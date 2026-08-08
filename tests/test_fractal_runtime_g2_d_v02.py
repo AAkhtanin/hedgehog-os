@@ -7,9 +7,11 @@ from decimal import Decimal
 import hashlib
 import importlib
 import inspect
+from itertools import permutations
 import json
 from pathlib import Path
 import re
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -49,6 +51,9 @@ ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "hedgehog/kernel/fractal_runtime_v02.py"
 SCHEMA_PATH = ROOT / "schemas/fractal_runtime_v02.schema.json"
 PREFLIGHT_PATH = ROOT / "docs/fractal_runtime_v0_2_g2_d_preflight_v01.md"
+ADDENDUM_PATH = (
+    ROOT / "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md"
+)
 fr = importlib.import_module("hedgehog.kernel.fractal_runtime_v02")
 
 
@@ -76,6 +81,12 @@ def _validation_reasons(value: object) -> tuple[str, ...]:
     validator = FUNCTION_FAMILIES[type(value)][0]
     result = validator(value)
     return result if type(value) is fr.FractalRuntimeValidationReportV02 else result.reason_codes
+
+
+def _kernel_payload(artifact: KernelArtifactV01) -> dict[str, object]:
+    payload = kernel_artifact_to_plain_dict_v01(artifact)["payload"]
+    assert type(payload) is dict
+    return payload
 
 
 def _preflight_annotation_rows(class_name: str) -> tuple[tuple[str, str], ...]:
@@ -857,7 +868,7 @@ def test_d1_static_surface_schema_import() -> None:
         name for name, value in vars(fr).items()
         if not name.startswith("_") and inspect.isfunction(value) and value.__module__ == fr.__name__
     ]
-    assert len(public_functions) == 81
+    assert len(public_functions) == 90
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
     expected_rows = re.findall(r"^\|\s*(\d+)\s*\|\s*D1\s*\|\s*`([^`]+)`\s*\|$", preflight, re.MULTILINE)
     assert len(expected_rows) == 74
@@ -868,7 +879,7 @@ def test_d1_static_surface_schema_import() -> None:
         current = actual[signature.split("(", 1)[0]]
         assert ast.dump(current.args, include_attributes=False) == ast.dump(expected.args, include_attributes=False)
         assert ast.dump(current.returns, include_attributes=False) == ast.dump(expected.returns, include_attributes=False)
-    future_names = re.findall(r"^\|\s*(?:8[2-9]|9\d|1(?:0\d|1[0]))\s*\|\s*D[3-4]\s*\|\s*`([a-z0-9_]+)\(", preflight, re.MULTILINE)
+    future_names = re.findall(r"^\|\s*(?:9[1-9]|10\d|110)\s*\|\s*D4\s*\|\s*`([a-z0-9_]+)\(", preflight, re.MULTILINE)
     assert future_names and not any(callable(getattr(fr, name, None)) for name in future_names)
     assert not any(hasattr(importlib.import_module("hedgehog.kernel"), name) for name in public_functions)
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -1844,6 +1855,36 @@ def test_d1_schema_valid_and_negative_mutations() -> None:
     policy_data["policy_id"] = "bad"
     with pytest.raises(ValidationError):
         Draft202012Validator(schema["$defs"]["FractalRuntimePolicyV02"]).validate(policy_data)
+    policy = fixtures[fr.FractalRuntimePolicyV02]
+    policy_schema = Draft202012Validator(schema["$defs"]["FractalRuntimePolicyV02"])
+    canonical_policy_data = fr.fractal_runtime_policy_to_plain_data_v02(policy)
+    assert policy.max_parallelism == 3
+    assert schema["$defs"]["FractalRuntimePolicyV02"]["properties"]["max_parallelism"]["const"] == 3
+    assert fr.validate_fractal_runtime_policy_v02(policy).status == "PASS"
+    policy_schema.validate(canonical_policy_data)
+    rebuilt_policy = fr.build_fractal_runtime_policy_v02(
+        required_downstream_capability_ids=("capability:source:semantic",),
+        permitted_child_scope_refs=(),
+    )
+    assert rebuilt_policy == policy
+    assert fr.fractal_runtime_policy_to_plain_data_v02(rebuilt_policy) == canonical_policy_data
+    assert rebuilt_policy.policy_id == policy.policy_id
+    legacy_policy = replace(policy, max_parallelism=4)
+    legacy_report = fr.validate_fractal_runtime_policy_v02(legacy_policy)
+    assert legacy_report.status == "FAIL_CLOSED"
+    assert "g2d_identity_mismatch" in legacy_report.reason_codes
+    assert "g2d_topology_policy_invalid" in legacy_report.reason_codes
+    legacy_policy_id = fr.rebuild_fractal_runtime_policy_identity_v02(legacy_policy)
+    resealed_legacy_policy = replace(legacy_policy, policy_id=legacy_policy_id)
+    assert resealed_legacy_policy.policy_id != policy.policy_id
+    resealed_report = fr.validate_fractal_runtime_policy_v02(resealed_legacy_policy)
+    assert resealed_report.status == "FAIL_CLOSED"
+    assert "g2d_topology_policy_invalid" in resealed_report.reason_codes
+    legacy_policy_data = dict(canonical_policy_data)
+    legacy_policy_data["policy_id"] = legacy_policy_id
+    legacy_policy_data["max_parallelism"] = 4
+    with pytest.raises(ValidationError):
+        policy_schema.validate(legacy_policy_data)
     report_data = fr.fractal_runtime_validation_report_to_plain_data_v02(fixtures[fr.FractalRuntimeValidationReportV02])
     report_data["status"] = "FAIL_CLOSED"
     with pytest.raises(ValidationError):
@@ -3271,9 +3312,8 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 81
+    assert len(public_functions) == 90
     for forbidden in (
-        "evaluate_fractal_runtime_state_transition_v02",
         "execute_fractal_runtime_v02",
         "build_fractal_runtime_execution_bundle_v02",
     ):
@@ -3281,3 +3321,4648 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
     module_source = MODULE_PATH.read_text(encoding="utf-8")
     assert "import hedgehog.kernel\n" not in module_source
     assert "demo." not in module_source and "tests." not in module_source
+
+
+def _d3_topology_parts(
+    source: fr.FractalRuntimeSourceContextV02,
+    topology: fr.RuntimeExecutionTopologyV02,
+) -> tuple[
+    fr.RuntimeTopologySourceBindingV02,
+    fr.RuntimeTopologySeedV02,
+    fr.FractalRuntimeBudgetV02,
+    tuple[fr.RuntimeTopologyNodeV02, ...],
+]:
+    policy = source.runtime_policy
+    binding = fr.build_runtime_topology_source_binding_v02(source_context=source)
+    root_cell_id = fr.derive_fractal_root_cell_id_v02(
+        source_binding_id=binding.source_binding_id,
+        runtime_policy_id=policy.policy_id,
+        accepted_mode=binding.accepted_mode,
+        accepted_scope_ref=binding.accepted_scope_ref,
+    )
+    seed = fr.build_runtime_topology_seed_v02(binding, policy, root_cell_id=root_cell_id)
+    initial = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=seed,
+        allocation_parent_budget=None,
+        predecessor_budget=None,
+        owning_cell_id=root_cell_id,
+        budget_scope="ROOT_GLOBAL_AND_CELL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=None,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    rows = dict(fr.MODE_NODE_TEMPLATE_ROWS_V02)[topology.accepted_mode]
+    nodes = tuple(
+        fr.build_runtime_topology_node_v02(
+            seed,
+            binding,
+            policy,
+            canonical_index=row[0],
+            node_kind=row[1],
+            depth=0,
+            scope_ref=binding.accepted_scope_ref,
+            cell_binding_class=row[2],
+            scope_binding_class=row[3],
+            budget_binding_class=row[4],
+            required_capability_ids=(
+                binding.required_downstream_capability_ids
+                if row[5] == ("SRC_CAPS",)
+                else row[5]
+            ),
+            input_ref_derivation_class=row[8],
+        )
+        for row in rows
+    )
+    assert tuple(item.node_id for item in nodes) == topology.ordered_node_ids
+    assert initial.budget_id == topology.global_budget_id
+    return binding, seed, initial, nodes
+
+
+def _d3_budget_successor(
+    env: dict[str, object],
+    predecessor: fr.FractalRuntimeBudgetV02,
+    *,
+    event: str,
+    decision: TransitionDecisionV01 | None = None,
+    cell_input: fr.FractalCellInputV02 | None = None,
+    allocation_parent: fr.FractalRuntimeBudgetV02 | None = None,
+    owning_cell_id: str | None = None,
+    scope: str = "ROOT_GLOBAL_AND_CELL",
+    canonical_child_index: int | None = None,
+    allocation_queue_entries: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+    paired_cell_budget: fr.FractalRuntimeBudgetV02 | None = None,
+    state: str = "ACTIVE",
+) -> fr.FractalRuntimeBudgetV02:
+    source = env["source"]
+    topology = env["topology"]
+    seed = env["seed"]
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+    assert isinstance(seed, fr.RuntimeTopologySeedV02)
+    return fr.build_fractal_runtime_budget_v02(
+        policy=source.runtime_policy,
+        topology_seed=seed,
+        allocation_parent_budget=allocation_parent,
+        predecessor_budget=predecessor,
+        owning_cell_id=owning_cell_id or topology.root_cell_id,
+        budget_scope=scope,
+        budget_state=state,
+        budget_event_kind=event,
+        budget_context_input=cell_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queue_entries,
+        transition_decision=decision,
+        paired_cell_budget=paired_cell_budget,
+        child_result=None,
+    )
+
+
+def _d3_prefix_kwargs(
+    env: dict[str, object],
+    **overrides: object,
+) -> dict[str, object]:
+    result = {
+        "settled_budget_log": env.get("budget_log", ()),
+        "settled_queue_entry_log": env.get("queue_log", ()),
+        "settled_queue_artifact_log": env.get("artifact_log", ()),
+        "settled_cell_inputs": env.get("cell_inputs", ()),
+        "settled_scope_projections": env.get("scope_projections", ()),
+        "settled_revise_observations": env.get("revise_observations", ()),
+        "settled_backpressure_states": env.get("backpressure_states", ()),
+        "settled_validation_reports": env.get("validation_reports", ()),
+    }
+    result.update(overrides)
+    return result
+
+
+def _d3_clone_environment(env: dict[str, object]) -> dict[str, object]:
+    return dict(env)
+
+
+def _d3_retained_reports(
+    env: dict[str, object],
+    queue_log: tuple[fr.FractalCellQueueEntryV02, ...],
+) -> tuple[fr.FractalRuntimeValidationReportV02, ...]:
+    reports = env["validation_reports"]
+    assert isinstance(reports, tuple) and len(reports) >= 4
+    scope_reports = tuple(
+        item
+        for item in reports[4:]
+        if item.validation_target == "SCOPE_PROJECTION_AGAINST_SOURCES"
+    )
+    input_reports = tuple(
+        item
+        for item in reports[4:]
+        if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+    )
+    return (
+        *reports[:4],
+        *(fr.validate_fractal_cell_queue_entry_v02(item) for item in queue_log),
+        *scope_reports,
+        *input_reports,
+    )
+
+
+def _d3_eval(
+    env: dict[str, object],
+    *,
+    source_artifact: KernelArtifactV01,
+    node: fr.RuntimeTopologyNodeV02,
+    current_entry: fr.FractalCellQueueEntryV02 | None,
+    cell_input: fr.FractalCellInputV02 | None,
+    cell_budget: fr.FractalRuntimeBudgetV02,
+    global_budget: fr.FractalRuntimeBudgetV02,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+    queue_reason_codes: tuple[str, ...] = (),
+    observed_output_refs: tuple[str, ...] = (),
+    observed_evidence_refs: tuple[str, ...] = (),
+    advisory_refs: tuple[str, ...] = (),
+    local_child_result: fr.FractalCellResultV02 | None = None,
+    local_child_result_artifact: KernelArtifactV01 | None = None,
+    validation_report: fr.FractalRuntimeValidationReportV02 | None = None,
+    revise_observation: fr.FractalReviseObservationV02 | None = None,
+    backpressure_state: fr.FractalBackpressureStateV02 | None = None,
+    cell_id: str | None = None,
+    parent_cell_id: str | None = None,
+    planned_child_cell_id: str | None = None,
+    cell_depth: int | None = None,
+    scope_ref: str | None = None,
+    parent_return_pre_post_vv_terminal_queue_entries: object = (),
+    parent_return_child_results: object = (),
+    parent_return_partial_failures: object = (),
+    parent_return_result_proposal: object = None,
+    parent_return_post_vv_report: object = None,
+    parent_return_gt_advisory_report: object = None,
+    parent_return_validation_reports: object = (),
+) -> TransitionDecisionV01 | None:
+    source = env["source"]
+    topology = env["topology"]
+    registry = env["registry"]
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+    assert isinstance(registry, transition_registry.TransitionRegistryV01)
+    if current_entry is not None:
+        cell_id = current_entry.cell_id if cell_id is None else cell_id
+        parent_cell_id = current_entry.parent_cell_id if parent_cell_id is None else parent_cell_id
+        planned_child_cell_id = (
+            current_entry.planned_child_cell_id
+            if planned_child_cell_id is None
+            else planned_child_cell_id
+        )
+        cell_depth = current_entry.cell_depth if cell_depth is None else cell_depth
+        scope_ref = current_entry.scope_ref if scope_ref is None else scope_ref
+    else:
+        cell_id = topology.root_cell_id if cell_id is None else cell_id
+        cell_depth = 0 if cell_depth is None else cell_depth
+        scope_ref = topology.accepted_scope_ref if scope_ref is None else scope_ref
+    return fr.evaluate_fractal_runtime_state_transition_v02(
+        source_context=source,
+        topology=topology,
+        source_artifact=source_artifact,
+        current_entry=current_entry,
+        node=node,
+        cell_input=cell_input,
+        cell_id=cell_id,
+        parent_cell_id=parent_cell_id,
+        planned_child_cell_id=planned_child_cell_id,
+        cell_depth=cell_depth,
+        scope_ref=scope_ref,
+        cell_budget_before=cell_budget,
+        global_budget_before=global_budget,
+        dependencies=dependencies,
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
+        validation_report=validation_report,
+        parent_return_pre_post_vv_terminal_queue_entries=parent_return_pre_post_vv_terminal_queue_entries,
+        parent_return_child_results=parent_return_child_results,
+        parent_return_partial_failures=parent_return_partial_failures,
+        parent_return_result_proposal=parent_return_result_proposal,
+        parent_return_post_vv_report=parent_return_post_vv_report,
+        parent_return_gt_advisory_report=parent_return_gt_advisory_report,
+        parent_return_validation_reports=parent_return_validation_reports,
+        revise_observation=revise_observation,
+        backpressure_state=backpressure_state,
+        transition_registry=registry,
+        **_d3_prefix_kwargs(env),
+    )
+
+
+def _d3_root_environment(case: dict[str, object]) -> dict[str, object]:
+    source = case["source"]
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    topology = fr.construct_runtime_execution_topology_v02(source)
+    registry = transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+    t01 = fr.evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source,
+        topology=topology,
+        transition_registry=registry,
+    )
+    topology_artifact = fr.project_runtime_execution_topology_kernel_artifact_v02(
+        topology,
+        source_context=source,
+        topology_transition_decision=t01,
+    )
+    binding, seed, root_initial, nodes = _d3_topology_parts(source, topology)
+    env: dict[str, object] = {
+        "source": source,
+        "topology": topology,
+        "registry": registry,
+        "t01": t01,
+        "topology_artifact": topology_artifact,
+        "binding": binding,
+        "seed": seed,
+        "root_initial": root_initial,
+        "nodes": nodes,
+        "budget_log": (),
+        "queue_log": (),
+        "artifact_log": (),
+        "cell_inputs": (),
+        "scope_projections": (),
+        "revise_observations": (),
+        "backpressure_states": (),
+        "validation_reports": fr._d3_expected_retained_base_reports_v02(
+            source,
+            topology,
+        ),
+    }
+    root_active = _d3_budget_successor(env, root_initial, event="ACTIVATE")
+    root_create = _d3_budget_successor(env, root_active, event="CELL_CREATE")
+    env["root_active"] = root_active
+    env["root_create"] = root_create
+    env["budget_log"] = (root_initial, root_active, root_create)
+    planned = fr._derive_settled_planned_root_child_ids_v02(
+        source_context=source,
+        topology=topology,
+        topology_transition_decision=t01,
+        topology_artifact=topology_artifact,
+    )
+    t02 = tuple(
+        _d3_eval(
+            env,
+            source_artifact=topology_artifact,
+            node=node,
+            current_entry=None,
+            cell_input=None,
+            cell_budget=root_create,
+            global_budget=root_create,
+        )
+        for node in nodes
+    )
+    assert all(isinstance(item, TransitionDecisionV01) for item in t02)
+    queues = fr.admit_runtime_execution_topology_v02(
+        source_context=source,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        topology_transition_decision=t01,
+        cell_id=topology.root_cell_id,
+        parent_cell_id=None,
+        parent_slot_artifact=None,
+        cell_depth=0,
+        scope_ref=topology.accepted_scope_ref,
+        cell_budget=root_create,
+        global_budget=root_create,
+        projected_nodes=nodes,
+        planned_child_cell_ids=planned,
+        admission_decisions=t02,
+        cell_instantiation_order=(topology.root_cell_id,),
+        **_d3_prefix_kwargs(env),
+    )
+    queue_log: tuple[fr.FractalCellQueueEntryV02, ...] = ()
+    artifact_log: tuple[KernelArtifactV01, ...] = ()
+    retained_reports = env["validation_reports"]
+    assert isinstance(retained_reports, tuple)
+    for entry in queues:
+        artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            entry,
+            topology_artifact=topology_artifact,
+            predecessor_artifact=None,
+            activation_parent_artifact=None,
+            local_child_result_artifact=None,
+            source_context=source,
+            **_d3_prefix_kwargs(
+                env,
+                settled_queue_entry_log=queue_log + (entry,),
+                settled_queue_artifact_log=artifact_log,
+                settled_validation_reports=retained_reports,
+            ),
+        )
+        queue_log += (entry,)
+        artifact_log += (artifact,)
+        retained_reports = (
+            *retained_reports[:4],
+            *(fr.validate_fractal_cell_queue_entry_v02(item) for item in queue_log),
+        )
+    queue_artifacts = artifact_log
+    env["queue_log"] = queue_log
+    env["artifact_log"] = artifact_log
+    env["validation_reports"] = retained_reports
+    cell_input = fr.build_fractal_cell_input_from_queue_v02(
+        source_context=source,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        cell_id=topology.root_cell_id,
+        parent_cell_id=None,
+        parent_input=None,
+        parent_slot_artifact=None,
+        scope_projection=None,
+        cell_budget=root_create,
+        global_budget=root_create,
+        initial_queue_entries=queues,
+        initial_queue_artifacts=queue_artifacts,
+        ordered_planned_child_cell_ids=planned,
+        **_d3_prefix_kwargs(env),
+    )
+    input_report = fr.validate_fractal_cell_input_against_sources_v02(
+        cell_input,
+        source_context=source,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        parent_input=None,
+        parent_slot_artifact=None,
+        scope_projection=None,
+        cell_budget=root_create,
+        global_budget=root_create,
+        queue_entries=queues,
+        queue_artifacts=queue_artifacts,
+        **_d3_prefix_kwargs(env),
+    )
+    assert input_report.status == "PASS"
+    env["cell_inputs"] = (cell_input,)
+    env["validation_reports"] = retained_reports + (input_report,)
+    env.update(
+        planned=planned,
+        t02=t02,
+        queues=queues,
+        queue_artifacts=queue_artifacts,
+        cell_input=cell_input,
+    )
+    return env
+
+
+@pytest.fixture(scope="module")
+def d3_mode_environments() -> dict[str, dict[str, object]]:
+    return {
+        mode: _d3_root_environment(
+            _d2_g2c_family(
+                mode,
+                narrow=mode == "cloud_llm",
+                action_packet_required=mode == "local_slm",
+            )
+        )
+        for mode in fr.TOPOLOGY_ELIGIBLE_MODES
+    }
+
+
+@pytest.fixture(scope="module")
+def d3_full_fractal_micro_environment() -> dict[str, object]:
+    return _d3_root_environment(_d2_g2c_family("full_fractal"))
+
+
+def _d3_advance(
+    env: dict[str, object],
+    *,
+    current: fr.FractalCellQueueEntryV02,
+    current_artifact: KernelArtifactV01,
+    node: fr.RuntimeTopologyNodeV02,
+    cell_input: fr.FractalCellInputV02,
+    cell_budget_before: fr.FractalRuntimeBudgetV02,
+    global_budget_before: fr.FractalRuntimeBudgetV02,
+    cell_budget_after: fr.FractalRuntimeBudgetV02,
+    global_budget_after: fr.FractalRuntimeBudgetV02,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...],
+    round_entries: tuple[fr.FractalCellQueueEntryV02, ...],
+    queue_reason_codes: tuple[str, ...] = (),
+    observed_output_refs: tuple[str, ...] = (),
+    observed_evidence_refs: tuple[str, ...] = (),
+    advisory_refs: tuple[str, ...] = (),
+    local_child_result: fr.FractalCellResultV02 | None = None,
+    local_child_result_artifact: KernelArtifactV01 | None = None,
+    revise_observation: fr.FractalReviseObservationV02 | None = None,
+    validation_report: fr.FractalRuntimeValidationReportV02 | None = None,
+    backpressure_state: fr.FractalBackpressureStateV02 | None = None,
+) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01, TransitionDecisionV01]:
+    decision = _d3_eval(
+        env,
+        source_artifact=current_artifact,
+        node=node,
+        current_entry=current,
+        cell_input=cell_input,
+        cell_budget=cell_budget_before,
+        global_budget=global_budget_before,
+        dependencies=dependencies,
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
+        validation_report=validation_report,
+        revise_observation=revise_observation,
+        backpressure_state=backpressure_state,
+    )
+    assert isinstance(decision, TransitionDecisionV01)
+    topology = env["topology"]
+    source = env["source"]
+    topology_artifact = env["topology_artifact"]
+    nodes = env["nodes"]
+    assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    assert isinstance(topology_artifact, KernelArtifactV01)
+    assert isinstance(nodes, tuple)
+    budget_log = env["budget_log"]
+    assert isinstance(budget_log, tuple)
+    if (cell_budget_after, global_budget_after) != (
+        cell_budget_before,
+        global_budget_before,
+    ):
+        candidate_suffix = (
+            (global_budget_after,)
+            if cell_budget_after is global_budget_after
+            else (cell_budget_after, global_budget_after)
+        )
+        assert all(item not in budget_log for item in candidate_suffix)
+        budget_log += candidate_suffix
+    env["budget_log"] = budget_log
+    target = fr.advance_fractal_cell_queue_v02(
+        source_context=source,
+        topology=topology,
+        current_entry=current,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=decision,
+        cell_budget_after=cell_budget_after,
+        global_budget_after=global_budget_after,
+        dependencies=dependencies,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
+        cell_instantiation_order=tuple(
+            item.cell_id for item in env["cell_inputs"]
+        ),
+        projected_node_ids=cell_input.ordered_node_ids,
+        round_start_queue_entries=round_entries,
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        **_d3_prefix_kwargs(env),
+    )
+    queue_log = env["queue_log"]
+    artifact_log = env["artifact_log"]
+    reports = env["validation_reports"]
+    assert isinstance(queue_log, tuple)
+    assert isinstance(artifact_log, tuple)
+    assert isinstance(reports, tuple)
+    artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+        target,
+        topology_artifact=topology_artifact,
+        predecessor_artifact=current_artifact,
+        activation_parent_artifact=None,
+        local_child_result_artifact=local_child_result_artifact,
+        source_context=source,
+        **_d3_prefix_kwargs(
+            env,
+            settled_queue_entry_log=queue_log + (target,),
+            settled_validation_reports=reports,
+        ),
+    )
+    env["queue_log"] = queue_log + (target,)
+    env["artifact_log"] = artifact_log + (artifact,)
+    env["validation_reports"] = _d3_retained_reports(
+        env,
+        queue_log + (target,),
+    )
+    return target, artifact, decision
+
+
+def _d3_indexes(
+    env: dict[str, object],
+    *,
+    frontier: str = "COMPLETED",
+) -> dict[str, object]:
+    return fr._d3_validate_settled_runtime_prefix_v02(
+        topology=env["topology"],
+        policy=env["source"].runtime_policy,
+        source_context=env["source"],
+        frontier=frontier,
+        **_d3_prefix_kwargs(env),
+    )
+
+
+def _d3_latest(env: dict[str, object]) -> tuple[fr.FractalCellQueueEntryV02, ...]:
+    queue_log = env["queue_log"]
+    assert isinstance(queue_log, tuple)
+    return fr._d3_latest_queue_entries_v02(queue_log)
+
+
+def _d3_start_node(
+    env: dict[str, object],
+    *,
+    node_index: int,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+) -> tuple[
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+    fr.FractalRuntimeBudgetV02,
+]:
+    nodes = env["nodes"]
+    cell_input = env["cell_input"]
+    assert isinstance(nodes, tuple)
+    assert isinstance(cell_input, fr.FractalCellInputV02)
+    node = nodes[node_index]
+    indexes = _d3_indexes(env)
+    current = indexes["latest_by_key"][(cell_input.cell_id, node.node_id)]
+    current_artifact = indexes["artifact_by_queue_id"][current.queue_entry_id]
+    cell_budget = indexes["budget_by_id"][current.cell_budget_id]
+    global_budget = indexes["budget_by_id"][current.global_budget_id]
+    ready, ready_artifact, _ = _d3_advance(
+        env,
+        current=current,
+        current_artifact=current_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=cell_budget,
+        global_budget_before=global_budget,
+        cell_budget_after=cell_budget,
+        global_budget_after=global_budget,
+        dependencies=dependencies,
+        round_entries=_d3_latest(env),
+    )
+    t05 = _d3_eval(
+        env,
+        source_artifact=ready_artifact,
+        node=node,
+        current_entry=ready,
+        cell_input=cell_input,
+        cell_budget=cell_budget,
+        global_budget=global_budget,
+        dependencies=dependencies,
+    )
+    assert isinstance(t05, TransitionDecisionV01)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=current.cell_id,
+        indexes=_d3_indexes(env),
+    )
+    start_cell = _d3_budget_successor(
+        env,
+        live_cell,
+        event="START_NODE",
+        decision=t05,
+        cell_input=cell_input,
+        allocation_parent=(
+            None
+            if live_cell.allocation_parent_budget_id is None
+            else indexes["budget_by_id"][live_cell.allocation_parent_budget_id]
+        ),
+        owning_cell_id=current.cell_id,
+        scope=live_cell.budget_scope,
+    )
+    start_global = (
+        start_cell
+        if current.cell_id == env["topology"].root_cell_id
+        else _d3_budget_successor(
+            env,
+            live_global,
+            event="START_NODE",
+            decision=t05,
+            cell_input=cell_input,
+            paired_cell_budget=start_cell,
+        )
+    )
+    running, running_artifact, _ = _d3_advance(
+        env,
+        current=ready,
+        current_artifact=ready_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=cell_budget,
+        global_budget_before=global_budget,
+        cell_budget_after=start_cell,
+        global_budget_after=start_global,
+        dependencies=dependencies,
+        round_entries=_d3_latest(env),
+    )
+    return running, running_artifact, start_global
+
+
+def _d3_make_ready(
+    env: dict[str, object],
+    *,
+    current: fr.FractalCellQueueEntryV02,
+    node: fr.RuntimeTopologyNodeV02,
+    cell_input: fr.FractalCellInputV02,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+    backpressure_state: fr.FractalBackpressureStateV02 | None = None,
+    round_start_queue_entries: tuple[fr.FractalCellQueueEntryV02, ...] | None = None,
+) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
+    indexes = _d3_indexes(
+        env,
+        frontier="T03_DECISION" if backpressure_state is not None else "COMPLETED",
+    )
+    current_artifact = indexes["artifact_by_queue_id"][current.queue_entry_id]
+    cell_anchor = indexes["budget_by_id"][current.cell_budget_id]
+    global_anchor = indexes["budget_by_id"][current.global_budget_id]
+    ready, ready_artifact, _decision = _d3_advance(
+        env,
+        current=current,
+        current_artifact=current_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=cell_anchor,
+        global_budget_before=global_anchor,
+        cell_budget_after=cell_anchor,
+        global_budget_after=global_anchor,
+        dependencies=dependencies,
+        round_entries=(
+            _d3_latest(env)
+            if round_start_queue_entries is None
+            else round_start_queue_entries
+        ),
+        backpressure_state=backpressure_state,
+        queue_reason_codes=(
+            ("g2d_transition_backpressure_deferred",)
+            if backpressure_state is not None
+            else ()
+        ),
+    )
+    if backpressure_state is not None:
+        completed_indexes = _d3_indexes(env)
+        assert completed_indexes["backpressure_closure_frontier_by_id"][
+            backpressure_state.backpressure_id
+        ] == len(env["queue_log"]) - 1
+    return ready, ready_artifact
+
+
+def _d3_start_ready_entry(
+    env: dict[str, object],
+    *,
+    ready: fr.FractalCellQueueEntryV02,
+    ready_artifact: KernelArtifactV01,
+    node: fr.RuntimeTopologyNodeV02,
+    cell_input: fr.FractalCellInputV02,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+    round_start_queue_entries: tuple[fr.FractalCellQueueEntryV02, ...] | None = None,
+) -> tuple[
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+    fr.FractalRuntimeBudgetV02,
+    fr.FractalRuntimeBudgetV02,
+]:
+    indexes = _d3_indexes(env)
+    cell_anchor = indexes["budget_by_id"][ready.cell_budget_id]
+    global_anchor = indexes["budget_by_id"][ready.global_budget_id]
+    decision = _d3_eval(
+        env,
+        source_artifact=ready_artifact,
+        node=node,
+        current_entry=ready,
+        cell_input=cell_input,
+        cell_budget=cell_anchor,
+        global_budget=global_anchor,
+        dependencies=dependencies,
+    )
+    assert isinstance(decision, TransitionDecisionV01)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"], cell_id=ready.cell_id, indexes=indexes
+    )
+    start_cell = _d3_budget_successor(
+        env,
+        live_cell,
+        event="START_NODE",
+        decision=decision,
+        cell_input=cell_input,
+        allocation_parent=(
+            None
+            if live_cell.allocation_parent_budget_id is None
+            else indexes["budget_by_id"][live_cell.allocation_parent_budget_id]
+        ),
+        owning_cell_id=ready.cell_id,
+        scope=live_cell.budget_scope,
+    )
+    start_global = (
+        start_cell
+        if ready.cell_id == env["topology"].root_cell_id
+        else _d3_budget_successor(
+            env,
+            live_global,
+            event="START_NODE",
+            decision=decision,
+            cell_input=cell_input,
+            paired_cell_budget=start_cell,
+        )
+    )
+    running, running_artifact, _ = _d3_advance(
+        env,
+        current=ready,
+        current_artifact=ready_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=cell_anchor,
+        global_budget_before=global_anchor,
+        cell_budget_after=start_cell,
+        global_budget_after=start_global,
+        dependencies=dependencies,
+        round_entries=(
+            _d3_latest(env)
+            if round_start_queue_entries is None
+            else round_start_queue_entries
+        ),
+    )
+    return running, running_artifact, start_cell, start_global
+
+
+def _d3_activate_child(
+    env: dict[str, object],
+    *,
+    slot_running: fr.FractalCellQueueEntryV02,
+    slot_artifact: KernelArtifactV01,
+    dependency: fr.FractalCellQueueEntryV02,
+) -> dict[str, object]:
+    source = env["source"]
+    topology = env["topology"]
+    parent_input = env["cell_input"]
+    root_create = env["root_create"]
+    nodes = env["nodes"]
+    child_id = slot_running.planned_child_cell_id
+    assert isinstance(child_id, str)
+    canonical_child_index = nodes.index(
+        next(item for item in nodes if item.node_id == slot_running.node_id)
+    ) - 1
+    indexes = _d3_indexes(env)
+    _live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=topology, cell_id=topology.root_cell_id, indexes=indexes
+    )
+    material = fr._d3_child_activation_precheck_material_v02(
+        source_context=source,
+        topology=topology,
+        source_artifact=slot_artifact,
+        current_entry=slot_running,
+        node=nodes[canonical_child_index + 1],
+        cell_input=parent_input,
+        cell_budget_before=live_global,
+        global_budget_before=live_global,
+        dependencies=(dependency,),
+        indexes=indexes,
+    )
+    assert material["derived_disposition"] == "PASS_FOR_CHILD_ACTIVATION"
+    child_allocated = fr.build_fractal_runtime_budget_v02(
+        policy=source.runtime_policy,
+        topology_seed=env["seed"],
+        allocation_parent_budget=root_create,
+        predecessor_budget=None,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=env["queues"],
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    projection = fr.project_parent_child_scope_v02(
+        source_context=source,
+        topology=topology,
+        parent_input=parent_input,
+        child_cell_id=child_id,
+        child_scope_ref=topology.accepted_scope_ref,
+        parent_budget=root_create,
+        child_budget=child_allocated,
+        global_budget=live_global,
+    )
+    child_active = _d3_budget_successor(
+        env, child_allocated, event="ACTIVATE", cell_input=parent_input,
+        allocation_parent=root_create, owning_cell_id=child_id,
+        scope="CHILD_CELL_LOCAL", canonical_child_index=canonical_child_index,
+        allocation_queue_entries=env["queues"],
+    )
+    global_active = _d3_budget_successor(
+        env, live_global, event="ACTIVATE", cell_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=env["queues"], paired_cell_budget=child_active,
+    )
+    child_create = _d3_budget_successor(
+        env, child_active, event="CELL_CREATE", cell_input=parent_input,
+        allocation_parent=root_create, owning_cell_id=child_id,
+        scope="CHILD_CELL_LOCAL", canonical_child_index=canonical_child_index,
+        allocation_queue_entries=env["queues"],
+    )
+    global_create = _d3_budget_successor(
+        env, global_active, event="CELL_CREATE", cell_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=env["queues"], paired_cell_budget=child_create,
+    )
+    env["budget_log"] = env["budget_log"] + (
+        child_allocated, child_active, global_active, child_create, global_create,
+    )
+    env["scope_projections"] = (*env["scope_projections"], projection)
+    budget_by_id = {item.budget_id: item for item in env["budget_log"]}
+    scope_reports = tuple(
+        fr.validate_parent_child_scope_against_sources_v02(
+            item,
+            source_context=source,
+            topology=topology,
+            parent_input=env["cell_inputs"][0],
+            parent_budget=root_create,
+            child_budget=budget_by_id[item.child_budget_id],
+            global_budget=budget_by_id[item.global_budget_id],
+        )
+        for item in env["scope_projections"]
+    )
+    input_reports = tuple(
+        item
+        for item in env["validation_reports"][4:]
+        if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+    )
+    env["validation_reports"] = (
+        *env["validation_reports"][:4],
+        *(fr.validate_fractal_cell_queue_entry_v02(item) for item in env["queue_log"]),
+        *scope_reports,
+        *input_reports,
+    )
+    leaf_nodes = tuple(nodes[index] for index in (0, 4, 5, 6))
+    decisions = tuple(
+        _d3_eval(
+            env, source_artifact=env["topology_artifact"], node=node,
+            current_entry=None, cell_input=None, cell_budget=child_create,
+            global_budget=global_create, cell_id=child_id,
+            parent_cell_id=topology.root_cell_id, cell_depth=1,
+            scope_ref=projection.child_scope_ref,
+        )
+        for node in leaf_nodes
+    )
+    child_queues = fr.admit_runtime_execution_topology_v02(
+        source_context=source, topology=topology,
+        topology_artifact=env["topology_artifact"],
+        topology_transition_decision=env["t01"], cell_id=child_id,
+        parent_cell_id=topology.root_cell_id, parent_slot_artifact=slot_artifact,
+        cell_depth=1, scope_ref=projection.child_scope_ref,
+        cell_budget=child_create, global_budget=global_create,
+        projected_nodes=leaf_nodes, planned_child_cell_ids=(),
+        admission_decisions=decisions,
+        cell_instantiation_order=tuple(item.cell_id for item in env["cell_inputs"]) + (child_id,),
+        **_d3_prefix_kwargs(env),
+    )
+    child_artifacts: list[KernelArtifactV01] = []
+    for entry in child_queues:
+        artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            entry, topology_artifact=env["topology_artifact"],
+            predecessor_artifact=None, activation_parent_artifact=slot_artifact,
+            local_child_result_artifact=None, source_context=source,
+            **_d3_prefix_kwargs(
+                env,
+                settled_queue_entry_log=env["queue_log"] + (entry,),
+                settled_queue_artifact_log=env["artifact_log"],
+            ),
+        )
+        env["queue_log"] = env["queue_log"] + (entry,)
+        env["artifact_log"] = env["artifact_log"] + (artifact,)
+        env["validation_reports"] = _d3_retained_reports(env, env["queue_log"])
+        child_artifacts.append(artifact)
+    child_input = fr.build_fractal_cell_input_from_queue_v02(
+        source_context=source, topology=topology,
+        topology_artifact=env["topology_artifact"], cell_id=child_id,
+        parent_cell_id=topology.root_cell_id, parent_input=parent_input,
+        parent_slot_artifact=slot_artifact, scope_projection=projection,
+        cell_budget=child_create, global_budget=global_create,
+        initial_queue_entries=child_queues,
+        initial_queue_artifacts=tuple(child_artifacts),
+        ordered_planned_child_cell_ids=(), **_d3_prefix_kwargs(env),
+    )
+    input_report = fr.validate_fractal_cell_input_against_sources_v02(
+        child_input, source_context=source, topology=topology,
+        topology_artifact=env["topology_artifact"], parent_input=parent_input,
+        parent_slot_artifact=slot_artifact, scope_projection=projection,
+        cell_budget=child_create, global_budget=global_create,
+        queue_entries=child_queues, queue_artifacts=tuple(child_artifacts),
+        **_d3_prefix_kwargs(env),
+    )
+    assert input_report.status == "PASS"
+    env["cell_inputs"] = (*env["cell_inputs"], child_input)
+    env["validation_reports"] = (*env["validation_reports"], input_report)
+    return {
+        "cell_id": child_id,
+        "projection": projection,
+        "allocated_budget": child_allocated,
+        "cell_budget": child_create,
+        "global_budget": global_create,
+        "nodes": leaf_nodes,
+        "queues": child_queues,
+        "artifacts": tuple(child_artifacts),
+        "input": child_input,
+    }
+
+
+def _d3_finish_running_local(
+    env: dict[str, object],
+    *,
+    running: fr.FractalCellQueueEntryV02,
+    running_artifact: KernelArtifactV01,
+    node: fr.RuntimeTopologyNodeV02,
+    cell_input: fr.FractalCellInputV02,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+    round_start_queue_entries: tuple[fr.FractalCellQueueEntryV02, ...] | None = None,
+) -> tuple[
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+    fr.FractalRuntimeBudgetV02,
+]:
+    indexes = _d3_indexes(env)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"], cell_id=running.cell_id, indexes=indexes
+    )
+    material = fr._d3_local_observation_material_v02(
+        source_context=env["source"], topology=env["topology"], node=node,
+        cell_input=cell_input, cell_budget_before=live_cell,
+        global_budget_before=live_global, dependencies=dependencies,
+        indexes=indexes,
+    )
+    decision = _d3_eval(
+        env, source_artifact=running_artifact, node=node,
+        current_entry=running, cell_input=cell_input,
+        cell_budget=indexes["budget_by_id"][running.cell_budget_id],
+        global_budget=indexes["budget_by_id"][running.global_budget_id],
+        dependencies=dependencies,
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    assert isinstance(decision, TransitionDecisionV01)
+    finish_cell = _d3_budget_successor(
+        env, live_cell, event="FINISH_NODE", decision=decision,
+        cell_input=cell_input,
+        allocation_parent=(
+            None
+            if live_cell.allocation_parent_budget_id is None
+            else indexes["budget_by_id"][live_cell.allocation_parent_budget_id]
+        ),
+        owning_cell_id=running.cell_id, scope=live_cell.budget_scope,
+    )
+    finish_global = (
+        finish_cell
+        if running.cell_id == env["topology"].root_cell_id
+        else _d3_budget_successor(
+            env, live_global, event="FINISH_NODE", decision=decision,
+            cell_input=cell_input, paired_cell_budget=finish_cell,
+        )
+    )
+    validating, artifact, _ = _d3_advance(
+        env, current=running, current_artifact=running_artifact, node=node,
+        cell_input=cell_input,
+        cell_budget_before=indexes["budget_by_id"][running.cell_budget_id],
+        global_budget_before=indexes["budget_by_id"][running.global_budget_id],
+        cell_budget_after=finish_cell, global_budget_after=finish_global,
+        dependencies=dependencies,
+        round_entries=(
+            _d3_latest(env)
+            if round_start_queue_entries is None
+            else round_start_queue_entries
+        ),
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    return validating, artifact, finish_global
+
+
+def _d3_finish_no_child_gate(
+    env: dict[str, object],
+    *,
+    running: fr.FractalCellQueueEntryV02,
+    running_artifact: KernelArtifactV01,
+    node: fr.RuntimeTopologyNodeV02,
+    dependency: fr.FractalCellQueueEntryV02,
+) -> tuple[
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+]:
+    indexes = _d3_indexes(env)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=running.cell_id,
+        indexes=indexes,
+    )
+    material = fr._d3_child_activation_precheck_material_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        source_artifact=running_artifact,
+        current_entry=running,
+        node=node,
+        cell_input=env["cell_input"],
+        cell_budget_before=live_cell,
+        global_budget_before=live_global,
+        dependencies=(dependency,),
+        indexes=indexes,
+    )
+    anchor_cell = indexes["budget_by_id"][running.cell_budget_id]
+    anchor_global = indexes["budget_by_id"][running.global_budget_id]
+    t06 = _d3_eval(
+        env,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=env["cell_input"],
+        cell_budget=anchor_cell,
+        global_budget=anchor_global,
+        dependencies=(dependency,),
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_evidence_refs=material["derived_evidence_refs"],
+    )
+    assert isinstance(t06, TransitionDecisionV01)
+    finish_cell = _d3_budget_successor(
+        env,
+        live_cell,
+        event="FINISH_NODE",
+        decision=t06,
+        cell_input=env["cell_input"],
+        allocation_parent=(
+            None
+            if live_cell.allocation_parent_budget_id is None
+            else indexes["budget_by_id"][live_cell.allocation_parent_budget_id]
+        ),
+        owning_cell_id=running.cell_id,
+        scope=live_cell.budget_scope,
+    )
+    finish_global = (
+        finish_cell
+        if running.cell_id == env["topology"].root_cell_id
+        else _d3_budget_successor(
+            env,
+            live_global,
+            event="FINISH_NODE",
+            decision=t06,
+            cell_input=env["cell_input"],
+            paired_cell_budget=finish_cell,
+        )
+    )
+    validating, validating_artifact, _ = _d3_advance(
+        env,
+        current=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=env["cell_input"],
+        cell_budget_before=anchor_cell,
+        global_budget_before=anchor_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=(dependency,),
+        round_entries=_d3_latest(env),
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_evidence_refs=material["derived_evidence_refs"],
+    )
+    terminal, terminal_artifact, terminal_decision = _d3_advance(
+        env,
+        current=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=env["cell_input"],
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=(dependency,),
+        round_entries=_d3_latest(env),
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_evidence_refs=validating.observed_evidence_refs,
+    )
+    assert terminal_decision == fr._d3_transition_decision_v02(
+        env["registry"],
+        "t10" if terminal.state == "BLOCKED" else "t12",
+    )
+    return validating, validating_artifact, terminal, terminal_artifact
+
+
+def _d3_child_result_boundary_environment(
+    base: dict[str, object],
+) -> tuple[
+    dict[str, object],
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+]:
+    env = _d3_clone_environment(base)
+    dependency, _ = _d3_complete_local_node(env, node_index=0)
+    slot, slot_artifact, _ = _d3_start_node(
+        env, node_index=1, dependencies=(dependency,)
+    )
+    child = _d3_activate_child(
+        env, slot_running=slot, slot_artifact=slot_artifact,
+        dependency=dependency,
+    )
+    base_indexes = _d3_indexes(env)
+    decision = fr._d3_transition_decision_v02(env["registry"], "t08")
+    terminal_entries: list[fr.FractalCellQueueEntryV02] = []
+    terminal_artifacts: list[KernelArtifactV01] = []
+    for initial, initial_artifact in zip(
+        child["queues"], child["artifacts"], strict=True
+    ):
+        predecessor_id = initial.queue_entry_id
+        output_ref = f"output:boundary:{initial.node_instance_sequence}"
+        evidence_ref = f"evidence:boundary:{initial.node_instance_sequence}"
+        lineage = (
+            initial.topology_id,
+            initial.topology_seed_id,
+            initial.cell_id,
+            initial.parent_cell_id,
+            initial.node_id,
+            initial.cell_budget_id,
+            initial.global_budget_id,
+            initial.lineage_refs[7],
+            predecessor_id,
+            output_ref,
+            evidence_ref,
+        )
+        terminal = _seal(replace(
+            initial,
+            queue_entry_id=(
+                "frqueue_v02:"
+                + f"{initial.node_instance_sequence + 1000:064x}"
+            ),
+            state="COMPLETED",
+            prior_state="VALIDATING",
+            predecessor_queue_entry_id=predecessor_id,
+            predecessor_relation="EXACT_IMMEDIATE_PREDECESSOR",
+            transition_decision_id=decision.decision_id,
+            snapshot_sequence=initial.snapshot_sequence + 1,
+            admission_round=initial.admission_round + 1,
+            observed_output_refs=(output_ref,),
+            observed_evidence_refs=(evidence_ref,),
+            queue_reason_codes=(),
+            advisory_refs=(),
+            lineage_refs=lineage,
+        ))
+        assert isinstance(terminal, fr.FractalCellQueueEntryV02)
+        assert terminal.prior_state == "VALIDATING"
+        assert terminal.state == "COMPLETED"
+        assert terminal.transition_decision_id == decision.decision_id
+        artifact = fr._d3_build_queue_artifact_v02(
+            terminal,
+            parent_refs=(env["topology_artifact"].artifact_id, initial_artifact.artifact_id),
+            source_context=env["source"],
+        )
+        terminal_entries.append(terminal)
+        terminal_artifacts.append(artifact)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"], cell_id=child["cell_id"], indexes=base_indexes
+    )
+    final_decision = fr._d3_transition_decision_v02(env["registry"], "t12")
+    final_cell = _d3_budget_successor(
+        env, live_cell, event="FINALIZE", decision=final_decision,
+        cell_input=child["input"], allocation_parent=env["root_create"],
+        owning_cell_id=child["cell_id"], scope="CHILD_CELL_LOCAL",
+        state="FINAL",
+    )
+    final_global = _d3_budget_successor(
+        env, live_global, event="FINALIZE", decision=final_decision,
+        cell_input=child["input"], paired_cell_budget=final_cell,
+    )
+    boundary_indexes = dict(base_indexes)
+    boundary_indexes["latest_by_key"] = {
+        **base_indexes["latest_by_key"],
+        **{
+            (entry.cell_id, entry.node_id): entry
+            for entry in terminal_entries
+        },
+    }
+    boundary_indexes["artifact_by_queue_id"] = {
+        **base_indexes["artifact_by_queue_id"],
+        **{
+            entry.queue_entry_id: artifact
+            for entry, artifact in zip(
+                terminal_entries, terminal_artifacts, strict=True
+            )
+        },
+    }
+    boundary_indexes["budget_by_id"] = {
+        **base_indexes["budget_by_id"],
+        final_cell.budget_id: final_cell,
+        final_global.budget_id: final_global,
+    }
+    boundary_indexes["queue_by_id"] = {
+        **base_indexes["queue_by_id"],
+        **{
+            entry.queue_entry_id: entry
+            for entry in terminal_entries
+        },
+    }
+    env["child_result_boundary"] = {
+        **child,
+        "terminal_entries": tuple(terminal_entries),
+        "terminal_artifacts": tuple(terminal_artifacts),
+        "final_cell_budget": final_cell,
+        "final_global_budget": final_global,
+        "indexes": boundary_indexes,
+    }
+    assert all(item not in env["queue_log"] for item in terminal_entries)
+    assert all(item not in env["artifact_log"] for item in terminal_artifacts)
+    return env, slot, slot_artifact
+
+
+_TEST_ONLY_EXTERNAL_D4_BOUNDARY = "TEST_ONLY_EXTERNAL_D4_BOUNDARY"
+_TEST_ONLY_EXTERNAL_D4_NODE_KINDS = ("POST_VV", "GT_ADVISORY", "PARENT_RETURN")
+
+
+def _d3_external_d4_structural_advance(
+    env: dict[str, object],
+    *,
+    current: fr.FractalCellQueueEntryV02,
+    current_artifact: KernelArtifactV01,
+    node: fr.RuntimeTopologyNodeV02,
+    cell_input: fr.FractalCellInputV02,
+    decision: TransitionDecisionV01,
+    cell_budget_before: fr.FractalRuntimeBudgetV02,
+    global_budget_before: fr.FractalRuntimeBudgetV02,
+    cell_budget_after: fr.FractalRuntimeBudgetV02,
+    global_budget_after: fr.FractalRuntimeBudgetV02,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...],
+    queue_reason_codes: tuple[str, ...] = (),
+    observed_output_refs: tuple[str, ...] = (),
+    observed_evidence_refs: tuple[str, ...] = (),
+    advisory_refs: tuple[str, ...] = (),
+) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
+    assert node.node_kind in _TEST_ONLY_EXTERNAL_D4_NODE_KINDS
+    assert node.node_kind not in fr._D3_LOCAL_NODE_KINDS_V02
+    assert current.node_id == node.node_id
+    assert current.cell_id == cell_input.cell_id
+    assert all(item.state in fr._D3_TERMINAL_STATES_V02 for item in dependencies)
+    budget_log = env["budget_log"]
+    queue_log = env["queue_log"]
+    artifact_log = env["artifact_log"]
+    reports = env["validation_reports"]
+    assert isinstance(budget_log, tuple)
+    assert isinstance(queue_log, tuple)
+    assert isinstance(artifact_log, tuple)
+    assert isinstance(reports, tuple)
+
+    if (cell_budget_after, global_budget_after) != (
+        cell_budget_before,
+        global_budget_before,
+    ):
+        candidate_suffix = (
+            (global_budget_after,)
+            if cell_budget_after is global_budget_after
+            else (cell_budget_after, global_budget_after)
+        )
+        assert all(item not in budget_log for item in candidate_suffix)
+        budget_log += candidate_suffix
+    env["budget_log"] = budget_log
+
+    target = fr.advance_fractal_cell_queue_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        current_entry=current,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=decision,
+        cell_budget_after=cell_budget_after,
+        global_budget_after=global_budget_after,
+        dependencies=dependencies,
+        local_child_result=None,
+        local_child_result_artifact=None,
+        cell_instantiation_order=tuple(item.cell_id for item in env["cell_inputs"]),
+        projected_node_ids=cell_input.ordered_node_ids,
+        round_start_queue_entries=_d3_latest(env),
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        **_d3_prefix_kwargs(env),
+    )
+    artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+        target,
+        topology_artifact=env["topology_artifact"],
+        predecessor_artifact=current_artifact,
+        activation_parent_artifact=None,
+        local_child_result_artifact=None,
+        source_context=env["source"],
+        **_d3_prefix_kwargs(
+            env,
+            settled_queue_entry_log=queue_log + (target,),
+            settled_validation_reports=reports,
+        ),
+    )
+    env["queue_log"] = queue_log + (target,)
+    env["artifact_log"] = artifact_log + (artifact,)
+    env["validation_reports"] = _d3_retained_reports(
+        env,
+        env["queue_log"],
+    )
+    return target, artifact
+
+
+def _d3_complete_external_d4_boundary_node(
+    env: dict[str, object],
+    *,
+    node: fr.RuntimeTopologyNodeV02,
+    initial: fr.FractalCellQueueEntryV02,
+    initial_artifact: KernelArtifactV01,
+    cell_input: fr.FractalCellInputV02,
+) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
+    assert node.node_kind in _TEST_ONLY_EXTERNAL_D4_NODE_KINDS
+    indexes = _d3_indexes(env)
+    dependencies = tuple(
+        item
+        for item in fr._d3_dependencies_for_latest_entry_v02(
+            initial,
+            topology=env["topology"],
+            latest_by_key=indexes["latest_by_key"],
+        )
+        if item is not None
+    )
+    assert len(dependencies) == 1
+    assert dependencies[0].state in fr._D3_TERMINAL_STATES_V02
+
+    initial_cell = indexes["budget_by_id"][initial.cell_budget_id]
+    initial_global = indexes["budget_by_id"][initial.global_budget_id]
+    ready, ready_artifact = _d3_external_d4_structural_advance(
+        env,
+        current=initial,
+        current_artifact=initial_artifact,
+        node=node,
+        cell_input=cell_input,
+        decision=fr._d3_transition_decision_v02(env["registry"], "t04"),
+        cell_budget_before=initial_cell,
+        global_budget_before=initial_global,
+        cell_budget_after=initial_cell,
+        global_budget_after=initial_global,
+        dependencies=dependencies,
+    )
+
+    indexes = _d3_indexes(env)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=ready.cell_id,
+        indexes=indexes,
+    )
+    start_decision = fr._d3_transition_decision_v02(env["registry"], "t05")
+    start_cell = _d3_budget_successor(
+        env,
+        live_cell,
+        event="START_NODE",
+        decision=start_decision,
+        cell_input=cell_input,
+        allocation_parent=(
+            None
+            if live_cell.allocation_parent_budget_id is None
+            else indexes["budget_by_id"][live_cell.allocation_parent_budget_id]
+        ),
+        owning_cell_id=ready.cell_id,
+        scope=live_cell.budget_scope,
+    )
+    start_global = _d3_budget_successor(
+        env,
+        live_global,
+        event="START_NODE",
+        decision=start_decision,
+        cell_input=cell_input,
+        paired_cell_budget=start_cell,
+    )
+    ready_cell = indexes["budget_by_id"][ready.cell_budget_id]
+    ready_global = indexes["budget_by_id"][ready.global_budget_id]
+    running, running_artifact = _d3_external_d4_structural_advance(
+        env,
+        current=ready,
+        current_artifact=ready_artifact,
+        node=node,
+        cell_input=cell_input,
+        decision=start_decision,
+        cell_budget_before=ready_cell,
+        global_budget_before=ready_global,
+        cell_budget_after=start_cell,
+        global_budget_after=start_global,
+        dependencies=dependencies,
+    )
+
+    indexes = _d3_indexes(env)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=running.cell_id,
+        indexes=indexes,
+    )
+    finish_decision = fr._d3_transition_decision_v02(env["registry"], "t06")
+    finish_cell = _d3_budget_successor(
+        env,
+        live_cell,
+        event="FINISH_NODE",
+        decision=finish_decision,
+        cell_input=cell_input,
+        allocation_parent=(
+            None
+            if live_cell.allocation_parent_budget_id is None
+            else indexes["budget_by_id"][live_cell.allocation_parent_budget_id]
+        ),
+        owning_cell_id=running.cell_id,
+        scope=live_cell.budget_scope,
+    )
+    finish_global = _d3_budget_successor(
+        env,
+        live_global,
+        event="FINISH_NODE",
+        decision=finish_decision,
+        cell_input=cell_input,
+        paired_cell_budget=finish_cell,
+    )
+    observation_suffix = f"{node.node_kind.lower()}:{initial.node_instance_sequence}"
+    observed_outputs = (f"output:test-only-external-d4:{observation_suffix}",)
+    observed_evidence = (f"evidence:test-only-external-d4:{observation_suffix}",)
+    running_cell = indexes["budget_by_id"][running.cell_budget_id]
+    running_global = indexes["budget_by_id"][running.global_budget_id]
+    validating, validating_artifact = _d3_external_d4_structural_advance(
+        env,
+        current=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        decision=finish_decision,
+        cell_budget_before=running_cell,
+        global_budget_before=running_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        observed_output_refs=observed_outputs,
+        observed_evidence_refs=observed_evidence,
+    )
+
+    terminal, terminal_artifact = _d3_external_d4_structural_advance(
+        env,
+        current=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        decision=fr._d3_transition_decision_v02(env["registry"], "t08"),
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    assert terminal.state == "COMPLETED"
+    return terminal, terminal_artifact
+
+
+def _d3_child_result_runtime_environment(
+    bundle: dict[str, object],
+) -> tuple[
+    dict[str, object],
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+]:
+    base_env = bundle["env"]
+    child = bundle["child"]
+    assert isinstance(base_env, dict)
+    assert isinstance(child, dict)
+    env = _d3_clone_environment(base_env)
+    slot = bundle["slot"]
+    slot_artifact = bundle["slot_artifact"]
+    local_terminal = bundle["terminal"]
+    local_terminal_artifact = bundle["terminal_artifact"]
+    child_input = bundle["child_input"]
+    assert isinstance(slot, fr.FractalCellQueueEntryV02)
+    assert isinstance(slot_artifact, KernelArtifactV01)
+    assert isinstance(local_terminal, fr.FractalCellQueueEntryV02)
+    assert isinstance(local_terminal_artifact, KernelArtifactV01)
+    assert isinstance(child_input, fr.FractalCellInputV02)
+    assert child["nodes"][0].node_kind == "SEMANTIC_ACTOR"
+    external_nodes = child["nodes"][1:]
+    external_initials = child["queues"][1:]
+    external_initial_artifacts = child["artifacts"][1:]
+    assert tuple(item.node_kind for item in external_nodes) == _TEST_ONLY_EXTERNAL_D4_NODE_KINDS
+
+    terminal_entries: list[fr.FractalCellQueueEntryV02] = [local_terminal]
+    terminal_artifacts: list[KernelArtifactV01] = [local_terminal_artifact]
+    for node, initial, initial_artifact in zip(
+        external_nodes,
+        external_initials,
+        external_initial_artifacts,
+        strict=True,
+    ):
+        terminal, terminal_artifact = _d3_complete_external_d4_boundary_node(
+            env,
+            node=node,
+            initial=initial,
+            initial_artifact=initial_artifact,
+            cell_input=child_input,
+        )
+        terminal_entries.append(terminal)
+        terminal_artifacts.append(terminal_artifact)
+
+    assert tuple(item.node_id for item in terminal_entries) == child_input.ordered_node_ids
+    assert all(item.state == "COMPLETED" for item in terminal_entries)
+    indexes = _d3_indexes(env)
+    live_cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=child["cell_id"],
+        indexes=indexes,
+    )
+    final_decision = fr._d3_transition_decision_v02(env["registry"], "t12")
+    final_cell = _d3_budget_successor(
+        env,
+        live_cell,
+        event="FINALIZE",
+        decision=final_decision,
+        cell_input=child_input,
+        allocation_parent=env["root_create"],
+        owning_cell_id=child["cell_id"],
+        scope="CHILD_CELL_LOCAL",
+        state="FINAL",
+    )
+    final_global = _d3_budget_successor(
+        env,
+        live_global,
+        event="FINALIZE",
+        decision=final_decision,
+        cell_input=child_input,
+        paired_cell_budget=final_cell,
+    )
+    env["budget_log"] = (*env["budget_log"], final_cell, final_global)
+    strict_indexes = _d3_indexes(env)
+    env["child_result_boundary"] = {
+        **child,
+        "boundary_kind": _TEST_ONLY_EXTERNAL_D4_BOUNDARY,
+        "actual_d3_terminal_entry": local_terminal,
+        "actual_d3_terminal_artifact": local_terminal_artifact,
+        "external_tail_kinds": _TEST_ONLY_EXTERNAL_D4_NODE_KINDS,
+        "terminal_entries": tuple(terminal_entries),
+        "terminal_artifacts": tuple(terminal_artifacts),
+        "final_cell_budget": final_cell,
+        "final_global_budget": final_global,
+        "indexes": strict_indexes,
+    }
+    return env, slot, slot_artifact
+
+def _d3_complete_local_node(
+    env: dict[str, object],
+    *,
+    node_index: int,
+    dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
+    running, running_artifact, start = _d3_start_node(
+        env,
+        node_index=node_index,
+        dependencies=dependencies,
+    )
+    node = env["nodes"][node_index]
+    cell_input = env["cell_input"]
+    material = fr._d3_local_observation_material_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=start,
+        global_budget_before=start,
+        dependencies=dependencies,
+        indexes=_d3_indexes(env),
+    )
+    t06 = _d3_eval(
+        env,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=cell_input,
+        cell_budget=start,
+        global_budget=start,
+        dependencies=dependencies,
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    assert isinstance(t06, TransitionDecisionV01)
+    finish = _d3_budget_successor(
+        env,
+        start,
+        event="FINISH_NODE",
+        decision=t06,
+        cell_input=cell_input,
+    )
+    validating, validating_artifact, _ = _d3_advance(
+        env,
+        current=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=start,
+        global_budget_before=start,
+        cell_budget_after=finish,
+        global_budget_after=finish,
+        dependencies=dependencies,
+        round_entries=_d3_latest(env),
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    terminal, terminal_artifact, _ = _d3_advance(
+        env,
+        current=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=finish,
+        global_budget_before=finish,
+        cell_budget_after=finish,
+        global_budget_after=finish,
+        dependencies=dependencies,
+        round_entries=_d3_latest(env),
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    return terminal, terminal_artifact
+
+
+_D3_RESULT_PAYLOAD_FIELDS = (
+    "result_id",
+    "topology_seed_id",
+    "cell_id",
+    "parent_cell_id",
+    "cell_depth",
+    "cell_input_id",
+    "outcome",
+    "accepted_output_refs",
+    "evidence_refs",
+    "pre_result_validation_report_id",
+    "partial_failure_ids",
+    "allocated_cell_budget_id",
+    "final_cell_budget_id",
+    "global_budget_id",
+    "scope_ref",
+    "reason_codes",
+    "source_reason_codes",
+    "parent_return_required",
+    "root_review_required",
+    "authority_created",
+    "permission_created",
+    "action_commit_packet_created",
+    "receipt_created",
+    "final_output_created",
+    "drs_write_created",
+    "real_world_effects_count",
+)
+
+
+def _d3_child_result_fixture(
+    env: dict[str, object],
+    *,
+    outcome: str,
+    ordinal: int,
+) -> tuple[fr.FractalCellResultV02, KernelArtifactV01]:
+    topology = env["topology"]
+    source = env["source"]
+    planned = env["planned"]
+    assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    assert isinstance(planned, tuple) and planned
+    boundary = env.get("child_result_boundary")
+    suffixes = tuple(f"{ordinal * 16 + index + 1:064x}" for index in range(7))
+    reasons_by_outcome = {
+        "COMPLETED": (),
+        "DEGRADED": ("g2d_partial_failure_recorded",),
+        "BLOCKED": ("g2d_required_child_failure",),
+        "NEEDS_USER": ("g2d_resolvable_input_needs_user",),
+        "DEADEND": ("g2d_no_progress_deadend",),
+    }
+    cell_input_id = (
+        boundary["input"].cell_input_id
+        if isinstance(boundary, dict)
+        else "frcellin_v02:" + suffixes[0]
+    )
+    terminal_queue_ids = (
+        tuple(item.queue_entry_id for item in boundary["terminal_entries"])
+        if isinstance(boundary, dict)
+        else ("frqueue_v02:" + suffixes[1],)
+    )
+    allocated_budget_id = (
+        boundary["allocated_budget"].budget_id
+        if isinstance(boundary, dict)
+        else "frbudget_v02:" + suffixes[2]
+    )
+    final_budget_id = (
+        boundary["final_cell_budget"].budget_id
+        if isinstance(boundary, dict)
+        else "frbudget_v02:" + suffixes[3]
+    )
+    global_budget_id = (
+        boundary["final_global_budget"].budget_id
+        if isinstance(boundary, dict)
+        else "frbudget_v02:" + suffixes[4]
+    )
+    validation_report_id = "frvalidation_v02:" + suffixes[5]
+    post_vv_ref = f"vv:g2d3:child:{ordinal}"
+    gt_ref = f"gt:g2d3:child:{ordinal}"
+    result = _seal(fr.FractalCellResultV02(
+        result_id="frcellresult_v02:" + "0" * 64,
+        topology_id=topology.topology_id,
+        topology_seed_id=topology.topology_seed_id,
+        cell_id=boundary["cell_id"] if isinstance(boundary, dict) else planned[0],
+        parent_cell_id=topology.root_cell_id,
+        cell_depth=1,
+        cell_input_id=cell_input_id,
+        ordered_terminal_queue_entry_ids=terminal_queue_ids,
+        ordered_child_result_ids=(),
+        outcome=outcome,
+        accepted_output_refs=(f"output:g2d3:child:{ordinal}",),
+        evidence_refs=(f"evidence:g2d3:child:{ordinal}",),
+        pre_result_validation_report_id=validation_report_id,
+        post_vv_report_ref=post_vv_ref,
+        gt_advisory_ref=gt_ref,
+        partial_failure_ids=(),
+        allocated_cell_budget_id=allocated_budget_id,
+        final_cell_budget_id=final_budget_id,
+        global_budget_id=global_budget_id,
+        scope_ref=topology.accepted_scope_ref,
+        reason_codes=reasons_by_outcome[outcome],
+        source_reason_codes=(),
+        trace_refs=(
+            topology.topology_id,
+            cell_input_id,
+            *terminal_queue_ids,
+            allocated_budget_id,
+            final_budget_id,
+            global_budget_id,
+            validation_report_id,
+            post_vv_ref,
+            gt_ref,
+        ),
+        parent_return_required=True,
+        root_review_required=True,
+        authority_created=False,
+        permission_created=False,
+        action_commit_packet_created=False,
+        receipt_created=False,
+        final_output_created=False,
+        drs_write_created=False,
+        real_world_effects_count=0,
+    ))
+    assert isinstance(result, fr.FractalCellResultV02)
+    assert fr.validate_fractal_cell_result_v02(result).status == "PASS"
+    payload = {
+        name: list(getattr(result, name))
+        if type(getattr(result, name)) is tuple
+        else getattr(result, name)
+        for name in _D3_RESULT_PAYLOAD_FIELDS
+    }
+    route_plain = kernel_artifact_to_plain_dict_v01(source.route_eligibility_artifact)
+    provisional = build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id="frabi_result_v02:" + "0" * 64,
+        artifact_type="FractalCellResult",
+        schema_version="v0.2",
+        transaction_id=source.decision.transaction_id,
+        owner_root_id=source.decision.owning_root_id,
+        source_component="fractal_runtime_v02",
+        authority_class="ADVISORY",
+        lifecycle_state=("BLOCKED_FAIL_CLOSED" if outcome == "BLOCKED" else "VALIDATED"),
+        payload=payload,
+        trace_refs=result.trace_refs,
+        parent_refs=(
+            env["topology_artifact"].artifact_id,
+            *(
+                tuple(item.artifact_id for item in boundary["terminal_artifacts"])
+                if isinstance(boundary, dict)
+                else (env["queue_artifacts"][0].artifact_id,)
+            ),
+        ),
+        time_envelope=route_plain["time_envelope"],
+    )
+    material = kernel_artifact_to_plain_dict_v01(provisional)
+    material.pop("artifact_id")
+    artifact = replace(
+        provisional,
+        artifact_id=(
+            "frabi_result_v02:"
+            + domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_FRACTAL_CELL_RESULT_KERNEL_ARTIFACT_V02",
+                payload=canonical_json_bytes_v01(material),
+            )
+        ),
+    )
+    assert validate_kernel_artifact_v01(artifact) == ()
+    return result, artifact
+
+
+def _d3_reseal_result_artifact(
+    artifact: KernelArtifactV01,
+    **changes: object,
+) -> KernelArtifactV01:
+    material = kernel_artifact_to_plain_dict_v01(artifact)
+    for name, value in changes.items():
+        material[name] = list(value) if type(value) is tuple else value
+    material.pop("artifact_id")
+    new_id = (
+        "frabi_result_v02:"
+        + domain_separated_sha256_hex_v01(
+            domain="HEDGEHOG_FRACTAL_CELL_RESULT_KERNEL_ARTIFACT_V02",
+            payload=canonical_json_bytes_v01(material),
+        )
+    )
+    return replace(
+        artifact,
+        artifact_id=new_id,
+        **changes,
+    )
+
+
+def _d3_terminal_dependency_fixture(
+    env: dict[str, object],
+) -> fr.FractalCellQueueEntryV02:
+    queues = env["queues"]
+    topology = env["topology"]
+    root_create = env["root_create"]
+    assert isinstance(queues, tuple)
+    decision = fr._d3_transition_decision_v02(env["registry"], "t08")
+    predecessor_id = "frqueue_v02:" + "e" * 64
+    result = _seal(replace(
+        queues[0],
+        state="COMPLETED",
+        prior_state="VALIDATING",
+        predecessor_queue_entry_id=predecessor_id,
+        predecessor_relation="EXACT_IMMEDIATE_PREDECESSOR",
+        transition_decision_id=decision.decision_id,
+        snapshot_sequence=4,
+        admission_round=4,
+        lineage_refs=(
+            topology.topology_id,
+            topology.topology_seed_id,
+            topology.root_cell_id,
+            queues[0].node_id,
+            root_create.budget_id,
+            root_create.budget_id,
+            predecessor_id,
+        ),
+    ))
+    assert isinstance(result, fr.FractalCellQueueEntryV02)
+    assert fr.validate_fractal_cell_queue_entry_v02(result).status == "PASS"
+    return result
+
+
+def test_d3_exact_public_surface_and_preserved_geometry() -> None:
+    expected_signatures = {
+        "admit_runtime_execution_topology_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', topology_artifact: 'KernelArtifactV01', topology_transition_decision: 'TransitionDecisionV01', cell_id: 'str', parent_cell_id: 'str | None', parent_slot_artifact: 'KernelArtifactV01 | None', cell_depth: 'int', scope_ref: 'str', cell_budget: 'FractalRuntimeBudgetV02', global_budget: 'FractalRuntimeBudgetV02', projected_nodes: 'tuple[RuntimeTopologyNodeV02, ...]', planned_child_cell_ids: 'tuple[str, ...]', admission_decisions: 'tuple[TransitionDecisionV01, ...]', cell_instantiation_order: 'tuple[str, ...]') -> 'tuple[FractalCellQueueEntryV02, ...]'",
+        "advance_fractal_cell_queue_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', current_entry: 'FractalCellQueueEntryV02', node: 'RuntimeTopologyNodeV02', cell_input: 'FractalCellInputV02', transition_decision: 'TransitionDecisionV01', cell_budget_after: 'FractalRuntimeBudgetV02', global_budget_after: 'FractalRuntimeBudgetV02', dependencies: 'tuple[FractalCellQueueEntryV02, ...]', local_child_result: 'FractalCellResultV02 | None', local_child_result_artifact: 'KernelArtifactV01 | None', cell_instantiation_order: 'tuple[str, ...]', projected_node_ids: 'tuple[str, ...]', round_start_queue_entries: 'tuple[FractalCellQueueEntryV02, ...]', queue_reason_codes: 'tuple[str, ...]', observed_output_refs: 'tuple[str, ...]', observed_evidence_refs: 'tuple[str, ...]', advisory_refs: 'tuple[str, ...]') -> 'FractalCellQueueEntryV02'",
+        "project_parent_child_scope_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', parent_input: 'FractalCellInputV02', child_cell_id: 'str', child_scope_ref: 'str', parent_budget: 'FractalRuntimeBudgetV02', child_budget: 'FractalRuntimeBudgetV02', global_budget: 'FractalRuntimeBudgetV02') -> 'ParentChildScopeProjectionV02'",
+        "validate_parent_child_scope_against_sources_v02": "(value: 'object', *, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', parent_input: 'FractalCellInputV02', parent_budget: 'FractalRuntimeBudgetV02', child_budget: 'FractalRuntimeBudgetV02', global_budget: 'FractalRuntimeBudgetV02') -> 'FractalRuntimeValidationReportV02'",
+        "build_fractal_cell_input_from_queue_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', topology_artifact: 'KernelArtifactV01', cell_id: 'str', parent_cell_id: 'str | None', parent_input: 'FractalCellInputV02 | None', parent_slot_artifact: 'KernelArtifactV01 | None', scope_projection: 'ParentChildScopeProjectionV02 | None', cell_budget: 'FractalRuntimeBudgetV02', global_budget: 'FractalRuntimeBudgetV02', initial_queue_entries: 'tuple[FractalCellQueueEntryV02, ...]', initial_queue_artifacts: 'tuple[KernelArtifactV01, ...]', ordered_planned_child_cell_ids: 'tuple[str, ...]') -> 'FractalCellInputV02'",
+        "validate_fractal_cell_input_against_sources_v02": "(value: 'object', *, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', topology_artifact: 'KernelArtifactV01', parent_input: 'FractalCellInputV02 | None', parent_slot_artifact: 'KernelArtifactV01 | None', scope_projection: 'ParentChildScopeProjectionV02 | None', cell_budget: 'FractalRuntimeBudgetV02', global_budget: 'FractalRuntimeBudgetV02', queue_entries: 'tuple[FractalCellQueueEntryV02, ...]', queue_artifacts: 'tuple[KernelArtifactV01, ...]') -> 'FractalRuntimeValidationReportV02'",
+        "evaluate_fractal_backpressure_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', policy: 'FractalRuntimePolicyV02', global_budget: 'FractalRuntimeBudgetV02', queue_entries: 'tuple[FractalCellQueueEntryV02, ...]', admission_round: 'int') -> 'FractalBackpressureStateV02 | None'",
+        "project_fractal_cell_queue_entry_kernel_artifact_v02": "(queue_entry: 'FractalCellQueueEntryV02', *, topology_artifact: 'KernelArtifactV01', predecessor_artifact: 'KernelArtifactV01 | None', activation_parent_artifact: 'KernelArtifactV01 | None', local_child_result_artifact: 'KernelArtifactV01 | None', source_context: 'FractalRuntimeSourceContextV02') -> 'KernelArtifactV01'",
+        "evaluate_fractal_runtime_state_transition_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', source_artifact: 'KernelArtifactV01', current_entry: 'FractalCellQueueEntryV02 | None', node: 'RuntimeTopologyNodeV02', cell_input: 'FractalCellInputV02 | None', cell_id: 'str', parent_cell_id: 'str | None', planned_child_cell_id: 'str | None', cell_depth: 'int', scope_ref: 'str', cell_budget_before: 'FractalRuntimeBudgetV02', global_budget_before: 'FractalRuntimeBudgetV02', dependencies: 'tuple[FractalCellQueueEntryV02, ...]', queue_reason_codes: 'tuple[str, ...]', observed_output_refs: 'tuple[str, ...]', observed_evidence_refs: 'tuple[str, ...]', advisory_refs: 'tuple[str, ...]', local_child_result: 'FractalCellResultV02 | None', local_child_result_artifact: 'KernelArtifactV01 | None', validation_report: 'FractalRuntimeValidationReportV02 | None', parent_return_pre_post_vv_terminal_queue_entries: 'tuple[FractalCellQueueEntryV02, ...]', parent_return_child_results: 'tuple[FractalCellResultV02, ...]', parent_return_partial_failures: 'tuple[FractalPartialFailureRecordV02, ...]', parent_return_result_proposal: 'dict[str, object] | None', parent_return_post_vv_report: 'dict[str, object] | None', parent_return_gt_advisory_report: 'dict[str, object] | None', parent_return_validation_reports: 'tuple[FractalRuntimeValidationReportV02, ...]', revise_observation: 'FractalReviseObservationV02 | None', backpressure_state: 'FractalBackpressureStateV02 | None', transition_registry: 'TransitionRegistryV01') -> 'TransitionDecisionV01 | None'",
+    }
+    settled_suffix = ", settled_budget_log: 'tuple[FractalRuntimeBudgetV02, ...]', settled_queue_entry_log: 'tuple[FractalCellQueueEntryV02, ...]', settled_queue_artifact_log: 'tuple[KernelArtifactV01, ...]', settled_cell_inputs: 'tuple[FractalCellInputV02, ...]', settled_scope_projections: 'tuple[ParentChildScopeProjectionV02, ...]', settled_revise_observations: 'tuple[FractalReviseObservationV02, ...]', settled_backpressure_states: 'tuple[FractalBackpressureStateV02, ...]', settled_validation_reports: 'tuple[FractalRuntimeValidationReportV02, ...]'"
+    amended = {
+        "admit_runtime_execution_topology_v02",
+        "advance_fractal_cell_queue_v02",
+        "build_fractal_cell_input_from_queue_v02",
+        "validate_fractal_cell_input_against_sources_v02",
+        "evaluate_fractal_backpressure_v02",
+        "project_fractal_cell_queue_entry_kernel_artifact_v02",
+        "evaluate_fractal_runtime_state_transition_v02",
+    }
+    for name in amended:
+        expected_signatures[name] = expected_signatures[name].replace(
+            ") -> ",
+            settled_suffix + ") -> ",
+        )
+    for name, signature in expected_signatures.items():
+        assert str(inspect.signature(getattr(fr, name))) == signature
+    public_functions = tuple(
+        name
+        for name, value in vars(fr).items()
+        if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
+    )
+    assert len(public_functions) == 90
+    assert len(fr.G2D_TYPES_V02) == 20
+    assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
+    assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 2
+    assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
+    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.FAILURE_STAGES) == 30
+    for forbidden in (
+        "build_fractal_runtime_execution_bundle_v02",
+        "build_fractal_cell_result_proposal_v02",
+        "run_fractal_runtime_v02",
+    ):
+        assert not callable(getattr(fr, forbidden, None))
+
+
+def _d3_reseal_profile_d_queue_entry_v036(
+    entry: fr.FractalCellQueueEntryV02,
+    **changes: object,
+) -> fr.FractalCellQueueEntryV02:
+    candidate = replace(entry, **changes)
+    assert candidate.parent_cell_id is not None
+    assert candidate.predecessor_queue_entry_id is not None
+    lineage_refs = (
+        candidate.topology_id,
+        candidate.topology_seed_id,
+        candidate.cell_id,
+        candidate.parent_cell_id,
+        candidate.node_id,
+        candidate.cell_budget_id,
+        candidate.global_budget_id,
+        candidate.lineage_refs[7],
+        candidate.predecessor_queue_entry_id,
+        *candidate.observed_output_refs,
+        *candidate.observed_evidence_refs,
+        *candidate.advisory_refs,
+    )
+    result = _seal(replace(candidate, lineage_refs=lineage_refs))
+    assert isinstance(result, fr.FractalCellQueueEntryV02)
+    return result
+
+
+@pytest.fixture(scope="module")
+def d3_profile_d_contextual_micro_bundle(
+    d3_full_fractal_micro_environment: dict[str, object],
+) -> dict[str, object]:
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
+    dependency, dependency_artifact = _d3_complete_local_node(env, node_index=0)
+    slot, slot_artifact, _slot_start = _d3_start_node(
+        env,
+        node_index=1,
+        dependencies=(dependency,),
+    )
+    child = _d3_activate_child(
+        env,
+        slot_running=slot,
+        slot_artifact=slot_artifact,
+        dependency=dependency,
+    )
+    node = child["nodes"][0]
+    initial = child["queues"][0]
+    initial_artifact = child["artifacts"][0]
+    child_input = child["input"]
+    assert isinstance(node, fr.RuntimeTopologyNodeV02)
+    assert isinstance(initial, fr.FractalCellQueueEntryV02)
+    assert isinstance(initial_artifact, KernelArtifactV01)
+    assert isinstance(child_input, fr.FractalCellInputV02)
+    assert node.node_kind == "SEMANTIC_ACTOR"
+    assert node.node_kind in fr._D3_LOCAL_NODE_KINDS_V02
+    assert tuple(item.node_kind for item in child["nodes"][1:]) == (
+        "POST_VV",
+        "GT_ADVISORY",
+        "PARENT_RETURN",
+    )
+
+    initial_indexes = _d3_indexes(env)
+    dependencies = tuple(
+        item
+        for item in fr._d3_dependencies_for_latest_entry_v02(
+            initial,
+            topology=env["topology"],
+            latest_by_key=initial_indexes["latest_by_key"],
+        )
+        if item is not None
+    )
+    assert dependencies == ()
+    ready, ready_artifact = _d3_make_ready(
+        env,
+        current=initial,
+        node=node,
+        cell_input=child_input,
+        dependencies=dependencies,
+    )
+    running, running_artifact, start_cell, start_global = _d3_start_ready_entry(
+        env,
+        ready=ready,
+        ready_artifact=ready_artifact,
+        node=node,
+        cell_input=child_input,
+        dependencies=dependencies,
+    )
+    pre_t06_indexes = _d3_indexes(env)
+    validating, validating_artifact, _finish_global = _d3_finish_running_local(
+        env,
+        running=running,
+        running_artifact=running_artifact,
+        node=node,
+        cell_input=child_input,
+        dependencies=dependencies,
+    )
+    t06_indexes = _d3_indexes(env)
+    finish_cell = t06_indexes["budget_by_id"][validating.cell_budget_id]
+    finish_global = t06_indexes["budget_by_id"][validating.global_budget_id]
+    terminal, terminal_artifact, terminal_decision = _d3_advance(
+        env,
+        current=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=child_input,
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        round_entries=_d3_latest(env),
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    assert terminal.state == "COMPLETED"
+    assert terminal_decision == fr._d3_transition_decision_v02(
+        env["registry"],
+        "t08",
+    )
+    final_indexes = _d3_indexes(env)
+    activation_parent_id = initial_artifact.parent_refs[1]
+    assert activation_parent_id == slot_artifact.artifact_id
+    return {
+        "env": env,
+        "dependency": dependency,
+        "dependency_artifact": dependency_artifact,
+        "slot": slot,
+        "slot_artifact": slot_artifact,
+        "child": child,
+        "child_input": child_input,
+        "initial": initial,
+        "initial_artifact": initial_artifact,
+        "node": node,
+        "dependencies": dependencies,
+        "ready": ready,
+        "ready_artifact": ready_artifact,
+        "running": running,
+        "running_artifact": running_artifact,
+        "start_cell": start_cell,
+        "start_global": start_global,
+        "pre_t06_indexes": pre_t06_indexes,
+        "validating": validating,
+        "validating_artifact": validating_artifact,
+        "t06_indexes": t06_indexes,
+        "terminal": terminal,
+        "terminal_artifact": terminal_artifact,
+        "terminal_decision": terminal_decision,
+        "activation_parent_id": activation_parent_id,
+        "final_indexes": final_indexes,
+    }
+
+
+def test_d3_post_acceptance_contract_addendum_v036_accepted() -> None:
+    raw = ADDENDUM_PATH.read_bytes()
+    text = raw.decode("utf-8")
+    assert hashlib.sha256(raw).hexdigest() == (
+        "7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570"
+    )
+    assert len(raw) == 133145
+    assert raw.count(b"\n") == 2212
+    required_rows = (
+        "document_revision: v0.3.6",
+        "guardian_review_status: ACCEPTED",
+        "G2D3_V036_CONTRACT_DRAFT=false",
+        "G2D3_V036_CONTRACT_ACCEPTED=true",
+        "G2D3_V036_GUARDIAN_REVIEW_STATUS=ACCEPTED",
+        "G2D3_ADDENDUM_GUARDIAN_STATUS=ACCEPTED",
+        "G2D3_V035_REMAINS_HISTORICAL_ACCEPTED=true",
+        "PROFILE_D_DRAFTED=true",
+        "PROFILE_D_ACCEPTED=true",
+        "PROFILE_D_IMPLEMENTATION_CANDIDATE_PRESENT=true",
+        "PROFILE_D_IMPLEMENTATION_PROVEN=true",
+        "PROFILE_D_INTEGRATION_SENTINEL_PASS=true",
+        "ACTIVE_G2D3_QUEUE_ROLE_ALIAS_PROFILE_COUNT=3",
+        "PRIVATE_CANONICAL_MATERIAL_PROFILE_COUNT=3",
+        "FUTURE_DOCUMENTED_ROLE_ALIAS_PROFILE_COUNT=1",
+        "CURRENT_RUNTIME_REFERENCE_MAX_PARALLELISM=3",
+        "CURRENT_SCHEMA_REFERENCE_MAX_PARALLELISM=3",
+        "G2D3_IMPLEMENTATION_AUTHORIZED=true",
+        "G2D3_IMPLEMENTATION_RESUMED=true",
+        "G2D3_IMPLEMENTATION_COMPLETED=true",
+        "G2D3_IMPLEMENTATION_COMMITTED=false",
+        "G2D3_FINAL_COMPLETE_DFILE_EXECUTED=true",
+        "G2D3_FINAL_COMPLETE_DFILE_COLLECTION=57",
+        "G2D3_FINAL_COMPLETE_DFILE_PASSED=57",
+        "G2D3_FINAL_COMPLETE_DFILE_FAILED=0",
+        "G2D3_FINAL_COMPLETE_DFILE_SKIPPED=0",
+        "G2D3_FINAL_COMPLETE_DFILE_XFAIL=0",
+        "G2D3_FINAL_COMPLETE_DFILE_DURATION_SECONDS=19385.32",
+        "G2D3_FINAL_COMPLETE_DFILE_REPORTED_DURATION=5:23:05",
+        "G2D3_FINAL_COMPLETE_DFILE_WRAPPER_ELAPSED=5:23:06",
+        "G2D3_FINAL_COMPLETE_DFILE_EXIT_CODE=0",
+        "G2D3_FINAL_COMPLETE_DFILE_RUN_RESULT=G2D3_FINAL_COMPLETE_DFILE_PASS",
+        "G2D3_FINAL_COMPLETE_DFILE_REPOSITORY_GUARD=PASS",
+        "G2D3_FINAL_COMPLETE_DFILE_LOG_SHA256="
+        "17003824f527e8ca1adbf9e256ca61d9cbc085939fe0badb02ec3535f0c90628",
+        "G2D3_FINAL_COMPLETE_DFILE_LOG_BYTES=47840",
+        "G2D3_FINAL_COMPLETE_DFILE_LOG_LF_LINES=575",
+        "G2D3_ACCEPTED_RUNTIME_SHA256="
+        "dcfee5bef674c8b90e875e04fa64312df3db021bafdd0c6e476f2bb01fe4a386",
+        "G2D3_ACCEPTED_SCHEMA_SHA256="
+        "e62f693cc24a0562ca2955b011530916a85598dd00026f6dbadb80b6b9eb94ac",
+        "G2D3_ACCEPTED_PREFLIGHT_SHA256="
+        "8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79",
+        "G2D3_PRE_ACCEPTANCE_TEST_SHA256="
+        "ae7d3e5438ff51c1269b2c11c6b9e28beb85792d644847f25230a12b789058b1",
+        "RUNTIME_CHANGED=true",
+        "TESTS_CHANGED=true",
+        "TESTS_EXECUTED=true",
+        "PYTHON_EXECUTED=true",
+        "READY_FOR_OWNER_GUARDIAN_REVIEW=true",
+        "READY_FOR_OWNER_COMMIT_REVIEW=true",
+        "G2D4_IMPLEMENTATION_AUTHORIZED=false",
+        "G2D4_STARTED=false",
+        "G2E_STARTED=false",
+        "G2F_STARTED=false",
+        "G2D_CLOSED=false",
+        "GATE2_CLOSED=false",
+        "STAGING_CHANGED=false",
+        "COMMIT_CREATED=false",
+        "PUSH_PERFORMED=false",
+        "PROVIDER_CALLS=0",
+        "MODEL_CALLS=0",
+        "NETWORK_CALLS=0",
+        "CONNECTOR_CALLS=0",
+        "EXTERNAL_DRS_CALLS=0",
+        "AUTHORITY_CREATED_COUNT=0",
+        "REAL_WORLD_EFFECTS_COUNT=0",
+        "PUBLIC_RELEASE_CLAIMED=false",
+    )
+    assert all(row in text for row in required_rows)
+    normalized = " ".join(text.split())
+    assert (
+        "v0.3.6 is the controlling accepted addendum only for Profile D "
+        "`CHILD_ACTIVATION_PARENT_DEPENDENCY_FREE_EVIDENCE_ALIAS`, the "
+        "accepted active queue-role-alias count of three, its identity-impact "
+        "register, its proof ledger, and its final closing flags."
+        in normalized
+    )
+    assert (
+        "Accepted v0.3.5 remains historical accepted authority for CTC-01, "
+        "CTC-02, CTC-03, and every unaffected ruling."
+        in normalized
+    )
+    assert "## 4A. Accepted Active Profile D:" in text
+    for row in (
+        "PENDING_REVIEW",
+        "Pending v0.3.6",
+        "pending narrow Profile D",
+        "pending Profile D",
+        "proposed active",
+        "V036_PROPOSED_ACTIVE_G2D3_QUEUE_ROLE_ALIAS_PROFILE_COUNT",
+        "G2D3_V035_REMAINS_CONTROLLING_ACCEPTED",
+    ):
+        assert row not in text
+    assert text.count("ACTIVE_G2D3_QUEUE_ROLE_ALIAS_PROFILE_COUNT=3") == 1
+    assert text.count("V036_NEW_PUBLIC_PARAMETER_COUNT=0") == 1
+    machine_keys = re.findall(r"(?m)^([A-Z][A-Z0-9_]+)=", text)
+    assert len(machine_keys) == len(set(machine_keys))
+    assert "g2d3_implementation_authorized: true" in text
+    assert "g2d3_implementation_resumed: true" in text
+    assert "g2d3_implementation_completed: true" in text
+    assert "g2d4_implementation_authorized: false" in text
+    assert "gate2_closed: false" in text
+
+
+def test_d3_profile_d_raw_path_rejects_context_free_alias_micro(
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+) -> None:
+    bundle = d3_profile_d_contextual_micro_bundle
+    env = bundle["env"]
+    assert isinstance(env, dict)
+    for entry, artifact in (
+        (bundle["validating"], bundle["validating_artifact"]),
+        (bundle["terminal"], bundle["terminal_artifact"]),
+    ):
+        assert isinstance(entry, fr.FractalCellQueueEntryV02)
+        assert isinstance(artifact, KernelArtifactV01)
+        assert entry.lineage_refs.count(bundle["activation_parent_id"]) == 2
+        with pytest.raises(ValueError, match="g2d_queue_artifact_lineage_invalid"):
+            fr._d3_queue_artifact_trace_refs_v02(
+                entry,
+                parent_refs=artifact.parent_refs,
+            )
+        with pytest.raises(ValueError, match="g2d_queue_artifact_lineage_invalid"):
+            fr._d3_build_queue_artifact_v02(
+                entry,
+                parent_refs=artifact.parent_refs,
+                source_context=env["source"],
+            )
+        assert not fr._d3_queue_artifact_matches_entry_v02(
+            artifact,
+            entry,
+            env["source"],
+        )
+    for helper in (
+        fr._d3_queue_artifact_trace_refs_v02,
+        fr._d3_build_queue_artifact_v02,
+        fr._d3_queue_artifact_matches_entry_v02,
+    ):
+        assert "profile_d_omission_index" not in inspect.signature(helper).parameters
+
+
+def test_d3_profile_d_contextual_child_t06_t08_micro(
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+) -> None:
+    bundle = d3_profile_d_contextual_micro_bundle
+    env = bundle["env"]
+    child_input = bundle["child_input"]
+    activation_parent_id = bundle["activation_parent_id"]
+    final_indexes = bundle["final_indexes"]
+    assert isinstance(env, dict)
+    assert isinstance(child_input, fr.FractalCellInputV02)
+    assert isinstance(activation_parent_id, str)
+    assert isinstance(final_indexes, dict)
+    pairs = (
+        (
+            bundle["validating"],
+            bundle["validating_artifact"],
+            bundle["running_artifact"],
+            "t06",
+        ),
+        (
+            bundle["terminal"],
+            bundle["terminal_artifact"],
+            bundle["validating_artifact"],
+            "t08",
+        ),
+    )
+    for entry, artifact, source_artifact, rule_id in pairs:
+        assert isinstance(entry, fr.FractalCellQueueEntryV02)
+        assert isinstance(artifact, KernelArtifactV01)
+        assert isinstance(source_artifact, KernelArtifactV01)
+        assert entry.cell_id == child_input.cell_id
+        assert entry.parent_cell_id == child_input.parent_cell_id
+        assert entry.node_id == bundle["node"].node_id
+        assert entry.observed_evidence_refs == child_input.evidence_refs
+        assert entry.observed_evidence_refs.count(activation_parent_id) == 1
+        assert entry.lineage_refs.count(activation_parent_id) == 2
+        assert _kernel_payload(artifact)["observed_evidence_refs"] == list(
+            child_input.evidence_refs
+        )
+        assert artifact.trace_refs.count(activation_parent_id) == 1
+        assert len(artifact.trace_refs) == len(set(artifact.trace_refs))
+        other_evidence = tuple(
+            item for item in child_input.evidence_refs if item != activation_parent_id
+        )
+        evidence_positions = tuple(
+            artifact.trace_refs.index(item) for item in other_evidence
+        )
+        assert evidence_positions == tuple(sorted(evidence_positions))
+        assert artifact.trace_refs[0] == entry.transition_decision_id
+        assert artifact.trace_refs[1] == entry.topology_id
+        assert validate_kernel_artifact_v01(artifact) == ()
+        omission_index = fr._d3_profile_d_omission_index_v02(
+            queue_entry=entry,
+            source_context=env["source"],
+            topology=env["topology"],
+            indexes=final_indexes,
+            settled_budget_log=env["budget_log"],
+            settled_queue_entry_log=env["queue_log"],
+            settled_cell_inputs=env["cell_inputs"],
+            settled_scope_projections=env["scope_projections"],
+        )
+        assert type(omission_index) is int
+        assert entry.lineage_refs[omission_index] == activation_parent_id
+        expected = fr._d3_expected_queue_artifact_against_prefix_v02(
+            entry,
+            parent_refs=artifact.parent_refs,
+            source_context=env["source"],
+            topology=env["topology"],
+            indexes=final_indexes,
+            settled_budget_log=env["budget_log"],
+            settled_queue_entry_log=env["queue_log"],
+            settled_cell_inputs=env["cell_inputs"],
+            settled_scope_projections=env["scope_projections"],
+        )
+        assert artifact == expected
+        assert canonical_json_bytes_v01(
+            kernel_artifact_to_plain_dict_v01(artifact)
+        ) == canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(expected))
+        decision = fr._d3_transition_decision_v02(env["registry"], rule_id)
+        assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+            decision,
+            registry=env["registry"],
+            source_artifact=source_artifact,
+            target_artifact=artifact,
+        ) == ()
+        payload = _kernel_payload(artifact)
+        assert not entry.authority_created
+        assert not entry.permission_created
+        assert not entry.final_output_created
+        assert not entry.drs_write_created
+        assert entry.real_world_effects_count == 0
+        assert "action_commit_packet_created" not in payload
+        assert "receipt_created" not in payload
+
+    validating = bundle["validating"]
+    terminal = bundle["terminal"]
+    assert (validating.prior_state, validating.state) == ("RUNNING", "VALIDATING")
+    assert (terminal.prior_state, terminal.state) == ("VALIDATING", "COMPLETED")
+    assert validating.predecessor_queue_entry_id == bundle["running"].queue_entry_id
+    assert terminal.predecessor_queue_entry_id == validating.queue_entry_id
+    assert terminal.queue_reason_codes == validating.queue_reason_codes
+    assert terminal.observed_output_refs == validating.observed_output_refs
+    assert terminal.observed_evidence_refs == validating.observed_evidence_refs
+    assert terminal.advisory_refs == validating.advisory_refs
+    assert _d3_indexes(env) == final_indexes
+
+
+def test_d3_profile_d_contextual_mutation_matrix_micro(
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+) -> None:
+    bundle = d3_profile_d_contextual_micro_bundle
+    env = bundle["env"]
+    child = bundle["child"]
+    child_input = bundle["child_input"]
+    validating = bundle["validating"]
+    terminal = bundle["terminal"]
+    activation_parent_id = bundle["activation_parent_id"]
+    indexes = bundle["final_indexes"]
+    assert isinstance(env, dict)
+    assert isinstance(child, dict)
+    assert isinstance(child_input, fr.FractalCellInputV02)
+    assert isinstance(validating, fr.FractalCellQueueEntryV02)
+    assert isinstance(terminal, fr.FractalCellQueueEntryV02)
+    assert isinstance(activation_parent_id, str)
+    assert isinstance(indexes, dict)
+
+    def omission(
+        entry: fr.FractalCellQueueEntryV02,
+        *,
+        candidate_indexes: dict[str, object] = indexes,
+        cell_inputs: tuple[fr.FractalCellInputV02, ...] = env["cell_inputs"],
+    ) -> int | None:
+        return fr._d3_profile_d_omission_index_v02(
+            queue_entry=entry,
+            source_context=env["source"],
+            topology=env["topology"],
+            indexes=candidate_indexes,
+            settled_budget_log=env["budget_log"],
+            settled_queue_entry_log=env["queue_log"],
+            settled_cell_inputs=cell_inputs,
+            settled_scope_projections=env["scope_projections"],
+        )
+
+    labels: list[str] = []
+
+    def reject(label: str, callback: object) -> None:
+        assert callable(callback)
+        with pytest.raises(ValueError):
+            callback()
+        labels.append(label)
+
+    root_input = env["cell_inputs"][0]
+    assert isinstance(root_input, fr.FractalCellInputV02)
+    reject(
+        "foreign_same_type_child_input",
+        lambda: omission(validating, cell_inputs=(root_input,)),
+    )
+
+    evidence_index = child_input.evidence_refs.index(activation_parent_id)
+    evidence_without_activation = (
+        child_input.evidence_refs[:evidence_index]
+        + child_input.evidence_refs[evidence_index + 1:]
+    )
+    input_without_activation = _seal(
+        replace(child_input, evidence_refs=evidence_without_activation)
+    )
+    assert isinstance(input_without_activation, fr.FractalCellInputV02)
+    reject(
+        "child_input_activation_parent_evidence_removed",
+        lambda: omission(
+            validating,
+            cell_inputs=(root_input, input_without_activation),
+        ),
+    )
+
+    duplicated_evidence = (
+        child_input.evidence_refs[:evidence_index + 1]
+        + (activation_parent_id,)
+        + child_input.evidence_refs[evidence_index + 1:]
+    )
+    input_with_duplicate = _seal(
+        replace(child_input, evidence_refs=duplicated_evidence)
+    )
+    assert isinstance(input_with_duplicate, fr.FractalCellInputV02)
+    reject(
+        "child_input_activation_parent_evidence_duplicated",
+        lambda: omission(
+            validating,
+            cell_inputs=(root_input, input_with_duplicate),
+        ),
+    )
+
+    reordered_evidence = tuple(reversed(child_input.evidence_refs))
+    assert reordered_evidence != child_input.evidence_refs
+    reordered_input = _seal(replace(child_input, evidence_refs=reordered_evidence))
+    assert isinstance(reordered_input, fr.FractalCellInputV02)
+    reject(
+        "child_input_evidence_reordered",
+        lambda: omission(validating, cell_inputs=(root_input, reordered_input)),
+    )
+
+    foreign_indexes = dict(indexes)
+    foreign_artifact_by_id = dict(indexes["artifact_by_id"])
+    foreign_artifact_by_id[activation_parent_id] = bundle["initial_artifact"]
+    foreign_indexes["artifact_by_id"] = foreign_artifact_by_id
+    reject(
+        "foreign_activation_parent_artifact",
+        lambda: omission(validating, candidate_indexes=foreign_indexes),
+    )
+
+    broken_predecessor = _d3_reseal_profile_d_queue_entry_v036(
+        validating,
+        predecessor_queue_entry_id=bundle["ready"].queue_entry_id,
+    )
+    reject("broken_predecessor_queue_entry_id", lambda: omission(broken_predecessor))
+
+    skipped_snapshot = _d3_reseal_profile_d_queue_entry_v036(
+        validating,
+        snapshot_sequence=validating.snapshot_sequence + 1,
+    )
+    reject("skipped_snapshot_sequence", lambda: omission(skipped_snapshot))
+
+    wrong_parent = _d3_reseal_profile_d_queue_entry_v036(
+        validating,
+        parent_cell_id=child_input.cell_id,
+    )
+    reject("wrong_parent_cell_id", lambda: omission(wrong_parent))
+
+    wrong_node = _d3_reseal_profile_d_queue_entry_v036(
+        validating,
+        node_id=child["nodes"][1].node_id,
+    )
+    assert child["nodes"][1].node_kind == "POST_VV"
+    assert omission(wrong_node) is None
+    labels.append("wrong_node_id_nonlocal_node_kind")
+
+    assert omission(bundle["ready"]) is None
+    labels.append("wrong_t_state_pair")
+
+    arbitrary_duplicate = _d3_reseal_profile_d_queue_entry_v036(
+        validating,
+        observed_output_refs=(validating.topology_id,),
+    )
+    reject("arbitrary_duplicate_outside_evidence_role", lambda: omission(arbitrary_duplicate))
+
+    mismatched_terminal = _d3_reseal_profile_d_queue_entry_v036(
+        terminal,
+        observed_evidence_refs=tuple(reversed(terminal.observed_evidence_refs)),
+    )
+    reject("mismatched_terminal_copy_of_t06_evidence", lambda: omission(mismatched_terminal))
+
+    assert tuple(labels) == (
+        "foreign_same_type_child_input",
+        "child_input_activation_parent_evidence_removed",
+        "child_input_activation_parent_evidence_duplicated",
+        "child_input_evidence_reordered",
+        "foreign_activation_parent_artifact",
+        "broken_predecessor_queue_entry_id",
+        "skipped_snapshot_sequence",
+        "wrong_parent_cell_id",
+        "wrong_node_id_nonlocal_node_kind",
+        "wrong_t_state_pair",
+        "arbitrary_duplicate_outside_evidence_role",
+        "mismatched_terminal_copy_of_t06_evidence",
+    )
+
+
+
+def test_d3_external_d4_boundary_strict_prefix_micro(
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    forbidden_calls: list[str] = []
+
+    def forbidden_eval(*args: object, **kwargs: object) -> object:
+        forbidden_calls.append("_d3_eval")
+        raise AssertionError("external D4 boundary invoked D3 semantic evaluator")
+
+    def forbidden_finish(*args: object, **kwargs: object) -> object:
+        forbidden_calls.append("_d3_finish_running_local")
+        raise AssertionError("external D4 boundary invoked D3 local finish helper")
+
+    monkeypatch.setattr(sys.modules[__name__], "_d3_eval", forbidden_eval)
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_d3_finish_running_local",
+        forbidden_finish,
+    )
+    env, slot, _slot_artifact = _d3_child_result_runtime_environment(
+        d3_profile_d_contextual_micro_bundle
+    )
+    assert forbidden_calls == []
+    boundary = env["child_result_boundary"]
+    assert isinstance(boundary, dict)
+    assert boundary["boundary_kind"] == _TEST_ONLY_EXTERNAL_D4_BOUNDARY
+    assert boundary["external_tail_kinds"] == _TEST_ONLY_EXTERNAL_D4_NODE_KINDS
+    assert boundary["actual_d3_terminal_entry"] == (
+        d3_profile_d_contextual_micro_bundle["terminal"]
+    )
+    assert boundary["actual_d3_terminal_artifact"] == (
+        d3_profile_d_contextual_micro_bundle["terminal_artifact"]
+    )
+    terminal_entries = boundary["terminal_entries"]
+    terminal_artifacts = boundary["terminal_artifacts"]
+    assert isinstance(terminal_entries, tuple)
+    assert isinstance(terminal_artifacts, tuple)
+    assert tuple(item.node_id for item in terminal_entries) == (
+        boundary["input"].ordered_node_ids
+    )
+    assert tuple(item.node_kind for item in boundary["nodes"][1:]) == (
+        _TEST_ONLY_EXTERNAL_D4_NODE_KINDS
+    )
+    assert all(item.state == "COMPLETED" for item in terminal_entries)
+    assert all(validate_kernel_artifact_v01(item) == () for item in terminal_artifacts)
+    assert _d3_indexes(env) == boundary["indexes"]
+
+    result, artifact = _d3_child_result_fixture(
+        env,
+        outcome="COMPLETED",
+        ordinal=63,
+    )
+    assert fr._d3_child_result_artifact_pair_valid_v02(
+        result,
+        artifact,
+        source_context=env["source"],
+        topology=env["topology"],
+        current_entry=slot,
+        indexes=boundary["indexes"],
+    )
+
+
+def test_d3_root_t02_queue_artifact_and_input_five_modes(
+    d3_mode_environments: dict[str, dict[str, object]],
+    ) -> None:
+    queue_payload_fields = (
+        "queue_entry_id", "topology_seed_id", "cell_id", "parent_cell_id",
+        "node_id", "planned_child_cell_id", "cell_depth", "scope_ref",
+        "cell_budget_id", "global_budget_id", "state", "prior_state",
+        "predecessor_relation", "canonical_priority", "node_instance_sequence",
+        "snapshot_sequence", "admission_round", "queue_reason_codes",
+        "observed_output_refs", "observed_evidence_refs", "advisory_refs",
+        "root_review_required", "authority_created", "permission_created",
+        "final_output_created", "drs_write_created", "real_world_effects_count",
+    )
+    for mode, env in d3_mode_environments.items():
+        topology = env["topology"]
+        queues = env["queues"]
+        artifacts = env["queue_artifacts"]
+        cell_input = env["cell_input"]
+        planned = env["planned"]
+        assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+        assert isinstance(queues, tuple) and isinstance(artifacts, tuple)
+        assert isinstance(cell_input, fr.FractalCellInputV02)
+        assert len(queues) == len(dict(fr.MODE_NODE_TEMPLATE_ROWS_V02)[mode])
+        assert tuple(item.node_id for item in queues) == topology.ordered_node_ids
+        assert tuple(item.node_instance_sequence for item in queues) == tuple(range(len(queues)))
+        assert all(
+            item.state == "PENDING"
+            and item.prior_state is None
+            and item.predecessor_queue_entry_id is None
+            and item.snapshot_sequence == item.admission_round == 0
+            and item.queue_reason_codes == ()
+            and item.observed_output_refs == item.observed_evidence_refs == item.advisory_refs == ()
+            for item in queues
+        )
+        for index, (entry, artifact) in enumerate(zip(queues, artifacts, strict=True)):
+            payload = _kernel_payload(artifact)
+            assert tuple(payload) == tuple(sorted(queue_payload_fields))
+            assert "topology_id" not in payload
+            assert "predecessor_queue_entry_id" not in payload
+            assert entry.cell_budget_id == entry.global_budget_id
+            assert entry.lineage_refs[4:6] == (
+                entry.cell_budget_id,
+                entry.global_budget_id,
+            )
+            assert entry.lineage_refs.count(entry.cell_budget_id) == 2
+            assert payload["cell_budget_id"] == entry.cell_budget_id
+            assert payload["global_budget_id"] == entry.global_budget_id
+            assert artifact.trace_refs.count(entry.cell_budget_id) == 1
+            assert len(artifact.trace_refs) == len(set(artifact.trace_refs))
+            assert artifact.trace_refs == fr._d3_queue_artifact_trace_refs_v02(
+                entry,
+                parent_refs=artifact.parent_refs,
+            )
+            assert artifact.trace_refs[0] == entry.transition_decision_id
+            assert artifact.trace_refs[1] == entry.topology_id == topology.topology_id
+            assert payload["topology_seed_id"] == topology.topology_seed_id
+            assert artifact.parent_refs == (env["topology_artifact"].artifact_id,)
+            assert validate_kernel_artifact_v01(artifact) == ()
+            assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+                env["t02"][index],
+                registry=env["registry"],
+                source_artifact=env["topology_artifact"],
+                target_artifact=artifact,
+            ) == ()
+        assert cell_input.ordered_initial_queue_entry_ids == tuple(item.queue_entry_id for item in queues)
+        assert cell_input.ordered_required_queue_entry_ids == cell_input.ordered_initial_queue_entry_ids
+        assert cell_input.ordered_planned_child_cell_ids == planned
+        assert (len(planned) == 2) is (mode == "full_fractal")
+        assert cell_input.authority_created is cell_input.permission_created is False
+        assert cell_input.action_commit_packet_created is cell_input.final_output_created is False
+        assert cell_input.real_world_effects_count == 0
+        with pytest.raises(ValueError):
+            fr.admit_runtime_execution_topology_v02(
+                source_context=env["source"],
+                topology=topology,
+                topology_artifact=env["topology_artifact"],
+                topology_transition_decision=env["t01"],
+                cell_id=topology.root_cell_id,
+                parent_cell_id=None,
+                parent_slot_artifact=None,
+                cell_depth=0,
+                scope_ref=topology.accepted_scope_ref,
+                cell_budget=env["root_create"],
+                global_budget=env["root_create"],
+                projected_nodes=tuple(reversed(env["nodes"])),
+                planned_child_cell_ids=planned,
+                admission_decisions=env["t02"],
+                cell_instantiation_order=(topology.root_cell_id,),
+                **_d3_prefix_kwargs(env),
+            )
+
+
+def test_d3_queue_state_chain_latest_budget_and_ctx_trace(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    initial_budget_log = env["budget_log"]
+    completed, completed_artifact = _d3_complete_local_node(env, node_index=0)
+    queue_log = env["queue_log"]
+    artifact_log = env["artifact_log"]
+    assert isinstance(queue_log, tuple) and isinstance(artifact_log, tuple)
+    chain = tuple(
+        item
+        for item in queue_log
+        if item.cell_id == completed.cell_id and item.node_id == completed.node_id
+    )
+    assert tuple(item.state for item in chain) == (
+        "PENDING", "READY", "RUNNING", "VALIDATING", "COMPLETED",
+    )
+    assert tuple(item.snapshot_sequence for item in chain) == (0, 1, 2, 3, 4)
+    assert chain[3].observed_evidence_refs == env["cell_input"].evidence_refs
+    assert chain[4].observed_output_refs == chain[3].observed_output_refs
+    artifact_by_queue = {
+        entry.queue_entry_id: artifact
+        for entry, artifact in zip(queue_log, artifact_log, strict=True)
+    }
+    for entry in chain[1:]:
+        artifact = artifact_by_queue[entry.queue_entry_id]
+        payload = _kernel_payload(artifact)
+        assert entry.cell_budget_id == entry.global_budget_id
+        assert entry.lineage_refs.count(entry.cell_budget_id) == 2
+        assert payload["cell_budget_id"] == payload["global_budget_id"]
+        assert artifact.trace_refs.count(entry.cell_budget_id) == 1
+        assert len(artifact.trace_refs) == len(set(artifact.trace_refs))
+        assert artifact.trace_refs == fr._d3_queue_artifact_trace_refs_v02(
+            entry,
+            parent_refs=artifact.parent_refs,
+        )
+        if entry.predecessor_queue_entry_id is not None:
+            assert artifact.trace_refs.index(entry.predecessor_queue_entry_id) < min(
+                (
+                    artifact.trace_refs.index(item)
+                    for item in (
+                        *entry.observed_output_refs,
+                        *entry.observed_evidence_refs,
+                        *entry.advisory_refs,
+                    )
+                ),
+                default=len(artifact.trace_refs),
+            )
+    assert completed_artifact.trace_refs[0] == completed.transition_decision_id
+    assert completed_artifact.trace_refs[1] == env["topology"].topology_id
+    predecessor = artifact_by_queue[completed.predecessor_queue_entry_id]
+    assert completed_artifact.parent_refs == (env["topology_artifact"].artifact_id, predecessor.artifact_id)
+    completed_payload = _kernel_payload(completed_artifact)
+    validating_payload = _kernel_payload(predecessor)
+    assert completed_payload["topology_seed_id"] == validating_payload["topology_seed_id"]
+    assert completed_payload["cell_id"] == validating_payload["cell_id"]
+    assert completed_payload["node_id"] == validating_payload["node_id"]
+    assert "topology_id" not in completed_payload
+    assert "predecessor_queue_entry_id" not in completed_payload
+    assert len(env["budget_log"]) == len(initial_budget_log) + 2
+    base = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    indexes = _d3_indexes(base)
+    blocked_node = base["nodes"][3]
+    blocked_entry = indexes["latest_by_key"][(base["topology"].root_cell_id, blocked_node.node_id)]
+    assert _d3_eval(
+        base,
+        source_artifact=indexes["artifact_by_queue_id"][blocked_entry.queue_entry_id],
+        node=blocked_node,
+        current_entry=blocked_entry,
+        cell_input=base["cell_input"],
+        cell_budget=base["root_create"],
+        global_budget=base["root_create"],
+        dependencies=(),
+    ) is None
+    foreign = _seal(replace(base["root_create"], budget_event_ref="foreign:g2d3"))
+    with pytest.raises(ValueError):
+        _d3_eval(
+            base,
+            source_artifact=base["queue_artifacts"][0],
+            node=base["nodes"][0],
+            current_entry=base["queues"][0],
+            cell_input=base["cell_input"],
+            cell_budget=foreign,
+            global_budget=foreign,
+        )
+    with pytest.raises(ValueError):
+        fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            _seal(replace(completed, topology_id="frtopology_v02:" + "f" * 64)),
+            topology_artifact=env["topology_artifact"],
+            predecessor_artifact=predecessor,
+            activation_parent_artifact=None,
+            local_child_result_artifact=None,
+            source_context=env["source"],
+            **_d3_prefix_kwargs(
+                env,
+                settled_queue_entry_log=queue_log + (
+                    _seal(replace(completed, topology_id="frtopology_v02:" + "f" * 64)),
+                ),
+            ),
+        )
+
+
+def test_d3_invoked_child_result_observation_alias_matrix(
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+) -> None:
+    env, running, running_artifact = _d3_child_result_runtime_environment(
+        d3_profile_d_contextual_micro_bundle
+    )
+    indexes = _d3_indexes(env)
+    dependency = indexes["latest_by_key"][(
+        env["topology"].root_cell_id,
+        env["nodes"][0].node_id,
+    )]
+    _live_cell, start = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=env["topology"].root_cell_id,
+        indexes=indexes,
+    )
+    anchor = indexes["budget_by_id"][running.cell_budget_id]
+    node = env["nodes"][1]
+    cell_input = env["cell_input"]
+    assert node.node_kind == "FRACTAL_CELL"
+    expected_terminal_rules = {
+        "COMPLETED": "g2d_t08_validating_to_completed",
+        "DEGRADED": "g2d_t09_validating_to_degraded",
+        "BLOCKED": "g2d_t10_validating_to_blocked",
+        "NEEDS_USER": "g2d_t11_validating_to_needs_user",
+        "DEADEND": "g2d_t12_validating_to_deadend",
+    }
+    first_validating: tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01, KernelArtifactV01] | None = None
+    for ordinal, outcome in enumerate(expected_terminal_rules, start=1):
+        branch = _d3_clone_environment(env)
+        child_result, result_artifact = _d3_child_result_fixture(
+            branch,
+            outcome=outcome,
+            ordinal=ordinal,
+        )
+        outputs = (result_artifact.artifact_id,)
+        evidence = child_result.evidence_refs
+        advisories = (child_result.post_vv_report_ref, child_result.gt_advisory_ref)
+        t06 = _d3_eval(
+            branch,
+            source_artifact=running_artifact,
+            node=node,
+            current_entry=running,
+            cell_input=cell_input,
+            cell_budget=anchor,
+            global_budget=anchor,
+            dependencies=(dependency,),
+            queue_reason_codes=child_result.reason_codes,
+            observed_output_refs=outputs,
+            observed_evidence_refs=evidence,
+            advisory_refs=advisories,
+            local_child_result=child_result,
+            local_child_result_artifact=result_artifact,
+        )
+        assert isinstance(t06, TransitionDecisionV01)
+        finish = _d3_budget_successor(
+            branch,
+            start,
+            event="FINISH_NODE",
+            decision=t06,
+            cell_input=cell_input,
+        )
+        validating, validating_artifact, validating_decision = _d3_advance(
+            branch,
+            current=running,
+            current_artifact=running_artifact,
+            node=node,
+            cell_input=cell_input,
+            cell_budget_before=anchor,
+            global_budget_before=anchor,
+            cell_budget_after=finish,
+            global_budget_after=finish,
+            dependencies=(dependency,),
+            round_entries=_d3_latest(branch),
+            queue_reason_codes=child_result.reason_codes,
+            observed_output_refs=outputs,
+            observed_evidence_refs=evidence,
+            advisory_refs=advisories,
+            local_child_result=child_result,
+            local_child_result_artifact=result_artifact,
+        )
+        terminal, terminal_artifact, terminal_decision = _d3_advance(
+            branch,
+            current=validating,
+            current_artifact=validating_artifact,
+            node=node,
+            cell_input=cell_input,
+            cell_budget_before=finish,
+            global_budget_before=finish,
+            cell_budget_after=finish,
+            global_budget_after=finish,
+            dependencies=(dependency,),
+            round_entries=_d3_latest(branch),
+            queue_reason_codes=validating.queue_reason_codes,
+            observed_output_refs=validating.observed_output_refs,
+            observed_evidence_refs=validating.observed_evidence_refs,
+            advisory_refs=validating.advisory_refs,
+            local_child_result=child_result,
+            local_child_result_artifact=result_artifact,
+        )
+        assert validating_decision.rule_id == "g2d_t06_running_to_validating"
+        assert terminal_decision.rule_id == expected_terminal_rules[outcome]
+        assert terminal.state == outcome
+        if outcome == "DEGRADED":
+            assert terminal.queue_reason_codes == ("g2d_partial_failure_recorded",)
+            assert terminal_decision.reason_code == "g2d_transition_degraded_recorded"
+        for entry, artifact in (
+            (validating, validating_artifact),
+            (terminal, terminal_artifact),
+        ):
+            payload = _kernel_payload(artifact)
+            assert entry.cell_budget_id == entry.global_budget_id
+            assert entry.lineage_refs.count(entry.cell_budget_id) == 2
+            assert entry.lineage_refs.count(result_artifact.artifact_id) == 2
+            assert entry.observed_output_refs == (result_artifact.artifact_id,)
+            assert payload["observed_output_refs"] == [result_artifact.artifact_id]
+            assert artifact.parent_refs[2] == result_artifact.artifact_id
+            assert artifact.trace_refs.count(entry.cell_budget_id) == 1
+            assert artifact.trace_refs.count(result_artifact.artifact_id) == 1
+            assert artifact.trace_refs.index(result_artifact.artifact_id) < artifact.trace_refs.index(
+                entry.observed_evidence_refs[0]
+            )
+            assert len(artifact.trace_refs) == len(set(artifact.trace_refs))
+            assert artifact.trace_refs == fr._d3_queue_artifact_trace_refs_v02(
+                entry,
+                parent_refs=artifact.parent_refs,
+            )
+            assert validate_kernel_artifact_v01(artifact) == ()
+        assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+            validating_decision,
+            registry=branch["registry"],
+            source_artifact=running_artifact,
+            target_artifact=validating_artifact,
+        ) == ()
+        assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+            terminal_decision,
+            registry=branch["registry"],
+            source_artifact=validating_artifact,
+            target_artifact=terminal_artifact,
+        ) == ()
+        if first_validating is None:
+            first_validating = (validating, validating_artifact, result_artifact)
+
+    assert first_validating is not None
+    validating, validating_artifact, result_artifact = first_validating
+    raw_trace = (validating.transition_decision_id, *validating.lineage_refs)
+    assert raw_trace.count(validating.cell_budget_id) == 2
+    assert raw_trace.count(result_artifact.artifact_id) == 2
+    assert validate_kernel_artifact_v01(replace(validating_artifact, trace_refs=raw_trace))
+    with pytest.raises(ValueError):
+        fr._d3_queue_artifact_trace_refs_v02(
+            _seal(replace(
+                validating,
+                global_budget_id="frbudget_v02:" + "f" * 64,
+                lineage_refs=(
+                    *validating.lineage_refs[:5],
+                    "frbudget_v02:" + "f" * 64,
+                    *validating.lineage_refs[6:],
+                ),
+            )),
+            parent_refs=validating_artifact.parent_refs,
+        )
+    with pytest.raises(ValueError):
+        fr._d3_queue_artifact_trace_refs_v02(
+            _seal(replace(
+                validating,
+                observed_evidence_refs=(result_artifact.artifact_id,),
+                lineage_refs=(
+                    *validating.lineage_refs[:-3],
+                    result_artifact.artifact_id,
+                    *validating.lineage_refs[-2:],
+                ),
+            )),
+            parent_refs=validating_artifact.parent_refs,
+        )
+    assert not fr._d3_queue_artifact_matches_entry_v02(
+        replace(
+            validating_artifact,
+            trace_refs=tuple(
+                item
+                for index, item in enumerate(validating_artifact.trace_refs)
+                if index != 2
+            ),
+        ),
+        validating,
+        env["source"],
+    )
+    child_result, result_artifact = _d3_child_result_fixture(
+        env,
+        outcome="COMPLETED",
+        ordinal=15,
+    )
+    with pytest.raises(ValueError):
+        _d3_eval(
+            env,
+            source_artifact=running_artifact,
+            node=node,
+            current_entry=running,
+            cell_input=cell_input,
+            cell_budget=start,
+            global_budget=start,
+            dependencies=(dependency,),
+            queue_reason_codes=child_result.reason_codes,
+            observed_output_refs=(result_artifact.artifact_id,),
+            observed_evidence_refs=child_result.evidence_refs,
+            advisory_refs=(child_result.post_vv_report_ref, child_result.gt_advisory_ref),
+            local_child_result=child_result,
+            local_child_result_artifact=None,
+        )
+
+
+def test_d3_child_result_artifact_exact_pair_positive_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env, slot, _slot_artifact = _d3_child_result_boundary_environment(
+        d3_mode_environments["full_fractal"]
+    )
+    boundary = env["child_result_boundary"]
+    indexes = boundary["indexes"]
+    assert all(item not in env["queue_log"] for item in boundary["terminal_entries"])
+    assert all(item not in env["artifact_log"] for item in boundary["terminal_artifacts"])
+    for ordinal, outcome in enumerate(
+        ("COMPLETED", "DEGRADED", "BLOCKED", "NEEDS_USER", "DEADEND"),
+        start=40,
+    ):
+        result, artifact = _d3_child_result_fixture(
+            env, outcome=outcome, ordinal=ordinal
+        )
+        assert fr._d3_child_result_artifact_pair_valid_v02(
+            result, artifact, source_context=env["source"],
+            topology=env["topology"], current_entry=slot, indexes=indexes,
+        )
+        expected = fr._d3_expected_child_result_artifact_v02(
+            result, source_context=env["source"], topology=env["topology"],
+            current_entry=slot, indexes=indexes,
+        )
+        assert artifact == expected
+        assert canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(artifact)) == (
+            canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(expected))
+        )
+
+
+def test_d3_child_result_artifact_full_field_mutation_matrix_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env, slot, _slot_artifact = _d3_child_result_boundary_environment(
+        d3_mode_environments["full_fractal"]
+    )
+    boundary = env["child_result_boundary"]
+    indexes = boundary["indexes"]
+    result, artifact = _d3_child_result_fixture(
+        env, outcome="COMPLETED", ordinal=51
+    )
+    for item in fields(fr.FractalCellResultV02):
+        if item.name == "result_id":
+            mutated_result = replace(result, result_id="frcellresult_v02:" + "f" * 64)
+        else:
+            mutated_result = _seal(replace(
+                result,
+                **{item.name: _same_type_alternate(result, item.name)},
+            ))
+        assert not fr._d3_child_result_artifact_pair_valid_v02(
+            mutated_result, artifact, source_context=env["source"],
+            topology=env["topology"], current_entry=slot, indexes=indexes,
+        )
+        if item.name in _D3_RESULT_PAYLOAD_FIELDS:
+            payload = dict(_kernel_payload(artifact))
+            value = payload[item.name]
+            payload[item.name] = (
+                not value if type(value) is bool else
+                value + 1 if type(value) is int else
+                value + ":foreign" if type(value) is str else
+                [*value, "ref:foreign"]
+            )
+            mutated_artifact = _d3_reseal_result_artifact(
+                artifact, payload=payload
+            )
+            assert not fr._d3_child_result_artifact_pair_valid_v02(
+                result, mutated_artifact, source_context=env["source"],
+                topology=env["topology"], current_entry=slot, indexes=indexes,
+            )
+    top_level_mutations = {
+        "abi_version": "v9.9",
+        "artifact_type": "FractalRuntimeReport",
+        "schema_version": "v9.9",
+        "transaction_id": artifact.transaction_id + ":foreign",
+        "owner_root_id": artifact.owner_root_id + ":foreign",
+        "source_component": "foreign_component",
+        "authority_class": "ROOT",
+        "lifecycle_state": "PENDING",
+        "parent_refs": tuple(reversed(artifact.parent_refs)),
+        "trace_refs": tuple(reversed(artifact.trace_refs)),
+        "time_envelope": {
+            **dict(kernel_artifact_to_plain_dict_v01(artifact)["time_envelope"]),
+            "ttl_seconds": 1,
+        },
+    }
+    for name, value in top_level_mutations.items():
+        mutated = _d3_reseal_result_artifact(artifact, **{name: value})
+        assert not fr._d3_child_result_artifact_pair_valid_v02(
+            result, mutated, source_context=env["source"],
+            topology=env["topology"], current_entry=slot, indexes=indexes,
+        )
+    for payload in (
+        {key: value for key, value in _kernel_payload(artifact).items() if key != "scope_ref"},
+        {**_kernel_payload(artifact), "unexpected": "value"},
+    ):
+        mutated = _d3_reseal_result_artifact(artifact, payload=payload)
+        assert not fr._d3_child_result_artifact_pair_valid_v02(
+            result, mutated, source_context=env["source"],
+            topology=env["topology"], current_entry=slot, indexes=indexes,
+        )
+
+
+def test_d3_child_activation_scope_budget_and_initial_family(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    nodes = env["nodes"]
+    parent_input = env["cell_input"]
+    root_create = env["root_create"]
+    planned = env["planned"]
+    assert isinstance(nodes, tuple)
+    assert isinstance(parent_input, fr.FractalCellInputV02)
+    assert isinstance(root_create, fr.FractalRuntimeBudgetV02)
+    dependency, _ = _d3_complete_local_node(env, node_index=0)
+    slot_running, slot_artifact, start = _d3_start_node(
+        env,
+        node_index=1,
+        dependencies=(dependency,),
+    )
+    child_id = planned[0]
+    precheck = fr._d3_child_activation_precheck_material_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        source_artifact=slot_artifact,
+        current_entry=slot_running,
+        node=nodes[1],
+        cell_input=parent_input,
+        cell_budget_before=start,
+        global_budget_before=start,
+        dependencies=(dependency,),
+        indexes=_d3_indexes(env),
+    )
+    assert precheck["derived_disposition"] == "PASS_FOR_CHILD_ACTIVATION"
+    child_allocated = fr.build_fractal_runtime_budget_v02(
+        policy=env["source"].runtime_policy,
+        topology_seed=env["seed"],
+        allocation_parent_budget=root_create,
+        predecessor_budget=None,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=parent_input,
+        canonical_child_index=0,
+        allocation_queue_entries=env["queues"],
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    projection = fr.project_parent_child_scope_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        parent_input=parent_input,
+        child_cell_id=child_id,
+        child_scope_ref=env["topology"].accepted_scope_ref,
+        parent_budget=root_create,
+        child_budget=child_allocated,
+        global_budget=start,
+    )
+    assert projection.scope_relation == "EQUAL"
+    assert projection.child_depth == parent_input.cell_depth + 1 == 1
+    assert set(projection.child_allowed_capability_ids).issubset(projection.parent_allowed_capability_ids)
+    assert set(projection.parent_forbidden_claims).issubset(projection.child_forbidden_claims)
+    assert projection.child_ttl_units <= projection.parent_ttl_units
+    assert fr.validate_parent_child_scope_against_sources_v02(
+        projection,
+        source_context=env["source"],
+        topology=env["topology"],
+        parent_input=parent_input,
+        parent_budget=root_create,
+        child_budget=child_allocated,
+        global_budget=start,
+    ).status == "PASS"
+    child_active = _d3_budget_successor(
+        env,
+        child_allocated,
+        event="ACTIVATE",
+        cell_input=parent_input,
+        allocation_parent=root_create,
+        owning_cell_id=child_id,
+        scope="CHILD_CELL_LOCAL",
+        canonical_child_index=0,
+        allocation_queue_entries=env["queues"],
+    )
+    global_active = _d3_budget_successor(
+        env,
+        start,
+        event="ACTIVATE",
+        cell_input=parent_input,
+        canonical_child_index=0,
+        allocation_queue_entries=env["queues"],
+        paired_cell_budget=child_active,
+    )
+    child_create = _d3_budget_successor(
+        env,
+        child_active,
+        event="CELL_CREATE",
+        cell_input=parent_input,
+        allocation_parent=root_create,
+        owning_cell_id=child_id,
+        scope="CHILD_CELL_LOCAL",
+        canonical_child_index=0,
+        allocation_queue_entries=env["queues"],
+    )
+    global_create = _d3_budget_successor(
+        env,
+        global_active,
+        event="CELL_CREATE",
+        cell_input=parent_input,
+        canonical_child_index=0,
+        allocation_queue_entries=env["queues"],
+        paired_cell_budget=child_create,
+    )
+    assert child_allocated.consumed_cell_count == child_active.consumed_cell_count == 0
+    assert child_create.consumed_cell_count == 1
+    assert global_create.consumed_cell_count == start.consumed_cell_count + 1
+    env["budget_log"] = env["budget_log"] + (
+        child_allocated,
+        child_active,
+        global_active,
+        child_create,
+        global_create,
+    )
+    env["scope_projections"] = (projection,)
+    scope_report = fr.validate_parent_child_scope_against_sources_v02(
+        projection,
+        source_context=env["source"],
+        topology=env["topology"],
+        parent_input=parent_input,
+        parent_budget=root_create,
+        child_budget=child_allocated,
+        global_budget=start,
+    )
+    existing_reports = env["validation_reports"]
+    env["validation_reports"] = (
+        *existing_reports[:4],
+        *(fr.validate_fractal_cell_queue_entry_v02(item) for item in env["queue_log"]),
+        scope_report,
+        *(
+            item
+            for item in existing_reports[4:]
+            if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+        ),
+    )
+    leaf_nodes = tuple(nodes[index] for index in (0, 4, 5, 6))
+    child_t02 = tuple(
+        _d3_eval(
+            env,
+            source_artifact=env["topology_artifact"],
+            node=node,
+            current_entry=None,
+            cell_input=None,
+            cell_budget=child_create,
+            global_budget=global_create,
+            cell_id=child_id,
+            parent_cell_id=env["topology"].root_cell_id,
+            planned_child_cell_id=None,
+            cell_depth=1,
+            scope_ref=projection.child_scope_ref,
+        )
+        for node in leaf_nodes
+    )
+    child_queues = fr.admit_runtime_execution_topology_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        topology_artifact=env["topology_artifact"],
+        topology_transition_decision=env["t01"],
+        cell_id=child_id,
+        parent_cell_id=env["topology"].root_cell_id,
+        parent_slot_artifact=slot_artifact,
+        cell_depth=1,
+        scope_ref=projection.child_scope_ref,
+        cell_budget=child_create,
+        global_budget=global_create,
+        projected_nodes=leaf_nodes,
+        planned_child_cell_ids=(),
+        admission_decisions=child_t02,
+        cell_instantiation_order=(env["topology"].root_cell_id, child_id),
+        **_d3_prefix_kwargs(env),
+    )
+    queue_log = env["queue_log"]
+    artifact_log = env["artifact_log"]
+    reports = env["validation_reports"]
+    assert isinstance(queue_log, tuple) and isinstance(artifact_log, tuple) and isinstance(reports, tuple)
+    child_artifacts_list: list[KernelArtifactV01] = []
+    for entry in child_queues:
+        artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            entry,
+            topology_artifact=env["topology_artifact"],
+            predecessor_artifact=None,
+            activation_parent_artifact=slot_artifact,
+            local_child_result_artifact=None,
+            source_context=env["source"],
+            **_d3_prefix_kwargs(
+                env,
+                settled_queue_entry_log=queue_log + (entry,),
+                settled_queue_artifact_log=artifact_log,
+                settled_validation_reports=reports,
+            ),
+        )
+        queue_log += (entry,)
+        artifact_log += (artifact,)
+        reports = _d3_retained_reports(env, queue_log)
+        child_artifacts_list.append(artifact)
+    child_artifacts = tuple(child_artifacts_list)
+    env["queue_log"] = queue_log
+    env["artifact_log"] = artifact_log
+    env["validation_reports"] = reports
+    assert all(
+        artifact.parent_refs == (env["topology_artifact"].artifact_id, slot_artifact.artifact_id)
+        for artifact in child_artifacts
+    )
+    for entry, artifact in zip(child_queues, child_artifacts, strict=True):
+        payload = _kernel_payload(artifact)
+        assert entry.cell_budget_id != entry.global_budget_id
+        assert entry.lineage_refs[5:7] == (
+            entry.cell_budget_id,
+            entry.global_budget_id,
+        )
+        assert payload["cell_budget_id"] == entry.cell_budget_id
+        assert payload["global_budget_id"] == entry.global_budget_id
+        assert artifact.trace_refs == (
+            entry.transition_decision_id,
+            *entry.lineage_refs,
+        )
+        assert artifact.trace_refs == fr._d3_queue_artifact_trace_refs_v02(
+            entry,
+            parent_refs=artifact.parent_refs,
+        )
+        assert len(artifact.trace_refs) == len(set(artifact.trace_refs))
+    child_input = fr.build_fractal_cell_input_from_queue_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        topology_artifact=env["topology_artifact"],
+        cell_id=child_id,
+        parent_cell_id=env["topology"].root_cell_id,
+        parent_input=parent_input,
+        parent_slot_artifact=slot_artifact,
+        scope_projection=projection,
+        cell_budget=child_create,
+        global_budget=global_create,
+        initial_queue_entries=child_queues,
+        initial_queue_artifacts=child_artifacts,
+        ordered_planned_child_cell_ids=(),
+        **_d3_prefix_kwargs(env),
+    )
+    assert child_input.parent_cell_id == env["topology"].root_cell_id
+    assert child_input.scope_projection_id == projection.projection_id
+    child_input_report = fr.validate_fractal_cell_input_against_sources_v02(
+        child_input,
+        source_context=env["source"],
+        topology=env["topology"],
+        topology_artifact=env["topology_artifact"],
+        parent_input=parent_input,
+        parent_slot_artifact=slot_artifact,
+        scope_projection=projection,
+        cell_budget=child_create,
+        global_budget=global_create,
+        queue_entries=child_queues,
+        queue_artifacts=child_artifacts,
+        **_d3_prefix_kwargs(env),
+    )
+    assert child_input_report.status == "PASS"
+    env["cell_inputs"] = env["cell_inputs"] + (child_input,)
+    env["validation_reports"] = reports + (child_input_report,)
+    child_indexes = _d3_indexes(env)
+    assert child_indexes["latest_by_key"][(
+        env["topology"].root_cell_id,
+        leaf_nodes[0].node_id,
+    )].cell_id == env["topology"].root_cell_id
+    assert child_indexes["latest_by_key"][(
+        child_id,
+        leaf_nodes[0].node_id,
+    )].cell_id == child_id
+    child_ready, child_ready_artifact, _ = _d3_advance(
+        env,
+        current=child_queues[0],
+        current_artifact=child_artifacts[0],
+        node=leaf_nodes[0],
+        cell_input=child_input,
+        cell_budget_before=child_create,
+        global_budget_before=global_create,
+        cell_budget_after=child_create,
+        global_budget_after=global_create,
+        dependencies=(),
+        round_entries=_d3_latest(env),
+    )
+    assert child_ready_artifact.parent_refs == (env["topology_artifact"].artifact_id, child_artifacts[0].artifact_id)
+    assert child_ready.cell_budget_id != child_ready.global_budget_id
+    assert child_ready_artifact.trace_refs == (child_ready.transition_decision_id, *child_ready.lineage_refs)
+    with pytest.raises(ValueError):
+        fr._d3_queue_artifact_trace_refs_v02(
+            _seal(replace(
+                child_ready,
+                global_budget_id=child_ready.cell_budget_id,
+                lineage_refs=(
+                    *child_ready.lineage_refs[:6],
+                    child_ready.cell_budget_id,
+                    *child_ready.lineage_refs[7:],
+                ),
+            )),
+            parent_refs=child_ready_artifact.parent_refs,
+        )
+    with pytest.raises(ValueError):
+        fr.admit_runtime_execution_topology_v02(
+            source_context=env["source"],
+            topology=env["topology"],
+            topology_artifact=env["topology_artifact"],
+            topology_transition_decision=env["t01"],
+            cell_id=child_id,
+            parent_cell_id=env["topology"].root_cell_id,
+            parent_slot_artifact=slot_artifact,
+            cell_depth=1,
+            scope_ref=projection.child_scope_ref,
+            cell_budget=child_active,
+            global_budget=global_active,
+            projected_nodes=leaf_nodes,
+            planned_child_cell_ids=(),
+            admission_decisions=child_t02,
+            cell_instantiation_order=(env["topology"].root_cell_id, child_id),
+            **_d3_prefix_kwargs(env),
+        )
+    forged_running = _seal(replace(
+        slot_running,
+        predecessor_queue_entry_id="frqueue_v02:" + "f" * 64,
+    ))
+    with pytest.raises(ValueError):
+        fr._d3_build_queue_artifact_v02(
+            forged_running,
+            parent_refs=(
+                env["topology_artifact"].artifact_id,
+                env["queue_artifacts"][1].artifact_id,
+            ),
+            source_context=env["source"],
+        )
+
+
+_D3_ACTIVATION_MATERIAL_KEYS_V035 = (
+    "profile_version", "topology_id", "topology_seed_id", "source_binding_id",
+    "route_eligibility_artifact_id", "topology_artifact_id", "parent_cell_id",
+    "parent_cell_input_id", "parent_scope_ref", "parent_slot_node_id",
+    "parent_slot_assignment_id", "canonical_child_index", "planned_child_cell_id",
+    "candidate_child_scope_ref", "parent_slot_initial_queue_entry_id",
+    "parent_slot_initial_artifact_id", "parent_slot_t02_decision_id",
+    "parent_slot_ready_queue_entry_id", "parent_slot_ready_artifact_id",
+    "parent_slot_t04_decision_id", "parent_slot_running_queue_entry_id",
+    "parent_slot_running_artifact_id", "parent_slot_t05_decision_id",
+    "parent_cell_budget_id", "global_budget_id", "parent_budget_state",
+    "global_budget_state", "parent_budget_counters", "global_budget_counters",
+    "dependency_queue_entry_ids", "dependency_queue_artifact_ids",
+    "dependency_states", "dependency_reason_tuples", "dependency_output_tuples",
+    "dependency_evidence_tuples", "parent_allowed_capability_ids",
+    "child_allowed_capability_ids", "parent_forbidden_claims",
+    "child_forbidden_claims", "parent_ttl_units", "child_ttl_units",
+    "parent_depth", "child_depth", "instantiated_sibling_count",
+    "instantiated_total_cell_count", "occupied_admission_slots", "max_depth",
+    "max_fan_out", "max_total_cells", "max_parallelism", "max_provider_calls",
+    "relevant_parent_slot_revise_observation_ids",
+    "relevant_parent_slot_revise_terminal_states", "derived_disposition",
+    "derived_queue_reason_codes", "derived_evidence_refs",
+)
+
+
+def _d3_parent_slot_precheck_fixture(
+    base: dict[str, object],
+) -> tuple[
+    dict[str, object],
+    fr.FractalCellQueueEntryV02,
+    KernelArtifactV01,
+    fr.FractalRuntimeBudgetV02,
+    fr.FractalCellQueueEntryV02,
+]:
+    env = _d3_clone_environment(base)
+    dependency, _ = _d3_complete_local_node(env, node_index=0)
+    running, artifact, budget = _d3_start_node(
+        env,
+        node_index=1,
+        dependencies=(dependency,),
+    )
+    return env, running, artifact, budget, dependency
+
+
+def _d3_expected_activation_material(
+    env: dict[str, object],
+    running: fr.FractalCellQueueEntryV02,
+    artifact: KernelArtifactV01,
+    budget: fr.FractalRuntimeBudgetV02,
+    dependency: fr.FractalCellQueueEntryV02,
+) -> dict[str, object]:
+    indexes = _d3_indexes(env)
+    queue_by_id = indexes["queue_by_id"]
+    artifact_by_queue = indexes["artifact_by_queue_id"]
+    ready = queue_by_id[running.predecessor_queue_entry_id]
+    initial = queue_by_id[ready.predecessor_queue_entry_id]
+    policy = env["source"].runtime_policy
+    ttl = env["source"].router_input.local_routing_snapshot.ttl_seconds
+    counters = lambda value: (
+        value.max_depth, value.max_fan_out, value.max_total_cells,
+        value.max_parallelism, value.max_revise_count, value.max_wall_time_units,
+        value.max_token_budget, value.max_provider_calls,
+        value.consumed_wall_time_units, value.consumed_token_budget,
+        value.consumed_provider_calls, value.consumed_cell_count,
+        value.consumed_revise_count, value.current_parallelism,
+        value.remaining_wall_time_units, value.remaining_token_budget,
+        value.remaining_provider_calls, value.remaining_cell_count,
+        value.remaining_revise_count, value.remaining_parallel_slots,
+    )
+    evidence = (
+        env["source"].route_eligibility_artifact.artifact_id,
+        env["topology_artifact"].artifact_id,
+        env["cell_input"].cell_input_id,
+        artifact_by_queue[initial.queue_entry_id].artifact_id,
+        artifact_by_queue[ready.queue_entry_id].artifact_id,
+        artifact.artifact_id,
+        budget.budget_id,
+        artifact_by_queue[dependency.queue_entry_id].artifact_id,
+    )
+    return {
+        "profile_version": "v0.3.1",
+        "topology_id": env["topology"].topology_id,
+        "topology_seed_id": env["topology"].topology_seed_id,
+        "source_binding_id": env["topology"].source_binding_id,
+        "route_eligibility_artifact_id": env["source"].route_eligibility_artifact.artifact_id,
+        "topology_artifact_id": env["topology_artifact"].artifact_id,
+        "parent_cell_id": running.cell_id,
+        "parent_cell_input_id": env["cell_input"].cell_input_id,
+        "parent_scope_ref": env["cell_input"].scope_ref,
+        "parent_slot_node_id": running.node_id,
+        "parent_slot_assignment_id": env["topology"].ordered_assignment_ids[1],
+        "canonical_child_index": 0,
+        "planned_child_cell_id": running.planned_child_cell_id,
+        "candidate_child_scope_ref": env["cell_input"].scope_ref,
+        "parent_slot_initial_queue_entry_id": initial.queue_entry_id,
+        "parent_slot_initial_artifact_id": artifact_by_queue[initial.queue_entry_id].artifact_id,
+        "parent_slot_t02_decision_id": initial.transition_decision_id,
+        "parent_slot_ready_queue_entry_id": ready.queue_entry_id,
+        "parent_slot_ready_artifact_id": artifact_by_queue[ready.queue_entry_id].artifact_id,
+        "parent_slot_t04_decision_id": ready.transition_decision_id,
+        "parent_slot_running_queue_entry_id": running.queue_entry_id,
+        "parent_slot_running_artifact_id": artifact.artifact_id,
+        "parent_slot_t05_decision_id": running.transition_decision_id,
+        "parent_cell_budget_id": budget.budget_id,
+        "global_budget_id": budget.budget_id,
+        "parent_budget_state": budget.budget_state,
+        "global_budget_state": budget.budget_state,
+        "parent_budget_counters": counters(budget),
+        "global_budget_counters": counters(budget),
+        "dependency_queue_entry_ids": (dependency.queue_entry_id,),
+        "dependency_queue_artifact_ids": (artifact_by_queue[dependency.queue_entry_id].artifact_id,),
+        "dependency_states": (dependency.state,),
+        "dependency_reason_tuples": (dependency.queue_reason_codes,),
+        "dependency_output_tuples": (dependency.observed_output_refs,),
+        "dependency_evidence_tuples": (dependency.observed_evidence_refs,),
+        "parent_allowed_capability_ids": policy.allowed_capability_ids,
+        "child_allowed_capability_ids": policy.allowed_capability_ids,
+        "parent_forbidden_claims": policy.forbidden_claims,
+        "child_forbidden_claims": policy.forbidden_claims,
+        "parent_ttl_units": ttl,
+        "child_ttl_units": ttl,
+        "parent_depth": 0,
+        "child_depth": 1,
+        "instantiated_sibling_count": 0,
+        "instantiated_total_cell_count": 1,
+        "occupied_admission_slots": 1,
+        "max_depth": policy.max_depth,
+        "max_fan_out": policy.max_fan_out,
+        "max_total_cells": policy.max_total_cells,
+        "max_parallelism": policy.max_parallelism,
+        "max_provider_calls": policy.max_provider_calls,
+        "relevant_parent_slot_revise_observation_ids": (),
+        "relevant_parent_slot_revise_terminal_states": (),
+        "derived_disposition": "PASS_FOR_CHILD_ACTIVATION",
+        "derived_queue_reason_codes": (),
+        "derived_evidence_refs": (),
+    }
+
+
+def test_d3_child_activation_precheck_exact_material_v035(
+    d3_full_fractal_micro_environment: dict[str, object],
+) -> None:
+    env, running, artifact, budget, dependency = _d3_parent_slot_precheck_fixture(
+        d3_full_fractal_micro_environment
+    )
+    actual = fr._d3_child_activation_precheck_material_v02(
+        source_context=env["source"], topology=env["topology"],
+        source_artifact=artifact, current_entry=running, node=env["nodes"][1],
+        cell_input=env["cell_input"], cell_budget_before=budget,
+        global_budget_before=budget, dependencies=(dependency,),
+        indexes=_d3_indexes(env),
+    )
+    expected = _d3_expected_activation_material(
+        env, running, artifact, budget, dependency
+    )
+    assert tuple(actual) == _D3_ACTIVATION_MATERIAL_KEYS_V035
+    assert actual == expected
+    assert canonical_json_bytes_v01(actual) == canonical_json_bytes_v01(expected)
+    assert actual["profile_version"] == "v0.3.1"
+
+
+def test_d3_child_activation_precheck_56_field_mutation_matrix_v035(
+    d3_full_fractal_micro_environment: dict[str, object],
+) -> None:
+    env, running, artifact, budget, dependency = _d3_parent_slot_precheck_fixture(
+        d3_full_fractal_micro_environment
+    )
+    actual = fr._d3_child_activation_precheck_material_v02(
+        source_context=env["source"], topology=env["topology"],
+        source_artifact=artifact, current_entry=running, node=env["nodes"][1],
+        cell_input=env["cell_input"], cell_budget_before=budget,
+        global_budget_before=budget, dependencies=(dependency,),
+        indexes=_d3_indexes(env),
+    )
+    assert len(actual) == 56
+    source_bound_family = {
+        name: (
+            "SOURCE_CONTEXT"
+            if name in {
+                "profile_version", "source_binding_id",
+                "route_eligibility_artifact_id", "max_depth", "max_fan_out",
+                "max_total_cells", "max_parallelism", "max_provider_calls",
+                "parent_allowed_capability_ids", "child_allowed_capability_ids",
+                "parent_forbidden_claims", "child_forbidden_claims",
+                "parent_ttl_units", "child_ttl_units",
+            }
+            else "TOPOLOGY"
+            if name in {
+                "topology_id", "topology_seed_id", "topology_artifact_id",
+                "parent_cell_id", "parent_scope_ref", "parent_slot_node_id",
+                "parent_slot_assignment_id", "canonical_child_index",
+                "planned_child_cell_id", "candidate_child_scope_ref",
+                "parent_depth", "child_depth",
+            }
+            else "PARENT_CHAIN"
+            if name.startswith("parent_slot_")
+            else "LIVE_BUDGET"
+            if name in {
+                "parent_cell_budget_id", "global_budget_id",
+                "parent_budget_state", "global_budget_state",
+                "parent_budget_counters", "global_budget_counters",
+                "occupied_admission_slots", "instantiated_sibling_count",
+                "instantiated_total_cell_count",
+            }
+            else "DEPENDENCY"
+            if name.startswith("dependency_")
+            else "REVISE_HISTORY"
+            if name.startswith("relevant_parent_slot_revise_")
+            else "DERIVED_GATE"
+        )
+        for name in _D3_ACTIVATION_MATERIAL_KEYS_V035
+    }
+    assert tuple(source_bound_family) == _D3_ACTIVATION_MATERIAL_KEYS_V035
+    assert set(source_bound_family.values()) == {
+        "SOURCE_CONTEXT", "TOPOLOGY", "PARENT_CHAIN", "LIVE_BUDGET",
+        "DEPENDENCY", "REVISE_HISTORY", "DERIVED_GATE",
+    }
+    for name, value in actual.items():
+        alternate = (
+            not value if type(value) is bool else
+            value + 1 if type(value) is int else
+            value + ":foreign" if type(value) is str else
+            (*value, "ref:foreign")
+        )
+        mutated = {**actual, name: alternate}
+        assert mutated != actual
+        assert canonical_json_bytes_v01(mutated) != canonical_json_bytes_v01(actual)
+        if type(value) is tuple and value:
+            candidates = (
+                value[:-1],
+                (*value, value[-1]),
+                tuple(reversed(value)),
+                (*value[:-1], "ref:foreign"),
+            )
+            variants = tuple(variant for variant in candidates if variant != value)
+            assert variants
+            assert all(
+                canonical_json_bytes_v01({**actual, name: variant})
+                != canonical_json_bytes_v01(actual)
+                for variant in variants
+            )
+
+    invalid_calls = (
+        ("source_context_nested_artifact", {"source_context": replace(
+            env["source"],
+            route_eligibility_artifact=replace(
+                env["source"].route_eligibility_artifact,
+                transaction_id="transaction:foreign",
+            ),
+        )}),
+        ("topology_identity", {"topology": replace(
+            env["topology"], topology_id="frtopology_v02:" + "f" * 64
+        )}),
+        ("source_artifact", {"source_artifact": replace(
+            artifact, transaction_id="transaction:foreign"
+        )}),
+        ("cell_budget_identity", {"cell_budget_before": replace(
+            budget, budget_id="frbudget_v02:" + "f" * 64
+        )}),
+        ("dependency_absence", {"dependencies": ()}),
+    )
+    base_call = {
+        "source_context": env["source"], "topology": env["topology"],
+        "source_artifact": artifact, "current_entry": running,
+        "node": env["nodes"][1], "cell_input": env["cell_input"],
+        "cell_budget_before": budget, "global_budget_before": budget,
+        "dependencies": (dependency,), "indexes": _d3_indexes(env),
+    }
+    for label, override in invalid_calls:
+        try:
+            fr._d3_child_activation_precheck_material_v02(
+                **{**base_call, **override}
+            )
+        except ValueError:
+            continue
+        pytest.fail(f"{label} substitution was accepted")
+    with pytest.raises(ValueError):
+        _d3_eval(
+            env, source_artifact=artifact, node=env["nodes"][1],
+            current_entry=running, cell_input=env["cell_input"],
+            cell_budget=budget, global_budget=budget,
+            dependencies=(dependency,),
+            queue_reason_codes=("g2d_required_child_failure",),
+            observed_evidence_refs=("evidence:stale",),
+        )
+
+
+def test_d3_no_child_blocked_and_deadend_positive_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    blocked_env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    dependency, _ = _d3_complete_local_node(blocked_env, node_index=0)
+    p1, p1_artifact, _ = _d3_start_node(
+        blocked_env, node_index=1, dependencies=(dependency,)
+    )
+    p2, p2_artifact, _ = _d3_start_node(
+        blocked_env, node_index=2, dependencies=(dependency,)
+    )
+    c1 = _d3_activate_child(
+        blocked_env, slot_running=p1, slot_artifact=p1_artifact,
+        dependency=dependency,
+    )
+    c1_ready, c1_ready_artifact = _d3_make_ready(
+        blocked_env, current=c1["queues"][0], node=c1["nodes"][0],
+        cell_input=c1["input"],
+    )
+    _c1_running, _c1_artifact, _cell_start, global_start = _d3_start_ready_entry(
+        blocked_env, ready=c1_ready, ready_artifact=c1_ready_artifact,
+        node=c1["nodes"][0], cell_input=c1["input"],
+    )
+    assert global_start.current_parallelism == 3
+    blocked_validating, blocked_validating_artifact, blocked, blocked_artifact = (
+        _d3_finish_no_child_gate(
+            blocked_env, running=p2, running_artifact=p2_artifact,
+            node=blocked_env["nodes"][2], dependency=dependency,
+        )
+    )
+    assert blocked_validating.state == "VALIDATING"
+    assert blocked.state == "BLOCKED"
+    assert blocked.predecessor_queue_entry_id == blocked_validating.queue_entry_id
+    assert blocked_artifact.parent_refs[1] == blocked_validating_artifact.artifact_id
+    assert fr.validate_fractal_cell_queue_entry_v02(blocked).status == "PASS"
+
+    deadend_env, running, artifact, budget, dependency = (
+        _d3_parent_slot_precheck_fixture(d3_mode_environments["full_fractal"])
+    )
+    indexes = _d3_indexes(deadend_env)
+    ready = indexes["queue_by_id"][running.predecessor_queue_entry_id]
+    observation = fr.build_fractal_revise_observation_v02(
+        deadend_env["topology"], deadend_env["cell_input"], ready,
+        fr.validate_fractal_cell_queue_entry_v02(ready),
+        revision_index=2, newly_validated_evidence_count=0,
+        newly_resolved_constraints_count=0, newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=0, consecutive_non_positive_count=2,
+        max_consecutive_non_positive_count=2, cell_budget_before=budget,
+        global_budget_before=budget,
+    )
+    deadend_env["revise_observations"] = (observation,)
+    deadend_validating, deadend_validating_artifact, deadend, deadend_artifact = (
+        _d3_finish_no_child_gate(
+            deadend_env, running=running, running_artifact=artifact,
+            node=deadend_env["nodes"][1], dependency=dependency,
+        )
+    )
+    assert deadend_validating.state == "VALIDATING"
+    assert deadend.state == "DEADEND"
+    assert deadend.predecessor_queue_entry_id == deadend_validating.queue_entry_id
+    assert deadend_artifact.parent_refs[1] == deadend_validating_artifact.artifact_id
+    assert fr.validate_fractal_cell_queue_entry_v02(deadend).status == "PASS"
+
+
+def test_d3_no_child_needs_user_unreachable_and_caller_labels_rejected_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env, running, artifact, budget, dependency = _d3_parent_slot_precheck_fixture(
+        d3_mode_environments["full_fractal"]
+    )
+    with pytest.raises(ValueError):
+        _d3_eval(
+            env, source_artifact=artifact, node=env["nodes"][1],
+            current_entry=running, cell_input=env["cell_input"],
+            cell_budget=budget, global_budget=budget,
+            dependencies=(dependency,),
+            queue_reason_codes=("g2d_resolvable_input_needs_user",),
+            observed_evidence_refs=("evidence:invented",),
+        )
+    synthetic_dependency = _d3_terminal_dependency_fixture(env)
+    with pytest.raises(ValueError):
+        fr._d3_child_activation_precheck_material_v02(
+            source_context=env["source"], topology=env["topology"],
+            source_artifact=artifact, current_entry=running,
+            node=env["nodes"][1], cell_input=env["cell_input"],
+            cell_budget_before=budget, global_budget_before=budget,
+            dependencies=(synthetic_dependency,), indexes=_d3_indexes(env),
+        )
+    branch = _d3_clone_environment(env)
+    branch["queue_log"] = (
+        synthetic_dependency,
+        *branch["queue_log"][1:],
+    )
+    with pytest.raises(ValueError):
+        _d3_indexes(branch)
+    with pytest.raises(ValueError):
+        _d3_eval(
+            env, source_artifact=artifact, node=env["nodes"][1],
+            current_entry=running, cell_input=env["cell_input"],
+            cell_budget=budget, global_budget=budget,
+            dependencies=(dependency,),
+            local_child_result=SimpleNamespace(outcome="NEEDS_USER"),
+            local_child_result_artifact=env["topology_artifact"],
+        )
+
+
+def test_d3_historical_t06_origin_replay_ignores_later_live_head(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    running, running_artifact, start = _d3_start_node(env, node_index=0)
+    node = env["nodes"][0]
+    cell_input = env["cell_input"]
+    material = fr._d3_local_observation_material_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=start,
+        global_budget_before=start,
+        dependencies=(),
+        indexes=_d3_indexes(env),
+    )
+    t06 = _d3_eval(
+        env,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=cell_input,
+        cell_budget=start,
+        global_budget=start,
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    assert isinstance(t06, TransitionDecisionV01)
+    finish = _d3_budget_successor(
+        env,
+        start,
+        event="FINISH_NODE",
+        decision=t06,
+        cell_input=cell_input,
+    )
+    validating, validating_artifact, _ = _d3_advance(
+        env,
+        current=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=start,
+        global_budget_before=start,
+        cell_budget_after=finish,
+        global_budget_after=finish,
+        dependencies=(),
+        round_entries=_d3_latest(env),
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    _running_2, _artifact_2, later_live_head = _d3_start_node(env, node_index=1)
+    assert later_live_head != finish
+    later_material = fr._d3_local_observation_material_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=later_live_head,
+        global_budget_before=later_live_head,
+        dependencies=(),
+        indexes=_d3_indexes(env),
+    )
+    assert (
+        later_material["derived_observed_output_refs"]
+        != validating.observed_output_refs
+    )
+    terminal, _artifact, _decision = _d3_advance(
+        env,
+        current=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=finish,
+        global_budget_before=finish,
+        cell_budget_after=finish,
+        global_budget_after=finish,
+        dependencies=(),
+        round_entries=_d3_latest(env),
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    assert terminal.observed_output_refs == validating.observed_output_refs
+    assert terminal.observed_evidence_refs == env["cell_input"].evidence_refs
+
+
+def test_d3_complete_prefix_rejects_missing_duplicate_reordered_and_foreign(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    _d3_indexes(env)
+    mutations = (
+        {"settled_budget_log": env["budget_log"][:-1]},
+        {"settled_budget_log": (*env["budget_log"], env["budget_log"][-1])},
+        {"settled_queue_entry_log": tuple(reversed(env["queue_log"]))},
+        {"settled_queue_artifact_log": tuple(reversed(env["artifact_log"]))},
+        {"settled_cell_inputs": (*env["cell_inputs"], env["cell_inputs"][0])},
+        {"settled_validation_reports": env["validation_reports"][:-1]},
+    )
+    for mutation in mutations:
+        with pytest.raises(ValueError):
+            fr._d3_validate_settled_runtime_prefix_v02(
+                topology=env["topology"],
+                policy=env["source"].runtime_policy,
+                source_context=env["source"],
+                **_d3_prefix_kwargs(env, **mutation),
+            )
+    foreign_queue = _seal(replace(
+        env["queue_log"][0],
+        topology_id="frtopology_v02:" + "f" * 64,
+    ))
+    with pytest.raises(ValueError):
+        fr._d3_validate_settled_runtime_prefix_v02(
+            topology=env["topology"],
+            policy=env["source"].runtime_policy,
+            source_context=env["source"],
+            **_d3_prefix_kwargs(
+                env,
+                settled_queue_entry_log=(foreign_queue, *env["queue_log"][1:]),
+            ),
+        )
+
+
+def _d3_evaluate_backpressure(
+    env: dict[str, object],
+    *,
+    source_context: fr.FractalRuntimeSourceContextV02 | None = None,
+    admission_round: int = 1,
+) -> fr.FractalBackpressureStateV02 | None:
+    source = env["source"] if source_context is None else source_context
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    indexes = _d3_indexes(env)
+    live_global = indexes["live_head_by_axis"][(
+        "ROOT_GLOBAL_AND_CELL",
+        env["topology"].root_cell_id,
+    )]
+    return fr.evaluate_fractal_backpressure_v02(
+        source_context=source,
+        topology=env["topology"],
+        policy=env["source"].runtime_policy,
+        global_budget=live_global,
+        queue_entries=_d3_latest(env),
+        admission_round=admission_round,
+        **_d3_prefix_kwargs(env),
+    )
+
+
+def test_d3_function88_actual_source_context_positive_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    assert _d3_evaluate_backpressure(env) is None
+
+
+def test_d3_function88_source_context_substitution_matrix_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    source = env["source"]
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    for source_field in fields(fr.FractalRuntimeSourceContextV02):
+        component = getattr(source, source_field.name)
+        component_fields = fields(type(component))
+        mutable_field = next(
+            item
+            for item in component_fields
+            if type(getattr(component, item.name))
+            in {bool, int, str, tuple, type(None)}
+            and item.name not in {"real_world_effects_count"}
+        )
+        foreign_component = replace(
+            component,
+            **{
+                mutable_field.name: _same_type_alternate(
+                    component,
+                    mutable_field.name,
+                )
+            },
+        )
+        foreign_source = replace(
+            source,
+            **{source_field.name: foreign_component},
+        )
+        with pytest.raises(ValueError):
+            _d3_evaluate_backpressure(
+                env,
+                source_context=foreign_source,
+            )
+
+
+def test_d3_function88_rejects_copied_and_constructed_pass_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    reports = env["validation_reports"]
+    assert isinstance(reports, tuple)
+    copied = replace(
+        reports[1],
+        validation_report_id=reports[0].validation_report_id,
+    )
+    for mutated in (
+        (reports[0], copied, *reports[2:]),
+        tuple(reversed(reports)),
+        reports[:-1],
+        (*reports, reports[-1]),
+    ):
+        branch = _d3_clone_environment(env)
+        branch["validation_reports"] = mutated
+        with pytest.raises(ValueError):
+            _d3_evaluate_backpressure(branch)
+    artifact = env["artifact_log"][0]
+    forged_artifact = replace(
+        artifact,
+        transaction_id=artifact.transaction_id + ":foreign",
+    )
+    branch = _d3_clone_environment(env)
+    branch["artifact_log"] = (forged_artifact, *env["artifact_log"][1:])
+    with pytest.raises(ValueError):
+        _d3_evaluate_backpressure(branch)
+    foreign_input = _seal(replace(
+        env["cell_input"],
+        evidence_refs=(*env["cell_input"].evidence_refs, "evidence:foreign"),
+    ))
+    branch = _d3_clone_environment(env)
+    branch["cell_inputs"] = (foreign_input,)
+    with pytest.raises(ValueError):
+        _d3_evaluate_backpressure(branch)
+
+
+def _d3_parent_return_eval(
+    env: dict[str, object],
+    **overrides: object,
+) -> TransitionDecisionV01 | None:
+    node = next(item for item in env["nodes"] if item.node_kind == "PARENT_RETURN")
+    current = next(
+        item
+        for item in reversed(env["queue_log"])
+        if item.cell_id == env["topology"].root_cell_id
+        and item.node_id == node.node_id
+    )
+    artifact = next(
+        artifact
+        for entry, artifact in zip(
+            reversed(env["queue_log"]),
+            reversed(env["artifact_log"]),
+            strict=True,
+        )
+        if entry.queue_entry_id == current.queue_entry_id
+    )
+    return _d3_eval(
+        env,
+        source_artifact=artifact,
+        node=node,
+        current_entry=current,
+        cell_input=env["cell_input"],
+        cell_budget=env["root_create"],
+        global_budget=env["root_create"],
+        **overrides,
+    )
+
+
+def test_d3_parent_return_wholly_absent_is_unavailable_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    assert _d3_parent_return_eval(env) is None
+
+
+def test_d3_parent_return_future_family_fail_closed_127_mask_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    result, _artifact = _d3_child_result_fixture(env, outcome="COMPLETED", ordinal=31)
+    partial = _fixture_family()[fr.FractalPartialFailureRecordV02]
+    reports = env["validation_reports"]
+    rows = (
+        ("parent_return_pre_post_vv_terminal_queue_entries", (env["queues"][0],)),
+        ("parent_return_child_results", (result,)),
+        ("parent_return_partial_failures", (partial,)),
+        ("parent_return_result_proposal", {"proposal_id": "proposal:test"}),
+        ("parent_return_post_vv_report", {"vv_report_id": "vv:test"}),
+        ("parent_return_gt_advisory_report", {"gt_report_id": "gt:test"}),
+        ("parent_return_validation_reports", (reports[0],)),
+    )
+    for mask in range(1, 128):
+        kwargs = {
+            name: value
+            for index, (name, value) in enumerate(rows)
+            if mask & (1 << index)
+        }
+        with pytest.raises(ValueError, match="g2d_parent_return_invalid"):
+            _d3_parent_return_eval(env, **kwargs)
+    malformed = (
+        {rows[0][0]: [env["queues"][0]]},
+        {rows[1][0]: (env["queues"][0],)},
+        {rows[2][0]: (result,)},
+        {rows[3][0]: []},
+        {rows[4][0]: "vv:test"},
+        {rows[5][0]: ()},
+        {rows[6][0]: (env["queues"][0],)},
+    )
+    for kwargs in malformed:
+        with pytest.raises(ValueError, match="g2d_parent_return_invalid"):
+            _d3_parent_return_eval(env, **kwargs)
+
+
+def _d3_classifier_pair(
+    env: dict[str, object],
+    entry: fr.FractalCellQueueEntryV02,
+) -> tuple[str, fr.FractalCellQueueEntryV02]:
+    indexes = _d3_indexes(env)
+    _cell, live_global = fr._d3_live_budget_heads_v02(
+        topology=env["topology"],
+        cell_id=env["topology"].root_cell_id,
+        indexes=indexes,
+    )
+    material = fr._d3_scheduler_classification_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        policy=env["source"].runtime_policy,
+        global_budget=live_global,
+        entries=env["queue_log"],
+        indexes=indexes,
+    )
+    matches = tuple(
+        item for item in material["classified"] if item[1] == entry
+    )
+    assert len(matches) == 1
+    return matches[0]
+
+
+@pytest.fixture(scope="module")
+def d3_six_class_pairs(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> tuple[tuple[str, fr.FractalCellQueueEntryV02], ...]:
+    pending_env = _d3_clone_environment(d3_mode_environments["memory_informed"])
+    pending = pending_env["queues"][0]
+
+    ready_env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    ready, _ready_artifact = _d3_make_ready(
+        ready_env,
+        current=ready_env["queues"][0],
+        node=ready_env["nodes"][0],
+        cell_input=ready_env["cell_input"],
+    )
+
+    running_env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    running, _running_artifact, _running_budget = _d3_start_node(
+        running_env,
+        node_index=0,
+    )
+
+    terminal_env = _d3_clone_environment(d3_mode_environments["cloud_llm"])
+    terminal_running, terminal_running_artifact, _ = _d3_start_node(
+        terminal_env,
+        node_index=0,
+    )
+    terminal, _terminal_artifact, _ = _d3_finish_running_local(
+        terminal_env,
+        running=terminal_running,
+        running_artifact=terminal_running_artifact,
+        node=terminal_env["nodes"][0],
+        cell_input=terminal_env["cell_input"],
+    )
+
+    revise_env = _d3_clone_environment(d3_mode_environments["local_slm"])
+    revise_running, revise_running_artifact, _ = _d3_start_node(
+        revise_env,
+        node_index=0,
+    )
+    revise_entry, _revise_artifact, _ = _d3_finish_running_local(
+        revise_env,
+        running=revise_running,
+        running_artifact=revise_running_artifact,
+        node=revise_env["nodes"][0],
+        cell_input=revise_env["cell_input"],
+    )
+    revise_indexes = _d3_indexes(revise_env)
+    revise_cell, revise_global = fr._d3_live_budget_heads_v02(
+        topology=revise_env["topology"],
+        cell_id=revise_entry.cell_id,
+        indexes=revise_indexes,
+    )
+    observation = fr.build_fractal_revise_observation_v02(
+        revise_env["topology"],
+        revise_env["cell_input"],
+        revise_entry,
+        fr.validate_fractal_cell_queue_entry_v02(revise_entry),
+        revision_index=1,
+        newly_validated_evidence_count=1,
+        newly_resolved_constraints_count=0,
+        newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=0,
+        consecutive_non_positive_count=0,
+        max_consecutive_non_positive_count=2,
+        cell_budget_before=revise_cell,
+        global_budget_before=revise_global,
+    )
+    revise_env["revise_observations"] = (observation,)
+
+    deferred_env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    dependency, _ = _d3_complete_local_node(deferred_env, node_index=0)
+    p1, p1_artifact, _ = _d3_start_node(
+        deferred_env, node_index=1, dependencies=(dependency,)
+    )
+    p2, p2_artifact, _ = _d3_start_node(
+        deferred_env, node_index=2, dependencies=(dependency,)
+    )
+    c1 = _d3_activate_child(
+        deferred_env, slot_running=p1, slot_artifact=p1_artifact,
+        dependency=dependency,
+    )
+    c2 = _d3_activate_child(
+        deferred_env, slot_running=p2, slot_artifact=p2_artifact,
+        dependency=dependency,
+    )
+    _c1_ready, _ = _d3_make_ready(
+        deferred_env,
+        current=c1["queues"][0],
+        node=c1["nodes"][0],
+        cell_input=c1["input"],
+    )
+    deferred = c2["queues"][0]
+
+    pairs = (
+        _d3_classifier_pair(ready_env, ready),
+        _d3_classifier_pair(running_env, running),
+        _d3_classifier_pair(terminal_env, terminal),
+        _d3_classifier_pair(revise_env, revise_entry),
+        _d3_classifier_pair(pending_env, pending),
+        _d3_classifier_pair(deferred_env, deferred),
+    )
+    assert tuple(item[0] for item in pairs) == fr._D3_STATE_CLASS_ORDER_V02
+    assert len({(item[1].cell_id, item[1].node_id) for item in pairs}) == 6
+    return pairs
+
+
+def test_d3_exact_six_class_scheduler_order_v035(
+    d3_six_class_pairs: tuple[tuple[str, fr.FractalCellQueueEntryV02], ...],
+) -> None:
+    assert fr._D3_STATE_CLASS_ORDER_V02 == (
+        "READY", "RUNNING", "VALIDATING_TERMINAL", "VALIDATING_REVISE",
+        "PENDING_READY", "PENDING_DEFERRED",
+    )
+    assert tuple(item[0] for item in d3_six_class_pairs) == (
+        fr._D3_STATE_CLASS_ORDER_V02
+    )
+
+
+def test_d3_six_class_order_permutation_and_substitution_matrix_v035(
+    d3_six_class_pairs: tuple[tuple[str, fr.FractalCellQueueEntryV02], ...],
+) -> None:
+    expected = fr._d3_order_classified_scheduler_entries_v02(
+        d3_six_class_pairs
+    )
+    assert tuple(name for name, _entry in expected) == fr._D3_STATE_CLASS_ORDER_V02
+    for permutation in permutations(d3_six_class_pairs):
+        assert fr._d3_order_classified_scheduler_entries_v02(permutation) == expected
+    with pytest.raises(ValueError, match="g2d_queue_order_mismatch"):
+        fr._d3_order_classified_scheduler_entries_v02((expected[0], expected[0]))
+    with pytest.raises(ValueError, match="g2d_queue_order_mismatch"):
+        fr._d3_order_classified_scheduler_entries_v02(
+            (("PENDING", expected[0][1]),)
+        )
+    with pytest.raises(ValueError, match="g2d_queue_order_mismatch"):
+        fr._d3_order_classified_scheduler_entries_v02(
+            (("RUNNING", expected[0][1]),)
+        )
+
+
+def test_d3_budget_axis_serialization_fork_rejection_and_bounds_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    topology = env["topology"]
+    policy = env["source"].runtime_policy
+    root_create = env["root_create"]
+    cell_input = env["cell_input"]
+    t05 = fr._d3_transition_decision_v02(env["registry"], "t05")
+    heads = [root_create]
+    for _ in range(3):
+        heads.append(_d3_budget_successor(
+            env,
+            heads[-1],
+            event="START_NODE",
+            decision=t05,
+            cell_input=cell_input,
+        ))
+    budget_log = (*env["budget_log"], *heads[1:])
+    indexes = fr._d3_validate_budget_log_v02(
+        budget_log,
+        topology=topology,
+        policy=policy,
+        source_context=env["source"],
+    )
+    assert tuple(item.current_parallelism for item in heads) == (0, 1, 2, 3)
+    assert indexes["live_head_by_axis"][(
+        "ROOT_GLOBAL_AND_CELL",
+        topology.root_cell_id,
+    )] == heads[-1]
+    assert all(
+        fr._d3_budget_is_ancestor_v02(
+            root_create,
+            item,
+            budget_by_id=indexes["budget_by_id"],
+        )
+        for item in heads
+    )
+    assert heads[-1].current_parallelism == 3
+    assert heads[-1].remaining_parallel_slots == 0
+    with pytest.raises(ValueError, match="g2d_budget_overflow"):
+        _d3_budget_successor(
+            env,
+            heads[-1],
+            event="START_NODE",
+            decision=t05,
+            cell_input=cell_input,
+        )
+    fork = _d3_budget_successor(
+        env,
+        root_create,
+        event="REVISE",
+        decision=fr._d3_transition_decision_v02(env["registry"], "t07"),
+        cell_input=cell_input,
+    )
+    with pytest.raises(ValueError, match="g2d_budget_predecessor_invalid"):
+        fr._d3_validate_budget_log_v02(
+            (*env["budget_log"], heads[1], fork),
+            topology=topology,
+            policy=policy,
+            source_context=env["source"],
+        )
+    assert (
+        policy.max_depth,
+        policy.max_fan_out,
+        policy.max_total_cells,
+        policy.max_parallelism,
+        policy.max_provider_calls,
+    ) == (3, 4, 21, 3, 0)
+
+
+def _d3_prior_postclosure_core(
+    env: dict[str, object],
+    state: fr.FractalBackpressureStateV02,
+) -> dict[str, object]:
+    indexes = _d3_indexes(env)
+    closure_frontiers = indexes["backpressure_closure_frontier_by_id"]
+    closure_frontier = closure_frontiers[state.backpressure_id]
+    state_budget = indexes["budget_by_id"][state.global_budget_id]
+    prior_states = tuple(
+        item
+        for item in env["backpressure_states"]
+        if item.evaluated_round < state.evaluated_round
+    )
+    local_indexes = fr._d3_frontier_local_indexes_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        policy=env["source"].runtime_policy,
+        queue_entries=env["queue_log"],
+        queue_artifacts=env["artifact_log"],
+        queue_frontier=closure_frontier,
+        global_budget=state_budget,
+        complete_indexes=indexes,
+        prior_states=prior_states,
+        closure_frontiers=closure_frontiers,
+    )
+    assert len(local_indexes["queue_by_id"]) == closure_frontier + 1
+    assert local_indexes["live_head_by_axis"][(
+        "ROOT_GLOBAL_AND_CELL", env["topology"].root_cell_id,
+    )] == state_budget
+    return fr._d3_round_control_material_v02(
+        source_context=env["source"],
+        topology=env["topology"],
+        policy=env["source"].runtime_policy,
+        global_budget=state_budget,
+        admission_round=state.evaluated_round,
+        entries=env["queue_log"][: closure_frontier + 1],
+        indexes=local_indexes,
+        prior_backpressure_states=prior_states,
+    )
+
+
+def test_d3_s0_t03_postclosure_suppression_s1_no_spin_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    dependency, _ = _d3_complete_local_node(env, node_index=0)
+    p1, p1_artifact, _ = _d3_start_node(
+        env, node_index=1, dependencies=(dependency,)
+    )
+    p2, p2_artifact, _ = _d3_start_node(
+        env, node_index=2, dependencies=(dependency,)
+    )
+    assert _d3_indexes(env)["live_head_by_axis"][(
+        "ROOT_GLOBAL_AND_CELL", env["topology"].root_cell_id,
+    )].current_parallelism == 2
+    c1 = _d3_activate_child(
+        env, slot_running=p1, slot_artifact=p1_artifact, dependency=dependency
+    )
+    c2 = _d3_activate_child(
+        env, slot_running=p2, slot_artifact=p2_artifact, dependency=dependency
+    )
+    indexes = _d3_indexes(env)
+    live_global = indexes["live_head_by_axis"][(
+        "ROOT_GLOBAL_AND_CELL", env["topology"].root_cell_id,
+    )]
+    assert live_global.current_parallelism == 2
+    r1_round_start = _d3_latest(env)
+    c1_ready, c1_ready_artifact = _d3_make_ready(
+        env, current=c1["queues"][0], node=c1["nodes"][0],
+        cell_input=c1["input"], round_start_queue_entries=r1_round_start,
+    )
+    latest = _d3_latest(env)
+    assert sum(item.state == "READY" for item in latest) == 1
+    assert live_global.current_parallelism + 1 == 3
+    s0 = _d3_evaluate_backpressure(
+        env, admission_round=c1_ready.admission_round,
+    )
+    assert isinstance(s0, fr.FractalBackpressureStateV02)
+    assert s0.deferred_queue_entry_ids == (c2["queues"][0].queue_entry_id,)
+    env["backpressure_states"] = (s0,)
+    before_t03 = len(env["queue_log"])
+    c2_deferred, _c2_deferred_artifact = _d3_make_ready(
+        env, current=c2["queues"][0], node=c2["nodes"][0],
+        cell_input=c2["input"], backpressure_state=s0,
+        round_start_queue_entries=r1_round_start,
+    )
+    assert c2_deferred.state == "PENDING"
+    assert c2_deferred.queue_reason_codes == (
+        "g2d_transition_backpressure_deferred",
+    )
+    assert len(env["queue_log"]) == before_t03 + 1
+    assert len(env["artifact_log"]) == len(env["queue_log"])
+    assert len(env["budget_log"]) == len(_d3_indexes(env)["budget_log"])
+    assert c1_ready.admission_round == s0.evaluated_round
+    assert c2_deferred.admission_round == s0.evaluated_round
+    s0_core_before_r2 = _d3_prior_postclosure_core(env, s0)
+
+    r2_round_start = _d3_latest(env)
+    c1_running, c1_running_artifact, _c1_cell_start, c1_global_start = (
+        _d3_start_ready_entry(
+            env, ready=c1_ready, ready_artifact=c1_ready_artifact,
+            node=c1["nodes"][0], cell_input=c1["input"],
+            round_start_queue_entries=r2_round_start,
+        )
+    )
+    assert c1_global_start.current_parallelism == 3
+    s1 = _d3_evaluate_backpressure(
+        env, admission_round=c1_running.admission_round,
+    )
+    assert isinstance(s1, fr.FractalBackpressureStateV02)
+    assert s1 != s0
+    assert s1.deferred_queue_entry_ids == (c2_deferred.queue_entry_id,)
+    env["backpressure_states"] = (s0, s1)
+    c2_deferred_2, _artifact_2 = _d3_make_ready(
+        env, current=c2_deferred, node=c2["nodes"][0],
+        cell_input=c2["input"], backpressure_state=s1,
+        round_start_queue_entries=r2_round_start,
+    )
+    assert c2_deferred_2.predecessor_queue_entry_id == c2_deferred.queue_entry_id
+    assert c1_running.admission_round == s1.evaluated_round
+    assert c2_deferred_2.admission_round == s1.evaluated_round
+    s0_core_after_r2 = _d3_prior_postclosure_core(env, s0)
+    assert s0_core_after_r2["control_core_sha256"] == (
+        s0_core_before_r2["control_core_sha256"]
+    )
+    assert canonical_json_bytes_v01(s0_core_after_r2["controlling_core"]) == (
+        canonical_json_bytes_v01(s0_core_before_r2["controlling_core"])
+    )
+    s1_core_before_suppression = _d3_prior_postclosure_core(env, s1)
+    queue_count = len(env["queue_log"])
+    artifact_count = len(env["artifact_log"])
+    report_count = len(env["validation_reports"])
+    budget_count = len(env["budget_log"])
+    assert _d3_evaluate_backpressure(env, admission_round=3) is None
+    s1_core_after_suppression = _d3_prior_postclosure_core(env, s1)
+    assert s1_core_after_suppression["control_core_sha256"] == (
+        s1_core_before_suppression["control_core_sha256"]
+    )
+    assert (
+        len(env["queue_log"]), len(env["artifact_log"]),
+        len(env["validation_reports"]), len(env["budget_log"]),
+    ) == (queue_count, artifact_count, report_count, budget_count)
+    assert c2_deferred in env["queue_log"] and c2_deferred_2 in env["queue_log"]
+
+    release_round_start = _d3_latest(env)
+    _validating, _validating_artifact, released_global = _d3_finish_running_local(
+        env, running=c1_running, running_artifact=c1_running_artifact,
+        node=c1["nodes"][0], cell_input=c1["input"],
+        round_start_queue_entries=release_round_start,
+    )
+    assert released_global.current_parallelism == 2
+    later_round_start = _d3_latest(env)
+    c2_ready, _ = _d3_make_ready(
+        env, current=c2_deferred_2, node=c2["nodes"][0],
+        cell_input=c2["input"], round_start_queue_entries=later_round_start,
+    )
+    assert c2_ready.state == "READY"
+    assert sum(item.state == "READY" for item in _d3_latest(env)) == 1
+
+
+def test_d3_activated_child_waits_for_exact_result_v035(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    dependency, _ = _d3_complete_local_node(env, node_index=0)
+    p1, p1_artifact, _ = _d3_start_node(
+        env, node_index=1, dependencies=(dependency,)
+    )
+    p2, _p2_artifact, _ = _d3_start_node(
+        env, node_index=2, dependencies=(dependency,)
+    )
+    child = _d3_activate_child(
+        env, slot_running=p1, slot_artifact=p1_artifact,
+        dependency=dependency,
+    )
+    child_ready, child_ready_artifact = _d3_make_ready(
+        env, current=child["queues"][0], node=child["nodes"][0],
+        cell_input=child["input"],
+    )
+    _child_running, _child_artifact, _cell_start, global_start = (
+        _d3_start_ready_entry(
+            env, ready=child_ready, ready_artifact=child_ready_artifact,
+            node=child["nodes"][0], cell_input=child["input"],
+        )
+    )
+    assert global_start.current_parallelism == 3
+    indexes = _d3_indexes(env)
+    assert fr._d3_instantiated_child_v02(p1, indexes=indexes) is not None
+    with pytest.raises(ValueError, match="g2d_child_slot_activation_invalid"):
+        fr._d3_child_activation_precheck_material_v02(
+            source_context=env["source"], topology=env["topology"],
+            source_artifact=p1_artifact, current_entry=p1,
+            node=env["nodes"][1], cell_input=env["cell_input"],
+            cell_budget_before=global_start, global_budget_before=global_start,
+            dependencies=(dependency,), indexes=indexes,
+        )
+    p1_anchor = indexes["budget_by_id"][p1.cell_budget_id]
+    assert _d3_eval(
+        env, source_artifact=p1_artifact, node=env["nodes"][1],
+        current_entry=p1, cell_input=env["cell_input"],
+        cell_budget=p1_anchor, global_budget=p1_anchor,
+        dependencies=(dependency,),
+    ) is None
+    with pytest.raises(ValueError, match="g2d_child_slot_activation_invalid"):
+        _d3_eval(
+            env, source_artifact=p1_artifact, node=env["nodes"][1],
+            current_entry=p1, cell_input=env["cell_input"],
+            cell_budget=p1_anchor, global_budget=p1_anchor,
+            dependencies=(dependency,),
+            queue_reason_codes=("g2d_required_child_failure",),
+            observed_evidence_refs=("evidence:forged",),
+        )
+    classified = fr._d3_scheduler_classification_v02(
+        source_context=env["source"], topology=env["topology"],
+        policy=env["source"].runtime_policy, global_budget=global_start,
+        entries=env["queue_log"], indexes=indexes,
+    )
+    assert p1 not in tuple(item[1] for item in classified["classified"])
+    assert p1 in classified["future_progress"]
+    assert ("RUNNING", p2) in classified["classified"]
+    assert p2.global_budget_id != global_start.budget_id
+    with pytest.raises(ValueError, match="g2d_backpressure_invalid"):
+        fr._d3_scheduler_classification_v02(
+            source_context=env["source"], topology=env["topology"],
+            policy=env["source"].runtime_policy,
+            global_budget=indexes["budget_by_id"][p2.global_budget_id],
+            entries=env["queue_log"], indexes=indexes,
+        )
+
+
+def test_d3_scope_input_queue_negative_and_d4_boundary(
+    d3_mode_environments: dict[str, dict[str, object]],
+) -> None:
+    env = d3_mode_environments["cloud_llm"]
+    cell_input = env["cell_input"]
+    topology = env["topology"]
+    queues = env["queues"]
+    artifacts = env["queue_artifacts"]
+    assert isinstance(cell_input, fr.FractalCellInputV02)
+    assert fr.validate_fractal_cell_input_against_sources_v02(
+        _seal(replace(cell_input, evidence_refs=tuple(reversed(cell_input.evidence_refs)))),
+        source_context=env["source"],
+        topology=topology,
+        topology_artifact=env["topology_artifact"],
+        parent_input=None,
+        parent_slot_artifact=None,
+        scope_projection=None,
+        cell_budget=env["root_create"],
+        global_budget=env["root_create"],
+        queue_entries=queues,
+        queue_artifacts=artifacts,
+        **_d3_prefix_kwargs(env),
+    ).status == "FAIL_CLOSED"
+    with pytest.raises(ValueError):
+        fr.build_fractal_cell_input_from_queue_v02(
+            source_context=env["source"],
+            topology=topology,
+            topology_artifact=env["topology_artifact"],
+            cell_id=topology.root_cell_id,
+            parent_cell_id=None,
+            parent_input=None,
+            parent_slot_artifact=None,
+            scope_projection=None,
+            cell_budget=env["root_create"],
+            global_budget=env["root_create"],
+            initial_queue_entries=tuple(reversed(queues)),
+            initial_queue_artifacts=tuple(reversed(artifacts)),
+            ordered_planned_child_cell_ids=(),
+            **_d3_prefix_kwargs(env),
+        )
+    module_source = MODULE_PATH.read_text(encoding="utf-8")
+    assert "import hedgehog.kernel\n" not in module_source
+    assert "demo." not in module_source and "tests." not in module_source
+    for token in ("provider_calls=0", "network_calls=0", "real_world_effects_count=0"):
+        assert token in module_source
+    for forbidden in (
+        "build_fractal_cell_result_proposal_v02",
+        "aggregate_fractal_runtime_report_v02",
+        "run_fractal_runtime_v02",
+        "validate_fractal_runtime_stage_bundle_v02",
+    ):
+        assert not callable(getattr(fr, forbidden, None))
+    package = importlib.import_module("hedgehog.kernel")
+    assert not hasattr(package, "admit_runtime_execution_topology_v02")

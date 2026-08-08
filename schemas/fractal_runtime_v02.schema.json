@@ -154,7 +154,7 @@
           "const": 21
         },
         "max_parallelism": {
-          "const": 4
+          "const": 3
         },
         "max_revise_count": {
           "const": 2

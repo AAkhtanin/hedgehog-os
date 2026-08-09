@@ -1,4 +1,4 @@
-"""Deterministic contracts for Fractal Runtime v0.2 through G2-D3.
+"""Deterministic contracts for Fractal Runtime v0.2 through G2-D4.
 
 This module owns canonical data, structural and G2-C source validation, and
 deterministic topology, queue, budget, scope, and backpressure construction.
@@ -8,8 +8,11 @@ DRS, permission, packet, receipt, FinalOutput, authority, or effect operation.
 
 from __future__ import annotations
 
-from dataclasses import dataclass as _dataclass, fields as _fields, replace as _replace
+from collections.abc import Mapping as _Mapping
+from dataclasses import dataclass as _dataclass, fields as _fields, is_dataclass as _is_dataclass, replace as _replace
+from functools import lru_cache as _lru_cache
 import hashlib
+from math import isfinite as _isfinite
 import re
 import types
 import unicodedata
@@ -18,8 +21,14 @@ from typing import get_args as _get_args, get_origin as _get_origin, get_type_hi
 from hedgehog.kernel.abi_v01 import (
     CausalConsumptionRefV01,
     KernelArtifactV01,
+    build_causal_consumption_ref_v01 as _build_causal_consumption_ref_v01,
     build_kernel_artifact_v01 as _build_kernel_artifact_v01,
+    causal_consumption_ref_to_plain_dict_v01 as _causal_consumption_ref_to_plain_dict_v01,
+    causal_consumption_refs_to_plain_list_v01 as _causal_consumption_refs_to_plain_list_v01,
     kernel_artifact_to_plain_dict_v01 as _kernel_artifact_to_plain_dict_v01,
+    validate_causal_consumption_bundle_v01 as _validate_causal_consumption_bundle_v01,
+    validate_causal_consumption_ref_v01 as _validate_causal_consumption_ref_v01,
+    validate_kernel_artifact_bundle_v01 as _validate_kernel_artifact_bundle_v01,
     validate_kernel_artifact_v01 as _validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.execution_mode_router_v01 import (
@@ -62,6 +71,10 @@ from hedgehog.kernel.transition_registry_v01 import (
     validate_fractal_runtime_transition_decision_v02 as _validate_fractal_runtime_transition_decision_v02,
     validate_fractal_runtime_transition_registry_profile_v02 as _validate_fractal_runtime_transition_registry_profile_v02,
 )
+from hedgehog.post_vv import (
+    validate_result_proposals as _validate_result_proposals,
+)
+from hedgehog.gt_validator import validate_gt as _validate_gt
 
 
 MODULE_ID = "kernel_fractal_runtime_v02"
@@ -1559,45 +1572,79 @@ def _plain_value(value: object, active: set[int]) -> object:
     raise ValueError("g2d_serialization_invalid")
 
 
-def _plain_data_unchecked(value: object, *, omit_identity: bool = False) -> dict[str, object]:
+@_lru_cache(maxsize=None)
+def _resolved_type_hints_v02(expected_type: type[object]) -> dict[str, object]:
+    return _get_type_hints(expected_type)
+
+
+@_lru_cache(maxsize=None)
+def _dataclass_field_row_v02(expected_type: type[object]) -> tuple[object, ...]:
+    return _fields(expected_type)
+
+
+def _plain_data_material_v02(
+    value: object,
+    *,
+    omit_identity: bool = False,
+) -> dict[str, object]:
     value_type = type(value)
     if value_type not in SERIALIZED_G2D_TYPES_V02:
         raise ValueError("g2d_type_invalid")
     identity_field = _IDENTITY_PROFILES[value_type][0]
     output: dict[str, object] = {}
-    for field in _fields(value_type):
+    for field in _dataclass_field_row_v02(value_type):
         if omit_identity and field.name == identity_field:
             continue
         output[field.name] = _plain_value(getattr(value, field.name), set())
+    return output
+
+
+def _plain_data_unchecked(value: object, *, omit_identity: bool = False) -> dict[str, object]:
+    output = _plain_data_material_v02(value, omit_identity=omit_identity)
     _canonical_json_bytes_v01(output)
     return output
 
 
-def _rebuild_identity(value: object) -> str:
+def _rebuild_identity(
+    value: object,
+    *,
+    annotations_validated: bool = False,
+) -> str:
     value_type = type(value)
     if value_type not in SERIALIZED_G2D_TYPES_V02:
         raise ValueError("g2d_type_invalid")
-    errors = _annotation_errors(value, value_type)
-    if errors:
-        raise ValueError(errors[0])
+    if not annotations_validated:
+        errors = _annotation_errors(value, value_type)
+        if errors:
+            raise ValueError(errors[0])
     _identity_field, domain, prefix = _IDENTITY_PROFILES[value_type]
     return prefix + _domain_separated_sha256_hex_v01(
         domain=domain,
-        payload=_canonical_json_bytes_v01(_plain_data_unchecked(value, omit_identity=True)),
+        payload=_canonical_json_bytes_v01(
+            _plain_data_material_v02(value, omit_identity=True)
+        ),
     )
 
 
-def _finish_identity(value: object) -> object:
+def _finish_identity(value: object, *, annotations_validated: bool = False) -> object:
     identity_field = _IDENTITY_PROFILES[type(value)][0]
-    return _replace(value, **{identity_field: _rebuild_identity(value)})
+    return _replace(
+        value,
+        **{
+            identity_field: _rebuild_identity(
+                value,
+                annotations_validated=annotations_validated,
+            )
+        },
+    )
 
 
 def _annotation_errors(value: object, expected_type: type[object]) -> tuple[str, ...]:
     if type(value) is not expected_type:
         return ("g2d_type_invalid",)
-    hints = _get_type_hints(expected_type)
+    hints = _resolved_type_hints_v02(expected_type)
     errors: list[str] = []
-    for field in _fields(expected_type):
+    for field in _dataclass_field_row_v02(expected_type):
         item = getattr(value, field.name)
         if _annotation_valid(item, hints[field.name]):
             continue
@@ -1614,13 +1661,25 @@ def _annotation_errors(value: object, expected_type: type[object]) -> tuple[str,
     return _sort_reasons(errors) if errors else ()
 
 
-def _common_errors(value: object, expected_type: type[object]) -> tuple[str, ...]:
-    errors = list(_annotation_errors(value, expected_type))
+def _common_errors(
+    value: object,
+    expected_type: type[object],
+    *,
+    checked_annotation_errors: tuple[str, ...] | None = None,
+) -> tuple[str, ...]:
+    annotation_errors = (
+        _annotation_errors(value, expected_type)
+        if checked_annotation_errors is None
+        else checked_annotation_errors
+    )
+    errors = list(annotation_errors)
     if errors:
         return _sort_reasons(errors)
-    if len(_fields(type(value))) != len(_fields(expected_type)):
+    if len(_dataclass_field_row_v02(type(value))) != len(
+        _dataclass_field_row_v02(expected_type)
+    ):
         errors.append("g2d_field_count_invalid")
-    for field in _fields(expected_type):
+    for field in _dataclass_field_row_v02(expected_type):
         item = getattr(value, field.name)
         if type(item) is str and not _text_valid(item):
             errors.append("g2d_text_invalid")
@@ -1635,7 +1694,7 @@ def _common_errors(value: object, expected_type: type[object]) -> tuple[str, ...
         errors.append("g2d_identity_invalid")
     else:
         try:
-            if identity != _rebuild_identity(value):
+            if identity != _rebuild_identity(value, annotations_validated=True):
                 errors.append("g2d_identity_mismatch")
         except Exception:
             errors.append("g2d_identity_invalid")
@@ -1728,7 +1787,7 @@ _ENUM_FIELDS = {
 
 def _specific_errors(value: object) -> tuple[str, ...]:
     errors: list[str] = []
-    for field in _fields(type(value)):
+    for field in _dataclass_field_row_v02(type(value)):
         item = getattr(value, field.name)
         if field.name in _ENUM_FIELDS and item is not None and item not in _ENUM_FIELDS[field.name]:
             errors.append("g2d_unknown_enum")
@@ -2265,6 +2324,7 @@ def _specific_errors(value: object) -> tuple[str, ...]:
             value.allocated_cell_budget_id,
             value.final_cell_budget_id,
             value.global_budget_id,
+            *value.evidence_refs,
         )
         if (
             value.retry_eligible is not False
@@ -2326,17 +2386,16 @@ def _specific_errors(value: object) -> tuple[str, ...]:
         elif value.cell_depth < 1 or not _identity_pattern_valid(value.cell_id, "frchildcell_v02:") or value.final_cell_budget_id == value.global_budget_id:
             errors.append("g2d_cell_result_context_mismatch")
         expected_trace = (
-            value.topology_id,
             value.cell_input_id,
             *value.ordered_terminal_queue_entry_ids,
             *value.ordered_child_result_ids,
+            *value.accepted_output_refs,
+            *value.evidence_refs,
+            value.pre_result_validation_report_id,
             *value.partial_failure_ids,
             value.allocated_cell_budget_id,
             value.final_cell_budget_id,
             value.global_budget_id,
-            value.pre_result_validation_report_id,
-            value.post_vv_report_ref,
-            value.gt_advisory_ref,
         )
         if value.trace_refs != expected_trace or _has_own_identity(value, "trace_refs"):
             errors.append("g2d_identity_dependency_cycle")
@@ -2434,11 +2493,226 @@ def _validation_report_semantic_errors(value: FractalRuntimeValidationReportV02)
     return _sort_reasons(errors) if errors else ()
 
 
-def _serialized_errors(value: object, expected_type: type[object]) -> tuple[str, ...]:
-    common = list(_common_errors(value, expected_type))
-    if type(value) is expected_type and not _annotation_errors(value, expected_type):
-        common.extend(_specific_errors(value))
+_SERIALIZED_VALIDATION_SUCCESS_CACHE_MAX_V02 = 4096
+_SERIALIZED_VALIDATION_SUCCESS_CACHE_V02: dict[
+    tuple[type[object], object],
+    None,
+] = {}
+
+_SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_MAX_V02 = 16
+_TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_MAX_V02 = 16
+_TOPOLOGY_PARTS_SUCCESS_CACHE_MAX_V02 = 32
+_RETAINED_BASE_REPORTS_SUCCESS_CACHE_MAX_V02 = 32
+
+_SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02: dict[
+    tuple[object, ...],
+    tuple[str | None, tuple[str, ...]],
+] = {}
+_TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02: dict[
+    tuple[object, ...],
+    RuntimeExecutionTopologyV02,
+] = {}
+_TOPOLOGY_PARTS_SUCCESS_CACHE_V02: dict[
+    tuple[object, ...],
+    tuple[
+        RuntimeTopologySourceBindingV02,
+        RuntimeTopologySeedV02,
+        FractalRuntimeBudgetV02,
+        tuple[RuntimeTopologyNodeV02, ...],
+    ],
+] = {}
+_RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02: dict[
+    tuple[object, ...],
+    tuple[FractalRuntimeValidationReportV02, ...],
+] = {}
+
+
+class _ExactCacheKeyErrorV02(Exception):
+    pass
+
+
+def _exact_cache_type_tag_v02(value: object) -> str:
+    value_type = type(value)
+    return value_type.__module__ + "." + value_type.__qualname__
+
+
+def _exact_cache_freeze_v02(
+    value: object,
+    *,
+    _active: tuple[object, ...] = (),
+) -> tuple[object, ...]:
+    value_type = type(value)
+    type_tag = _exact_cache_type_tag_v02(value)
+    if value is None:
+        return ("scalar", type_tag, None)
+    if value_type is bool:
+        return ("scalar", type_tag, value)
+    if value_type is int:
+        return ("scalar", type_tag, value)
+    if value_type is str:
+        return ("scalar", type_tag, value)
+    if value_type is float:
+        if not _isfinite(value):
+            raise _ExactCacheKeyErrorV02(type_tag)
+        return ("scalar", type_tag, value.hex())
+    if value_type is bytes:
+        return ("scalar", type_tag, value)
+    if any(value is active_value for active_value in _active):
+        raise _ExactCacheKeyErrorV02(type_tag)
+    next_active = (*_active, value)
+    if value_type is tuple:
+        return (
+            "tuple",
+            type_tag,
+            tuple(
+                _exact_cache_freeze_v02(item, _active=next_active)
+                for item in value
+            ),
+        )
+    if value_type is list:
+        return (
+            "list",
+            type_tag,
+            tuple(
+                _exact_cache_freeze_v02(item, _active=next_active)
+                for item in value
+            ),
+        )
+    if isinstance(value, _Mapping):
+        rows = tuple(
+            (
+                _exact_cache_freeze_v02(key, _active=next_active),
+                _exact_cache_freeze_v02(item, _active=next_active),
+            )
+            for key, item in value.items()
+        )
+        try:
+            ordered_rows = tuple(sorted(rows, key=lambda row: row[0]))
+        except TypeError as exc:
+            raise _ExactCacheKeyErrorV02(type_tag) from exc
+        return ("mapping", type_tag, ordered_rows)
+    if _is_dataclass(value) and not isinstance(value, type):
+        return (
+            "dataclass",
+            type_tag,
+            tuple(
+                (
+                    field.name,
+                    _exact_cache_freeze_v02(
+                        getattr(value, field.name),
+                        _active=next_active,
+                    ),
+                )
+                for field in _dataclass_field_row_v02(value_type)
+            ),
+        )
+    raise _ExactCacheKeyErrorV02(type_tag)
+
+
+def _exact_cache_key_or_none_v02(value: object) -> tuple[object, ...] | None:
+    try:
+        return _exact_cache_freeze_v02(value)
+    except (Exception, RecursionError):
+        return None
+
+
+def _source_context_success_cache_key_v02(
+    source_context: object,
+) -> tuple[object, ...] | None:
+    frozen_source = _exact_cache_key_or_none_v02(source_context)
+    if frozen_source is None:
+        return None
+    return ("source_context_family", frozen_source)
+
+
+def _topology_success_cache_key_v02(
+    source_context: object,
+    topology: object | None = None,
+) -> tuple[object, ...] | None:
+    frozen_source = _exact_cache_key_or_none_v02(source_context)
+    if frozen_source is None:
+        return None
+    if topology is None:
+        return ("topology_construction", frozen_source)
+    frozen_topology = _exact_cache_key_or_none_v02(topology)
+    if frozen_topology is None:
+        return None
+    return ("source_topology_pair", frozen_source, frozen_topology)
+
+
+def _store_bounded_success_v02(
+    cache: dict[tuple[object, ...], object],
+    key: tuple[object, ...],
+    value: object,
+    *,
+    maximum: int,
+) -> None:
+    if key in cache:
+        return
+    if len(cache) >= maximum:
+        oldest = next(iter(cache))
+        del cache[oldest]
+    cache[key] = value
+
+
+def _serialized_validation_cache_key_v02(
+    value: object,
+    expected_type: type[object],
+) -> tuple[type[object], object] | None:
+    if type(value) is not expected_type:
+        return None
+    try:
+        hash(value)
+    except (TypeError, ValueError, RecursionError):
+        return None
+    return (expected_type, value)
+
+
+def _serialized_errors_uncached_v02(
+    value: object,
+    expected_type: type[object],
+) -> tuple[str, ...]:
+    annotation_errors = _annotation_errors(value, expected_type)
+    if annotation_errors:
+        return annotation_errors
+    common = list(
+        _common_errors(
+            value,
+            expected_type,
+            checked_annotation_errors=(),
+        )
+    )
+    common.extend(_specific_errors(value))
     return _sort_reasons(common) if common else ()
+
+
+def _serialized_errors(value: object, expected_type: type[object]) -> tuple[str, ...]:
+    key = _serialized_validation_cache_key_v02(value, expected_type)
+    if key is not None:
+        try:
+            if key in _SERIALIZED_VALIDATION_SUCCESS_CACHE_V02:
+                return ()
+        except (TypeError, ValueError, RecursionError):
+            key = None
+    errors = _serialized_errors_uncached_v02(value, expected_type)
+    if not errors and key is not None:
+        if len(_SERIALIZED_VALIDATION_SUCCESS_CACHE_V02) >= (
+            _SERIALIZED_VALIDATION_SUCCESS_CACHE_MAX_V02
+        ):
+            oldest = next(iter(_SERIALIZED_VALIDATION_SUCCESS_CACHE_V02))
+            del _SERIALIZED_VALIDATION_SUCCESS_CACHE_V02[oldest]
+        _SERIALIZED_VALIDATION_SUCCESS_CACHE_V02[key] = None
+    return errors
+
+
+def _clear_structural_validation_caches_v02() -> None:
+    _resolved_type_hints_v02.cache_clear()
+    _dataclass_field_row_v02.cache_clear()
+    _SERIALIZED_VALIDATION_SUCCESS_CACHE_V02.clear()
+    _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02.clear()
+    _TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02.clear()
+    _TOPOLOGY_PARTS_SUCCESS_CACHE_V02.clear()
+    _RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02.clear()
 
 
 def _structural_report(value: object, expected_type: type[object]) -> FractalRuntimeValidationReportV02:
@@ -3917,6 +4191,7 @@ def build_fractal_partial_failure_record_v02(
         allocated_cell_budget.budget_id,
         final_cell_budget.budget_id,
         global_budget.budget_id,
+        *evidence,
     )
     provisional = FractalPartialFailureRecordV02(
         partial_failure_id="frfailure_v02:" + _ZERO_SHA256,
@@ -4025,7 +4300,7 @@ def _exact_dict_ref(value: object, key: str, reason: str) -> str:
     if type(value) is not dict or type(value.get(key)) is not str or not _ref_valid(value[key]):
         raise ValueError(reason)
     try:
-        _plain_value(value, set())
+        _canonical_json_bytes_v01(value)
     except (TypeError, ValueError, RecursionError):
         raise ValueError(reason) from None
     return value[key]
@@ -4124,17 +4399,16 @@ def build_fractal_cell_result_v02(
     )
     source_reasons = _ordered_source_reason_union(*(failure.source_reason_codes for failure in partial_failures))
     trace_refs = (
-        topology.topology_id,
         cell_input.cell_input_id,
         *(entry.queue_entry_id for entry in terminal_queue_entries),
         *actual_children,
+        *outputs,
+        *evidence,
+        pre_result_validation_report.validation_report_id,
         *(failure.partial_failure_id for failure in partial_failures),
         allocated_cell_budget.budget_id,
         final_cell_budget.budget_id,
         global_budget.budget_id,
-        pre_result_validation_report.validation_report_id,
-        post_vv_ref,
-        gt_ref,
     )
     provisional = FractalCellResultV02(
         result_id="frcellresult_v02:" + _ZERO_SHA256,
@@ -4433,7 +4707,7 @@ def build_fractal_runtime_validation_report_v02(
         drs_write_created=False,
         real_world_effects_count=0,
     )
-    result = _finish_identity(provisional)
+    result = _finish_identity(provisional, annotations_validated=True)
     errors = _validation_report_semantic_errors(result)
     if errors:
         raise ValueError(errors[0])
@@ -4442,11 +4716,7 @@ def build_fractal_runtime_validation_report_v02(
 
 def validate_fractal_runtime_validation_report_v02(value: object) -> tuple[str, ...]:
     try:
-        if type(value) is not FractalRuntimeValidationReportV02:
-            return ("g2d_type_invalid",)
-        errors = list(_common_errors(value, FractalRuntimeValidationReportV02))
-        errors.extend(_specific_errors(value))
-        return _sort_reasons(errors) if errors else ()
+        return _serialized_errors(value, FractalRuntimeValidationReportV02)
     except Exception:
         return ("g2d_serialization_invalid",)
 
@@ -4559,7 +4829,7 @@ def _source_context_failure_v02(
     return reason, () if report is None else _source_reasons_from_report_v02(report)
 
 
-def _validate_source_context_family_v02(
+def _validate_source_context_family_uncached_v02(
     value: object,
 ) -> tuple[str | None, tuple[str, ...]]:
     try:
@@ -4756,6 +5026,25 @@ def _validate_source_context_family_v02(
         return _source_context_failure_v02("g2d_source_context_invalid")
 
 
+def _validate_source_context_family_v02(
+    value: object,
+) -> tuple[str | None, tuple[str, ...]]:
+    key = _source_context_success_cache_key_v02(value)
+    if key is not None and key in _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02:
+        return _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02[key]
+    result = _validate_source_context_family_uncached_v02(value)
+    if result == (None, ()) and key is not None:
+        final_key = _source_context_success_cache_key_v02(value)
+        if final_key == key:
+            _store_bounded_success_v02(
+                _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02,
+                key,
+                result,
+                maximum=_SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_MAX_V02,
+            )
+    return result
+
+
 def build_fractal_runtime_source_context_v02(
     *,
     transition_registry: TransitionRegistryV01,
@@ -4838,7 +5127,7 @@ def validate_runtime_topology_source_binding_against_g2c_v02(
         )
 
 
-def _construct_runtime_execution_topology_from_source_v02(
+def _construct_runtime_execution_topology_from_source_uncached_v02(
     source_context: FractalRuntimeSourceContextV02,
 ) -> RuntimeExecutionTopologyV02:
     source_binding = build_runtime_topology_source_binding_v02(source_context=source_context)
@@ -4925,6 +5214,27 @@ def _construct_runtime_execution_topology_from_source_v02(
         global_budget=global_budget,
         time_envelope_ref=source_binding.source_time_envelope_ref,
     )
+
+
+def _construct_runtime_execution_topology_from_source_v02(
+    source_context: FractalRuntimeSourceContextV02,
+) -> RuntimeExecutionTopologyV02:
+    key = _topology_success_cache_key_v02(source_context)
+    if key is not None and key in _TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02:
+        return _TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02[key]
+    result = _construct_runtime_execution_topology_from_source_uncached_v02(
+        source_context
+    )
+    if key is not None:
+        final_key = _topology_success_cache_key_v02(source_context)
+        if final_key == key:
+            _store_bounded_success_v02(
+                _TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02,
+                key,
+                result,
+                maximum=_TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_MAX_V02,
+            )
+    return result
 
 
 def construct_runtime_execution_topology_v02(
@@ -5240,7 +5550,7 @@ _D3_STATE_CLASS_ORDER_V02 = (
 )
 
 
-def _d3_reconstruct_topology_parts_v02(
+def _d3_reconstruct_topology_parts_uncached_v02(
     source_context: FractalRuntimeSourceContextV02,
     topology: RuntimeExecutionTopologyV02,
 ) -> tuple[
@@ -5308,6 +5618,34 @@ def _d3_reconstruct_topology_parts_v02(
     if initial_budget.budget_id != topology.global_budget_id:
         raise ValueError("g2d_global_budget_binding_missing")
     return source_binding, seed, initial_budget, nodes
+
+
+def _d3_reconstruct_topology_parts_v02(
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+) -> tuple[
+    RuntimeTopologySourceBindingV02,
+    RuntimeTopologySeedV02,
+    FractalRuntimeBudgetV02,
+    tuple[RuntimeTopologyNodeV02, ...],
+]:
+    key = _topology_success_cache_key_v02(source_context, topology)
+    if key is not None and key in _TOPOLOGY_PARTS_SUCCESS_CACHE_V02:
+        return _TOPOLOGY_PARTS_SUCCESS_CACHE_V02[key]
+    result = _d3_reconstruct_topology_parts_uncached_v02(
+        source_context,
+        topology,
+    )
+    if key is not None:
+        final_key = _topology_success_cache_key_v02(source_context, topology)
+        if final_key == key:
+            _store_bounded_success_v02(
+                _TOPOLOGY_PARTS_SUCCESS_CACHE_V02,
+                key,
+                result,
+                maximum=_TOPOLOGY_PARTS_SUCCESS_CACHE_MAX_V02,
+            )
+    return result
 
 
 def _d3_projected_nodes_v02(
@@ -5396,11 +5734,11 @@ def _d3_transition_decision_v02(
             item
             for item in registry.rules
             if re.search(
-                r"(?:^|_)t(0[2-9]|1[0-2])(?:_|$)",
+                r"(?:^|_)t(0[2-9]|1[0-7])(?:_|$)",
                 item.rule_id,
             )
             and "t" + re.search(
-                r"(?:^|_)t(0[2-9]|1[0-2])(?:_|$)",
+                r"(?:^|_)t(0[2-9]|1[0-7])(?:_|$)",
                 item.rule_id,
             ).group(1)
             == short_rule_id
@@ -5859,7 +6197,7 @@ _D3_LOCAL_NODE_KINDS_V02 = frozenset(
 )
 
 
-def _d3_expected_retained_base_reports_v02(
+def _d3_expected_retained_base_reports_uncached_v02(
     source_context: FractalRuntimeSourceContextV02,
     topology: RuntimeExecutionTopologyV02,
 ) -> tuple[FractalRuntimeValidationReportV02, ...]:
@@ -5893,6 +6231,29 @@ def _d3_expected_retained_base_reports_v02(
     if any(report.status != "PASS" for report in reports):
         raise ValueError("g2d_validation_target_id_mismatch")
     return reports
+
+
+def _d3_expected_retained_base_reports_v02(
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+) -> tuple[FractalRuntimeValidationReportV02, ...]:
+    key = _topology_success_cache_key_v02(source_context, topology)
+    if key is not None and key in _RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02:
+        return _RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02[key]
+    result = _d3_expected_retained_base_reports_uncached_v02(
+        source_context,
+        topology,
+    )
+    if key is not None and all(report.status == "PASS" for report in result):
+        final_key = _topology_success_cache_key_v02(source_context, topology)
+        if final_key == key:
+            _store_bounded_success_v02(
+                _RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02,
+                key,
+                result,
+                maximum=_RETAINED_BASE_REPORTS_SUCCESS_CACHE_MAX_V02,
+            )
+    return result
 
 
 def _d3_validation_reports_equal_v02(
@@ -5965,6 +6326,25 @@ def _d3_budget_is_ancestor_v02(
             else budget_by_id.get(cursor.predecessor_budget_id)
         )
     return False
+
+
+def _d3_is_adjacent_child_finalize_global_pair_v02(
+    budgets: tuple[FractalRuntimeBudgetV02, ...],
+    index: int,
+) -> bool:
+    if type(budgets) is not tuple or type(index) is not int or not 0 < index < len(budgets):
+        return False
+    current = budgets[index]
+    previous = budgets[index - 1]
+    return (
+        type(current) is FractalRuntimeBudgetV02
+        and type(previous) is FractalRuntimeBudgetV02
+        and current.budget_scope == "ROOT_GLOBAL_AND_CELL"
+        and current.budget_event_kind == "FINALIZE"
+        and previous.budget_scope == "CHILD_CELL_LOCAL"
+        and previous.budget_event_kind == current.budget_event_kind
+        and previous.budget_event_ref == current.budget_event_ref
+    )
 
 
 def _d3_validate_budget_log_v02(
@@ -6074,16 +6454,12 @@ def _d3_validate_budget_log_v02(
                 raise ValueError("g2d_budget_event_context_invalid")
             if budget.budget_event_kind == "FINALIZE":
                 expected_state = (
-                    "FINAL"
-                    if budget.budget_scope == "CHILD_CELL_LOCAL"
-                    or budget.owning_cell_id == topology.root_cell_id
-                    and not any(
-                        item.budget_scope == "CHILD_CELL_LOCAL"
-                        and item.budget_event_ref == budget.budget_event_ref
-                        and item.budget_event_kind == "FINALIZE"
-                        for item in budgets[:index]
+                    "ACTIVE"
+                    if _d3_is_adjacent_child_finalize_global_pair_v02(
+                        budgets,
+                        index,
                     )
-                    else "ACTIVE"
+                    else "FINAL"
                 )
                 if budget.budget_state != expected_state:
                     raise ValueError("g2d_budget_state_transition_invalid")
@@ -9840,15 +10216,14 @@ def _d3_expected_child_result_artifact_v02(
     ):
         raise ValueError("g2d_cell_result_context_mismatch")
     expected_trace = (
-        topology.topology_id,
         cell_input.cell_input_id,
         *result.ordered_terminal_queue_entry_ids,
+        *result.accepted_output_refs,
+        *result.evidence_refs,
+        result.pre_result_validation_report_id,
         result.allocated_cell_budget_id,
         result.final_cell_budget_id,
         result.global_budget_id,
-        result.pre_result_validation_report_id,
-        result.post_vv_report_ref,
-        result.gt_advisory_ref,
     )
     if result.trace_refs != expected_trace:
         raise ValueError("g2d_cell_result_context_mismatch")
@@ -9875,7 +10250,7 @@ def _d3_expected_child_result_artifact_v02(
             "BLOCKED_FAIL_CLOSED" if result.outcome == "BLOCKED" else "VALIDATED"
         ),
         payload=payload,
-        trace_refs=result.trace_refs,
+        trace_refs=(result.post_vv_report_ref, result.gt_advisory_ref, *result.trace_refs),
         parent_refs=(
             topology_artifact.artifact_id,
             *(item.artifact_id for item in terminal_artifacts),
@@ -10147,7 +10522,10 @@ def evaluate_fractal_runtime_state_transition_v02(
         gt_advisory_report=parent_return_gt_advisory_report,
         validation_reports=parent_return_validation_reports,
     )
-    if not family_empty:
+    if not family_empty and (
+        type(node) is not RuntimeTopologyNodeV02
+        or node.node_kind != "PARENT_RETURN"
+    ):
         raise ValueError("g2d_parent_return_invalid")
     _binding, _seed, _initial, nodes = _d3_reconstruct_topology_parts_v02(
         source_context,
@@ -10277,8 +10655,6 @@ def evaluate_fractal_runtime_state_transition_v02(
             raise ValueError("g2d_node_instance_geometry_invalid")
         rule_id = "t02"
     else:
-        if node.node_kind == "PARENT_RETURN":
-            return None
         if (
             validate_fractal_cell_queue_entry_v02(current_entry).status != "PASS"
             or type(cell_input) is not FractalCellInputV02
@@ -10322,6 +10698,12 @@ def evaluate_fractal_runtime_state_transition_v02(
             cell_depth=cell_depth,
             dependencies=dependencies,
         )
+        if (
+            node.node_kind == "PARENT_RETURN"
+            and current_entry.state in {"PENDING", "READY"}
+            and not family_empty
+        ):
+            raise ValueError("g2d_parent_return_invalid")
         if current_entry.state == "PENDING":
             if not dependencies_satisfied:
                 return None
@@ -10381,10 +10763,37 @@ def evaluate_fractal_runtime_state_transition_v02(
             if (
                 backpressure_state is not None
                 or revise_observation is not None
-                or validation_report is not None
+                or (
+                    validation_report is not None
+                    and node.node_kind not in {"POST_VV", "GT_ADVISORY"}
+                )
             ):
                 raise ValueError("g2d_queue_entry_invalid")
-            if node.node_kind == "FRACTAL_CELL":
+            if node.node_kind == "PARENT_RETURN":
+                if family_empty:
+                    return None
+                if local_child_result is not None or local_child_result_artifact is not None:
+                    raise ValueError("g2d_parent_return_invalid")
+                material = _d4_parent_return_material_v02(
+                    source_context=source_context,
+                    topology=topology,
+                    cell_input=cell_input,
+                    pre_post_vv_terminal_queue_entries=parent_return_pre_post_vv_terminal_queue_entries,
+                    child_results=parent_return_child_results,
+                    partial_failures=parent_return_partial_failures,
+                    result_proposal=parent_return_result_proposal,
+                    post_vv_report=parent_return_post_vv_report,
+                    gt_advisory_report=parent_return_gt_advisory_report,
+                    validation_reports=parent_return_validation_reports,
+                )
+                if (
+                    reasons != material["reason_codes"]
+                    or outputs != material["observed_output_refs"]
+                    or evidence != material["observed_evidence_refs"]
+                    or advisories != material["advisory_refs"]
+                ):
+                    raise ValueError("g2d_parent_return_invalid")
+            elif node.node_kind == "FRACTAL_CELL":
                 if (local_child_result is None) != (local_child_result_artifact is None):
                     raise ValueError("g2d_queue_artifact_lineage_invalid")
                 instantiated_child = _d3_instantiated_child_v02(
@@ -10457,6 +10866,28 @@ def evaluate_fractal_runtime_state_transition_v02(
                     or advisories != material["derived_advisory_refs"]
                 ):
                     raise ValueError("g2d_queue_entry_invalid")
+            elif node.node_kind in {"POST_VV", "GT_ADVISORY"}:
+                expected_target = (
+                    "POST_VV_REPORT"
+                    if node.node_kind == "POST_VV"
+                    else "GT_ADVISORY_REPORT"
+                )
+                if (
+                    type(validation_report) is not FractalRuntimeValidationReportV02
+                    or validate_fractal_runtime_validation_report_v02(validation_report)
+                    or validation_report.status != "PASS"
+                    or validation_report.validation_target != expected_target
+                    or outputs != (validation_report.validated_object_id,)
+                    or not evidence
+                    or advisories
+                    or local_child_result is not None
+                    or local_child_result_artifact is not None
+                ):
+                    raise ValueError(
+                        "g2d_post_vv_report_invalid"
+                        if node.node_kind == "POST_VV"
+                        else "g2d_gt_advisory_invalid"
+                    )
             else:
                 if (
                     local_child_result is not None
@@ -10541,7 +10972,10 @@ def evaluate_fractal_runtime_state_transition_v02(
                         != validate_fractal_revise_observation_v02(revise_observation)
                     ):
                         raise ValueError("g2d_revise_observation_invalid")
-                elif validation_report is not None:
+                elif (
+                    validation_report is not None
+                    and node.node_kind not in {"POST_VV", "GT_ADVISORY"}
+                ):
                     raise ValueError("g2d_queue_entry_invalid")
                 if (
                     outputs != current_entry.observed_output_refs
@@ -10550,7 +10984,34 @@ def evaluate_fractal_runtime_state_transition_v02(
                     or reasons != current_entry.queue_reason_codes
                 ):
                     raise ValueError("g2d_queue_entry_invalid")
-                if node.node_kind == "FRACTAL_CELL":
+                if node.node_kind == "PARENT_RETURN":
+                    if family_empty or revise_observation is not None:
+                        return None
+                    material = _d4_parent_return_material_v02(
+                        source_context=source_context,
+                        topology=topology,
+                        cell_input=cell_input,
+                        pre_post_vv_terminal_queue_entries=parent_return_pre_post_vv_terminal_queue_entries,
+                        child_results=parent_return_child_results,
+                        partial_failures=parent_return_partial_failures,
+                        result_proposal=parent_return_result_proposal,
+                        post_vv_report=parent_return_post_vv_report,
+                        gt_advisory_report=parent_return_gt_advisory_report,
+                        validation_reports=parent_return_validation_reports,
+                    )
+                    if (
+                        reasons != material["reason_codes"]
+                        or outputs != material["observed_output_refs"]
+                        or evidence != material["observed_evidence_refs"]
+                        or advisories != material["advisory_refs"]
+                        or current_entry.queue_reason_codes != material["reason_codes"]
+                        or current_entry.observed_output_refs != material["observed_output_refs"]
+                        or current_entry.observed_evidence_refs != material["observed_evidence_refs"]
+                        or current_entry.advisory_refs != material["advisory_refs"]
+                    ):
+                        raise ValueError("g2d_parent_return_invalid")
+                    terminal_state = material["terminal_state"]
+                elif node.node_kind == "FRACTAL_CELL":
                     if local_child_result is not None:
                         if (
                             type(local_child_result_artifact) is not KernelArtifactV01
@@ -10636,6 +11097,29 @@ def evaluate_fractal_runtime_state_transition_v02(
                     ):
                         raise ValueError("g2d_terminal_outcome_mapping_invalid")
                     terminal_state = material["allowed_outcome"]
+                elif node.node_kind in {"POST_VV", "GT_ADVISORY"}:
+                    expected_target = (
+                        "POST_VV_REPORT"
+                        if node.node_kind == "POST_VV"
+                        else "GT_ADVISORY_REPORT"
+                    )
+                    if (
+                        type(validation_report) is not FractalRuntimeValidationReportV02
+                        or validate_fractal_runtime_validation_report_v02(validation_report)
+                        or validation_report.status != "PASS"
+                        or validation_report.validation_target != expected_target
+                        or outputs != (validation_report.validated_object_id,)
+                        or outputs != current_entry.observed_output_refs
+                        or not evidence
+                        or evidence != current_entry.observed_evidence_refs
+                        or advisories
+                    ):
+                        raise ValueError(
+                            "g2d_post_vv_report_invalid"
+                            if node.node_kind == "POST_VV"
+                            else "g2d_gt_advisory_invalid"
+                        )
+                    terminal_state = "COMPLETED"
                 elif revise_observation is not None:
                     terminal_state = "DEADEND"
                 else:
@@ -10652,3 +11136,4074 @@ def evaluate_fractal_runtime_state_transition_v02(
     if source_context.root_decision_result.root_commit_created is not True:
         raise ValueError("g2d_g2c_root_result_invalid")
     return _d3_transition_decision_v02(transition_registry, rule_id)
+
+
+def _d4_contextual_report_v02(
+    *,
+    validation_target: str,
+    validated_object_id: str | None,
+    failure_stage: str,
+    reason_code: str | None = None,
+) -> FractalRuntimeValidationReportV02:
+    return build_fractal_runtime_validation_report_v02(
+        validation_target=validation_target,
+        validated_object_id=validated_object_id if reason_code is None else None,
+        failure_stage="NONE" if reason_code is None else failure_stage,
+        reason_codes=() if reason_code is None else (reason_code,),
+        source_reason_codes=(),
+    )
+
+
+def _d4_canonical_dict_equal_v02(left: object, right: object) -> bool:
+    return bool(
+        type(left) is dict
+        and type(right) is dict
+        and left == right
+        and _canonical_json_bytes_v01(left) == _canonical_json_bytes_v01(right)
+    )
+
+
+def _d4_ordered_unique_refs_v02(*families: tuple[str, ...]) -> tuple[str, ...]:
+    result: list[str] = []
+    for family in families:
+        values = _require_text_tuple(family)
+        for value in values:
+            if value not in result:
+                result.append(value)
+    return tuple(result)
+
+
+def _d4_partition_root_structural_evidence_v02(
+    *,
+    cell_input: FractalCellInputV02,
+    child_results: tuple[FractalCellResultV02, ...],
+    evidence_refs: tuple[str, ...],
+) -> tuple[str, ...]:
+    if (
+        type(cell_input) is not FractalCellInputV02
+        or type(child_results) is not tuple
+        or type(evidence_refs) is not tuple
+        or any(type(item) is not FractalCellResultV02 for item in child_results)
+        or any(type(item) is not str or not item for item in evidence_refs)
+    ):
+        raise ValueError("g2d_result_proposal_invalid")
+    if cell_input.parent_cell_id is not None or not child_results:
+        return evidence_refs
+    if any(item.parent_cell_id != cell_input.cell_id for item in child_results):
+        raise ValueError("g2d_result_proposal_invalid")
+    carriers = tuple(
+        item
+        for item in child_results
+        if cell_input.cell_input_id in item.evidence_refs
+    )
+    if not carriers:
+        return evidence_refs
+    positions = tuple(
+        index
+        for index, item in enumerate(evidence_refs)
+        if item == cell_input.cell_input_id
+    )
+    if len(positions) != 1:
+        raise ValueError("g2d_result_proposal_invalid")
+    position = positions[0]
+    return evidence_refs[:position] + evidence_refs[position + 1:]
+
+
+def _d4_result_proposal_material_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+) -> dict[str, object]:
+    if (
+        validate_fractal_runtime_source_context_v02(source_context).status != "PASS"
+        or validate_runtime_execution_topology_against_sources_v02(
+            topology,
+            source_context=source_context,
+        ).status
+        != "PASS"
+        or type(cell_input) is not FractalCellInputV02
+        or validate_fractal_cell_input_v02(cell_input).status != "PASS"
+        or cell_input.topology_id != topology.topology_id
+    ):
+        raise ValueError("g2d_result_proposal_invalid")
+    _binding, _seed, _initial, nodes = _d3_reconstruct_topology_parts_v02(
+        source_context,
+        topology,
+    )
+    projected = _d3_projected_nodes_v02(
+        topology,
+        nodes,
+        cell_depth=cell_input.cell_depth,
+        parent_cell_id=cell_input.parent_cell_id,
+    )
+    post_position = next(
+        (index for index, node in enumerate(projected) if node.node_kind == "POST_VV"),
+        None,
+    )
+    if type(post_position) is not int:
+        raise ValueError("g2d_result_proposal_invalid")
+    expected_nodes = projected[:post_position]
+    if (
+        type(pre_post_vv_terminal_queue_entries) is not tuple
+        or len(pre_post_vv_terminal_queue_entries) != len(expected_nodes)
+        or any(
+            type(entry) is not FractalCellQueueEntryV02
+            or validate_fractal_cell_queue_entry_v02(entry).status != "PASS"
+            or entry.cell_id != cell_input.cell_id
+            or entry.node_id != node.node_id
+            or entry.state not in _D3_TERMINAL_STATES_V02
+            for entry, node in zip(
+                pre_post_vv_terminal_queue_entries,
+                expected_nodes,
+                strict=True,
+            )
+        )
+        or len({item.queue_entry_id for item in pre_post_vv_terminal_queue_entries})
+        != len(pre_post_vv_terminal_queue_entries)
+        or type(child_results) is not tuple
+        or any(
+            type(item) is not FractalCellResultV02
+            or validate_fractal_cell_result_v02(item).status != "PASS"
+            or item.parent_cell_id != cell_input.cell_id
+            for item in child_results
+        )
+        or type(partial_failures) is not tuple
+        or any(
+            type(item) is not FractalPartialFailureRecordV02
+            or validate_fractal_partial_failure_record_v02(item).status != "PASS"
+            or item.parent_cell_id != cell_input.cell_id
+            for item in partial_failures
+        )
+    ):
+        raise ValueError("g2d_result_proposal_invalid")
+    child_position = {
+        child_id: index
+        for index, child_id in enumerate(cell_input.ordered_planned_child_cell_ids)
+    }
+    if (
+        any(item.cell_id not in child_position for item in child_results)
+        or tuple(child_position[item.cell_id] for item in child_results)
+        != tuple(sorted(child_position[item.cell_id] for item in child_results))
+        or len({item.cell_id for item in child_results}) != len(child_results)
+        or tuple(item.child_result_id for item in partial_failures)
+        != tuple(
+            item.result_id
+            for item in child_results
+            if item.outcome != "COMPLETED"
+        )
+    ):
+        raise ValueError("g2d_result_proposal_invalid")
+    states = tuple(item.state for item in pre_post_vv_terminal_queue_entries)
+    child_states = tuple(item.outcome for item in child_results)
+    failure_states = tuple(item.parent_disposition for item in partial_failures)
+    all_states = states + child_states + failure_states
+    if "BLOCKED" in all_states:
+        status = "blocked"
+    elif "NEEDS_USER" in all_states:
+        status = "needs_user"
+    elif "DEADEND" in all_states:
+        status = "deadend"
+    elif partial_failures or "DEGRADED" in all_states:
+        status = "degraded"
+    else:
+        status = "completed"
+    reasons = _ordered_public_reason_union(
+        *(item.queue_reason_codes for item in pre_post_vv_terminal_queue_entries),
+        *(item.reason_codes for item in partial_failures),
+    )
+    if status == "blocked" and not reasons:
+        reasons = ("g2d_required_child_failure",)
+    if status == "needs_user" and not reasons:
+        reasons = ("g2d_resolvable_input_needs_user",)
+    if status == "deadend" and not reasons:
+        reasons = ("g2d_no_progress_deadend",)
+    outputs = _d4_ordered_unique_refs_v02(
+        *(item.observed_output_refs for item in pre_post_vv_terminal_queue_entries),
+        *(item.accepted_output_refs for item in child_results),
+    )
+    evidence = _d4_ordered_unique_refs_v02(
+        *(item.observed_evidence_refs for item in pre_post_vv_terminal_queue_entries),
+        *(item.evidence_refs for item in child_results),
+        *(item.evidence_refs for item in partial_failures),
+    )
+    if cell_input.parent_cell_id is not None:
+        first_terminal = pre_post_vv_terminal_queue_entries[0]
+        if len(first_terminal.lineage_refs) < 8:
+            raise ValueError("g2d_result_proposal_invalid")
+        activation_parent_id = first_terminal.lineage_refs[7]
+        if (
+            type(activation_parent_id) is not str
+            or not activation_parent_id
+            or any(
+                len(item.lineage_refs) < 8
+                or item.lineage_refs[7] != activation_parent_id
+                for item in pre_post_vv_terminal_queue_entries
+            )
+        ):
+            raise ValueError("g2d_result_proposal_invalid")
+        activation_positions = tuple(
+            index for index, item in enumerate(evidence)
+            if item == activation_parent_id
+        )
+        if len(activation_positions) != 1:
+            raise ValueError("g2d_result_proposal_invalid")
+        activation_position = activation_positions[0]
+        evidence = (
+            evidence[:activation_position]
+            + evidence[activation_position + 1:]
+        )
+    evidence = _d4_partition_root_structural_evidence_v02(
+        cell_input=cell_input,
+        child_results=child_results,
+        evidence_refs=evidence,
+    )
+    if status in {"completed", "degraded"} and not evidence:
+        raise ValueError("g2d_result_proposal_invalid")
+    blocked_reason: str | None
+    if status == "blocked":
+        blocked_reason = next(
+            (item for item in PUBLIC_G2D_REASON_CODES if item in reasons),
+            "g2d_required_child_failure",
+        )
+    elif status == "deadend":
+        blocked_reason = "g2d_no_progress_deadend"
+    else:
+        blocked_reason = None
+    return {
+        "status": status,
+        "reason_codes": reasons,
+        "accepted_output_refs": outputs,
+        "evidence_refs": evidence,
+        "blocked_reason": blocked_reason,
+    }
+
+
+def _d4_parent_return_material_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    result_proposal: dict[str, object] | None,
+    post_vv_report: dict[str, object] | None,
+    gt_advisory_report: dict[str, object] | None,
+    validation_reports: tuple[FractalRuntimeValidationReportV02, ...],
+) -> dict[str, object]:
+    if (
+        type(result_proposal) is not dict
+        or type(post_vv_report) is not dict
+        or type(gt_advisory_report) is not dict
+        or type(validation_reports) is not tuple
+        or len(validation_reports) != 3
+    ):
+        raise ValueError("g2d_parent_return_invalid")
+    expected_reports = (
+        validate_fractal_cell_result_proposal_v02(
+            result_proposal,
+            source_context=source_context,
+            topology=topology,
+            cell_input=cell_input,
+            pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+            child_results=child_results,
+            partial_failures=partial_failures,
+        ),
+        validate_fractal_post_vv_report_v02(
+            post_vv_report,
+            result_proposal=result_proposal,
+            source_context=source_context,
+        ),
+        validate_fractal_gt_advisory_v02(
+            gt_advisory_report,
+            post_vv_report=post_vv_report,
+            source_context=source_context,
+        ),
+    )
+    if (
+        validation_reports != expected_reports
+        or any(item.status != "PASS" for item in expected_reports)
+        or _canonical_json_bytes_v01(
+            [fractal_runtime_validation_report_to_plain_data_v02(item) for item in validation_reports]
+        )
+        != _canonical_json_bytes_v01(
+            [fractal_runtime_validation_report_to_plain_data_v02(item) for item in expected_reports]
+        )
+    ):
+        raise ValueError("g2d_parent_return_invalid")
+    proposal_material = _d4_result_proposal_material_v02(
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+    )
+    payload = result_proposal.get("result_payload")
+    proposal_evidence = result_proposal.get("evidence")
+    if (
+        type(payload) is not dict
+        or payload.get("status") != proposal_material["status"]
+        or type(proposal_evidence) is not list
+        or any(type(item) is not dict for item in proposal_evidence)
+    ):
+        raise ValueError("g2d_parent_return_invalid")
+    evidence_refs = tuple(item.get("ref_id") for item in proposal_evidence)
+    if evidence_refs != proposal_material["evidence_refs"]:
+        raise ValueError("g2d_parent_return_invalid")
+    status = proposal_material["status"]
+    vv_decision = post_vv_report.get("decision")
+    vv_status = post_vv_report.get("status")
+    gt_decision = gt_advisory_report.get("decision")
+    if status in {"completed", "degraded"}:
+        if (vv_decision, vv_status, gt_decision) != ("accept", "accepted", "accept"):
+            raise ValueError("g2d_parent_return_invalid")
+    elif vv_decision == "accept" or gt_decision == "accept":
+        raise ValueError("g2d_parent_return_invalid")
+    terminal_state = dict(
+        (proposal_status, terminal)
+        for proposal_status, _t06, _rule, terminal in PARENT_RETURN_PROPOSAL_OUTCOME_ROWS_V02
+    )[status]
+    return {
+        "terminal_state": terminal_state,
+        "reason_codes": proposal_material["reason_codes"],
+        "observed_output_refs": (result_proposal["proposal_id"],),
+        "observed_evidence_refs": evidence_refs,
+        "advisory_refs": (
+            post_vv_report["vv_report_id"],
+            gt_advisory_report["gt_report_id"],
+        ),
+    }
+
+
+def build_fractal_runtime_execution_bundle_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    source_binding: RuntimeTopologySourceBindingV02,
+    topology_seed: RuntimeTopologySeedV02,
+    budgets: tuple[FractalRuntimeBudgetV02, ...],
+    topology_nodes: tuple[RuntimeTopologyNodeV02, ...],
+    topology_edges: tuple[RuntimeTopologyEdgeV02, ...],
+    runtime_assignments: tuple[RuntimeAssignmentV02, ...],
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    scope_projections: tuple[ParentChildScopeProjectionV02, ...],
+    cell_inputs: tuple[FractalCellInputV02, ...],
+    revise_observations: tuple[FractalReviseObservationV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    validation_reports: tuple[FractalRuntimeValidationReportV02, ...],
+    result_proposals: tuple[dict[str, object], ...],
+    post_vv_reports: tuple[dict[str, object], ...],
+    gt_advisory_reports: tuple[dict[str, object], ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+    transition_decisions: tuple[TransitionDecisionV01, ...],
+    causal_consumption_refs: tuple[CausalConsumptionRefV01, ...],
+) -> FractalRuntimeExecutionBundleV02:
+    value = FractalRuntimeExecutionBundleV02(
+        source_context=source_context,
+        source_binding=source_binding,
+        topology_seed=topology_seed,
+        budgets=budgets,
+        topology_nodes=topology_nodes,
+        topology_edges=topology_edges,
+        runtime_assignments=runtime_assignments,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        queue_entries=queue_entries,
+        queue_artifacts=queue_artifacts,
+        scope_projections=scope_projections,
+        cell_inputs=cell_inputs,
+        revise_observations=revise_observations,
+        partial_failures=partial_failures,
+        backpressure_states=backpressure_states,
+        validation_reports=validation_reports,
+        result_proposals=result_proposals,
+        post_vv_reports=post_vv_reports,
+        gt_advisory_reports=gt_advisory_reports,
+        cell_results=cell_results,
+        result_artifacts=result_artifacts,
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        transition_decisions=transition_decisions,
+        causal_consumption_refs=causal_consumption_refs,
+    )
+    report = validate_fractal_runtime_execution_bundle_v02(value)
+    if report.status != "PASS":
+        raise ValueError(report.reason_codes[0])
+    return value
+
+
+def validate_fractal_runtime_execution_bundle_v02(
+    value: object,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if type(value) is not FractalRuntimeExecutionBundleV02:
+            raise ValueError("g2d_abi_bundle_invalid")
+        if validate_fractal_runtime_source_context_v02(value.source_context).status != "PASS":
+            raise ValueError("g2d_source_context_invalid")
+        if value.source_binding != build_runtime_topology_source_binding_v02(
+            source_context=value.source_context
+        ):
+            raise ValueError("g2d_topology_source_binding_invalid")
+        binding, seed, initial, nodes = _d3_reconstruct_topology_parts_v02(
+            value.source_context,
+            value.topology,
+        )
+        edge_rows = dict(MODE_EDGE_TEMPLATE_ROWS_V02)[value.topology.accepted_mode]
+        edges = tuple(
+            build_runtime_topology_edge_v02(
+                seed,
+                nodes[row[2]],
+                nodes[row[3]],
+                edge_kind=row[4],
+                canonical_index=row[0],
+                cell_projection_class=row[1],
+            )
+            for row in edge_rows
+        )
+        assignments = tuple(
+            _d3_runtime_assignment_for_node_v02(value.source_context, value.topology, node)
+            for node in nodes
+        )
+        if (
+            value.source_binding != binding
+            or value.topology_seed != seed
+            or value.topology_nodes != nodes
+            or value.topology_edges != edges
+            or value.runtime_assignments != assignments
+            or not value.budgets
+            or value.budgets[0] != initial
+            or len(value.queue_entries) != len(value.queue_artifacts)
+            or len(value.cell_results) != len(value.result_artifacts)
+            or len(value.cell_results) != len(value.result_proposals)
+            or len(value.cell_results) != len(value.post_vv_reports)
+            or len(value.cell_results) != len(value.gt_advisory_reports)
+            or len({item.queue_entry_id for item in value.queue_entries}) != len(value.queue_entries)
+            or len({item.result_id for item in value.cell_results}) != len(value.cell_results)
+            or len({item.artifact_id for item in value.queue_artifacts + value.result_artifacts})
+            != len(value.queue_artifacts) + len(value.result_artifacts)
+        ):
+            raise ValueError("g2d_abi_bundle_invalid")
+        indexes = _d3_validate_settled_runtime_prefix_v02(
+            topology=value.topology,
+            policy=value.source_context.runtime_policy,
+            source_context=value.source_context,
+            settled_budget_log=value.budgets,
+            settled_queue_entry_log=value.queue_entries,
+            settled_queue_artifact_log=value.queue_artifacts,
+            settled_cell_inputs=value.cell_inputs,
+            settled_scope_projections=value.scope_projections,
+            settled_revise_observations=value.revise_observations,
+            settled_backpressure_states=value.backpressure_states,
+            settled_validation_reports=value.validation_reports[
+                : 4
+                + len(value.queue_entries)
+                + len(value.scope_projections)
+                + len(value.cell_inputs)
+            ],
+            frontier="COMPLETED",
+        )
+        if not isinstance(indexes, dict):
+            raise ValueError("g2d_abi_bundle_invalid")
+        if validate_fractal_runtime_trace_v02(value.runtime_trace).status != "PASS":
+            raise ValueError("g2d_runtime_trace_invalid")
+        report_validation = validate_fractal_runtime_report_against_sources_v02(
+            value.runtime_report,
+            source_context=value.source_context,
+            source_binding=value.source_binding,
+            topology=value.topology,
+            topology_artifact=value.topology_artifact,
+            cell_results=value.cell_results,
+            queue_entries=value.queue_entries,
+            backpressure_states=value.backpressure_states,
+            runtime_trace=value.runtime_trace,
+            final_global_budget=value.budgets[-1],
+            parent_return_transition_decision=value.transition_decisions[-1],
+            root_result_artifact=value.result_artifacts[-1],
+        )
+        if report_validation.status != "PASS":
+            raise ValueError("g2d_runtime_report_invalid")
+        complete = validate_fractal_runtime_abi_profile_v02(
+            _d4_stage_artifacts_v02(
+                stage="STAGE_D_C",
+                source_context=value.source_context,
+                topology_artifact=value.topology_artifact,
+                runtime_trace=value.runtime_trace,
+                artifact_by_id={
+                    item.artifact_id: item
+                    for item in (
+                        value.topology_artifact,
+                        *value.queue_artifacts,
+                        *value.result_artifacts,
+                        value.report_artifact,
+                    )
+                },
+                report_artifact=value.report_artifact,
+            ),
+            source_context=value.source_context,
+            topology=value.topology,
+            topology_artifact=value.topology_artifact,
+            runtime_trace=value.runtime_trace,
+            queue_entries=value.queue_entries,
+            queue_artifacts=value.queue_artifacts,
+            cell_results=value.cell_results,
+            result_artifacts=value.result_artifacts,
+            runtime_report=value.runtime_report,
+            report_artifact=value.report_artifact,
+        )
+        if complete.status != "PASS":
+            raise ValueError("g2d_abi_profile_invalid")
+        causal = validate_fractal_runtime_causal_consumption_refs_v02(
+            value.causal_consumption_refs,
+            source_context=value.source_context,
+            topology=value.topology,
+            topology_artifact=value.topology_artifact,
+            runtime_assignments=value.runtime_assignments,
+            queue_entries=value.queue_entries,
+            queue_artifacts=value.queue_artifacts,
+            cell_results=value.cell_results,
+            result_artifacts=value.result_artifacts,
+            runtime_trace=value.runtime_trace,
+            runtime_report=value.runtime_report,
+            report_artifact=value.report_artifact,
+            stage_d_c_artifacts=_d4_stage_artifacts_v02(
+                stage="STAGE_D_C",
+                source_context=value.source_context,
+                topology_artifact=value.topology_artifact,
+                runtime_trace=value.runtime_trace,
+                artifact_by_id={
+                    item.artifact_id: item
+                    for item in (
+                        value.topology_artifact,
+                        *value.queue_artifacts,
+                        *value.result_artifacts,
+                        value.report_artifact,
+                    )
+                },
+                report_artifact=value.report_artifact,
+            ),
+        )
+        if causal.status != "PASS":
+            raise ValueError("g2d_causal_consumption_invalid")
+        return _d4_contextual_report_v02(
+            validation_target="COMPLETE_PROFILE",
+            validated_object_id=value.report_artifact.artifact_id,
+            failure_stage="COMPLETE_PROFILE",
+        )
+    except Exception as exc:
+        reason = str(exc)
+        if reason not in PUBLIC_G2D_REASON_CODES:
+            reason = "g2d_abi_bundle_invalid"
+        return _d4_contextual_report_v02(
+            validation_target="COMPLETE_PROFILE",
+            validated_object_id=None,
+            failure_stage="COMPLETE_PROFILE",
+            reason_code=reason,
+        )
+
+
+def _d4_build_fractal_cell_result_proposal_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    accepted_output_refs: tuple[str, ...],
+    evidence_refs: tuple[str, ...],
+) -> dict[str, object]:
+    material = _d4_result_proposal_material_v02(
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+    )
+    outputs = _require_text_tuple(accepted_output_refs)
+    evidence = _require_text_tuple(evidence_refs)
+    if outputs != material["accepted_output_refs"] or evidence != material["evidence_refs"]:
+        raise ValueError("g2d_result_proposal_invalid")
+    route_plain = _kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)
+    result_payload = {
+        "artifact_type": "FractalCellLocalResult",
+        "status": material["status"],
+        "task_completed": material["status"] in {"completed", "degraded"},
+        "requires_human_input": material["status"] == "needs_user",
+        "blocked_reason": material["blocked_reason"],
+        "cell_id": cell_input.cell_id,
+        "parent_cell_id": cell_input.parent_cell_id,
+        "cell_depth": cell_input.cell_depth,
+        "ordered_child_result_ids": [item.result_id for item in child_results],
+        "accepted_output_refs": list(outputs),
+        "evidence_refs": list(evidence),
+        "partial_failure_ids": [item.partial_failure_id for item in partial_failures],
+        "dependency_depth": cell_input.cell_depth,
+        "authority_created": False,
+        "permission_created": False,
+        "action_commit_packet_created": False,
+        "receipt_created": False,
+        "final_output_created": False,
+        "drs_write_created": False,
+        "real_world_effects_count": 0,
+    }
+    trace_values = (
+        topology.topology_id,
+        cell_input.cell_input_id,
+        *(item.queue_entry_id for item in pre_post_vv_terminal_queue_entries),
+        *(item.result_id for item in child_results),
+        *(item.partial_failure_id for item in partial_failures),
+        *outputs,
+        *evidence,
+    )
+    proposal: dict[str, object] = {
+        "proposal_id": "frproposal_v02:" + _ZERO_SHA256,
+        "request_id": source_context.router_input.request_id,
+        "producer": {"executor_id": "fractal_runtime_v02"},
+        "vector_id": cell_input.cell_id,
+        "plan_id": topology.topology_id,
+        "result_payload": result_payload,
+        "evidence": [
+            {
+                "kind": "simulated_executor",
+                "summary": "G2-D bounded local deterministic evidence",
+                "ref_id": ref,
+                "confidence": 1.0,
+            }
+            for ref in evidence
+        ],
+        "cost": {"tokens": 0, "walltime_ms": 0, "toolcalls": 0},
+        "risks": [],
+        "time_envelope": route_plain["time_envelope"],
+        "trace_refs": [
+            {"trace_id": ref, "kind": "g2d_runtime"}
+            for ref in trace_values
+        ],
+    }
+    identity_material = dict(proposal)
+    identity_material.pop("proposal_id")
+    proposal["proposal_id"] = (
+        "frproposal_v02:"
+        + _domain_separated_sha256_hex_v01(
+            domain="HEDGEHOG_FRACTAL_RUNTIME_V02_RESULT_PROPOSAL",
+            payload=_canonical_json_bytes_v01(identity_material),
+        )
+    )
+    _canonical_json_bytes_v01(proposal)
+    return proposal
+
+
+def build_fractal_cell_result_proposal_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    accepted_output_refs: tuple[str, ...],
+    evidence_refs: tuple[str, ...],
+) -> dict[str, object]:
+    proposal = _d4_build_fractal_cell_result_proposal_v02(
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+        accepted_output_refs=accepted_output_refs,
+        evidence_refs=evidence_refs,
+    )
+    report = validate_fractal_cell_result_proposal_v02(
+        proposal,
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+    )
+    if report.status != "PASS":
+        raise ValueError("g2d_result_proposal_invalid")
+    return proposal
+
+
+def validate_fractal_cell_result_proposal_v02(
+    value: object,
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if type(value) is not dict:
+            raise ValueError("g2d_result_proposal_invalid")
+        material = _d4_result_proposal_material_v02(
+            source_context=source_context,
+            topology=topology,
+            cell_input=cell_input,
+            pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+            child_results=child_results,
+            partial_failures=partial_failures,
+        )
+        expected = _d4_build_fractal_cell_result_proposal_v02(
+            source_context=source_context,
+            topology=topology,
+            cell_input=cell_input,
+            pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+            child_results=child_results,
+            partial_failures=partial_failures,
+            accepted_output_refs=material["accepted_output_refs"],
+            evidence_refs=material["evidence_refs"],
+        )
+        if not _d4_canonical_dict_equal_v02(value, expected):
+            raise ValueError("g2d_result_proposal_invalid")
+        return _d4_contextual_report_v02(
+            validation_target="RESULT_PROPOSAL",
+            validated_object_id=value["proposal_id"],
+            failure_stage="RESULT_PROPOSAL",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="RESULT_PROPOSAL",
+            validated_object_id=None,
+            failure_stage="RESULT_PROPOSAL",
+            reason_code="g2d_result_proposal_invalid",
+        )
+
+
+def validate_fractal_post_vv_report_v02(
+    value: object,
+    *,
+    result_proposal: dict[str, object],
+    source_context: FractalRuntimeSourceContextV02,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if type(value) is not dict or type(result_proposal) is not dict:
+            raise ValueError("g2d_post_vv_report_invalid")
+        source_time = source_context.router_input.local_routing_snapshot.kt_asof_utc
+        expected = _validate_result_proposals([result_proposal], checked_at=source_time)
+        if (
+            type(expected) is not list
+            or len(expected) != 1
+            or not _d4_canonical_dict_equal_v02(value, expected[0])
+            or value.get("proposal_id") != result_proposal.get("proposal_id")
+            or value.get("checked_at") != source_time
+        ):
+            raise ValueError("g2d_post_vv_report_invalid")
+        return _d4_contextual_report_v02(
+            validation_target="POST_VV_REPORT",
+            validated_object_id=value["vv_report_id"],
+            failure_stage="POST_VV",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="POST_VV_REPORT",
+            validated_object_id=None,
+            failure_stage="POST_VV",
+            reason_code="g2d_post_vv_report_invalid",
+        )
+
+
+def validate_fractal_gt_advisory_v02(
+    value: object,
+    *,
+    post_vv_report: dict[str, object],
+    source_context: FractalRuntimeSourceContextV02,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if type(value) is not dict or type(post_vv_report) is not dict:
+            raise ValueError("g2d_gt_advisory_invalid")
+        source_time = source_context.router_input.local_routing_snapshot.kt_asof_utc
+        expected = _validate_gt([post_vv_report], created_at=source_time)
+        if (
+            not _d4_canonical_dict_equal_v02(value, expected)
+            or value.get("created_at") != source_time
+            or post_vv_report.get("proposal_id") not in value.get("gt_report_id", "")
+        ):
+            raise ValueError("g2d_gt_advisory_invalid")
+        return _d4_contextual_report_v02(
+            validation_target="GT_ADVISORY_REPORT",
+            validated_object_id=value["gt_report_id"],
+            failure_stage="GT",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="GT_ADVISORY_REPORT",
+            validated_object_id=None,
+            failure_stage="GT",
+            reason_code="g2d_gt_advisory_invalid",
+        )
+
+
+def evaluate_fractal_revise_observation_v02(
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    queue_entry: FractalCellQueueEntryV02,
+    validation_report: FractalRuntimeValidationReportV02,
+    cell_budget_before: FractalRuntimeBudgetV02,
+    global_budget_before: FractalRuntimeBudgetV02,
+    revision_index: int,
+    newly_validated_evidence_count: int,
+    newly_resolved_constraints_count: int,
+    newly_accepted_outputs_count: int,
+    newly_introduced_conflicts_count: int,
+    consecutive_non_positive_count: int,
+) -> FractalReviseObservationV02:
+    if (
+        queue_entry.state != "VALIDATING"
+        or queue_entry.cell_id != cell_input.cell_id
+        or queue_entry.cell_budget_id != cell_budget_before.budget_id
+        or queue_entry.global_budget_id != global_budget_before.budget_id
+        or revision_index < cell_input.initial_revise_count
+        or revision_index > queue_entry.snapshot_sequence
+    ):
+        raise ValueError("g2d_revise_observation_invalid")
+    return build_fractal_revise_observation_v02(
+        topology,
+        cell_input,
+        queue_entry,
+        validation_report,
+        revision_index=revision_index,
+        newly_validated_evidence_count=newly_validated_evidence_count,
+        newly_resolved_constraints_count=newly_resolved_constraints_count,
+        newly_accepted_outputs_count=newly_accepted_outputs_count,
+        newly_introduced_conflicts_count=newly_introduced_conflicts_count,
+        consecutive_non_positive_count=consecutive_non_positive_count,
+        max_consecutive_non_positive_count=cell_budget_before.max_revise_count,
+        cell_budget_before=cell_budget_before,
+        global_budget_before=global_budget_before,
+    )
+
+
+def record_fractal_partial_failure_v02(
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    parent_input: FractalCellInputV02,
+    child_result: FractalCellResultV02,
+    failure_stage: str,
+    reason_codes: tuple[str, ...],
+    source_reason_codes: tuple[str, ...],
+    evidence_refs: tuple[str, ...],
+    allocated_cell_budget: FractalRuntimeBudgetV02,
+    final_cell_budget: FractalRuntimeBudgetV02,
+    global_budget: FractalRuntimeBudgetV02,
+    required_child: bool,
+    sibling_independent: bool,
+) -> FractalPartialFailureRecordV02:
+    result = build_fractal_partial_failure_record_v02(
+        topology,
+        parent_input,
+        child_result,
+        failure_stage=failure_stage,
+        reason_codes=reason_codes,
+        source_reason_codes=source_reason_codes,
+        evidence_refs=evidence_refs,
+        allocated_cell_budget=allocated_cell_budget,
+        final_cell_budget=final_cell_budget,
+        global_budget=global_budget,
+        required_child=required_child,
+        sibling_independent=sibling_independent,
+    )
+    if result.retry_eligible is not False:
+        raise ValueError("g2d_partial_failure_invalid")
+    return result
+
+
+def validate_fractal_cell_result_against_input_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    result_proposal: dict[str, object],
+    post_vv_report: dict[str, object],
+    gt_advisory_report: dict[str, object],
+    cell_budget: FractalRuntimeBudgetV02,
+    global_budget: FractalRuntimeBudgetV02,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        _binding, _seed, _initial, nodes = _d3_reconstruct_topology_parts_v02(
+            source_context,
+            topology,
+        )
+        projected = _d3_projected_nodes_v02(
+            topology,
+            nodes,
+            cell_depth=cell_input.cell_depth,
+            parent_cell_id=cell_input.parent_cell_id,
+        )
+        if (
+            type(terminal_queue_entries) is not tuple
+            or len(terminal_queue_entries) != len(projected)
+            or tuple(item.node_id for item in terminal_queue_entries)
+            != tuple(item.node_id for item in projected)
+            or any(item.state not in _D3_TERMINAL_STATES_V02 for item in terminal_queue_entries)
+            or any(
+                item.cell_id != cell_input.cell_id
+                or item.parent_cell_id != cell_input.parent_cell_id
+                or item.topology_id != topology.topology_id
+                for item in terminal_queue_entries
+            )
+        ):
+            raise ValueError("g2d_cell_result_postorder_invalid")
+        post_position = next(
+            index for index, node in enumerate(projected) if node.node_kind == "POST_VV"
+        )
+        prefix = terminal_queue_entries[:post_position]
+        reports = (
+            validate_fractal_cell_result_proposal_v02(
+                result_proposal,
+                source_context=source_context,
+                topology=topology,
+                cell_input=cell_input,
+                pre_post_vv_terminal_queue_entries=prefix,
+                child_results=child_results,
+                partial_failures=partial_failures,
+            ),
+            validate_fractal_post_vv_report_v02(
+                post_vv_report,
+                result_proposal=result_proposal,
+                source_context=source_context,
+            ),
+            validate_fractal_gt_advisory_v02(
+                gt_advisory_report,
+                post_vv_report=post_vv_report,
+                source_context=source_context,
+            ),
+        )
+        if any(item.status != "PASS" for item in reports):
+            raise ValueError("g2d_cell_result_context_mismatch")
+        parent_return = terminal_queue_entries[-1]
+        status = result_proposal["result_payload"]["status"]
+        expected_state = dict(
+            (proposal_status, terminal)
+            for proposal_status, _t06, _rule, terminal in PARENT_RETURN_PROPOSAL_OUTCOME_ROWS_V02
+        )[status]
+        if (
+            parent_return.state != expected_state
+            or cell_budget.budget_state != "FINAL"
+            or cell_budget.budget_event_kind != "FINALIZE"
+            or cell_budget.owning_cell_id != cell_input.cell_id
+            or global_budget.budget_scope != "ROOT_GLOBAL_AND_CELL"
+            or global_budget.owning_cell_id != topology.root_cell_id
+            or (cell_input.parent_cell_id is None) != (cell_budget == global_budget)
+            or _derive_result_outcome(terminal_queue_entries, child_results, partial_failures)
+            != expected_state
+        ):
+            raise ValueError("g2d_cell_result_context_mismatch")
+        return _d4_contextual_report_v02(
+            validation_target="CELL_RESULT_PRECONDITIONS",
+            validated_object_id=result_proposal["proposal_id"],
+            failure_stage="CELL_RESULT_PRECONDITIONS",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="CELL_RESULT_PRECONDITIONS",
+            validated_object_id=None,
+            failure_stage="CELL_RESULT_PRECONDITIONS",
+            reason_code="g2d_cell_result_context_mismatch",
+        )
+
+
+def aggregate_fractal_runtime_report_v02(
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    source_binding: RuntimeTopologySourceBindingV02,
+    cell_results: tuple[FractalCellResultV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    final_global_budget: FractalRuntimeBudgetV02,
+    parent_return_transition_decision: TransitionDecisionV01,
+    root_result_artifact: KernelArtifactV01,
+) -> FractalRuntimeReportV02:
+    return build_fractal_runtime_report_v02(
+        topology,
+        topology_artifact,
+        source_binding,
+        ordered_cell_results=cell_results,
+        queue_entries=queue_entries,
+        backpressure_states=backpressure_states,
+        runtime_trace=runtime_trace,
+        final_budget=final_global_budget,
+        parent_return_transition_decision=parent_return_transition_decision,
+        root_result_artifact=root_result_artifact,
+    )
+
+
+def run_fractal_runtime_v02(
+    source_context: FractalRuntimeSourceContextV02,
+) -> tuple[FractalRuntimeExecutionBundleV02 | None, FractalRuntimeValidationReportV02]:
+    source_report = validate_fractal_runtime_source_context_v02(source_context)
+    if source_report.status != "PASS":
+        return None, source_report
+    try:
+        bundle = _d4_run_runtime_v02(source_context)
+        complete = validate_fractal_runtime_execution_bundle_v02(bundle)
+        if complete.status != "PASS":
+            return None, complete
+        return bundle, complete
+    except Exception as exc:
+        reason = str(exc)
+        if reason not in PUBLIC_G2D_REASON_CODES:
+            reason = "g2d_abi_bundle_invalid"
+        return None, _d4_contextual_report_v02(
+            validation_target="COMPLETE_PROFILE",
+            validated_object_id=None,
+            failure_stage="COMPLETE_PROFILE",
+            reason_code=reason,
+        )
+
+
+def validate_fractal_runtime_report_against_sources_v02(
+    value: object,
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    source_binding: RuntimeTopologySourceBindingV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    cell_results: tuple[FractalCellResultV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    final_global_budget: FractalRuntimeBudgetV02,
+    parent_return_transition_decision: TransitionDecisionV01,
+    root_result_artifact: KernelArtifactV01,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if (
+            type(value) is not FractalRuntimeReportV02
+            or validate_fractal_runtime_report_v02(value).status != "PASS"
+            or validate_fractal_runtime_source_context_v02(source_context).status != "PASS"
+            or source_binding
+            != build_runtime_topology_source_binding_v02(source_context=source_context)
+            or validate_runtime_execution_topology_against_sources_v02(
+                topology,
+                source_context=source_context,
+            ).status
+            != "PASS"
+            or topology_artifact != _build_topology_artifact_v02(topology, source_context)
+        ):
+            raise ValueError("g2d_runtime_report_invalid")
+        expected = aggregate_fractal_runtime_report_v02(
+            topology=topology,
+            topology_artifact=topology_artifact,
+            source_binding=source_binding,
+            cell_results=cell_results,
+            queue_entries=queue_entries,
+            backpressure_states=backpressure_states,
+            runtime_trace=runtime_trace,
+            final_global_budget=final_global_budget,
+            parent_return_transition_decision=parent_return_transition_decision,
+            root_result_artifact=root_result_artifact,
+        )
+        if (
+            value != expected
+            or fractal_runtime_report_to_plain_data_v02(value)
+            != fractal_runtime_report_to_plain_data_v02(expected)
+        ):
+            raise ValueError("g2d_runtime_report_identity_mismatch")
+        return _d4_contextual_report_v02(
+            validation_target="RUNTIME_REPORT_AGAINST_SOURCES",
+            validated_object_id=value.report_id,
+            failure_stage="REPORT",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="RUNTIME_REPORT_AGAINST_SOURCES",
+            validated_object_id=None,
+            failure_stage="REPORT",
+            reason_code="g2d_runtime_report_invalid",
+        )
+
+
+def project_fractal_cell_result_kernel_artifact_v02(
+    result: FractalCellResultV02,
+    *,
+    topology_artifact: KernelArtifactV01,
+    terminal_queue_artifacts: tuple[KernelArtifactV01, ...],
+    child_result_artifacts: tuple[KernelArtifactV01, ...],
+    source_context: FractalRuntimeSourceContextV02,
+) -> KernelArtifactV01:
+    if (
+        type(result) is not FractalCellResultV02
+        or validate_fractal_cell_result_v02(result).status != "PASS"
+        or type(topology_artifact) is not KernelArtifactV01
+        or topology_artifact.artifact_type != "RuntimeExecutionTopology"
+        or type(terminal_queue_artifacts) is not tuple
+        or type(child_result_artifacts) is not tuple
+        or any(
+            type(item) is not KernelArtifactV01 or _validate_kernel_artifact_v01(item)
+            for item in terminal_queue_artifacts + child_result_artifacts
+        )
+        or tuple(
+            _kernel_artifact_to_plain_dict_v01(item)["payload"].get("queue_entry_id")
+            for item in terminal_queue_artifacts
+        )
+        != result.ordered_terminal_queue_entry_ids
+        or tuple(
+            _kernel_artifact_to_plain_dict_v01(item)["payload"].get("result_id")
+            for item in child_result_artifacts
+        )
+        != result.ordered_child_result_ids
+    ):
+        raise ValueError("g2d_abi_projection_substituted")
+    topology = construct_runtime_execution_topology_v02(source_context)
+    if topology_artifact != _build_topology_artifact_v02(topology, source_context):
+        raise ValueError("g2d_abi_projection_substituted")
+    payload = {
+        name: list(getattr(result, name))
+        if type(getattr(result, name)) is tuple
+        else getattr(result, name)
+        for name in _D3_CELL_RESULT_PAYLOAD_FIELDS_V02
+    }
+    trace_refs = (result.post_vv_report_ref, result.gt_advisory_ref, *result.trace_refs)
+    if (
+        result.parent_cell_id is None
+        and result.final_cell_budget_id == result.global_budget_id
+    ):
+        if len(trace_refs) < 2 or trace_refs[-1] != trace_refs[-2]:
+            raise ValueError("g2d_abi_field_partition_invalid")
+        trace_refs = trace_refs[:-1]
+    route_plain = _kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)
+    provisional = _build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id="frabi_result_v02:" + _ZERO_SHA256,
+        artifact_type="FractalCellResult",
+        schema_version="v0.2",
+        transaction_id=topology.transaction_id,
+        owner_root_id=topology.owning_root_id,
+        source_component="fractal_runtime_v02",
+        authority_class="ADVISORY",
+        lifecycle_state=(
+            "BLOCKED_FAIL_CLOSED" if result.outcome == "BLOCKED" else "VALIDATED"
+        ),
+        payload=payload,
+        trace_refs=trace_refs,
+        parent_refs=(
+            topology_artifact.artifact_id,
+            *(item.artifact_id for item in terminal_queue_artifacts),
+            *(item.artifact_id for item in child_result_artifacts),
+        ),
+        time_envelope=route_plain["time_envelope"],
+    )
+    material = _kernel_artifact_to_plain_dict_v01(provisional)
+    material.pop("artifact_id")
+    artifact = _replace(
+        provisional,
+        artifact_id=(
+            "frabi_result_v02:"
+            + _domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_FRACTAL_CELL_RESULT_KERNEL_ARTIFACT_V02",
+                payload=_canonical_json_bytes_v01(material),
+            )
+        ),
+    )
+    if _validate_kernel_artifact_v01(artifact):
+        raise ValueError("g2d_abi_projection_substituted")
+    return artifact
+
+
+_D4_RUNTIME_REPORT_PAYLOAD_FIELDS_V02 = (
+    "report_id",
+    "report_version",
+    "profile_id",
+    "topology_seed_id",
+    "source_binding_id",
+    "request_id",
+    "domain_id",
+    "accepted_mode",
+    "accepted_scope_ref",
+    "runtime_outcome",
+    "completed_cell_count",
+    "degraded_cell_count",
+    "blocked_cell_count",
+    "needs_user_cell_count",
+    "deadend_cell_count",
+    "backpressure_state_ids",
+    "final_budget_id",
+    "report_status",
+    "reason_codes",
+    "topology_created_count",
+    "provider_calls",
+    "model_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "final_outputs_created",
+    "drs_writes",
+    "authority_created_count",
+    "real_world_effects_count",
+    "root_review_required",
+)
+
+
+def project_fractal_runtime_report_kernel_artifact_v02(
+    report: FractalRuntimeReportV02,
+    *,
+    topology_artifact: KernelArtifactV01,
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    source_context: FractalRuntimeSourceContextV02,
+) -> KernelArtifactV01:
+    if (
+        type(report) is not FractalRuntimeReportV02
+        or validate_fractal_runtime_report_v02(report).status != "PASS"
+        or type(result_artifacts) is not tuple
+        or not result_artifacts
+        or any(
+            type(item) is not KernelArtifactV01
+            or _validate_kernel_artifact_v01(item)
+            or item.artifact_type != "FractalCellResult"
+            for item in result_artifacts
+        )
+        or tuple(
+            _kernel_artifact_to_plain_dict_v01(item)["payload"].get("result_id")
+            for item in result_artifacts
+        )
+        != report.ordered_cell_result_ids
+    ):
+        raise ValueError("g2d_abi_projection_substituted")
+    topology = construct_runtime_execution_topology_v02(source_context)
+    if (
+        topology_artifact != _build_topology_artifact_v02(topology, source_context)
+        or report.topology_id != topology.topology_id
+        or report.topology_artifact_id != topology_artifact.artifact_id
+    ):
+        raise ValueError("g2d_abi_projection_substituted")
+    payload = {
+        name: list(getattr(report, name))
+        if type(getattr(report, name)) is tuple
+        else getattr(report, name)
+        for name in _D4_RUNTIME_REPORT_PAYLOAD_FIELDS_V02
+    }
+    route_plain = _kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)
+    provisional = _build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id="frabi_report_v02:" + _ZERO_SHA256,
+        artifact_type="FractalRuntimeReport",
+        schema_version="v0.2",
+        transaction_id=topology.transaction_id,
+        owner_root_id=topology.owning_root_id,
+        source_component="fractal_runtime_v02",
+        authority_class="ADVISORY",
+        lifecycle_state=(
+            "BLOCKED_FAIL_CLOSED" if report.runtime_outcome == "BLOCKED" else "VALIDATED"
+        ),
+        payload=payload,
+        trace_refs=(
+            report.runtime_trace_id,
+            report.parent_return_transition_decision_id,
+            *report.parent_return_refs,
+        ),
+        parent_refs=(
+            topology_artifact.artifact_id,
+            *(item.artifact_id for item in result_artifacts),
+        ),
+        time_envelope=route_plain["time_envelope"],
+    )
+    material = _kernel_artifact_to_plain_dict_v01(provisional)
+    material.pop("artifact_id")
+    artifact = _replace(
+        provisional,
+        artifact_id=(
+            "frabi_report_v02:"
+            + _domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_FRACTAL_RUNTIME_REPORT_KERNEL_ARTIFACT_V02",
+                payload=_canonical_json_bytes_v01(material),
+            )
+        ),
+    )
+    if _validate_kernel_artifact_v01(artifact):
+        raise ValueError("g2d_abi_projection_substituted")
+    return artifact
+
+
+def _d4_stage_projection_id_v02(
+    stage: str,
+    artifacts: tuple[KernelArtifactV01, ...],
+) -> str:
+    return (
+        "frstage_v02:"
+        + _domain_separated_sha256_hex_v01(
+            domain="HEDGEHOG_FRACTAL_RUNTIME_V02_STAGE_PROJECTION",
+            payload=_canonical_json_bytes_v01(
+                [stage, *(item.artifact_id for item in artifacts)]
+            ),
+        )
+    )
+
+
+def _d4_stage_artifacts_v02(
+    *,
+    stage: str,
+    source_context: FractalRuntimeSourceContextV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_trace: FractalRuntimeTraceV02,
+    artifact_by_id: dict[str, KernelArtifactV01],
+    report_artifact: KernelArtifactV01 | None,
+) -> tuple[KernelArtifactV01, ...]:
+    stage_d_a = (
+        source_context.proposal_artifact,
+        source_context.decision_artifact,
+        source_context.route_eligibility_artifact,
+        topology_artifact,
+    )
+    if stage == "STAGE_D_A":
+        return stage_d_a
+    runtime_artifacts = tuple(
+        artifact_by_id.get(item) for item in runtime_trace.abi_artifact_refs
+    )
+    if any(type(item) is not KernelArtifactV01 for item in runtime_artifacts):
+        raise ValueError("g2d_abi_bundle_invalid")
+    stage_d_b = (*stage_d_a[:3], *runtime_artifacts)
+    if stage == "STAGE_D_B":
+        return stage_d_b
+    if stage == "STAGE_D_C" and type(report_artifact) is KernelArtifactV01:
+        return (*stage_d_b, report_artifact)
+    raise ValueError("g2d_abi_bundle_invalid")
+
+
+def validate_fractal_runtime_stage_bundle_v02(
+    *,
+    stage: str,
+    artifacts: tuple[KernelArtifactV01, ...],
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_trace: FractalRuntimeTraceV02,
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_report: FractalRuntimeReportV02 | None,
+    report_artifact: KernelArtifactV01 | None,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if stage not in {"STAGE_D_A", "STAGE_D_B", "STAGE_D_C"}:
+            raise ValueError("g2d_abi_bundle_invalid")
+        if (
+            type(artifacts) is not tuple
+            or any(type(item) is not KernelArtifactV01 for item in artifacts)
+            or topology_artifact != _build_topology_artifact_v02(topology, source_context)
+            or validate_fractal_runtime_trace_v02(runtime_trace).status != "PASS"
+            or len(queue_entries) != len(queue_artifacts)
+            or len(cell_results) != len(result_artifacts)
+            or (stage == "STAGE_D_C")
+            != (type(runtime_report) is FractalRuntimeReportV02 and type(report_artifact) is KernelArtifactV01)
+            or stage != "STAGE_D_C" and (runtime_report is not None or report_artifact is not None)
+        ):
+            raise ValueError("g2d_abi_bundle_invalid")
+        artifact_by_id = {
+            item.artifact_id: item
+            for item in (topology_artifact, *queue_artifacts, *result_artifacts)
+        }
+        if report_artifact is not None:
+            artifact_by_id[report_artifact.artifact_id] = report_artifact
+        expected = _d4_stage_artifacts_v02(
+            stage=stage,
+            source_context=source_context,
+            topology_artifact=topology_artifact,
+            runtime_trace=runtime_trace,
+            artifact_by_id=artifact_by_id,
+            report_artifact=report_artifact,
+        )
+        if artifacts != expected or _validate_kernel_artifact_bundle_v01(artifacts=artifacts):
+            raise ValueError("g2d_abi_bundle_invalid")
+        if stage != "STAGE_D_A":
+            for entry, artifact in zip(queue_entries, queue_artifacts, strict=True):
+                plain = _kernel_artifact_to_plain_dict_v01(artifact)
+                if (
+                    artifact.artifact_type != "FractalCellQueueEntry"
+                    or plain["payload"] != _d3_queue_payload_v02(entry)
+                    or artifact.trace_refs[0] != entry.transition_decision_id
+                ):
+                    raise ValueError("g2d_abi_projection_substituted")
+            result_by_id = {item.result_id: item for item in cell_results}
+            artifact_by_result_id = {
+                _kernel_artifact_to_plain_dict_v01(item)["payload"].get("result_id"): item
+                for item in result_artifacts
+            }
+            queue_artifact_by_id = {item.artifact_id: item for item in queue_artifacts}
+            for result in cell_results:
+                terminal_artifacts = tuple(
+                    next(
+                        artifact
+                        for entry, artifact in zip(queue_entries, queue_artifacts, strict=True)
+                        if entry.queue_entry_id == queue_id
+                    )
+                    for queue_id in result.ordered_terminal_queue_entry_ids
+                )
+                child_artifacts = tuple(
+                    artifact_by_result_id[item] for item in result.ordered_child_result_ids
+                )
+                expected_result_artifact = project_fractal_cell_result_kernel_artifact_v02(
+                    result,
+                    topology_artifact=topology_artifact,
+                    terminal_queue_artifacts=terminal_artifacts,
+                    child_result_artifacts=child_artifacts,
+                    source_context=source_context,
+                )
+                if artifact_by_result_id.get(result.result_id) != expected_result_artifact:
+                    raise ValueError("g2d_abi_projection_substituted")
+            if result_by_id.keys() != artifact_by_result_id.keys() or not queue_artifact_by_id:
+                raise ValueError("g2d_abi_bundle_invalid")
+        if stage == "STAGE_D_C":
+            assert runtime_report is not None and report_artifact is not None
+            expected_report_artifact = project_fractal_runtime_report_kernel_artifact_v02(
+                runtime_report,
+                topology_artifact=topology_artifact,
+                result_artifacts=result_artifacts,
+                source_context=source_context,
+            )
+            if report_artifact != expected_report_artifact:
+                raise ValueError("g2d_abi_projection_substituted")
+        return _d4_contextual_report_v02(
+            validation_target=stage,
+            validated_object_id=_d4_stage_projection_id_v02(stage, artifacts),
+            failure_stage="ABI",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target=stage if stage in {"STAGE_D_A", "STAGE_D_B", "STAGE_D_C"} else "STAGE_D_C",
+            validated_object_id=None,
+            failure_stage="ABI",
+            reason_code="g2d_abi_bundle_invalid",
+        )
+
+
+def validate_fractal_runtime_abi_profile_v02(
+    value: tuple[KernelArtifactV01, ...],
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_trace: FractalRuntimeTraceV02,
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        artifact_by_id = {
+            item.artifact_id: item
+            for item in (topology_artifact, *queue_artifacts, *result_artifacts, report_artifact)
+        }
+        expected_c = _d4_stage_artifacts_v02(
+            stage="STAGE_D_C",
+            source_context=source_context,
+            topology_artifact=topology_artifact,
+            runtime_trace=runtime_trace,
+            artifact_by_id=artifact_by_id,
+            report_artifact=report_artifact,
+        )
+        if value != expected_c:
+            raise ValueError("g2d_abi_profile_invalid")
+        for stage in ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"):
+            stage_artifacts = _d4_stage_artifacts_v02(
+                stage=stage,
+                source_context=source_context,
+                topology_artifact=topology_artifact,
+                runtime_trace=runtime_trace,
+                artifact_by_id=artifact_by_id,
+                report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+            )
+            report = validate_fractal_runtime_stage_bundle_v02(
+                stage=stage,
+                artifacts=stage_artifacts,
+                source_context=source_context,
+                topology=topology,
+                topology_artifact=topology_artifact,
+                runtime_trace=runtime_trace,
+                queue_entries=queue_entries,
+                queue_artifacts=queue_artifacts,
+                cell_results=cell_results,
+                result_artifacts=result_artifacts,
+                runtime_report=runtime_report if stage == "STAGE_D_C" else None,
+                report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+            )
+            if report.status != "PASS":
+                raise ValueError("g2d_abi_profile_invalid")
+        return _d4_contextual_report_v02(
+            validation_target="ABI_PROFILE",
+            validated_object_id=_d4_stage_projection_id_v02("STAGE_D_C", value),
+            failure_stage="ABI",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="ABI_PROFILE",
+            validated_object_id=None,
+            failure_stage="ABI",
+            reason_code="g2d_abi_profile_invalid",
+        )
+
+
+def evaluate_fractal_parent_return_transition_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    root_result: FractalCellResultV02,
+    root_result_artifact: KernelArtifactV01,
+    ordered_cell_results: tuple[FractalCellResultV02, ...],
+    transition_registry: TransitionRegistryV01,
+) -> TransitionDecisionV01:
+    if (
+        validate_fractal_runtime_source_context_v02(source_context).status != "PASS"
+        or type(root_result) is not FractalCellResultV02
+        or validate_fractal_cell_result_v02(root_result).status != "PASS"
+        or root_result.parent_cell_id is not None
+        or type(ordered_cell_results) is not tuple
+        or not ordered_cell_results
+        or ordered_cell_results[-1] != root_result
+        or len({item.result_id for item in ordered_cell_results}) != len(ordered_cell_results)
+        or any(
+            type(item) is not FractalCellResultV02
+            or validate_fractal_cell_result_v02(item).status != "PASS"
+            for item in ordered_cell_results
+        )
+        or type(root_result_artifact) is not KernelArtifactV01
+        or _validate_kernel_artifact_v01(root_result_artifact)
+        or root_result_artifact.artifact_type != "FractalCellResult"
+        or _kernel_artifact_to_plain_dict_v01(root_result_artifact)["payload"].get("result_id")
+        != root_result.result_id
+    ):
+        raise ValueError("g2d_root_result_required_for_parent_return")
+    rule_id = {
+        "COMPLETED": "t13",
+        "DEGRADED": "t14",
+        "BLOCKED": "t15",
+        "NEEDS_USER": "t16",
+        "DEADEND": "t17",
+    }[root_result.outcome]
+    return _d3_transition_decision_v02(transition_registry, rule_id)
+
+
+def _d4_causal_ref_v02(
+    *,
+    producer_actor_id: str,
+    source_artifact: KernelArtifactV01,
+    output_field: str,
+    downstream_artifact: KernelArtifactV01,
+    decision_effect: str,
+    disposition: str,
+    reason_code: str,
+    runtime_trace: FractalRuntimeTraceV02,
+) -> CausalConsumptionRefV01:
+    return _build_causal_consumption_ref_v01(
+        producer_actor_id=producer_actor_id,
+        source_artifact_id=source_artifact.artifact_id,
+        output_field=output_field,
+        consumer_component=downstream_artifact.source_component,
+        downstream_artifact_id=downstream_artifact.artifact_id,
+        decision_effect=decision_effect,
+        disposition=disposition,
+        reason_code=reason_code,
+        trace_refs=(
+            source_artifact.artifact_id,
+            downstream_artifact.artifact_id,
+            runtime_trace.trace_id,
+        ),
+    )
+
+
+def build_fractal_runtime_causal_consumption_refs_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_assignments: tuple[RuntimeAssignmentV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+) -> tuple[CausalConsumptionRefV01, ...]:
+    if (
+        validate_runtime_execution_topology_against_sources_v02(
+            topology,
+            source_context=source_context,
+        ).status
+        != "PASS"
+        or topology_artifact != _build_topology_artifact_v02(topology, source_context)
+        or len(queue_entries) != len(queue_artifacts)
+        or len(cell_results) != len(result_artifacts)
+        or validate_fractal_runtime_trace_v02(runtime_trace).status != "PASS"
+        or validate_fractal_runtime_report_v02(runtime_report).status != "PASS"
+        or report_artifact.artifact_type != "FractalRuntimeReport"
+    ):
+        raise ValueError("g2d_causal_consumption_invalid")
+    assignment_by_node = {item.node_id: item for item in runtime_assignments}
+    if (
+        tuple(item.assignment_id for item in runtime_assignments)
+        != topology.ordered_assignment_ids
+        or len(assignment_by_node) != len(runtime_assignments)
+    ):
+        raise ValueError("g2d_topology_assignment_invalid")
+    queue_artifact_by_entry_id = {
+        entry.queue_entry_id: artifact
+        for entry, artifact in zip(queue_entries, queue_artifacts, strict=True)
+    }
+    queue_entry_by_artifact_id = {
+        artifact.artifact_id: entry
+        for entry, artifact in zip(queue_entries, queue_artifacts, strict=True)
+    }
+    result_artifact_by_result_id = {
+        result.result_id: artifact
+        for result, artifact in zip(cell_results, result_artifacts, strict=True)
+    }
+    result_by_artifact_id = {
+        artifact.artifact_id: result
+        for result, artifact in zip(cell_results, result_artifacts, strict=True)
+    }
+    refs: list[CausalConsumptionRefV01] = []
+    activation_row_child_cell_ids: list[str] = []
+
+    route = source_context.route_eligibility_artifact
+    for pointer, effect, reason in (
+        ("/accepted_mode", "TOPOLOGY_SELECTION", "used:g2d_route_accepted_mode"),
+        ("/accepted_scope_ref", "TOPOLOGY_SCOPE", "used:g2d_route_accepted_scope"),
+        (
+            "/downstream_consumption_class",
+            "TOPOLOGY_SELECTION",
+            "used:g2d_route_consumption_class",
+        ),
+    ):
+        refs.append(
+            _d4_causal_ref_v02(
+                producer_actor_id="root_decision_v01",
+                source_artifact=route,
+                output_field=pointer,
+                downstream_artifact=topology_artifact,
+                decision_effect=effect,
+                disposition="USED",
+                reason_code=reason,
+                runtime_trace=runtime_trace,
+            )
+        )
+
+    for child_initial, child_artifact in zip(queue_entries, queue_artifacts, strict=True):
+        if child_initial.parent_cell_id is None or child_initial.predecessor_queue_entry_id is not None:
+            continue
+        if len(child_artifact.parent_refs) != 2:
+            raise ValueError("g2d_causal_consumption_invalid")
+        parent_artifact = next(
+            (item for item in queue_artifacts if item.artifact_id == child_artifact.parent_refs[1]),
+            None,
+        )
+        parent_entry = queue_entry_by_artifact_id.get(child_artifact.parent_refs[1])
+        if (
+            type(parent_artifact) is not KernelArtifactV01
+            or type(parent_entry) is not FractalCellQueueEntryV02
+            or parent_entry.state != "RUNNING"
+            or parent_entry.planned_child_cell_id != child_initial.cell_id
+        ):
+            raise ValueError("g2d_causal_consumption_invalid")
+        producer_actor_id = assignment_by_node[
+            parent_entry.node_id
+        ].executor_component_id
+        if child_initial.cell_id in activation_row_child_cell_ids:
+            continue
+        activation_row_child_cell_ids.append(child_initial.cell_id)
+        refs.append(
+            _d4_causal_ref_v02(
+                producer_actor_id=producer_actor_id,
+                source_artifact=parent_artifact,
+                output_field="/planned_child_cell_id",
+                downstream_artifact=child_artifact,
+                decision_effect="CHILD_ACTIVATION",
+                disposition="USED",
+                reason_code="used:g2d_planned_child_activation",
+                runtime_trace=runtime_trace,
+            )
+        )
+
+    for entry, artifact in zip(queue_entries, queue_artifacts, strict=True):
+        result_parent_ids = tuple(
+            parent_id for parent_id in artifact.parent_refs if parent_id in result_by_artifact_id
+        )
+        if len(result_parent_ids) > 1:
+            raise ValueError("g2d_causal_consumption_invalid")
+        if not result_parent_ids:
+            continue
+        child_artifact = next(item for item in result_artifacts if item.artifact_id == result_parent_ids[0])
+        if entry.state == "VALIDATING":
+            for pointer in ("/result_id", "/accepted_output_refs", "/evidence_refs"):
+                refs.append(
+                    _d4_causal_ref_v02(
+                        producer_actor_id="fractal_runtime_v02",
+                        source_artifact=child_artifact,
+                        output_field=pointer,
+                        downstream_artifact=artifact,
+                        decision_effect="CHILD_RESULT_RETURN_BINDING",
+                        disposition="USED",
+                        reason_code="used:g2d_child_result_return",
+                        runtime_trace=runtime_trace,
+                    )
+                )
+        elif entry.state in _D3_TERMINAL_STATES_V02:
+            refs.append(
+                _d4_causal_ref_v02(
+                    producer_actor_id="fractal_runtime_v02",
+                    source_artifact=child_artifact,
+                    output_field="/outcome",
+                    downstream_artifact=artifact,
+                    decision_effect="CHILD_RESULT_TERMINAL_MAPPING",
+                    disposition="USED",
+                    reason_code="used:g2d_child_result_terminal",
+                    runtime_trace=runtime_trace,
+                )
+            )
+
+    result_by_id = {item.result_id: item for item in cell_results}
+    for result, result_artifact in zip(cell_results, result_artifacts, strict=True):
+        for queue_id in result.ordered_terminal_queue_entry_ids:
+            entry = next(item for item in queue_entries if item.queue_entry_id == queue_id)
+            artifact = queue_artifact_by_entry_id[queue_id]
+            producer = assignment_by_node[entry.node_id].executor_component_id
+            refs.append(
+                _d4_causal_ref_v02(
+                    producer_actor_id=producer,
+                    source_artifact=artifact,
+                    output_field="/state",
+                    downstream_artifact=result_artifact,
+                    decision_effect="CELL_TERMINAL_OUTCOME",
+                    disposition="USED",
+                    reason_code="used:g2d_terminal_outcome",
+                    runtime_trace=runtime_trace,
+                )
+            )
+            if entry.queue_reason_codes:
+                refs.append(
+                    _d4_causal_ref_v02(
+                        producer_actor_id=producer,
+                        source_artifact=artifact,
+                        output_field="/queue_reason_codes",
+                        downstream_artifact=result_artifact,
+                        decision_effect="CELL_TERMINAL_OUTCOME",
+                        disposition="USED",
+                        reason_code="used:g2d_terminal_reason",
+                        runtime_trace=runtime_trace,
+                    )
+                )
+            for index, _ref in enumerate(entry.observed_output_refs):
+                refs.append(
+                    _d4_causal_ref_v02(
+                        producer_actor_id=producer,
+                        source_artifact=artifact,
+                        output_field=f"/observed_output_refs/{index}",
+                        downstream_artifact=result_artifact,
+                        decision_effect="CELL_RESULT_OUTPUT",
+                        disposition="USED",
+                        reason_code="used:g2d_cell_output",
+                        runtime_trace=runtime_trace,
+                    )
+                )
+            for index, _ref in enumerate(entry.observed_evidence_refs):
+                refs.append(
+                    _d4_causal_ref_v02(
+                        producer_actor_id=producer,
+                        source_artifact=artifact,
+                        output_field=f"/observed_evidence_refs/{index}",
+                        downstream_artifact=result_artifact,
+                        decision_effect="CELL_RESULT_EVIDENCE",
+                        disposition="USED",
+                        reason_code="used:g2d_cell_evidence",
+                        runtime_trace=runtime_trace,
+                    )
+                )
+            for index, _ref in enumerate(entry.advisory_refs):
+                refs.append(
+                    _d4_causal_ref_v02(
+                        producer_actor_id=producer,
+                        source_artifact=artifact,
+                        output_field=f"/advisory_refs/{index}",
+                        downstream_artifact=result_artifact,
+                        decision_effect="UNUSED_ADVISORY",
+                        disposition="IGNORED_WITH_REASON",
+                        reason_code="ignored:g2d_unused_advisory",
+                        runtime_trace=runtime_trace,
+                    )
+                )
+        for child_id in result.ordered_child_result_ids:
+            child = result_by_id[child_id]
+            child_artifact = result_artifact_by_result_id[child_id]
+            if child.parent_cell_id != result.cell_id:
+                raise ValueError("g2d_causal_consumption_invalid")
+            for pointer in ("/result_id", "/outcome", "/accepted_output_refs", "/evidence_refs"):
+                refs.append(
+                    _d4_causal_ref_v02(
+                        producer_actor_id="fractal_runtime_v02",
+                        source_artifact=child_artifact,
+                        output_field=pointer,
+                        downstream_artifact=result_artifact,
+                        decision_effect="PARENT_CELL_AGGREGATION",
+                        disposition="USED",
+                        reason_code="used:g2d_child_result_aggregation",
+                        runtime_trace=runtime_trace,
+                    )
+                )
+        for pointer in ("/result_id", "/outcome", "/accepted_output_refs", "/evidence_refs"):
+            refs.append(
+                _d4_causal_ref_v02(
+                    producer_actor_id="fractal_runtime_v02",
+                    source_artifact=result_artifact,
+                    output_field=pointer,
+                    downstream_artifact=report_artifact,
+                    decision_effect="RUNTIME_REPORT_AGGREGATION",
+                    disposition="USED",
+                    reason_code="used:g2d_result_aggregation",
+                    runtime_trace=runtime_trace,
+                )
+            )
+    root_result = cell_results[-1]
+    root_artifact = result_artifacts[-1]
+    if root_result.parent_cell_id is not None or runtime_report.runtime_outcome != root_result.outcome:
+        raise ValueError("g2d_causal_consumption_invalid")
+    for pointer in ("/outcome", "/reason_codes"):
+        refs.append(
+            _d4_causal_ref_v02(
+                producer_actor_id="fractal_runtime_v02",
+                source_artifact=root_artifact,
+                output_field=pointer,
+                downstream_artifact=report_artifact,
+                decision_effect="RUNTIME_OUTCOME_SELECTION",
+                disposition="USED",
+                reason_code="used:g2d_root_outcome_selection",
+                runtime_trace=runtime_trace,
+            )
+        )
+    result = tuple(refs)
+    if (
+        any(_validate_causal_consumption_ref_v01(item) for item in result)
+        or len(_causal_consumption_refs_to_plain_list_v01(result)) != len(result)
+    ):
+        raise ValueError("g2d_causal_consumption_invalid")
+    return result
+
+
+def validate_fractal_runtime_causal_consumption_refs_v02(
+    value: tuple[CausalConsumptionRefV01, ...],
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_assignments: tuple[RuntimeAssignmentV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+    stage_d_c_artifacts: tuple[KernelArtifactV01, ...],
+) -> FractalRuntimeValidationReportV02:
+    try:
+        expected = build_fractal_runtime_causal_consumption_refs_v02(
+            source_context=source_context,
+            topology=topology,
+            topology_artifact=topology_artifact,
+            runtime_assignments=runtime_assignments,
+            queue_entries=queue_entries,
+            queue_artifacts=queue_artifacts,
+            cell_results=cell_results,
+            result_artifacts=result_artifacts,
+            runtime_trace=runtime_trace,
+            runtime_report=runtime_report,
+            report_artifact=report_artifact,
+        )
+        if (
+            type(value) is not tuple
+            or value != expected
+            or _causal_consumption_refs_to_plain_list_v01(value)
+            != _causal_consumption_refs_to_plain_list_v01(expected)
+            or _validate_causal_consumption_bundle_v01(
+                artifacts=stage_d_c_artifacts,
+                causal_refs=value,
+            )
+        ):
+            raise ValueError("g2d_causal_consumption_invalid")
+        material = {
+            "stage_d_c_artifact_ids": [item.artifact_id for item in stage_d_c_artifacts],
+            "causal_refs": _causal_consumption_refs_to_plain_list_v01(value),
+        }
+        profile_id = (
+            "frcausalprofile_v02:"
+            + _domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_FRACTAL_RUNTIME_V02_CAUSAL_PROFILE",
+                payload=_canonical_json_bytes_v01(material),
+            )
+        )
+        return _d4_contextual_report_v02(
+            validation_target="CAUSAL_CONSUMPTION",
+            validated_object_id=profile_id,
+            failure_stage="CAUSAL_CONSUMPTION",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="CAUSAL_CONSUMPTION",
+            validated_object_id=None,
+            failure_stage="CAUSAL_CONSUMPTION",
+            reason_code="g2d_causal_consumption_invalid",
+        )
+
+
+def _d4_plain_pointer_leaf_paths_v02(value: object, prefix: str = "") -> dict[str, object]:
+    if type(value) is dict:
+        result: dict[str, object] = {}
+        for key, item in value.items():
+            escaped = key.replace("~", "~0").replace("/", "~1")
+            result.update(_d4_plain_pointer_leaf_paths_v02(item, f"{prefix}/{escaped}"))
+        return result
+    if type(value) is list:
+        result = {}
+        for index, item in enumerate(value):
+            result.update(_d4_plain_pointer_leaf_paths_v02(item, f"{prefix}/{index}"))
+        return result
+    return {prefix: value}
+
+
+def validate_fractal_runtime_causal_counterfactual_v02(
+    *,
+    execution_bundle: FractalRuntimeExecutionBundleV02,
+    causal_ref: CausalConsumptionRefV01,
+    mutated_source_artifact: KernelArtifactV01,
+) -> FractalRuntimeValidationReportV02:
+    try:
+        if validate_fractal_runtime_execution_bundle_v02(execution_bundle).status != "PASS":
+            raise ValueError("g2d_causal_counterfactual_mismatch")
+        if causal_ref not in execution_bundle.causal_consumption_refs:
+            raise ValueError("g2d_causal_counterfactual_mismatch")
+        stage_c = _d4_stage_artifacts_v02(
+            stage="STAGE_D_C",
+            source_context=execution_bundle.source_context,
+            topology_artifact=execution_bundle.topology_artifact,
+            runtime_trace=execution_bundle.runtime_trace,
+            artifact_by_id={
+                item.artifact_id: item
+                for item in (
+                    execution_bundle.topology_artifact,
+                    *execution_bundle.queue_artifacts,
+                    *execution_bundle.result_artifacts,
+                    execution_bundle.report_artifact,
+                )
+            },
+            report_artifact=execution_bundle.report_artifact,
+        )
+        baseline = next(
+            item for item in stage_c if item.artifact_id == causal_ref.source_artifact_id
+        )
+        if (
+            type(mutated_source_artifact) is not KernelArtifactV01
+            or _validate_kernel_artifact_v01(mutated_source_artifact)
+            or mutated_source_artifact.artifact_id == baseline.artifact_id
+            or mutated_source_artifact.artifact_type != baseline.artifact_type
+            or mutated_source_artifact.schema_version != baseline.schema_version
+            or mutated_source_artifact.transaction_id != baseline.transaction_id
+            or mutated_source_artifact.owner_root_id != baseline.owner_root_id
+            or mutated_source_artifact.source_component != baseline.source_component
+            or mutated_source_artifact.authority_class != baseline.authority_class
+            or mutated_source_artifact.lifecycle_state != baseline.lifecycle_state
+            or mutated_source_artifact.trace_refs != baseline.trace_refs
+            or mutated_source_artifact.parent_refs != baseline.parent_refs
+            or _canonical_json_bytes_v01(
+                _kernel_artifact_to_plain_dict_v01(mutated_source_artifact)["time_envelope"]
+            )
+            != _canonical_json_bytes_v01(
+                _kernel_artifact_to_plain_dict_v01(baseline)["time_envelope"]
+            )
+        ):
+            raise ValueError("g2d_causal_counterfactual_mismatch")
+        baseline_payload = _kernel_artifact_to_plain_dict_v01(baseline)["payload"]
+        mutated_payload = _kernel_artifact_to_plain_dict_v01(mutated_source_artifact)["payload"]
+        before = _d4_plain_pointer_leaf_paths_v02(baseline_payload)
+        after = _d4_plain_pointer_leaf_paths_v02(mutated_payload)
+        changed = tuple(
+            pointer
+            for pointer in tuple(dict.fromkeys((*before, *after)))
+            if before.get(pointer) != after.get(pointer)
+        )
+        if changed != (causal_ref.output_field,):
+            raise ValueError("g2d_causal_counterfactual_mismatch")
+        expected_downstream: str | None
+        if causal_ref.disposition == "IGNORED_WITH_REASON":
+            expected_downstream = causal_ref.downstream_artifact_id
+        elif causal_ref.disposition in {"REJECTED", "BLOCKED_BY_GATE"}:
+            expected_downstream = None
+        else:
+            expected_downstream = None
+        material = {
+            "causal_ref": _causal_consumption_ref_to_plain_dict_v01(causal_ref),
+            "mutated_source_artifact_id": mutated_source_artifact.artifact_id,
+            "expected_disposition": causal_ref.disposition,
+            "expected_downstream_artifact_id": expected_downstream,
+        }
+        counterfactual_id = (
+            "frcounterfactual_v02:"
+            + _domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_FRACTAL_RUNTIME_V02_CAUSAL_COUNTERFACTUAL",
+                payload=_canonical_json_bytes_v01(material),
+            )
+        )
+        return _d4_contextual_report_v02(
+            validation_target="CAUSAL_COUNTERFACTUAL",
+            validated_object_id=counterfactual_id,
+            failure_stage="CAUSAL_COUNTERFACTUAL",
+        )
+    except Exception:
+        return _d4_contextual_report_v02(
+            validation_target="CAUSAL_COUNTERFACTUAL",
+            validated_object_id=None,
+            failure_stage="CAUSAL_COUNTERFACTUAL",
+            reason_code="g2d_causal_counterfactual_mismatch",
+        )
+
+
+def _d4_prefix_kwargs_v02(
+    state: dict[str, object],
+    **overrides: object,
+) -> dict[str, object]:
+    result = {
+        "settled_budget_log": state["budgets"],
+        "settled_queue_entry_log": state["queue_entries"],
+        "settled_queue_artifact_log": state["queue_artifacts"],
+        "settled_cell_inputs": state["cell_inputs"],
+        "settled_scope_projections": state["scope_projections"],
+        "settled_revise_observations": state["revise_observations"],
+        "settled_backpressure_states": state["backpressure_states"],
+        "settled_validation_reports": state["prefix_reports"],
+    }
+    result.update(overrides)
+    return result
+
+
+def _d4_retain_prefix_reports_v02(
+    state: dict[str, object],
+) -> tuple[FractalRuntimeValidationReportV02, ...]:
+    reports = state["prefix_reports"]
+    queue_entries = state["queue_entries"]
+    if type(reports) is not tuple or len(reports) < 4 or type(queue_entries) is not tuple:
+        raise ValueError("g2d_validation_status_stage_mismatch")
+    scope_reports = tuple(
+        item
+        for item in reports[4:]
+        if item.validation_target == "SCOPE_PROJECTION_AGAINST_SOURCES"
+    )
+    input_reports = tuple(
+        item
+        for item in reports[4:]
+        if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+    )
+    return (
+        *reports[:4],
+        *(validate_fractal_cell_queue_entry_v02(item) for item in queue_entries),
+        *scope_reports,
+        *input_reports,
+    )
+
+
+def _d4_indexes_v02(
+    state: dict[str, object],
+    *,
+    frontier: str = "COMPLETED",
+) -> dict[str, object]:
+    source_context = state["source_context"]
+    topology = state["topology"]
+    if (
+        type(source_context) is not FractalRuntimeSourceContextV02
+        or type(topology) is not RuntimeExecutionTopologyV02
+    ):
+        raise ValueError("g2d_source_context_invalid")
+    return _d3_validate_settled_runtime_prefix_v02(
+        topology=topology,
+        policy=source_context.runtime_policy,
+        source_context=source_context,
+        frontier=frontier,
+        **_d4_prefix_kwargs_v02(state),
+    )
+
+
+def _d4_latest_v02(
+    state: dict[str, object],
+) -> tuple[FractalCellQueueEntryV02, ...]:
+    queue_entries = state["queue_entries"]
+    if type(queue_entries) is not tuple:
+        raise ValueError("g2d_queue_order_mismatch")
+    return _d3_latest_queue_entries_v02(queue_entries)
+
+
+def _d4_budget_successor_v02(
+    state: dict[str, object],
+    predecessor: FractalRuntimeBudgetV02,
+    *,
+    event: str,
+    transition_decision: TransitionDecisionV01 | None = None,
+    cell_input: FractalCellInputV02 | None = None,
+    allocation_parent: FractalRuntimeBudgetV02 | None = None,
+    owning_cell_id: str | None = None,
+    budget_scope: str = "ROOT_GLOBAL_AND_CELL",
+    canonical_child_index: int | None = None,
+    allocation_queue_entries: tuple[FractalCellQueueEntryV02, ...] = (),
+    paired_cell_budget: FractalRuntimeBudgetV02 | None = None,
+    child_result: FractalCellResultV02 | None = None,
+    budget_state: str = "ACTIVE",
+) -> FractalRuntimeBudgetV02:
+    source_context = state["source_context"]
+    topology = state["topology"]
+    seed = state["topology_seed"]
+    if (
+        type(source_context) is not FractalRuntimeSourceContextV02
+        or type(topology) is not RuntimeExecutionTopologyV02
+        or type(seed) is not RuntimeTopologySeedV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    return build_fractal_runtime_budget_v02(
+        policy=source_context.runtime_policy,
+        topology_seed=seed,
+        allocation_parent_budget=allocation_parent,
+        predecessor_budget=predecessor,
+        owning_cell_id=owning_cell_id or topology.root_cell_id,
+        budget_scope=budget_scope,
+        budget_state=budget_state,
+        budget_event_kind=event,
+        budget_context_input=cell_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queue_entries,
+        transition_decision=transition_decision,
+        paired_cell_budget=paired_cell_budget,
+        child_result=child_result,
+    )
+
+
+def _d4_evaluate_queue_transition_v02(
+    state: dict[str, object],
+    *,
+    source_artifact: KernelArtifactV01,
+    node: RuntimeTopologyNodeV02,
+    current_entry: FractalCellQueueEntryV02 | None,
+    cell_input: FractalCellInputV02 | None,
+    cell_budget: FractalRuntimeBudgetV02,
+    global_budget: FractalRuntimeBudgetV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...] = (),
+    queue_reason_codes: tuple[str, ...] = (),
+    observed_output_refs: tuple[str, ...] = (),
+    observed_evidence_refs: tuple[str, ...] = (),
+    advisory_refs: tuple[str, ...] = (),
+    local_child_result: FractalCellResultV02 | None = None,
+    local_child_result_artifact: KernelArtifactV01 | None = None,
+    validation_report: FractalRuntimeValidationReportV02 | None = None,
+    revise_observation: FractalReviseObservationV02 | None = None,
+    backpressure_state: FractalBackpressureStateV02 | None = None,
+    cell_id: str | None = None,
+    parent_cell_id: str | None = None,
+    planned_child_cell_id: str | None = None,
+    cell_depth: int | None = None,
+    scope_ref: str | None = None,
+    parent_return_pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...] = (),
+    parent_return_child_results: tuple[FractalCellResultV02, ...] = (),
+    parent_return_partial_failures: tuple[FractalPartialFailureRecordV02, ...] = (),
+    parent_return_result_proposal: dict[str, object] | None = None,
+    parent_return_post_vv_report: dict[str, object] | None = None,
+    parent_return_gt_advisory_report: dict[str, object] | None = None,
+    parent_return_validation_reports: tuple[FractalRuntimeValidationReportV02, ...] = (),
+) -> TransitionDecisionV01:
+    source_context = state["source_context"]
+    topology = state["topology"]
+    registry = state["transition_registry"]
+    if (
+        type(source_context) is not FractalRuntimeSourceContextV02
+        or type(topology) is not RuntimeExecutionTopologyV02
+        or type(registry) is not TransitionRegistryV01
+    ):
+        raise ValueError("g2d_transition_decision_substituted")
+    if current_entry is not None:
+        cell_id = current_entry.cell_id if cell_id is None else cell_id
+        parent_cell_id = (
+            current_entry.parent_cell_id
+            if parent_cell_id is None
+            else parent_cell_id
+        )
+        planned_child_cell_id = (
+            current_entry.planned_child_cell_id
+            if planned_child_cell_id is None
+            else planned_child_cell_id
+        )
+        cell_depth = current_entry.cell_depth if cell_depth is None else cell_depth
+        scope_ref = current_entry.scope_ref if scope_ref is None else scope_ref
+    else:
+        cell_id = topology.root_cell_id if cell_id is None else cell_id
+        cell_depth = 0 if cell_depth is None else cell_depth
+        scope_ref = topology.accepted_scope_ref if scope_ref is None else scope_ref
+    decision = evaluate_fractal_runtime_state_transition_v02(
+        source_context=source_context,
+        topology=topology,
+        source_artifact=source_artifact,
+        current_entry=current_entry,
+        node=node,
+        cell_input=cell_input,
+        cell_id=cell_id,
+        parent_cell_id=parent_cell_id,
+        planned_child_cell_id=planned_child_cell_id,
+        cell_depth=cell_depth,
+        scope_ref=scope_ref,
+        cell_budget_before=cell_budget,
+        global_budget_before=global_budget,
+        dependencies=dependencies,
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
+        validation_report=validation_report,
+        parent_return_pre_post_vv_terminal_queue_entries=parent_return_pre_post_vv_terminal_queue_entries,
+        parent_return_child_results=parent_return_child_results,
+        parent_return_partial_failures=parent_return_partial_failures,
+        parent_return_result_proposal=parent_return_result_proposal,
+        parent_return_post_vv_report=parent_return_post_vv_report,
+        parent_return_gt_advisory_report=parent_return_gt_advisory_report,
+        parent_return_validation_reports=parent_return_validation_reports,
+        revise_observation=revise_observation,
+        backpressure_state=backpressure_state,
+        transition_registry=registry,
+        **_d4_prefix_kwargs_v02(state),
+    )
+    if type(decision) is not TransitionDecisionV01:
+        raise ValueError("g2d_transition_decision_substituted")
+    return decision
+
+
+def _d4_append_queue_target_v02(
+    state: dict[str, object],
+    *,
+    current_entry: FractalCellQueueEntryV02,
+    current_artifact: KernelArtifactV01,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02,
+    transition_decision: TransitionDecisionV01,
+    cell_budget_before: FractalRuntimeBudgetV02,
+    global_budget_before: FractalRuntimeBudgetV02,
+    cell_budget_after: FractalRuntimeBudgetV02,
+    global_budget_after: FractalRuntimeBudgetV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...],
+    queue_reason_codes: tuple[str, ...] = (),
+    observed_output_refs: tuple[str, ...] = (),
+    observed_evidence_refs: tuple[str, ...] = (),
+    advisory_refs: tuple[str, ...] = (),
+    local_child_result: FractalCellResultV02 | None = None,
+    local_child_result_artifact: KernelArtifactV01 | None = None,
+) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    budgets = state["budgets"]
+    queue_entries = state["queue_entries"]
+    queue_artifacts = state["queue_artifacts"]
+    runtime_artifacts = state["runtime_artifacts"]
+    queue_decisions = state["queue_decisions"]
+    if not all(type(item) is tuple for item in (
+        budgets,
+        queue_entries,
+        queue_artifacts,
+        runtime_artifacts,
+        queue_decisions,
+    )):
+        raise ValueError("g2d_abi_bundle_invalid")
+    if (cell_budget_after, global_budget_after) != (
+        cell_budget_before,
+        global_budget_before,
+    ):
+        suffix = (
+            (global_budget_after,)
+            if cell_budget_after is global_budget_after
+            else (cell_budget_after, global_budget_after)
+        )
+        if any(item in budgets for item in suffix):
+            raise ValueError("g2d_budget_double_spend")
+        state["budgets"] = (*budgets, *suffix)
+    source_context = state["source_context"]
+    topology = state["topology"]
+    topology_artifact = state["topology_artifact"]
+    if (
+        type(source_context) is not FractalRuntimeSourceContextV02
+        or type(topology) is not RuntimeExecutionTopologyV02
+        or type(topology_artifact) is not KernelArtifactV01
+    ):
+        raise ValueError("g2d_source_context_invalid")
+    target = advance_fractal_cell_queue_v02(
+        source_context=source_context,
+        topology=topology,
+        current_entry=current_entry,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=transition_decision,
+        cell_budget_after=cell_budget_after,
+        global_budget_after=global_budget_after,
+        dependencies=dependencies,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
+        cell_instantiation_order=tuple(item.cell_id for item in state["cell_inputs"]),
+        projected_node_ids=cell_input.ordered_node_ids,
+        round_start_queue_entries=_d4_latest_v02(state),
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        **_d4_prefix_kwargs_v02(state),
+    )
+    next_queue_entries = (*queue_entries, target)
+    artifact = project_fractal_cell_queue_entry_kernel_artifact_v02(
+        target,
+        topology_artifact=topology_artifact,
+        predecessor_artifact=current_artifact,
+        activation_parent_artifact=None,
+        local_child_result_artifact=local_child_result_artifact,
+        source_context=source_context,
+        **_d4_prefix_kwargs_v02(
+            state,
+            settled_queue_entry_log=next_queue_entries,
+        ),
+    )
+    state["queue_entries"] = next_queue_entries
+    state["queue_artifacts"] = (*queue_artifacts, artifact)
+    state["runtime_artifacts"] = (*runtime_artifacts, artifact)
+    state["queue_decisions"] = (*queue_decisions, transition_decision)
+    state["prefix_reports"] = _d4_retain_prefix_reports_v02(state)
+    return target, artifact
+
+
+def _d4_initialize_runtime_state_v02(
+    source_context: FractalRuntimeSourceContextV02,
+) -> dict[str, object]:
+    topology = construct_runtime_execution_topology_v02(source_context)
+    registry = _build_fractal_runtime_transition_registry_profile_v02()
+    t01 = evaluate_route_eligibility_to_topology_transition_v02(
+        source_context=source_context,
+        topology=topology,
+        transition_registry=registry,
+    )
+    topology_artifact = project_runtime_execution_topology_kernel_artifact_v02(
+        topology,
+        source_context=source_context,
+        topology_transition_decision=t01,
+    )
+    binding, seed, root_initial, nodes = _d3_reconstruct_topology_parts_v02(
+        source_context,
+        topology,
+    )
+    edges = tuple(
+        build_runtime_topology_edge_v02(
+            seed,
+            nodes[row[2]],
+            nodes[row[3]],
+            edge_kind=row[4],
+            canonical_index=row[0],
+            cell_projection_class=row[1],
+        )
+        for row in dict(MODE_EDGE_TEMPLATE_ROWS_V02)[topology.accepted_mode]
+    )
+    assignments = tuple(
+        _d3_runtime_assignment_for_node_v02(source_context, topology, node)
+        for node in nodes
+    )
+    state: dict[str, object] = {
+        "source_context": source_context,
+        "topology": topology,
+        "transition_registry": registry,
+        "topology_transition": t01,
+        "topology_artifact": topology_artifact,
+        "source_binding": binding,
+        "topology_seed": seed,
+        "topology_nodes": nodes,
+        "topology_edges": edges,
+        "runtime_assignments": assignments,
+        "root_initial_budget": root_initial,
+        "budgets": (),
+        "queue_entries": (),
+        "queue_artifacts": (),
+        "runtime_artifacts": (),
+        "queue_decisions": (),
+        "cell_inputs": (),
+        "scope_projections": (),
+        "revise_observations": (),
+        "partial_failures": (),
+        "backpressure_states": (),
+        "prefix_reports": _d3_expected_retained_base_reports_v02(
+            source_context,
+            topology,
+        ),
+        "cell_results": (),
+        "result_artifacts": (),
+        "result_proposals": (),
+        "post_vv_reports": (),
+        "gt_advisory_reports": (),
+        "pre_result_reports": (),
+        "cell_contexts": {},
+    }
+    root_active = _d4_budget_successor_v02(
+        state,
+        root_initial,
+        event="ACTIVATE",
+    )
+    root_create = _d4_budget_successor_v02(
+        state,
+        root_active,
+        event="CELL_CREATE",
+    )
+    state["root_create_budget"] = root_create
+    state["budgets"] = (root_initial, root_active, root_create)
+    planned_child_ids = _derive_settled_planned_root_child_ids_v02(
+        source_context=source_context,
+        topology=topology,
+        topology_transition_decision=t01,
+        topology_artifact=topology_artifact,
+    )
+    admission_decisions = tuple(
+        _d4_evaluate_queue_transition_v02(
+            state,
+            source_artifact=topology_artifact,
+            node=node,
+            current_entry=None,
+            cell_input=None,
+            cell_budget=root_create,
+            global_budget=root_create,
+        )
+        for node in nodes
+    )
+    root_queues = admit_runtime_execution_topology_v02(
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        topology_transition_decision=t01,
+        cell_id=topology.root_cell_id,
+        parent_cell_id=None,
+        parent_slot_artifact=None,
+        cell_depth=0,
+        scope_ref=topology.accepted_scope_ref,
+        cell_budget=root_create,
+        global_budget=root_create,
+        projected_nodes=nodes,
+        planned_child_cell_ids=planned_child_ids,
+        admission_decisions=admission_decisions,
+        cell_instantiation_order=(topology.root_cell_id,),
+        **_d4_prefix_kwargs_v02(state),
+    )
+    initial_artifacts: list[KernelArtifactV01] = []
+    for entry, decision in zip(root_queues, admission_decisions, strict=True):
+        next_queue_entries = (*state["queue_entries"], entry)
+        artifact = project_fractal_cell_queue_entry_kernel_artifact_v02(
+            entry,
+            topology_artifact=topology_artifact,
+            predecessor_artifact=None,
+            activation_parent_artifact=None,
+            local_child_result_artifact=None,
+            source_context=source_context,
+            **_d4_prefix_kwargs_v02(
+                state,
+                settled_queue_entry_log=next_queue_entries,
+            ),
+        )
+        state["queue_entries"] = next_queue_entries
+        state["queue_artifacts"] = (*state["queue_artifacts"], artifact)
+        state["runtime_artifacts"] = (*state["runtime_artifacts"], artifact)
+        state["queue_decisions"] = (*state["queue_decisions"], decision)
+        state["prefix_reports"] = _d4_retain_prefix_reports_v02(state)
+        initial_artifacts.append(artifact)
+    root_input = build_fractal_cell_input_from_queue_v02(
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        cell_id=topology.root_cell_id,
+        parent_cell_id=None,
+        parent_input=None,
+        parent_slot_artifact=None,
+        scope_projection=None,
+        cell_budget=root_create,
+        global_budget=root_create,
+        initial_queue_entries=root_queues,
+        initial_queue_artifacts=tuple(initial_artifacts),
+        ordered_planned_child_cell_ids=planned_child_ids,
+        **_d4_prefix_kwargs_v02(state),
+    )
+    input_report = validate_fractal_cell_input_against_sources_v02(
+        root_input,
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=topology_artifact,
+        parent_input=None,
+        parent_slot_artifact=None,
+        scope_projection=None,
+        cell_budget=root_create,
+        global_budget=root_create,
+        queue_entries=root_queues,
+        queue_artifacts=tuple(initial_artifacts),
+        **_d4_prefix_kwargs_v02(state),
+    )
+    if input_report.status != "PASS":
+        raise ValueError(input_report.reason_codes[0])
+    state["cell_inputs"] = (root_input,)
+    state["prefix_reports"] = (*state["prefix_reports"], input_report)
+    state["cell_contexts"] = {
+        topology.root_cell_id: {
+            "cell_input": root_input,
+            "nodes": nodes,
+            "initial_queues": root_queues,
+            "initial_artifacts": tuple(initial_artifacts),
+            "allocated_budget": root_initial,
+            "allocation_parent": None,
+            "canonical_child_index": None,
+        }
+    }
+    return state
+
+
+def _d4_dependencies_v02(
+    state: dict[str, object],
+    entry: FractalCellQueueEntryV02,
+) -> tuple[FractalCellQueueEntryV02, ...]:
+    topology = state["topology"]
+    indexes = _d4_indexes_v02(state)
+    latest_by_key = indexes.get("latest_by_key")
+    if (
+        type(topology) is not RuntimeExecutionTopologyV02
+        or not isinstance(latest_by_key, dict)
+    ):
+        raise ValueError("g2d_queue_order_mismatch")
+    values = _d3_dependencies_for_latest_entry_v02(
+        entry,
+        topology=topology,
+        latest_by_key=latest_by_key,
+    )
+    if any(item is None for item in values):
+        raise ValueError("g2d_queue_order_mismatch")
+    result = tuple(item for item in values if item is not None)
+    if any(item.state not in _D3_TERMINAL_STATES_V02 for item in result):
+        raise ValueError("g2d_queue_order_mismatch")
+    return result
+
+
+def _d4_ready_and_start_node_v02(
+    state: dict[str, object],
+    *,
+    current: FractalCellQueueEntryV02,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...],
+) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    indexes = _d4_indexes_v02(state)
+    artifact_by_queue_id = indexes.get("artifact_by_queue_id")
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(artifact_by_queue_id, dict) or not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_queue_artifact_lineage_invalid")
+    current_artifact = artifact_by_queue_id.get(current.queue_entry_id)
+    cell_anchor = budget_by_id.get(current.cell_budget_id)
+    global_anchor = budget_by_id.get(current.global_budget_id)
+    if (
+        type(current_artifact) is not KernelArtifactV01
+        or type(cell_anchor) is not FractalRuntimeBudgetV02
+        or type(global_anchor) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    ready_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=current_artifact,
+        node=node,
+        current_entry=current,
+        cell_input=cell_input,
+        cell_budget=cell_anchor,
+        global_budget=global_anchor,
+        dependencies=dependencies,
+    )
+    ready, ready_artifact = _d4_append_queue_target_v02(
+        state,
+        current_entry=current,
+        current_artifact=current_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=ready_decision,
+        cell_budget_before=cell_anchor,
+        global_budget_before=global_anchor,
+        cell_budget_after=cell_anchor,
+        global_budget_after=global_anchor,
+        dependencies=dependencies,
+    )
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    ready_cell = budget_by_id.get(ready.cell_budget_id)
+    ready_global = budget_by_id.get(ready.global_budget_id)
+    if (
+        type(ready_cell) is not FractalRuntimeBudgetV02
+        or type(ready_global) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    start_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=ready_artifact,
+        node=node,
+        current_entry=ready,
+        cell_input=cell_input,
+        cell_budget=ready_cell,
+        global_budget=ready_global,
+        dependencies=dependencies,
+    )
+    live_cell, live_global = _d3_live_budget_heads_v02(
+        topology=state["topology"],
+        cell_id=ready.cell_id,
+        indexes=indexes,
+    )
+    allocation_parent = (
+        None
+        if live_cell.allocation_parent_budget_id is None
+        else budget_by_id.get(live_cell.allocation_parent_budget_id)
+    )
+    if allocation_parent is not None and type(allocation_parent) is not FractalRuntimeBudgetV02:
+        raise ValueError("g2d_budget_predecessor_invalid")
+    start_cell = _d4_budget_successor_v02(
+        state,
+        live_cell,
+        event="START_NODE",
+        transition_decision=start_decision,
+        cell_input=cell_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=ready.cell_id,
+        budget_scope=live_cell.budget_scope,
+    )
+    start_global = (
+        start_cell
+        if ready.cell_id == state["topology"].root_cell_id
+        else _d4_budget_successor_v02(
+            state,
+            live_global,
+            event="START_NODE",
+            transition_decision=start_decision,
+            cell_input=cell_input,
+            paired_cell_budget=start_cell,
+        )
+    )
+    return _d4_append_queue_target_v02(
+        state,
+        current_entry=ready,
+        current_artifact=ready_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=start_decision,
+        cell_budget_before=ready_cell,
+        global_budget_before=ready_global,
+        cell_budget_after=start_cell,
+        global_budget_after=start_global,
+        dependencies=dependencies,
+    )
+
+
+def _d4_complete_local_node_v02(
+    state: dict[str, object],
+    *,
+    initial: FractalCellQueueEntryV02,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...],
+) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    running, running_artifact = _d4_ready_and_start_node_v02(
+        state,
+        current=initial,
+        node=node,
+        cell_input=cell_input,
+        dependencies=dependencies,
+    )
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    running_cell = budget_by_id.get(running.cell_budget_id)
+    running_global = budget_by_id.get(running.global_budget_id)
+    if (
+        type(running_cell) is not FractalRuntimeBudgetV02
+        or type(running_global) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    live_cell, live_global = _d3_live_budget_heads_v02(
+        topology=state["topology"],
+        cell_id=running.cell_id,
+        indexes=indexes,
+    )
+    material = _d3_local_observation_material_v02(
+        source_context=state["source_context"],
+        topology=state["topology"],
+        node=node,
+        cell_input=cell_input,
+        cell_budget_before=live_cell,
+        global_budget_before=live_global,
+        dependencies=dependencies,
+        indexes=indexes,
+    )
+    finish_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=cell_input,
+        cell_budget=running_cell,
+        global_budget=running_global,
+        dependencies=dependencies,
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    allocation_parent = (
+        None
+        if live_cell.allocation_parent_budget_id is None
+        else budget_by_id.get(live_cell.allocation_parent_budget_id)
+    )
+    if allocation_parent is not None and type(allocation_parent) is not FractalRuntimeBudgetV02:
+        raise ValueError("g2d_budget_predecessor_invalid")
+    finish_cell = _d4_budget_successor_v02(
+        state,
+        live_cell,
+        event="FINISH_NODE",
+        transition_decision=finish_decision,
+        cell_input=cell_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=running.cell_id,
+        budget_scope=live_cell.budget_scope,
+    )
+    finish_global = (
+        finish_cell
+        if running.cell_id == state["topology"].root_cell_id
+        else _d4_budget_successor_v02(
+            state,
+            live_global,
+            event="FINISH_NODE",
+            transition_decision=finish_decision,
+            cell_input=cell_input,
+            paired_cell_budget=finish_cell,
+        )
+    )
+    validating, validating_artifact = _d4_append_queue_target_v02(
+        state,
+        current_entry=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=finish_decision,
+        cell_budget_before=running_cell,
+        global_budget_before=running_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=material["derived_queue_reason_codes"],
+        observed_output_refs=material["derived_observed_output_refs"],
+        observed_evidence_refs=material["derived_observed_evidence_refs"],
+        advisory_refs=material["derived_advisory_refs"],
+    )
+    terminal_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=validating_artifact,
+        node=node,
+        current_entry=validating,
+        cell_input=cell_input,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    return _d4_append_queue_target_v02(
+        state,
+        current_entry=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=terminal_decision,
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+
+
+def _d4_activate_child_v02(
+    state: dict[str, object],
+    *,
+    parent_input: FractalCellInputV02,
+    slot_running: FractalCellQueueEntryV02,
+    slot_artifact: KernelArtifactV01,
+    dependency: FractalCellQueueEntryV02,
+) -> dict[str, object]:
+    source_context = state["source_context"]
+    topology = state["topology"]
+    nodes = state["topology_nodes"]
+    child_id = slot_running.planned_child_cell_id
+    if (
+        type(source_context) is not FractalRuntimeSourceContextV02
+        or type(topology) is not RuntimeExecutionTopologyV02
+        or type(nodes) is not tuple
+        or type(child_id) is not str
+    ):
+        raise ValueError("g2d_child_slot_activation_invalid")
+    parent_node = next(item for item in nodes if item.node_id == slot_running.node_id)
+    canonical_child_index = parent_node.canonical_index - 1
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    allocation_parent = budget_by_id.get(parent_input.cell_budget_id)
+    if type(allocation_parent) is not FractalRuntimeBudgetV02:
+        raise ValueError("g2d_budget_predecessor_invalid")
+    _live_parent, live_global = _d3_live_budget_heads_v02(
+        topology=topology,
+        cell_id=parent_input.cell_id,
+        indexes=indexes,
+    )
+    precheck = _d3_child_activation_precheck_material_v02(
+        source_context=source_context,
+        topology=topology,
+        source_artifact=slot_artifact,
+        current_entry=slot_running,
+        node=parent_node,
+        cell_input=parent_input,
+        cell_budget_before=live_global,
+        global_budget_before=live_global,
+        dependencies=(dependency,),
+        indexes=indexes,
+    )
+    if precheck["derived_disposition"] != "PASS_FOR_CHILD_ACTIVATION":
+        raise ValueError("g2d_child_slot_activation_invalid")
+    parent_context = state["cell_contexts"].get(parent_input.cell_id)
+    if not isinstance(parent_context, dict):
+        raise ValueError("g2d_cell_input_invalid")
+    allocation_queues = parent_context["initial_queues"]
+    if type(allocation_queues) is not tuple:
+        raise ValueError("g2d_budget_event_context_invalid")
+    child_allocated = build_fractal_runtime_budget_v02(
+        policy=source_context.runtime_policy,
+        topology_seed=state["topology_seed"],
+        allocation_parent_budget=allocation_parent,
+        predecessor_budget=None,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    projection = project_parent_child_scope_v02(
+        source_context=source_context,
+        topology=topology,
+        parent_input=parent_input,
+        child_cell_id=child_id,
+        child_scope_ref=topology.accepted_scope_ref,
+        parent_budget=allocation_parent,
+        child_budget=child_allocated,
+        global_budget=live_global,
+    )
+    child_active = _d4_budget_successor_v02(
+        state,
+        child_allocated,
+        event="ACTIVATE",
+        cell_input=parent_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+    )
+    global_active = _d4_budget_successor_v02(
+        state,
+        live_global,
+        event="ACTIVATE",
+        cell_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+        paired_cell_budget=child_active,
+    )
+    child_create = _d4_budget_successor_v02(
+        state,
+        child_active,
+        event="CELL_CREATE",
+        cell_input=parent_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+    )
+    global_create = _d4_budget_successor_v02(
+        state,
+        global_active,
+        event="CELL_CREATE",
+        cell_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+        paired_cell_budget=child_create,
+    )
+    state["budgets"] = (
+        *state["budgets"],
+        child_allocated,
+        child_active,
+        global_active,
+        child_create,
+        global_create,
+    )
+    state["scope_projections"] = (*state["scope_projections"], projection)
+    scope_report = validate_parent_child_scope_against_sources_v02(
+        projection,
+        source_context=source_context,
+        topology=topology,
+        parent_input=parent_input,
+        parent_budget=allocation_parent,
+        child_budget=child_allocated,
+        global_budget=live_global,
+    )
+    if scope_report.status != "PASS":
+        raise ValueError(scope_report.reason_codes[0])
+    reports = state["prefix_reports"]
+    state["prefix_reports"] = (
+        *reports[:4],
+        *(validate_fractal_cell_queue_entry_v02(item) for item in state["queue_entries"]),
+        *(
+            item
+            for item in reports[4:]
+            if item.validation_target == "SCOPE_PROJECTION_AGAINST_SOURCES"
+        ),
+        scope_report,
+        *(
+            item
+            for item in reports[4:]
+            if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+        ),
+    )
+    child_nodes = _d3_projected_nodes_v02(
+        topology,
+        nodes,
+        cell_depth=parent_input.cell_depth + 1,
+        parent_cell_id=parent_input.cell_id,
+    )
+    admission_decisions = tuple(
+        _d4_evaluate_queue_transition_v02(
+            state,
+            source_artifact=state["topology_artifact"],
+            node=node,
+            current_entry=None,
+            cell_input=None,
+            cell_budget=child_create,
+            global_budget=global_create,
+            cell_id=child_id,
+            parent_cell_id=parent_input.cell_id,
+            cell_depth=parent_input.cell_depth + 1,
+            scope_ref=projection.child_scope_ref,
+        )
+        for node in child_nodes
+    )
+    child_queues = admit_runtime_execution_topology_v02(
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        topology_transition_decision=state["topology_transition"],
+        cell_id=child_id,
+        parent_cell_id=parent_input.cell_id,
+        parent_slot_artifact=slot_artifact,
+        cell_depth=parent_input.cell_depth + 1,
+        scope_ref=projection.child_scope_ref,
+        cell_budget=child_create,
+        global_budget=global_create,
+        projected_nodes=child_nodes,
+        planned_child_cell_ids=(),
+        admission_decisions=admission_decisions,
+        cell_instantiation_order=(
+            *(item.cell_id for item in state["cell_inputs"]),
+            child_id,
+        ),
+        **_d4_prefix_kwargs_v02(state),
+    )
+    child_artifacts: list[KernelArtifactV01] = []
+    for entry, decision in zip(child_queues, admission_decisions, strict=True):
+        next_queue_entries = (*state["queue_entries"], entry)
+        artifact = project_fractal_cell_queue_entry_kernel_artifact_v02(
+            entry,
+            topology_artifact=state["topology_artifact"],
+            predecessor_artifact=None,
+            activation_parent_artifact=slot_artifact,
+            local_child_result_artifact=None,
+            source_context=source_context,
+            **_d4_prefix_kwargs_v02(
+                state,
+                settled_queue_entry_log=next_queue_entries,
+            ),
+        )
+        state["queue_entries"] = next_queue_entries
+        state["queue_artifacts"] = (*state["queue_artifacts"], artifact)
+        state["runtime_artifacts"] = (*state["runtime_artifacts"], artifact)
+        state["queue_decisions"] = (*state["queue_decisions"], decision)
+        state["prefix_reports"] = _d4_retain_prefix_reports_v02(state)
+        child_artifacts.append(artifact)
+    child_input = build_fractal_cell_input_from_queue_v02(
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        cell_id=child_id,
+        parent_cell_id=parent_input.cell_id,
+        parent_input=parent_input,
+        parent_slot_artifact=slot_artifact,
+        scope_projection=projection,
+        cell_budget=child_create,
+        global_budget=global_create,
+        initial_queue_entries=child_queues,
+        initial_queue_artifacts=tuple(child_artifacts),
+        ordered_planned_child_cell_ids=(),
+        **_d4_prefix_kwargs_v02(state),
+    )
+    input_report = validate_fractal_cell_input_against_sources_v02(
+        child_input,
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        parent_input=parent_input,
+        parent_slot_artifact=slot_artifact,
+        scope_projection=projection,
+        cell_budget=child_create,
+        global_budget=global_create,
+        queue_entries=child_queues,
+        queue_artifacts=tuple(child_artifacts),
+        **_d4_prefix_kwargs_v02(state),
+    )
+    if input_report.status != "PASS":
+        raise ValueError(input_report.reason_codes[0])
+    state["cell_inputs"] = (*state["cell_inputs"], child_input)
+    state["prefix_reports"] = (*state["prefix_reports"], input_report)
+    context = {
+        "cell_input": child_input,
+        "nodes": child_nodes,
+        "initial_queues": child_queues,
+        "initial_artifacts": tuple(child_artifacts),
+        "allocated_budget": child_allocated,
+        "allocation_parent": allocation_parent,
+        "canonical_child_index": canonical_child_index,
+        "parent_slot_entry": slot_running,
+        "parent_slot_artifact": slot_artifact,
+    }
+    state["cell_contexts"][child_id] = context
+    return context
+
+
+def _d4_finish_report_node_v02(
+    state: dict[str, object],
+    *,
+    initial: FractalCellQueueEntryV02,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02,
+    validation_report: FractalRuntimeValidationReportV02,
+    observed_output_ref: str,
+    observed_evidence_ref: str,
+) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    dependencies = _d4_dependencies_v02(state, initial)
+    running, running_artifact = _d4_ready_and_start_node_v02(
+        state,
+        current=initial,
+        node=node,
+        cell_input=cell_input,
+        dependencies=dependencies,
+    )
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    running_cell = budget_by_id.get(running.cell_budget_id)
+    running_global = budget_by_id.get(running.global_budget_id)
+    if (
+        type(running_cell) is not FractalRuntimeBudgetV02
+        or type(running_global) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    live_cell, live_global = _d3_live_budget_heads_v02(
+        topology=state["topology"],
+        cell_id=running.cell_id,
+        indexes=indexes,
+    )
+    finish_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=cell_input,
+        cell_budget=running_cell,
+        global_budget=running_global,
+        dependencies=dependencies,
+        observed_output_refs=(observed_output_ref,),
+        observed_evidence_refs=(observed_evidence_ref,),
+        validation_report=validation_report,
+    )
+    allocation_parent = (
+        None
+        if live_cell.allocation_parent_budget_id is None
+        else budget_by_id.get(live_cell.allocation_parent_budget_id)
+    )
+    if allocation_parent is not None and type(allocation_parent) is not FractalRuntimeBudgetV02:
+        raise ValueError("g2d_budget_predecessor_invalid")
+    finish_cell = _d4_budget_successor_v02(
+        state,
+        live_cell,
+        event="FINISH_NODE",
+        transition_decision=finish_decision,
+        cell_input=cell_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=running.cell_id,
+        budget_scope=live_cell.budget_scope,
+    )
+    finish_global = (
+        finish_cell
+        if running.cell_id == state["topology"].root_cell_id
+        else _d4_budget_successor_v02(
+            state,
+            live_global,
+            event="FINISH_NODE",
+            transition_decision=finish_decision,
+            cell_input=cell_input,
+            paired_cell_budget=finish_cell,
+        )
+    )
+    validating, validating_artifact = _d4_append_queue_target_v02(
+        state,
+        current_entry=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=finish_decision,
+        cell_budget_before=running_cell,
+        global_budget_before=running_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        observed_output_refs=(observed_output_ref,),
+        observed_evidence_refs=(observed_evidence_ref,),
+    )
+    terminal_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=validating_artifact,
+        node=node,
+        current_entry=validating,
+        cell_input=cell_input,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
+        dependencies=dependencies,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        validation_report=validation_report,
+    )
+    return _d4_append_queue_target_v02(
+        state,
+        current_entry=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=terminal_decision,
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+    )
+
+
+def _d4_finish_parent_slot_v02(
+    state: dict[str, object],
+    *,
+    running: FractalCellQueueEntryV02,
+    running_artifact: KernelArtifactV01,
+    node: RuntimeTopologyNodeV02,
+    parent_input: FractalCellInputV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...],
+    child_result: FractalCellResultV02,
+    child_result_artifact: KernelArtifactV01,
+) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    running_cell = budget_by_id.get(running.cell_budget_id)
+    running_global = budget_by_id.get(running.global_budget_id)
+    if (
+        type(running_cell) is not FractalRuntimeBudgetV02
+        or type(running_global) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    live_cell, live_global = _d3_live_budget_heads_v02(
+        topology=state["topology"],
+        cell_id=running.cell_id,
+        indexes=indexes,
+    )
+    finish_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=parent_input,
+        cell_budget=running_cell,
+        global_budget=running_global,
+        dependencies=dependencies,
+        queue_reason_codes=child_result.reason_codes,
+        observed_output_refs=(child_result_artifact.artifact_id,),
+        observed_evidence_refs=child_result.evidence_refs,
+        advisory_refs=(
+            child_result.post_vv_report_ref,
+            child_result.gt_advisory_ref,
+        ),
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+    finish_cell = _d4_budget_successor_v02(
+        state,
+        live_cell,
+        event="FINISH_NODE",
+        transition_decision=finish_decision,
+        cell_input=parent_input,
+        owning_cell_id=running.cell_id,
+        budget_scope=live_cell.budget_scope,
+    )
+    finish_global = (
+        finish_cell
+        if running.cell_id == state["topology"].root_cell_id
+        else _d4_budget_successor_v02(
+            state,
+            live_global,
+            event="FINISH_NODE",
+            transition_decision=finish_decision,
+            cell_input=parent_input,
+            paired_cell_budget=finish_cell,
+        )
+    )
+    validating, validating_artifact = _d4_append_queue_target_v02(
+        state,
+        current_entry=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=parent_input,
+        transition_decision=finish_decision,
+        cell_budget_before=running_cell,
+        global_budget_before=running_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=child_result.reason_codes,
+        observed_output_refs=(child_result_artifact.artifact_id,),
+        observed_evidence_refs=child_result.evidence_refs,
+        advisory_refs=(
+            child_result.post_vv_report_ref,
+            child_result.gt_advisory_ref,
+        ),
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+    terminal_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=validating_artifact,
+        node=node,
+        current_entry=validating,
+        cell_input=parent_input,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+    return _d4_append_queue_target_v02(
+        state,
+        current_entry=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=parent_input,
+        transition_decision=terminal_decision,
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+
+
+def _d4_finish_parent_return_node_v02(
+    state: dict[str, object],
+    *,
+    initial: FractalCellQueueEntryV02,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02,
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    result_proposal: dict[str, object],
+    post_vv_report: dict[str, object],
+    gt_advisory_report: dict[str, object],
+    validation_reports: tuple[FractalRuntimeValidationReportV02, ...],
+) -> tuple[
+    FractalCellQueueEntryV02,
+    KernelArtifactV01,
+    TransitionDecisionV01,
+    FractalRuntimeBudgetV02,
+    FractalRuntimeBudgetV02,
+]:
+    dependencies = _d4_dependencies_v02(state, initial)
+    running, running_artifact = _d4_ready_and_start_node_v02(
+        state,
+        current=initial,
+        node=node,
+        cell_input=cell_input,
+        dependencies=dependencies,
+    )
+    material = _d4_parent_return_material_v02(
+        source_context=state["source_context"],
+        topology=state["topology"],
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+        result_proposal=result_proposal,
+        post_vv_report=post_vv_report,
+        gt_advisory_report=gt_advisory_report,
+        validation_reports=validation_reports,
+    )
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    running_cell = budget_by_id.get(running.cell_budget_id)
+    running_global = budget_by_id.get(running.global_budget_id)
+    if (
+        type(running_cell) is not FractalRuntimeBudgetV02
+        or type(running_global) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_budget_invalid")
+    live_cell, live_global = _d3_live_budget_heads_v02(
+        topology=state["topology"],
+        cell_id=running.cell_id,
+        indexes=indexes,
+    )
+    family = {
+        "parent_return_pre_post_vv_terminal_queue_entries": pre_post_vv_terminal_queue_entries,
+        "parent_return_child_results": child_results,
+        "parent_return_partial_failures": partial_failures,
+        "parent_return_result_proposal": result_proposal,
+        "parent_return_post_vv_report": post_vv_report,
+        "parent_return_gt_advisory_report": gt_advisory_report,
+        "parent_return_validation_reports": validation_reports,
+    }
+    finish_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=cell_input,
+        cell_budget=running_cell,
+        global_budget=running_global,
+        dependencies=dependencies,
+        queue_reason_codes=material["reason_codes"],
+        observed_output_refs=material["observed_output_refs"],
+        observed_evidence_refs=material["observed_evidence_refs"],
+        advisory_refs=material["advisory_refs"],
+        **family,
+    )
+    allocation_parent = (
+        None
+        if live_cell.allocation_parent_budget_id is None
+        else budget_by_id.get(live_cell.allocation_parent_budget_id)
+    )
+    if allocation_parent is not None and type(allocation_parent) is not FractalRuntimeBudgetV02:
+        raise ValueError("g2d_budget_predecessor_invalid")
+    finish_cell = _d4_budget_successor_v02(
+        state,
+        live_cell,
+        event="FINISH_NODE",
+        transition_decision=finish_decision,
+        cell_input=cell_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=running.cell_id,
+        budget_scope=live_cell.budget_scope,
+    )
+    finish_global = (
+        finish_cell
+        if running.cell_id == state["topology"].root_cell_id
+        else _d4_budget_successor_v02(
+            state,
+            live_global,
+            event="FINISH_NODE",
+            transition_decision=finish_decision,
+            cell_input=cell_input,
+            paired_cell_budget=finish_cell,
+        )
+    )
+    validating, validating_artifact = _d4_append_queue_target_v02(
+        state,
+        current_entry=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=finish_decision,
+        cell_budget_before=running_cell,
+        global_budget_before=running_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=material["reason_codes"],
+        observed_output_refs=material["observed_output_refs"],
+        observed_evidence_refs=material["observed_evidence_refs"],
+        advisory_refs=material["advisory_refs"],
+    )
+    terminal_decision = _d4_evaluate_queue_transition_v02(
+        state,
+        source_artifact=validating_artifact,
+        node=node,
+        current_entry=validating,
+        cell_input=cell_input,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+        **family,
+    )
+    terminal, terminal_artifact = _d4_append_queue_target_v02(
+        state,
+        current_entry=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=terminal_decision,
+        cell_budget_before=finish_cell,
+        global_budget_before=finish_global,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    indexes = _d4_indexes_v02(state)
+    budget_by_id = indexes.get("budget_by_id")
+    if not isinstance(budget_by_id, dict):
+        raise ValueError("g2d_budget_invalid")
+    live_cell, live_global = _d3_live_budget_heads_v02(
+        topology=state["topology"],
+        cell_id=cell_input.cell_id,
+        indexes=indexes,
+    )
+    allocation_parent = (
+        None
+        if live_cell.allocation_parent_budget_id is None
+        else budget_by_id.get(live_cell.allocation_parent_budget_id)
+    )
+    if allocation_parent is not None and type(allocation_parent) is not FractalRuntimeBudgetV02:
+        raise ValueError("g2d_budget_predecessor_invalid")
+    final_cell = _d4_budget_successor_v02(
+        state,
+        live_cell,
+        event="FINALIZE",
+        transition_decision=terminal_decision,
+        cell_input=cell_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=cell_input.cell_id,
+        budget_scope=live_cell.budget_scope,
+        budget_state="FINAL",
+    )
+    final_global = (
+        final_cell
+        if cell_input.parent_cell_id is None
+        else _d4_budget_successor_v02(
+            state,
+            live_global,
+            event="FINALIZE",
+            transition_decision=terminal_decision,
+            cell_input=cell_input,
+            paired_cell_budget=final_cell,
+        )
+    )
+    state["budgets"] = (
+        *state["budgets"],
+        *(
+            (final_cell,)
+            if final_cell is final_global
+            else (final_cell, final_global)
+        ),
+    )
+    _d4_indexes_v02(state)
+    return (
+        terminal,
+        terminal_artifact,
+        terminal_decision,
+        final_cell,
+        final_global,
+    )
+
+
+def _d4_finalize_cell_v02(
+    state: dict[str, object],
+    *,
+    context: dict[str, object],
+    pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    child_results: tuple[FractalCellResultV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+) -> dict[str, object]:
+    source_context = state["source_context"]
+    topology = state["topology"]
+    cell_input = context.get("cell_input")
+    nodes = context.get("nodes")
+    initial_queues = context.get("initial_queues")
+    allocated_budget = context.get("allocated_budget")
+    if (
+        type(source_context) is not FractalRuntimeSourceContextV02
+        or type(topology) is not RuntimeExecutionTopologyV02
+        or type(cell_input) is not FractalCellInputV02
+        or type(nodes) is not tuple
+        or type(initial_queues) is not tuple
+        or type(allocated_budget) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_cell_result_invalid")
+    material = _d4_result_proposal_material_v02(
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+    )
+    proposal = build_fractal_cell_result_proposal_v02(
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+        accepted_output_refs=material["accepted_output_refs"],
+        evidence_refs=material["evidence_refs"],
+    )
+    proposal_report = validate_fractal_cell_result_proposal_v02(
+        proposal,
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+    )
+    source_time = source_context.router_input.local_routing_snapshot.kt_asof_utc
+    post_values = _validate_result_proposals([proposal], checked_at=source_time)
+    if type(post_values) is not list or len(post_values) != 1 or type(post_values[0]) is not dict:
+        raise ValueError("g2d_post_vv_report_invalid")
+    post_vv_report = post_values[0]
+    post_report = validate_fractal_post_vv_report_v02(
+        post_vv_report,
+        result_proposal=proposal,
+        source_context=source_context,
+    )
+    gt_advisory_report = _validate_gt([post_vv_report], created_at=source_time)
+    gt_report = validate_fractal_gt_advisory_v02(
+        gt_advisory_report,
+        post_vv_report=post_vv_report,
+        source_context=source_context,
+    )
+    transient_reports = (proposal_report, post_report, gt_report)
+    if any(item.status != "PASS" for item in transient_reports):
+        first = next(item for item in transient_reports if item.status != "PASS")
+        raise ValueError(first.reason_codes[0])
+    node_by_kind = {item.node_kind: item for item in nodes}
+    initial_by_node = {
+        item.node_id: item for item in initial_queues
+    }
+    post_node = node_by_kind.get("POST_VV")
+    gt_node = node_by_kind.get("GT_ADVISORY")
+    parent_return_node = node_by_kind.get("PARENT_RETURN")
+    if not all(
+        type(item) is RuntimeTopologyNodeV02
+        for item in (post_node, gt_node, parent_return_node)
+    ):
+        raise ValueError("g2d_node_instance_geometry_invalid")
+    _d4_finish_report_node_v02(
+        state,
+        initial=initial_by_node[post_node.node_id],
+        node=post_node,
+        cell_input=cell_input,
+        validation_report=post_report,
+        observed_output_ref=post_vv_report["vv_report_id"],
+        observed_evidence_ref=proposal["proposal_id"],
+    )
+    _d4_finish_report_node_v02(
+        state,
+        initial=initial_by_node[gt_node.node_id],
+        node=gt_node,
+        cell_input=cell_input,
+        validation_report=gt_report,
+        observed_output_ref=gt_advisory_report["gt_report_id"],
+        observed_evidence_ref=post_vv_report["vv_report_id"],
+    )
+    (
+        _parent_terminal,
+        _parent_terminal_artifact,
+        _parent_terminal_decision,
+        final_cell,
+        final_global,
+    ) = _d4_finish_parent_return_node_v02(
+        state,
+        initial=initial_by_node[parent_return_node.node_id],
+        node=parent_return_node,
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_post_vv_terminal_queue_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+        result_proposal=proposal,
+        post_vv_report=post_vv_report,
+        gt_advisory_report=gt_advisory_report,
+        validation_reports=transient_reports,
+    )
+    indexes = _d4_indexes_v02(state)
+    latest_by_key = indexes.get("latest_by_key")
+    artifact_by_queue_id = indexes.get("artifact_by_queue_id")
+    if not isinstance(latest_by_key, dict) or not isinstance(artifact_by_queue_id, dict):
+        raise ValueError("g2d_queue_artifact_lineage_invalid")
+    terminal_entries = tuple(
+        latest_by_key[(cell_input.cell_id, node.node_id)] for node in nodes
+    )
+    terminal_artifacts = tuple(
+        artifact_by_queue_id[item.queue_entry_id] for item in terminal_entries
+    )
+    pre_result_report = validate_fractal_cell_result_against_input_v02(
+        source_context=source_context,
+        topology=topology,
+        cell_input=cell_input,
+        terminal_queue_entries=terminal_entries,
+        child_results=child_results,
+        partial_failures=partial_failures,
+        result_proposal=proposal,
+        post_vv_report=post_vv_report,
+        gt_advisory_report=gt_advisory_report,
+        cell_budget=final_cell,
+        global_budget=final_global,
+    )
+    if pre_result_report.status != "PASS":
+        raise ValueError(pre_result_report.reason_codes[0])
+    result = build_fractal_cell_result_v02(
+        topology,
+        cell_input,
+        terminal_entries,
+        child_results,
+        accepted_output_refs=material["accepted_output_refs"],
+        evidence_refs=material["evidence_refs"],
+        pre_result_validation_report=pre_result_report,
+        post_vv_report=post_vv_report,
+        gt_advisory_report=gt_advisory_report,
+        partial_failures=partial_failures,
+        allocated_cell_budget=allocated_budget,
+        final_cell_budget=final_cell,
+        global_budget=final_global,
+    )
+    if validate_fractal_cell_result_v02(result).status != "PASS":
+        raise ValueError("g2d_cell_result_invalid")
+    result_artifact_by_id = {
+        item.result_id: artifact
+        for item, artifact in zip(
+            state["cell_results"],
+            state["result_artifacts"],
+            strict=True,
+        )
+    }
+    child_artifacts = tuple(
+        result_artifact_by_id[item.result_id] for item in child_results
+    )
+    result_artifact = project_fractal_cell_result_kernel_artifact_v02(
+        result,
+        topology_artifact=state["topology_artifact"],
+        terminal_queue_artifacts=terminal_artifacts,
+        child_result_artifacts=child_artifacts,
+        source_context=source_context,
+    )
+    state["cell_results"] = (*state["cell_results"], result)
+    state["result_artifacts"] = (*state["result_artifacts"], result_artifact)
+    state["runtime_artifacts"] = (*state["runtime_artifacts"], result_artifact)
+    state["result_proposals"] = (*state["result_proposals"], proposal)
+    state["post_vv_reports"] = (*state["post_vv_reports"], post_vv_report)
+    state["gt_advisory_reports"] = (*state["gt_advisory_reports"], gt_advisory_report)
+    state["pre_result_reports"] = (*state["pre_result_reports"], pre_result_report)
+    return {
+        "result": result,
+        "result_artifact": result_artifact,
+        "final_cell_budget": final_cell,
+        "completion_global_budget": final_global,
+        "terminal_entries": terminal_entries,
+        "terminal_artifacts": terminal_artifacts,
+        "proposal": proposal,
+        "post_vv_report": post_vv_report,
+        "gt_advisory_report": gt_advisory_report,
+        "transient_reports": transient_reports,
+        "pre_result_report": pre_result_report,
+    }
+
+
+def _d4_execute_cell_v02(
+    state: dict[str, object],
+    context: dict[str, object],
+) -> dict[str, object]:
+    topology = state["topology"]
+    cell_input = context.get("cell_input")
+    nodes = context.get("nodes")
+    initial_queues = context.get("initial_queues")
+    if (
+        type(topology) is not RuntimeExecutionTopologyV02
+        or type(cell_input) is not FractalCellInputV02
+        or type(nodes) is not tuple
+        or type(initial_queues) is not tuple
+    ):
+        raise ValueError("g2d_cell_input_invalid")
+    post_position = next(
+        index for index, node in enumerate(nodes) if node.node_kind == "POST_VV"
+    )
+    initial_by_node = {item.node_id: item for item in initial_queues}
+    child_results: list[FractalCellResultV02] = []
+    partial_failures: list[FractalPartialFailureRecordV02] = []
+    for node in nodes[:post_position]:
+        initial = initial_by_node[node.node_id]
+        dependencies = _d4_dependencies_v02(state, initial)
+        if node.node_kind in _D3_LOCAL_NODE_KINDS_V02:
+            _d4_complete_local_node_v02(
+                state,
+                initial=initial,
+                node=node,
+                cell_input=cell_input,
+                dependencies=dependencies,
+            )
+            continue
+        if node.node_kind != "FRACTAL_CELL":
+            raise ValueError("g2d_topology_node_invalid")
+        if len(dependencies) != 1:
+            raise ValueError("g2d_queue_order_mismatch")
+        slot_running, slot_artifact = _d4_ready_and_start_node_v02(
+            state,
+            current=initial,
+            node=node,
+            cell_input=cell_input,
+            dependencies=dependencies,
+        )
+        child_context = _d4_activate_child_v02(
+            state,
+            parent_input=cell_input,
+            slot_running=slot_running,
+            slot_artifact=slot_artifact,
+            dependency=dependencies[0],
+        )
+        child_completion = _d4_execute_cell_v02(state, child_context)
+        child_result = child_completion["result"]
+        child_result_artifact = child_completion["result_artifact"]
+        child_final = child_completion["final_cell_budget"]
+        child_global = child_completion["completion_global_budget"]
+        if (
+            type(child_result) is not FractalCellResultV02
+            or type(child_result_artifact) is not KernelArtifactV01
+            or type(child_final) is not FractalRuntimeBudgetV02
+            or type(child_global) is not FractalRuntimeBudgetV02
+        ):
+            raise ValueError("g2d_cell_result_invalid")
+        child_index = context["nodes"].index(node) - 1
+        aggregate = _d4_budget_successor_v02(
+            state,
+            child_global,
+            event="CHILD_AGGREGATE",
+            cell_input=cell_input,
+            canonical_child_index=child_index,
+            paired_cell_budget=child_final,
+            child_result=child_result,
+        )
+        state["budgets"] = (*state["budgets"], aggregate)
+        _d4_indexes_v02(state)
+        _d4_finish_parent_slot_v02(
+            state,
+            running=slot_running,
+            running_artifact=slot_artifact,
+            node=node,
+            parent_input=cell_input,
+            dependencies=dependencies,
+            child_result=child_result,
+            child_result_artifact=child_result_artifact,
+        )
+        child_results.append(child_result)
+    indexes = _d4_indexes_v02(state)
+    latest_by_key = indexes.get("latest_by_key")
+    if not isinstance(latest_by_key, dict):
+        raise ValueError("g2d_queue_order_mismatch")
+    prefix = tuple(
+        latest_by_key[(cell_input.cell_id, node.node_id)]
+        for node in nodes[:post_position]
+    )
+    if any(item.state not in _D3_TERMINAL_STATES_V02 for item in prefix):
+        raise ValueError("g2d_cell_result_postorder_invalid")
+    return _d4_finalize_cell_v02(
+        state,
+        context=context,
+        pre_post_vv_terminal_queue_entries=prefix,
+        child_results=tuple(child_results),
+        partial_failures=tuple(partial_failures),
+    )
+
+
+def _d4_run_runtime_v02(
+    source_context: FractalRuntimeSourceContextV02,
+) -> FractalRuntimeExecutionBundleV02:
+    state = _d4_initialize_runtime_state_v02(source_context)
+    topology = state["topology"]
+    if type(topology) is not RuntimeExecutionTopologyV02:
+        raise ValueError("g2d_topology_identity_mismatch")
+    root_context = state["cell_contexts"].get(topology.root_cell_id)
+    if not isinstance(root_context, dict):
+        raise ValueError("g2d_cell_input_invalid")
+    root_completion = _d4_execute_cell_v02(state, root_context)
+    root_result = root_completion["result"]
+    root_result_artifact = root_completion["result_artifact"]
+    final_global_budget = root_completion["completion_global_budget"]
+    if (
+        type(root_result) is not FractalCellResultV02
+        or type(root_result_artifact) is not KernelArtifactV01
+        or type(final_global_budget) is not FractalRuntimeBudgetV02
+    ):
+        raise ValueError("g2d_root_result_required_for_parent_return")
+    parent_return_decision = evaluate_fractal_parent_return_transition_v02(
+        source_context=source_context,
+        root_result=root_result,
+        root_result_artifact=root_result_artifact,
+        ordered_cell_results=state["cell_results"],
+        transition_registry=state["transition_registry"],
+    )
+    runtime_trace = build_fractal_runtime_trace_v02(
+        topology,
+        state["source_binding"],
+        topology_artifact=state["topology_artifact"],
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        state_transition_decisions=state["queue_decisions"],
+        cell_inputs=state["cell_inputs"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_abi_artifacts=state["runtime_artifacts"],
+        scope_projections=state["scope_projections"],
+        revise_observations=state["revise_observations"],
+        partial_failures=state["partial_failures"],
+        backpressure_states=state["backpressure_states"],
+        budgets=state["budgets"],
+        topology_transition_decision=state["topology_transition"],
+        parent_return_transition_decision=parent_return_decision,
+        root_result_artifact=root_result_artifact,
+    )
+    runtime_report = aggregate_fractal_runtime_report_v02(
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        source_binding=state["source_binding"],
+        cell_results=state["cell_results"],
+        queue_entries=state["queue_entries"],
+        backpressure_states=state["backpressure_states"],
+        runtime_trace=runtime_trace,
+        final_global_budget=final_global_budget,
+        parent_return_transition_decision=parent_return_decision,
+        root_result_artifact=root_result_artifact,
+    )
+    report_artifact = project_fractal_runtime_report_kernel_artifact_v02(
+        runtime_report,
+        topology_artifact=state["topology_artifact"],
+        result_artifacts=state["result_artifacts"],
+        source_context=source_context,
+    )
+    if _validate_fractal_runtime_transition_decision_v02(
+        parent_return_decision,
+        registry=state["transition_registry"],
+        source_artifact=root_result_artifact,
+        target_artifact=report_artifact,
+    ):
+        raise ValueError("g2d_transition_decision_substituted")
+    report_validation = validate_fractal_runtime_report_against_sources_v02(
+        runtime_report,
+        source_context=source_context,
+        source_binding=state["source_binding"],
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        cell_results=state["cell_results"],
+        queue_entries=state["queue_entries"],
+        backpressure_states=state["backpressure_states"],
+        runtime_trace=runtime_trace,
+        final_global_budget=final_global_budget,
+        parent_return_transition_decision=parent_return_decision,
+        root_result_artifact=root_result_artifact,
+    )
+    artifact_by_id = {
+        item.artifact_id: item
+        for item in (
+            state["topology_artifact"],
+            *state["queue_artifacts"],
+            *state["result_artifacts"],
+            report_artifact,
+        )
+    }
+    stage_reports: list[FractalRuntimeValidationReportV02] = []
+    for stage in ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"):
+        artifacts = _d4_stage_artifacts_v02(
+            stage=stage,
+            source_context=source_context,
+            topology_artifact=state["topology_artifact"],
+            runtime_trace=runtime_trace,
+            artifact_by_id=artifact_by_id,
+            report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+        )
+        stage_report = validate_fractal_runtime_stage_bundle_v02(
+            stage=stage,
+            artifacts=artifacts,
+            source_context=source_context,
+            topology=topology,
+            topology_artifact=state["topology_artifact"],
+            runtime_trace=runtime_trace,
+            queue_entries=state["queue_entries"],
+            queue_artifacts=state["queue_artifacts"],
+            cell_results=state["cell_results"],
+            result_artifacts=state["result_artifacts"],
+            runtime_report=runtime_report if stage == "STAGE_D_C" else None,
+            report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+        )
+        if stage_report.status != "PASS":
+            raise ValueError(stage_report.reason_codes[0])
+        stage_reports.append(stage_report)
+    stage_d_c = _d4_stage_artifacts_v02(
+        stage="STAGE_D_C",
+        source_context=source_context,
+        topology_artifact=state["topology_artifact"],
+        runtime_trace=runtime_trace,
+        artifact_by_id=artifact_by_id,
+        report_artifact=report_artifact,
+    )
+    abi_report = validate_fractal_runtime_abi_profile_v02(
+        stage_d_c,
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        runtime_trace=runtime_trace,
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+    )
+    if abi_report.status != "PASS":
+        raise ValueError(abi_report.reason_codes[0])
+    causal_refs = build_fractal_runtime_causal_consumption_refs_v02(
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        runtime_assignments=state["runtime_assignments"],
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+    )
+    causal_report = validate_fractal_runtime_causal_consumption_refs_v02(
+        causal_refs,
+        source_context=source_context,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        runtime_assignments=state["runtime_assignments"],
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        stage_d_c_artifacts=stage_d_c,
+    )
+    if causal_report.status != "PASS":
+        raise ValueError(causal_report.reason_codes[0])
+    retained_reports = (
+        *state["prefix_reports"],
+        *state["pre_result_reports"],
+        *(validate_fractal_cell_result_v02(item) for item in state["cell_results"]),
+        report_validation,
+        *stage_reports,
+    )
+    if any(item.status != "PASS" for item in retained_reports):
+        raise ValueError("g2d_validation_status_stage_mismatch")
+    return build_fractal_runtime_execution_bundle_v02(
+        source_context=source_context,
+        source_binding=state["source_binding"],
+        topology_seed=state["topology_seed"],
+        budgets=state["budgets"],
+        topology_nodes=state["topology_nodes"],
+        topology_edges=state["topology_edges"],
+        runtime_assignments=state["runtime_assignments"],
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        scope_projections=state["scope_projections"],
+        cell_inputs=state["cell_inputs"],
+        revise_observations=state["revise_observations"],
+        partial_failures=state["partial_failures"],
+        backpressure_states=state["backpressure_states"],
+        validation_reports=retained_reports,
+        result_proposals=state["result_proposals"],
+        post_vv_reports=state["post_vv_reports"],
+        gt_advisory_reports=state["gt_advisory_reports"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        transition_decisions=(
+            state["topology_transition"],
+            *state["queue_decisions"],
+            parent_return_decision,
+        ),
+        causal_consumption_refs=causal_refs,
+    )

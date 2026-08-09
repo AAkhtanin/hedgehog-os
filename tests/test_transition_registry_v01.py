@@ -1878,7 +1878,7 @@ def test_g2d2_transition_surface_and_exact_seventeen_rule_profile() -> None:
     for name in G2D2_TRANSITION_FUNCTIONS:
         assert inspect.isfunction(getattr(transition, name))
         assert str(inspect.signature(getattr(transition, name))) == G2D2_TRANSITION_SIGNATURES[name]
-        assert not hasattr(kernel_package, name)
+        assert getattr(kernel_package, name) is getattr(transition, name)
     registry = transition.build_fractal_runtime_transition_registry_profile_v02()
     assert registry.registry_version == "v0.1"
     assert registry.abi_major_version == 1

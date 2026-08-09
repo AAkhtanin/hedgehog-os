@@ -3,7 +3,9 @@ from copy import deepcopy
 from pathlib import Path
 
 import jsonschema
+import pytest
 
+import hedgehog.gt_validator as gt_validator
 from hedgehog.architect import make_plan_graph
 from hedgehog.avf import build_attractor_packet
 from hedgehog.candidate_vectors import load_candidate_vectors_from_needles
@@ -688,3 +690,164 @@ def test_validate_gt_returns_no_update_when_no_candidates_are_accepted():
     assert gt_report["candidate_scores"] == []
     assert gt_report["payoff_formula_version"] == PAYOFF_FORMULA_VERSION
     gt_report_validator().validate(gt_report)
+
+
+def test_g2d_explicit_created_at_is_used_exactly_v02():
+    created_at = "2026-08-08T12:34:56+00:00"
+    report = accepted_report(
+        "proposal:g2d:accepted",
+        utility=0.8,
+        robustness=0.8,
+    )
+
+    gt_report = validate_gt([report], created_at=created_at)
+
+    assert gt_report["created_at"] == created_at
+    assert gt_report["winner"] == report["proposal_id"]
+    assert gt_report["gt_report_id"] == "gt:result_selection:proposal:g2d:accepted"
+    gt_report_validator().validate(gt_report)
+
+
+def test_g2d_gt_default_remains_callable_v02():
+    report = accepted_report(
+        "proposal:g2d:default",
+        utility=0.8,
+        robustness=0.8,
+    )
+
+    gt_report = validate_gt([report])
+
+    assert isinstance(gt_report["created_at"], str)
+    assert gt_report["gt_report_id"] == "gt:result_selection:proposal:g2d:default"
+    assert gt_report["winner"] == report["proposal_id"]
+
+
+def test_g2d_gt_invalid_explicit_time_fails_closed_v02():
+    report = accepted_report(
+        "proposal:g2d:invalid-time",
+        utility=0.8,
+        robustness=0.8,
+    )
+    invalid_values = (
+        "2026-08-08T12:34:56Z",
+        "2026-08-08T12:34:56+01:00",
+        "2026-08-08T12:34:56.123+00:00",
+        "2026-08-08T12:34:56",
+        "2026-02-30T12:34:56+00:00",
+        "",
+        123,
+    )
+
+    for value in invalid_values:
+        with pytest.raises(ValueError) as error:
+            validate_gt([report], created_at=value)
+        assert str(error.value) == "gt_created_at_invalid"
+        assert error.value.__cause__ is None
+
+
+def test_g2d_gt_explicit_time_avoids_wall_clock_v02(monkeypatch):
+    created_at = "2026-08-08T12:34:56+00:00"
+    report = accepted_report(
+        "proposal:g2d:no-clock",
+        utility=0.8,
+        robustness=0.8,
+    )
+
+    def forbidden_wall_clock():
+        raise AssertionError("explicit GT path used utc_now_iso")
+
+    monkeypatch.setattr(gt_validator, "utc_now_iso", forbidden_wall_clock)
+
+    gt_report = validate_gt([report], created_at=created_at)
+
+    assert gt_report["created_at"] == created_at
+
+
+def test_g2d_gt_explicit_ids_are_proposal_bound_v02():
+    created_at = "2026-08-08T12:34:56+00:00"
+    accepted = accepted_report(
+        "proposal:g2d:accept-id",
+        utility=0.8,
+        robustness=0.8,
+    )
+    revise = accepted_report(
+        "proposal:g2d:revise-id",
+        utility=0.8,
+        robustness=0.8,
+    )
+    revise["decision"] = "revise"
+    revise["status"] = "needs_revision"
+    no_update = accepted_report(
+        "proposal:g2d:no-update-id",
+        utility=0.8,
+        robustness=0.8,
+    )
+    no_update["decision"] = "reject"
+    no_update["status"] = "rejected"
+
+    accepted_gt = validate_gt([accepted], created_at=created_at)
+    revise_gt = validate_gt([revise], created_at=created_at)
+    no_update_gt = validate_gt([no_update], created_at=created_at)
+
+    assert accepted_gt["gt_report_id"] == (
+        "gt:result_selection:proposal:g2d:accept-id"
+    )
+    assert revise_gt["gt_report_id"] == (
+        "gt:result_selection:revise:proposal:g2d:revise-id"
+    )
+    assert no_update_gt["gt_report_id"] == (
+        "gt:result_selection:no_update:proposal:g2d:no-update-id"
+    )
+    assert accepted_gt["created_at"] == created_at
+    assert revise_gt["created_at"] == created_at
+    assert no_update_gt["created_at"] == created_at
+
+
+def test_g2d_gt_explicit_single_report_required_v02():
+    created_at = "2026-08-08T12:34:56+00:00"
+    first = accepted_report(
+        "proposal:g2d:first",
+        utility=0.8,
+        robustness=0.8,
+    )
+    second = accepted_report(
+        "proposal:g2d:second",
+        utility=0.7,
+        robustness=0.7,
+    )
+    invalid_report_sets = (
+        [],
+        [first, second],
+        [{}],
+        [{"proposal_id": ""}],
+        [{"proposal_id": 123}],
+    )
+
+    for reports in invalid_report_sets:
+        with pytest.raises(ValueError) as error:
+            validate_gt(reports, created_at=created_at)
+        assert str(error.value) == "gt_created_at_invalid"
+        assert error.value.__cause__ is None
+
+
+def test_g2d_gt_historical_revise_no_update_ids_unchanged_v02():
+    revise = accepted_report(
+        "proposal:g2d:historical-revise",
+        utility=0.8,
+        robustness=0.8,
+    )
+    revise["decision"] = "revise"
+    revise["status"] = "needs_revision"
+    no_update = accepted_report(
+        "proposal:g2d:historical-no-update",
+        utility=0.8,
+        robustness=0.8,
+    )
+    no_update["decision"] = "reject"
+    no_update["status"] = "rejected"
+
+    revise_gt = validate_gt([revise])
+    no_update_gt = validate_gt([no_update])
+
+    assert revise_gt["gt_report_id"] == "gt:result_selection:revise"
+    assert no_update_gt["gt_report_id"] == "gt:result_selection:no_update"

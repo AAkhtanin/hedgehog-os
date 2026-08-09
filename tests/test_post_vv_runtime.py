@@ -3,6 +3,7 @@ from copy import deepcopy
 from pathlib import Path
 
 import jsonschema
+import pytest
 
 from hedgehog import post_vv
 from hedgehog.architect import make_plan_graph
@@ -465,4 +466,116 @@ def test_outgoing_validation_fallback_does_not_create_authority_or_action(monkey
     assert "gt_report" not in report
     assert "root_final" not in report
     assert not contains_key(report, "final_output")
+    vv_report_validator().validate(report)
+
+
+def test_g2d_explicit_checked_at_is_used_exactly_v02():
+    checked_at = "2026-08-08T12:34:56+00:00"
+    proposal = build_demo_proposals()[0]
+
+    report = validate_result_proposal(proposal, checked_at=checked_at)
+
+    assert report["checked_at"] == checked_at
+    vv_report_validator().validate(report)
+
+
+def test_g2d_batch_post_vv_uses_one_explicit_time_v02(monkeypatch):
+    checked_at = "2026-08-08T12:34:56+00:00"
+    proposals = build_demo_proposals()[:2]
+    resolver_calls = []
+    original_resolver = post_vv._resolve_post_vv_checked_at_v02
+
+    def recording_resolver(value):
+        resolver_calls.append(value)
+        return original_resolver(value)
+
+    monkeypatch.setattr(
+        post_vv,
+        "_resolve_post_vv_checked_at_v02",
+        recording_resolver,
+    )
+    reports = validate_result_proposals(proposals, checked_at=checked_at)
+
+    assert resolver_calls == [checked_at]
+    assert len(reports) == len(proposals)
+    assert all(report["checked_at"] == checked_at for report in reports)
+
+
+def test_g2d_post_vv_default_remains_callable_v02():
+    proposal = build_demo_proposals()[0]
+
+    report = validate_result_proposal(proposal)
+    reports = validate_result_proposals([proposal])
+
+    assert isinstance(report["checked_at"], str)
+    assert isinstance(reports[0]["checked_at"], str)
+    assert report["vv_report_id"] == f"vv:{proposal['proposal_id']}"
+    assert reports[0]["vv_report_id"] == f"vv:{proposal['proposal_id']}"
+
+
+def test_g2d_post_vv_invalid_explicit_time_fails_closed_v02():
+    proposal = build_demo_proposals()[0]
+    invalid_values = (
+        "2026-08-08T12:34:56Z",
+        "2026-08-08T12:34:56+01:00",
+        "2026-08-08T12:34:56.123+00:00",
+        "2026-08-08T12:34:56",
+        "2026-02-30T12:34:56+00:00",
+        "",
+        123,
+    )
+
+    for value in invalid_values:
+        with pytest.raises(ValueError) as single_error:
+            validate_result_proposal(proposal, checked_at=value)
+        assert str(single_error.value) == "post_vv_checked_at_invalid"
+        assert single_error.value.__cause__ is None
+
+        with pytest.raises(ValueError) as batch_error:
+            validate_result_proposals([proposal], checked_at=value)
+        assert str(batch_error.value) == "post_vv_checked_at_invalid"
+        assert batch_error.value.__cause__ is None
+
+
+def test_g2d_post_vv_explicit_time_avoids_wall_clock_v02(monkeypatch):
+    checked_at = "2026-08-08T12:34:56+00:00"
+    proposal = build_demo_proposals()[0]
+
+    def forbidden_wall_clock():
+        raise AssertionError("explicit Post V&V path used utc_now_iso")
+
+    monkeypatch.setattr(post_vv, "utc_now_iso", forbidden_wall_clock)
+
+    report = validate_result_proposal(proposal, checked_at=checked_at)
+
+    assert report["checked_at"] == checked_at
+
+
+def test_g2d_post_vv_safe_rejection_uses_explicit_time_v02(monkeypatch):
+    checked_at = "2026-08-08T12:34:56+00:00"
+    proposal = build_demo_proposals()[0]
+
+    def forbidden_wall_clock():
+        raise AssertionError("explicit Post V&V fallback used utc_now_iso")
+
+    monkeypatch.setattr(post_vv, "utc_now_iso", forbidden_wall_clock)
+    monkeypatch.setattr(
+        post_vv,
+        "_vv_report_schema_violations",
+        lambda report: [
+            post_vv._violation(
+                "vv_outgoing_runtime_schema_validation_failed",
+                "schema",
+                "Outgoing VVReport runtime schema validation failed at $: "
+                "test injected shape error.",
+            )
+        ],
+    )
+
+    report = validate_result_proposal(proposal, checked_at=checked_at)
+
+    assert report["decision"] == "reject"
+    assert report["status"] == "rejected"
+    assert report["checked_at"] == checked_at
+    assert "vv_outgoing_runtime_schema_validation_failed" in violation_ids(report)
     vv_report_validator().validate(report)

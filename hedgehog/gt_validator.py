@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import math
+import re
+from datetime import datetime, timedelta
 
 from hedgehog.time_model import utc_now_iso
 
@@ -15,6 +17,30 @@ TIE_BREAK_RULE = (
     "then_higher_evidence_strength_then_lower_cost_then_higher_robustness_"
     "then_proposal_id"
 )
+_CANONICAL_UTC_SECOND_RE_V02 = re.compile(
+    r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+00:00"
+)
+
+
+def _resolve_gt_created_at_v02(created_at: str | None) -> str | None:
+    if created_at is None:
+        return None
+    if (
+        type(created_at) is not str
+        or _CANONICAL_UTC_SECOND_RE_V02.fullmatch(created_at) is None
+    ):
+        raise ValueError("gt_created_at_invalid")
+    try:
+        parsed = datetime.fromisoformat(created_at)
+    except ValueError:
+        raise ValueError("gt_created_at_invalid") from None
+    if (
+        parsed.utcoffset() != timedelta(0)
+        or parsed.microsecond != 0
+        or parsed.isoformat(timespec="seconds") != created_at
+    ):
+        raise ValueError("gt_created_at_invalid")
+    return created_at
 
 
 def _clamp(value: float, minimum: float, maximum: float) -> float:
@@ -358,7 +384,25 @@ def _select_winner_from_scores(accepted_scores: list[dict]) -> tuple[dict, bool,
     return tied_scores[0], False, [], "highest_payoff"
 
 
-def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> dict:
+def validate_gt(
+    vv_reports: list[dict],
+    game_mode: str = "result_selection",
+    *,
+    created_at: str | None = None,
+) -> dict:
+    resolved_created_at = _resolve_gt_created_at_v02(created_at)
+    explicit_proposal_id: str | None = None
+    if resolved_created_at is not None:
+        if type(vv_reports) is not list or len(vv_reports) != 1:
+            raise ValueError("gt_created_at_invalid")
+        explicit_report = vv_reports[0]
+        explicit_proposal_id = (
+            explicit_report.get("proposal_id")
+            if type(explicit_report) is dict
+            else None
+        )
+        if type(explicit_proposal_id) is not str or not explicit_proposal_id:
+            raise ValueError("gt_created_at_invalid")
     accepted_reports = [
         report
         for report in vv_reports
@@ -369,7 +413,11 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
         for report in vv_reports
         if classify_vv_report(report) == "needs_revision"
     ]
-    created_at = utc_now_iso()
+    report_created_at = (
+        resolved_created_at
+        if resolved_created_at is not None
+        else utc_now_iso()
+    )
     request_id = vv_reports[0].get("request_id") if vv_reports else None
     candidate_scores = _score_reports(vv_reports)
     base_benchmark_fields = {
@@ -385,11 +433,15 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
     if not accepted_reports:
         if needs_revision_reports:
             report = {
-                "gt_report_id": f"gt:{game_mode}:revise",
+                "gt_report_id": (
+                    f"gt:{game_mode}:revise:{explicit_proposal_id}"
+                    if explicit_proposal_id is not None
+                    else f"gt:{game_mode}:revise"
+                ),
                 "game_mode": game_mode,
                 "candidates": [],
                 "decision": "revise",
-                "created_at": created_at,
+                "created_at": report_created_at,
                 **base_benchmark_fields,
                 "selection_reason": "no accepted completed candidates; needs_revision candidates require revision before selection",
                 "notes": [
@@ -402,11 +454,15 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
                 report["request_id"] = request_id
             return report
         report = {
-            "gt_report_id": f"gt:{game_mode}:no_update",
+            "gt_report_id": (
+                f"gt:{game_mode}:no_update:{explicit_proposal_id}"
+                if explicit_proposal_id is not None
+                else f"gt:{game_mode}:no_update"
+            ),
             "game_mode": game_mode,
             "candidates": [],
             "decision": "no_update",
-            "created_at": created_at,
+            "created_at": report_created_at,
             **base_benchmark_fields,
             "selection_reason": "no accepted completed candidates available",
             "notes": ["No accepted Post V&V candidates; GT returned no_update."],
@@ -425,11 +481,15 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
     ]
     if not accepted_scores:
         report = {
-            "gt_report_id": f"gt:{game_mode}:no_update",
+            "gt_report_id": (
+                f"gt:{game_mode}:no_update:{explicit_proposal_id}"
+                if explicit_proposal_id is not None
+                else f"gt:{game_mode}:no_update"
+            ),
             "game_mode": game_mode,
             "candidates": [],
             "decision": "no_update",
-            "created_at": created_at,
+            "created_at": report_created_at,
             **base_benchmark_fields,
             "selection_reason": "no executable accepted completed candidates available",
             "notes": [
@@ -500,7 +560,7 @@ def validate_gt(vv_reports: list[dict], game_mode: str = "result_selection") -> 
         "game_mode": game_mode,
         "candidates": candidates,
         "decision": "accept",
-        "created_at": created_at,
+        "created_at": report_created_at,
         "winner": winner_id,
         "mix": _softmax_mix(scored_candidates),
         "ratings": ratings,

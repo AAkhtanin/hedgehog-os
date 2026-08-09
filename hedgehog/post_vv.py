@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
 from copy import deepcopy
+from datetime import datetime, timedelta
 from functools import lru_cache
 from pathlib import Path
 
@@ -34,6 +36,30 @@ REQUIRED_TIME_ENVELOPE_FIELDS = {
 }
 
 FORBIDDEN_KEYS = {"final_output", "answer", "raw_user_text"}
+_CANONICAL_UTC_SECOND_RE_V02 = re.compile(
+    r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+00:00"
+)
+
+
+def _resolve_post_vv_checked_at_v02(checked_at: str | None) -> str | None:
+    if checked_at is None:
+        return None
+    if (
+        type(checked_at) is not str
+        or _CANONICAL_UTC_SECOND_RE_V02.fullmatch(checked_at) is None
+    ):
+        raise ValueError("post_vv_checked_at_invalid")
+    try:
+        parsed = datetime.fromisoformat(checked_at)
+    except ValueError:
+        raise ValueError("post_vv_checked_at_invalid") from None
+    if (
+        parsed.utcoffset() != timedelta(0)
+        or parsed.microsecond != 0
+        or parsed.isoformat(timespec="seconds") != checked_at
+    ):
+        raise ValueError("post_vv_checked_at_invalid")
+    return checked_at
 
 
 def _load_schema(name: str) -> dict:
@@ -269,6 +295,7 @@ def _safe_rejected_vv_report(
     proposal_id: str,
     trace_refs: list[dict],
     violations: list[dict],
+    checked_at: str | None = None,
 ) -> dict:
     return {
         "vv_report_id": f"vv:{proposal_id}",
@@ -284,7 +311,7 @@ def _safe_rejected_vv_report(
         },
         "overall_score": 0.0,
         "decision": "reject",
-        "checked_at": utc_now_iso(),
+        "checked_at": checked_at if checked_at is not None else utc_now_iso(),
         "violations": violations,
         "normalized_features": {
             "utility": 0.0,
@@ -300,7 +327,12 @@ def _safe_rejected_vv_report(
     }
 
 
-def _validate_outgoing_vv_report(report: dict, candidate: dict) -> dict:
+def _validate_outgoing_vv_report(
+    report: dict,
+    candidate: dict,
+    *,
+    checked_at: str | None = None,
+) -> dict:
     violations = _vv_report_schema_violations(report)
     if not violations:
         return report
@@ -312,10 +344,15 @@ def _validate_outgoing_vv_report(report: dict, candidate: dict) -> dict:
         proposal_id=proposal_id,
         trace_refs=_safe_trace_refs(candidate),
         violations=violations,
+        checked_at=checked_at,
     )
 
 
-def validate_result_proposal(proposal: dict) -> dict:
+def _validate_result_proposal_with_resolved_checked_at_v02(
+    proposal: dict,
+    *,
+    checked_at: str | None,
+) -> dict:
     candidate = deepcopy(proposal)
     violations = _result_proposal_schema_violations(candidate)
 
@@ -492,7 +529,7 @@ def validate_result_proposal(proposal: dict) -> dict:
         "scores": scores,
         "overall_score": overall_score,
         "decision": decision,
-        "checked_at": utc_now_iso(),
+        "checked_at": checked_at if checked_at is not None else utc_now_iso(),
         "violations": violations,
         "normalized_features": {
             "utility": utility,
@@ -525,8 +562,37 @@ def validate_result_proposal(proposal: dict) -> dict:
         if request_id is not None:
             report["request_id"] = request_id
     # Final outgoing schema boundary; manual checks above remain in force.
-    return _validate_outgoing_vv_report(report, candidate)
+    return _validate_outgoing_vv_report(
+        report,
+        candidate,
+        checked_at=checked_at,
+    )
 
 
-def validate_result_proposals(proposals: list[dict]) -> list[dict]:
-    return [validate_result_proposal(proposal) for proposal in proposals]
+def validate_result_proposal(
+    proposal: dict,
+    *,
+    checked_at: str | None = None,
+) -> dict:
+    resolved_checked_at = _resolve_post_vv_checked_at_v02(checked_at)
+    return _validate_result_proposal_with_resolved_checked_at_v02(
+        proposal,
+        checked_at=resolved_checked_at,
+    )
+
+
+def validate_result_proposals(
+    proposals: list[dict],
+    *,
+    checked_at: str | None = None,
+) -> list[dict]:
+    resolved_checked_at = _resolve_post_vv_checked_at_v02(checked_at)
+    if resolved_checked_at is None:
+        return [validate_result_proposal(proposal) for proposal in proposals]
+    return [
+        _validate_result_proposal_with_resolved_checked_at_v02(
+            proposal,
+            checked_at=resolved_checked_at,
+        )
+        for proposal in proposals
+    ]

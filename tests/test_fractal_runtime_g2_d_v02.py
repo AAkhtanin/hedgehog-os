@@ -684,15 +684,13 @@ def _fixture_family(
         reason_codes=("g2d_required_child_failure",),
         source_reason_codes=(),
         trace_refs=(
-            topology.topology_id,
             "frcellin_v02:" + "2" * 64,
             terminal_entries[0].queue_entry_id,
+            "evidence:child",
+            pre_result.validation_report_id,
             child_allocated.budget_id,
             child_final.budget_id,
             child_global.budget_id,
-            pre_result.validation_report_id,
-            "vv:child",
-            "gt:child",
         ),
         parent_return_required=True,
         root_review_required=True,
@@ -868,7 +866,7 @@ def test_d1_static_surface_schema_import() -> None:
         name for name, value in vars(fr).items()
         if not name.startswith("_") and inspect.isfunction(value) and value.__module__ == fr.__name__
     ]
-    assert len(public_functions) == 90
+    assert len(public_functions) == 110
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
     expected_rows = re.findall(r"^\|\s*(\d+)\s*\|\s*D1\s*\|\s*`([^`]+)`\s*\|$", preflight, re.MULTILINE)
     assert len(expected_rows) == 74
@@ -880,8 +878,9 @@ def test_d1_static_surface_schema_import() -> None:
         assert ast.dump(current.args, include_attributes=False) == ast.dump(expected.args, include_attributes=False)
         assert ast.dump(current.returns, include_attributes=False) == ast.dump(expected.returns, include_attributes=False)
     future_names = re.findall(r"^\|\s*(?:9[1-9]|10\d|110)\s*\|\s*D4\s*\|\s*`([a-z0-9_]+)\(", preflight, re.MULTILINE)
-    assert future_names and not any(callable(getattr(fr, name, None)) for name in future_names)
-    assert not any(hasattr(importlib.import_module("hedgehog.kernel"), name) for name in public_functions)
+    assert future_names and all(callable(getattr(fr, name, None)) for name in future_names)
+    package = importlib.import_module("hedgehog.kernel")
+    assert all(hasattr(package, name) for name in public_functions)
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
     assert len(schema["$defs"]) == 18
@@ -1757,7 +1756,12 @@ def test_d1_structural_validators_and_reasons() -> None:
         and isinstance(node.value, str)
         and public_literal_pattern.fullmatch(node.value)
     }
-    assert module_reason_literals.issubset(fr.PUBLIC_G2D_REASON_CODES)
+    contract_non_reason_literals = {"g2d_runtime"}
+    assert contract_non_reason_literals.issubset(module_reason_literals)
+    assert contract_non_reason_literals.isdisjoint(fr.PUBLIC_G2D_REASON_CODES)
+    assert (module_reason_literals - contract_non_reason_literals).issubset(
+        fr.PUBLIC_G2D_REASON_CODES
+    )
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
     def schema_strings(value: object) -> set[str]:
@@ -1832,6 +1836,679 @@ def test_d1_structural_validators_and_reasons() -> None:
         "g2d_validation_report_invalid",
     ):
         assert retired not in source
+
+
+def test_private_g2d_finalize_pair_and_validation_hot_path_v02(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fixtures = _fixture_family()
+    policy = fixtures[fr.FractalRuntimePolicyV02]
+    topology_seed = fixtures[fr.RuntimeTopologySeedV02]
+    topology = fixtures[fr.RuntimeExecutionTopologyV02]
+    cell_input = fixtures[fr.FractalCellInputV02]
+    queue_template = fixtures[fr.FractalCellQueueEntryV02]
+    root_allocated = fixtures[fr.FractalRuntimeBudgetV02]
+    assert isinstance(policy, fr.FractalRuntimePolicyV02)
+    assert isinstance(topology_seed, fr.RuntimeTopologySeedV02)
+    assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+    assert isinstance(cell_input, fr.FractalCellInputV02)
+    assert isinstance(queue_template, fr.FractalCellQueueEntryV02)
+    assert isinstance(root_allocated, fr.FractalRuntimeBudgetV02)
+
+    root_active = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=topology_seed,
+        allocation_parent_budget=None,
+        predecessor_budget=root_allocated,
+        owning_cell_id=topology.root_cell_id,
+        budget_scope="ROOT_GLOBAL_AND_CELL",
+        budget_state="ACTIVE",
+        budget_event_kind="ACTIVATE",
+        budget_context_input=None,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    root_created = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=topology_seed,
+        allocation_parent_budget=None,
+        predecessor_budget=root_active,
+        owning_cell_id=topology.root_cell_id,
+        budget_scope="ROOT_GLOBAL_AND_CELL",
+        budget_state="ACTIVE",
+        budget_event_kind="CELL_CREATE",
+        budget_context_input=None,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    allocation_entries = tuple(
+        replace(queue_template, queue_entry_id=queue_entry_id)
+        for queue_entry_id in cell_input.ordered_initial_queue_entry_ids
+    )
+    child_id = cell_input.ordered_planned_child_cell_ids[0]
+    child_allocated = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=topology_seed,
+        allocation_parent_budget=root_created,
+        predecessor_budget=None,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=cell_input,
+        canonical_child_index=0,
+        allocation_queue_entries=allocation_entries,
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    finalize_decision = _decision("t08", "shared-finalize")
+    child_final = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=topology_seed,
+        allocation_parent_budget=root_created,
+        predecessor_budget=child_allocated,
+        owning_cell_id=child_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        budget_state="FINAL",
+        budget_event_kind="FINALIZE",
+        budget_context_input=cell_input,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=finalize_decision,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    child_context = replace(cell_input, cell_id=child_id)
+    paired_global = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=topology_seed,
+        allocation_parent_budget=None,
+        predecessor_budget=root_created,
+        owning_cell_id=topology.root_cell_id,
+        budget_scope="ROOT_GLOBAL_AND_CELL",
+        budget_state="ACTIVE",
+        budget_event_kind="FINALIZE",
+        budget_context_input=child_context,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=finalize_decision,
+        paired_cell_budget=child_final,
+        child_result=None,
+    )
+    standalone_root_final = fr.build_fractal_runtime_budget_v02(
+        policy=policy,
+        topology_seed=topology_seed,
+        allocation_parent_budget=None,
+        predecessor_budget=paired_global,
+        owning_cell_id=topology.root_cell_id,
+        budget_scope="ROOT_GLOBAL_AND_CELL",
+        budget_state="FINAL",
+        budget_event_kind="FINALIZE",
+        budget_context_input=cell_input,
+        canonical_child_index=None,
+        allocation_queue_entries=(),
+        transition_decision=finalize_decision,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    budgets = (
+        root_allocated,
+        root_active,
+        root_created,
+        child_allocated,
+        child_final,
+        paired_global,
+        standalone_root_final,
+    )
+    assert child_final.budget_state == "FINAL"
+    assert paired_global.budget_state == "ACTIVE"
+    assert standalone_root_final.budget_state == "FINAL"
+    assert child_final.budget_event_ref == standalone_root_final.budget_event_ref
+    assert fr._d3_is_adjacent_child_finalize_global_pair_v02(budgets, 5)
+    assert not fr._d3_is_adjacent_child_finalize_global_pair_v02(budgets, 6)
+    fr._d3_validate_budget_log_v02(
+        budgets,
+        topology=topology,
+        policy=policy,
+        source_context=None,
+    )
+    invalid_standalone = _seal(
+        replace(standalone_root_final, budget_state="ACTIVE")
+    )
+    with pytest.raises(ValueError, match="g2d_budget_state_transition_invalid"):
+        fr._d3_validate_budget_log_v02(
+            (*budgets[:-1], invalid_standalone),
+            topology=topology,
+            policy=policy,
+            source_context=None,
+        )
+    invalid_paired = _seal(replace(paired_global, budget_state="FINAL"))
+    with pytest.raises(ValueError, match="g2d_budget_state_transition_invalid"):
+        fr._d3_validate_budget_log_v02(
+            (*budgets[:5], invalid_paired, standalone_root_final),
+            topology=topology,
+            policy=policy,
+            source_context=None,
+        )
+
+    original_get_type_hints = fr._get_type_hints
+    resolved_types: list[type[object]] = []
+
+    def counted_get_type_hints(expected_type: type[object]) -> dict[str, object]:
+        resolved_types.append(expected_type)
+        return original_get_type_hints(expected_type)
+
+    monkeypatch.setattr(fr, "_get_type_hints", counted_get_type_hints)
+    fr._clear_structural_validation_caches_v02()
+    first_policy_report = fr.validate_fractal_runtime_policy_v02(policy)
+    second_policy_report = fr.validate_fractal_runtime_policy_v02(policy)
+    assert first_policy_report.status == second_policy_report.status == "PASS"
+    assert resolved_types == [fr.FractalRuntimePolicyV02]
+    budget_report = fr.validate_fractal_runtime_budget_v02(root_allocated)
+    assert budget_report.status == "PASS"
+    assert resolved_types == [
+        fr.FractalRuntimePolicyV02,
+        fr.FractalRuntimeBudgetV02,
+    ]
+
+    fr._SERIALIZED_VALIDATION_SUCCESS_CACHE_V02.clear()
+    original_annotation_errors = fr._annotation_errors
+    annotation_types: list[type[object]] = []
+
+    def counted_annotation_errors(
+        value: object,
+        expected_type: type[object],
+    ) -> tuple[str, ...]:
+        annotation_types.append(expected_type)
+        return original_annotation_errors(value, expected_type)
+
+    monkeypatch.setattr(fr, "_annotation_errors", counted_annotation_errors)
+    assert fr.validate_fractal_runtime_policy_v02(policy).status == "PASS"
+    assert annotation_types == [fr.FractalRuntimePolicyV02]
+    monkeypatch.setattr(fr, "_annotation_errors", original_annotation_errors)
+
+    original_canonical_json = fr._canonical_json_bytes_v01
+    canonicalized_material: list[object] = []
+
+    def counted_canonical_json(value: object) -> bytes:
+        canonicalized_material.append(value)
+        return original_canonical_json(value)
+
+    monkeypatch.setattr(fr, "_canonical_json_bytes_v01", counted_canonical_json)
+    assert fr.rebuild_fractal_runtime_policy_identity_v02(policy) == policy.policy_id
+    assert len(canonicalized_material) == 1
+    monkeypatch.setattr(fr, "_canonical_json_bytes_v01", original_canonical_json)
+
+    fr._clear_structural_validation_caches_v02()
+    original_uncached = fr._serialized_errors_uncached_v02
+    uncached_types: list[type[object]] = []
+
+    def counted_uncached(
+        value: object,
+        expected_type: type[object],
+    ) -> tuple[str, ...]:
+        uncached_types.append(expected_type)
+        return original_uncached(value, expected_type)
+
+    monkeypatch.setattr(fr, "_serialized_errors_uncached_v02", counted_uncached)
+    first = fr.validate_fractal_runtime_policy_v02(policy)
+    second = fr.validate_fractal_runtime_policy_v02(policy)
+    assert first == second and first is not second
+    assert uncached_types.count(fr.FractalRuntimePolicyV02) == 1
+    first_bytes = canonical_json_bytes_v01(
+        fr.fractal_runtime_validation_report_to_plain_data_v02(first)
+    )
+    second_bytes = canonical_json_bytes_v01(
+        fr.fractal_runtime_validation_report_to_plain_data_v02(second)
+    )
+    assert first_bytes == second_bytes
+    mutated_policy = _seal(replace(policy, root_review_required=False))
+    assert fr.validate_fractal_runtime_policy_v02(mutated_policy).status == "FAIL_CLOSED"
+    assert fr.validate_fractal_runtime_policy_v02(mutated_policy).status == "FAIL_CLOSED"
+    assert uncached_types.count(fr.FractalRuntimePolicyV02) == 3
+    wrong = object()
+    wrong_first = fr.validate_fractal_runtime_policy_v02(wrong)
+    wrong_second = fr.validate_fractal_runtime_policy_v02(wrong)
+    assert wrong_first == wrong_second
+    assert wrong_first.status == "FAIL_CLOSED"
+    assert wrong_first.reason_codes == ("g2d_type_invalid",)
+    assert uncached_types.count(fr.FractalRuntimePolicyV02) == 5
+    assert len(fr._SERIALIZED_VALIDATION_SUCCESS_CACHE_V02) <= (
+        fr._SERIALIZED_VALIDATION_SUCCESS_CACHE_MAX_V02
+    )
+    monkeypatch.setattr(fr, "_serialized_errors_uncached_v02", original_uncached)
+
+    fr._clear_structural_validation_caches_v02()
+    for cls, value in fixtures.items():
+        validator, serializer, rebuilder = FUNCTION_FAMILIES[cls]
+        first_validation = validator(value)
+        second_validation = validator(value)
+        assert first_validation == second_validation
+        first_plain = serializer(value)
+        second_plain = serializer(value)
+        assert first_plain is not second_plain
+        assert canonical_json_bytes_v01(first_plain) == canonical_json_bytes_v01(
+            second_plain
+        )
+        identity_field = next(
+            row[1] for row in fr.IDENTITY_PROFILE_ROWS_V02 if row[0] is cls
+        )
+        assert rebuilder(value) == getattr(value, identity_field)
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
+    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.FAILURE_STAGES) == 30
+
+
+def test_private_g2d_source_topology_canonical_cache_v02(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = _d2_g2c_family("full_fractal")["source"]
+    assert type(source) is fr.FractalRuntimeSourceContextV02
+    with pytest.raises(TypeError, match="unhashable type: 'dict'"):
+        hash(source)
+    assert fr.validate_fractal_runtime_source_context_v02(source).status == "PASS"
+
+    first_key = fr._source_context_success_cache_key_v02(source)
+    second_key = fr._source_context_success_cache_key_v02(source)
+    assert type(first_key) is tuple
+    assert first_key == second_key
+    hash(first_key)
+    assert first_key[0] == "source_context_family"
+    frozen_source = first_key[1]
+    assert type(frozen_source) is tuple
+    assert frozen_source[:2] == (
+        "dataclass",
+        "hedgehog.kernel.fractal_runtime_v02.FractalRuntimeSourceContextV02",
+    )
+    top_level_fields = tuple(name for name, _value in frozen_source[2])
+    assert top_level_fields == tuple(field.name for field in fields(type(source)))
+    assert len(top_level_fields) == 15
+
+    def key_contains_reference(value: object, target: object) -> bool:
+        return value is target or (
+            type(value) is tuple
+            and any(key_contains_reference(item, target) for item in value)
+        )
+
+    def key_leaf_types(value: object) -> set[type[object]]:
+        if type(value) is tuple:
+            result: set[type[object]] = {tuple}
+            for item in value:
+                result.update(key_leaf_types(item))
+            return result
+        return {type(value)}
+
+    assert not key_contains_reference(first_key, source)
+    assert key_leaf_types(first_key).issubset(
+        {tuple, str, int, bool, bytes, type(None)}
+    )
+
+    packet = dict(source.g2c_source_context.business_request_context_packet)
+    packet["business_subject"] = (
+        packet["business_subject"] + ":cache-key-mutation"
+    )
+    invalid_g2c_source = replace(
+        source.g2c_source_context,
+        business_request_context_packet=packet,
+    )
+    invalid_source = replace(source, g2c_source_context=invalid_g2c_source)
+    assert type(invalid_source) is fr.FractalRuntimeSourceContextV02
+    invalid_key = fr._source_context_success_cache_key_v02(invalid_source)
+    assert type(invalid_key) is tuple
+    assert invalid_key != first_key
+    initial_invalid_report = fr.validate_fractal_runtime_source_context_v02(
+        invalid_source
+    )
+    assert initial_invalid_report.status == "FAIL_CLOSED"
+
+    fr._clear_structural_validation_caches_v02()
+    assert not fr._SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02
+    assert not fr._TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02
+    assert not fr._TOPOLOGY_PARTS_SUCCESS_CACHE_V02
+    assert not fr._RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02
+
+    counts = {
+        "source": 0,
+        "topology": 0,
+        "parts": 0,
+        "reports": 0,
+    }
+    original_source = fr._validate_source_context_family_uncached_v02
+    original_topology = (
+        fr._construct_runtime_execution_topology_from_source_uncached_v02
+    )
+    original_parts = fr._d3_reconstruct_topology_parts_uncached_v02
+    original_reports = fr._d3_expected_retained_base_reports_uncached_v02
+
+    def counted_source(value: object) -> tuple[str | None, tuple[str, ...]]:
+        counts["source"] += 1
+        return original_source(value)
+
+    def counted_topology(
+        source_context: fr.FractalRuntimeSourceContextV02,
+    ) -> fr.RuntimeExecutionTopologyV02:
+        counts["topology"] += 1
+        return original_topology(source_context)
+
+    def counted_parts(
+        source_context: fr.FractalRuntimeSourceContextV02,
+        topology: fr.RuntimeExecutionTopologyV02,
+    ) -> tuple[
+        fr.RuntimeTopologySourceBindingV02,
+        fr.RuntimeTopologySeedV02,
+        fr.FractalRuntimeBudgetV02,
+        tuple[fr.RuntimeTopologyNodeV02, ...],
+    ]:
+        counts["parts"] += 1
+        return original_parts(source_context, topology)
+
+    def counted_reports(
+        source_context: fr.FractalRuntimeSourceContextV02,
+        topology: fr.RuntimeExecutionTopologyV02,
+    ) -> tuple[fr.FractalRuntimeValidationReportV02, ...]:
+        counts["reports"] += 1
+        return original_reports(source_context, topology)
+
+    monkeypatch.setattr(
+        fr,
+        "_validate_source_context_family_uncached_v02",
+        counted_source,
+    )
+    monkeypatch.setattr(
+        fr,
+        "_construct_runtime_execution_topology_from_source_uncached_v02",
+        counted_topology,
+    )
+    monkeypatch.setattr(
+        fr,
+        "_d3_reconstruct_topology_parts_uncached_v02",
+        counted_parts,
+    )
+    monkeypatch.setattr(
+        fr,
+        "_d3_expected_retained_base_reports_uncached_v02",
+        counted_reports,
+    )
+
+    source_reports = tuple(
+        fr.validate_fractal_runtime_source_context_v02(source)
+        for _index in range(3)
+    )
+    assert all(report.status == "PASS" for report in source_reports)
+    assert source_reports[0] == source_reports[1] == source_reports[2]
+    assert source_reports[0] is not source_reports[1]
+    assert source_reports[1] is not source_reports[2]
+    assert counts["source"] == 1
+
+    topology = fr.construct_runtime_execution_topology_v02(source)
+    topology_reports = tuple(
+        fr.validate_runtime_execution_topology_against_sources_v02(
+            topology,
+            source_context=source,
+        )
+        for _index in range(2)
+    )
+    assert all(report.status == "PASS" for report in topology_reports)
+    assert topology_reports[0] == topology_reports[1]
+    assert topology_reports[0] is not topology_reports[1]
+    assert counts["topology"] <= 1
+
+    topology_parts = tuple(
+        fr._d3_reconstruct_topology_parts_v02(source, topology)
+        for _index in range(3)
+    )
+    assert topology_parts[0] == topology_parts[1] == topology_parts[2]
+    assert all(type(parts) is tuple for parts in topology_parts)
+    assert all(
+        item.__dataclass_params__.frozen
+        for item in (*topology_parts[0][:-1], *topology_parts[0][-1])
+    )
+    assert counts["parts"] == 1
+
+    retained_reports = tuple(
+        fr._d3_expected_retained_base_reports_v02(source, topology)
+        for _index in range(3)
+    )
+    assert retained_reports[0] == retained_reports[1] == retained_reports[2]
+    assert all(type(reports) is tuple for reports in retained_reports)
+    assert all(report.status == "PASS" for report in retained_reports[0])
+    assert counts["reports"] == 1
+
+    source_count_before_failures = counts["source"]
+    first_failure = fr.validate_fractal_runtime_source_context_v02(invalid_source)
+    second_failure = fr.validate_fractal_runtime_source_context_v02(invalid_source)
+    assert first_failure.status == second_failure.status == "FAIL_CLOSED"
+    assert first_failure.reason_codes == second_failure.reason_codes
+    assert first_failure.source_reason_codes == second_failure.source_reason_codes
+    assert counts["source"] == source_count_before_failures + 2
+    assert len(fr._SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02) == 1
+
+    source_count_before_clear = counts["source"]
+    fr._clear_structural_validation_caches_v02()
+    assert not fr._SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02
+    assert not fr._TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_V02
+    assert not fr._TOPOLOGY_PARTS_SUCCESS_CACHE_V02
+    assert not fr._RETAINED_BASE_REPORTS_SUCCESS_CACHE_V02
+    assert fr.validate_fractal_runtime_source_context_v02(source).status == "PASS"
+    assert counts["source"] == source_count_before_clear + 1
+    assert len(fr._SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02) == 1
+
+    assert fr._SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_MAX_V02 == 16
+    assert fr._TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_MAX_V02 == 16
+    assert fr._TOPOLOGY_PARTS_SUCCESS_CACHE_MAX_V02 == 32
+    assert fr._RETAINED_BASE_REPORTS_SUCCESS_CACHE_MAX_V02 == 32
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
+    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.FAILURE_STAGES) == 30
+    test_tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    assert sum(
+        isinstance(node, ast.FunctionDef) and node.name.startswith("test_d4_")
+        for node in ast.walk(test_tree)
+    ) == 16
+
+
+def test_private_g2d_root_result_structural_evidence_partition_v02() -> None:
+    fixtures = _fixture_family()
+    root_input = fixtures[fr.FractalCellInputV02]
+    root_result = fixtures[fr.FractalCellResultV02]
+    partial_failure = fixtures[fr.FractalPartialFailureRecordV02]
+    assert type(root_input) is fr.FractalCellInputV02
+    assert type(root_result) is fr.FractalCellResultV02
+    assert type(partial_failure) is fr.FractalPartialFailureRecordV02
+
+    child_input_id = "frcellin_v02:" + "3" * 64
+    child_evidence = (root_input.cell_input_id, "evidence:child-retained")
+    child_result = _seal(fr.FractalCellResultV02(
+        result_id="frcellresult_v02:" + "0" * 64,
+        topology_id=root_result.topology_id,
+        topology_seed_id=root_result.topology_seed_id,
+        cell_id=partial_failure.child_cell_id,
+        parent_cell_id=root_input.cell_id,
+        cell_depth=1,
+        cell_input_id=child_input_id,
+        ordered_terminal_queue_entry_ids=(
+            root_result.ordered_terminal_queue_entry_ids[0],
+        ),
+        ordered_child_result_ids=(),
+        outcome="BLOCKED",
+        accepted_output_refs=(),
+        evidence_refs=child_evidence,
+        pre_result_validation_report_id=(
+            root_result.pre_result_validation_report_id
+        ),
+        post_vv_report_ref="vv:root-evidence-partition:child",
+        gt_advisory_ref="gt:root-evidence-partition:child",
+        partial_failure_ids=(),
+        allocated_cell_budget_id=partial_failure.allocated_cell_budget_id,
+        final_cell_budget_id=partial_failure.final_cell_budget_id,
+        global_budget_id=partial_failure.global_budget_id,
+        scope_ref=root_result.scope_ref,
+        reason_codes=("g2d_required_child_failure",),
+        source_reason_codes=(),
+        trace_refs=(
+            child_input_id,
+            root_result.ordered_terminal_queue_entry_ids[0],
+            *child_evidence,
+            root_result.pre_result_validation_report_id,
+            partial_failure.allocated_cell_budget_id,
+            partial_failure.final_cell_budget_id,
+            partial_failure.global_budget_id,
+        ),
+        parent_return_required=True,
+        root_review_required=True,
+        authority_created=False,
+        permission_created=False,
+        action_commit_packet_created=False,
+        receipt_created=False,
+        final_output_created=False,
+        drs_write_created=False,
+        real_world_effects_count=0,
+    ))
+    assert type(child_result) is fr.FractalCellResultV02
+    assert fr.validate_fractal_cell_result_v02(child_result).status == "PASS"
+    child_before = canonical_json_bytes_v01(
+        fr.fractal_cell_result_to_plain_data_v02(child_result)
+    )
+
+    aggregated_evidence = (
+        "evidence:root-before",
+        root_input.cell_input_id,
+        "evidence:child-retained",
+        "evidence:root-after",
+    )
+    partitioned_evidence = fr._d4_partition_root_structural_evidence_v02(
+        cell_input=root_input,
+        child_results=(child_result,),
+        evidence_refs=aggregated_evidence,
+    )
+    assert partitioned_evidence == (
+        "evidence:root-before",
+        "evidence:child-retained",
+        "evidence:root-after",
+    )
+    assert child_result.evidence_refs == child_evidence
+    assert canonical_json_bytes_v01(
+        fr.fractal_cell_result_to_plain_data_v02(child_result)
+    ) == child_before
+
+    root_trace = (
+        root_input.cell_input_id,
+        *root_result.ordered_terminal_queue_entry_ids,
+        child_result.result_id,
+        *root_result.accepted_output_refs,
+        *partitioned_evidence,
+        root_result.pre_result_validation_report_id,
+        *root_result.partial_failure_ids,
+        root_result.allocated_cell_budget_id,
+        root_result.final_cell_budget_id,
+        root_result.global_budget_id,
+    )
+    partitioned_root = _seal(replace(
+        root_result,
+        result_id="frcellresult_v02:" + "0" * 64,
+        ordered_child_result_ids=(child_result.result_id,),
+        evidence_refs=partitioned_evidence,
+        trace_refs=root_trace,
+    ))
+    assert type(partitioned_root) is fr.FractalCellResultV02
+    assert fr.validate_fractal_cell_result_v02(partitioned_root).status == "PASS"
+    assert partitioned_root.trace_refs.count(root_input.cell_input_id) == 1
+
+    artifact_trace_before_profile_c = (
+        partitioned_root.post_vv_report_ref,
+        partitioned_root.gt_advisory_ref,
+        *partitioned_root.trace_refs,
+    )
+    assert artifact_trace_before_profile_c[-2:] == (
+        partitioned_root.final_cell_budget_id,
+        partitioned_root.global_budget_id,
+    )
+    assert (
+        partitioned_root.final_cell_budget_id
+        == partitioned_root.global_budget_id
+    )
+    artifact_trace = artifact_trace_before_profile_c[:-1]
+    assert artifact_trace[:2] == (
+        partitioned_root.post_vv_report_ref,
+        partitioned_root.gt_advisory_ref,
+    )
+    assert all(artifact_trace.count(item) == 1 for item in artifact_trace)
+    assert artifact_trace.count(partitioned_root.global_budget_id) == 1
+    payload = fr.fractal_cell_result_to_plain_data_v02(partitioned_root)
+    assert payload["final_cell_budget_id"] == partitioned_root.final_cell_budget_id
+    assert payload["global_budget_id"] == partitioned_root.global_budget_id
+
+    non_root_input = replace(root_input, parent_cell_id=root_input.cell_id)
+    assert fr._d4_partition_root_structural_evidence_v02(
+        cell_input=non_root_input,
+        child_results=(child_result,),
+        evidence_refs=aggregated_evidence,
+    ) is aggregated_evidence
+
+    child_without_root_input = _seal(replace(
+        child_result,
+        result_id="frcellresult_v02:" + "0" * 64,
+        evidence_refs=("evidence:child-retained",),
+        trace_refs=(
+            child_result.cell_input_id,
+            *child_result.ordered_terminal_queue_entry_ids,
+            "evidence:child-retained",
+            child_result.pre_result_validation_report_id,
+            child_result.allocated_cell_budget_id,
+            child_result.final_cell_budget_id,
+            child_result.global_budget_id,
+        ),
+    ))
+    assert type(child_without_root_input) is fr.FractalCellResultV02
+    assert (
+        fr.validate_fractal_cell_result_v02(child_without_root_input).status
+        == "PASS"
+    )
+    no_carrier_evidence = ("evidence:root-before", "evidence:child-retained")
+    assert fr._d4_partition_root_structural_evidence_v02(
+        cell_input=root_input,
+        child_results=(child_without_root_input,),
+        evidence_refs=no_carrier_evidence,
+    ) is no_carrier_evidence
+    no_child_evidence = ("evidence:root-only",)
+    assert fr._d4_partition_root_structural_evidence_v02(
+        cell_input=root_input,
+        child_results=(),
+        evidence_refs=no_child_evidence,
+    ) is no_child_evidence
+
+    with pytest.raises(ValueError, match="g2d_result_proposal_invalid"):
+        fr._d4_partition_root_structural_evidence_v02(
+            cell_input=root_input,
+            child_results=(child_result,),
+            evidence_refs=("evidence:child-retained",),
+        )
+    with pytest.raises(ValueError, match="g2d_result_proposal_invalid"):
+        fr._d4_partition_root_structural_evidence_v02(
+            cell_input=root_input,
+            child_results=(replace(child_result, parent_cell_id="cell:foreign"),),
+            evidence_refs=aggregated_evidence,
+        )
+
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert len(fr.G2D_TYPES_V02) == 20
+    assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
+    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.FAILURE_STAGES) == 30
+    test_tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    assert sum(
+        isinstance(node, ast.FunctionDef) and node.name.startswith("test_d4_")
+        for node in ast.walk(test_tree)
+    ) == 16
 
 
 def test_d1_schema_valid_and_negative_mutations() -> None:
@@ -3312,12 +3989,9 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 90
-    for forbidden in (
-        "execute_fractal_runtime_v02",
-        "build_fractal_runtime_execution_bundle_v02",
-    ):
-        assert not callable(getattr(fr, forbidden, None))
+    assert len(public_functions) == 110
+    assert not callable(getattr(fr, "execute_fractal_runtime_v02", None))
+    assert callable(getattr(fr, "build_fractal_runtime_execution_bundle_v02", None))
     module_source = MODULE_PATH.read_text(encoding="utf-8")
     assert "import hedgehog.kernel\n" not in module_source
     assert "demo." not in module_source and "tests." not in module_source
@@ -5093,15 +5767,14 @@ def _d3_child_result_fixture(
         reason_codes=reasons_by_outcome[outcome],
         source_reason_codes=(),
         trace_refs=(
-            topology.topology_id,
             cell_input_id,
             *terminal_queue_ids,
+            f"output:g2d3:child:{ordinal}",
+            f"evidence:g2d3:child:{ordinal}",
+            validation_report_id,
             allocated_budget_id,
             final_budget_id,
             global_budget_id,
-            validation_report_id,
-            post_vv_ref,
-            gt_ref,
         ),
         parent_return_required=True,
         root_review_required=True,
@@ -5133,7 +5806,11 @@ def _d3_child_result_fixture(
         authority_class="ADVISORY",
         lifecycle_state=("BLOCKED_FAIL_CLOSED" if outcome == "BLOCKED" else "VALIDATED"),
         payload=payload,
-        trace_refs=result.trace_refs,
+        trace_refs=(
+            result.post_vv_report_ref,
+            result.gt_advisory_ref,
+            *result.trace_refs,
+        ),
         parent_refs=(
             env["topology_artifact"].artifact_id,
             *(
@@ -5249,19 +5926,19 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 90
+    assert len(public_functions) == 110
     assert len(fr.G2D_TYPES_V02) == 20
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 2
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 34
     assert len(fr.FAILURE_STAGES) == 30
-    for forbidden in (
+    for activated in (
         "build_fractal_runtime_execution_bundle_v02",
         "build_fractal_cell_result_proposal_v02",
         "run_fractal_runtime_v02",
     ):
-        assert not callable(getattr(fr, forbidden, None))
+        assert callable(getattr(fr, activated, None))
 
 
 def _d3_reseal_profile_d_queue_entry_v036(
@@ -6304,10 +6981,10 @@ def test_d3_invoked_child_result_observation_alias_matrix(
 
 
 def test_d3_child_result_artifact_exact_pair_positive_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
     env, slot, _slot_artifact = _d3_child_result_boundary_environment(
-        d3_mode_environments["full_fractal"]
+        d3_full_fractal_micro_environment
     )
     boundary = env["child_result_boundary"]
     indexes = boundary["indexes"]
@@ -6335,10 +7012,10 @@ def test_d3_child_result_artifact_exact_pair_positive_v035(
 
 
 def test_d3_child_result_artifact_full_field_mutation_matrix_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
     env, slot, _slot_artifact = _d3_child_result_boundary_environment(
-        d3_mode_environments["full_fractal"]
+        d3_full_fractal_micro_environment
     )
     boundary = env["child_result_boundary"]
     indexes = boundary["indexes"]
@@ -7957,12 +8634,936 @@ def test_d3_scope_input_queue_negative_and_d4_boundary(
     assert "demo." not in module_source and "tests." not in module_source
     for token in ("provider_calls=0", "network_calls=0", "real_world_effects_count=0"):
         assert token in module_source
-    for forbidden in (
+    for activated in (
         "build_fractal_cell_result_proposal_v02",
         "aggregate_fractal_runtime_report_v02",
         "run_fractal_runtime_v02",
         "validate_fractal_runtime_stage_bundle_v02",
     ):
-        assert not callable(getattr(fr, forbidden, None))
+        assert callable(getattr(fr, activated, None))
     package = importlib.import_module("hedgehog.kernel")
-    assert not hasattr(package, "admit_runtime_execution_topology_v02")
+    assert hasattr(package, "admit_runtime_execution_topology_v02")
+
+
+_D4_PUBLIC_FUNCTION_NAMES_V02 = (
+    "build_fractal_runtime_execution_bundle_v02",
+    "validate_fractal_runtime_execution_bundle_v02",
+    "build_fractal_cell_result_proposal_v02",
+    "validate_fractal_cell_result_proposal_v02",
+    "validate_fractal_post_vv_report_v02",
+    "validate_fractal_gt_advisory_v02",
+    "evaluate_fractal_revise_observation_v02",
+    "record_fractal_partial_failure_v02",
+    "validate_fractal_cell_result_against_input_v02",
+    "aggregate_fractal_runtime_report_v02",
+    "run_fractal_runtime_v02",
+    "validate_fractal_runtime_report_against_sources_v02",
+    "project_fractal_cell_result_kernel_artifact_v02",
+    "project_fractal_runtime_report_kernel_artifact_v02",
+    "validate_fractal_runtime_stage_bundle_v02",
+    "validate_fractal_runtime_abi_profile_v02",
+    "evaluate_fractal_parent_return_transition_v02",
+    "build_fractal_runtime_causal_consumption_refs_v02",
+    "validate_fractal_runtime_causal_consumption_refs_v02",
+    "validate_fractal_runtime_causal_counterfactual_v02",
+)
+
+_D4_TRANSITION_FUNCTION_NAMES_V02 = (
+    "build_fractal_runtime_transition_registry_profile_v02",
+    "validate_fractal_runtime_transition_registry_profile_v02",
+    "fractal_runtime_transition_registry_profile_to_plain_dict_v02",
+    "validate_fractal_runtime_transition_decision_v02",
+    "fractal_runtime_transition_decision_to_plain_dict_v02",
+    "rebuild_fractal_runtime_transition_decision_identity_v02",
+)
+
+_HISTORICAL_KERNEL_DUNDER_ALL_V02 = (
+    "CanonicalArtifactRefV01",
+    "ArtifactDependencyEdgeV01",
+    "RootOwnershipBindingV01",
+    "EvidenceClassBindingV01",
+    "AuthorityClassBindingV01",
+    "SealProfileV01",
+    "ArtifactManifestV01",
+    "SealVerificationResultV01",
+    "ReplayVerificationResultV01",
+    "build_default_seal_profile_v01",
+    "canonical_json_bytes_v01",
+    "domain_separated_sha256_hex_v01",
+    "build_canonical_artifact_ref_v01",
+    "build_artifact_manifest_v01",
+    "verify_artifact_manifest_v01",
+    "verify_artifact_replay_v01",
+    "artifact_manifest_to_plain_dict_v01",
+    "seal_verification_result_to_plain_dict_v01",
+    "replay_verification_result_to_plain_dict_v01",
+)
+
+
+def _d4_bundle_artifacts(
+    bundle: fr.FractalRuntimeExecutionBundleV02,
+) -> tuple[tuple[KernelArtifactV01, ...], tuple[KernelArtifactV01, ...], tuple[KernelArtifactV01, ...]]:
+    by_id = {
+        item.artifact_id: item
+        for item in (
+            bundle.topology_artifact,
+            *bundle.queue_artifacts,
+            *bundle.result_artifacts,
+            bundle.report_artifact,
+        )
+    }
+    stage_a = (
+        bundle.source_context.proposal_artifact,
+        bundle.source_context.decision_artifact,
+        bundle.source_context.route_eligibility_artifact,
+        bundle.topology_artifact,
+    )
+    stage_b = (
+        *stage_a[:3],
+        *(by_id[item] for item in bundle.runtime_trace.abi_artifact_refs),
+    )
+    return stage_a, stage_b, (*stage_b, bundle.report_artifact)
+
+
+def _d4_cell_contract_material(
+    bundle: fr.FractalRuntimeExecutionBundleV02,
+    result_index: int,
+) -> dict[str, object]:
+    result = bundle.cell_results[result_index]
+    cell_input = next(
+        item for item in bundle.cell_inputs if item.cell_input_id == result.cell_input_id
+    )
+    queue_by_id = {item.queue_entry_id: item for item in bundle.queue_entries}
+    terminal_entries = tuple(
+        queue_by_id[item] for item in result.ordered_terminal_queue_entry_ids
+    )
+    _binding, _seed, _initial, topology_nodes = fr._d3_reconstruct_topology_parts_v02(
+        bundle.source_context,
+        bundle.topology,
+    )
+    projected = fr._d3_projected_nodes_v02(
+        bundle.topology,
+        topology_nodes,
+        cell_depth=cell_input.cell_depth,
+        parent_cell_id=cell_input.parent_cell_id,
+    )
+    post_position = next(
+        index for index, node in enumerate(projected) if node.node_kind == "POST_VV"
+    )
+    result_by_id = {item.result_id: item for item in bundle.cell_results}
+    child_results = tuple(result_by_id[item] for item in result.ordered_child_result_ids)
+    partial_by_id = {
+        item.partial_failure_id: item for item in bundle.partial_failures
+    }
+    partial_failures = tuple(partial_by_id[item] for item in result.partial_failure_ids)
+    budget_by_id = {item.budget_id: item for item in bundle.budgets}
+    return {
+        "result": result,
+        "cell_input": cell_input,
+        "terminal_entries": terminal_entries,
+        "pre_post_vv_terminal_queue_entries": terminal_entries[:post_position],
+        "child_results": child_results,
+        "partial_failures": partial_failures,
+        "proposal": bundle.result_proposals[result_index],
+        "post_vv_report": bundle.post_vv_reports[result_index],
+        "gt_advisory_report": bundle.gt_advisory_reports[result_index],
+        "allocated_budget": budget_by_id[result.allocated_cell_budget_id],
+        "final_budget": budget_by_id[result.final_cell_budget_id],
+        "global_budget": budget_by_id[result.global_budget_id],
+    }
+
+
+def _d4_validation_kwargs(
+    bundle: fr.FractalRuntimeExecutionBundleV02,
+) -> dict[str, object]:
+    return {
+        "source_context": bundle.source_context,
+        "topology": bundle.topology,
+        "topology_artifact": bundle.topology_artifact,
+        "runtime_assignments": bundle.runtime_assignments,
+        "queue_entries": bundle.queue_entries,
+        "queue_artifacts": bundle.queue_artifacts,
+        "cell_results": bundle.cell_results,
+        "result_artifacts": bundle.result_artifacts,
+        "runtime_trace": bundle.runtime_trace,
+        "runtime_report": bundle.runtime_report,
+        "report_artifact": bundle.report_artifact,
+    }
+
+
+def _d4_mutated_kernel_payload_artifact(
+    artifact: KernelArtifactV01,
+    *,
+    pointer: str,
+    replacement: object,
+) -> KernelArtifactV01:
+    plain = kernel_artifact_to_plain_dict_v01(artifact)
+    payload = plain["payload"]
+    assert isinstance(payload, dict)
+    tokens = pointer.lstrip("/").split("/")
+    cursor: object = payload
+    for token in tokens[:-1]:
+        if isinstance(cursor, dict):
+            cursor = cursor[token]
+        else:
+            assert isinstance(cursor, list)
+            cursor = cursor[int(token)]
+    leaf = tokens[-1]
+    if isinstance(cursor, dict):
+        cursor[leaf] = replacement
+    else:
+        assert isinstance(cursor, list)
+        cursor[int(leaf)] = replacement
+    provisional = build_kernel_artifact_v01(
+        abi_version=artifact.abi_version,
+        artifact_id="counterfactual:" + "0" * 64,
+        artifact_type=artifact.artifact_type,
+        schema_version=artifact.schema_version,
+        transaction_id=artifact.transaction_id,
+        owner_root_id=artifact.owner_root_id,
+        source_component=artifact.source_component,
+        authority_class=artifact.authority_class,
+        lifecycle_state=artifact.lifecycle_state,
+        payload=payload,
+        trace_refs=artifact.trace_refs,
+        parent_refs=artifact.parent_refs,
+        time_envelope=plain["time_envelope"],
+    )
+    identity_material = kernel_artifact_to_plain_dict_v01(provisional)
+    identity_material.pop("artifact_id")
+    prefixes = {
+        "FractalCellQueueEntry": (
+            "frabi_queue_v02:",
+            "HEDGEHOG_FRACTAL_CELL_QUEUE_ENTRY_KERNEL_ARTIFACT_V02",
+        ),
+        "FractalCellResult": (
+            "frabi_result_v02:",
+            "HEDGEHOG_FRACTAL_CELL_RESULT_KERNEL_ARTIFACT_V02",
+        ),
+    }
+    prefix, domain = prefixes[artifact.artifact_type]
+    return replace(
+        provisional,
+        artifact_id=prefix
+        + domain_separated_sha256_hex_v01(
+            domain=domain,
+            payload=canonical_json_bytes_v01(identity_material),
+        ),
+    )
+
+
+@pytest.fixture(scope="module")
+def d4_full_fractal_source_context_v02() -> fr.FractalRuntimeSourceContextV02:
+    source = _d2_g2c_family("full_fractal")["source"]
+    assert isinstance(source, fr.FractalRuntimeSourceContextV02)
+    assert fr.validate_fractal_runtime_source_context_v02(source).status == "PASS"
+    return source
+
+
+@pytest.fixture(scope="module")
+def d4_complete_full_fractal_bundle(
+    d4_full_fractal_source_context_v02: fr.FractalRuntimeSourceContextV02,
+) -> dict[str, object]:
+    source = d4_full_fractal_source_context_v02
+    bundle, complete_report = fr.run_fractal_runtime_v02(source)
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02), complete_report
+    assert complete_report.status == "PASS"
+    assert complete_report.validation_target == "COMPLETE_PROFILE"
+    stage_a, stage_b, stage_c = _d4_bundle_artifacts(bundle)
+    return {
+        "source": source,
+        "bundle": bundle,
+        "complete_report": complete_report,
+        "stage_a": stage_a,
+        "stage_b": stage_b,
+        "stage_c": stage_c,
+    }
+
+
+def test_d4_exact_public_surface_and_facade_v02() -> None:
+    public_functions = tuple(
+        name
+        for name, value in vars(fr).items()
+        if not name.startswith("_")
+        and inspect.isfunction(value)
+        and value.__module__ == fr.__name__
+    )
+    preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
+    rows = tuple(
+        (number, signature)
+        for number, signature in re.findall(
+            r"^\|\s*(\d+)\s*\|\s*D[1-4]\s*\|\s*`([^`]+)`\s*\|$",
+            preflight,
+            re.MULTILINE,
+        )
+        if int(number) <= 110
+    )
+    assert len(rows) == 110
+    assert public_functions == tuple(row.split("(", 1)[0] for _number, row in rows)
+    assert public_functions[-20:] == _D4_PUBLIC_FUNCTION_NAMES_V02
+    module_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    actual = {
+        node.name: node
+        for node in module_tree.body
+        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
+    }
+    d4_rows = tuple(row for row in rows if 91 <= int(row[0]) <= 110)
+    assert tuple(signature.split("(", 1)[0] for _number, signature in d4_rows) == (
+        _D4_PUBLIC_FUNCTION_NAMES_V02
+    )
+    for _number, signature in d4_rows:
+        expected = ast.parse("def " + signature + ":\n pass").body[0]
+        current = actual[signature.split("(", 1)[0]]
+        assert ast.dump(current.args, include_attributes=False) == ast.dump(
+            expected.args,
+            include_attributes=False,
+        )
+        assert ast.dump(current.returns, include_attributes=False) == ast.dump(
+            expected.returns,
+            include_attributes=False,
+        )
+    for name in public_functions:
+        current = actual[name]
+        assert not any(
+            isinstance(item, (ast.Pass, ast.AsyncFunctionDef))
+            or (
+                isinstance(item, ast.Raise)
+                and isinstance(item.exc, ast.Call)
+                and getattr(item.exc.func, "id", None) == "NotImplementedError"
+            )
+            for item in ast.walk(current)
+        )
+    package = importlib.import_module("hedgehog.kernel")
+    g2d_names = tuple(item.__name__ for item in fr.G2D_TYPES_V02) + public_functions
+    assert len(g2d_names) == 130 and len(set(g2d_names)) == 130
+    for name in g2d_names:
+        assert getattr(package, name) is getattr(fr, name)
+    for name in _D4_TRANSITION_FUNCTION_NAMES_V02:
+        assert getattr(package, name) is getattr(transition_registry, name)
+    assert len(set((*g2d_names, *_D4_TRANSITION_FUNCTION_NAMES_V02))) == 136
+    assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 116
+    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 136
+
+
+def test_d4_revise_retry_and_no_progress_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    node_by_id = {item.node_id: item for item in bundle.topology_nodes}
+    validating = next(
+        item
+        for item in bundle.queue_entries
+        if item.state == "VALIDATING"
+        and node_by_id[item.node_id].node_kind in fr._D3_LOCAL_NODE_KINDS_V02
+    )
+    cell_input = next(item for item in bundle.cell_inputs if item.cell_id == validating.cell_id)
+    budget_by_id = {item.budget_id: item for item in bundle.budgets}
+    cell_budget = budget_by_id[validating.cell_budget_id]
+    global_budget = budget_by_id[validating.global_budget_id]
+    observation = fr.evaluate_fractal_revise_observation_v02(
+        topology=bundle.topology,
+        cell_input=cell_input,
+        queue_entry=validating,
+        validation_report=fr.validate_fractal_cell_queue_entry_v02(validating),
+        cell_budget_before=cell_budget,
+        global_budget_before=global_budget,
+        revision_index=cell_input.initial_revise_count,
+        newly_validated_evidence_count=0,
+        newly_resolved_constraints_count=0,
+        newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=0,
+        consecutive_non_positive_count=cell_budget.max_revise_count,
+    )
+    assert fr.validate_fractal_revise_observation_v02(observation).status == "PASS"
+    assert observation.revise_eligible is False
+    assert observation.derived_terminal_state == "DEADEND"
+    assert observation.reason_codes == ("g2d_no_progress_deadend",)
+    assert observation.trace_refs[-3:-1] == (
+        cell_budget.budget_id,
+        global_budget.budget_id,
+    )
+    assert not bundle.revise_observations
+    with pytest.raises(ValueError, match="g2d_revise_observation_invalid"):
+        fr.evaluate_fractal_revise_observation_v02(
+            topology=bundle.topology,
+            cell_input=cell_input,
+            queue_entry=validating,
+            validation_report=fr.validate_fractal_cell_queue_entry_v02(validating),
+            cell_budget_before=cell_budget,
+            global_budget_before=global_budget,
+            revision_index=validating.snapshot_sequence + 1,
+            newly_validated_evidence_count=0,
+            newly_resolved_constraints_count=0,
+            newly_accepted_outputs_count=0,
+            newly_introduced_conflicts_count=0,
+            consecutive_non_positive_count=0,
+        )
+
+
+def test_d4_partial_failure_and_parent_return_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    result_ids = {item.result_id for item in bundle.cell_results}
+    assert all(item.child_result_id in result_ids for item in bundle.partial_failures)
+    assert all(item.retry_eligible is False for item in bundle.partial_failures)
+    root = bundle.cell_results[-1]
+    assert root.ordered_child_result_ids == tuple(
+        item.result_id for item in bundle.cell_results if item.parent_cell_id == root.cell_id
+    )
+    parent_return_nodes = {
+        item.node_id for item in bundle.topology_nodes if item.node_kind == "PARENT_RETURN"
+    }
+    chains = tuple(
+        item
+        for item in bundle.queue_entries
+        if item.node_id in parent_return_nodes
+    )
+    assert {item.state for item in chains} >= {"PENDING", "READY", "RUNNING", "VALIDATING", "COMPLETED"}
+    assert all(
+        item.advisory_refs
+        for item in chains
+        if item.state in {"VALIDATING", "COMPLETED"}
+    )
+    node_by_id = {item.node_id: item for item in bundle.topology_nodes}
+    queue_artifact_by_entry_id = {
+        _kernel_payload(artifact)["queue_entry_id"]: artifact
+        for artifact in bundle.queue_artifacts
+    }
+    for result, proposal in zip(
+        bundle.cell_results,
+        bundle.result_proposals,
+        strict=True,
+    ):
+        if result.parent_cell_id is None:
+            continue
+        initial = next(
+            item for item in bundle.queue_entries
+            if item.cell_id == result.cell_id
+            and item.predecessor_queue_entry_id is None
+        )
+        activation_parent_id = queue_artifact_by_entry_id[
+            initial.queue_entry_id
+        ].parent_refs[1]
+        local_terminal = next(
+            item for item in bundle.queue_entries
+            if item.cell_id == result.cell_id
+            and node_by_id[item.node_id].node_kind == "SEMANTIC_ACTOR"
+            and item.state in fr._D3_TERMINAL_STATES_V02
+        )
+        assert local_terminal.observed_evidence_refs.count(activation_parent_id) == 1
+        proposal_evidence = tuple(proposal["result_payload"]["evidence_refs"])
+        assert activation_parent_id not in proposal_evidence
+        parent_return_observations = tuple(
+            item for item in chains
+            if item.cell_id == result.cell_id
+            and item.state in {"VALIDATING", *fr._D3_TERMINAL_STATES_V02}
+        )
+        assert len(parent_return_observations) == 2
+        assert all(
+            item.observed_evidence_refs == proposal_evidence
+            for item in parent_return_observations
+        )
+        assert all(
+            activation_parent_id not in item.observed_evidence_refs
+            and len(queue_artifact_by_entry_id[item.queue_entry_id].trace_refs)
+            == len(set(queue_artifact_by_entry_id[item.queue_entry_id].trace_refs))
+            for item in parent_return_observations
+        )
+    child = bundle.cell_results[0]
+    parent_input = next(item for item in bundle.cell_inputs if item.cell_id == child.parent_cell_id)
+    budget_by_id = {item.budget_id: item for item in bundle.budgets}
+    with pytest.raises(ValueError, match="g2d_success_laundering_forbidden"):
+        fr.record_fractal_partial_failure_v02(
+            topology=bundle.topology,
+            parent_input=parent_input,
+            child_result=child,
+            failure_stage="CELL_RESULT_PRECONDITIONS",
+            reason_codes=("g2d_required_child_failure",),
+            source_reason_codes=(),
+            evidence_refs=child.evidence_refs,
+            allocated_cell_budget=budget_by_id[child.allocated_cell_budget_id],
+            final_cell_budget=budget_by_id[child.final_cell_budget_id],
+            global_budget=budget_by_id[child.global_budget_id],
+            required_child=True,
+            sibling_independent=True,
+        )
+
+
+def test_d4_transition_abi_facade_and_stage_bundles_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    for stage, artifacts in zip(
+        ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"),
+        (
+            d4_complete_full_fractal_bundle["stage_a"],
+            d4_complete_full_fractal_bundle["stage_b"],
+            d4_complete_full_fractal_bundle["stage_c"],
+        ),
+        strict=True,
+    ):
+        report = fr.validate_fractal_runtime_stage_bundle_v02(
+            stage=stage,
+            artifacts=artifacts,
+            source_context=bundle.source_context,
+            topology=bundle.topology,
+            topology_artifact=bundle.topology_artifact,
+            runtime_trace=bundle.runtime_trace,
+            queue_entries=bundle.queue_entries,
+            queue_artifacts=bundle.queue_artifacts,
+            cell_results=bundle.cell_results,
+            result_artifacts=bundle.result_artifacts,
+            runtime_report=bundle.runtime_report if stage == "STAGE_D_C" else None,
+            report_artifact=bundle.report_artifact if stage == "STAGE_D_C" else None,
+        )
+        assert report.status == "PASS"
+    assert fr.validate_fractal_runtime_abi_profile_v02(
+        d4_complete_full_fractal_bundle["stage_c"],
+        source_context=bundle.source_context,
+        topology=bundle.topology,
+        topology_artifact=bundle.topology_artifact,
+        runtime_trace=bundle.runtime_trace,
+        queue_entries=bundle.queue_entries,
+        queue_artifacts=bundle.queue_artifacts,
+        cell_results=bundle.cell_results,
+        result_artifacts=bundle.result_artifacts,
+        runtime_report=bundle.runtime_report,
+        report_artifact=bundle.report_artifact,
+    ).status == "PASS"
+    assert bundle.transition_decisions[-1].rule_id.endswith("t13_completed_to_parent_return")
+
+
+def test_d4_causal_consumption_and_complete_profile_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    report = fr.validate_fractal_runtime_causal_consumption_refs_v02(
+        bundle.causal_consumption_refs,
+        **_d4_validation_kwargs(bundle),
+        stage_d_c_artifacts=d4_complete_full_fractal_bundle["stage_c"],
+    )
+    assert report.status == "PASS"
+    effects = tuple(item.decision_effect for item in bundle.causal_consumption_refs)
+    assert effects[:3] == ("TOPOLOGY_SELECTION", "TOPOLOGY_SCOPE", "TOPOLOGY_SELECTION")
+    child_initial_pairs = tuple(
+        (entry, artifact)
+        for entry, artifact in zip(
+            bundle.queue_entries,
+            bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.parent_cell_id is not None
+        and entry.predecessor_queue_entry_id is None
+    )
+    first_child_initial_pairs: list[
+        tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]
+    ] = []
+    later_child_initial_artifact_ids: list[str] = []
+    activated_child_cell_ids: list[str] = []
+    for entry, artifact in child_initial_pairs:
+        assert len(artifact.parent_refs) == 2
+        parent_entry = next(
+            candidate_entry
+            for candidate_entry, candidate_artifact in zip(
+                bundle.queue_entries,
+                bundle.queue_artifacts,
+                strict=True,
+            )
+            if candidate_artifact.artifact_id == artifact.parent_refs[1]
+        )
+        assert parent_entry.state == "RUNNING"
+        assert parent_entry.planned_child_cell_id == entry.cell_id
+        if entry.cell_id in activated_child_cell_ids:
+            later_child_initial_artifact_ids.append(artifact.artifact_id)
+            continue
+        activated_child_cell_ids.append(entry.cell_id)
+        first_child_initial_pairs.append((entry, artifact))
+    assert len(activated_child_cell_ids) == 2
+    assert len(first_child_initial_pairs) == 2
+    activation_refs = tuple(
+        item
+        for item in bundle.causal_consumption_refs
+        if item.decision_effect == "CHILD_ACTIVATION"
+    )
+    assert len(activation_refs) == 2
+    assert bundle.causal_consumption_refs[3:5] == activation_refs
+    assert tuple(item.downstream_artifact_id for item in activation_refs) == tuple(
+        artifact.artifact_id for _entry, artifact in first_child_initial_pairs
+    )
+    for causal_ref, (_entry, child_artifact) in zip(
+        activation_refs,
+        first_child_initial_pairs,
+        strict=True,
+    ):
+        assert causal_ref.source_artifact_id == child_artifact.parent_refs[1]
+        assert causal_ref.output_field == "/planned_child_cell_id"
+        assert causal_ref.disposition == "USED"
+        assert causal_ref.reason_code == "used:g2d_planned_child_activation"
+    assert all(
+        artifact_id not in tuple(
+            item.downstream_artifact_id for item in activation_refs
+        )
+        for artifact_id in later_child_initial_artifact_ids
+    )
+    assert effects.count("CHILD_ACTIVATION") == 2
+    assert effects.count("CHILD_RESULT_RETURN_BINDING") == 6
+    assert effects.count("CHILD_RESULT_TERMINAL_MAPPING") == 2
+    assert effects.count("RUNTIME_OUTCOME_SELECTION") == 2
+    assert fr.validate_fractal_runtime_execution_bundle_v02(bundle).status == "PASS"
+
+
+def test_d4_run_fractal_runtime_complete_profile_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    complete = d4_complete_full_fractal_bundle["complete_report"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(complete, fr.FractalRuntimeValidationReportV02)
+    assert complete.status == "PASS"
+    assert complete.validation_target == "COMPLETE_PROFILE"
+    assert fr.validate_fractal_runtime_execution_bundle_v02(bundle) == complete
+    assert all(
+        getattr(bundle.runtime_report, field) == 0
+        for field in (
+            "provider_calls",
+            "model_calls",
+            "network_calls",
+            "connector_calls",
+            "external_drs_calls",
+            "real_world_effects_count",
+        )
+    )
+    run_tree = next(
+        item
+        for item in ast.parse(MODULE_PATH.read_text(encoding="utf-8")).body
+        if isinstance(item, ast.FunctionDef) and item.name == "run_fractal_runtime_v02"
+    )
+    assert "validate_fractal_runtime_causal_counterfactual_v02" not in ast.unparse(run_tree)
+
+
+def test_d4_parent_return_five_outcome_and_substitution_matrix_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert fr.PARENT_RETURN_PROPOSAL_OUTCOME_ROWS_V02 == (
+        ("completed", "t06", "t08", "COMPLETED"),
+        ("degraded", "t06", "t09", "DEGRADED"),
+        ("blocked", "t06", "t10", "BLOCKED"),
+        ("needs_user", "t06", "t11", "NEEDS_USER"),
+        ("deadend", "t06", "t12", "DEADEND"),
+    )
+    registry = transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+    expected = fr._d3_transition_decision_v02(registry, "t13")
+    assert fr.evaluate_fractal_parent_return_transition_v02(
+        source_context=bundle.source_context,
+        root_result=bundle.cell_results[-1],
+        root_result_artifact=bundle.result_artifacts[-1],
+        ordered_cell_results=bundle.cell_results,
+        transition_registry=registry,
+    ) == expected
+    with pytest.raises(ValueError, match="g2d_root_result_required_for_parent_return"):
+        fr.evaluate_fractal_parent_return_transition_v02(
+            source_context=bundle.source_context,
+            root_result=bundle.cell_results[0],
+            root_result_artifact=bundle.result_artifacts[0],
+            ordered_cell_results=bundle.cell_results,
+            transition_registry=registry,
+        )
+    with pytest.raises(ValueError, match="g2d_transition_profile_invalid"):
+        fr.evaluate_fractal_parent_return_transition_v02(
+            source_context=bundle.source_context,
+            root_result=bundle.cell_results[-1],
+            root_result_artifact=bundle.result_artifacts[-1],
+            ordered_cell_results=bundle.cell_results,
+            transition_registry=bundle.source_context.transition_registry,
+        )
+    with pytest.raises(ValueError, match="g2d_root_result_required_for_parent_return"):
+        fr.evaluate_fractal_parent_return_transition_v02(
+            source_context=bundle.source_context,
+            root_result=bundle.cell_results[-1],
+            root_result_artifact=bundle.result_artifacts[0],
+            ordered_cell_results=bundle.cell_results,
+            transition_registry=registry,
+        )
+
+
+def test_d4_result_report_artifact_and_bundle_mutation_matrix_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert all(validate_kernel_artifact_v01(item) == () for item in bundle.result_artifacts)
+    assert validate_kernel_artifact_v01(bundle.report_artifact) == ()
+    root = bundle.cell_results[-1]
+    root_artifact = bundle.result_artifacts[-1]
+    assert root.final_cell_budget_id == root.global_budget_id
+    assert _kernel_payload(root_artifact)["final_cell_budget_id"] == root.final_cell_budget_id
+    assert _kernel_payload(root_artifact)["global_budget_id"] == root.global_budget_id
+    assert root_artifact.trace_refs.count(root.global_budget_id) == 1
+    for result, artifact in zip(
+        bundle.cell_results,
+        bundle.result_artifacts,
+        strict=True,
+    ):
+        expected_result_trace = (
+            result.cell_input_id,
+            *result.ordered_terminal_queue_entry_ids,
+            *result.ordered_child_result_ids,
+            *result.accepted_output_refs,
+            *result.evidence_refs,
+            result.pre_result_validation_report_id,
+            *result.partial_failure_ids,
+            result.allocated_cell_budget_id,
+            result.final_cell_budget_id,
+            result.global_budget_id,
+        )
+        assert result.trace_refs == expected_result_trace
+        expected_artifact_trace = (
+            result.post_vv_report_ref,
+            result.gt_advisory_ref,
+            *expected_result_trace,
+        )
+        if result.parent_cell_id is None:
+            assert result.final_cell_budget_id == result.global_budget_id
+            expected_artifact_trace = expected_artifact_trace[:-1]
+        assert artifact.trace_refs == expected_artifact_trace
+        assert len(artifact.trace_refs) == len(set(artifact.trace_refs))
+    mutations = (
+        replace(bundle, queue_entries=bundle.queue_entries[:-1]),
+        replace(bundle, queue_artifacts=tuple(reversed(bundle.queue_artifacts))),
+        replace(bundle, result_artifacts=(*bundle.result_artifacts, bundle.result_artifacts[-1])),
+        replace(bundle, report_artifact=bundle.result_artifacts[-1]),
+        replace(bundle, transition_decisions=bundle.transition_decisions[:-1]),
+        replace(bundle, causal_consumption_refs=bundle.causal_consumption_refs[:-1]),
+    )
+    for candidate in mutations:
+        assert fr.validate_fractal_runtime_execution_bundle_v02(candidate).status == "FAIL_CLOSED"
+    assert fr.validate_fractal_runtime_stage_bundle_v02(
+        stage="STAGE_D_C",
+        artifacts=tuple(reversed(d4_complete_full_fractal_bundle["stage_c"])),
+        source_context=bundle.source_context,
+        topology=bundle.topology,
+        topology_artifact=bundle.topology_artifact,
+        runtime_trace=bundle.runtime_trace,
+        queue_entries=bundle.queue_entries,
+        queue_artifacts=bundle.queue_artifacts,
+        cell_results=bundle.cell_results,
+        result_artifacts=bundle.result_artifacts,
+        runtime_report=bundle.runtime_report,
+        report_artifact=bundle.report_artifact,
+    ).status == "FAIL_CLOSED"
+
+
+def test_d4_causal_counterfactual_contract_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    causal_ref = next(
+        item
+        for item in bundle.causal_consumption_refs
+        if item.disposition == "IGNORED_WITH_REASON"
+    )
+    source_artifact = next(
+        item
+        for item in bundle.queue_artifacts
+        if item.artifact_id == causal_ref.source_artifact_id
+    )
+    payload = _kernel_payload(source_artifact)
+    tokens = causal_ref.output_field.rsplit("/", 1)
+    replacement = payload[tokens[0].lstrip("/")][int(tokens[1])] + ":counterfactual"
+    mutated = _d4_mutated_kernel_payload_artifact(
+        source_artifact,
+        pointer=causal_ref.output_field,
+        replacement=replacement,
+    )
+    assert validate_kernel_artifact_v01(mutated) == ()
+    report = fr.validate_fractal_runtime_causal_counterfactual_v02(
+        execution_bundle=bundle,
+        causal_ref=causal_ref,
+        mutated_source_artifact=mutated,
+    )
+    assert report.status == "PASS"
+    assert report.validation_target == "CAUSAL_COUNTERFACTUAL"
+    assert fr.validate_fractal_runtime_causal_counterfactual_v02(
+        execution_bundle=bundle,
+        causal_ref=causal_ref,
+        mutated_source_artifact=source_artifact,
+    ).status == "FAIL_CLOSED"
+    foreign_ref = replace(causal_ref, source_artifact_id=bundle.report_artifact.artifact_id)
+    assert fr.validate_fractal_runtime_causal_counterfactual_v02(
+        execution_bundle=bundle,
+        causal_ref=foreign_ref,
+        mutated_source_artifact=mutated,
+    ).status == "FAIL_CLOSED"
+
+
+def test_d4_build_fractal_cell_result_proposal_contract_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    material = _d4_cell_contract_material(bundle, -1)
+    proposal = fr.build_fractal_cell_result_proposal_v02(
+        source_context=bundle.source_context,
+        topology=bundle.topology,
+        cell_input=material["cell_input"],
+        pre_post_vv_terminal_queue_entries=material["pre_post_vv_terminal_queue_entries"],
+        child_results=material["child_results"],
+        partial_failures=material["partial_failures"],
+        accepted_output_refs=material["result"].accepted_output_refs,
+        evidence_refs=material["result"].evidence_refs,
+    )
+    assert canonical_json_bytes_v01(proposal) == canonical_json_bytes_v01(material["proposal"])
+    assert tuple(proposal) == (
+        "proposal_id", "request_id", "producer", "vector_id", "plan_id",
+        "result_payload", "evidence", "cost", "risks", "time_envelope", "trace_refs",
+    )
+    assert tuple(proposal["result_payload"]) == (
+        "artifact_type", "status", "task_completed", "requires_human_input",
+        "blocked_reason", "cell_id", "parent_cell_id", "cell_depth",
+        "ordered_child_result_ids", "accepted_output_refs", "evidence_refs",
+        "partial_failure_ids", "dependency_depth", "authority_created",
+        "permission_created", "action_commit_packet_created", "receipt_created",
+        "final_output_created", "drs_write_created", "real_world_effects_count",
+    )
+
+
+def test_d4_validate_fractal_cell_result_proposal_contract_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    material = _d4_cell_contract_material(bundle, 0)
+    kwargs = {
+        "source_context": bundle.source_context,
+        "topology": bundle.topology,
+        "cell_input": material["cell_input"],
+        "pre_post_vv_terminal_queue_entries": material["pre_post_vv_terminal_queue_entries"],
+        "child_results": material["child_results"],
+        "partial_failures": material["partial_failures"],
+    }
+    assert fr.validate_fractal_cell_result_proposal_v02(material["proposal"], **kwargs).status == "PASS"
+    mutated = dict(material["proposal"])
+    mutated["request_id"] = mutated["request_id"] + ":foreign"
+    assert fr.validate_fractal_cell_result_proposal_v02(mutated, **kwargs).status == "FAIL_CLOSED"
+    assert fr.validate_fractal_cell_result_proposal_v02(dict(material["proposal"]), **{
+        **kwargs,
+        "cell_input": _seal(replace(material["cell_input"], scope_ref="scope:foreign")),
+    }).status == "FAIL_CLOSED"
+
+
+def test_d4_validate_fractal_post_vv_report_contract_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    for proposal, report in zip(bundle.result_proposals, bundle.post_vv_reports, strict=True):
+        validation = fr.validate_fractal_post_vv_report_v02(
+            report,
+            result_proposal=proposal,
+            source_context=bundle.source_context,
+        )
+        assert validation.status == "PASS"
+        assert report["checked_at"] == bundle.source_context.router_input.local_routing_snapshot.kt_asof_utc
+    mutated = dict(bundle.post_vv_reports[0])
+    mutated["proposal_id"] = "frproposal_v02:" + "0" * 64
+    assert fr.validate_fractal_post_vv_report_v02(
+        mutated,
+        result_proposal=bundle.result_proposals[0],
+        source_context=bundle.source_context,
+    ).status == "FAIL_CLOSED"
+
+
+def test_d4_validate_fractal_gt_advisory_contract_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    for vv_report, gt_report in zip(bundle.post_vv_reports, bundle.gt_advisory_reports, strict=True):
+        validation = fr.validate_fractal_gt_advisory_v02(
+            gt_report,
+            post_vv_report=vv_report,
+            source_context=bundle.source_context,
+        )
+        assert validation.status == "PASS"
+        assert gt_report["created_at"] == bundle.source_context.router_input.local_routing_snapshot.kt_asof_utc
+        assert vv_report["proposal_id"] in gt_report["gt_report_id"]
+    mutated = dict(bundle.gt_advisory_reports[0])
+    mutated["created_at"] = "2026-08-08T12:34:55+00:00"
+    assert fr.validate_fractal_gt_advisory_v02(
+        mutated,
+        post_vv_report=bundle.post_vv_reports[0],
+        source_context=bundle.source_context,
+    ).status == "FAIL_CLOSED"
+
+
+def test_d4_post_vv_gt_explicit_time_repeated_bytes_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    kt = bundle.source_context.router_input.local_routing_snapshot.kt_asof_utc
+    for proposal, expected_vv, expected_gt in zip(
+        bundle.result_proposals,
+        bundle.post_vv_reports,
+        bundle.gt_advisory_reports,
+        strict=True,
+    ):
+        first_vv = fr._validate_result_proposals([proposal], checked_at=kt)[0]
+        second_vv = fr._validate_result_proposals([proposal], checked_at=kt)[0]
+        assert canonical_json_bytes_v01(first_vv) == canonical_json_bytes_v01(second_vv)
+        assert canonical_json_bytes_v01(first_vv) == canonical_json_bytes_v01(expected_vv)
+        first_gt = fr._validate_gt([first_vv], created_at=kt)
+        second_gt = fr._validate_gt([second_vv], created_at=kt)
+        assert canonical_json_bytes_v01(first_gt) == canonical_json_bytes_v01(second_gt)
+        assert canonical_json_bytes_v01(first_gt) == canonical_json_bytes_v01(expected_gt)
+
+
+def test_d4_context_unique_report_ref_alignment_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    proposal_ids = tuple(item["proposal_id"] for item in bundle.result_proposals)
+    vv_ids = tuple(item["vv_report_id"] for item in bundle.post_vv_reports)
+    gt_ids = tuple(item["gt_report_id"] for item in bundle.gt_advisory_reports)
+    assert all(len(values) == len(set(values)) for values in (proposal_ids, vv_ids, gt_ids))
+    assert tuple(item["proposal_id"] for item in bundle.post_vv_reports) == proposal_ids
+    assert tuple(item.post_vv_report_ref for item in bundle.cell_results) == vv_ids
+    assert tuple(item.gt_advisory_ref for item in bundle.cell_results) == gt_ids
+    assert all(proposal_id in gt_id for proposal_id, gt_id in zip(proposal_ids, gt_ids, strict=True))
+
+
+def test_d4_root_report_status_and_outcome_projection_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> None:
+    bundle = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    report = bundle.runtime_report
+    root = bundle.cell_results[-1]
+    assert root.parent_cell_id is None
+    assert report.runtime_outcome == root.outcome
+    assert report.reason_codes == root.reason_codes
+    assert report.report_status == "PASS"
+    assert report.ordered_cell_result_ids == tuple(item.result_id for item in bundle.cell_results)
+    assert report.parent_return_refs == (bundle.result_artifacts[-1].artifact_id,)
+    assert report.parent_return_transition_decision_id == bundle.transition_decisions[-1].decision_id
+    assert report.root_review_required is True
+    assert all(
+        getattr(report, field) == 0
+        for field in (
+            "provider_calls", "model_calls", "network_calls", "connector_calls",
+            "external_drs_calls", "action_commit_packets_created", "permissions_created",
+            "receipts_created", "final_outputs_created", "drs_writes",
+            "authority_created_count", "real_world_effects_count",
+        )
+    )

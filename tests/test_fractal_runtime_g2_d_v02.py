@@ -17,6 +17,7 @@ from types import SimpleNamespace
 import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
+import demo.run_fractal_runtime_g2_d_v02 as d5_runner
 import hedgehog.context_packets as context_packets
 import hedgehog.drs_g2b_compatibility_v01 as drs_compatibility
 import hedgehog.drs_memory_resolution_v01 as drs_resolution
@@ -9550,4 +9551,954 @@ def test_d4_root_report_status_and_outcome_projection_v02(
             "receipts_created", "final_outputs_created", "drs_writes",
             "authority_created_count", "real_world_effects_count",
         )
+    )
+
+
+D5_CASE_ORDER_V02 = (
+    "g2d_case:travel:memory_informed:v02",
+    "g2d_case:travel:local_slm:v02",
+    "g2d_case:travel:cloud_llm_narrow:v02",
+    "g2d_case:travel:full_semantic:v02",
+    "g2d_case:travel:full_fractal:v02",
+    "g2d_case:warehouse:memory_informed:v02",
+    "g2d_case:warehouse:local_slm:v02",
+    "g2d_case:warehouse:cloud_llm:v02",
+    "g2d_case:warehouse:full_semantic:v02",
+    "g2d_case:warehouse:full_fractal:v02",
+    "g2d_case:negative:deterministic_shortcut:v02",
+    "g2d_case:negative:sealed_replay_shortcut:v02",
+    "g2d_case:negative:direct_reuse_shortcut:v02",
+    "g2d_case:negative:blocked_terminal:v02",
+    "g2d_case:negative:needs_user_terminal:v02",
+    "g2d_case:negative:root_reject_terminal:v02",
+    "g2d_case:negative:direct_root_decision:v02",
+    "g2d_case:negative:route_substitution:v02",
+    "g2d_case:negative:cross_domain_source:v02",
+    "g2d_case:negative:foreign_id_only:v02",
+    "g2d_case:negative:scope_widening:v02",
+    "g2d_case:negative:capability_widening:v02",
+    "g2d_case:negative:fractal_capability_missing:v02",
+    "g2d_case:negative:mode_upgrade:v02",
+    "g2d_case:negative:mode_downgrade:v02",
+    "g2d_case:negative:g2b_instruction_authority:v02",
+    "g2d_case:negative:g2a_history_authority:v02",
+    "g2d_case:negative:depth_overflow:v02",
+    "g2d_case:negative:fan_out_overflow:v02",
+    "g2d_case:negative:total_cell_overflow:v02",
+    "g2d_case:parallelism_backpressure:v02",
+    "g2d_case:negative:token_budget_overflow:v02",
+    "g2d_case:negative:time_budget_overflow:v02",
+    "g2d_case:negative:provider_budget_overflow:v02",
+    "g2d_case:negative:scope_budget_monotonic_matrix:v02",
+    "g2d_case:negative:revise_count_overflow:v02",
+    "g2d_case:no_progress_deadend:v02",
+    "g2d_case:resolvable_missing_input:v02",
+    "g2d_case:required_child_partial:v02",
+    "g2d_case:required_child_hard_failure:v02",
+    "g2d_case:negative:child_authority_claims:v02",
+    "g2d_case:repeated_canonical_equality:v02",
+    "g2d_case:identity:acyclic_graph_rebuild:v02",
+    "g2d_case:negative:queue_predecessor_substitution:v02",
+    "g2d_case:deterministic:post_vv_gt_injected_time:v02",
+    "g2d_case:causal:used_field_counterfactual:v02",
+    "g2d_case:causal:blocked_and_ignored_dispositions:v02",
+    "g2d_case:identity:child_result_partial_failure_postorder:v02",
+    "g2d_case:identity:pre_result_validation_no_cycle:v02",
+    "g2d_case:runtime:node_work_queue_cell_aggregation:v02",
+    "g2d_case:runtime:five_mode_exact_template_rows:v02",
+    "g2d_case:source:selected_profile_capability_scope_binding:v02",
+    "g2d_case:budget:allocation_predecessor_debit_matrix:v02",
+    "g2d_case:validation:resultproposal_postvv_gt_outcome_matrix:v02",
+    "g2d_case:transition:root_only_parent_return:v02",
+    "g2d_case:abi:complete_field_partition_and_trace:v02",
+    "g2d_case:causal:exact_pointer_reason_bundle:v02",
+    "g2d_case:queue:backpressure_precedence:v02",
+    "g2d_case:identity:policy_profile_separation:v02",
+    "g2d_case:runtime:full_fractal_leaf_edge_projection:v02",
+    "g2d_case:budget:cell_global_event_pairing:v02",
+    "g2d_case:abi:pre_root_lifecycle_boundary:v02",
+    "g2d_case:validation:context_unique_gt_report_ids:v02",
+    "g2d_case:validation:pass_none_stage_contract:v02",
+    "g2d_case:queue:instance_snapshot_round_and_blocked_reason:v02",
+    "g2d_case:runtime:child_slot_input_node_outcome_order:v02",
+    "g2d_case:validation:root_result_report_and_slice_surface:v02",
+    "g2d_case:budget:typed_event_and_child_allocation_context:v02",
+    "g2d_case:runtime:planned_child_activation_boundary:v02",
+    "g2d_case:transition:prestate_decision_budget_queue_order:v02",
+    "g2d_case:revise:observation_before_t07_and_budget:v02",
+    "g2d_case:bundle:prebundle_validation_causal_final_assembly:v02",
+)
+
+D5_CONSTRUCTIVE_CASE_NUMBERS_V02 = (
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 42, 43, 45, 46, 48, 49, 50, 51,
+    52, 53, 54, 55, 56, 57, 59, 60, 61, 63, 64, 66, 67, 68, 69, 70,
+    71, 72,
+)
+
+D5_NEGATIVE_CASE_NUMBERS_V02 = (
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+    27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 44,
+    47, 58, 62, 65,
+)
+
+
+@pytest.fixture(scope="module")
+def d5_fractal_runtime_report_v02() -> d5_runner.FractalRuntimeG2DReportV02:
+    report = d5_runner.collect_fractal_runtime_g2_d_v02()
+    assert d5_runner.validate_fractal_runtime_g2_d_report_v02(report) == ()
+    return report
+
+
+def _d5_material_v02(
+    row: d5_runner.FractalRuntimeG2DCaseResultV02,
+) -> dict[str, object]:
+    value = json.loads(row.evidence_material_json)
+    assert type(value) is dict
+    return value
+
+
+def _d5_proof_v02(
+    row: d5_runner.FractalRuntimeG2DCaseResultV02,
+) -> dict[str, object]:
+    value = _d5_material_v02(row)["proof"]
+    assert type(value) is dict
+    return value
+
+
+def _d5_details_v02(
+    row: d5_runner.FractalRuntimeG2DCaseResultV02,
+) -> dict[str, object]:
+    value = _d5_proof_v02(row)["details"]
+    assert type(value) is dict
+    return value
+
+
+def _d5_json_value_v02(value: object) -> bool:
+    if value is None or type(value) in {bool, int, float, str}:
+        return True
+    if type(value) is list:
+        return all(_d5_json_value_v02(item) for item in value)
+    if type(value) is dict:
+        return all(
+            type(key) is str and _d5_json_value_v02(item)
+            for key, item in value.items()
+        )
+    return False
+
+
+def _d5_coherently_tampered_report_v02(
+    report: d5_runner.FractalRuntimeG2DReportV02,
+    *,
+    case_number: int,
+    mutate: object,
+) -> d5_runner.FractalRuntimeG2DReportV02:
+    if not callable(mutate):
+        raise TypeError("d5_tamper_callback_invalid")
+    position = case_number - 1
+    row = report.case_results[position]
+    material = _d5_material_v02(row)
+    proof = material["proof"]
+    assert type(proof) is dict and type(proof["details"]) is dict
+    mutate(proof["details"])
+    proof["details_sha256"] = d5_runner._sha256_plain_v02(proof["details"])
+    material["proof"] = proof
+    evidence_bytes = canonical_json_bytes_v01(material)
+    changed_row = replace(
+        row,
+        evidence_material_json=evidence_bytes.decode("ascii"),
+        evidence_sha256=hashlib.sha256(evidence_bytes).hexdigest(),
+    )
+    rows = (
+        *report.case_results[:position],
+        changed_row,
+        *report.case_results[position + 1:],
+    )
+    changed_report = replace(report, report_id="", case_results=rows)
+    return replace(
+        changed_report,
+        report_id=d5_runner._report_identity_v02(changed_report),
+    )
+
+
+def test_d5_public_runner_surface_and_exact_case_order_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    assert d5_runner.__all__ == (
+        "FractalRuntimeG2DCaseResultV02",
+        "FractalRuntimeG2DReportV02",
+        "collect_fractal_runtime_g2_d_v02",
+        "validate_fractal_runtime_g2_d_report_v02",
+        "fractal_runtime_g2_d_report_to_plain_data_v02",
+        "render_fractal_runtime_g2_d_v02",
+        "main",
+    )
+    assert inspect.isclass(d5_runner.FractalRuntimeG2DCaseResultV02)
+    assert inspect.isclass(d5_runner.FractalRuntimeG2DReportV02)
+    assert all(
+        inspect.isfunction(getattr(d5_runner, name))
+        for name in d5_runner.__all__[2:]
+    )
+    assert report.case_order == D5_CASE_ORDER_V02
+    assert tuple(item.case_id for item in report.case_results) == D5_CASE_ORDER_V02
+    assert len(report.case_results) == len(set(report.case_order)) == 72
+    assert tuple(
+        index + 1
+        for index, item in enumerate(report.case_results)
+        if item.case_class == "CONSTRUCTIVE"
+    ) == D5_CONSTRUCTIVE_CASE_NUMBERS_V02
+    assert tuple(
+        index + 1
+        for index, item in enumerate(report.case_results)
+        if item.case_class == "NEGATIVE"
+    ) == D5_NEGATIVE_CASE_NUMBERS_V02
+    assert len(d5_runner._PROOF_CONTRACTS_V02) == 72
+    assert len(d5_runner._DETAIL_KEY_CONTRACTS_V02) == 72
+    for position, row in enumerate(report.case_results):
+        proof = _d5_proof_v02(row)
+        contract = d5_runner._PROOF_CONTRACTS_V02[row.case_id]
+        assert set(proof) == {
+            "proof_kind", "axis", "executor", "observed_source",
+            "matrix_cardinality", "accepted_bundle_required", "details",
+            "details_sha256",
+        }
+        assert proof["proof_kind"] == contract.proof_kind
+        assert proof["axis"] == contract.axis
+        assert proof["executor"] == contract.executor
+        assert proof["observed_source"] == contract.observed_source
+        assert proof["matrix_cardinality"] == contract.matrix_cardinality
+        assert set(_d5_details_v02(row)) == d5_runner._DETAIL_KEY_CONTRACTS_V02[row.case_id]
+        assert d5_runner._proof_contract_valid_v02(
+            case_result=row,
+            proof=proof,
+            position=position,
+        )
+
+    runner_source = Path(d5_runner.__file__).read_text(encoding="utf-8")
+    runner_tree = ast.parse(runner_source)
+    forbidden_assignments = tuple(
+        item
+        for item in ast.walk(runner_tree)
+        if (
+            isinstance(item, ast.keyword)
+            and item.arg == "observed_outcome"
+            or isinstance(item, (ast.Assign, ast.AnnAssign))
+            and any(
+                isinstance(target, ast.Name)
+                and target.id in {"observed", "observed_outcome"}
+                for target in (
+                    item.targets if isinstance(item, ast.Assign) else (item.target,)
+                )
+            )
+        )
+        and any(
+            isinstance(child, ast.Attribute)
+            and isinstance(child.value, ast.Name)
+            and child.value.id == "spec"
+            and child.attr == "expected_outcome"
+            for child in ast.walk(item)
+        )
+    )
+    assert forbidden_assignments == ()
+    assert "_SOURCE_SUBSTITUTION_FIELDS" not in runner_source
+    assert "structural_corruption_created" not in runner_source
+    matrix_function = next(
+        item
+        for item in runner_tree.body
+        if isinstance(item, ast.FunctionDef)
+        and item.name == "_populate_accepted_matrix_proof_v02"
+    )
+    assert any(
+        isinstance(item, ast.Attribute)
+        and item.attr == "cell_projection_class"
+        for item in ast.walk(matrix_function)
+    )
+
+
+def test_d5_two_domain_positive_determinism_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    positive = report.case_results[:10]
+    assert report.domain_order == (
+        "TRAVEL_POLICY_INFORMATION",
+        "WAREHOUSE_MAINTENANCE_INFORMATION",
+    )
+    assert tuple((item.domain_id, item.accepted_mode) for item in positive) == (
+        *((report.domain_order[0], mode) for mode in fr.TOPOLOGY_ELIGIBLE_MODES),
+        *((report.domain_order[1], mode) for mode in fr.TOPOLOGY_ELIGIBLE_MODES),
+    )
+    assert all(item.observed_outcome == "COMPLETED" for item in positive)
+    assert all(item.final_status == "PASS" and item.reason_codes == () for item in positive)
+    assert all(item.topology_created_count == 1 for item in positive)
+    assert len({item.topology_id for item in positive}) == 10
+    assert len({item.runtime_report_id for item in positive}) == 10
+    assert len({item.source_family_sha256 for item in positive}) == 10
+    travel_cloud = positive[2]
+    warehouse_cloud = positive[7]
+    assert _d5_details_v02(travel_cloud)["root_outcome"] == "NARROW"
+    assert _d5_details_v02(warehouse_cloud)["root_outcome"] == "ACCEPT"
+    assert len(_d5_details_v02(positive[4])["child_cell_input_ids"]) == 2
+    assert len(_d5_details_v02(positive[9])["child_cell_input_ids"]) == 2
+    assert all(
+        _d5_details_v02(item)["child_cell_input_ids"] == []
+        for item in (*positive[:4], *positive[5:9])
+    )
+    assert all(
+        _d5_details_v02(item)["zero_runtime_counters"] == [0] * 12
+        for item in positive
+    )
+
+
+def test_d5_complete_negative_matrix_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    negative_rows = tuple(
+        item for item in report.case_results if item.case_class == "NEGATIVE"
+    )
+    assert len(negative_rows) == 36
+    assert all(item.observed_outcome == item.expected_outcome for item in negative_rows)
+    assert all(item.final_status == "PASS" and item.reason_codes == () for item in negative_rows)
+    for case_number in range(11, 28):
+        row = report.case_results[case_number - 1]
+        proof = _d5_proof_v02(row)
+        details = _d5_details_v02(row)
+        assert proof["proof_kind"] == "SOURCE_EXACT_AXIS_FAIL_CLOSED"
+        assert proof["axis"] == d5_runner._SOURCE_NEGATIVE_AXIS_ROWS_V02[case_number - 11][1]
+        assert details["case_number"] == case_number
+        assert details["mutated_path"] == d5_runner._SOURCE_NEGATIVE_MUTATED_PATHS_V02[case_number - 11]
+        assert details["baseline_sha256"] != details["attempted_sha256"]
+        assert details["validation_target"] == "SOURCE_CONTEXT_STRUCTURAL"
+        assert details["failure_stage"] == "SOURCE_CONTEXT"
+        assert details["validation_report_id"] in row.evidence_refs
+        assert details["external_validation_report_id"] in row.evidence_refs
+        assert details["reason_codes"] and details["external_reason_codes"]
+        assert details["topology_created_delta"] == 0
+        assert details["bundle_created_delta"] == 0
+        assert details["created_before"] == details["created_after"] == {
+            "bundle_report_ids": [], "topology_ids": [],
+        }
+    for case_number in range(28, 42):
+        row = report.case_results[case_number - 1]
+        proof = _d5_proof_v02(row)
+        details = _d5_details_v02(row)
+        assert proof["proof_kind"] == "BOUNDED_ACTUAL_EXECUTION"
+        assert proof["executor"] == d5_runner._BOUNDED_NEGATIVE_AXIS_ROWS_V02[case_number - 28][2]
+        assert details["case_number"] == case_number
+        assert details["policy_id"] in row.evidence_refs
+        assert details["accepted_bundle_validation_id"] in row.evidence_refs
+        if case_number == 28:
+            assert details["accepted_depths"] == [0, 1, 2]
+            assert [item["depth"] for item in details["accepted_depth_rows"]] == [
+                0, 1, 2,
+            ]
+            assert all(
+                item["status"] == "PASS"
+                and item["cell_input_id"] in row.evidence_refs
+                and item["validation_report_id"] in row.evidence_refs
+                for item in details["accepted_depth_rows"]
+            )
+            assert details["accepted_depth_rows"][0]["parent_cell_id"] is None
+            assert (
+                details["accepted_depth_rows"][1]["parent_cell_id"]
+                == details["accepted_depth_rows"][0]["cell_id"]
+            )
+            assert (
+                details["accepted_depth_rows"][2]["parent_cell_id"]
+                == details["accepted_depth_rows"][1]["cell_id"]
+            )
+            assert details["rejected_depth"] == 3
+            assert (
+                details["rejected_parent_cell_id"]
+                == details["accepted_depth_rows"][2]["cell_id"]
+            )
+            assert details["rejected_input_id"] in row.evidence_refs
+            assert details["rejected_validation_report_id"] in row.evidence_refs
+            assert details["rejected_reason_codes"]
+            assert details["rejected_runtime_object_delta"]["created_count"] == 0
+        elif case_number == 30:
+            assert details["max_total_cells"] == 21
+            assert details["tree_shape"] == [1, 4, 16]
+            assert details["depth_counts"] == {"0": 1, "1": 4, "2": 16}
+            assert len(details["cell_rows"]) == 21
+            assert [item["cell_depth"] for item in details["cell_rows"]].count(0) == 1
+            assert [item["cell_depth"] for item in details["cell_rows"]].count(1) == 4
+            assert [item["cell_depth"] for item in details["cell_rows"]].count(2) == 16
+            assert details["cell_rows"][0]["cell_id"] == details["root_cell_id"]
+            assert details["cell_rows"][0]["parent_cell_id"] is None
+            assert [
+                item["cell_id"]
+                for item in details["cell_rows"]
+                if item["cell_depth"] == 1
+            ] == details["depth_1_cell_ids"]
+            assert [
+                item["cell_id"]
+                for item in details["cell_rows"]
+                if item["cell_depth"] == 2
+            ] == details["depth_2_cell_ids"]
+            assert {
+                item["parent_cell_id"]
+                for item in details["parent_child_rows"]
+                if item["child_depth"] == 1
+            } == {details["root_cell_id"]}
+            assert {
+                item["parent_cell_id"]
+                for item in details["parent_child_rows"]
+                if item["child_depth"] == 2
+            } == set(details["depth_1_cell_ids"])
+            for parent_id in (
+                details["root_cell_id"],
+                *details["depth_1_cell_ids"],
+            ):
+                assert sorted(
+                    item["canonical_child_index"]
+                    for item in details["parent_child_rows"]
+                    if item["parent_cell_id"] == parent_id
+                ) == [0, 1, 2, 3]
+            assert all(
+                item["cell_input_validation_status"] == "PASS"
+                and item["cell_input_id"] in row.evidence_refs
+                and item["cell_input_validation_report_id"] in row.evidence_refs
+                for item in details["cell_rows"]
+            )
+            assert [item[0] for item in details["root_budget_event_rows"]] == [
+                "INITIAL_ALLOCATION", "ACTIVATE", "CELL_CREATE",
+            ]
+            assert [item[2] for item in details["root_budget_event_rows"]] == [0, 0, 1]
+            assert len(details["accepted_cell_rows"]) == 20
+            assert [item["cell_number"] for item in details["accepted_cell_rows"]] == list(
+                range(2, 22)
+            )
+            assert len(details["accepted_cell_ids"]) == 21
+            assert len(set(details["accepted_cell_ids"])) == 21
+            assert details["accepted_cell_ids"] == [
+                item["cell_id"] for item in details["cell_rows"]
+            ]
+            assert details["planning_debit_count"] == 0
+            assert details["allocation_debit_count"] == 0
+            assert details["activate_debit_count"] == 0
+            assert details["cell_create_debit_count"] == 21
+            assert all(
+                item["planning_validation_status"] == "FAIL_CLOSED"
+                and item["planning_reason_codes"]
+                and item["global_activate_consumed_cell_count"]
+                == item["global_before_consumed_cell_count"]
+                and item["global_create_consumed_cell_count"]
+                == item["global_activate_consumed_cell_count"] + 1
+                for item in details["accepted_cell_rows"]
+            )
+            assert details["twenty_first_consumed_cell_count"] == 21
+            assert details["twenty_first_remaining_cell_count"] == 0
+            assert details["attempted_twenty_second_error"] == "g2d_budget_overflow"
+            assert (
+                details["attempted_twenty_second_parent_id"]
+                == details["root_cell_id"]
+            )
+            assert details["attempted_twenty_second_global_budget_created"] is False
+            assert details["rejected_budget_id"] in row.evidence_refs
+            assert details["rejected_validation_report_id"] in row.evidence_refs
+            assert details["rejected_reason_codes"]
+            assert details["rejected_runtime_object_delta"]["created_count"] == 0
+        elif case_number in {29, 32, 33, 34}:
+            assert details["validation_report_id"] in row.evidence_refs
+            assert details["reason_codes"]
+            assert details["created_objects"]["created_count"] == 0
+        elif case_number == 31:
+            assert details["validation_report_id"] in row.evidence_refs
+            assert details["queue_capacity"] == (
+                details["running_count"] + details["ready_count"]
+            )
+            assert details["deferred_queue_entry_ids"] == [
+                details["deferred_source_queue_id"]
+            ]
+            assert details["deferred_state"] == "PENDING"
+            assert details["predecessor_queue_id"] == details["deferred_source_queue_id"]
+            assert details["queue_reason_codes"] == [
+                "g2d_transition_backpressure_deferred"
+            ]
+            assert details["t03_decision_id"] in row.evidence_refs
+            assert details["deferred_successor_queue_id"] in row.evidence_refs
+            assert details["deferred_successor_artifact_id"] in row.evidence_refs
+            assert details["created_objects"]["created_count"] == 2
+            assert details["no_work_dropped"] is True
+        elif case_number == 35:
+            assert details["mutation_count"] == len(details["mutation_rows"]) == 12
+            assert details["baseline_context_validation_id"] in row.evidence_refs
+            assert all(item[1] in row.evidence_refs and item[2] for item in details["mutation_rows"])
+            assert details["created_objects"]["created_count"] == 0
+        elif case_number in {36, 37, 38}:
+            assert details["queue_validation_report_id"] in row.evidence_refs
+            assert details["observation_id"] in row.evidence_refs
+            assert details["observation_validation_report_id"] in row.evidence_refs
+            assert details["derived_terminal_state"] == row.observed_outcome
+            assert details["reason_codes"]
+            if case_number == 36:
+                assert details["revision_index"] == details["max_revise_count"] + 1
+                assert details["consecutive_non_positive_count"] == 0
+            elif case_number == 37:
+                assert details["revision_index"] <= details["max_revise_count"]
+                assert (
+                    details["consecutive_non_positive_count"]
+                    == details["max_revise_count"]
+                )
+        elif case_number in {39, 40}:
+            expected_outcome = "DEGRADED" if case_number == 39 else "BLOCKED"
+            expected_reason = (
+                "g2d_partial_failure_recorded"
+                if case_number == 39
+                else "g2d_required_child_failure"
+            )
+            assert details["child_input_id"] in row.evidence_refs
+            assert details["attempted_outcome"] == expected_outcome
+            assert len(details["terminal_queue_rows"]) == 4
+            assert details["terminal_queue_rows"][0][1:] == [
+                expected_outcome,
+                [expected_reason],
+            ]
+            assert details["terminal_queue_rows"][-1][1:] == [
+                expected_outcome,
+                [expected_reason],
+            ]
+            assert details["result_proposal_id"] in row.evidence_refs
+            assert details["post_vv_report_id"] in row.evidence_refs
+            assert details["gt_report_id"] in row.evidence_refs
+            assert details["proposal_validation_report_id"] in row.evidence_refs
+            assert details["post_vv_validation_report_id"] in row.evidence_refs
+            assert details["gt_validation_report_id"] in row.evidence_refs
+            assert details["child_validation_report_id"] in row.evidence_refs
+            assert details["child_structural_validation_report_id"] in row.evidence_refs
+            assert details["result_artifact_id"] in row.evidence_refs
+            assert details["activation_causal_row"][2] == "/planned_child_cell_id"
+            assert details["activation_causal_row"][5:] == [
+                "CHILD_ACTIVATION",
+                "USED",
+                "used:g2d_planned_child_activation",
+            ]
+            assert details["partial_failure_validation_report_id"] in row.evidence_refs
+            assert details["parent_disposition"] == row.observed_outcome
+            assert details["created_result_delta"]["created_ids"] == [
+                details["attempted_child_result_id"]
+            ]
+            assert details["created_result_delta"]["created_count"] == 1
+            assert details["created_partial_failure_delta"]["created_ids"] == [
+                details["partial_failure_id"]
+            ]
+            assert details["created_partial_failure_delta"]["created_count"] == 1
+            assert details["created_causal_delta"]["created_count"] == 0
+            if case_number == 39:
+                assert details["safe_sibling_result_id"] != details[
+                    "attempted_child_result_id"
+                ]
+                assert details["safe_sibling_input_id"] in row.evidence_refs
+                assert details["safe_sibling_result_id"] in row.evidence_refs
+                assert details["safe_sibling_result_artifact_id"] in row.evidence_refs
+                assert details["safe_sibling_outcome"] == "COMPLETED"
+                assert details["safe_sibling_evidence_refs"]
+                assert all(
+                    item in row.evidence_refs
+                    for item in details["safe_sibling_evidence_refs"]
+                )
+                assert details["safe_sibling_before_sha256"] == details[
+                    "safe_sibling_after_sha256"
+                ]
+                assert details["safe_sibling_unchanged"] is True
+                assert details["safe_sibling_result_delta"]["created_count"] == 0
+                assert details["safe_sibling_causal_delta"]["created_count"] == 0
+                assert details["partial_failure_sibling_independent"] is True
+            else:
+                assert details["gate_disposition"] == (
+                    "VALID_HARD_POLICY_AUTHORITY_SCOPE_OR_BUDGET_DENIAL"
+                )
+                assert details["gate_reason_codes"] == [
+                    "g2d_required_child_failure"
+                ]
+                assert details["blocked_queue_id"] in row.evidence_refs
+                assert details["blocked_artifact_id"] in row.evidence_refs
+                assert details["blocked_validation_id"] in row.evidence_refs
+                assert details["no_child_invocation_delta"]["created_count"] == 0
+                assert details["no_child_result_delta"]["created_count"] == 0
+                assert details["no_child_partial_failure_delta"]["created_count"] == 0
+                assert details["no_child_terminal_delta"]["created_ids"] == [
+                    details["blocked_queue_id"]
+                ]
+                assert details["merge_decision_is_none"] is True
+                assert details["malformed_axis"] == (
+                    "/current_entry/planned_child_cell_id"
+                )
+                assert details["malformed_reason_codes"]
+                assert details["malformed_error"]
+                assert details["malformed_terminal_delta"]["created_count"] == 0
+                assert details["malformed_causal_delta"]["created_count"] == 0
+                assert details["malformed_bundle_delta"]["created_count"] == 0
+        else:
+            assert details["mutation_count"] == len(details["mutation_rows"]) == 6
+            assert all(item[1] in row.evidence_refs and item[2] for item in details["mutation_rows"])
+            assert details["no_created_objects"]["created_count"] == 0
+
+
+def test_d5_repeated_report_value_id_and_render_bytes_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    plain = d5_runner.fractal_runtime_g2_d_report_to_plain_data_v02(report)
+    rebuilt = d5_runner._fractal_runtime_g2_d_report_from_plain_data_v02(plain)
+    assert rebuilt == report
+    assert rebuilt is not report
+    assert d5_runner.validate_fractal_runtime_g2_d_report_v02(rebuilt) == ()
+    assert d5_runner._report_identity_v02(replace(report, report_id="")) == report.report_id
+    first = d5_runner.render_fractal_runtime_g2_d_v02(report)
+    second = d5_runner.render_fractal_runtime_g2_d_v02(rebuilt)
+    assert first == second
+    assert first.endswith("\n") and not first.endswith("\n\n")
+    rendered = json.loads(first)
+    assert isinstance(rendered, dict)
+    assert len(rendered["case_results"]) == 72
+    assert _d5_json_value_v02(rendered)
+    for item in report.case_results:
+        material = json.loads(item.evidence_material_json)
+        assert hashlib.sha256(canonical_json_bytes_v01(material)).hexdigest() == item.evidence_sha256
+        proof = _d5_proof_v02(item)
+        assert proof["details_sha256"] == d5_runner._sha256_plain_v02(proof["details"])
+    repeated = _d5_details_v02(report.case_results[41])
+    assert repeated["construction_call_count"] == 2
+    assert repeated["first_report_id"] == repeated["second_report_id"]
+    assert repeated["first_sha256"] == repeated["second_sha256"]
+    assert repeated["repeated_value_equal"] is True
+    assert repeated["repeated_id_equal"] is True
+    assert repeated["repeated_bytes_equal"] is True
+
+
+def test_d5_identity_postorder_template_queue_budget_time_abi_causal_matrices_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    required_numbers = (42, 43, 44, 45, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72)
+    for case_number in required_numbers:
+        row = report.case_results[case_number - 1]
+        proof = _d5_proof_v02(row)
+        details = _d5_details_v02(row)
+        assert proof["proof_kind"] == "ACCEPTED_RUNTIME_EXECUTABLE_MATRIX"
+        assert details["case_number"] == case_number
+        assert details["complete_profile_validation_id"] in row.evidence_refs
+        assert d5_runner._matrix_proof_valid_v02(
+            number=case_number,
+            details=details,
+            evidence_refs=row.evidence_refs,
+        )
+    assert len(_d5_details_v02(report.case_results[43])["mutation_rows"]) == 10
+    assert len(_d5_details_v02(report.case_results[50])["five_mode_template_rows"]) == 5
+    assert _d5_details_v02(report.case_results[51])["total_substitution_count"] == 40
+    assert len(_d5_details_v02(report.case_results[52])["mutation_rows"]) == 8
+    assert _d5_details_v02(report.case_results[53])["outcome_count"] == 5
+    assert _d5_details_v02(report.case_results[55])["field_partitions"] == [32, 31, 32, 42]
+    assert len(_d5_details_v02(report.case_results[55])["queue_parent_form_names"]) == 6
+    causal = _d5_details_v02(report.case_results[56])
+    assert causal["activation_causal_row_count"] == 2
+    assert causal["child_return_causal_row_count"] == 6
+    backpressure = _d5_details_v02(report.case_results[57])
+    assert len(backpressure["backpressure_precedence_rows"]) == 2
+    assert len(backpressure["deferred_successor_rows"]) == 2
+    assert backpressure["dependency_wait_row"][2:] == ["PENDING", [], True]
+    assert backpressure["budget_blocked_row"][3:5] == [
+        "BLOCKED",
+        ["g2d_required_child_failure"],
+    ]
+    assert backpressure["budget_exhaustion_resource"] == "remaining_cell_count"
+    assert backpressure["budget_exhaustion_tree_shape"] == [1, 4, 16]
+    assert backpressure["budget_exhaustion_depth_counts"] == {
+        "0": 1,
+        "1": 4,
+        "2": 16,
+    }
+    assert len(backpressure["budget_exhaustion_accepted_cell_ids"]) == 21
+    assert len(set(backpressure["budget_exhaustion_accepted_cell_ids"])) == 21
+    assert backpressure["budget_before_consumed_cell_count"] == 1
+    assert backpressure["budget_before_remaining_cell_count"] == 20
+    assert backpressure["exhausted_consumed_cell_count"] == 21
+    assert backpressure["exhausted_remaining_cell_count"] == 0
+    assert backpressure["budget_blocked_row"][6:] == [
+        backpressure["exhausted_budget_id"],
+        backpressure["exhausted_budget_validation_id"],
+        backpressure["budget_exhaustion_t06_decision_id"],
+    ]
+    assert backpressure["budget_exhaustion_queue_delta"]["created_count"] == 2
+    assert backpressure["budget_exhaustion_queue_delta"]["created_ids"][-1] == (
+        backpressure["budget_blocked_row"][0]
+    )
+    assert backpressure["budget_exhaustion_budget_delta"]["created_count"] > 0
+    assert backpressure["budget_exhaustion_no_drop"] is True
+    assert backpressure["suppression_created_objects"]["created_count"] == 0
+    assert backpressure["queue_order_error"]
+    denied = _d5_details_v02(report.case_results[65])
+    assert denied["denied_slot_state"] == "BLOCKED"
+    assert denied["denied_gate_disposition"] == (
+        "VALID_HARD_POLICY_AUTHORITY_SCOPE_OR_BUDGET_DENIAL"
+    )
+    assert denied["denied_terminal_delta"]["created_ids"] == [
+        denied["denied_slot_terminal_id"]
+    ]
+    assert denied["denied_invocation_delta"]["created_count"] == 0
+    assert denied["denied_result_delta"]["created_count"] == 0
+    assert denied["denied_partial_failure_delta"]["created_count"] == 0
+    assert denied["merge_decision_is_none"] is True
+    leaf = _d5_details_v02(report.case_results[59])
+    assert [item[:5] for item in leaf["full_fractal_leaf_edges"]] == [
+        [7, 0, 4, "VALIDATION", "FRACTAL_LEAF_PROJECTION"],
+        [8, 4, 5, "VALIDATION", "FRACTAL_LEAF_PROJECTION"],
+        [9, 5, 6, "RETURN", "FRACTAL_LEAF_PROJECTION"],
+    ]
+    four_child = _d5_details_v02(report.case_results[67])["four_child_structural_rows"]
+    four_child_details = _d5_details_v02(report.case_results[67])
+    assert len(four_child) == 4
+    assert len({item["budget_id"] for item in four_child}) == 4
+    assert all(item["budget_validation_id"] in report.case_results[67].evidence_refs for item in four_child)
+    assert four_child_details["four_child_context_validation_status"] == "FAIL_CLOSED"
+    assert "g2d_node_instance_geometry_invalid" in four_child_details["four_child_context_reason_codes"]
+    assert four_child_details["four_child_runtime_projection_count"] == 0
+    assert four_child_details["four_child_derivation_rows"] == [
+        [0, 1], [1, 1], [0, 2], [1, 2],
+    ]
+    activation = _d5_details_v02(report.case_results[68])
+    assert len(activation["activation_rows"]) == 2
+    assert activation["valid_denial_disposition"] == (
+        "VALID_HARD_POLICY_AUTHORITY_SCOPE_OR_BUDGET_DENIAL"
+    )
+    assert activation["valid_denial_invocation_delta"]["created_count"] == 0
+    assert activation["malformed_candidate_created_terminals"]["created_count"] == 0
+    prestate = _d5_details_v02(report.case_results[69])
+    assert prestate["parent_return_decision_rule_id"] == (
+        "g2d_t08_validating_to_completed"
+    )
+    assert prestate["construction_dependency_rows"][0][0] == "DECISION"
+    assert prestate["construction_dependency_rows"][1][0] == "QUEUE"
+    assert prestate["construction_dependency_rows"][2][0] == "ARTIFACT"
+    assert all(
+        item[0] == "BUDGET"
+        for item in prestate["construction_dependency_rows"][3:]
+    )
+    assert prestate["root_return_decision_position"] == (
+        len(prestate["transition_decision_ids"]) - 1
+    )
+    assert prestate["post_hoc_mapping_count"] == 0
+    assert len(_d5_details_v02(report.case_results[70])["mutation_rows"]) == 4
+
+
+def test_d5_actual_artifact_counterfactual_profiles_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    used = d5_fractal_runtime_report_v02.case_results[45]
+    ignored = d5_fractal_runtime_report_v02.case_results[46]
+    used_proof = _d5_details_v02(used)
+    ignored_proof = _d5_details_v02(ignored)
+    assert used_proof["causal_ref"]["disposition"] == "USED"
+    assert used_proof["changed_pointer"] == used_proof["causal_ref"]["output_field"]
+    assert used_proof["counterfactual_validation_id"] in used.evidence_refs
+    assert ignored_proof["ignored_causal_ref"]["disposition"] == "IGNORED_WITH_REASON"
+    assert ignored_proof["ignored_counterfactual_validation_id"] in ignored.evidence_refs
+    assert ignored_proof["admission_mutation_axis"] == (
+        "/source_artifact/planned_child_cell_id"
+    )
+    assert ignored_proof["admission_accepted_causal_ref"]["decision_effect"] == (
+        "CHILD_ACTIVATION"
+    )
+    assert ignored_proof["admission_accepted_causal_ref"]["disposition"] == "USED"
+    assert ignored_proof["admission_profile_status"] == "PASS"
+    assert ignored_proof["admission_profile_validation_id"] in ignored.evidence_refs
+    assert ignored_proof["admission_error"]
+    assert ignored_proof["admission_expected_downstream_artifact_id"] is None
+    assert ignored_proof["admission_child_input_delta"]["created_count"] == 0
+    assert ignored_proof["admission_initial_queue_delta"]["created_count"] == 0
+    assert ignored_proof["admission_initial_artifact_delta"]["created_count"] == 0
+    assert ignored_proof["actual_gate_disposition"] == (
+        "VALID_HARD_POLICY_AUTHORITY_SCOPE_OR_BUDGET_DENIAL"
+    )
+    assert ignored_proof["actual_gate_reason_codes"] == [
+        "g2d_required_child_failure"
+    ]
+    assert ignored_proof["actual_gate_t06_decision_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_validating_queue_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_validating_artifact_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_terminal_decision_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_blocked_queue_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_blocked_artifact_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_validation_id"] in ignored.evidence_refs
+    assert ignored_proof["actual_gate_terminal_delta"]["created_ids"] == [
+        ignored_proof["actual_gate_blocked_queue_id"]
+    ]
+    assert ignored_proof["actual_gate_invocation_delta"]["created_count"] == 0
+    assert ignored_proof["actual_gate_downstream_delta"]["created_count"] == 0
+    assert ignored_proof["blocked_gate_causal_ref"]["disposition"] == (
+        "BLOCKED_BY_GATE"
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["output_field"] == (
+        "/observed_output_refs/0"
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["decision_effect"] == (
+        "CELL_RESULT_OUTPUT"
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["reason_code"] == (
+        "gate:g2d_child_output"
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["source_artifact_id"] == (
+        ignored_proof["blocked_gate_source_artifact_id"]
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["downstream_artifact_id"] == (
+        ignored_proof["blocked_gate_downstream_artifact_id"]
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["consumer_component"] == (
+        "fractal_scheduler_v02"
+    )
+    assert ignored_proof["blocked_gate_causal_ref"]["trace_refs"][:2] == [
+        ignored_proof["blocked_gate_source_artifact_id"],
+        ignored_proof["blocked_gate_downstream_artifact_id"],
+    ]
+    assert ignored_proof["blocked_gate_causal_validation_reasons"] == []
+    assert ignored_proof["blocked_gate_artifact_validation_reasons"] == []
+    assert ignored_proof["blocked_gate_bundle_validation_reasons"] == []
+    assert ignored_proof["blocked_gate_counterfactual_validation_reasons"] == []
+    assert ignored_proof["blocked_gate_generic_diagnostic_scope"] == (
+        "SUPPLEMENTAL_NON_EXECUTABLE_STABLE_ID"
+    )
+    assert ignored_proof["blocked_gate_row_in_accepted_runtime"] is False
+    assert used_proof["accepted_bundle_ref"] == ignored_proof["accepted_bundle_ref"]
+    assert d5_fractal_runtime_report_v02.counterfactual_case_count == 2
+
+
+def test_d5_zero_operation_and_non_authority_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    zero_fields = (
+        "provider_calls", "model_calls", "gemini_calls", "network_calls",
+        "connector_calls", "external_drs_calls", "action_commit_packets_created",
+        "permissions_created", "receipts_created", "final_outputs_created",
+        "drs_writes", "authority_created_count", "real_world_effects_count",
+    )
+    assert all(getattr(report, name) == 0 for name in zero_fields)
+    assert all(
+        all(getattr(item, name) == 0 for name in zero_fields)
+        for item in report.case_results
+    )
+    assert report.accepted_bundle_count == report.topology_created_count == 10
+    assert sum(item.topology_created_count for item in report.case_results) == 10
+    source = Path(d5_runner.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imports = tuple(
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    ) + tuple(
+        node.module
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    )
+    assert not any(name == "tests" or name.startswith("tests.") for name in imports)
+    assert "_d4_run_runtime_v02" not in source
+    assert "ActionCommitPacket(" not in source
+    assert "FinalOutput(" not in source
+    assert "requests." not in source
+    assert "subprocess" not in imports
+    assert len(d5_runner._SOURCE_NEGATIVE_AXIS_ROWS_V02) == 17
+    assert len(d5_runner._BOUNDED_NEGATIVE_AXIS_ROWS_V02) == 14
+    assert len(d5_runner._PROOF_CONTRACTS_V02) == 72
+
+
+def test_d5_runner_main_and_json_projection_contract_v02(
+    d5_fractal_runtime_report_v02: d5_runner.FractalRuntimeG2DReportV02,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    report = d5_fractal_runtime_report_v02
+    monkeypatch.setattr(d5_runner, "collect_fractal_runtime_g2_d_v02", lambda: report)
+    assert d5_runner.main() == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert captured.out == d5_runner.render_fractal_runtime_g2_d_v02(report)
+    assert json.loads(captured.out)["report_id"] == report.report_id
+
+    rows = report.case_results
+    extra = replace(rows[-1], case_id="g2d_case:extra:v02")
+    mutations = (
+        replace(report, case_results=rows[:-1]),
+        replace(report, case_results=(rows[1], rows[0], *rows[2:])),
+        replace(report, case_results=(rows[0], rows[0], *rows[2:])),
+        replace(report, case_results=(replace(rows[0], case_id=rows[1].case_id), *rows[1:])),
+        replace(report, case_results=(replace(rows[0], evidence_sha256="0" * 64), *rows[1:])),
+        replace(report, report_id=d5_runner.REPORT_ID_PREFIX + "0" * 64),
+        replace(report, provider_calls=1),
+        replace(report, case_results=(replace(rows[0], case_class="NEGATIVE"), *rows[1:])),
+        replace(report, case_results=(replace(rows[0], observed_outcome="FAIL_CLOSED"), *rows[1:])),
+        replace(report, case_results=(*rows, extra), case_order=(*report.case_order, extra.case_id)),
+        replace(report, domain_order=tuple(reversed(report.domain_order))),
+    )
+    assert all(d5_runner.validate_fractal_runtime_g2_d_report_v02(item) for item in mutations)
+
+    coherent = (
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=28,
+            mutate=lambda details: details["accepted_depth_rows"][2].__setitem__(
+                "status", "FAIL_CLOSED"
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=30,
+            mutate=lambda details: details["accepted_cell_rows"][-1].__setitem__(
+                "global_create_consumed_cell_count", 20
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=39,
+            mutate=lambda details: details.__setitem__(
+                "safe_sibling_after_sha256", "0" * 64
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=35,
+            mutate=lambda details: details["mutation_rows"][0].__setitem__(
+                0, "scope_axis_renamed"
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=47,
+            mutate=lambda details: details["blocked_gate_causal_ref"].__setitem__(
+                "disposition", "REJECTED"
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=58,
+            mutate=lambda details: details.__setitem__(
+                "exhausted_remaining_cell_count", 1
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=60,
+            mutate=lambda details: details["full_fractal_leaf_edges"][0].__setitem__(
+                0, 6
+            ),
+        ),
+        _d5_coherently_tampered_report_v02(
+            report,
+            case_number=72,
+            mutate=lambda details: details.__setitem__(
+                "stage_d_c_artifact_count", details["stage_d_b_artifact_count"]
+            ),
+        ),
+    )
+    assert all(
+        item.report_id == d5_runner._report_identity_v02(replace(item, report_id=""))
+        for item in coherent
+    )
+    assert all(
+        d5_runner.validate_fractal_runtime_g2_d_report_v02(item)
+        == ("g2d5_report_invalid",)
+        for item in coherent
     )

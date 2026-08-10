@@ -4006,56 +4006,7 @@ def _d3_topology_parts(
     fr.FractalRuntimeBudgetV02,
     tuple[fr.RuntimeTopologyNodeV02, ...],
 ]:
-    policy = source.runtime_policy
-    binding = fr.build_runtime_topology_source_binding_v02(source_context=source)
-    root_cell_id = fr.derive_fractal_root_cell_id_v02(
-        source_binding_id=binding.source_binding_id,
-        runtime_policy_id=policy.policy_id,
-        accepted_mode=binding.accepted_mode,
-        accepted_scope_ref=binding.accepted_scope_ref,
-    )
-    seed = fr.build_runtime_topology_seed_v02(binding, policy, root_cell_id=root_cell_id)
-    initial = fr.build_fractal_runtime_budget_v02(
-        policy=policy,
-        topology_seed=seed,
-        allocation_parent_budget=None,
-        predecessor_budget=None,
-        owning_cell_id=root_cell_id,
-        budget_scope="ROOT_GLOBAL_AND_CELL",
-        budget_state="ALLOCATED",
-        budget_event_kind="INITIAL_ALLOCATION",
-        budget_context_input=None,
-        canonical_child_index=None,
-        allocation_queue_entries=(),
-        transition_decision=None,
-        paired_cell_budget=None,
-        child_result=None,
-    )
-    rows = dict(fr.MODE_NODE_TEMPLATE_ROWS_V02)[topology.accepted_mode]
-    nodes = tuple(
-        fr.build_runtime_topology_node_v02(
-            seed,
-            binding,
-            policy,
-            canonical_index=row[0],
-            node_kind=row[1],
-            depth=0,
-            scope_ref=binding.accepted_scope_ref,
-            cell_binding_class=row[2],
-            scope_binding_class=row[3],
-            budget_binding_class=row[4],
-            required_capability_ids=(
-                binding.required_downstream_capability_ids
-                if row[5] == ("SRC_CAPS",)
-                else row[5]
-            ),
-            input_ref_derivation_class=row[8],
-        )
-        for row in rows
-    )
-    assert tuple(item.node_id for item in nodes) == topology.ordered_node_ids
-    assert initial.budget_id == topology.global_budget_id
-    return binding, seed, initial, nodes
+    return fr._d3_reconstruct_topology_parts_v02(source, topology)
 
 
 def _d3_budget_successor(
@@ -4384,22 +4335,55 @@ def _d3_root_environment(case: dict[str, object]) -> dict[str, object]:
 
 
 @pytest.fixture(scope="module")
-def d3_mode_environments() -> dict[str, dict[str, object]]:
-    return {
-        mode: _d3_root_environment(
-            _d2_g2c_family(
-                mode,
-                narrow=mode == "cloud_llm",
-                action_packet_required=mode == "local_slm",
-            )
+def d3_memory_informed_environment() -> dict[str, object]:
+    return _d3_root_environment(_d2_g2c_family("memory_informed"))
+
+
+@pytest.fixture(scope="module")
+def d3_local_slm_environment() -> dict[str, object]:
+    return _d3_root_environment(
+        _d2_g2c_family(
+            "local_slm",
+            action_packet_required=True,
         )
-        for mode in fr.TOPOLOGY_ELIGIBLE_MODES
-    }
+    )
+
+
+@pytest.fixture(scope="module")
+def d3_cloud_llm_environment() -> dict[str, object]:
+    return _d3_root_environment(
+        _d2_g2c_family(
+            "cloud_llm",
+            narrow=True,
+        )
+    )
+
+
+@pytest.fixture(scope="module")
+def d3_full_semantic_environment() -> dict[str, object]:
+    return _d3_root_environment(_d2_g2c_family("full_semantic"))
 
 
 @pytest.fixture(scope="module")
 def d3_full_fractal_micro_environment() -> dict[str, object]:
     return _d3_root_environment(_d2_g2c_family("full_fractal"))
+
+
+@pytest.fixture(scope="module")
+def d3_mode_environments(
+    d3_memory_informed_environment: dict[str, object],
+    d3_local_slm_environment: dict[str, object],
+    d3_cloud_llm_environment: dict[str, object],
+    d3_full_semantic_environment: dict[str, object],
+    d3_full_fractal_micro_environment: dict[str, object],
+) -> dict[str, dict[str, object]]:
+    return {
+        "memory_informed": d3_memory_informed_environment,
+        "local_slm": d3_local_slm_environment,
+        "cloud_llm": d3_cloud_llm_environment,
+        "full_semantic": d3_full_semantic_environment,
+        "full_fractal": d3_full_fractal_micro_environment,
+    }
 
 
 def _d3_advance(
@@ -6668,9 +6652,9 @@ def test_d3_root_t02_queue_artifact_and_input_five_modes(
 
 
 def test_d3_queue_state_chain_latest_budget_and_ctx_trace(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
     initial_budget_log = env["budget_log"]
     completed, completed_artifact = _d3_complete_local_node(env, node_index=0)
     queue_log = env["queue_log"]
@@ -6727,7 +6711,7 @@ def test_d3_queue_state_chain_latest_budget_and_ctx_trace(
     assert "topology_id" not in completed_payload
     assert "predecessor_queue_entry_id" not in completed_payload
     assert len(env["budget_log"]) == len(initial_budget_log) + 2
-    base = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    base = _d3_clone_environment(d3_full_fractal_micro_environment)
     indexes = _d3_indexes(base)
     blocked_node = base["nodes"][3]
     blocked_entry = indexes["latest_by_key"][(base["topology"].root_cell_id, blocked_node.node_id)]
@@ -7084,9 +7068,9 @@ def test_d3_child_result_artifact_full_field_mutation_matrix_v035(
 
 
 def test_d3_child_activation_scope_budget_and_initial_family(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
     nodes = env["nodes"]
     parent_input = env["cell_input"]
     root_create = env["root_create"]
@@ -7707,9 +7691,9 @@ def test_d3_child_activation_precheck_56_field_mutation_matrix_v035(
 
 
 def test_d3_no_child_blocked_and_deadend_positive_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    blocked_env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    blocked_env = _d3_clone_environment(d3_full_fractal_micro_environment)
     dependency, _ = _d3_complete_local_node(blocked_env, node_index=0)
     p1, p1_artifact, _ = _d3_start_node(
         blocked_env, node_index=1, dependencies=(dependency,)
@@ -7743,7 +7727,7 @@ def test_d3_no_child_blocked_and_deadend_positive_v035(
     assert fr.validate_fractal_cell_queue_entry_v02(blocked).status == "PASS"
 
     deadend_env, running, artifact, budget, dependency = (
-        _d3_parent_slot_precheck_fixture(d3_mode_environments["full_fractal"])
+        _d3_parent_slot_precheck_fixture(d3_full_fractal_micro_environment)
     )
     indexes = _d3_indexes(deadend_env)
     ready = indexes["queue_by_id"][running.predecessor_queue_entry_id]
@@ -7771,10 +7755,10 @@ def test_d3_no_child_blocked_and_deadend_positive_v035(
 
 
 def test_d3_no_child_needs_user_unreachable_and_caller_labels_rejected_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
     env, running, artifact, budget, dependency = _d3_parent_slot_precheck_fixture(
-        d3_mode_environments["full_fractal"]
+        d3_full_fractal_micro_environment
     )
     with pytest.raises(ValueError):
         _d3_eval(
@@ -7813,9 +7797,9 @@ def test_d3_no_child_needs_user_unreachable_and_caller_labels_rejected_v035(
 
 
 def test_d3_historical_t06_origin_replay_ignores_later_live_head(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_semantic_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    env = _d3_clone_environment(d3_full_semantic_environment)
     running, running_artifact, start = _d3_start_node(env, node_index=0)
     node = env["nodes"][0]
     cell_input = env["cell_input"]
@@ -7905,9 +7889,9 @@ def test_d3_historical_t06_origin_replay_ignores_later_live_head(
 
 
 def test_d3_complete_prefix_rejects_missing_duplicate_reordered_and_foreign(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_semantic_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    env = _d3_clone_environment(d3_full_semantic_environment)
     _d3_indexes(env)
     mutations = (
         {"settled_budget_log": env["budget_log"][:-1]},
@@ -7966,16 +7950,16 @@ def _d3_evaluate_backpressure(
 
 
 def test_d3_function88_actual_source_context_positive_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_semantic_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    env = _d3_clone_environment(d3_full_semantic_environment)
     assert _d3_evaluate_backpressure(env) is None
 
 
 def test_d3_function88_source_context_substitution_matrix_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_semantic_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    env = _d3_clone_environment(d3_full_semantic_environment)
     source = env["source"]
     assert isinstance(source, fr.FractalRuntimeSourceContextV02)
     for source_field in fields(fr.FractalRuntimeSourceContextV02):
@@ -8009,9 +7993,9 @@ def test_d3_function88_source_context_substitution_matrix_v035(
 
 
 def test_d3_function88_rejects_copied_and_constructed_pass_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_semantic_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    env = _d3_clone_environment(d3_full_semantic_environment)
     reports = env["validation_reports"]
     assert isinstance(reports, tuple)
     copied = replace(
@@ -8080,16 +8064,16 @@ def _d3_parent_return_eval(
 
 
 def test_d3_parent_return_wholly_absent_is_unavailable_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
     assert _d3_parent_return_eval(env) is None
 
 
 def test_d3_parent_return_future_family_fail_closed_127_mask_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
     result, _artifact = _d3_child_result_fixture(env, outcome="COMPLETED", ordinal=31)
     partial = _fixture_family()[fr.FractalPartialFailureRecordV02]
     reports = env["validation_reports"]
@@ -8289,9 +8273,9 @@ def test_d3_six_class_order_permutation_and_substitution_matrix_v035(
 
 
 def test_d3_budget_axis_serialization_fork_rejection_and_bounds_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_semantic_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_semantic"])
+    env = _d3_clone_environment(d3_full_semantic_environment)
     topology = env["topology"]
     policy = env["source"].runtime_policy
     root_create = env["root_create"]
@@ -8401,9 +8385,9 @@ def _d3_prior_postclosure_core(
 
 
 def test_d3_s0_t03_postclosure_suppression_s1_no_spin_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
     dependency, _ = _d3_complete_local_node(env, node_index=0)
     p1, p1_artifact, _ = _d3_start_node(
         env, node_index=1, dependencies=(dependency,)
@@ -8520,9 +8504,9 @@ def test_d3_s0_t03_postclosure_suppression_s1_no_spin_v035(
 
 
 def test_d3_activated_child_waits_for_exact_result_v035(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    env = _d3_clone_environment(d3_mode_environments["full_fractal"])
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
     dependency, _ = _d3_complete_local_node(env, node_index=0)
     p1, p1_artifact, _ = _d3_start_node(
         env, node_index=1, dependencies=(dependency,)
@@ -8590,9 +8574,9 @@ def test_d3_activated_child_waits_for_exact_result_v035(
 
 
 def test_d3_scope_input_queue_negative_and_d4_boundary(
-    d3_mode_environments: dict[str, dict[str, object]],
+    d3_cloud_llm_environment: dict[str, object],
 ) -> None:
-    env = d3_mode_environments["cloud_llm"]
+    env = d3_cloud_llm_environment
     cell_input = env["cell_input"]
     topology = env["topology"]
     queues = env["queues"]

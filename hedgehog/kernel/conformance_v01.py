@@ -21,10 +21,11 @@ del annotations
 
 MODULE_ID = "kernel_conformance_v01"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
-CONFORMANCE_VERSION = "v0.4"
+CONFORMANCE_VERSION = "v0.5"
 _GATE1_CONFORMANCE_VERSION_V01 = "v0.1"
 _G2A_CONFORMANCE_VERSION_V02 = "v0.2"
 _G2B_CONFORMANCE_VERSION_V03 = "v0.3"
+_G2C_CONFORMANCE_VERSION_V04 = "v0.4"
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -50,10 +51,11 @@ _G2B_CATEGORY_IDS_V03 = (
     *_G2A_CATEGORY_IDS_V02,
     "DRSSemanticAddressReuseCertificateConformance",
 )
-CATEGORY_IDS = (
+_G2C_CATEGORY_IDS_V04 = (
     *_G2B_CATEGORY_IDS_V03,
     "ExecutionModeRouterConformance",
 )
+CATEGORY_IDS = (*_G2C_CATEGORY_IDS_V04, "FractalRuntimeConformance")
 DOMAIN_IDS = ("airline", "supplier_water_filter")
 _GATE1_NEGATIVE_PROBE_IDS_V01 = (
     "manifest_hash_mismatch",
@@ -108,9 +110,25 @@ _G2C_NEGATIVE_PROBE_IDS_V04 = (
     "execution_mode_operation_order_forgery",
     "execution_mode_zero_operation_forgery",
 )
-NEGATIVE_PROBE_IDS = (
+_G2C_NEGATIVE_PROBE_IDS_CUMULATIVE_V04 = (
     *_G2B_NEGATIVE_PROBE_IDS_CUMULATIVE_V03,
     *_G2C_NEGATIVE_PROBE_IDS_V04,
+)
+_G2D_NEGATIVE_PROBE_IDS_V05 = (
+    "fractal_runtime_report_identity_forgery",
+    "fractal_runtime_route_eligibility_substitution",
+    "fractal_runtime_direct_root_decision_bypass",
+    "fractal_runtime_mode_profile_forgery",
+    "fractal_runtime_scope_budget_widening",
+    "fractal_runtime_queue_transition_forgery",
+    "fractal_runtime_recursive_capability_forgery",
+    "fractal_runtime_no_progress_forgery",
+    "fractal_runtime_child_authority_forgery",
+    "fractal_runtime_zero_operation_forgery",
+)
+NEGATIVE_PROBE_IDS = (
+    *_G2C_NEGATIVE_PROBE_IDS_CUMULATIVE_V04,
+    *_G2D_NEGATIVE_PROBE_IDS_V05,
 )
 
 _GATE1_ACTIVE_GAUNTLET_REFS_V01 = (
@@ -135,10 +153,11 @@ _G2B_ACTIVE_GAUNTLET_REFS_V03 = (
     *_G2A_ACTIVE_GAUNTLET_REFS_V02,
     "drs_semantic_address_and_reuse_certificate",
 )
-_ACTIVE_GAUNTLET_REFS = (
+_G2C_ACTIVE_GAUNTLET_REFS_V04 = (
     *_G2B_ACTIVE_GAUNTLET_REFS_V03,
     "execution_mode_router",
 )
+_ACTIVE_GAUNTLET_REFS = (*_G2C_ACTIVE_GAUNTLET_REFS_V04, "fractal_runtime")
 _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
     (
         "DomainPackConformance",
@@ -288,9 +307,26 @@ _G2C_EXPECTED_CHECK_IDS_V04 = (
     "negative_matrix_and_domain_invariance",
     "zero_operations",
 )
-_EXPECTED_CATEGORY_CHECK_IDS = (
+_G2C_EXPECTED_CATEGORY_CHECK_IDS_V04 = (
     *_G2B_EXPECTED_CATEGORY_CHECK_IDS_V03,
     ("ExecutionModeRouterConformance", _G2C_EXPECTED_CHECK_IDS_V04),
+)
+_G2D_EXPECTED_CHECK_IDS_V05 = (
+    "policy_identity_and_staged_surface",
+    "executable_templates_and_child_activation",
+    "queue_input_outcome_and_result_order",
+    "paired_budget_events_and_backpressure",
+    "resultproposal_unique_gt_kt_validation",
+    "pre_root_four_artifact_abi_partitions",
+    "transition_profile_and_root_only_report",
+    "causal_pointer_reason_and_root_outcome",
+    "two_domain_seventy_two_case_boundary",
+    "zero_authority_and_operations",
+)
+_G2D_CHECK_EVIDENCE_PREFIX_V05 = "g2d5_check_evidence:"
+_EXPECTED_CATEGORY_CHECK_IDS = (
+    *_G2C_EXPECTED_CATEGORY_CHECK_IDS_V04,
+    ("FractalRuntimeConformance", _G2D_EXPECTED_CHECK_IDS_V05),
 )
 _EXPECTED_DOMAIN_GEOMETRY = (
     (
@@ -455,13 +491,31 @@ _G2C_EXPECTED_NEGATIVE_REASONS_V04 = (
     ("g2c5_case_result_invalid", "g2c5_report_identity_invalid"),
     ("g2c5_zero_operation_invalid", "g2c5_report_identity_invalid"),
 )
-_EXPECTED_NEGATIVE_GEOMETRY = (
+_G2C_EXPECTED_NEGATIVE_GEOMETRY_V04 = (
     *_G2B_EXPECTED_NEGATIVE_GEOMETRY_V03,
     *(
         (probe_id, _G2C_REPORT_VALIDATOR_TARGET_V01, expected_reasons)
         for probe_id, expected_reasons in zip(
             _G2C_NEGATIVE_PROBE_IDS_V04,
             _G2C_EXPECTED_NEGATIVE_REASONS_V04,
+            strict=True,
+        )
+    ),
+)
+_G2D_REPORT_VALIDATOR_TARGET_V02 = (
+    "demo.run_fractal_runtime_g2_d_v02."
+    "validate_fractal_runtime_g2_d_report_v02"
+)
+_G2D_EXPECTED_NEGATIVE_REASONS_V05 = (
+    *(("g2d5_report_invalid",),) * 10,
+)
+_EXPECTED_NEGATIVE_GEOMETRY = (
+    *_G2C_EXPECTED_NEGATIVE_GEOMETRY_V04,
+    *(
+        (probe_id, _G2D_REPORT_VALIDATOR_TARGET_V02, expected_reasons)
+        for probe_id, expected_reasons in zip(
+            _G2D_NEGATIVE_PROBE_IDS_V05,
+            _G2D_EXPECTED_NEGATIVE_REASONS_V05,
             strict=True,
         )
     ),
@@ -996,6 +1050,7 @@ def _report_errors(report: object) -> tuple[str, ...]:
             _GATE1_CONFORMANCE_VERSION_V01,
             _G2A_CONFORMANCE_VERSION_V02,
             _G2B_CONFORMANCE_VERSION_V03,
+            _G2C_CONFORMANCE_VERSION_V04,
             CONFORMANCE_VERSION,
         )
         or not _valid_commit(report.implementation_commit)
@@ -1081,6 +1136,12 @@ def _require_report_geometry(
         expected_active_refs = _G2B_ACTIVE_GAUNTLET_REFS_V03
         expected_category_geometry = _G2B_EXPECTED_CATEGORY_CHECK_IDS_V03
         expected_negative_geometry = _G2B_EXPECTED_NEGATIVE_GEOMETRY_V03
+    elif conformance_version == _G2C_CONFORMANCE_VERSION_V04:
+        category_ids = _G2C_CATEGORY_IDS_V04
+        negative_probe_ids = _G2C_NEGATIVE_PROBE_IDS_CUMULATIVE_V04
+        expected_active_refs = _G2C_ACTIVE_GAUNTLET_REFS_V04
+        expected_category_geometry = _G2C_EXPECTED_CATEGORY_CHECK_IDS_V04
+        expected_negative_geometry = _G2C_EXPECTED_NEGATIVE_GEOMETRY_V04
     elif conformance_version == CONFORMANCE_VERSION:
         category_ids = CATEGORY_IDS
         negative_probe_ids = NEGATIVE_PROBE_IDS
@@ -1148,6 +1209,24 @@ def _require_report_geometry(
             )
         ):
             raise ValueError
+        if category_id == "FractalRuntimeConformance" and (
+            len(item.evidence_refs) != 11
+            or item.evidence_refs[0]
+            != "runtime:kernel_conformance:FractalRuntimeConformance"
+            or any(
+                not evidence_ref.startswith(
+                    f"{_G2D_CHECK_EVIDENCE_PREFIX_V05}{check_id}:"
+                )
+                for check_id, evidence_ref in zip(
+                    _G2D_EXPECTED_CHECK_IDS_V05,
+                    item.evidence_refs[1:],
+                    strict=True,
+                )
+            )
+            or item.limitation_refs
+            != ("limitation_g2d6_validated_d5_report_only",)
+        ):
+            raise ValueError
     for item, expected in zip(domains, _EXPECTED_DOMAIN_GEOMETRY):
         (
             domain_id,
@@ -1188,6 +1267,14 @@ def _require_report_geometry(
             raise ValueError
         if probe_id in _G2C_NEGATIVE_PROBE_IDS_V04 and item.evidence_refs != (
             "demo/run_execution_mode_router_g2_c_v01.py",
+        ):
+            raise ValueError
+        if probe_id in _G2D_NEGATIVE_PROBE_IDS_V05 and (
+            len(item.evidence_refs) < 3
+            or item.evidence_refs[0]
+            != "demo/run_fractal_runtime_g2_d_v02.py"
+            or not item.evidence_refs[1].startswith("baseline_report:")
+            or not item.evidence_refs[-1].startswith("forged_report:")
         ):
             raise ValueError
     if len({item.result_id for item in categories}) != len(categories):

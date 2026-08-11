@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, replace
 import copy
+import hashlib
 import json
 from pathlib import Path
 import pickle
@@ -17,6 +18,7 @@ from demo import (
     run_drs_semantic_address_reuse_certificate_g2_b_v01 as _g2b
 )
 from demo import run_execution_mode_router_g2_c_v01 as _g2c
+from demo import run_fractal_runtime_g2_d_v02 as _g2d
 from demo.run_all_layers_applied_super_smoke import (
     collect_all_layers_applied_super_smoke,
     validate_all_layers_applied_super_smoke_report_consistency,
@@ -28,6 +30,7 @@ from demo.run_full_wow_v1_2_product_trace import (
     collect_full_wow_v1_2_product_trace,
 )
 from demo.run_kernel_conformance_v01 import (
+    _collect_kernel_conformance_with_validated_fractal_runtime_v01,
     collect_kernel_conformance_v01,
     resolve_current_implementation_commit_v01,
     validate_kernel_conformance_runtime_v01,
@@ -163,10 +166,11 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v1.3"
+RUNNER_VERSION = "v1.4"
 _GATE1_RELEASE_RUNNER_VERSION_V10 = "v1.0"
 _G2A_RUNNER_VERSION_V11 = "v1.1"
 _G2B_RUNNER_VERSION_V12 = "v1.2"
+_G2C_RUNNER_VERSION_V13 = "v1.3"
 _RELEASE_INDEX_VERSION = "v0.1"
 
 STATUS_PASS = "PASS"
@@ -291,11 +295,19 @@ _G2B_ACTIVE_ACT_SOURCES_V12 = {
     ),
 }
 _G2B_ACTIVE_ACT_IDS_V12 = tuple(_G2B_ACTIVE_ACT_SOURCES_V12)
-_ACTIVE_ACT_SOURCES = {
+_G2C_ACTIVE_ACT_SOURCES_V13 = {
     **_G2B_ACTIVE_ACT_SOURCES_V12,
     "execution_mode_router": (
         "demo.run_execution_mode_router_g2_c_v01",
         "collect_execution_mode_router_g2_c_v01",
+    ),
+}
+_G2C_ACTIVE_ACT_IDS_V13 = tuple(_G2C_ACTIVE_ACT_SOURCES_V13)
+_ACTIVE_ACT_SOURCES = {
+    **_G2C_ACTIVE_ACT_SOURCES_V13,
+    "fractal_runtime": (
+        "demo.run_fractal_runtime_g2_d_v02",
+        "collect_fractal_runtime_g2_d_v02",
     ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
@@ -560,7 +572,7 @@ _EVIDENCE_RESULT_FIELD_NAMES = frozenset(
 )
 _PLANNED_RESULT_FIELD_NAMES = frozenset({"act_id", "executed", "state"})
 _INVARIANT_RESULT_FIELD_NAMES = frozenset({"invariant_id", "state"})
-_COUNTER_FIELD_NAMES = frozenset(
+_G2C_COUNTER_FIELD_NAMES_V13 = frozenset(
     {
         "active_act_count",
         "active_act_fail_closed_count",
@@ -589,6 +601,45 @@ _COUNTER_FIELD_NAMES = frozenset(
         "execution_mode_router_execution_count",
     }
 )
+_G2B_COUNTER_FIELD_NAMES_V12 = _G2C_COUNTER_FIELD_NAMES_V13 - {
+    "execution_mode_router_execution_count",
+}
+_G2A_COUNTER_FIELD_NAMES_V11 = _G2B_COUNTER_FIELD_NAMES_V12 - {
+    "drs_semantic_address_reuse_certificate_execution_count",
+}
+_GATE1_COUNTER_FIELD_NAMES_V10 = _G2A_COUNTER_FIELD_NAMES_V11 - {
+    "action_packet_lifecycle_execution_count",
+}
+_COUNTER_FIELD_NAMES = frozenset(
+    (*_G2C_COUNTER_FIELD_NAMES_V13, "fractal_runtime_execution_count")
+)
+_LIVING_VERSION_GEOMETRY = {
+    _GATE1_RELEASE_RUNNER_VERSION_V10: (
+        _GATE1_ACTIVE_ACT_IDS_V10,
+        _GATE1_ACTIVE_ACT_SOURCES_V10,
+        _GATE1_COUNTER_FIELD_NAMES_V10,
+    ),
+    _G2A_RUNNER_VERSION_V11: (
+        _G2A_ACTIVE_ACT_IDS_V11,
+        _G2A_ACTIVE_ACT_SOURCES_V11,
+        _G2A_COUNTER_FIELD_NAMES_V11,
+    ),
+    _G2B_RUNNER_VERSION_V12: (
+        _G2B_ACTIVE_ACT_IDS_V12,
+        _G2B_ACTIVE_ACT_SOURCES_V12,
+        _G2B_COUNTER_FIELD_NAMES_V12,
+    ),
+    _G2C_RUNNER_VERSION_V13: (
+        _G2C_ACTIVE_ACT_IDS_V13,
+        _G2C_ACTIVE_ACT_SOURCES_V13,
+        _G2C_COUNTER_FIELD_NAMES_V13,
+    ),
+    RUNNER_VERSION: (
+        _ACTIVE_ACT_IDS,
+        _ACTIVE_ACT_SOURCES,
+        _COUNTER_FIELD_NAMES,
+    ),
+}
 
 _G2B_EXPECTED_OPERATION_COUNTERS_V01 = (
     ("domain_count", 2),
@@ -4141,8 +4192,12 @@ def _invariant_result(invariant_id: str, passed: bool) -> dict[str, Any]:
     }
 
 
-def _aggregate_real_world_effects_count(active: Any) -> int:
-    if not isinstance(active, list) or len(active) != len(_ACTIVE_ACT_IDS):
+def _aggregate_real_world_effects_count(
+    active: Any,
+    *,
+    expected_active_ids: tuple[str, ...] = _ACTIVE_ACT_IDS,
+) -> int:
+    if not isinstance(active, list) or len(active) != len(expected_active_ids):
         return -1
     effect_counts = [
         row.get("real_world_effects_count") if isinstance(row, Mapping) else None
@@ -4157,11 +4212,14 @@ def _derive_report_counters_v01(
     active: Any,
     evidence: Any,
     planned: Any,
+    *,
+    active_ids: tuple[str, ...] = _ACTIVE_ACT_IDS,
+    counter_field_names: frozenset[str] = _COUNTER_FIELD_NAMES,
 ) -> dict[str, int]:
     active_rows = active if isinstance(active, list) else []
     evidence_rows = evidence if isinstance(evidence, list) else []
     planned_rows = planned if isinstance(planned, list) else []
-    return {
+    counters = {
         "active_act_count": len(active_rows),
         "active_act_fail_closed_count": sum(
             isinstance(row, Mapping) and row.get("state") == STATUS_FAIL_CLOSED
@@ -4177,7 +4235,7 @@ def _derive_report_counters_v01(
         ),
         "airline_collector_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[0]
+            and row.get("act_id") == "airline_deterministic_transaction_runtime"
             and row.get("executed") is True
             for row in active_rows
         ),
@@ -4188,13 +4246,13 @@ def _derive_report_counters_v01(
         ),
         "generic_integrity_replay_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[2]
+            and row.get("act_id") == "generic_integrity_replay"
             and row.get("executed") is True
             for row in active_rows
         ),
         "invariant_collector_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[1]
+            and row.get("act_id") == "all_layers_invariant_super_smoke"
             and row.get("executed") is True
             for row in active_rows
         ),
@@ -4203,85 +4261,98 @@ def _derive_report_counters_v01(
             isinstance(row, Mapping) and row.get("executed") is True
             for row in planned_rows
         ),
-        "real_world_effects_count": _aggregate_real_world_effects_count(active_rows),
+        "real_world_effects_count": _aggregate_real_world_effects_count(
+            active_rows,
+            expected_active_ids=active_ids,
+        ),
         "root_signer_isolation_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[3]
+            and row.get("act_id") == "root_signer_isolation_conformance"
             and row.get("executed") is True
             for row in active_rows
         ),
         "semantic_work_contract_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[4]
+            and row.get("act_id") == "semantic_work_contract"
             and row.get("executed") is True
             for row in active_rows
         ),
         "domain_neutral_kernel_abi_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[5]
+            and row.get("act_id") == "domain_neutral_kernel_abi"
             and row.get("executed") is True
             for row in active_rows
         ),
         "causal_consumption_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[6]
+            and row.get("act_id") == "causal_consumption"
             and row.get("executed") is True
             for row in active_rows
         ),
         "transition_registry_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[7]
+            and row.get("act_id") == "transition_registry"
             and row.get("executed") is True
             for row in active_rows
         ),
         "root_decision_kernel_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[8]
+            and row.get("act_id") == "root_decision_kernel"
             and row.get("executed") is True
             for row in active_rows
         ),
         "effect_firewall_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[9]
+            and row.get("act_id") == "effect_firewall"
             and row.get("executed") is True
             for row in active_rows
         ),
         "generic_multiroot_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[10]
+            and row.get("act_id") == "generic_multiroot"
             and row.get("executed") is True
             for row in active_rows
         ),
         "supplier_water_filter_portability_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[11]
+            and row.get("act_id") == "supplier_water_filter_portability"
             and row.get("executed") is True
             for row in active_rows
         ),
         "kernel_conformance_closure_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[12]
+            and row.get("act_id") == "kernel_conformance_closure"
             and row.get("executed") is True
             for row in active_rows
         ),
         "action_packet_lifecycle_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[13]
+            and row.get("act_id") == "action_packet_lifecycle"
             and row.get("executed") is True
             for row in active_rows
         ),
         "drs_semantic_address_reuse_certificate_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[14]
+            and row.get("act_id")
+            == "drs_semantic_address_and_reuse_certificate"
             and row.get("executed") is True
             for row in active_rows
         ),
         "execution_mode_router_execution_count": sum(
             isinstance(row, Mapping)
-            and row.get("act_id") == _ACTIVE_ACT_IDS[15]
+            and row.get("act_id") == "execution_mode_router"
             and row.get("executed") is True
             for row in active_rows
         ),
+        "fractal_runtime_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == "fractal_runtime"
+            and row.get("executed") is True
+            for row in active_rows
+        ),
+    }
+    return {
+        key: value for key, value in counters.items() if key in counter_field_names
     }
 
 
@@ -4894,6 +4965,115 @@ def collect_execution_mode_router_gauntlet_act_v01(
         )
 
 
+_G2D_ZERO_COUNTER_FIELDS_V14 = (
+    "provider_calls",
+    "model_calls",
+    "gemini_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "final_outputs_created",
+    "drs_writes",
+    "authority_created_count",
+    "real_world_effects_count",
+)
+
+
+def _fractal_runtime_report_passes_living_act_v01(report: object) -> bool:
+    try:
+        if type(report) is not _g2d.FractalRuntimeG2DReportV02:
+            return False
+        cases = report.case_results
+        return (
+            report.report_version == _g2d.REPORT_VERSION
+            and report.profile_id == _g2d.PROFILE_ID
+            and report.final_status == STATUS_PASS
+            and report.reason_codes == ()
+            and report.domain_order
+            == (
+                "TRAVEL_POLICY_INFORMATION",
+                "WAREHOUSE_MAINTENANCE_INFORMATION",
+            )
+            and len(report.case_order) == len(cases) == 72
+            and report.case_order == tuple(item.case_id for item in cases)
+            and len(set(report.case_order)) == 72
+            and report.constructive_case_count == 36
+            and report.negative_case_count == 36
+            and report.domain_positive_case_count == 10
+            and report.accepted_bundle_count == 10
+            and report.topology_created_count == 10
+            and all(
+                type(getattr(report, name)) is int
+                and getattr(report, name) == 0
+                for name in _G2D_ZERO_COUNTER_FIELDS_V14
+            )
+            and all(
+                item.final_status == STATUS_PASS
+                and item.reason_codes == ()
+                and item.observed_outcome == item.expected_outcome
+                and type(item.evidence_material_json) is str
+                and hashlib.sha256(
+                    item.evidence_material_json.encode("ascii")
+                ).hexdigest()
+                == item.evidence_sha256
+                and all(
+                    type(getattr(item, name)) is int
+                    and getattr(item, name) == 0
+                    for name in _G2D_ZERO_COUNTER_FIELDS_V14
+                )
+                for item in cases
+            )
+        )
+    except Exception:
+        return False
+
+
+def _fractal_runtime_gauntlet_act_from_validated_report_v01(
+    report: object,
+) -> LivingGauntletActResultV01:
+    act_id = "fractal_runtime"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    if _fractal_runtime_report_passes_living_act_v01(report):
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    return LivingGauntletActResultV01(
+        act_id=act_id,
+        errors=("fractal_runtime_gauntlet_act_failed",),
+        executed=True,
+        no_real_connector_or_action=False,
+        real_world_effects_count=-1,
+        root_authority_preserved=False,
+        runtime_status=STATUS_FAIL_CLOSED,
+        source_module=source_module,
+        source_symbol=source_symbol,
+        state=STATUS_FAIL_CLOSED,
+    )
+
+
+def collect_fractal_runtime_gauntlet_act_v01() -> LivingGauntletActResultV01:
+    try:
+        report = _g2d.collect_fractal_runtime_g2_d_v02()
+        reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(report)
+        if reasons:
+            raise ValueError
+        return _fractal_runtime_gauntlet_act_from_validated_report_v01(report)
+    except Exception:
+        return _fractal_runtime_gauntlet_act_from_validated_report_v01(None)
+
+
 def collect_living_gauntlet_base_act_results_v01(
 ) -> tuple[dict[str, object], ...]:
     collectors = (
@@ -4972,26 +5152,28 @@ def collect_living_gauntlet_base_act_results_v01(
     return tuple(results)
 
 
-def collect_kernel_conformance_closure_gauntlet_act_v01(
+def _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
     active_act_results: tuple[Mapping[str, object], ...],
+    fractal_runtime_report: _g2d.FractalRuntimeG2DReportV02,
 ) -> LivingGauntletActResultV01:
     act_id = "kernel_conformance_closure"
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
     try:
-        report = collect_kernel_conformance_v01(
+        report = _collect_kernel_conformance_with_validated_fractal_runtime_v01(
             active_act_results=active_act_results,
             implementation_commit=resolve_current_implementation_commit_v01(),
+            fractal_runtime_report=fractal_runtime_report,
         )
         validation_errors = validate_kernel_conformance_runtime_v01(report)
         counters = report.counters
         passed = (
             not validation_errors
             and report.final_status == STATUS_PASS
-            and report.conformance_version == "v0.4"
-            and len(report.category_results) == 13
+            and report.conformance_version == "v0.5"
+            and len(report.category_results) == 14
             and len(report.domain_results) == 2
-            and len(report.negative_test_results) == 40
-            and len(report.active_gauntlet_refs) == 15
+            and len(report.negative_test_results) == 50
+            and len(report.active_gauntlet_refs) == 16
             and all(item.status == STATUS_PASS for item in report.category_results)
             and all(item.status == STATUS_PASS for item in report.domain_results)
             and all(
@@ -5037,6 +5219,27 @@ def collect_kernel_conformance_closure_gauntlet_act_v01(
             source_module=source_module,
             source_symbol=source_symbol,
             state=STATUS_FAIL_CLOSED,
+        )
+
+
+def collect_kernel_conformance_closure_gauntlet_act_v01(
+    active_act_results: tuple[Mapping[str, object], ...],
+) -> LivingGauntletActResultV01:
+    try:
+        fractal_runtime_report = _g2d.collect_fractal_runtime_g2_d_v02()
+        reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
+            fractal_runtime_report
+        )
+        if reasons:
+            raise ValueError
+        return _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
+            active_act_results,
+            fractal_runtime_report,
+        )
+    except Exception:
+        return _failed_act_result(
+            act_id="kernel_conformance_closure",
+            reason="kernel_conformance_closure_failed",
         )
 
 
@@ -5089,19 +5292,47 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     act_id="execution_mode_router",
                     reason="execution_mode_router_gauntlet_act_failed",
                 )
-            closure = collect_kernel_conformance_closure_gauntlet_act_v01(
-                (
-                    *base_results,
-                    asdict(lifecycle),
-                    asdict(g2b),
-                    asdict(g2c),
+            fractal_runtime_report = None
+            try:
+                candidate = _g2d.collect_fractal_runtime_g2_d_v02()
+                reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
+                    candidate
                 )
+                if reasons:
+                    raise ValueError
+                fractal_runtime_report = candidate
+                g2d = _fractal_runtime_gauntlet_act_from_validated_report_v01(
+                    candidate
+                )
+            except Exception:
+                g2d = _fractal_runtime_gauntlet_act_from_validated_report_v01(
+                    None
+                )
+            closure_inputs = (
+                *base_results,
+                asdict(lifecycle),
+                asdict(g2b),
+                asdict(g2c),
+                asdict(g2d),
             )
+            if fractal_runtime_report is None:
+                closure = _failed_act_result(
+                    act_id="kernel_conformance_closure",
+                    reason="kernel_conformance_closure_failed",
+                )
+            else:
+                closure = (
+                    _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
+                        closure_inputs,
+                        fractal_runtime_report,
+                    )
+                )
             active_result_rows.extend(dict(row) for row in base_results)
             active_result_rows.append(asdict(closure))
             active_result_rows.append(asdict(lifecycle))
             active_result_rows.append(asdict(g2b))
             active_result_rows.append(asdict(g2c))
+            active_result_rows.append(asdict(g2d))
 
     for result in active_result_rows:
         row_errors = result.get("errors")
@@ -5184,22 +5415,28 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         _invariant_result(
             "action_packet_lifecycle_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-3].get("act_id")
+            and active_result_rows[-4].get("act_id")
             == "action_packet_lifecycle"
-            and active_result_rows[-3].get("state") == STATUS_PASS,
+            and active_result_rows[-4].get("state") == STATUS_PASS,
         ),
         _invariant_result(
             "drs_semantic_address_reuse_certificate_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-2].get("act_id")
+            and active_result_rows[-3].get("act_id")
             == "drs_semantic_address_and_reuse_certificate"
-            and active_result_rows[-2].get("state") == STATUS_PASS,
+            and active_result_rows[-3].get("state") == STATUS_PASS,
         ),
         _invariant_result(
             "execution_mode_router_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-1].get("act_id")
+            and active_result_rows[-2].get("act_id")
             == "execution_mode_router"
+            and active_result_rows[-2].get("state") == STATUS_PASS,
+        ),
+        _invariant_result(
+            "fractal_runtime_act_pass",
+            len(active_result_rows) == len(_ACTIVE_ACT_IDS)
+            and active_result_rows[-1].get("act_id") == "fractal_runtime"
             and active_result_rows[-1].get("state") == STATUS_PASS,
         ),
     ]
@@ -5257,8 +5494,20 @@ def validate_living_gauntlet_report_v01(
         errors.append("living_gauntlet_report_field_surface_mismatch")
     if report.get("runner_id") != RUNNER_ID:
         errors.append("living_gauntlet_runner_id_mismatch")
-    if report.get("runner_version") != RUNNER_VERSION:
+    version_geometry = _LIVING_VERSION_GEOMETRY.get(
+        report.get("runner_version")
+    )
+    if version_geometry is None:
         errors.append("living_gauntlet_runner_version_mismatch")
+        expected_active_ids = _ACTIVE_ACT_IDS
+        expected_active_sources = _ACTIVE_ACT_SOURCES
+        expected_counter_fields = _COUNTER_FIELD_NAMES
+    else:
+        (
+            expected_active_ids,
+            expected_active_sources,
+            expected_counter_fields,
+        ) = version_geometry
     active = report.get("active_act_results")
     evidence = report.get("evidence_only_entries")
     planned = report.get("planned_entries")
@@ -5272,7 +5521,7 @@ def validate_living_gauntlet_report_v01(
     errors.extend(id_errors)
     planned_ids, id_errors = _record_ids(planned, "act_id", "report_planned_act")
     errors.extend(id_errors)
-    if active_ids != _ACTIVE_ACT_IDS:
+    if active_ids != expected_active_ids:
         errors.append("report_active_act_ids_mismatch")
     if evidence_ids != _EVIDENCE_ONLY_ACT_IDS:
         errors.append("report_evidence_act_ids_mismatch")
@@ -5308,7 +5557,7 @@ def validate_living_gauntlet_report_v01(
                 errors.append(f"report_real_world_effects_nonzero:{act_id}")
             if result.get("no_real_connector_or_action") is not True:
                 errors.append(f"report_real_connector_or_action:{act_id}")
-            expected_source = _ACTIVE_ACT_SOURCES.get(act_id)
+            expected_source = expected_active_sources.get(act_id)
             if expected_source is None or (
                 result.get("source_module"), result.get("source_symbol")
             ) != expected_source:
@@ -5363,9 +5612,15 @@ def validate_living_gauntlet_report_v01(
     if not isinstance(counters, Mapping):
         errors.append("report_counters_invalid")
     else:
-        if frozenset(counters) != _COUNTER_FIELD_NAMES:
+        if frozenset(counters) != expected_counter_fields:
             errors.append("report_counter_field_surface_mismatch")
-        derived_counters = _derive_report_counters_v01(active, evidence, planned)
+        derived_counters = _derive_report_counters_v01(
+            active,
+            evidence,
+            planned,
+            active_ids=expected_active_ids,
+            counter_field_names=expected_counter_fields,
+        )
         for key, expected in derived_counters.items():
             if counters.get(key) != expected or not _is_exact_int(counters.get(key)):
                 errors.append(f"report_counter_mismatch:{key}")

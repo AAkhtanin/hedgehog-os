@@ -39,10 +39,11 @@ G2B_EXPECTED_CATEGORIES = (
     *G2A_EXPECTED_CATEGORIES,
     "DRSSemanticAddressReuseCertificateConformance",
 )
-EXPECTED_CATEGORIES = (
+G2C_EXPECTED_CATEGORIES = (
     *G2B_EXPECTED_CATEGORIES,
     "ExecutionModeRouterConformance",
 )
+EXPECTED_CATEGORIES = (*G2C_EXPECTED_CATEGORIES, "FractalRuntimeConformance")
 EXPECTED_DOMAINS = ("airline", "supplier_water_filter")
 GATE1_EXPECTED_PROBES = (
     "manifest_hash_mismatch",
@@ -94,7 +95,23 @@ G2C_EXPECTED_PROBES = (
     "execution_mode_operation_order_forgery",
     "execution_mode_zero_operation_forgery",
 )
-EXPECTED_PROBES = (*G2B_EXPECTED_PROBES, *G2C_EXPECTED_PROBES)
+G2D_EXPECTED_PROBES = (
+    "fractal_runtime_report_identity_forgery",
+    "fractal_runtime_route_eligibility_substitution",
+    "fractal_runtime_direct_root_decision_bypass",
+    "fractal_runtime_mode_profile_forgery",
+    "fractal_runtime_scope_budget_widening",
+    "fractal_runtime_queue_transition_forgery",
+    "fractal_runtime_recursive_capability_forgery",
+    "fractal_runtime_no_progress_forgery",
+    "fractal_runtime_child_authority_forgery",
+    "fractal_runtime_zero_operation_forgery",
+)
+EXPECTED_PROBES = (
+    *G2B_EXPECTED_PROBES,
+    *G2C_EXPECTED_PROBES,
+    *G2D_EXPECTED_PROBES,
+)
 GATE1_EXPECTED_ACTIVE_REFS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
@@ -117,7 +134,8 @@ G2B_EXPECTED_ACTIVE_REFS = (
     *G2A_EXPECTED_ACTIVE_REFS,
     "drs_semantic_address_and_reuse_certificate",
 )
-EXPECTED_ACTIVE_REFS = (*G2B_EXPECTED_ACTIVE_REFS, "execution_mode_router")
+G2C_EXPECTED_ACTIVE_REFS = (*G2B_EXPECTED_ACTIVE_REFS, "execution_mode_router")
+EXPECTED_ACTIVE_REFS = (*G2C_EXPECTED_ACTIVE_REFS, "fractal_runtime")
 DATACLASS_FIELDS = {
     "ConformanceCountersV01": (
         "category_result_count",
@@ -293,54 +311,45 @@ def _category(category_id: str, passed: bool = True):
         for expected_id, check_ids in conformance._EXPECTED_CATEGORY_CHECK_IDS
         if expected_id == category_id
     )
+    if category_id == "ActionPacketLifecycleConformance":
+        evidence_refs = (
+            "runtime:kernel_conformance:ActionPacketLifecycleConformance",
+        )
+        limitation_refs = (
+            "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
+        )
+    elif category_id == "DRSSemanticAddressReuseCertificateConformance":
+        evidence_refs = (
+            "runtime:kernel_conformance:"
+            "DRSSemanticAddressReuseCertificateConformance",
+        )
+        limitation_refs = (
+            "limitation_g2b6_deterministic_local_drs_semantic_reuse_only",
+        )
+    elif category_id == "ExecutionModeRouterConformance":
+        evidence_refs = (
+            "runtime:kernel_conformance:ExecutionModeRouterConformance",
+        )
+        limitation_refs = (
+            "limitation_g2c6_deterministic_two_domain_execution_mode_router_only",
+        )
+    elif category_id == "FractalRuntimeConformance":
+        evidence_refs = (
+            "runtime:kernel_conformance:FractalRuntimeConformance",
+            *(
+                f"{conformance._G2D_CHECK_EVIDENCE_PREFIX_V05}{check_id}:{{}}"
+                for check_id in conformance._G2D_EXPECTED_CHECK_IDS_V05
+            ),
+        )
+        limitation_refs = ("limitation_g2d6_validated_d5_report_only",)
+    else:
+        evidence_refs = (f"evidence:{category_id}",)
+        limitation_refs = (f"limitation:{category_id}",)
     return conformance.build_conformance_category_result_v01(
         category_id=category_id,
         check_results=tuple((check_id, passed) for check_id in required),
-        evidence_refs=(
-            (
-                "runtime:kernel_conformance:"
-                "ActionPacketLifecycleConformance",
-            )
-            if category_id == "ActionPacketLifecycleConformance"
-            else (
-                (
-                    "runtime:kernel_conformance:"
-                    "DRSSemanticAddressReuseCertificateConformance",
-                )
-                if category_id
-                == "DRSSemanticAddressReuseCertificateConformance"
-                else (
-                    (
-                        "runtime:kernel_conformance:"
-                        "ExecutionModeRouterConformance",
-                    )
-                    if category_id == "ExecutionModeRouterConformance"
-                    else (f"evidence:{category_id}",)
-                )
-            )
-        ),
-        limitation_refs=(
-            (
-                "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
-            )
-            if category_id == "ActionPacketLifecycleConformance"
-            else (
-                (
-                    "limitation_g2b6_deterministic_local_drs_"
-                    "semantic_reuse_only",
-                )
-                if category_id
-                == "DRSSemanticAddressReuseCertificateConformance"
-                else (
-                    (
-                        "limitation_g2c6_deterministic_two_domain_"
-                        "execution_mode_router_only",
-                    )
-                    if category_id == "ExecutionModeRouterConformance"
-                    else (f"limitation:{category_id}",)
-                )
-            )
-        ),
+        evidence_refs=evidence_refs,
+        limitation_refs=limitation_refs,
     )
 
 
@@ -378,17 +387,25 @@ def _negative(probe_id: str, *, blocked: bool = True, observed: bool = True):
         observed_reason_codes=expected_reasons if observed else (),
         blocked=blocked,
         evidence_refs=(
-            ("demo/run_execution_mode_router_g2_c_v01.py",)
-            if probe_id in G2C_EXPECTED_PROBES
+            (
+                "demo/run_fractal_runtime_g2_d_v02.py",
+                "baseline_report:frg2dproof_v02:" + "a" * 64,
+                "forged_report:frg2dproof_v02:" + "b" * 64,
+            )
+            if probe_id in G2D_EXPECTED_PROBES
             else (
-                (
-                    "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
-                )
-                if probe_id in G2B_EXPECTED_PROBES[len(G2A_EXPECTED_PROBES) :]
+                ("demo/run_execution_mode_router_g2_c_v01.py",)
+                if probe_id in G2C_EXPECTED_PROBES
                 else (
-                    ("demo/run_action_commit_packet_lifecycle_g2_a_v01.py",)
-                    if probe_id not in GATE1_EXPECTED_PROBES
-                    else (f"evidence:{probe_id}",)
+                    (
+                        "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
+                    )
+                    if probe_id in G2B_EXPECTED_PROBES[len(G2A_EXPECTED_PROBES) :]
+                    else (
+                        ("demo/run_action_commit_packet_lifecycle_g2_a_v01.py",)
+                        if probe_id not in GATE1_EXPECTED_PROBES
+                        else (f"evidence:{probe_id}",)
+                    )
                 )
             )
         ),
@@ -457,8 +474,20 @@ def _contains_type(value, target_type) -> bool:
     return False
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _shared_d5_report():
+    original = runner._g2d.collect_fractal_runtime_g2_d_v02
+    report = original()
+    assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(report) == ()
+    runner._g2d.collect_fractal_runtime_g2_d_v02 = lambda: report
+    try:
+        yield report
+    finally:
+        runner._g2d.collect_fractal_runtime_g2_d_v02 = original
+
+
 @pytest.fixture(scope="module")
-def standalone_report():
+def standalone_report(_shared_d5_report):
     return runner.collect_standalone_kernel_conformance_v01(
         implementation_commit="abcdef0"
     )
@@ -505,7 +534,7 @@ def test_future_annotations_binding_is_absent():
     (
         ("MODULE_ID", "kernel_conformance_v01"),
         ("SLICE_ID", "domain_neutral_reference_kernel_gate1_g1e"),
-        ("CONFORMANCE_VERSION", "v0.4"),
+        ("CONFORMANCE_VERSION", "v0.5"),
         ("STATUS_PASS", "PASS"),
         ("STATUS_FAIL_CLOSED", "FAIL_CLOSED"),
         ("CONFORMANCE_STATUSES", ("PASS", "FAIL_CLOSED")),
@@ -675,11 +704,11 @@ def test_report_pass_geometry_and_counters_are_derived():
         len(report.category_results),
         len(report.domain_results),
         len(report.negative_test_results),
-    ) == (13, 2, 40)
-    assert report.counters.category_pass_count == 13
+    ) == (14, 2, 50)
+    assert report.counters.category_pass_count == 14
     assert report.counters.domain_pass_count == 2
-    assert report.counters.negative_pass_count == 40
-    assert report.counters.active_gauntlet_ref_count == 15
+    assert report.counters.negative_pass_count == 50
+    assert report.counters.active_gauntlet_ref_count == 16
 
 
 def test_final_report_rejects_arbitrary_synthetic_check_geometry_after_rehash():
@@ -956,12 +985,12 @@ def test_canonical_report_validates_and_projects(standalone_report):
         standalone_report
     )
     assert projection["final_status"] == conformance.STATUS_PASS
-    assert len(projection["category_results"]) == 13
+    assert len(projection["category_results"]) == 14
     assert len(projection["domain_results"]) == 2
-    assert len(projection["negative_test_results"]) == 40
+    assert len(projection["negative_test_results"]) == 50
 
 
-@pytest.mark.parametrize("index", range(13))
+@pytest.mark.parametrize("index", range(14))
 def test_canonical_category_check_geometry_is_exact(standalone_report, index):
     category_id, required = conformance._EXPECTED_CATEGORY_CHECK_IDS[index]
     result = standalone_report.category_results[index]
@@ -983,7 +1012,7 @@ def test_canonical_domain_binding_geometry_is_exact(standalone_report, index):
     ) == expected
 
 
-@pytest.mark.parametrize("index", range(40))
+@pytest.mark.parametrize("index", range(50))
 def test_canonical_negative_geometry_is_exact(standalone_report, index):
     probe_id, target, expected_reasons = conformance._EXPECTED_NEGATIVE_GEOMETRY[
         index
@@ -1178,7 +1207,7 @@ def test_runner_does_not_call_supplier_source_collector():
 
 def test_render_contains_only_summary_geometry(standalone_report):
     rendered = runner.render_kernel_conformance_v01(standalone_report)
-    assert "kernel_conformance_v01 v0.3" in rendered
+    assert "kernel_conformance_v01 v0.4" in rendered
     assert "final_status=PASS" in rendered
     for forbidden in ("manifest_hash=", "adapter_id=", "artifact_id=", "invoice", "shipment_sh"):
         assert forbidden not in rendered.lower()
@@ -1207,7 +1236,7 @@ def test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category
         len(historical_v02.active_gauntlet_refs),
     ) == ("v0.2", 11, 2, 20, 13)
     unknown = conformance._replace_report_id(
-        replace(standalone_report, conformance_version="v0.5")
+        replace(standalone_report, conformance_version="v9.9")
     )
     mixed_v01 = conformance._replace_report_id(
         replace(historical_v02, conformance_version="v0.1")
@@ -1453,9 +1482,9 @@ def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect(
         first_conformance.counters.category_pass_count,
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
-    ) == (13, 2, 40)
+    ) == (14, 2, 50)
     assert first_living["final_status"] == living.STATUS_PASS
-    assert first_living["counters"]["active_act_pass_count"] == 16
+    assert first_living["counters"]["active_act_pass_count"] == 17
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1546,6 +1575,33 @@ def _historical_v03_report(current):
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
         conformance_version="v0.3",
+        implementation_commit=current.implementation_commit,
+        category_results=categories,
+        domain_results=current.domain_results,
+        negative_test_results=negatives,
+        active_gauntlet_refs=active_refs,
+        evidence_refs=evidence_refs,
+        limitations=current.limitations,
+        counters=conformance._derive_counters(
+            categories,
+            current.domain_results,
+            negatives,
+            active_refs,
+            evidence_refs,
+        ),
+        final_status=conformance.STATUS_PASS,
+    )
+    return conformance._replace_report_id(provisional)
+
+
+def _historical_v04_report(current):
+    categories = current.category_results[:13]
+    negatives = current.negative_test_results[:40]
+    active_refs = current.active_gauntlet_refs[:15]
+    evidence_refs = current.evidence_refs
+    provisional = conformance.KernelConformanceReportV01(
+        report_id="0" * 64,
+        conformance_version="v0.4",
         implementation_commit=current.implementation_commit,
         category_results=categories,
         domain_results=current.domain_results,
@@ -1810,7 +1866,7 @@ def test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect():
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
         first_conformance.counters.active_gauntlet_ref_count,
-    ) == (13, 2, 40, 15)
+    ) == (14, 2, 50, 16)
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1858,36 +1914,39 @@ def test_c6_conformance_v04_preserves_v03_and_appends_exact_geometry(
     standalone_report,
 ):
     historical_v03 = _historical_v03_report(standalone_report)
-    assert conformance.CONFORMANCE_VERSION == "v0.4"
+    historical_v04 = _historical_v04_report(standalone_report)
+    assert conformance.CONFORMANCE_VERSION == "v0.5"
     assert conformance._G2B_CONFORMANCE_VERSION_V03 == "v0.3"
-    assert runner.RUNNER_VERSION == "v0.3"
+    assert conformance._G2C_CONFORMANCE_VERSION_V04 == "v0.4"
+    assert runner._G2C_RUNNER_VERSION_V03 == "v0.3"
+    assert runner.RUNNER_VERSION == "v0.4"
     assert conformance.validate_kernel_conformance_report_v01(
         historical_v03
     ) == ()
     assert conformance.validate_kernel_conformance_report_v01(
-        standalone_report
+        historical_v04
     ) == ()
-    assert standalone_report.conformance_version == "v0.4"
-    assert standalone_report.category_results[:12] == historical_v03.category_results
-    assert standalone_report.negative_test_results[:30] == (
+    assert historical_v04.conformance_version == "v0.4"
+    assert historical_v04.category_results[:12] == historical_v03.category_results
+    assert historical_v04.negative_test_results[:30] == (
         historical_v03.negative_test_results
     )
-    assert standalone_report.active_gauntlet_refs[:14] == (
+    assert historical_v04.active_gauntlet_refs[:14] == (
         historical_v03.active_gauntlet_refs
     )
-    assert tuple(item.category_id for item in standalone_report.category_results) == (
+    assert tuple(item.category_id for item in historical_v04.category_results) == (
         *G2B_EXPECTED_CATEGORIES,
         "ExecutionModeRouterConformance",
     )
-    assert tuple(item.probe_id for item in standalone_report.negative_test_results) == (
+    assert tuple(item.probe_id for item in historical_v04.negative_test_results) == (
         *G2B_EXPECTED_PROBES,
         *G2C_EXPECTED_PROBES,
     )
-    assert standalone_report.active_gauntlet_refs == (
+    assert historical_v04.active_gauntlet_refs == (
         *G2B_EXPECTED_ACTIVE_REFS,
         "execution_mode_router",
     )
-    counters = standalone_report.counters
+    counters = historical_v04.counters
     assert (
         counters.category_result_count,
         counters.category_pass_count,
@@ -1902,7 +1961,7 @@ def test_c6_conformance_v04_preserves_v03_and_appends_exact_geometry(
 def test_c6_execution_mode_router_category_and_c5_profile_are_exact(
     standalone_report,
 ):
-    category = standalone_report.category_results[-1]
+    category = standalone_report.category_results[12]
     assert category.category_id == "ExecutionModeRouterConformance"
     assert category.required_check_ids == G2C_EXPECTED_CHECKS
     assert category.passed_check_ids == G2C_EXPECTED_CHECKS
@@ -2001,3 +2060,255 @@ def test_c6_conformance_report_and_render_are_repeated_and_zero_operation(
     assert tuple(item.domain_id for item in standalone_report.domain_results) == (
         "airline", "supplier_water_filter"
     )
+
+
+G2D_EXPECTED_CHECKS = (
+    "policy_identity_and_staged_surface",
+    "executable_templates_and_child_activation",
+    "queue_input_outcome_and_result_order",
+    "paired_budget_events_and_backpressure",
+    "resultproposal_unique_gt_kt_validation",
+    "pre_root_four_artifact_abi_partitions",
+    "transition_profile_and_root_only_report",
+    "causal_pointer_reason_and_root_outcome",
+    "two_domain_seventy_two_case_boundary",
+    "zero_authority_and_operations",
+)
+
+
+def test_d6_conformance_v05_appends_exact_g2d_geometry(standalone_report):
+    historical_v04 = _historical_v04_report(standalone_report)
+    assert conformance.CONFORMANCE_VERSION == "v0.5"
+    assert conformance._G2C_CONFORMANCE_VERSION_V04 == "v0.4"
+    assert runner.RUNNER_VERSION == "v0.4"
+    assert runner._G2C_RUNNER_VERSION_V03 == "v0.3"
+    assert conformance.validate_kernel_conformance_report_v01(historical_v04) == ()
+    assert conformance.validate_kernel_conformance_report_v01(standalone_report) == ()
+    assert standalone_report.conformance_version == "v0.5"
+    assert standalone_report.category_results[:13] == historical_v04.category_results
+    assert standalone_report.negative_test_results[:40] == (
+        historical_v04.negative_test_results
+    )
+    assert standalone_report.active_gauntlet_refs[:15] == (
+        historical_v04.active_gauntlet_refs
+    )
+    assert tuple(item.category_id for item in standalone_report.category_results) == (
+        *G2C_EXPECTED_CATEGORIES,
+        "FractalRuntimeConformance",
+    )
+    assert tuple(item.probe_id for item in standalone_report.negative_test_results) == (
+        *G2B_EXPECTED_PROBES,
+        *G2C_EXPECTED_PROBES,
+        *G2D_EXPECTED_PROBES,
+    )
+    assert standalone_report.active_gauntlet_refs == (
+        *G2C_EXPECTED_ACTIVE_REFS,
+        "fractal_runtime",
+    )
+    assert (
+        standalone_report.counters.category_result_count,
+        standalone_report.counters.category_pass_count,
+        standalone_report.counters.domain_result_count,
+        standalone_report.counters.domain_pass_count,
+        standalone_report.counters.negative_result_count,
+        standalone_report.counters.negative_pass_count,
+        standalone_report.counters.active_gauntlet_ref_count,
+    ) == (14, 14, 2, 2, 50, 50, 16)
+
+
+def test_d6_historical_v01_through_v04_remain_exact_and_mixed_geometry_fails(
+    standalone_report,
+):
+    historical = (
+        _historical_v01_report(),
+        _historical_v02_report(standalone_report),
+        _historical_v03_report(standalone_report),
+        _historical_v04_report(standalone_report),
+    )
+    versions = ("v0.1", "v0.2", "v0.3", "v0.4")
+    for report, version in zip(historical, versions, strict=True):
+        assert report.conformance_version == version
+        assert conformance.validate_kernel_conformance_report_v01(report) == ()
+        for foreign_version in (*versions, "v0.5"):
+            if foreign_version == version:
+                continue
+            forged = _reversion(report, foreign_version)
+            reasons = conformance.validate_kernel_conformance_report_v01(forged)
+            assert "conformance_report_geometry_invalid" in reasons
+
+
+def test_d6_fractal_runtime_category_binds_exact_sealed_case_evidence(
+    standalone_report,
+    _shared_d5_report,
+):
+    category = standalone_report.category_results[13]
+    assert category.category_id == "FractalRuntimeConformance"
+    assert category.required_check_ids == G2D_EXPECTED_CHECKS
+    assert category.passed_check_ids == G2D_EXPECTED_CHECKS
+    assert category.failed_check_ids == ()
+    assert category.status == conformance.STATUS_PASS
+    assert category.real_world_effects_count == 0
+    assert category.limitation_refs == (
+        "limitation_g2d6_validated_d5_report_only",
+    )
+    assert category.evidence_refs == runner._g2d_check_evidence_refs_v04(
+        _shared_d5_report
+    )
+    geometry = runner._g2d_baseline_geometry_v04(_shared_d5_report)
+    assert geometry == {check_id: True for check_id in G2D_EXPECTED_CHECKS}
+    for (check_id, case_numbers), evidence_ref in zip(
+        runner._G2D_CHECK_CASE_NUMBERS_V04,
+        category.evidence_refs[1:],
+        strict=True,
+    ):
+        prefix = f"{conformance._G2D_CHECK_EVIDENCE_PREFIX_V05}{check_id}:"
+        assert evidence_ref.startswith(prefix)
+        payload = json.loads(evidence_ref[len(prefix) :])
+        expected_cases = tuple(
+            _shared_d5_report.case_results[index - 1] for index in case_numbers
+        )
+        assert payload["check_id"] == check_id
+        assert tuple(item["case_id"] for item in payload["case_evidence"]) == tuple(
+            item.case_id for item in expected_cases
+        )
+        assert tuple(
+            item["evidence_sha256"] for item in payload["case_evidence"]
+        ) == tuple(item.evidence_sha256 for item in expected_cases)
+        assert tuple(
+            tuple(item["evidence_refs"]) for item in payload["case_evidence"]
+        ) == tuple(item.evidence_refs for item in expected_cases)
+
+
+def test_d6_exact_ten_d5_mutations_are_resealed_and_publicly_rejected(
+    _shared_d5_report,
+):
+    mutations = runner._g2d_negative_mutations_v04(_shared_d5_report)
+    observations = runner._collect_g2d_negative_observations_v01(
+        _shared_d5_report
+    )
+    assert tuple(item[0] for item in mutations) == G2D_EXPECTED_PROBES
+    assert tuple(item[0] for item in observations) == G2D_EXPECTED_PROBES
+    assert len(mutations) == len(observations) == 10
+    route_probe_id, route_forged = mutations[1]
+    assert route_probe_id == "fractal_runtime_route_eligibility_substitution"
+    route_case = route_forged.case_results[17]
+    route_material = json.loads(route_case.evidence_material_json)
+    route_proof = route_material["proof"]
+    route_details = route_proof["details"]
+    assert route_details["mutated_path"] == "/route_eligibility_artifact"
+    assert route_details["attempted_sha256"] == route_details["baseline_sha256"]
+    assert all(
+        type(value) is str
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+        for value in (
+            route_details["baseline_sha256"],
+            route_details["attempted_sha256"],
+        )
+    )
+    assert route_proof["details_sha256"] == hashlib.sha256(
+        runner.canonical_json_bytes_v01(route_details)
+    ).hexdigest()
+    route_evidence_bytes = runner.canonical_json_bytes_v01(route_material)
+    assert route_case.evidence_sha256 == hashlib.sha256(
+        route_evidence_bytes
+    ).hexdigest()
+    assert route_forged.report_id == runner._g2d_report_identity_v04(
+        route_forged
+    )
+    assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(
+        route_forged
+    ) == ("g2d5_report_invalid",)
+    mutation_source = inspect.getsource(runner._g2d_negative_mutations_v04)
+    assert "route_attempted" not in mutation_source
+    assert ":route_substitution" not in mutation_source
+    for index, ((probe_id, forged), observation) in enumerate(
+        zip(mutations, observations, strict=True)
+    ):
+        observed_probe_id, target, expected, observed, blocked, evidence = observation
+        assert observed_probe_id == probe_id
+        assert target == conformance._G2D_REPORT_VALIDATOR_TARGET_V02
+        assert expected == observed == ("g2d5_report_invalid",)
+        assert blocked is True
+        assert evidence[0] == "demo/run_fractal_runtime_g2_d_v02.py"
+        assert evidence[1] == f"baseline_report:{_shared_d5_report.report_id}"
+        assert evidence[-1] == f"forged_report:{forged.report_id}"
+        assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(forged) == (
+            "g2d5_report_invalid",
+        )
+        if index not in (0,):
+            assert forged.report_id == runner._g2d_report_identity_v04(forged)
+    results = runner._build_g2d_negative_results_v01(observations)
+    assert len(results) == len({item.result_id for item in results}) == 10
+    assert all(item.status == conformance.STATUS_PASS for item in results)
+    assert all(item.real_world_effects_count == 0 for item in results)
+
+
+def test_d6_public_collection_collects_and_validates_d5_baseline_once(
+    monkeypatch: pytest.MonkeyPatch,
+    _shared_d5_report,
+):
+    collection_count = 0
+    validations = []
+    original_collect = runner._g2d.collect_fractal_runtime_g2_d_v02
+    original_validate = runner._g2d.validate_fractal_runtime_g2_d_report_v02
+
+    def collect_once():
+        nonlocal collection_count
+        collection_count += 1
+        return original_collect()
+
+    def validate_and_record(report):
+        result = original_validate(report)
+        validations.append((report, result))
+        return result
+
+    monkeypatch.setattr(
+        runner._g2d,
+        "collect_fractal_runtime_g2_d_v02",
+        collect_once,
+    )
+    monkeypatch.setattr(
+        runner._g2d,
+        "validate_fractal_runtime_g2_d_report_v02",
+        validate_and_record,
+    )
+    report = runner.collect_kernel_conformance_v01(
+        active_act_results=_c6_active_rows(),
+        implementation_commit="abcdef0",
+    )
+    assert report.final_status == conformance.STATUS_PASS
+    assert collection_count == 1
+    assert sum(item is _shared_d5_report for item, _ in validations) == 1
+    assert next(result for item, result in validations if item is _shared_d5_report) == ()
+    assert len(validations) == 11
+    assert all(
+        result == ("g2d5_report_invalid",)
+        for item, result in validations
+        if item is not _shared_d5_report
+    )
+
+
+def test_d6_runner_imports_d5_normally_without_reconstruction_or_private_runtime():
+    source = inspect.getsource(runner)
+    tree = ast.parse(source)
+    imported_modules = {
+        node.module
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    }
+    imported_modules.update(
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    )
+    assert "demo.run_fractal_runtime_g2_d_v02" in imported_modules
+    assert not any(item == "tests" or item.startswith("tests.") for item in imported_modules)
+    for forbidden in (
+        "_d4_run_runtime_v02",
+        "_CASE_SPECS_V02",
+        "_build_shared_runtime_bundles_v02",
+        "FractalRuntimeG2DCaseResultV02(",
+    ):
+        assert forbidden not in source

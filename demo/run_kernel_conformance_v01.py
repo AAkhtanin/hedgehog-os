@@ -11,7 +11,9 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import asdict as _asdict
 from dataclasses import fields, replace
+import hashlib
 import inspect
+import json
 import re
 import subprocess
 
@@ -20,6 +22,7 @@ from demo import (
     run_drs_semantic_address_reuse_certificate_g2_b_v01 as _g2b,
 )
 import demo.run_execution_mode_router_g2_c_v01 as _g2c
+import demo.run_fractal_runtime_g2_d_v02 as _g2d
 import hedgehog.kernel as _kernel_package
 from hedgehog.kernel import execution_mode_router_v01 as _execution_mode_router
 from hedgehog.kernel import transition_registry_v01 as _transition_registry
@@ -47,6 +50,8 @@ from hedgehog.kernel.integrity_replay_v01 import (
     build_artifact_manifest_v01,
     build_canonical_artifact_ref_v01,
     build_default_seal_profile_v01,
+    canonical_json_bytes_v01,
+    domain_separated_sha256_hex_v01,
     verify_artifact_manifest_v01,
     verify_artifact_replay_v01,
 )
@@ -91,7 +96,8 @@ from hedgehog.kernel.trust_model_v01 import (
 
 
 RUNNER_ID = "kernel_conformance_v01"
-RUNNER_VERSION = "v0.3"
+_G2C_RUNNER_VERSION_V03 = "v0.3"
+RUNNER_VERSION = "v0.4"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
 
 _COMMIT_PATTERN = re.compile(r"^[0-9a-f]{7,40}$")
@@ -125,10 +131,11 @@ _G2B_BASE_ACT_IDS_V03 = (
     *_G2A_BASE_ACT_IDS_V02,
     "drs_semantic_address_and_reuse_certificate",
 )
-_BASE_ACT_IDS = (
+_G2C_BASE_ACT_IDS_V03 = (
     *_G2B_BASE_ACT_IDS_V03,
     "execution_mode_router",
 )
+_BASE_ACT_IDS = (*_G2C_BASE_ACT_IDS_V03, "fractal_runtime")
 _ACT_FIELDS = frozenset(
     {
         "act_id",
@@ -207,6 +214,10 @@ _ACT_SOURCES = {
         "demo.run_execution_mode_router_g2_c_v01",
         "collect_execution_mode_router_g2_c_v01",
     ),
+    "fractal_runtime": (
+        "demo.run_fractal_runtime_g2_d_v02",
+        "collect_fractal_runtime_g2_d_v02",
+    ),
 }
 _EVIDENCE_REFS = (
     "hedgehog/kernel/integrity_replay_v01.py",
@@ -223,6 +234,7 @@ _EVIDENCE_REFS = (
     "demo/run_action_commit_packet_lifecycle_g2_a_v01.py",
     "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
     "demo/run_execution_mode_router_g2_c_v01.py",
+    "demo/run_fractal_runtime_g2_d_v02.py",
 )
 _LIMITATIONS = (
     "deterministic_current_repository_conformance_only",
@@ -233,7 +245,10 @@ _LIMITATIONS = (
     "limitation_g2a6_deterministic_local_actionpacket_lifecycle_only",
     "limitation_g2b6_deterministic_local_drs_semantic_reuse_only",
     "limitation_g2c6_deterministic_two_domain_execution_mode_router_only",
+    "limitation_g2d6_validated_d5_report_only",
 )
+
+
 def resolve_current_implementation_commit_v01() -> str:
     try:
         completed = subprocess.run(
@@ -256,6 +271,42 @@ def collect_kernel_conformance_v01(
     implementation_commit: str,
 ) -> conformance.KernelConformanceReportV01:
     try:
+        fractal_runtime_report = _g2d.collect_fractal_runtime_g2_d_v02()
+        reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
+            fractal_runtime_report
+        )
+        if reasons:
+            raise ValueError("kernel_conformance_runtime_invalid")
+        return _collect_kernel_conformance_with_validated_fractal_runtime_v01(
+            active_act_results=active_act_results,
+            implementation_commit=implementation_commit,
+            fractal_runtime_report=fractal_runtime_report,
+        )
+    except ValueError as exc:
+        reason = (
+            exc.args[0]
+            if len(exc.args) == 1 and type(exc.args[0]) is str
+            else "kernel_conformance_runtime_invalid"
+        )
+        allowed = {
+            "active_gauntlet_results_invalid",
+            "implementation_commit_invalid",
+            "kernel_conformance_runtime_invalid",
+        }
+        raise ValueError(
+            reason if reason in allowed else "kernel_conformance_runtime_invalid"
+        ) from None
+    except Exception:
+        raise ValueError("kernel_conformance_runtime_invalid") from None
+
+
+def _collect_kernel_conformance_with_validated_fractal_runtime_v01(
+    *,
+    active_act_results: tuple[Mapping[str, object], ...],
+    implementation_commit: str,
+    fractal_runtime_report: _g2d.FractalRuntimeG2DReportV02,
+) -> conformance.KernelConformanceReportV01:
+    try:
         rows = _validate_active_act_results(active_act_results)
         if _COMMIT_PATTERN.fullmatch(implementation_commit) is None:
             raise ValueError("implementation_commit_invalid")
@@ -276,11 +327,15 @@ def collect_kernel_conformance_v01(
         g2c_observations = _collect_g2c_negative_observations_v01(
             g2c_baseline
         )
+        g2d_observations = _collect_g2d_negative_observations_v01(
+            fractal_runtime_report
+        )
         negatives = _collect_negative_results(
             by_id,
             action_packet_report,
             g2b_observations,
             g2c_observations,
+            g2d_observations,
         )
         domains = _build_domain_results(by_id, negatives)
         categories = _build_category_results(
@@ -290,6 +345,7 @@ def collect_kernel_conformance_v01(
             action_packet_geometry_pass,
             g2b_baseline,
             g2c_baseline,
+            fractal_runtime_report,
         )
         report = conformance.build_kernel_conformance_report_v01(
             implementation_commit=implementation_commit,
@@ -314,7 +370,9 @@ def collect_kernel_conformance_v01(
             "implementation_commit_invalid",
             "kernel_conformance_runtime_invalid",
         }
-        raise ValueError(reason if reason in allowed else "kernel_conformance_runtime_invalid") from None
+        raise ValueError(
+            reason if reason in allowed else "kernel_conformance_runtime_invalid"
+        ) from None
     except Exception:
         raise ValueError("kernel_conformance_runtime_invalid") from None
 
@@ -332,20 +390,33 @@ def collect_standalone_kernel_conformance_v01(
             living.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
         )
         g2c_result = living.collect_execution_mode_router_gauntlet_act_v01()
+        fractal_runtime_report = _g2d.collect_fractal_runtime_g2_d_v02()
+        reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
+            fractal_runtime_report
+        )
+        if reasons:
+            raise ValueError("kernel_conformance_runtime_invalid")
+        g2d_result = (
+            living._fractal_runtime_gauntlet_act_from_validated_report_v01(
+                fractal_runtime_report
+            )
+        )
         active_results = (
             *base_results,
             _asdict(lifecycle_result),
             _asdict(g2b_result),
             _asdict(g2c_result),
+            _asdict(g2d_result),
         )
         commit = (
             resolve_current_implementation_commit_v01()
             if implementation_commit is None
             else implementation_commit
         )
-        return collect_kernel_conformance_v01(
+        return _collect_kernel_conformance_with_validated_fractal_runtime_v01(
             active_act_results=active_results,
             implementation_commit=commit,
+            fractal_runtime_report=fractal_runtime_report,
         )
     except ValueError:
         raise
@@ -372,10 +443,10 @@ def validate_kernel_conformance_runtime_v01(
             errors.append("kernel_conformance_not_pass")
         counters = report.counters
         if (
-            counters.category_pass_count != 13
+            counters.category_pass_count != 14
             or counters.domain_pass_count != 2
-            or counters.negative_pass_count != 40
-            or counters.active_gauntlet_ref_count != 15
+            or counters.negative_pass_count != 50
+            or counters.active_gauntlet_ref_count != 16
             or any(
                 value != 0
                 for value in (
@@ -449,7 +520,7 @@ def main() -> int:
         return 0
     except Exception:
         print(
-            "kernel_conformance: kernel_conformance_v01 v0.3\n"
+            "kernel_conformance: kernel_conformance_v01 v0.4\n"
             "final_status=FAIL_CLOSED\n",
             end="",
         )
@@ -947,6 +1018,272 @@ def _g2c_baseline_geometry_v01(report: object) -> dict[str, bool]:
         return {key: False for key in checks}
 
 
+_G2D_CHECK_CASE_NUMBERS_V04 = (
+    ("policy_identity_and_staged_surface", (59, 67)),
+    ("executable_templates_and_child_activation", (40, 48, 51, 66, 69)),
+    ("queue_input_outcome_and_result_order", (44, 48, 49, 50, 65, 66, 71)),
+    ("paired_budget_events_and_backpressure", (30, 53, 58, 61, 68)),
+    ("resultproposal_unique_gt_kt_validation", (45, 54, 63, 72)),
+    ("pre_root_four_artifact_abi_partitions", (56, 62, 72)),
+    ("transition_profile_and_root_only_report", (55, 70)),
+    ("causal_pointer_reason_and_root_outcome", (47, 57, 67)),
+    ("two_domain_seventy_two_case_boundary", (1, 10, 42, 72)),
+    ("zero_authority_and_operations", (1, 41, 72)),
+)
+_G2D_CHECK_CASE_IDS_V04 = {
+    1: "g2d_case:travel:memory_informed:v02",
+    10: "g2d_case:warehouse:full_fractal:v02",
+    30: "g2d_case:negative:total_cell_overflow:v02",
+    40: "g2d_case:required_child_hard_failure:v02",
+    41: "g2d_case:negative:child_authority_claims:v02",
+    42: "g2d_case:repeated_canonical_equality:v02",
+    44: "g2d_case:negative:queue_predecessor_substitution:v02",
+    45: "g2d_case:deterministic:post_vv_gt_injected_time:v02",
+    47: "g2d_case:causal:blocked_and_ignored_dispositions:v02",
+    48: "g2d_case:identity:child_result_partial_failure_postorder:v02",
+    49: "g2d_case:identity:pre_result_validation_no_cycle:v02",
+    50: "g2d_case:runtime:node_work_queue_cell_aggregation:v02",
+    51: "g2d_case:runtime:five_mode_exact_template_rows:v02",
+    53: "g2d_case:budget:allocation_predecessor_debit_matrix:v02",
+    54: "g2d_case:validation:resultproposal_postvv_gt_outcome_matrix:v02",
+    55: "g2d_case:transition:root_only_parent_return:v02",
+    56: "g2d_case:abi:complete_field_partition_and_trace:v02",
+    57: "g2d_case:causal:exact_pointer_reason_bundle:v02",
+    58: "g2d_case:queue:backpressure_precedence:v02",
+    59: "g2d_case:identity:policy_profile_separation:v02",
+    61: "g2d_case:budget:cell_global_event_pairing:v02",
+    62: "g2d_case:abi:pre_root_lifecycle_boundary:v02",
+    63: "g2d_case:validation:context_unique_gt_report_ids:v02",
+    65: "g2d_case:queue:instance_snapshot_round_and_blocked_reason:v02",
+    66: "g2d_case:runtime:child_slot_input_node_outcome_order:v02",
+    67: "g2d_case:validation:root_result_report_and_slice_surface:v02",
+    68: "g2d_case:budget:typed_event_and_child_allocation_context:v02",
+    69: "g2d_case:runtime:planned_child_activation_boundary:v02",
+    70: "g2d_case:transition:prestate_decision_budget_queue_order:v02",
+    71: "g2d_case:revise:observation_before_t07_and_budget:v02",
+    72: "g2d_case:bundle:prebundle_validation_causal_final_assembly:v02",
+}
+_G2D_ZERO_COUNTER_FIELDS_V04 = (
+    "provider_calls",
+    "model_calls",
+    "gemini_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "final_outputs_created",
+    "drs_writes",
+    "authority_created_count",
+    "real_world_effects_count",
+)
+
+
+def _g2d_case_and_details_v04(
+    report: _g2d.FractalRuntimeG2DReportV02,
+    case_number: int,
+) -> tuple[_g2d.FractalRuntimeG2DCaseResultV02, dict[str, object]]:
+    case = report.case_results[case_number - 1]
+    if case.case_id != _G2D_CHECK_CASE_IDS_V04[case_number]:
+        raise ValueError
+    material = json.loads(case.evidence_material_json)
+    if (
+        type(material) is not dict
+        or hashlib.sha256(canonical_json_bytes_v01(material)).hexdigest()
+        != case.evidence_sha256
+        or material.get("case_id") != case.case_id
+        or material.get("evidence_refs") != list(case.evidence_refs)
+        or type(material.get("proof")) is not dict
+    ):
+        raise ValueError
+    proof = material["proof"]
+    details = proof.get("details")
+    if (
+        type(details) is not dict
+        or proof.get("details_sha256")
+        != hashlib.sha256(canonical_json_bytes_v01(details)).hexdigest()
+    ):
+        raise ValueError
+    return case, details
+
+
+def _g2d_check_evidence_refs_v04(
+    report: _g2d.FractalRuntimeG2DReportV02,
+) -> tuple[str, ...]:
+    rows = ["runtime:kernel_conformance:FractalRuntimeConformance"]
+    for check_id, case_numbers in _G2D_CHECK_CASE_NUMBERS_V04:
+        case_rows = []
+        for case_number in case_numbers:
+            case, _details = _g2d_case_and_details_v04(report, case_number)
+            case_rows.append(
+                {
+                    "case_id": case.case_id,
+                    "evidence_sha256": case.evidence_sha256,
+                    "evidence_refs": list(case.evidence_refs),
+                }
+            )
+        payload = canonical_json_bytes_v01(
+            {"check_id": check_id, "case_evidence": case_rows}
+        ).decode("ascii")
+        rows.append(
+            f"{conformance._G2D_CHECK_EVIDENCE_PREFIX_V05}{check_id}:{payload}"
+        )
+    return tuple(rows)
+
+
+def _g2d_baseline_geometry_v04(report: object) -> dict[str, bool]:
+    checks = {check_id: False for check_id, _ in _G2D_CHECK_CASE_NUMBERS_V04}
+    try:
+        if type(report) is not _g2d.FractalRuntimeG2DReportV02:
+            return checks
+        details = {
+            number: _g2d_case_and_details_v04(report, number)[1]
+            for number in _G2D_CHECK_CASE_IDS_V04
+        }
+        transition_profile = (
+            _transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+        )
+        checks["policy_identity_and_staged_surface"] = (
+            details[59]["profile_count"] == 1
+            and details[59]["policy_identity_count"] == 5
+            and details[59]["source_binding_identity_count"] == 5
+            and len(details[59]["policy_profile_separation"]) == 5
+            and details[67]["staged_public_function_counts"]
+            == [74, 81, 90, 110]
+            and details[67]["module_public_function_count"] == 110
+            and details[67]["public_return_bundle_type"]
+            == "FractalRuntimeExecutionBundleV02"
+            and details[67]["terminal_report_target"] == "COMPLETE_PROFILE"
+        )
+        checks["executable_templates_and_child_activation"] = (
+            len(details[51]["five_mode_template_rows"]) == 5
+            and all(
+                row["node_count"] > 0 and row["assignment_count"] > 0
+                for row in details[51]["five_mode_template_rows"]
+            )
+            and len(details[69]["planned_child_ids"]) == 2
+            and len(details[69]["activated_child_ids"]) == 2
+            and len(details[69]["activation_rows"]) == 2
+            and details[40]["no_child_invocation_delta"]["created_count"] == 0
+            and details[48]["no_child_result_ids"] == []
+            and details[48]["no_child_partial_failure_ids"] == []
+            and details[66]["child_invocation_count"] == 2
+            and details[66]["denied_result_delta"]["created_count"] == 0
+        )
+        checks["queue_input_outcome_and_result_order"] = (
+            details[44]["mutation_count"] == 10
+            and len(details[48]["actual_child_result_rows"]) == 3
+            and len(details[49]["validation_chain_rows"]) == 3
+            and [row[0] for row in details[50]["aggregation_rows"]]
+            == [0, 1, 2]
+            and details[65]["rejected_copied_signal_count"] == 2
+            and len(details[66]["child_slot_input_node_order"]) == 3
+            and details[66]["child_results_before_root"] == [True, True]
+            and details[71]["transition_rule_id"]
+            == "g2d_t07_validating_to_revise"
+        )
+        checks["paired_budget_events_and_backpressure"] = (
+            details[30]["tree_shape"] == [1, 4, 16]
+            and details[30]["accepted_cell_count"] == 21
+            and details[30]["planning_debit_count"] == 0
+            and details[30]["allocation_debit_count"] == 0
+            and details[30]["activate_debit_count"] == 0
+            and details[30]["cell_create_debit_count"] == 21
+            and details[53]["mutation_count"] == 8
+            and details[58]["unique_state_per_round"] is True
+            and details[58]["unchanged_t03_suppressed"] is True
+            and details[58]["no_work_dropped"] is True
+            and details[58]["exhausted_consumed_cell_count"] == 21
+            and details[58]["exhausted_remaining_cell_count"] == 0
+            and len(details[61]["mutation_rows"]) == 3
+            and len(details[68]["four_child_structural_rows"]) == 4
+        )
+        checks["resultproposal_unique_gt_kt_validation"] = (
+            details[45]["first_vv_report_id"]
+            == details[45]["second_vv_report_id"]
+            and details[45]["first_gt_report_id"]
+            == details[45]["second_gt_report_id"]
+            and details[45]["post_wall_clock_call_count"] == 0
+            and details[45]["gt_wall_clock_call_count"] == 0
+            and details[54]["outcome_count"] == 5
+            and len(details[63]["context_unique_gt_rows"]) == 3
+            and len(set(row[2] for row in details[63]["context_unique_gt_rows"]))
+            == 3
+            and len(details[72]["retained_result_report_rows"]) == 3
+            and details[72]["complete_profile_status"] == "PASS"
+        )
+        checks["pre_root_four_artifact_abi_partitions"] = (
+            details[56]["field_partitions"] == [32, 31, 32, 42]
+            and len(details[56]["queue_parent_form_names"]) == 6
+            and details[56]["trace_unique"] is True
+            and details[62]["final_output_created"] == 0
+            and details[62]["forbidden_root_lifecycles"]
+            == ["ACCEPTED", "REJECTED", "ROOT_REVIEWED"]
+            and details[72]["stage_d_a_artifact_count"]
+            < details[72]["stage_d_b_artifact_count"]
+            < details[72]["stage_d_c_artifact_count"]
+        )
+        checks["transition_profile_and_root_only_report"] = (
+            _transition_registry.validate_fractal_runtime_transition_registry_profile_v02(
+                transition_profile
+            )
+            == ()
+            and len(transition_profile.rules) == 17
+            and len(details[55]["root_final_budget_ids"]) == 1
+            and len(details[55]["root_return_rule_ids"]) == 5
+            and details[70]["root_return_decision_position"]
+            == len(details[70]["transition_decision_ids"]) - 1
+            and details[70]["post_hoc_mapping_count"] == 0
+        )
+        checks["causal_pointer_reason_and_root_outcome"] = (
+            details[47]["ignored_causal_ref"]["disposition"]
+            == "IGNORED_WITH_REASON"
+            and details[47]["blocked_gate_causal_ref"]["disposition"]
+            == "BLOCKED_BY_GATE"
+            and details[47]["blocked_gate_causal_ref"]["decision_effect"]
+            == "CELL_RESULT_OUTPUT"
+            and details[57]["activation_causal_row_count"] == 2
+            and details[57]["child_return_causal_row_count"] == 6
+            and details[57]["corruption_causal_delta"]["created_count"] == 0
+            and details[67]["root_owned_outcome"] is True
+        )
+        checks["two_domain_seventy_two_case_boundary"] = (
+            report.domain_order
+            == (
+                "TRAVEL_POLICY_INFORMATION",
+                "WAREHOUSE_MAINTENANCE_INFORMATION",
+            )
+            and len(report.case_order) == len(report.case_results) == 72
+            and report.constructive_case_count == 36
+            and report.negative_case_count == 36
+            and report.domain_positive_case_count == 10
+            and report.accepted_bundle_count == 10
+            and details[42]["construction_call_count"] == 2
+            and details[42]["repeated_value_equal"] is True
+            and details[42]["repeated_id_equal"] is True
+            and details[42]["repeated_bytes_equal"] is True
+            and all(
+                hashlib.sha256(item.evidence_material_json.encode("ascii")).hexdigest()
+                == item.evidence_sha256
+                for item in report.case_results
+            )
+        )
+        checks["zero_authority_and_operations"] = (
+            report.topology_created_count == 10
+            and all(getattr(report, name) == 0 for name in _G2D_ZERO_COUNTER_FIELDS_V04)
+            and all(
+                getattr(item, name) == 0
+                for item in report.case_results
+                for name in _G2D_ZERO_COUNTER_FIELDS_V04
+            )
+            and details[41]["no_created_objects"]["created_count"] == 0
+        )
+        return checks
+    except Exception:
+        return {key: False for key in checks}
+
+
 def _build_category_results(
     by_id: Mapping[str, Mapping[str, object]],
     domains: tuple[conformance.DomainConformanceResultV01, ...],
@@ -954,6 +1291,7 @@ def _build_category_results(
     action_packet_geometry_pass: bool,
     g2b_baseline: object,
     g2c_baseline: object,
+    g2d_baseline: object,
 ) -> tuple[conformance.ConformanceCategoryResultV01, ...]:
     negative_by_id = {item.probe_id: item for item in negatives}
     domain_by_id = {item.domain_id: item for item in domains}
@@ -962,6 +1300,8 @@ def _build_category_results(
     g2b_act_pass = safe["drs_semantic_address_and_reuse_certificate"]
     g2c_geometry = _g2c_baseline_geometry_v01(g2c_baseline)
     g2c_act_pass = safe["execution_mode_router"]
+    g2d_geometry = _g2d_baseline_geometry_v04(g2d_baseline)
+    g2d_act_pass = safe["fractal_runtime"]
     rows = (
         (
             "DomainPackConformance",
@@ -1261,12 +1601,36 @@ def _build_category_results(
                 "execution_mode_router_only",
             ),
         ),
+        (
+            "FractalRuntimeConformance",
+            tuple(
+                (
+                    check_id,
+                    g2d_act_pass
+                    and passed
+                    and (
+                        check_id != "zero_authority_and_operations"
+                        or all(
+                            negative_by_id[probe_id].status
+                            == conformance.STATUS_PASS
+                            for probe_id in conformance._G2D_NEGATIVE_PROBE_IDS_V05
+                        )
+                    ),
+                )
+                for check_id, passed in g2d_geometry.items()
+            ),
+            ("limitation_g2d6_validated_d5_report_only",),
+        ),
     )
     return tuple(
         conformance.build_conformance_category_result_v01(
             category_id=category_id,
             check_results=checks,
-            evidence_refs=_category_evidence(category_id),
+            evidence_refs=(
+                _g2d_check_evidence_refs_v04(g2d_baseline)
+                if category_id == "FractalRuntimeConformance"
+                else _category_evidence(category_id)
+            ),
             limitation_refs=limitations,
         )
         for category_id, checks, limitations in rows
@@ -1282,6 +1646,7 @@ def _collect_negative_results(
     action_packet_report: object,
     g2b_observations: tuple[tuple[object, ...], ...],
     g2c_observations: tuple[tuple[object, ...], ...],
+    g2d_observations: tuple[tuple[object, ...], ...],
 ) -> tuple[conformance.NegativeConformanceResultV01, ...]:
     observations = (
         _probe_manifest_hash_mismatch(),
@@ -1297,6 +1662,7 @@ def _collect_negative_results(
         *_collect_action_packet_negative_observations_v01(action_packet_report),
         *g2b_observations,
         *g2c_observations,
+        *g2d_observations,
     )
     return tuple(
         conformance.build_negative_conformance_result_v01(
@@ -1305,7 +1671,7 @@ def _collect_negative_results(
             expected_reason_codes=expected,
             observed_reason_codes=observed,
             blocked=blocked,
-            evidence_refs=(evidence,),
+            evidence_refs=(evidence,) if type(evidence) is str else evidence,
             real_world_effects_count=0,
         )
         for probe_id, target, expected, observed, blocked, evidence in observations
@@ -1738,6 +2104,224 @@ def _build_g2c_negative_results_v01(
             observed_reason_codes=observed,
             blocked=blocked,
             evidence_refs=(evidence,),
+            real_world_effects_count=0,
+        )
+        for probe_id, target, expected, observed, blocked, evidence in observations
+    )
+
+
+_G2D_NEGATIVE_AXIS_CASE_IDS_V04 = (
+    None,
+    "g2d_case:negative:route_substitution:v02",
+    "g2d_case:negative:direct_root_decision:v02",
+    "g2d_case:identity:policy_profile_separation:v02",
+    "g2d_case:negative:scope_budget_monotonic_matrix:v02",
+    "g2d_case:negative:queue_predecessor_substitution:v02",
+    "g2d_case:negative:fractal_capability_missing:v02",
+    "g2d_case:no_progress_deadend:v02",
+    "g2d_case:negative:child_authority_claims:v02",
+    None,
+)
+
+
+def _g2d_report_identity_v04(
+    report: _g2d.FractalRuntimeG2DReportV02,
+) -> str:
+    material = _g2d.fractal_runtime_g2_d_report_to_plain_data_v02(report)
+    material.pop("report_id")
+    return _g2d.REPORT_ID_PREFIX + domain_separated_sha256_hex_v01(
+        domain=_g2d.REPORT_ID_DOMAIN,
+        payload=canonical_json_bytes_v01(material),
+    )
+
+
+def _reseal_g2d_case_detail_v04(
+    report: _g2d.FractalRuntimeG2DReportV02,
+    *,
+    case_id: str,
+    detail_key: str,
+    detail_value: object,
+) -> _g2d.FractalRuntimeG2DReportV02:
+    cases = list(report.case_results)
+    index = report.case_order.index(case_id)
+    case = cases[index]
+    material = json.loads(case.evidence_material_json)
+    proof = material["proof"]
+    details = proof["details"]
+    details[detail_key] = detail_value
+    proof["details_sha256"] = hashlib.sha256(
+        canonical_json_bytes_v01(details)
+    ).hexdigest()
+    evidence_bytes = canonical_json_bytes_v01(material)
+    cases[index] = replace(
+        case,
+        evidence_material_json=evidence_bytes.decode("ascii"),
+        evidence_sha256=hashlib.sha256(evidence_bytes).hexdigest(),
+    )
+    provisional = replace(report, case_results=tuple(cases))
+    return replace(provisional, report_id=_g2d_report_identity_v04(provisional))
+
+
+def _g2d_negative_mutations_v04(
+    report: _g2d.FractalRuntimeG2DReportV02,
+) -> tuple[tuple[str, _g2d.FractalRuntimeG2DReportV02], ...]:
+    route_case = report.case_results[17]
+    route_material = json.loads(route_case.evidence_material_json)
+    route_details = route_material["proof"]["details"]
+    route_baseline_sha = route_details["baseline_sha256"]
+    accepted_attempted_sha = route_details["attempted_sha256"]
+    if (
+        type(route_baseline_sha) is not str
+        or type(accepted_attempted_sha) is not str
+        or re.fullmatch(r"[0-9a-f]{64}", route_baseline_sha) is None
+        or re.fullmatch(r"[0-9a-f]{64}", accepted_attempted_sha) is None
+        or route_baseline_sha == accepted_attempted_sha
+    ):
+        raise ValueError("kernel_conformance_runtime_invalid")
+    zero_operation = replace(report, provider_calls=1)
+    zero_operation = replace(
+        zero_operation,
+        report_id=_g2d_report_identity_v04(zero_operation),
+    )
+    return (
+        (
+            "fractal_runtime_report_identity_forgery",
+            replace(report, report_id=_g2d.REPORT_ID_PREFIX + "f" * 64),
+        ),
+        (
+            "fractal_runtime_route_eligibility_substitution",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[1],
+                detail_key="attempted_sha256",
+                detail_value=route_baseline_sha,
+            ),
+        ),
+        (
+            "fractal_runtime_direct_root_decision_bypass",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[2],
+                detail_key="topology_created_delta",
+                detail_value=1,
+            ),
+        ),
+        (
+            "fractal_runtime_mode_profile_forgery",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[3],
+                detail_key="profile_count",
+                detail_value=2,
+            ),
+        ),
+        (
+            "fractal_runtime_scope_budget_widening",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[4],
+                detail_key="mutation_count",
+                detail_value=11,
+            ),
+        ),
+        (
+            "fractal_runtime_queue_transition_forgery",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[5],
+                detail_key="mutation_count",
+                detail_value=9,
+            ),
+        ),
+        (
+            "fractal_runtime_recursive_capability_forgery",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[6],
+                detail_key="mutated_path",
+                detail_value="/runtime_policy/allowed_capability_ids",
+            ),
+        ),
+        (
+            "fractal_runtime_no_progress_forgery",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[7],
+                detail_key="consecutive_non_positive_count",
+                detail_value=1,
+            ),
+        ),
+        (
+            "fractal_runtime_child_authority_forgery",
+            _reseal_g2d_case_detail_v04(
+                report,
+                case_id=_G2D_NEGATIVE_AXIS_CASE_IDS_V04[8],
+                detail_key="mutation_count",
+                detail_value=5,
+            ),
+        ),
+        ("fractal_runtime_zero_operation_forgery", zero_operation),
+    )
+
+
+def _collect_g2d_negative_observations_v01(
+    report: _g2d.FractalRuntimeG2DReportV02,
+) -> tuple[tuple[object, ...], ...]:
+    if (
+        type(report) is not _g2d.FractalRuntimeG2DReportV02
+        or len(report.case_results) != 72
+        or report.final_status != conformance.STATUS_PASS
+    ):
+        raise ValueError("kernel_conformance_runtime_invalid")
+    target = conformance._G2D_REPORT_VALIDATOR_TARGET_V02
+    evidence_path = "demo/run_fractal_runtime_g2_d_v02.py"
+    observations: list[tuple[object, ...]] = []
+    for index, ((probe_id, forged), expected) in enumerate(
+        zip(
+            _g2d_negative_mutations_v04(report),
+            conformance._G2D_EXPECTED_NEGATIVE_REASONS_V05,
+            strict=True,
+        )
+    ):
+        try:
+            observed = _g2d.validate_fractal_runtime_g2_d_report_v02(forged)
+        except Exception:
+            observed = ()
+        axis_case_id = _G2D_NEGATIVE_AXIS_CASE_IDS_V04[index]
+        evidence_refs = (
+            evidence_path,
+            f"baseline_report:{report.report_id}",
+            *(
+                (f"axis_case:{axis_case_id}",)
+                if axis_case_id is not None
+                else ()
+            ),
+            f"forged_report:{forged.report_id}",
+        )
+        observations.append(
+            (
+                probe_id,
+                target,
+                expected,
+                observed,
+                type(observed) is tuple and observed == expected,
+                evidence_refs,
+            )
+        )
+    return tuple(observations)
+
+
+def _build_g2d_negative_results_v01(
+    observations: tuple[tuple[object, ...], ...],
+) -> tuple[conformance.NegativeConformanceResultV01, ...]:
+    return tuple(
+        conformance.build_negative_conformance_result_v01(
+            probe_id=probe_id,
+            target_contract=target,
+            expected_reason_codes=expected,
+            observed_reason_codes=observed,
+            blocked=blocked,
+            evidence_refs=evidence,
             real_world_effects_count=0,
         )
         for probe_id, target, expected, observed, blocked, evidence in observations

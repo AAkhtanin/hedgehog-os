@@ -300,6 +300,13 @@ def test_module_identity(name: str, value: object) -> None:
                 "FractalCellQueueEntry",
                 "FractalCellResult",
                 "FractalRuntimeReport",
+                "ContinuousDeltaSource",
+                "DependencyGraphIndex",
+                "AffectedSetResult",
+                "ArtifactInvalidationReport",
+                "PreservationProof",
+                "SelectiveRecomputationPlan",
+                "ContinuousDeltaRuntimeReport",
             ),
         ),
         (
@@ -1641,10 +1648,10 @@ def test_g2d2_artifact_type_append_and_generic_envelope() -> None:
         "FractalCellQueueEntry", "FractalCellResult", "FractalRuntimeReport",
     )
     assert abi.ARTIFACT_TYPES[: len(historical)] == historical
-    assert abi.ARTIFACT_TYPES[len(historical) :] == suffix
+    assert abi.ARTIFACT_TYPES[len(historical) : len(historical) + len(suffix)] == suffix
     schema_types = tuple(_schema()["$defs"]["artifactType"]["enum"])
     assert schema_types[: len(historical)] == historical
-    assert schema_types[len(historical) :] == suffix
+    assert schema_types[len(historical) : len(historical) + len(suffix)] == suffix
     assert abi.ARTIFACT_TYPES.count("RuntimeExecutionTopology") == 1
     for artifact_type in suffix:
         artifact = _artifact(artifact_type=artifact_type)
@@ -1666,3 +1673,76 @@ def test_g2d2_artifact_type_append_and_generic_envelope() -> None:
         if isinstance(node, ast.ImportFrom)
     )
     assert "hedgehog.kernel.fractal_runtime_v02" not in imports
+
+
+def test_g2e_artifact_type_literals_append_after_historical_prefix_v01() -> None:
+    historical = (
+        "OrchestratorRouteProposal", "RootAcceptedRoute", "BSEPPacket",
+        "BSEPProjection", "SemanticArchitectProposal",
+        "RuntimeExecutionTopology", "ActorContribution", "SemanticEvidence",
+        "ValidatedEvidence", "ResultProposal", "PostVVReport",
+        "GTAdvisoryReport", "RootOwnedIntent", "RootDecision",
+        "ExecutionRequest", "EvidenceReceipt", "RootFinal",
+        "CrossRootEvidenceRef", "TransactionOutcomeEnvelope",
+        "CausalConsumptionRef", "ExecutionModeProposal",
+        "RootExecutionModeDecision", "ExecutionModeRouteEligibility",
+        "FractalCellQueueEntry", "FractalCellResult", "FractalRuntimeReport",
+    )
+    additions = (
+        "ContinuousDeltaSource",
+        "DependencyGraphIndex",
+        "AffectedSetResult",
+        "ArtifactInvalidationReport",
+        "PreservationProof",
+        "SelectiveRecomputationPlan",
+        "ContinuousDeltaRuntimeReport",
+    )
+    schema_types = tuple(_schema()["$defs"]["artifactType"]["enum"])
+    assert abi.ARTIFACT_TYPES[: len(historical)] == historical
+    assert abi.ARTIFACT_TYPES[len(historical) :] == additions
+    assert schema_types[: len(historical)] == historical
+    assert schema_types[len(historical) :] == additions
+    assert len(abi.ARTIFACT_TYPES) == len(set(abi.ARTIFACT_TYPES))
+
+
+def test_g2e_kernel_artifact_schema_literals_and_unknown_rejection_v01() -> None:
+    additions = (
+        "ContinuousDeltaSource",
+        "DependencyGraphIndex",
+        "AffectedSetResult",
+        "ArtifactInvalidationReport",
+        "PreservationProof",
+        "SelectiveRecomputationPlan",
+        "ContinuousDeltaRuntimeReport",
+    )
+    schema = _schema()
+    for artifact_type in additions:
+        artifact = _artifact(
+            artifact_id="artifact:g2e:" + artifact_type,
+            artifact_type=artifact_type,
+            authority_class="NON_AUTHORITY",
+            lifecycle_state="VALIDATED",
+        )
+        assert abi.validate_kernel_artifact_v01(artifact) == ()
+        Draft202012Validator(schema).validate(
+            abi.kernel_artifact_to_plain_dict_v01(artifact)
+        )
+        assert artifact.authority_class == "NON_AUTHORITY"
+    for unknown in (
+        "ContinuousDeltaSourceUnknown",
+        "continuousDeltaSource",
+        "ContinuousDeltaSource ",
+    ):
+        with pytest.raises(ValueError, match="^artifact_type_unknown$"):
+            _artifact(artifact_type=unknown)
+        invalid = abi.kernel_artifact_to_plain_dict_v01(_artifact())
+        invalid["artifact_type"] = unknown
+        with pytest.raises(ValidationError):
+            Draft202012Validator(schema).validate(invalid)
+    tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    public_names = {
+        node.name
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    assert not any("continuous_delta" in name or "g2e" in name for name in public_names)

@@ -175,7 +175,14 @@
         "ExecutionModeRouteEligibility",
         "FractalCellQueueEntry",
         "FractalCellResult",
-        "FractalRuntimeReport"
+        "FractalRuntimeReport",
+        "ContinuousDeltaSource",
+        "DependencyGraphIndex",
+        "AffectedSetResult",
+        "ArtifactInvalidationReport",
+        "PreservationProof",
+        "SelectiveRecomputationPlan",
+        "ContinuousDeltaRuntimeReport"
       ]
     },
     "causalDisposition": {

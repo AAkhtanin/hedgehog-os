@@ -101,6 +101,13 @@ ARTIFACT_TYPES = (
     "FractalCellQueueEntry",
     "FractalCellResult",
     "FractalRuntimeReport",
+    "ContinuousDeltaSource",
+    "DependencyGraphIndex",
+    "AffectedSetResult",
+    "ArtifactInvalidationReport",
+    "PreservationProof",
+    "SelectiveRecomputationPlan",
+    "ContinuousDeltaRuntimeReport",
 )
 
 CAUSAL_DISPOSITIONS = (

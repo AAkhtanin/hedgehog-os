@@ -1,0 +1,3291 @@
+# Continuous / Delta Runtime v0.1 - Gate 2 / G2-E Architect Preflight
+
+document_status: PREFLIGHT
+document_revision: v0.1.4
+guardian_review_status: ACCEPTED
+g2e_preflight_accepted: true
+repository_basis_branch: main
+repository_basis_head: efa0aa4ddf301aee0d90e39003fee259a1c69192
+repository_basis_origin_main: efa0aa4ddf301aee0d90e39003fee259a1c69192
+gate_id: gate2_g2e_continuous_delta_runtime_v0_1
+gate_slice: G2-E
+planning_only: true
+implementation_authorized: false
+implementation_started: false
+g2d_status: CLOSED_PASS
+gate2_closed: false
+g2f_started: false
+public_release_claimed: false
+rc2_claimed: false
+production_readiness_claimed: false
+production_security_certification_claimed: false
+
+Revision ruling:
+
+- v0.1.4 preserves every accepted v0.1.1 graph/identity correction;
+- v0.1.4 preserves every accepted v0.1.2 source-pair/execution-carrier
+  correction;
+- v0.1.4 preserves every accepted v0.1.3 artifact-level closure,
+  route/topology, complete G2-D bundle, preservation, and derived-status law;
+- v0.1.4 freezes exact shared Root, Transition Registry, ABI projection, and
+  identity-profile geometry;
+- no G2-E implementation exists;
+- G2-E1 still requires a later separate explicit owner authorization;
+- no document field self-authorizes implementation.
+
+## 1. Purpose, Authority, and Scope
+
+This document is an accepted planning contract only, not an implementation
+authorization. It records a complete static repository inventory, a
+conflict/reuse register, and one bounded G2-E contract accepted by guardian
+review at revision v0.1.4.
+
+The accepted current fact is that G2-D is `CLOSED_PASS`, Gate 2 is
+`NOT_CLOSED`, G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`, and G2-F is
+`NOT_STARTED / NOT_AUTHORIZED`. No proposal below changes those facts.
+
+The proposed G2-E duty is to accept validated immutable deltas, derive a
+bounded deterministic affected set from explicit dependency evidence,
+invalidate current eligibility without deleting history, preserve unrelated
+artifacts byte-for-byte, and select bounded work for recomputation through
+existing G2-C/G2-D/Root seams. G2-E is not Root, not permission, not an effect
+executor, and not a source of truth.
+
+Fact labels used throughout:
+
+- **ACCEPTED CURRENT FACT**: directly present in committed source or accepted
+  checkpoint/audit at the stated repository basis.
+- **OWNER-SUPPLIED ROADMAP REQUIREMENT**: text supplied in the planning
+  authorization; the untracked companion roadmaps were not reconstructed.
+- **INVENTORY INFERENCE**: a static conclusion from committed fields,
+  signatures, validators, tests, and path ownership.
+- **ACCEPTED PLANNING CONTRACT**: exact planning law accepted by guardian
+  review; it still requires later separate owner authorization before any
+  implementation.
+- **UNRESOLVED REVIEW QUESTION**: none at revision v0.1.4. Future
+  constructibility failures stop and return to guardian review; they are not
+  silently defaulted.
+
+Sole output authorized by this planning hop:
+`docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md`. No implementation,
+test, runner, schema, ABI, Transition, Root, DRS, packet, Living, Conformance,
+release, checkpoint, or status file is authorized to change.
+
+## 2. Source-of-Truth and Roadmap Custody
+
+The controlling hierarchy is exact:
+
+1. explicit owner planning authorization for this hop;
+2. committed status at `efa0aa4ddf301aee0d90e39003fee259a1c69192`;
+3. owner-supplied roadmap excerpts for Gate order and high-level G2-E duty;
+4. accepted G2-D checkpoint, audit, preflight, addendum, implementation, and
+   tests;
+5. accepted G2-A, G2-B, and G2-C preflights, audits, checkpoints,
+   implementations, and tests;
+6. Human Passport, invariants, Machine Manifest, Math Appendix, AGENTS active
+   checkpoint, and README engineering boundary;
+7. current ABI, Transition Registry, Root, Integrity Replay, DRS/reuse,
+   ActionPacket, Fractal Runtime, Post V&V, GT, Living, and Conformance
+   contracts;
+8. the Master-roadmap excerpt only where consistent with all higher sources;
+9. historical demos/proofs only as classified donors or adversarial sensors.
+
+The owner supplied only these roadmap excerpts; no absent companion text is
+claimed or reconstructed:
+
+```text
+G2-A - ActionPacket lifecycle and kill-switch
+G2-B - DRS semantic address space and ReuseCertificate
+G2-C - ExecutionModeRouter
+G2-D - Fractal Runtime v0.2
+G2-E - Continuous / Delta Runtime
+G2-F - consolidated Gate-2 gauntlet and operational closure
+```
+
+```text
+one ABI
+one Transition Registry
+one Root law
+```
+
+```text
+Dependency fingerprints determine affected artifacts.
+```
+
+```text
+hold expired
+-> purchase/ticket subtree
+
+price changed
+-> payment/approval/GT subtree
+
+fraud flag changed
+-> bank-risk subtree and affected Root decisions
+
+policy version changed
+-> certificates bound to old policy
+```
+
+```text
+downstream sealed/reuse/action artifacts are invalidated when their dependency
+fingerprint changes
+```
+
+```text
+Affected(delta_world_state) =
+  transitive_closure(
+    dependents(changed_fields(delta_world_state))
+  )
+```
+
+```text
+Recompute only affected artifacts.
+Preserve unaffected work.
+Invalidate downstream sealed/reuse/action objects whose dependency
+fingerprints changed.
+```
+
+These excerpts constrain planning. They are not represented as accepted
+implementation contracts.
+
+## 3. Frozen Prior-Slice Boundaries
+
+**ACCEPTED CURRENT FACT:** G2-A through G2-D remain closed and frozen. G2-E
+uses their public contracts and does not alter their authority semantics.
+
+- G2-A owns ActionCommitPacket lifecycle, temporal authority, invalidation,
+  revocation, supersession, immutable packet history, and the owning-Root
+  transition. G2-E may derive a candidate/currentness contradiction; it may
+  not revoke or supersede a packet itself.
+- G2-B owns semantic addressing, temporal query, hard reuse eligibility,
+  immutable meaning-record history, and Root-bound ReuseCertificate issuance.
+  G2-E may prove a prior certificate stale for current use; it may not delete
+  or rewrite it.
+- G2-C owns Root-reviewed mode/scope route eligibility. G2-E may preserve a
+  route only when every bound source remains current; otherwise it must return
+  `g2e_route_revalidation_required` before plan acceptance. A new G2-C route
+  and new G2-D baseline belong only to a later fresh invocation.
+- G2-D owns RuntimeExecutionTopology, cell/queue/budget/result/report/trace
+  laws, bounded execution, Post V&V/GT integration, and parent return. G2-E
+  selects a bounded subset but invokes only existing public granular G2-D
+  functions; no G2-D module change is proposed.
+- Integrity Replay preserves immutable evidence and proves replay without
+  semantic rerun. Replay cannot make invalidated historical evidence current.
+- Post V&V validates proposals; GT is advisory; Root is the only final
+  decision boundary.
+
+The controlling route remains:
+
+```text
+BSEP
+-> semantic proposal
+-> G2-C Root-reviewed ExecutionModeRouteEligibility
+-> runtime-owned RuntimeExecutionTopology
+-> bounded runtime execution
+-> ResultProposal / Post V&V / GT / PARENT_RETURN
+-> Root
+```
+
+`RuntimeExecutionTopology` is not authority. A child cell is not Root. A child
+result is not FinalOutput. The four important-debt findings and one style-only
+finding in the G2-D audit remain deferred post-Gate-2 maintenance and are not
+G2-E paths.
+
+## 4. Complete Read Register
+
+The inventory byte-read every path below at the exact committed basis. The
+register contains 62 mandatory core paths and every tracked text file returned
+by the required case-insensitive repository vocabulary search. The vocabulary
+was: `dependency`, `dependency_fingerprint`,
+`dependency_set_candidate_fingerprint`, `checked_dependency_fingerprint`,
+`ArtifactDependencyEdgeV01`, `depends_on_artifact_id`, `supersed`,
+`invalidate`, `revok`, `forbidden_changes`, `policy_version`,
+`schema_versions`, `source_history_hash`, `lineage`, `changed_fields`,
+`world_state`, `delta`, `affected`, `recompute`, `replay`, `freshness`,
+`valid_from`, and `valid_to`.
+
+Exact read facts:
+
+- mandatory paths: 62;
+- vocabulary-search hits: 512;
+- de-duplicated full-read register: 517 files;
+- bytes read: 22,682,465;
+- LF lines read: 510,079;
+- Python files AST-parsed without import: 260;
+- JSON files strictly parsed: 34;
+- register SHA-256: `00b96325ee3d77cee768ba7135133400272524400f26b512927c81746024705a`.
+
+Complete register (`scope`, path, SHA-256, bytes, LF lines, mode, UTF-8, parse):
+
+```text
+scope	path	sha256	bytes	lf_lines	mode	utf8	parse
+MANDATORY	AGENTS.md	d9da22a53909bf9d870212cff5302c028894f0883948d75de7161da2571373e9	90277	1037	0644	UTF8_OK	TEXT_OK
+MANDATORY	README.md	5f6deb3a3bbaad136e5368a8196b22c7594a5e6ddb1dc79c2e1a6b00e2f0bd4a	237298	3819	0644	UTF8_OK	TEXT_OK
+MANDATORY	specs/human_passport_v0_25.md	b229b6b08c5d3657258dbef315798a1686a845e4509926a2e839236dc7023324	210794	4982	0644	UTF8_OK	TEXT_OK
+MANDATORY	specs/invariants.md	584f3ef64187355db84f8b5fb2b69345e547406f157a3bac99f85c30e8eb9256	95441	1256	0644	UTF8_OK	TEXT_OK
+MANDATORY	specs/math_appendix_v0_3.md	81266378617b3a6bd39f837921cda1c38b58f651fd9a8ee112d754bb9d59185e	75236	3581	0644	UTF8_OK	TEXT_OK
+MANDATORY	specs/machine_manifest_v0_25.json	9da6c6747b1c7c8e23532f238fc2e1121504d770e89be317b83e59d3f8637f01	156606	3380	0644	UTF8_OK	JSON_OK
+MANDATORY	release/current_status_overlay_v01.json	2b39d70c18ddb115f0c8c9a41bc6e5b80ec4e0438a74bec99d4f3457ac9c022a	3033	75	0644	UTF8_OK	JSON_OK
+MANDATORY	release/current_limitations.md	43a1e345444d26ef1410457b42131f66fd5f1ed6e40d3e4f17c9b052b095df93	2893	55	0644	UTF8_OK	TEXT_OK
+MANDATORY	release/current_release_notes.md	30d361c98e98e1f461d6983fe5a0185b35aa5d9fd2cd103ab31f64f2bfa2f331	4260	93	0644	UTF8_OK	TEXT_OK
+MANDATORY	tests/test_repository_release_spine_v01.py	ff05291fb38597e354958aae4e5cd5d91c7c468c93d32e24f65f9323f31cd8cf	70560	1742	0644	UTF8_OK	AST_OK
+MANDATORY	docs/fractal_runtime_v0_2_g2_d_preflight_v01.md	8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79	304175	4500	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md	7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570	133145	2212	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log	ccc367ac92ad02e005c7968d152bf7810a772db94dd671e26e5d27f30d2d72aa	62197	1238	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md	f5bb19741ee992605ed772a282f4374bc3949508052edb09c8b3fdbbf210c1de	9365	255	0644	UTF8_OK	TEXT_OK
+MANDATORY	hedgehog/kernel/fractal_runtime_v02.py	ca5338f27ab0c0573cc2d831f8286ff3451d79da6b414a2514c62f5856f8f6b2	673917	15209	0644	UTF8_OK	AST_OK
+MANDATORY	schemas/fractal_runtime_v02.schema.json	e62f693cc24a0562ca2955b011530916a85598dd00026f6dbadb80b6b9eb94ac	181301	5551	0644	UTF8_OK	JSON_OK
+MANDATORY	demo/run_fractal_runtime_g2_d_v02.py	b15ef4d4461769db8f8e12dc06b0748ab9d749a6b26d199c16d1b6f04dac6fbd	485775	11294	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_fractal_runtime_g2_d_v02.py	0ed20add36a82a576cf5e4ce9d787079c6052bf24465b225c18d2c33303416e7	457915	10504	0644	UTF8_OK	AST_OK
+MANDATORY	docs/actionpacket_lifecycle_kill_switch_g2_a_preflight_v01.md	db43f0c4d467d04921f103b69fc59e60633e17d313dd94b70ed33a41cad94f1a	211666	5387	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log	ca3b63d74744b53f02e0b638fc26e6bb476a350682ad3035c4f81307c5deb777	44928	414	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md	61feef4640856f2474848d316e8f2159ed8522fffddc8c512f07c308b6ff9234	8544	240	0644	UTF8_OK	TEXT_OK
+MANDATORY	hedgehog/action_commit_packet_v02.py	b68b1dfd759bde818e5f9562d41d1072a1462e1e6c5eec24639257e7e24931e3	755879	19667	0644	UTF8_OK	AST_OK
+MANDATORY	demo/run_action_commit_packet_lifecycle_g2_a_v01.py	49d9bb14a2ea04c9a9906a75eb245fcebcca3db98badd9d6d0224b807850a903	65877	1743	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_action_commit_packet_lifecycle_g2_a_v01.py	044a0bafa42e12cce1af8f500ef8f136df383152a3a81d233b7616f28b877c49	641358	18213	0644	UTF8_OK	AST_OK
+MANDATORY	docs/drs_semantic_address_space_reuse_certificate_g2_b_preflight_v01.md	0b72a7794c0eee9d86d7745a304f7c4341d3e2c8b7ffece3665f16e38643a094	104493	2381	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/audit_reports/auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01.log	78d2debc7d9969caca6b896b00273d879eb72a933b84b29eb43d27456effa17b	65730	390	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md	c8f94825080864bf14afe8219a3c0bab4ff5613dcb7bddc471b141f3ffbac553	6036	163	0644	UTF8_OK	TEXT_OK
+MANDATORY	hedgehog/drs_semantic_address_v01.py	9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20	57213	1753	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/drs_memory_resolution_v01.py	698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8	157202	3962	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/reuse_certificate_v01.py	55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c	50900	1382	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/drs_g2b_compatibility_v01.py	dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5	48098	1493	0644	UTF8_OK	AST_OK
+MANDATORY	schemas/drs_semantic_address_v01.schema.json	595e7b1950ea5a879003633441069a68c75ff36d774fad9c85220dc46a0e002c	4442	154	0644	UTF8_OK	JSON_OK
+MANDATORY	schemas/drs_meaning_record_v01.schema.json	dc6499a7e0fa4f89851cfc90dcc029a6fef3178a8f6c593c65f5a81c4f5f0f1c	23992	940	0644	UTF8_OK	JSON_OK
+MANDATORY	schemas/drs_memory_resolution_v01.schema.json	194b8f44aec569f7c064dd1423bb2f9696d8cca0742f0ad48f093cd45dc0f742	50293	1895	0644	UTF8_OK	JSON_OK
+MANDATORY	schemas/reuse_certificate_v01.schema.json	c19b0d114fc67e852e26d83c2c0d3ac5bd3d9870d096a095c68ad45b97262a0e	14505	557	0644	UTF8_OK	JSON_OK
+MANDATORY	demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py	be4d2b4803e57e2bfe6464094cb48c95b6f13ef0f1847f32d161629aba4140ef	67486	1823	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py	fa8de4a4f731a6b1ce487e1860a34268a6b7a8784c73cdc1185462c85e9628d0	373141	10937	0644	UTF8_OK	AST_OK
+MANDATORY	docs/execution_mode_router_g2_c_preflight_v01.md	5bea2e49a6a5ff1c80df526a142329e7e218558f64c77be0a2f64294f2673077	192554	3417	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log	3f6aab5c26b486a463174a6d57a22097b8eee2dcd314433b27462117b21d73d5	27663	596	0644	UTF8_OK	TEXT_OK
+MANDATORY	docs/execution_mode_router_g2_c_checkpoint_v01.md	28ba0de21cf6458a408911b0342d57db72ad6f6cf6e8e5aec8b87fb616802f0b	6263	171	0644	UTF8_OK	TEXT_OK
+MANDATORY	hedgehog/kernel/execution_mode_router_v01.py	29e6500ca2b6966d0b5068f9fa1cdc1ef937cb4e5c284ea3acc78b0e9103ca22	293335	7593	0644	UTF8_OK	AST_OK
+MANDATORY	schemas/execution_mode_router_v01.schema.json	cd07223ffd6085682cee4a49781f5471997ad371b4cd3916d01c146ed7e33468	79878	3106	0644	UTF8_OK	JSON_OK
+MANDATORY	demo/run_execution_mode_router_g2_c_v01.py	1d775010d0fdcba7d2ebbcadf50d0bc4815a99dc08785f2f6a0d635477ff8719	88591	1858	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_execution_mode_router_g2_c_v01.py	6903a7e4223f2d8c4712122fb88dbaa4b788ef84d5d85b53ce6ea1eacbbbbeec	281524	6131	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/abi_v01.py	1927d1ae061c94964ba6b5a209945794ce04a943383820cdc73feac19256dd2f	42806	1191	0644	UTF8_OK	AST_OK
+MANDATORY	schemas/kernel_artifact_v01.schema.json	56792c03bb8b24973e472bae1b31b49f9f6fa60afa1feffac69af336db9970d2	7142	297	0644	UTF8_OK	JSON_OK
+MANDATORY	hedgehog/kernel/transition_registry_v01.py	f9dbe2e734cfa7991183d11177f39d98faa44e429a62cd3753d017c3ec1c6496	113213	3080	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_transition_registry_v01.py	ec76373a27a5cdc794d78806e1add13a03f9cb6a282f579dd548f3ee0752592c	100763	2501	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/root_decision_v01.py	cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c	43352	1116	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_root_decision_kernel_v01.py	f19eb1bb3ed7bb11fb707308165aaf1629e4e6ac1f152817d15955d34e52222a	45287	1053	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/integrity_replay_v01.py	d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be	48487	1321	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_kernel_integrity_replay_v01.py	4c498217117b0aa63e615319f07e8580ea61dd3b2d4f2f2302a90595984fa031	49792	1111	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/semantic_work_v01.py	34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1	58880	1570	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/trust_model_v01.py	6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d	15364	467	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/post_vv.py	e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3	18910	598	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/gt_validator.py	e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd	21496	594	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/__init__.py	caa163dc51d035feb2551e1772304abd91a0768f3248e74213c896da6e2f8561	17375	425	0644	UTF8_OK	AST_OK
+MANDATORY	demo/run_living_gauntlet_v01.py	d066cb9cd3a681acbc774ac3eb878dd54ac190ca1e1d8cb6a823bc1aa9513d00	222402	5700	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_living_gauntlet_v01_runner.py	48bf157ea080e994f42ace54e7393463cb6ec95fc16175ff1455ddd9026a7b78	184719	5020	0644	UTF8_OK	AST_OK
+MANDATORY	hedgehog/kernel/conformance_v01.py	038abbea4cd1504472ed5bad5f7b1c73b9f46d5cff3fa4b4cdf9c13a8586813e	56995	1601	0644	UTF8_OK	AST_OK
+MANDATORY	demo/run_kernel_conformance_v01.py	b4902f8bdf2ceedf893f049d6bf17ac80ea4ef0442bf45e50aa9eb54dd9bdfee	113776	2962	0644	UTF8_OK	AST_OK
+MANDATORY	tests/test_kernel_conformance_v01_runner.py	c2b36e6bb799e9c291abd5913c5494c637d09f154f6db7aed56c75d51eab1624	87519	2314	0644	UTF8_OK	AST_OK
+SEARCH_HIT	LICENSE	0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0	34523	661	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	demo/run_airline_all_real_evidence_showcase_v01.py	32301824cd4fd31ce00f1a94171da3055f8c3038a1f54bf1317fd1c33a5aabeb	86996	2289	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_airline_sealed_trace_replay_v01.py	ed34aad86c1e479e12458db332c7c757e54197a35cf697c86a7626ed063411b5	34413	983	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_airline_transaction_artifact_ledger_audit_v01.py	a73a936756a09bbc80c8ee2f094dfa404c55c0b69e63629f5f2eb618cd5ba744	70631	1877	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_applied_certificate_readiness_demo.py	9e6532d2edaaddaf839eabf8d9f934c96eca257f059111b6b1feb263fbc0c437	34535	863	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_applied_drs_retrieval_reuse.py	a815786566569a396378efeeae46571c5a5cc8566ca3e076efe664ba7cc63cf8	32001	818	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_applied_warehouse_semantic_demo.py	f0f07ae8bd787a26a4abc03b897b8ab662682b4990b8bea57b83075f07c8fa94	43030	1030	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_architect_from_bounded_attractor_packet.py	e02e6aff43a8becaab141b01cad5ed115686ff7f9d160eec0cd80959b8af9c86	19693	542	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_bounded_llm_semantic_executor_node_v01.py	1e8f76adbcba0a85e21fc9f2d5a3b33a47f232dc78a032ac15f64c7697bd5a62	18661	486	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_candidate_vector_generator_avf_scoring_v01.py	ddfaf9bc997ae6cfb14fcde518fb773d3184358167ceb3bd5d5464506861202c	20333	539	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_canonical_pipeline_trace.py	3f52f5ba3338269e70d93484bc56229f4cccc435a966a115fd950ce78542b31d	22450	502	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_chaos_survival_showcase.py	2bbb9dd5fb8b99b8c22a3a97561c54f6dc0291f220bc68cbca826c0e66528574	19178	511	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_compromised_upstream_pack_v01.py	73a7d2a6a3a0f91d16612a57527efd2284d0a02dc2a2882c29dd48da714729a2	33781	808	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_compute_collapse_enterprise_bench_v01.py	9ebb67957ee7770506590e474d3db64c890a0172130de7c9c5f6854eb20ae95b	16130	423	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_conflictcheck.py	5aa917efc6326f6d6bf363f7f2a7f07dd65d2a392d3e0a59f85d6b0f51712270	28682	718	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_controlled_orchestrator_dry_run.py	a28400fa59a0b9cc0c816f73eececf6b2da227b7bbcf8c572b6847f57de35403	9430	255	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_controlled_orchestrator_integration_gate.py	921b10dad1f4722f2eb58073eb072fdd86d40302c37ec091de353d38350fbb1d	12376	320	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_controlled_orchestrator_runtime_prototype.py	ba1f564e707ad7d0844802bb7afb6bd39c6762622b6ed33f37086f99bf3a5ca1	13096	350	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_controlled_root_orchestrator_route_assembly.py	962a358aeb8fba2e0029dc8058e9435289835c3354989e1e838b95f9aff70f31	25265	607	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_deadend_memory_demo.py	74d335a3925e1844e5a91366a816f3a147049d3808f4b095377582a43f205310	7491	215	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_developer_facade_capability_manifest_ux_v01.py	cd69f4833fe7925fc8bb58b715423120614c9a78a3f7734b1311b56aeb68216f	29477	711	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_drs_adversarial_stress_pack.py	d56749df70db95936627b798e9264029c031acc5b3fd192344f64082162ba170	20458	504	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_drs_graph_proximity.py	fcee073344ae987e984d4491e5127a35799196c5a60208b39be5deda661a40b2	15935	445	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_drs_lifecycle_semantics.py	5631abd377a02da33577be96f54f6f3c385f4287f106cfa2aacdcee2a635636a	30939	766	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_drs_lineage_provenance_pressure_v01.py	adbd3dac0d590cfe829dd4078132cd3957e6764c3392b2b89eb1f86fb4ce1e78	38126	955	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_drs_writeback_from_root_final.py	8a6eb029b1cd0dc64cdc4e809ef519113a3c78691e74d8cbdc633e2e8b8748d8	20445	511	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_enterprise_chaos_pack_v01.py	4f0202a969aa9b77fa860b5a8f7dc68bb138cc267690703e3748773c803d46d8	16702	466	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_enterprise_document_killer_demo_b_v01.py	150cc893b0997569eb47ccd8d2c2e761c724435c9e778ff5799a2f8b14a135be	32286	814	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_enterprise_killer_demo_v01.py	5be4c06184fd1ef7c314e5e919153facf25295ab584ae1ce9e7ee6071c3db565	31129	764	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_external_drs_pointer_protocol_v01.py	78e43748d129bb122c9b771859aab81f58b9113cb4a4bbb06a4da32b88930a60	18669	476	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_external_evidence_acceptance_gate_v01.py	396751d9c20aca8f830164572120a277aadcf6f2d857b5e7b43ec5410dc5004c	20485	563	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_fractal_cell_runtime.py	f10fc6d10f2dc8d70bd57d1014b622429875e2a1261e664bae365744e4632237	21180	510	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_fractal_cell_runtime_integration_v01.py	95bba2f66c448bba09e1e83683c660a6c2ef1f981c03d6ed83ebd9d13ff7178c	24270	689	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_full_semantic_e2e_v01.py	f856690d883e53605550cd73c63d32d1119b957825f7001a84e3f10fbcce218a	366316	8992	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_full_wow_v1_2_manual_live_multillm_fractal_trace.py	112a6294116367b0a46117a20e9de0c02ab1419e80e06817165e353ef113b8e4	146487	3584	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_full_wow_v1_2_product_trace.py	7eea020d23a9c6aa95dae4366cf683a59e699c3051eaf5de642e6225fc4ea44f	89787	2030	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_airline_ticket_purchase_corridor_story_v01.py	fc7c8a71f795ff69447aee77a8f19f29c7f9da3e3c78d0f5954bc1976efccefe	57851	1268	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_airline_transaction_artifact_ledger_timeline_v01.py	59933e4a8f8468e086234e0acddfe02c2fd685cc52953acf6b0a8186c05a2aaf	6568	171	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_applied_auditor_walkthrough.py	1f32ed4d8174039ca00c4cd807c37c4e51cb06b0e006bbfaf7e7eacbdd772ec0	11888	278	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_bounded_llm_semantic_executor_node_walkthrough_v01.py	824d4f0f1f5426f6cae78caebd5b0eed1e67c65bc88d6f6c6a471916245da301	10475	239	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_compute_collapse_enterprise_bench_walkthrough_v01.py	7cfddb5824dcc9d56de22c11abfc2c84cd50b2dd8a8dd28ae08d6c26b5960ca9	12308	261	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_developer_facade_capability_manifest_ux_walkthrough_v01.py	9520d918212b22a185ab28febe5bd02da5d28e7fbcec0d030dc969eb3e4d1fb1	13250	278	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_drs_lineage_provenance_pressure_walkthrough_v01.py	fa4e9f161fec02fbfc1e8740799a809f03ee880576f73660affbd693af49e014	8749	213	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_enterprise_chaos_pack_walkthrough_v01.py	b3064841e210732b538262a32bea0b2874da503f7994f52df2ebda06de44d2b5	9319	211	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_enterprise_document_killer_demo_b_walkthrough_v01.py	c4ea01026d2245be06624d6ff131e539df5fb6e7fb9e98e81b99b0b76b750728	12872	302	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_enterprise_killer_demo_walkthrough_v01.py	57cc966b255f93cbdd84f2fee128af387ae092e6d045aa84ad30a0f1a314e2e2	11886	273	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_external_drs_pointer_protocol_walkthrough_v01.py	02a091c69455f410a798b28eab28bfe5bfab94c5952efd9e5a38cf18b6019150	9741	207	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_external_evidence_acceptance_gate_walkthrough_v01.py	5ca0bb2d9dfa1592fa92d33a1fcf283465133f80efa0b73cc270648c348b8ae3	12552	256	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_full_wow_v1_2_avf_live_observation_story.py	9631771f3d0b3f83069b6ed9ea77915375dd5203f32998450db1824f29c29521	29762	772	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_full_wow_v1_2_live_action_corridor_integrated_story.py	24378ca738262cb71fcbbfccfea124bae9111898ce830420bd71a61d872eaabc	28792	682	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_live_llm_semantic_evidence_reader_walkthrough_v01.py	89b377c644029d2544888cd5a493b0f4ec8102f6126e987de9ff298f93a99cbc	6813	175	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_live_provider_adapter_response_capture_walkthrough_v01.py	d79974df638686f04691f059a1ede0675e80bfca68389d522d34072fc9751373	10638	254	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_long_lived_drs_ttl_aging_stress_walkthrough_v01.py	b5033522eddba2a68c7062a6438b2f88c1dc7c960068ff19e453d38fa7a15452	7750	192	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_optional_live_llm_evidence_reader_smoke_walkthrough_v01.py	7701ee120589fe866b8fb478acf3b7fb4a04ec1bc72a4d3441ce31d84e4f0d0f	5299	122	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_read_only_enterprise_connector_sandbox_walkthrough_v01.py	45a4645d35da712d389fd0aea714f196af42404e39f83a271820a4a5e677ff64	9231	209	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_real_local_drs_resolver_walkthrough_v01.py	d9144f0c83b0a115fc905476e672ee4c0258b1d551b3f58816625ffadb2cb688	9905	226	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_real_semantic_runtime_thread_walkthrough_v01.py	13fe50217536a09506c7f0f91f9378499da17ab4f7eb489fccdcb788bf62bdc0	26363	530	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_tri_party_airline_all_real_semantic_to_contract_causal_corridor_story_v01.py	9edd2d4ebc9ffcf3135b79dfdb2641fe423f0ce1b142375cd1acaef5ca00d6db	62026	1502	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_human_tri_party_airline_live_semantic_story_v01.py	27eb320d31583fed48446c2bd1b57b7350f079461f3fadfb2ba1828087f05960	45737	1018	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_kernel_enforcement_transition_matrix_v01.py	c179c70c7dbaa0df5054a69aedf61babe06fccbf5b97eca9adda5b0487891084	26803	723	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_large_graph_stress.py	92ca042efc3e9b43954a83797cc072701be909f64636ff12b3ba5a18c64a1370	15157	407	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_live_gemini_orchestrator_shadow.py	7eda753337bd50703ea0f666ee2ffc757cd38224fd5403b5f8f46678bce1e071	19969	549	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_live_llm_semantic_evidence_reader_v01.py	0ac6d91c70ee8231a0e62052f25115045a9561ee79682b17f04479881d57b7c8	5298	153	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_live_provider_adapter_response_capture_v01.py	c66fc9e9f6a4bbc9db0c8a7fc972e2ea98d80fffb25ed535e6f0e71d75694ee5	25797	732	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_long_lived_drs_ttl_aging_stress_v01.py	eea586f7056df6a7f5f8619db1f6286989a95aa7420959130e3179ffae9aae6a	48891	1029	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_optional_live_llm_evidence_reader_smoke_v01.py	1b5ba06599952ba891a46a7a0f36523e866f558fdb3d0765346782d562e82062	21462	613	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_orchestrator_guard_completeness.py	d7b4f31465ded98855f96a258071c73d605922f8b275502680706776812f9d6a	12722	375	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_orchestrator_route_validator.py	6f558edef61ee0c38a144255ca8a3c459a4c268525bd86c458a0b30b0c305793	12532	339	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_orchestrator_shadow_mode.py	37d4bcd17114a149a12a55c95f6843e6a8254a16bd8e0b7877a5c4483730399b	7002	204	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_read_only_enterprise_connector_sandbox_v01.py	a70f06a19e55eae062b2a935cdd58d704e3d4581d5eb5ab28f37ee122f27bebd	18491	493	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_real_local_drs_resolver_writeback_v01.py	d3f99ba06bbdc0e0fec6bca2cdec4d7aa95e9f2b7296983c5d2ad356a6672064	17709	473	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_real_semantic_runtime_thread_composite_smoke_v01.py	452b8118027f1547a06218e5bc50736c42cd4e99b70209f6afd620169a57c2ed	24625	529	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_reuse_score.py	c71179bcc2d47b380e8f30de8dc10d25c2bc106920d656860e4b348d90a67ea5	18688	540	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_root_native_sandbox_needleruntime_e2e.py	fada86c9681a4cd737eb3c11fe06307367c683d8db6a50f1ee038d707b4dec91	21043	554	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_root_native_semantic_reuse_e2e_trace.py	c4a8c3eec2614dcc147dcdeed1be8af679bcffe903db8555132e79a8bd502fd4	21126	534	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_sealed_evidence_anchor_v01.py	19e53c2e45fef9b116289328da27801727a2ea1e82cc128bb5fcc611c6b171b4	39980	1156	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_sealed_evidence_package_v01.py	c111b8e602c5ba5dd40f37857fcd11e4a07f0c07bd487c51ddc01d42cf4ace6c	49181	1441	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_sealed_evidence_replay_v01.py	11fb3029cde2da768a3270c77c580a1d29dd8dc32de9f6558be7df265f0f4fc1	48804	1355	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_semantic_reuse_authority_stack_audit.py	ecf5d89de0dead6e62bb3eeaa79a58baad4f45cebefaf3de1e194f4fc4a0d923	21015	548	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_semantic_reuse_pipeline.py	624c59a3fffd7188d204930fcdb0ef85174ac7959feb01bac0f05099d228aa7c	17673	478	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_supplier_water_filter_negative_matrix_v01.py	2a166558c04e2dfd41b706c42a85d36753f031ae0cef60a20aadb4b45c27918f	71673	1971	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_tri_party_airline_live_semantic_lane_v01.py	de0d635574ad2dba82ce18f8b1af9ac8bf01d500a0529983287ac488e923835a	174376	4262	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_tri_party_airline_ticket_purchase_mock_e2e_v01.py	3e032a7e0cdb273832f5356733b2ecb7f1f5f1a9eb8a31f66932dadf47341024	244928	5608	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_two_domain_airline_a2_seal_v01.py	7513c0ceb1c3eb100f480a8f46798942fc23b28d7fc0a1adb8aa30b9fb3bfee6	59327	1523	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_two_domain_airline_all_real_program_v01.py	c3ec0da0ff68f88c51de188003624f370ea0fdc2ce8d6969b38af2ee75c88caa	240823	6176	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_two_domain_sealed_evidence_audit_v01.py	6bab28f83ed33874b88cb1a943b8282f61f51d582e481b00fbf0723530ba33e6	55643	1052	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_two_domain_supplier_water_filter_program_v01.py	b1f778922423c3fa9cd1afd362d12d8a134bf8796192d5b33f58f6217fbfeaad	68419	1631	0644	UTF8_OK	AST_OK
+SEARCH_HIT	demo/run_typed_drs_lineage_edges.py	7340933d40103b8ab7db39b830982d1c5ee6a3d79ebdae1087adfeb62d0290d7	27821	779	0644	UTF8_OK	AST_OK
+SEARCH_HIT	docs/airline_all_real_evidence_showcase_checkpoint_v01.md	9821d6653a56b9b84c005a1a2bb58adc8d827880a3706e87ce6a887f49ab17f5	9794	285	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_all_real_evidence_showcase_preflight_v01.md	3aa8955cc41e633ddea542f05c2e1fd9089f17a40e2779cf3f2f8a1fad193e23	13183	350	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_all_real_full_stack_crypto_anchor_v01.json	54ee8e6dcceaa846ecc4bf8968b0ab26c9bcb849663a76c0cb9d01d564c694b0	1607	1	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/airline_all_real_full_stack_human_story_v01.md	b6d40a818b9c513a7aaafaeb5557ab3ef064b20e65a75b44c1de5f9152fa4e44	39288	608	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_all_real_full_stack_replay_report_v01.json	7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57	14657	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/airline_all_real_full_stack_run_preflight_v01.md	95d32efec5ed86c6427eb466bf2bf502ad1e7fd3a3f5ec6da37a98232caa45da	54297	1391	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_all_real_full_stack_run_recovery_v01.md	5c42a5a357f9a19b0a5893e50118ef3468219f5a42b2f748839569223a56a0cf	3467	105	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_crypto_artifact_seal_anchor_v01.json	f2929a305d1b05a16a51ead28972919a3209db1234ea6d0555f7228a460963fe	1667	29	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/airline_crypto_artifact_seal_checkpoint_v01.md	64797d53869865a2f76f8b7710736b314dc97588fe60096b7d2edad118461f20	3398	76	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_crypto_artifact_seal_preflight_v01.md	ec857f377462bba144fd555a7377eb33aeb9e3ff16ef96b056bd94499b0f49ae	27318	1015	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_crypto_artifact_seal_slice_e2_human_explanation_v01.md	7e6083f5cdbf5f4a25cc759aabd29d0d08bcbffa9de9810efe6e6f25a78e8456	3330	84	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_root_artifact_attestation_future_profile_v01.md	e536a5826558aa94ff940010b9afdb1520e3509034ab7074d19aca5d0420bb58	6492	183	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_sealed_trace_replay_checkpoint_v01.md	82d5314b846832519859ff2a4d4ca6248fe10b8e582794aad3de41162afd2aa6	5318	182	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_sealed_trace_replay_slice_d_human_explanation_v01.md	fd2db81d10380ec116aaa84564c18fda92bcbe729624b75f86a05b05fba30d2b	13851	270	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_sealed_trace_replay_slice_d_official_report_v01.json	4626a972e3f127b9df51e16ac429d9392a1b8338b2d730f26d9691a2288694a9	14638	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/airline_sealed_trace_replay_verifier_preflight_v01.md	645df1c4b65610aea55b0edfafc910d7aed8d490fd86f76debb69300d629e545	38655	1037	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_semantic_to_contract_causal_binding_preflight_v01.md	4651aec71d415338e39f2a0bbf5f853b2b749fdfe10a66e38a52ad7906276052	22966	847	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_ticket_purchase_corridor_artifact_ledger_crypto_replay_preflight_v01.md	6f278ed513a7b185dfb70a13bad3c98e4e3b97d15f063174242e08907316e5f2	30467	1006	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_transaction_artifact_ledger_checkpoint_v01.md	1781995780a6b76fc239df667745e4184431f1c91d8c9607665cbc6393f9fd6d	2258	87	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/airline_transaction_artifact_ledger_preflight_v01.md	c8039c9626a1e4c85a40eeac39cea699db6dd2eddb28ade759706eaa36afa294	44545	1179	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/artifact_type_mapping_runtime_vocabulary_preflight_v01.md	92668d7e8229d4b608bea1a16c61dc03c26ab62188c7e3497d52e7c01c17b8e4	30340	461	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/artifact_vocabulary_evidence_taxonomy_preflight_v01.md	53b3aaca138f21e0c43fe8aaf17a43b16641065d4836bcf7a62d85bee59fdc01	30460	495	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/README.md	cc0a15293a5cc56bfb775f248e362bfafcd6a8b88b212df78c43ad48160a2762	102701	993	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_action_commit_packet_v0_2_slice_a_local_packet_corridor_model_v01.log	b90e1a6c542d47feb4a3fbbb78d250096d24482749089aea3b2f7c966248b821	9247	194	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_action_commit_packet_v0_2_slice_b_local_registry_replay_guard_v01.log	4f232443dc7f62fdcf00ee73abf7bf983d5ed7a13cd24261ec5f86ff40a444f4	8281	176	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_action_commit_packet_v0_2_slice_d_mockbanksandbox_corridor_v01.log	49ea811149ee6cc4f3c69d4b81494c8b9ec2392a28716ea8c35393484588a411	8877	179	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_all_real_evidence_showcase_v01.log	dfc3fca88c14dfacc43269d869c0b96ecb4e42d1e6d181db889518ca9be09716	12525	346	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_all_real_full_stack_v01_anchored_replay.log	af516265c0298037a1e1f45957a78e8c89b4c8752fea44e544980dec9fb54f96	12873	298	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_all_real_full_stack_v01_generation_anchor_publication.log	faea6a5425f7b162bee2f4f9ad0ad8bbbe428df8821b7beec7ca38a5bb5fbd4e	16880	293	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_crypto_artifact_seal_slice_e1_anchor_publication_v01.log	46078d302c705fbfc1144f3888429f8028fafdf8a03e89bc917a256e1148fede	10958	253	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_crypto_artifact_seal_slice_e2_anchored_audit_v01.log	1140e5e9b156f93f122bb1170d2789f9a3ec5c61ada8c63c6a881b167e63c924	8459	194	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_sealed_trace_replay_slice_d_official_replay_v01.log	2945fc46f9c75d15a28c209193ab26c6044f1c04e2862721d2b1c8cc8e997587	10097	251	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_airline_transaction_artifact_ledger_slice_e2_offline_package_v01.log	936d9c16aca3671f1d2ee340b60fcfccc25e99ae080dbf5dd8fb2d04c620e410	3973	137	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_applied_certificate_readiness_demo.log	46bfd6279a27165e8c42aca092e3f7d5709fac72074bda7a54e8c274bc8f5e61	33195	491	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_applied_certificate_readiness_demo_postcommit.log	bf42dc5c1ede9b2aac6f74a5b7c1e9f7296fbc1ccc56e1757f037d7b13429eae	33063	489	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_applied_drs_retrieval_reuse.log	8beaad8cb52ac733d3bfb407f5294eab9f7ab8cfefc01018ed335cfa94e7debc	40658	442	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_applied_drs_retrieval_reuse_postcommit.log	40f902f9543904e917c98e8f4b33ac8b32a5f54997f677d6ed501cf03c61e20e	40503	438	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_applied_warehouse_semantic_demo.log	845b82dbdd1412f40b5f21581d0d2850db8761bfeb91e7f9264e38c879c2a41d	34993	553	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_applied_warehouse_semantic_demo_postcommit.log	5429786cb5545d1db5bd8efaf02d99e54352981ed93f88740af6885aa338608e	34875	551	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_architect_from_bounded_attractor_packet_report.log	29e095da6567aeaa4e9d37c66ee7442faa3f8eaf2941037c95d3ae5a59db667f	27936	297	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_audit_hash_chain.log	67db6099616ebcb7ec243c6c8481feec4ae011533694077ac8b4d9ad4c28a518	29382	352	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_avf_attractor_from_accepted_matrix_report.log	7bf2b247851b27ab18e17e37004faa97805f2dd170b8c0bc46576340eb5bb124	27787	286	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_avf_v0_2_after_local_drs_v0_2_v01.log	ef1dd1a2f806fda3361b6ae241d50d3048a1dc9f14c41b59152c3f1a2d2e7b75	6459	135	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_avf_v0_2_full_wow_v1_2_live_observation_real_run_v01.log	63855ad0a2a4e0b3ecf58814e911d2e14cd0307e3cbbf1db5c5d9c3171880e7e	17006	300	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_bounded_gemini_architect_role_runtime_v01.log	abdcb1f032b781794907e3065639b2549fa587b7cd667cba9152a934964fbb08	7102	191	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_bounded_llm_semantic_executor_node_v01.log	6d94b8502fb96a3bacc6f5efad69ff1bd7c2b3b4617021c16d28a8b22118fdea	25538	524	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_bounded_semantic_evidence_real_gemini_slice_d_004_v01.log	562a2aca7c340984099849f7dcc4929f4198e3737e0df869a6bff01d633fc0a2	5128	106	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_candidate_vector_generator_avf_scoring_v01.log	bd928e50310b588c9217d1f38b08307ca29053ce250a68153cc59d9a2c7a74df	8740	260	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_chaos_survival_showcase_report.log	883c12813aed81af65582803589ae2d7f324649f545c4c03e73e7a9c52e0bbe2	18984	285	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log	40148424d58b1f599c9212a6914bdaadbfc932b2cce19fc67fccd0801b12af23	15013	384	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_compute_collapse_enterprise_bench_v01.log	d6a9a1e2e6b86a1eab68e0c84ffae630690d73701f68aa87e0fa63dda995bde6	9253	285	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_compute_collapse_reuse_showcase_report.log	296a38a72a67ee159878668561199526a07d3a4f9abe0c7f1c4ce16972fbe306	20819	268	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_conflictcheck.log	6cd5e9a55e5e55c3dc004a8dac5056330b7ea1a8f64acdff20da97c4fe67fe02	48084	350	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_controlled_orchestrator_matrix_gate_report.log	f5d81606244630c2ae9ba7752e76b1815e216b0345a5b446ecc7f907118578b3	24885	299	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_controlled_root_orchestrator_route_assembly.log	d37da5d3c121d36ad1042f582f5929b96dfc3d155ece5534a736fa2735fa77f7	35681	421	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_dag_executor_from_valid_plan_graph_report.log	f1813c6f7d10ab57edca21f9180178dd2183e9fcd29de7d3089ee922dead8316	27037	300	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_developer_facade_capability_manifest_ux_v01.log	0391d3666d968cc92731e66ad65c7344e562e1ec274068189de0f2c7c9b5da82	19806	431	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_domain_neutral_reference_kernel_gate1_v01.log	7ada01ea81b3b6ba48f4a0c09a0dd875b62591a3c683fd00551998fc238dfaab	9242	191	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_drs_layer_taxonomy_report.log	438fd95cfde6ace2be2fba713014e434f26ab3f9a35b94e7e853effa68c68dec	20430	247	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_drs_lifecycle_semantics.log	db67637562da9fa7cdd0cc6dc5f7ab4731e7e2e3ed159c32e41693b9a84e72d9	58116	360	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_drs_lineage_provenance_pressure_v01.log	6b15c5820eece1a908e3e05491fb9dc9e9b4fadc9d053d2e7e77f86034ce03bd	7539	214	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_drs_v0_2_local_lineage_reuse_v01.log	76e5be045e174fe46719aba669fc688fd16d18608a51d593cb4753a4ab77d87b	9728	230	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_drs_writeback_from_root_final.log	b6594c15effb47a85a1cde6ea3bb075839f663ff94b98378b01ca61da586a25f	31455	331	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_enterprise_chaos_pack_v01.log	7ac18520742ae3cd768602123d7b18f2a6d9127706c566f9c2df35112a362aa3	35725	481	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_enterprise_document_killer_demo_b_v01.log	c23b82ee231bfa77edbd0bc820fa83b23f962d9f36791a3cd59623b3cdb09160	26537	527	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_enterprise_killer_demo_v01.log	b2599b0ed2a7d0d3be3a7bbd9d37106b2358eeb4c9b3c9b1c544cd1c171dd3f3	20176	370	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_external_drs_pointer_protocol_v01.log	1c7cde6c829ed894b4fc10ae94400d9582359104abec3bcbe8bb50d37660d887	18441	344	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_external_evidence_acceptance_gate_v01.log	906909551d4d773cd40c3162d251d6b7c50b78179516642cdb641758b435903e	41909	458	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_final_day_checkpoint_after_conflictcheck.log	80718dac6a452b487d137ecc74646f0bda857e4cc0deace87a0e7458ca61b230	97723	582	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_fractal_cell_runtime.log	5aae85c2702840e337d046b4042067fa956bc2cacf5b5fe6d3377b0f2ac48e4c	34393	355	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_fractal_order_fulfillment_dag_runtime_v01.log	d8fd9c4159de005540dd8642f029c08b725efadabf4175318c3a96da2ff00932	11211	328	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_full_wow_v1_2_live_action_corridor_integrated_organism_real_run_v01.log	df494bd9256d0fc0e25c43f09bc38817dedb2d44dfbca939032bf13a8aceef31	6441	139	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_gt_from_validation_report.log	56b4b74625a7f6f84679a483f40e04fab3eb71ac5911bb108551c72fa25608fc	33770	329	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_applied_stack_walkthrough.log	4b9b79e1588ce1ff152aa3968bf2d493b40db6540e81e964202a7e0dad4275bb	31611	386	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_drs_lineage_provenance_pressure_walkthrough_v01.log	3425fb373f57fd4206c46ab9a5608bf582967444374c54ad1e8c99f37df6028e	7718	253	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_full_wow_v1_2_action_corridor_walkthrough_v01.log	b3e126ee5106452b4ab4cb36b60a18d7f0be0797cfe5fe411e294bde5bbcca12	7784	167	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_full_wow_v1_2_avf_live_observation_story_renderer_v01.log	e4e1e7ab95aba109c382c602c44001db263bdb694e0e926be2bbbb94fcc2e717	7577	154	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_live_llm_semantic_evidence_reader_walkthrough_v01.log	11ce04e51dbf16f678655fac08ee71c265d8880b6b54974eb08872c87d5d7013	6207	142	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_long_lived_drs_ttl_aging_stress_walkthrough_v01.log	cbba0b4456b198afa7182ea48f8c73791890a852c6c8dea823bf06ca0e1e4bc4	7996	244	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_real_semantic_runtime_thread_walkthrough_v01.log	c170d39a5c40891d958eb7a042b223d08f507146833acc8cac9afc1eb16c40db	9679	284	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_human_tri_party_airline_live_semantic_story_renderer_v01.log	09b167ae2ec9e635b34c708d26c88dfb8e6ccb9b673d5b95b7ad7a138d93810a	6934	157	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_kernel_enforcement_transition_matrix_v01.log	1589227033232f0cdfa00fec58eb84c7c4a341cb9f0ae4b0224d016db8668473	11747	342	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_large_graph_drs_lineage_report.log	71fc8fd019d521f0f2fef13a52434466c68103a5ae5f2bb46d33202a448e7a20	45507	801	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_child_executor_in_fractal_cell_deterministic.log	12929c98dfa5285b100e22785f2fca28f674d6cafc3463e3926c07b1ae963259	31341	342	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_dual_gemini_full_chain_smoke_LOCAL_PASS.log	b36a811b7ad16a854083c34db72e445ada58a7dc16c287e56b26804975fc37d1	28641	407	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_architect_smoke_report.log	5ad4f66f4d28becc12af1070c2a283b2e63dfbfc201a27556bff938d2e1da035	21706	319	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_dual_role_smoke_report.log	ef56b358b7ae0a8fbc28f36f6dc12287c36dda0abfd0358570126a3eb9d1d944	35949	727	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_orchestrator_smoke_report.log	a2175b86d6dfd696582bcca0d4a351e9ef8eee08fe3cede2298ce33e882ac89a	24339	365	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_25_live_report.log	a0c877a4ef8e0e437784c5d26bf95559182a714fb6394aaac171d3bf240bb59d	26669	445	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_25_success_report.log	ba82427392e0012aea2e4012c512aa4e4143887f034588ce10f214cbaa813cb4	6241	163	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_live_report.log	8f10606b7d929bfb8c428fa4a71d7c44f3c7b584c9d63d7ffba6959b188fae08	25968	433	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_gemini_ordered_orchestrator_architect_smoke_report.log	f7cfe05299228199161a3c6d9a92a2001aa5652d0902115fd36f7368f7e43966	22095	320	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_llm_semantic_evidence_reader_v01.log	5c0430cfc6756bab95807179493e6070398a96c331c12419cb14887b2ce23734	6630	166	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_live_unknown_request_real_gemini_007_v01.log	4ca64236feb0b92c51de7dbf51b8521105d2de35334e8713432b444ebcc5ac4b	5818	132	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_local_drs_v0_2_closure_before_avf_v01.log	943213a02e3bc69bee9f87144ad40162b2cef9c00b9fa577ce122ac6649a8447	6758	151	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_local_drs_v0_2_full_wow_v1_2_live_observation_real_run_v01.log	ac7048c1a6ac7671e2e3341729dab6220ab9da99f0226836199f20282cfcab14	12601	234	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_long_lived_drs_ttl_aging_stress_v01.log	656d72929f2f11cf3089d512ff3e38be1a20662103b1ff18c6da9086f91185e1	7113	234	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_matrix_gate_avf_current_canon_sanity.log	87850d8b8bfd0a6461f7edcf16ad9d7755a3a1287bd6b44dfe2bdb9c8a62816b	23711	346	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_mock_connector_sandbox_runtime_v01.log	181005ac39b66039f93b49a47a2d72c0cc01dfe39d1ed08dd23fa1e09b136282	8896	275	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_needlecandidate_lifecycle_proof.log	1e492ca10774ec7a3303783f6fb82a014a378ee3330e121b67caa543d85f20a8	33361	392	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_needlecandidate_lifecycle_proof_postcommit.log	fe06c12749d1e5cd779ae9fde63f1ee4be552fb91cb034c47069d9b36b349807	33220	388	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_non_action_direct_reuse_positive_control_v01.log	8309f310d4d0adec8abaa932120c38015defeb877695b0e6b774a441dde5e3d6	5075	120	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_permission_needsuser_ux_proof.log	dde11f2a99a2ec2df21cc5df49fee315812b286f54fd19f1b861429911bcddd1	29681	380	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_permission_needsuser_ux_proof_postcommit.log	ae1c5ff82054ad5dd9e9e4b86f71fb1facfad02d95d037a088cf2b207589f0c1	29540	376	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_post_super_smoke_full_suite.log	ae048b168f43aec0aaec53744a9d4e74c4b4edecd9159c144d7fbf0f632bf4f1	20073	224	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_post_vv_from_result_proposal_report.log	91d01c849e176e1fa10ddfa0c5964e4f59f45bb25e2af1660f476e14c87c4d60	30385	318	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_read_only_enterprise_connector_sandbox_v01.log	d345503dde31b59921a6c75a155a3236922287f97bf42405429b146360491dd5	21597	359	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_real_local_drs_resolver_writeback_v01.log	8faf028328555b71cc68189f9a8376515804a04eb3cd759fe21d25b415703128	7819	259	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_real_semantic_runtime_thread_composite_smoke_v01.log	3ec11a1f0a2163b87b6969983f5f53066d422c8d9b3e8bd69cafeee829286faa	6689	184	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_reuse_score_report.log	1a0e0916ca3a6ca0199779cc0cc1cbc2cb4bb1693e9db9553c16460a21e5fdd4	21699	269	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_final_from_gt_decision.log	1d2156c531062240b4673d8340a759f5f50737c0ec838f2e0681a6ddbe8eb45e	37032	339	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_native_dag_drs_audit_report.log	b0cc884ec4d460af1b042697e4a2e5d2eaa0ecaf1f0816345291cf21fa8a35b5	31651	563	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_native_full_canonical_e2e_trace_report.log	72dbd32e5d38ca10715fca2848642eadf7b7a9ea408ca53cb7fab51b70180763	25050	327	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_native_sandbox_needleruntime_e2e.log	cb4c23fe2eb39d6f99474e2e61031fef8f1fc67ce452238cb45872ddcaecc4d8	35539	334	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_native_semantic_reuse_e2e_trace_report.log	5b89084095747ddcfd7389bf1ed8fb9e9008d3020917bf6aee5585e114268114	23107	319	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_semantic_reuse_decision_trace_report.log	2fd1942da941574d70e1126a1c908a17bb8b0e35659c57f1adf8628a16663654	22853	279	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_semantic_reuse_final_decision_trace_report.log	b6be27bd7210bcec7e66c89fcabf424307f57410a97c04c1d79e5da65cf557f7	24118	297	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_root_semantic_reuse_gate_trace_report.log	621f85b1a2626d26951800ad1bffa3700164a1ee001101197737720855905ddc	23529	294	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_semantic_reasoning_adapter_delegation_slice_c_v01.log	0c7fd46701eebd1be2ee008de2496a49946f645328132018bdef54b3d7bce769	4534	111	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_semantic_reuse_authority_stack_report.log	ddea080bcd57e0476390b573bd2e3fa4def4c88ff07c9b3df83c421b9f5bd811	22489	308	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_semantic_reuse_pipeline_report.log	8a8ba4cb7c53daac8f736dbf9ec338627831b81f74af1afa1e0bf5d56aca0a1d	21885	279	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_supplier_payment_shipment_release_review_wow_v1_1.log	65af6623603c953020652a679ee2b0a9632d7dc56bde632e9a54c8e7ef51b6ec	7539	196	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_tri_party_airline_all_real_semantic_to_contract_causal_corridor_real_run_v01.log	5f483fdc28c564ce82d0329128f03b7e880db5c4892665a68ab129161564441e	11701	300	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_tri_party_airline_live_semantic_lane_real_run_v01.log	1916e6c8ebb2b7ed392a8815358724026dd5e6bedeaab6389cc03b8253f7c4d5	13186	366	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_applied_domains_smoke.log	8a4ec1bde7d6c22e60a6128d1a27839dbdfa422ee69e90552e766a0b39e3003d	46833	790	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_airline_all_real_generation_attempt_04_v01.log	9b2c4243512f6405eebdcf6cb606374d0d8d2b8593c440cb6e39556d4dd08760	8308	195	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_airline_all_real_generation_v01.log	3ce11fa97c4b2f0424781f8393d58e176df877ef08de320ba1f419208be3cd7e	12704	286	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_airline_anchor_publication_v01.log	1cfea24a111d226371a53be0d8c3eaa1d83d7ee53677b5c661b44512b21ca2cd	7881	156	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_airline_anchored_replay_v01.log	bf4a6f580e369181cb03a4bea31b817ce70421137d8296039e69797c43792abc	5496	107	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_all_real_evidence_showcase_v01.log	624d6edc57a5e2d0d45ba1e1dae80e2b3c1714d48d45933ecabbf4087a2a117f	7798	173	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_all_real_sealed_evidence_program_v01.log	ad54955da438b938c6fc376380f7bf7116034560cf82baf1fcbb75fe528eb8aa	11555	181	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_supplier_anchor_publication_v01.log	2e2d9400c2d992c9bd9d0a58f4ecfd50d7f6af988ea69545c67c2e8326c8109c	5489	95	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_supplier_anchored_replay_v01.log	7e5f4926355925a4e3f9e3b05fc0dabc830317307f0bce46d978a9a0687ca629	5106	106	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_two_domain_supplier_water_filter_generation_v01.log	3405c628f5d0612f86ad464743287dbfbe666b67da267d237b9ead4729da4616	5655	108	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/audit_reports/auditor_typed_drs_lineage_edges_report.log	7c953f3e8a756c3ddc06265e1cf5a1152622d56e1522e9369bef7e49a9c38f07	21960	282	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/avf_v0_2_after_local_drs_v0_2_closure_preflight_v01.md	de8cf15d487121b782ec68443da4b3a58a8df8cd74c490cb7d1831ff4f845dc5	10079	330	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/avf_v0_2_full_wow_v1_2_live_observation_preflight_v01.md	6be8d49ef3f5b7600daee043865cebba3c895709b8c887d8cb103ef9ab501c06	13746	431	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/bounded_llm_slm_actors_preflight_v01.md	91f790361639e7e151681ad8902bcaed1971a94974c4a44001330575655b73b6	26578	599	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/bounded_semantic_evidence_packet_preflight_v01.md	492bcddc42c0d682ac1990eb7198c2c39e93450025863f4a7654f24da8cabfa5	13924	344	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/bounded_semantic_evidence_packet_real_gemini_checkpoint_v01.md	e1620629cf94892b8a1cf7c7548e2e6c184559a0c85b0007508904522042fa46	4536	117	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/candidate_vector_generator_avf_scoring_patch_plan_v01.md	33cdd9f7cc8a7d0fdedbbe879791d89b5bf571e2becd4759666a5c062ffca18a	16051	458	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/candidate_vector_generator_avf_scoring_preflight_v01.md	c4da5f2ce4c199c8418600b9456bb45db2ce2b7719bcb0f7efc61c61d2326972	20060	355	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md	92b267eb014659304df8cfa99da4b0370d1053090161ceaedccdbcf1b3018d0f	75370	1892	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/compromised_upstream_economic_adversary_preflight_v01.md	47e783e48d62374ef5f16bdd3cd7e7f253d8781aea7dfea0e6e2108f15217035	26622	263	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/compromised_upstream_pack_patch_plan_v01.md	b1799d352e297e9094e613b5f6831c4bc04477524a5e5833edf77f149bef63d2	15950	557	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/demo_designs/enterprise_document_killer_demo_b_v01.md	710cd15fee925dc9c98b462cee82f381e117530b231a7c4592e3b480325aec6e	17103	607	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md	1ba33b760172b918789b1def0975c7180594fb969314af8ed66fcbfd167ef1e6	7010	234	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/domain_neutral_reference_kernel_gate1_preflight_v01.md	25fc66fcc0d883664bcaaad18681723ea2f336cd8ebad3eb9420f1d61f3d7992	52739	1196	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/drs_lineage_provenance_pressure_patch_plan_v01.md	1bf4796a038cdecc56b8a0a901633023ad8496551998fbd25f1596f6001a94da	17365	449	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/drs_lineage_provenance_pressure_preflight_v01.md	c8c615a7b2d02abfd361938aef1f24e0e9cbc8aba952ccfd7192e0c7efddad14	18861	248	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_human_story_v01.md	488b9cef815184b2eb5cdd1109faac938497f344fbdcbc5a11d55e924f7b75f7	3234	74	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_replay_report_v01.json	9caa9361746660c08b8e20f75bba5e5f07336e8dfbf0ab744ec98e1d346dac39	4148	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_package_index_v01.json	333ee37ee3c5d85fb1158b4ad663f6464138fa2252007630f1bf2a4eae44cb25	7907	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/02-airline-source-lineage-v01.json	c1562090af6212c66d7a7e23cfe82f31d84fa0e6bc0fc734f9c68d1e287b3555	4529	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/03-airline-a2-typed-context-v01.json	b8418e89e2d2b67a40ac83d255c976fdfbffefa3afabe6be774456bc0ff8a4aa	1126349	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/04-airline-sealed-evidence-adapter-result-v01.json	26c0688c1ba46266604dd91b58991c1211de1642fca36128b6c42bcf1b293a70	97393	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/sealed_package_manifest_v01.json	691d39788df1738d0cd8698b5174ccdee36bf42c173582e089a6dbcf3bb074fe	5305	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json	053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1	25745	1	0400	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_human_story_v01.md	422087c73dfc7a84b5e3528395918d60e66e33b65812693f5159147daacbe533	12491	93	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_replay_report_v01.json	666ab84f04a9f75bc510dade055d4d4e777712aeadb013cb79b00358aff9de55	4267	1	0600	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/fractal_cell_runtime_integration_patch_plan_v01.md	5b9c1bc127dad785293eb302eaa8c84a8c1bd0937bd4214e7a062bf653c7728a	21980	536	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/fractal_cell_runtime_integration_preflight_v01.md	e9f6376bf8bd2cb482bdedd5ec422b6001e2986e59dd523a95bf2dfeb963667b	26090	644	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/full_semantic_e2e_live_evidence_mode_after_wow_v1_1_reentry_preflight_v01.md	304891806616cd83fb6280b8922d8f8a20d00d70f1afe03a2318a03f08a3cde1	14449	281	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/full_suite_drift_triage_preflight_v01.md	4c4a499bc6798af00d90920f77c7de7a5260dc9749a945fe601249cb5eef8727	16108	305	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/full_wow_v1_1_evidence_pack_index.md	08de27de6a0f10842e677fe823a96c5abdfc2879f7e4f663ca65103ceeec66e1	9038	194	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/full_wow_v1_1_manual_live_gemini_lane_preflight_v01.md	ce2b57f78647b5a26dc13e3c6be0aba43246e140c3b534dc18eee864db04a717	17641	380	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/full_wow_v1_2_live_action_corridor_integrated_organism_preflight_v01.md	8de5b48feebae6e1f2b248d5758266e7149859e419ab9a47acd39048f1d8368f	13018	365	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/full_wow_v1_2_product_trace_preflight_v01.md	7c97b021979dfde75ef4b70bc8b72ab623f9cc2288830740d6dfd97853f6d925	9226	346	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/gt_lgt_advisory_evaluator_patch_plan_v01.md	0f9b5a942394c43b92f0041014d11aa7e79f0974f0b5259aa7bdea8096625536	16082	483	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/gt_lgt_advisory_evaluator_preflight_v01.md	8af689f4b91fd7d3db90d1cb82f1a200936cd469ea586d88d007ca2d329e0c9b	25560	611	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/live_llm_semantic_evidence_reader_patch_plan_v01.md	cb80ca882e66e2cc4d01745f70be4dc87a4dfc2bacaceb94e9cb1c75f83b6a03	11033	350	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/live_llm_semantic_evidence_reader_preflight_v01.md	a00fd5857b2239b7cfd1053264cd20216f0abcb8709438eba95b610ffd9316c7	9825	292	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/local_drs_v0_2_after_full_wow_v1_2_preflight_v01.md	bb45fcb9a69c447cb666d8be52ee74c37202ff1fce1a82b175c397e79529cab4	12831	398	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/local_drs_v0_2_full_wow_v1_2_live_observation_preflight_v01.md	420c47d9b1ad5528e71ddff220cc8312afd0c358ac39026816902b8abf27e2c1	10868	313	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/long_lived_drs_ttl_aging_stress_math_invariants_patch_plan_v01.md	3ddf2606650c9501f45a47080037d4656a8cdd123611e0b85fd5b40edefebc4c	20556	615	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/long_lived_drs_ttl_aging_stress_preflight_v01.md	e2de3cc885e58f49f3bfe395184b17693b8818304c1dfedd4bb0822a6bc41b2d	31886	732	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/long_lived_drs_ttl_aging_stress_proof_runner_patch_plan_v01.md	95b3d47f8b02df1c06d6369d5db3a62719728a02cedb5e2a07377b9f57a507df	21597	580	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/optional_live_llm_evidence_reader_smoke_patch_plan_v01.md	54e0d46abd8d0246dc139380f158f5210c8806855ab4e6e468887289aa031e07	10588	308	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/optional_live_llm_evidence_reader_smoke_preflight_v01.md	97432e9d2d58d3c3fdcb5b19d64b6e34a5f5886d9572ca5cf178e75d6cad54c2	7054	222	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/passport_geometry_root_needles.md	347ca55f3074106836c6646992cfdc18a2afefede199df1c1d2f9a4c6525cf70	28736	645	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/production_boundary_design_v01.md	f282cb823bcf2f13208ecdfa95eb652fc11d78ce65da94fb8f175c5a0764b66a	14354	391	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/real_local_drs_resolver_writeback_patch_plan_v01.md	2959ba86b2a9192f707105d6317d0817aceb3a383bdfec5617c10697d116371d	13771	418	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/real_local_drs_resolver_writeback_preflight_v01.md	6dcd8bfe858f79946b9b5915ba1a597ba231aeba7449d41a975ca98d4e557e1a	15592	280	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/repomix_handoff_reproducibility_v01.md	f6ae6adabea1bb6c5784a4c982b280d822750ffc582251eb86239017821a20f0	6741	170	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/rich_context_bounded_context_packets_preflight_v01.md	0a48eb86104b9b96e5fe6badaa5f736948b8b81dd8aa500e3d8a1eb182570e5d	15948	465	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/root_centered_phase_loops_actioncommitpacket_geometry_v01.md	b5f67f52bfedbeac80c01ff2d89d136ce40d8c3c997d725af5e91b028c8e41d5	10901	409	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/schema_contract_alignment_outgoing_vvreport_runtime_validation_preflight_v01.md	35076265715bb31015474b4ae86abf60741803d67ba0bde62a22cb94aa5a7131	14911	358	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/schema_contract_alignment_runtime_jsonschema_hardening_preflight_v01.md	92944b00fd41d85b7ce94f84936fa4b2c701faf7fdaac309964ff02b7f9deb1f	16784	367	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/semantic_reasoning_adapter_core_extraction_checkpoint_v01.md	3368e28fe70b9b81087c27a69c6c0169ae6a38ccc1a1011b85e298ef4f4ee8a7	6191	188	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/semantic_reasoning_adapter_core_extraction_preflight_v01.md	a3a739ed533b137c30d17d97d49cf0372824131b2897fae9c9c2853b430cc903	11726	318	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/showcase/airline_all_real_full_stack_v01/README.md	761fe7e4f8729600a5258edf426d6fc61c9a6759d2212ae0edb072dec74b783e	2659	76	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json	7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a	16634	569	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/showcase/two_domain_master_v01/README.md	15fee210c36c4ad4874a32e10f3682155a0655646e1b587a4ae0ef9b69ad04c4	2222	36	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_sources_v01.json	64999cb42219fd08e1aec8b2ac25db7804e55cbad580ca175395de6c6385d41f	23347	672	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	docs/strategic_expansion_map.md	f1e2b0f11d3160f444ec23c56a6c4aed873a0d299f59e472ab24d0ea8dd9ee10	38339	1410	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/supplier_payment_integration_runtime_full_semantic_e2e_reentry_preflight_v01.md	c7ae2fe4604d6f9acc7019c4779abbdd34dc7c7a1d4bba1c45cf449c46fd313d	14576	339	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/supplier_payment_shipment_release_review_wow_v1_1_preflight.md	f69bd2124bdcddd48549bc4343bb1164883874b24ca8c8f8e1831c7db36b286e	24034	866	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/tri_party_airline_live_semantic_lane_preflight_v01.md	fac4bc62ec00ffb9357f579dbf1511b5d129cec8b48c66c91e104c4215354c6b	18252	655	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/tri_party_airline_ticket_purchase_mock_e2e_preflight_v01.md	2e50d46b4a063b55dbc3012c391bbf22eb063dd694263dabece04fd0bb422e97	14961	529	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_02_recovery_preflight.md	8328d2e95a8a45dbb54377ef2c5b602a07ee6a09de1b92cdaae28a1e76ef66a0	27387	637	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_03_root_review_acknowledgement_recovery_preflight.md	20c1ad5a7c0d558adc147354abe16716d0da971cfbaac4062987c07b6c554666	24251	536	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_a1_attempt_04_complete_corridor_capture_preflight.md	63f235ca202c16ba46dba61b0a9e50ad8d287c451871f3e74866d4f61a4ecc13	44748	1014	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_a2_airline_seal_preflight.md	ea6d5172aef746e6dcc933e51cea8982e7ade5ce27fdc27edf454df6dbd235bd	96586	1990	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_checkpoint.md	a288b7eb005c1497e5d3f4b0186a07065d5ad30e915bd4563aeb56dc0e51858e	13673	327	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_preflight.md	7d88ea6f62895120fc740a1f0205d7c164d95f3008c24461b7d270b810fa5be6	49208	997	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_r1_checkpoint.md	7bbe6fe8fab599e2e77f948af6e6ead9ac760e52321ae35e51171335e40b4ffc	16475	361	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/two_domain_all_real_sealed_evidence_program_v01_r1_i2a_airline_kernel_source_lineage_compatibility_preflight.md	145d9129c30975ffc928c5dcca5a80a353453bb6f2c63cb0c5a950e588c0b7d4	12973	371	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/zero_trust_supplier_payment_wow_patch_plan_v01.md	fa439db623ccc47fc77d7cc4aad28111ea2d989ef32b7c93576f3012540a5d2a	10777	316	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	docs/zero_trust_supplier_payment_wow_preflight_v01.md	891d6390d49e7b83910f69d2f6d31a9f9797c85db8ba332cb335e4bfa989bdc2	10475	276	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	hedgehog/architect.py	5d29c6da9e401e2f66d4e60cdfcf43bd37fc988d503493af8841e39ff1f5ffd6	4522	135	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/architect_prompt_compiler.py	1e5290e1bd3e978e6e51ccb7dd4638eccd7d3fa625cb6af0138767a235ab3520	5672	139	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/avf.py	8ee327dfeb41a42bef4907f080afb1440718782de1d215087ad21532b1cdcea4	4404	147	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/avf_v02.py	ba88a22b3ddea715ad7af2731c171511273b6e7bb4c67f5d54024464a1a8b616	32601	800	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/candidate_vector_generator.py	7b85289fac5a536eb7dce9d470970904e80febba03f53cdb62a291daf7281a5b	18947	510	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/context_packets.py	080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32	57747	1553	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/crypto_artifact_seal_collector_v01.py	a62a4a3a90757235b0acd6666bdb7735f6cdd009f474466dfdf945a494326b66	86323	2193	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/crypto_artifact_seal_v01.py	787b3ef1b3f5898e61f8be9154325580b89d1ac60eee48391189fecdde9c78e8	104489	2637	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/kernel_adapter_v01.py	deebc60e3c0b7840ac58eab7e448ebae328e749239fde6e5503c571bae187dd5	41886	1039	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/sealed_evidence_a2_binding_v01.py	ca5dd083a384a3218dca1a06d46feddd7c9544d0b6333e1aaa153e190adad16b	112904	2667	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/sealed_evidence_package_adapter_v01.py	d25c90bce6c28156135d4cbe87fd8e9b89cc3de131498a6b6043815e7d0afdda	85682	2073	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/sealed_trace_replay_collector_v01.py	070b6bb5e663cfdeab5393862a07d03970a76807ec24aad33318db46b869381e	47035	1098	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/sealed_trace_replay_v01.py	ba9bf8aa3f72f1e6566b412884ddb405c2f3fb1a5ce3338820778cd7e359959f	103206	2597	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/semantic_provider_canonicalization_v01.py	06ea5c77608860e017e754cced1f5599cfc1701b5fdfc20074bfe595da426c20	24616	674	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/semantic_to_contract_binding_v01.py	6b9f34433cae8ef0435ea1456820fd4f7e300a2a6c9a2d389c77c3db008be4a6	110859	2632	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py	3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98	123173	3079	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py	0e9864fb499f378edeeb8300b785a8de69af2fbcb51ad4039d9306e182adb0eb	63810	1580	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/ticket_purchase_corridor_v01.py	5bf787130b370da4c58918ef4a65de29aa7c017a59d9fc491ad5c4ee66a50e3b	73472	1880	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py	af7dc4da6ce1185688447d96747516a521084ec7c749c8490ea92f3ee65264c4	94409	2570	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/airline/transaction_artifact_ledger_v01.py	3e9cdcd6d3c411b4dfab598d4b62b5648dcf071d4bf15e8297e3d4144aa831bf	98131	2546	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py	433888ec19c6632ac7abd9f9f64cd350ca95b3dc8c94035e7804e49beb816fac	62262	1392	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/supplier_water_filter/live_evidence_adapter_v01.py	b1efafd5b5dbce27ae96c853ca970fecd383b6470511180e71f478d094a670ff	25071	678	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/domains/supplier_water_filter/sealed_evidence_package_adapter_v01.py	1eeb20bfd41de4650d04e2f2ab355db0c2b390c4f019b654cb4aab3dff563517	48495	1170	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/evidence/__init__.py	2fa905efbd7f2a968d8a648ef14ef676a4f64bac94a159651c7a4d7b71a81b8b	3830	101	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/evidence/external_anchor_v01.py	299c6d2daabfe53c0c93c76a46709d09c4cc26b89907af17a30dab8ce8537994	35826	953	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/evidence/sealed_evidence_profile_v01.py	3845a246e641aea8da3d9314e2d140bcb701a5488cb9de8153a62f0d84529b37	54293	1481	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/evidence/sealed_package_v01.py	4fecf1b24696316348256acd1bd5a9e7a237dc37bd5b11abc41a71257796af53	30908	836	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/evidence/sealed_replay_evidence_v01.py	f40e48f3d32f4b67250534f5d47d5bb4e076890497506ec4315d9ce06261c5a3	38035	935	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/executor.py	c49c5852abed5137ed5f70137986f0d0f6857b2db108d51f46d76986c9393a58	6973	217	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/fractal_cell_integration.py	81d3bd2dcc123014c26ac7b8d65c503aa2eeb1b0d9c80e84c2e820bd5a0ea7df	39501	1046	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/fractal_dag_executor.py	00b2f7db7f94b4f31eb223ebc764f4762ab9abe30afaf07730326673d59b4ff6	10979	314	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/kernel/effect_firewall_v01.py	e467fdde7ed2f8ff7b7e6130ebb2fa62844b667089a15b42af83d9d4402b40c6	77997	2035	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/kernel/multiroot_v01.py	e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff	52804	1402	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/kernel/root_signer_isolation_v01.py	3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8	31043	879	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/live_llm_semantic_evidence_reader.py	c41fb6321ac8511826f36e5ff1ec1c19777dda8adbfbed830d561ec429113807	23629	597	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/llm_architect.py	4aa56b5045a2657075fd3abae858cef8a8d5acaf5efeeb88fa4849e6035c2a51	12919	367	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/llm_gateway.py	d913b59bab23e586b47214b01ef7501de2a8fb0a1c8248d03555b428736725a7	4447	153	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/local_drs_resolver.py	5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4	53552	1503	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/local_drs_v02.py	831c3c7e0a1bfcb2ad9cc56d61c2c33ccbc8982add7ac46434c55676c03a34af	30549	885	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/non_action_reuse_positive_control.py	540676c7720c008f9f9899dc246d483f5c9c47d30f52350d37f2439b522a8f55	36711	1014	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/reuse_gate.py	964bd4ae925c934710f1055514a256b2a5d7521e91841628180c418742df9584	4052	133	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/root_orchestrator.py	412739ccc209fd1aa7b66195ed04fdadd8eda63d5866a10fa846dfbf3e09760c	64173	1560	0644	UTF8_OK	AST_OK
+SEARCH_HIT	hedgehog/time_model.py	1b461cf013f2e60a82509669b0ac692d0121b8d5f3c9d3a46a3d5fd33fc48cba	974	42	0644	UTF8_OK	AST_OK
+SEARCH_HIT	release/completion_manifest.json	02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466	26256	446	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	release/integration_seam_index.json	c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231	15150	295	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	release/integration_seam_index.md	d46217e458a8fc717304415b67a541b3e3af9ea85e66d493c99ce867b01dae31	2770	24	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	schemas/attractor_packet.schema.json	361c7c821b02177236c1515a1b4ab1d59912955672b0fa76a0fd935116d360a2	5858	244	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/drs_record.schema.json	a4948d36e3089485bff72841f5e8bb764b292c1ab3b505866695fddee971bd29	5829	256	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/gt_report.schema.json	783be910399f5bc8e640c00aa42d8af90b7a122d1404fa11b15347e5c35072e3	7732	341	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/marenna_record.schema.json	cea87125f5c815f02f12cc2a758e863b8d92d22996d3001702e6617a004a2909	3774	169	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/plan_graph.schema.json	706a00ae1558e2ce65127bab2ea1eb65ae7f510d48f02f80ee8d87110ccc30fb	3804	163	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/temporal_query.schema.json	8803318aa5f01c0e5b95367a9b36ce60e07e9dde8e5245764ba74f2ba3ad73a2	830	39	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/time_envelope.schema.json	fffa05739e3eeed6d4cc6b4342d8833d6435aa8e9edbdfdafb96e5a7f3a99424	1333	67	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/vv_report.schema.json	44d9db2f5046e39178acc1461a93c670870fae0a2c71db79d61dfd5e193f4854	4160	180	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	schemas/world_state.schema.json	bc7e895c6653f397fdb132ccf23b34d80cb41adf78caf6e71e6573b888b85e3e	3492	156	0644	UTF8_OK	JSON_OK
+SEARCH_HIT	specs/demo_baseline_v0_25.md	05c8aa63e11f562f7d6dc8f77c3e5f56bcbb346c0a31270154523437fd072466	109659	2237	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	specs/demo_scenario.md	770a9bddcb9e6453774840ff5b44d9c4c5574bba11a750fb8859700e5f964c8c	91797	1840	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md	c406dd84163634d55e23309a814d49c7a3ff30171059b7b95a1a38e2cc07e7b6	82789	2291	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	specs/gt_payoff_v0_2.md	675f2a96fdaa9213615a407a7552711926c288afe5e6740dc7ad6dbd23025698	3118	110	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	specs/legacy_mapping.md	c4df26b099863227f4b7cb6e2a63beb07935566166bfdfef64fe0e2a6d64c0e4	5287	134	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	specs/schema_package_v0_25_reference.md	e9d1b442cd05c17bd881e93e11997625680bc254d97bf0da3273eddf6b926d52	46355	1622	0644	UTF8_OK	TEXT_OK
+SEARCH_HIT	tests/test_airline_all_real_evidence_showcase_v01_runner.py	c30842ec2ec63fdd62331795a165682a27198794008305460a16dbac478bf98c	22322	561	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_crypto_artifact_seal_collector_v01.py	47bb4cc1e14c99e8a67cce0aa05f391d3f5df05d60b3a825f42becb1ceb78efa	76409	1998	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_crypto_artifact_seal_v01.py	46e432099b55d698293390a80084f76bbb7a2999c4cdb2e1cbbb00feacef6f95	91615	2373	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_kernel_adapter_v01.py	7a19112457a26b5859efd0c84e54c42315fbc9c0bc9a6274fbf2cce605f3eabf	44117	1217	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_sealed_evidence_a2_binding_v01.py	a29f988da2ae31a704560ba08ce09118658708b7e12cc08bf0585502ee9d37c5	11763	328	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_sealed_evidence_package_adapter_v01.py	23da9854871b2404fa72c6333b2c99e1aaab9c995d655c9424e64978f3c3e2b6	74360	1938	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_sealed_trace_replay_collector_v01.py	90f41a6a13559d525e2c6a2975b731983032b909e7555417a6f5177e48481656	62512	1697	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_sealed_trace_replay_v01.py	cc31d108d27b720f7ab97a4229584b275a2dc771c53f1b3e0340b9d5655d88aa	59815	1580	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_sealed_trace_replay_v01_runner.py	e86bd5b5320fa8945db758418d0ceff596cfa2648a98f476460c613a17d0413d	42583	1104	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_semantic_provider_canonicalization_v01.py	47d84aa8c3512ecfd0bf6f33285fce0e6d10a147dd3d7f95898299e1a1f9052c	20051	512	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_semantic_to_contract_binding_v01.py	4005d3e05c01268ea2618710ef810856c552c6cd5272c234a16c91b77e8c4d0b	59434	1857	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_semantic_to_contract_causal_runtime_v01.py	d0b78bb60235fadfb487082a9134978c1df4f5273d1d8c2d365f8d81856475bf	56524	1580	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_ticket_purchase_corridor_runtime_v01.py	5ba359d5ab7ddcd9abfba0d39b4a2da2b4322bd8d3315f24d12b369358f98094	36052	1020	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_ticket_purchase_corridor_v01.py	03a6770e121c1ab27b9c67766c1a958b381a7edea36dbf5b01a0c5d2f780cfbc	27195	795	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_transaction_artifact_ledger_audit_v01_runner.py	7417e04c6434098e6e06e5ac8087a35cd4a574a20f7e5b03690d9db22bc77755	42613	999	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_transaction_artifact_ledger_collector_v01.py	32141a4e4fb159e6c6146016da825a2696e6a675ea6431e84114cc909774aa15	123729	3328	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_airline_transaction_artifact_ledger_v01.py	194c661b6041010ca0ad873ece9d3e7ba14f5f0ffc321077a2b174d0d49a9278	40048	1122	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_applied_drs_retrieval_reuse_runner.py	c82a281469a544b5093543fbb810d483b1f3636367b9ed83016e8c146d08ce34	13027	327	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_applied_warehouse_semantic_demo_runner.py	fbd0eac6548b4cc18ed1938c7002d8c7997e989464964f0fb22234df68b76249	21433	504	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_architect_prompt_compiler_runtime.py	8de9b2c9f3b23166c03367b7e2f4b097f4fa7da332a43e7763797ec9ee95441a	3292	80	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_architect_runtime.py	fce774db860b6a4bf38e3d893db64208fd2b83ed80ed10855194dc7a65439d4a	4938	146	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_audit_hash_chain_runner.py	4b8b7e664b550a694f69d8ea1ba0bb6a69c9201da2142aac8a2bd64491cf8369	8511	217	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_avf_runtime.py	9465193c3e8341064013cfee79900d3056911459464bdaae3c0e046c79856127	2934	81	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_bounded_llm_semantic_executor_node_v01_runner.py	4ef40eeea69fe64a9169fd74dc2be762ebab4c5bf4047de325dbb8d6eb710ed0	6571	190	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_candidate_vector_generator_avf_scoring_v01_runner.py	04b1f3dd2a93a328a50fa08c07f834b8f21fbbe7df1cd4983af6883b3b65e2e6	10321	268	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_canonical_pipeline_trace_runner.py	f5c418d31687bb702c95676c6640b0d8083d42dd4393a62ce77a17adc2c14267	8488	203	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_chaos_survival_showcase_runner.py	c284a34197e735c104ac8f8cc13478400ed798b612eb773c8744a313aed7d634	12402	285	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_compute_collapse_enterprise_bench_v01_runner.py	1cdf8670915c57c067450a2f47d1a7a86cf52ea7fa8a70ca0d470e981246bea5	5247	135	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_conflictcheck_runner.py	b9088cb23121136b066059fc1bf2419418bdfa7259e07f4441c5c0e865a32846	10626	244	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_context_packets_core.py	7a3bd7e1f601613984d383d3208d17834316f2b7b394ed625f15b9273dbe5f7e	41559	1160	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_developer_facade_capability_manifest_ux_v01_runner.py	714ec5d1415834ee9e1199575fc4fd5078eb3bdcd50d6d2f2b9e312b04086a07	8432	216	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_drs_adversarial_stress_pack_runner.py	89e99c85f27ca657e80a0f6c8b97bace44fccecd05e273ab33d61a0366b01fbb	8060	219	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_drs_graph_proximity_runner.py	620a458ee892cd3641807d49494a2187880054864ed86aa15d5e39073dcfcb38	5690	167	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_drs_lineage_provenance_pressure_v01_runner.py	72ae9ba5ecb08901689298da19a5ea4452fcbb3bf65b01523ae6443f5211c200	7308	163	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_drs_v02_local_lineage_reuse.py	5039967f169ac392eff71b78344e9c6ef50f2fdb0b5bc205a35bbe67b986e2fb	24028	684	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_effect_firewall_v01.py	4f8276656c495637e56acb385be8876f5e42986bbb099f4fdfc60d0505c2b332	75802	1925	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_enterprise_chaos_pack_v01_runner.py	c2cb6d5b0c9b4394c67f3c7755cf9da7cff603d5a6dcf322d97de64370ac77f4	5040	137	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_enterprise_document_killer_demo_b_v01_runner.py	32cb769bef935f6e8decbf7bc9c95f1198793f0f60ca8d356dcccb8277c058f9	20694	520	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_enterprise_killer_demo_v01_runner.py	2f5b05aa34398ecdcf441133f487928714c297cb6ae028e48f9dd5103534c5c6	16526	401	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_executor_runtime.py	2889f5e924db29c315ed9ff84c147bcd96b5dd329a538db919b16d0d5251da45	6905	181	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_external_drs_pointer_protocol_v01_runner.py	b102b907df4e21b6ba70c5121ffbd0655435124c41d2eee34ac29d439d1b545c	7811	233	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_external_evidence_acceptance_gate_v01_runner.py	e49c3320288d8c4b8edb0e0e6d538e5688938a3e68490f55c68c467fae12efcb	7549	206	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_fractal_cell_runtime_integration_v01_runner.py	9866affd43b91c0676b569a4679f32b8e190b567e46f705ba287ed2aea451327	13709	372	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_fractal_dag_executor_core_runner.py	7d4082f42a85b5b78be35d7d4ec798906b2d1c35f0562a3135b9abf0db4dbe93	6615	194	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_fractal_fulfillment_core.py	86c8d3767d0b1de0ba7d49ae0b366a3633da367eeb8398308828fa5008c6b447	17273	476	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_full_semantic_e2e_v01_runner.py	ab3df8c970b43eee8fab1e63bc17dc2818616eb073652a3937c260931f3ee916	279920	6563	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_full_wow_v1_2_manual_live_multillm_fractal_trace_runner.py	f61278866a14778909d3f770031052e27880ec35692d090d6b75c5edc009e3c1	76610	1888	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_full_wow_v1_2_product_trace_runner.py	64c17a6e836d60d37252e7a576ae6b473e3d6c9c227016ee801823b16328075e	42021	1007	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_gt_validator_runtime.py	91745d5c3a167d4dcd6b0954b753de2078753d39a5eab43c296b162ddc5bcbeb	27723	853	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_airline_ticket_purchase_corridor_story_v01_runner.py	2674e790b9828ddabb6e7190ee4cc0dc814df500c1d69f589fe9dab947093cab	24022	680	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_airline_transaction_artifact_ledger_timeline_v01_runner.py	7314fd8f591e1192439ff4cb9907dd94483b8f8103bf8eade83c70cd1f0a81e7	10124	259	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_drs_lineage_provenance_pressure_walkthrough_v01_runner.py	b6d81a646ae97d7bb2eca3e4f4729ddd8a5f4282cbebb38873feeee099c72bf7	5075	142	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_full_wow_v1_2_avf_live_observation_story_runner.py	4d81eabc9d15321684da23f12bb2661fcdb0be2f9ee87e2a8ecbbb379aeacece	16064	425	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_live_llm_semantic_evidence_reader_walkthrough_v01_runner.py	4c37c8ff9a7a4cd655893b741bd06a63a190a64510fe073d0db1eb86f26169fd	6481	184	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_real_semantic_runtime_thread_walkthrough_v01_runner.py	deb1d3f5913106dd6a77a1ca429b10d3037ca259b083f6f48c6942c503df155d	8269	225	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_tri_party_airline_all_real_semantic_to_contract_causal_corridor_story_v01_runner.py	5f7adc61e3640094ec2bf65d3c77ead8310f74b4dc60aa3a28034e9424c4e46f	62059	1274	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_human_tri_party_airline_live_semantic_story_v01_runner.py	62b5ed3f81437dca21a37fdfa8d882d6aecdd1f431972ea1e0d5e5266b47cfe1	13277	350	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_kernel_abi_v01.py	3a0f3cf5615bf6e574075d9e1fa38e823bfeaeb5c6fb8ebe889a7af7dff8250e	57419	1668	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_kernel_trust_model_v01.py	303380f69f01dadcfbc41dfe923efc5c73bf7b41b12f21384cf65bd8630c46e1	13291	409	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_large_graph_stress_runner.py	98b794522d21a2a7a4bfb7c2c5b3ca7af16477b0347e56f1c3141e04079f18d0	5412	145	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_live_gemini_orchestrator_shadow_runner.py	8cdd9ce1c918b39fafd151cdd241da8be43022bba37ea6e9e7c7e0c16136434d	4305	122	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_live_llm_semantic_evidence_reader_v01_runner.py	1c655dfa3b7a276d0f64d2e4e845c6940d81ebf23f15274897b97ba60bb6c916	11212	282	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_live_provider_adapter_response_capture_v01_runner.py	7fa0533fe99cbf4e83c805a72a72fc3fd39ef96529ec6ece9780665c8bab1fd1	24454	613	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_llm_architect_runtime.py	cf3cfb3e0d68c93b8f0349fb4050a4cf5f4cbf60a34070e040cadfe34b73088d	17652	551	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_llm_gateway_runtime.py	43d4691ba491812349fc951fac81b939d7aa9965c8b70cc4e7e4f66cb6a8f95c	3130	97	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_long_lived_drs_ttl_aging_stress_v01_runner.py	9d0762b8a2965bd13bed972d901e7957dcdf27c07ef810b301b8750e2e848c9e	8010	180	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_multiroot_v01.py	176887c099d5c924a9f8c43c98a28081dc14240d7a1c418ce2126d3efb5f39e4	62888	1680	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_optional_live_llm_evidence_reader_smoke_v01_runner.py	c4a478294f9faa9eaa2441430598fb0a908642fe00d929c8f6a9fe9452a97110	12736	322	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_orchestrator_route_validator_runner.py	201df6cda9f41fca0f4a4306193eb499d513d7ca933661d3203864a4bc09d2e6	3983	112	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_post_vv_runtime.py	f6a03f8e7e6adfdb2f5f3dbbd73fefe7434bef2545b85f20929cf97a5aecb43c	21037	581	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_read_only_enterprise_connector_sandbox_v01_runner.py	6c7bd5cbbe597297458d2019d452e64ab89af9121883fca4c297827034ac4fc2	7026	185	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_real_local_drs_resolver_writeback_v01_runner.py	1debda228a5357d9f09b877c637655aef510ad5084f6b7fcf433ad628006f0d1	19546	571	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_real_semantic_runtime_thread_composite_smoke_v01_runner.py	1234aca40fbc461fa289991b80bc318ba30309305d2922c2eb89be2b52588b6c	7197	192	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_repository_maintenance_contract_v01.py	add6c5b7ba3438284595e550a5c968447f50a944c77308dc66ea0c76fb4efea5	14192	412	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_reuse_gate_runtime.py	46af2008234ffc8bf5ef23e53454f3ac7305a58e3b45d72cb9e84075588308f5	4624	142	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_reuse_score_runner.py	34f12e3e97072e629957f8b05218c9101f82bb26550e76ebf7601fe8ddeb6d16	9122	255	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_root_orchestrator_runtime.py	82d1d6f9c4c28191c4752763e44d5ddc9e70e17d76b2657811bb7f200f17fd9b	39887	972	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_root_signer_isolation_v01.py	549a50112af139bfbcb26b3752b8d021f0d47d1b0d4ced8c584b3ab4f7a90b09	40320	1160	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_sealed_evidence_package_v01_runner.py	021ad66cb60c6c14760af5792c1c8bf4c7596dc6bfe78c43383c2bedeefada8f	54550	1533	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_sealed_evidence_profile_v01.py	6b85f95295089b2768b212c9f2bf8671afe25513af188d2151979cb30f684588	173325	4828	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_sealed_evidence_replay_v01_runner.py	25cbaae15230721a18384163963138a5650c4f13dc4a315011057a4721fb9edf	61488	1495	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_semantic_reuse_authority_stack_audit_runner.py	30eb711f13e9f47e0a95ffe6c0e80942f65eba8b648142fb9107a2dccd44aaca	7686	207	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_semantic_reuse_pipeline_runner.py	dd6a7f2d11a4fec332b48e14b594eb5a75c42e7d46b0f1a8733f8fb101761fb5	11211	299	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_semantic_work_v01.py	8f91a1ec4cde364347badc0d760e3f8be658f680ec2db02b7bb2c4c1768595ac	62999	1763	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_supplier_payment_live_evidence_integration_v02_runner.py	ee1b58ac192febb8b249a3c47af63b2e37f255cc01eac43be14f999d1d130192	15221	368	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_supplier_water_filter_kernel_adapter_v01.py	38be45250f52d25908681e85a404ae4a0054cbdc365dd448d1b1e571fae1d549	38679	794	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_supplier_water_filter_live_evidence_adapter_v01.py	cc6be2a9f0dec13f5b83e73ea7d04e62f00ba01533f93d46cd2d4e997a2e5a8e	27101	823	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_supplier_water_filter_negative_matrix_v01_runner.py	ec73b935765bcec5de4c267bfe6fc1f3591658e3411fda3cc9469df5d3072a89	53737	1484	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_supplier_water_filter_sealed_evidence_package_adapter_v01.py	15790328249db4bf164025078d036dbcfc18536946016b99b0a440284a090e31	35622	794	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_time_model.py	97ad851d751ef552d570f20967b6425242b930354d0c10244759fc205abdcfa7	1725	50	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_tri_party_airline_live_semantic_lane_v01_runner.py	b165644e8b0ddd175fecfa598f2fe10dd40cace8ab32f6aeeb6492b782a91a91	133431	3578	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py	5435cab83361262dc2f5f949e846242ff2d1e8d47d679756fb7b43d02a5fb759	95768	2522	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_two_domain_airline_a2_seal_v01_runner.py	e32e1b415fade57044eb490b9d44dabd9df7910d9ed093202813f02685156359	22347	581	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_two_domain_airline_all_real_program_v01_runner.py	193393f77f9c55b5abaaed8ed06d1333919d964f2e8b03fe44da92f5241a2a60	192826	5066	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_two_domain_sealed_evidence_audit_v01_runner.py	17749b548d029fa837b740aa670ad195288358d189a4217a6ee8ad1f02206140	18783	441	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_two_domain_supplier_water_filter_program_v01_runner.py	d4ba9ff66d1b4312ad4a4cce642d2680b20191d9fc6bdd17f12ccdf1fdb7d598	45345	1191	0644	UTF8_OK	AST_OK
+SEARCH_HIT	tests/test_typed_drs_lineage_edges_runner.py	56375cede60ac6423becbab09b14a5b0df5f1afcf3f63531b2af585572e789e7	9473	273	0644	UTF8_OK	AST_OK
+```
+
+## 5. Existing Primitive Inventory
+
+The inventory rows below are the complete material symbol/path families for
+G2-E planning. A row may group inseparable builder/validator members owned by
+one current contract; no grouped row implies duck typing. Classification
+counts are exact: 33 `REUSE_EXACT`, 8 `ADDITIVE_EXTENSION`, 9
+`NEW_CANONICAL_REQUIRED`, 5 `HISTORICAL_DONOR_ONLY`, 8 `FORBIDDEN`, and 7
+`DEFERRED`, for 70 rows.
+
+| ID | Path | Symbol | Current role | Classification | Proposed G2-E role | Authority consequence | Mutation consequence | Reason |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| I-001 | hedgehog/kernel/integrity_replay_v01.py | canonical_json_bytes_v01 | canonical deterministic JSON bytes | REUSE_EXACT | all G2-E identity/fingerprint preimages | none | none | same canonical byte law |
+| I-002 | hedgehog/kernel/integrity_replay_v01.py | CanonicalArtifactRefV01 | sealed artifact identity reference | REUSE_EXACT | dependency-graph node source | evidence only | immutable input | already canonical and source-bound |
+| I-003 | hedgehog/kernel/integrity_replay_v01.py | ArtifactManifestV01 | ordered sealed artifact/dependency manifest | REUSE_EXACT | graph source and baseline | evidence only | immutable input | already rejects malformed manifests |
+| I-004 | hedgehog/kernel/integrity_replay_v01.py | ArtifactDependencyEdgeV01 | artifact_id depends on depends_on_artifact_id | REUSE_EXACT | accepted replay-edge source projected into G2-E edge | evidence only | no mutation | direction and integrity law remain canonical |
+| I-005 | hedgehog/kernel/integrity_replay_v01.py | verify_artifact_manifest_v01; verify_artifact_replay_v01 | acyclic replay with zero reruns/effects | REUSE_EXACT | baseline admissibility gate | none | read-only | complete replay validation already exists |
+| I-006 | hedgehog/action_commit_packet_v02.py | DependencySetCandidateRecordV01 | typed packet dependency candidate | REUSE_EXACT | G2-A dependency source binding | does not grant packet authority | immutable input | exact dependency/evidence/time/root fields exist |
+| I-007 | hedgehog/action_commit_packet_v02.py | DependencySetCandidateV01 | ordered packet dependency set | REUSE_EXACT | bound packet dependency-set source | none | immutable input | canonical candidate family |
+| I-008 | hedgehog/action_commit_packet_v02.py | build_dependency_set_candidate_fingerprint_v01 | G2-A packet-role digest | REUSE_EXACT | bound input digest only | packet role only | no mutation | must not be relabeled as G2-E digest |
+| I-009 | hedgehog/action_commit_packet_v02.py | ActionDependencyCurrentObservationV01 | current observed dependency | REUSE_EXACT | packet-currentness input | none | immutable input | has content/time/provenance bindings |
+| I-010 | hedgehog/action_commit_packet_v02.py | PacketDependencyAcceptanceBindingV01 | Root-bound accepted packet dependencies | REUSE_EXACT | packet invalidation eligibility input | Root authority remains G2-A | immutable input | exact accepted seam |
+| I-011 | hedgehog/action_commit_packet_v02.py | ActionTemporalAuthorityProfileV01; build_temporal_authority_fingerprint_v01 | packet temporal authority profile | REUSE_EXACT | time-bound packet comparison | does not grant new authority | immutable input | typed temporal role |
+| I-012 | hedgehog/action_commit_packet_v02.py | accepted revocation/supersession validators | Root-controlled invalidation seams | REUSE_EXACT | consume candidate/evidence after affected-set derivation | only owning Root can revoke/supersede | G2-E cannot invoke authority transition autonomously | accepted G2-A boundary |
+| I-013 | hedgehog/action_commit_packet_v02.py | ActionPacketLifecycleReplayReportV01; ActionPacketPresentEligibilityInspectionV01 | immutable history and present eligibility | REUSE_EXACT | historical/current packet distinction | none | read-only | explicit zero-rerun/effect geometry |
+| I-014 | hedgehog/drs_semantic_address_v01.py | SemanticAddressV01 | canonical DRS semantic address | REUSE_EXACT | delta source/history address | not authority | immutable input | domain/subject/intent/schema binding exists |
+| I-015 | hedgehog/drs_semantic_address_v01.py | MeaningRecordV01; LineageEdgeV01 | immutable versioned meaning record and lineage | REUSE_EXACT | historical DRS dependency evidence | not truth or authority | no deletion | predecessor/supersession/policy/schema/history fields exist |
+| I-016 | hedgehog/drs_memory_resolution_v01.py | DRSTemporalQueryV01 | Root-bound temporal reuse query | REUSE_EXACT | current-use eligibility source | not authority | immutable input | forbidden changes/policy/schema/time fields exist |
+| I-017 | hedgehog/drs_memory_resolution_v01.py | QueryEvaluationStateV01 | hard-gated current query evaluation | REUSE_EXACT | stale dependency evidence detector | not truth | immutable input | checked dependency/evidence/history fingerprints exist |
+| I-018 | hedgehog/reuse_certificate_v01.py | ReuseCertificateV01 | Root-gated shortcut certificate | REUSE_EXACT | prior certificate currentness input | Root-bound; never G2-E authority | old certificate preserved | validity/forbidden changes/policy/schema/history bindings exist |
+| I-019 | hedgehog/drs_memory_resolution_v01.py | DRSResolutionReportV01 | bounded resolution result | REUSE_EXACT | source and certificate context | not authority | persistent records unchanged | exact zero-operation counters |
+| I-020 | hedgehog/kernel/execution_mode_router_v01.py | ExecutionModeSourceContextV01; ExecutionModeRouterInputV01 | complete G2-C source context | REUSE_EXACT | route-currentness source | not authority | immutable input | BSEP/Replay/G2-A/G2-B bindings already exact |
+| I-021 | hedgehog/kernel/execution_mode_router_v01.py | RootExecutionModeDecisionV01; ExecutionModeRouteEligibility artifact | Root-reviewed mode/scope eligibility | REUSE_EXACT | plan route binding and revalidation decision | Root-reviewed only | no mutation | accepted compute-depth seam |
+| I-022 | hedgehog/kernel/execution_mode_router_v01.py | public source/decision validators | contextual route validation | REUSE_EXACT | preserve route only when all bound source bytes remain current | none | read-only | prevents route identity substitution |
+| I-023 | hedgehog/kernel/fractal_runtime_v02.py | RuntimeTopologySourceBindingV02 | G2-C-to-G2-D source binding | REUSE_EXACT | baseline topology source | not authority | immutable input | exact mode/scope/policy/source bindings |
+| I-024 | hedgehog/kernel/fractal_runtime_v02.py | RuntimeExecutionTopologyV02 | runtime-owned bounded topology | REUSE_EXACT | affected node/artifact namespace | not authority | immutable input | ordered nodes/edges/assignments and source identity exist |
+| I-025 | hedgehog/kernel/fractal_runtime_v02.py | FractalCellInputV02; FractalCellQueueEntryV02; FractalRuntimeBudgetV02 | bounded cell/queue/budget state | REUSE_EXACT | selective work admission | children remain non-Root | new objects only | public granular builders/validators exist |
+| I-026 | hedgehog/kernel/fractal_runtime_v02.py | FractalCellResultV02; FractalRuntimeTraceV02; FractalRuntimeReportV02 | actual result/report/trace family | REUSE_EXACT | baseline and recomputed evidence | not FinalOutput | prior objects preserved | actual-only result order and Root-return laws |
+| I-027 | hedgehog/kernel/fractal_runtime_v02.py | admit/advance/evaluate/build/validate public functions | granular public runtime seams | REUSE_EXACT | execute only selected bounded work | no new authority | no in-place mutation | avoids reopening G2-D or private calls |
+| I-028 | hedgehog/kernel/fractal_runtime_v02.py | run_fractal_runtime_v02 | complete bounded runtime | REUSE_EXACT | two baseline runs and whole-run escalation only | Root return required | returns new immutable bundle | exact public surface |
+| I-029 | hedgehog/kernel/abi_v01.py | KernelArtifactV01 | one Kernel ABI envelope | REUSE_EXACT | G2-E artifacts | authority_class remains explicit | new envelopes only | existing generic builder/validator |
+| I-030 | hedgehog/kernel/abi_v01.py | CausalConsumptionRefV01 | field-level causal evidence | REUSE_EXACT | delta/invalidation/recomputation causal refs | evidence only | new refs only | JSON Pointer and disposition law already canonical |
+| I-031 | hedgehog/kernel/root_decision_v01.py | RootDecisionInputV01; RootDecisionResultV01; RootDecisionKernelV01 | single Root law | REUSE_EXACT | mandatory plan/return review | only Root decides | new Root decision only through existing seam | no second Root type |
+| I-032 | hedgehog/post_vv.py; hedgehog/gt_validator.py | ResultProposal/Post V&V/GT public validation | proposal validation and advisory | REUSE_EXACT | validate recomputed proposal; old rows remain history | neither is Root or truth | new rows, no mutation | accepted explicit-time seams |
+| I-033 | demo/run_living_gauntlet_v01.py; hedgehog/kernel/conformance_v01.py | append-only version/prefix validators | cumulative proof consumers | REUSE_EXACT | G2-E6 donor geometry | reports are not authority | append only | historical prefixes are explicit |
+| I-034 | hedgehog/kernel/abi_v01.py | ARTIFACT_TYPES | closed artifact literal tuple | ADDITIVE_EXTENSION | append seven G2-E literals | no authority consequence | tuple append only | G2-E artifacts otherwise cannot use one ABI |
+| I-035 | schemas/kernel_artifact_v01.schema.json | artifact_type enum | ABI schema mirror | ADDITIVE_EXTENSION | append same seven literals | none | enum append only | must match ABI exactly |
+| I-036 | tests/test_kernel_abi_v01.py | ABI literal/profile tests | one-ABI guard | ADDITIVE_EXTENSION | append G2-E literal and prefix tests | none | test-only | protect historical ABI |
+| I-037 | hedgehog/kernel/transition_registry_v01.py | TransitionRegistryV01 profiles | single Transition Registry | ADDITIVE_EXTENSION | append ten-rule G2-E profile and six functions | decisions are non-authority | append only | separate private state machine forbidden |
+| I-038 | tests/test_transition_registry_v01.py | profile preservation tests | single-registry guard | ADDITIVE_EXTENSION | append G2-E profile tests | none | test-only | protect all historical profiles |
+| I-039 | hedgehog/kernel/__init__.py | direct package attributes; immutable __all__ | package facade | ADDITIVE_EXTENSION | append 115 direct G2-E attributes (20 types plus 95 functions); keep __all__ byte-exact | none | attribute append only | matches G2-C/D facade law |
+| I-040 | demo/run_living_gauntlet_v01.py; tests/test_living_gauntlet_v01_runner.py | Living v1.4 prefix | 17-act cumulative report | ADDITIVE_EXTENSION | append v1.5 act 18 | none | append only | validated G2-E report consumed once |
+| I-041 | hedgehog/kernel/conformance_v01.py; demo/run_kernel_conformance_v01.py; tests/test_kernel_conformance_v01_runner.py | Conformance v0.5/runner v0.4 | 14/2/50/16 geometry | ADDITIVE_EXTENSION | append v0.6/v0.5 category/probes/ref | none | append only | validated G2-E report consumed once |
+| I-042 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | DeltaSourceBindingV01; WorldStateDeltaV01; changed bindings | no canonical typed delta intake exists | NEW_CANONICAL_REQUIRED | source-bound immutable delta family | non-authority | new objects only | historical dicts cannot be canonical |
+| I-043 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | DependencyFingerprintProfileV01 | no G2-E typed digest role exists | NEW_CANONICAL_REQUIRED | domain-separated dependency fingerprint | non-authority | none | G2-A/B digests have different typed roles |
+| I-044 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | DeltaDependencyEdgeV01; DependencyGraphIndexV01 | no field-aware delta graph exists | NEW_CANONICAL_REQUIRED | project replay edges with context/version/field pointers | evidence only | new projection | two-field replay edge is insufficient |
+| I-045 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | AffectedSetRequestV01; AffectedSetResultV01 | no bounded affected closure exists | NEW_CANONICAL_REQUIRED | complete/minimal deterministic transitive closure | non-authority | new result | roadmap duty requires it |
+| I-046 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | ArtifactInvalidationRecordV01; InvalidationReportV01 | no cross-slice current-eligibility report exists | NEW_CANONICAL_REQUIRED | invalidation without deletion | proposal/evidence only | history preserved | revoked/expired/superseded are distinct |
+| I-047 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | PreservationProofV01 | no exact unaffected-byte proof exists | NEW_CANONICAL_REQUIRED | before/after identity/hash/bytes/cache proof | none | read-only comparison | constitutional preservation law |
+| I-048 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | SelectiveRecomputationPlanV01 | no bounded work-selection contract exists | NEW_CANONICAL_REQUIRED | route/topology/budget-bound plan | Root review required | new plan | selection is not permission |
+| I-049 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | RecomputedArtifactBindingV01; SelectiveRecomputationResultV01; trace/report | no delta result family exists | NEW_CANONICAL_REQUIRED | old/new/predecessor/preserved/unresolved geometry | non-authority | new objects | must distinguish history and current use |
+| I-050 | proposed hedgehog/kernel/continuous_delta_runtime_v01.py | ContinuousDeltaValidationReportV01; contexts/bundle | no complete G2-E validation surface exists | NEW_CANONICAL_REQUIRED | fail-closed public pair and bundle | zero authority/effects | new objects | no caller-selected PASS |
+| I-051 | hedgehog/domains/airline/ticket_purchase_corridor_v01.py | AirlineHoldCommitPacketV01; AirlineOfferPacketV01 | typed hold/price application fixtures | HISTORICAL_DONOR_ONLY | travel change scenario donor | domain objects are not G2-E authority | not imported into canonical module | exact hold/price fields exist |
+| I-052 | demo/run_applied_warehouse_semantic_demo.py | worldstate current_stock/requested_items | deterministic warehouse dict | HISTORICAL_DONOR_ONLY | water_filter scenario vocabulary | not authority | not canonical input | untyped dict cannot become live contract |
+| I-053 | demo/run_full_wow_v1_1_final_integrated_rollup.py; related walkthroughs | changed-facts second-run story | historical recomputation narrative | HISTORICAL_DONOR_ONLY | adversarial/proof sensor | none | no import | not canonical Gate-2 law |
+| I-054 | hedgehog/domains/supplier_water_filter/* | safe execution and sealed-evidence adapters | domain projection family | HISTORICAL_DONOR_ONLY | supplier evidence labels and unrelated sibling donor | not authority | no canonical mutation | use source paths only in public proof fixture |
+| I-055 | repository delta/recompute demos outside kernel | ad hoc changed-state/replay helpers | historical proof implementations | HISTORICAL_DONOR_ONLY | negative sensor only | none | no import | would create duplicate canonical law |
+| I-056 | any public G2-E runner | import tests | test-owned construction | FORBIDDEN | none | would bypass public ownership | forbidden | runner/test boundary law |
+| I-057 | any public G2-E path | _d4_run_runtime_v02 or other private G2-D helper | private proof/runtime seam | FORBIDDEN | none | would bypass accepted surface | forbidden | G2-D public boundary |
+| I-058 | provider/model/network/connector/external DRS surfaces | live execution | excluded operational systems | FORBIDDEN | none | would create unaccepted effects | forbidden | planning and proof are local/zero-operation |
+| I-059 | proposed canonical module | mutable global cache or failure cache | hidden state | FORBIDDEN | none | could change independent results | forbidden | determinism and fail-closed law |
+| I-060 | G2-E invalidation | direct packet revoke/supersede | G2-A Root authority transition | FORBIDDEN | derive candidate/evidence only | G2-E cannot revoke | forbidden | owning Root controls G2-A |
+| I-061 | G2-E report/plan/result | Root decision or FinalOutput creation | final authority | FORBIDDEN | return to existing Root seam | Root only | forbidden | single Root law |
+| I-062 | proposed runtime | second private state machine/ABI/Root law | duplicate kernel law | FORBIDDEN | use shared Registry/ABI/Root | would conflict | forbidden | roadmap says one ABI/Registry/Root |
+| I-063 | G2-E invalidation | history deletion or in-place mutation | retroactive erasure | FORBIDDEN | new eligibility records only | none | forbidden | immutable audit/history law |
+| I-064 | future G2-F | consolidated Gate-2 gauntlet/closure | next slice | DEFERRED | none in G2-E | none | none | outside G2-E |
+| I-065 | future production runtime | distributed scheduling/event streaming | production operations | DEFERRED | none | none | none | explicit non-claim |
+| I-066 | future persistence/DRS | production persistence/external-global DRS | production storage | DEFERRED | none | none | none | explicit non-claim |
+| I-067 | future provider/connector work | provider reliability/connector trust | external systems | DEFERRED | none | none | none | explicit non-claim |
+| I-068 | future policy/GT work | automatic policy learning; GT-TTL; Strong GT | new core layers | DEFERRED | none | none | none | explicit exclusion |
+| I-069 | future architecture | Full AVF; NeedleFactory; quantum runtime | future layers | DEFERRED | none | none | none | explicit exclusion |
+| I-070 | G2-D audit debt paths | G2D-MP-001..005 | post-Gate-2 maintenance | DEFERRED | none in G2-E | none | none | must not be smuggled into G2-E |
+
+## 6. Conflict and Reuse Register
+
+Material conflicts and their accepted planning resolutions are exact:
+
+| Conflict | Evidence | Accepted resolution | Review state |
+| --- | --- | --- | --- |
+| C-01: two domain-name families | G2-D D5 uses `TRAVEL_POLICY_INFORMATION` and `WAREHOUSE_MAINTENANCE_INFORMATION`; historical domain adapters use `airline` and `supplier_water_filter` | G2-E canonical proof keeps the G2-D domain IDs; historical application objects are source donors mapped by an explicit `DeltaSourceBindingV01`, never substituted as domain IDs | ACCEPTED |
+| C-02: Replay edge is too narrow for delta indexing | `ArtifactDependencyEdgeV01` has only `artifact_id` and `depends_on_artifact_id`, and no source edge ID | preserve it unchanged as exact Replay evidence; project a richer edge whose `source_replay_edge_sha256` is derived from the accepted Manifest/Replay pair and whose identity uses an acyclic graph basis | ACCEPTED WITH O-01 CORRECTION |
+| C-03: SHA-256 roles could be confused | G2-A dependency-set, G2-B checked dependency, artifact payload, and source-history hashes are all 64-hex digests | G2-E uses a domain-separated typed fingerprint profile; equal digest bytes never authorize cross-role substitution | ACCEPTED |
+| C-04: invalidation vocabulary is overloaded | G2-A has revoked/expired/superseded; G2-B has stale/historical; G2-D has blocked/deadend/failed | add `ArtifactInvalidationRecordV01`; `invalidated` means not current/eligible and never means revoked, deleted, false, or retroactively absent | ACCEPTED |
+| C-05: no canonical immutable delta object | current world-state examples are mostly domain dictionaries or specialized packets | create typed immutable baseline/observed source pairs, changed-field/artifact bindings, and `WorldStateDeltaV01` with ordered source-binding IDs and exact before/after carriers; historical dicts remain donors only | ACCEPTED WITH O-06/O-08 AND v0.1.2 CORRECTION |
+| C-06: ABI and Registry lack G2-E profile | current ABI ends with G2-D artifacts; current Registry has no G2-E rules | append seven ABI literals and one ten-rule/six-function Registry profile; no second ABI/state machine | ACCEPTED |
+| C-07: full runtime versus selective work | `run_fractal_runtime_v02` is whole-bundle, while granular public G2-D functions already exist | two public baseline runs are allowed in E5; E4 first proves public construction and validation of a complete recomputed `FractalRuntimeExecutionBundleV02`, then drives affected work through proven public functions with complete carriers and returns that bundle inside the G2-E bundle; complete rerun only when closure covers the bounded runtime or fail-closed escalation requires it | ACCEPTED CONDITIONALLY UNDER O-03 |
+| C-08: roadmap fraud flag has no current typed airline field | static search found no `fraud` field in current airline canonical contracts | do not invent one; retain it as an owner-supplied class example and exclude it from the v0.1 positive proof until a separately accepted typed source exists | ACCEPTED UNDER O-04 |
+| C-09: warehouse fact is an untyped report dictionary | `run_applied_warehouse_semantic_demo.py` exposes `/worldstate/current_stock/water_filter` as a dict | use it only as scenario vocabulary; actual typed proof source is the G2-A supplier dependency record/content hash bound to the G2-D warehouse domain | ACCEPTED |
+| C-10: route reuse cannot be inferred from affected cells alone | G2-C route identity binds BSEP/Replay/G2-A/G2-B/source fingerprints and the G2-D topology binds that route/source basis | route preservation requires the exact baseline route and topology source binding to remain current; any bound change stops the same invocation with route revalidation required, and a fresh route/topology belongs to a later fresh baseline | ACCEPTED |
+| C-11: packet invalidation is not packet revocation | G2-A revocation and supersession require accepted owning-Root bindings | G2-E emits candidate/evidence IDs in its report; G2-A/Root alone may transition the packet | ACCEPTED |
+
+Reuse decision summary:
+
+- `ArtifactDependencyEdgeV01` is reused as accepted source evidence, not as the
+  G2-E live edge representation.
+- G2-A and G2-B dependency digests are bound as typed inputs and never
+  reissued under the G2-E role.
+- G2-C route and G2-D topology objects remain immutable inputs.
+- No prior-slice implementation file is proposed for G2-E mutation.
+- Historical demos supply scenarios and adversarial sensors only; the
+  canonical module imports none of them.
+
+## 7. Constitutional Delta and Invalidation Laws
+
+The following are **ACCEPTED PLANNING CONTRACT** laws at revision v0.1.4.
+They do not authorize implementation:
+
+1. Delta input is typed, source-bound, deterministic, and immutable.
+2. A delta is not truth merely because it is new. Only validated accepted
+   source material may enter affected-set evaluation.
+3. Dependency direction is explicit: if A depends on B and B changes, A is a
+   dependent candidate.
+4. The affected set is the deterministic bounded artifact-node transitive
+   closure of dependents of accepted changed fields/artifacts. A changed field
+   maps to its baseline artifact node; field pointers cannot prune edges.
+5. The algorithm has explicit graph bounds, rejects cycles, rejects unknown,
+   duplicate, self, cross-transaction, cross-domain, and cross-Root
+   substitutions, uses exact order/tie-breaks, includes every artifact-level
+   reachable dependent, and excludes every graph-unrelated artifact. v0.1 does
+   not claim intra-artifact field-minimality.
+6. Invalidation is not deletion.
+7. Historical artifacts, manifests, reports, packets, certificates, Root
+   decisions, receipts, and audit rows remain preserved.
+8. Invalidated means not current/eligible for the affected decision path. It
+   does not mean erased, false, unauthorized history, or retroactively never
+   created.
+9. Unaffected artifacts remain byte-identical and retain their identities.
+10. Recomputed artifacts receive new identities and explicit predecessor,
+    supersession, and derivation bindings.
+11. Selective recomputation cannot mutate an accepted object in place.
+12. Whole-run recomputation is permitted only when the exact affected closure
+    covers the complete bounded runtime or a fail-closed policy requires
+    escalation.
+13. G2-E may select work; it cannot grant permission, authorize an effect,
+    create Root authority, or produce FinalOutput.
+14. Packet revocation remains G2-A Root-controlled.
+15. Reuse eligibility remains G2-B Root-bound and certificate-gated.
+16. Mode selection remains G2-C Root-reviewed.
+17. Cell execution remains G2-D bounded and child cells remain non-Root.
+18. Root remains the only final decision boundary.
+19. Provider, model, network, connector, external-DRS, packet, permission,
+    receipt, FinalOutput, DRS-write, authority, and real-world-effect counters
+    are zero in the G2-E proof runner.
+20. Audit/hash-chain continuity is evidence, not truth.
+
+## 8. Proposed Canonical Types and Functions
+
+**ACCEPTED PLANNING CONTRACT totals:** 20 canonical types, 18 serialized
+identity-bearing types, 2 runtime-only frozen context/bundle types, 18 schema
+definitions, 89 public functions in the canonical module, 6 public G2-E
+Transition-profile functions, 95 total public G2-E functions, 115 direct
+package-facade additions (20 types plus 95 functions), 7 additive ABI artifact
+literals, 9 successful-path G2-E artifact instances, and 2 shared Root reviews.
+
+Canonical type table:
+
+| Type | Owner | Class | Frozen ordered fields | Identity/runtime | Source binding | Validation target | Failure stage | Authority/effect | Schema definition | Slice |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| DeltaSourceBindingV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | source_binding_id, binding_version, request_id, transaction_id, owning_root_id, domain_id, baseline_source_artifact_id, baseline_source_artifact_type, baseline_source_artifact_sha256, baseline_source_payload_sha256, observed_source_artifact_id, observed_source_artifact_type, observed_source_artifact_sha256, observed_source_payload_sha256, predecessor_relation, baseline_report_id, baseline_graph_id, baseline_graph_version, baseline_policy_version, observed_policy_version, baseline_schema_versions, observed_schema_versions, baseline_source_history_hash, observed_source_history_hash, valid_from_utc, valid_to_utc, trace_refs, authority_created, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | DeltaSourceBindingV01 | see target/stage registries | authority=false; effects=0 | DeltaSourceBindingV01 | G2-E1 |
+| ChangedFieldBindingV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | changed_field_binding_id, source_binding_id, json_pointer, prior_value_sha256, observed_value_sha256, change_class, observed_at_utc, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | ChangedFieldBindingV01 | see target/stage registries | authority=false; effects=0 | ChangedFieldBindingV01 | G2-E1 |
+| ChangedArtifactBindingV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | changed_artifact_binding_id, source_binding_id, baseline_artifact_id, baseline_artifact_type, baseline_payload_sha256, observed_artifact_id, observed_artifact_type, observed_payload_sha256, baseline_dependency_fingerprint, observed_dependency_fingerprint, predecessor_relation, change_class, observed_at_utc, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | ChangedArtifactBindingV01 | see target/stage registries | authority=false; effects=0 | ChangedArtifactBindingV01 | G2-E1 |
+| WorldStateDeltaV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | delta_id, delta_version, delta_profile_id, ordered_source_binding_ids, request_id, transaction_id, owning_root_id, domain_id, baseline_report_id, baseline_graph_id, baseline_graph_version, delta_sequence, prior_delta_id, observed_at_utc, valid_from_utc, valid_to_utc, baseline_policy_version, observed_policy_version, baseline_schema_versions, observed_schema_versions, baseline_source_history_hash, observed_source_history_hash, ordered_changed_field_binding_ids, ordered_changed_artifact_binding_ids, dependency_fingerprint_before, dependency_fingerprint_after, trace_refs, authority_created, permission_created, action_commit_packet_created, receipt_created, final_output_created, drs_write_created, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | WorldStateDeltaV01 | see target/stage registries | authority=false; effects=0 | WorldStateDeltaV01 | G2-E1 |
+| DependencyFingerprintProfileV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | fingerprint_profile_id, fingerprint_profile_version, hash_algorithm, canonicalization_profile_id, domain_separator, typed_role, ordered_preimage_fields, cross_role_reuse_forbidden | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | DependencyFingerprintProfileV01 | see target/stage registries | authority=false; effects=0 | DependencyFingerprintProfileV01 | G2-E1 |
+| DeltaDependencyEdgeV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | edge_id, graph_basis_sha256, graph_version, dependent_artifact_id, dependency_artifact_id, dependency_field_pointers, edge_class, transaction_id, owning_root_id, domain_id, canonical_order, source_replay_edge_sha256, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | DeltaDependencyEdgeV01 | see target/stage registries | authority=false; effects=0 | DeltaDependencyEdgeV01 | G2-E2 |
+| DependencyGraphIndexV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | graph_id, graph_version, graph_basis_sha256, source_manifest_id, source_manifest_hash, source_replay_id, transaction_id, owning_root_id, domain_id, ordered_node_ids, ordered_edge_ids, node_count, edge_count, max_nodes, max_edges, max_hops, acyclic, source_history_hash, policy_version, schema_versions, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | DependencyGraphIndexV01 | see target/stage registries | authority=false; effects=0 | DependencyGraphIndexV01 | G2-E2 |
+| AffectedSetRequestV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | affected_request_id, delta_id, graph_id, graph_version, baseline_report_id, transaction_id, owning_root_id, domain_id, ordered_changed_field_binding_ids, ordered_changed_artifact_binding_ids, max_nodes, max_edges, max_hops, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | AffectedSetRequestV01 | see target/stage registries | authority=false; effects=0 | AffectedSetRequestV01 | G2-E2 |
+| AffectedSetResultV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | affected_set_id, affected_request_id, delta_id, graph_id, graph_version, ordered_changed_node_ids, ordered_directly_affected_ids, ordered_transitively_affected_ids, ordered_affected_ids, ordered_unaffected_ids, closure_proof_sha256, visited_node_count, traversed_edge_count, maximum_observed_hops, complete, minimal, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | AffectedSetResultV01 | see target/stage registries | authority=false; effects=0 | AffectedSetResultV01 | G2-E2 |
+| ArtifactInvalidationRecordV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | invalidation_record_id, affected_set_id, artifact_id, artifact_type, current_eligible_before, current_eligible_after, invalidation_reason_class, triggering_delta_id, triggering_binding_ids, predecessor_artifact_id, superseded_by_artifact_id, g2a_packet_relation, g2b_reuse_relation, g2c_route_relation, root_review_required, historical_artifact_preserved, deleted, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | ArtifactInvalidationRecordV01 | see target/stage registries | authority=false; effects=0 | ArtifactInvalidationRecordV01 | G2-E3 |
+| InvalidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | invalidation_report_id, affected_set_id, ordered_invalidation_record_ids, ordered_invalidated_artifact_ids, ordered_historical_artifact_ids, ordered_unresolved_artifact_ids, ordered_packet_invalidation_candidate_ids, ordered_stale_reuse_certificate_ids, ordered_route_revalidation_ids, report_status, reason_codes, root_review_required, authority_created, permission_created, action_commit_packet_created, receipt_created, final_output_created, drs_write_created, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | InvalidationReportV01 | see target/stage registries | authority=false; effects=0 | InvalidationReportV01 | G2-E3 |
+| PreservationProofV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | preservation_proof_id, baseline_graph_id, affected_set_id, ordered_preserved_artifact_ids, ordered_before_artifact_sha256, ordered_after_artifact_sha256, ordered_before_payload_sha256, ordered_after_payload_sha256, ordered_before_identity_ids, ordered_after_identity_ids, before_cache_state_sha256, after_cache_state_sha256, mutable_global_write_count, byte_identity_preserved, object_identity_used_as_proof, proof_sha256, status, reason_codes | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | PreservationProofV01 | see target/stage registries | authority=false; effects=0 | PreservationProofV01 | G2-E3 |
+| SelectiveRecomputationPlanV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | recomputation_plan_id, delta_id, affected_set_id, invalidation_report_id, source_route_eligibility_artifact_id, source_topology_id, accepted_mode, accepted_scope_ref, ordered_affected_cell_ids, ordered_affected_artifact_ids, ordered_work_node_ids, ordered_preserved_artifact_ids, max_work_items, max_queue_entries, max_wall_time_units, max_token_budget, max_provider_calls, transition_profile_id, root_review_required, plan_status, reason_codes, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | SelectiveRecomputationPlanV01 | see target/stage registries | authority=false; effects=0 | SelectiveRecomputationPlanV01 | G2-E4 |
+| RecomputedArtifactBindingV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | recomputed_binding_id, recomputation_plan_id, prior_artifact_id, prior_payload_sha256, new_artifact_id, new_payload_sha256, predecessor_relation, supersession_relation, derivation_refs, source_cell_id, source_queue_entry_id, g2d_cell_result_ref, g2d_runtime_report_ref, trace_refs | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | RecomputedArtifactBindingV01 | see target/stage registries | authority=false; effects=0 | RecomputedArtifactBindingV01 | G2-E4 |
+| SelectiveRecomputationResultV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | recomputation_result_id, recomputation_plan_id, baseline_runtime_report_id, recomputed_runtime_report_id, preservation_proof_id, ordered_recomputed_binding_ids, ordered_invalidated_downstream_ids, ordered_recomputed_artifact_ids, ordered_preserved_artifact_ids, ordered_unresolved_artifact_ids, ordered_partial_failure_ids, parent_return_transition_decision_id, result_status, reason_codes, provider_calls, model_calls, network_calls, connector_calls, external_drs_calls, action_commit_packets_created, permissions_created, receipts_created, final_outputs_created, drs_writes, authority_created_count, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | SelectiveRecomputationResultV01 | see target/stage registries | authority=false; effects=0 | SelectiveRecomputationResultV01 | G2-E4 |
+| ContinuousDeltaRuntimeTraceV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | trace_id, delta_id, graph_id, affected_set_id, invalidation_report_id, preservation_proof_id, recomputation_plan_id, recomputation_result_id, plan_root_decision_input_id, plan_root_decision_id, final_root_decision_input_id, final_root_decision_id, ordered_transition_decision_ids, ordered_causal_ref_ids, ordered_source_artifact_ids, ordered_downstream_artifact_ids, provider_calls, model_calls, network_calls, connector_calls, external_drs_calls, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | ContinuousDeltaRuntimeTraceV01 | see target/stage registries | authority=false; effects=0 | ContinuousDeltaRuntimeTraceV01 | G2-E4 |
+| ContinuousDeltaRuntimeReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | report_id, report_version, profile_id, ordered_source_binding_ids, baseline_report_id, delta_id, graph_id, affected_set_id, invalidation_report_id, preservation_proof_id, recomputation_plan_id, recomputation_result_id, trace_id, plan_root_decision_input_id, plan_root_decision_id, final_root_decision_input_id, final_root_decision_id, changed_count, directly_affected_count, transitively_affected_count, invalidated_count, recomputed_count, preserved_count, unresolved_count, report_status, reason_codes, root_review_required, provider_calls, model_calls, network_calls, connector_calls, external_drs_calls, action_commit_packets_created, permissions_created, receipts_created, final_outputs_created, drs_writes, authority_created_count, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | ContinuousDeltaRuntimeReportV01 | see target/stage registries | authority=false; effects=0 | ContinuousDeltaRuntimeReportV01 | G2-E4 |
+| ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | validation_report_id, validation_target, validated_object_id, status, failure_stage, reason_codes, source_reason_codes, return_to_root_required, root_review_required, authority_created, permission_created, action_commit_packet_created, receipt_created, final_output_created, drs_write_created, real_world_effects_count | identity-bearing; frozen dataclass | same transaction/domain/Root/source basis unless typed boundary says otherwise | ContinuousDeltaValidationReportV01 | see target/stage registries | authority=false; effects=0 | ContinuousDeltaValidationReportV01 | G2-E1 |
+| ContinuousDeltaSourceContextV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | integrity_manifest, integrity_replay, baseline_source_artifacts, observed_source_artifacts, g2a_registry, g2a_packet, g2a_dependency_candidate, g2a_current_observations, g2a_root_invalidation_material, g2b_resolution_report, g2b_reuse_certificate, g2b_writeback_evidence, g2c_source_context, baseline_g2c_route_eligibility_artifact, baseline_g2d_execution_bundle, root_kernel, post_vv_profile, gt_profile | runtime-only; frozen dataclass; no schema identity | all members independently validated and same context | ContinuousDeltaSourceContextV01 | source_context or bundle_final | authority=false; effects=0 | NONE | G2-E3 |
+| ContinuousDeltaExecutionBundleV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | NEW_CANONICAL_REQUIRED | source_context, source_bindings, changed_field_bindings, changed_artifact_bindings, delta, dependency_edges, dependency_graph, affected_request, affected_result, invalidation_records, invalidation_report, delta_source_proposed_artifact, delta_source_artifact, dependency_graph_artifact, affected_set_artifact, invalidation_report_artifact, recomputation_plan, plan_proposed_artifact, plan_root_decision_input, plan_root_decision_result, plan_root_decision_artifact, plan_accepted_artifact, recomputed_g2d_execution_bundle, recomputed_bindings, preservation_proof, preservation_proof_artifact, recomputation_result, g2e_validation_reports, g2e_transition_decisions, g2e_causal_consumption_refs, final_root_decision_input, final_root_decision_result, final_root_decision_artifact, runtime_trace, runtime_report, runtime_report_artifact | runtime-only; frozen dataclass; no schema identity | all members independently validated and same context | ContinuousDeltaExecutionBundleV01 | source_context or bundle_final | authority=false; effects=0 | NONE | G2-E4 |
+
+Runtime carrier types are exact:
+
+- `ContinuousDeltaSourceContextV01.baseline_source_artifacts` and
+  `observed_source_artifacts` are each `tuple[KernelArtifactV01, ...]` and
+  appear immediately after `integrity_replay` in that order;
+- the baseline tuple is in exact Manifest order; the observed tuple has the
+  same length and logical positions, with byte-identical unchanged artifacts
+  and exact immutable successors at changed positions;
+- every baseline artifact projects to its exact Manifest ref; every observed
+  successor passes public ABI/source validation and has the exact predecessor
+  binding;
+- neither tuple is reconstructed from IDs, hashes, hidden registries, test
+  fixtures, caches, or object identity; both are immutable runtime inputs;
+- `baseline_g2c_route_eligibility_artifact` is the exact route already bound
+  by `baseline_g2d_execution_bundle.source_context`;
+- `baseline_g2d_execution_bundle` is the exact accepted immutable G2-D
+  baseline and is never mutated;
+- `ContinuousDeltaExecutionBundleV01.source_bindings` is
+  `tuple[DeltaSourceBindingV01, ...]`;
+- `changed_field_bindings` is
+  `tuple[ChangedFieldBindingV01, ...]`;
+- `changed_artifact_bindings` is
+  `tuple[ChangedArtifactBindingV01, ...]`;
+- `dependency_edges` is `tuple[DeltaDependencyEdgeV01, ...]`;
+- `recomputed_g2d_execution_bundle` is one complete mandatory
+  `FractalRuntimeExecutionBundleV02` for a successful E4 recomputation;
+- `delta_source_proposed_artifact`, `delta_source_artifact`,
+  `dependency_graph_artifact`, `affected_set_artifact`,
+  `invalidation_report_artifact`,
+  `plan_proposed_artifact`, `plan_accepted_artifact`,
+  `preservation_proof_artifact`, and `runtime_report_artifact` are the exact
+  nine G2-E `KernelArtifactV01` instances and no generic ABI tuple exists;
+- `delta_source_proposed_artifact` and `delta_source_artifact` are mandatory,
+  distinct immutable artifacts over the same exact `WorldStateDeltaV01`
+  payload; the former is t01's PROPOSED source and the latter is t01's
+  VALIDATED target and t02's source;
+- `plan_root_decision_input`/`result`/`artifact` and
+  `final_root_decision_input`/`result`/`artifact` are exact shared Root
+  objects; both artifacts have artifact type `RootDecision` and are not G2-E
+  ABI literals;
+- `g2e_validation_reports`, `g2e_transition_decisions`, and
+  `g2e_causal_consumption_refs` contain only G2-E objects and are disjoint from
+  the corresponding tuples owned by the recomputed G2-D bundle;
+- the trace and report each carry the exact four plan/final Root input/decision
+  IDs; their Transition decision lists exclude t10, while the runtime-only
+  bundle carries and validates all t01-t10.
+
+The exact conceptual public run surface is:
+
+```text
+run_continuous_delta_runtime_v01(
+    *,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    delta: WorldStateDeltaV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    dependency_graph: DependencyGraphIndexV01,
+) -> tuple[
+    ContinuousDeltaExecutionBundleV01 | None,
+    ContinuousDeltaValidationReportV01,
+]
+```
+
+It validates the complete carrier closure before affected-set construction.
+No hidden lookup, registry, cache, object-identity relation, or caller mapping
+may fill a missing source, binding, edge, or payload object.
+
+Every serialized type retains the same exact four public function names, where
+`<stem>` is the exact stem in the next table:
+
+```text
+build_<stem>_v01(*, <exact construction inputs>) -> <Type>
+validate_<stem>_v01(value: object) -> ContinuousDeltaValidationReportV01
+<stem>_to_plain_data_v01(value: <Type>) -> dict[str, object]
+rebuild_<stem>_identity_v01(value: <Type>) -> str
+```
+
+A build function accepts only its exact construction inputs. Identity is
+derived from the final frozen object's exact ordered non-own-ID fields. Fields
+representing status, reason codes, completeness, minimality, proof hashes,
+zero-operation counters, Root-review requirement, or accepted outcome are
+derived by the owning accepted builder/evaluator from exact inputs and are not
+accepted as free caller authority. Structural builders may create explicit
+mutation-test candidates, but no such object is semantically accepted until
+the exact contextual validator reconstructs every derived field and source
+binding.
+
+`ContinuousDeltaValidationReportV01` is constructed from the actual validation
+target, failure stage, and returned reason tuple; `PASS` is derived only from
+an empty accepted reason tuple. Bundle validation reruns or reconstructs every
+required contextual validator and rejects a copied or independently
+constructed PASS report.
+
+| Type | Exact stem | Exact four function names | Owner | Slice |
+| --- | --- | --- | --- | --- |
+| DeltaSourceBindingV01 | delta_source_binding | build_delta_source_binding_v01; validate_delta_source_binding_v01; delta_source_binding_to_plain_data_v01; rebuild_delta_source_binding_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E1 |
+| ChangedFieldBindingV01 | changed_field_binding | build_changed_field_binding_v01; validate_changed_field_binding_v01; changed_field_binding_to_plain_data_v01; rebuild_changed_field_binding_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E1 |
+| ChangedArtifactBindingV01 | changed_artifact_binding | build_changed_artifact_binding_v01; validate_changed_artifact_binding_v01; changed_artifact_binding_to_plain_data_v01; rebuild_changed_artifact_binding_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E1 |
+| WorldStateDeltaV01 | world_state_delta | build_world_state_delta_v01; validate_world_state_delta_v01; world_state_delta_to_plain_data_v01; rebuild_world_state_delta_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E1 |
+| DependencyFingerprintProfileV01 | dependency_fingerprint_profile | build_dependency_fingerprint_profile_v01; validate_dependency_fingerprint_profile_v01; dependency_fingerprint_profile_to_plain_data_v01; rebuild_dependency_fingerprint_profile_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E1 |
+| DeltaDependencyEdgeV01 | delta_dependency_edge | build_delta_dependency_edge_v01; validate_delta_dependency_edge_v01; delta_dependency_edge_to_plain_data_v01; rebuild_delta_dependency_edge_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 |
+| DependencyGraphIndexV01 | dependency_graph_index | build_dependency_graph_index_v01; validate_dependency_graph_index_v01; dependency_graph_index_to_plain_data_v01; rebuild_dependency_graph_index_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 |
+| AffectedSetRequestV01 | affected_set_request | build_affected_set_request_v01; validate_affected_set_request_v01; affected_set_request_to_plain_data_v01; rebuild_affected_set_request_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 |
+| AffectedSetResultV01 | affected_set_result | build_affected_set_result_v01; validate_affected_set_result_v01; affected_set_result_to_plain_data_v01; rebuild_affected_set_result_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 |
+| ArtifactInvalidationRecordV01 | artifact_invalidation_record | build_artifact_invalidation_record_v01; validate_artifact_invalidation_record_v01; artifact_invalidation_record_to_plain_data_v01; rebuild_artifact_invalidation_record_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 |
+| InvalidationReportV01 | invalidation_report | build_invalidation_report_v01; validate_invalidation_report_v01; invalidation_report_to_plain_data_v01; rebuild_invalidation_report_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 |
+| PreservationProofV01 | preservation_proof | build_preservation_proof_v01; validate_preservation_proof_v01; preservation_proof_to_plain_data_v01; rebuild_preservation_proof_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 |
+| SelectiveRecomputationPlanV01 | selective_recomputation_plan | build_selective_recomputation_plan_v01; validate_selective_recomputation_plan_v01; selective_recomputation_plan_to_plain_data_v01; rebuild_selective_recomputation_plan_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 |
+| RecomputedArtifactBindingV01 | recomputed_artifact_binding | build_recomputed_artifact_binding_v01; validate_recomputed_artifact_binding_v01; recomputed_artifact_binding_to_plain_data_v01; rebuild_recomputed_artifact_binding_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 |
+| SelectiveRecomputationResultV01 | selective_recomputation_result | build_selective_recomputation_result_v01; validate_selective_recomputation_result_v01; selective_recomputation_result_to_plain_data_v01; rebuild_selective_recomputation_result_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 |
+| ContinuousDeltaRuntimeTraceV01 | continuous_delta_runtime_trace | build_continuous_delta_runtime_trace_v01; validate_continuous_delta_runtime_trace_v01; continuous_delta_runtime_trace_to_plain_data_v01; rebuild_continuous_delta_runtime_trace_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 |
+| ContinuousDeltaRuntimeReportV01 | continuous_delta_runtime_report | build_continuous_delta_runtime_report_v01; validate_continuous_delta_runtime_report_v01; continuous_delta_runtime_report_to_plain_data_v01; rebuild_continuous_delta_runtime_report_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 |
+| ContinuousDeltaValidationReportV01 | continuous_delta_validation_report | build_continuous_delta_validation_report_v01; validate_continuous_delta_validation_report_v01; continuous_delta_validation_report_to_plain_data_v01; rebuild_continuous_delta_validation_report_identity_v01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E1 |
+
+Runtime/context and behavioral public functions:
+
+| Function | Exact signature | Owner | Slice | Validation/failure disposition |
+| --- | --- | --- | --- | --- |
+| build_continuous_delta_source_context_v01 | (*, integrity_manifest, integrity_replay, baseline_source_artifacts: tuple[KernelArtifactV01, ...], observed_source_artifacts: tuple[KernelArtifactV01, ...], g2a_registry, g2a_packet, g2a_dependency_candidate, g2a_current_observations, g2a_root_invalidation_material, g2b_resolution_report, g2b_reuse_certificate, g2b_writeback_evidence, g2c_source_context, baseline_g2c_route_eligibility_artifact, baseline_g2d_execution_bundle: FractalRuntimeExecutionBundleV02, root_kernel, post_vv_profile, gt_profile) -> ContinuousDeltaSourceContextV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_continuous_delta_source_context_v01 | (value: object) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| build_continuous_delta_execution_bundle_v01 | (*, source_context, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], delta, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph, affected_request, affected_result, invalidation_records, invalidation_report, delta_source_proposed_artifact: KernelArtifactV01, delta_source_artifact: KernelArtifactV01, dependency_graph_artifact: KernelArtifactV01, affected_set_artifact: KernelArtifactV01, invalidation_report_artifact: KernelArtifactV01, recomputation_plan, plan_proposed_artifact: KernelArtifactV01, plan_root_decision_input: RootDecisionInputV01, plan_root_decision_result: RootDecisionResultV01, plan_root_decision_artifact: KernelArtifactV01, plan_accepted_artifact: KernelArtifactV01, recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02, recomputed_bindings, preservation_proof, preservation_proof_artifact: KernelArtifactV01, recomputation_result, g2e_validation_reports, g2e_transition_decisions, g2e_causal_consumption_refs, final_root_decision_input: RootDecisionInputV01, final_root_decision_result: RootDecisionResultV01, final_root_decision_artifact: KernelArtifactV01, runtime_trace, runtime_report, runtime_report_artifact: KernelArtifactV01) -> ContinuousDeltaExecutionBundleV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_continuous_delta_execution_bundle_v01 | (value: object) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| build_dependency_fingerprint_v01 | (*, profile: DependencyFingerprintProfileV01, graph: DependencyGraphIndexV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], source_artifacts: tuple[KernelArtifactV01, ...], policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str) -> str | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_dependency_fingerprint_against_sources_v01 | (value: str, *, profile: DependencyFingerprintProfileV01, graph: DependencyGraphIndexV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], source_artifacts: tuple[KernelArtifactV01, ...], policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| project_integrity_replay_dependency_edges_v01 | (*, manifest: ArtifactManifestV01, replay: ReplayVerificationResultV01, source_artifacts: tuple[KernelArtifactV01, ...], graph_version: str, transaction_id: str, owning_root_id: str, domain_id: str, policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str, edge_projection_bindings: tuple[tuple[str, str, tuple[str, ...], str], ...]) -> tuple[str, tuple[DeltaDependencyEdgeV01, ...]] | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| compute_affected_set_v01 | (*, request: AffectedSetRequestV01, delta: WorldStateDeltaV01, graph: DependencyGraphIndexV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], baseline_source_artifacts: tuple[KernelArtifactV01, ...], observed_source_artifacts: tuple[KernelArtifactV01, ...]) -> AffectedSetResultV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_affected_set_against_graph_v01 | (value: AffectedSetResultV01, *, request: AffectedSetRequestV01, delta: WorldStateDeltaV01, graph: DependencyGraphIndexV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], baseline_source_artifacts: tuple[KernelArtifactV01, ...], observed_source_artifacts: tuple[KernelArtifactV01, ...]) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E2 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| derive_invalidation_report_v01 | (*, affected_set: AffectedSetResultV01, delta: WorldStateDeltaV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01) -> tuple[tuple[ArtifactInvalidationRecordV01, ...], InvalidationReportV01] | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_invalidation_report_against_sources_v01 | (value: InvalidationReportV01, *, records: tuple[ArtifactInvalidationRecordV01, ...], affected_set: AffectedSetResultV01, delta: WorldStateDeltaV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| prove_unaffected_artifact_preservation_v01 | (*, affected_set: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], source_context: ContinuousDeltaSourceContextV01, recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]) -> PreservationProofV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E3 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| build_selective_recomputation_plan_from_affected_set_v01 | (*, delta: WorldStateDeltaV01, affected_set: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01) -> SelectiveRecomputationPlanV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_selective_recomputation_plan_against_sources_v01 | (value: SelectiveRecomputationPlanV01, *, delta: WorldStateDeltaV01, affected_set: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| execute_selective_recomputation_v01 | (*, plan: SelectiveRecomputationPlanV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], delta: WorldStateDeltaV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01, affected_request: AffectedSetRequestV01, affected_result: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01) -> tuple[ContinuousDeltaExecutionBundleV01 \| None, ContinuousDeltaValidationReportV01] | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| validate_selective_recomputation_result_against_plan_v01 | (value: SelectiveRecomputationResultV01, *, plan: SelectiveRecomputationPlanV01, source_context: ContinuousDeltaSourceContextV01, delta_source_proposed_artifact: KernelArtifactV01, delta_source_artifact: KernelArtifactV01, dependency_graph_artifact: KernelArtifactV01, affected_set_artifact: KernelArtifactV01, invalidation_report_artifact: KernelArtifactV01, plan_proposed_artifact: KernelArtifactV01, plan_root_decision_input: RootDecisionInputV01, plan_root_decision_result: RootDecisionResultV01, plan_root_decision_artifact: KernelArtifactV01, plan_accepted_artifact: KernelArtifactV01, recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...], preservation_proof: PreservationProofV01, preservation_proof_artifact: KernelArtifactV01, g2e_transition_decisions: tuple[TransitionDecisionV01, ...], g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...]) -> ContinuousDeltaValidationReportV01 | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+| run_continuous_delta_runtime_v01 | (*, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], delta: WorldStateDeltaV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01) -> tuple[ContinuousDeltaExecutionBundleV01 \| None, ContinuousDeltaValidationReportV01] | hedgehog/kernel/continuous_delta_runtime_v01.py | G2-E4 | returns/uses ContinuousDeltaValidationReportV01; never caller-selected PASS |
+
+Transition-profile public functions:
+
+| Function | Exact signature | Owner | Slice | Disposition |
+| --- | --- | --- | --- | --- |
+| build_continuous_delta_transition_registry_profile_v01 | () -> TransitionRegistryV01 | hedgehog/kernel/transition_registry_v01.py | G2-E2 | pure profile/decision validation; non-authority |
+| validate_continuous_delta_transition_registry_profile_v01 | (value: object) -> tuple[str, ...] | hedgehog/kernel/transition_registry_v01.py | G2-E2 | pure profile/decision validation; non-authority |
+| continuous_delta_transition_registry_profile_to_plain_dict_v01 | (value: TransitionRegistryV01) -> dict[str, object] | hedgehog/kernel/transition_registry_v01.py | G2-E2 | pure profile/decision validation; non-authority |
+| validate_continuous_delta_transition_decision_v01 | (value: object, *, registry: TransitionRegistryV01, source_artifact: KernelArtifactV01, target_artifact: KernelArtifactV01) -> tuple[str, ...] | hedgehog/kernel/transition_registry_v01.py | G2-E2 | pure profile/decision validation; non-authority |
+| continuous_delta_transition_decision_to_plain_dict_v01 | (value: TransitionDecisionV01) -> dict[str, object] | hedgehog/kernel/transition_registry_v01.py | G2-E2 | pure profile/decision validation; non-authority |
+| rebuild_continuous_delta_transition_decision_identity_v01 | (value: TransitionDecisionV01) -> str | hedgehog/kernel/transition_registry_v01.py | G2-E2 | pure profile/decision validation; non-authority |
+
+## 9. Identity, Serialization, Schema, and Reason Geometry
+
+The exact prefix algorithm for all 18 serialized types is:
+
+```text
+prefix = "g2e_" + <exact_stem> + "_v01:"
+domain_bytes = UTF8(
+  "HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01"
+  + NUL
+  + <EXACT_TYPE_NAME>
+  + NUL
+)
+identity = prefix + sha256(
+  domain_bytes
+  + canonical_json_bytes_v01(
+      exact ordered non-own-ID fields after all derived fields are computed
+    )
+).hexdigest()
+```
+
+All concrete stems, prefixes, and domains are unique:
+
+| Exact type | Exact stem | Exact prefix | Exact domain bytes |
+| --- | --- | --- | --- |
+| DeltaSourceBindingV01 | delta_source_binding | g2e_delta_source_binding_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + DeltaSourceBindingV01 + NUL) |
+| ChangedFieldBindingV01 | changed_field_binding | g2e_changed_field_binding_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + ChangedFieldBindingV01 + NUL) |
+| ChangedArtifactBindingV01 | changed_artifact_binding | g2e_changed_artifact_binding_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + ChangedArtifactBindingV01 + NUL) |
+| WorldStateDeltaV01 | world_state_delta | g2e_world_state_delta_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + WorldStateDeltaV01 + NUL) |
+| DependencyFingerprintProfileV01 | dependency_fingerprint_profile | g2e_dependency_fingerprint_profile_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + DependencyFingerprintProfileV01 + NUL) |
+| DeltaDependencyEdgeV01 | delta_dependency_edge | g2e_delta_dependency_edge_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + DeltaDependencyEdgeV01 + NUL) |
+| DependencyGraphIndexV01 | dependency_graph_index | g2e_dependency_graph_index_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + DependencyGraphIndexV01 + NUL) |
+| AffectedSetRequestV01 | affected_set_request | g2e_affected_set_request_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + AffectedSetRequestV01 + NUL) |
+| AffectedSetResultV01 | affected_set_result | g2e_affected_set_result_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + AffectedSetResultV01 + NUL) |
+| ArtifactInvalidationRecordV01 | artifact_invalidation_record | g2e_artifact_invalidation_record_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + ArtifactInvalidationRecordV01 + NUL) |
+| InvalidationReportV01 | invalidation_report | g2e_invalidation_report_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + InvalidationReportV01 + NUL) |
+| PreservationProofV01 | preservation_proof | g2e_preservation_proof_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + PreservationProofV01 + NUL) |
+| SelectiveRecomputationPlanV01 | selective_recomputation_plan | g2e_selective_recomputation_plan_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + SelectiveRecomputationPlanV01 + NUL) |
+| RecomputedArtifactBindingV01 | recomputed_artifact_binding | g2e_recomputed_artifact_binding_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + RecomputedArtifactBindingV01 + NUL) |
+| SelectiveRecomputationResultV01 | selective_recomputation_result | g2e_selective_recomputation_result_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + SelectiveRecomputationResultV01 + NUL) |
+| ContinuousDeltaRuntimeTraceV01 | continuous_delta_runtime_trace | g2e_continuous_delta_runtime_trace_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + ContinuousDeltaRuntimeTraceV01 + NUL) |
+| ContinuousDeltaRuntimeReportV01 | continuous_delta_runtime_report | g2e_continuous_delta_runtime_report_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + ContinuousDeltaRuntimeReportV01 + NUL) |
+| ContinuousDeltaValidationReportV01 | continuous_delta_validation_report | g2e_continuous_delta_validation_report_v01: | UTF8(HEDGEHOG_CONTINUOUS_DELTA_RUNTIME_V01 + NUL + ContinuousDeltaValidationReportV01 + NUL) |
+
+No prefix/domain is caller-selected and no typed role can reuse another row.
+The identity material is the Section 8 field order minus the own-ID field.
+Derived status, reason, proof, completeness, and outcome fields become
+identity-bearing only after the owning evaluator derives them. An unvalidated
+caller-selected status/reason is never accepted identity material. Runtime-only
+`ContinuousDeltaSourceContextV01` and `ContinuousDeltaExecutionBundleV01` have
+no serialized identities. No Python object identity, mapping insertion
+accident, `repr`, clock read, random value, or mutable global is identity
+material. Rebuilders independently reconstruct every ID.
+
+Schema disposition:
+
+- one new Draft 2020-12 document:
+  `schemas/continuous_delta_runtime_v01.schema.json`;
+- exactly 18 definitions, one for every serialized type below;
+- `additionalProperties: false` or the repository's exact equivalent on every
+  object;
+- ordered tuples represented as arrays with deterministic order and unique
+  item laws where applicable;
+- runtime-only `ContinuousDeltaSourceContextV01` and
+  `ContinuousDeltaExecutionBundleV01` have no schema definitions;
+- Kernel artifacts continue to use `schemas/kernel_artifact_v01.schema.json`.
+
+Exact definitions:
+
+- `DeltaSourceBindingV01`
+- `ChangedFieldBindingV01`
+- `ChangedArtifactBindingV01`
+- `WorldStateDeltaV01`
+- `DependencyFingerprintProfileV01`
+- `DeltaDependencyEdgeV01`
+- `DependencyGraphIndexV01`
+- `AffectedSetRequestV01`
+- `AffectedSetResultV01`
+- `ArtifactInvalidationRecordV01`
+- `InvalidationReportV01`
+- `PreservationProofV01`
+- `SelectiveRecomputationPlanV01`
+- `RecomputedArtifactBindingV01`
+- `SelectiveRecomputationResultV01`
+- `ContinuousDeltaRuntimeTraceV01`
+- `ContinuousDeltaRuntimeReportV01`
+- `ContinuousDeltaValidationReportV01`
+
+Exact additive ABI literals, appended after the complete historical prefix:
+
+- `ContinuousDeltaSource`
+- `DependencyGraphIndex`
+- `AffectedSetResult`
+- `ArtifactInvalidationReport`
+- `PreservationProof`
+- `SelectiveRecomputationPlan`
+- `ContinuousDeltaRuntimeReport`
+
+The semicolon-separated parent/trace cells below are ordered tuples in the
+displayed order. Every artifact uses ABI `v1.0`, the public generic
+`build_kernel_artifact_v01` and `validate_kernel_artifact_v01`, exact
+transaction/owner Root from the delta, and no private ABI. Payload field cells
+list the complete serialized source object in exact order:
+
+| Artifact literal | Serialized source | Lifecycle | Authority | source_component | Source-instance law | Exact payload fields | Ordered parent_artifact_ids | Ordered trace_refs | Exact artifact-ID prefix/domain | Schema/policy source | Exact time-envelope source | Public ABI builder/validator | Owning slice | Successful instances |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ContinuousDeltaSource | WorldStateDeltaV01 | PROPOSED; VALIDATED | NON_AUTHORITY | continuous_delta_runtime_v01 | one WorldStateDeltaV01 projected twice; payload bytes equal; lifecycle, parent, trace, prefix/domain, and artifact IDs differ | delta_id, delta_version, delta_profile_id, ordered_source_binding_ids, request_id, transaction_id, owning_root_id, domain_id, baseline_report_id, baseline_graph_id, baseline_graph_version, delta_sequence, prior_delta_id, observed_at_utc, valid_from_utc, valid_to_utc, baseline_policy_version, observed_policy_version, baseline_schema_versions, observed_schema_versions, baseline_source_history_hash, observed_source_history_hash, ordered_changed_field_binding_ids, ordered_changed_artifact_binding_ids, dependency_fingerprint_before, dependency_fingerprint_after, trace_refs, authority_created, permission_created, action_commit_packet_created, receipt_created, final_output_created, drs_write_created, real_world_effects_count | PROPOSED: baseline route artifact; baseline G2-D report artifact; baseline source artifacts in Manifest order; observed source artifacts in matching order. VALIDATED: proposed source artifact; baseline route artifact; baseline G2-D report artifact; baseline source artifacts in Manifest order; observed source artifacts in matching order | PROPOSED: delta.trace_refs; ordered source-binding IDs. VALIDATED: proposed source artifact ID; t01 decision ID; delta.trace_refs; ordered source-binding IDs | PROPOSED g2eabi_source_proposed_v01:/HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_PROPOSED_ARTIFACT_V01; VALIDATED g2eabi_source_validated_v01:/HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_VALIDATED_ARTIFACT_V01 | schema v0.1; delta observed_policy_version and observed_schema_versions | ct_session_anchor/freshness_class/kt_asof/ttl_seconds from baseline route envelope; et_observed_at and pt_created_at from delta.observed_at_utc; valid_from/valid_to from delta.valid_from_utc/delta.valid_to_utc | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E1 | 2 |
+| DependencyGraphIndex | DependencyGraphIndexV01 | VALIDATED | NON_AUTHORITY | continuous_delta_runtime_v01 | one graph; payload graph_id equals source object identity | graph_id, graph_version, graph_basis_sha256, source_manifest_id, source_manifest_hash, source_replay_id, transaction_id, owning_root_id, domain_id, ordered_node_ids, ordered_edge_ids, node_count, edge_count, max_nodes, max_edges, max_hops, acyclic, source_history_hash, policy_version, schema_versions, trace_refs | validated delta-source artifact; baseline source artifacts in Manifest order | graph.trace_refs; source_manifest_id; source_replay_id | g2eabi_graph_v01:/HEDGEHOG_G2E_DEPENDENCY_GRAPH_INDEX_ARTIFACT_V01 | schema v0.1; graph.policy_version and graph.schema_versions | ct_session_anchor/freshness_class/kt_asof/ttl_seconds from baseline route envelope; et_observed_at and pt_created_at from delta.observed_at_utc; valid_from/valid_to from delta.valid_from_utc/delta.valid_to_utc | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E2 | 1 |
+| AffectedSetResult | AffectedSetResultV01 | VALIDATED | NON_AUTHORITY | continuous_delta_runtime_v01 | one affected set; payload affected_set_id equals source object identity | affected_set_id, affected_request_id, delta_id, graph_id, graph_version, ordered_changed_node_ids, ordered_directly_affected_ids, ordered_transitively_affected_ids, ordered_affected_ids, ordered_unaffected_ids, closure_proof_sha256, visited_node_count, traversed_edge_count, maximum_observed_hops, complete, minimal, trace_refs | validated delta-source artifact; dependency-graph artifact | affected_result.trace_refs; t02 decision ID; delta_id; graph_id | g2eabi_affected_v01:/HEDGEHOG_G2E_AFFECTED_SET_RESULT_ARTIFACT_V01 | schema v0.1; delta observed_policy_version and observed_schema_versions | ct_session_anchor/freshness_class/kt_asof/ttl_seconds from baseline route envelope; et_observed_at and pt_created_at from delta.observed_at_utc; valid_from/valid_to from delta.valid_from_utc/delta.valid_to_utc | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E2 | 1 |
+| ArtifactInvalidationReport | InvalidationReportV01 | VALIDATED | NON_AUTHORITY | continuous_delta_runtime_v01 | one invalidation report; payload invalidation_report_id equals source object identity | invalidation_report_id, affected_set_id, ordered_invalidation_record_ids, ordered_invalidated_artifact_ids, ordered_historical_artifact_ids, ordered_unresolved_artifact_ids, ordered_packet_invalidation_candidate_ids, ordered_stale_reuse_certificate_ids, ordered_route_revalidation_ids, report_status, reason_codes, root_review_required, authority_created, permission_created, action_commit_packet_created, receipt_created, final_output_created, drs_write_created, real_world_effects_count | affected-set artifact; validated delta-source artifact; dependency-graph artifact | affected_set_id; t03 decision ID; ordered invalidation-record IDs; report reason codes | g2eabi_invalidation_v01:/HEDGEHOG_G2E_ARTIFACT_INVALIDATION_REPORT_ARTIFACT_V01 | schema v0.1; delta observed_policy_version and observed_schema_versions | ct_session_anchor/freshness_class/kt_asof/ttl_seconds from baseline route envelope; et_observed_at and pt_created_at from delta.observed_at_utc; valid_from/valid_to from delta.valid_from_utc/delta.valid_to_utc | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E3 | 1 |
+| PreservationProof | PreservationProofV01 | VALIDATED | EVIDENCE_ONLY | continuous_delta_runtime_v01 | one derived proof; payload preservation_proof_id equals source object identity | preservation_proof_id, baseline_graph_id, affected_set_id, ordered_preserved_artifact_ids, ordered_before_artifact_sha256, ordered_after_artifact_sha256, ordered_before_payload_sha256, ordered_after_payload_sha256, ordered_before_identity_ids, ordered_after_identity_ids, before_cache_state_sha256, after_cache_state_sha256, mutable_global_write_count, byte_identity_preserved, object_identity_used_as_proof, proof_sha256, status, reason_codes | ROOT_ACCEPTED plan artifact; invalidation-report artifact; recomputed G2-D report artifact | affected_set_id; ordered preserved artifact IDs; recomputed G2-D runtime trace ID | g2eabi_preservation_v01:/HEDGEHOG_G2E_PRESERVATION_PROOF_ARTIFACT_V01 | schema v0.1; delta observed_policy_version and observed_schema_versions | all eight TimeEnvelope fields copied byte-for-byte from recomputed G2-D report artifact | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E3/E4 | 1 |
+| SelectiveRecomputationPlan | SelectiveRecomputationPlanV01 | PROPOSED; ROOT_ACCEPTED | ADVISORY | continuous_delta_runtime_v01 | one plan object projected twice; payload bytes equal; lifecycle, parent, trace, prefix/domain, and artifact IDs differ | recomputation_plan_id, delta_id, affected_set_id, invalidation_report_id, source_route_eligibility_artifact_id, source_topology_id, accepted_mode, accepted_scope_ref, ordered_affected_cell_ids, ordered_affected_artifact_ids, ordered_work_node_ids, ordered_preserved_artifact_ids, max_work_items, max_queue_entries, max_wall_time_units, max_token_budget, max_provider_calls, transition_profile_id, root_review_required, plan_status, reason_codes, trace_refs | PROPOSED: invalidation-report artifact; affected-set artifact; dependency-graph artifact; baseline route artifact; baseline G2-D report artifact. ROOT_ACCEPTED: proposed plan artifact; plan RootDecision artifact | PROPOSED: plan.trace_refs; delta/affected/invalidation/route/topology IDs. ROOT_ACCEPTED: proposed plan artifact ID; plan Root input ID; plan Root decision ID; t04 ID; t05 ID | PROPOSED g2eabi_plan_proposed_v01:/HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_PROPOSED_ARTIFACT_V01; ROOT_ACCEPTED g2eabi_plan_accepted_v01:/HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_ACCEPTED_ARTIFACT_V01 | schema v0.1; delta observed_policy_version and observed_schema_versions | ct_session_anchor/freshness_class/kt_asof/ttl_seconds from baseline route envelope; et_observed_at and pt_created_at from delta.observed_at_utc; valid_from/valid_to from delta.valid_from_utc/delta.valid_to_utc | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E4 | 2 |
+| ContinuousDeltaRuntimeReport | ContinuousDeltaRuntimeReportV01 | FINALIZED | EVIDENCE_ONLY | continuous_delta_runtime_v01 | one report; payload report_id equals source object identity | report_id, report_version, profile_id, ordered_source_binding_ids, baseline_report_id, delta_id, graph_id, affected_set_id, invalidation_report_id, preservation_proof_id, recomputation_plan_id, recomputation_result_id, trace_id, plan_root_decision_input_id, plan_root_decision_id, final_root_decision_input_id, final_root_decision_id, changed_count, directly_affected_count, transitively_affected_count, invalidated_count, recomputed_count, preserved_count, unresolved_count, report_status, reason_codes, root_review_required, provider_calls, model_calls, network_calls, connector_calls, external_drs_calls, action_commit_packets_created, permissions_created, receipts_created, final_outputs_created, drs_writes, authority_created_count, real_world_effects_count | ROOT_ACCEPTED plan artifact; recomputed G2-D report artifact; preservation-proof artifact; final RootDecision artifact; invalidation-report artifact | runtime trace ID; plan Root decision ID; final Root decision ID; recomputed G2-D runtime report ID; excludes t10 | g2eabi_report_v01:/HEDGEHOG_G2E_CONTINUOUS_DELTA_RUNTIME_REPORT_ARTIFACT_V01 | schema v0.1; delta observed_policy_version and observed_schema_versions | all eight TimeEnvelope fields copied byte-for-byte from recomputed G2-D report artifact | build_kernel_artifact_v01; validate_kernel_artifact_v01 | G2-E4 | 1 |
+
+There are exactly seven literals and nine successful-path G2-E artifact
+instances: distinct immutable PROPOSED and VALIDATED source artifacts, one
+each for graph, affected set, invalidation report, preservation proof, and
+final report, plus distinct immutable PROPOSED and ROOT_ACCEPTED artifacts over
+the same plan payload. The two source artifacts carry byte-identical
+`WorldStateDeltaV01` payloads but different lifecycle, parent, trace,
+prefix/domain, and artifact-ID material. The two plan artifacts likewise have
+different lifecycle, parent, trace, prefix/domain, and artifact-ID material.
+
+The private canonical-module projection helper derives each artifact ID before
+calling the public generic ABI builder. For every instance:
+
+```text
+artifact_id = prefix + sha256(
+  UTF8(domain + NUL)
+  + canonical_json_bytes_v01(
+      abi_version,
+      artifact_type,
+      schema_version,
+      transaction_id,
+      owner_root_id,
+      source_component,
+      authority_class,
+      lifecycle_state,
+      payload,
+      trace_refs,
+      parent_refs,
+      time_envelope
+    )
+).hexdigest()
+```
+
+The ordered canonical tuple is the complete `KernelArtifactV01` material
+excluding only `artifact_id`; no other envelope field is omitted.
+
+The nine concrete artifact instance identities are:
+
+| Instance | Artifact literal | Lifecycle | Exact prefix | Exact domain |
+| --- | --- | --- | --- | --- |
+| delta_source_proposed | ContinuousDeltaSource | PROPOSED | g2eabi_source_proposed_v01: | HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_PROPOSED_ARTIFACT_V01 |
+| delta_source_validated | ContinuousDeltaSource | VALIDATED | g2eabi_source_validated_v01: | HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_VALIDATED_ARTIFACT_V01 |
+| dependency_graph_validated | DependencyGraphIndex | VALIDATED | g2eabi_graph_v01: | HEDGEHOG_G2E_DEPENDENCY_GRAPH_INDEX_ARTIFACT_V01 |
+| affected_set_validated | AffectedSetResult | VALIDATED | g2eabi_affected_v01: | HEDGEHOG_G2E_AFFECTED_SET_RESULT_ARTIFACT_V01 |
+| invalidation_report_validated | ArtifactInvalidationReport | VALIDATED | g2eabi_invalidation_v01: | HEDGEHOG_G2E_ARTIFACT_INVALIDATION_REPORT_ARTIFACT_V01 |
+| plan_proposed | SelectiveRecomputationPlan | PROPOSED | g2eabi_plan_proposed_v01: | HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_PROPOSED_ARTIFACT_V01 |
+| plan_root_accepted | SelectiveRecomputationPlan | ROOT_ACCEPTED | g2eabi_plan_accepted_v01: | HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_ACCEPTED_ARTIFACT_V01 |
+| preservation_proof_validated | PreservationProof | VALIDATED | g2eabi_preservation_v01: | HEDGEHOG_G2E_PRESERVATION_PROOF_ARTIFACT_V01 |
+| runtime_report_finalized | ContinuousDeltaRuntimeReport | FINALIZED | g2eabi_report_v01: | HEDGEHOG_G2E_CONTINUOUS_DELTA_RUNTIME_REPORT_ARTIFACT_V01 |
+
+All nine prefixes/domains are concrete, unique, lifecycle-sensitive, and
+disjoint from the 18 serialized-object rows and the two shared Root artifact
+profiles in Section 17. Validation independently rebuilds payload, parent,
+trace, time, policy/schema, lifecycle, authority, and artifact ID. A copied
+payload under another typed role is invalid.
+
+Reason geometry is frozen at 88 ordered public reasons. The original
+82-reason prefix is exact; the final six reasons are constructibility-carrier
+and graph-basis failures. The registry includes all ten Transition reasons:
+
+| No. | Public reason |
+| --- | --- |
+| 1 | g2e_object_invalid |
+| 2 | g2e_identity_invalid |
+| 3 | g2e_identity_mismatch |
+| 4 | g2e_version_unsupported |
+| 5 | g2e_status_invalid |
+| 6 | g2e_reason_codes_invalid |
+| 7 | g2e_zero_operation_boundary_violated |
+| 8 | g2e_authority_boundary_violated |
+| 9 | g2e_delta_source_invalid |
+| 10 | g2e_delta_source_unvalidated |
+| 11 | g2e_delta_baseline_stale |
+| 12 | g2e_delta_time_invalid |
+| 13 | g2e_delta_future_observation |
+| 14 | g2e_delta_duplicate_binding |
+| 15 | g2e_delta_conflicting_duplicate |
+| 16 | g2e_delta_field_path_invalid |
+| 17 | g2e_delta_artifact_binding_invalid |
+| 18 | g2e_delta_cross_transaction |
+| 19 | g2e_delta_cross_domain |
+| 20 | g2e_delta_cross_root |
+| 21 | g2e_delta_policy_version_mismatch |
+| 22 | g2e_delta_schema_version_mismatch |
+| 23 | g2e_dependency_fingerprint_profile_invalid |
+| 24 | g2e_dependency_fingerprint_preimage_invalid |
+| 25 | g2e_dependency_fingerprint_role_collision |
+| 26 | g2e_dependency_fingerprint_mismatch |
+| 27 | g2e_dependency_fingerprint_forgery |
+| 28 | g2e_dependency_source_history_mismatch |
+| 29 | g2e_dependency_canonicalization_mismatch |
+| 30 | g2e_dependency_edge_invalid |
+| 31 | g2e_dependency_edge_direction_invalid |
+| 32 | g2e_dependency_edge_duplicate |
+| 33 | g2e_dependency_edge_self |
+| 34 | g2e_dependency_edge_unknown_source |
+| 35 | g2e_dependency_edge_unknown_dependent |
+| 36 | g2e_dependency_edge_cross_transaction |
+| 37 | g2e_dependency_edge_cross_domain |
+| 38 | g2e_dependency_edge_cross_root |
+| 39 | g2e_dependency_graph_cycle |
+| 40 | g2e_dependency_graph_version_mismatch |
+| 41 | g2e_dependency_graph_bounds_exceeded |
+| 42 | g2e_dependency_graph_ordering_invalid |
+| 43 | g2e_dependency_graph_missing_edge |
+| 44 | g2e_affected_request_invalid |
+| 45 | g2e_affected_changed_binding_unknown |
+| 46 | g2e_affected_closure_incomplete |
+| 47 | g2e_affected_reachable_omitted |
+| 48 | g2e_affected_unrelated_injected |
+| 49 | g2e_affected_ordering_invalid |
+| 50 | g2e_affected_hop_bound_exceeded |
+| 51 | g2e_affected_node_bound_exceeded |
+| 52 | g2e_affected_proof_invalid |
+| 53 | g2e_invalidation_record_invalid |
+| 54 | g2e_invalidation_reason_invalid |
+| 55 | g2e_invalidation_deletion_forbidden |
+| 56 | g2e_invalidation_history_mutation |
+| 57 | g2e_invalidation_predecessor_mismatch |
+| 58 | g2e_invalidation_supersession_mismatch |
+| 59 | g2e_invalidation_g2a_root_binding_required |
+| 60 | g2e_invalidation_g2b_reuse_still_current |
+| 61 | g2e_preservation_proof_invalid |
+| 62 | g2e_preserved_artifact_changed |
+| 63 | g2e_preserved_identity_changed |
+| 64 | g2e_preservation_cache_mutation |
+| 65 | g2e_recomputation_plan_invalid |
+| 66 | g2e_route_revalidation_required |
+| 67 | g2e_topology_binding_mismatch |
+| 68 | g2e_recomputation_budget_exceeded |
+| 69 | g2e_recomputation_in_place_forbidden |
+| 70 | g2e_recomputation_result_invalid |
+| 71 | g2e_recomputation_no_progress |
+| 72 | g2e_repeated_delta_conflict |
+| 73 | g2e_transition_delta_validated |
+| 74 | g2e_transition_affected_set_derived |
+| 75 | g2e_transition_invalidation_derived |
+| 76 | g2e_transition_recomputation_plan_reviewed |
+| 77 | g2e_transition_recomputation_plan_accepted |
+| 78 | g2e_transition_recomputation_plan_rejected |
+| 79 | g2e_transition_selective_recomputation_executed |
+| 80 | g2e_transition_selective_recomputation_blocked |
+| 81 | g2e_transition_delta_parent_returned |
+| 82 | g2e_transition_delta_report_finalized |
+| 83 | g2e_delta_binding_set_mismatch |
+| 84 | g2e_delta_source_binding_set_mismatch |
+| 85 | g2e_dependency_edge_set_mismatch |
+| 86 | g2e_dependency_graph_basis_mismatch |
+| 87 | g2e_dependency_replay_edge_mismatch |
+| 88 | g2e_dependency_source_payload_unavailable |
+
+Validation targets are frozen at 32:
+
+- `DeltaSourceBindingV01`
+- `ChangedFieldBindingV01`
+- `ChangedArtifactBindingV01`
+- `WorldStateDeltaV01`
+- `DependencyFingerprintProfileV01`
+- `DeltaDependencyEdgeV01`
+- `DependencyGraphIndexV01`
+- `AffectedSetRequestV01`
+- `AffectedSetResultV01`
+- `ArtifactInvalidationRecordV01`
+- `InvalidationReportV01`
+- `PreservationProofV01`
+- `SelectiveRecomputationPlanV01`
+- `RecomputedArtifactBindingV01`
+- `SelectiveRecomputationResultV01`
+- `ContinuousDeltaRuntimeTraceV01`
+- `ContinuousDeltaRuntimeReportV01`
+- `ContinuousDeltaValidationReportV01`
+- `ContinuousDeltaSourceContextV01`
+- `ContinuousDeltaExecutionBundleV01`
+- `delta_against_source_context`
+- `dependency_fingerprint_against_sources`
+- `dependency_graph_against_context`
+- `affected_set_completeness`
+- `invalidation_against_prior_slices`
+- `preservation_against_artifacts`
+- `selective_plan_against_sources`
+- `recomputation_result_against_plan`
+- `runtime_report_against_sources`
+- `continuous_delta_abi_profile`
+- `continuous_delta_transition_profile`
+- `continuous_delta_stage_bundle`
+
+Failure stages are frozen at 24:
+
+- `delta_source_structure`
+- `delta_source_context`
+- `changed_binding`
+- `delta_time`
+- `fingerprint_profile`
+- `fingerprint_context`
+- `dependency_edge`
+- `dependency_graph`
+- `graph_bounds`
+- `affected_request`
+- `affected_closure`
+- `affected_completeness`
+- `invalidation_record`
+- `invalidation_prior_slice`
+- `preservation`
+- `route_revalidation`
+- `topology_binding`
+- `recomputation_plan`
+- `recomputation_admission`
+- `recomputation_execution`
+- `post_vv`
+- `gt`
+- `parent_return`
+- `bundle_final`
+
+The public validation status vocabulary is exactly `PASS` and `FAIL_CLOSED`.
+Failure reports derive status and reason codes from validation; callers cannot
+provide them. A valid report still creates no truth, authority, permission,
+packet, receipt, FinalOutput, DRS write, or effect.
+
+## 10. Dependency Fingerprint and Graph Law
+
+### Typed fingerprint
+
+The G2-E digest role is distinct from G2-A's
+`dependency_set_candidate_fingerprint`, G2-B's
+`checked_dependency_fingerprint`, an artifact payload hash, and
+`source_history_hash`. Those values may appear as bound input fields but may
+not be relabeled or substituted.
+
+The public fingerprint API accepts only a validated
+`DependencyFingerprintProfileV01`, `DependencyGraphIndexV01`, exact
+`tuple[DeltaDependencyEdgeV01, ...]`, and exact source
+`tuple[KernelArtifactV01, ...]`, plus explicit matching `policy_version`,
+`schema_versions`, and `source_history_hash`. It derives its own preimage. No
+public signature accepts generic caller-preassembled dependency material.
+
+Exact public builder surface:
+
+```text
+build_dependency_fingerprint_v01(
+    *,
+    profile: DependencyFingerprintProfileV01,
+    graph: DependencyGraphIndexV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+) -> str
+```
+
+`validate_dependency_fingerprint_against_sources_v01` receives the same
+contextual inputs plus the fingerprint value.
+
+The function is called once with the exact baseline artifact tuple and
+baseline policy/schema/history, and once with the exact observed artifact
+tuple and observed policy/schema/history. Both calls use the same typed role.
+
+Exact fingerprint preimage, in order, is derived from those validated values:
+
+1. domain separator
+   `HEDGEHOG_CONTINUOUS_DELTA_DEPENDENCY_FINGERPRINT_V01`;
+2. `fingerprint_profile_id`;
+3. `fingerprint_profile_version`;
+4. `typed_role` equal to `G2E_DEPENDENCY_CURRENTNESS`;
+5. `hash_algorithm` equal to `sha256`;
+6. `canonicalization_profile_id` equal to
+   `integrity_replay_canonical_json_v01`;
+7. graph ID and `graph_basis_sha256`;
+8. graph version, transaction, owning Root, and domain;
+9. the explicit policy version, schema versions, and source-history hash from
+   the matching baseline or observed context;
+10. ordered dependency rows in exact `ordered_edge_ids` order, each containing
+    `(dependent_artifact_id, dependency_artifact_id,
+    dependency_field_pointers, edge_class, canonical_order,
+    source_replay_edge_sha256)`;
+11. matching source artifact IDs, canonical payload hashes, time envelopes,
+    lifecycle, authority class, and schema bindings in Manifest order.
+
+The digest is lowercase 64-hex SHA-256 over `canonical_json_bytes_v01` of that
+ordered tuple. Equal digest bytes in another typed role do not satisfy G2-E.
+The profile explicitly sets `cross_role_reuse_forbidden=true`.
+
+Validation requires `dependency_fingerprint_before` to equal the baseline
+rebuild and `dependency_fingerprint_after` to equal the observed rebuild.
+Before/after artifact/context arguments cannot be swapped. A no-change delta
+is rejected. An unchanged dependency basis may produce the same digest, but
+the delta still requires at least one validated canonical change outside that
+unchanged basis.
+
+### Graph/index
+
+Node identity is the accepted `CanonicalArtifactRefV01.artifact_id`. Edge
+direction is `dependent_artifact_id -> dependency_artifact_id`: if edge A -> B
+exists and B changes, A is a dependent candidate.
+
+Graph and edge identities are constructed in this exact acyclic order:
+
+1. validate the exact Manifest, Replay result, baseline source Kernel
+   artifacts,
+   context, graph version, and edge-projection bindings;
+2. derive `graph_basis_sha256` without any G2-E edge ID or final graph ID;
+3. derive every `source_replay_edge_sha256`;
+4. derive every `DeltaDependencyEdgeV01.edge_id` from
+   `graph_basis_sha256` and that edge's exact non-own-ID material;
+5. derive `DependencyGraphIndexV01.graph_id` from
+   `graph_basis_sha256`, ordered node IDs, ordered edge IDs, bounds, context,
+   policy/schema, source history, and trace material.
+
+The exact graph-basis digest domain is:
+
+```text
+HEDGEHOG_CONTINUOUS_DELTA_GRAPH_BASIS_V01
+```
+
+Its ordered preimage is:
+
+1. graph profile/version;
+2. `graph_version`;
+3. `source_manifest_id`;
+4. `source_manifest_hash`;
+5. `source_replay_id`;
+6. `transaction_id`;
+7. `owning_root_id`;
+8. `domain_id`;
+9. `policy_version`;
+10. `schema_versions`;
+11. `source_history_hash`;
+12. ordered baseline source artifact IDs and payload hashes in Manifest order;
+13. ordered Replay dependency pairs in Manifest order;
+14. edge-projection bindings normalized into the exact pre-ID graph order.
+
+The graph basis contains no edge ID and no final graph ID.
+
+The exact source-Replay-edge digest domain is:
+
+```text
+HEDGEHOG_CONTINUOUS_DELTA_SOURCE_REPLAY_EDGE_V01
+```
+
+Its ordered preimage is:
+
+1. `source_manifest_id`;
+2. `source_manifest_hash`;
+3. `source_replay_id`;
+4. dependent artifact ID;
+5. dependency artifact ID;
+6. dependent Manifest position;
+7. dependency Manifest position.
+
+`source_replay_edge_sha256` is evidence continuity only. It is not authority
+and cannot replace contextual edge validation. Every serialized identity,
+including each edge and final graph, is derived from every ordered non-own-ID
+field. No identity exception, recursive fixed point, or fixed-point search is
+permitted.
+
+The baseline graph source of truth is a PASS `ArtifactManifestV01`, PASS
+`ReplayVerificationResultV01`, and exact baseline source
+`tuple[KernelArtifactV01, ...]` in Manifest order, projected with exact
+edge-projection bindings. Each source artifact passes its public ABI validator
+and projects to the exact Manifest `CanonicalArtifactRefV01`, including
+artifact ID, payload hash, transaction, Root, lifecycle, authority class, and
+schema binding; the accepted Replay covers it.
+
+The exact conceptual projection signature is:
+
+```text
+project_integrity_replay_dependency_edges_v01(
+    *,
+    manifest: ArtifactManifestV01,
+    replay: ReplayVerificationResultV01,
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    graph_version: str,
+    transaction_id: str,
+    owning_root_id: str,
+    domain_id: str,
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+    edge_projection_bindings:
+        tuple[tuple[str, str, tuple[str, ...], str], ...],
+) -> tuple[str, tuple[DeltaDependencyEdgeV01, ...]]
+```
+
+The first return is `graph_basis_sha256`. Each edge-projection row is exact
+dependent artifact ID, dependency artifact ID, exact RFC-6901 pointer tuple,
+and edge class. Rows must cover Replay edge pairs exactly. Unknown, missing,
+or duplicate pairs, silent deduplication, or caller-selected canonical order
+fail closed. The supplied rows are normalized by the four frozen pre-ID keys
+before they enter `graph_basis_sha256`; caller tuple order is never identity
+authority.
+
+An empty RFC-6901 pointer tuple is legal for an artifact-level dependency. Each
+nonempty pointer resolves against the exact canonical `payload` of the matching
+baseline dependency `KernelArtifactV01`. A payload hash is never treated as an
+addressable payload. Missing source payload carriers or unresolved pointers
+fail closed with `g2e_dependency_source_payload_unavailable`. Valid pointers
+are identity-bearing causal metadata only; they cannot suppress an accepted
+artifact dependency edge.
+
+Frozen v0.1 bounds:
+
+- maximum nodes: 256;
+- maximum edges: 1,024;
+- maximum changed bindings per delta: 64;
+- maximum transitive hops: 32;
+- maximum work items in a selective plan: 256;
+- maximum queue entries created by a selective plan: the lesser of 1,024 and
+  the accepted G2-D policy-derived bound;
+- cycle law: reject the graph; no strongly-connected-component shortcut;
+- cross-transaction/domain/Root edges: reject unless a future accepted typed
+  boundary exists; v0.1 defines none.
+
+Canonical graph-edge order is derived before any edge ID exists. Sort raw,
+validated edge descriptors by exactly:
+
+1. dependent Manifest position;
+2. dependency Manifest position;
+3. lexicographic RFC-6901 pointer tuple;
+4. edge class.
+
+After sorting, assign `canonical_order` as contiguous one-based integers
+`1..N`; then derive edge IDs; then derive the final graph ID. Edge ID is not an
+ordering key, and `canonical_order` never depends on `edge_id`.
+
+Duplicate `(dependent, dependency, pointer tuple, edge class)` descriptors
+fail closed. No valid descriptor tie remains after the four pre-ID keys. Self
+edges, unknown artifacts, backward source-timeline violations inherited from
+Integrity Replay, and any cycle also fail closed. The index is immutable and
+versioned; a delta binds the exact graph ID and version.
+
+## 11. Delta Intake and Changed-Field Binding
+
+The canonical delta source is `WorldStateDeltaV01`, not a plain mapping and
+not a provider event. It is accepted only after every source object and
+binding passes its public validator. One `DeltaSourceBindingV01` binds one
+exact immutable baseline `KernelArtifactV01` and one exact immutable observed
+successor `KernelArtifactV01`. One delta binds one or more source pairs through
+the ordered, identity-bearing `tuple[str, ...]` field
+`ordered_source_binding_ids`; at least one source binding is required.
+
+Both source artifacts are actual immutable ABI carriers. When any canonical
+field changes they are different objects with different IDs; their artifact
+types match in v0.1. `predecessor_relation` is exactly
+`OBSERVED_SUCCESSOR_OF_BASELINE`. Full-artifact SHA-256 values cover canonical
+Kernel artifact bytes; payload SHA-256 values cover canonical payload bytes.
+Policy, schema, and source-history before/after values are explicit. In-place
+source mutation is forbidden.
+
+Source acceptance uses no dangling report ID and no caller-shaped PASS status.
+The baseline artifact is carried in `baseline_source_artifacts`, passes the
+public Kernel ABI validator, projects exactly to the accepted Manifest, and is
+covered by the accepted Replay result. The observed artifact is carried in
+`observed_source_artifacts`, passes the public Kernel ABI validator, matches the
+v0.1 artifact type/context, and has the exact immutable predecessor relation to
+the baseline artifact. The public run independently rebuilds full-artifact and
+payload hashes and contextually revalidates the source pair plus its
+before/after policy/schema/history context before affected-set construction.
+Optional domain evidence may exist inside the exact Kernel artifact evidence
+or trace material; G2-E does not invent, relabel, or dereference an uncarried
+external source report.
+
+Changed fields use RFC-6901 JSON Pointers resolved against both exact source
+artifacts. The prior and observed values are each hashed from
+`canonical_json_bytes_v01` of the resolved value. The prior hash must match the
+baseline value, the observed hash must match the observed value, and at least
+one canonical value/hash differs. No raw Python object, `repr`, insertion
+order, or caller-supplied hash is trusted. `ChangedFieldBindingV01` carries no
+external source-validation-report ID.
+
+Changed artifact bindings carry distinct baseline and observed artifact IDs,
+types, payload hashes, dependency fingerprints, and the exact predecessor
+relation. The pair must be the same pair owned by its source binding; types
+match in v0.1 and IDs differ whenever canonical bytes differ. No one mutable
+artifact ID represents both states. A delta may carry both binding families
+when an artifact-level change also names exact field causes.
+
+Required context bindings are request, transaction, domain, owning Root,
+baseline and observed source artifacts, baseline report, baseline dependency
+graph ID/version, observed/valid times, before/after policy versions,
+before/after schema versions, and before/after source-history hashes.
+
+Intake order is exact:
+
+1. structural/type/UTF-8/canonical JSON checks;
+2. direct public ABI, Manifest, Replay, and source-pair validation;
+3. request/transaction/domain/Root coherence;
+4. baseline report and graph-currentness checks;
+5. baseline/observed artifact, predecessor, policy/schema/source-history
+   checks;
+6. time-window and freshness checks;
+7. exact source-binding ID-to-object closure;
+8. changed-binding pointer/artifact existence and ID-to-object closure;
+9. duplicate/conflict checks;
+10. dependency-edge ID-to-object closure;
+11. before/after dependency fingerprint rebuild from the matching typed
+    graph/edge/artifact/context carriers;
+12. delta identity rebuild.
+
+Duplicate identical bindings are rejected rather than silently deduplicated.
+An exact repeat of the same complete delta bytes against the same exact
+baseline and graph is logically idempotent. Independent fresh calls must
+produce byte-identical accepted bundle/report bytes and identical semantic
+identities. They create no additional accepted history identity and no
+provider/model/network/connector/external-DRS/packet/permission/receipt/
+FinalOutput/DRS-write/authority/effect operation. The same sequence or ID with
+different bytes is a conflicting duplicate and fails closed. A stale
+baseline, future observation, invalid validity interval, unvalidated source,
+unknown path, policy/schema substitution, or cross-context binding fails
+before affected-set creation.
+
+`g2e_delta_source_unvalidated` covers an invalid baseline Manifest/Replay
+projection, an invalid baseline or observed Kernel artifact, an invalid
+predecessor/source-pair binding, or source/context currentness failure.
+
+The v0.1 contract does not claim persistent memoization, a short-circuit
+registry, zero Python object allocation, zero CPU work, or production event
+deduplication. v0.1 uses no runtime cache; any later accepted cache extension
+requires an explicit contract revision.
+
+The accepted v0.1 boundary is one explicit immutable delta against one exact
+accepted baseline. `delta_sequence == 1` and `prior_delta_id is None`. A
+combined delta may contain multiple source pairs only when all pairs share
+request, transaction, domain, owning Root, baseline report, baseline graph,
+and compatible before/after context. Every changed binding points to one
+listed source pair. Source order is deterministic; changes are disjoint or
+mutually coherent; the identity includes complete ordered source-, field-,
+and artifact-binding ID tuples. Conflicting observed values require
+`NEEDS_USER` / `FAIL_CLOSED`. There is no last-write-wins law.
+
+Sequential multi-delta chaining is not implemented in v0.1. A later fresh
+invocation against a new state requires a separately validated new Manifest,
+Replay result, baseline/observed source-artifact sets, G2-C route, and G2-D
+baseline bundle. G2-E v0.1 does not persist or automatically accept a
+successor baseline, event stream, or multi-delta history.
+
+Complete carrier law:
+
+- every ID listed by the delta resolves to exactly one supplied object of the
+  exact type;
+- every supplied source or changed-binding object is referenced exactly once;
+- no referenced object is absent and no unreferenced object is injected;
+- no duplicate ID or duplicate object row is accepted;
+- tuple order is canonical and identity-bearing;
+- every graph edge ID resolves to exactly one supplied
+  `DeltaDependencyEdgeV01`, and every supplied edge occurs exactly once in
+  `ordered_edge_ids`;
+- no graph walk resolves IDs through a module global, test registry, hidden
+  cache, object identity, caller mapping, or implicit duck typing.
+
+## 12. Deterministic Affected-Set Algorithm
+
+Inputs are one validated `WorldStateDeltaV01`, one validated
+`AffectedSetRequestV01`, one validated `DependencyGraphIndexV01`, and the
+complete exact E2 carrier tuples: `tuple[DeltaSourceBindingV01, ...]`,
+`tuple[ChangedFieldBindingV01, ...]`,
+`tuple[ChangedArtifactBindingV01, ...]`, and
+`tuple[DeltaDependencyEdgeV01, ...]`, plus exact baseline and observed
+`tuple[KernelArtifactV01, ...]` values. Both
+`compute_affected_set_v01` and
+`validate_affected_set_against_graph_v01` receive every carrier directly and
+do not require `ContinuousDeltaSourceContextV01`; E2 cannot depend on an
+E3-built context. The public run validates this complete closure before
+affected-set construction.
+
+```text
+compute_affected_set_v01(
+    *,
+    request: AffectedSetRequestV01,
+    delta: WorldStateDeltaV01,
+    graph: DependencyGraphIndexV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> AffectedSetResultV01
+```
+
+`validate_affected_set_against_graph_v01` receives the same complete carrier
+inputs plus the value/request.
+
+G2-E v0.1 affected-set semantics are frozen at artifact-node granularity. A
+valid `ChangedFieldBindingV01` proves which canonical field changed but maps to
+its exact baseline artifact node. A valid `ChangedArtifactBindingV01` proves an
+artifact-level change and maps to that same node family. Once a baseline
+artifact node is changed, traversal considers every accepted artifact edge
+whose dependency node is that artifact. `dependency_field_pointers` are
+validated identity-bearing explanatory/causal metadata only and never a
+pruning mechanism. v0.1 makes no intra-artifact field-minimal recomputation
+claim. Minimality and unrelatedness are defined only against the accepted
+artifact-level dependency graph.
+
+Exact algorithm:
+
+1. Prove exact source-binding, changed-binding, and dependency-edge
+   ID-to-object closure, including canonical tuple order and shared context.
+2. Resolve every changed field/artifact binding from its exact immutable
+   baseline/observed pair to one or more baseline graph node IDs. Observed
+   successor IDs need not already be graph nodes. Zero matches or ambiguity
+   fails closed.
+3. Sort changed nodes by Manifest node order, then artifact ID.
+4. Construct a reverse adjacency index from supplied, independently validated
+   dependency edge objects, from dependency node to dependent
+   nodes without changing the canonical stored edge direction. Do not filter
+   any edge by `dependency_field_pointers` or edge class.
+5. Initialize a FIFO frontier with changed nodes in canonical order and mark
+   them changed, not affected.
+6. Pop one node. Visit its dependents in canonical edge order. For each unseen
+   dependent, record direct distance 1 or parent distance + 1, record the
+   causative edge, and append it to the frontier.
+7. Stop only when the frontier is empty. Exceeding node, edge, or hop bounds
+   fails closed and produces no partial PASS result.
+8. Emit directly affected IDs at distance 1; transitively affected IDs at
+   distance greater than 1; and the union ordered by `(distance, manifest
+   position, artifact_id)`.
+9. Emit unaffected IDs in source Manifest order.
+10. Recompute a closure proof from every changed node, visited edge, distance,
+   affected ID, and unaffected ID.
+11. Independently validate completeness by rerunning a separate pure
+    artifact-node closure walk and minimality by proving every included
+    affected node has an artifact dependency path and every excluded node
+    lacks one.
+
+Changed nodes are not automatically included in the affected set unless a
+self-currentness artifact explicitly depends on the changed source through a
+different node; self edges remain forbidden. No reachable dependent may be
+omitted. No node lacking a dependency path may be included.
+
+Missing dependency evidence fails closed. It never means unaffected. If the
+missing edge makes completeness unknowable, the public result is
+`FAIL_CLOSED`, the unresolved source IDs are reported, and no invalidation or
+recomputation plan is accepted.
+
+This conservative boundary still fulfills the roadmap duty: one changed fact
+affects only its transitive artifact subtree, while disconnected artifacts and
+branches remain preserved. A pointer cannot make a reachable artifact vanish,
+and a pointer cannot inject an artifact without an artifact-level path.
+
+## 13. Invalidation, Supersession, and Immutable History
+
+`ArtifactInvalidationRecordV01` is a current-eligibility evidence record. Its
+allowed reason classes are exactly:
+
+- `DEPENDENCY_FINGERPRINT_CHANGED`;
+- `SOURCE_FIELD_CHANGED`;
+- `SOURCE_ARTIFACT_CHANGED`;
+- `POLICY_VERSION_CHANGED`;
+- `SCHEMA_VERSION_CHANGED`;
+- `TEMPORAL_VALIDITY_CHANGED`;
+- `UPSTREAM_ARTIFACT_INVALIDATED`;
+- `ROUTE_REVALIDATION_REQUIRED`;
+- `PACKET_ROOT_REVIEW_REQUIRED`;
+- `REUSE_CERTIFICATE_STALE`.
+
+Invalidation derivation and validation receive the actual affected set, delta,
+source context, source bindings, changed-field bindings, changed-artifact
+bindings, dependency edges, dependency graph, and, for validation, the exact
+invalidation record tuple. Reason classes are derived from the actual changed
+objects, before/after policy/schema/history, graph reachability, and prior-slice
+currentness. No class may be inferred from an ID string.
+
+The record always carries `historical_artifact_preserved=true` and
+`deleted=false`. It changes only eligibility in the new decision context. It
+does not alter the historical artifact's lifecycle field.
+
+`superseded_by_artifact_id` is pre-execution and must be `None` in v0.1 E3
+records. Exact successor/supersession identity is owned later by
+`RecomputedArtifactBindingV01`; an immutable invalidation record is never
+rewritten.
+
+Vocabulary is disjoint:
+
+- `invalidated`: not current/eligible for this affected path;
+- `revoked`: a G2-A owning-Root lifecycle transition;
+- `expired`: current time exceeds accepted validity/TTL;
+- `superseded`: a validated successor/predecessor relationship;
+- `stale`: current-use freshness/dependency check failed;
+- `blocked`: a current gate prevented progress;
+- `quarantined`: isolated from eligible use;
+- `failed`: an attempted bounded operation failed;
+- `deleted`: physical/history erasure, forbidden in G2-E.
+
+G2-A packet handling: G2-E records a packet invalidation candidate and exact
+changed dependency IDs. It calls no Root transition itself. The existing
+owning-Root G2-A validator decides whether revocation/supersession material is
+valid. Until that decision, the packet is not executable for the affected
+path.
+
+G2-B reuse handling: any certificate whose checked dependency, forbidden
+change, policy/schema, source-history, validity, or evidence binding is
+affected becomes stale for current use. The certificate and MeaningRecord stay
+byte-identical historical evidence. A new certificate requires the complete
+existing G2-B Root-gated path after recomputation.
+
+G2-C route handling: the source context carries the exact
+`baseline_g2c_route_eligibility_artifact` already bound by
+`baseline_g2d_execution_bundle.source_context`. When any route-bound source
+ID/hash is affected, the baseline route remains historical but the current
+invocation returns `g2e_route_revalidation_required` before plan acceptance
+and creates no recomputed G2-D bundle. A freshly revalidated route is never
+spliced into the baseline topology. A later fresh invocation may receive a
+separately accepted route and G2-D baseline bundle; constructing or accepting
+those successor inputs is outside v0.1.
+
+Every recomputed artifact receives a new ID and one
+`RecomputedArtifactBindingV01` with old/new hashes, `DERIVED_FROM_INVALIDATED`
+predecessor relation, the exact supersession relation where one exists, and
+causal/trace refs. No history row is removed or rewritten.
+
+## 14. Unaffected Artifact Preservation
+
+`PreservationProofV01` proves preservation by derived values, not object
+identity and not caller-selected before/after tuples. Its public derivation
+surface is exact:
+
+```text
+prove_unaffected_artifact_preservation_v01(
+    *,
+    affected_set: AffectedSetResultV01,
+    invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+    source_context: ContinuousDeltaSourceContextV01,
+    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+    recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
+) -> PreservationProofV01
+```
+
+The function derives exact before/after sets from the baseline versus observed
+source-artifact tuples, baseline versus recomputed G2-D execution bundles,
+affected-set partitions, invalidation records, and recomputed bindings. For
+every preserved source and downstream G2-D object it binds and checks:
+
+- artifact ID before and after;
+- complete canonical Kernel artifact bytes SHA-256 before and after through
+  `ordered_before_artifact_sha256` and `ordered_after_artifact_sha256`;
+- payload hash before and after;
+- schema, profile, lifecycle, authority, and time material before and after;
+- canonical source/bundle order;
+- absence from every invalidated and recomputed set.
+
+PASS requires equal full-artifact hashes, equal payload hashes, equal semantic
+IDs, equal ordering and profile material, `mutable_global_write_count == 0`,
+and `object_identity_used_as_proof == false`. Full-artifact hashes cover
+complete canonical Kernel artifact bytes, never payload-only material. `is`,
+`id()`, or container aliasing is never semantic evidence.
+
+G2-E v0.1 uses no runtime cache. `before_cache_state_sha256` and
+`after_cache_state_sha256` are internally derived from the exact fixed
+empty-cache profile `HEDGEHOG_G2E_NO_CACHE_STATE_V01`; both equal the same
+domain-separated digest and callers cannot supply either value.
+`mutable_global_write_count` is internally derived and must be zero;
+`object_identity_used_as_proof` is internally derived and must be false. A
+later accepted cache extension requires a contract revision.
+
+Preservation failure is fail closed: no accepted recomputation bundle or
+report is produced. The source artifacts remain untouched regardless of the
+failure.
+
+## 15. Selective Recomputation Plan and Runtime Boundary
+
+The work-selection object is `SelectiveRecomputationPlanV01`. It binds the
+validated delta, affected set, exact invalidation record objects and report,
+source context, source and changed bindings, dependency edges and graph,
+exact baseline G2-C route artifact, exact baseline G2-D topology, accepted
+mode/scope, affected cells/artifacts, preserved IDs, stable work-node IDs,
+G2-D policy budgets, and G2-E Transition profile. A plan cannot bind an
+invalidation-record ID without its exact immutable record object.
+
+The baseline G2-C route artifact is the exact route already bound by
+`source_context.baseline_g2d_execution_bundle.source_context`. E4 may build and
+execute a selective plan only while that route remains contextually current
+and the exact baseline G2-D topology source binding remains valid. If any
+route-bound source changes, the invocation returns
+`g2e_route_revalidation_required` before plan acceptance and creates no
+recomputed G2-D bundle. A freshly revalidated route is not paired with the old
+topology in the same invocation. A later fresh invocation may receive a
+separately accepted route and separately accepted G2-D baseline; their
+construction and acceptance are outside v0.1.
+
+Affected artifact IDs map to G2-D work IDs only through this exact public,
+contextual law:
+
+1. Non-G2-D affected artifacts remain invalidation/currentness evidence and do
+   not become scheduler work nodes.
+2. A G2-D artifact maps to a topology node/cell only when it is an exact member
+   of the baseline G2-D bundle or its exact ABI artifacts, its public contextual
+   validator passes, its typed payload/source fields bind one exact topology ID
+   and exact node and/or cell ID, and those IDs exist in the baseline topology.
+3. Queue artifacts map through their exact queue entry's `node_id`/`cell_id`.
+4. Result, report, trace, Post V&V, and GT artifacts map through exact accepted
+   G2-D source/result/causal lineage, never string parsing or guessed prefixes.
+5. Zero mappings for a non-recomputable affected artifact is legal and leaves
+   it invalidation-only.
+6. Zero mappings for an artifact declared recomputable fails closed.
+7. Multiple mappings are emitted only when the accepted causal/profile law
+   proves all mappings; order is baseline topology order, then node ID.
+8. `ordered_affected_cell_ids` and `ordered_work_node_ids` are independently
+   rebuilt from this mapping.
+
+No hidden map, test registry, object identity, lexical ID convention, or
+caller-supplied node list is accepted.
+
+`ordered_work_node_ids` are exact existing G2-D topology node IDs. They are
+not future queue-entry IDs and are not derived from the plan itself. G2-D queue
+entries are created only after Root accepts the plan; no plan/queue identity
+recursion is permitted.
+
+Scheduling order is:
+
+1. dependency distance ascending;
+2. source G2-D topology node order;
+3. canonical topology node ID.
+
+The plan ceiling is the minimum of its frozen v0.1 limits and the accepted
+G2-D policy/budget limits. It cannot widen scope, capabilities, TTL, depth,
+fan-out, cells, parallelism, revise count, wall time, token budget, or provider
+calls. In the proof profile provider calls remain zero.
+
+Execution receives the plan, complete source context, source and changed
+bindings, delta, dependency edges and graph, affected request/result, exact
+invalidation records, and invalidation report. It uses the actual observed
+source artifacts carried by the context. The public execution function returns
+the complete `ContinuousDeltaExecutionBundleV01` or `None` with its validation
+report; it does not return only an ID-bearing result while hiding generated
+objects.
+
+```text
+execute_selective_recomputation_v01(
+    *,
+    plan: SelectiveRecomputationPlanV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    delta: WorldStateDeltaV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    dependency_graph: DependencyGraphIndexV01,
+    affected_request: AffectedSetRequestV01,
+    affected_result: AffectedSetResultV01,
+    invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+    invalidation_report: InvalidationReportV01,
+) -> tuple[
+    ContinuousDeltaExecutionBundleV01 | None,
+    ContinuousDeltaValidationReportV01,
+]
+```
+
+On successful selective execution the runtime bundle carries a mandatory
+`recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02`. That
+complete bundle owns and validates its source context/binding; topology seed,
+nodes, edges, assignments, and topology; budgets; topology artifact; queue
+entries and queue artifacts; scope projections; cell inputs; revise
+observations; partial-failure records; backpressure states; G2-D validation
+reports; ResultProposal mappings; Post V&V mappings; GT advisory mappings;
+typed cell results; result artifacts; runtime trace; runtime report; report
+artifact; G2-D Transition decisions; and G2-D causal refs. It must pass the
+existing public `validate_fractal_runtime_execution_bundle_v02`; G2-E does not
+reimplement that validator.
+
+The G2-E bundle names each of its nine successful-path ABI artifact instances
+in a distinct field, including both lifecycle-sensitive source artifacts; it
+has no ambiguous generic ABI tuple.
+`g2e_transition_decisions` and `g2e_causal_consumption_refs` contain only G2-E
+profile evidence. The plan/final Root input, result, and shared Root artifact
+fields contain only the two exact Root reviews. The complete recomputed G2-D
+bundle owns its own G2-D artifacts, Transition decisions, and causal refs;
+these families are disjointly named and cannot be substituted.
+
+The executor uses only public G2-D functions for admission, queue advancement,
+state transition, budget pairing, result proposal, Post V&V, GT validation,
+partial failure, trace/report construction, ABI projection, causal refs, and
+parent return. It never calls a private G2-D helper and never mutates the
+baseline bundle.
+
+Result validation receives the complete recomputed G2-D execution bundle, the
+actual recomputed binding tuple, both source artifacts and every other exact
+pre-result G2-E ABI artifact, the plan Root review family, the G2-E Transition
+decision tuple, G2-E causal ref tuple, and exact preservation proof. Final Root
+carriers, runtime trace/report, runtime-report artifact, and t10 are
+constructed later and are validated only by the final bundle validator. The
+result validator resolves
+every `g2d_cell_result_ref`, `g2d_runtime_report_ref`,
+`ordered_partial_failure_ids` entry, parent-return decision ID, and recomputed artifact
+ID against exact objects in the recomputed G2-D bundle and exact G2-E carriers.
+Missing, duplicate, injected, reordered, cross-context, baseline-only, or
+substituted objects fail closed.
+
+`SelectiveRecomputationResultV01.baseline_runtime_report_id` resolves to
+`source_context.baseline_g2d_execution_bundle.runtime_report`;
+`recomputed_runtime_report_id` resolves to
+`recomputed_g2d_execution_bundle.runtime_report`; `preservation_proof_id`
+resolves to the exact supplied proof; and `ordered_partial_failure_ids`
+resolves exactly to selected partial-failure records in the recomputed G2-D
+bundle.
+
+`RecomputedArtifactBindingV01.g2d_cell_result_ref` and
+`g2d_runtime_report_ref` name accepted G2-D artifacts created before the G2-E
+result. Neither may point to a G2-E result, trace, report, or bundle. Exact E4
+successful-path construction and identity order is:
+
+1. E1 serialized source bindings, changed bindings, `WorldStateDeltaV01`, and
+   derived structural validation reports;
+2. PROPOSED `ContinuousDeltaSource` Kernel artifact;
+3. t01 Transition decision built through shared Registry lookup from the
+   PROPOSED source profile toward the intended VALIDATED source profile;
+4. VALIDATED `ContinuousDeltaSource` Kernel artifact, followed by contextual
+   t01 validation against the exact carried source and target artifacts;
+5. `DependencyGraphIndexV01` and its VALIDATED Kernel artifact;
+6. `AffectedSetRequestV01` and `AffectedSetResultV01`;
+7. t02 Transition decision, then the VALIDATED `AffectedSetResult` artifact
+   and contextual t02 validation against the exact source/target artifacts;
+8. `ArtifactInvalidationRecordV01` objects and `InvalidationReportV01`;
+9. t03 Transition decision, then the VALIDATED
+   `ArtifactInvalidationReport` artifact and contextual t03 validation;
+10. `SelectiveRecomputationPlanV01`;
+11. PROPOSED plan Kernel artifact;
+12. plan `RootDecisionInputV01`;
+13. plan `RootDecisionResultV01` and shared `RootDecision` artifact;
+14. t04 and t05 Transition decisions;
+15. ROOT_ACCEPTED plan Kernel artifact;
+16. complete recomputed `FractalRuntimeExecutionBundleV02` and all internal
+    identities;
+17. recomputed artifact bindings;
+18. `PreservationProofV01` and its VALIDATED artifact;
+19. `SelectiveRecomputationResultV01`;
+20. pre-final G2-E causal refs and t07 decision;
+21. final `RootDecisionInputV01`;
+22. final `RootDecisionResultV01` and shared `RootDecision` artifact;
+23. t09 Transition decision;
+24. `ContinuousDeltaRuntimeTraceV01` containing t01-t09 and the four Root IDs;
+25. `ContinuousDeltaRuntimeReportV01`;
+26. FINALIZED `ContinuousDeltaRuntimeReport` Kernel artifact;
+27. t10 Transition decision;
+28. runtime-only `ContinuousDeltaExecutionBundleV01` containing every exact
+    object, both `ContinuousDeltaSource` artifacts, and t01-t10.
+
+For t01, t02, and t03, the Registry decision identity is constructible from
+the exact rule/profile before the target artifact is projected. The target
+artifact may therefore carry that Transition decision ID. After target
+projection, the public contextual Transition validator validates the exact
+source artifact, target artifact, rule, and decision. No Transition decision
+identity depends on a future target-artifact ID.
+
+The trace's `ordered_transition_decision_ids` is exactly t01 through t09. The
+trace/report never contain t10's decision ID, and no trace-carried G2-E causal
+ref requires the future runtime-report artifact or t10. The FINALIZED report
+artifact is built from the accepted final Root result and already-frozen
+report bytes; its ordered parent/trace material may cite the trace, final Root
+artifact, accepted plan artifact, preservation artifact, and recomputed G2-D
+report artifact, but never t10. t10 then validates the existing RootDecision
+source artifact and report target artifact and is carried only by the runtime
+bundle. No report, report artifact, Root result, or Transition decision
+references a future object required for its own identity. Fail-closed t06/t08 paths create no
+accepted runtime-only bundle. No reverse reference is permitted. The report's
+`ordered_source_binding_ids` exactly equals the delta's plural tuple; no
+combined delta is collapsed to one source binding.
+
+A ResultProposal must be rebuilt whenever an affected output/evidence binding
+changes. Prior Post V&V and GT rows stay historical but are not current for a
+new ResultProposal. New Post V&V and GT rows use current explicit-time public
+seams. GT remains advisory. The recomputation result returns to Root through
+the existing Root decision path; G2-E creates no FinalOutput.
+
+Partial failure uses existing G2-D required/optional child and sibling
+independence laws. Unaffected siblings remain preserved. An unresolved source,
+needs-user conflict, budget ceiling, or no-progress condition is explicit in
+`ordered_unresolved_artifact_ids` and reason codes. It cannot be silently
+dropped or retried forever.
+
+Whole-run escalation is allowed only if the independently validated affected
+set equals every recomputable artifact in the bounded topology, or a named
+fail-closed policy requires full reconstruction. The report records the exact
+escalation reason. Otherwise a complete rerun is forbidden.
+
+Historical replay remains non-executing. It can show what was accepted at the
+prior basis; it cannot upgrade invalidated evidence into current evidence.
+Execution creates no successor baseline. A later fresh call may receive a
+separately accepted new baseline, but constructing or accepting it is outside
+the v0.1 proof.
+
+## 16. G2-A / G2-B / G2-C / G2-D Integration
+
+### G2-A
+
+Inputs: `DependencySetCandidateV01`, accepted packet dependency binding,
+current observations, temporal authority fingerprint/profile, lifecycle
+state, replay report, and present eligibility. G2-E compares typed dependency
+material and emits only candidate/evidence rows. Revocation, expiry, and
+supersession semantics remain G2-A/Root-owned. Packet history and audit rows
+are immutable.
+
+### G2-B
+
+Inputs: SemanticAddress/MeaningRecord lineage, temporal query/evaluation,
+`checked_dependency_fingerprint`, observed evidence fingerprint,
+`forbidden_changes`, source history, policy/schema versions, validity/freshness,
+and ReuseCertificate. A changed bound dependency makes shortcut evidence
+ineligible for current use. Old records/certificates remain historical; G2-E
+does not issue a replacement certificate or write DRS.
+
+### G2-C
+
+Inputs: complete source context, proposal/decision, route eligibility artifact,
+mode/profile and source fingerprints. If all route-bound fields are preserved
+and contextual validation still passes, the plan may reference the same route
+artifact. Any affected route source stops the current invocation with
+`g2e_route_revalidation_required` before plan acceptance. A fresh route and its
+separately accepted G2-D topology/baseline belong only to a later fresh
+invocation; no fresh route is paired with the baseline topology. The router
+still creates no topology, permission, packet, receipt, FinalOutput, or effect.
+
+### G2-D
+
+Inputs: complete immutable baseline execution bundle, source binding, topology,
+queue/artifact predecessor geometry, budgets, scopes, results/reports/traces,
+and causal refs. The exact public contextual mapping in Section 15 maps
+affected artifacts to exact topology nodes/cells. New queue and result rows
+follow existing
+predecessor, actual-only child order, budget pairing, backpressure,
+partial-failure, no-progress, Stage D, and Root-return laws. G2-D has no mutable
+global runtime state and is not modified by the proposed G2-E ledger. A
+successful G2-E execution carries and publicly validates the complete
+recomputed `FractalRuntimeExecutionBundleV02`; it does not reconstruct the
+G2-D bundle validator.
+
+### Post V&V, GT, Root
+
+Affected ResultProposal material requires a new proposal and new Post V&V/GT
+validation. Historical advisory artifacts remain evidence. Root review is
+mandatory before a selective plan is executable and after recomputation
+returns. No delta, graph, affected set, invalidation report, plan, result,
+trace, audit row, or conformance PASS is authority.
+
+## 17. Transition, ABI, Post V&V, GT, and Root Boundary
+
+G2-E preserves one Kernel ABI, one Transition Registry, and one Root law. The
+mandatory v0.1.4 static constructibility map full-read and AST/JSON-parsed the
+Root, ABI, Transition, G2-C, and G2-D implementations and focused tests. It
+proved that the public semantic-work packet builders, Root kernel/input/result
+builders and validators, `root_decision_result_to_plain_dict_v01`, generic
+`build_kernel_artifact_v01`/`validate_kernel_artifact_v01`, and public G2-D
+bundle validator are sufficient. No Root, ABI, Transition, or G2-D path is
+added to the 25-path ledger beyond the already planned ABI literals and G2-E
+Transition profile.
+
+The exact shared public construction/validation seams are:
+
+```text
+build_root_decision_kernel_v01() -> RootDecisionKernelV01
+validate_root_decision_kernel_v01(kernel: object) -> tuple[str, ...]
+build_root_decision_input_v01(
+    *, transaction_id: str, target_root_id: str,
+    root_review_packet: RootReviewPacketV01,
+    post_vv_bundle: object, gt_advisory: object, policy_state: object,
+    permission_state: object, temporal_state: object,
+    conflict_state: object, prior_root_state: object,
+) -> RootDecisionInputV01
+validate_root_decision_input_v01(
+    *, kernel: object, decision_input: object,
+) -> tuple[str, ...]
+decide_root_v01(
+    *, kernel: object, decision_input: object,
+) -> RootDecisionResultV01
+validate_root_decision_result_v01(
+    *, kernel: object, decision_input: object, result: object,
+) -> tuple[str, ...]
+root_decision_input_to_plain_dict_v01(
+    decision_input: RootDecisionInputV01,
+) -> dict[str, object]
+root_decision_result_to_plain_dict_v01(
+    result: RootDecisionResultV01,
+) -> dict[str, object]
+build_kernel_artifact_v01(
+    *, abi_version: str, artifact_id: str, artifact_type: str,
+    schema_version: str, transaction_id: str, owner_root_id: str,
+    source_component: str, authority_class: str, lifecycle_state: str,
+    payload: object, trace_refs: tuple[str, ...],
+    parent_refs: tuple[str, ...], time_envelope: object,
+) -> KernelArtifactV01
+validate_kernel_artifact_v01(artifact: object) -> tuple[str, ...]
+```
+
+These shared names are reused exactly and are not counted as new G2-E public
+functions.
+
+### Two exact Root reviews
+
+A successful path has exactly two reviews: plan review after the validated
+PROPOSED plan artifact and before G2-D execution; final recomputation review
+after the complete recomputed G2-D bundle, bindings, preservation proof, and
+recomputation result and before report finalization. Both use the shared
+`RootDecisionKernelV01` carried by `source_context.root_kernel`.
+
+Every ordered `RootDecisionInputV01` field has this exact source:
+
+| RootDecisionInputV01 field | Plan review source | Final review source |
+| --- | --- | --- |
+| decision_input_id | derived by build_root_decision_input_v01 from the remaining ten fields | derived by build_root_decision_input_v01 from the remaining ten fields |
+| transaction_id | delta.transaction_id | delta.transaction_id |
+| target_root_id | delta.owning_root_id | delta.owning_root_id |
+| root_review_packet | exact plan RootReviewPacketV01 profile below | exact final RootReviewPacketV01 profile below |
+| post_vv_bundle | exact plan-validation mapping below | exact mapping rebuilt from recomputed G2-D Post V&V rows below |
+| gt_advisory | exact advisory-only plan mapping below | exact advisory-only mapping rebuilt from recomputed G2-D GT rows below |
+| policy_state | exact plan policy mapping below | exact final policy mapping below |
+| permission_state | exact zero-permission mapping below | exact zero-permission mapping below |
+| temporal_state | exact accepted delta/source time mapping below | exact recomputed-report time mapping below |
+| conflict_state | exact empty-conflict mapping below | exact result unresolved/conflict mapping below; ACCEPT requires empty/false |
+| prior_root_state | all three fields None | ACCEPT; plan Root decision ID; plan selected plan ID |
+
+Each `root_review_packet` is built through
+`build_root_review_packet_from_contributions_v01` from one validated
+`SemanticWorkRequestV01`, one deterministic `ActorContributionV01`, and the
+default validated component trust profiles. The request uses
+`permitted_actor_ids=("continuous_delta_runtime_v01",)`,
+`permitted_contribution_modes=("DETERMINISTIC",)`, the exact transaction and
+target Root, and the runtime-topology ref in the table. Its forbidden claims
+are exactly `("AUTHORITY", "PERMISSION", "EFFECT", "PACKET", "RECEIPT",
+"DRS_WRITE", "FINAL_OUTPUT")`. The contribution uses actor ID
+`continuous_delta_runtime_v01`, actor role `deterministic_runtime`, mode
+`DETERMINISTIC`, exact bounded-context refs from the claim mapping, no
+constraints or uncertainties, no observed forbidden claim, and exact
+validator IDs below. Evidence bindings are one-for-one with the ordered
+validation/evidence refs, use state `PRESENT`, source component
+`continuous_delta_runtime_v01`, and bind each ref's independently rebuilt
+canonical SHA-256 as provenance.
+
+The plan claim has claim ID equal to the plan ID, subject
+`selective_recomputation_plan`, predicate `candidate_profile`, source role
+`deterministic_runtime`, source mode `DETERMINISTIC`, confidence 1000000, and
+the baseline route time-envelope ref. The final claim has claim ID equal to
+the recomputation-result ID, subject `selective_recomputation_result`, the
+same predicate/role/mode/confidence, and the recomputed G2-D report artifact
+time-envelope ref. Their `object_or_value` mappings have exactly these ordered
+keys and value sources; keys whose plan value is `None` remain explicit and
+cannot be omitted or filled by a caller registry:
+
+| Claim mapping key | Plan packet value | Final packet value |
+| --- | --- | --- |
+| profile_id | g2e_plan_root_review_packet_v01 | g2e_final_root_review_packet_v01 |
+| profile_version | v0.1 | v0.1 |
+| delta_id | delta.delta_id | delta.delta_id |
+| graph_id | dependency_graph.graph_id | dependency_graph.graph_id |
+| graph_version | dependency_graph.graph_version | dependency_graph.graph_version |
+| affected_set_id | affected_result.affected_set_id | affected_result.affected_set_id |
+| invalidation_report_id | invalidation_report.invalidation_report_id | invalidation_report.invalidation_report_id |
+| recomputation_plan_id | recomputation_plan.recomputation_plan_id | recomputation_plan.recomputation_plan_id |
+| plan_artifact_id | plan_proposed_artifact.artifact_id | plan_accepted_artifact.artifact_id |
+| baseline_route_artifact_id | source_context.baseline_g2c_route_eligibility_artifact.artifact_id | same carried baseline route artifact ID |
+| baseline_topology_id | source_context.baseline_g2d_execution_bundle.topology.topology_id | same carried baseline topology ID |
+| ordered_work_node_ids | recomputation_plan.ordered_work_node_ids | recomputation_plan.ordered_work_node_ids |
+| ordered_preserved_ids | recomputation_plan.ordered_preserved_artifact_ids | recomputation_result.ordered_preserved_artifact_ids |
+| max_work_items | recomputation_plan.max_work_items | recomputation_plan.max_work_items |
+| max_queue_entries | recomputation_plan.max_queue_entries | recomputation_plan.max_queue_entries |
+| max_wall_time_units | recomputation_plan.max_wall_time_units | recomputation_plan.max_wall_time_units |
+| max_token_budget | recomputation_plan.max_token_budget | recomputation_plan.max_token_budget |
+| max_provider_calls | recomputation_plan.max_provider_calls; exact zero | recomputation_plan.max_provider_calls; exact zero |
+| ordered_validation_report_ids | exact ordered pre-plan G2-E validation-report IDs | exact ordered pre-final G2-E validation-report IDs |
+| plan_root_decision_id | None | plan_root_decision_result.decision_id |
+| recomputed_g2d_runtime_report_id | None | recomputed_g2d_execution_bundle.runtime_report.report_id |
+| recomputed_g2d_report_artifact_id | None | recomputed_g2d_execution_bundle.report_artifact.artifact_id |
+| recomputation_result_id | None | recomputation_result.recomputation_result_id |
+| preservation_proof_id | None | preservation_proof.preservation_proof_id |
+| preservation_proof_artifact_id | None | preservation_proof_artifact.artifact_id |
+| ordered_recomputed_binding_ids | empty tuple | recomputation_result.ordered_recomputed_binding_ids |
+| ordered_invalidated_ids | invalidation_report.ordered_invalidated_artifact_ids | recomputation_result.ordered_invalidated_downstream_ids |
+| ordered_unresolved_ids | invalidation_report.ordered_unresolved_artifact_ids | recomputation_result.ordered_unresolved_artifact_ids |
+| ordered_partial_failure_ids | empty tuple | recomputation_result.ordered_partial_failure_ids |
+| ordered_pre_final_transition_decision_ids | t01-t03 IDs | t01-t07 IDs; excludes t09/t10 because they do not yet exist |
+| ordered_post_vv_report_ids | empty tuple | vv_report_id from every selected recomputed G2-D post_vv_reports row in bundle order |
+| ordered_post_vv_report_sha256 | empty tuple | canonical SHA-256 of those full rows in the same order |
+| ordered_gt_advisory_report_ids | empty tuple | gt_report_id from every selected recomputed G2-D gt_advisory_reports row in bundle order |
+| ordered_gt_advisory_report_sha256 | empty tuple | canonical SHA-256 of those full rows in the same order |
+| provider_calls | 0 | 0 |
+| model_calls | 0 | 0 |
+| network_calls | 0 | 0 |
+| connector_calls | 0 | 0 |
+| external_drs_calls | 0 | 0 |
+| action_commit_packets_created | 0 | 0 |
+| permissions_created | 0 | 0 |
+| receipts_created | 0 | 0 |
+| final_outputs_created | 0 | 0 |
+| drs_writes | 0 | 0 |
+| authority_created_count | 0 | 0 |
+| real_world_effects_count | 0 | 0 |
+| trace_refs | recomputation_plan.trace_refs followed by plan proposal/affected/invalidation IDs | recomputation_result ID, preservation proof ID, recomputed G2-D trace/report IDs, ordered pre-final G2-E decision IDs |
+
+The shared packet builder derives the `SynthesisProposalV01` and packet IDs.
+Every `RootReviewPacketV01` field is frozen as follows:
+
+| RootReviewPacketV01 field | Plan packet | Final packet |
+| --- | --- | --- |
+| packet_id | derived shared packet identity | derived shared packet identity |
+| request_id | delta.request_id | delta.request_id |
+| transaction_id | delta.transaction_id | delta.transaction_id |
+| target_root_id | delta.owning_root_id | delta.owning_root_id |
+| runtime_topology_ref | recomputation_plan.source_topology_id | recomputed_g2d_execution_bundle.topology.topology_id |
+| synthesis_proposal | one deterministic contribution and one plan claim with the exact mapping keys below | one deterministic contribution and one result claim with the exact mapping keys below |
+| contribution_ids | one domain-derived continuous_delta_runtime_v01 contribution ID | one distinct domain-derived continuous_delta_runtime_v01 contribution ID |
+| conflict_set_ids | empty tuple | empty tuple on ACCEPT |
+| missing_evidence_refs | empty tuple | empty tuple on ACCEPT |
+| required_validator_ids | continuous_delta_plan_against_sources_v01 | continuous_delta_result_against_plan_v01; fractal_runtime_execution_bundle_v02; continuous_delta_preservation_v01 |
+| review_state | ROOT_REVIEW_REQUIRED | ROOT_REVIEW_REQUIRED |
+| authority_class | ADVISORY_ONLY | ADVISORY_ONLY |
+| root_decision_created | False | False |
+| permission_created | False | False |
+| final_output_created | False | False |
+
+Every nested Root mapping key accepted by the public Root validator is frozen;
+no extra key is legal:
+
+| Exact nested key | Plan review value source | Final review value source |
+| --- | --- | --- |
+| post_vv_bundle.bundle_id | domain-derived from plan ID and ordered pre-plan validation-report IDs | domain-derived from result ID and ordered G2-D Post V&V row IDs/hashes |
+| post_vv_bundle.hard_failure_reasons | empty list | empty list; any recomputed Post V&V hard failure makes Root non-ACCEPT |
+| post_vv_bundle.post_vv_passed | True only after all plan validators PASS | True only after every selected recomputed G2-D Post V&V row validates and accepts |
+| post_vv_bundle.provided_evidence_refs | ordered pre-plan G2-E validation-report IDs | ordered selected G2-D vv_report_id values followed by ordered pre-final G2-E validation-report IDs |
+| post_vv_bundle.rejected_candidate_ids | empty list | empty list on ACCEPT |
+| post_vv_bundle.required_evidence_refs | same exact ordered list as provided_evidence_refs | same exact ordered list as provided_evidence_refs |
+| post_vv_bundle.validated_candidate_ids | one plan ID | one recomputation-result ID |
+| gt_advisory.actor_role | gt | gt |
+| gt_advisory.advisory_id | domain-derived from plan ID and plan-validation bundle | domain-derived from result ID and ordered G2-D GT row IDs/hashes |
+| gt_advisory.advisory_only | True | True |
+| gt_advisory.attempted_effect | CREATE_ROOT_DECISION | CREATE_ROOT_DECISION |
+| gt_advisory.candidate_ids | one plan ID | one recomputation-result ID |
+| gt_advisory.creates_final_output | False | False |
+| gt_advisory.requests_effect | False | False |
+| gt_advisory.score_micros_by_candidate | plan ID -> 1000000 after all plan validators PASS | result ID -> 1000000 only when every selected G2-D GT row validates and accepts |
+| gt_advisory.selected_candidate_id | plan ID | recomputation-result ID |
+| gt_advisory.source_artifact_type | GTAdvisoryReport | GTAdvisoryReport |
+| gt_advisory.source_lifecycle_state | VALIDATED | VALIDATED |
+| gt_advisory.target_artifact_type | RootDecision | RootDecision |
+| policy_state.allow_accept | True only after complete plan validation | True only after complete result/bundle/proof validation |
+| policy_state.conflict_policy | REJECT | REJECT |
+| policy_state.hard_policy_passed | True only when every hard plan bound passes | True only when every hard result/bundle/proof bound passes |
+| policy_state.identity_passed | True only after every plan-side identity rebuild | True only after every final-side identity rebuild |
+| policy_state.no_candidate_policy | REJECT | REJECT |
+| policy_state.policy_id | delta.observed_policy_version bound to baseline route policy snapshot | same observed policy version bound to recomputed G2-D source context |
+| policy_state.scope_passed | True only when plan scope equals accepted baseline scope | True only when result remains inside the accepted plan scope |
+| permission_state.permission_ref | None | None |
+| permission_state.permission_required | False | False |
+| permission_state.permission_scope_valid | True | True |
+| permission_state.user_permission_present | False | False |
+| temporal_state.expired | False after delta/source validity check | False after recomputed report/source validity check |
+| temporal_state.not_before_satisfied | True after delta.valid_from_utc check | True after recomputed report time-envelope check |
+| temporal_state.temporal_valid | True after complete plan temporal validation | True after complete final temporal validation |
+| temporal_state.time_envelope_ref | source_context baseline route time-envelope ref bound by delta | recomputed G2-D report artifact time-envelope ref |
+| conflict_state.conflict_set_ids | empty list | list from final packet; ACCEPT requires empty |
+| conflict_state.material_unresolved_conflict | False | False on ACCEPT |
+| prior_root_state.prior_decision | None | ACCEPT |
+| prior_root_state.prior_decision_id | None | plan_root_decision_result.decision_id |
+| prior_root_state.prior_selected_candidate_id | None | recomputation_plan.recomputation_plan_id |
+
+The final packet carries the exact Post V&V and GT rows indirectly by ordered
+IDs and full canonical row hashes while the actual rows remain carried in
+`recomputed_g2d_execution_bundle.post_vv_reports` and
+`gt_advisory_reports`. Bundle validation resolves every ID/hash to those exact
+rows. No summary mapping can replace or mutate a G2-D row.
+
+Every ordered `RootDecisionResultV01` field is frozen as follows:
+
+| RootDecisionResultV01 field | Accepted plan review | Accepted final review |
+| --- | --- | --- |
+| decision_id | derived by decide_root_v01 | derived by decide_root_v01 |
+| decision_input_id | plan input decision_input_id | final input decision_input_id |
+| transaction_id | delta.transaction_id | delta.transaction_id |
+| target_root_id | delta.owning_root_id | delta.owning_root_id |
+| decision | ACCEPT on successful path | ACCEPT on successful path |
+| reason_code | validated_candidate_accepted | validated_candidate_accepted |
+| selected_candidate_id | recomputation_plan.recomputation_plan_id | recomputation_result.recomputation_result_id |
+| transition_decision | shared rule gt_advisory_to_root_decision; GTAdvisoryReport/VALIDATED/gt/CREATE_ROOT_DECISION/RootDecision; RETURN_TO_ROOT; gt_advisory_returns_to_root | same exact shared Root transition profile rebuilt for final input |
+| hard_failure_reasons | empty tuple | empty tuple |
+| missing_evidence_refs | empty tuple | empty tuple |
+| conflict_set_ids | empty tuple | empty tuple |
+| prior_decision_id | None | plan_root_decision_result.decision_id |
+| root_commit_created | True | True |
+| permission_created | False | False |
+| final_output_created | False | False |
+| effect_requested | False | False |
+
+For both reviews, the public Root validator independently rebuilds the input,
+the shared `gt_advisory_to_root_decision` transition, and the result against
+`source_context.root_kernel`. The accepted decision literal is exactly
+`ACCEPT`; selected candidates are respectively the exact plan and exact
+recomputation result. Both results have zero permission, FinalOutput, and
+effect fields. G2-E's surrounding packet/receipt/DRS-write/real-effect
+counters are also exactly zero.
+
+A plan-review non-`ACCEPT` result is terminal t06: no ROOT_ACCEPTED plan
+artifact, recomputed G2-D bundle, or G2-E bundle exists. A final-review
+non-`ACCEPT` result returns `None` plus a derived fail-closed
+`ContinuousDeltaValidationReportV01`; it creates no t10, FINALIZED report
+artifact, accepted runtime report, or execution bundle. No caller can relabel
+a Root result.
+
+Both accepted Root results are projected through
+`root_decision_result_to_plain_dict_v01` and the public generic Kernel ABI
+builder/validator. These are shared `RootDecision` artifacts, not new G2-E ABI
+literals:
+
+| Bundle field | Artifact type | Lifecycle | Authority | Source component | Payload | Ordered parents | Ordered trace refs | Time source | ID prefix | ID domain |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| plan_root_decision_artifact | RootDecision | ROOT_REVIEWED | ROOT_OWNED | root_decision_v01 | root_decision_result_to_plain_dict_v01(plan result), exact 16-field order | plan proposed artifact; baseline route artifact; baseline G2-D report artifact | plan Root input ID; plan packet ID; plan ID; delta ID; affected-set ID; invalidation-report ID | copy plan proposed artifact time envelope | g2e_root_plan_decision_v01: | HEDGEHOG_G2E_PLAN_ROOT_DECISION_ARTIFACT_V01 |
+| final_root_decision_artifact | RootDecision | ROOT_REVIEWED | ROOT_OWNED | root_decision_v01 | root_decision_result_to_plain_dict_v01(final result), exact 16-field order | plan RootDecision artifact; accepted plan artifact; recomputed G2-D report artifact; preservation proof artifact | final Root input ID; final packet ID; plan Root decision ID; recomputation-result ID; recomputed G2-D report ID; preservation-proof ID | copy recomputed G2-D report artifact time envelope | g2e_root_final_decision_v01: | HEDGEHOG_G2E_FINAL_ROOT_DECISION_ARTIFACT_V01 |
+
+Both use ABI `v1.0`, schema `v0.1`, exact transaction/owner Root, and the full
+16-field Root result plain-data payload in dataclass order. Their private G2-E
+projection helper derives the artifact ID from every complete non-ID envelope
+field and then calls only the public generic ABI builder/validator. Neither
+artifact is counted among the seven G2-E literals or nine G2-E artifact
+instances.
+
+### Exact ten-rule shared Transition profile
+
+The G2-E profile is one exact `TransitionRegistryV01` additive profile. The
+semicolon-separated guard cells below denote ordered tuples in the displayed
+order. Every row has the exact eleven `TransitionRuleV01` fields:
+
+| rule_id | abi_major_version | source_artifact_type | source_lifecycle_state | actor_role | attempted_effect | target_artifact_type | required_guards | decision | reason_code | root_commit_required |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| g2e_t01_delta_validate | 1 | ContinuousDeltaSource | PROPOSED | continuous_delta_runtime | VALIDATE_DELTA_SOURCE | ContinuousDeltaSource | delta_source_artifact_valid; source_pair_valid; manifest_replay_projection_valid; zero_operation_boundary_valid | ALLOW | g2e_transition_delta_validated | False |
+| g2e_t02_affected_set_derive | 1 | ContinuousDeltaSource | VALIDATED | continuous_delta_runtime | DERIVE_AFFECTED_SET | AffectedSetResult | delta_source_context_valid; dependency_graph_artifact_valid; dependency_fingerprints_valid; changed_binding_carriers_complete; dependency_edge_carriers_complete; artifact_node_closure_complete; affected_set_bounds_valid | ALLOW | g2e_transition_affected_set_derived | False |
+| g2e_t03_invalidation_derive | 1 | AffectedSetResult | VALIDATED | continuous_delta_runtime | DERIVE_INVALIDATION | ArtifactInvalidationReport | affected_set_artifact_valid; invalidation_carriers_complete; prior_slice_currentness_valid; immutable_history_preserved; zero_operation_boundary_valid | ALLOW | g2e_transition_invalidation_derived | False |
+| g2e_t04_plan_root_review | 1 | SelectiveRecomputationPlan | PROPOSED | continuous_delta_runtime | RETURN_TO_ROOT | RootDecision | plan_proposed_artifact_valid; plan_source_bindings_valid; plan_bounds_valid; plan_root_input_valid; root_target_bound; zero_operation_boundary_valid | RETURN_TO_ROOT | g2e_transition_recomputation_plan_reviewed | False |
+| g2e_t05_plan_root_accept | 1 | RootDecision | ROOT_REVIEWED | root | ACCEPT_RECOMPUTATION_PLAN | SelectiveRecomputationPlan | plan_root_input_valid; plan_root_result_valid; root_decision_accept; selected_plan_exact; plan_proposed_artifact_valid; root_zero_effect_geometry_valid; root_commit_present | ALLOW | g2e_transition_recomputation_plan_accepted | True |
+| g2e_t06_plan_root_reject | 1 | RootDecision | ROOT_REVIEWED | root | REJECT_RECOMPUTATION_PLAN | SelectiveRecomputationPlan | plan_root_input_valid; plan_root_result_valid; root_decision_non_accept; selected_plan_binding_valid; terminal_non_execution_valid; root_zero_effect_geometry_valid; root_commit_present | BLOCKED_FAIL_CLOSED | g2e_transition_recomputation_plan_rejected | True |
+| g2e_t07_selective_recompute | 1 | SelectiveRecomputationPlan | ROOT_ACCEPTED | continuous_delta_runtime | EXECUTE_SELECTIVE_RECOMPUTATION | FractalRuntimeReport | plan_accepted_artifact_valid; plan_root_decision_valid; route_topology_current; affected_work_mapping_valid; g2d_public_seams_valid; execution_bounds_valid; root_commit_present | ALLOW | g2e_transition_selective_recomputation_executed | True |
+| g2e_t08_recompute_block | 1 | SelectiveRecomputationPlan | ROOT_ACCEPTED | continuous_delta_runtime | BLOCK_SELECTIVE_RECOMPUTATION | ContinuousDeltaRuntimeReport | plan_accepted_artifact_valid; execution_failure_evidence_valid; accepted_g2d_bundle_absent; terminal_fail_closed_valid; zero_operation_boundary_valid; root_commit_present | BLOCKED_FAIL_CLOSED | g2e_transition_selective_recomputation_blocked | True |
+| g2e_t09_parent_return | 1 | FractalRuntimeReport | VALIDATED | continuous_delta_runtime | RETURN_TO_ROOT | RootDecision | recomputed_g2d_bundle_valid; recomputation_result_valid; preservation_proof_valid; partial_failures_resolved; final_root_input_valid; zero_operation_boundary_valid | RETURN_TO_ROOT | g2e_transition_delta_parent_returned | False |
+| g2e_t10_report_finalize | 1 | RootDecision | ROOT_REVIEWED | root | FINALIZE_CONTINUOUS_DELTA_REPORT | ContinuousDeltaRuntimeReport | final_root_input_valid; final_root_result_valid; root_decision_accept; selected_result_exact; runtime_report_artifact_valid; preservation_proof_valid; transition_prefix_t01_t09_valid; root_zero_effect_geometry_valid; root_commit_present | ALLOW | g2e_transition_delta_report_finalized | True |
+
+The target lifecycle map is exact: t01 `VALIDATED ContinuousDeltaSource`; t02
+`VALIDATED AffectedSetResult`; t03 `VALIDATED ArtifactInvalidationReport`;
+t04 `ROOT_REVIEWED RootDecision`; t05 `ROOT_ACCEPTED
+SelectiveRecomputationPlan`; t06 `BLOCKED_FAIL_CLOSED
+SelectiveRecomputationPlan`; t07 `VALIDATED FractalRuntimeReport`; t08
+`BLOCKED_FAIL_CLOSED ContinuousDeltaRuntimeReport`; t09 `ROOT_REVIEWED
+RootDecision`; and t10 `FINALIZED ContinuousDeltaRuntimeReport`.
+
+For t01, the exact source object is
+`ContinuousDeltaExecutionBundleV01.delta_source_proposed_artifact` and the
+exact target object is `delta_source_artifact`. Both artifacts carry the same
+canonical `WorldStateDeltaV01` payload bytes. Their lifecycle, ordered parent
+refs, ordered trace refs, artifact-ID prefix/domain, and final artifact IDs
+are different and are independently rebuilt. The PROPOSED artifact cannot
+substitute for the VALIDATED artifact, and the VALIDATED artifact cannot be
+used as its own t01 source.
+
+`continuous_delta_runtime` is the exact additive G2-E actor-role literal.
+The ten uppercase attempted-effect strings and the ordered guard strings in
+the table are exact additive G2-E profile literals. `root` and the three
+decision literals `ALLOW`, `RETURN_TO_ROOT`, and `BLOCKED_FAIL_CLOSED` are
+shared Registry literals. The seven G2-E artifact types are the exact ABI
+additions in Section 9; `RootDecision` and `FractalRuntimeReport` remain shared
+artifact types. No profile value is accepted outside this exact ten-row
+append-only profile.
+
+The exact profile validator compares canonical bytes for all eleven fields of
+all ten rows, exact row order/count, unique IDs, exact registry version/ABI,
+and rebuilt registry identity. It returns `g2e_object_invalid` for any rule
+profile mutation and `g2e_identity_mismatch` for a resealed wrong registry
+identity. The profile uses the shared `TransitionRuleV01` and
+`TransitionDecisionV01`; no private state machine exists.
+
+Terminal and Root-path law is exact:
+
+- `g2e_t06_plan_root_reject` is a terminal non-execution path. It produces no
+  accepted selective execution bundle and cannot reach t07-t10.
+- `g2e_t08_recompute_block` is a terminal fail-closed execution-admission
+  path. It produces no PASS runtime report and cannot be reclassified by a
+  caller.
+- t04 and t09 are `RETURN_TO_ROOT` requests, not Root acceptance. t05 and t10
+  require the exact carried, validated Root result payload decision `ACCEPT`.
+- a final non-`ACCEPT` result produces no t10, final report artifact, or
+  accepted bundle; no eleventh rule is needed because no accepted target
+  artifact exists on that path.
+- `PARTIAL`, `NEEDS_USER`, `BLOCKED`, `DEADEND`, `DEGRADED`, and
+  `FAIL_CLOSED` are typed bounded
+  G2-D/G2-E result outcomes, not new authority classes.
+- `g2e_t09_parent_return` is legal only after a validated existing G2-D
+  PARENT_RETURN/return boundary and exact source/plan/result binding.
+- `g2e_t10_report_finalize` validates the already constructed final Root
+  artifact and FINALIZED report artifact. It does not mean FinalOutput,
+  external effect, or parent-transaction closure.
+
+The seven ABI literals and nine successful-path instances in Section 9 are
+the only G2-E ABI additions/projections.
+Source/downstream pointers use exact JSON Pointers. Causal disposition uses
+`USED`, `REJECTED`, `IGNORED_WITH_REASON`, or `BLOCKED_BY_GATE` with the
+existing reason-prefix law. Invalidation predecessors point from the new
+invalidation artifact to the historical artifact; recomputation predecessors
+point from each new artifact to its exact invalidated predecessor. Current and
+historical artifacts are partitioned explicitly in the report and never by
+deletion.
+
+Exact bounded result outcomes are `RECOMPUTED`, `PRESERVED`, `PARTIAL`,
+`NEEDS_USER`, `BLOCKED`, and `FAIL_CLOSED`; the aggregate report status remains
+`PASS` or `FAIL_CLOSED`. None creates authority. Root retains final review and
+is the only creator of FinalOutput.
+
+## 18. Exact Negative and Substitution Matrix
+
+The E5 public proof freezes 90 negative cases. Cases 1-82 retain their exact
+order and v0.1.3 semantics. Cases 83-90 append the shared Root, eleven-field
+Transition, seven-profile ABI, and identity-domain substitutions. Cases 2, 7,
+32, 41, 46, 53, 79, and 80 retain their exact v0.1.3 clarifications; case 82
+remains the distinct unsupported sequential-delta axis. Each case mutates its
+named axis, coherently reseals any outer evidence needed to reach the semantic
+validator, and requires the exact reason tuple containing the public reason
+below. A stale identity alone is not accepted as proof when an inner semantic
+mutation can be coherently resealed.
+
+| No. | Case ID suffix | Mutated axis | Exact expected public validator reason tuple |
+| --- | --- | --- | --- |
+| 1 | malformed_delta_identity | delta_id | ("g2e_identity_mismatch",) |
+| 2 | unvalidated_delta_source | baseline or observed Kernel artifact / Manifest-Replay projection / source-pair predecessor-currentness validation | ("g2e_delta_source_unvalidated",) |
+| 3 | stale_baseline | baseline_report_id or graph version | ("g2e_delta_baseline_stale",) |
+| 4 | future_observation | observed_at_utc | ("g2e_delta_future_observation",) |
+| 5 | invalid_time_window | valid_from_utc/valid_to_utc | ("g2e_delta_time_invalid",) |
+| 6 | duplicate_changed_field | ordered changed bindings | ("g2e_delta_duplicate_binding",) |
+| 7 | conflicting_duplicate_delta | two bindings inside one combined delta target the same exact source/path or artifact with conflicting observed values/hashes | ("g2e_delta_conflicting_duplicate",) |
+| 8 | unknown_field_path | json_pointer | ("g2e_delta_field_path_invalid",) |
+| 9 | unknown_changed_artifact | artifact_id | ("g2e_delta_artifact_binding_invalid",) |
+| 10 | cross_transaction_substitution | transaction_id | ("g2e_delta_cross_transaction",) |
+| 11 | cross_domain_substitution | domain_id | ("g2e_delta_cross_domain",) |
+| 12 | cross_root_substitution | owning_root_id | ("g2e_delta_cross_root",) |
+| 13 | policy_version_substitution | policy_version | ("g2e_delta_policy_version_mismatch",) |
+| 14 | schema_version_substitution | schema_versions | ("g2e_delta_schema_version_mismatch",) |
+| 15 | dependency_fingerprint_forgery | dependency_fingerprint_after | ("g2e_dependency_fingerprint_forgery",) |
+| 16 | dependency_digest_role_collision | fingerprint typed_role | ("g2e_dependency_fingerprint_role_collision",) |
+| 17 | source_history_substitution | source_history_hash | ("g2e_dependency_source_history_mismatch",) |
+| 18 | missing_dependency_edge | ordered edge IDs | ("g2e_dependency_graph_missing_edge",) |
+| 19 | extra_unrelated_dependency_edge | edge source/dependent | ("g2e_dependency_edge_unknown_source",) |
+| 20 | duplicate_dependency_edge | edge identity pair | ("g2e_dependency_edge_duplicate",) |
+| 21 | self_dependency_edge | dependent == dependency | ("g2e_dependency_edge_self",) |
+| 22 | dependency_cycle | ordered graph edges | ("g2e_dependency_graph_cycle",) |
+| 23 | unknown_dependency_artifact | dependency_artifact_id | ("g2e_dependency_edge_unknown_source",) |
+| 24 | unknown_dependent_artifact | dependent_artifact_id | ("g2e_dependency_edge_unknown_dependent",) |
+| 25 | graph_version_substitution | graph_version | ("g2e_dependency_graph_version_mismatch",) |
+| 26 | graph_edge_reordering | canonical_order | ("g2e_dependency_graph_ordering_invalid",) |
+| 27 | graph_node_bound_overflow | node_count/max_nodes | ("g2e_dependency_graph_bounds_exceeded",) |
+| 28 | graph_edge_bound_overflow | edge_count/max_edges | ("g2e_dependency_graph_bounds_exceeded",) |
+| 29 | graph_hop_bound_overflow | maximum path | ("g2e_affected_hop_bound_exceeded",) |
+| 30 | omitted_direct_dependent | ordered_directly_affected_ids | ("g2e_affected_reachable_omitted",) |
+| 31 | omitted_transitive_dependent | ordered_transitively_affected_ids | ("g2e_affected_reachable_omitted",) |
+| 32 | injected_unrelated_affected_artifact | artifact-level affected IDs, including pointer-based edge suppression or injection without an artifact dependency path | (injection: ("g2e_affected_unrelated_injected",); pointer suppression: ("g2e_affected_reachable_omitted",)) |
+| 33 | affected_set_reordering | ordered_affected_ids | ("g2e_affected_ordering_invalid",) |
+| 34 | affected_closure_proof_forgery | closure_proof_sha256 | ("g2e_affected_proof_invalid",) |
+| 35 | invalidation_reason_substitution | invalidation_reason_class | ("g2e_invalidation_reason_invalid",) |
+| 36 | deletion_disguised_as_invalidation | deleted | ("g2e_invalidation_deletion_forbidden",) |
+| 37 | invalidation_predecessor_mismatch | predecessor_artifact_id | ("g2e_invalidation_predecessor_mismatch",) |
+| 38 | invalidation_supersession_mismatch | superseded_by_artifact_id | ("g2e_invalidation_supersession_mismatch",) |
+| 39 | preserved_payload_mutation | before/after payload hash | ("g2e_preserved_artifact_changed",) |
+| 40 | preserved_identity_mutation | before/after identity | ("g2e_preserved_identity_changed",) |
+| 41 | hidden_cache_mutation | derived fixed no-cache-state fields or detected mutable global/cache write | ("g2e_preservation_cache_mutation",) |
+| 42 | in_place_recomputation | prior/new artifact identity | ("g2e_recomputation_in_place_forbidden",) |
+| 43 | stale_reuse_certificate_retained_current | G2-B certificate currentness | ("g2e_invalidation_g2b_reuse_still_current",) |
+| 44 | packet_kept_executable_after_invalidation | G2-A present eligibility | ("g2e_invalidation_g2a_root_binding_required",) |
+| 45 | packet_revoked_without_root_seam | G2-A revocation binding | ("g2e_invalidation_g2a_root_binding_required",) |
+| 46 | route_reused_after_bound_source_change | fresh/different route artifact or changed route binding paired with the baseline G2-D topology in the same invocation | (route-source change: ("g2e_route_revalidation_required",); lower-layer topology substitution: ("g2e_topology_binding_mismatch",)) |
+| 47 | child_input_topology_mismatch | G2-D cell input/topology | ("g2e_topology_binding_mismatch",) |
+| 48 | result_report_binding_mismatch | G2-D result/report | ("g2e_recomputation_result_invalid",) |
+| 49 | post_vv_gt_binding_mismatch | Post V&V/GT refs | ("g2e_recomputation_result_invalid",) |
+| 50 | direct_root_decision_bypass | Root review transition | ("g2e_authority_boundary_violated",) |
+| 51 | caller_supplied_pass_reason_status | validation report | ("g2e_status_invalid",) |
+| 52 | object_identity_presented_as_proof | preservation proof | ("g2e_preservation_proof_invalid",) |
+| 53 | repeated_delta_spin | one accepted invocation re-enqueues the same work node/frontier without new validated evidence or state progress | ("g2e_recomputation_no_progress",) |
+| 54 | hidden_mutable_global_state | independent call result | ("g2e_preservation_cache_mutation",) |
+| 55 | unbounded_affected_closure | configured closure limits | ("g2e_dependency_graph_bounds_exceeded",) |
+| 56 | nonzero_provider_calls | provider_calls | ("g2e_zero_operation_boundary_violated",) |
+| 57 | nonzero_model_calls | model_calls | ("g2e_zero_operation_boundary_violated",) |
+| 58 | nonzero_network_calls | network_calls | ("g2e_zero_operation_boundary_violated",) |
+| 59 | nonzero_connector_calls | connector_calls | ("g2e_zero_operation_boundary_violated",) |
+| 60 | nonzero_external_drs_calls | external_drs_calls | ("g2e_zero_operation_boundary_violated",) |
+| 61 | nonzero_drs_writes | drs_writes | ("g2e_zero_operation_boundary_violated",) |
+| 62 | nonzero_action_packets | action_commit_packets_created | ("g2e_zero_operation_boundary_violated",) |
+| 63 | nonzero_permissions | permissions_created | ("g2e_zero_operation_boundary_violated",) |
+| 64 | nonzero_receipts | receipts_created | ("g2e_zero_operation_boundary_violated",) |
+| 65 | nonzero_final_outputs | final_outputs_created | ("g2e_zero_operation_boundary_violated",) |
+| 66 | nonzero_authority | authority_created_count | ("g2e_authority_boundary_violated",) |
+| 67 | nonzero_real_world_effects | real_world_effects_count | ("g2e_zero_operation_boundary_violated",) |
+| 68 | missing_changed_binding_carrier | one delta-referenced ChangedFieldBindingV01 or ChangedArtifactBindingV01 object is absent | ("g2e_delta_binding_set_mismatch",) |
+| 69 | unreferenced_changed_binding_injection | one supplied changed-binding object is not referenced by the delta | ("g2e_delta_binding_set_mismatch",) |
+| 70 | source_binding_set_mismatch | ordered_source_binding_ids versus supplied DeltaSourceBindingV01 tuple | ("g2e_delta_source_binding_set_mismatch",) |
+| 71 | dependency_edge_carrier_mismatch | ordered_edge_ids versus supplied DeltaDependencyEdgeV01 tuple | ("g2e_dependency_edge_set_mismatch",) |
+| 72 | graph_basis_identity_mismatch | graph_basis_sha256 in edge/index/context | ("g2e_dependency_graph_basis_mismatch",) |
+| 73 | source_replay_edge_fingerprint_mismatch | source_replay_edge_sha256 | ("g2e_dependency_replay_edge_mismatch",) |
+| 74 | source_payload_pointer_unavailable | Manifest/Replay edge is present but the exact source Kernel payload carrier or RFC-6901 pointer is unavailable | ("g2e_dependency_source_payload_unavailable",) |
+| 75 | baseline_observed_source_pair_substitution | baseline and observed source artifact pair or predecessor relation | ("g2e_delta_source_binding_set_mismatch",) |
+| 76 | observed_source_payload_hash_mismatch | observed source canonical payload versus observed hash/binding | ("g2e_delta_artifact_binding_invalid",) |
+| 77 | dependency_fingerprint_before_after_swap | baseline and observed fingerprint/context arguments exchanged | ("g2e_dependency_fingerprint_mismatch",) |
+| 78 | invalidation_binding_carrier_omission | a triggering changed-binding object required by an invalidation record is absent | ("g2e_invalidation_record_invalid",) |
+| 79 | selective_execution_carrier_omission | pre-execution plan-bound delta/edge/affected/invalidation carrier or post-execution complete G2-D bundle/object, partial failure, recomputed binding, or G2-E ABI/Transition/causal object is absent or substituted | (pre-execution: ("g2e_recomputation_plan_invalid",); post-execution/result: ("g2e_recomputation_result_invalid",)) |
+| 80 | recomputed_g2d_result_report_ref_substitution | G2-D cell-result/report ref, recomputed runtime report, preservation proof, or partial-failure ID | ("g2e_recomputation_result_invalid",) |
+| 81 | preserved_full_artifact_bytes_mutation | complete canonical artifact SHA-256 changes while payload/ID assertions are otherwise held coherent | ("g2e_preserved_artifact_changed",) |
+| 82 | unsupported_sequential_delta | delta_sequence != 1 or prior_delta_id is not None | ("g2e_repeated_delta_conflict",) |
+| 83 | plan_root_review_carrier_substitution | plan Root input/result, selected plan, target Root, transaction, prior decision, or Root artifact | (input/result/selection/prior binding: ("g2e_recomputation_plan_invalid",); target-Root/transaction/Root-artifact authority binding: ("g2e_authority_boundary_violated",)) |
+| 84 | final_root_review_carrier_substitution | final Root input/result, selected recomputation result, recomputed G2-D report, preservation proof, prior plan decision, or Root artifact | (input/result/selected-result/G2-D-report/proof/prior binding: ("g2e_recomputation_result_invalid",); target-Root/transaction/Root-artifact authority binding: ("g2e_authority_boundary_violated",)) |
+| 85 | root_acceptance_outcome_forgery | non-ACCEPT Root result or nonzero Root permission/FinalOutput/effect fields coherently resealed as accepted | ("g2e_authority_boundary_violated",) |
+| 86 | transition_rule_eleven_field_substitution | complete submatrix over all eleven TransitionRuleV01 fields for each of the ten rules | (each of the eleven fields in each rule: ("g2e_object_invalid",)) |
+| 87 | transition_rule_order_or_terminal_path_forgery | missing, duplicate, extra, or reordered rule; t06/t08 made nonterminal; t10 inserted into trace/report identity; final non-ACCEPT allowed to finalize | (rule count/order/terminal mutation: ("g2e_object_invalid",); t10 in trace/report identity: ("g2e_identity_mismatch",); final non-ACCEPT finalization: ("g2e_authority_boundary_violated",)) |
+| 88 | abi_projection_profile_substitution | one of the seven G2-E artifact type/lifecycle/authority/source-component/payload profiles | (each ABI profile field: ("g2e_object_invalid",)) |
+| 89 | abi_parent_trace_or_root_artifact_substitution | parent IDs, trace refs, time envelope, proposed/accepted plan relation, or one shared RootDecision artifact | (parent/trace/time/plan relation: ("g2e_object_invalid",); shared Root artifact: ("g2e_authority_boundary_violated",)) |
+| 90 | identity_prefix_or_domain_collision | serialized type prefix, type domain, ABI artifact prefix/domain, or cross-role identity reuse | (serialized or ABI prefix/domain: ("g2e_identity_mismatch",); cross-fingerprint typed-role reuse: ("g2e_dependency_fingerprint_role_collision",)) |
+
+The public case ID format is
+`g2e_case:negative:<case_id_suffix>:v01`. The zero-operation cases 56-67 are
+independent axes, not one aggregate shortcut. Cases 68-74 independently prove
+complete changed/source/edge carriage, acyclic graph-basis identity, source
+Replay edge continuity, and exact source payload availability. Cases 75-82
+independently prove the v0.1.2 execution-carrier corrections as clarified by
+v0.1.3. Cases 83-90 independently prove both Root reviews, exact Transition
+rows and terminal paths, exact ABI profiles/parents/traces, and typed identity
+prefix/domain separation. No expected
+outcome is copied into an observed result. Every observed reason is returned
+by the public validator.
+
+Exact multi-subcase reason law for the clarified rows:
+
+- Case 32 edge-suppression subcase omits a reachable artifact and requires
+  `("g2e_affected_reachable_omitted",)`; unrelated injection requires
+  `("g2e_affected_unrelated_injected",)`. Field pointers cannot prune an
+  accepted artifact edge in either subcase.
+- Case 46 route-source change paired with the baseline topology requires
+  `("g2e_route_revalidation_required",)`; a lower-layer topology-ID/source
+  substitution after route currentness passes requires
+  `("g2e_topology_binding_mismatch",)`.
+- Case 79 pre-execution carrier loss requires
+  `("g2e_recomputation_plan_invalid",)`; post-execution/result carrier loss,
+  including a complete G2-D bundle member, partial-failure record, recomputed
+  binding, or G2-E evidence object, requires
+  `("g2e_recomputation_result_invalid",)`.
+- Case 80 always requires `("g2e_recomputation_result_invalid",)` for each
+  result/report/preservation/partial-failure substitution subcase.
+
+## 19. Two-Domain Proof Plan
+
+The E5 proof reuses the two accepted G2-D domain IDs in exact order:
+
+1. `TRAVEL_POLICY_INFORMATION`;
+2. `WAREHOUSE_MAINTENANCE_INFORMATION`.
+
+It builds exactly one accepted full-fractal baseline bundle per domain through
+the public `run_fractal_runtime_v02` surface, for two baseline calls total.
+The D5 collector is not called and the 72 D5 cases are not reconstructed.
+Every delta scenario reuses the immutable domain baseline and invokes only the
+bounded affected work. Negative cases do not create another positive baseline.
+Each accepted scenario supplies an immutable baseline/observed source-artifact
+pair; it never mutates the baseline artifact. The observed artifact is input
+to the one v0.1 delta, not an automatically accepted successor Manifest,
+Replay, graph, route, or runtime baseline.
+
+Application-source reconciliation:
+
+- Travel hold source: current typed
+  `hedgehog/domains/airline/ticket_purchase_corridor_v01.py::AirlineHoldCommitPacketV01`,
+  transaction `tri_airline_purchase:PAR-LIM:2026-08-12:client_001`, owning Root
+  `root:mock_airline_al`, packet
+  `airline_hold_commit_packet:mock_airline_al:001`, path `/expired`, baseline
+  `false`, accepted change `true`.
+- Travel price source: current typed `AirlineOfferPacketV01`, same transaction
+  and owning Root, artifact `airline_offer_packet:mock_airline_al:001`, path
+  `/amount`, baseline `782`, proposed proof change `783`, currency `EUR`.
+- Travel unrelated preference donor: current typed
+  `ClientRootTravelConstraintSetV01` from
+  `semantic_to_contract_binding_v01.py`, owning Root `root:client_os_001`, path
+  `/soft_preference_priority`. It remains outside the hold/payment hard
+  dependency closure when its artifact has no edge to that subtree.
+- Warehouse business vocabulary donor: current deterministic local world-state
+  path `/worldstate/current_stock/water_filter`, requested 8 and current 6, in
+  `demo/run_applied_warehouse_semantic_demo.py`. Because this is a plain
+  historical report dictionary, it is not the canonical G2-E source.
+- Warehouse typed source: the accepted G2-A supplier dependency record
+  `dependency:g2a5:supplier:primary`, owning Root `root:g2a5:supplier`, with
+  exact `content_sha256` and evidence/time/provenance fields. The new content
+  hash represents the validated inventory projection that changes water-filter
+  availability. The G2-E binding records the historical business pointer as a
+  trace ref but derives identity only from the typed record and validated
+  projection.
+- Warehouse unaffected source: the unrelated safe sibling result/artifact
+  selected from the accepted G2-D warehouse full-fractal bundle. Its exact ID
+  is source-derived, not hardcoded, and must remain byte-identical.
+
+Ten constructive cases are frozen, five per domain:
+
+| No. | Case ID | Delta | Directly affected | Transitively affected | Required preservation/outcome |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `g2e_case:travel:hold_expiry:v01` | hold `/expired`: false -> true | hold-validating artifact | purchase intent, payment/ticket eligibility, affected Root-review inputs | unrelated preference and safe sibling unchanged; no ticket/payment/effect |
+| 2 | `g2e_case:travel:price_change:v01` | offer `/amount`: 782 -> 783 | price-validation/result artifact | payment/approval/Post V&V/GT and affected Root review | hold identity unchanged; no payment |
+| 3 | `g2e_case:travel:policy_change:v01` | bound policy version changes | route/reuse-policy-bound artifacts | old certificates and affected decision path invalidated | historical route/topology/certificate preserved; `ROUTE_REVALIDATION_REQUIRED`; no recomputed G2-D bundle |
+| 4 | `g2e_case:travel:unrelated_preference:v01` | soft preference changes on a graph-disconnected artifact | none in purchase/ticket hard subtree | none | complete hard subtree byte-identical; context-only result explicit |
+| 5 | `g2e_case:travel:repeat_idempotent:v01` | exact repeat of case 1 delta bytes against the same baseline/graph | same logical affected set | no additional accepted history identity | independent fresh calls produce byte-identical bundle/report bytes and semantic identities; no spin or operation/effect |
+| 6 | `g2e_case:warehouse:water_filter_stock:v01` | typed supplier dependency content hash for water-filter 6 -> 8 projection | inventory validation artifact | procurement/validation/approval/Post V&V/GT/Root-review subtree | unrelated safe sibling unchanged; no order/effect |
+| 7 | `g2e_case:warehouse:evidence_validity:v01` | supplier dependency validity/freshness changes | current dependency evaluation | packet/reuse/approval currentness | historical packet/certificate preserved |
+| 8 | `g2e_case:warehouse:policy_change:v01` | policy version changes | policy-bound query/certificate/route artifacts | affected approval and Root-review artifacts | historical route/topology/policy artifacts preserved; `ROUTE_REVALIDATION_REQUIRED`; no recomputed G2-D bundle |
+| 9 | `g2e_case:warehouse:safe_sibling:v01` | water-filter change with explicit sibling partition | water-filter branch | only its dependent branch | accepted safe sibling ID/hash/bytes unchanged |
+| 10 | `g2e_case:warehouse:repeat_idempotent:v01` | exact repeat of case 6 delta bytes against the same baseline/graph | same logical affected set | no additional accepted history identity | independent fresh calls produce byte-identical bundle/report bytes and semantic identities; no spin or operation/effect |
+
+Each case reports exact partitions: changed, directly affected, transitively
+affected, invalidated, recomputed, preserved, unresolved/blocked,
+Root-reviewed, and zero-effect.
+
+Policy-change rows 3 and 8 are constructive because their valid delta,
+artifact-level affected set, invalidation, and currentness result are exact;
+their expected terminal result is same-call route revalidation, not selective
+execution. For hold, price, unrelated-preference, stock, evidence-validity,
+safe-sibling, and repeat rows, a selective recomputation bundle is accepted
+only while the exact baseline route and topology remain current. No case
+splices a fresh route into the baseline topology.
+
+The roadmap fraud-flag example is reconciled but not selected as a v0.1
+positive case because the current airline canonical contracts have no typed
+fraud field. Inventing that field in this preflight would violate roadmap
+custody. Guardian disposition O-04 accepts its exclusion until a separately
+accepted typed source exists.
+
+E5 primary proof geometry is therefore 100 cases: 10 constructive and 90
+negative; two domains; two accepted baseline bundles; exact source-derived
+evidence refs; repeated compact JSON byte equality; zero operations/effects.
+
+## 20. Six-Slice Implementation Plan
+
+No slice self-authorizes the next slice. Every slice requires a separate clean
+basis, exact owner prompt, path guard, focused acceptance, and commit review.
+
+### G2-E1 - Structural contracts
+
+Create the canonical module, schema, focused test file, and zero-operation
+surface. Add the seven ABI/schema literals and ABI tests. Implement the exact
+18 serialized identity prefixes/domains, two runtime-only type declarations,
+canonical identities,
+plain-data forms, structural validation reports, 88-reason registry, 32
+targets, and 24 stages only. Implement the source binding without dangling
+validation-report IDs or caller PASS statuses. Structural builders create no
+semantic acceptance; accepted status/reasons are derived and contextually
+reconstructed. Include immutable baseline/observed source-pair fields,
+before/after policy/schema/history fields, exact derived status/reason
+builders, and corrected
+preservation/report/recomputed-binding fields. No graph walk, invalidation, or
+execution. Shared Root/Transition/ABI behavior is limited here to structural
+shared-type references and the seven exact ABI literal/profile declarations,
+including the distinct PROPOSED/VALIDATED `ContinuousDeltaSource` profiles.
+
+### G2-E2 - Fingerprint, graph, and affected closure
+
+Implement typed before/after fingerprints, replay-edge projection, bounded
+baseline graph/index, pre-ID edge ordering, artifact-node affected closure,
+pointer non-pruning, affected request/result, complete/minimal closure
+validation, exact carrier inputs independent of E3 SourceContext,
+cycle/cross-context rejection, the exact eleven-field ten-rule/six-function
+shared Transition profile, and the first four G2-E ABI artifact profiles. No
+invalidation or execution.
+
+### G2-E3 - Invalidation and preservation
+
+Build SourceContext with exact baseline and observed artifact tuples, the exact
+`baseline_g2c_route_eligibility_artifact`, and the exact
+`baseline_g2d_execution_bundle`. Implement invalidation from actual binding
+objects, pre-execution
+`superseded_by_artifact_id is None`, immutable history,
+packet/reuse/route currentness bindings, and full canonical-artifact-byte
+preservation with internally derived no-cache evidence and the invalidation and
+preservation ABI artifact profiles. Route-currentness
+failure stops before E4. Consume G2-A, G2-B, G2-C, and G2-D public values
+without modifying their modules. No packet revocation, DRS write, route
+decision, or runtime execution.
+
+### G2-E4 - Selective recomputation and Root return
+
+Before any E4 repository edit, the separately authorized E4 action must build
+and validate a static public-seam register for every exact existing G2-D
+function it will call. Each row records public name, current exact signature,
+input owner, output owner, validation function, failure stage,
+Transition/ABI/causal relation, and why no private helper is required. The
+register must prove one minimal affected subtree is constructible without
+calling `_d4_run_runtime_v02` or any private G2-D function, modifying G2-D,
+importing tests, reconstructing D5, or executing Living/Conformance. If any
+required admission, queue, budget, result, Post V&V, GT, trace, causal,
+partial-failure, or parent-return seam is absent, E4 stops before mutation and
+returns to guardian review for an explicit guardian contract ruling.
+
+The register must also prove construction and public validation of the complete
+recomputed `FractalRuntimeExecutionBundleV02`, both exact
+`RootDecisionInputV01`/`RootDecisionResultV01` pairs, and both shared
+`RootDecision` Kernel artifacts. Implement exact affected
+artifact-to-baseline-topology-node mapping, complete plan carrier closure,
+stable topology-node work IDs, execution with actual observed sources, and a
+complete recomputed G2-D bundle returned inside the G2-E bundle. Bind every
+partial failure, recomputed runtime report, preservation proof, recomputed
+binding/result, both Root reviews, proposed/accepted plan artifacts, final
+report artifact, both source artifacts, every other explicit G2-E
+ABI/Transition/causal object, trace, and report in the
+exact acyclic order, including the t10/report anti-cycle law. Use public
+granular G2-D execution, Post V&V/GT, partial failure, exact-repeat/no-spin,
+Stage E geometry, and Root return. No successor baseline is created. Append
+the complete 95-name direct package surface while preserving `kernel.__all__`
+exactly. No FinalOutput or effect.
+
+### G2-E5 - Deterministic two-domain proof
+
+Create the public runner implementation over the existing E1-E4 files and
+complete focused tests. Execute exactly two public baseline G2-D runs, ten
+constructive cases, 90 negative cases, 100 total, deterministic repeated compact
+JSON bytes, the exact clarified case semantics in Section 18, two domains,
+exact sealed evidence, zero operations/effects, and focused performance
+evidence. The runner imports no tests and calls no private G2-D function.
+
+### G2-E6 - Living and Conformance integration
+
+Append Living v1.5 act 18, Conformance v0.6 category 15, Conformance runner
+v0.5, ten exact checks, ten exact probes, and active ref 17. Consumers call the
+G2-E collector exactly once per report, validate it publicly, and never
+reconstruct the 100 cases. Preserve every historical prefix.
+
+After G2-E6: independent read-only non-repairing audit; separate accepted audit
+commit; separately authorized checkpoint/status synchronization; G2-E may
+become `CLOSED_PASS` only after closure guards. Gate 2 remains `NOT_CLOSED` and
+G2-F becomes `NEXT / NOT_STARTED / NOT_AUTHORIZED` only in that later closure
+hop.
+
+## 21. Exact Proposed Path Ledger
+
+This proposed ledger contains 25 unique future mutation paths. The current
+preflight output itself is a planning artifact and is not counted in the later
+implementation/audit/closure ledger.
+
+### CREATE - G2-E1 through G2-E5 (4)
+
+- `hedgehog/kernel/continuous_delta_runtime_v01.py`
+- `schemas/continuous_delta_runtime_v01.schema.json`
+- `tests/test_continuous_delta_runtime_g2_e_v01.py`
+- `demo/run_continuous_delta_runtime_g2_e_v01.py`
+
+### MODIFY - additive implementation/integration only (11)
+
+- `hedgehog/kernel/abi_v01.py`
+- `schemas/kernel_artifact_v01.schema.json`
+- `tests/test_kernel_abi_v01.py`
+- `hedgehog/kernel/transition_registry_v01.py`
+- `tests/test_transition_registry_v01.py`
+- `hedgehog/kernel/__init__.py`
+- `demo/run_living_gauntlet_v01.py`
+- `tests/test_living_gauntlet_v01_runner.py`
+- `hedgehog/kernel/conformance_v01.py`
+- `demo/run_kernel_conformance_v01.py`
+- `tests/test_kernel_conformance_v01_runner.py`
+
+No G2-A, G2-B, G2-C, G2-D, Root, Post V&V, GT, Integrity Replay, completion
+manifest, integration seam, or status path is in E1-E5. `hedgehog/kernel/__init__.py`
+is modified once in E4. Living/Conformance paths are modified only in E6.
+
+### READ_ONLY / FROZEN
+
+- all G2-A implementation, schemas, runners, tests, audit, and checkpoint;
+- all G2-B implementation, schemas, runners, tests, audit, and checkpoint;
+- all G2-C implementation, schema, runner, tests, audit, and checkpoint;
+- all G2-D implementation, schema, runner, tests, addendum, audit, checkpoint;
+- `hedgehog/kernel/integrity_replay_v01.py` and its tests;
+- `hedgehog/kernel/root_decision_v01.py` and its tests;
+- `hedgehog/post_vv.py`, `hedgehog/gt_validator.py`, and their tests;
+- all historical domain donor paths;
+- `release/completion_manifest.json` and
+  `release/integration_seam_index.json`;
+- all governance/status/release paths until a separate closure authorization.
+
+### Audit CREATE - separately authorized after E6 (1)
+
+- `docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log`
+
+### CLOSURE_ONLY - separately authorized after accepted audit commit (9)
+
+- `docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md`
+- `AGENTS.md`
+- `README.md`
+- `specs/machine_manifest_v0_25.json`
+- `release/current_status_overlay_v01.json`
+- `release/claim_to_evidence_index.md`
+- `release/current_limitations.md`
+- `release/current_release_notes.md`
+- `tests/test_repository_release_spine_v01.py`
+
+No cleanup or G2-D debt path is included. No deletion or rename is proposed.
+
+## 22. Focused Test and Performance Contour
+
+The development loop is tiered and no cumulative suite is used as a local
+debugger.
+
+| Tier | Scope | Required contour | Proposed hard ceiling |
+| --- | --- | --- | --- |
+| Tier 0 | static | AST, schema, surface, import, identity, reason/target/stage, path and protected-hash checks | 15 seconds per process |
+| Tier 1 | unit/microproof | source pair without dangling reports; all 18 serialized prefixes/domains; all eleven fields of ten Transition rules; all seven ABI profiles/nine instances; distinct PROPOSED/VALIDATED source pair; before/after fingerprint; pre-ID edge/index; pointer non-pruning; artifact-node closure; invalidation carriers; derived no-cache/full-byte preservation; exact-repeat idempotency; no full G2-D fixture | 60 seconds per focused process |
+| Tier 2 | focused integration | one immutable source pair and delta; both exact Root input/result profiles including ACCEPT/non-ACCEPT; same-call route/topology mismatch; exact artifact-to-work-node mapping; complete recomputed G2-D bundle and partial-failure carriage; preservation-proof/result binding; exact Root/ABI/Transition bundle carriage and t10 anti-cycle | 300 seconds per process |
+| Tier 3 | slice acceptance | E1-E3 selector 300 seconds each; E4 900 seconds; E5 1,200 seconds; E6 focused selector 1,200 seconds | exact one process per accepted slice prompt |
+| Tier 4 | cumulative | complete Living and complete Conformance only at E6 final acceptance | 5,400 seconds each, one run each |
+
+Focused seams:
+
+- E1: each type quartet and identity rebuild independently; source acceptance
+  has no dangling report ID or caller PASS status;
+- E2: pure before/after fingerprint, pre-ID edge projection, graph,
+  artifact-node closure, pointer non-pruning, every field in the ten-rule
+  Transition profile, and the first four ABI profiles with bounded Kernel
+  artifacts and no E3 SourceContext;
+- E3: baseline/observed SourceContext, actual-binding invalidation,
+  packet/certificate/route currentness projections, same-call route/topology
+  stop, and internally derived no-cache/full canonical-byte preservation,
+  without running G2-D;
+- E4: first pass the static public-seam constructibility register, then use one
+  accepted source bundle, exact artifact-to-topology mapping, complete
+  execution carriers, and one affected subtree through public G2-D granular
+  functions; assert a publicly valid complete recomputed G2-D bundle,
+  partial-failure carrier resolution, preservation-proof/result binding, both
+  exact Root reviews/shared Root artifacts, all nine successful G2-E artifact
+  instances including the distinct PROPOSED/VALIDATED source pair, exact
+  t01-t10 carriage, t10/report anti-cycle geometry, and
+  acyclic E4 identities; partial/block/no-progress tests use minimal fixtures;
+- E5: module-scoped two-domain baselines built once and reused by all 100 case
+  assertions; public runner independently builds its own values and imports no
+  tests.
+
+The E4 register must list, for every public G2-D call, its public name, current
+exact signature, input/output owners, validation function, failure stage,
+Transition/ABI/causal relation, and why no private helper is required. It must
+prove construction and public validation of the complete recomputed
+`FractalRuntimeExecutionBundleV02` without `_d4_run_runtime_v02`, another private G2-D
+function, a G2-D edit, a tests import, complete D5 reconstruction, or
+Living/Conformance execution. The same register proves public construction and
+validation of both `RootDecisionInputV01`/`RootDecisionResultV01` pairs and
+their shared `RootDecision` artifacts. Failure stops E4 before repository
+mutation and returns to guardian review.
+
+Requirements: no nested pytest; no pytest subprocess from tests; no test import
+by runners; no private G2-D call; no failure cache; no object identity proof;
+no blind patch/traceback/full-rerun loop; long processes use a `/tmp` bounded
+wrapper, heartbeats, and hard ceilings; each failure class is inspected before
+one consolidated correction.
+
+## 23. Living and Conformance Append-Only Plan
+
+Current frozen geometry is Living v1.4 with 17 acts, Conformance v0.5 with 14
+categories and 50 probes, Conformance runner v0.4, two historical domains, and
+16 active refs.
+
+Proposed append-only target:
+
+- Living `v1.5`, historical 17-act prefix exact;
+- append act `continuous_delta_runtime` at position 18 from
+  `demo.run_continuous_delta_runtime_g2_e_v01::collect_continuous_delta_runtime_g2_e_v01`;
+- add `continuous_delta_runtime_execution_count == 1`;
+- Conformance `v0.6`, historical 14-category prefix exact;
+- append `ContinuousDeltaRuntimeConformance` at category position 15;
+- Conformance runner `v0.5`, historical 16-ref prefix exact;
+- append active ref `continuous_delta_runtime` at position 17;
+- append ten probes, taking the cumulative probe count from 50 to 60;
+- preserve exactly two historical domain rows unchanged.
+
+Exact category check IDs, in order:
+
+- `delta_source_identity_and_changed_field_binding`
+- `dependency_fingerprint_profile_and_role_separation`
+- `dependency_graph_bounds_order_and_acyclicity`
+- `affected_set_complete_and_minimal`
+- `invalidation_without_deletion`
+- `preservation_and_new_identity_recomputation`
+- `g2a_g2b_g2c_g2d_source_binding`
+- `repeated_delta_idempotency_and_no_spin`
+- `two_domain_selective_recomputation`
+- `zero_authority_and_operations`
+
+Exact appended probe IDs, in order:
+
+- `continuous_delta_report_identity_forgery`
+- `continuous_delta_source_substitution`
+- `continuous_delta_dependency_fingerprint_forgery`
+- `continuous_delta_graph_edge_forgery`
+- `continuous_delta_affected_set_omission`
+- `continuous_delta_unrelated_artifact_injection`
+- `continuous_delta_invalidation_deletion_forgery`
+- `continuous_delta_preserved_artifact_mutation`
+- `continuous_delta_root_authority_forgery`
+- `continuous_delta_zero_operation_forgery`
+
+Living and Conformance each obtain one G2-E report, call the public G2-E
+validator, and derive their own rows from sealed proof details. They do not
+copy PASS, reconstruct 100 cases, run a second delta runtime, import tests, or
+call private G2-D functions. Historical version reconstruction remains exact.
+
+## 24. Audit, Checkpoint, and Closure Sequence
+
+The sequence is proposed and remains unauthorized:
+
+1. separately authorized, committed G2-E1 through G2-E6;
+2. independent read-only non-repairing audit with a maintainability/performance
+   gate;
+3. separate accepted audit commit;
+4. separately authorized G2-E checkpoint and current-status synchronization;
+5. G2-E may become `CLOSED_PASS` only if all closure guards pass;
+6. Gate 2 remains `NOT_CLOSED`;
+7. G2-F becomes `NEXT / NOT_STARTED / NOT_AUTHORIZED` without implementation
+   authorization.
+
+No slice, report, audit hash, conformance result, or this preflight can
+self-authorize a later step. Audit and checkpoint paths are not touched by
+E1-E6. Status/release surfaces are not touched before the separate closure
+hop. No public release or RC2 follows from G2-E closure.
+
+## 25. Explicit Non-Claims and G2-F Boundary
+
+G2-E v0.1 is accepted only as a planning contract for a local,
+deterministic, bounded, proof-of-architecture continuous/delta runtime. It
+does not implement or prove:
+
+- G2-F or consolidated Gate-2 closure;
+- public release or RC2;
+- production readiness or production security certification;
+- production distributed scheduling or event streaming;
+- production persistence, external/global DRS, provider reliability, or
+  connector trust;
+- automatic policy learning, GT-TTL, OutcomeFeedback as a new core layer,
+  Full AVF, Strong GT, NeedleFactory, Netflix/subscription application, or
+  quantum-inspired runtime;
+- hidden mutable global cache, automatic Root mutation, effect execution, or
+  historical evidence deletion;
+- persistent event registry, accepted multi-delta history, or automatic
+  successor Manifest/Replay/graph/baseline construction;
+- performance beyond the accepted bounded proof measurements;
+- truth or authority from dependency hashes, affected sets, invalidation
+  reports, replay, Post V&V, GT, audit, Living, or Conformance.
+
+G2-D is not reopened. Its four important-debt items and one style-only item
+remain post-Gate-2 maintenance. G2-F stays `NOT_STARTED / NOT_AUTHORIZED` in
+this planning hop.
+
+## 26. Guardian Decisions and Acceptance Register
+
+Guardian review accepts all nine decisions at revision v0.1.4. Every row has
+`decision_status: ACCEPTED`; there are zero unresolved guardian decisions.
+Acceptance binds planning only and does not authorize G2-E implementation.
+
+| ID | decision_status | Exact accepted disposition |
+| --- | --- | --- |
+| O-01 | ACCEPTED | ACCEPTED WITH CORRECTION. Preserve `ArtifactDependencyEdgeV01` as immutable Replay evidence; use richer `DeltaDependencyEdgeV01` projection with the acyclic graph basis and source-Replay-edge SHA-256 corrections. Integrity Replay remains unchanged. |
+| O-02 | ACCEPTED | The v0.1 hard fail-closed ceilings are 256 nodes, 1,024 edges, 64 changed bindings, 32 transitive hops, 256 work items, and selective queue entries `min(1,024, accepted G2-D policy-derived bound)`. These are proof-profile ceilings, not production capacity. |
+| O-03 | ACCEPTED | ACCEPTED CONDITIONALLY. G2-D stays frozen; E4 may use only proven public granular G2-D seams. Its static public-seam register must prove public construction and validation of the complete recomputed `FractalRuntimeExecutionBundleV02`, both exact `RootDecisionInputV01`/`RootDecisionResultV01` pairs, and both shared Root artifacts before mutation. A missing seam stops E4 and returns to guardian review without a private call, G2-D/Root edit, or adapter disguised as G2-E. |
+| O-04 | ACCEPTED | The fraud-flag row remains a roadmap class example only. No fraud field is invented, and it is excluded from the v0.1 positive proof until a separately accepted typed source exists. |
+| O-05 | ACCEPTED | Totals are 20 canonical types, 18 schemas, 89 canonical-module public functions, 6 Transition-profile functions, 95 total public functions, 115 facade additions, 88 reasons, 32 targets, 24 stages, 7 ABI literals, 9 successful G2-E artifact instances, 2 ContinuousDeltaSource instances, 2 SelectiveRecomputationPlan instances, 2 Root reviews, 10 Transition rules, 10 constructive cases, 90 negative cases, 100 primary cases, and 25 future paths. |
+| O-06 | ACCEPTED | v0.1 accepts one explicit immutable delta against one exact baseline. A combined delta may carry multiple coherent source pairs, but `delta_sequence == 1`, `prior_delta_id is None`, and there is no last-write-wins, persistent event registry, successor baseline, or accepted multi-delta history. Same-call route/topology identity is frozen: a route-bound change stops with revalidation required, and any later route/topology belongs to a later fresh baseline. Conflicts become `NEEDS_USER` / `FAIL_CLOSED`. |
+| O-07 | ACCEPTED | E5 geometry is 2 accepted baseline bundles, 10 constructive cases, 90 negative cases, and 100 primary cases. Cases 1-82 retain their exact order and semantics; cases 83-90 append the shared-kernel finalization matrix. |
+| O-08 | ACCEPTED | `WorldStateDeltaV01` remains canonical, non-authoritative, and source-bound; its source field is the mandatory ordered tuple `ordered_source_binding_ids`. |
+| O-09 | ACCEPTED | Future append-only target remains Living v1.5/act 18, Conformance v0.6/category 15, runner v0.5, 2 historical domains, 60 cumulative probes, 17 active refs, 10 G2-E checks, and 10 appended representative G2-E probes. Those probes do not replace the complete 90-case E5 matrix. |
+
+The eight constructibility corrections are: acyclic graph identity; derived
+source-Replay-edge fingerprint; exact source payload carriers; typed
+fingerprint preimage derivation; plural/combined source binding; complete
+changed-binding object carriage; complete dependency-edge object carriage and
+public signature closure; and logical idempotency without a persistence,
+short-circuit, allocation, or zero-CPU claim.
+
+v0.1.2 execution-carrier correction count: 12.
+
+1. immutable baseline/observed source pair;
+2. actual observed source artifact carriage;
+3. before/after policy/schema/source-history context;
+4. typed before/after fingerprint reconstruction;
+5. pre-ID edge canonical order;
+6. E2 independence from E3 SourceContext;
+7. invalidation carrier closure;
+8. plan carrier closure and stable topology-node work IDs;
+9. selective execution full carrier closure and full-bundle return;
+10. acyclic G2-D result/report reference naming and construction order;
+11. plural report source bindings and full artifact-byte preservation;
+12. single-baseline v0.1 boundary without unsupported history/successor
+    claims.
+
+v0.1.3 final contract-closure correction count: 9.
+
+1. remove dangling source-validation report IDs and caller PASS statuses;
+2. freeze artifact-node affected closure and pointer non-pruning;
+3. freeze same-call baseline route/topology currentness;
+4. freeze exact affected-artifact to G2-D work-node mapping;
+5. carry the complete recomputed G2-D execution bundle;
+6. resolve partial failures and all G2-D result/report objects from that bundle;
+7. derive preservation/no-cache proof from actual baseline and recomputed
+   bundles;
+8. bind preservation proof and recomputed runtime report into the result with
+   acyclic identity order;
+9. reconcile derived status/reason construction and stale negative axes.
+
+v0.1.4 shared-kernel finalization correction count: 11.
+
+1. exact plan Root input/result/artifact carriers;
+2. exact final Root input/result/artifact carriers;
+3. exact field-source profiles for both Root reviews;
+4. exact successful and non-accepted Root path law;
+5. exact eleven-field geometry for ten Transition rules;
+6. exact seven ABI profiles, nine successful artifact instances, and the
+   distinct PROPOSED/VALIDATED ContinuousDeltaSource pair;
+7. exact serialized and ABI identity-prefix/domain law;
+8. exact explicit Root/ABI/Transition runtime-bundle fields;
+9. exact trace/report Root fields;
+10. exact t10/report anti-cycle construction order;
+11. exact negative cases 83-90 and 10/90/100 proof geometry.
+
+## 27. Machine-Readable Planning Flags
+
+G2E_INVENTORY_COMPLETED=true
+G2E_FULL_READ_FILE_COUNT=517
+G2E_MANDATORY_READ_FILE_COUNT=62
+G2E_SEARCH_HIT_FILE_COUNT=512
+G2E_CONFLICT_REUSE_REGISTER_COMPLETED=true
+G2E_INVENTORY_ROW_COUNT=70
+G2E_REUSE_EXACT_COUNT=33
+G2E_ADDITIVE_EXTENSION_COUNT=8
+G2E_NEW_CANONICAL_REQUIRED_COUNT=9
+G2E_HISTORICAL_DONOR_ONLY_COUNT=5
+G2E_FORBIDDEN_COUNT=8
+G2E_DEFERRED_COUNT=7
+G2E_MATERIAL_CONFLICT_COUNT=11
+G2E_OPEN_GUARDIAN_DECISION_COUNT=0
+G2E_ACCEPTED_GUARDIAN_DECISION_COUNT=9
+G2E_CONSTRUCTIBILITY_CORRECTION_COUNT=8
+G2E_EXECUTION_CARRIER_CORRECTION_COUNT=12
+G2E_FINAL_CONTRACT_CLOSURE_CORRECTION_COUNT=9
+G2E_SHARED_KERNEL_FINALIZATION_CORRECTION_COUNT=11
+G2E_PREFLIGHT_SHARED_KERNEL_FINALIZATION_COMPLETED=true
+G2E_ARCHITECT_PREFLIGHT_DRAFT_CREATED=true
+G2E_PREFLIGHT_STATUS=ACCEPTED
+G2E_PREFLIGHT_ACCEPTED=true
+G2E_GUARDIAN_REVIEW_STATUS=ACCEPTED
+G2E_IMPLEMENTATION_AUTHORIZED=false
+G2E_IMPLEMENTATION_STARTED=false
+G2D_REOPENED=false
+GATE2_CLOSED=false
+G2F_STARTED=false
+PROPOSED_G2E_SLICE_COUNT=6
+PROPOSED_TYPE_COUNT=20
+PROPOSED_SERIALIZED_TYPE_COUNT=18
+PROPOSED_RUNTIME_ONLY_TYPE_COUNT=2
+PROPOSED_SCHEMA_DEFINITION_COUNT=18
+PROPOSED_CANONICAL_MODULE_PUBLIC_FUNCTION_COUNT=89
+PROPOSED_TRANSITION_PROFILE_FUNCTION_COUNT=6
+PROPOSED_PUBLIC_FUNCTION_COUNT=95
+PROPOSED_REASON_COUNT=88
+PROPOSED_PACKAGE_FACADE_ADDITION_COUNT=115
+PROPOSED_VALIDATION_TARGET_COUNT=32
+PROPOSED_FAILURE_STAGE_COUNT=24
+PROPOSED_TRANSITION_RULE_COUNT=10
+PROPOSED_ABI_ARTIFACT_LITERAL_COUNT=7
+PROPOSED_G2E_SUCCESS_PATH_ARTIFACT_INSTANCE_COUNT=9
+PROPOSED_CONTINUOUS_DELTA_SOURCE_ARTIFACT_INSTANCE_COUNT=2
+PROPOSED_SELECTIVE_RECOMPUTATION_PLAN_ARTIFACT_INSTANCE_COUNT=2
+PROPOSED_ROOT_REVIEW_COUNT=2
+PROPOSED_CONSTRUCTIVE_CASE_COUNT=10
+PROPOSED_NEGATIVE_CASE_COUNT=90
+PROPOSED_PRIMARY_CASE_COUNT=100
+PROPOSED_ACCEPTED_BASELINE_BUNDLE_COUNT=2
+PROPOSED_PATH_COUNT=25
+G2E_V01_SINGLE_BASELINE_ONLY=true
+G2E_V01_ARTIFACT_LEVEL_AFFECTED_CLOSURE=true
+G2E_V01_FIELD_POINTERS_CAN_PRUNE_EDGES=false
+G2E_V01_FRESH_ROUTE_OLD_TOPOLOGY_PAIRING_ALLOWED=false
+G2E_V01_RECOMPUTED_G2D_BUNDLE_CARRIED=true
+G2E_V01_SOURCE_VALIDATION_REPORT_IDS_CARRIED=false
+G2E_V01_RUNTIME_CACHE_USED=false
+G2E_V01_PROPOSED_DELTA_SOURCE_ARTIFACT_CARRIED=true
+G2E_V01_VALIDATED_DELTA_SOURCE_ARTIFACT_CARRIED=true
+G2E_V01_PLAN_ROOT_REVIEW_CARRIED=true
+G2E_V01_FINAL_ROOT_REVIEW_CARRIED=true
+G2E_V01_TRANSITION_RULE_FIELDS_EXACT=11
+G2E_V01_ABI_PROFILES_EXACT=7
+G2E_V01_T10_INCLUDED_IN_TRACE_OR_REPORT_IDENTITY=false
+G2E_V01_SEQUENTIAL_DELTA_HISTORY_IMPLEMENTED=false
+G2E_V01_SUCCESSOR_BASELINE_CREATED=false
+LIVING_TARGET_VERSION=v1.5
+LIVING_TARGET_ACT_COUNT=18
+CONFORMANCE_TARGET_VERSION=v0.6
+CONFORMANCE_RUNNER_TARGET_VERSION=v0.5
+CONFORMANCE_TARGET_CATEGORY_COUNT=15
+CONFORMANCE_TARGET_DOMAIN_COUNT=2
+CONFORMANCE_TARGET_NEGATIVE_PROBE_COUNT=60
+CONFORMANCE_TARGET_ACTIVE_REF_COUNT=17
+CONTINUOUS_DELTA_CONFORMANCE_CHECK_COUNT=10
+CONTINUOUS_DELTA_NEGATIVE_PROBE_COUNT=10
+PYTEST_EXECUTED=false
+RUNNER_EXECUTED=false
+RUNTIME_IMPORTED_FOR_EXECUTION=false
+PROVIDER_CALLS=0
+MODEL_CALLS=0
+NETWORK_CALLS=0
+CONNECTOR_CALLS=0
+EXTERNAL_DRS_CALLS=0
+ACTION_COMMIT_PACKETS_CREATED=0
+PERMISSIONS_CREATED=0
+RECEIPTS_CREATED=0
+FINAL_OUTPUTS_CREATED=0
+DRS_WRITES=0
+AUTHORITY_CREATED_COUNT=0
+REAL_WORLD_EFFECTS_COUNT=0
+STAGING_CHANGED=false
+COMMIT_CREATED=false
+PUSH_PERFORMED=false
+READY_FOR_OWNER_G2E_PREFLIGHT_COMMIT_REVIEW=true

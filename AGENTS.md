@@ -57,9 +57,9 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-C ExecutionModeRouter CLOSED_PASS.
+Current checkpoint: G2-D Fractal Runtime v0.2 CLOSED_PASS.
 
-Current G2-C closure facts:
+Current G2-D closure facts:
 
 - R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
 - R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
@@ -72,6 +72,19 @@ Current G2-C closure facts:
 - G2-C audit commit: `72854bcdc85d19e9c6a6636f9a7eedd1929f03cb`.
 - G2-C audit: `docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log`.
 - G2-C checkpoint: `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
+- Accepted G2-D preflight commit: `2e1681a54c847beb106d9e57da250dac82ea6192`.
+- Accepted G2-D preflight path: `docs/fractal_runtime_v0_2_g2_d_preflight_v01.md`.
+- Accepted G2-D preflight SHA-256: `8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79`.
+- Accepted G2-D addendum path: `docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md`.
+- Accepted G2-D addendum SHA-256: `7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570`.
+- G2-D implementation basis: `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
+- G2-D audit commit: `c0dc618a0b693fe55435f17a025789267bcb79ff`.
+- G2-D audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
+- G2-D audit SHA-256: `ccc367ac92ad02e005c7968d152bf7810a772db94dd671e26e5d27f30d2d72aa`.
+- G2-D checkpoint: `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
+- G2-D independent audit: `PASS`.
+- G2-D repair required: `false`.
+- G2-D blocker count: `0`.
 - Closure commit identity: `NOT_SELF_RECORDED`.
 - R-H1 status: `CLOSED_PASS`.
 - Gate 1: `CLOSED_PASS`.
@@ -79,23 +92,34 @@ Current G2-C closure facts:
 - G2-A: `CLOSED_PASS`.
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
+- G2-D: `CLOSED_PASS`.
 - Gate 2: `NOT_CLOSED`.
-- G2-D: `NEXT / NOT_STARTED`.
-- G2-D implementation: `NOT_AUTHORIZED`.
-- G2-D implementation started: `false`.
+- G2-E: `NEXT / NOT_STARTED / NOT_AUTHORIZED`.
+- G2-E implementation started: `false`.
+- G2-F: `NOT_STARTED / NOT_AUTHORIZED`.
 - Current architecture:
 
   ```text
   BSEP
   -> semantic proposal
+  -> G2-C Root-reviewed ExecutionModeRouteEligibility
   -> runtime-owned RuntimeExecutionTopology
+  -> bounded runtime execution
+  -> ResultProposal / Post V&V / GT / PARENT_RETURN
   -> Root
   ```
 
-- ExecutionModeRouter creates no RuntimeExecutionTopology, packet, permission,
-  receipt, DRS write, FinalOutput, or effect.
+- RuntimeExecutionTopology is not authority, a child cell is not Root, and a
+  child result is not FinalOutput.
+- G2-D creates no truth, permission, ActionCommitPacket, receipt, effect
+  handle, DRS write, FinalOutput, provider authority, connector authority, or
+  real-world effect.
+- Provider, model, network, connector, and external-DRS calls remain zero.
+- No implementation repair occurred during the G2-D audit or closure.
+- This closure synchronization executes only the release-spine closure test;
+  no expensive G2-D, D5, Living, Conformance, or public runner is replayed.
 - Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
-- R-IP1 does not block G2-D through G2-F.
+- R-IP1 does not block G2-E or G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.
 - No public publication occurs before Gate 6 closure and separate explicit owner release approval.
 - Public release: `NOT_CLAIMED`.

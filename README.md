@@ -36,10 +36,10 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
-R-H1, G2-A, and G2-B are `CLOSED_PASS`. G2-C ExecutionModeRouter is also
-`CLOSED_PASS`. G2-C is an internal Gate-2 slice closure. It does not close
-Gate 2 and is not a public release, RC2, production-readiness claim, or
-production-security-certification claim.
+R-H1, G2-A, G2-B, G2-C ExecutionModeRouter, and G2-D Fractal Runtime v0.2 are
+`CLOSED_PASS`. G2-D is an internal Gate-2 slice closure. Gate 2 remains
+`NOT_CLOSED`; G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`; and G2-F remains
+`NOT_STARTED / NOT_AUTHORIZED`.
 
 ```text
 workstream_id: R-H1
@@ -64,33 +64,67 @@ g2c_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
 g2c_implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
 g2c_audit_commit: 72854bcdc85d19e9c6a6636f9a7eedd1929f03cb
 g2c_closure_commit_identity: NOT_SELF_RECORDED
-g2d_status: NEXT_NOT_STARTED
-g2d_implementation_authorized: false
-g2d_implementation_started: false
+g2d_status: CLOSED_PASS
+g2d_implementation_authorized: true
+g2d_implementation_completed: true
+g2d_implementation_active: false
+g2d_audit_status: PASS
+g2d_checkpoint_present: true
+g2d_repair_pending: false
+g2d_preflight_commit: 2e1681a54c847beb106d9e57da250dac82ea6192
+g2d_implementation_basis_commit: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
+g2d_audit_commit: c0dc618a0b693fe55435f17a025789267bcb79ff
+g2d_closure_commit_identity: NOT_SELF_RECORDED
+g2e_status: NEXT_NOT_STARTED
+g2e_implementation_authorized: false
+g2e_implementation_started: false
+g2f_status: NOT_STARTED
+g2f_implementation_authorized: false
+g2f_implementation_started: false
 public_release_claimed: false
 rc2_claimed: false
 production_readiness_claimed: false
 production_security_certification_claimed: false
 ```
 
-- Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, and
-  G2-C ExecutionModeRouter are `CLOSED_PASS`.
+- Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, G2-C,
+  and G2-D Fractal Runtime v0.2 are `CLOSED_PASS`.
 - Gate 2 is `NOT_CLOSED`.
-- G2-D is `NEXT / NOT_STARTED` and `NOT_AUTHORIZED`.
+- G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`.
+- G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
 - R-H1 audit: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
 - R-H1 checkpoint: `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
 - R-H1 is `CLOSED_PASS`.
+- G2-D implementation basis: `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
+- G2-D audit commit: `c0dc618a0b693fe55435f17a025789267bcb79ff`.
+- G2-D audit status: `PASS`; repair required: `false`; blocker count: `0`.
+- No implementation repair occurred during the G2-D audit or closure.
+- No expensive G2-D execution gate was rerun; only the release-spine closure
+  test is executed during this synchronization.
+- Real-world effects remain zero.
 - [Accepted R-H1 preflight](docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md)
 - [Accepted G2-C preflight](docs/execution_mode_router_g2_c_preflight_v01.md)
 - [G2-C independent audit](docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log)
 - [G2-C checkpoint](docs/execution_mode_router_g2_c_checkpoint_v01.md)
+- [Accepted G2-D preflight](docs/fractal_runtime_v0_2_g2_d_preflight_v01.md)
+- [Accepted G2-D addendum](docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md)
+- [G2-D independent audit](docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log)
+- [G2-D checkpoint](docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md)
 - [Current status overlay](release/current_status_overlay_v01.json)
 - [Claim-to-evidence index](release/claim_to_evidence_index.md)
 - [Current integration seam index](release/integration_seam_index.md)
 - [Deterministic one-command gauntlet](release/one_command_gauntlet.md)
 - [Current limitations](release/current_limitations.md)
 - [Current engineering notes](release/current_release_notes.md)
+
+The independent audit records four nonblocking maintenance-debt items for
+post-Gate-2 treatment: large explicit proof/validation functions, duplicated
+donor/proof construction, expensive cumulative Living/Conformance feedback,
+and two inactive historical private helpers. These do not reopen G2-D. The
+current project remains a proof-of-architecture reference kernel, not a public
+release, RC2, production-readiness result, or production-security
+certification.
 <!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 
 ## Future Mathematical Profiles

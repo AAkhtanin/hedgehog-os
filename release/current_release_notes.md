@@ -39,6 +39,18 @@ These are current engineering notes, not a public release announcement.
 - G2-C checkpoint:
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - G2-C closure_commit_identity: `NOT_SELF_RECORDED`.
+- Accepted G2-D preflight commit:
+  `2e1681a54c847beb106d9e57da250dac82ea6192`.
+- G2-D implementation basis commit:
+  `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
+- G2-D audit commit:
+  `c0dc618a0b693fe55435f17a025789267bcb79ff`.
+- Accepted G2-D audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
+- G2-D checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
+- G2-D audit status: `PASS`; repair required: `false`; blocker count: `0`.
+- G2-D closure_commit_identity: `NOT_SELF_RECORDED`.
 - R-H1A reconciled direct dependency declarations, the PEP-639 build metadata
   floor, canonical `AGPL-3.0-only` licensing, and a non-granting commercial
   licensing notice.
@@ -47,14 +59,17 @@ These are current engineering notes, not a public release announcement.
 - External clean-clone validation: `ACCEPTED_PASS`.
 - R-H1 is `CLOSED_PASS`.
 - G2-C is `CLOSED_PASS`.
+- G2-D is `CLOSED_PASS`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-D is `NEXT / NOT_STARTED` and `NOT_AUTHORIZED`.
-- G2-D implementation started: `false`.
+- G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`.
+- G2-E implementation authorized: `false`.
+- G2-E implementation started: `false`.
+- G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - No implementation repair occurred during the independent audit or this
   closure synchronization.
-- No tests or runners are rerun during this synchronization except the single
-  release-spine closure test.
-- R-IP1 does not block G2-D through G2-F; private R-IP1 drafts may remain
+- No expensive G2-D test or runner is rerun during this synchronization; only
+  the single release-spine closure test is executed.
+- R-IP1 does not block G2-E or G2-F; private R-IP1 drafts may remain
   living through Gates 3-6.
 - Public release remains `NOT_CLAIMED`.
 - No public publication occurs before Gate 6 closure and separate explicit
@@ -74,5 +89,5 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. G2-C closure does not close Gate 2 or
-start or authorize G2-D.
+not standalone public architectures. G2-D closure does not close Gate 2 or
+start or authorize G2-E or G2-F.

@@ -41,6 +41,9 @@ AGENTS_BEGIN_MARKER = (
 AGENTS_CURRENT_BEGIN_MARKER = (
     "Current checkpoint: G2-C ExecutionModeRouter CLOSED_PASS."
 )
+AGENTS_G2D_CURRENT_BEGIN_MARKER = (
+    "Current checkpoint: G2-D Fractal Runtime v0.2 CLOSED_PASS."
+)
 AGENTS_END_MARKER = "## Root-centered capability geometry"
 
 G2C_ACCEPTED_PREFLIGHT_COMMIT = (
@@ -74,6 +77,89 @@ G2C_CLOSURE_CLAIM_ID = "claim_g2c_execution_mode_router_closed_pass"
 G2C_CLOSURE_CLAIM_WORDING = (
     "Gate 2 slice G2-C ExecutionModeRouter is CLOSED_PASS."
 )
+
+G2D_ACCEPTED_PREFLIGHT_COMMIT = (
+    "2e1681a54c847beb106d9e57da250dac82ea6192"
+)
+G2D_ACCEPTED_PREFLIGHT_PATH = (
+    "docs/fractal_runtime_v0_2_g2_d_preflight_v01.md"
+)
+G2D_ACCEPTED_PREFLIGHT_SHA256 = (
+    "8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79"
+)
+G2D_ACCEPTED_ADDENDUM_PATH = (
+    "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md"
+)
+G2D_ACCEPTED_ADDENDUM_SHA256 = (
+    "7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570"
+)
+G2D_IMPLEMENTATION_BASIS_COMMIT = (
+    "5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd"
+)
+G2D_AUDIT_COMMIT = "c0dc618a0b693fe55435f17a025789267bcb79ff"
+G2D_AUDIT_PATH = "docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log"
+G2D_AUDIT_SHA256 = (
+    "ccc367ac92ad02e005c7968d152bf7810a772db94dd671e26e5d27f30d2d72aa"
+)
+G2D_CHECKPOINT_PATH = "docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md"
+G2D_CHECKPOINT_SHA256 = (
+    "f5bb19741ee992605ed772a282f4374bc3949508052edb09c8b3fdbbf210c1de"
+)
+G2D_CLOSURE_CLAIM_ID = "claim_g2d_fractal_runtime_v0_2_closed_pass"
+G2D_CLOSURE_CLAIM_WORDING = (
+    "Gate 2 slice G2-D Fractal Runtime v0.2 is CLOSED_PASS."
+)
+G2D_CLOSURE_SUBJECT = "Close G2-D Fractal Runtime v0.2"
+
+G2D_CLOSURE_PATHS = (
+    "AGENTS.md",
+    "README.md",
+    "docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md",
+    "release/claim_to_evidence_index.md",
+    "release/current_limitations.md",
+    "release/current_release_notes.md",
+    "release/current_status_overlay_v01.json",
+    "specs/machine_manifest_v0_25.json",
+    "tests/test_repository_release_spine_v01.py",
+)
+
+G2D_CURRENT_BOUNDARY_FIELDS = {
+    "g2d_status": "CLOSED_PASS",
+    "g2d_implementation_authorized": True,
+    "g2e_status": "NEXT_NOT_STARTED",
+    "g2e_implementation_authorized": False,
+    "g2e_implementation_started": False,
+}
+
+G2D_FROZEN_IMPLEMENTATION_SHA256 = {
+    "hedgehog/kernel/fractal_runtime_v02.py": (
+        "ca5338f27ab0c0573cc2d831f8286ff3451d79da6b414a2514c62f5856f8f6b2"
+    ),
+    "schemas/fractal_runtime_v02.schema.json": (
+        "e62f693cc24a0562ca2955b011530916a85598dd00026f6dbadb80b6b9eb94ac"
+    ),
+    "tests/test_fractal_runtime_g2_d_v02.py": (
+        "0ed20add36a82a576cf5e4ce9d787079c6052bf24465b225c18d2c33303416e7"
+    ),
+    "demo/run_fractal_runtime_g2_d_v02.py": (
+        "b15ef4d4461769db8f8e12dc06b0748ab9d749a6b26d199c16d1b6f04dac6fbd"
+    ),
+    "demo/run_living_gauntlet_v01.py": (
+        "d066cb9cd3a681acbc774ac3eb878dd54ac190ca1e1d8cb6a823bc1aa9513d00"
+    ),
+    "tests/test_living_gauntlet_v01_runner.py": (
+        "48bf157ea080e994f42ace54e7393463cb6ec95fc16175ff1455ddd9026a7b78"
+    ),
+    "hedgehog/kernel/conformance_v01.py": (
+        "038abbea4cd1504472ed5bad5f7b1c73b9f46d5cff3fa4b4cdf9c13a8586813e"
+    ),
+    "demo/run_kernel_conformance_v01.py": (
+        "b4902f8bdf2ceedf893f049d6bf17ac80ea4ef0442bf45e50aa9eb54dd9bdfee"
+    ),
+    "tests/test_kernel_conformance_v01_runner.py": (
+        "c2b36e6bb799e9c291abd5913c5494c637d09f154f6db7aed56c75d51eab1624"
+    ),
+}
 
 G2C_CLOSURE_PATHS = (
     "AGENTS.md",
@@ -382,7 +468,11 @@ def _readme_without_block(raw: bytes) -> bytes:
 def _agents_block(raw: bytes) -> bytes:
     starts = tuple(
         marker.encode("utf-8")
-        for marker in (AGENTS_BEGIN_MARKER, AGENTS_CURRENT_BEGIN_MARKER)
+        for marker in (
+            AGENTS_BEGIN_MARKER,
+            AGENTS_CURRENT_BEGIN_MARKER,
+            AGENTS_G2D_CURRENT_BEGIN_MARKER,
+        )
         if marker.encode("utf-8") in raw
     )
     end = AGENTS_END_MARKER.encode("utf-8")
@@ -418,6 +508,24 @@ def _revert_g2c_boundary_transition(
     return reverted
 
 
+def _revert_g2d_boundary_transition(
+    document: dict[str, object],
+    *,
+    overlay: bool,
+) -> dict[str, object]:
+    reverted = copy.deepcopy(document)
+    if overlay:
+        boundary = reverted["current_engineering_boundary"]
+    else:
+        checkpoint = reverted["current_checkpoint_status"]
+        assert isinstance(checkpoint, dict)
+        boundary = checkpoint["current_engineering_boundary_v01"]
+    assert isinstance(boundary, dict)
+    for key in G2D_CURRENT_BOUNDARY_FIELDS:
+        assert boundary.pop(key) == G2D_CURRENT_BOUNDARY_FIELDS[key]
+    return reverted
+
+
 def _assert_exactly_once(text: str, required: tuple[str, ...]) -> None:
     for value in required:
         assert text.count(value) == 1, value
@@ -429,7 +537,9 @@ def _assert_absent(text: str, forbidden: tuple[str, ...]) -> None:
 
 
 def _assert_closed_boundary(boundary: dict[str, object]) -> None:
-    assert set(boundary) == set(IN_PROGRESS_BOUNDARY)
+    assert set(boundary) == set(IN_PROGRESS_BOUNDARY) | set(
+        G2D_CURRENT_BOUNDARY_FIELDS
+    )
     assert re.fullmatch(r"[0-9a-f]{40}", boundary["implementation_basis_commit"])
     assert re.fullmatch(r"[0-9a-f]{40}", boundary["audit_commit"])
     assert boundary["closure_commit_identity"] == "NOT_SELF_RECORDED"
@@ -442,6 +552,8 @@ def _assert_closed_boundary(boundary: dict[str, object]) -> None:
     assert boundary["r_h1_checkpoint_path"] == R_H1_CHECKPOINT_PATH
     assert boundary["g2c_status"] == "CLOSED_PASS"
     assert boundary["g2c_implementation_authorized"] is True
+    for key, value in G2D_CURRENT_BOUNDARY_FIELDS.items():
+        assert boundary[key] == value
 
     basis_commit = boundary["implementation_basis_commit"]
     assert isinstance(basis_commit, str)
@@ -453,6 +565,8 @@ def _assert_closed_boundary(boundary: dict[str, object]) -> None:
     ]
     assert basis_boundary == IN_PROGRESS_BOUNDARY
     r_h1_closure_boundary = copy.deepcopy(boundary)
+    for key in G2D_CURRENT_BOUNDARY_FIELDS:
+        r_h1_closure_boundary.pop(key)
     r_h1_closure_boundary["g2c_status"] = "NEXT_NOT_STARTED"
     r_h1_closure_boundary["g2c_implementation_authorized"] = False
     changed_fields = {
@@ -564,9 +678,23 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
         f"g2c_implementation_basis_commit: {G2C_IMPLEMENTATION_BASIS_COMMIT}",
         f"g2c_audit_commit: {G2C_AUDIT_COMMIT}",
         "g2c_closure_commit_identity: NOT_SELF_RECORDED",
-        "g2d_status: NEXT_NOT_STARTED",
-        "g2d_implementation_authorized: false",
-        "g2d_implementation_started: false",
+        "g2d_status: CLOSED_PASS",
+        "g2d_implementation_authorized: true",
+        "g2d_implementation_completed: true",
+        "g2d_implementation_active: false",
+        "g2d_audit_status: PASS",
+        "g2d_checkpoint_present: true",
+        "g2d_repair_pending: false",
+        f"g2d_preflight_commit: {G2D_ACCEPTED_PREFLIGHT_COMMIT}",
+        f"g2d_implementation_basis_commit: {G2D_IMPLEMENTATION_BASIS_COMMIT}",
+        f"g2d_audit_commit: {G2D_AUDIT_COMMIT}",
+        "g2d_closure_commit_identity: NOT_SELF_RECORDED",
+        "g2e_status: NEXT_NOT_STARTED",
+        "g2e_implementation_authorized: false",
+        "g2e_implementation_started: false",
+        "g2f_status: NOT_STARTED",
+        "g2f_implementation_authorized: false",
+        "g2f_implementation_started: false",
         "public_release_claimed: false",
         "rc2_claimed: false",
         "production_readiness_claimed: false",
@@ -612,11 +740,19 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
             f"R-H1 audit: `{R_H1_AUDIT_PATH}`",
             f"R-H1 checkpoint: `{R_H1_CHECKPOINT_PATH}`",
             "R-H1 is `CLOSED_PASS`",
-            "G2-C ExecutionModeRouter are `CLOSED_PASS`",
-            "G2-D is `NEXT / NOT_STARTED` and `NOT_AUTHORIZED`",
+            "G2-D Fractal Runtime v0.2 are\n`CLOSED_PASS`",
+            "- G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`",
+            "- G2-F is `NOT_STARTED / NOT_AUTHORIZED`",
             f"[Accepted G2-C preflight]({G2C_ACCEPTED_PREFLIGHT_PATH})",
             f"[G2-C independent audit]({G2C_AUDIT_PATH})",
             f"[G2-C checkpoint]({G2C_CHECKPOINT_PATH})",
+            f"[Accepted G2-D preflight]({G2D_ACCEPTED_PREFLIGHT_PATH})",
+            f"[Accepted G2-D addendum]({G2D_ACCEPTED_ADDENDUM_PATH})",
+            f"[G2-D independent audit]({G2D_AUDIT_PATH})",
+            f"[G2-D checkpoint]({G2D_CHECKPOINT_PATH})",
+            "G2-D audit status: `PASS`; repair required: `false`; blocker count: `0`",
+            "No implementation repair occurred during the G2-D audit or closure",
+            "Real-world effects remain zero",
         ))
         assert block.count(R_H1_AUDIT_PATH) == 1
         assert block.count(R_H1_CHECKPOINT_PATH) == 1
@@ -643,6 +779,9 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
     assert "G2-C is `NEXT / NOT_STARTED`" not in block
     assert "g2c_status: NEXT_NOT_STARTED" not in block
     assert "g2c_implementation_authorized: false" not in block
+    assert "g2d_status: NEXT_NOT_STARTED" not in block
+    assert "g2d_implementation_authorized: false" not in block
+    assert "G2-D is `NEXT / NOT_STARTED`" not in block
 
     assert "python3 -m venv .venv" in text
     assert ".venv/bin/python -m pip install -e ." in text
@@ -671,22 +810,38 @@ def test_agents_g2c_closure_block_is_exactly_bounded() -> None:
     audit_agents = _git_show(G2C_AUDIT_COMMIT_BASELINE, "AGENTS.md")
     assert _agents_without_block(raw) == _agents_without_block(audit_agents)
     _assert_exactly_once(block, (
-        AGENTS_CURRENT_BEGIN_MARKER,
+        AGENTS_G2D_CURRENT_BEGIN_MARKER,
         f"Accepted G2-C preflight commit: `{G2C_ACCEPTED_PREFLIGHT_COMMIT}`",
         f"Accepted G2-C preflight path: `{G2C_ACCEPTED_PREFLIGHT_PATH}`",
         f"G2-C implementation basis: `{G2C_IMPLEMENTATION_BASIS_COMMIT}`",
         f"G2-C audit commit: `{G2C_AUDIT_COMMIT}`",
         f"G2-C audit: `{G2C_AUDIT_PATH}`",
         f"G2-C checkpoint: `{G2C_CHECKPOINT_PATH}`",
+        f"Accepted G2-D preflight commit: `{G2D_ACCEPTED_PREFLIGHT_COMMIT}`",
+        f"Accepted G2-D preflight path: `{G2D_ACCEPTED_PREFLIGHT_PATH}`",
+        f"Accepted G2-D preflight SHA-256: `{G2D_ACCEPTED_PREFLIGHT_SHA256}`",
+        f"Accepted G2-D addendum path: `{G2D_ACCEPTED_ADDENDUM_PATH}`",
+        f"Accepted G2-D addendum SHA-256: `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
+        f"G2-D implementation basis: `{G2D_IMPLEMENTATION_BASIS_COMMIT}`",
+        f"G2-D audit commit: `{G2D_AUDIT_COMMIT}`",
+        f"G2-D audit: `{G2D_AUDIT_PATH}`",
+        f"G2-D audit SHA-256: `{G2D_AUDIT_SHA256}`",
+        f"G2-D checkpoint: `{G2D_CHECKPOINT_PATH}`",
+        "G2-D independent audit: `PASS`",
+        "G2-D repair required: `false`",
+        "G2-D blocker count: `0`",
         "Closure commit identity: `NOT_SELF_RECORDED`",
         "R-H1 status: `CLOSED_PASS`",
         "G2-A: `CLOSED_PASS`",
         "G2-B: `CLOSED_PASS`",
         "G2-C: `CLOSED_PASS`",
+        "G2-D: `CLOSED_PASS`",
         "Gate 2: `NOT_CLOSED`",
-        "G2-D: `NEXT / NOT_STARTED`",
-        "G2-D implementation: `NOT_AUTHORIZED`",
-        "G2-D implementation started: `false`",
+        "G2-E: `NEXT / NOT_STARTED / NOT_AUTHORIZED`",
+        "G2-E implementation started: `false`",
+        "G2-F: `NOT_STARTED / NOT_AUTHORIZED`",
+        "Provider, model, network, connector, and external-DRS calls remain zero",
+        "No implementation repair occurred during the G2-D audit or closure",
         "Public release: `NOT_CLAIMED`",
         "RC2: `NOT_CLAIMED`",
         "Production readiness: `NOT_CLAIMED`",
@@ -696,9 +851,21 @@ def test_agents_g2c_closure_block_is_exactly_bounded() -> None:
     _assert_absent(block, (
         "G2-C: `NEXT / NOT_STARTED`",
         "G2-C implementation: `NOT_AUTHORIZED`",
+        "G2-D: `NEXT / NOT_STARTED`",
+        "G2-D implementation: `NOT_AUTHORIZED`",
         "read-only G2-C inventory",
         "No G2-C slice names",
     ))
+    for route_step in (
+        "BSEP",
+        "semantic proposal",
+        "G2-C Root-reviewed ExecutionModeRouteEligibility",
+        "runtime-owned RuntimeExecutionTopology",
+        "bounded runtime execution",
+        "ResultProposal / Post V&V / GT / PARENT_RETURN",
+        "Root",
+    ):
+        assert route_step in block
 
 
 def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
@@ -739,6 +906,16 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     assert isinstance(boundary, dict)
     assert boundary["g2c_status"] == "CLOSED_PASS"
     assert boundary["g2c_implementation_authorized"] is True
+    for key, value in G2D_CURRENT_BOUNDARY_FIELDS.items():
+        assert boundary[key] == value
+
+    g2d_audit_overlay = json.loads(
+        _git_show(G2D_AUDIT_COMMIT, "release/current_status_overlay_v01.json")
+    )
+    assert _revert_g2d_boundary_transition(
+        overlay,
+        overlay=True,
+    ) == g2d_audit_overlay
 
     audit_overlay = json.loads(
         _git_show(G2C_AUDIT_COMMIT_BASELINE, "release/current_status_overlay_v01.json")
@@ -748,7 +925,7 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     assert audit_boundary["g2c_status"] == "NEXT_NOT_STARTED"
     assert audit_boundary["g2c_implementation_authorized"] is False
     assert _revert_g2c_boundary_transition(
-        overlay,
+        g2d_audit_overlay,
         overlay=True,
     ) == audit_overlay
 
@@ -791,6 +968,7 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
         assert observed_claim_ids == CLAIM_IDS + (
             R_H1_CLOSURE_CLAIM_ID,
             G2C_CLOSURE_CLAIM_ID,
+            G2D_CLOSURE_CLAIM_ID,
         )
         closure_row = next(
             line
@@ -846,6 +1024,34 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             "creates no topology or real-world effect",
         ):
             assert limitation in g2c_row
+        g2d_row = next(
+            line
+            for line in claim_text.splitlines()
+            if f"| {G2D_CLOSURE_CLAIM_ID} |" in line
+        )
+        assert G2D_CLOSURE_CLAIM_WORDING in g2d_row
+        assert "CLOSED_PASS" in g2d_row
+        for path in (
+            "tests/test_fractal_runtime_g2_d_v02.py",
+            "tests/test_living_gauntlet_v01_runner.py",
+            "tests/test_kernel_conformance_v01_runner.py",
+            "demo/run_fractal_runtime_g2_d_v02.py",
+            "demo/run_living_gauntlet_v01.py",
+            "demo/run_kernel_conformance_v01.py",
+            G2D_AUDIT_PATH,
+            G2D_CHECKPOINT_PATH,
+        ):
+            assert path in g2d_row
+            assert (REPOSITORY_ROOT / path).exists()
+        for limitation in (
+            "internal Gate-2 slice closure",
+            "Gate 2 remains NOT_CLOSED",
+            "RuntimeExecutionTopology is not authority",
+            "child results are not FinalOutput",
+            "no public release, RC2, production readiness, or production security",
+            "real-world effects remain zero",
+        ):
+            assert limitation in g2d_row
     for claim_id, paths in CLAIM_EVIDENCE_PATHS.items():
         row = next(
             line for line in claim_text.splitlines() if f"| {claim_id} |" in line
@@ -923,15 +1129,22 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             "G2-C is `CLOSED_PASS`",
             G2C_AUDIT_PATH,
             G2C_CHECKPOINT_PATH,
+            "G2-D Fractal Runtime v0.2 is `CLOSED_PASS`",
+            G2D_AUDIT_PATH,
+            G2D_CHECKPOINT_PATH,
             "Gate 2 remains `NOT_CLOSED`",
-            "G2-D is `NEXT / NOT_STARTED`",
-            "G2-D implementation remains `NOT_AUTHORIZED`",
+            "G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`",
+            "G2-F remains `NOT_STARTED / NOT_AUTHORIZED`",
             "Public release remains `NOT_CLAIMED`",
             "RC2 remains `NOT_CLAIMED`",
             "Production readiness remains `NOT_CLAIMED`",
             "Production security certification remains `NOT_CLAIMED`",
-            "No real-world effect is claimed",
+            "Real-world effects remain zero",
             "No RuntimeExecutionTopology was created by G2-C",
+            "RuntimeExecutionTopology is not authority",
+            "Child results are not FinalOutput",
+            "A D5 or D6 validation PASS is not truth or authority",
+            "Important maintenance debt is recorded for post-Gate-2 treatment",
             "metadata-only and non-authoritative",
             "frozen Gate-1 evidence",
         ):
@@ -945,6 +1158,8 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             "NOT_YET_COMPLETED",
             "G2-C remains `NEXT / NOT_STARTED`",
             "G2-C implementation remains `NOT_AUTHORIZED`",
+            "G2-D is `NEXT / NOT_STARTED`",
+            "G2-D implementation remains `NOT_AUTHORIZED`",
         ))
 
     notes = (REPOSITORY_ROOT / "release/current_release_notes.md").read_text(
@@ -979,12 +1194,22 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2C_AUDIT_PATH,
             G2C_CHECKPOINT_PATH,
             "G2-C closure_commit_identity: `NOT_SELF_RECORDED`",
+            f"Accepted G2-D preflight commit:\n  `{G2D_ACCEPTED_PREFLIGHT_COMMIT}`",
+            f"G2-D implementation basis commit:\n  `{G2D_IMPLEMENTATION_BASIS_COMMIT}`",
+            f"G2-D audit commit:\n  `{G2D_AUDIT_COMMIT}`",
+            G2D_AUDIT_PATH,
+            G2D_CHECKPOINT_PATH,
+            "G2-D audit status: `PASS`; repair required: `false`; blocker count: `0`",
+            "G2-D closure_commit_identity: `NOT_SELF_RECORDED`",
             "G2-C is `CLOSED_PASS`",
+            "G2-D is `CLOSED_PASS`",
             "Gate 2 remains `NOT_CLOSED`",
-            "G2-D is `NEXT / NOT_STARTED` and `NOT_AUTHORIZED`",
-            "G2-D implementation started: `false`",
+            "G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`",
+            "G2-E implementation authorized: `false`",
+            "G2-E implementation started: `false`",
+            "G2-F is `NOT_STARTED / NOT_AUTHORIZED`",
             "No implementation repair occurred during the independent audit or this",
-            "except the single\n  release-spine closure test",
+            "only\n  the single release-spine closure test is executed",
             "Public release remains `NOT_CLAIMED`",
             "RC2 remains `NOT_CLAIMED`",
             "Production readiness remains `NOT_CLAIMED`",
@@ -1001,10 +1226,12 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             "NOT_YET_COMPLETED",
             "G2-C remains `NEXT / NOT_STARTED`",
             "read-only G2-C inventory",
+            "G2-D is `NEXT / NOT_STARTED`",
         ))
     assert "Gate 2 remains `NOT_CLOSED`" in notes
     assert "G2-C is `CLOSED_PASS`" in notes
-    assert "G2-D is `NEXT / NOT_STARTED` and `NOT_AUTHORIZED`" in notes
+    assert "G2-D is `CLOSED_PASS`" in notes
+    assert "G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`" in notes
 
 
 def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
@@ -1015,6 +1242,7 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
         LIMITATIONS_PATH.read_text(encoding="utf-8"),
         NOTES_PATH.read_text(encoding="utf-8"),
         (REPOSITORY_ROOT / G2C_CHECKPOINT_PATH).read_text(encoding="utf-8"),
+        (REPOSITORY_ROOT / G2D_CHECKPOINT_PATH).read_text(encoding="utf-8"),
         json.dumps(_read_json(OVERLAY_PATH), sort_keys=True),
     ))
     lowered = current_text.lower()
@@ -1039,14 +1267,19 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
         assert "R-H1 is `CLOSED_PASS`" in current_text
         assert "Gate 2 remains `NOT_CLOSED`" in current_text
         assert "G2-C is `CLOSED_PASS`" in current_text
-        assert "G2-D is `NEXT / NOT_STARTED`" in current_text
-        assert "G2-D implementation remains `NOT_AUTHORIZED`" in current_text
+        assert "G2-D is `CLOSED_PASS`" in current_text
+        assert "G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`" in current_text
+        assert "G2-F is `NOT_STARTED / NOT_AUTHORIZED`" in current_text
         _assert_absent(current_text, (
             "G2-C remains `NEXT / NOT_STARTED`",
             "G2-C is `NEXT / NOT_STARTED`",
             "G2-C implementation remains `NOT_AUTHORIZED`",
             '"g2c_status": "NEXT_NOT_STARTED"',
             '"g2c_implementation_authorized": false',
+            '"g2d_status": "NEXT_NOT_STARTED"',
+            '"g2d_implementation_authorized": false',
+            '"g2e_implementation_authorized": true',
+            '"g2e_implementation_started": true',
         ))
 
 
@@ -1187,6 +1420,217 @@ def test_g2c_closure_history_has_exact_scope_and_preservation() -> None:
         G2C_CLOSURE_COMMIT,
         historical_passport,
     )
+
+
+def test_g2d_checkpoint_metadata_geometry_and_nonclaims_are_exact() -> None:
+    checkpoint_path = REPOSITORY_ROOT / G2D_CHECKPOINT_PATH
+    assert checkpoint_path.is_file()
+    raw = checkpoint_path.read_bytes()
+    text = raw.decode("utf-8")
+    assert _sha256_bytes(raw) == G2D_CHECKPOINT_SHA256
+    assert raw.endswith(b"\n")
+    assert b"\x00" not in raw
+    assert b"\r" not in raw
+
+    required_sections = tuple(f"## {index}. " for index in range(1, 10))
+    offsets = tuple(text.index(section) for section in required_sections)
+    assert offsets == tuple(sorted(offsets))
+    _assert_exactly_once(text, (
+        "document_status: CHECKPOINT",
+        "checkpoint_id: fractal_runtime_v0_2_g2_d_v01",
+        "checkpoint_status: CLOSED_PASS",
+        "gate_id: gate2_g2d_fractal_runtime_v0_2",
+        "gate_slice: G2-D",
+        "closure_date: 2026-08-11",
+        f"accepted_preflight_path:\n{G2D_ACCEPTED_PREFLIGHT_PATH}",
+        f"accepted_preflight_sha256:\n{G2D_ACCEPTED_PREFLIGHT_SHA256}",
+        f"accepted_addendum_path:\n{G2D_ACCEPTED_ADDENDUM_PATH}",
+        f"accepted_addendum_sha256:\n{G2D_ACCEPTED_ADDENDUM_SHA256}",
+        f"audit_path:\n{G2D_AUDIT_PATH}",
+        f"audit_sha256:\n{G2D_AUDIT_SHA256}",
+        "closure_commit_identity: NOT_SELF_RECORDED",
+        "Independent audit: `PASS`",
+        "G2-D status: `CLOSED_PASS`",
+        "Gate 2 status: `NOT_CLOSED`",
+        "G2-E status: `NEXT / NOT_STARTED / NOT_AUTHORIZED`",
+        "Important-debt count: `4`",
+        "Style-only count: `1`",
+        "Maintainability gate: `PASS`",
+        "Performance gate: `PASS`",
+    ))
+    assert text.count("Repair required: `false`") == 2
+    assert text.count("Blocker count: `0`") == 2
+    assert text.count(G2D_ACCEPTED_PREFLIGHT_COMMIT) == 2
+    assert text.count(G2D_IMPLEMENTATION_BASIS_COMMIT) == 2
+    assert text.count(G2D_AUDIT_COMMIT) == 2
+    for commit in (
+        "9be19f4e7843a5a35956fb98ee531a3982aa1b4a",
+        "bee5231b5cea581dca8cff56cd892280dd58938c",
+        "3c80eb63a01c63a8d4a930e4b199a093a90901a5",
+        "f175a92660ff7dd8fd600fbc80eb5b20be7eef18",
+        "16f401e5efdb37ae0083e151631a025b10758724",
+        "c047e271ab620c216871f6e4dcfc178cbf66f950",
+        "4b40972a1a41e4c24e65d7ea876b0c41d406479",
+    ):
+        assert text.count(commit) == 1
+    for required in (
+        "Canonical G2-D types: `20`",
+        "Serialized identity-bearing types: `18`",
+        "Runtime-only context types: `2`",
+        "G2-D schema definitions: `18`",
+        "Fractal Runtime module functions: `110`",
+        "Transition-profile functions: `6`",
+        "Total public G2-D functions: `116`",
+        "Direct package attributes: `136`",
+        "Public reasons: `220`",
+        "Validation targets: `34`",
+        "Failure stages: `30`",
+        "Transition rules: `17`",
+        "Exact mode profiles: `5`",
+        "Exact full-fractal topology edges: `10`",
+        "Exact ABI partitions: `32 / 31 / 32 / 42`",
+        "D5 primary cases: `72`",
+        "Constructive / negative split: `36 / 36`",
+        "Accepted domain-positive bundles: `10`",
+        "Canonical domains: `2`",
+        "Living Gauntlet version: `v1.4`",
+        "Living acts: `17`",
+        "Kernel Conformance version: `v0.5`",
+        "Conformance runner version: `v0.4`",
+        "Conformance categories: `14`",
+        "Negative probes: `50`",
+        "Active refs: `16`",
+        "Real-world effects: `0`",
+        "Public release: `NOT_CLAIMED`",
+        "RC2: `NOT_CLAIMED`",
+        "Production readiness: `NOT_CLAIMED`",
+        "Production security certification: `NOT_CLAIMED`",
+    ):
+        assert required in text
+    for path in G2D_CLOSURE_PATHS:
+        assert f"`{path}`" in text
+
+
+def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
+    manifest = _read_json(MANIFEST_PATH)
+    overlay = _read_json(OVERLAY_PATH)
+    checkpoint = manifest["current_checkpoint_status"]
+    assert isinstance(checkpoint, dict)
+    manifest_boundary = checkpoint["current_engineering_boundary_v01"]
+    overlay_boundary = overlay["current_engineering_boundary"]
+    assert isinstance(manifest_boundary, dict)
+    assert manifest_boundary == overlay_boundary
+    for key, value in G2D_CURRENT_BOUNDARY_FIELDS.items():
+        assert manifest_boundary[key] == value
+    assert manifest_boundary["gate2_status"] == "NOT_CLOSED"
+    assert manifest_boundary["g2c_status"] == "CLOSED_PASS"
+    assert manifest_boundary["public_release_claimed"] is False
+    assert manifest_boundary["rc2_claimed"] is False
+    assert manifest_boundary["production_readiness_claimed"] is False
+    assert manifest_boundary["production_security_certification_claimed"] is False
+
+    audit_manifest = json.loads(
+        _git_show(G2D_AUDIT_COMMIT, "specs/machine_manifest_v0_25.json")
+    )
+    audit_overlay = json.loads(
+        _git_show(G2D_AUDIT_COMMIT, "release/current_status_overlay_v01.json")
+    )
+    assert _revert_g2d_boundary_transition(
+        manifest,
+        overlay=False,
+    ) == audit_manifest
+    assert _revert_g2d_boundary_transition(
+        overlay,
+        overlay=True,
+    ) == audit_overlay
+
+
+def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
+    expected = {
+        G2D_ACCEPTED_PREFLIGHT_PATH: G2D_ACCEPTED_PREFLIGHT_SHA256,
+        G2D_ACCEPTED_ADDENDUM_PATH: G2D_ACCEPTED_ADDENDUM_SHA256,
+        G2D_AUDIT_PATH: G2D_AUDIT_SHA256,
+        **G2D_FROZEN_IMPLEMENTATION_SHA256,
+    }
+    for path, sha256 in expected.items():
+        raw = (REPOSITORY_ROOT / path).read_bytes()
+        assert _sha256_bytes(raw) == sha256, path
+        assert raw == _git_show(G2D_AUDIT_COMMIT, path), path
+    for path in (
+        "release/completion_manifest.json",
+        "release/integration_seam_index.json",
+        "specs/human_passport_v0_25.md",
+    ):
+        assert (REPOSITORY_ROOT / path).read_bytes() == _git_show(
+            G2D_AUDIT_COMMIT,
+            path,
+        )
+
+
+def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
+    checkpoint = (REPOSITORY_ROOT / G2D_CHECKPOINT_PATH).read_text(
+        encoding="utf-8"
+    )
+    scope = checkpoint.split("## 7. Exact Closure Path Scope", 1)[1].split(
+        "## 8. Frozen Evidence",
+        1,
+    )[0]
+    observed_scope = tuple(sorted(
+        match.group(1)
+        for match in re.finditer(r"^\d+\. `([^`]+)`", scope, re.MULTILINE)
+    ))
+    assert observed_scope == G2D_CLOSURE_PATHS
+
+    history = subprocess.run(
+        ("git", "log", "--all", "--format=%H%x1f%P%x1f%s"),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    candidates = []
+    for line in history:
+        commit, parents, subject = line.split("\x1f", 2)
+        if subject == G2D_CLOSURE_SUBJECT:
+            candidates.append((commit, tuple(parents.split())))
+    if not candidates:
+        head = subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            cwd=REPOSITORY_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        assert head == G2D_AUDIT_COMMIT
+        return
+
+    assert len(candidates) == 1
+    closure_commit, parents = candidates[0]
+    assert parents == (G2D_AUDIT_COMMIT,)
+    changed = subprocess.run(
+        (
+            "git",
+            "diff-tree",
+            "--no-commit-id",
+            "--name-status",
+            "-r",
+            "--no-renames",
+            G2D_AUDIT_COMMIT,
+            closure_commit,
+        ),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    observed = {
+        path: status
+        for status, path in (line.split("\t", 1) for line in changed)
+    }
+    assert tuple(sorted(observed)) == G2D_CLOSURE_PATHS
+    assert observed[G2D_CHECKPOINT_PATH] == "A"
+    assert tuple(observed.values()).count("A") == 1
+    assert tuple(observed.values()).count("M") == 8
 
 
 def test_quantum_roadmap_identity_metadata_and_amendment_are_exact() -> None:

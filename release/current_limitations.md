@@ -12,18 +12,33 @@
   `docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log`.
 - Accepted G2-C checkpoint:
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
+- G2-D Fractal Runtime v0.2 is `CLOSED_PASS` as an internal
+  proof-of-architecture Gate-2 slice.
+- Accepted G2-D audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
+- Accepted G2-D checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-D is `NEXT / NOT_STARTED`.
-- G2-D implementation remains `NOT_AUTHORIZED`.
+- G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`.
+- G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
 - RC2 remains `NOT_CLAIMED`.
 - Production readiness remains `NOT_CLAIMED`.
 - Production security certification remains `NOT_CLAIMED`.
+- G2-D does not prove production readiness, distributed execution,
+  persistence, provider reliability, connector trust, external/global DRS,
+  fault tolerance, production security certification, public release, RC2, or
+  performance beyond accepted bounded evidence.
+- A D5 or D6 validation PASS is not truth or authority.
+- RuntimeExecutionTopology is not authority.
+- Child results are not FinalOutput.
+- Important maintenance debt is recorded for post-Gate-2 treatment and is not
+  a closure blocker.
 - An editable Git checkout from the repository root is the supported near-term
   target.
 - Standalone wheel completeness remains `NOT_CLAIMED`.
 - Package-resource migration and console entry points are deferred.
-- No real-world effect is claimed.
+- Real-world effects remain zero.
 - No RuntimeExecutionTopology was created by G2-C.
 - The Quantum-Inspired Mathematical Extension is a future post-Gate-6 engineering design only. No quantum-inspired state ABI, Quantum AVF, Quantum GT, Quantum DRS, quantum Fractal allocator, simulator backend, physical-QPU adapter, physical quantum-state result, or quantum-advantage result is implemented or claimed in the current release.
 - `release/current_status_overlay_v01.json` is metadata-only and

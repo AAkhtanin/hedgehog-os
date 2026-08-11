@@ -1,0 +1,1238 @@
+1. Metadata and Audit Boundary
+
+audit_id: auditor_fractal_runtime_g2_d_v02
+audit_status: PASS
+audit_mode: independent_read_only_non_repairing
+gate_id: gate2_g2d_fractal_runtime_v0_2
+gate_slice: G2-D
+audit_timestamp_local: 2026-08-11T10:33:04+0200 CEST
+accepted_preflight_commit: 2e1681a54c847beb106d9e57da250dac82ea6192
+implementation_basis_commit: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
+audit_commit: NOT_YET_KNOWN
+preflight_path: docs/fractal_runtime_v0_2_g2_d_preflight_v01.md
+preflight_sha256: 8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79
+repair_required: false
+
+This was an independent, read-only, non-repairing audit of the exact committed
+G2-D1 through G2-D6 implementation. The audit independently inspected Git
+ancestry and path scope, complete committed text, JSON and JSON Schema shape,
+Python ASTs, canonical constants and identity algorithms, static call and
+import direction, cache laws, fixture topology, closure surfaces, and owner-
+supplied accepted execution evidence. It did not import repository modules for
+behavioral execution.
+
+No pytest process, public runner, D5 collector, Living collector, Conformance
+collector, provider, model, network, connector, or external DRS operation was
+executed. No runtime, test, runner, schema, contract, facade, closure, status,
+or checkpoint path was modified during inspection. The only permitted final
+repository output is this audit log, created only after the complete draft
+passed all gates with blocker count zero.
+
+Static support artifacts were written only under /tmp:
+- HEDGEHOG_G2D_STATIC_ANALYSIS_V01.json
+  sha256 dcfd9f1b3c34dd1a831a2c1014e322e04ae2c8af2adf395157d7bb61f1f43329
+- HEDGEHOG_G2D_GEOMETRY_V01.json
+- HEDGEHOG_G2D_DEAD_DEPENDENCY_V01.json
+
+Those temporary files are analysis aids, not accepted repository evidence.
+
+2. Exact Audited Committed Basis
+
+repository: /Users/admin/Projects/hedgehog-os
+branch: main
+HEAD: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
+origin/main: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
+HEAD subject: Integrate G2-D6 Living Gauntlet and Kernel Conformance
+initial worktree: clean, including untracked paths
+initial staging: empty
+initial git diff --check: PASS
+initial audit log path: absent
+initial checkpoint path: absent
+
+All audited key paths were mode 0644. Exact key identities:
+
+docs/fractal_runtime_v0_2_g2_d_preflight_v01.md
+  sha256 8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79
+  bytes 304175; LF lines 4500
+docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md
+  sha256 7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570
+  bytes 133145; LF lines 2212
+hedgehog/kernel/fractal_runtime_v02.py
+  sha256 ca5338f27ab0c0573cc2d831f8286ff3451d79da6b414a2514c62f5856f8f6b2
+  bytes 673917; LF lines 15209
+schemas/fractal_runtime_v02.schema.json
+  sha256 e62f693cc24a0562ca2955b011530916a85598dd00026f6dbadb80b6b9eb94ac
+  bytes 181301; LF lines 5551
+tests/test_fractal_runtime_g2_d_v02.py
+  sha256 0ed20add36a82a576cf5e4ce9d787079c6052bf24465b225c18d2c33303416e7
+  bytes 457915; LF lines 10504
+demo/run_fractal_runtime_g2_d_v02.py
+  sha256 b15ef4d4461769db8f8e12dc06b0748ab9d749a6b26d199c16d1b6f04dac6fbd
+  bytes 485775; LF lines 11294
+hedgehog/kernel/abi_v01.py
+  sha256 1927d1ae061c94964ba6b5a209945794ce04a943383820cdc73feac19256dd2f
+  bytes 42806; LF lines 1191
+schemas/kernel_artifact_v01.schema.json
+  sha256 56792c03bb8b24973e472bae1b31b49f9f6fa60afa1feffac69af336db9970d2
+  bytes 7142; LF lines 297
+hedgehog/kernel/transition_registry_v01.py
+  sha256 f9dbe2e734cfa7991183d11177f39d98faa44e429a62cd3753d017c3ec1c6496
+  bytes 113213; LF lines 3080
+tests/test_transition_registry_v01.py
+  sha256 ec76373a27a5cdc794d78806e1add13a03f9cb6a282f579dd548f3ee0752592c
+  bytes 100763; LF lines 2501
+hedgehog/kernel/root_decision_v01.py
+  sha256 cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c
+  bytes 43352; LF lines 1116
+hedgehog/kernel/integrity_replay_v01.py
+  sha256 d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be
+  bytes 48487; LF lines 1321
+hedgehog/kernel/__init__.py
+  sha256 caa163dc51d035feb2551e1772304abd91a0768f3248e74213c896da6e2f8561
+  bytes 17375; LF lines 425
+hedgehog/post_vv.py
+  sha256 e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3
+  bytes 18910; LF lines 598
+tests/test_post_vv_runtime.py
+  sha256 f6a03f8e7e6adfdb2f5f3dbbd73fefe7434bef2545b85f20929cf97a5aecb43c
+  bytes 21037; LF lines 581
+hedgehog/gt_validator.py
+  sha256 e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd
+  bytes 21496; LF lines 594
+tests/test_gt_validator_runtime.py
+  sha256 91745d5c3a167d4dcd6b0954b753de2078753d39a5eab43c296b162ddc5bcbeb
+  bytes 27723; LF lines 853
+demo/run_living_gauntlet_v01.py
+  sha256 d066cb9cd3a681acbc774ac3eb878dd54ac190ca1e1d8cb6a823bc1aa9513d00
+  bytes 222402; LF lines 5700
+tests/test_living_gauntlet_v01_runner.py
+  sha256 48bf157ea080e994f42ace54e7393463cb6ec95fc16175ff1455ddd9026a7b78
+  bytes 184719; LF lines 5020
+hedgehog/kernel/conformance_v01.py
+  sha256 038abbea4cd1504472ed5bad5f7b1c73b9f46d5cff3fa4b4cdf9c13a8586813e
+  bytes 56995; LF lines 1601
+demo/run_kernel_conformance_v01.py
+  sha256 b4902f8bdf2ceedf893f049d6bf17ac80ea4ef0442bf45e50aa9eb54dd9bdfee
+  bytes 113776; LF lines 2962
+tests/test_kernel_conformance_v01_runner.py
+  sha256 c2b36e6bb799e9c291abd5913c5494c637d09f154f6db7aed56c75d51eab1624
+  bytes 87519; LF lines 2314
+
+No required identity differed.
+
+3. Complete Full-Read Register
+
+complete_full_read_file_count: 49
+complete_full_read_result: PASS
+
+Every byte of each path below was read as UTF-8 or parsed as JSON as
+applicable. Columns are path | SHA-256 | bytes | LF lines | mode.
+
+AGENTS.md | 7e94830873d9a77361f2834bde2c82b8e741944f9cf08bdccc1473240f7fe7fd | 88710 | 1013 | 0644
+README.md | b204d0a86775e26c4b0e88c9c268e572eac74b409def7bad98402bf869ef3a62 | 235474 | 3785 | 0644
+demo/run_execution_mode_router_g2_c_v01.py | 1d775010d0fdcba7d2ebbcadf50d0bc4815a99dc08785f2f6a0d635477ff8719 | 88591 | 1858 | 0644
+demo/run_fractal_runtime_g2_d_v02.py | b15ef4d4461769db8f8e12dc06b0748ab9d749a6b26d199c16d1b6f04dac6fbd | 485775 | 11294 | 0644
+demo/run_kernel_conformance_v01.py | b4902f8bdf2ceedf893f049d6bf17ac80ea4ef0442bf45e50aa9eb54dd9bdfee | 113776 | 2962 | 0644
+demo/run_living_gauntlet_v01.py | d066cb9cd3a681acbc774ac3eb878dd54ac190ca1e1d8cb6a823bc1aa9513d00 | 222402 | 5700 | 0644
+docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md | 61feef4640856f2474848d316e8f2159ed8522fffddc8c512f07c308b6ff9234 | 8544 | 240 | 0644
+docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log | ca3b63d74744b53f02e0b638fc26e6bb476a350682ad3035c4f81307c5deb777 | 44928 | 414 | 0644
+docs/audit_reports/auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01.log | 78d2debc7d9969caca6b896b00273d879eb72a933b84b29eb43d27456effa17b | 65730 | 390 | 0644
+docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log | 3f6aab5c26b486a463174a6d57a22097b8eee2dcd314433b27462117b21d73d5 | 27663 | 596 | 0644
+docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md | c8f94825080864bf14afe8219a3c0bab4ff5613dcb7bddc471b141f3ffbac553 | 6036 | 163 | 0644
+docs/execution_mode_router_g2_c_checkpoint_v01.md | 28ba0de21cf6458a408911b0342d57db72ad6f6cf6e8e5aec8b87fb616802f0b | 6263 | 171 | 0644
+docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md | 7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570 | 133145 | 2212 | 0644
+docs/fractal_runtime_v0_2_g2_d_preflight_v01.md | 8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79 | 304175 | 4500 | 0644
+hedgehog/gt_validator.py | e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd | 21496 | 594 | 0644
+hedgehog/kernel/__init__.py | caa163dc51d035feb2551e1772304abd91a0768f3248e74213c896da6e2f8561 | 17375 | 425 | 0644
+hedgehog/kernel/abi_v01.py | 1927d1ae061c94964ba6b5a209945794ce04a943383820cdc73feac19256dd2f | 42806 | 1191 | 0644
+hedgehog/kernel/conformance_v01.py | 038abbea4cd1504472ed5bad5f7b1c73b9f46d5cff3fa4b4cdf9c13a8586813e | 56995 | 1601 | 0644
+hedgehog/kernel/execution_mode_router_v01.py | 29e6500ca2b6966d0b5068f9fa1cdc1ef937cb4e5c284ea3acc78b0e9103ca22 | 293335 | 7593 | 0644
+hedgehog/kernel/fractal_runtime_v02.py | ca5338f27ab0c0573cc2d831f8286ff3451d79da6b414a2514c62f5856f8f6b2 | 673917 | 15209 | 0644
+hedgehog/kernel/integrity_replay_v01.py | d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be | 48487 | 1321 | 0644
+hedgehog/kernel/root_decision_v01.py | cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c | 43352 | 1116 | 0644
+hedgehog/kernel/semantic_work_v01.py | 34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1 | 58880 | 1570 | 0644
+hedgehog/kernel/transition_registry_v01.py | f9dbe2e734cfa7991183d11177f39d98faa44e429a62cd3753d017c3ec1c6496 | 113213 | 3080 | 0644
+hedgehog/kernel/trust_model_v01.py | 6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d | 15364 | 467 | 0644
+hedgehog/post_vv.py | e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3 | 18910 | 598 | 0644
+release/claim_to_evidence_index.md | e00c0ab92f29dfba353390556821ba8ee8f2af1cfa75d1a5b8a227f76d3116ae | 5111 | 33 | 0644
+release/completion_manifest.json | 02ffac0d78df768f91df0bb06bdd15ec463dbe5ccea6ef82b7022146819f3466 | 26256 | 446 | 0644
+release/current_limitations.md | c992a4d3822c6f4128c3870c8e1b264815bf6f7e302da52889c99b2baf1a6167 | 2109 | 40 | 0644
+release/current_release_notes.md | 267106dd984ced0cc76d02d4dd2161f4475b81bf5e5a3f64b9ca9574669bae13 | 3614 | 78 | 0644
+release/current_status_overlay_v01.json | 6c9356b6e5ec280a72c3a2159998e8e41cfc22c435e7edf0b2ea522f27e54d95 | 2834 | 70 | 0644
+release/integration_seam_index.json | c29c2ff873c8b448d8825c3288918e980eab3d65a5114762d2e3fbe5b1206231 | 15150 | 295 | 0644
+schemas/execution_mode_router_v01.schema.json | cd07223ffd6085682cee4a49781f5471997ad371b4cd3916d01c146ed7e33468 | 79878 | 3106 | 0644
+schemas/fractal_runtime_v02.schema.json | e62f693cc24a0562ca2955b011530916a85598dd00026f6dbadb80b6b9eb94ac | 181301 | 5551 | 0644
+schemas/kernel_artifact_v01.schema.json | 56792c03bb8b24973e472bae1b31b49f9f6fa60afa1feffac69af336db9970d2 | 7142 | 297 | 0644
+specs/machine_manifest_v0_25.json | 54934c5f5d3d8e66d2516af515fe33bb941c4cc3ac4cdd190d01ff0be5c8e58a | 156397 | 3375 | 0644
+tests/test_execution_mode_router_g2_c_v01.py | 6903a7e4223f2d8c4712122fb88dbaa4b788ef84d5d85b53ce6ea1eacbbbbeec | 281524 | 6131 | 0644
+tests/test_fractal_runtime_g2_d_v02.py | 0ed20add36a82a576cf5e4ce9d787079c6052bf24465b225c18d2c33303416e7 | 457915 | 10504 | 0644
+tests/test_gt_validator_runtime.py | 91745d5c3a167d4dcd6b0954b753de2078753d39a5eab43c296b162ddc5bcbeb | 27723 | 853 | 0644
+tests/test_kernel_abi_v01.py | 3a0f3cf5615bf6e574075d9e1fa38e823bfeaeb5c6fb8ebe889a7af7dff8250e | 57419 | 1668 | 0644
+tests/test_kernel_conformance_v01_runner.py | c2b36e6bb799e9c291abd5913c5494c637d09f154f6db7aed56c75d51eab1624 | 87519 | 2314 | 0644
+tests/test_kernel_integrity_replay_v01.py | 4c498217117b0aa63e615319f07e8580ea61dd3b2d4f2f2302a90595984fa031 | 49792 | 1111 | 0644
+tests/test_kernel_trust_model_v01.py | 303380f69f01dadcfbc41dfe923efc5c73bf7b41b12f21384cf65bd8630c46e1 | 13291 | 409 | 0644
+tests/test_living_gauntlet_v01_runner.py | 48bf157ea080e994f42ace54e7393463cb6ec95fc16175ff1455ddd9026a7b78 | 184719 | 5020 | 0644
+tests/test_post_vv_runtime.py | f6a03f8e7e6adfdb2f5f3dbbd73fefe7434bef2545b85f20929cf97a5aecb43c | 21037 | 581 | 0644
+tests/test_repository_release_spine_v01.py | 033d4217e9d04fd02cdb3e7faaa39f17cc9ba51a87665ff0cee4b8dcad5735ae | 52759 | 1298 | 0644
+tests/test_root_decision_kernel_v01.py | f19eb1bb3ed7bb11fb707308165aaf1629e4e6ac1f152817d15955d34e52222a | 45287 | 1053 | 0644
+tests/test_semantic_work_v01.py | 8f91a1ec4cde364347badc0d760e3f8be658f680ec2db02b7bb2c4c1768595ac | 62999 | 1763 | 0644
+tests/test_transition_registry_v01.py | ec76373a27a5cdc794d78806e1add13a03f9cb6a282f579dd548f3ee0752592c | 100763 | 2501 | 0644
+
+The register includes all nineteen implementation/additive paths, both binding
+documents, all specified G2-C and kernel donors/consumers, all ten closure-only
+surfaces (with the two future outputs verified absent at start), and all six
+prior accepted audit/checkpoint donors.
+
+4. Exact Implementation Chain
+
+pre-G2-D basis:
+ba2e45be93aec6bc1f6de1891a9b50bb6546070d
+Add future quantum-inspired mathematical roadmap v2.0
+
+Exact immediate first-parent sequence:
+1. 2e1681a54c847beb106d9e57da250dac82ea6192
+   Add G2-D Fractal Runtime v0.2 architect preflight
+2. 9be19f4e7843a5a35956fb98ee531a3982aa1b4a
+   Implement G2-D1 Fractal Runtime structural contracts
+3. bee5231b5cea581dca8cff56cd892280dd58938c
+   Implement G2-D2 source-bound topology and transition profile
+4. 3c80eb63a01c63a8d4a930e4b199a093a90901a5
+   Repair G2-D2 CTX topology transition binding
+5. f175a92660ff7dd8fd600fbc80eb5b20be7eef18
+   Implement G2-D3 Fractal Runtime contextual closure
+6. 16f401e5efdb37ae0083e151631a025b10758724
+   Implement G2-D4 Fractal Runtime typed result closure
+7. c047e271ab620c216871f6e4dcfc178cbf66f950
+   Optimize G2-D3 test harness performance
+8. 4b40972a1a41e4c24e65d7ea876b0c41d406479e
+   Implement G2-D5 deterministic two-domain proof closure
+9. 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
+   Integrate G2-D6 Living Gauntlet and Kernel Conformance
+
+Every commit exists, has exactly one parent, is the immediate first parent of
+the next commit, and is not a merge. The reverse first-parent range contains
+exactly these nine commits and no intervening commit. No implementation path
+was deleted or renamed.
+
+G2D_IMPLEMENTATION_CHAIN_PASS=true
+
+5. Exact Per-Commit Path Scope
+
+Commit 1, 2e1681a54c847beb106d9e57da250dac82ea6192
+  counts: A=1 M=0 D=0 R=0
+  A docs/fractal_runtime_v0_2_g2_d_preflight_v01.md
+
+Commit 2, 9be19f4e7843a5a35956fb98ee531a3982aa1b4a
+  counts: A=3 M=0 D=0 R=0
+  A hedgehog/kernel/fractal_runtime_v02.py
+  A schemas/fractal_runtime_v02.schema.json
+  A tests/test_fractal_runtime_g2_d_v02.py
+
+Commit 3, bee5231b5cea581dca8cff56cd892280dd58938c
+  counts: A=0 M=7 D=0 R=0
+  M hedgehog/kernel/abi_v01.py
+  M hedgehog/kernel/fractal_runtime_v02.py
+  M hedgehog/kernel/transition_registry_v01.py
+  M schemas/kernel_artifact_v01.schema.json
+  M tests/test_fractal_runtime_g2_d_v02.py
+  M tests/test_kernel_abi_v01.py
+  M tests/test_transition_registry_v01.py
+
+Commit 4, 3c80eb63a01c63a8d4a930e4b199a093a90901a5
+  counts: A=0 M=2 D=0 R=0
+  M hedgehog/kernel/transition_registry_v01.py
+  M tests/test_transition_registry_v01.py
+
+Commit 5, f175a92660ff7dd8fd600fbc80eb5b20be7eef18
+  counts: A=1 M=3 D=0 R=0
+  A docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md
+  M hedgehog/kernel/fractal_runtime_v02.py
+  M schemas/fractal_runtime_v02.schema.json
+  M tests/test_fractal_runtime_g2_d_v02.py
+
+Commit 6, 16f401e5efdb37ae0083e151631a025b10758724
+  counts: A=0 M=8 D=0 R=0
+  M hedgehog/gt_validator.py
+  M hedgehog/kernel/__init__.py
+  M hedgehog/kernel/fractal_runtime_v02.py
+  M hedgehog/post_vv.py
+  M tests/test_fractal_runtime_g2_d_v02.py
+  M tests/test_gt_validator_runtime.py
+  M tests/test_post_vv_runtime.py
+  M tests/test_transition_registry_v01.py
+
+Commit 7, c047e271ab620c216871f6e4dcfc178cbf66f950
+  counts: A=0 M=1 D=0 R=0
+  M tests/test_fractal_runtime_g2_d_v02.py
+
+Commit 8, 4b40972a1a41e4c24e65d7ea876b0c41d406479e
+  counts: A=1 M=1 D=0 R=0
+  A demo/run_fractal_runtime_g2_d_v02.py
+  M tests/test_fractal_runtime_g2_d_v02.py
+
+Commit 9, 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
+  counts: A=0 M=5 D=0 R=0
+  M demo/run_kernel_conformance_v01.py
+  M demo/run_living_gauntlet_v01.py
+  M hedgehog/kernel/conformance_v01.py
+  M tests/test_kernel_conformance_v01_runner.py
+  M tests/test_living_gauntlet_v01_runner.py
+
+The preflight and addendum are the accepted binding-document additions. Every
+implementation path is one of the four create paths or fifteen additive shared
+paths in the accepted ledger. The D3 performance commit modifies only the
+accepted G2-D test path. All ten closure-only paths are unchanged across the
+basis-to-HEAD implementation range.
+
+G2D_PATH_SCOPE_PASS=true
+
+6. Binding Preflight and Addendum
+
+The accepted preflight at commit 2e1681a54c847beb106d9e57da250dac82ea6192
+is present at the exact committed identity stated in Sections 1-3. Its path
+ledger, six-slice implementation plan, cumulative validation plan, D5 case
+order, D6 append-only geometry, authority law, zero-effect law, and non-claims
+were reconciled against current source.
+
+The post-acceptance addendum is present at exact SHA-256
+7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570.
+Its Profile-D contextual aliasing, strict-prefix, child-result, activation,
+no-child, six-class scheduler, budget, and no-spin obligations are represented
+in the committed runtime and exact D3 tests. No later slice weakens those laws.
+
+The implementation preserves the binding route, exact staged signatures,
+identity separation, failure reasons, validation targets/stages, and D3/D4
+boundary. Static schema definitions and required fields reconcile with the
+eighteen serialized dataclasses. No unresolved preflight or addendum
+contradiction was found.
+
+G2D_PREFLIGHT_BINDING_PASS=true
+G2D_ADDENDUM_BINDING_PASS=true
+
+7. Canonical Types, Functions, Reasons, Schema, and ABI Geometry
+
+Canonical type geometry:
+- 20 canonical G2-D types total.
+- 18 serialized, identity-bearing types:
+  FractalRuntimePolicyV02
+  FractalRuntimeBudgetV02
+  RuntimeTopologySourceBindingV02
+  RuntimeTopologySeedV02
+  RuntimeTopologyNodeV02
+  RuntimeTopologyEdgeV02
+  RuntimeAssignmentV02
+  RuntimeExecutionTopologyV02
+  ParentChildScopeProjectionV02
+  FractalCellInputV02
+  FractalCellQueueEntryV02
+  FractalReviseObservationV02
+  FractalPartialFailureRecordV02
+  FractalBackpressureStateV02
+  FractalCellResultV02
+  FractalRuntimeTraceV02
+  FractalRuntimeReportV02
+  FractalRuntimeValidationReportV02
+- 2 runtime-only context types:
+  FractalRuntimeSourceContextV02
+  FractalRuntimeExecutionBundleV02
+
+Schema geometry:
+- Draft: https://json-schema.org/draft/2020-12/schema
+- 18 definitions, exactly matching the serialized type names.
+- Every object definition has additionalProperties=false.
+- Every declared property is required by its owning definition.
+- Every local $ref resolves to a present definition.
+
+Function and package geometry:
+- 110 public functions in hedgehog/kernel/fractal_runtime_v02.py.
+- 6 exact G2-D Transition functions:
+  build_fractal_runtime_transition_registry_profile_v02
+  validate_fractal_runtime_transition_registry_profile_v02
+  fractal_runtime_transition_registry_profile_to_plain_dict_v02
+  validate_fractal_runtime_transition_decision_v02
+  fractal_runtime_transition_decision_to_plain_dict_v02
+  rebuild_fractal_runtime_transition_decision_identity_v02
+- 116 total public G2-D functions.
+- 136 unique direct package attributes.
+- hedgehog.kernel.__all__ remains the immutable historical 19-name tuple and
+  contains no G2-D addition.
+
+Registry geometry:
+- 220 unique reason codes.
+- 34 validation targets.
+- 30 failure stages.
+- 17 Transition rules.
+- No duplicate reason, target, stage, or rule ID.
+
+Mode profiles, in canonical order:
+- memory_informed: 5 nodes, 4 edges, 5 assignments.
+- local_slm: 5 nodes, 4 edges, 5 assignments.
+- cloud_llm: 5 nodes, 4 edges, 5 assignments.
+- full_semantic: 7 nodes, 6 edges, 7 assignments.
+- full_fractal: 7 nodes, 10 edges, 7 assignments.
+
+The full-fractal ten-edge order is exact:
+0 root 0->1 PARENT_CHILD
+1 root 0->2 PARENT_CHILD
+2 root 1->3 DATA_DEPENDENCY
+3 root 2->3 DATA_DEPENDENCY
+4 root 3->4 VALIDATION
+5 root 4->5 VALIDATION
+6 root 5->6 RETURN
+7 leaf 0->4 VALIDATION
+8 leaf 4->5 VALIDATION
+9 leaf 5->6 RETURN
+
+Exact ABI partitions are 32 FractalCellInput fields, 31 queue fields, 32 cell
+result fields, and 42 runtime report fields. Queue, budget, artifact, report,
+result, and causal objects retain typed staged identity and lineage rather than
+caller-selected identity.
+
+G2D_CANONICAL_GEOMETRY_PASS=true
+
+8. G2-C Source and RouteEligibility Consumption
+
+The static controlling source route is:
+
+BSEP
+-> semantic proposal
+-> G2-C Root-reviewed ExecutionModeRouteEligibility
+-> runtime-owned RuntimeExecutionTopology
+-> bounded runtime execution
+-> ResultProposal / Post V&V / GT / PARENT_RETURN
+-> Root
+
+The G2-C source family is constructed and validated through public lower-layer
+builders including build_execution_mode_source_context_v01,
+validate_execution_mode_source_context_v01,
+validate_execution_mode_router_input_against_sources_v01,
+validate_execution_mode_proposal_against_sources_v01,
+evaluate_execution_mode_proposal_to_root_transition_v01,
+build_root_execution_mode_review_input_v01,
+validate_root_execution_mode_review_input_against_sources_v01,
+project_root_execution_mode_decision_v01,
+validate_root_execution_mode_decision_against_source_v01,
+evaluate_execution_mode_root_route_transition_v01, and
+validate_execution_mode_route_eligibility_against_source_v01.
+
+G2-D consumes that completed family through
+build_fractal_runtime_source_context_v02,
+validate_fractal_runtime_source_context_v02,
+build_runtime_topology_source_binding_v02,
+validate_runtime_topology_source_binding_against_g2c_v02,
+construct_runtime_execution_topology_v02,
+validate_runtime_execution_topology_against_sources_v02,
+evaluate_route_eligibility_to_topology_transition_v02, and
+admit_runtime_execution_topology_v02.
+
+Static fail-closed paths cover shortcut and terminal source families, direct
+Root-decision bypass, route substitution, cross-domain binding, foreign ID,
+scope/capability widening, recursive-capability removal, mode upgrade and
+downgrade, and G2-A/G2-B non-authority. A decision object without the complete
+accepted RouteEligibility/source family cannot construct an accepted topology.
+RuntimeExecutionTopology owns execution shape but is explicitly not authority.
+
+9. Topology, Queue, Budget, Scope, and Backpressure
+
+Topology identity is derived from the validated source binding, seed, ordered
+nodes, ordered edges, assignments, mode profile, and Root-reviewed route. The
+root and child cell IDs, topology artifact, source family hash, policy ID, and
+profile ID are cross-bound. Foreign, missing, duplicated, reordered, skipped,
+or substituted predecessor material fails closed.
+
+Queue state is immutable and predecessor-linked. Current code validates exact
+round, state, reason, admission, activation-parent, local-child-result, and
+artifact relationships. Latest-settled-prefix validation rejects incomplete,
+foreign, duplicate, and reordered material. Scheduler ordering is exact across
+the six queue classes.
+
+Budget construction and validation preserve owner, predecessor, local/global
+pair, event kind, immutable immediate-parent allocation basis, reserve/release,
+revise, and create-only debit laws. The accepted isolated structural matrix is
+the exact 1+4+16 tree: 21 unique instantiated cell IDs enter accounting only
+after accepted CELL_CREATE; planning, INITIAL_ALLOCATION, and ACTIVATE do not
+debit; the attempted 22nd create is bounded.
+
+Scope validation binds capabilities, TTL, forbidden claims, lineage, parent
+slot, allocation, and source context. Child authority cannot propagate upward
+or sideways. Valid policy/scope/budget denial is distinguished from malformed
+structural input.
+
+Backpressure uses bounded max_parallelism, deterministic admission order,
+one state per evaluated round, visible deferred PENDING work, dependency wait,
+budget-exhaustion BLOCKED, no drop/reorder, and unchanged-state suppression.
+Recursion is bounded by max_depth, max_fan_out, max_total_cells, budget limits,
+revise limits, and cycle guards. No accepted unbounded scheduler or recursion
+path was found.
+
+10. Results, Post V&V, GT, PARENT_RETURN, and Root Boundary
+
+Only actual invoked child results or valid no-child terminal material can
+advance a parent slot. Structural corruption creates no accepted slot terminal,
+partial failure, result, causal row, or bundle. Actual-only child result and
+partial-failure postorder precedes merge, ResultProposal, Post V&V, GT,
+PARENT_RETURN, complete-terminal validation, final result, and bundle assembly.
+
+run_fractal_runtime_v02 returns the exact public pair
+(bundle_or_none, terminal_report). Accepted COMPLETE_PROFILE requires an actual
+FractalRuntimeExecutionBundleV02 plus a PASS validation report. Invalid source
+families return no bundle and fail before accepted topology execution.
+
+Post V&V and GT use the additive explicit-time seams for deterministic G2-D
+proof. ResultProposal, POST_VV_REPORT, and GT_ADVISORY_REPORT are independently
+validated and reconstructed. GT remains advisory and does not prove truth or
+create Root authority. PARENT_RETURN is fixed by the accepted Transition
+profile. Only the root enters t13-t17 and only Root owns the global outcome.
+
+FractalCellResultV02 is not FinalOutput. A child cannot create Root, permission,
+packet, receipt, FinalOutput, DRS write, authority, or effect. Stage D-B and
+Stage D-C bundles preserve exact report, artifact, trace, causal, and parent
+relationships without changing this boundary.
+
+11. D5 Two-Domain 72-Case Evidence
+
+Exact committed source geometry:
+- public runner SHA-256:
+  b15ef4d4461769db8f8e12dc06b0748ab9d749a6b26d199c16d1b6f04dac6fbd
+- public test SHA-256:
+  0ed20add36a82a576cf5e4ce9d787079c6052bf24465b225c18d2c33303416e7
+- public runner __all__: exactly seven names.
+- 72 unique primary case IDs in exact accepted order.
+- 36 constructive and 36 negative cases.
+- two exact domains:
+  TRAVEL_POLICY_INFORMATION
+  WAREHOUSE_MAINTENANCE_INFORMATION
+- ten domain-positive rows and ten accepted bundles.
+- seventeen source-negative exact axes.
+- fourteen bounded-negative exact axes.
+- thirty-one accepted matrix axes.
+- two profile-aware counterfactual cases.
+
+The positive collector loops the exact ten domain/mode rows and has one public
+run_fractal_runtime_v02 call site. It requires an actual bundle and external
+COMPLETE_PROFILE PASS. Each positive source is built once and retained for
+later cases. The source-negative collector has a separate public run call site
+for the seventeen exact invalid source families; each must return bundle None
+and FAIL_CLOSED before accepted topology creation. It does not execute 72 full
+runtimes.
+
+Cases 46 and 47 use profile-aware actual-artifact counterfactual evidence only
+after an accepted bundle. The canonical blocked row uses
+/observed_output_refs/<index>, CELL_RESULT_OUTPUT, BLOCKED_BY_GATE, and
+gate:g2d_child_output. IGNORED_WITH_REASON remains distinct. The generic stable-
+ID validator is supplemental and non-runtime; its diagnostic copies are not
+inserted into accepted runtime, Stage D-C, trace, causal, or release evidence.
+
+The public report validator has 72 exact proof contracts and rejects coherent
+inner/outer resealed semantic tampering. It validates evidence hashes, report
+identity, exact case order and classification, outcome laws, cardinalities,
+accepted bundle references, topology counts, and zero operation/effect/
+authority counters. The runner imports no test module and does not call private
+_d4_run_runtime_v02.
+
+Accepted owner-supplied D5 execution evidence, not rerun here:
+- two public module runs PASS and byte-identical;
+- D5 selector: 8 passed;
+- complete G2-D file: 84 passed;
+- compatibility: 55 passed;
+- commit: 4b40972a1a41e4c24e65d7ea876b0c41d406479e.
+
+This evidence is bound to the exact committed runner/test identities above and
+to independently inspected static case, validator, identity, and call geometry.
+
+G2D_D5_EVIDENCE_BOUND=true
+
+12. D6 Living and Conformance Evidence
+
+Living geometry:
+- version v1.4.
+- exact historical v1.0-v1.3 prefixes preserved at 13, 14, 15, and 16 acts.
+- current active act count 17.
+- fractal_runtime is exact act 17.
+- source module demo.run_fractal_runtime_g2_d_v02.
+- source symbol collect_fractal_runtime_g2_d_v02.
+- fractal_runtime_execution_count is derived from executed rows and equals 1.
+
+Conformance geometry:
+- contract version v0.5.
+- runner version v0.4.
+- exact historical v0.1-v0.4 category/probe/ref prefixes preserved.
+- 14 categories, 2 unchanged domains, 50 negative probes, 16 active refs.
+- FractalRuntimeConformance is category 14 with exactly ten checks:
+  policy_identity_and_staged_surface
+  executable_templates_and_child_activation
+  queue_input_outcome_and_result_order
+  paired_budget_events_and_backpressure
+  resultproposal_unique_gt_kt_validation
+  pre_root_four_artifact_abi_partitions
+  transition_profile_and_root_only_report
+  causal_pointer_reason_and_root_outcome
+  two_domain_seventy_two_case_boundary
+  zero_authority_and_operations
+- exact ten appended G2-D probes:
+  fractal_runtime_report_identity_forgery
+  fractal_runtime_route_eligibility_substitution
+  fractal_runtime_direct_root_decision_bypass
+  fractal_runtime_mode_profile_forgery
+  fractal_runtime_scope_budget_widening
+  fractal_runtime_queue_transition_forgery
+  fractal_runtime_recursive_capability_forgery
+  fractal_runtime_no_progress_forgery
+  fractal_runtime_child_authority_forgery
+  fractal_runtime_zero_operation_forgery
+- each expected observed reason tuple is exactly (g2d5_report_invalid,).
+
+D6 imports the D5 runner normally. One validated immutable D5 report is reused
+for the Living row, category checks, and ten coherently resealed negative
+mutations within a collection path. It does not reconstruct the 72 cases, does
+not copy PASS, and does not call private _d4_run_runtime_v02. The route probe
+correctly collapses case-18 baseline and attempted SHA values, reseals inner
+details/evidence and outer report identity, and is rejected by the public D5
+validator.
+
+Accepted owner-supplied D6 execution evidence, not rerun here:
+- complete Living: 575 passed, 2 existing nonblocking deprecation warnings,
+  3859.53 seconds, no hard ceiling;
+- complete Conformance: 349 passed, 2 existing nonblocking deprecation
+  warnings, 1873.22 seconds, no hard ceiling;
+- no failure, error, skip, or xfail;
+- exact geometry 17 / 14 / 2 / 50 / 16;
+- commit 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd.
+
+These expensive results were not independently rerun. They are owner-supplied
+accepted execution evidence bound to exact committed file identities and
+combined with independently inspected Git, source, schema, AST, path-scope,
+identity, and static evidence.
+
+G2D_D6_EVIDENCE_BOUND=true
+
+13. Twenty Validation Groups
+
+Group 01 - static_surface_schema_import
+  owning slice: G2-D1
+  implementation: fractal_runtime_v02.py public constants/types/serializers;
+    fractal_runtime_v02.schema.json; package boundary.
+  tests/evidence: tests/test_fractal_runtime_g2_d_v02.py:860,
+    test_d1_schema_valid_and_negative_mutations (2515),
+    test_d1_import_and_zero_operation_boundary (2591).
+  positive: exact importable static surface and schema mapping.
+  negative: malformed schema/type/import/effect surfaces fail or remain absent.
+  preflight binding: Sections 9, 19, 21; later weakening: none.
+  GROUP_01_STATUS=PASS
+
+Group 02 - canonical_types_fields_enums
+  owning slice: G2-D1
+  implementation: twenty canonical dataclasses, enum/tuple registries, field
+    tables, target/stage/reason registries.
+  tests/evidence: tests/test_fractal_runtime_g2_d_v02.py:892,
+    test_d1_structural_unique_tuple_python_schema_matrix (1474),
+    test_d1_semantic_tuple_cell_input_and_source_reason_parity (1523).
+  positive: exact type, field, enum, tuple, and schema parity.
+  negative: duplicate, missing, substituted, and invalid semantic rows reject.
+  preflight binding: exact canonical geometry; later weakening: none.
+  GROUP_02_STATUS=PASS
+
+Group 03 - acyclic_identity_and_serialization
+  owning slice: G2-D1
+  implementation: plain-data projectors, domain-separated identities,
+    recursive cycle guards, canonical JSON serialization.
+  tests/evidence: tests/test_fractal_runtime_g2_d_v02.py:1010,
+    test_d1_guardian_object_local_acyclic_validation_matrix (1666).
+  positive: value/ID/serialization determinism and exact rebuild.
+  negative: cyclic, copied, foreign, and malformed material fails closed.
+  preflight binding: identity and DAG law; later weakening: none.
+  GROUP_03_STATUS=PASS
+
+Group 04 - structural_validators_and_reasons
+  owning slice: G2-D1
+  implementation: total object validators, _specific_errors, validation report
+    builder, 220 reason registry, bounded success-only validation cache.
+  tests/evidence: tests/test_fractal_runtime_g2_d_v02.py:1737, cache tests
+    at 1842 and 2111, schema negatives at 2515.
+  positive: exact PASS report target/stage/reason law.
+  negative: every field/reason/schema mutation produces typed fail-closed data.
+  preflight binding: validator/reason geometry; later weakening: none.
+  GROUP_04_STATUS=PASS
+
+Group 05 - complete_g2c_source_context
+  owning slice: G2-D2
+  implementation: build_fractal_runtime_source_context_v02 and contextual
+    source validation over the complete G2-C family.
+  tests/evidence: actual G2-C seam at 1161; five-mode source/topology test 3614.
+  positive: exact BSEP/proposal/Root/route/policy/profile source family.
+  negative: incomplete, foreign, and cross-bound source families reject.
+  preflight binding: source-consumption contract; later weakening: none.
+  GROUP_05_STATUS=PASS
+
+Group 06 - route_eligibility_consumption
+  owning slice: G2-D2
+  implementation: source binding, route-to-topology transition, topology
+    admission, exact G2-C Root artifact consumption.
+  tests/evidence: shortcut/terminal test 3861, source substitution 3891,
+    topology/transition/artifact substitutions 3916.
+  positive: only accepted Root-reviewed RouteEligibility reaches topology.
+  negative: direct Root decision, shortcut, terminal, or substituted route fails.
+  preflight binding: authority route; later weakening: none.
+  GROUP_06_STATUS=PASS
+
+Group 07 - mode_topology_profiles
+  owning slice: G2-D2
+  implementation: exact five template node/edge/assignment/projection tables
+    and topology constructor.
+  tests/evidence: five-mode test 3614, full-fractal geometry test 3699,
+    D5 exact-template case 51.
+  positive: exact 5/5/5/7/7 node and 4/4/4/6/10 edge geometry.
+  negative: row mutation, substitution, missing recursive capability reject.
+  preflight binding: five mode profiles; later weakening: none.
+  GROUP_07_STATUS=PASS
+
+Group 08 - topology_identity_lineage
+  owning slice: G2-D2
+  implementation: topology seed, source binding, root ID, artifact projection,
+    transition identity, parent/trace lineage.
+  tests/evidence: seed/topology cross-binding 1105, G2-C lineage 1364,
+    full-fractal geometry 3699, substitution test 3916.
+  positive: deterministic source-bound topology and exact lineage.
+  negative: copied ID, foreign artifact, changed edge/order/source reject.
+  preflight binding: topology identity law; later weakening: none.
+  GROUP_08_STATUS=PASS
+
+Group 09 - queue_state_predecessor_and_order
+  owning slice: G2-D3
+  implementation: queue builder/validator, advance evaluator, prefix validator,
+    scheduler class order, typed queue artifacts.
+  tests/evidence: queue chain 6655, complete-prefix 7892, scheduler 8243/8255;
+    D5 cases 44, 65, 66, and 71.
+  positive: exact predecessor, round, state, reason, and result order.
+  negative: missing, duplicate, reordered, skipped, copied queue material rejects.
+  preflight binding: queue and transition ordering; later weakening: none.
+  GROUP_09_STATUS=PASS
+
+Group 10 - bounds_and_budget
+  owning slice: G2-D3 with D5 cumulative closure
+  implementation: budget builder/validator, paired event laws, policy bounds,
+    cell-create chain and exact total-cell matrix.
+  tests/evidence: D3 budget matrix 8276; D5 cases 28-35, 53, 61, and 68.
+  positive: depth/fan-out/cell/token/time/provider and paired-budget bounds.
+  negative: exact overflow, stale/missing/forged pair, owner/event/debit reject.
+  preflight binding: Sections 9.3, 10, 22; later weakening: none.
+  GROUP_10_STATUS=PASS
+
+Group 11 - scope_capability_ttl_lineage
+  owning slice: G2-D3
+  implementation: scope projection, cell-input contextual validation, child
+    activation precheck, capability/TTL/forbidden/budget lineage.
+  tests/evidence: activation 7071, precheck mutation 7568, scope boundary 8577;
+    D5 cases 35, 41, 52, 59, and 69.
+  positive: exact parent scope and source-bound capability inheritance.
+  negative: widening, borrowing, forbidden claim, owner/lineage mutation rejects.
+  preflight binding: bounded local authority law; later weakening: none.
+  GROUP_11_STATUS=PASS
+
+Group 12 - recursion_and_backpressure
+  owning slice: G2-D3
+  implementation: evaluate_fractal_backpressure_v02, bounded scheduler,
+    recursive child gate, unchanged-state suppression.
+  tests/evidence: six-class scheduler 8243, S0/t03/S1 no-spin 8388;
+    D5 cases 31 and 58.
+  positive: deterministic admission, visible PENDING, dependency wait, no drop.
+  negative: capacity and budget exhaustion block; unchanged state adds nothing.
+  preflight binding: recursion/backpressure contract; later weakening: none.
+  GROUP_12_STATUS=PASS
+
+Group 13 - revise_retry_and_no_progress
+  owning slice: G2-D4
+  implementation: evaluate_fractal_revise_observation_v02, revise counters,
+    paired budget/event ordering, no-progress terminal mapping.
+  tests/evidence: D4 revise test 8935; D5 cases 36, 37, and 71.
+  positive: bounded revise progression with observation before transition/budget.
+  negative: overflow and two non-positive revisions produce DEADEND.
+  preflight binding: retry/no-spin law; later weakening: none.
+  GROUP_13_STATUS=PASS
+
+Group 14 - partial_failure_and_parent_return
+  owning slice: G2-D4
+  implementation: partial-failure record, actual child result validation,
+    normalized merge, five parent-return outcomes.
+  tests/evidence: D4 partial/parent test 8991, outcome matrix 9236;
+    D5 cases 39, 40, 48, 54, 55, 62, 66, and 70.
+  positive: actual child/no-child results map through exact parent outcomes.
+  negative: malformed child identity/lineage creates no terminal/result/bundle.
+  preflight binding: result/Root boundary; later weakening: none.
+  GROUP_14_STATUS=PASS
+
+Group 15 - transition_abi_facade_and_stage_bundles
+  owning slice: G2-D4
+  implementation: 17-rule profile, six transition helper functions, package
+    facade attrs, ABI partition validators, Stage D-A/B/C bundle validation.
+  tests/evidence: public/facade 8868, transition ABI 9082, bundle mutations 9283;
+    D5 cases 56, 67, and 72.
+  positive: exact signatures, partitions, stages, artifacts, and typed traces.
+  negative: rule, partition, stage, report, artifact, or bundle mutation rejects.
+  preflight binding: Transition/ABI/staged geometry; later weakening: none.
+  GROUP_15_STATUS=PASS
+
+Group 16 - deterministic_post_vv_gt_time_boundary
+  owning slice: G2-D4
+  implementation: ResultProposal projection/validation, explicit-time Post V&V
+    and GT seams, source-KT and context-unique GT report bindings.
+  tests/evidence: tests 9394, 9425, 9449, 9471, 9494, and 9516;
+    D5 cases 45, 54, 63, 64, and 72.
+  positive: repeated values/IDs/bytes and independent PASS report rebuild.
+  negative: time/context/stage/reason/nullability and copied-report mutations fail.
+  preflight binding: deterministic validation boundary; later weakening: none.
+  GROUP_16_STATUS=PASS
+
+Group 17 - causal_consumption_and_counterfactuals
+  owning slice: G2-D4 with D5 actual-artifact closure
+  implementation: causal row builder/validator, profile-aware runtime
+    counterfactual validator, supplemental generic ABI validator.
+  tests/evidence: D4 causal test 9127, counterfactual test 9350;
+    D5 cases 46, 47, and 57.
+  positive: exact pointers/reasons and USED/blocked/ignored dispositions.
+  negative: mutation prevents accepted downstream; corruption creates no row.
+  preflight binding: causal profile and non-authority; later weakening: none.
+  GROUP_17_STATUS=PASS
+
+Group 18 - two_domain_positive_determinism
+  owning slice: G2-D5
+  implementation: public D5 collector, exact positive mode rows, public report
+    validator, deterministic identity/plain/render functions.
+  tests/evidence: positive geometry 9818, repeated value/ID/bytes 10140;
+    D5 cases 1-10 and 42.
+  positive: two domains x five modes, ten actual accepted bundles.
+  negative: substituted report/evidence/order/identity fails validator.
+  preflight binding: cumulative validation group 18; later weakening: none.
+  GROUP_18_STATUS=PASS
+
+Group 19 - complete_negative_and_zero_operation
+  owning slice: G2-D5
+  implementation: source-negative, bounded-negative, matrix handlers, 72 proof
+    contracts, exact report validator, zero counters.
+  tests/evidence: complete negative matrix 9853, matrix tests 10172,
+    zero/non-authority 10368, JSON/main contract 10408.
+  positive: all named bounded outcomes derive from actual typed boundaries.
+  negative: coherent inner/outer tampering and every authority/effect axis reject.
+  preflight binding: cumulative validation group 19; later weakening: none.
+  GROUP_19_STATUS=PASS
+
+Group 20 - living_conformance_final_profile
+  owning slice: G2-D6
+  implementation: Living v1.4 act collector/report counter; Conformance v0.5
+    category, ten checks, ten mutations, runner v0.4 report reuse.
+  tests/evidence: Living D6 tests at 4868, 4894, 4917, 4951, 4980, 5004;
+    Conformance D6 tests at 2079, 2119, 2140, 2182, 2247, 2292.
+  positive: exact 17/14/2/50/16 append-only profile using one validated D5 report.
+  negative: ten coherent D5 forgeries yield exact public rejection and zero effects.
+  preflight binding: cumulative validation group 20; later weakening: none.
+  GROUP_20_STATUS=PASS
+
+G2D_20_VALIDATION_GROUPS_PASS=true
+
+14. Authority, Effect, and Zero-Operation Boundary
+
+Static authority findings:
+- RuntimeExecutionTopology is a runtime-owned shape, not Root or authority.
+- A child cell is bounded local execution material, not Root.
+- A child result and ResultProposal are not FinalOutput.
+- PARENT_RETURN returns validated advisory/result material toward Root; it does
+  not grant the runtime final authority.
+- Root remains the sole final/global outcome owner.
+- No provider-owned PlanGraph is promoted to topology owner.
+
+Static zero-operation findings:
+- G2-D runtime module imports no provider, model, network, connector, external
+  DRS, filesystem, random, or subprocess execution surface.
+- Runtime code contains no call to its counterfactual validator; profile-aware
+  calls occur only in D5 proof construction after accepted bundles.
+- Public G2-D and D6 runners import no tests.
+- No public runner calls private _d4_run_runtime_v02.
+- No exec, eval, compile-based dynamic generation, or dynamic import call exists
+  in the nineteen implementation/additive paths.
+- D5 report and case counters are structurally required to be zero for provider,
+  model, Gemini, network, connector, external DRS, packet, permission, receipt,
+  FinalOutput, DRS write, authority, and real-world effect.
+- D6 checks preserve and independently mutate/reject those zero-counter laws.
+- Topology creation is counted separately and is not an effect.
+
+The Conformance runner has one subprocess.run call at lines 252-265 solely for
+local read-only `git rev-parse --short HEAD` implementation-commit metadata. It
+does not execute a proof runner, provider, network, connector, or external DRS
+surface and has no authority/effect consequence.
+
+Post V&V loads local schemas through bounded maxsize=1 validators and accepts
+an explicit checked_at value for deterministic G2-D evidence. GT similarly
+parses explicit validated time. Those lower-layer local schema/time operations
+are not hidden external execution and do not change the zero-effect boundary.
+
+PROVIDER_CALLS=0
+MODEL_CALLS=0
+NETWORK_CALLS=0
+CONNECTOR_CALLS=0
+EXTERNAL_DRS_CALLS=0
+REAL_WORLD_EFFECTS_COUNT=0
+G2D_AUTHORITY_EFFECT_BOUNDARY_PASS=true
+
+15. Maintainability and Performance Classification
+
+Static measurement scope: all nineteen implementation/additive paths.
+Aggregate geometry:
+- 2,892,203 bytes.
+- 71,943 LF lines.
+- 57 top-level classes.
+- 1,414 top-level functions.
+- 857 non-underscore and 557 underscore-prefixed top-level functions; test
+  function names are included in the non-underscore count.
+- approximate AST decision nodes: 6,688.
+- approximate AST loops/comprehensions: 2,386.
+- approximate AST exception nodes: 1,361.
+- maximum measured nesting depth: 26.
+- 19 exact normalized duplicate-body groups.
+- 18 module-scoped fixtures and zero session-scoped fixtures in the three G2-D
+  cumulative test files.
+
+Per-path AST measurements are listed as:
+path | classes | functions | public/private | decisions | loops | exceptions | max nesting | module fixtures
+
+hedgehog/kernel/fractal_runtime_v02.py | 21 | 256 | 110/146 | 2317 | 530 | 700 | 18 | 0
+schemas/fractal_runtime_v02.schema.json | 0 | 0 | 0/0 | 0 | 0 | 0 | 0 | 0
+tests/test_fractal_runtime_g2_d_v02.py | 0 | 144 | 86/58 | 612 | 379 | 6 | 9 | 11
+demo/run_fractal_runtime_g2_d_v02.py | 13 | 86 | 5/81 | 1112 | 519 | 147 | 26 | 0
+hedgehog/kernel/abi_v01.py | 4 | 47 | 15/32 | 298 | 48 | 88 | 6 | 0
+schemas/kernel_artifact_v01.schema.json | 0 | 0 | 0/0 | 0 | 0 | 0 | 0 | 0
+tests/test_kernel_abi_v01.py | 7 | 105 | 97/8 | 64 | 32 | 2 | 5 | 0
+hedgehog/kernel/transition_registry_v01.py | 5 | 62 | 28/34 | 352 | 58 | 91 | 7 | 0
+tests/test_transition_registry_v01.py | 1 | 61 | 53/8 | 105 | 71 | 0 | 3 | 0
+hedgehog/kernel/__init__.py | 0 | 0 | 0/0 | 0 | 0 | 0 | 0 | 0
+hedgehog/post_vv.py | 0 | 25 | 2/23 | 104 | 8 | 5 | 2 | 0
+tests/test_post_vv_runtime.py | 0 | 38 | 38/0 | 13 | 10 | 2 | 2 | 0
+hedgehog/gt_validator.py | 0 | 20 | 4/16 | 102 | 24 | 7 | 3 | 0
+tests/test_gt_validator_runtime.py | 0 | 32 | 32/0 | 33 | 25 | 1 | 2 | 0
+demo/run_living_gauntlet_v01.py | 1 | 76 | 20/56 | 691 | 216 | 151 | 5 | 0
+tests/test_living_gauntlet_v01_runner.py | 0 | 272 | 266/6 | 252 | 225 | 14 | 3 | 5
+hedgehog/kernel/conformance_v01.py | 5 | 47 | 14/33 | 224 | 49 | 84 | 5 | 0
+demo/run_kernel_conformance_v01.py | 0 | 50 | 6/44 | 268 | 91 | 61 | 3 | 0
+tests/test_kernel_conformance_v01_runner.py | 0 | 93 | 81/12 | 141 | 101 | 2 | 4 | 2
+
+Twenty largest functions by source lines:
+1. demo/run_fractal_runtime_g2_d_v02.py:7758-9704 _populate_accepted_matrix_proof_v02; 1947 lines; 245 decisions, 166 loops, 16 exception nodes; nesting 26.
+2. demo/run_fractal_runtime_g2_d_v02.py:5408-6165 _bounded_negative_case_result_v02; 758 lines; 62/33/11; nesting 10.
+3. hedgehog/kernel/fractal_runtime_v02.py:1788-2459 _specific_errors; 672 lines; 221/26/2; nesting 18.
+4. hedgehog/kernel/fractal_runtime_v02.py:10474-11138 evaluate_fractal_runtime_state_transition_v02; 665 lines; 124/7/46; nesting 11.
+5. demo/run_fractal_runtime_g2_d_v02.py:9903-10532 _matrix_proof_valid_v02; 630 lines; 132/54/0; nesting 1.
+6. demo/run_fractal_runtime_g2_d_v02.py:10535-11104 _proof_contract_valid_v02; 570 lines; 83/34/0; nesting 3.
+7. demo/run_fractal_runtime_g2_d_v02.py:4663-5147 _build_cell_create_budget_chain_v02; 485 lines; 29/22/4; nesting 2.
+8. tests/test_fractal_runtime_g2_d_v02.py:326-784 _fixture_family; 459 lines; 17/13/0; nesting 2.
+9. demo/run_fractal_runtime_g2_d_v02.py:931-1368 _build_memory_family_v02; 438 lines; 10/1/0; nesting 1.
+10. demo/run_fractal_runtime_g2_d_v02.py:4030-4458 _build_gate_boundary_witness_v02; 429 lines; 41/17/11; nesting 1.
+11. tests/test_fractal_runtime_g2_d_v02.py:2859-3284 _d2_memory_family; 426 lines; 10/1/0; nesting 1.
+12. hedgehog/kernel/fractal_runtime_v02.py:7480-7903 _d3_validate_settled_runtime_prefix_v02; 424 lines; 89/26/27; nesting 5.
+13. demo/run_fractal_runtime_g2_d_v02.py:6498-6907 _accepted_matrix_case_result_v02; 410 lines; 22/12/2; nesting 7.
+14. demo/run_fractal_runtime_g2_d_v02.py:6985-7353 _build_invoked_child_failure_witness_v02; 369 lines; 27/12/6; nesting 2.
+15. demo/run_kernel_conformance_v01.py:1287-1637 _build_category_results; 351 lines; 38/12/0; nesting 0.
+16. tests/test_fractal_runtime_g2_d_v02.py:7071-7403 test_d3_child_activation_scope_budget_and_initial_family; 333 lines; 8/7/0; nesting 1.
+17. demo/run_fractal_runtime_g2_d_v02.py:1552-1849 _build_runtime_source_family_v02; 298 lines; 19/2/3; nesting 1.
+18. tests/test_fractal_runtime_g2_d_v02.py:9853-10137 test_d5_complete_negative_matrix_v02; 285 lines; 44/25/0; nesting 9.
+19. hedgehog/kernel/fractal_runtime_v02.py:12733-13007 build_fractal_runtime_causal_consumption_refs_v02; 275 lines; 45/25/8; nesting 3.
+20. demo/run_fractal_runtime_g2_d_v02.py:1852-2121 _build_non_runtime_g2c_family_v02; 270 lines; 18/2/2; nesting 1.
+
+The decision/loop/exception figures are AST node counts, not formal cyclomatic
+complexity. They are used only as comparative maintainability measurements.
+
+Cache audit:
+- serialized validation success cache: maximum 4096.
+- source-context-family success cache: maximum 16.
+- topology-construction success cache: maximum 16.
+- topology-parts success cache: maximum 32.
+- retained-base-reports success cache: maximum 32.
+- all use content-derived, type-tagged recursive keys; cyclic/unsupported
+  mutable material bypasses caching; keys are recomputed before storage.
+- only successful validation/construction/report tuples are stored. Failures
+  and exceptions are not cached.
+- deterministic FIFO eviction is applied at each explicit maximum.
+- _clear_fractal_runtime_validation_caches_v02 clears every explicit cache and
+  both metadata caches.
+- the two maxsize=None lru caches hold get_type_hints and dataclass fields only;
+  every call site first constrains the key to the finite canonical serialized
+  type domain. Their accepted-path cardinality is therefore finite despite the
+  implicit decorator bound.
+- Post V&V schema validators each use maxsize=1.
+- no mutable cache value becomes semantic proof, no object identity is a
+  semantic cache key, and no caller selects cached PASS/status/reason.
+
+Fixture/performance audit:
+- Five separate D3 module fixtures each build one exact mode micro-environment.
+- d3_mode_environments composes those five values and builds no sixth family.
+- The full-fractal fixture is constructed once and reused by Profile-D.
+- d3_six_class_pairs consumes the composed mapping without rebuilding modes.
+- D3 fixtures make zero complete run_fractal_runtime_v02 calls.
+- D4 source fixture makes zero runtime calls; the D4 bundle fixture makes one.
+- The D5 module fixture invokes the D5 collector once; internally the collector
+  performs exactly ten accepted runs and seventeen early-fail public run-pair
+  checks, not 72 complete runtimes.
+- Living and Conformance test modules each collect one shared D5 report and
+  reuse it through module-scoped fixtures.
+- No session fixture, nested pytest, or test-spawned subprocess exists.
+- D1-D5 mechanisms have focused tests; development does not necessarily require
+  either greater-than-20-minute cumulative D6 file.
+
+Accepted D3 performance-maintenance evidence, not rerun here:
+- fast development selector: 8 passed in 48.69 seconds.
+- complete 29-node D3 certification: 29 passed in 100.40 seconds.
+- commit c047e271ab620c216871f6e4dcfc178cbf66f950.
+- production runtime changed by that commit: false.
+
+Dependency and boundary audit:
+- runtime imports lower ABI, G2-C, integrity, Root, Transition, Post V&V, and GT
+  layers; lower canonical layers do not import the D5 proof runner.
+- D5 runner imports public lower builders/validators and public runtime; it
+  imports no tests.
+- Living/Conformance integrations consume D5 through its public collector and
+  validator; conformance contract types remain below the demo runner.
+- public runtime wrappers call private implementation helpers only after typed
+  validation and seal results through public validators.
+- test files deliberately inspect private seams, but no private test seam is
+  used by a public runner.
+- no production mechanism exists only in tests. D5 runner-local proof helpers
+  are proof/report construction, not production runtime authority.
+
+Duplication audit:
+- 19 exact normalized duplicate-body groups were found.
+- material G2-D examples are the 46-line test `_d2_source_context` and runner
+  `_build_execution_mode_source_context_v02`, and the 23/27-line test
+  `_d4_bundle_artifacts` and runner `_stage_artifacts_v02`.
+- remaining duplicates are short canonical JSON/hash/frozen-value helpers,
+  historical negative-result builders, and repeated test assertions/fixtures.
+- duplicate runner helpers are necessary today because public runners may not
+  import tests. Their outputs are still checked by independent public
+  validators; no conflicting active canonical law was found.
+
+Dynamic/dead-surface audit:
+- no exec/eval/dynamic code generation.
+- no shadowed or redefined top-level function name.
+- no conflicting duplicate active implementation.
+- two unreferenced private top-level helpers were found by whole-repository
+  lexical reference and AST checks:
+  hedgehog/kernel/fractal_runtime_v02.py:10309
+    _d3_terminal_state_from_inputs_v02
+  hedgehog/kernel/abi_v01.py:1186
+    _artifact_projection_bytes
+  Neither is called by the canonical route, public runners, or tests.
+
+Text hygiene:
+- all nineteen paths parse/read as applicable.
+- no NUL, CR, trailing whitespace, or missing terminal LF.
+- all modes 0644.
+
+Finding G2D-MP-001
+  classification: IMPORTANT_DEBT
+  path: demo/run_fractal_runtime_g2_d_v02.py and
+    hedgehog/kernel/fractal_runtime_v02.py
+  symbol/range: the largest-function inventory above, especially
+    _populate_accepted_matrix_proof_v02:7758-9704,
+    _specific_errors:1788-2459, and
+    evaluate_fractal_runtime_state_transition_v02:10474-11138.
+  exact evidence: multi-hundred-line explicit proof/validation functions, with
+    the D5 matrix function at 1,947 lines and nesting 26.
+  observable impact: review and localized change cost is high; a future edit can
+    require broad contextual reading.
+  closure blocking: no. The functions are parseable, sealed by exact validators,
+    covered by focused matrices, bounded, deterministic, and non-authoritative.
+  minimal future action: after Gate 2, consider behavior-preserving partitioning
+    by proof family or validator table while freezing public identities/tests.
+  recommended timing: post-Gate-2 maintenance, not pre-closure repair.
+
+Finding G2D-MP-002
+  classification: IMPORTANT_DEBT
+  path: tests/test_fractal_runtime_g2_d_v02.py,
+    demo/run_fractal_runtime_g2_d_v02.py, and short lower-layer helpers.
+  symbol/range: exact duplicate inventory, especially source-context and staged-
+    artifact donor pairs.
+  exact evidence: 19 normalized duplicate-body groups, including one 46-line
+    and one 23/27-line test/runner pair.
+  observable impact: future contract changes must keep donor and public proof
+    construction aligned.
+  closure blocking: no. The runner cannot import tests, uses public builders,
+    and every constructed value is independently validated and identity-sealed.
+  minimal future action: retain explicit cross-binding tests or, after Gate 2,
+    evaluate a small non-authoritative shared construction helper without moving
+    production law into proof code.
+  recommended timing: post-Gate-2 developer-maintenance review.
+
+Finding G2D-MP-003
+  classification: IMPORTANT_DEBT
+  path: tests/test_living_gauntlet_v01_runner.py and
+    tests/test_kernel_conformance_v01_runner.py
+  symbol/range: complete cumulative files and module-scoped D5 fixtures.
+  exact evidence: accepted complete durations are 3859.53 and 1873.22 seconds.
+  observable impact: full cumulative feedback is expensive.
+  closure blocking: no. D1-D5 focused tests exist, D3 feedback is under 101
+    seconds, D5 report construction is shared once per module, and cumulative
+    replay is reserved for explicit acceptance.
+  minimal future action: profile and partition cumulative-only assertions or add
+    metadata-only targeted seams without weakening full acceptance coverage.
+  recommended timing: post-Gate-2 test-infrastructure work.
+
+Finding G2D-MP-004
+  classification: IMPORTANT_DEBT
+  path: hedgehog/kernel/fractal_runtime_v02.py and hedgehog/kernel/abi_v01.py
+  symbol/range: _d3_terminal_state_from_inputs_v02 at 10309 and
+    _artifact_projection_bytes at 1186.
+  exact evidence: each name occurs only at its definition across repository
+    Python source; no dynamic execution/import surface can call it.
+  observable impact: dead historical private code adds reader ambiguity and can
+    drift from active law.
+  closure blocking: no. Neither helper is imported or called by any accepted
+    path and neither changes current behavior.
+  minimal future action: remove or document in a focused post-Gate-2 cleanup
+    with the relevant ABI/D3 tests.
+  recommended timing: post-Gate-2 low-risk cleanup.
+
+Finding G2D-MP-005
+  classification: STYLE_ONLY
+  path: all table-heavy G2-D runtime, proof-runner, and cumulative test files.
+  symbol/range: long explicit names, tuple registries, and repeated field tables.
+  exact evidence: large line count and explicit enumerated geometry.
+  observable impact: subjective verbosity; no measured correctness or runtime
+    effect.
+  closure blocking: no. Explicitness improves audit traceability and exact
+    contract comparison.
+  minimal future action: none required; formatting/naming changes should occur
+    only with a concrete maintenance benefit.
+  recommended timing: discretionary, after architectural closure.
+
+Blocker inventory: none.
+Important-debt count: 4.
+Style-only count: 1.
+Maintainability gate: PASS.
+Performance gate: PASS.
+Repair required: false.
+
+G2D_MAINTAINABILITY_GATE_PASS=true
+G2D_PERFORMANCE_GATE_PASS=true
+G2D_BLOCKER_COUNT=0
+G2D_IMPORTANT_DEBT_COUNT=4
+G2D_STYLE_ONLY_COUNT=1
+
+16. Closure-Surface Freeze
+
+The exact ten closure-only surfaces were inspected. Existing path geometry:
+
+AGENTS.md
+  sha256 7e94830873d9a77361f2834bde2c82b8e741944f9cf08bdccc1473240f7fe7fd
+  bytes 88710; LF lines 1013; mode 0644
+README.md
+  sha256 b204d0a86775e26c4b0e88c9c268e572eac74b409def7bad98402bf869ef3a62
+  bytes 235474; LF lines 3785; mode 0644
+specs/machine_manifest_v0_25.json
+  sha256 54934c5f5d3d8e66d2516af515fe33bb941c4cc3ac4cdd190d01ff0be5c8e58a
+  bytes 156397; LF lines 3375; mode 0644
+release/current_status_overlay_v01.json
+  sha256 6c9356b6e5ec280a72c3a2159998e8e41cfc22c435e7edf0b2ea522f27e54d95
+  bytes 2834; LF lines 70; mode 0644
+release/claim_to_evidence_index.md
+  sha256 e00c0ab92f29dfba353390556821ba8ee8f2af1cfa75d1a5b8a227f76d3116ae
+  bytes 5111; LF lines 33; mode 0644
+release/current_limitations.md
+  sha256 c992a4d3822c6f4128c3870c8e1b264815bf6f7e302da52889c99b2baf1a6167
+  bytes 2109; LF lines 40; mode 0644
+release/current_release_notes.md
+  sha256 267106dd984ced0cc76d02d4dd2161f4475b81bf5e5a3f64b9ca9574669bae13
+  bytes 3614; LF lines 78; mode 0644
+tests/test_repository_release_spine_v01.py
+  sha256 033d4217e9d04fd02cdb3e7faaa39f17cc9ba51a87665ff0cee4b8dcad5735ae
+  bytes 52759; LF lines 1298; mode 0644
+docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log
+  absent at audit start; this is the sole PASS output.
+docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md
+  absent and not created by this audit.
+
+The basis-to-HEAD diff for all ten paths is empty. Current frozen status blocks
+still report G2-D as NEXT / NOT_STARTED / NOT_AUTHORIZED because closure/status
+synchronization has not yet occurred. Gate 2 is NOT_CLOSED. Public release,
+RC2, production readiness, and production security certification remain
+NOT_CLAIMED. G2-E and G2-F remain NOT_STARTED.
+
+This audit does not alter those surfaces. With blocker count zero, later
+checkpoint/status synchronization can bind this audit and the accepted D3/D5/
+D6 evidence without runtime repair or replay of the expensive execution gates.
+
+G2D_CLOSURE_SURFACES_FROZEN=true
+
+17. Current Non-Claims
+
+This audit does not claim production readiness, production security
+certification, distributed execution, provider reliability, persistence,
+external/global DRS, connector trust, fault tolerance, public release, RC2,
+real-world effects, installed Needles, Marennya/UP activation, or performance
+proof beyond the bounded accepted evidence stated here.
+
+The owner-supplied execution timings are acceptance evidence, not a production
+benchmark. The cache and termination findings cover the committed accepted
+paths, not arbitrary future extension. A validated D5/D6 proof report is not
+truth or authority. Audit hash continuity is not truth. G2-D remains an
+implemented and audited proof-of-architecture slice until a separate checkpoint
+and status synchronization action closes it.
+
+18. Final Audit Verdict
+
+Independent audit: PASS
+Repair required: false
+Blocker count: 0
+G2-D status after audit commit: IMPLEMENTED_AUDITED / NOT_YET_CLOSED
+Gate 2: NOT_CLOSED
+Checkpoint/status synchronization: REQUIRED_NEXT
+G2-E: NEXT / NOT_STARTED / NOT_AUTHORIZED
+Real-world effects: 0
+
+Every formal gate passed. All twenty cumulative validation groups, canonical
+geometry, path scope, source binding, authority/effect boundary, D5 evidence,
+D6 evidence, text hygiene, closure freeze, and maintainability/performance gate
+are statically reconciled to exact committed bytes. The four important-debt
+items and one style-only item do not justify reopening the accepted G2-D
+architecture before closure.
+
+19. Machine-Readable Flags
+
+G2D_INDEPENDENT_AUDIT_COMPLETED=true
+G2D_AUDIT_STATUS=PASS
+G2D_REPAIR_REQUIRED=false
+
+G2D_IMPLEMENTATION_CHAIN_PASS=true
+G2D_PATH_SCOPE_PASS=true
+G2D_PREFLIGHT_BINDING_PASS=true
+G2D_ADDENDUM_BINDING_PASS=true
+G2D_20_VALIDATION_GROUPS_PASS=true
+G2D_CANONICAL_GEOMETRY_PASS=true
+G2D_AUTHORITY_EFFECT_BOUNDARY_PASS=true
+G2D_D5_EVIDENCE_BOUND=true
+G2D_D6_EVIDENCE_BOUND=true
+G2D_CLOSURE_SURFACES_FROZEN=true
+
+G2D_MAINTAINABILITY_GATE_PASS=true
+G2D_PERFORMANCE_GATE_PASS=true
+G2D_BLOCKER_COUNT=0
+G2D_IMPORTANT_DEBT_COUNT=4
+G2D_STYLE_ONLY_COUNT=1
+
+RUNTIME_OR_TESTS_MODIFIED_BY_AUDIT=false
+PYTEST_EXECUTED=false
+RUNNER_EXECUTED=false
+PROVIDER_CALLS=0
+MODEL_CALLS=0
+NETWORK_CALLS=0
+CONNECTOR_CALLS=0
+EXTERNAL_DRS_CALLS=0
+REAL_WORLD_EFFECTS_COUNT=0
+
+AUDIT_LOG_CREATED=true
+CHECKPOINT_CREATED=false
+STATUS_SYNCHRONIZED=false
+G2D_CLOSED_PASS_CLAIMED=false
+G2E_STARTED=false
+
+STAGING_CHANGED=false
+COMMIT_CREATED=false
+PUSH_PERFORMED=false
+
+READY_FOR_OWNER_G2D_AUDIT_COMMIT_REVIEW=true

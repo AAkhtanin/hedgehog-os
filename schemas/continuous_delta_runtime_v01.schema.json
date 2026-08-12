@@ -598,8 +598,7 @@
           "pattern": "^[0-9a-f]{64}$"
         },
         "graph_version": {
-          "type": "string",
-          "minLength": 1
+          "const": "v0.1"
         },
         "dependent_artifact_id": {
           "type": "string",
@@ -613,13 +612,14 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 256
         },
         "edge_class": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:/-]{0,255}$"
         },
         "transaction_id": {
           "type": "string",
@@ -635,7 +635,8 @@
         },
         "canonical_order": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 1,
+          "maximum": 1024
         },
         "source_replay_edge_sha256": {
           "type": "string",
@@ -683,8 +684,7 @@
           "pattern": "^g2e_dependency_graph_index_v01:[0-9a-f]{64}$"
         },
         "graph_version": {
-          "type": "string",
-          "minLength": 1
+          "const": "v0.1"
         },
         "graph_basis_sha256": {
           "type": "string",
@@ -720,7 +720,9 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 256
         },
         "ordered_edge_ids": {
           "type": "array",
@@ -728,30 +730,30 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 1024
         },
         "node_count": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 1,
+          "maximum": 256
         },
         "edge_count": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 1024
         },
         "max_nodes": {
-          "type": "integer",
-          "minimum": 0
+          "const": 256
         },
         "max_edges": {
-          "type": "integer",
-          "minimum": 0
+          "const": 1024
         },
         "max_hops": {
-          "type": "integer",
-          "minimum": 0
+          "const": 32
         },
         "acyclic": {
-          "type": "boolean"
+          "const": true
         },
         "source_history_hash": {
           "type": "string",
@@ -813,8 +815,7 @@
           "pattern": "^g2e_dependency_graph_index_v01:[0-9a-f]{64}$"
         },
         "graph_version": {
-          "type": "string",
-          "minLength": 1
+          "const": "v0.1"
         },
         "baseline_report_id": {
           "type": "string",
@@ -838,7 +839,8 @@
             "type": "string",
             "pattern": "^g2e_changed_field_binding_v01:[0-9a-f]{64}$"
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 64
         },
         "ordered_changed_artifact_binding_ids": {
           "type": "array",
@@ -846,19 +848,17 @@
             "type": "string",
             "pattern": "^g2e_changed_artifact_binding_v01:[0-9a-f]{64}$"
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 64
         },
         "max_nodes": {
-          "type": "integer",
-          "minimum": 0
+          "const": 256
         },
         "max_edges": {
-          "type": "integer",
-          "minimum": 0
+          "const": 1024
         },
         "max_hops": {
-          "type": "integer",
-          "minimum": 0
+          "const": 32
         },
         "trace_refs": {
           "type": "array",
@@ -868,7 +868,23 @@
           },
           "uniqueItems": true
         }
-      }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "ordered_changed_field_binding_ids": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "ordered_changed_artifact_binding_ids": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
     },
     "AffectedSetResultV01": {
       "type": "object",
@@ -910,8 +926,7 @@
           "pattern": "^g2e_dependency_graph_index_v01:[0-9a-f]{64}$"
         },
         "graph_version": {
-          "type": "string",
-          "minLength": 1
+          "const": "v0.1"
         },
         "ordered_changed_node_ids": {
           "type": "array",
@@ -919,7 +934,9 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 64
         },
         "ordered_directly_affected_ids": {
           "type": "array",
@@ -927,7 +944,8 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 256
         },
         "ordered_transitively_affected_ids": {
           "type": "array",
@@ -935,7 +953,8 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 256
         },
         "ordered_affected_ids": {
           "type": "array",
@@ -943,7 +962,8 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 256
         },
         "ordered_unaffected_ids": {
           "type": "array",
@@ -951,7 +971,8 @@
             "type": "string",
             "minLength": 1
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 256
         },
         "closure_proof_sha256": {
           "type": "string",
@@ -959,21 +980,24 @@
         },
         "visited_node_count": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 1,
+          "maximum": 256
         },
         "traversed_edge_count": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 1024
         },
         "maximum_observed_hops": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 32
         },
         "complete": {
-          "type": "boolean"
+          "const": true
         },
         "minimal": {
-          "type": "boolean"
+          "const": true
         },
         "trace_refs": {
           "type": "array",

@@ -59,6 +59,14 @@ TRANSITION_ATTEMPTED_EFFECTS = (
     "REQUEST_EFFECT",
     "RECORD_EVIDENCE",
     "RETURN_TO_ROOT",
+    "VALIDATE_DELTA_SOURCE",
+    "DERIVE_AFFECTED_SET",
+    "DERIVE_INVALIDATION",
+    "ACCEPT_RECOMPUTATION_PLAN",
+    "REJECT_RECOMPUTATION_PLAN",
+    "EXECUTE_SELECTIVE_RECOMPUTATION",
+    "BLOCK_SELECTIVE_RECOMPUTATION",
+    "FINALIZE_CONTINUOUS_DELTA_REPORT",
 )
 
 TRANSITION_GUARD_IDS = (
@@ -75,6 +83,52 @@ TRANSITION_GUARD_IDS = (
     "outcome_complete",
     "source_root_isolated",
     "finalization_policy_passed",
+    "delta_source_artifact_valid",
+    "source_pair_valid",
+    "manifest_replay_projection_valid",
+    "zero_operation_boundary_valid",
+    "delta_source_context_valid",
+    "dependency_graph_artifact_valid",
+    "dependency_fingerprints_valid",
+    "changed_binding_carriers_complete",
+    "dependency_edge_carriers_complete",
+    "artifact_node_closure_complete",
+    "affected_set_bounds_valid",
+    "affected_set_artifact_valid",
+    "invalidation_carriers_complete",
+    "prior_slice_currentness_valid",
+    "immutable_history_preserved",
+    "plan_proposed_artifact_valid",
+    "plan_source_bindings_valid",
+    "plan_bounds_valid",
+    "plan_root_input_valid",
+    "root_target_bound",
+    "plan_root_result_valid",
+    "root_decision_accept",
+    "selected_plan_exact",
+    "root_zero_effect_geometry_valid",
+    "root_commit_present",
+    "root_decision_non_accept",
+    "selected_plan_binding_valid",
+    "terminal_non_execution_valid",
+    "plan_accepted_artifact_valid",
+    "plan_root_decision_valid",
+    "route_topology_current",
+    "affected_work_mapping_valid",
+    "g2d_public_seams_valid",
+    "execution_bounds_valid",
+    "execution_failure_evidence_valid",
+    "accepted_g2d_bundle_absent",
+    "terminal_fail_closed_valid",
+    "recomputed_g2d_bundle_valid",
+    "recomputation_result_valid",
+    "preservation_proof_valid",
+    "partial_failures_resolved",
+    "final_root_input_valid",
+    "final_root_result_valid",
+    "selected_result_exact",
+    "runtime_report_artifact_valid",
+    "transition_prefix_t01_t09_valid",
 )
 
 ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_ID_V01 = (
@@ -263,6 +317,7 @@ _ACTOR_ROLES = (
     "crypto",
     "replay",
     "renderer_showcase",
+    "continuous_delta_runtime",
 )
 _CANONICAL_REASONS = (
     "route_acceptance_requires_root",
@@ -283,6 +338,16 @@ _CANONICAL_REASONS = (
     "receipt_cannot_create_permission",
     "causal_evidence_cannot_create_root_decision",
     "domain_adapter_cannot_request_effect",
+    "g2e_transition_delta_validated",
+    "g2e_transition_affected_set_derived",
+    "g2e_transition_invalidation_derived",
+    "g2e_transition_recomputation_plan_reviewed",
+    "g2e_transition_recomputation_plan_accepted",
+    "g2e_transition_recomputation_plan_rejected",
+    "g2e_transition_selective_recomputation_executed",
+    "g2e_transition_selective_recomputation_blocked",
+    "g2e_transition_delta_parent_returned",
+    "g2e_transition_delta_report_finalized",
 )
 _LOOKUP_REASONS = (
     "unknown_abi_major",
@@ -405,7 +470,7 @@ def lookup_transition_v01(
     root_commit_present: object,
 ) -> TransitionDecisionV01:
     try:
-        if _registry_errors(registry) or not _lookup_input_valid(
+        if not _registry_accepted_for_lookup_v01(registry) or not _lookup_input_valid(
             abi_major_version=abi_major_version,
             source_artifact_type=source_artifact_type,
             source_lifecycle_state=source_lifecycle_state,
@@ -521,6 +586,16 @@ def lookup_transition_v01(
         raise ValueError("transition_lookup_invalid") from None
     except Exception:
         raise ValueError("transition_lookup_invalid") from None
+
+
+def _registry_accepted_for_lookup_v01(registry: object) -> bool:
+    if not _registry_errors(registry):
+        return True
+    return bool(
+        not validate_execution_mode_transition_registry_profile_v01(registry)
+        or not validate_fractal_runtime_transition_registry_profile_v02(registry)
+        or not validate_continuous_delta_transition_registry_profile_v01(registry)
+    )
 
 
 def validate_transition_decision_v01(
@@ -3078,3 +3153,461 @@ def rebuild_fractal_runtime_transition_decision_identity_v02(
         return _hash(_DECISION_DOMAIN, material)
     except Exception:
         raise ValueError("g2d_transition_decision_substituted") from None
+
+
+CONTINUOUS_DELTA_TRANSITION_REGISTRY_PROFILE_VERSION_V01 = (
+    "continuous_delta_transition_registry_profile_v01"
+)
+_CONTINUOUS_DELTA_TRANSITION_RULE_COUNT_V01 = 10
+
+_CONTINUOUS_DELTA_TRANSITION_RULE_ROWS_V01 = (
+    (
+        "g2e_t01_delta_validate", 1, "ContinuousDeltaSource", "PROPOSED",
+        "continuous_delta_runtime", "VALIDATE_DELTA_SOURCE",
+        "ContinuousDeltaSource",
+        (
+            "delta_source_artifact_valid", "source_pair_valid",
+            "manifest_replay_projection_valid", "zero_operation_boundary_valid",
+        ),
+        DECISION_ALLOW, "g2e_transition_delta_validated", False,
+    ),
+    (
+        "g2e_t02_affected_set_derive", 1, "ContinuousDeltaSource", "VALIDATED",
+        "continuous_delta_runtime", "DERIVE_AFFECTED_SET", "AffectedSetResult",
+        (
+            "delta_source_context_valid", "dependency_graph_artifact_valid",
+            "dependency_fingerprints_valid", "changed_binding_carriers_complete",
+            "dependency_edge_carriers_complete", "artifact_node_closure_complete",
+            "affected_set_bounds_valid",
+        ),
+        DECISION_ALLOW, "g2e_transition_affected_set_derived", False,
+    ),
+    (
+        "g2e_t03_invalidation_derive", 1, "AffectedSetResult", "VALIDATED",
+        "continuous_delta_runtime", "DERIVE_INVALIDATION",
+        "ArtifactInvalidationReport",
+        (
+            "affected_set_artifact_valid", "invalidation_carriers_complete",
+            "prior_slice_currentness_valid", "immutable_history_preserved",
+            "zero_operation_boundary_valid",
+        ),
+        DECISION_ALLOW, "g2e_transition_invalidation_derived", False,
+    ),
+    (
+        "g2e_t04_plan_root_review", 1, "SelectiveRecomputationPlan", "PROPOSED",
+        "continuous_delta_runtime", "RETURN_TO_ROOT", "RootDecision",
+        (
+            "plan_proposed_artifact_valid", "plan_source_bindings_valid",
+            "plan_bounds_valid", "plan_root_input_valid", "root_target_bound",
+            "zero_operation_boundary_valid",
+        ),
+        DECISION_RETURN_TO_ROOT, "g2e_transition_recomputation_plan_reviewed", False,
+    ),
+    (
+        "g2e_t05_plan_root_accept", 1, "RootDecision", "ROOT_REVIEWED", "root",
+        "ACCEPT_RECOMPUTATION_PLAN", "SelectiveRecomputationPlan",
+        (
+            "plan_root_input_valid", "plan_root_result_valid", "root_decision_accept",
+            "selected_plan_exact", "plan_proposed_artifact_valid",
+            "root_zero_effect_geometry_valid", "root_commit_present",
+        ),
+        DECISION_ALLOW, "g2e_transition_recomputation_plan_accepted", True,
+    ),
+    (
+        "g2e_t06_plan_root_reject", 1, "RootDecision", "ROOT_REVIEWED", "root",
+        "REJECT_RECOMPUTATION_PLAN", "SelectiveRecomputationPlan",
+        (
+            "plan_root_input_valid", "plan_root_result_valid",
+            "root_decision_non_accept", "selected_plan_binding_valid",
+            "terminal_non_execution_valid", "root_zero_effect_geometry_valid",
+            "root_commit_present",
+        ),
+        DECISION_BLOCKED_FAIL_CLOSED,
+        "g2e_transition_recomputation_plan_rejected", True,
+    ),
+    (
+        "g2e_t07_selective_recompute", 1, "SelectiveRecomputationPlan",
+        "ROOT_ACCEPTED", "continuous_delta_runtime",
+        "EXECUTE_SELECTIVE_RECOMPUTATION", "FractalRuntimeReport",
+        (
+            "plan_accepted_artifact_valid", "plan_root_decision_valid",
+            "route_topology_current", "affected_work_mapping_valid",
+            "g2d_public_seams_valid", "execution_bounds_valid",
+            "root_commit_present",
+        ),
+        DECISION_ALLOW, "g2e_transition_selective_recomputation_executed", True,
+    ),
+    (
+        "g2e_t08_recompute_block", 1, "SelectiveRecomputationPlan",
+        "ROOT_ACCEPTED", "continuous_delta_runtime",
+        "BLOCK_SELECTIVE_RECOMPUTATION", "ContinuousDeltaRuntimeReport",
+        (
+            "plan_accepted_artifact_valid", "execution_failure_evidence_valid",
+            "accepted_g2d_bundle_absent", "terminal_fail_closed_valid",
+            "zero_operation_boundary_valid", "root_commit_present",
+        ),
+        DECISION_BLOCKED_FAIL_CLOSED,
+        "g2e_transition_selective_recomputation_blocked", True,
+    ),
+    (
+        "g2e_t09_parent_return", 1, "FractalRuntimeReport", "VALIDATED",
+        "continuous_delta_runtime", "RETURN_TO_ROOT", "RootDecision",
+        (
+            "recomputed_g2d_bundle_valid", "recomputation_result_valid",
+            "preservation_proof_valid", "partial_failures_resolved",
+            "final_root_input_valid", "zero_operation_boundary_valid",
+        ),
+        DECISION_RETURN_TO_ROOT, "g2e_transition_delta_parent_returned", False,
+    ),
+    (
+        "g2e_t10_report_finalize", 1, "RootDecision", "ROOT_REVIEWED", "root",
+        "FINALIZE_CONTINUOUS_DELTA_REPORT", "ContinuousDeltaRuntimeReport",
+        (
+            "final_root_input_valid", "final_root_result_valid",
+            "root_decision_accept", "selected_result_exact",
+            "runtime_report_artifact_valid", "preservation_proof_valid",
+            "transition_prefix_t01_t09_valid", "root_zero_effect_geometry_valid",
+            "root_commit_present",
+        ),
+        DECISION_ALLOW, "g2e_transition_delta_report_finalized", True,
+    ),
+)
+
+_CONTINUOUS_DELTA_TARGET_LIFECYCLE_BY_RULE_V01 = (
+    ("g2e_t01_delta_validate", "VALIDATED"),
+    ("g2e_t02_affected_set_derive", "VALIDATED"),
+    ("g2e_t03_invalidation_derive", "VALIDATED"),
+    ("g2e_t04_plan_root_review", "ROOT_REVIEWED"),
+    ("g2e_t05_plan_root_accept", "ROOT_ACCEPTED"),
+    ("g2e_t06_plan_root_reject", "BLOCKED_FAIL_CLOSED"),
+    ("g2e_t07_selective_recompute", "VALIDATED"),
+    ("g2e_t08_recompute_block", "BLOCKED_FAIL_CLOSED"),
+    ("g2e_t09_parent_return", "ROOT_REVIEWED"),
+    ("g2e_t10_report_finalize", "FINALIZED"),
+)
+
+_CONTINUOUS_DELTA_ARTIFACT_CONTEXT_PROFILES_V01 = (
+    (
+        "ContinuousDeltaSource", "PROPOSED", "NON_AUTHORITY",
+        "g2eabi_source_proposed_v01:",
+        "HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_PROPOSED_ARTIFACT_V01",
+    ),
+    (
+        "ContinuousDeltaSource", "VALIDATED", "NON_AUTHORITY",
+        "g2eabi_source_validated_v01:",
+        "HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_VALIDATED_ARTIFACT_V01",
+    ),
+    (
+        "DependencyGraphIndex", "VALIDATED", "NON_AUTHORITY",
+        "g2eabi_graph_v01:",
+        "HEDGEHOG_G2E_DEPENDENCY_GRAPH_INDEX_ARTIFACT_V01",
+    ),
+    (
+        "AffectedSetResult", "VALIDATED", "NON_AUTHORITY",
+        "g2eabi_affected_v01:",
+        "HEDGEHOG_G2E_AFFECTED_SET_RESULT_ARTIFACT_V01",
+    ),
+    (
+        "ArtifactInvalidationReport", "VALIDATED", "NON_AUTHORITY",
+        "g2eabi_invalidation_v01:",
+        "HEDGEHOG_G2E_ARTIFACT_INVALIDATION_REPORT_ARTIFACT_V01",
+    ),
+    (
+        "SelectiveRecomputationPlan", "PROPOSED", "ADVISORY",
+        "g2eabi_plan_proposed_v01:",
+        "HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_PROPOSED_ARTIFACT_V01",
+    ),
+    (
+        "SelectiveRecomputationPlan", "ROOT_ACCEPTED", "ADVISORY",
+        "g2eabi_plan_accepted_v01:",
+        "HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_ACCEPTED_ARTIFACT_V01",
+    ),
+    (
+        "ContinuousDeltaRuntimeReport", "FINALIZED", "EVIDENCE_ONLY",
+        "g2eabi_report_v01:",
+        "HEDGEHOG_G2E_CONTINUOUS_DELTA_RUNTIME_REPORT_ARTIFACT_V01",
+    ),
+)
+
+
+def _continuous_delta_transition_rules_v01() -> tuple[TransitionRuleV01, ...]:
+    return tuple(
+        TransitionRuleV01(
+            rule_id=row[0],
+            abi_major_version=row[1],
+            source_artifact_type=row[2],
+            source_lifecycle_state=row[3],
+            actor_role=row[4],
+            attempted_effect=row[5],
+            target_artifact_type=row[6],
+            required_guards=row[7],
+            decision=row[8],
+            reason_code=row[9],
+            root_commit_required=row[10],
+        )
+        for row in _CONTINUOUS_DELTA_TRANSITION_RULE_ROWS_V01
+    )
+
+
+def _continuous_delta_transition_registry_material_v01(
+    rules: tuple[TransitionRuleV01, ...],
+) -> dict[str, object]:
+    return {
+        "registry_version": CONTINUOUS_DELTA_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
+        "abi_major_version": 1,
+        "rules": [_rule_plain(rule) for rule in rules],
+    }
+
+
+def build_continuous_delta_transition_registry_profile_v01(
+) -> TransitionRegistryV01:
+    rules = _continuous_delta_transition_rules_v01()
+    return TransitionRegistryV01(
+        registry_id=_hash(
+            _REGISTRY_DOMAIN,
+            _continuous_delta_transition_registry_material_v01(rules),
+        ),
+        registry_version=CONTINUOUS_DELTA_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
+        abi_major_version=1,
+        rules=rules,
+    )
+
+
+def validate_continuous_delta_transition_registry_profile_v01(
+    value: object,
+) -> tuple[str, ...]:
+    try:
+        if type(value) is not TransitionRegistryV01:
+            return ("g2e_object_invalid",)
+        expected_rules = _continuous_delta_transition_rules_v01()
+        if (
+            value.registry_version
+            != CONTINUOUS_DELTA_TRANSITION_REGISTRY_PROFILE_VERSION_V01
+            or type(value.abi_major_version) is not int
+            or value.abi_major_version != 1
+            or type(value.rules) is not tuple
+            or len(value.rules) != _CONTINUOUS_DELTA_TRANSITION_RULE_COUNT_V01
+            or any(type(rule) is not TransitionRuleV01 for rule in value.rules)
+            or len({rule.rule_id for rule in value.rules}) != len(value.rules)
+            or len({_rule_key(rule) for rule in value.rules}) != len(value.rules)
+            or _canonical_bytes([_rule_plain(rule) for rule in value.rules])
+            != _canonical_bytes([_rule_plain(rule) for rule in expected_rules])
+        ):
+            return ("g2e_object_invalid",)
+        expected_id = _hash(
+            _REGISTRY_DOMAIN,
+            _continuous_delta_transition_registry_material_v01(expected_rules),
+        )
+        if value.registry_id != expected_id:
+            return ("g2e_identity_mismatch",)
+        return ()
+    except Exception:
+        return ("g2e_object_invalid",)
+
+
+def continuous_delta_transition_registry_profile_to_plain_dict_v01(
+    value: TransitionRegistryV01,
+) -> dict[str, object]:
+    errors = validate_continuous_delta_transition_registry_profile_v01(value)
+    if errors:
+        raise ValueError(errors[0])
+    result = _registry_plain(value)
+    _canonical_json_bytes_v01(result)
+    return result
+
+
+def _continuous_delta_artifact_context_valid_v01(
+    artifact: KernelArtifactV01,
+) -> bool:
+    profile = next(
+        (
+            row
+            for row in _CONTINUOUS_DELTA_ARTIFACT_CONTEXT_PROFILES_V01
+            if row[0] == artifact.artifact_type
+            and row[1] == artifact.lifecycle_state
+        ),
+        None,
+    )
+    if profile is None:
+        return True
+    _artifact_type, _lifecycle, authority, prefix, domain = profile
+    if (
+        artifact.abi_version != "v1.0"
+        or artifact.schema_version != "v0.1"
+        or artifact.source_component != "continuous_delta_runtime_v01"
+        or artifact.authority_class != authority
+    ):
+        return False
+    material = _kernel_artifact_to_plain_dict_v01(artifact)
+    material.pop("artifact_id")
+    return artifact.artifact_id == prefix + _hash(domain, material)
+
+
+def _continuous_delta_transition_decision_structure_v01(value: object) -> bool:
+    return _execution_mode_transition_decision_structure_v01(value)
+
+
+def _continuous_delta_t01_relation_valid_v01(
+    decision: TransitionDecisionV01,
+    source: KernelArtifactV01,
+    target: KernelArtifactV01,
+) -> bool:
+    source_plain = _kernel_artifact_to_plain_dict_v01(source)
+    target_plain = _kernel_artifact_to_plain_dict_v01(target)
+    return bool(
+        source.artifact_id != target.artifact_id
+        and _canonical_bytes(source_plain["payload"])
+        == _canonical_bytes(target_plain["payload"])
+        and target.parent_refs
+        and target.parent_refs[0] == source.artifact_id
+        and len(target.trace_refs) >= 2
+        and target.trace_refs[0] == source.artifact_id
+        and target.trace_refs[1] == decision.decision_id
+    )
+
+
+def _continuous_delta_t02_relation_valid_v01(
+    decision: TransitionDecisionV01,
+    source: KernelArtifactV01,
+    target: KernelArtifactV01,
+) -> bool:
+    source_payload = _kernel_artifact_to_plain_dict_v01(source)["payload"]
+    target_payload = _kernel_artifact_to_plain_dict_v01(target)["payload"]
+    if type(source_payload) is not dict or type(target_payload) is not dict:
+        return False
+    graph_id = target_payload.get("graph_id")
+    delta_id = target_payload.get("delta_id")
+    return bool(
+        target.parent_refs
+        and len(target.parent_refs) == 2
+        and target.parent_refs[0] == source.artifact_id
+        and _re.fullmatch(r"g2eabi_graph_v01:[0-9a-f]{64}", target.parent_refs[1])
+        and source_payload.get("delta_id") == delta_id
+        and type(graph_id) is str
+        and _re.fullmatch(r"g2e_dependency_graph_index_v01:[0-9a-f]{64}", graph_id)
+        and len(target.trace_refs) >= 3
+        and target.trace_refs[-3:] == (decision.decision_id, delta_id, graph_id)
+    )
+
+
+def validate_continuous_delta_transition_decision_v01(
+    value: object,
+    *,
+    registry: TransitionRegistryV01,
+    source_artifact: KernelArtifactV01,
+    target_artifact: KernelArtifactV01,
+) -> tuple[str, ...]:
+    try:
+        profile_errors = validate_continuous_delta_transition_registry_profile_v01(
+            registry
+        )
+        if profile_errors:
+            return profile_errors
+        if (
+            not _continuous_delta_transition_decision_structure_v01(value)
+            or type(source_artifact) is not KernelArtifactV01
+            or type(target_artifact) is not KernelArtifactV01
+            or _validate_kernel_artifact_v01(source_artifact)
+            or _validate_kernel_artifact_v01(target_artifact)
+        ):
+            return ("g2e_object_invalid",)
+        assert type(value) is TransitionDecisionV01
+        rule = {rule.rule_id: rule for rule in registry.rules}.get(value.rule_id)
+        if rule is None:
+            return ("g2e_object_invalid",)
+        expected = lookup_transition_v01(
+            registry=registry,
+            abi_major_version=rule.abi_major_version,
+            source_artifact_type=rule.source_artifact_type,
+            source_lifecycle_state=rule.source_lifecycle_state,
+            actor_role=rule.actor_role,
+            attempted_effect=rule.attempted_effect,
+            target_artifact_type=rule.target_artifact_type,
+            satisfied_guards=rule.required_guards,
+            root_commit_present=rule.root_commit_required,
+        )
+        target_lifecycle = dict(
+            _CONTINUOUS_DELTA_TARGET_LIFECYCLE_BY_RULE_V01
+        )[rule.rule_id]
+        if value.decision_id != rebuild_continuous_delta_transition_decision_identity_v01(
+            value
+        ):
+            return ("g2e_identity_mismatch",)
+        if (
+            _canonical_bytes(_decision_plain(value))
+            != _canonical_bytes(_decision_plain(expected))
+            or source_artifact.artifact_type != rule.source_artifact_type
+            or source_artifact.lifecycle_state != rule.source_lifecycle_state
+            or target_artifact.artifact_type != rule.target_artifact_type
+            or target_artifact.lifecycle_state != target_lifecycle
+            or source_artifact.transaction_id != target_artifact.transaction_id
+            or source_artifact.owner_root_id != target_artifact.owner_root_id
+            or not _continuous_delta_artifact_context_valid_v01(source_artifact)
+            or not _continuous_delta_artifact_context_valid_v01(target_artifact)
+        ):
+            return ("g2e_object_invalid",)
+        if rule.rule_id == "g2e_t01_delta_validate" and not (
+            _continuous_delta_t01_relation_valid_v01(
+                value, source_artifact, target_artifact
+            )
+        ):
+            return ("g2e_object_invalid",)
+        if rule.rule_id == "g2e_t02_affected_set_derive" and not (
+            _continuous_delta_t02_relation_valid_v01(
+                value, source_artifact, target_artifact
+            )
+        ):
+            return ("g2e_object_invalid",)
+        return ()
+    except Exception:
+        return ("g2e_object_invalid",)
+
+
+def continuous_delta_transition_decision_to_plain_dict_v01(
+    value: TransitionDecisionV01,
+) -> dict[str, object]:
+    try:
+        if not _continuous_delta_transition_decision_structure_v01(value):
+            raise ValueError("g2e_object_invalid")
+        registry = build_continuous_delta_transition_registry_profile_v01()
+        rule = {rule.rule_id: rule for rule in registry.rules}.get(value.rule_id)
+        if rule is None:
+            raise ValueError("g2e_object_invalid")
+        expected = lookup_transition_v01(
+            registry=registry,
+            abi_major_version=rule.abi_major_version,
+            source_artifact_type=rule.source_artifact_type,
+            source_lifecycle_state=rule.source_lifecycle_state,
+            actor_role=rule.actor_role,
+            attempted_effect=rule.attempted_effect,
+            target_artifact_type=rule.target_artifact_type,
+            satisfied_guards=rule.required_guards,
+            root_commit_present=rule.root_commit_required,
+        )
+        if _canonical_bytes(_decision_plain(value)) != _canonical_bytes(
+            _decision_plain(expected)
+        ):
+            raise ValueError("g2e_object_invalid")
+        result = _decision_plain(value)
+        _canonical_json_bytes_v01(result)
+        return result
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        if reason not in {"g2e_object_invalid", "g2e_identity_mismatch"}:
+            reason = "g2e_object_invalid"
+        raise ValueError(reason) from None
+    except Exception:
+        raise ValueError("g2e_object_invalid") from None
+
+
+def rebuild_continuous_delta_transition_decision_identity_v01(
+    value: TransitionDecisionV01,
+) -> str:
+    try:
+        if not _continuous_delta_transition_decision_structure_v01(value):
+            raise ValueError("g2e_object_invalid")
+        material = _decision_plain(value)
+        material.pop("decision_id")
+        return _hash(_DECISION_DOMAIN, material)
+    except Exception:
+        raise ValueError("g2e_object_invalid") from None

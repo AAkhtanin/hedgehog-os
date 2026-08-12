@@ -444,6 +444,7 @@ def test_exact_public_function_surface():
         *ACTION_PACKET_PUBLIC_FUNCTIONS,
         *G2C_TRANSITION_FUNCTIONS,
         *G2D2_TRANSITION_FUNCTIONS,
+        *G2E_TRANSITION_FUNCTIONS,
     )
 
 
@@ -471,8 +472,24 @@ def test_module_identity(name, expected):
 def test_exact_constant_tuples():
     assert transition.SUPPORTED_ABI_MAJOR_VERSIONS == (1,)
     assert transition.TRANSITION_DECISIONS == ("ALLOW", "BLOCKED_FAIL_CLOSED", "RETURN_TO_ROOT", "NEEDS_USER", "NEEDS_MORE_EVIDENCE")
-    assert transition.TRANSITION_ATTEMPTED_EFFECTS == ("CREATE_TARGET_ARTIFACT", "CREATE_ROOT_DECISION", "CREATE_PERMISSION", "CREATE_FINAL_OUTPUT", "REQUEST_EFFECT", "RECORD_EVIDENCE", "RETURN_TO_ROOT")
-    assert len(transition.TRANSITION_GUARD_IDS) == 13
+    assert transition.TRANSITION_ATTEMPTED_EFFECTS == (
+        "CREATE_TARGET_ARTIFACT",
+        "CREATE_ROOT_DECISION",
+        "CREATE_PERMISSION",
+        "CREATE_FINAL_OUTPUT",
+        "REQUEST_EFFECT",
+        "RECORD_EVIDENCE",
+        "RETURN_TO_ROOT",
+        "VALIDATE_DELTA_SOURCE",
+        "DERIVE_AFFECTED_SET",
+        "DERIVE_INVALIDATION",
+        "ACCEPT_RECOMPUTATION_PLAN",
+        "REJECT_RECOMPUTATION_PLAN",
+        "EXECUTE_SELECTIVE_RECOMPUTATION",
+        "BLOCK_SELECTIVE_RECOMPUTATION",
+        "FINALIZE_CONTINUOUS_DELTA_REPORT",
+    )
+    assert len(transition.TRANSITION_GUARD_IDS) == 59
 
 
 def test_registry_geometry(registry):
@@ -1286,6 +1303,14 @@ G2D2_TRANSITION_FUNCTIONS = (
     "validate_fractal_runtime_transition_decision_v02",
     "fractal_runtime_transition_decision_to_plain_dict_v02",
     "rebuild_fractal_runtime_transition_decision_identity_v02",
+)
+G2E_TRANSITION_FUNCTIONS = (
+    "build_continuous_delta_transition_registry_profile_v01",
+    "validate_continuous_delta_transition_registry_profile_v01",
+    "continuous_delta_transition_registry_profile_to_plain_dict_v01",
+    "validate_continuous_delta_transition_decision_v01",
+    "continuous_delta_transition_decision_to_plain_dict_v01",
+    "rebuild_continuous_delta_transition_decision_identity_v01",
 )
 G2D2_TRANSITION_SIGNATURES = {
     "build_fractal_runtime_transition_registry_profile_v02": "() -> 'TransitionRegistryV01'",
@@ -2499,3 +2524,485 @@ def test_g2d2_profile_preserves_historical_registries_and_import_direction() -> 
     )
     source = MODULE_PATH.read_text(encoding="utf-8")
     assert "hedgehog.kernel.fractal_runtime_v02" not in source
+
+
+G2E_TRANSITION_EXPECTED_ROWS = (
+    (
+        "g2e_t01_delta_validate", 1, "ContinuousDeltaSource", "PROPOSED",
+        "continuous_delta_runtime", "VALIDATE_DELTA_SOURCE",
+        "ContinuousDeltaSource",
+        (
+            "delta_source_artifact_valid", "source_pair_valid",
+            "manifest_replay_projection_valid", "zero_operation_boundary_valid",
+        ),
+        "ALLOW", "g2e_transition_delta_validated", False,
+    ),
+    (
+        "g2e_t02_affected_set_derive", 1, "ContinuousDeltaSource", "VALIDATED",
+        "continuous_delta_runtime", "DERIVE_AFFECTED_SET", "AffectedSetResult",
+        (
+            "delta_source_context_valid", "dependency_graph_artifact_valid",
+            "dependency_fingerprints_valid", "changed_binding_carriers_complete",
+            "dependency_edge_carriers_complete", "artifact_node_closure_complete",
+            "affected_set_bounds_valid",
+        ),
+        "ALLOW", "g2e_transition_affected_set_derived", False,
+    ),
+    (
+        "g2e_t03_invalidation_derive", 1, "AffectedSetResult", "VALIDATED",
+        "continuous_delta_runtime", "DERIVE_INVALIDATION",
+        "ArtifactInvalidationReport",
+        (
+            "affected_set_artifact_valid", "invalidation_carriers_complete",
+            "prior_slice_currentness_valid", "immutable_history_preserved",
+            "zero_operation_boundary_valid",
+        ),
+        "ALLOW", "g2e_transition_invalidation_derived", False,
+    ),
+    (
+        "g2e_t04_plan_root_review", 1, "SelectiveRecomputationPlan", "PROPOSED",
+        "continuous_delta_runtime", "RETURN_TO_ROOT", "RootDecision",
+        (
+            "plan_proposed_artifact_valid", "plan_source_bindings_valid",
+            "plan_bounds_valid", "plan_root_input_valid", "root_target_bound",
+            "zero_operation_boundary_valid",
+        ),
+        "RETURN_TO_ROOT", "g2e_transition_recomputation_plan_reviewed", False,
+    ),
+    (
+        "g2e_t05_plan_root_accept", 1, "RootDecision", "ROOT_REVIEWED", "root",
+        "ACCEPT_RECOMPUTATION_PLAN", "SelectiveRecomputationPlan",
+        (
+            "plan_root_input_valid", "plan_root_result_valid", "root_decision_accept",
+            "selected_plan_exact", "plan_proposed_artifact_valid",
+            "root_zero_effect_geometry_valid", "root_commit_present",
+        ),
+        "ALLOW", "g2e_transition_recomputation_plan_accepted", True,
+    ),
+    (
+        "g2e_t06_plan_root_reject", 1, "RootDecision", "ROOT_REVIEWED", "root",
+        "REJECT_RECOMPUTATION_PLAN", "SelectiveRecomputationPlan",
+        (
+            "plan_root_input_valid", "plan_root_result_valid",
+            "root_decision_non_accept", "selected_plan_binding_valid",
+            "terminal_non_execution_valid", "root_zero_effect_geometry_valid",
+            "root_commit_present",
+        ),
+        "BLOCKED_FAIL_CLOSED", "g2e_transition_recomputation_plan_rejected", True,
+    ),
+    (
+        "g2e_t07_selective_recompute", 1, "SelectiveRecomputationPlan",
+        "ROOT_ACCEPTED", "continuous_delta_runtime",
+        "EXECUTE_SELECTIVE_RECOMPUTATION", "FractalRuntimeReport",
+        (
+            "plan_accepted_artifact_valid", "plan_root_decision_valid",
+            "route_topology_current", "affected_work_mapping_valid",
+            "g2d_public_seams_valid", "execution_bounds_valid",
+            "root_commit_present",
+        ),
+        "ALLOW", "g2e_transition_selective_recomputation_executed", True,
+    ),
+    (
+        "g2e_t08_recompute_block", 1, "SelectiveRecomputationPlan",
+        "ROOT_ACCEPTED", "continuous_delta_runtime",
+        "BLOCK_SELECTIVE_RECOMPUTATION", "ContinuousDeltaRuntimeReport",
+        (
+            "plan_accepted_artifact_valid", "execution_failure_evidence_valid",
+            "accepted_g2d_bundle_absent", "terminal_fail_closed_valid",
+            "zero_operation_boundary_valid", "root_commit_present",
+        ),
+        "BLOCKED_FAIL_CLOSED", "g2e_transition_selective_recomputation_blocked", True,
+    ),
+    (
+        "g2e_t09_parent_return", 1, "FractalRuntimeReport", "VALIDATED",
+        "continuous_delta_runtime", "RETURN_TO_ROOT", "RootDecision",
+        (
+            "recomputed_g2d_bundle_valid", "recomputation_result_valid",
+            "preservation_proof_valid", "partial_failures_resolved",
+            "final_root_input_valid", "zero_operation_boundary_valid",
+        ),
+        "RETURN_TO_ROOT", "g2e_transition_delta_parent_returned", False,
+    ),
+    (
+        "g2e_t10_report_finalize", 1, "RootDecision", "ROOT_REVIEWED", "root",
+        "FINALIZE_CONTINUOUS_DELTA_REPORT", "ContinuousDeltaRuntimeReport",
+        (
+            "final_root_input_valid", "final_root_result_valid",
+            "root_decision_accept", "selected_result_exact",
+            "runtime_report_artifact_valid", "preservation_proof_valid",
+            "transition_prefix_t01_t09_valid", "root_zero_effect_geometry_valid",
+            "root_commit_present",
+        ),
+        "ALLOW", "g2e_transition_delta_report_finalized", True,
+    ),
+)
+
+_G2E_ARTIFACT_PROFILES = {
+    ("ContinuousDeltaSource", "PROPOSED"): (
+        "NON_AUTHORITY", "g2eabi_source_proposed_v01:",
+        "HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_PROPOSED_ARTIFACT_V01",
+    ),
+    ("ContinuousDeltaSource", "VALIDATED"): (
+        "NON_AUTHORITY", "g2eabi_source_validated_v01:",
+        "HEDGEHOG_G2E_CONTINUOUS_DELTA_SOURCE_VALIDATED_ARTIFACT_V01",
+    ),
+    ("DependencyGraphIndex", "VALIDATED"): (
+        "NON_AUTHORITY", "g2eabi_graph_v01:",
+        "HEDGEHOG_G2E_DEPENDENCY_GRAPH_INDEX_ARTIFACT_V01",
+    ),
+    ("AffectedSetResult", "VALIDATED"): (
+        "NON_AUTHORITY", "g2eabi_affected_v01:",
+        "HEDGEHOG_G2E_AFFECTED_SET_RESULT_ARTIFACT_V01",
+    ),
+    ("ArtifactInvalidationReport", "VALIDATED"): (
+        "NON_AUTHORITY", "g2eabi_invalidation_v01:",
+        "HEDGEHOG_G2E_ARTIFACT_INVALIDATION_REPORT_ARTIFACT_V01",
+    ),
+    ("SelectiveRecomputationPlan", "PROPOSED"): (
+        "ADVISORY", "g2eabi_plan_proposed_v01:",
+        "HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_PROPOSED_ARTIFACT_V01",
+    ),
+    ("SelectiveRecomputationPlan", "ROOT_ACCEPTED"): (
+        "ADVISORY", "g2eabi_plan_accepted_v01:",
+        "HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_ACCEPTED_ARTIFACT_V01",
+    ),
+    ("ContinuousDeltaRuntimeReport", "FINALIZED"): (
+        "EVIDENCE_ONLY", "g2eabi_report_v01:",
+        "HEDGEHOG_G2E_CONTINUOUS_DELTA_RUNTIME_REPORT_ARTIFACT_V01",
+    ),
+}
+
+
+def _g2e_time_envelope() -> dict[str, object]:
+    return {
+        "ct_session_anchor": "session:g2e:transition",
+        "et_observed_at": "2026-08-11T01:00:00+00:00",
+        "freshness_class": "normal",
+        "kt_asof": "2026-08-11T01:00:00+00:00",
+        "pt_created_at": "2026-08-11T01:00:00+00:00",
+        "ttl_seconds": 3600,
+        "valid_from": "2026-08-11T00:00:00+00:00",
+        "valid_to": "2026-08-12T00:00:00+00:00",
+    }
+
+
+def _g2e_artifact(
+    *,
+    artifact_type: str,
+    lifecycle_state: str,
+    label: str,
+    payload: dict[str, object],
+    trace_refs: tuple[str, ...],
+    parent_refs: tuple[str, ...] = (),
+) -> object:
+    profile = _G2E_ARTIFACT_PROFILES.get((artifact_type, lifecycle_state))
+    if profile is None:
+        authority = (
+            "ROOT_OWNED"
+            if artifact_type == "RootDecision"
+            else "EVIDENCE_ONLY"
+            if artifact_type in {"FractalRuntimeReport", "ContinuousDeltaRuntimeReport"}
+            else "ADVISORY"
+        )
+        source_component = (
+            "root_decision_v01"
+            if artifact_type == "RootDecision"
+            else "fractal_runtime_v02"
+            if artifact_type == "FractalRuntimeReport"
+            else "continuous_delta_runtime_v01"
+        )
+        artifact_id = "artifact:g2e:transition:" + label
+    else:
+        authority, prefix, domain = profile
+        source_component = "continuous_delta_runtime_v01"
+        material = {
+            "abi_version": "v1.0",
+            "artifact_type": artifact_type,
+            "schema_version": "v0.1",
+            "transaction_id": "transaction:g2e:transition",
+            "owner_root_id": "root:g2e:transition",
+            "source_component": source_component,
+            "authority_class": authority,
+            "lifecycle_state": lifecycle_state,
+            "payload": payload,
+            "trace_refs": list(trace_refs),
+            "parent_refs": list(parent_refs),
+            "time_envelope": _g2e_time_envelope(),
+        }
+        artifact_id = prefix + domain_separated_sha256_hex_v01(
+            domain=domain, payload=canonical_json_bytes_v01(material)
+        )
+    return build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=artifact_id,
+        artifact_type=artifact_type,
+        schema_version="v0.1",
+        transaction_id="transaction:g2e:transition",
+        owner_root_id="root:g2e:transition",
+        source_component=source_component,
+        authority_class=authority,
+        lifecycle_state=lifecycle_state,
+        payload=payload,
+        trace_refs=trace_refs,
+        parent_refs=parent_refs,
+        time_envelope=_g2e_time_envelope(),
+    )
+
+
+def _g2e_decision(
+    registry: object, rule_index: int,
+) -> object:
+    rule = registry.rules[rule_index]
+    return transition.lookup_transition_v01(
+        registry=registry,
+        abi_major_version=rule.abi_major_version,
+        source_artifact_type=rule.source_artifact_type,
+        source_lifecycle_state=rule.source_lifecycle_state,
+        actor_role=rule.actor_role,
+        attempted_effect=rule.attempted_effect,
+        target_artifact_type=rule.target_artifact_type,
+        satisfied_guards=rule.required_guards,
+        root_commit_present=rule.root_commit_required,
+    )
+
+
+def _g2e_artifact_pair(registry: object, rule_index: int) -> tuple[object, ...]:
+    rule = registry.rules[rule_index]
+    target_lifecycle = dict(
+        transition._CONTINUOUS_DELTA_TARGET_LIFECYCLE_BY_RULE_V01
+    )[rule.rule_id]
+    delta_id = "g2e_world_state_delta_v01:" + "1" * 64
+    graph_id = "g2e_dependency_graph_index_v01:" + "2" * 64
+    source_payload = {"delta_id": delta_id, "profile": rule.rule_id}
+    source = _g2e_artifact(
+        artifact_type=rule.source_artifact_type,
+        lifecycle_state=rule.source_lifecycle_state,
+        label=rule.rule_id + ":source",
+        payload=source_payload,
+        trace_refs=("trace:" + rule.rule_id + ":source",),
+    )
+    decision = _g2e_decision(registry, rule_index)
+    if rule_index == 0:
+        target_payload = source_payload
+        target_parents = (source.artifact_id, "artifact:route", "artifact:report")
+        target_traces = (source.artifact_id, decision.decision_id)
+    elif rule_index == 1:
+        target_payload = {"delta_id": delta_id, "graph_id": graph_id}
+        target_parents = (source.artifact_id, "g2eabi_graph_v01:" + "3" * 64)
+        target_traces = (decision.decision_id, delta_id, graph_id)
+    else:
+        target_payload = {"profile": rule.rule_id, "decision": decision.decision}
+        target_parents = (source.artifact_id,)
+        target_traces = ("trace:" + rule.rule_id + ":target",)
+    target = _g2e_artifact(
+        artifact_type=rule.target_artifact_type,
+        lifecycle_state=target_lifecycle,
+        label=rule.rule_id + ":target",
+        payload=target_payload,
+        trace_refs=target_traces,
+        parent_refs=target_parents,
+    )
+    return source, target, decision
+
+
+def test_g2e_transition_profile_exact_ten_rules_eleven_fields_v01() -> None:
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    actual = tuple(tuple(getattr(rule, name) for name in RULE_FIELDS) for rule in registry.rules)
+    assert actual == G2E_TRANSITION_EXPECTED_ROWS
+    assert len(registry.rules) == 10
+    assert all(tuple(field.name for field in fields(type(rule))) == RULE_FIELDS for rule in registry.rules)
+    assert transition.validate_continuous_delta_transition_registry_profile_v01(registry) == ()
+
+
+def test_g2e_transition_profile_identity_plain_data_and_default_preservation_v01() -> None:
+    default_before = transition.transition_registry_to_plain_dict_v01(
+        transition.build_default_transition_registry_v01()
+    )
+    g2c_before = transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+        transition.build_execution_mode_transition_registry_profile_v01()
+    )
+    g2d_before = transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+        transition.build_fractal_runtime_transition_registry_profile_v02()
+    )
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    plain = transition.continuous_delta_transition_registry_profile_to_plain_dict_v01(registry)
+    assert canonical_json_bytes_v01(plain) == canonical_json_bytes_v01(
+        transition.continuous_delta_transition_registry_profile_to_plain_dict_v01(
+            transition.build_continuous_delta_transition_registry_profile_v01()
+        )
+    )
+    assert default_before == transition.transition_registry_to_plain_dict_v01(
+        transition.build_default_transition_registry_v01()
+    )
+    assert g2c_before == transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+        transition.build_execution_mode_transition_registry_profile_v01()
+    )
+    assert g2d_before == transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+        transition.build_fractal_runtime_transition_registry_profile_v02()
+    )
+    wrong_id = replace(registry, registry_id="0" * 64)
+    assert transition.validate_continuous_delta_transition_registry_profile_v01(
+        wrong_id
+    ) == ("g2e_identity_mismatch",)
+
+
+def test_g2e_transition_profile_complete_field_mutation_matrix_v01() -> None:
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    replacements = {
+        "rule_id": "g2e_mutated_rule",
+        "abi_major_version": 2,
+        "source_artifact_type": "ResultProposal",
+        "source_lifecycle_state": "FINALIZED",
+        "actor_role": "executor_fractal_child",
+        "attempted_effect": "RECORD_EVIDENCE",
+        "target_artifact_type": "ResultProposal",
+        "required_guards": ("artifact_valid",),
+        "decision": "NEEDS_USER",
+        "reason_code": "result_proposal_allows_post_vv",
+        "root_commit_required": None,
+    }
+    for rule_index, rule in enumerate(registry.rules):
+        for field_name in RULE_FIELDS:
+            replacement = replacements[field_name]
+            if field_name == "root_commit_required":
+                replacement = not rule.root_commit_required
+            mutated_rule = replace(rule, **{field_name: replacement})
+            rules = list(registry.rules)
+            rules[rule_index] = mutated_rule
+            mutated = replace(registry, rules=tuple(rules))
+            assert transition.validate_continuous_delta_transition_registry_profile_v01(
+                mutated
+            ) == ("g2e_object_invalid",)
+    for rules in (
+        registry.rules[:-1],
+        registry.rules + (registry.rules[-1],),
+        tuple(reversed(registry.rules)),
+    ):
+        assert transition.validate_continuous_delta_transition_registry_profile_v01(
+            replace(registry, rules=rules)
+        ) == ("g2e_object_invalid",)
+
+
+def test_g2e_transition_t01_source_validation_contextual_contract_v01() -> None:
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    source, target, decision = _g2e_artifact_pair(registry, 0)
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=target,
+    ) == ()
+    assert source.artifact_id != target.artifact_id
+    assert kernel_artifact_to_plain_dict_v01(source)["payload"] == (
+        kernel_artifact_to_plain_dict_v01(target)["payload"]
+    )
+    forged = _g2e_artifact(
+        artifact_type="ContinuousDeltaSource",
+        lifecycle_state="VALIDATED",
+        label="t01:forged",
+        payload={"delta_id": "different"},
+        trace_refs=(source.artifact_id, decision.decision_id),
+        parent_refs=(source.artifact_id,),
+    )
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=forged,
+    ) == ("g2e_object_invalid",)
+
+
+def test_g2e_transition_t02_affected_set_contextual_contract_v01() -> None:
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    source, target, decision = _g2e_artifact_pair(registry, 1)
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=target,
+    ) == ()
+    forged = _g2e_artifact(
+        artifact_type="AffectedSetResult",
+        lifecycle_state="VALIDATED",
+        label="t02:forged",
+        payload={
+            "delta_id": "g2e_world_state_delta_v01:" + "9" * 64,
+            "graph_id": "g2e_dependency_graph_index_v01:" + "2" * 64,
+        },
+        trace_refs=target.trace_refs,
+        parent_refs=target.parent_refs,
+    )
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        decision,
+        registry=registry,
+        source_artifact=source,
+        target_artifact=forged,
+    ) == ("g2e_object_invalid",)
+
+
+def test_g2e_transition_future_rows_are_structural_only_v01() -> None:
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    for rule_index in range(2, 10):
+        source, target, decision = _g2e_artifact_pair(registry, rule_index)
+        assert transition.validate_continuous_delta_transition_decision_v01(
+            decision,
+            registry=registry,
+            source_artifact=source,
+            target_artifact=target,
+        ) == ()
+    source_text = MODULE_PATH.read_text(encoding="utf-8")
+    assert "from hedgehog.kernel.continuous_delta_runtime_v01" not in source_text
+    assert "from hedgehog.kernel.root_decision_v01" not in source_text
+
+
+def test_g2e_transition_terminal_and_root_commit_geometry_v01() -> None:
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    decisions = tuple(_g2e_decision(registry, index) for index in range(10))
+    assert tuple(decisions[index].decision for index in (3, 8)) == (
+        "RETURN_TO_ROOT",
+        "RETURN_TO_ROOT",
+    )
+    assert tuple(decisions[index].decision for index in (5, 7)) == (
+        "BLOCKED_FAIL_CLOSED",
+        "BLOCKED_FAIL_CLOSED",
+    )
+    assert tuple(decisions[index].decision for index in (0, 1, 2, 4, 6, 9)) == (
+        "ALLOW",
+    ) * 6
+    assert tuple(decision.root_commit_required for decision in decisions) == tuple(
+        row[-1] for row in G2E_TRANSITION_EXPECTED_ROWS
+    )
+    assert tuple(decision.root_commit_present for decision in decisions) == tuple(
+        row[-1] for row in G2E_TRANSITION_EXPECTED_ROWS
+    )
+
+
+def test_g2e_transition_public_surface_import_and_zero_authority_v01() -> None:
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    public_functions = tuple(
+        node.name
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
+    )
+    expected = (
+        "build_continuous_delta_transition_registry_profile_v01",
+        "validate_continuous_delta_transition_registry_profile_v01",
+        "continuous_delta_transition_registry_profile_to_plain_dict_v01",
+        "validate_continuous_delta_transition_decision_v01",
+        "continuous_delta_transition_decision_to_plain_dict_v01",
+        "rebuild_continuous_delta_transition_decision_identity_v01",
+    )
+    assert public_functions[-6:] == expected
+    assert not hasattr(kernel_package, expected[0])
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    source_artifact, target_artifact, decision = _g2e_artifact_pair(registry, 0)
+    assert source_artifact.authority_class == "NON_AUTHORITY"
+    assert target_artifact.authority_class == "NON_AUTHORITY"
+    assert transition.continuous_delta_transition_decision_to_plain_dict_v01(
+        decision
+    )["decision_id"] == decision.decision_id
+    assert transition.rebuild_continuous_delta_transition_decision_identity_v01(
+        decision
+    ) == decision.decision_id
+    assert not any("authority" in field.name for field in fields(type(decision)))

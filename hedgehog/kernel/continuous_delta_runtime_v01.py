@@ -1,25 +1,37 @@
-"""Deterministic structural contracts for G2-E Continuous Delta Runtime v0.1.
+"""Deterministic G2-E Continuous Delta Runtime v0.1 contracts through E2.
 
-G2-E1 defines frozen data, identities, structural validation, and declarations
-only.  A structural PASS is not source acceptance, truth, Root authority,
-permission, execution, persistence, or a real-world effect.
+The module defines frozen data and deterministic structural/currentness proofs.
+No G2-E object is truth, Root authority, permission, execution, persistence,
+or a real-world effect.
 """
 
 from __future__ import annotations
 
+from collections import deque
 from dataclasses import dataclass, fields, replace
 from datetime import datetime
 import hashlib
 import re
 import unicodedata
 
-from hedgehog.kernel.abi_v01 import CausalConsumptionRefV01, KernelArtifactV01
+from hedgehog.kernel.abi_v01 import (
+    CausalConsumptionRefV01,
+    KernelArtifactV01,
+    build_kernel_artifact_v01,
+    kernel_artifact_to_canonical_ref_v01,
+    kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_v01,
+)
 from hedgehog.kernel.execution_mode_router_v01 import ExecutionModeSourceContextV01
 from hedgehog.kernel.fractal_runtime_v02 import FractalRuntimeExecutionBundleV02
 from hedgehog.kernel.integrity_replay_v01 import (
+    ArtifactDependencyEdgeV01,
     ArtifactManifestV01,
     ReplayVerificationResultV01,
     canonical_json_bytes_v01,
+    domain_separated_sha256_hex_v01,
+    verify_artifact_manifest_v01,
+    verify_artifact_replay_v01,
 )
 from hedgehog.kernel.root_decision_v01 import (
     RootDecisionInputV01,
@@ -30,7 +42,7 @@ from hedgehog.kernel.transition_registry_v01 import TransitionDecisionV01
 
 
 MODULE_ID = "continuous_delta_runtime_v01"
-SLICE_ID = "gate2_g2e1_structural_contracts"
+SLICE_ID = "gate2_g2e2_dependency_graph_and_affected_closure"
 CONTINUOUS_DELTA_RUNTIME_VERSION = "v0.1"
 DELTA_SOURCE_BINDING_VERSION_V01 = "v0.1"
 WORLD_STATE_DELTA_VERSION_V01 = "v0.1"
@@ -46,6 +58,18 @@ DEPENDENCY_FINGERPRINT_DOMAIN_SEPARATOR_V01 = (
 DEPENDENCY_FINGERPRINT_TYPED_ROLE_V01 = "G2E_DEPENDENCY_CURRENTNESS"
 OBSERVED_SUCCESSOR_RELATION_V01 = "OBSERVED_SUCCESSOR_OF_BASELINE"
 MAX_CHANGED_BINDINGS_V01 = 64
+CONTINUOUS_DELTA_GRAPH_VERSION_V01 = "v0.1"
+CONTINUOUS_DELTA_GRAPH_PROFILE_ID_V01 = "continuous_delta_dependency_graph_v01"
+MAX_DEPENDENCY_GRAPH_NODES_V01 = 256
+MAX_DEPENDENCY_GRAPH_EDGES_V01 = 1024
+MAX_AFFECTED_HOPS_V01 = 32
+GRAPH_BASIS_DOMAIN_V01 = "HEDGEHOG_CONTINUOUS_DELTA_GRAPH_BASIS_V01"
+SOURCE_REPLAY_EDGE_DOMAIN_V01 = (
+    "HEDGEHOG_CONTINUOUS_DELTA_SOURCE_REPLAY_EDGE_V01"
+)
+AFFECTED_CLOSURE_PROOF_DOMAIN_V01 = (
+    "HEDGEHOG_CONTINUOUS_DELTA_AFFECTED_CLOSURE_PROOF_V01"
+)
 
 VALIDATION_STATUSES_V01 = ("PASS", "FAIL_CLOSED")
 
@@ -781,6 +805,18 @@ G2E_ABI_ARTIFACT_INSTANCE_PROFILES_V01 = (
     ("runtime_report_finalized", "ContinuousDeltaRuntimeReport", "ContinuousDeltaRuntimeReportV01", "FINALIZED", "EVIDENCE_ONLY", "continuous_delta_runtime_v01", "g2eabi_report_v01:", "HEDGEHOG_G2E_CONTINUOUS_DELTA_RUNTIME_REPORT_ARTIFACT_V01", "G2-E4"),
 )
 
+_G2E_ABI_PAYLOAD_OMISSIONS_V01 = (
+    ("delta_source_proposed", ("transaction_id", "trace_refs")),
+    ("delta_source_validated", ("transaction_id", "trace_refs")),
+    ("dependency_graph_validated", ("transaction_id", "trace_refs")),
+    ("affected_set_validated", ("trace_refs",)),
+    ("invalidation_report_validated", ()),
+    ("plan_proposed", ("trace_refs",)),
+    ("plan_root_accepted", ("trace_refs",)),
+    ("preservation_proof_validated", ()),
+    ("runtime_report_finalized", ()),
+)
+
 _DELTA_POLICY_SCHEMA_SOURCE_V01 = (
     ("schema_version", "v0.1"),
     ("policy_version", "delta.observed_policy_version"),
@@ -903,15 +939,25 @@ def _sha256_valid(value: object) -> bool:
     return type(value) is str and _SHA256_PATTERN.fullmatch(value) is not None
 
 
-def _timestamp_valid(value: object) -> bool:
+def _parse_aware_timestamp_v01(value: object) -> datetime:
     if type(value) is not str or _TIMESTAMP_PATTERN.fullmatch(value) is None:
-        return False
+        raise ValueError("g2e_delta_time_invalid")
     normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
     try:
         parsed = datetime.fromisoformat(normalized)
+    except ValueError as exc:
+        raise ValueError("g2e_delta_time_invalid") from exc
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("g2e_delta_time_invalid")
+    return parsed
+
+
+def _timestamp_valid(value: object) -> bool:
+    try:
+        _parse_aware_timestamp_v01(value)
     except ValueError:
         return False
-    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+    return True
 
 
 def _text_tuple_valid(
@@ -1305,6 +1351,1345 @@ def _require_built_valid(value: object, error_function: object) -> object:
     return value
 
 
+def _domain_sha256_v01(domain: str, material: object) -> str:
+    return hashlib.sha256(
+        domain.encode("ascii") + b"\x00" + canonical_json_bytes_v01(material)
+    ).hexdigest()
+
+
+def _artifact_plain_v01(artifact: KernelArtifactV01) -> dict[str, object]:
+    if type(artifact) is not KernelArtifactV01 or validate_kernel_artifact_v01(
+        artifact
+    ):
+        raise ValueError("g2e_delta_source_unvalidated")
+    return kernel_artifact_to_plain_dict_v01(artifact)
+
+
+def _artifact_payload_sha256_v01(artifact: KernelArtifactV01) -> str:
+    return hashlib.sha256(
+        canonical_json_bytes_v01(_artifact_plain_v01(artifact)["payload"])
+    ).hexdigest()
+
+
+def _artifact_sha256_v01(artifact: KernelArtifactV01) -> str:
+    return hashlib.sha256(
+        canonical_json_bytes_v01(_artifact_plain_v01(artifact))
+    ).hexdigest()
+
+
+def _source_manifest_id_v01(manifest: ArtifactManifestV01) -> str:
+    return "integrity_manifest_v01:" + manifest.manifest_hash
+
+
+def _contextual_report_v01(
+    *,
+    validation_target: str,
+    validated_object_id: str | None,
+    failure_stage: str,
+    reason_codes: tuple[str, ...],
+) -> ContinuousDeltaValidationReportV01:
+    reasons = _ordered_reasons(reason_codes)
+    return _make_validation_report(
+        validation_target=validation_target,
+        validated_object_id=validated_object_id if not reasons else None,
+        failure_stage=failure_stage,
+        reason_codes=reasons,
+        source_reason_codes=(),
+        return_to_root_required=bool(reasons),
+        root_review_required=False,
+    )
+
+
+def _resolve_json_pointer_v01(value: object, pointer: str) -> object:
+    if not _json_pointer_valid(pointer):
+        raise ValueError("g2e_dependency_source_payload_unavailable")
+    current = value
+    if pointer == "":
+        return current
+    for encoded in pointer.split("/")[1:]:
+        segment = encoded.replace("~1", "/").replace("~0", "~")
+        if type(current) is dict:
+            if segment not in current:
+                raise ValueError("g2e_dependency_source_payload_unavailable")
+            current = current[segment]
+        elif type(current) is list:
+            if (
+                not segment.isdigit()
+                or (len(segment) > 1 and segment.startswith("0"))
+            ):
+                raise ValueError("g2e_dependency_source_payload_unavailable")
+            index = int(segment)
+            if index >= len(current):
+                raise ValueError("g2e_dependency_source_payload_unavailable")
+            current = current[index]
+        else:
+            raise ValueError("g2e_dependency_source_payload_unavailable")
+    return current
+
+
+def _manifest_replay_source_errors_v01(
+    *,
+    manifest: object,
+    replay: object,
+    source_artifacts: object,
+) -> tuple[str, ...]:
+    try:
+        if (
+            type(manifest) is not ArtifactManifestV01
+            or type(replay) is not ReplayVerificationResultV01
+            or type(source_artifacts) is not tuple
+            or not source_artifacts
+            or any(type(item) is not KernelArtifactV01 for item in source_artifacts)
+        ):
+            return ("g2e_delta_source_unvalidated",)
+        if len(source_artifacts) > MAX_DEPENDENCY_GRAPH_NODES_V01:
+            return ("g2e_dependency_graph_bounds_exceeded",)
+        plains = tuple(_artifact_plain_v01(item) for item in source_artifacts)
+        refs = tuple(
+            kernel_artifact_to_canonical_ref_v01(item) for item in source_artifacts
+        )
+        if refs != manifest.artifacts:
+            return ("g2e_delta_source_unvalidated",)
+        payload_rows = tuple(
+            (artifact.artifact_id, plain["payload"])
+            for artifact, plain in zip(source_artifacts, plains, strict=True)
+        )
+        manifest_result = verify_artifact_manifest_v01(
+            manifest=manifest,
+            payload_rows=payload_rows,
+            expected_manifest_hash=manifest.manifest_hash,
+        )
+        expected_replay = verify_artifact_replay_v01(
+            manifest=manifest,
+            payload_rows=payload_rows,
+            expected_manifest_hash=manifest.manifest_hash,
+        )
+        if (
+            manifest_result.verification_status != "PASS"
+            or expected_replay.replay_status != "PASS"
+            or replay != expected_replay
+            or replay.reconstructed_dependency_edges != manifest.dependency_edges
+        ):
+            return ("g2e_delta_source_unvalidated",)
+        return ()
+    except Exception:
+        return ("g2e_delta_source_unvalidated",)
+
+
+def _edge_descriptor_v01(
+    edge: DeltaDependencyEdgeV01,
+) -> tuple[str, str, tuple[str, ...], str]:
+    return (
+        edge.dependent_artifact_id,
+        edge.dependency_artifact_id,
+        edge.dependency_field_pointers,
+        edge.edge_class,
+    )
+
+
+def _normalized_edge_descriptors_v01(
+    descriptors: tuple[tuple[str, str, tuple[str, ...], str], ...],
+    positions: dict[str, int],
+) -> tuple[tuple[str, str, tuple[str, ...], str], ...]:
+    return tuple(
+        sorted(
+            descriptors,
+            key=lambda row: (
+                positions[row[0]], positions[row[1]], row[2], row[3]
+            ),
+        )
+    )
+
+
+def _graph_basis_sha256_v01(
+    *,
+    graph_version: str,
+    source_manifest_id: str,
+    source_manifest_hash: str,
+    source_replay_id: str,
+    transaction_id: str,
+    owning_root_id: str,
+    domain_id: str,
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    replay_pairs: tuple[tuple[str, str], ...],
+    normalized_descriptors: tuple[
+        tuple[str, str, tuple[str, ...], str], ...
+    ],
+) -> str:
+    material = (
+        CONTINUOUS_DELTA_GRAPH_PROFILE_ID_V01,
+        graph_version,
+        source_manifest_id,
+        source_manifest_hash,
+        source_replay_id,
+        transaction_id,
+        owning_root_id,
+        domain_id,
+        policy_version,
+        schema_versions,
+        source_history_hash,
+        tuple(
+            (artifact.artifact_id, _artifact_payload_sha256_v01(artifact))
+            for artifact in source_artifacts
+        ),
+        replay_pairs,
+        normalized_descriptors,
+    )
+    return _domain_sha256_v01(GRAPH_BASIS_DOMAIN_V01, material)
+
+
+def _source_replay_edge_sha256_v01(
+    *,
+    source_manifest_id: str,
+    source_manifest_hash: str,
+    source_replay_id: str,
+    dependent_artifact_id: str,
+    dependency_artifact_id: str,
+    positions: dict[str, int],
+) -> str:
+    material = (
+        source_manifest_id,
+        source_manifest_hash,
+        source_replay_id,
+        dependent_artifact_id,
+        dependency_artifact_id,
+        positions[dependent_artifact_id],
+        positions[dependency_artifact_id],
+    )
+    return _domain_sha256_v01(SOURCE_REPLAY_EDGE_DOMAIN_V01, material)
+
+
+def _graph_has_cycle_v01(
+    node_ids: tuple[str, ...],
+    descriptors: tuple[tuple[str, str, tuple[str, ...], str], ...],
+) -> bool:
+    dependencies = {node_id: [] for node_id in node_ids}
+    for dependent, dependency, _pointers, _edge_class in descriptors:
+        dependencies[dependent].append(dependency)
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(node_id: str) -> bool:
+        if node_id in visiting:
+            return True
+        if node_id in visited:
+            return False
+        visiting.add(node_id)
+        try:
+            if any(visit(dependency) for dependency in dependencies[node_id]):
+                return True
+        finally:
+            visiting.remove(node_id)
+        visited.add(node_id)
+        return False
+
+    return any(visit(node_id) for node_id in node_ids)
+
+
+def _delta_dependency_edge_errors(value: object) -> tuple[str, ...]:
+    if type(value) is not DeltaDependencyEdgeV01:
+        return ("g2e_object_invalid",)
+    errors: list[str] = []
+    if not _sha256_valid(value.graph_basis_sha256):
+        errors.append("g2e_dependency_graph_basis_mismatch")
+    if value.graph_version != CONTINUOUS_DELTA_GRAPH_VERSION_V01:
+        errors.append("g2e_dependency_graph_version_mismatch")
+    if not _text_valid(value.dependent_artifact_id):
+        errors.append("g2e_dependency_edge_unknown_dependent")
+    if not _text_valid(value.dependency_artifact_id):
+        errors.append("g2e_dependency_edge_unknown_source")
+    if value.dependent_artifact_id == value.dependency_artifact_id:
+        errors.append("g2e_dependency_edge_self")
+    if (
+        type(value.dependency_field_pointers) is not tuple
+        or len(value.dependency_field_pointers) > MAX_DEPENDENCY_GRAPH_NODES_V01
+        or len(value.dependency_field_pointers)
+        != len(set(value.dependency_field_pointers))
+        or any(
+            not _json_pointer_valid(pointer)
+            for pointer in value.dependency_field_pointers
+        )
+    ):
+        errors.append("g2e_dependency_edge_invalid")
+    if not _token_valid(value.edge_class):
+        errors.append("g2e_dependency_edge_invalid")
+    if any(
+        not _text_valid(item)
+        for item in (value.transaction_id, value.owning_root_id, value.domain_id)
+    ):
+        errors.append("g2e_dependency_edge_invalid")
+    if (
+        type(value.canonical_order) is not int
+        or not 1 <= value.canonical_order <= MAX_DEPENDENCY_GRAPH_EDGES_V01
+    ):
+        errors.append("g2e_dependency_graph_ordering_invalid")
+    if not _sha256_valid(value.source_replay_edge_sha256):
+        errors.append("g2e_dependency_replay_edge_mismatch")
+    if not _text_tuple_valid(value.trace_refs, minimum=1):
+        errors.append("g2e_dependency_edge_invalid")
+    errors.extend(_identity_errors(value))
+    return _ordered_reasons(errors)
+
+
+def _dependency_graph_index_errors(value: object) -> tuple[str, ...]:
+    if type(value) is not DependencyGraphIndexV01:
+        return ("g2e_object_invalid",)
+    errors: list[str] = []
+    if value.graph_version != CONTINUOUS_DELTA_GRAPH_VERSION_V01:
+        errors.append("g2e_dependency_graph_version_mismatch")
+    if not _sha256_valid(value.graph_basis_sha256):
+        errors.append("g2e_dependency_graph_basis_mismatch")
+    if not _sha256_valid(value.source_manifest_hash):
+        errors.append("g2e_delta_source_unvalidated")
+    if not _sha256_valid(value.source_history_hash):
+        errors.append("g2e_dependency_source_history_mismatch")
+    if any(
+        not _text_valid(item)
+        for item in (
+            value.source_manifest_id, value.source_replay_id,
+            value.transaction_id, value.owning_root_id, value.domain_id,
+            value.policy_version,
+        )
+    ):
+        errors.append("g2e_object_invalid")
+    nodes_valid = _text_tuple_valid(
+        value.ordered_node_ids,
+        minimum=1,
+        maximum=MAX_DEPENDENCY_GRAPH_NODES_V01,
+    )
+    edges_valid = _text_tuple_valid(
+        value.ordered_edge_ids,
+        maximum=MAX_DEPENDENCY_GRAPH_EDGES_V01,
+    )
+    if not nodes_valid or not edges_valid:
+        errors.append("g2e_dependency_graph_bounds_exceeded")
+    if (
+        type(value.node_count) is not int
+        or value.node_count != len(value.ordered_node_ids)
+        or type(value.edge_count) is not int
+        or value.edge_count != len(value.ordered_edge_ids)
+    ):
+        errors.append("g2e_dependency_graph_bounds_exceeded")
+    if (
+        value.max_nodes != MAX_DEPENDENCY_GRAPH_NODES_V01
+        or value.max_edges != MAX_DEPENDENCY_GRAPH_EDGES_V01
+        or value.max_hops != MAX_AFFECTED_HOPS_V01
+        or value.acyclic is not True
+    ):
+        errors.append("g2e_dependency_graph_bounds_exceeded")
+    if not _text_tuple_valid(value.schema_versions, minimum=1, maximum=64):
+        errors.append("g2e_delta_schema_version_mismatch")
+    if not _text_tuple_valid(value.trace_refs, minimum=1):
+        errors.append("g2e_object_invalid")
+    errors.extend(_identity_errors(value))
+    return _ordered_reasons(errors)
+
+
+def _affected_set_request_errors(value: object) -> tuple[str, ...]:
+    if type(value) is not AffectedSetRequestV01:
+        return ("g2e_object_invalid",)
+    errors: list[str] = []
+    if value.graph_version != CONTINUOUS_DELTA_GRAPH_VERSION_V01:
+        errors.append("g2e_dependency_graph_version_mismatch")
+    for item, prefix in (
+        (value.delta_id, "g2e_world_state_delta_v01:"),
+        (value.graph_id, "g2e_dependency_graph_index_v01:"),
+    ):
+        if not _prefixed_identity_valid(item, prefix):
+            errors.append("g2e_affected_request_invalid")
+    if any(
+        not _text_valid(item)
+        for item in (
+            value.baseline_report_id, value.transaction_id,
+            value.owning_root_id, value.domain_id,
+        )
+    ):
+        errors.append("g2e_affected_request_invalid")
+    field_ids_valid = _text_tuple_valid(
+        value.ordered_changed_field_binding_ids,
+        maximum=MAX_CHANGED_BINDINGS_V01,
+    )
+    artifact_ids_valid = _text_tuple_valid(
+        value.ordered_changed_artifact_binding_ids,
+        maximum=MAX_CHANGED_BINDINGS_V01,
+    )
+    if (
+        not field_ids_valid
+        or not artifact_ids_valid
+        or not (
+            value.ordered_changed_field_binding_ids
+            or value.ordered_changed_artifact_binding_ids
+        )
+        or len(value.ordered_changed_field_binding_ids)
+        + len(value.ordered_changed_artifact_binding_ids)
+        > MAX_CHANGED_BINDINGS_V01
+    ):
+        errors.append("g2e_affected_request_invalid")
+    if (
+        value.max_nodes != MAX_DEPENDENCY_GRAPH_NODES_V01
+        or value.max_edges != MAX_DEPENDENCY_GRAPH_EDGES_V01
+        or value.max_hops != MAX_AFFECTED_HOPS_V01
+    ):
+        errors.append("g2e_affected_request_invalid")
+    if not _text_tuple_valid(value.trace_refs, minimum=1):
+        errors.append("g2e_affected_request_invalid")
+    errors.extend(_identity_errors(value))
+    return _ordered_reasons(errors)
+
+
+def _affected_set_result_errors(value: object) -> tuple[str, ...]:
+    if type(value) is not AffectedSetResultV01:
+        return ("g2e_object_invalid",)
+    errors: list[str] = []
+    if value.graph_version != CONTINUOUS_DELTA_GRAPH_VERSION_V01:
+        errors.append("g2e_dependency_graph_version_mismatch")
+    tuples = (
+        value.ordered_changed_node_ids,
+        value.ordered_directly_affected_ids,
+        value.ordered_transitively_affected_ids,
+        value.ordered_affected_ids,
+        value.ordered_unaffected_ids,
+    )
+    if (
+        not _text_tuple_valid(
+            value.ordered_changed_node_ids,
+            minimum=1,
+            maximum=MAX_CHANGED_BINDINGS_V01,
+        )
+        or any(
+            not _text_tuple_valid(item, maximum=MAX_DEPENDENCY_GRAPH_NODES_V01)
+            for item in tuples[1:]
+        )
+    ):
+        errors.append("g2e_affected_closure_incomplete")
+    changed, direct, transitive, affected, unaffected = map(set, tuples)
+    if (
+        direct & transitive
+        or changed & affected
+        or changed & unaffected
+        or affected & unaffected
+        or direct | transitive != affected
+    ):
+        errors.append("g2e_affected_closure_incomplete")
+    if not _sha256_valid(value.closure_proof_sha256):
+        errors.append("g2e_affected_proof_invalid")
+    if (
+        type(value.visited_node_count) is not int
+        or value.visited_node_count
+        != len(value.ordered_changed_node_ids) + len(value.ordered_affected_ids)
+        or not 1 <= value.visited_node_count <= MAX_DEPENDENCY_GRAPH_NODES_V01
+        or type(value.traversed_edge_count) is not int
+        or not 0 <= value.traversed_edge_count <= MAX_DEPENDENCY_GRAPH_EDGES_V01
+        or type(value.maximum_observed_hops) is not int
+        or not 0 <= value.maximum_observed_hops <= MAX_AFFECTED_HOPS_V01
+    ):
+        errors.append("g2e_affected_closure_incomplete")
+    if value.complete is not True or value.minimal is not True:
+        errors.append("g2e_affected_closure_incomplete")
+    if not _text_tuple_valid(value.trace_refs, minimum=1):
+        errors.append("g2e_object_invalid")
+    errors.extend(_identity_errors(value))
+    return _ordered_reasons(errors)
+
+
+def _closure_proof_sha256_v01(
+    *,
+    affected_request_id: str,
+    delta_id: str,
+    graph_id: str,
+    graph_version: str,
+    graph_basis_sha256: str,
+    ordered_changed_node_ids: tuple[str, ...],
+    visited_rows: tuple[tuple[str, int, str | None], ...],
+    ordered_directly_affected_ids: tuple[str, ...],
+    ordered_transitively_affected_ids: tuple[str, ...],
+    ordered_affected_ids: tuple[str, ...],
+    ordered_unaffected_ids: tuple[str, ...],
+    visited_node_count: int,
+    traversed_edge_count: int,
+    maximum_observed_hops: int,
+) -> str:
+    material = (
+        affected_request_id,
+        delta_id,
+        graph_id,
+        graph_version,
+        graph_basis_sha256,
+        ordered_changed_node_ids,
+        visited_rows,
+        ordered_directly_affected_ids,
+        ordered_transitively_affected_ids,
+        ordered_affected_ids,
+        ordered_unaffected_ids,
+        visited_node_count,
+        traversed_edge_count,
+        maximum_observed_hops,
+    )
+    return _domain_sha256_v01(AFFECTED_CLOSURE_PROOF_DOMAIN_V01, material)
+
+
+def _build_affected_set_result_internal_v01(
+    *,
+    affected_request_id: str,
+    delta_id: str,
+    graph_id: str,
+    graph_version: str,
+    graph_basis_sha256: str,
+    ordered_changed_node_ids: tuple[str, ...],
+    ordered_directly_affected_ids: tuple[str, ...],
+    ordered_transitively_affected_ids: tuple[str, ...],
+    ordered_affected_ids: tuple[str, ...],
+    ordered_unaffected_ids: tuple[str, ...],
+    visited_rows: tuple[tuple[str, int, str | None], ...],
+    traversed_edge_count: int,
+    maximum_observed_hops: int,
+    trace_refs: tuple[str, ...],
+) -> AffectedSetResultV01:
+    if (
+        type(visited_rows) is not tuple
+        or tuple(row[0] for row in visited_rows)
+        != ordered_changed_node_ids + ordered_affected_ids
+        or len({row[0] for row in visited_rows}) != len(visited_rows)
+    ):
+        raise ValueError("g2e_affected_closure_incomplete")
+    for index, row in enumerate(visited_rows):
+        if (
+            type(row) is not tuple
+            or len(row) != 3
+            or not _text_valid(row[0])
+            or type(row[1]) is not int
+            or not 0 <= row[1] <= MAX_AFFECTED_HOPS_V01
+            or (row[2] is not None and not _text_valid(row[2]))
+        ):
+            raise ValueError("g2e_affected_closure_incomplete")
+        if index < len(ordered_changed_node_ids):
+            if row[1:] != (0, None):
+                raise ValueError("g2e_affected_closure_incomplete")
+        elif row[0] in ordered_directly_affected_ids and row[1] != 1:
+            raise ValueError("g2e_affected_closure_incomplete")
+        elif row[0] in ordered_transitively_affected_ids and row[1] <= 1:
+            raise ValueError("g2e_affected_closure_incomplete")
+    visited_node_count = len(visited_rows)
+    closure_proof = _closure_proof_sha256_v01(
+        affected_request_id=affected_request_id,
+        delta_id=delta_id,
+        graph_id=graph_id,
+        graph_version=graph_version,
+        graph_basis_sha256=graph_basis_sha256,
+        ordered_changed_node_ids=ordered_changed_node_ids,
+        visited_rows=visited_rows,
+        ordered_directly_affected_ids=ordered_directly_affected_ids,
+        ordered_transitively_affected_ids=ordered_transitively_affected_ids,
+        ordered_affected_ids=ordered_affected_ids,
+        ordered_unaffected_ids=ordered_unaffected_ids,
+        visited_node_count=visited_node_count,
+        traversed_edge_count=traversed_edge_count,
+        maximum_observed_hops=maximum_observed_hops,
+    )
+    provisional = AffectedSetResultV01(
+        affected_set_id="g2e_affected_set_result_v01:" + _ZERO_SHA256,
+        affected_request_id=affected_request_id,
+        delta_id=delta_id,
+        graph_id=graph_id,
+        graph_version=graph_version,
+        ordered_changed_node_ids=ordered_changed_node_ids,
+        ordered_directly_affected_ids=ordered_directly_affected_ids,
+        ordered_transitively_affected_ids=ordered_transitively_affected_ids,
+        ordered_affected_ids=ordered_affected_ids,
+        ordered_unaffected_ids=ordered_unaffected_ids,
+        closure_proof_sha256=closure_proof,
+        visited_node_count=visited_node_count,
+        traversed_edge_count=traversed_edge_count,
+        maximum_observed_hops=maximum_observed_hops,
+        complete=True,
+        minimal=True,
+        trace_refs=trace_refs,
+    )
+    result = _finish_identity(provisional)
+    return _require_built_valid(  # type: ignore[return-value]
+        result, _affected_set_result_errors
+    )
+
+
+def _fingerprint_source_rows_v01(
+    source_artifacts: tuple[KernelArtifactV01, ...],
+) -> tuple[tuple[object, ...], ...]:
+    rows = []
+    for artifact in source_artifacts:
+        plain = _artifact_plain_v01(artifact)
+        rows.append(
+            (
+                artifact.artifact_id,
+                hashlib.sha256(
+                    canonical_json_bytes_v01(plain["payload"])
+                ).hexdigest(),
+                plain["time_envelope"],
+                artifact.lifecycle_state,
+                artifact.authority_class,
+                artifact.schema_version,
+            )
+        )
+    return tuple(rows)
+
+
+def _fingerprint_context_error_v01(
+    *,
+    profile: object,
+    graph: object,
+    dependency_edges: object,
+    source_artifacts: object,
+    policy_version: object,
+    schema_versions: object,
+    source_history_hash: object,
+) -> str | None:
+    if type(profile) is not DependencyFingerprintProfileV01:
+        return "g2e_dependency_fingerprint_profile_invalid"
+    profile_errors = _dependency_fingerprint_profile_errors(profile)
+    if profile_errors:
+        if profile.typed_role != DEPENDENCY_FINGERPRINT_TYPED_ROLE_V01:
+            return "g2e_dependency_fingerprint_role_collision"
+        return profile_errors[0]
+    if type(graph) is not DependencyGraphIndexV01:
+        return "g2e_object_invalid"
+    graph_errors = _dependency_graph_index_errors(graph)
+    if graph_errors:
+        return graph_errors[0]
+    if (
+        type(dependency_edges) is not tuple
+        or tuple(
+            edge.edge_id
+            for edge in dependency_edges
+            if type(edge) is DeltaDependencyEdgeV01
+        )
+        != graph.ordered_edge_ids
+        or len(dependency_edges) != len(graph.ordered_edge_ids)
+        or any(_delta_dependency_edge_errors(edge) for edge in dependency_edges)
+    ):
+        return "g2e_dependency_edge_set_mismatch"
+    if (
+        type(source_artifacts) is not tuple
+        or len(source_artifacts) != graph.node_count
+        or any(type(item) is not KernelArtifactV01 for item in source_artifacts)
+    ):
+        return "g2e_delta_source_unvalidated"
+    try:
+        for artifact in source_artifacts:
+            _artifact_plain_v01(artifact)
+            if (
+                artifact.transaction_id != graph.transaction_id
+                or artifact.owner_root_id != graph.owning_root_id
+            ):
+                return "g2e_delta_source_unvalidated"
+    except ValueError:
+        return "g2e_delta_source_unvalidated"
+    if tuple(item.artifact_id for item in source_artifacts) == graph.ordered_node_ids:
+        if policy_version != graph.policy_version:
+            return "g2e_delta_policy_version_mismatch"
+        if schema_versions != graph.schema_versions:
+            return "g2e_delta_schema_version_mismatch"
+        if source_history_hash != graph.source_history_hash:
+            return "g2e_dependency_source_history_mismatch"
+        positions = {
+            artifact_id: index
+            for index, artifact_id in enumerate(graph.ordered_node_ids)
+        }
+        descriptors = tuple(_edge_descriptor_v01(edge) for edge in dependency_edges)
+        replay_pairs = tuple(
+            sorted(
+                {(row[0], row[1]) for row in descriptors},
+                key=lambda pair: (positions[pair[0]], positions[pair[1]]),
+            )
+        )
+        expected_basis = _graph_basis_sha256_v01(
+            graph_version=graph.graph_version,
+            source_manifest_id=graph.source_manifest_id,
+            source_manifest_hash=graph.source_manifest_hash,
+            source_replay_id=graph.source_replay_id,
+            transaction_id=graph.transaction_id,
+            owning_root_id=graph.owning_root_id,
+            domain_id=graph.domain_id,
+            policy_version=graph.policy_version,
+            schema_versions=graph.schema_versions,
+            source_history_hash=graph.source_history_hash,
+            source_artifacts=source_artifacts,
+            replay_pairs=replay_pairs,
+            normalized_descriptors=descriptors,
+        )
+        if expected_basis != graph.graph_basis_sha256:
+            return "g2e_dependency_graph_basis_mismatch"
+    if not _text_valid(policy_version):
+        return "g2e_delta_policy_version_mismatch"
+    if not _text_tuple_valid(schema_versions, minimum=1, maximum=64):
+        return "g2e_delta_schema_version_mismatch"
+    if not _sha256_valid(source_history_hash):
+        return "g2e_dependency_source_history_mismatch"
+    return None
+
+
+def _carrier_context_v01(
+    *,
+    request: AffectedSetRequestV01,
+    delta: WorldStateDeltaV01,
+    graph: DependencyGraphIndexV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> tuple[tuple[str, ...], dict[str, int]]:
+    if _affected_set_request_errors(request):
+        raise ValueError("g2e_affected_request_invalid")
+    delta_errors = _world_state_delta_errors(delta)
+    if "g2e_delta_time_invalid" in delta_errors:
+        raise ValueError("g2e_delta_time_invalid")
+    if delta_errors:
+        raise ValueError("g2e_delta_source_invalid")
+    observed_at = _parse_aware_timestamp_v01(delta.observed_at_utc)
+    valid_from = _parse_aware_timestamp_v01(delta.valid_from_utc)
+    valid_to = _parse_aware_timestamp_v01(delta.valid_to_utc)
+    if not valid_from < valid_to or not valid_from <= observed_at < valid_to:
+        raise ValueError("g2e_delta_time_invalid")
+    if _dependency_graph_index_errors(graph):
+        raise ValueError("g2e_dependency_graph_basis_mismatch")
+    if (
+        request.delta_id != delta.delta_id
+        or request.graph_id != graph.graph_id
+        or request.graph_version != graph.graph_version
+        or request.baseline_report_id != delta.baseline_report_id
+        or request.transaction_id != delta.transaction_id
+        or request.owning_root_id != delta.owning_root_id
+        or request.domain_id != delta.domain_id
+        or request.ordered_changed_field_binding_ids
+        != delta.ordered_changed_field_binding_ids
+        or request.ordered_changed_artifact_binding_ids
+        != delta.ordered_changed_artifact_binding_ids
+        or delta.baseline_graph_id != graph.graph_id
+        or delta.baseline_graph_version != graph.graph_version
+        or delta.baseline_policy_version != graph.policy_version
+        or delta.baseline_schema_versions != graph.schema_versions
+        or delta.baseline_source_history_hash != graph.source_history_hash
+    ):
+        raise ValueError("g2e_affected_request_invalid")
+    if (
+        type(source_bindings) is not tuple
+        or any(type(item) is not DeltaSourceBindingV01 for item in source_bindings)
+        or tuple(item.source_binding_id for item in source_bindings)
+        != delta.ordered_source_binding_ids
+        or len(source_bindings) != len(delta.ordered_source_binding_ids)
+    ):
+        raise ValueError("g2e_delta_source_binding_set_mismatch")
+    source_binding_errors = tuple(
+        _delta_source_binding_errors(item) for item in source_bindings
+    )
+    if any(
+        "g2e_delta_time_invalid" in errors for errors in source_binding_errors
+    ):
+        raise ValueError("g2e_delta_time_invalid")
+    if any(source_binding_errors):
+        raise ValueError("g2e_delta_source_binding_set_mismatch")
+    if (
+        type(changed_field_bindings) is not tuple
+        or any(
+            type(item) is not ChangedFieldBindingV01
+            for item in changed_field_bindings
+        )
+        or tuple(item.changed_field_binding_id for item in changed_field_bindings)
+        != delta.ordered_changed_field_binding_ids
+        or len(changed_field_bindings)
+        != len(delta.ordered_changed_field_binding_ids)
+        or type(changed_artifact_bindings) is not tuple
+        or any(
+            type(item) is not ChangedArtifactBindingV01
+            for item in changed_artifact_bindings
+        )
+        or tuple(
+            item.changed_artifact_binding_id for item in changed_artifact_bindings
+        )
+        != delta.ordered_changed_artifact_binding_ids
+        or len(changed_artifact_bindings)
+        != len(delta.ordered_changed_artifact_binding_ids)
+    ):
+        raise ValueError("g2e_delta_binding_set_mismatch")
+    changed_field_errors = tuple(
+        _changed_field_binding_errors(item) for item in changed_field_bindings
+    )
+    changed_artifact_errors = tuple(
+        _changed_artifact_binding_errors(item) for item in changed_artifact_bindings
+    )
+    if any(
+        "g2e_delta_time_invalid" in errors
+        for errors in changed_field_errors + changed_artifact_errors
+    ):
+        raise ValueError("g2e_delta_time_invalid")
+    if any(changed_field_errors) or any(changed_artifact_errors):
+        raise ValueError("g2e_delta_binding_set_mismatch")
+    if (
+        type(dependency_edges) is not tuple
+        or tuple(
+            item.edge_id
+            for item in dependency_edges
+            if type(item) is DeltaDependencyEdgeV01
+        )
+        != graph.ordered_edge_ids
+        or len(dependency_edges) != graph.edge_count
+        or any(_delta_dependency_edge_errors(item) for item in dependency_edges)
+    ):
+        raise ValueError("g2e_dependency_edge_set_mismatch")
+    if (
+        type(baseline_source_artifacts) is not tuple
+        or type(observed_source_artifacts) is not tuple
+        or len(baseline_source_artifacts) != graph.node_count
+        or len(observed_source_artifacts) != graph.node_count
+        or any(
+            type(item) is not KernelArtifactV01
+            for item in baseline_source_artifacts + observed_source_artifacts
+        )
+        or tuple(item.artifact_id for item in baseline_source_artifacts)
+        != graph.ordered_node_ids
+    ):
+        raise ValueError("g2e_delta_source_binding_set_mismatch")
+    positions = {
+        artifact_id: index for index, artifact_id in enumerate(graph.ordered_node_ids)
+    }
+    baseline_by_id = {
+        artifact.artifact_id: artifact for artifact in baseline_source_artifacts
+    }
+    binding_by_id = {item.source_binding_id: item for item in source_bindings}
+    bound_positions: set[int] = set()
+    for binding in source_bindings:
+        if binding.baseline_source_artifact_id not in positions:
+            raise ValueError("g2e_delta_source_binding_set_mismatch")
+        position = positions[binding.baseline_source_artifact_id]
+        if position in bound_positions:
+            raise ValueError("g2e_delta_source_binding_set_mismatch")
+        bound_positions.add(position)
+        baseline = baseline_source_artifacts[position]
+        observed = observed_source_artifacts[position]
+        if (
+            baseline.artifact_id != binding.baseline_source_artifact_id
+            or observed.artifact_id != binding.observed_source_artifact_id
+            or baseline.artifact_type != binding.baseline_source_artifact_type
+            or observed.artifact_type != binding.observed_source_artifact_type
+            or baseline.artifact_type != observed.artifact_type
+            or _artifact_sha256_v01(baseline)
+            != binding.baseline_source_artifact_sha256
+            or _artifact_sha256_v01(observed)
+            != binding.observed_source_artifact_sha256
+            or _artifact_payload_sha256_v01(baseline)
+            != binding.baseline_source_payload_sha256
+            or _artifact_payload_sha256_v01(observed)
+            != binding.observed_source_payload_sha256
+            or binding.predecessor_relation != OBSERVED_SUCCESSOR_RELATION_V01
+        ):
+            raise ValueError("g2e_delta_source_binding_set_mismatch")
+        if (
+            binding.request_id != delta.request_id
+            or binding.transaction_id != delta.transaction_id
+            or binding.owning_root_id != delta.owning_root_id
+            or binding.domain_id != delta.domain_id
+            or binding.baseline_report_id != delta.baseline_report_id
+            or binding.baseline_graph_id != graph.graph_id
+            or binding.baseline_graph_version != graph.graph_version
+            or binding.baseline_policy_version != delta.baseline_policy_version
+            or binding.observed_policy_version != delta.observed_policy_version
+            or binding.baseline_schema_versions != delta.baseline_schema_versions
+            or binding.observed_schema_versions != delta.observed_schema_versions
+            or binding.baseline_source_history_hash
+            != delta.baseline_source_history_hash
+            or binding.observed_source_history_hash
+            != delta.observed_source_history_hash
+        ):
+            raise ValueError("g2e_delta_source_binding_set_mismatch")
+        if (
+            binding.valid_from_utc != delta.valid_from_utc
+            or binding.valid_to_utc != delta.valid_to_utc
+        ):
+            raise ValueError("g2e_delta_time_invalid")
+    if any(
+        changed.source_binding_id not in binding_by_id
+        for changed in changed_field_bindings + changed_artifact_bindings
+    ):
+        raise ValueError("g2e_delta_binding_set_mismatch")
+    if any(
+        changed.observed_at_utc != delta.observed_at_utc
+        for changed in changed_field_bindings + changed_artifact_bindings
+    ):
+        raise ValueError("g2e_delta_time_invalid")
+
+    field_semantics: dict[tuple[str, str], tuple[object, ...]] = {}
+    for changed in changed_field_bindings:
+        semantic_key = (changed.source_binding_id, changed.json_pointer)
+        semantic_material = (
+            changed.prior_value_sha256,
+            changed.observed_value_sha256,
+            changed.change_class,
+            changed.observed_at_utc,
+        )
+        if semantic_key in field_semantics:
+            if field_semantics[semantic_key] == semantic_material:
+                raise ValueError("g2e_delta_duplicate_binding")
+            raise ValueError("g2e_delta_conflicting_duplicate")
+        field_semantics[semantic_key] = semantic_material
+
+    artifact_semantics: dict[tuple[str, str], tuple[object, ...]] = {}
+    for changed in changed_artifact_bindings:
+        semantic_key = (
+            changed.source_binding_id,
+            changed.baseline_artifact_id,
+        )
+        semantic_material = (
+            changed.baseline_artifact_type,
+            changed.observed_artifact_id,
+            changed.observed_artifact_type,
+            changed.baseline_payload_sha256,
+            changed.observed_payload_sha256,
+            changed.baseline_dependency_fingerprint,
+            changed.observed_dependency_fingerprint,
+            changed.predecessor_relation,
+            changed.change_class,
+            changed.observed_at_utc,
+        )
+        if semantic_key in artifact_semantics:
+            if artifact_semantics[semantic_key] == semantic_material:
+                raise ValueError("g2e_delta_duplicate_binding")
+            raise ValueError("g2e_delta_conflicting_duplicate")
+        artifact_semantics[semantic_key] = semantic_material
+    for index, (baseline, observed) in enumerate(
+        zip(baseline_source_artifacts, observed_source_artifacts, strict=True)
+    ):
+        _artifact_plain_v01(baseline)
+        _artifact_plain_v01(observed)
+        if (
+            baseline.transaction_id != graph.transaction_id
+            or observed.transaction_id != graph.transaction_id
+            or baseline.owner_root_id != graph.owning_root_id
+            or observed.owner_root_id != graph.owning_root_id
+            or baseline.artifact_type != observed.artifact_type
+            or baseline.schema_version != observed.schema_version
+        ):
+            raise ValueError("g2e_delta_source_binding_set_mismatch")
+        if index not in bound_positions and canonical_json_bytes_v01(
+            _artifact_plain_v01(baseline)
+        ) != canonical_json_bytes_v01(_artifact_plain_v01(observed)):
+            raise ValueError("g2e_delta_source_binding_set_mismatch")
+    for changed in changed_field_bindings:
+        binding = binding_by_id.get(changed.source_binding_id)
+        if binding is None:
+            raise ValueError("g2e_delta_binding_set_mismatch")
+        position = positions[binding.baseline_source_artifact_id]
+        baseline_plain = _artifact_plain_v01(baseline_source_artifacts[position])
+        observed_plain = _artifact_plain_v01(observed_source_artifacts[position])
+        try:
+            prior = _resolve_json_pointer_v01(baseline_plain, changed.json_pointer)
+            current = _resolve_json_pointer_v01(observed_plain, changed.json_pointer)
+        except ValueError:
+            raise ValueError("g2e_dependency_source_payload_unavailable") from None
+        if (
+            hashlib.sha256(canonical_json_bytes_v01(prior)).hexdigest()
+            != changed.prior_value_sha256
+            or hashlib.sha256(canonical_json_bytes_v01(current)).hexdigest()
+            != changed.observed_value_sha256
+            or canonical_json_bytes_v01(prior) == canonical_json_bytes_v01(current)
+        ):
+            raise ValueError("g2e_delta_artifact_binding_invalid")
+    profile = build_dependency_fingerprint_profile_v01()
+    baseline_fingerprint = build_dependency_fingerprint_v01(
+        profile=profile,
+        graph=graph,
+        dependency_edges=dependency_edges,
+        source_artifacts=baseline_source_artifacts,
+        policy_version=delta.baseline_policy_version,
+        schema_versions=delta.baseline_schema_versions,
+        source_history_hash=delta.baseline_source_history_hash,
+    )
+    observed_fingerprint = build_dependency_fingerprint_v01(
+        profile=profile,
+        graph=graph,
+        dependency_edges=dependency_edges,
+        source_artifacts=observed_source_artifacts,
+        policy_version=delta.observed_policy_version,
+        schema_versions=delta.observed_schema_versions,
+        source_history_hash=delta.observed_source_history_hash,
+    )
+    if (
+        delta.dependency_fingerprint_before != baseline_fingerprint
+        or delta.dependency_fingerprint_after != observed_fingerprint
+    ):
+        raise ValueError("g2e_dependency_fingerprint_forgery")
+    for changed in changed_artifact_bindings:
+        binding = binding_by_id.get(changed.source_binding_id)
+        if binding is None:
+            raise ValueError("g2e_delta_binding_set_mismatch")
+        if (
+            changed.baseline_artifact_id != binding.baseline_source_artifact_id
+            or changed.observed_artifact_id != binding.observed_source_artifact_id
+            or changed.baseline_artifact_type != binding.baseline_source_artifact_type
+            or changed.observed_artifact_type != binding.observed_source_artifact_type
+            or changed.baseline_payload_sha256
+            != binding.baseline_source_payload_sha256
+            or changed.observed_payload_sha256
+            != binding.observed_source_payload_sha256
+            or changed.baseline_dependency_fingerprint != baseline_fingerprint
+            or changed.observed_dependency_fingerprint != observed_fingerprint
+        ):
+            raise ValueError("g2e_delta_artifact_binding_invalid")
+    changed_nodes = tuple(
+        sorted(
+            {
+                binding_by_id[item.source_binding_id].baseline_source_artifact_id
+                for item in changed_field_bindings + changed_artifact_bindings
+            },
+            key=lambda artifact_id: (positions[artifact_id], artifact_id),
+        )
+    )
+    if not changed_nodes:
+        raise ValueError("g2e_affected_changed_binding_unknown")
+    return changed_nodes, positions
+
+
+def _affected_walk_v01(
+    *,
+    changed_nodes: tuple[str, ...],
+    graph: DependencyGraphIndexV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    positions: dict[str, int],
+) -> dict[str, object]:
+    reverse: dict[str, list[DeltaDependencyEdgeV01]] = {
+        node_id: [] for node_id in graph.ordered_node_ids
+    }
+    for edge in dependency_edges:
+        reverse[edge.dependency_artifact_id].append(edge)
+    for rows in reverse.values():
+        rows.sort(key=lambda edge: edge.canonical_order)
+    frontier = deque(changed_nodes)
+    distance = {node_id: 0 for node_id in changed_nodes}
+    cause: dict[str, str | None] = {node_id: None for node_id in changed_nodes}
+    traversed_edge_count = 0
+    while frontier:
+        dependency_id = frontier.popleft()
+        for edge in reverse[dependency_id]:
+            traversed_edge_count += 1
+            dependent_id = edge.dependent_artifact_id
+            if dependent_id in distance:
+                continue
+            next_distance = distance[dependency_id] + 1
+            if next_distance > graph.max_hops:
+                raise ValueError("g2e_affected_hop_bound_exceeded")
+            distance[dependent_id] = next_distance
+            cause[dependent_id] = edge.edge_id
+            if len(distance) > graph.max_nodes:
+                raise ValueError("g2e_affected_node_bound_exceeded")
+            frontier.append(dependent_id)
+    affected = tuple(
+        sorted(
+            (node_id for node_id, hops in distance.items() if hops > 0),
+            key=lambda node_id: (distance[node_id], positions[node_id], node_id),
+        )
+    )
+    direct = tuple(node_id for node_id in affected if distance[node_id] == 1)
+    transitive = tuple(node_id for node_id in affected if distance[node_id] > 1)
+    changed_set = set(changed_nodes)
+    affected_set = set(affected)
+    unaffected = tuple(
+        node_id
+        for node_id in graph.ordered_node_ids
+        if node_id not in changed_set and node_id not in affected_set
+    )
+    visited_rows = tuple((node_id, 0, None) for node_id in changed_nodes) + tuple(
+        (node_id, distance[node_id], cause[node_id]) for node_id in affected
+    )
+    return {
+        "ordered_changed_node_ids": changed_nodes,
+        "ordered_directly_affected_ids": direct,
+        "ordered_transitively_affected_ids": transitive,
+        "ordered_affected_ids": affected,
+        "ordered_unaffected_ids": unaffected,
+        "visited_rows": visited_rows,
+        "traversed_edge_count": traversed_edge_count,
+        "maximum_observed_hops": max(distance.values(), default=0),
+    }
+
+
+def _artifact_profile_instance_v01(name: str) -> tuple[object, ...]:
+    for row in G2E_ABI_ARTIFACT_INSTANCE_PROFILES_V01:
+        if row[0] == name:
+            return row
+    raise ValueError("g2e_object_invalid")
+
+
+def _project_g2e_abi_payload_v01(
+    *,
+    profile_name: str,
+    complete_payload: dict[str, object],
+) -> dict[str, object]:
+    profile = _artifact_profile_instance_v01(profile_name)
+    source_type_name = profile[2]
+    try:
+        expected_field_order = next(
+            field_names
+            for type_name, field_names in CONTINUOUS_DELTA_FIELD_NAMES_V01
+            if type_name == source_type_name
+        )
+        omitted_fields = next(
+            fields
+            for name, fields in _G2E_ABI_PAYLOAD_OMISSIONS_V01
+            if name == profile_name
+        )
+    except StopIteration as exc:
+        raise ValueError("g2e_object_invalid") from exc
+    if type(complete_payload) is not dict:
+        raise ValueError("g2e_object_invalid")
+    if tuple(complete_payload) != expected_field_order:
+        raise ValueError("g2e_object_invalid")
+    if any(field_name not in complete_payload for field_name in omitted_fields):
+        raise ValueError("g2e_object_invalid")
+    projected = {
+        field_name: complete_payload[field_name]
+        for field_name in expected_field_order
+        if field_name not in omitted_fields
+    }
+    expected_projected_order = tuple(
+        field_name
+        for field_name in expected_field_order
+        if field_name not in omitted_fields
+    )
+    if tuple(projected) != expected_projected_order:
+        raise ValueError("g2e_object_invalid")
+    return projected
+
+
+def _artifact_time_envelope_v01(
+    *,
+    baseline_route_artifact: KernelArtifactV01,
+    delta: WorldStateDeltaV01,
+) -> dict[str, object]:
+    route_plain = _artifact_plain_v01(baseline_route_artifact)
+    route_envelope = route_plain["time_envelope"]
+    if type(route_envelope) is not dict:
+        raise ValueError("g2e_object_invalid")
+    return {
+        "ct_session_anchor": route_envelope["ct_session_anchor"],
+        "et_observed_at": delta.observed_at_utc,
+        "freshness_class": route_envelope["freshness_class"],
+        "kt_asof": route_envelope["kt_asof"],
+        "pt_created_at": delta.observed_at_utc,
+        "ttl_seconds": route_envelope["ttl_seconds"],
+        "valid_from": delta.valid_from_utc,
+        "valid_to": delta.valid_to_utc,
+    }
+
+
+def _project_g2e_kernel_artifact_v01(
+    *,
+    profile_name: str,
+    transaction_id: str,
+    owning_root_id: str,
+    payload: dict[str, object],
+    trace_refs: tuple[str, ...],
+    parent_refs: tuple[str, ...],
+    time_envelope: dict[str, object],
+) -> KernelArtifactV01:
+    profile = _artifact_profile_instance_v01(profile_name)
+    (
+        _name, artifact_type, _source_type, lifecycle_state, authority_class,
+        source_component, prefix, domain, _owner_slice,
+    ) = profile
+    material = {
+        "abi_version": "v1.0",
+        "artifact_type": artifact_type,
+        "schema_version": "v0.1",
+        "transaction_id": transaction_id,
+        "owner_root_id": owning_root_id,
+        "source_component": source_component,
+        "authority_class": authority_class,
+        "lifecycle_state": lifecycle_state,
+        "payload": payload,
+        "trace_refs": list(trace_refs),
+        "parent_refs": list(parent_refs),
+        "time_envelope": time_envelope,
+    }
+    artifact_id = str(prefix) + domain_separated_sha256_hex_v01(
+        domain=str(domain),
+        payload=canonical_json_bytes_v01(material),
+    )
+    artifact = build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=artifact_id,
+        artifact_type=str(artifact_type),
+        schema_version="v0.1",
+        transaction_id=transaction_id,
+        owner_root_id=owning_root_id,
+        source_component=str(source_component),
+        authority_class=str(authority_class),
+        lifecycle_state=str(lifecycle_state),
+        payload=payload,
+        trace_refs=trace_refs,
+        parent_refs=parent_refs,
+        time_envelope=time_envelope,
+    )
+    if validate_kernel_artifact_v01(artifact):
+        raise ValueError("g2e_object_invalid")
+    return artifact
+
+
+def _project_delta_source_proposed_artifact_v01(
+    *,
+    delta: WorldStateDeltaV01,
+    baseline_route_artifact: KernelArtifactV01,
+    baseline_g2d_report_artifact: KernelArtifactV01,
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> KernelArtifactV01:
+    if _world_state_delta_errors(delta):
+        raise ValueError("g2e_delta_source_invalid")
+    for artifact in (
+        baseline_route_artifact,
+        baseline_g2d_report_artifact,
+        *baseline_source_artifacts,
+        *observed_source_artifacts,
+    ):
+        _artifact_plain_v01(artifact)
+    return _project_g2e_kernel_artifact_v01(
+        profile_name="delta_source_proposed",
+        transaction_id=delta.transaction_id,
+        owning_root_id=delta.owning_root_id,
+        payload=_project_g2e_abi_payload_v01(
+            profile_name="delta_source_proposed",
+            complete_payload=world_state_delta_to_plain_data_v01(delta),
+        ),
+        trace_refs=delta.trace_refs + delta.ordered_source_binding_ids,
+        parent_refs=(
+            baseline_route_artifact.artifact_id,
+            baseline_g2d_report_artifact.artifact_id,
+            *(artifact.artifact_id for artifact in baseline_source_artifacts),
+            *(artifact.artifact_id for artifact in observed_source_artifacts),
+        ),
+        time_envelope=_artifact_time_envelope_v01(
+            baseline_route_artifact=baseline_route_artifact,
+            delta=delta,
+        ),
+    )
+
+
+def _project_delta_source_validated_artifact_v01(
+    *,
+    delta: WorldStateDeltaV01,
+    proposed_source_artifact: KernelArtifactV01,
+    t01_decision_id: str,
+    baseline_route_artifact: KernelArtifactV01,
+    baseline_g2d_report_artifact: KernelArtifactV01,
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> KernelArtifactV01:
+    _artifact_plain_v01(proposed_source_artifact)
+    if (
+        proposed_source_artifact.artifact_type != "ContinuousDeltaSource"
+        or proposed_source_artifact.lifecycle_state != "PROPOSED"
+        or not _text_valid(t01_decision_id)
+    ):
+        raise ValueError("g2e_object_invalid")
+    return _project_g2e_kernel_artifact_v01(
+        profile_name="delta_source_validated",
+        transaction_id=delta.transaction_id,
+        owning_root_id=delta.owning_root_id,
+        payload=_project_g2e_abi_payload_v01(
+            profile_name="delta_source_validated",
+            complete_payload=world_state_delta_to_plain_data_v01(delta),
+        ),
+        trace_refs=(
+            proposed_source_artifact.artifact_id,
+            t01_decision_id,
+            *delta.trace_refs,
+            *delta.ordered_source_binding_ids,
+        ),
+        parent_refs=(
+            proposed_source_artifact.artifact_id,
+            baseline_route_artifact.artifact_id,
+            baseline_g2d_report_artifact.artifact_id,
+            *(artifact.artifact_id for artifact in baseline_source_artifacts),
+            *(artifact.artifact_id for artifact in observed_source_artifacts),
+        ),
+        time_envelope=_artifact_time_envelope_v01(
+            baseline_route_artifact=baseline_route_artifact,
+            delta=delta,
+        ),
+    )
+
+
+def _project_dependency_graph_artifact_v01(
+    *,
+    graph: DependencyGraphIndexV01,
+    delta: WorldStateDeltaV01,
+    validated_delta_source_artifact: KernelArtifactV01,
+    baseline_route_artifact: KernelArtifactV01,
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> KernelArtifactV01:
+    if _dependency_graph_index_errors(graph):
+        raise ValueError("g2e_dependency_graph_basis_mismatch")
+    return _project_g2e_kernel_artifact_v01(
+        profile_name="dependency_graph_validated",
+        transaction_id=graph.transaction_id,
+        owning_root_id=graph.owning_root_id,
+        payload=_project_g2e_abi_payload_v01(
+            profile_name="dependency_graph_validated",
+            complete_payload=dependency_graph_index_to_plain_data_v01(graph),
+        ),
+        trace_refs=graph.trace_refs + (
+            graph.source_manifest_id,
+            graph.source_replay_id,
+        ),
+        parent_refs=(
+            validated_delta_source_artifact.artifact_id,
+            *(artifact.artifact_id for artifact in baseline_source_artifacts),
+        ),
+        time_envelope=_artifact_time_envelope_v01(
+            baseline_route_artifact=baseline_route_artifact,
+            delta=delta,
+        ),
+    )
+
+
+def _project_affected_set_artifact_v01(
+    *,
+    affected_result: AffectedSetResultV01,
+    delta: WorldStateDeltaV01,
+    validated_delta_source_artifact: KernelArtifactV01,
+    dependency_graph_artifact: KernelArtifactV01,
+    baseline_route_artifact: KernelArtifactV01,
+    t02_decision_id: str,
+) -> KernelArtifactV01:
+    if _affected_set_result_errors(affected_result):
+        raise ValueError("g2e_affected_closure_incomplete")
+    return _project_g2e_kernel_artifact_v01(
+        profile_name="affected_set_validated",
+        transaction_id=delta.transaction_id,
+        owning_root_id=delta.owning_root_id,
+        payload=_project_g2e_abi_payload_v01(
+            profile_name="affected_set_validated",
+            complete_payload=affected_set_result_to_plain_data_v01(
+                affected_result
+            ),
+        ),
+        trace_refs=affected_result.trace_refs + (
+            t02_decision_id,
+            affected_result.delta_id,
+            affected_result.graph_id,
+        ),
+        parent_refs=(
+            validated_delta_source_artifact.artifact_id,
+            dependency_graph_artifact.artifact_id,
+        ),
+        time_envelope=_artifact_time_envelope_v01(
+            baseline_route_artifact=baseline_route_artifact,
+            delta=delta,
+        ),
+    )
+
+
 def build_delta_source_binding_v01(
     *,
     request_id: str,
@@ -1603,6 +2988,745 @@ def rebuild_continuous_delta_validation_report_identity_v01(value: ContinuousDel
     return _rebuild(value, ContinuousDeltaValidationReportV01)
 
 
+def build_delta_dependency_edge_v01(
+    *,
+    graph_basis_sha256: str,
+    graph_version: str,
+    dependent_artifact_id: str,
+    dependency_artifact_id: str,
+    dependency_field_pointers: tuple[str, ...],
+    edge_class: str,
+    transaction_id: str,
+    owning_root_id: str,
+    domain_id: str,
+    canonical_order: int,
+    source_replay_edge_sha256: str,
+    trace_refs: tuple[str, ...],
+) -> DeltaDependencyEdgeV01:
+    provisional = DeltaDependencyEdgeV01(
+        edge_id="g2e_delta_dependency_edge_v01:" + _ZERO_SHA256,
+        graph_basis_sha256=graph_basis_sha256,
+        graph_version=graph_version,
+        dependent_artifact_id=dependent_artifact_id,
+        dependency_artifact_id=dependency_artifact_id,
+        dependency_field_pointers=dependency_field_pointers,
+        edge_class=edge_class,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        canonical_order=canonical_order,
+        source_replay_edge_sha256=source_replay_edge_sha256,
+        trace_refs=trace_refs,
+    )
+    result = _finish_identity(provisional)
+    return _require_built_valid(  # type: ignore[return-value]
+        result, _delta_dependency_edge_errors
+    )
+
+
+def validate_delta_dependency_edge_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        DeltaDependencyEdgeV01,
+        "dependency_edge",
+        _delta_dependency_edge_errors,
+    )
+
+
+def delta_dependency_edge_to_plain_data_v01(
+    value: DeltaDependencyEdgeV01,
+) -> dict[str, object]:
+    return _serialize(
+        value, DeltaDependencyEdgeV01, _delta_dependency_edge_errors
+    )
+
+
+def rebuild_delta_dependency_edge_identity_v01(
+    value: DeltaDependencyEdgeV01,
+) -> str:
+    return _rebuild(value, DeltaDependencyEdgeV01)
+
+
+def build_dependency_graph_index_v01(
+    *,
+    graph_basis_sha256: str,
+    graph_version: str,
+    manifest: ArtifactManifestV01,
+    replay: ReplayVerificationResultV01,
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    transaction_id: str,
+    owning_root_id: str,
+    domain_id: str,
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+    trace_refs: tuple[str, ...],
+) -> DependencyGraphIndexV01:
+    source_errors = _manifest_replay_source_errors_v01(
+        manifest=manifest,
+        replay=replay,
+        source_artifacts=source_artifacts,
+    )
+    if source_errors:
+        raise ValueError(source_errors[0])
+    if graph_version != CONTINUOUS_DELTA_GRAPH_VERSION_V01:
+        raise ValueError("g2e_dependency_graph_version_mismatch")
+    node_ids = tuple(item.artifact_id for item in manifest.artifacts)
+    if len(node_ids) > MAX_DEPENDENCY_GRAPH_NODES_V01:
+        raise ValueError("g2e_dependency_graph_bounds_exceeded")
+    if (
+        transaction_id != manifest.transaction_id
+        or any(item.transaction_id != transaction_id for item in source_artifacts)
+    ):
+        raise ValueError("g2e_dependency_edge_cross_transaction")
+    if any(item.owner_root_id != owning_root_id for item in source_artifacts):
+        raise ValueError("g2e_dependency_edge_cross_root")
+    if (
+        not _text_valid(domain_id)
+        or not _text_valid(policy_version)
+        or not _text_tuple_valid(schema_versions, minimum=1, maximum=64)
+        or not _sha256_valid(source_history_hash)
+        or not _text_tuple_valid(trace_refs, minimum=1)
+    ):
+        raise ValueError("g2e_object_invalid")
+    if (
+        type(dependency_edges) is not tuple
+        or len(dependency_edges) > MAX_DEPENDENCY_GRAPH_EDGES_V01
+        or any(_delta_dependency_edge_errors(edge) for edge in dependency_edges)
+    ):
+        raise ValueError("g2e_dependency_edge_set_mismatch")
+    positions = {artifact_id: index for index, artifact_id in enumerate(node_ids)}
+    descriptors = tuple(_edge_descriptor_v01(edge) for edge in dependency_edges)
+    try:
+        normalized = _normalized_edge_descriptors_v01(descriptors, positions)
+    except KeyError as exc:
+        unknown = exc.args[0]
+        if any(row[0] == unknown for row in descriptors):
+            raise ValueError("g2e_dependency_edge_unknown_dependent") from None
+        raise ValueError("g2e_dependency_edge_unknown_source") from None
+    if descriptors != normalized or tuple(
+        edge.canonical_order for edge in dependency_edges
+    ) != tuple(range(1, len(dependency_edges) + 1)):
+        raise ValueError("g2e_dependency_graph_ordering_invalid")
+    replay_pairs = tuple(
+        (edge.artifact_id, edge.depends_on_artifact_id)
+        for edge in replay.reconstructed_dependency_edges
+    )
+    if len(descriptors) != len(set(descriptors)):
+        raise ValueError("g2e_dependency_edge_duplicate")
+    descriptor_pair_rows = tuple((row[0], row[1]) for row in descriptors)
+    if len(descriptor_pair_rows) != len(set(descriptor_pair_rows)):
+        raise ValueError("g2e_dependency_edge_duplicate")
+    if _graph_has_cycle_v01(node_ids, descriptors):
+        raise ValueError("g2e_dependency_graph_cycle")
+    descriptor_pairs = set(descriptor_pair_rows)
+    replay_pair_set = set(replay_pairs)
+    if descriptor_pairs - replay_pair_set:
+        raise ValueError("g2e_dependency_edge_unknown_source")
+    if replay_pair_set - descriptor_pairs:
+        raise ValueError("g2e_dependency_graph_missing_edge")
+    source_manifest_id = _source_manifest_id_v01(manifest)
+    expected_basis = _graph_basis_sha256_v01(
+        graph_version=graph_version,
+        source_manifest_id=source_manifest_id,
+        source_manifest_hash=manifest.manifest_hash,
+        source_replay_id=replay.replay_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        policy_version=policy_version,
+        schema_versions=schema_versions,
+        source_history_hash=source_history_hash,
+        source_artifacts=source_artifacts,
+        replay_pairs=replay_pairs,
+        normalized_descriptors=normalized,
+    )
+    if graph_basis_sha256 != expected_basis:
+        raise ValueError("g2e_dependency_graph_basis_mismatch")
+    for index, edge in enumerate(dependency_edges, start=1):
+        expected_replay_edge = _source_replay_edge_sha256_v01(
+            source_manifest_id=source_manifest_id,
+            source_manifest_hash=manifest.manifest_hash,
+            source_replay_id=replay.replay_id,
+            dependent_artifact_id=edge.dependent_artifact_id,
+            dependency_artifact_id=edge.dependency_artifact_id,
+            positions=positions,
+        )
+        if (
+            edge.graph_basis_sha256 != expected_basis
+            or edge.graph_version != graph_version
+            or edge.transaction_id != transaction_id
+            or edge.owning_root_id != owning_root_id
+            or edge.domain_id != domain_id
+            or edge.canonical_order != index
+            or edge.source_replay_edge_sha256 != expected_replay_edge
+        ):
+            raise ValueError("g2e_dependency_replay_edge_mismatch")
+    provisional = DependencyGraphIndexV01(
+        graph_id="g2e_dependency_graph_index_v01:" + _ZERO_SHA256,
+        graph_version=graph_version,
+        graph_basis_sha256=expected_basis,
+        source_manifest_id=source_manifest_id,
+        source_manifest_hash=manifest.manifest_hash,
+        source_replay_id=replay.replay_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        ordered_node_ids=node_ids,
+        ordered_edge_ids=tuple(edge.edge_id for edge in dependency_edges),
+        node_count=len(node_ids),
+        edge_count=len(dependency_edges),
+        max_nodes=MAX_DEPENDENCY_GRAPH_NODES_V01,
+        max_edges=MAX_DEPENDENCY_GRAPH_EDGES_V01,
+        max_hops=MAX_AFFECTED_HOPS_V01,
+        acyclic=True,
+        source_history_hash=source_history_hash,
+        policy_version=policy_version,
+        schema_versions=schema_versions,
+        trace_refs=trace_refs,
+    )
+    result = _finish_identity(provisional)
+    return _require_built_valid(  # type: ignore[return-value]
+        result, _dependency_graph_index_errors
+    )
+
+
+def validate_dependency_graph_index_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        DependencyGraphIndexV01,
+        "dependency_graph",
+        _dependency_graph_index_errors,
+    )
+
+
+def dependency_graph_index_to_plain_data_v01(
+    value: DependencyGraphIndexV01,
+) -> dict[str, object]:
+    return _serialize(
+        value, DependencyGraphIndexV01, _dependency_graph_index_errors
+    )
+
+
+def rebuild_dependency_graph_index_identity_v01(
+    value: DependencyGraphIndexV01,
+) -> str:
+    return _rebuild(value, DependencyGraphIndexV01)
+
+
+def build_affected_set_request_v01(
+    *,
+    delta: WorldStateDeltaV01,
+    graph: DependencyGraphIndexV01,
+    trace_refs: tuple[str, ...],
+) -> AffectedSetRequestV01:
+    if _world_state_delta_errors(delta):
+        raise ValueError("g2e_delta_source_invalid")
+    if _dependency_graph_index_errors(graph):
+        raise ValueError("g2e_dependency_graph_basis_mismatch")
+    if (
+        delta.baseline_graph_id != graph.graph_id
+        or delta.baseline_graph_version != graph.graph_version
+        or delta.transaction_id != graph.transaction_id
+        or delta.owning_root_id != graph.owning_root_id
+        or delta.domain_id != graph.domain_id
+    ):
+        raise ValueError("g2e_affected_request_invalid")
+    provisional = AffectedSetRequestV01(
+        affected_request_id="g2e_affected_set_request_v01:" + _ZERO_SHA256,
+        delta_id=delta.delta_id,
+        graph_id=graph.graph_id,
+        graph_version=graph.graph_version,
+        baseline_report_id=delta.baseline_report_id,
+        transaction_id=delta.transaction_id,
+        owning_root_id=delta.owning_root_id,
+        domain_id=delta.domain_id,
+        ordered_changed_field_binding_ids=delta.ordered_changed_field_binding_ids,
+        ordered_changed_artifact_binding_ids=(
+            delta.ordered_changed_artifact_binding_ids
+        ),
+        max_nodes=MAX_DEPENDENCY_GRAPH_NODES_V01,
+        max_edges=MAX_DEPENDENCY_GRAPH_EDGES_V01,
+        max_hops=MAX_AFFECTED_HOPS_V01,
+        trace_refs=trace_refs,
+    )
+    result = _finish_identity(provisional)
+    return _require_built_valid(  # type: ignore[return-value]
+        result, _affected_set_request_errors
+    )
+
+
+def validate_affected_set_request_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        AffectedSetRequestV01,
+        "affected_request",
+        _affected_set_request_errors,
+    )
+
+
+def affected_set_request_to_plain_data_v01(
+    value: AffectedSetRequestV01,
+) -> dict[str, object]:
+    return _serialize(
+        value, AffectedSetRequestV01, _affected_set_request_errors
+    )
+
+
+def rebuild_affected_set_request_identity_v01(
+    value: AffectedSetRequestV01,
+) -> str:
+    return _rebuild(value, AffectedSetRequestV01)
+
+
+def build_affected_set_result_v01(
+    *,
+    affected_request_id: str,
+    delta_id: str,
+    graph_id: str,
+    graph_version: str,
+    ordered_changed_node_ids: tuple[str, ...],
+    ordered_directly_affected_ids: tuple[str, ...],
+    ordered_transitively_affected_ids: tuple[str, ...],
+    ordered_affected_ids: tuple[str, ...],
+    ordered_unaffected_ids: tuple[str, ...],
+    visited_rows: tuple[tuple[str, int, str | None], ...],
+    traversed_edge_count: int,
+    maximum_observed_hops: int,
+    trace_refs: tuple[str, ...],
+) -> AffectedSetResultV01:
+    return _build_affected_set_result_internal_v01(
+        affected_request_id=affected_request_id,
+        delta_id=delta_id,
+        graph_id=graph_id,
+        graph_version=graph_version,
+        graph_basis_sha256=_ZERO_SHA256,
+        ordered_changed_node_ids=ordered_changed_node_ids,
+        ordered_directly_affected_ids=ordered_directly_affected_ids,
+        ordered_transitively_affected_ids=ordered_transitively_affected_ids,
+        ordered_affected_ids=ordered_affected_ids,
+        ordered_unaffected_ids=ordered_unaffected_ids,
+        visited_rows=visited_rows,
+        traversed_edge_count=traversed_edge_count,
+        maximum_observed_hops=maximum_observed_hops,
+        trace_refs=trace_refs,
+    )
+
+
+def validate_affected_set_result_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        AffectedSetResultV01,
+        "affected_closure",
+        _affected_set_result_errors,
+    )
+
+
+def affected_set_result_to_plain_data_v01(
+    value: AffectedSetResultV01,
+) -> dict[str, object]:
+    return _serialize(
+        value, AffectedSetResultV01, _affected_set_result_errors
+    )
+
+
+def rebuild_affected_set_result_identity_v01(
+    value: AffectedSetResultV01,
+) -> str:
+    return _rebuild(value, AffectedSetResultV01)
+
+
+def build_dependency_fingerprint_v01(
+    *,
+    profile: DependencyFingerprintProfileV01,
+    graph: DependencyGraphIndexV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+) -> str:
+    error = _fingerprint_context_error_v01(
+        profile=profile,
+        graph=graph,
+        dependency_edges=dependency_edges,
+        source_artifacts=source_artifacts,
+        policy_version=policy_version,
+        schema_versions=schema_versions,
+        source_history_hash=source_history_hash,
+    )
+    if error:
+        raise ValueError(error)
+    if (
+        not _text_valid(policy_version)
+        or not _text_tuple_valid(schema_versions, minimum=1, maximum=64)
+        or not _sha256_valid(source_history_hash)
+    ):
+        raise ValueError("g2e_dependency_fingerprint_preimage_invalid")
+    dependency_rows = tuple(
+        (
+            edge.dependent_artifact_id,
+            edge.dependency_artifact_id,
+            edge.dependency_field_pointers,
+            edge.edge_class,
+            edge.canonical_order,
+            edge.source_replay_edge_sha256,
+        )
+        for edge in dependency_edges
+    )
+    material = (
+        profile.domain_separator,
+        profile.fingerprint_profile_id,
+        profile.fingerprint_profile_version,
+        profile.typed_role,
+        profile.hash_algorithm,
+        profile.canonicalization_profile_id,
+        (graph.graph_id, graph.graph_basis_sha256),
+        (
+            graph.graph_version,
+            graph.transaction_id,
+            graph.owning_root_id,
+            graph.domain_id,
+        ),
+        policy_version,
+        schema_versions,
+        source_history_hash,
+        dependency_rows,
+        _fingerprint_source_rows_v01(source_artifacts),
+    )
+    return hashlib.sha256(canonical_json_bytes_v01(material)).hexdigest()
+
+
+def validate_dependency_fingerprint_against_sources_v01(
+    value: str,
+    *,
+    profile: DependencyFingerprintProfileV01,
+    graph: DependencyGraphIndexV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+) -> ContinuousDeltaValidationReportV01:
+    reason: str | None = None
+    try:
+        expected = build_dependency_fingerprint_v01(
+            profile=profile,
+            graph=graph,
+            dependency_edges=dependency_edges,
+            source_artifacts=source_artifacts,
+            policy_version=policy_version,
+            schema_versions=schema_versions,
+            source_history_hash=source_history_hash,
+        )
+        if not _sha256_valid(value) or value != expected:
+            reason = "g2e_dependency_fingerprint_mismatch"
+    except ValueError as exc:
+        candidate = exc.args[0] if len(exc.args) == 1 else None
+        reason = (
+            candidate
+            if candidate in PUBLIC_G2E_REASON_CODES_V01
+            else "g2e_dependency_fingerprint_preimage_invalid"
+        )
+    return _contextual_report_v01(
+        validation_target="dependency_fingerprint_against_sources",
+        validated_object_id=value if reason is None else None,
+        failure_stage="fingerprint_context",
+        reason_codes=() if reason is None else (reason,),
+    )
+
+
+def project_integrity_replay_dependency_edges_v01(
+    *,
+    manifest: ArtifactManifestV01,
+    replay: ReplayVerificationResultV01,
+    source_artifacts: tuple[KernelArtifactV01, ...],
+    graph_version: str,
+    transaction_id: str,
+    owning_root_id: str,
+    domain_id: str,
+    policy_version: str,
+    schema_versions: tuple[str, ...],
+    source_history_hash: str,
+    edge_projection_bindings: tuple[
+        tuple[str, str, tuple[str, ...], str], ...
+    ],
+) -> tuple[str, tuple[DeltaDependencyEdgeV01, ...]]:
+    source_errors = _manifest_replay_source_errors_v01(
+        manifest=manifest,
+        replay=replay,
+        source_artifacts=source_artifacts,
+    )
+    if source_errors:
+        raise ValueError(source_errors[0])
+    if graph_version != CONTINUOUS_DELTA_GRAPH_VERSION_V01:
+        raise ValueError("g2e_dependency_graph_version_mismatch")
+    if transaction_id != manifest.transaction_id:
+        raise ValueError("g2e_dependency_edge_cross_transaction")
+    if any(item.owner_root_id != owning_root_id for item in source_artifacts):
+        raise ValueError("g2e_dependency_edge_cross_root")
+    if (
+        not _text_valid(domain_id)
+        or not _text_valid(policy_version)
+        or not _text_tuple_valid(schema_versions, minimum=1, maximum=64)
+        or not _sha256_valid(source_history_hash)
+    ):
+        raise ValueError("g2e_dependency_edge_invalid")
+    if (
+        type(edge_projection_bindings) is not tuple
+        or len(edge_projection_bindings) > MAX_DEPENDENCY_GRAPH_EDGES_V01
+    ):
+        raise ValueError("g2e_dependency_graph_bounds_exceeded")
+    node_ids = tuple(item.artifact_id for item in manifest.artifacts)
+    positions = {artifact_id: index for index, artifact_id in enumerate(node_ids)}
+    descriptors: list[tuple[str, str, tuple[str, ...], str]] = []
+    payload_by_id = {
+        item.artifact_id: _artifact_plain_v01(item)["payload"]
+        for item in source_artifacts
+    }
+    for row in edge_projection_bindings:
+        if type(row) is not tuple or len(row) != 4:
+            raise ValueError("g2e_dependency_edge_invalid")
+        dependent, dependency, pointers, edge_class = row
+        if dependent not in positions:
+            raise ValueError("g2e_dependency_edge_unknown_dependent")
+        if dependency not in positions:
+            raise ValueError("g2e_dependency_edge_unknown_source")
+        if dependent == dependency:
+            raise ValueError("g2e_dependency_edge_self")
+        if (
+            type(pointers) is not tuple
+            or len(pointers) > MAX_DEPENDENCY_GRAPH_NODES_V01
+            or len(pointers) != len(set(pointers))
+            or any(not _json_pointer_valid(pointer) for pointer in pointers)
+            or not _token_valid(edge_class)
+        ):
+            raise ValueError("g2e_dependency_edge_invalid")
+        for pointer in pointers:
+            _resolve_json_pointer_v01(payload_by_id[dependency], pointer)
+        descriptors.append((dependent, dependency, pointers, edge_class))
+    descriptor_tuple = tuple(descriptors)
+    if len(descriptor_tuple) != len(set(descriptor_tuple)):
+        raise ValueError("g2e_dependency_edge_duplicate")
+    descriptor_pair_rows = tuple((row[0], row[1]) for row in descriptor_tuple)
+    if len(descriptor_pair_rows) != len(set(descriptor_pair_rows)):
+        raise ValueError("g2e_dependency_edge_duplicate")
+    replay_pairs = tuple(
+        (edge.artifact_id, edge.depends_on_artifact_id)
+        for edge in replay.reconstructed_dependency_edges
+    )
+    if _graph_has_cycle_v01(node_ids, descriptor_tuple):
+        raise ValueError("g2e_dependency_graph_cycle")
+    descriptor_pairs = set(descriptor_pair_rows)
+    replay_pair_set = set(replay_pairs)
+    if descriptor_pairs - replay_pair_set:
+        raise ValueError("g2e_dependency_edge_unknown_source")
+    if replay_pair_set - descriptor_pairs:
+        raise ValueError("g2e_dependency_graph_missing_edge")
+    normalized = _normalized_edge_descriptors_v01(descriptor_tuple, positions)
+    source_manifest_id = _source_manifest_id_v01(manifest)
+    graph_basis = _graph_basis_sha256_v01(
+        graph_version=graph_version,
+        source_manifest_id=source_manifest_id,
+        source_manifest_hash=manifest.manifest_hash,
+        source_replay_id=replay.replay_id,
+        transaction_id=transaction_id,
+        owning_root_id=owning_root_id,
+        domain_id=domain_id,
+        policy_version=policy_version,
+        schema_versions=schema_versions,
+        source_history_hash=source_history_hash,
+        source_artifacts=source_artifacts,
+        replay_pairs=replay_pairs,
+        normalized_descriptors=normalized,
+    )
+    edges = []
+    for canonical_order, descriptor in enumerate(normalized, start=1):
+        dependent, dependency, pointers, edge_class = descriptor
+        replay_edge_sha256 = _source_replay_edge_sha256_v01(
+            source_manifest_id=source_manifest_id,
+            source_manifest_hash=manifest.manifest_hash,
+            source_replay_id=replay.replay_id,
+            dependent_artifact_id=dependent,
+            dependency_artifact_id=dependency,
+            positions=positions,
+        )
+        edges.append(
+            build_delta_dependency_edge_v01(
+                graph_basis_sha256=graph_basis,
+                graph_version=graph_version,
+                dependent_artifact_id=dependent,
+                dependency_artifact_id=dependency,
+                dependency_field_pointers=pointers,
+                edge_class=edge_class,
+                transaction_id=transaction_id,
+                owning_root_id=owning_root_id,
+                domain_id=domain_id,
+                canonical_order=canonical_order,
+                source_replay_edge_sha256=replay_edge_sha256,
+                trace_refs=(
+                    source_manifest_id,
+                    manifest.manifest_hash,
+                    replay.replay_id,
+                ),
+            )
+        )
+    return graph_basis, tuple(edges)
+
+
+def compute_affected_set_v01(
+    *,
+    request: AffectedSetRequestV01,
+    delta: WorldStateDeltaV01,
+    graph: DependencyGraphIndexV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> AffectedSetResultV01:
+    changed_nodes, positions = _carrier_context_v01(
+        request=request,
+        delta=delta,
+        graph=graph,
+        source_bindings=source_bindings,
+        changed_field_bindings=changed_field_bindings,
+        changed_artifact_bindings=changed_artifact_bindings,
+        dependency_edges=dependency_edges,
+        baseline_source_artifacts=baseline_source_artifacts,
+        observed_source_artifacts=observed_source_artifacts,
+    )
+    walk = _affected_walk_v01(
+        changed_nodes=changed_nodes,
+        graph=graph,
+        dependency_edges=dependency_edges,
+        positions=positions,
+    )
+    return _build_affected_set_result_internal_v01(
+        affected_request_id=request.affected_request_id,
+        delta_id=delta.delta_id,
+        graph_id=graph.graph_id,
+        graph_version=graph.graph_version,
+        graph_basis_sha256=graph.graph_basis_sha256,
+        ordered_changed_node_ids=walk["ordered_changed_node_ids"],
+        ordered_directly_affected_ids=walk["ordered_directly_affected_ids"],
+        ordered_transitively_affected_ids=walk[
+            "ordered_transitively_affected_ids"
+        ],
+        ordered_affected_ids=walk["ordered_affected_ids"],
+        ordered_unaffected_ids=walk["ordered_unaffected_ids"],
+        visited_rows=walk["visited_rows"],
+        traversed_edge_count=walk["traversed_edge_count"],
+        maximum_observed_hops=walk["maximum_observed_hops"],
+        trace_refs=request.trace_refs,
+    )
+
+
+def validate_affected_set_against_graph_v01(
+    value: AffectedSetResultV01,
+    *,
+    request: AffectedSetRequestV01,
+    delta: WorldStateDeltaV01,
+    graph: DependencyGraphIndexV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+) -> ContinuousDeltaValidationReportV01:
+    reason: str | None = None
+    expected: AffectedSetResultV01 | None = None
+    try:
+        if _affected_set_result_errors(value):
+            raise ValueError(_affected_set_result_errors(value)[0])
+        changed_nodes, positions = _carrier_context_v01(
+            request=request,
+            delta=delta,
+            graph=graph,
+            source_bindings=source_bindings,
+            changed_field_bindings=changed_field_bindings,
+            changed_artifact_bindings=changed_artifact_bindings,
+            dependency_edges=dependency_edges,
+            baseline_source_artifacts=baseline_source_artifacts,
+            observed_source_artifacts=observed_source_artifacts,
+        )
+        walk = _affected_walk_v01(
+            changed_nodes=changed_nodes,
+            graph=graph,
+            dependency_edges=dependency_edges,
+            positions=positions,
+        )
+        expected = _build_affected_set_result_internal_v01(
+            affected_request_id=request.affected_request_id,
+            delta_id=delta.delta_id,
+            graph_id=graph.graph_id,
+            graph_version=graph.graph_version,
+            graph_basis_sha256=graph.graph_basis_sha256,
+            ordered_changed_node_ids=walk["ordered_changed_node_ids"],
+            ordered_directly_affected_ids=walk["ordered_directly_affected_ids"],
+            ordered_transitively_affected_ids=walk[
+                "ordered_transitively_affected_ids"
+            ],
+            ordered_affected_ids=walk["ordered_affected_ids"],
+            ordered_unaffected_ids=walk["ordered_unaffected_ids"],
+            visited_rows=walk["visited_rows"],
+            traversed_edge_count=walk["traversed_edge_count"],
+            maximum_observed_hops=walk["maximum_observed_hops"],
+            trace_refs=request.trace_refs,
+        )
+        if value.ordered_changed_node_ids != expected.ordered_changed_node_ids:
+            reason = "g2e_delta_binding_set_mismatch"
+        elif not set(expected.ordered_affected_ids).issubset(
+            value.ordered_affected_ids
+        ):
+            reason = "g2e_affected_reachable_omitted"
+        elif not set(value.ordered_affected_ids).issubset(
+            expected.ordered_affected_ids
+        ):
+            reason = "g2e_affected_unrelated_injected"
+        elif (
+            value.ordered_directly_affected_ids
+            != expected.ordered_directly_affected_ids
+            or value.ordered_transitively_affected_ids
+            != expected.ordered_transitively_affected_ids
+            or value.ordered_affected_ids != expected.ordered_affected_ids
+            or value.ordered_unaffected_ids != expected.ordered_unaffected_ids
+        ):
+            reason = "g2e_affected_ordering_invalid"
+        elif value.closure_proof_sha256 != expected.closure_proof_sha256:
+            reason = "g2e_affected_proof_invalid"
+        elif value != expected:
+            reason = "g2e_affected_closure_incomplete"
+    except ValueError as exc:
+        candidate = exc.args[0] if len(exc.args) == 1 else None
+        reason = (
+            candidate
+            if candidate in PUBLIC_G2E_REASON_CODES_V01
+            else "g2e_affected_closure_incomplete"
+        )
+    return _contextual_report_v01(
+        validation_target="affected_set_completeness",
+        validated_object_id=(
+            value.affected_set_id
+            if reason is None and type(value) is AffectedSetResultV01
+            else None
+        ),
+        failure_stage="affected_completeness",
+        reason_codes=() if reason is None else (reason,),
+    )
+
+
 __all__ = (
     "DeltaSourceBindingV01",
     "ChangedFieldBindingV01",
@@ -1648,4 +3772,25 @@ __all__ = (
     "validate_continuous_delta_validation_report_v01",
     "continuous_delta_validation_report_to_plain_data_v01",
     "rebuild_continuous_delta_validation_report_identity_v01",
+    "build_delta_dependency_edge_v01",
+    "validate_delta_dependency_edge_v01",
+    "delta_dependency_edge_to_plain_data_v01",
+    "rebuild_delta_dependency_edge_identity_v01",
+    "build_dependency_graph_index_v01",
+    "validate_dependency_graph_index_v01",
+    "dependency_graph_index_to_plain_data_v01",
+    "rebuild_dependency_graph_index_identity_v01",
+    "build_affected_set_request_v01",
+    "validate_affected_set_request_v01",
+    "affected_set_request_to_plain_data_v01",
+    "rebuild_affected_set_request_identity_v01",
+    "build_affected_set_result_v01",
+    "validate_affected_set_result_v01",
+    "affected_set_result_to_plain_data_v01",
+    "rebuild_affected_set_result_identity_v01",
+    "build_dependency_fingerprint_v01",
+    "validate_dependency_fingerprint_against_sources_v01",
+    "project_integrity_replay_dependency_edges_v01",
+    "compute_affected_set_v01",
+    "validate_affected_set_against_graph_v01",
 )

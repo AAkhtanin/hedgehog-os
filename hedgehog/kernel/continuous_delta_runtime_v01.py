@@ -1,4 +1,4 @@
-"""Deterministic G2-E Continuous Delta Runtime v0.1 contracts through E2.
+"""Deterministic G2-E Continuous Delta Runtime v0.1 contracts through E3.
 
 The module defines frozen data and deterministic structural/currentness proofs.
 No G2-E object is truth, Root authority, permission, execution, persistence,
@@ -9,11 +9,14 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass, fields, replace
-from datetime import datetime
+from datetime import datetime, timezone
 import hashlib
 import re
 import unicodedata
 
+import hedgehog.action_commit_packet_v02 as action_commit_packet
+import hedgehog.drs_memory_resolution_v01 as drs_memory_resolution
+import hedgehog.reuse_certificate_v01 as reuse_certificate
 from hedgehog.kernel.abi_v01 import (
     CausalConsumptionRefV01,
     KernelArtifactV01,
@@ -22,8 +25,15 @@ from hedgehog.kernel.abi_v01 import (
     kernel_artifact_to_plain_dict_v01,
     validate_kernel_artifact_v01,
 )
-from hedgehog.kernel.execution_mode_router_v01 import ExecutionModeSourceContextV01
-from hedgehog.kernel.fractal_runtime_v02 import FractalRuntimeExecutionBundleV02
+from hedgehog.kernel.execution_mode_router_v01 import (
+    ExecutionModeSourceContextV01,
+    validate_execution_mode_source_context_v01,
+)
+from hedgehog.kernel.fractal_runtime_v02 import (
+    FractalRuntimeExecutionBundleV02,
+    validate_fractal_runtime_execution_bundle_v02,
+    validate_runtime_topology_source_binding_against_g2c_v02,
+)
 from hedgehog.kernel.integrity_replay_v01 import (
     ArtifactDependencyEdgeV01,
     ArtifactManifestV01,
@@ -37,8 +47,13 @@ from hedgehog.kernel.root_decision_v01 import (
     RootDecisionInputV01,
     RootDecisionKernelV01,
     RootDecisionResultV01,
+    validate_root_decision_kernel_v01,
 )
-from hedgehog.kernel.transition_registry_v01 import TransitionDecisionV01
+from hedgehog.kernel.transition_registry_v01 import (
+    TransitionDecisionV01,
+    build_continuous_delta_transition_registry_profile_v01 as _build_continuous_delta_transition_registry_profile_v01,
+    validate_continuous_delta_transition_decision_v01 as _validate_continuous_delta_transition_decision_v01,
+)
 
 
 MODULE_ID = "continuous_delta_runtime_v01"
@@ -69,6 +84,45 @@ SOURCE_REPLAY_EDGE_DOMAIN_V01 = (
 )
 AFFECTED_CLOSURE_PROOF_DOMAIN_V01 = (
     "HEDGEHOG_CONTINUOUS_DELTA_AFFECTED_CLOSURE_PROOF_V01"
+)
+NO_CACHE_STATE_DOMAIN_V01 = "HEDGEHOG_G2E_NO_CACHE_STATE_V01"
+PRESERVATION_PROOF_DOMAIN_V01 = "HEDGEHOG_G2E_PRESERVATION_PROOF_V01"
+
+G2E_INVALIDATION_REASON_CLASSES_V01 = (
+    "DEPENDENCY_FINGERPRINT_CHANGED",
+    "SOURCE_FIELD_CHANGED",
+    "SOURCE_ARTIFACT_CHANGED",
+    "POLICY_VERSION_CHANGED",
+    "SCHEMA_VERSION_CHANGED",
+    "TEMPORAL_VALIDITY_CHANGED",
+    "UPSTREAM_ARTIFACT_INVALIDATED",
+    "ROUTE_REVALIDATION_REQUIRED",
+    "PACKET_ROOT_REVIEW_REQUIRED",
+    "REUSE_CERTIFICATE_STALE",
+)
+G2E_G2A_PACKET_RELATIONS_V01 = (
+    "NOT_APPLICABLE",
+    "PACKET_ROOT_REVIEW_REQUIRED",
+)
+G2E_G2B_REUSE_RELATIONS_V01 = (
+    "NOT_APPLICABLE",
+    "REUSE_CERTIFICATE_STALE",
+)
+G2E_G2C_ROUTE_RELATIONS_V01 = (
+    "ROUTE_CURRENT",
+    "ROUTE_REVALIDATION_REQUIRED",
+)
+_INVALIDATION_REASON_PRIORITY_V01 = (
+    "ROUTE_REVALIDATION_REQUIRED",
+    "PACKET_ROOT_REVIEW_REQUIRED",
+    "REUSE_CERTIFICATE_STALE",
+    "POLICY_VERSION_CHANGED",
+    "SCHEMA_VERSION_CHANGED",
+    "TEMPORAL_VALIDITY_CHANGED",
+    "DEPENDENCY_FINGERPRINT_CHANGED",
+    "SOURCE_ARTIFACT_CHANGED",
+    "SOURCE_FIELD_CHANGED",
+    "UPSTREAM_ARTIFACT_INVALIDATED",
 )
 
 VALIDATION_STATUSES_V01 = ("PASS", "FAIL_CLOSED")
@@ -2562,11 +2616,13 @@ def _project_delta_source_proposed_artifact_v01(
             complete_payload=world_state_delta_to_plain_data_v01(delta),
         ),
         trace_refs=delta.trace_refs + delta.ordered_source_binding_ids,
-        parent_refs=(
-            baseline_route_artifact.artifact_id,
-            baseline_g2d_report_artifact.artifact_id,
-            *(artifact.artifact_id for artifact in baseline_source_artifacts),
-            *(artifact.artifact_id for artifact in observed_source_artifacts),
+        parent_refs=_ordered_unique_v01(
+            (
+                baseline_route_artifact.artifact_id,
+                baseline_g2d_report_artifact.artifact_id,
+                *(artifact.artifact_id for artifact in baseline_source_artifacts),
+                *(artifact.artifact_id for artifact in observed_source_artifacts),
+            )
         ),
         time_envelope=_artifact_time_envelope_v01(
             baseline_route_artifact=baseline_route_artifact,
@@ -2606,12 +2662,14 @@ def _project_delta_source_validated_artifact_v01(
             *delta.trace_refs,
             *delta.ordered_source_binding_ids,
         ),
-        parent_refs=(
-            proposed_source_artifact.artifact_id,
-            baseline_route_artifact.artifact_id,
-            baseline_g2d_report_artifact.artifact_id,
-            *(artifact.artifact_id for artifact in baseline_source_artifacts),
-            *(artifact.artifact_id for artifact in observed_source_artifacts),
+        parent_refs=_ordered_unique_v01(
+            (
+                proposed_source_artifact.artifact_id,
+                baseline_route_artifact.artifact_id,
+                baseline_g2d_report_artifact.artifact_id,
+                *(artifact.artifact_id for artifact in baseline_source_artifacts),
+                *(artifact.artifact_id for artifact in observed_source_artifacts),
+            )
         ),
         time_envelope=_artifact_time_envelope_v01(
             baseline_route_artifact=baseline_route_artifact,
@@ -3727,6 +3785,1669 @@ def validate_affected_set_against_graph_v01(
     )
 
 
+def _invalidation_record_errors_v01(value: object) -> tuple[str, ...]:
+    if type(value) is not ArtifactInvalidationRecordV01:
+        return ("g2e_invalidation_record_invalid",)
+    errors: list[str] = []
+    if (
+        not _prefixed_identity_valid(
+            value.affected_set_id, "g2e_affected_set_result_v01:"
+        )
+        or not _text_valid(value.artifact_id)
+        or not _text_valid(value.artifact_type)
+        or not _prefixed_identity_valid(
+            value.triggering_delta_id, "g2e_world_state_delta_v01:"
+        )
+        or not _text_tuple_valid(
+            value.triggering_binding_ids, minimum=1, maximum=MAX_CHANGED_BINDINGS_V01
+        )
+        or not _text_tuple_valid(value.trace_refs, minimum=1)
+        or type(value.root_review_required) is not bool
+    ):
+        errors.append("g2e_invalidation_record_invalid")
+    if value.invalidation_reason_class not in G2E_INVALIDATION_REASON_CLASSES_V01:
+        errors.append("g2e_invalidation_reason_invalid")
+    if value.deleted is not False:
+        errors.append("g2e_invalidation_deletion_forbidden")
+    if value.historical_artifact_preserved is not True:
+        errors.append("g2e_invalidation_history_mutation")
+    if value.predecessor_artifact_id != value.artifact_id:
+        errors.append("g2e_invalidation_predecessor_mismatch")
+    if value.superseded_by_artifact_id is not None:
+        errors.append("g2e_invalidation_supersession_mismatch")
+    if (
+        value.current_eligible_before is not True
+        or value.current_eligible_after is not False
+        or value.g2a_packet_relation not in G2E_G2A_PACKET_RELATIONS_V01
+        or value.g2b_reuse_relation not in G2E_G2B_REUSE_RELATIONS_V01
+        or value.g2c_route_relation not in G2E_G2C_ROUTE_RELATIONS_V01
+    ):
+        errors.append("g2e_invalidation_record_invalid")
+    expected_root_review = bool(
+        value.g2a_packet_relation == "PACKET_ROOT_REVIEW_REQUIRED"
+        or value.g2b_reuse_relation == "REUSE_CERTIFICATE_STALE"
+        or value.g2c_route_relation == "ROUTE_REVALIDATION_REQUIRED"
+    )
+    if value.root_review_required is not expected_root_review:
+        errors.append("g2e_invalidation_record_invalid")
+    if _identity_errors(value):
+        errors.append("g2e_invalidation_history_mutation")
+    return _ordered_reasons(errors)
+
+
+def _report_reason_codes_v01(
+    *,
+    unresolved: tuple[str, ...],
+    packet_ids: tuple[str, ...],
+    certificate_ids: tuple[str, ...],
+    route_ids: tuple[str, ...],
+) -> tuple[str, ...]:
+    reasons: list[str] = []
+    if unresolved:
+        reasons.append("g2e_invalidation_record_invalid")
+    if packet_ids:
+        reasons.append("g2e_invalidation_g2a_root_binding_required")
+    if certificate_ids:
+        reasons.append("g2e_invalidation_g2b_reuse_still_current")
+    if route_ids:
+        reasons.append("g2e_route_revalidation_required")
+    return _ordered_reasons(reasons)
+
+
+def _invalidation_report_errors_v01(value: object) -> tuple[str, ...]:
+    if type(value) is not InvalidationReportV01:
+        return ("g2e_invalidation_record_invalid",)
+    errors: list[str] = []
+    bounded_nonempty = (
+        value.ordered_invalidation_record_ids,
+        value.ordered_invalidated_artifact_ids,
+        value.ordered_historical_artifact_ids,
+    )
+    bounded_optional = (
+        value.ordered_unresolved_artifact_ids,
+        value.ordered_packet_invalidation_candidate_ids,
+        value.ordered_stale_reuse_certificate_ids,
+        value.ordered_route_revalidation_ids,
+    )
+    if (
+        not _prefixed_identity_valid(
+            value.affected_set_id, "g2e_affected_set_result_v01:"
+        )
+        or any(
+            not _text_tuple_valid(rows, minimum=1, maximum=256)
+            for rows in bounded_nonempty
+        )
+        or any(
+            not _text_tuple_valid(rows, maximum=256)
+            for rows in bounded_optional
+        )
+        or len(value.ordered_invalidation_record_ids)
+        != len(value.ordered_invalidated_artifact_ids)
+        or value.ordered_historical_artifact_ids
+        != value.ordered_invalidated_artifact_ids
+    ):
+        errors.append("g2e_invalidation_record_invalid")
+    expected_reasons = _report_reason_codes_v01(
+        unresolved=value.ordered_unresolved_artifact_ids,
+        packet_ids=value.ordered_packet_invalidation_candidate_ids,
+        certificate_ids=value.ordered_stale_reuse_certificate_ids,
+        route_ids=value.ordered_route_revalidation_ids,
+    )
+    expected_status = "PASS" if not expected_reasons else "FAIL_CLOSED"
+    if (
+        value.report_status != expected_status
+        or value.reason_codes != expected_reasons
+        or not _ordered_public_reasons_valid(value.reason_codes)
+        or value.root_review_required
+        is not bool(
+            value.ordered_packet_invalidation_candidate_ids
+            or value.ordered_stale_reuse_certificate_ids
+            or value.ordered_route_revalidation_ids
+        )
+    ):
+        errors.append("g2e_invalidation_record_invalid")
+    errors.extend(_zero_boundary_errors(value))
+    if _identity_errors(value):
+        errors.append("g2e_invalidation_record_invalid")
+    return _ordered_reasons(errors)
+
+
+def _no_cache_state_sha256_v01() -> str:
+    return _domain_sha256_v01(
+        NO_CACHE_STATE_DOMAIN_V01,
+        ("fixed_empty_cache_profile", ()),
+    )
+
+
+def _preservation_proof_sha256_v01(value: PreservationProofV01) -> str:
+    material = tuple(
+        (field.name, _plain_value(getattr(value, field.name)))
+        for field in fields(PreservationProofV01)
+        if field.name not in {"preservation_proof_id", "proof_sha256"}
+    )
+    return _domain_sha256_v01(PRESERVATION_PROOF_DOMAIN_V01, material)
+
+
+def _preservation_reason_codes_v01(
+    *,
+    before_artifact: tuple[str, ...],
+    after_artifact: tuple[str, ...],
+    before_payload: tuple[str, ...],
+    after_payload: tuple[str, ...],
+    before_identity: tuple[str, ...],
+    after_identity: tuple[str, ...],
+) -> tuple[str, ...]:
+    reasons: list[str] = []
+    if before_artifact != after_artifact or before_payload != after_payload:
+        reasons.append("g2e_preserved_artifact_changed")
+    if before_identity != after_identity:
+        reasons.append("g2e_preserved_identity_changed")
+    return _ordered_reasons(reasons)
+
+
+def _preservation_proof_errors_v01(value: object) -> tuple[str, ...]:
+    if type(value) is not PreservationProofV01:
+        return ("g2e_preservation_proof_invalid",)
+    errors: list[str] = []
+    tuple_rows = (
+        value.ordered_preserved_artifact_ids,
+        value.ordered_before_artifact_sha256,
+        value.ordered_after_artifact_sha256,
+        value.ordered_before_payload_sha256,
+        value.ordered_after_payload_sha256,
+        value.ordered_before_identity_ids,
+        value.ordered_after_identity_ids,
+    )
+    lengths = tuple(len(row) for row in tuple_rows if type(row) is tuple)
+    if (
+        len(lengths) != len(tuple_rows)
+        or len(set(lengths)) != 1
+        or not _text_tuple_valid(
+            value.ordered_preserved_artifact_ids, maximum=256
+        )
+        or not _text_tuple_valid(
+            value.ordered_before_identity_ids, maximum=256
+        )
+        or not _text_tuple_valid(
+            value.ordered_after_identity_ids, maximum=256
+        )
+        or any(
+            not all(_sha256_valid(item) for item in row)
+            for row in (
+                value.ordered_before_artifact_sha256,
+                value.ordered_after_artifact_sha256,
+                value.ordered_before_payload_sha256,
+                value.ordered_after_payload_sha256,
+            )
+        )
+        or not _text_valid(value.baseline_graph_id)
+        or not _prefixed_identity_valid(
+            value.affected_set_id, "g2e_affected_set_result_v01:"
+        )
+    ):
+        errors.append("g2e_preservation_proof_invalid")
+    no_cache = _no_cache_state_sha256_v01()
+    if (
+        value.before_cache_state_sha256 != no_cache
+        or value.after_cache_state_sha256 != no_cache
+        or value.mutable_global_write_count != 0
+    ):
+        errors.append("g2e_preservation_cache_mutation")
+    if value.object_identity_used_as_proof is not False:
+        errors.append("g2e_preservation_proof_invalid")
+    expected_reasons = _preservation_reason_codes_v01(
+        before_artifact=value.ordered_before_artifact_sha256,
+        after_artifact=value.ordered_after_artifact_sha256,
+        before_payload=value.ordered_before_payload_sha256,
+        after_payload=value.ordered_after_payload_sha256,
+        before_identity=value.ordered_before_identity_ids,
+        after_identity=value.ordered_after_identity_ids,
+    )
+    expected_preserved = not expected_reasons
+    expected_status = "PASS" if expected_preserved else "FAIL_CLOSED"
+    if (
+        value.byte_identity_preserved is not expected_preserved
+        or value.status != expected_status
+        or value.reason_codes != expected_reasons
+        or not _ordered_public_reasons_valid(value.reason_codes)
+    ):
+        errors.append("g2e_preservation_proof_invalid")
+    if value.proof_sha256 != _preservation_proof_sha256_v01(value):
+        errors.append("g2e_preservation_proof_invalid")
+    if _identity_errors(value):
+        errors.append("g2e_preservation_proof_invalid")
+    return _ordered_reasons(errors)
+
+
+def _timestamp_epoch_microseconds_v01(value: object) -> int:
+    parsed = _parse_aware_timestamp_v01(value).astimezone(timezone.utc)
+    epoch = datetime(1970, 1, 1, tzinfo=timezone.utc)
+    delta = parsed - epoch
+    return (
+        delta.days * 86_400_000_000
+        + delta.seconds * 1_000_000
+        + delta.microseconds
+    )
+
+
+def _bool_tuple_validation_pass_v01(result: object) -> bool:
+    return (
+        type(result) is tuple
+        and len(result) == 2
+        and result[0] is True
+        and result[1] == ()
+    )
+
+
+def _source_context_shape_valid_v01(value: object) -> bool:
+    return bool(
+        type(value) is ContinuousDeltaSourceContextV01
+        and type(value.baseline_source_artifacts) is tuple
+        and type(value.observed_source_artifacts) is tuple
+        and type(value.g2a_current_observations) is tuple
+    )
+
+
+def _source_context_reason_v01(value: object) -> str | None:
+    if not _source_context_shape_valid_v01(value):
+        return "g2e_delta_source_invalid"
+    assert type(value) is ContinuousDeltaSourceContextV01
+    if (
+        value.g2b_writeback_evidence is not None
+        or value.post_vv_profile is not None
+        or value.gt_profile is not None
+    ):
+        return "g2e_delta_source_unvalidated"
+    try:
+        manifest_errors = _manifest_replay_source_errors_v01(
+            manifest=value.integrity_manifest,
+            replay=value.integrity_replay,
+            source_artifacts=value.baseline_source_artifacts,
+        )
+        if manifest_errors:
+            return "g2e_delta_source_unvalidated"
+        if (
+            not value.baseline_source_artifacts
+            or len(value.baseline_source_artifacts)
+            != len(value.observed_source_artifacts)
+        ):
+            return "g2e_delta_source_unvalidated"
+        for baseline, observed in zip(
+            value.baseline_source_artifacts,
+            value.observed_source_artifacts,
+        ):
+            baseline_plain = _artifact_plain_v01(baseline)
+            observed_plain = _artifact_plain_v01(observed)
+            if baseline.artifact_id == observed.artifact_id:
+                if canonical_json_bytes_v01(baseline_plain) != canonical_json_bytes_v01(
+                    observed_plain
+                ):
+                    return "g2e_delta_source_unvalidated"
+            elif (
+                baseline.artifact_type != observed.artifact_type
+                or baseline.transaction_id != observed.transaction_id
+                or baseline.owner_root_id != observed.owner_root_id
+                or baseline.artifact_id not in observed.parent_refs
+            ):
+                return "g2e_delta_source_unvalidated"
+        if not _bool_tuple_validation_pass_v01(
+            action_commit_packet.validate_action_commit_packet_registry_v02(
+                value.g2a_registry
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if not _bool_tuple_validation_pass_v01(
+            action_commit_packet.validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                value.g2a_packet
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if not _bool_tuple_validation_pass_v01(
+            action_commit_packet.validate_mandatory_dependency_local_root_acceptance_v01(
+                value.g2a_packet
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if not _bool_tuple_validation_pass_v01(
+            action_commit_packet.validate_dependency_set_candidate_v01(
+                value.g2a_dependency_candidate
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if (
+            value.g2a_packet.canonical_projection.dependency_candidate
+            != value.g2a_dependency_candidate
+            or not value.g2a_current_observations
+            or any(
+                not _bool_tuple_validation_pass_v01(
+                    action_commit_packet.validate_action_dependency_current_observation_v01(
+                        observation
+                    )
+                )
+                for observation in value.g2a_current_observations
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if not _bool_tuple_validation_pass_v01(
+            action_commit_packet.validate_action_invalidation_evidence_v01(
+                value.g2a_root_invalidation_material
+            )
+        ) or not _bool_tuple_validation_pass_v01(
+            action_commit_packet.validate_action_invalidation_evidence_against_packet_v01(
+                value.g2a_root_invalidation_material,
+                value.g2a_packet,
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if not _bool_tuple_validation_pass_v01(
+            drs_memory_resolution.validate_drs_resolution_report_v01(
+                value.g2b_resolution_report
+            )
+        ) or not _bool_tuple_validation_pass_v01(
+            reuse_certificate.validate_reuse_certificate_v01(
+                value.g2b_reuse_certificate
+            )
+        ):
+            return "g2e_delta_source_unvalidated"
+        if (
+            value.g2b_resolution_report.reuse_certificate
+            != value.g2b_reuse_certificate
+        ):
+            return "g2e_delta_source_unvalidated"
+        g2c_report = validate_execution_mode_source_context_v01(
+            value.g2c_source_context
+        )
+        if g2c_report.validation_status != "PASS":
+            return "g2e_delta_source_unvalidated"
+        if (
+            value.g2c_source_context.g2b_writeback_evidence is not None
+            or value.g2c_source_context.g2b_resolution_report
+            != value.g2b_resolution_report
+        ):
+            return "g2e_delta_source_unvalidated"
+        if _artifact_plain_v01(value.baseline_g2c_route_eligibility_artifact) is None:
+            return "g2e_delta_source_unvalidated"
+        if type(value.baseline_g2d_execution_bundle) is not FractalRuntimeExecutionBundleV02:
+            return "g2e_delta_source_unvalidated"
+        bundle = value.baseline_g2d_execution_bundle
+        if validate_fractal_runtime_execution_bundle_v02(bundle).status != "PASS":
+            return "g2e_delta_source_unvalidated"
+        dedicated_carrier_ids = {
+            value.g2a_packet.packet_identity.packet_id,
+            value.g2b_reuse_certificate.certificate_id,
+            value.baseline_g2c_route_eligibility_artifact.artifact_id,
+            bundle.report_artifact.artifact_id,
+        }
+        if dedicated_carrier_ids.intersection(
+            artifact.artifact_id
+            for artifact in value.baseline_source_artifacts
+            + value.observed_source_artifacts
+        ):
+            return "g2e_delta_source_unvalidated"
+        if validate_root_decision_kernel_v01(value.root_kernel):
+            return "g2e_delta_source_unvalidated"
+    except Exception:
+        return "g2e_delta_source_unvalidated"
+
+    bundle = value.baseline_g2d_execution_bundle
+    router_input = bundle.source_context.router_input
+    snapshot = router_input.local_routing_snapshot
+    packet_projection = value.g2a_packet.canonical_projection
+    report = value.g2b_resolution_report
+    transaction_id = router_input.transaction_id
+    if (
+        value.integrity_manifest.transaction_id != transaction_id
+        or any(
+            artifact.transaction_id != transaction_id
+            for artifact in value.baseline_source_artifacts
+            + value.observed_source_artifacts
+        )
+        or packet_projection.transaction_id != transaction_id
+        or report.query.query_id != transaction_id
+        or value.baseline_g2c_route_eligibility_artifact.transaction_id
+        != transaction_id
+        or bundle.runtime_report.transaction_id != transaction_id
+    ):
+        return "g2e_delta_cross_transaction"
+    if (
+        report.query.domain != snapshot.domain_id
+        or bundle.runtime_report.domain_id != snapshot.domain_id
+    ):
+        return "g2e_delta_cross_domain"
+    if (
+        packet_projection.owning_local_root_id != router_input.owning_root_id
+        or report.query.owning_local_root_id != router_input.owning_root_id
+        or value.baseline_g2c_route_eligibility_artifact.owner_root_id
+        != router_input.owning_root_id
+        or any(
+            artifact.owner_root_id != router_input.owning_root_id
+            for artifact in value.baseline_source_artifacts
+            + value.observed_source_artifacts
+        )
+    ):
+        return "g2e_delta_cross_root"
+    if value.g2b_reuse_certificate.policy_version != report.query.policy_version:
+        return "g2e_delta_policy_version_mismatch"
+    if value.g2b_reuse_certificate.schema_versions != report.query.schema_versions:
+        return "g2e_delta_schema_version_mismatch"
+    if (
+        value.g2b_reuse_certificate.source_history_hash
+        != report.query_evaluations[0].source_history_hash
+    ):
+        return "g2e_dependency_source_history_mismatch"
+    report_artifact_payload = _artifact_plain_v01(bundle.report_artifact)["payload"]
+    if (
+        bundle.runtime_report.report_status != "PASS"
+        or type(report_artifact_payload) is not dict
+        or report_artifact_payload.get("report_id")
+        != bundle.runtime_report.report_id
+    ):
+        return "g2e_delta_baseline_stale"
+
+    ceiling = snapshot.evaluation_time_epoch_seconds
+    if (
+        type(ceiling) is not int
+        or value.g2c_source_context.g2a_evaluation_time != ceiling
+        or value.g2c_source_context.g2b_use_time != ceiling
+        or value.g2a_root_invalidation_material.evaluation_time != ceiling
+    ):
+        return "g2e_delta_source_unvalidated"
+    ceiling_microseconds = ceiling * 1_000_000
+    try:
+        for artifact in value.observed_source_artifacts:
+            observed_at = kernel_artifact_to_plain_dict_v01(artifact)[
+                "time_envelope"
+            ]["et_observed_at"]
+            if _timestamp_epoch_microseconds_v01(observed_at) > ceiling_microseconds:
+                return "g2e_delta_future_observation"
+    except Exception:
+        return "g2e_delta_source_unvalidated"
+
+    if (
+        value.g2c_source_context
+        != bundle.source_context.g2c_source_context
+        or canonical_json_bytes_v01(
+            kernel_artifact_to_plain_dict_v01(
+                value.baseline_g2c_route_eligibility_artifact
+            )
+        )
+        != canonical_json_bytes_v01(
+            kernel_artifact_to_plain_dict_v01(
+                bundle.source_context.route_eligibility_artifact
+            )
+        )
+    ):
+        return "g2e_route_revalidation_required"
+    if (
+        validate_runtime_topology_source_binding_against_g2c_v02(
+            bundle.source_binding,
+            source_context=bundle.source_context,
+        ).status
+        != "PASS"
+        or bundle.source_binding.route_eligibility_artifact_id
+        != value.baseline_g2c_route_eligibility_artifact.artifact_id
+    ):
+        return "g2e_topology_binding_mismatch"
+    if value.root_kernel != bundle.source_context.root_kernel:
+        return "g2e_topology_binding_mismatch"
+    return None
+
+
+def _source_context_validated_id_v01(
+    value: ContinuousDeltaSourceContextV01,
+) -> str:
+    return value.baseline_g2d_execution_bundle.runtime_report.report_id
+
+
+def _ordered_unique_v01(values: tuple[str, ...] | list[str]) -> tuple[str, ...]:
+    output: list[str] = []
+    present: set[str] = set()
+    for value in values:
+        if value not in present:
+            output.append(value)
+            present.add(value)
+    return tuple(output)
+
+
+def _g2d_kernel_artifacts_v01(
+    bundle: FractalRuntimeExecutionBundleV02,
+) -> tuple[KernelArtifactV01, ...]:
+    candidates = (
+        bundle.source_context.proposal_artifact,
+        bundle.source_context.decision_artifact,
+        bundle.source_context.route_eligibility_artifact,
+        bundle.topology_artifact,
+        *bundle.queue_artifacts,
+        *bundle.result_artifacts,
+        bundle.report_artifact,
+    )
+    output: list[KernelArtifactV01] = []
+    seen: set[str] = set()
+    for artifact in candidates:
+        _artifact_plain_v01(artifact)
+        if artifact.artifact_id not in seen:
+            output.append(artifact)
+            seen.add(artifact.artifact_id)
+    return tuple(output)
+
+
+def _binding_reaches_artifact_v01(
+    *,
+    source_artifact_id: str,
+    target_artifact_id: str,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+) -> bool:
+    if source_artifact_id == target_artifact_id:
+        return True
+    reverse: dict[str, list[str]] = {}
+    for edge in dependency_edges:
+        reverse.setdefault(edge.dependency_artifact_id, []).append(
+            edge.dependent_artifact_id
+        )
+    frontier = deque((source_artifact_id,))
+    seen = {source_artifact_id}
+    while frontier:
+        current = frontier.popleft()
+        for dependent in reverse.get(current, ()):
+            if dependent == target_artifact_id:
+                return True
+            if dependent not in seen:
+                seen.add(dependent)
+                frontier.append(dependent)
+    return False
+
+
+def _e3_contextual_carriers_v01(
+    *,
+    affected_set: AffectedSetResultV01,
+    delta: WorldStateDeltaV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    dependency_graph: DependencyGraphIndexV01,
+) -> AffectedSetRequestV01:
+    context_report = validate_continuous_delta_source_context_v01(source_context)
+    if context_report.status != "PASS":
+        raise ValueError(context_report.reason_codes[0])
+    request = build_affected_set_request_v01(
+        delta=delta,
+        graph=dependency_graph,
+        trace_refs=affected_set.trace_refs,
+    )
+    if request.affected_request_id != affected_set.affected_request_id:
+        raise ValueError("g2e_affected_request_invalid")
+    report = validate_affected_set_against_graph_v01(
+        affected_set,
+        request=request,
+        delta=delta,
+        graph=dependency_graph,
+        source_bindings=source_bindings,
+        changed_field_bindings=changed_field_bindings,
+        changed_artifact_bindings=changed_artifact_bindings,
+        dependency_edges=dependency_edges,
+        baseline_source_artifacts=source_context.baseline_source_artifacts,
+        observed_source_artifacts=source_context.observed_source_artifacts,
+    )
+    if report.status != "PASS":
+        raise ValueError(report.reason_codes[0])
+    if (
+        delta.baseline_report_id
+        != source_context.baseline_g2d_execution_bundle.runtime_report.report_id
+    ):
+        raise ValueError("g2e_delta_baseline_stale")
+    return request
+
+
+def _source_pair_payloads_v01(
+    binding: DeltaSourceBindingV01,
+    *,
+    baseline_by_id: dict[str, KernelArtifactV01],
+    observed_by_id: dict[str, KernelArtifactV01],
+) -> tuple[dict[str, object], dict[str, object]]:
+    baseline = baseline_by_id.get(binding.baseline_source_artifact_id)
+    observed = observed_by_id.get(binding.observed_source_artifact_id)
+    if baseline is None or observed is None:
+        raise ValueError("g2e_delta_binding_set_mismatch")
+    baseline_payload = _artifact_plain_v01(baseline)["payload"]
+    observed_payload = _artifact_plain_v01(observed)["payload"]
+    if type(baseline_payload) is not dict or type(observed_payload) is not dict:
+        raise ValueError("g2e_delta_source_unvalidated")
+    return baseline_payload, observed_payload
+
+
+def _g2a_packet_binding_changed_v01(
+    *,
+    baseline_payload: dict[str, object],
+    observed_payload: dict[str, object],
+    source_context: ContinuousDeltaSourceContextV01,
+) -> bool:
+    invalidation = source_context.g2a_root_invalidation_material
+    observation_by_dependency = {
+        item.dependency_id: item for item in source_context.g2a_current_observations
+    }
+    for record in source_context.g2a_dependency_candidate.dependency_records:
+        observation = observation_by_dependency.get(record.dependency_id)
+        if observation is None:
+            continue
+        baseline_material = {
+            "dependency_id": record.dependency_id,
+            "dependency_class": record.dependency_class,
+            "evidence_ref": record.evidence_ref,
+            "content_sha256": record.content_sha256,
+            "requirement_class": record.requirement_class,
+            "time_envelope_id": record.time_envelope_id,
+            "freshness_policy_id": record.freshness_policy_id,
+            "source_provenance_refs": list(record.source_provenance_refs),
+            "expected_accepting_local_root_id": (
+                record.expected_accepting_local_root_id
+            ),
+        }
+        if any(
+            baseline_payload.get(name) != expected
+            for name, expected in baseline_material.items()
+        ):
+            continue
+        if (
+            observation.evidence_ref != record.evidence_ref
+            or observation.observed_content_sha256 != record.content_sha256
+            or observation.time_envelope_id != record.time_envelope_id
+            or observation.freshness_policy_id != record.freshness_policy_id
+            or observation.source_provenance_refs != record.source_provenance_refs
+            or invalidation.dependency_id != record.dependency_id
+            or invalidation.evidence_ref != record.evidence_ref
+            or invalidation.time_envelope_id != record.time_envelope_id
+            or invalidation.freshness_policy_id != record.freshness_policy_id
+            or observed_payload.get("dependency_id") != record.dependency_id
+            or observed_payload.get("evidence_ref") != record.evidence_ref
+            or observed_payload.get("content_sha256")
+            != invalidation.evidence_sha256
+            or observed_payload.get("observed_status")
+            != invalidation.observed_status
+            or observed_payload.get("invalidation_evidence_id")
+            != invalidation.invalidation_evidence_id
+            or observed_payload.get("packet_id") != invalidation.packet_id
+            or observed_payload.get("content_sha256")
+            == baseline_payload.get("content_sha256")
+        ):
+            continue
+        return True
+    return False
+
+
+def _g2b_reuse_binding_changed_v01(
+    *,
+    baseline_payload: dict[str, object],
+    observed_payload: dict[str, object],
+    source_context: ContinuousDeltaSourceContextV01,
+) -> bool:
+    certificate = source_context.g2b_reuse_certificate
+    report = source_context.g2b_resolution_report
+    source_refs = {
+        source_ref
+        for record in report.source_records
+        if record.meaning_record_id == certificate.meaning_record_id
+        for source_ref in record.source_reference_ids
+    }
+    baseline_material = {
+        "semantic_address_id": certificate.semantic_address_id,
+        "meaning_record_id": certificate.meaning_record_id,
+        "query_id": certificate.query_id,
+        "query_evaluation_id": certificate.query_evaluation_id,
+        "required_evidence_classes": list(certificate.required_evidence_classes),
+        "observed_evidence_fingerprint": (
+            certificate.observed_evidence_fingerprint
+        ),
+        "forbidden_changes": list(certificate.forbidden_changes),
+        "checked_dependency_fingerprint": (
+            certificate.checked_dependency_fingerprint
+        ),
+        "source_history_hash": certificate.source_history_hash,
+        "policy_version": certificate.policy_version,
+        "schema_versions": list(certificate.schema_versions),
+    }
+    if (
+        baseline_payload.get("source_reference_id") not in source_refs
+        or any(
+            baseline_payload.get(name) != expected
+            for name, expected in baseline_material.items()
+        )
+    ):
+        return False
+    stable_fields = tuple(
+        name for name in baseline_material if name != "observed_evidence_fingerprint"
+    ) + ("source_reference_id",)
+    return bool(
+        all(
+            observed_payload.get(name) == baseline_payload.get(name)
+            for name in stable_fields
+        )
+        and observed_payload.get("observed_evidence_fingerprint")
+        != certificate.observed_evidence_fingerprint
+    )
+
+
+def _g2c_route_binding_changed_v01(
+    *,
+    baseline_payload: dict[str, object],
+    observed_payload: dict[str, object],
+    source_context: ContinuousDeltaSourceContextV01,
+) -> bool:
+    binding = source_context.baseline_g2d_execution_bundle.source_binding
+    baseline_material = {
+        "route_eligibility_artifact_id": binding.route_eligibility_artifact_id,
+        "route_eligibility_artifact_sha256": (
+            binding.route_eligibility_artifact_sha256
+        ),
+        "source_decision_artifact_id": binding.source_decision_artifact_id,
+        "source_proposal_artifact_id": binding.source_proposal_artifact_id,
+        "source_policy_snapshot_id": binding.source_policy_snapshot_id,
+        "source_capability_snapshot_id": binding.source_capability_snapshot_id,
+        "source_parent_refs": list(binding.source_parent_refs),
+        "source_trace_refs": list(binding.source_trace_refs),
+    }
+    if any(
+        baseline_payload.get(name) != expected
+        for name, expected in baseline_material.items()
+    ):
+        return False
+    stable_fields = tuple(
+        name
+        for name in baseline_material
+        if name != "route_eligibility_artifact_sha256"
+    )
+    return bool(
+        all(
+            observed_payload.get(name) == baseline_payload.get(name)
+            for name in stable_fields
+        )
+        and observed_payload.get("route_eligibility_artifact_sha256")
+        != binding.route_eligibility_artifact_sha256
+    )
+
+
+def _record_relation_candidate_ids_v01(
+    record: ArtifactInvalidationRecordV01,
+) -> tuple[str | None, str | None, str | None]:
+    active = (
+        record.g2a_packet_relation == "PACKET_ROOT_REVIEW_REQUIRED",
+        record.g2b_reuse_relation == "REUSE_CERTIFICATE_STALE",
+        record.g2c_route_relation == "ROUTE_REVALIDATION_REQUIRED",
+    )
+    count = sum(active)
+    if count == 0:
+        return None, None, None
+    if len(record.trace_refs) < count:
+        raise ValueError("g2e_invalidation_record_invalid")
+    candidates = iter(record.trace_refs[-count:])
+    return tuple(  # type: ignore[return-value]
+        next(candidates) if present else None for present in active
+    )
+
+
+def _derive_invalidation_rows_v01(
+    *,
+    affected_set: AffectedSetResultV01,
+    delta: WorldStateDeltaV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+) -> tuple[tuple[ArtifactInvalidationRecordV01, ...], tuple[str, ...]]:
+    baseline_by_id = {
+        artifact.artifact_id: artifact
+        for artifact in source_context.baseline_source_artifacts
+    }
+    observed_by_id = {
+        artifact.artifact_id: artifact
+        for artifact in source_context.observed_source_artifacts
+    }
+    binding_by_id = {
+        binding.source_binding_id: binding for binding in source_bindings
+    }
+    packet_id = source_context.g2a_packet.packet_identity.packet_id
+    certificate_id = source_context.g2b_reuse_certificate.certificate_id
+    route_id = source_context.baseline_g2c_route_eligibility_artifact.artifact_id
+    records: list[ArtifactInvalidationRecordV01] = []
+    unresolved: list[str] = []
+    ordered_changed = tuple(changed_field_bindings) + tuple(
+        changed_artifact_bindings
+    )
+    for artifact_id in affected_set.ordered_affected_ids:
+        artifact = baseline_by_id.get(artifact_id)
+        if artifact is None:
+            unresolved.append(artifact_id)
+            continue
+        triggering: list[object] = []
+        for changed in ordered_changed:
+            binding = binding_by_id.get(changed.source_binding_id)
+            if binding is not None and _binding_reaches_artifact_v01(
+                source_artifact_id=binding.baseline_source_artifact_id,
+                target_artifact_id=artifact_id,
+                dependency_edges=dependency_edges,
+            ):
+                triggering.append(changed)
+        if not triggering:
+            unresolved.append(artifact_id)
+            continue
+        reason_candidates: list[str] = []
+        g2a_relation = "NOT_APPLICABLE"
+        g2b_relation = "NOT_APPLICABLE"
+        g2c_relation = "ROUTE_CURRENT"
+        source_rows = tuple(
+            binding
+            for binding in source_bindings
+            if any(
+                changed.source_binding_id == binding.source_binding_id
+                for changed in triggering
+            )
+        )
+        source_pairs = tuple(
+            _source_pair_payloads_v01(
+                binding,
+                baseline_by_id=baseline_by_id,
+                observed_by_id=observed_by_id,
+            )
+            for binding in source_rows
+        )
+        route_changed = any(
+            _g2c_route_binding_changed_v01(
+                baseline_payload=baseline_payload,
+                observed_payload=observed_payload,
+                source_context=source_context,
+            )
+            for baseline_payload, observed_payload in source_pairs
+        )
+        packet_changed = any(
+            _g2a_packet_binding_changed_v01(
+                baseline_payload=baseline_payload,
+                observed_payload=observed_payload,
+                source_context=source_context,
+            )
+            for baseline_payload, observed_payload in source_pairs
+        )
+        certificate_changed = any(
+            _g2b_reuse_binding_changed_v01(
+                baseline_payload=baseline_payload,
+                observed_payload=observed_payload,
+                source_context=source_context,
+            )
+            for baseline_payload, observed_payload in source_pairs
+        )
+        if route_changed:
+            g2c_relation = "ROUTE_REVALIDATION_REQUIRED"
+            reason_candidates.append("ROUTE_REVALIDATION_REQUIRED")
+        if packet_changed:
+            g2a_relation = "PACKET_ROOT_REVIEW_REQUIRED"
+            reason_candidates.append("PACKET_ROOT_REVIEW_REQUIRED")
+        if certificate_changed:
+            g2b_relation = "REUSE_CERTIFICATE_STALE"
+            reason_candidates.append("REUSE_CERTIFICATE_STALE")
+        if any(
+            item.baseline_policy_version != item.observed_policy_version
+            for item in source_rows
+        ):
+            reason_candidates.append("POLICY_VERSION_CHANGED")
+        if any(
+            item.baseline_schema_versions != item.observed_schema_versions
+            for item in source_rows
+        ):
+            reason_candidates.append("SCHEMA_VERSION_CHANGED")
+        if any(
+            item.baseline_source_history_hash
+            != item.observed_source_history_hash
+            for item in source_rows
+        ):
+            reason_candidates.append("DEPENDENCY_FINGERPRINT_CHANGED")
+        if any(
+            type(item) is ChangedArtifactBindingV01 for item in triggering
+        ):
+            reason_candidates.append("SOURCE_ARTIFACT_CHANGED")
+        if any(type(item) is ChangedFieldBindingV01 for item in triggering):
+            reason_candidates.append("SOURCE_FIELD_CHANGED")
+        reason_candidates.append("UPSTREAM_ARTIFACT_INVALIDATED")
+        primary_reason = next(
+            reason
+            for reason in _INVALIDATION_REASON_PRIORITY_V01
+            if reason in reason_candidates
+        )
+        triggering_ids = tuple(
+            item.changed_field_binding_id
+            if type(item) is ChangedFieldBindingV01
+            else item.changed_artifact_binding_id
+            for item in triggering
+        )
+        record = build_artifact_invalidation_record_v01(
+            affected_set_id=affected_set.affected_set_id,
+            artifact_id=artifact.artifact_id,
+            artifact_type=artifact.artifact_type,
+            invalidation_reason_class=primary_reason,
+            triggering_delta_id=delta.delta_id,
+            triggering_binding_ids=triggering_ids,
+            predecessor_artifact_id=artifact.artifact_id,
+            g2a_packet_relation=g2a_relation,
+            g2b_reuse_relation=g2b_relation,
+            g2c_route_relation=g2c_relation,
+            root_review_required=bool(
+                g2a_relation == "PACKET_ROOT_REVIEW_REQUIRED"
+                or g2b_relation == "REUSE_CERTIFICATE_STALE"
+                or g2c_relation == "ROUTE_REVALIDATION_REQUIRED"
+            ),
+            trace_refs=_ordered_unique_v01(
+                (
+                    delta.delta_id,
+                    affected_set.affected_set_id,
+                    *triggering_ids,
+                    artifact.artifact_id,
+                    *((packet_id,) if packet_changed else ()),
+                    *((certificate_id,) if certificate_changed else ()),
+                    *((route_id,) if route_changed else ()),
+                )
+            ),
+        )
+        records.append(record)
+    return tuple(records), tuple(unresolved)
+
+
+def _project_invalidation_report_artifact_v01(
+    *,
+    report: InvalidationReportV01,
+    affected_set_artifact: KernelArtifactV01,
+    validated_delta_source_artifact: KernelArtifactV01,
+    dependency_graph_artifact: KernelArtifactV01,
+    baseline_route_artifact: KernelArtifactV01,
+    delta: WorldStateDeltaV01,
+    t03_decision_id: str,
+) -> KernelArtifactV01:
+    if _invalidation_report_errors_v01(report):
+        raise ValueError("g2e_invalidation_record_invalid")
+    for artifact in (
+        affected_set_artifact,
+        validated_delta_source_artifact,
+        dependency_graph_artifact,
+        baseline_route_artifact,
+    ):
+        _artifact_plain_v01(artifact)
+    if (
+        affected_set_artifact.artifact_type != "AffectedSetResult"
+        or affected_set_artifact.lifecycle_state != "VALIDATED"
+        or validated_delta_source_artifact.artifact_type
+        != "ContinuousDeltaSource"
+        or dependency_graph_artifact.artifact_type != "DependencyGraphIndex"
+        or not _text_valid(t03_decision_id)
+    ):
+        raise ValueError("g2e_object_invalid")
+    return _project_g2e_kernel_artifact_v01(
+        profile_name="invalidation_report_validated",
+        transaction_id=delta.transaction_id,
+        owning_root_id=delta.owning_root_id,
+        payload=_project_g2e_abi_payload_v01(
+            profile_name="invalidation_report_validated",
+            complete_payload=invalidation_report_to_plain_data_v01(report),
+        ),
+        trace_refs=(
+            report.affected_set_id,
+            t03_decision_id,
+            *report.ordered_invalidation_record_ids,
+            *report.reason_codes,
+        ),
+        parent_refs=(
+            affected_set_artifact.artifact_id,
+            validated_delta_source_artifact.artifact_id,
+            dependency_graph_artifact.artifact_id,
+        ),
+        time_envelope=_artifact_time_envelope_v01(
+            baseline_route_artifact=baseline_route_artifact,
+            delta=delta,
+        ),
+    )
+
+
+def _validate_invalidation_report_artifact_against_source_v01(
+    artifact: object,
+    *,
+    report: InvalidationReportV01,
+    affected_set_artifact: KernelArtifactV01,
+    validated_delta_source_artifact: KernelArtifactV01,
+    dependency_graph_artifact: KernelArtifactV01,
+    baseline_route_artifact: KernelArtifactV01,
+    delta: WorldStateDeltaV01,
+    t03_decision: TransitionDecisionV01,
+) -> tuple[str, ...]:
+    try:
+        if type(artifact) is not KernelArtifactV01:
+            raise ValueError("g2e_object_invalid")
+        expected = _project_invalidation_report_artifact_v01(
+            report=report,
+            affected_set_artifact=affected_set_artifact,
+            validated_delta_source_artifact=validated_delta_source_artifact,
+            dependency_graph_artifact=dependency_graph_artifact,
+            baseline_route_artifact=baseline_route_artifact,
+            delta=delta,
+            t03_decision_id=t03_decision.decision_id,
+        )
+        registry = _build_continuous_delta_transition_registry_profile_v01()
+        if (
+            artifact != expected
+            or canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(artifact))
+            != canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(expected))
+            or validate_kernel_artifact_v01(artifact)
+            or _validate_continuous_delta_transition_decision_v01(
+                t03_decision,
+                registry=registry,
+                source_artifact=affected_set_artifact,
+                target_artifact=artifact,
+            )
+        ):
+            raise ValueError("g2e_object_invalid")
+        return ()
+    except ValueError as exc:
+        reason = exc.args[0] if len(exc.args) == 1 else None
+        return (
+            reason
+            if reason in PUBLIC_G2E_REASON_CODES_V01
+            else "g2e_object_invalid",
+        )
+    except Exception:
+        return ("g2e_object_invalid",)
+
+
+def _project_preservation_proof_artifact_v01(
+    *,
+    proof: PreservationProofV01,
+    root_accepted_plan_artifact: KernelArtifactV01,
+    invalidation_report_artifact: KernelArtifactV01,
+    recomputed_g2d_report_artifact: KernelArtifactV01,
+    delta: WorldStateDeltaV01,
+    recomputed_g2d_runtime_trace_id: str,
+) -> KernelArtifactV01:
+    if _preservation_proof_errors_v01(proof):
+        raise ValueError("g2e_preservation_proof_invalid")
+    for artifact in (
+        root_accepted_plan_artifact,
+        invalidation_report_artifact,
+        recomputed_g2d_report_artifact,
+    ):
+        _artifact_plain_v01(artifact)
+    if (
+        root_accepted_plan_artifact.artifact_type
+        != "SelectiveRecomputationPlan"
+        or root_accepted_plan_artifact.lifecycle_state != "ROOT_ACCEPTED"
+        or invalidation_report_artifact.artifact_type
+        != "ArtifactInvalidationReport"
+        or invalidation_report_artifact.lifecycle_state != "VALIDATED"
+        or recomputed_g2d_report_artifact.artifact_type
+        != "FractalRuntimeReport"
+        or recomputed_g2d_report_artifact.lifecycle_state != "VALIDATED"
+        or not _text_valid(recomputed_g2d_runtime_trace_id)
+    ):
+        raise ValueError("g2e_preservation_proof_invalid")
+    return _project_g2e_kernel_artifact_v01(
+        profile_name="preservation_proof_validated",
+        transaction_id=delta.transaction_id,
+        owning_root_id=delta.owning_root_id,
+        payload=_project_g2e_abi_payload_v01(
+            profile_name="preservation_proof_validated",
+            complete_payload=preservation_proof_to_plain_data_v01(proof),
+        ),
+        trace_refs=(
+            proof.affected_set_id,
+            *proof.ordered_preserved_artifact_ids,
+            recomputed_g2d_runtime_trace_id,
+        ),
+        parent_refs=(
+            root_accepted_plan_artifact.artifact_id,
+            invalidation_report_artifact.artifact_id,
+            recomputed_g2d_report_artifact.artifact_id,
+        ),
+        time_envelope=kernel_artifact_to_plain_dict_v01(
+            recomputed_g2d_report_artifact
+        )["time_envelope"],
+    )
+
+
+def build_artifact_invalidation_record_v01(
+    *,
+    affected_set_id: str,
+    artifact_id: str,
+    artifact_type: str,
+    invalidation_reason_class: str,
+    triggering_delta_id: str,
+    triggering_binding_ids: tuple[str, ...],
+    predecessor_artifact_id: str,
+    g2a_packet_relation: str,
+    g2b_reuse_relation: str,
+    g2c_route_relation: str,
+    root_review_required: bool,
+    trace_refs: tuple[str, ...],
+) -> ArtifactInvalidationRecordV01:
+    provisional = ArtifactInvalidationRecordV01(
+        invalidation_record_id=(
+            "g2e_artifact_invalidation_record_v01:" + _ZERO_SHA256
+        ),
+        affected_set_id=affected_set_id,
+        artifact_id=artifact_id,
+        artifact_type=artifact_type,
+        current_eligible_before=True,
+        current_eligible_after=False,
+        invalidation_reason_class=invalidation_reason_class,
+        triggering_delta_id=triggering_delta_id,
+        triggering_binding_ids=triggering_binding_ids,
+        predecessor_artifact_id=predecessor_artifact_id,
+        superseded_by_artifact_id=None,
+        g2a_packet_relation=g2a_packet_relation,
+        g2b_reuse_relation=g2b_reuse_relation,
+        g2c_route_relation=g2c_route_relation,
+        root_review_required=root_review_required,
+        historical_artifact_preserved=True,
+        deleted=False,
+        trace_refs=trace_refs,
+    )
+    value = _finish_identity(provisional)
+    return _require_built_valid(  # type: ignore[return-value]
+        value, _invalidation_record_errors_v01
+    )
+
+
+def validate_artifact_invalidation_record_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        ArtifactInvalidationRecordV01,
+        "invalidation_record",
+        _invalidation_record_errors_v01,
+    )
+
+
+def artifact_invalidation_record_to_plain_data_v01(
+    value: ArtifactInvalidationRecordV01,
+) -> dict[str, object]:
+    return _serialize(
+        value,
+        ArtifactInvalidationRecordV01,
+        _invalidation_record_errors_v01,
+    )
+
+
+def rebuild_artifact_invalidation_record_identity_v01(
+    value: ArtifactInvalidationRecordV01,
+) -> str:
+    return _rebuild(value, ArtifactInvalidationRecordV01)
+
+
+def build_invalidation_report_v01(
+    *,
+    affected_set_id: str,
+    records: tuple[ArtifactInvalidationRecordV01, ...],
+    ordered_unresolved_artifact_ids: tuple[str, ...],
+) -> InvalidationReportV01:
+    if (
+        type(records) is not tuple
+        or not records
+        or any(_invalidation_record_errors_v01(record) for record in records)
+        or any(record.affected_set_id != affected_set_id for record in records)
+    ):
+        raise ValueError("g2e_invalidation_record_invalid")
+    invalidated = tuple(record.artifact_id for record in records)
+    relation_candidates = tuple(
+        _record_relation_candidate_ids_v01(record) for record in records
+    )
+    packet_ids = _ordered_unique_v01(
+        [
+            packet_id
+            for packet_id, _certificate_id, _route_id in relation_candidates
+            if packet_id is not None
+        ]
+    )
+    certificate_ids = _ordered_unique_v01(
+        [
+            certificate_id
+            for _packet_id, certificate_id, _route_id in relation_candidates
+            if certificate_id is not None
+        ]
+    )
+    route_ids = _ordered_unique_v01(
+        [
+            route_id
+            for _packet_id, _certificate_id, route_id in relation_candidates
+            if route_id is not None
+        ]
+    )
+    reasons = _report_reason_codes_v01(
+        unresolved=ordered_unresolved_artifact_ids,
+        packet_ids=packet_ids,
+        certificate_ids=certificate_ids,
+        route_ids=route_ids,
+    )
+    provisional = InvalidationReportV01(
+        invalidation_report_id="g2e_invalidation_report_v01:" + _ZERO_SHA256,
+        affected_set_id=affected_set_id,
+        ordered_invalidation_record_ids=tuple(
+            record.invalidation_record_id for record in records
+        ),
+        ordered_invalidated_artifact_ids=invalidated,
+        ordered_historical_artifact_ids=invalidated,
+        ordered_unresolved_artifact_ids=ordered_unresolved_artifact_ids,
+        ordered_packet_invalidation_candidate_ids=packet_ids,
+        ordered_stale_reuse_certificate_ids=certificate_ids,
+        ordered_route_revalidation_ids=route_ids,
+        report_status="PASS" if not reasons else "FAIL_CLOSED",
+        reason_codes=reasons,
+        root_review_required=bool(packet_ids or certificate_ids or route_ids),
+        authority_created=False,
+        permission_created=False,
+        action_commit_packet_created=False,
+        receipt_created=False,
+        final_output_created=False,
+        drs_write_created=False,
+        real_world_effects_count=0,
+    )
+    value = _finish_identity(provisional)
+    return _require_built_valid(  # type: ignore[return-value]
+        value, _invalidation_report_errors_v01
+    )
+
+
+def validate_invalidation_report_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        InvalidationReportV01,
+        "invalidation_record",
+        _invalidation_report_errors_v01,
+    )
+
+
+def invalidation_report_to_plain_data_v01(
+    value: InvalidationReportV01,
+) -> dict[str, object]:
+    return _serialize(
+        value,
+        InvalidationReportV01,
+        _invalidation_report_errors_v01,
+    )
+
+
+def rebuild_invalidation_report_identity_v01(
+    value: InvalidationReportV01,
+) -> str:
+    return _rebuild(value, InvalidationReportV01)
+
+
+def build_preservation_proof_v01(
+    *,
+    baseline_graph_id: str,
+    affected_set_id: str,
+    ordered_preserved_artifact_ids: tuple[str, ...],
+    ordered_before_artifact_sha256: tuple[str, ...],
+    ordered_after_artifact_sha256: tuple[str, ...],
+    ordered_before_payload_sha256: tuple[str, ...],
+    ordered_after_payload_sha256: tuple[str, ...],
+    ordered_before_identity_ids: tuple[str, ...],
+    ordered_after_identity_ids: tuple[str, ...],
+) -> PreservationProofV01:
+    reasons = _preservation_reason_codes_v01(
+        before_artifact=ordered_before_artifact_sha256,
+        after_artifact=ordered_after_artifact_sha256,
+        before_payload=ordered_before_payload_sha256,
+        after_payload=ordered_after_payload_sha256,
+        before_identity=ordered_before_identity_ids,
+        after_identity=ordered_after_identity_ids,
+    )
+    no_cache = _no_cache_state_sha256_v01()
+    provisional = PreservationProofV01(
+        preservation_proof_id="g2e_preservation_proof_v01:" + _ZERO_SHA256,
+        baseline_graph_id=baseline_graph_id,
+        affected_set_id=affected_set_id,
+        ordered_preserved_artifact_ids=ordered_preserved_artifact_ids,
+        ordered_before_artifact_sha256=ordered_before_artifact_sha256,
+        ordered_after_artifact_sha256=ordered_after_artifact_sha256,
+        ordered_before_payload_sha256=ordered_before_payload_sha256,
+        ordered_after_payload_sha256=ordered_after_payload_sha256,
+        ordered_before_identity_ids=ordered_before_identity_ids,
+        ordered_after_identity_ids=ordered_after_identity_ids,
+        before_cache_state_sha256=no_cache,
+        after_cache_state_sha256=no_cache,
+        mutable_global_write_count=0,
+        byte_identity_preserved=not reasons,
+        object_identity_used_as_proof=False,
+        proof_sha256=_ZERO_SHA256,
+        status="PASS" if not reasons else "FAIL_CLOSED",
+        reason_codes=reasons,
+    )
+    with_proof = replace(
+        provisional,
+        proof_sha256=_preservation_proof_sha256_v01(provisional),
+    )
+    value = _finish_identity(with_proof)
+    return _require_built_valid(  # type: ignore[return-value]
+        value, _preservation_proof_errors_v01
+    )
+
+
+def validate_preservation_proof_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    return _structural_report(
+        value,
+        PreservationProofV01,
+        "preservation",
+        _preservation_proof_errors_v01,
+    )
+
+
+def preservation_proof_to_plain_data_v01(
+    value: PreservationProofV01,
+) -> dict[str, object]:
+    return _serialize(
+        value,
+        PreservationProofV01,
+        _preservation_proof_errors_v01,
+    )
+
+
+def rebuild_preservation_proof_identity_v01(
+    value: PreservationProofV01,
+) -> str:
+    return _rebuild(value, PreservationProofV01)
+
+
+def build_continuous_delta_source_context_v01(
+    *,
+    integrity_manifest,
+    integrity_replay,
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    observed_source_artifacts: tuple[KernelArtifactV01, ...],
+    g2a_registry,
+    g2a_packet,
+    g2a_dependency_candidate,
+    g2a_current_observations,
+    g2a_root_invalidation_material,
+    g2b_resolution_report,
+    g2b_reuse_certificate,
+    g2b_writeback_evidence,
+    g2c_source_context,
+    baseline_g2c_route_eligibility_artifact,
+    baseline_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+    root_kernel,
+    post_vv_profile,
+    gt_profile,
+) -> ContinuousDeltaSourceContextV01:
+    value = ContinuousDeltaSourceContextV01(
+        integrity_manifest=integrity_manifest,
+        integrity_replay=integrity_replay,
+        baseline_source_artifacts=baseline_source_artifacts,
+        observed_source_artifacts=observed_source_artifacts,
+        g2a_registry=g2a_registry,
+        g2a_packet=g2a_packet,
+        g2a_dependency_candidate=g2a_dependency_candidate,
+        g2a_current_observations=g2a_current_observations,
+        g2a_root_invalidation_material=g2a_root_invalidation_material,
+        g2b_resolution_report=g2b_resolution_report,
+        g2b_reuse_certificate=g2b_reuse_certificate,
+        g2b_writeback_evidence=g2b_writeback_evidence,
+        g2c_source_context=g2c_source_context,
+        baseline_g2c_route_eligibility_artifact=(
+            baseline_g2c_route_eligibility_artifact
+        ),
+        baseline_g2d_execution_bundle=baseline_g2d_execution_bundle,
+        root_kernel=root_kernel,
+        post_vv_profile=post_vv_profile,
+        gt_profile=gt_profile,
+    )
+    report = validate_continuous_delta_source_context_v01(value)
+    if report.status != "PASS":
+        raise ValueError(report.reason_codes[0])
+    return value
+
+
+def validate_continuous_delta_source_context_v01(
+    value: object,
+) -> ContinuousDeltaValidationReportV01:
+    reason = _source_context_reason_v01(value)
+    return _contextual_report_v01(
+        validation_target="ContinuousDeltaSourceContextV01",
+        validated_object_id=(
+            _source_context_validated_id_v01(value)
+            if reason is None and type(value) is ContinuousDeltaSourceContextV01
+            else None
+        ),
+        failure_stage="delta_source_context",
+        reason_codes=() if reason is None else (reason,),
+    )
+
+
+def derive_invalidation_report_v01(
+    *,
+    affected_set: AffectedSetResultV01,
+    delta: WorldStateDeltaV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    dependency_graph: DependencyGraphIndexV01,
+) -> tuple[
+    tuple[ArtifactInvalidationRecordV01, ...],
+    InvalidationReportV01,
+]:
+    _e3_contextual_carriers_v01(
+        affected_set=affected_set,
+        delta=delta,
+        source_context=source_context,
+        source_bindings=source_bindings,
+        changed_field_bindings=changed_field_bindings,
+        changed_artifact_bindings=changed_artifact_bindings,
+        dependency_edges=dependency_edges,
+        dependency_graph=dependency_graph,
+    )
+    records, unresolved = _derive_invalidation_rows_v01(
+        affected_set=affected_set,
+        delta=delta,
+        source_context=source_context,
+        source_bindings=source_bindings,
+        changed_field_bindings=changed_field_bindings,
+        changed_artifact_bindings=changed_artifact_bindings,
+        dependency_edges=dependency_edges,
+    )
+    if not records:
+        raise ValueError("g2e_invalidation_record_invalid")
+    report = build_invalidation_report_v01(
+        affected_set_id=affected_set.affected_set_id,
+        records=records,
+        ordered_unresolved_artifact_ids=unresolved,
+    )
+    return records, report
+
+
+def validate_invalidation_report_against_sources_v01(
+    value: InvalidationReportV01,
+    *,
+    records: tuple[ArtifactInvalidationRecordV01, ...],
+    affected_set: AffectedSetResultV01,
+    delta: WorldStateDeltaV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    dependency_graph: DependencyGraphIndexV01,
+) -> ContinuousDeltaValidationReportV01:
+    reason: str | None = None
+    try:
+        expected_records, expected_report = derive_invalidation_report_v01(
+            affected_set=affected_set,
+            delta=delta,
+            source_context=source_context,
+            source_bindings=source_bindings,
+            changed_field_bindings=changed_field_bindings,
+            changed_artifact_bindings=changed_artifact_bindings,
+            dependency_edges=dependency_edges,
+            dependency_graph=dependency_graph,
+        )
+        if (
+            type(records) is not tuple
+            or records != expected_records
+            or value != expected_report
+            or canonical_json_bytes_v01(
+                invalidation_report_to_plain_data_v01(value)
+            )
+            != canonical_json_bytes_v01(
+                invalidation_report_to_plain_data_v01(expected_report)
+            )
+        ):
+            reason = "g2e_invalidation_record_invalid"
+    except ValueError as exc:
+        candidate = exc.args[0] if len(exc.args) == 1 else None
+        reason = (
+            candidate
+            if candidate in PUBLIC_G2E_REASON_CODES_V01
+            else "g2e_invalidation_record_invalid"
+        )
+    except Exception:
+        reason = "g2e_invalidation_record_invalid"
+    return _contextual_report_v01(
+        validation_target="invalidation_against_prior_slices",
+        validated_object_id=(
+            value.invalidation_report_id
+            if reason is None and type(value) is InvalidationReportV01
+            else None
+        ),
+        failure_stage="invalidation_prior_slice",
+        reason_codes=() if reason is None else (reason,),
+    )
+
+
+def prove_unaffected_artifact_preservation_v01(
+    *,
+    affected_set: AffectedSetResultV01,
+    invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+    source_context: ContinuousDeltaSourceContextV01,
+    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+    recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
+) -> PreservationProofV01:
+    context_report = validate_continuous_delta_source_context_v01(source_context)
+    if context_report.status != "PASS":
+        raise ValueError(context_report.reason_codes[0])
+    if (
+        _affected_set_result_errors(affected_set)
+        or type(invalidation_records) is not tuple
+        or any(_invalidation_record_errors_v01(row) for row in invalidation_records)
+        or tuple(row.artifact_id for row in invalidation_records)
+        != affected_set.ordered_affected_ids
+        or type(recomputed_g2d_execution_bundle)
+        is not FractalRuntimeExecutionBundleV02
+        or validate_fractal_runtime_execution_bundle_v02(
+            recomputed_g2d_execution_bundle
+        ).status
+        != "PASS"
+        or type(recomputed_bindings) is not tuple
+        or any(
+            type(binding) is not RecomputedArtifactBindingV01
+            for binding in recomputed_bindings
+        )
+    ):
+        raise ValueError("g2e_preservation_proof_invalid")
+    baseline_g2d = _g2d_kernel_artifacts_v01(
+        source_context.baseline_g2d_execution_bundle
+    )
+    recomputed_g2d = _g2d_kernel_artifacts_v01(
+        recomputed_g2d_execution_bundle
+    )
+    affected_ids = set(
+        affected_set.ordered_changed_node_ids
+        + affected_set.ordered_affected_ids
+    )
+    route_revalidation_required = any(
+        record.g2c_route_relation == "ROUTE_REVALIDATION_REQUIRED"
+        for record in invalidation_records
+    )
+    recomputed_prior_ids = {
+        binding.prior_artifact_id for binding in recomputed_bindings
+    }
+    baseline_g2d_ids = {artifact.artifact_id for artifact in baseline_g2d}
+    if (
+        affected_ids & baseline_g2d_ids
+        or recomputed_bindings
+        or route_revalidation_required
+    ) and (
+        not recomputed_bindings
+        or tuple(
+            canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+            for item in baseline_g2d
+        )
+        == tuple(
+            canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+            for item in recomputed_g2d
+        )
+    ):
+        raise ValueError("g2e_recomputation_in_place_forbidden")
+
+    before_rows: list[KernelArtifactV01] = []
+    after_rows: list[KernelArtifactV01] = []
+    observed_by_baseline_position = dict(
+        zip(
+            (
+                artifact.artifact_id
+                for artifact in source_context.baseline_source_artifacts
+            ),
+            source_context.observed_source_artifacts,
+        )
+    )
+    for baseline in source_context.baseline_source_artifacts:
+        if (
+            baseline.artifact_id not in affected_ids
+            and baseline.artifact_id not in recomputed_prior_ids
+        ):
+            before_rows.append(baseline)
+            after_rows.append(observed_by_baseline_position[baseline.artifact_id])
+    recomputed_by_role = {
+        index: artifact for index, artifact in enumerate(recomputed_g2d)
+    }
+    for index, baseline in enumerate(baseline_g2d):
+        if (
+            baseline.artifact_id not in affected_ids
+            and baseline.artifact_id not in recomputed_prior_ids
+            and baseline.artifact_id
+            not in {artifact.artifact_id for artifact in before_rows}
+        ):
+            if index not in recomputed_by_role:
+                raise ValueError("g2e_preservation_proof_invalid")
+            before_rows.append(baseline)
+            after_rows.append(recomputed_by_role[index])
+    before = tuple(before_rows)
+    after = tuple(after_rows)
+    return build_preservation_proof_v01(
+        baseline_graph_id=affected_set.graph_id,
+        affected_set_id=affected_set.affected_set_id,
+        ordered_preserved_artifact_ids=tuple(
+            artifact.artifact_id for artifact in before
+        ),
+        ordered_before_artifact_sha256=tuple(
+            _artifact_sha256_v01(artifact) for artifact in before
+        ),
+        ordered_after_artifact_sha256=tuple(
+            _artifact_sha256_v01(artifact) for artifact in after
+        ),
+        ordered_before_payload_sha256=tuple(
+            _artifact_payload_sha256_v01(artifact) for artifact in before
+        ),
+        ordered_after_payload_sha256=tuple(
+            _artifact_payload_sha256_v01(artifact) for artifact in after
+        ),
+        ordered_before_identity_ids=tuple(
+            artifact.artifact_id for artifact in before
+        ),
+        ordered_after_identity_ids=tuple(
+            artifact.artifact_id for artifact in after
+        ),
+    )
+
+
 __all__ = (
     "DeltaSourceBindingV01",
     "ChangedFieldBindingV01",
@@ -3793,4 +5514,21 @@ __all__ = (
     "project_integrity_replay_dependency_edges_v01",
     "compute_affected_set_v01",
     "validate_affected_set_against_graph_v01",
+    "build_artifact_invalidation_record_v01",
+    "validate_artifact_invalidation_record_v01",
+    "artifact_invalidation_record_to_plain_data_v01",
+    "rebuild_artifact_invalidation_record_identity_v01",
+    "build_invalidation_report_v01",
+    "validate_invalidation_report_v01",
+    "invalidation_report_to_plain_data_v01",
+    "rebuild_invalidation_report_identity_v01",
+    "build_preservation_proof_v01",
+    "validate_preservation_proof_v01",
+    "preservation_proof_to_plain_data_v01",
+    "rebuild_preservation_proof_identity_v01",
+    "build_continuous_delta_source_context_v01",
+    "validate_continuous_delta_source_context_v01",
+    "derive_invalidation_report_v01",
+    "validate_invalidation_report_against_sources_v01",
+    "prove_unaffected_artifact_preservation_v01",
 )

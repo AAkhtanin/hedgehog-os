@@ -5,6 +5,8 @@ from dataclasses import FrozenInstanceError, fields, is_dataclass, replace
 import hashlib
 import inspect
 import json
+import math
+import os
 from pathlib import Path
 import re
 import types
@@ -13,11 +15,26 @@ from typing import get_args, get_origin, get_type_hints
 from jsonschema import Draft202012Validator, ValidationError
 import pytest
 
+import hedgehog.action_commit_packet_v02 as action_commit_packet
+import hedgehog.context_packets as context_packets
+import hedgehog.drs_g2b_compatibility_v01 as drs_compatibility
+import hedgehog.drs_memory_resolution_v01 as drs_resolution
+import hedgehog.drs_semantic_address_v01 as drs_semantic
+import hedgehog.reuse_certificate_v01 as reuse_certificate
+import hedgehog.structured_rationale as structured_rationale
 import hedgehog.kernel as kernel
 import hedgehog.kernel.continuous_delta_runtime_v01 as g2e
+import hedgehog.kernel.execution_mode_router_v01 as g2c
+import hedgehog.kernel.fractal_runtime_v02 as g2d
+import hedgehog.kernel.root_decision_v01 as root_decision
+import hedgehog.kernel.semantic_work_v01 as semantic_work
 import hedgehog.kernel.transition_registry_v01 as transition
+from hedgehog.kernel.trust_model_v01 import (
+    build_default_component_trust_profiles_v01,
+)
 from hedgehog.kernel.abi_v01 import (
     build_kernel_artifact_v01,
+    causal_consumption_ref_to_plain_dict_v01,
     kernel_artifact_to_canonical_ref_v01,
     kernel_artifact_to_plain_dict_v01,
     validate_kernel_artifact_v01,
@@ -43,7 +60,7 @@ ADDENDUM_PATH = ROOT / (
     "post_acceptance_contract_addendum_v01.md"
 )
 ACCEPTED_ADDENDUM_SHA256 = (
-    "b3a6c9c7b3687f18bd3c6739c096e7486a4f6505dc9dd49ecc5e1ecd8a4a49f1"
+    "1041dbf3da320557d5eca948a13d0c4737e4e9b9ffac64c9453c97503527ca4c"
 )
 
 TYPE_NAMES = (
@@ -123,6 +140,29 @@ E2_BEHAVIORAL_FUNCTIONS = (
     "validate_affected_set_against_graph_v01",
 )
 E2_PUBLIC_FUNCTIONS = E2_QUARTET_FUNCTIONS + E2_BEHAVIORAL_FUNCTIONS
+
+E3_QUARTET_FUNCTIONS = (
+    "build_artifact_invalidation_record_v01",
+    "validate_artifact_invalidation_record_v01",
+    "artifact_invalidation_record_to_plain_data_v01",
+    "rebuild_artifact_invalidation_record_identity_v01",
+    "build_invalidation_report_v01",
+    "validate_invalidation_report_v01",
+    "invalidation_report_to_plain_data_v01",
+    "rebuild_invalidation_report_identity_v01",
+    "build_preservation_proof_v01",
+    "validate_preservation_proof_v01",
+    "preservation_proof_to_plain_data_v01",
+    "rebuild_preservation_proof_identity_v01",
+)
+E3_BEHAVIORAL_FUNCTIONS = (
+    "build_continuous_delta_source_context_v01",
+    "validate_continuous_delta_source_context_v01",
+    "derive_invalidation_report_v01",
+    "validate_invalidation_report_against_sources_v01",
+    "prove_unaffected_artifact_preservation_v01",
+)
+E3_PUBLIC_FUNCTIONS = E3_QUARTET_FUNCTIONS + E3_BEHAVIORAL_FUNCTIONS
 
 
 def _sha(label: str) -> str:
@@ -820,6 +860,1973 @@ def _e2_artifact_chain(
     )
 
 
+_E3_TIME = 1783470600
+_E3_VALID_FROM = 1783468800
+_E3_VALID_TO = 1783472400
+_E3_UTC = "2026-07-08T00:30:00+00:00"
+_E3_VALID_FROM_UTC = "2026-07-08T00:00:00+00:00"
+_E3_VALID_TO_UTC = "2026-07-08T01:00:00+00:00"
+_E3_ROOT = "root:g2e:e3"
+_E3_DOMAIN = "G2E3_CONTINUOUS_DELTA"
+_E3_BASELINE_OBSERVATION_DOMAIN = "HEDGEHOG_G2E3_BASELINE_OBSERVATION_V01"
+_E3_EXPECTED_DIGEST_ENV = (
+    "HEDGEHOG_G2E3_EXPECTED_BASELINE_SOURCE_OBSERVATION_SHA256",
+    "HEDGEHOG_G2E3_EXPECTED_BASELINE_MEMBER_OBSERVATION_SHA256",
+    "HEDGEHOG_G2E3_EXPECTED_BASELINE_MEMBER_IDENTITIES_SHA256",
+)
+
+
+def _e3_g2a_dependency() -> action_commit_packet.DependencySetCandidateV01:
+    content_sha256 = _sha("g2e-e3-g2a-dependency")
+    provenance = ("source:g2e:e3:g2a-dependency",)
+    envelope_id = action_commit_packet.build_action_dependency_time_envelope_id_v01(
+        dependency_id="dependency:g2e:e3:invoice",
+        evidence_ref="evidence:g2e:e3:invoice",
+        content_sha256=content_sha256,
+        freshness_policy_id="freshness:g2e:e3:v01",
+        source_provenance_refs=provenance,
+        valid_from_utc=_E3_VALID_FROM,
+        valid_to_utc=_E3_VALID_TO,
+    )
+    record = action_commit_packet.build_dependency_set_candidate_record_v01(
+        dependency_id="dependency:g2e:e3:invoice",
+        dependency_class="INVOICE_EVIDENCE",
+        evidence_ref="evidence:g2e:e3:invoice",
+        content_sha256=content_sha256,
+        requirement_class="MANDATORY",
+        time_envelope_id=envelope_id,
+        freshness_policy_id="freshness:g2e:e3:v01",
+        source_provenance_refs=provenance,
+        expected_accepting_local_root_id=_E3_ROOT,
+    )
+    return action_commit_packet.build_dependency_set_candidate_v01(
+        dependency_records=(record,)
+    )
+
+
+def _e3_g2a_policy(
+) -> action_commit_packet.ActionAuthorityPolicyProfileV01:
+    return action_commit_packet.build_action_authority_policy_profile_v01(
+        policy_version="policy:g2e:e3:g2a:v01",
+        owning_local_root_id=_E3_ROOT,
+        authority_rule_refs=("authority_rule:g2e:e3",),
+        kill_switch_condition_refs=("kill_switch:g2e:e3",),
+        retry_policy="NON_CONSUMING_RETRY",
+        supersession_policy="ROOT_DECISION_ONLY",
+        logical_effect_namespace="supplier.payment.v01",
+        allowed_logical_effect_classes=("PAYMENT",),
+        allowed_business_object_namespaces=("supplier.payment_slot.v01",),
+        allowed_corridor_classes=("supplier_a_mock_payment_corridor",),
+    )
+
+
+def _e3_g2a_root_evidence(
+    canonical: action_commit_packet.SupplierActionCommitPacketCanonicalProjectionV01,
+) -> tuple[
+    root_decision.RootDecisionKernelV01,
+    root_decision.RootDecisionInputV01,
+    root_decision.RootDecisionResultV01,
+]:
+    candidate_id = (
+        canonical.authorization_candidate.root_packet_authorization_candidate_id
+    )
+    actor_id = "runtime:g2e:e3:g2a"
+    request = semantic_work.build_semantic_work_request_v01(
+        request_id="semantic_request:g2e:e3:g2a",
+        transaction_id=canonical.transaction_id,
+        target_root_id=canonical.owning_local_root_id,
+        runtime_topology_ref="runtime_topology:g2e:e3:g2a",
+        bounded_context_refs=("context:g2e:e3:g2a",),
+        permitted_actor_ids=(actor_id,),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=("action_commit_packet:g2e:e3",),
+        required_evidence_classes=("DEPENDENCY_EVIDENCE",),
+        forbidden_claims=("authority_creation",),
+    )
+    dependency_record = canonical.dependency_candidate.dependency_records[0]
+    evidence = semantic_work.build_evidence_binding_v01(
+        evidence_id="evidence_binding:g2e:e3:g2a",
+        evidence_ref=dependency_record.evidence_ref,
+        evidence_class="DEPENDENCY_EVIDENCE",
+        source_component_id=actor_id,
+        provenance_ref=dependency_record.source_provenance_refs[0],
+        evidence_state="PRESENT",
+    )
+    claim = semantic_work.build_normalized_claim_v01(
+        claim_id=candidate_id,
+        subject="action_commit_packet:g2e:e3",
+        predicate="root_packet_authorization_candidate",
+        object_or_value={
+            "candidate_id": candidate_id,
+            "candidate_kind": "PACKET_AUTHORIZATION",
+        },
+        time_envelope_ref=canonical.temporal_authority_fingerprint,
+        provenance_refs=("provenance:g2e:e3:g2a",),
+        evidence_refs=(evidence.evidence_id,),
+        confidence_micros=1_000_000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    contribution = semantic_work.build_actor_contribution_v01(
+        contribution_id="contribution:g2e:e3:g2a",
+        request_id=request.request_id,
+        actor_id=actor_id,
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref="bsep:g2e:e3:g2a",
+        scope="scope:g2e:e3:g2a",
+        bounded_context_refs=("context:g2e:e3:g2a",),
+        claims=(claim,),
+        evidence_bindings=(evidence,),
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=("validator:g2e:e3:g2a",),
+        forbidden_claims_observed=(),
+    )
+    review_packet = semantic_work.build_root_review_packet_from_contributions_v01(
+        request=request,
+        contributions=(contribution,),
+        trust_profiles=build_default_component_trust_profiles_v01(),
+    )
+    mandatory_refs = tuple(
+        record.evidence_ref
+        for record in canonical.dependency_candidate.dependency_records
+        if record.requirement_class == "MANDATORY"
+    )
+    root_kernel = root_decision.build_root_decision_kernel_v01()
+    root_input = root_decision.build_root_decision_input_v01(
+        transaction_id=canonical.transaction_id,
+        target_root_id=canonical.owning_local_root_id,
+        root_review_packet=review_packet,
+        post_vv_bundle={
+            "bundle_id": "post_vv:g2e:e3:g2a",
+            "post_vv_passed": True,
+            "validated_candidate_ids": [candidate_id],
+            "rejected_candidate_ids": [],
+            "required_evidence_refs": list(mandatory_refs),
+            "provided_evidence_refs": list(mandatory_refs),
+            "hard_failure_reasons": [],
+        },
+        gt_advisory={
+            "advisory_id": "gt:g2e:e3:g2a",
+            "candidate_ids": [candidate_id],
+            "selected_candidate_id": candidate_id,
+            "score_micros_by_candidate": {candidate_id: 1_000_000},
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "target_artifact_type": "RootDecision",
+            "advisory_only": True,
+            "creates_final_output": False,
+            "requests_effect": False,
+        },
+        policy_state={
+            "policy_id": canonical.authority_policy_fingerprint,
+            "identity_passed": True,
+            "scope_passed": True,
+            "hard_policy_passed": True,
+            "allow_accept": True,
+            "conflict_policy": "DEFER",
+            "no_candidate_policy": "NO_UPDATE",
+        },
+        permission_state={
+            "permission_required": True,
+            "user_permission_present": True,
+            "permission_scope_valid": True,
+            "permission_ref": canonical.canonical_permission_ref,
+        },
+        temporal_state={
+            "temporal_valid": True,
+            "expired": False,
+            "not_before_satisfied": True,
+            "time_envelope_ref": canonical.temporal_authority_fingerprint,
+        },
+        conflict_state={
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": list(review_packet.conflict_set_ids),
+        },
+        prior_root_state={
+            "prior_decision_id": None,
+            "prior_decision": None,
+            "prior_selected_candidate_id": None,
+        },
+    )
+    root_result = root_decision.decide_root_v01(
+        kernel=root_kernel,
+        decision_input=root_input,
+    )
+    assert root_result.decision == "ACCEPT"
+    return root_kernel, root_input, root_result
+
+
+def _e3_g2a_family(transaction_id: str) -> dict[str, object]:
+    source = action_commit_packet.build_supplier_a_mock_action_commit_packet_fixture_v02()
+    dependency = _e3_g2a_dependency()
+    canonical = action_commit_packet.build_supplier_action_commit_packet_canonical_projection_v01(
+        source,
+        transaction_id=transaction_id,
+        owning_local_root_id=_E3_ROOT,
+        canonical_permission_ref="permission:g2e:e3:g2a",
+        selected_legacy_action=(
+            action_commit_packet.ACTION_MOCK_SUPPLIER_A_PAYMENT_ORDER
+        ),
+        logical_effect_namespace="supplier.payment.v01",
+        business_object_namespace="supplier.payment_slot.v01",
+        corridor_class="supplier_a_mock_payment_corridor",
+        adapter_version=action_commit_packet.PRE_G2A_ADAPTER_VERSION_V01,
+        temporal_policy_version="packet_ttl_v01",
+        authority_policy=_e3_g2a_policy(),
+        dependency_candidate=dependency,
+        evaluation_time=_E3_TIME,
+        evaluation_time_source="g2e_e3_trusted_ceiling",
+        evaluation_context_id="evaluation_context:g2e:e3:g2a",
+        predecessor_packet_id=None,
+        supersession_reason_class=None,
+    )
+    root_kernel, root_input, root_result = _e3_g2a_root_evidence(canonical)
+    root_projection = action_commit_packet.build_root_decision_candidate_projection_v01(
+        candidate_kind=(
+            action_commit_packet.ROOT_DECISION_CANDIDATE_KIND_PACKET_AUTHORIZATION_V01
+        ),
+        projected_candidate_id=(
+            canonical.authorization_candidate.root_packet_authorization_candidate_id
+        ),
+        root_decision_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+    )
+    packet = action_commit_packet.build_supplier_root_bound_action_commit_packet_v02_projection_v01(
+        canonical_projection=canonical,
+        root_decision_projection=root_projection,
+    )
+    transition_profile = (
+        transition.build_action_packet_transition_registry_profile_v01()
+    )
+    registry = action_commit_packet.record_action_packet_genesis_v01(
+        action_commit_packet.build_empty_action_commit_packet_registry_v02(),
+        root_bound_genesis=packet,
+        action_packet_transition_registry_profile=transition_profile,
+    )
+    observations = tuple(
+        action_commit_packet.build_action_dependency_current_observation_v01(
+            dependency_id=record.dependency_id,
+            evidence_ref=record.evidence_ref,
+            observed_content_sha256=record.content_sha256,
+            time_envelope_id=record.time_envelope_id,
+            freshness_policy_id=record.freshness_policy_id,
+            source_provenance_refs=record.source_provenance_refs,
+            valid_from_utc=_E3_VALID_FROM,
+            valid_to_utc=_E3_VALID_TO,
+            observed_at_utc=_E3_TIME,
+            observation_context_id="evaluation_context:g2e:e3:g2a",
+        )
+        for record in dependency.dependency_records
+    )
+    record = dependency.dependency_records[0]
+    invalidation = action_commit_packet.build_action_invalidation_evidence_v01(
+        source_invalidation_event_ref="event:g2e:e3:dependency-change",
+        packet_id=packet.packet_identity.packet_id,
+        dependency_id=record.dependency_id,
+        invalidation_class="DEPENDENCY_CHANGED",
+        evidence_ref=record.evidence_ref,
+        evidence_sha256=_sha("g2e-e3-updated-dependency"),
+        observed_status="CHANGED",
+        time_envelope_id=record.time_envelope_id,
+        freshness_policy_id=record.freshness_policy_id,
+        owning_local_root_id=_E3_ROOT,
+        accepted_by_local_root_id=_E3_ROOT,
+        authority_effect="DETERMINISTIC_BLOCK",
+        evaluation_time=_E3_TIME,
+        evaluation_time_source="g2e_e3_trusted_ceiling",
+        evaluation_context_id="evaluation_context:g2e:e3:g2a",
+    )
+    assert action_commit_packet.validate_action_invalidation_evidence_against_packet_v01(
+        invalidation,
+        packet,
+    ) == (True, ())
+    return {
+        "registry": registry,
+        "packet": packet,
+        "dependency": dependency,
+        "observations": observations,
+        "invalidation": invalidation,
+    }
+
+
+def _e3_g2b_family() -> dict[str, object]:
+    address = drs_semantic.build_semantic_address_v01(
+        namespace="g2e3_v01",
+        domain=_E3_DOMAIN,
+        subject_class="bounded_information",
+        intent_class="informational_summary",
+        meaning_schema_id="drs_meaning_record",
+        meaning_schema_version="v0.1",
+    )
+    scope_ref = "scope:g2e:e3"
+    scope_sha256 = _sha(scope_ref)
+    envelope = drs_semantic.build_drs_time_envelope_v01(
+        pt_created_at=_E3_VALID_FROM,
+        kt_as_of=_E3_TIME,
+        et_observed_at=_E3_TIME,
+        ct_context_anchor=_E3_TIME,
+        ttl_seconds=3600,
+        valid_from=_E3_VALID_FROM,
+        valid_to=_E3_VALID_TO,
+        source_observed_at=_E3_TIME,
+        source_reported_at=_E3_TIME,
+        system_ingested_at=_E3_TIME,
+        system_verified_at=_E3_TIME,
+        freshness_policy_id="freshness:g2e:e3:v01",
+    )
+    authority = drs_semantic.build_drs_authority_envelope_v01(
+        authority_class="ROOT_ACCEPTED_WORK",
+        owning_local_root_id=_E3_ROOT,
+        source_root_decision_input_id="root-input:g2e:e3:g2b",
+        source_root_decision_id="root-decision:g2e:e3:g2b",
+        source_root_decision_hash=_sha("g2e-e3-g2b-root"),
+        authority_scope_fingerprint=scope_sha256,
+        root_acceptance_state="ACCEPTED_WORK",
+        recording_component="continuous_delta_runtime_g2e3_test",
+    )
+    record = drs_semantic.build_meaning_record_v01(
+        semantic_address=address,
+        predecessor_record_id=None,
+        supersession_reason=None,
+        safe_summary="Bounded deterministic G2-E3 baseline context.",
+        semantic_tags=("bounded", "g2e3"),
+        resonance_reason="Exact deterministic semantic-address match.",
+        memory_pointers=(),
+        artifact_pointers=(),
+        source_reference_ids=("source:g2e:e3:g2b",),
+        lineage_edges=(),
+        time_envelope=envelope,
+        authority_envelope=authority,
+        persistent_lifecycle_state="ACTIVE",
+        risk_hints=(),
+        conflict_hints=(),
+        reuse_policy_class="ANSWER_SHORTCUT",
+        policy_version="policy:g2e:e3:v01",
+        schema_versions=("v0.1",),
+        content_fingerprint=_sha("g2e-e3-meaning-record"),
+        recording_component="continuous_delta_runtime_g2e3_test",
+    )
+    query = drs_resolution.build_drs_temporal_query_v01(
+        query_mode="DIRECT_REUSE_CANDIDATE",
+        semantic_address_id=address.semantic_address_id,
+        scope_fingerprint=scope_sha256,
+        as_of=_E3_TIME,
+        evaluation_time=_E3_TIME,
+        evaluation_time_source="INJECTED_CURRENT_DECISION_TIME",
+        time_range_start=_E3_VALID_FROM,
+        time_range_end=_E3_VALID_TO,
+        required_time_axes=("PT", "KT", "ET", "CT", "TTL", "VALIDITY"),
+        freshness_policy_id="freshness:g2e:e3:v01",
+        max_age_seconds=3600,
+        domain=_E3_DOMAIN,
+        risk_class="LOW",
+        reuse_intent="INFORMATIONAL_SHORTCUT_CONSIDERATION",
+        requested_reuse_classes=("ANSWER_SHORTCUT",),
+        required_evidence_classes=(
+            "SOURCE_IDENTITY",
+            "SOURCE_INTEGRITY",
+            "PROVENANCE_CHAIN",
+            "TIME_FITNESS",
+            "POLICY_COMPATIBILITY",
+            "SCHEMA_COMPATIBILITY",
+            "CONFLICT_CLEARANCE",
+            "ROOT_DECISION",
+            "SOURCE_HISTORY",
+        ),
+        forbidden_changes=("POLICY_CHANGED",),
+        policy_version="policy:g2e:e3:v01",
+        schema_versions=("v0.1",),
+        owning_local_root_id=_E3_ROOT,
+    )
+    evaluation = drs_resolution.evaluate_drs_candidate_v01(
+        semantic_address=address,
+        query=query,
+        meaning_record=record,
+        action_history_binding=None,
+    )
+    legacy = {
+        "record_id": "legacy:g2e:e3:g2b",
+        "layer": "work",
+        "type": "generic",
+        "domain": _E3_DOMAIN,
+        "content": {"summary": "Bounded deterministic memory context."},
+        "time_envelope": {
+            "pt_created_at": "2026-07-08T00:00:00Z",
+            "kt_asof": "2026-07-08T00:30:00Z",
+            "et_observed_at": "2026-07-08T00:30:00Z",
+            "ct_session_anchor": "case:g2e:e3:g2b",
+            "ttl_seconds": 3600,
+            "freshness_class": "static",
+            "valid_from": "2026-07-08T00:00:00Z",
+            "valid_to": "2026-07-08T01:00:00Z",
+        },
+        "provenance": {
+            "request_id": "request:g2e:e3",
+            "created_by": "root_orchestrator",
+            "trace_refs": [],
+        },
+        "status": "active",
+    }
+    projection = drs_compatibility.build_legacy_drs_projection_v01(
+        source_family="LOCAL_DRS_DICT",
+        source=legacy,
+        target_semantic_address=address,
+    )
+    budget = drs_resolution.build_memory_descent_budget_v01(
+        max_depth=0,
+        max_records_opened=1,
+        max_pointers_opened=0,
+        max_artifacts_opened=0,
+        max_bytes_opened=0,
+        max_lineage_edges=0,
+        max_conflict_records=0,
+    )
+    plan = drs_resolution.build_retrieval_plan_v01(
+        query_id=query.query_id,
+        semantic_address_id=address.semantic_address_id,
+        proposed_record_ids=(record.meaning_record_id,),
+        proposed_memory_pointer_ids=(),
+        proposed_artifact_pointer_ids=(),
+        requested_descent_class="SUMMARY_ONLY",
+        proposed_budget_id=budget.memory_descent_budget_id,
+        required_access_policy_ids=(),
+        reason_codes=(),
+    )
+    candidate = drs_resolution.build_resolution_candidate_v01(
+        query_id=query.query_id,
+        semantic_address_id=query.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        safe_summary=record.safe_summary,
+        evidence_ref_ids=record.source_reference_ids,
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        semantic_similarity_units=9000,
+        freshness_units=evaluation.current_freshness_units,
+        source_authority_prior_units=9000,
+        lineage_proximity_units=7000,
+        historical_utility_units=6000,
+        gt_advisory_prior_units=1000,
+        conflict_penalty_units=0,
+        risk_penalty_units=0,
+        retrieval_cost_units=100,
+    )
+    ranked = drs_resolution.rank_eligible_drs_candidates_v01(
+        query=query,
+        query_evaluations=(evaluation,),
+        candidates=(candidate,),
+    )
+    claim_preimage = {
+        "profile_version": "v0.1",
+        "semantic_address_id": address.semantic_address_id,
+        "meaning_record_id": record.meaning_record_id,
+        "query_id": query.query_id,
+        "query_evaluation_id": evaluation.query_evaluation_id,
+        "resolution_candidate_id": candidate.resolution_candidate_id,
+        "reuse_class": "ANSWER_SHORTCUT",
+        "case_type": "NON_ACTION_INFORMATIONAL",
+        "scope_fingerprint": query.scope_fingerprint,
+        "policy_version": query.policy_version,
+        "schema_versions": list(query.schema_versions),
+        "required_evidence_classes": list(query.required_evidence_classes),
+        "observed_evidence_fingerprint": evaluation.observed_evidence_fingerprint,
+        "forbidden_changes": list(query.forbidden_changes),
+        "checked_dependency_fingerprint": evaluation.checked_dependency_fingerprint,
+        "source_history_hash": evaluation.source_history_hash,
+        "action_history_binding_id": None,
+        "valid_from": _E3_VALID_FROM,
+        "valid_to": _E3_VALID_TO,
+        "issued_at": _E3_TIME,
+        "evaluated_at": evaluation.evaluated_at,
+        "root_shortcut_policy_ref": "policy:drs_answer_shortcut:v0.1",
+    }
+    actor_id = "actor:g2e:e3:g2b"
+    work_request = semantic_work.build_semantic_work_request_v01(
+        request_id="semantic-work-request:g2e:e3:g2b",
+        transaction_id=query.query_id,
+        target_root_id=_E3_ROOT,
+        runtime_topology_ref="g2e:e3:runtime_topology:not_created",
+        bounded_context_refs=("context:g2e:e3:g2b",),
+        permitted_actor_ids=(actor_id,),
+        permitted_contribution_modes=("DETERMINISTIC",),
+        requested_subjects=(address.semantic_address_id,),
+        required_evidence_classes=("ROOT_SHORTCUT_BINDING",),
+        forbidden_claims=("create_permission",),
+    )
+    evidence = semantic_work.build_evidence_binding_v01(
+        evidence_id="evidence-binding:g2e:e3:g2b",
+        evidence_ref="evidence:g2e:e3:g2b",
+        evidence_class="ROOT_SHORTCUT_BINDING",
+        source_component_id=actor_id,
+        provenance_ref="provenance:g2e:e3:g2b",
+        evidence_state=semantic_work.EVIDENCE_STATE_PRESENT,
+    )
+    claim = semantic_work.build_normalized_claim_v01(
+        claim_id=candidate.resolution_candidate_id,
+        subject=address.semantic_address_id,
+        predicate="authorize_non_action_informational_answer_shortcut_v01",
+        object_or_value=claim_preimage,
+        time_envelope_ref="time-envelope:g2e:e3:g2b",
+        provenance_refs=("provenance:g2e:e3:g2b",),
+        evidence_refs=(evidence.evidence_id,),
+        confidence_micros=1_000_000,
+        source_role="deterministic_runtime",
+        source_mode="DETERMINISTIC",
+    )
+    contribution = semantic_work.build_actor_contribution_v01(
+        contribution_id="contribution:g2e:e3:g2b",
+        request_id=work_request.request_id,
+        actor_id=actor_id,
+        actor_role="deterministic_runtime",
+        contribution_mode="DETERMINISTIC",
+        bsep_projection_ref="bsep:g2e:e3:g2b",
+        scope=address.semantic_address_id,
+        bounded_context_refs=("context:g2e:e3:g2b",),
+        claims=(claim,),
+        evidence_bindings=(evidence,),
+        constraint_bindings=(),
+        uncertainty_bindings=(),
+        requested_validators=(),
+        forbidden_claims_observed=(),
+    )
+    review_packet = semantic_work.build_root_review_packet_from_contributions_v01(
+        request=work_request,
+        contributions=(contribution,),
+        trust_profiles=build_default_component_trust_profiles_v01(),
+    )
+    root_kernel = root_decision.build_root_decision_kernel_v01()
+    root_input = root_decision.build_root_decision_input_v01(
+        transaction_id=query.query_id,
+        target_root_id=_E3_ROOT,
+        root_review_packet=review_packet,
+        post_vv_bundle={
+            "bundle_id": "post-vv:g2e:e3:g2b",
+            "post_vv_passed": True,
+            "validated_candidate_ids": [candidate.resolution_candidate_id],
+            "rejected_candidate_ids": [],
+            "required_evidence_refs": [],
+            "provided_evidence_refs": [],
+            "hard_failure_reasons": [],
+        },
+        gt_advisory={
+            "advisory_id": "gt:g2e:e3:g2b",
+            "candidate_ids": [candidate.resolution_candidate_id],
+            "selected_candidate_id": candidate.resolution_candidate_id,
+            "score_micros_by_candidate": {
+                candidate.resolution_candidate_id: 500000
+            },
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "target_artifact_type": "RootDecision",
+            "advisory_only": True,
+            "creates_final_output": False,
+            "requests_effect": False,
+        },
+        policy_state={
+            "policy_id": "policy:g2e:e3:g2b",
+            "identity_passed": True,
+            "scope_passed": True,
+            "hard_policy_passed": True,
+            "allow_accept": True,
+            "conflict_policy": "DEFER",
+            "no_candidate_policy": "NO_UPDATE",
+        },
+        permission_state={
+            "permission_required": False,
+            "user_permission_present": False,
+            "permission_scope_valid": True,
+            "permission_ref": None,
+        },
+        temporal_state={
+            "temporal_valid": True,
+            "expired": False,
+            "not_before_satisfied": True,
+            "time_envelope_ref": "time-envelope:g2e:e3:g2b",
+        },
+        conflict_state={
+            "material_unresolved_conflict": False,
+            "conflict_set_ids": [],
+        },
+        prior_root_state={
+            "prior_decision_id": None,
+            "prior_decision": None,
+            "prior_selected_candidate_id": None,
+        },
+    )
+    root_result = root_decision.decide_root_v01(
+        kernel=root_kernel,
+        decision_input=root_input,
+    )
+    root_hash = g2e.domain_separated_sha256_hex_v01(
+        domain="hedgehog:drs:root_shortcut_root_result_binding:v01",
+        payload=canonical_json_bytes_v01(
+            root_decision.root_decision_result_to_plain_dict_v01(root_result)
+        ),
+    )
+    root_projection = reuse_certificate.build_root_shortcut_authorization_projection_v01(
+        owning_local_root_id=_E3_ROOT,
+        root_kernel_id=root_kernel.kernel_id,
+        root_decision_input_id=root_input.decision_input_id,
+        root_decision_id=root_result.decision_id,
+        root_decision_hash=root_hash,
+        selected_candidate_id=candidate.resolution_candidate_id,
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        allowed_reuse_class="ANSWER_SHORTCUT",
+        scope_fingerprint=scope_sha256,
+        policy_version=query.policy_version,
+        schema_versions=query.schema_versions,
+        valid_from=_E3_VALID_FROM,
+        valid_to=_E3_VALID_TO,
+        root_shortcut_policy_ref="policy:drs_answer_shortcut:v0.1",
+    )
+    certificate = reuse_certificate.build_reuse_certificate_v01(
+        semantic_address_id=address.semantic_address_id,
+        meaning_record_id=record.meaning_record_id,
+        query_id=query.query_id,
+        query_evaluation_id=evaluation.query_evaluation_id,
+        resolution_candidate_id=candidate.resolution_candidate_id,
+        root_shortcut_authorization_projection=root_projection,
+        case_type="NON_ACTION_INFORMATIONAL",
+        required_evidence_classes=query.required_evidence_classes,
+        observed_evidence_fingerprint=evaluation.observed_evidence_fingerprint,
+        forbidden_changes=query.forbidden_changes,
+        checked_dependency_fingerprint=evaluation.checked_dependency_fingerprint,
+        valid_from=_E3_VALID_FROM,
+        valid_to=_E3_VALID_TO,
+        reuse_class="ANSWER_SHORTCUT",
+        source_history_hash=evaluation.source_history_hash,
+        action_history_binding_id=None,
+        issued_at=_E3_TIME,
+        evaluated_at=evaluation.evaluated_at,
+    )
+    report = drs_resolution.build_drs_resolution_report_v01(
+        semantic_address=address,
+        query=query,
+        source_projections=(projection,),
+        source_records=(record,),
+        query_evaluations=(evaluation,),
+        eligible_candidates=(candidate,),
+        ranked_candidate_ids=tuple(
+            item.resolution_candidate_id for item in ranked
+        ),
+        selected_candidate_id=candidate.resolution_candidate_id,
+        retrieval_plan=plan,
+        memory_descent_result=None,
+        root_shortcut_projection=root_projection,
+        reuse_certificate=certificate,
+        context_only_record_ids=(),
+        historical_only_record_ids=(),
+        warning_only_record_ids=(),
+        rerun_required_record_ids=(),
+        blocked_record_ids=(),
+        provider_calls=0,
+        network_calls=0,
+        gemini_calls=0,
+        external_drs_calls=0,
+        connector_calls=0,
+        real_world_effects_count=0,
+        final_status="PASS",
+        reason_codes=(),
+    )
+    assert drs_resolution.validate_drs_resolution_report_v01(report) == (
+        True,
+        (),
+    )
+    assert reuse_certificate.validate_reuse_certificate_v01(certificate) == (
+        True,
+        (),
+    )
+    return {
+        "transaction_id": query.query_id,
+        "report": report,
+        "certificate": certificate,
+        "projections": (projection,),
+        "root_kernel": root_kernel,
+        "root_input": root_input,
+        "root_result": root_result,
+    }
+
+
+def _e3_bsep(request_id: str) -> dict[str, dict[str, object]]:
+    route_id = "route:g2e:e3:memory-informed"
+    proposal_id = "proposal:g2e:e3:memory-informed"
+    vector_ids = ("vector:g2e:e3:memory-informed",)
+    guards = ("guard:g2e:e3:root-review",)
+    business = context_packets.build_business_request_context_packet(
+        packet_id="context_packet:g2e:e3:business",
+        created_by="runtime:g2e:e3:test",
+        domain=_E3_DOMAIN,
+        request_id=request_id,
+        business_subject="bounded_runtime_topology",
+        requested_action="root_review",
+        user_visible_summary="Bounded topology source review.",
+    )
+    business_ref = {
+        "source": "G2C_BUSINESS_REQUEST_CONTEXT_PACKET_V01",
+        "packet_id": business["packet_id"],
+        "request_id": request_id,
+        "domain_id": _E3_DOMAIN,
+    }
+    route = context_packets.build_orchestrator_route_context_packet(
+        packet_id="context_packet:g2e:e3:route",
+        created_by="runtime:g2e:e3:test",
+        source_refs=(business_ref,),
+        domain=_E3_DOMAIN,
+        allowed_routes=(route_id,),
+        required_guards=guards,
+        selected_vector_ids=vector_ids,
+        route_validation_expectations={
+            "root_review_required": True,
+            "selected_only_allowed_vectors": True,
+        },
+        orchestrator_is_root=False,
+        creates_action_commit_packet=False,
+        calls_connectors=False,
+    )
+    proposal: dict[str, object] = {
+        "proposal_id": proposal_id,
+        "suggested_route": route_id,
+        "selected_vector_ids": vector_ids,
+        "required_guards": guards,
+        "reason": "Bounded deterministic topology review is required.",
+        "confidence": 0.66,
+        "needs_review": True,
+        "uncertainty_notes": ("Source evidence remains advisory.",),
+        "root_review_required": True,
+        "truth_claimed": False,
+        "authority_claimed": False,
+        "action_permission_claimed": False,
+        "final_output_claimed": False,
+        "connector_command_claimed": False,
+        "drs_write_claimed": False,
+        "plan_graph_claimed": False,
+        "bypass_root_claimed": False,
+        "semantic_observations": ("A bounded route is present.",),
+        "route_reasoning": ("Use deterministic mode selection.",),
+        "rejected_route_reasoning": ("Unsupported action remains forbidden.",),
+        "guard_reasoning": ("Root review remains mandatory.",),
+        "vector_reasoning": ("The bounded vector matches the request.",),
+        "authority_boundary_reasoning": ("Root remains final authority.",),
+    }
+    rationale = structured_rationale.build_orchestrator_structured_rationale(
+        observed_semantics=proposal["semantic_observations"],
+        route_selection_reason=proposal["route_reasoning"],
+        rejected_routes=proposal["rejected_route_reasoning"],
+        required_guards_reasoning=proposal["guard_reasoning"],
+        selected_vector_reasoning=proposal["vector_reasoning"],
+        uncertainty_notes=proposal["uncertainty_notes"],
+        authority_boundary=proposal["authority_boundary_reasoning"],
+        root_review_required=True,
+    )
+    rationale_sha = hashlib.sha256(canonical_json_bytes_v01(rationale)).hexdigest()
+
+    def item(text: str, kind: str) -> dict[str, object]:
+        return context_packets.semantic_evidence_item(
+            text,
+            source="runtime_canonicalization",
+            evidence_kind=kind,
+            confidence_label="medium",
+        )
+
+    packet = context_packets.build_bounded_semantic_evidence_packet(
+        packet_id="context_packet:g2e:e3:bsep",
+        source_refs=(business_ref,),
+        domain=_E3_DOMAIN,
+        source_role="orchestrator",
+        target_role="architect",
+        source_route_id=route_id,
+        source_proposal_id=proposal_id,
+        source_context_packet_id=route["packet_id"],
+        source_structured_rationale_ref="structured_rationale_v01:" + rationale_sha,
+        observed_semantic_facts=(item("A bounded route is present.", "observed_fact"),),
+        missing_evidence=(item("Root review is pending.", "missing_evidence"),),
+        uncertainty_notes=(item("Source evidence remains advisory.", "uncertainty"),),
+        risk_boundary_notes=(item("No action authority is present.", "risk_boundary"),),
+        rejected_action_routes=(item("Unsupported action is forbidden.", "rejected_route"),),
+        required_approvals_or_conditions=(item("Root review is required.", "approval_condition"),),
+        authority_boundary_notes=(item("Root remains final authority.", "authority_boundary"),),
+        selected_vector_ids=vector_ids,
+        required_guards=guards,
+    )
+    return {
+        "business": business,
+        "route": route,
+        "proposal": proposal,
+        "rationale": rationale,
+        "packet": packet,
+    }
+
+
+def _e3_g2d_source_family(g2b: dict[str, object]) -> dict[str, object]:
+    request_id = "request:g2e:e3"
+    transaction_id = str(g2b["transaction_id"])
+    bsep = _e3_bsep(request_id)
+    profiles = []
+    selected_index = g2c.EXECUTABLE_EXECUTION_MODES_V01.index("memory_informed")
+    for index, candidate in enumerate(g2c.EXECUTABLE_EXECUTION_MODES_V01):
+        not_required = candidate in {"sealed_replay", "direct_informational_reuse"}
+        profiles.append(
+            g2c.build_execution_mode_local_mode_profile_v01(
+                request_id=request_id,
+                transaction_id=transaction_id,
+                owning_root_id=_E3_ROOT,
+                domain_id=_E3_DOMAIN,
+                mode=candidate,
+                policy_snapshot_id="policy:g2e:e3:route",
+                capability_snapshot_id="capabilities:g2e:e3:route",
+                cost_model_id="cost:g2e:e3:v01",
+                policy_allowed=index >= selected_index,
+                scope_allowed=True,
+                risk_allowed=True,
+                privacy_allowed=True,
+                capability_state="NOT_REQUIRED" if not_required else "AVAILABLE",
+                capability_id=None if not_required else f"capability:g2e:e3:{candidate}",
+                cost_units=index + 1,
+            )
+        )
+    snapshot = g2c.build_execution_mode_local_routing_snapshot_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=_E3_ROOT,
+        domain_id=_E3_DOMAIN,
+        request_class="BOUNDED_REVIEW",
+        action_class="NON_ACTION",
+        action_packet_relation="NOT_APPLICABLE",
+        scope_class="BOUNDED",
+        scope_ref="scope:g2e:e3",
+        permitted_narrower_scope_refs=(),
+        risk_class="LOW",
+        policy_snapshot_id="policy:g2e:e3:route",
+        capability_snapshot_id="capabilities:g2e:e3:route",
+        cost_model_id="cost:g2e:e3:v01",
+        required_user_input_state="COMPLETE",
+        hard_block_state="CLEAR",
+        evaluation_time_epoch_seconds=_E3_TIME,
+        pt_created_at_utc=_E3_UTC,
+        et_observed_at_utc=_E3_UTC,
+        ct_session_anchor="ct:g2e:e3",
+        ttl_seconds=3600,
+        freshness_class="static",
+        valid_from_utc=_E3_VALID_FROM_UTC,
+        valid_to_utc=_E3_VALID_TO_UTC,
+        mode_profiles=tuple(profiles),
+    )
+    source = g2c.build_execution_mode_source_context_v01(
+        business_request_context_packet=bsep["business"],
+        bsep_packet=bsep["packet"],
+        bsep_route_context_packet=bsep["route"],
+        bsep_orchestrator_proposal=bsep["proposal"],
+        bsep_structured_rationale=bsep["rationale"],
+        sealed_replay_evidence=None,
+        replay_source_manifest=None,
+        replay_source_domain_projection=None,
+        replay_source_safe_file_contents=(),
+        replay_anchor_publication=None,
+        replay_anchored_verification=None,
+        replay_supplied_anchor_publication_id=None,
+        replay_reconstructed_manifest=None,
+        replay_reconstructed_domain_projection=None,
+        replay_reconstructed_safe_file_contents=(),
+        g2a_inspection=None,
+        g2a_registry=None,
+        g2a_packet_id=None,
+        g2a_corridor=None,
+        g2a_corridor_step=None,
+        g2a_current_dependency_observations=(),
+        g2a_logical_time_bridge=None,
+        g2a_evaluation_time=_E3_TIME,
+        g2a_evaluation_time_source=snapshot.created_by,
+        g2a_evaluation_context_id=snapshot.local_routing_snapshot_id,
+        g2a_transition_registry_profile=None,
+        g2b_resolution_report=g2b["report"],
+        g2b_compatibility_projections=g2b["projections"],
+        g2b_use_time=_E3_TIME,
+        g2b_root_kernel=g2b["root_kernel"],
+        g2b_root_decision_input=g2b["root_input"],
+        g2b_root_decision_result=g2b["root_result"],
+        g2b_writeback_evidence=None,
+    )
+    common = {
+        "request_id": request_id,
+        "transaction_id": transaction_id,
+        "owning_root_id": _E3_ROOT,
+        "domain_id": _E3_DOMAIN,
+    }
+    router_input = g2c.build_execution_mode_router_input_v01(
+        request_id=request_id,
+        transaction_id=transaction_id,
+        owning_root_id=_E3_ROOT,
+        bsep_binding=g2c.build_execution_mode_bsep_binding_v01(
+            **common,
+            source_context=source,
+        ),
+        local_routing_snapshot=snapshot,
+        replay_binding=g2c.build_execution_mode_replay_not_applicable_binding_v01(
+            **common
+        ),
+        g2a_binding=g2c.build_execution_mode_g2a_no_packet_binding_v01(
+            **common,
+            evaluation_time=_E3_TIME,
+            evaluation_time_source=snapshot.created_by,
+            evaluation_context_id=snapshot.local_routing_snapshot_id,
+        ),
+        g2b_binding=g2c.build_execution_mode_g2b_binding_v01(
+            **common,
+            source_context=source,
+        ),
+    )
+    proposal, route_report = g2c.route_execution_mode_v01(
+        router_input=router_input,
+        source_context=source,
+    )
+    assert route_report.validation_status == "PASS" and proposal is not None
+    assert proposal.selected_mode == "memory_informed"
+    proposal_artifact = g2c.project_execution_mode_proposal_kernel_artifact_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+    )
+    registry = transition.build_execution_mode_transition_registry_profile_v01()
+    pre = g2c.evaluate_execution_mode_proposal_to_root_transition_v01(
+        registry=registry,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+    )
+    review = g2c.build_root_execution_mode_review_input_v01(
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        review_action="ACCEPT",
+        accepted_scope_ref=proposal.proposed_scope_ref,
+        narrowing_basis_refs=(),
+    )
+    decision, root_kernel, root_input, root_result, review_report = (
+        g2c.review_execution_mode_proposal_v01(
+            review_input=review,
+            proposal=proposal,
+            router_input=router_input,
+            source_context=source,
+            proposal_artifact=proposal_artifact,
+            proposal_transition_decision=pre,
+        )
+    )
+    assert review_report.validation_status == "PASS"
+    assert decision is not None and root_kernel is not None
+    assert root_input is not None and root_result is not None
+    decision_artifact = g2c.project_root_execution_mode_decision_kernel_artifact_v01(
+        decision=decision,
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+    )
+    post = g2c.evaluate_execution_mode_root_route_transition_v01(
+        registry=registry,
+        proposal_transition_decision=pre,
+        review_input=review,
+        decision=decision,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        proposal_artifact=proposal_artifact,
+        decision_artifact=decision_artifact,
+    )
+    route = g2c.project_execution_mode_route_eligibility_kernel_artifact_v01(
+        decision=decision,
+        review_input=review,
+        proposal=proposal,
+        router_input=router_input,
+        source_context=source,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        decision_artifact=decision_artifact,
+        root_route_transition_decision=post,
+    )
+    assert route is not None
+    policy = g2d.build_fractal_runtime_policy_v02(
+        required_downstream_capability_ids=proposal.required_downstream_capability_ids,
+        permitted_child_scope_refs=snapshot.permitted_narrower_scope_refs,
+    )
+    runtime_source = g2d.build_fractal_runtime_source_context_v02(
+        transition_registry=registry,
+        g2c_source_context=source,
+        router_input=router_input,
+        proposal=proposal,
+        proposal_artifact=proposal_artifact,
+        proposal_transition_decision=pre,
+        review_input=review,
+        decision=decision,
+        root_kernel=root_kernel,
+        root_decision_input=root_input,
+        root_decision_result=root_result,
+        decision_artifact=decision_artifact,
+        root_route_transition_decision=post,
+        route_eligibility_artifact=route,
+        runtime_policy=policy,
+    )
+    assert g2d.validate_fractal_runtime_source_context_v02(runtime_source).status == "PASS"
+    return {
+        "source": runtime_source,
+        "g2c_source": source,
+        "route": route,
+        "root_kernel": root_kernel,
+        "route_report": route_report,
+        "review_report": review_report,
+    }
+
+
+def _e3_time_envelope() -> dict[str, object]:
+    return {
+        "ct_session_anchor": "ct:g2e:e3",
+        "et_observed_at": _E3_UTC,
+        "freshness_class": "static",
+        "kt_asof": _E3_UTC,
+        "pt_created_at": _E3_UTC,
+        "ttl_seconds": 3600,
+        "valid_from": _E3_VALID_FROM_UTC,
+        "valid_to": _E3_VALID_TO_UTC,
+    }
+
+
+def _e3_kernel_artifact(
+    *,
+    artifact_id: str,
+    transaction_id: str,
+    payload: dict[str, object],
+    parent_refs: tuple[str, ...] = (),
+    time_envelope: dict[str, object] | None = None,
+) -> g2e.KernelArtifactV01:
+    return build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=artifact_id,
+        artifact_type="SemanticEvidence",
+        schema_version="v1",
+        transaction_id=transaction_id,
+        owner_root_id=_E3_ROOT,
+        source_component="continuous_delta_runtime_g2e3_test",
+        authority_class="EVIDENCE_ONLY",
+        lifecycle_state="VALIDATED",
+        payload=payload,
+        trace_refs=("trace:" + artifact_id,),
+        parent_refs=parent_refs,
+        time_envelope=time_envelope or _e3_time_envelope(),
+    )
+
+
+def _e3_g2d_serialization_seams() -> dict[type[object], tuple[object, object]]:
+    return {
+        g2d.FractalRuntimePolicyV02: (
+            g2d.fractal_runtime_policy_to_plain_data_v02,
+            g2d.rebuild_fractal_runtime_policy_identity_v02,
+        ),
+        g2d.FractalRuntimeBudgetV02: (
+            g2d.fractal_runtime_budget_to_plain_data_v02,
+            g2d.rebuild_fractal_runtime_budget_identity_v02,
+        ),
+        g2d.RuntimeTopologySourceBindingV02: (
+            g2d.runtime_topology_source_binding_to_plain_data_v02,
+            g2d.rebuild_runtime_topology_source_binding_identity_v02,
+        ),
+        g2d.RuntimeTopologySeedV02: (
+            g2d.runtime_topology_seed_to_plain_data_v02,
+            g2d.rebuild_runtime_topology_seed_identity_v02,
+        ),
+        g2d.RuntimeTopologyNodeV02: (
+            g2d.runtime_topology_node_to_plain_data_v02,
+            g2d.rebuild_runtime_topology_node_identity_v02,
+        ),
+        g2d.RuntimeTopologyEdgeV02: (
+            g2d.runtime_topology_edge_to_plain_data_v02,
+            g2d.rebuild_runtime_topology_edge_identity_v02,
+        ),
+        g2d.RuntimeAssignmentV02: (
+            g2d.runtime_assignment_to_plain_data_v02,
+            g2d.rebuild_runtime_assignment_identity_v02,
+        ),
+        g2d.RuntimeExecutionTopologyV02: (
+            g2d.runtime_execution_topology_to_plain_data_v02,
+            g2d.rebuild_runtime_execution_topology_identity_v02,
+        ),
+        g2d.ParentChildScopeProjectionV02: (
+            g2d.parent_child_scope_projection_to_plain_data_v02,
+            g2d.rebuild_parent_child_scope_projection_identity_v02,
+        ),
+        g2d.FractalCellInputV02: (
+            g2d.fractal_cell_input_to_plain_data_v02,
+            g2d.rebuild_fractal_cell_input_identity_v02,
+        ),
+        g2d.FractalCellQueueEntryV02: (
+            g2d.fractal_cell_queue_entry_to_plain_data_v02,
+            g2d.rebuild_fractal_cell_queue_entry_identity_v02,
+        ),
+        g2d.FractalReviseObservationV02: (
+            g2d.fractal_revise_observation_to_plain_data_v02,
+            g2d.rebuild_fractal_revise_observation_identity_v02,
+        ),
+        g2d.FractalPartialFailureRecordV02: (
+            g2d.fractal_partial_failure_record_to_plain_data_v02,
+            g2d.rebuild_fractal_partial_failure_record_identity_v02,
+        ),
+        g2d.FractalBackpressureStateV02: (
+            g2d.fractal_backpressure_state_to_plain_data_v02,
+            g2d.rebuild_fractal_backpressure_state_identity_v02,
+        ),
+        g2d.FractalCellResultV02: (
+            g2d.fractal_cell_result_to_plain_data_v02,
+            g2d.rebuild_fractal_cell_result_identity_v02,
+        ),
+        g2d.FractalRuntimeTraceV02: (
+            g2d.fractal_runtime_trace_to_plain_data_v02,
+            g2d.rebuild_fractal_runtime_trace_identity_v02,
+        ),
+        g2d.FractalRuntimeReportV02: (
+            g2d.fractal_runtime_report_to_plain_data_v02,
+            g2d.rebuild_fractal_runtime_report_identity_v02,
+        ),
+        g2d.FractalRuntimeValidationReportV02: (
+            g2d.fractal_runtime_validation_report_to_plain_data_v02,
+            g2d.rebuild_fractal_runtime_validation_report_identity_v02,
+        ),
+    }
+
+
+def _e3_g2c_serialization_seams() -> dict[type[object], tuple[object, object]]:
+    seams = {
+        g2c.ExecutionModeBSEPBindingV01: (
+            g2c.execution_mode_bsep_binding_to_plain_data_v01,
+            g2c.rebuild_execution_mode_bsep_binding_identity_v01,
+        ),
+        g2c.ExecutionModeReplayBindingV01: (
+            g2c.execution_mode_replay_binding_to_plain_data_v01,
+            g2c.rebuild_execution_mode_replay_binding_identity_v01,
+        ),
+        g2c.ExecutionModeG2ABindingV01: (
+            g2c.execution_mode_g2a_binding_to_plain_data_v01,
+            g2c.rebuild_execution_mode_g2a_binding_identity_v01,
+        ),
+        g2c.ExecutionModeG2BBindingV01: (
+            g2c.execution_mode_g2b_binding_to_plain_data_v01,
+            g2c.rebuild_execution_mode_g2b_binding_identity_v01,
+        ),
+        g2c.ExecutionModeLocalModeProfileV01: (
+            g2c.execution_mode_local_mode_profile_to_plain_data_v01,
+            g2c.rebuild_execution_mode_local_mode_profile_identity_v01,
+        ),
+        g2c.ExecutionModeLocalRoutingSnapshotV01: (
+            g2c.execution_mode_local_routing_snapshot_to_plain_data_v01,
+            g2c.rebuild_execution_mode_local_routing_snapshot_identity_v01,
+        ),
+        g2c.ExecutionModeRouterInputV01: (
+            g2c.execution_mode_router_input_to_plain_data_v01,
+            g2c.rebuild_execution_mode_router_input_identity_v01,
+        ),
+        g2c.ExecutionModeFeasibilityRowV01: (
+            g2c.execution_mode_feasibility_row_to_plain_data_v01,
+            g2c.rebuild_execution_mode_feasibility_row_identity_v01,
+        ),
+        g2c.ExecutionModeProposalV01: (
+            g2c.execution_mode_proposal_to_plain_data_v01,
+            g2c.rebuild_execution_mode_proposal_identity_v01,
+        ),
+        g2c.RootExecutionModeReviewInputV01: (
+            g2c.root_execution_mode_review_input_to_plain_data_v01,
+            g2c.rebuild_root_execution_mode_review_input_identity_v01,
+        ),
+        g2c.RootExecutionModeDecisionV01: (
+            g2c.root_execution_mode_decision_to_plain_data_v01,
+            g2c.rebuild_root_execution_mode_decision_identity_v01,
+        ),
+        g2c.ExecutionModeValidationReportV01: (
+            g2c.execution_mode_validation_report_to_plain_data_v01,
+            g2c.rebuild_execution_mode_validation_report_identity_v01,
+        ),
+    }
+    assert tuple(seams) == g2c.SERIALIZED_G2C_TYPES_V01
+    return seams
+
+
+def _e3_transition_profiles() -> tuple[
+    transition.TransitionRegistryV01,
+    transition.TransitionRegistryV01,
+    transition.TransitionRegistryV01,
+]:
+    g2c_registry = transition.build_execution_mode_transition_registry_profile_v01()
+    g2d_registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    default_registry = transition.build_default_transition_registry_v01()
+    assert len(
+        {
+            g2c_registry.registry_id,
+            g2d_registry.registry_id,
+            default_registry.registry_id,
+        }
+    ) == 3
+    return g2c_registry, g2d_registry, default_registry
+
+
+def _e3_transition_registry_plain(
+    value: transition.TransitionRegistryV01,
+) -> dict[str, object]:
+    if type(value) is not transition.TransitionRegistryV01:
+        raise TypeError("transition registry observation type invalid")
+    g2c_registry, g2d_registry, _default_registry = _e3_transition_profiles()
+    if value.registry_id == g2c_registry.registry_id:
+        if (
+            value != g2c_registry
+            or transition.validate_execution_mode_transition_registry_profile_v01(
+                value
+            )
+            != ()
+        ):
+            raise ValueError("G2-C transition registry observation invalid")
+        return transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+            value
+        )
+    if value.registry_id == g2d_registry.registry_id:
+        if (
+            value != g2d_registry
+            or transition.validate_fractal_runtime_transition_registry_profile_v02(
+                value
+            )
+            != ()
+        ):
+            raise ValueError("G2-D transition registry observation invalid")
+        return transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+            value
+        )
+    raise ValueError("foreign transition registry observation forbidden")
+
+
+def _e3_transition_decision_plain(
+    value: transition.TransitionDecisionV01,
+) -> dict[str, object]:
+    if type(value) is not transition.TransitionDecisionV01:
+        raise TypeError("transition decision observation type invalid")
+    g2c_registry, g2d_registry, _default_registry = _e3_transition_profiles()
+    if value.registry_id == g2c_registry.registry_id:
+        if (
+            transition.validate_execution_mode_transition_decision_v01(
+                registry=g2c_registry,
+                decision=value,
+            )
+            != ()
+            or transition.rebuild_execution_mode_transition_decision_identity_v01(
+                value
+            )
+            != value.decision_id
+        ):
+            raise ValueError("G2-C transition decision observation invalid")
+        return transition.execution_mode_transition_decision_to_plain_dict_v01(
+            registry=g2c_registry,
+            decision=value,
+        )
+    if value.registry_id == g2d_registry.registry_id:
+        if (
+            transition.rebuild_fractal_runtime_transition_decision_identity_v02(
+                value
+            )
+            != value.decision_id
+        ):
+            raise ValueError("G2-D transition decision observation invalid")
+        return transition.fractal_runtime_transition_decision_to_plain_dict_v02(value)
+    raise ValueError("foreign transition decision observation forbidden")
+
+
+def _e3_transition_decision_identity(
+    value: transition.TransitionDecisionV01,
+) -> str:
+    g2c_registry, g2d_registry, _default_registry = _e3_transition_profiles()
+    if value.registry_id == g2c_registry.registry_id:
+        identity = transition.rebuild_execution_mode_transition_decision_identity_v01(
+            value
+        )
+    elif value.registry_id == g2d_registry.registry_id:
+        identity = transition.rebuild_fractal_runtime_transition_decision_identity_v02(
+            value
+        )
+    else:
+        raise ValueError("foreign transition decision observation forbidden")
+    if identity != value.decision_id:
+        raise ValueError("transition decision observation identity mismatch")
+    return identity
+
+
+def _e3_public_plain(value: object) -> object:
+    if value is None:
+        return value
+    if type(value) is bool:
+        return value
+    if type(value) is int:
+        return value
+    if type(value) is float:
+        if not math.isfinite(value):
+            raise ValueError("non-finite public observation")
+        canonical_json_bytes_v01(value)
+        return value
+    if type(value) is str:
+        return value
+    if type(value) in {tuple, list}:
+        return [_e3_public_plain(item) for item in value]
+    if type(value) is dict:
+        return {
+            str(key): _e3_public_plain(item)
+            for key, item in value.items()
+        }
+    if type(value) is g2e.KernelArtifactV01:
+        return kernel_artifact_to_plain_dict_v01(value)
+    g2c_seams = _e3_g2c_serialization_seams()
+    if type(value) in g2c_seams:
+        serializer, _rebuilder = g2c_seams[type(value)]
+        return serializer(value)  # type: ignore[operator]
+    seams = _e3_g2d_serialization_seams()
+    if type(value) in seams:
+        serializer, _rebuilder = seams[type(value)]
+        return serializer(value)  # type: ignore[operator]
+    if type(value) is transition.TransitionRegistryV01:
+        return _e3_transition_registry_plain(value)
+    if type(value) is transition.TransitionDecisionV01:
+        return _e3_transition_decision_plain(value)
+    if type(value) is g2e.CausalConsumptionRefV01:
+        return causal_consumption_ref_to_plain_dict_v01(value)
+    if type(value) is root_decision.RootDecisionKernelV01:
+        return root_decision.root_decision_kernel_to_plain_dict_v01(value)
+    if type(value) is root_decision.RootDecisionInputV01:
+        return root_decision.root_decision_input_to_plain_dict_v01(value)
+    if type(value) is root_decision.RootDecisionResultV01:
+        return root_decision.root_decision_result_to_plain_dict_v01(value)
+    if is_dataclass(value):
+        return {
+            field.name: _e3_public_plain(getattr(value, field.name))
+            for field in fields(value)
+        }
+    raise TypeError(f"unsupported public observation type: {type(value)!r}")
+
+
+def _e3_public_identity(value: object) -> str | None:
+    if type(value) is g2e.KernelArtifactV01:
+        return value.artifact_id
+    g2c_seams = _e3_g2c_serialization_seams()
+    if type(value) in g2c_seams:
+        _serializer, rebuilder = g2c_seams[type(value)]
+        return rebuilder(value)  # type: ignore[operator]
+    seams = _e3_g2d_serialization_seams()
+    if type(value) in seams:
+        _serializer, rebuilder = seams[type(value)]
+        return rebuilder(value)  # type: ignore[operator]
+    if type(value) is transition.TransitionRegistryV01:
+        _e3_transition_registry_plain(value)
+        return value.registry_id
+    if type(value) is transition.TransitionDecisionV01:
+        return _e3_transition_decision_identity(value)
+    for field_name in (
+        "decision_id",
+        "causal_ref_id",
+        "kernel_id",
+        "decision_input_id",
+        "report_id",
+        "trace_id",
+        "topology_id",
+        "source_binding_id",
+    ):
+        candidate = getattr(value, field_name, None)
+        if type(candidate) is str and candidate:
+            return candidate
+    return None
+
+
+def _e3_observation_digest(role: str, value: object) -> str:
+    return hashlib.sha256(
+        canonical_json_bytes_v01(
+            {
+                "domain": _E3_BASELINE_OBSERVATION_DOMAIN,
+                "typed_role": role,
+                "value": _e3_public_plain(value),
+            }
+        )
+    ).hexdigest()
+
+
+def _e3_observation_members(
+    value: object,
+) -> tuple[tuple[int | None, object], ...]:
+    if type(value) is tuple:
+        indexed = tuple(enumerate(value))
+        return indexed if indexed else ((None, value),)
+    return ((None, value),)
+
+
+def _e3_bundle_observations(
+    bundle: g2d.FractalRuntimeExecutionBundleV02,
+) -> tuple[tuple[dict[str, object], ...], tuple[tuple[object, ...], ...]]:
+    rows: list[dict[str, object]] = []
+    identities: list[tuple[object, ...]] = []
+    for bundle_field in fields(g2d.FractalRuntimeExecutionBundleV02):
+        field_value = getattr(bundle, bundle_field.name)
+        for tuple_index, member in _e3_observation_members(field_value):
+            identity = _e3_public_identity(member)
+            rows.append(
+                {
+                    "field_name": bundle_field.name,
+                    "tuple_index_or_none": tuple_index,
+                    "exact_type_name": type(member).__name__,
+                    "public_semantic_identity_or_none": identity,
+                    "canonical_member_sha256": hashlib.sha256(
+                        canonical_json_bytes_v01(_e3_public_plain(member))
+                    ).hexdigest(),
+                }
+            )
+            identities.append(
+                (bundle_field.name, tuple_index, type(member).__name__, identity)
+            )
+    assert {row["field_name"] for row in rows} == {
+        field.name for field in fields(g2d.FractalRuntimeExecutionBundleV02)
+    }
+    assert len(identities) == len(rows)
+    return tuple(rows), tuple(identities)
+
+
+def _e3_complete_observation_errors(
+    source: g2d.FractalRuntimeSourceContextV02,
+    bundle: g2d.FractalRuntimeExecutionBundleV02,
+) -> tuple[tuple[str, str, str, str], ...]:
+    candidates: list[tuple[str, object]] = [("source_context", source)]
+    for bundle_field in fields(g2d.FractalRuntimeExecutionBundleV02):
+        field_value = getattr(bundle, bundle_field.name)
+        for tuple_index, member in _e3_observation_members(field_value):
+            path = (
+                f"bundle.{bundle_field.name}"
+                if tuple_index is None
+                else f"bundle.{bundle_field.name}[{tuple_index}]"
+            )
+            candidates.append((path, member))
+
+    errors: list[tuple[str, str, str, str]] = []
+    for path, value in candidates:
+        try:
+            plain = _e3_public_plain(value)
+            canonical_json_bytes_v01(plain)
+            _e3_public_identity(value)
+        except Exception as exc:
+            errors.append(
+                (
+                    path,
+                    type(value).__name__,
+                    type(exc).__name__,
+                    str(exc),
+                )
+            )
+    return tuple(errors)
+
+
+def _e3_baseline_digests(
+    source: g2d.FractalRuntimeSourceContextV02,
+    bundle: g2d.FractalRuntimeExecutionBundleV02,
+) -> tuple[str, str, str]:
+    rows, identities = _e3_bundle_observations(bundle)
+    return (
+        _e3_observation_digest("G2E3_BASELINE_SOURCE_OBSERVATION", source),
+        _e3_observation_digest("G2E3_BASELINE_MEMBER_OBSERVATION", rows),
+        _e3_observation_digest("G2E3_BASELINE_MEMBER_IDENTITIES", identities),
+    )
+
+
+def _e3_expected_digest_mode(
+    environment: dict[str, str],
+    actual: tuple[str, str, str] | None = None,
+) -> str:
+    supplied = tuple(environment.get(name) for name in _E3_EXPECTED_DIGEST_ENV)
+    if not any(item is not None for item in supplied):
+        return "FOCUSED"
+    if not all(item is not None for item in supplied):
+        raise AssertionError("partial expected baseline observation")
+    assert all(
+        re.fullmatch(r"[0-9a-f]{64}", item or "") is not None
+        for item in supplied
+    ), "malformed expected baseline observation"
+    if actual is not None:
+        assert supplied == actual, "baseline observation mismatch"
+    return "ACCEPTANCE"
+
+
+@pytest.fixture(scope="module")
+def e3_baseline_fixture() -> dict[str, object]:
+    environment = dict(os.environ)
+    mode = _e3_expected_digest_mode(environment)
+    g2b = _e3_g2b_family()
+    source_family = _e3_g2d_source_family(g2b)
+    source = source_family["source"]
+    assert type(source) is g2d.FractalRuntimeSourceContextV02
+    bundle, report = g2d.run_fractal_runtime_v02(source)
+    assert report.status == "PASS" and bundle is not None
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(bundle).status == "PASS"
+    if mode == "FOCUSED":
+        print("G2E3_FOCUSED_BASELINE_PUBLIC_CALL_COMPLETED=1")
+    else:
+        print("\nG2E3_ACCEPTANCE_BASELINE_PUBLIC_CALL_COMPLETED=1")
+    observation_errors = _e3_complete_observation_errors(source, bundle)
+    if observation_errors:
+        print(
+            "G2E3_COMPLETE_OBSERVATION_ERRORS="
+            + json.dumps(observation_errors, separators=(",", ":"))
+        )
+    assert observation_errors == (), observation_errors
+    digests = _e3_baseline_digests(source, bundle)
+    assert _e3_expected_digest_mode(environment, digests) == mode
+    if mode == "FOCUSED":
+        for label, digest in zip(
+            (
+                "G2E3_BASELINE_SOURCE_OBSERVATION_SHA256",
+                "G2E3_BASELINE_MEMBER_OBSERVATION_SHA256",
+                "G2E3_BASELINE_MEMBER_IDENTITIES_SHA256",
+            ),
+            digests,
+        ):
+            print(f"{label}={digest}")
+        print("G2E3_FOCUSED_BASELINE_CALL_OBSERVED=1")
+    else:
+        print("G2E3_ACCEPTANCE_BASELINE_CALL_OBSERVED=1")
+    g2a = _e3_g2a_family(str(g2b["transaction_id"]))
+    return {
+        "g2a": g2a,
+        "g2b": g2b,
+        "source_family": source_family,
+        "source": source,
+        "bundle": bundle,
+        "digests": digests,
+    }
+
+
+def _e3_changed_source_payloads(
+    *,
+    target_roles: tuple[str, ...],
+    g2a: dict[str, object] | None,
+    g2b: dict[str, object] | None,
+    bundle: g2d.FractalRuntimeExecutionBundleV02 | None,
+) -> tuple[dict[str, object], dict[str, object]]:
+    if (
+        len(target_roles) != 1
+        or target_roles[0] not in {"ordinary", "packet", "certificate", "route"}
+    ):
+        raise ValueError("unsupported E3 source role")
+    role = target_roles[0]
+    baseline: dict[str, object] = {
+        "hold_status": "OLD",
+        "source_role": role,
+    }
+    observed: dict[str, object] = {
+        "hold_status": "NEW",
+        "source_role": role,
+    }
+    if role == "ordinary":
+        return baseline, observed
+    if g2a is None or g2b is None or bundle is None:
+        raise ValueError("typed E3 source carrier required")
+    if role == "packet":
+        record = g2a["dependency"].dependency_records[0]
+        invalidation = g2a["invalidation"]
+        material = {
+            "dependency_id": record.dependency_id,
+            "dependency_class": record.dependency_class,
+            "evidence_ref": record.evidence_ref,
+            "content_sha256": record.content_sha256,
+            "requirement_class": record.requirement_class,
+            "time_envelope_id": record.time_envelope_id,
+            "freshness_policy_id": record.freshness_policy_id,
+            "source_provenance_refs": list(record.source_provenance_refs),
+            "expected_accepting_local_root_id": (
+                record.expected_accepting_local_root_id
+            ),
+        }
+        baseline.update(material)
+        observed.update(material)
+        observed.update(
+            {
+                "content_sha256": invalidation.evidence_sha256,
+                "observed_status": invalidation.observed_status,
+                "invalidation_evidence_id": invalidation.invalidation_evidence_id,
+                "packet_id": invalidation.packet_id,
+            }
+        )
+        return baseline, observed
+    if role == "certificate":
+        certificate = g2b["certificate"]
+        report = g2b["report"]
+        source_record = next(
+            item
+            for item in report.source_records
+            if item.meaning_record_id == certificate.meaning_record_id
+        )
+        material = {
+            "source_reference_id": source_record.source_reference_ids[0],
+            "semantic_address_id": certificate.semantic_address_id,
+            "meaning_record_id": certificate.meaning_record_id,
+            "query_id": certificate.query_id,
+            "query_evaluation_id": certificate.query_evaluation_id,
+            "required_evidence_classes": list(
+                certificate.required_evidence_classes
+            ),
+            "observed_evidence_fingerprint": (
+                certificate.observed_evidence_fingerprint
+            ),
+            "forbidden_changes": list(certificate.forbidden_changes),
+            "checked_dependency_fingerprint": (
+                certificate.checked_dependency_fingerprint
+            ),
+            "source_history_hash": certificate.source_history_hash,
+            "policy_version": certificate.policy_version,
+            "schema_versions": list(certificate.schema_versions),
+        }
+        baseline.update(material)
+        observed.update(material)
+        observed["observed_evidence_fingerprint"] = _sha(
+            "g2e-e3-observed-certificate-evidence"
+        )
+        return baseline, observed
+    binding = bundle.source_binding
+    material = {
+        "route_eligibility_artifact_id": binding.route_eligibility_artifact_id,
+        "route_eligibility_artifact_sha256": (
+            binding.route_eligibility_artifact_sha256
+        ),
+        "source_decision_artifact_id": binding.source_decision_artifact_id,
+        "source_proposal_artifact_id": binding.source_proposal_artifact_id,
+        "source_policy_snapshot_id": binding.source_policy_snapshot_id,
+        "source_capability_snapshot_id": binding.source_capability_snapshot_id,
+        "source_parent_refs": list(binding.source_parent_refs),
+        "source_trace_refs": list(binding.source_trace_refs),
+    }
+    baseline.update(material)
+    observed.update(material)
+    observed["route_eligibility_artifact_sha256"] = _sha(
+        "g2e-e3-observed-route-binding"
+    )
+    return baseline, observed
+
+
+def _e3_manifest_source_family(
+    *,
+    transaction_id: str,
+    target_roles: tuple[str, ...] = ("ordinary",),
+    g2a: dict[str, object] | None = None,
+    g2b: dict[str, object] | None = None,
+    bundle: g2d.FractalRuntimeExecutionBundleV02 | None = None,
+) -> dict[str, object]:
+    baseline_payload, observed_payload = _e3_changed_source_payloads(
+        target_roles=target_roles,
+        g2a=g2a,
+        g2b=g2b,
+        bundle=bundle,
+    )
+    changed = _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e3:source:baseline",
+        transaction_id=transaction_id,
+        payload=baseline_payload,
+    )
+    by_role = {
+        role: _e3_kernel_artifact(
+            artifact_id=f"artifact:g2e:e3:dependent:{role}",
+            transaction_id=transaction_id,
+            payload={"dependent_role": role},
+        )
+        for role in ("ordinary", "packet", "certificate", "route")
+    }
+    unrelated = _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e3:unrelated",
+        transaction_id=transaction_id,
+        payload={"dependent_role": "unrelated"},
+    )
+    baseline = (changed, *by_role.values(), unrelated)
+    observed_changed = _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e3:source:observed",
+        transaction_id=transaction_id,
+        payload=observed_payload,
+        parent_refs=(changed.artifact_id,),
+    )
+    observed = (observed_changed, *baseline[1:])
+    replay_edges = tuple(
+        ArtifactDependencyEdgeV01(
+            artifact_id=by_role[role].artifact_id,
+            depends_on_artifact_id=changed.artifact_id,
+        )
+        for role in target_roles
+    )
+    profile = build_default_seal_profile_v01()
+    manifest = build_artifact_manifest_v01(
+        transaction_id=transaction_id,
+        profile=profile,
+        artifacts=tuple(
+            kernel_artifact_to_canonical_ref_v01(item) for item in baseline
+        ),
+        dependency_edges=replay_edges,
+        root_ownership_bindings=tuple(
+            RootOwnershipBindingV01(item.artifact_id, _E3_ROOT)
+            for item in baseline
+        ),
+        evidence_class_bindings=tuple(
+            EvidenceClassBindingV01(item.artifact_id, "TEST_EVIDENCE")
+            for item in baseline
+        ),
+        authority_class_bindings=tuple(
+            AuthorityClassBindingV01(item.artifact_id, item.authority_class)
+            for item in baseline
+        ),
+    )
+    replay = verify_artifact_replay_v01(
+        manifest=manifest,
+        payload_rows=tuple(
+            (item.artifact_id, kernel_artifact_to_plain_dict_v01(item)["payload"])
+            for item in baseline
+        ),
+        expected_manifest_hash=manifest.manifest_hash,
+    )
+    return {
+        "baseline": baseline,
+        "observed": observed,
+        "manifest": manifest,
+        "replay": replay,
+        "replay_edges": replay_edges,
+        "by_role": by_role,
+    }
+
+
+def _e3_delta_family(
+    baseline_fixture: dict[str, object],
+    *,
+    target_roles: tuple[str, ...] = ("ordinary",),
+) -> dict[str, object]:
+    bundle = baseline_fixture["bundle"]
+    g2a = baseline_fixture["g2a"]
+    g2b = baseline_fixture["g2b"]
+    source_family = baseline_fixture["source_family"]
+    assert type(bundle) is g2d.FractalRuntimeExecutionBundleV02
+    transaction_id = bundle.source_context.router_input.transaction_id
+    route = source_family["route"]
+    assert type(route) is g2e.KernelArtifactV01
+    source_rows = _e3_manifest_source_family(
+        transaction_id=transaction_id,
+        target_roles=target_roles,
+        g2a=g2a,
+        g2b=g2b,
+        bundle=bundle,
+    )
+    baseline = source_rows["baseline"]
+    observed = source_rows["observed"]
+    manifest = source_rows["manifest"]
+    replay = source_rows["replay"]
+    replay_edges = source_rows["replay_edges"]
+    by_role = source_rows["by_role"]
+    changed = baseline[0]
+    observed_changed = observed[0]
+    edge_projection_bindings = tuple(
+        (
+            edge.artifact_id,
+            edge.depends_on_artifact_id,
+            ("/hold_status",) if edge.depends_on_artifact_id == changed.artifact_id else (),
+            "FIELD_CAUSAL" if edge.depends_on_artifact_id == changed.artifact_id else "ARTIFACT_DEPENDENCY",
+        )
+        for edge in replay_edges
+    )
+    history = g2b["report"].query_evaluations[0].source_history_hash
+    policy = g2b["report"].query.policy_version
+    schema_versions = g2b["report"].query.schema_versions
+    graph_basis, dependency_edges = g2e.project_integrity_replay_dependency_edges_v01(
+        manifest=manifest,
+        replay=replay,
+        source_artifacts=baseline,
+        graph_version="v0.1",
+        transaction_id=transaction_id,
+        owning_root_id=_E3_ROOT,
+        domain_id=_E3_DOMAIN,
+        policy_version=policy,
+        schema_versions=schema_versions,
+        source_history_hash=history,
+        edge_projection_bindings=edge_projection_bindings,
+    )
+    graph = g2e.build_dependency_graph_index_v01(
+        graph_basis_sha256=graph_basis,
+        graph_version="v0.1",
+        manifest=manifest,
+        replay=replay,
+        source_artifacts=baseline,
+        dependency_edges=dependency_edges,
+        transaction_id=transaction_id,
+        owning_root_id=_E3_ROOT,
+        domain_id=_E3_DOMAIN,
+        policy_version=policy,
+        schema_versions=schema_versions,
+        source_history_hash=history,
+        trace_refs=("trace:g2e:e3:graph",),
+    )
+    fingerprint_profile = g2e.build_dependency_fingerprint_profile_v01()
+    before = g2e.build_dependency_fingerprint_v01(
+        profile=fingerprint_profile,
+        graph=graph,
+        dependency_edges=dependency_edges,
+        source_artifacts=baseline,
+        policy_version=policy,
+        schema_versions=schema_versions,
+        source_history_hash=history,
+    )
+    after = g2e.build_dependency_fingerprint_v01(
+        profile=fingerprint_profile,
+        graph=graph,
+        dependency_edges=dependency_edges,
+        source_artifacts=observed,
+        policy_version=policy,
+        schema_versions=schema_versions,
+        source_history_hash=history,
+    )
+    source_binding = g2e.build_delta_source_binding_v01(
+        request_id="request:g2e:e3",
+        transaction_id=transaction_id,
+        owning_root_id=_E3_ROOT,
+        domain_id=_E3_DOMAIN,
+        baseline_source_artifact_id=changed.artifact_id,
+        baseline_source_artifact_type=changed.artifact_type,
+        baseline_source_artifact_sha256=_e2_artifact_sha(changed),
+        baseline_source_payload_sha256=_e2_payload_sha(changed),
+        observed_source_artifact_id=observed_changed.artifact_id,
+        observed_source_artifact_type=observed_changed.artifact_type,
+        observed_source_artifact_sha256=_e2_artifact_sha(observed_changed),
+        observed_source_payload_sha256=_e2_payload_sha(observed_changed),
+        baseline_report_id=bundle.runtime_report.report_id,
+        baseline_graph_id=graph.graph_id,
+        baseline_graph_version=graph.graph_version,
+        baseline_policy_version=policy,
+        observed_policy_version=policy,
+        baseline_schema_versions=schema_versions,
+        observed_schema_versions=schema_versions,
+        baseline_source_history_hash=history,
+        observed_source_history_hash=history,
+        valid_from_utc=_E3_VALID_FROM_UTC,
+        valid_to_utc=_E3_VALID_TO_UTC,
+        trace_refs=("trace:g2e:e3:source-binding",),
+    )
+    changed_field = g2e.build_changed_field_binding_v01(
+        source_binding_id=source_binding.source_binding_id,
+        json_pointer="/payload/hold_status",
+        prior_value_sha256=hashlib.sha256(canonical_json_bytes_v01("OLD")).hexdigest(),
+        observed_value_sha256=hashlib.sha256(canonical_json_bytes_v01("NEW")).hexdigest(),
+        change_class="FIELD_VALUE_CHANGE",
+        observed_at_utc=_E3_UTC,
+        trace_refs=("trace:g2e:e3:changed-field",),
+    )
+    changed_artifact = g2e.build_changed_artifact_binding_v01(
+        source_binding_id=source_binding.source_binding_id,
+        baseline_artifact_id=changed.artifact_id,
+        baseline_artifact_type=changed.artifact_type,
+        baseline_payload_sha256=_e2_payload_sha(changed),
+        observed_artifact_id=observed_changed.artifact_id,
+        observed_artifact_type=observed_changed.artifact_type,
+        observed_payload_sha256=_e2_payload_sha(observed_changed),
+        baseline_dependency_fingerprint=before,
+        observed_dependency_fingerprint=after,
+        change_class="ARTIFACT_SUCCESSOR",
+        observed_at_utc=_E3_UTC,
+        trace_refs=("trace:g2e:e3:changed-artifact",),
+    )
+    delta = g2e.build_world_state_delta_v01(
+        ordered_source_binding_ids=(source_binding.source_binding_id,),
+        request_id=source_binding.request_id,
+        transaction_id=transaction_id,
+        owning_root_id=_E3_ROOT,
+        domain_id=_E3_DOMAIN,
+        baseline_report_id=bundle.runtime_report.report_id,
+        baseline_graph_id=graph.graph_id,
+        baseline_graph_version=graph.graph_version,
+        observed_at_utc=_E3_UTC,
+        valid_from_utc=_E3_VALID_FROM_UTC,
+        valid_to_utc=_E3_VALID_TO_UTC,
+        baseline_policy_version=policy,
+        observed_policy_version=policy,
+        baseline_schema_versions=schema_versions,
+        observed_schema_versions=schema_versions,
+        baseline_source_history_hash=history,
+        observed_source_history_hash=history,
+        ordered_changed_field_binding_ids=(changed_field.changed_field_binding_id,),
+        ordered_changed_artifact_binding_ids=(changed_artifact.changed_artifact_binding_id,),
+        dependency_fingerprint_before=before,
+        dependency_fingerprint_after=after,
+        trace_refs=("trace:g2e:e3:delta",),
+    )
+    request = g2e.build_affected_set_request_v01(
+        delta=delta,
+        graph=graph,
+        trace_refs=("trace:g2e:e3:request",),
+    )
+    affected = g2e.compute_affected_set_v01(
+        request=request,
+        delta=delta,
+        graph=graph,
+        source_bindings=(source_binding,),
+        changed_field_bindings=(changed_field,),
+        changed_artifact_bindings=(changed_artifact,),
+        dependency_edges=dependency_edges,
+        baseline_source_artifacts=baseline,
+        observed_source_artifacts=observed,
+    )
+    context = g2e.build_continuous_delta_source_context_v01(
+        integrity_manifest=manifest,
+        integrity_replay=replay,
+        baseline_source_artifacts=baseline,
+        observed_source_artifacts=observed,
+        g2a_registry=g2a["registry"],
+        g2a_packet=g2a["packet"],
+        g2a_dependency_candidate=g2a["dependency"],
+        g2a_current_observations=g2a["observations"],
+        g2a_root_invalidation_material=g2a["invalidation"],
+        g2b_resolution_report=g2b["report"],
+        g2b_reuse_certificate=g2b["certificate"],
+        g2b_writeback_evidence=None,
+        g2c_source_context=source_family["g2c_source"],
+        baseline_g2c_route_eligibility_artifact=route,
+        baseline_g2d_execution_bundle=bundle,
+        root_kernel=source_family["root_kernel"],
+        post_vv_profile=None,
+        gt_profile=None,
+    )
+    return {
+        "baseline": baseline,
+        "observed": observed,
+        "manifest": manifest,
+        "replay": replay,
+        "dependency_edges": dependency_edges,
+        "graph": graph,
+        "source_binding": source_binding,
+        "changed_field": changed_field,
+        "changed_artifact": changed_artifact,
+        "delta": delta,
+        "request": request,
+        "affected": affected,
+        "context": context,
+        "roles": by_role,
+    }
+
+
 def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     public_functions = tuple(
@@ -839,8 +2846,12 @@ def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
         for node in ast.walk(tree)
         if isinstance(node, ast.ImportFrom)
     )
-    assert public_functions == QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
-    assert g2e.__all__ == TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
+    assert public_functions == (
+        QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS
+    )
+    assert g2e.__all__ == (
+        TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS
+    )
     assert len(g2e.PUBLIC_G2E_REASON_CODES_V01) == 88
     assert len(g2e.VALIDATION_TARGETS_V01) == 32
     assert len(g2e.FAILURE_STAGES_V01) == 24
@@ -857,7 +2868,9 @@ def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
         for target in node.targets
         if isinstance(target, ast.Name)
     }
-    assert not any("CACHE" in name for name in global_names)
+    assert {name for name in global_names if "CACHE" in name} == {
+        "NO_CACHE_STATE_DOMAIN_V01"
+    }
 
 
 def test_e1_exact_twenty_type_field_order_and_frozen_geometry_v01() -> None:
@@ -1366,8 +3379,8 @@ def test_e1_runtime_only_context_and_bundle_declarations_v01() -> None:
         g2e.CausalConsumptionRefV01, ...
     ]
     assert all(bundle_annotations[field_name] is not object for field_name in artifact_fields)
-    assert not hasattr(g2e, "build_continuous_delta_source_context_v01")
-    assert not hasattr(g2e, "validate_continuous_delta_source_context_v01")
+    assert hasattr(g2e, "build_continuous_delta_source_context_v01")
+    assert hasattr(g2e, "validate_continuous_delta_source_context_v01")
     assert not hasattr(g2e, "build_continuous_delta_execution_bundle_v01")
     assert not hasattr(g2e, "validate_continuous_delta_execution_bundle_v01")
 
@@ -1449,9 +3462,15 @@ def test_e1_abi_profile_declarations_and_future_slice_behavior_absent_v01() -> N
     assert "equivalent" not in profile_text
     assert "baseline route envelope plus delta observation/validity times" not in profile_text
     assert "recomputed g2-d report artifact envelope" not in profile_text
-    forbidden = (
+    present = (
         "derive_invalidation_report_v01",
         "prove_unaffected_artifact_preservation_v01",
+        "build_artifact_invalidation_record_v01",
+        "build_invalidation_report_v01",
+        "build_preservation_proof_v01",
+    )
+    assert all(hasattr(g2e, name) for name in present)
+    forbidden = (
         "execute_selective_recomputation_v01",
         "run_continuous_delta_runtime_v01",
         "build_continuous_delta_transition_registry_profile_v01",
@@ -1468,18 +3487,17 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
     )
     assert len(E2_QUARTET_FUNCTIONS) == 16
     assert len(E2_BEHAVIORAL_FUNCTIONS) == 5
-    assert public_functions == QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
-    assert len(public_functions) == 45
-    assert g2e.__all__ == TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
-    assert len(g2e.__all__) == 65
+    e2_prefix = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
+    assert public_functions[:45] == e2_prefix
+    assert len(public_functions) == 62
+    assert g2e.__all__[:65] == TYPE_NAMES + e2_prefix
+    assert len(g2e.__all__) == 82
+    assert public_functions[45:] == E3_PUBLIC_FUNCTIONS
     assert g2e.CONTINUOUS_DELTA_GRAPH_VERSION_V01 == "v0.1"
     assert g2e.MAX_DEPENDENCY_GRAPH_NODES_V01 == 256
     assert g2e.MAX_DEPENDENCY_GRAPH_EDGES_V01 == 1024
     assert g2e.MAX_AFFECTED_HOPS_V01 == 32
     for name in (
-        "derive_invalidation_report_v01",
-        "prove_unaffected_artifact_preservation_v01",
-        "build_continuous_delta_source_context_v01",
         "build_selective_recomputation_plan_from_affected_set_v01",
         "execute_selective_recomputation_v01",
         "run_continuous_delta_runtime_v01",
@@ -1492,18 +3510,20 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
         g2e.validate_affected_set_against_graph_v01
     ).parameters
     addendum_text = ADDENDUM_PATH.read_text(encoding="utf-8")
-    assert "document_revision: v0.1.1" in addendum_text
+    assert "document_revision: v0.1.2" in addendum_text
     assert "guardian_review_status: ACCEPTED" in addendum_text
+    assert (
+        "guardian_accepted_v012_pending_draft_sha256: "
+        "83e089679b73dcb5f43384ec788c53d86f59b350229bfb28859c8aa72db083dd"
+    ) in addendum_text
     assert "PENDING_REVIEW" not in addendum_text
     assert hashlib.sha256(ADDENDUM_PATH.read_bytes()).hexdigest() == (
         ACCEPTED_ADDENDUM_SHA256
     )
-    assert "g2e2_repair_authorized: false" in addendum_text
-    assert "g2e2_repair_started: false" in addendum_text
-    assert "does not self-authorize repair" in addendum_text
-    assert "Only separate owner repair\nauthorization may resume G2-E2" in (
-        addendum_text
-    )
+    assert "Version 0.1.1 remains controlling for PAC-01 through PAC-08" in addendum_text
+    assert "v0.1.2 addendum controls PAC-09 through PAC-12" in addendum_text
+    assert "does not self-authorize implementation" in addendum_text
+    assert "g2e3_implementation_authorized: false" in addendum_text
 
 
 def test_e2_four_quartets_identity_plain_data_and_schema_v01() -> None:
@@ -2378,17 +4398,26 @@ def test_e2_no_e3_source_context_invalidation_execution_or_facade_v01() -> None:
         if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
     }
     forbidden = {
-        "build_continuous_delta_source_context_v01",
-        "validate_continuous_delta_source_context_v01",
-        "derive_invalidation_report_v01",
-        "prove_unaffected_artifact_preservation_v01",
         "build_selective_recomputation_plan_from_affected_set_v01",
         "execute_selective_recomputation_v01",
         "run_continuous_delta_runtime_v01",
     }
     assert not public_functions.intersection(forbidden)
     assert not hasattr(kernel, "DeltaDependencyEdgeV01")
-    assert "hedgehog.kernel.fractal_runtime_v02 import (" not in source
+    top_level_functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    e2_called_names: set[str] = set()
+    for function_name in QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS:
+        for node in ast.walk(top_level_functions[function_name]):
+            if isinstance(node, ast.Call):
+                if isinstance(node.func, ast.Name):
+                    e2_called_names.add(node.func.id)
+                elif isinstance(node.func, ast.Attribute):
+                    e2_called_names.add(node.func.attr)
+    assert not e2_called_names.intersection(E3_PUBLIC_FUNCTIONS)
     defined_names = {
         node.name
         for node in ast.walk(tree)
@@ -2424,9 +4453,1075 @@ def test_e2_no_e3_source_context_invalidation_execution_or_facade_v01() -> None:
         "demo" in module_name or "runner" in module_name
         for module_name in imported_modules
     )
-    assert not any(
-        name.startswith("run_") or "runner" in name for name in called_names
-    )
+    assert "run_fractal_runtime_v02" not in called_names
     assert not called_names.intersection(
         {"provider_call", "model_call", "network_call", "connector_call"}
     )
+
+
+def _e3_structural_record() -> g2e.ArtifactInvalidationRecordV01:
+    return g2e.build_artifact_invalidation_record_v01(
+        affected_set_id="g2e_affected_set_result_v01:" + _sha("e3-affected"),
+        artifact_id="artifact:g2e:e3:structural",
+        artifact_type="SemanticEvidence",
+        invalidation_reason_class="SOURCE_FIELD_CHANGED",
+        triggering_delta_id="g2e_world_state_delta_v01:" + _sha("e3-delta"),
+        triggering_binding_ids=("g2e_changed_field_binding_v01:" + _sha("e3-field"),),
+        predecessor_artifact_id="artifact:g2e:e3:structural",
+        g2a_packet_relation="NOT_APPLICABLE",
+        g2b_reuse_relation="NOT_APPLICABLE",
+        g2c_route_relation="ROUTE_CURRENT",
+        root_review_required=False,
+        trace_refs=("trace:g2e:e3:structural",),
+    )
+
+
+def _e3_structural_report() -> g2e.InvalidationReportV01:
+    record = _e3_structural_record()
+    return g2e.build_invalidation_report_v01(
+        affected_set_id=record.affected_set_id,
+        records=(record,),
+        ordered_unresolved_artifact_ids=(),
+    )
+
+
+def _e3_structural_proof() -> g2e.PreservationProofV01:
+    artifact_sha = _sha("e3-preserved-artifact")
+    payload_sha = _sha("e3-preserved-payload")
+    return g2e.build_preservation_proof_v01(
+        baseline_graph_id="g2e_dependency_graph_index_v01:" + _sha("e3-graph"),
+        affected_set_id="g2e_affected_set_result_v01:" + _sha("e3-affected"),
+        ordered_preserved_artifact_ids=("artifact:g2e:e3:preserved",),
+        ordered_before_artifact_sha256=(artifact_sha,),
+        ordered_after_artifact_sha256=(artifact_sha,),
+        ordered_before_payload_sha256=(payload_sha,),
+        ordered_after_payload_sha256=(payload_sha,),
+        ordered_before_identity_ids=("artifact:g2e:e3:preserved",),
+        ordered_after_identity_ids=("artifact:g2e:e3:preserved",),
+    )
+
+
+def _e3_transition_decision(
+    registry: transition.TransitionRegistryV01,
+    rule_id: str,
+) -> transition.TransitionDecisionV01:
+    rule = next(item for item in registry.rules if item.rule_id == rule_id)
+    return transition.lookup_transition_v01(
+        registry=registry,
+        abi_major_version=rule.abi_major_version,
+        source_artifact_type=rule.source_artifact_type,
+        source_lifecycle_state=rule.source_lifecycle_state,
+        actor_role=rule.actor_role,
+        attempted_effect=rule.attempted_effect,
+        target_artifact_type=rule.target_artifact_type,
+        satisfied_guards=rule.required_guards,
+        root_commit_present=rule.root_commit_required,
+    )
+
+
+def _e3_artifact_chain(family: dict[str, object]) -> dict[str, object]:
+    delta = family["delta"]
+    graph = family["graph"]
+    affected = family["affected"]
+    baseline = family["baseline"]
+    observed = family["observed"]
+    context = family["context"]
+    assert type(delta) is g2e.WorldStateDeltaV01
+    assert type(graph) is g2e.DependencyGraphIndexV01
+    assert type(affected) is g2e.AffectedSetResultV01
+    assert type(context) is g2e.ContinuousDeltaSourceContextV01
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    proposed = g2e._project_delta_source_proposed_artifact_v01(
+        delta=delta,
+        baseline_route_artifact=context.baseline_g2c_route_eligibility_artifact,
+        baseline_g2d_report_artifact=context.baseline_g2d_execution_bundle.report_artifact,
+        baseline_source_artifacts=baseline,
+        observed_source_artifacts=observed,
+    )
+    t01 = _e3_transition_decision(registry, "g2e_t01_delta_validate")
+    validated = g2e._project_delta_source_validated_artifact_v01(
+        delta=delta,
+        proposed_source_artifact=proposed,
+        t01_decision_id=t01.decision_id,
+        baseline_route_artifact=context.baseline_g2c_route_eligibility_artifact,
+        baseline_g2d_report_artifact=context.baseline_g2d_execution_bundle.report_artifact,
+        baseline_source_artifacts=baseline,
+        observed_source_artifacts=observed,
+    )
+    graph_artifact = g2e._project_dependency_graph_artifact_v01(
+        graph=graph,
+        delta=delta,
+        validated_delta_source_artifact=validated,
+        baseline_route_artifact=context.baseline_g2c_route_eligibility_artifact,
+        baseline_source_artifacts=baseline,
+    )
+    t02 = _e3_transition_decision(registry, "g2e_t02_affected_set_derive")
+    affected_artifact = g2e._project_affected_set_artifact_v01(
+        affected_result=affected,
+        delta=delta,
+        validated_delta_source_artifact=validated,
+        dependency_graph_artifact=graph_artifact,
+        baseline_route_artifact=context.baseline_g2c_route_eligibility_artifact,
+        t02_decision_id=t02.decision_id,
+    )
+    return {
+        "registry": registry,
+        "proposed": proposed,
+        "validated": validated,
+        "graph": graph_artifact,
+        "affected": affected_artifact,
+        "t01": t01,
+        "t02": t02,
+    }
+
+
+def _e3_invalidation_kwargs(family: dict[str, object]) -> dict[str, object]:
+    return {
+        "affected_set": family["affected"],
+        "delta": family["delta"],
+        "source_context": family["context"],
+        "source_bindings": (family["source_binding"],),
+        "changed_field_bindings": (family["changed_field"],),
+        "changed_artifact_bindings": (family["changed_artifact"],),
+        "dependency_edges": family["dependency_edges"],
+        "dependency_graph": family["graph"],
+    }
+
+
+def test_e3_exact_public_surface_and_slice_boundary_v01() -> None:
+    tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    public_functions = tuple(
+        node.name
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
+    )
+    assert public_functions[:45] == QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
+    assert public_functions[45:] == E3_PUBLIC_FUNCTIONS
+    assert len(public_functions) == 62
+    assert g2e.__all__[:65] == TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
+    assert g2e.__all__[65:] == E3_PUBLIC_FUNCTIONS
+    assert len(g2e.__all__) == 82
+    assert len(g2e.G2E_INVALIDATION_REASON_CLASSES_V01) == 10
+    assert g2e.G2E_G2A_PACKET_RELATIONS_V01 == (
+        "NOT_APPLICABLE",
+        "PACKET_ROOT_REVIEW_REQUIRED",
+    )
+    assert g2e.G2E_G2B_REUSE_RELATIONS_V01 == (
+        "NOT_APPLICABLE",
+        "REUSE_CERTIFICATE_STALE",
+    )
+    assert g2e.G2E_G2C_ROUTE_RELATIONS_V01 == (
+        "ROUTE_CURRENT",
+        "ROUTE_REVALIDATION_REQUIRED",
+    )
+    assert not any(
+        hasattr(g2e, name)
+        for name in (
+            "build_selective_recomputation_plan_from_affected_set_v01",
+            "execute_selective_recomputation_v01",
+            "run_continuous_delta_runtime_v01",
+        )
+    )
+    g2b = _e3_g2b_family()
+    source_family = _e3_g2d_source_family(g2b)
+    source = source_family["source"]
+    assert type(source) is g2d.FractalRuntimeSourceContextV02
+    assert g2d.validate_fractal_runtime_source_context_v02(source).status == "PASS"
+    source_plain = _e3_public_plain(source)
+    assert canonical_json_bytes_v01(source_plain) == canonical_json_bytes_v01(
+        _e3_public_plain(source)
+    )
+    assert _e3_observation_digest(
+        "G2E3_TEST_ACTUAL_SOURCE_CONTEXT", source
+    ) == _e3_observation_digest("G2E3_TEST_ACTUAL_SOURCE_CONTEXT", source)
+
+    g2c_registry, g2d_registry, default_registry = _e3_transition_profiles()
+    assert len(
+        {
+            g2c_registry.registry_id,
+            g2d_registry.registry_id,
+            default_registry.registry_id,
+        }
+    ) == 3
+    assert source.transition_registry == g2c_registry
+    assert transition.validate_execution_mode_transition_registry_profile_v01(
+        g2c_registry
+    ) == ()
+    assert transition.validate_fractal_runtime_transition_registry_profile_v02(
+        g2d_registry
+    ) == ()
+    g2c_registry_plain = (
+        transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+            g2c_registry
+        )
+    )
+    g2d_registry_plain = (
+        transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+            g2d_registry
+        )
+    )
+    assert _e3_transition_registry_plain(g2c_registry) == g2c_registry_plain
+    assert _e3_transition_registry_plain(g2d_registry) == g2d_registry_plain
+    assert len(g2c_registry.rules) == 6
+    assert len(g2d_registry.rules) == 17
+    assert tuple(rule.rule_id for rule in g2c_registry.rules) == (
+        "g2c_transition:proposal_to_root_review:v01",
+        "g2c_transition:root_accept_to_route:v01",
+        "g2c_transition:root_narrow_to_route:v01",
+        "g2c_transition:root_reject_record:v01",
+        "g2c_transition:root_block_record:v01",
+        "g2c_transition:root_needs_user_record:v01",
+    )
+    assert tuple(rule.rule_id for rule in g2d_registry.rules) == (
+        "g2d_t01_route_eligibility_to_topology",
+        "g2d_t02_topology_to_pending",
+        "g2d_t03_pending_backpressure_defer",
+        "g2d_t04_pending_to_ready",
+        "g2d_t05_ready_to_running",
+        "g2d_t06_running_to_validating",
+        "g2d_t07_validating_to_revise",
+        "g2d_t08_validating_to_completed",
+        "g2d_t09_validating_to_degraded",
+        "g2d_t10_validating_to_blocked",
+        "g2d_t11_validating_to_needs_user",
+        "g2d_t12_validating_to_deadend",
+        "g2d_t13_completed_to_parent_return",
+        "g2d_t14_degraded_to_parent_return",
+        "g2d_t15_blocked_to_parent_return",
+        "g2d_t16_needs_user_to_parent_return",
+        "g2d_t17_deadend_to_parent_return",
+    )
+    for registry, registry_plain in (
+        (g2c_registry, g2c_registry_plain),
+        (g2d_registry, g2d_registry_plain),
+    ):
+        expected_rule_plain = tuple(
+            {
+                "rule_id": rule.rule_id,
+                "abi_major_version": rule.abi_major_version,
+                "source_artifact_type": rule.source_artifact_type,
+                "source_lifecycle_state": rule.source_lifecycle_state,
+                "actor_role": rule.actor_role,
+                "attempted_effect": rule.attempted_effect,
+                "target_artifact_type": rule.target_artifact_type,
+                "required_guards": list(rule.required_guards),
+                "decision": rule.decision,
+                "reason_code": rule.reason_code,
+                "root_commit_required": rule.root_commit_required,
+            }
+            for rule in registry.rules
+        )
+        assert tuple(registry_plain["rules"]) == expected_rule_plain
+    assert canonical_json_bytes_v01(g2c_registry_plain) == canonical_json_bytes_v01(
+        transition.execution_mode_transition_registry_profile_to_plain_dict_v01(
+            g2c_registry
+        )
+    )
+    assert canonical_json_bytes_v01(g2d_registry_plain) == canonical_json_bytes_v01(
+        transition.fractal_runtime_transition_registry_profile_to_plain_dict_v02(
+            g2d_registry
+        )
+    )
+    actual_g2c_decisions = (
+        source.proposal_transition_decision,
+        source.root_route_transition_decision,
+    )
+    for decision in actual_g2c_decisions:
+        assert transition.validate_execution_mode_transition_decision_v01(
+            registry=g2c_registry,
+            decision=decision,
+        ) == ()
+        assert transition.rebuild_execution_mode_transition_decision_identity_v01(
+            decision
+        ) == decision.decision_id
+        expected = transition.execution_mode_transition_decision_to_plain_dict_v01(
+            registry=g2c_registry,
+            decision=decision,
+        )
+        assert _e3_transition_decision_plain(decision) == expected
+        assert canonical_json_bytes_v01(expected) == canonical_json_bytes_v01(
+            _e3_transition_decision_plain(decision)
+        )
+
+    g2d_lookup_groups: dict[tuple[object, ...], list[str]] = {}
+    for rule in g2d_registry.rules:
+        lookup_key = (
+            rule.abi_major_version,
+            rule.source_artifact_type,
+            rule.source_lifecycle_state,
+            rule.actor_role,
+            rule.attempted_effect,
+            rule.target_artifact_type,
+        )
+        g2d_lookup_groups.setdefault(lookup_key, []).append(rule.rule_id)
+    duplicate_lookup_groups = tuple(
+        tuple(rule_ids)
+        for rule_ids in g2d_lookup_groups.values()
+        if len(rule_ids) > 1
+    )
+    assert duplicate_lookup_groups == (
+        (
+            "g2d_t13_completed_to_parent_return",
+            "g2d_t14_degraded_to_parent_return",
+            "g2d_t16_needs_user_to_parent_return",
+            "g2d_t17_deadend_to_parent_return",
+        ),
+    )
+    duplicate_rules = tuple(
+        rule
+        for rule in g2d_registry.rules
+        if rule.rule_id in duplicate_lookup_groups[0]
+    )
+    assert len({rule.required_guards for rule in duplicate_rules}) == 4
+
+    g2c_seams = _e3_g2c_serialization_seams()
+    assert tuple(g2c_seams) == g2c.SERIALIZED_G2C_TYPES_V01
+    router_input = source.router_input
+    proposal = source.proposal
+    snapshot = router_input.local_routing_snapshot
+    mapped_g2c_objects = (
+        router_input.bsep_binding,
+        router_input.replay_binding,
+        router_input.g2a_binding,
+        router_input.g2b_binding,
+        snapshot.mode_profiles[0],
+        snapshot,
+        router_input,
+        proposal.ordered_feasibility_rows[0],
+        proposal,
+        source.review_input,
+        source.decision,
+        source_family["route_report"],
+    )
+    assert tuple(type(value) for value in mapped_g2c_objects) == (
+        g2c.SERIALIZED_G2C_TYPES_V01
+    )
+    identity_fields = {
+        type_name: identity_field
+        for type_name, identity_field, _domain, _prefix in (
+            g2c.G2C_IDENTITY_PROFILES_V01
+        )
+    }
+    for value in mapped_g2c_objects:
+        serializer, rebuilder = g2c_seams[type(value)]
+        plain = serializer(value)  # type: ignore[operator]
+        assert _e3_public_plain(value) == plain
+        assert rebuilder(value) == getattr(  # type: ignore[operator]
+            value, identity_fields[type(value).__name__]
+        )
+        assert canonical_json_bytes_v01(plain) == canonical_json_bytes_v01(
+            serializer(value)  # type: ignore[operator]
+        )
+    public_plain_source = inspect.getsource(_e3_public_plain)
+    assert public_plain_source.index("_e3_g2c_serialization_seams") < (
+        public_plain_source.index("if is_dataclass(value)")
+    )
+
+    default_rule = default_registry.rules[0]
+    foreign_decision = transition.lookup_transition_v01(
+        registry=default_registry,
+        abi_major_version=default_rule.abi_major_version,
+        source_artifact_type=default_rule.source_artifact_type,
+        source_lifecycle_state=default_rule.source_lifecycle_state,
+        actor_role=default_rule.actor_role,
+        attempted_effect=default_rule.attempted_effect,
+        target_artifact_type=default_rule.target_artifact_type,
+        satisfied_guards=default_rule.required_guards,
+        root_commit_present=default_rule.root_commit_required,
+    )
+    assert foreign_decision.matched and foreign_decision.rule_id == default_rule.rule_id
+    with pytest.raises(ValueError, match="foreign transition registry"):
+        _e3_transition_registry_plain(default_registry)
+    with pytest.raises(ValueError, match="foreign transition decision"):
+        _e3_transition_decision_plain(foreign_decision)
+    decision_observer_tree = ast.parse(
+        inspect.getsource(_e3_transition_decision_plain)
+    )
+    decision_serializer_calls = {
+        node.func.attr
+        for node in ast.walk(decision_observer_tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    }
+    assert "transition_decision_to_plain_dict_v01" not in decision_serializer_calls
+    registry_observer_tree = ast.parse(
+        inspect.getsource(_e3_transition_registry_plain)
+    )
+    registry_serializer_calls = {
+        node.func.attr
+        for node in ast.walk(registry_observer_tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    }
+    assert "transition_registry_to_plain_dict_v01" not in registry_serializer_calls
+
+    assert _e3_observation_members(()) == ((None, ()),)
+    assert _e3_observation_members(("first", "second")) == (
+        (0, "first"),
+        (1, "second"),
+    )
+    assert _e3_observation_members("scalar") == ((None, "scalar"),)
+    empty_tuple_plain = _e3_public_plain(())
+    assert empty_tuple_plain == []
+    assert canonical_json_bytes_v01(empty_tuple_plain) == canonical_json_bytes_v01([])
+    assert _e3_observation_digest("G2E3_TEST_EMPTY_TUPLE", ()) == (
+        _e3_observation_digest("G2E3_TEST_EMPTY_TUPLE", ())
+    )
+
+    nested_observation = {
+        "tuple": (0.66, [True, 1, 1.0]),
+        "mapping": {"positive_zero": 0.0, "negative_zero": -0.0},
+    }
+    assert _e3_public_plain(nested_observation) == {
+        "tuple": [0.66, [True, 1, 1.0]],
+        "mapping": {"positive_zero": 0.0, "negative_zero": -0.0},
+    }
+    nested_digest = _e3_observation_digest(
+        "G2E3_TEST_NESTED_FINITE_FLOAT", nested_observation
+    )
+    assert nested_digest == _e3_observation_digest(
+        "G2E3_TEST_NESTED_FINITE_FLOAT", nested_observation
+    )
+    primitive_observations = tuple(
+        (
+            type(value).__name__,
+            canonical_json_bytes_v01(_e3_public_plain(value)),
+            _e3_observation_digest("G2E3_TEST_PRIMITIVE", value),
+        )
+        for value in (True, 1, 1.0)
+    )
+    assert tuple(row[0] for row in primitive_observations) == (
+        "bool",
+        "int",
+        "float",
+    )
+    assert len({row[1] for row in primitive_observations}) == 3
+    assert len({row[2] for row in primitive_observations}) == 3
+    for zero in (0.0, -0.0):
+        assert canonical_json_bytes_v01(_e3_public_plain(zero)) == (
+            canonical_json_bytes_v01(zero)
+        )
+        assert _e3_observation_digest("G2E3_TEST_ZERO", zero) == (
+            _e3_observation_digest("G2E3_TEST_ZERO", zero)
+        )
+    assert (
+        _e3_observation_digest("G2E3_TEST_ZERO", 0.0)
+        == _e3_observation_digest("G2E3_TEST_ZERO", -0.0)
+    ) == (
+        canonical_json_bytes_v01(0.0) == canonical_json_bytes_v01(-0.0)
+    )
+    for non_finite in (math.nan, math.inf, -math.inf):
+        with pytest.raises(ValueError, match="non-finite public observation"):
+            _e3_public_plain({"nested": (non_finite,)})
+    test_tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    replay_result_attributes = tuple(
+        node.attr
+        for node in ast.walk(test_tree)
+        if isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Attribute)
+        and node.value.attr == "integrity_replay"
+    )
+    assert "replay_status" in replay_result_attributes
+    assert "status" not in replay_result_attributes
+    fixture_source = inspect.getsource(e3_baseline_fixture)
+    for marker in (
+        "G2E3_FOCUSED_BASELINE_PUBLIC_CALL_COMPLETED=1",
+        "G2E3_ACCEPTANCE_BASELINE_PUBLIC_CALL_COMPLETED=1",
+        "G2E3_FOCUSED_BASELINE_CALL_OBSERVED=1",
+        "G2E3_ACCEPTANCE_BASELINE_CALL_OBSERVED=1",
+    ):
+        assert fixture_source.count(marker) == 1
+
+
+def test_e3_three_quartets_identity_plain_data_and_schema_v01() -> None:
+    values = (
+        _e3_structural_record(),
+        _e3_structural_report(),
+        _e3_structural_proof(),
+    )
+    serializers = (
+        g2e.artifact_invalidation_record_to_plain_data_v01,
+        g2e.invalidation_report_to_plain_data_v01,
+        g2e.preservation_proof_to_plain_data_v01,
+    )
+    rebuilders = (
+        g2e.rebuild_artifact_invalidation_record_identity_v01,
+        g2e.rebuild_invalidation_report_identity_v01,
+        g2e.rebuild_preservation_proof_identity_v01,
+    )
+    validators = (
+        g2e.validate_artifact_invalidation_record_v01,
+        g2e.validate_invalidation_report_v01,
+        g2e.validate_preservation_proof_v01,
+    )
+    identity_fields = (
+        "invalidation_record_id",
+        "invalidation_report_id",
+        "preservation_proof_id",
+    )
+    definitions = _schema()["$defs"]
+    for value, serializer, rebuilder, validator, identity_field in zip(
+        values, serializers, rebuilders, validators, identity_fields, strict=True
+    ):
+        plain = serializer(value)
+        assert validator(value).status == "PASS"
+        assert rebuilder(value) == getattr(value, identity_field)
+        assert canonical_json_bytes_v01(plain) == canonical_json_bytes_v01(
+            serializer(value)
+        )
+        Draft202012Validator(definitions[type(value).__name__]).validate(plain)
+
+
+def test_e3_invalidation_record_structural_mutation_matrix_v01() -> None:
+    record = _e3_structural_record()
+    matrix = (
+        (replace(record, invalidation_reason_class="UNKNOWN"), "g2e_invalidation_reason_invalid"),
+        (replace(record, deleted=True), "g2e_invalidation_deletion_forbidden"),
+        (replace(record, historical_artifact_preserved=False), "g2e_invalidation_history_mutation"),
+        (replace(record, predecessor_artifact_id="artifact:other"), "g2e_invalidation_predecessor_mismatch"),
+        (replace(record, superseded_by_artifact_id="artifact:successor"), "g2e_invalidation_supersession_mismatch"),
+        (replace(record, current_eligible_after=True), "g2e_invalidation_record_invalid"),
+    )
+    for candidate, reason in matrix:
+        assert reason in g2e.validate_artifact_invalidation_record_v01(
+            candidate
+        ).reason_codes
+
+
+def test_e3_invalidation_report_structural_mutation_matrix_v01() -> None:
+    report = _e3_structural_report()
+    assert g2e.validate_invalidation_report_v01(report).status == "PASS"
+    matrix = (
+        replace(report, ordered_invalidation_record_ids=()),
+        replace(report, ordered_historical_artifact_ids=("artifact:other",)),
+        replace(report, report_status="FAIL_CLOSED"),
+        replace(report, authority_created=True),
+        replace(report, ordered_invalidated_artifact_ids=report.ordered_invalidated_artifact_ids * 2),
+    )
+    for candidate in matrix:
+        assert "g2e_invalidation_record_invalid" in (
+            g2e.validate_invalidation_report_v01(candidate).reason_codes
+        )
+
+
+def test_e3_preservation_proof_structural_mutation_matrix_v01() -> None:
+    proof = _e3_structural_proof()
+    assert g2e.validate_preservation_proof_v01(proof).status == "PASS"
+    changed = g2e.build_preservation_proof_v01(
+        baseline_graph_id=proof.baseline_graph_id,
+        affected_set_id=proof.affected_set_id,
+        ordered_preserved_artifact_ids=proof.ordered_preserved_artifact_ids,
+        ordered_before_artifact_sha256=proof.ordered_before_artifact_sha256,
+        ordered_after_artifact_sha256=(_sha("changed-artifact"),),
+        ordered_before_payload_sha256=proof.ordered_before_payload_sha256,
+        ordered_after_payload_sha256=proof.ordered_after_payload_sha256,
+        ordered_before_identity_ids=proof.ordered_before_identity_ids,
+        ordered_after_identity_ids=proof.ordered_after_identity_ids,
+    )
+    assert changed.status == "FAIL_CLOSED"
+    assert changed.reason_codes == ("g2e_preserved_artifact_changed",)
+    matrix = (
+        (replace(proof, before_cache_state_sha256=_sha("cache")), "g2e_preservation_cache_mutation"),
+        (replace(proof, mutable_global_write_count=1), "g2e_preservation_cache_mutation"),
+        (replace(proof, object_identity_used_as_proof=True), "g2e_preservation_proof_invalid"),
+        (replace(proof, proof_sha256=_sha("proof")), "g2e_preservation_proof_invalid"),
+    )
+    for candidate, reason in matrix:
+        assert reason in g2e.validate_preservation_proof_v01(candidate).reason_codes
+
+
+def test_e3_source_context_exact_carriers_and_public_validation_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    context = family["context"]
+    assert type(context) is g2e.ContinuousDeltaSourceContextV01
+    report = g2e.validate_continuous_delta_source_context_v01(context)
+    assert report.status == "PASS"
+    assert context.g2b_writeback_evidence is None
+    assert context.post_vv_profile is None
+    assert context.gt_profile is None
+    for field_name in (
+        "g2b_writeback_evidence",
+        "post_vv_profile",
+        "gt_profile",
+    ):
+        rejected = g2e.validate_continuous_delta_source_context_v01(
+            replace(context, **{field_name: "non-none-sentinel"})
+        )
+        assert rejected.reason_codes == ("g2e_delta_source_unvalidated",)
+
+
+def test_e3_source_context_manifest_replay_source_pair_and_baseline_report_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    context = family["context"]
+    baseline = family["baseline"]
+    observed = family["observed"]
+    assert tuple(ref.artifact_id for ref in context.integrity_manifest.artifacts) == tuple(
+        artifact.artifact_id for artifact in baseline
+    )
+    assert context.integrity_replay.replay_status == "PASS"
+    assert all(artifact.schema_version == "v1" for artifact in baseline)
+    dedicated_ids = {
+        context.g2a_packet.packet_identity.packet_id,
+        context.g2b_reuse_certificate.certificate_id,
+        context.baseline_g2c_route_eligibility_artifact.artifact_id,
+        context.baseline_g2d_execution_bundle.report_artifact.artifact_id,
+    }
+    assert dedicated_ids.isdisjoint(
+        artifact.artifact_id for artifact in baseline
+    )
+    assert len({artifact.artifact_id for artifact in baseline}) == len(baseline)
+    assert observed[0].artifact_id != baseline[0].artifact_id
+    assert baseline[0].artifact_id in observed[0].parent_refs
+    assert tuple(
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+        for item in observed[1:]
+    ) == tuple(
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+        for item in baseline[1:]
+    )
+    reordered = replace(context, baseline_source_artifacts=tuple(reversed(baseline)))
+    assert g2e.validate_continuous_delta_source_context_v01(reordered).reason_codes == (
+        "g2e_delta_source_unvalidated",
+    )
+    stale_report_id = "frreport_v02:" + _sha("stale")
+    stale_source_binding = _e2_reseal(
+        family["source_binding"], baseline_report_id=stale_report_id
+    )
+    assert type(stale_source_binding) is g2e.DeltaSourceBindingV01
+    stale_changed_field = _e2_reseal(
+        family["changed_field"],
+        source_binding_id=stale_source_binding.source_binding_id,
+    )
+    assert type(stale_changed_field) is g2e.ChangedFieldBindingV01
+    stale_changed_artifact = _e2_reseal(
+        family["changed_artifact"],
+        source_binding_id=stale_source_binding.source_binding_id,
+    )
+    assert type(stale_changed_artifact) is g2e.ChangedArtifactBindingV01
+    stale_delta = _e2_reseal(
+        family["delta"],
+        baseline_report_id=stale_report_id,
+        ordered_source_binding_ids=(stale_source_binding.source_binding_id,),
+        ordered_changed_field_binding_ids=(
+            stale_changed_field.changed_field_binding_id,
+        ),
+        ordered_changed_artifact_binding_ids=(
+            stale_changed_artifact.changed_artifact_binding_id,
+        ),
+    )
+    assert type(stale_delta) is g2e.WorldStateDeltaV01
+    stale_request = g2e.build_affected_set_request_v01(
+        delta=stale_delta,
+        graph=family["graph"],
+        trace_refs=family["request"].trace_refs,
+    )
+    stale_affected = g2e.compute_affected_set_v01(
+        request=stale_request,
+        delta=stale_delta,
+        graph=family["graph"],
+        source_bindings=(stale_source_binding,),
+        changed_field_bindings=(stale_changed_field,),
+        changed_artifact_bindings=(stale_changed_artifact,),
+        dependency_edges=family["dependency_edges"],
+        baseline_source_artifacts=baseline,
+        observed_source_artifacts=observed,
+    )
+    assert all(
+        validation.status == "PASS"
+        for validation in (
+            g2e.validate_delta_source_binding_v01(stale_source_binding),
+            g2e.validate_changed_field_binding_v01(stale_changed_field),
+            g2e.validate_changed_artifact_binding_v01(stale_changed_artifact),
+            g2e.validate_world_state_delta_v01(stale_delta),
+            g2e.validate_affected_set_request_v01(stale_request),
+            g2e.validate_affected_set_against_graph_v01(
+                stale_affected,
+                request=stale_request,
+                delta=stale_delta,
+                graph=family["graph"],
+                source_bindings=(stale_source_binding,),
+                changed_field_bindings=(stale_changed_field,),
+                changed_artifact_bindings=(stale_changed_artifact,),
+                dependency_edges=family["dependency_edges"],
+                baseline_source_artifacts=baseline,
+                observed_source_artifacts=observed,
+            ),
+        )
+    )
+    assert stale_affected.affected_request_id == stale_request.affected_request_id
+    with pytest.raises(ValueError, match="^g2e_delta_baseline_stale$"):
+        g2e.derive_invalidation_report_v01(
+            affected_set=stale_affected,
+            delta=stale_delta,
+            source_context=context,
+            source_bindings=(stale_source_binding,),
+            changed_field_bindings=(stale_changed_field,),
+            changed_artifact_bindings=(stale_changed_artifact,),
+            dependency_edges=family["dependency_edges"],
+            dependency_graph=family["graph"],
+        )
+
+
+def test_e3_source_context_trusted_currentness_and_future_observation_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    context = family["context"]
+    snapshot = context.baseline_g2d_execution_bundle.source_context.router_input.local_routing_snapshot
+    assert snapshot.evaluation_time_epoch_seconds == _E3_TIME
+    assert g2e.validate_continuous_delta_source_context_v01(context).status == "PASS"
+    future_envelope = {
+        **_e3_time_envelope(),
+        "et_observed_at": _E3_VALID_TO_UTC,
+        "pt_created_at": _E3_VALID_TO_UTC,
+    }
+    future = _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e3:source:future",
+        transaction_id=context.baseline_source_artifacts[0].transaction_id,
+        payload={"hold_status": "NEW", "role": "changed-source"},
+        parent_refs=(context.baseline_source_artifacts[0].artifact_id,),
+        time_envelope=future_envelope,
+    )
+    candidate = replace(
+        context,
+        observed_source_artifacts=(future, *context.observed_source_artifacts[1:]),
+    )
+    assert g2e.validate_continuous_delta_source_context_v01(candidate).reason_codes == (
+        "g2e_delta_future_observation",
+    )
+
+
+def test_e3_source_context_route_topology_same_call_boundary_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    context = family["context"]
+    replacement_route = _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e3:route:substituted",
+        transaction_id=context.baseline_g2c_route_eligibility_artifact.transaction_id,
+        payload={"role": "substituted-route"},
+    )
+    route_report = g2e.validate_continuous_delta_source_context_v01(
+        replace(context, baseline_g2c_route_eligibility_artifact=replacement_route)
+    )
+    assert route_report.reason_codes == ("g2e_route_revalidation_required",)
+    runtime_source = MODULE_PATH.read_text(encoding="utf-8")
+    assert runtime_source.index('return "g2e_route_revalidation_required"') < (
+        runtime_source.index('return "g2e_topology_binding_mismatch"')
+    )
+
+
+def test_e3_actual_binding_invalidation_reason_and_order_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    records, report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    assert tuple(record.artifact_id for record in records) == family[
+        "affected"
+    ].ordered_affected_ids
+    assert all(
+        record.triggering_binding_ids
+        == (
+            family["changed_field"].changed_field_binding_id,
+            family["changed_artifact"].changed_artifact_binding_id,
+        )
+        for record in records
+    )
+    assert records[0].invalidation_reason_class == "SOURCE_ARTIFACT_CHANGED"
+    assert report.report_status == "PASS" and report.reason_codes == ()
+    contextual = g2e.validate_invalidation_report_against_sources_v01(
+        report,
+        records=records,
+        **_e3_invalidation_kwargs(family),
+    )
+    assert contextual.status == "PASS"
+
+
+def test_e3_invalidation_history_predecessor_supersession_and_deletion_law_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture, target_roles=("packet",))
+    baseline_bytes = tuple(
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+        for item in family["baseline"]
+    )
+    records, _report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    assert all(record.predecessor_artifact_id == record.artifact_id for record in records)
+    assert all(record.superseded_by_artifact_id is None for record in records)
+    assert all(record.historical_artifact_preserved and not record.deleted for record in records)
+    assert baseline_bytes == tuple(
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+        for item in family["baseline"]
+    )
+
+
+def test_e3_g2a_packet_candidate_root_boundary_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture, target_roles=("packet",))
+    records, report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    packet_id = e3_baseline_fixture["g2a"]["packet"].packet_identity.packet_id
+    record = next(
+        item
+        for item in records
+        if item.artifact_id == family["roles"]["packet"].artifact_id
+    )
+    assert record.g2a_packet_relation == "PACKET_ROOT_REVIEW_REQUIRED"
+    assert packet_id in record.trace_refs
+    assert report.ordered_packet_invalidation_candidate_ids == (packet_id,)
+    assert report.reason_codes == ("g2e_invalidation_g2a_root_binding_required",)
+    assert report.root_review_required and not report.action_commit_packet_created
+
+
+def test_e3_g2b_reuse_certificate_stale_history_preserved_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture, target_roles=("certificate",))
+    certificate = e3_baseline_fixture["g2b"]["certificate"]
+    before = _e3_public_plain(certificate)
+    records, report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    record = next(
+        item
+        for item in records
+        if item.artifact_id == family["roles"]["certificate"].artifact_id
+    )
+    assert record.g2b_reuse_relation == "REUSE_CERTIFICATE_STALE"
+    assert certificate.certificate_id in record.trace_refs
+    assert report.ordered_stale_reuse_certificate_ids == (certificate.certificate_id,)
+    assert report.reason_codes == ("g2e_invalidation_g2b_reuse_still_current",)
+    assert before == _e3_public_plain(certificate)
+    assert not report.drs_write_created
+
+
+def test_e3_g2c_route_revalidation_terminal_before_e4_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture, target_roles=("route",))
+    records, report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    route_id = family["context"].baseline_g2c_route_eligibility_artifact.artifact_id
+    route_record = next(
+        item
+        for item in records
+        if item.artifact_id == family["roles"]["route"].artifact_id
+    )
+    assert route_record.invalidation_reason_class == "ROUTE_REVALIDATION_REQUIRED"
+    assert route_record.g2c_route_relation == "ROUTE_REVALIDATION_REQUIRED"
+    assert route_id in route_record.trace_refs
+    assert report.report_status == "FAIL_CLOSED"
+    assert report.ordered_route_revalidation_ids == (route_id,)
+    assert "g2e_route_revalidation_required" in report.reason_codes
+    assert not hasattr(g2e, "build_selective_recomputation_plan_from_affected_set_v01")
+
+
+def test_e3_invalidation_report_artifact_and_t03_chain_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    records, report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    chain = _e3_artifact_chain(family)
+    proposed = chain["proposed"]
+    validated = chain["validated"]
+    assert type(proposed) is g2e.KernelArtifactV01
+    assert type(validated) is g2e.KernelArtifactV01
+    assert validate_kernel_artifact_v01(proposed) == ()
+    assert validate_kernel_artifact_v01(validated) == ()
+
+    def expected_ordered_unique(values: tuple[str, ...]) -> tuple[str, ...]:
+        ordered: list[str] = []
+        for value in values:
+            if value not in ordered:
+                ordered.append(value)
+        return tuple(ordered)
+
+    context = family["context"]
+    baseline_ids = tuple(item.artifact_id for item in family["baseline"])
+    observed_ids = tuple(item.artifact_id for item in family["observed"])
+    route_id = context.baseline_g2c_route_eligibility_artifact.artifact_id
+    report_id = context.baseline_g2d_execution_bundle.report_artifact.artifact_id
+    source_parent_candidates = (
+        route_id,
+        report_id,
+        *baseline_ids,
+        *observed_ids,
+    )
+    expected_proposed_parents = expected_ordered_unique(source_parent_candidates)
+    expected_validated_parents = expected_ordered_unique(
+        (proposed.artifact_id, *source_parent_candidates)
+    )
+    assert proposed.parent_refs == expected_proposed_parents
+    assert validated.parent_refs == expected_validated_parents
+    assert len(proposed.parent_refs) == len(set(proposed.parent_refs))
+    assert len(validated.parent_refs) == len(set(validated.parent_refs))
+    assert proposed.parent_refs[:2] == (route_id, report_id)
+    assert validated.parent_refs[:3] == (proposed.artifact_id, route_id, report_id)
+    assert proposed.parent_refs[2 : 2 + len(baseline_ids)] == baseline_ids
+    assert validated.parent_refs[3 : 3 + len(baseline_ids)] == baseline_ids
+    assert proposed.parent_refs[2 + len(baseline_ids)] == observed_ids[0]
+    assert validated.parent_refs[3 + len(baseline_ids)] == observed_ids[0]
+    for unchanged_alias_id in baseline_ids[1:]:
+        assert proposed.parent_refs.count(unchanged_alias_id) == 1
+        assert validated.parent_refs.count(unchanged_alias_id) == 1
+    proposed_plain = kernel_artifact_to_plain_dict_v01(proposed)
+    validated_plain = kernel_artifact_to_plain_dict_v01(validated)
+    assert canonical_json_bytes_v01(proposed_plain["payload"]) == (
+        canonical_json_bytes_v01(validated_plain["payload"])
+    )
+    profiles = {
+        row[0]: row for row in g2e.G2E_ABI_ARTIFACT_INSTANCE_PROFILES_V01
+    }
+    proposed_profile = profiles["delta_source_proposed"]
+    validated_profile = profiles["delta_source_validated"]
+    assert proposed.artifact_id.startswith(proposed_profile[6])
+    assert validated.artifact_id.startswith(validated_profile[6])
+    assert proposed_profile[6] != validated_profile[6]
+    assert proposed_profile[7] != validated_profile[7]
+    assert proposed.lifecycle_state != validated.lifecycle_state
+    assert proposed.parent_refs != validated.parent_refs
+    assert proposed.artifact_id != validated.artifact_id
+    for chain_name in ("proposed", "validated", "graph", "affected"):
+        assert validate_kernel_artifact_v01(chain[chain_name]) == ()
+    t03 = _e3_transition_decision(chain["registry"], "g2e_t03_invalidation_derive")
+    artifact = g2e._project_invalidation_report_artifact_v01(
+        report=report,
+        affected_set_artifact=chain["affected"],
+        validated_delta_source_artifact=chain["validated"],
+        dependency_graph_artifact=chain["graph"],
+        baseline_route_artifact=family["context"].baseline_g2c_route_eligibility_artifact,
+        delta=family["delta"],
+        t03_decision_id=t03.decision_id,
+    )
+    assert validate_kernel_artifact_v01(artifact) == ()
+    assert g2e._validate_invalidation_report_artifact_against_source_v01(
+        artifact,
+        report=report,
+        affected_set_artifact=chain["affected"],
+        validated_delta_source_artifact=chain["validated"],
+        dependency_graph_artifact=chain["graph"],
+        baseline_route_artifact=family["context"].baseline_g2c_route_eligibility_artifact,
+        delta=family["delta"],
+        t03_decision=t03,
+    ) == ()
+    assert tuple(record.invalidation_record_id for record in records) == (
+        report.ordered_invalidation_record_ids
+    )
+
+
+def test_e3_preservation_no_cache_full_bytes_and_no_object_identity_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture)
+    records, _report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    proof = g2e.prove_unaffected_artifact_preservation_v01(
+        affected_set=family["affected"],
+        invalidation_records=records,
+        source_context=family["context"],
+        recomputed_g2d_execution_bundle=e3_baseline_fixture["bundle"],
+        recomputed_bindings=(),
+    )
+    assert proof.status == "PASS" and proof.byte_identity_preserved
+    assert proof.before_cache_state_sha256 == proof.after_cache_state_sha256
+    assert proof.mutable_global_write_count == 0
+    assert proof.object_identity_used_as_proof is False
+    assert proof.ordered_before_artifact_sha256 == proof.ordered_after_artifact_sha256
+    assert proof.ordered_before_payload_sha256 == proof.ordered_after_payload_sha256
+    assert proof.ordered_before_identity_ids == proof.ordered_after_identity_ids
+    assert g2e.prove_unaffected_artifact_preservation_v01(
+        affected_set=family["affected"],
+        invalidation_records=records,
+        source_context=family["context"],
+        recomputed_g2d_execution_bundle=e3_baseline_fixture["bundle"],
+        recomputed_bindings=(),
+    ) == proof
+
+
+def test_e3_preservation_mutation_and_in_place_rejection_matrix_v01(
+    e3_baseline_fixture: dict[str, object],
+) -> None:
+    family = _e3_delta_family(e3_baseline_fixture, target_roles=("route",))
+    records, _report = g2e.derive_invalidation_report_v01(
+        **_e3_invalidation_kwargs(family)
+    )
+    with pytest.raises(ValueError, match="g2e_recomputation_in_place_forbidden"):
+        g2e.prove_unaffected_artifact_preservation_v01(
+            affected_set=family["affected"],
+            invalidation_records=records,
+            source_context=family["context"],
+            recomputed_g2d_execution_bundle=e3_baseline_fixture["bundle"],
+            recomputed_bindings=(),
+        )
+    proof = _e3_structural_proof()
+    identity_changed = g2e.build_preservation_proof_v01(
+        baseline_graph_id=proof.baseline_graph_id,
+        affected_set_id=proof.affected_set_id,
+        ordered_preserved_artifact_ids=proof.ordered_preserved_artifact_ids,
+        ordered_before_artifact_sha256=proof.ordered_before_artifact_sha256,
+        ordered_after_artifact_sha256=proof.ordered_after_artifact_sha256,
+        ordered_before_payload_sha256=proof.ordered_before_payload_sha256,
+        ordered_after_payload_sha256=proof.ordered_after_payload_sha256,
+        ordered_before_identity_ids=proof.ordered_before_identity_ids,
+        ordered_after_identity_ids=("artifact:g2e:e3:changed",),
+    )
+    assert identity_changed.reason_codes == ("g2e_preserved_identity_changed",)
+    with pytest.raises(ValueError, match="g2e_preservation_proof_invalid"):
+        g2e._project_preservation_proof_artifact_v01(
+            proof=proof,
+            root_accepted_plan_artifact=family["context"].baseline_g2c_route_eligibility_artifact,
+            invalidation_report_artifact=family["context"].baseline_g2d_execution_bundle.report_artifact,
+            recomputed_g2d_report_artifact=family["context"].baseline_g2d_execution_bundle.report_artifact,
+            delta=family["delta"],
+            recomputed_g2d_runtime_trace_id=family["context"].baseline_g2d_execution_bundle.runtime_trace.trace_id,
+        )
+
+
+def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
+    runtime_source = MODULE_PATH.read_text(encoding="utf-8")
+    test_source = Path(__file__).read_text(encoding="utf-8")
+    runtime_tree = ast.parse(runtime_source)
+    test_tree = ast.parse(test_source)
+    runtime_calls = {
+        node.func.id if isinstance(node.func, ast.Name) else node.func.attr
+        for node in ast.walk(runtime_tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, (ast.Name, ast.Attribute))
+    }
+    test_run_calls = [
+        node
+        for node in ast.walk(test_tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "run_fractal_runtime_v02"
+    ]
+    assert "run_fractal_runtime_v02" not in runtime_calls
+    assert "_d4_run_runtime_v02" not in runtime_calls
+    assert len(test_run_calls) == 1
+    assert not hasattr(g2e, "execute_selective_recomputation_v01")
+    assert not hasattr(g2e, "run_continuous_delta_runtime_v01")
+    assert not hasattr(kernel, "ContinuousDeltaSourceContextV01")
+    e3_nodes = (
+        node
+        for node in test_tree.body
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_e3_")
+    )
+    assert all(not node.decorator_list for node in e3_nodes)
+    for path in (
+        ROOT / "hedgehog/kernel/fractal_runtime_v02.py",
+        ROOT / "hedgehog/kernel/root_decision_v01.py",
+        ROOT / "hedgehog/kernel/__init__.py",
+    ):
+        assert path.is_file()

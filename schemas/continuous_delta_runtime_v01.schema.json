@@ -1050,14 +1050,24 @@
           "minLength": 1
         },
         "current_eligible_before": {
-          "type": "boolean"
+          "const": true
         },
         "current_eligible_after": {
-          "type": "boolean"
+          "const": false
         },
         "invalidation_reason_class": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "DEPENDENCY_FINGERPRINT_CHANGED",
+            "SOURCE_FIELD_CHANGED",
+            "SOURCE_ARTIFACT_CHANGED",
+            "POLICY_VERSION_CHANGED",
+            "SCHEMA_VERSION_CHANGED",
+            "TEMPORAL_VALIDITY_CHANGED",
+            "UPSTREAM_ARTIFACT_INVALIDATED",
+            "ROUTE_REVALIDATION_REQUIRED",
+            "PACKET_ROOT_REVIEW_REQUIRED",
+            "REUSE_CERTIFICATE_STALE"
+          ]
         },
         "triggering_delta_id": {
           "type": "string",
@@ -1065,6 +1075,8 @@
         },
         "triggering_binding_ids": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1079,28 +1091,36 @@
           "type": "null"
         },
         "g2a_packet_relation": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "NOT_APPLICABLE",
+            "PACKET_ROOT_REVIEW_REQUIRED"
+          ]
         },
         "g2b_reuse_relation": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "NOT_APPLICABLE",
+            "REUSE_CERTIFICATE_STALE"
+          ]
         },
         "g2c_route_relation": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "ROUTE_CURRENT",
+            "ROUTE_REVALIDATION_REQUIRED"
+          ]
         },
         "root_review_required": {
           "type": "boolean"
         },
         "historical_artifact_preserved": {
-          "type": "boolean"
+          "const": true
         },
         "deleted": {
           "const": false
         },
         "trace_refs": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1144,6 +1164,8 @@
         },
         "ordered_invalidation_record_ids": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1152,6 +1174,8 @@
         },
         "ordered_invalidated_artifact_ids": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1160,6 +1184,8 @@
         },
         "ordered_historical_artifact_ids": {
           "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1168,6 +1194,8 @@
         },
         "ordered_unresolved_artifact_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1176,6 +1204,8 @@
         },
         "ordered_packet_invalidation_candidate_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1184,6 +1214,8 @@
         },
         "ordered_stale_reuse_certificate_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1192,6 +1224,8 @@
         },
         "ordered_route_revalidation_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1364,6 +1398,8 @@
         },
         "ordered_preserved_artifact_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1372,6 +1408,8 @@
         },
         "ordered_before_artifact_sha256": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$"
@@ -1379,6 +1417,8 @@
         },
         "ordered_after_artifact_sha256": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$"
@@ -1386,6 +1426,8 @@
         },
         "ordered_before_payload_sha256": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$"
@@ -1393,6 +1435,8 @@
         },
         "ordered_after_payload_sha256": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$"
@@ -1400,6 +1444,8 @@
         },
         "ordered_before_identity_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1408,6 +1454,8 @@
         },
         "ordered_after_identity_ids": {
           "type": "array",
+          "minItems": 0,
+          "maxItems": 256,
           "items": {
             "type": "string",
             "minLength": 1
@@ -1415,12 +1463,10 @@
           "uniqueItems": true
         },
         "before_cache_state_sha256": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
+          "const": "9a55091b2e8dcf90d013795bd87eef6a6cf8828ee200b245c3c9473a23bced51"
         },
         "after_cache_state_sha256": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
+          "const": "9a55091b2e8dcf90d013795bd87eef6a6cf8828ee200b245c3c9473a23bced51"
         },
         "mutable_global_write_count": {
           "const": 0

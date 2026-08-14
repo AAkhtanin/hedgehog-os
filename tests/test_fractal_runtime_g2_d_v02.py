@@ -6078,14 +6078,54 @@ def d3_profile_d_contextual_micro_bundle(
     }
 
 
-def test_d3_post_acceptance_contract_addendum_v036_accepted() -> None:
+def test_d3_post_acceptance_contract_addendum_v037_accepted() -> None:
     raw = ADDENDUM_PATH.read_bytes()
     text = raw.decode("utf-8")
     assert hashlib.sha256(raw).hexdigest() == (
+        "29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511"
+    )
+    assert len(raw) == 185220
+    assert raw.count(b"\n") == 3532
+    separator = (
+        b"\n===============================================================================\n"
+        b"HISTORICAL ACCEPTED V0.3.6 CONTENT - EXACT PRE-CORRECTION REPOSITORY BYTES\n"
+        b"===============================================================================\n"
+        b"\n"
+        b"The following byte sequence is retained verbatim as immutable historical\n"
+        b"accepted content. Its embedded present-tense lifecycle statements are historical\n"
+        b"to v0.3.6 and do not override the active v0.3.7 metadata above.\n"
+        b"\n"
+    )
+    assert raw.count(separator) == 1
+    _, historical_v036 = raw.split(separator, 1)
+    assert hashlib.sha256(historical_v036).hexdigest() == (
         "7e3a9039e04a7ef2b20cd69ac442ad62c073e88d7d3b93c26f35b48b18d67570"
     )
-    assert len(raw) == 133145
-    assert raw.count(b"\n") == 2212
+    assert len(historical_v036) == 133145
+    assert historical_v036.count(b"\n") == 2212
+    current_rows = (
+        "document_revision: v0.3.7",
+        "guardian_review_status: ACCEPTED",
+        "guardian_accepted_v037_pending_draft_sha256: "
+        "8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d",
+        "current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "current_g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D",
+        "g2e4_status: NOT_STARTED_NOT_AUTHORIZED",
+        "gate2_status: NOT_CLOSED",
+        "implementation_authorized: false",
+        "G2D_V037_GUARDIAN_REVIEW_STATUS=ACCEPTED",
+        "G2D_V037_ACCEPTED=true",
+        "G2D_V037_IMPLEMENTATION_AUTHORIZED=false",
+        "G2D_V037_CURRENT_G2D_STATUS=CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "G2D_V037_CURRENT_G2E3_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D",
+        "G2D_V037_G2E4_STATUS=NOT_STARTED_NOT_AUTHORIZED",
+        "G2D_V037_GATE2_STATUS=NOT_CLOSED",
+        "G2D_V037_OBSERVED_WORK_COUNTERFACTUAL_ID_PREFIX=frcounterfactual_v02:",
+        "G2D_V037_OBSERVED_WORK_COUNTERFACTUAL_ID_DOMAIN="
+        "HEDGEHOG_FRACTAL_RUNTIME_V02_OBSERVED_WORK_COUNTERFACTUAL",
+        "G2D_V037_OBSERVED_WORK_COUNTERFACTUAL_ID_MATERIAL_FROZEN=true",
+    )
+    assert all(row in text for row in current_rows)
     required_rows = (
         "document_revision: v0.3.6",
         "guardian_review_status: ACCEPTED",
@@ -6173,6 +6213,11 @@ def test_d3_post_acceptance_contract_addendum_v036_accepted() -> None:
     assert "## 4A. Accepted Active Profile D:" in text
     for row in (
         "PENDING_REVIEW",
+        "POST_ACCEPTANCE_CORRECTION_ADDENDUM_DRAFT",
+        "draft_is_accepted_contract: false",
+        "external_draft_only: true",
+        "G2D_V037_ACCEPTED=false",
+        "G2D_V037_READY_FOR_GUARDIAN_REVIEW=true",
         "Pending v0.3.6",
         "pending narrow Profile D",
         "pending Profile D",

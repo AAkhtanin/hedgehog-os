@@ -12,14 +12,30 @@
   `docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log`.
 - Accepted G2-C checkpoint:
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
-- G2-D Fractal Runtime v0.2 is `CLOSED_PASS` as an internal
-  proof-of-architecture Gate-2 slice.
-- Accepted G2-D audit:
+- Historical pre-correction G2-D is
+  `CLOSED_PASS_ON_PRECORRECTION_BYTES` only.
+- Current G2-D is
+  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- G2-D correction implementation authorization is `false`; no corrected
+  implementation byte exists.
+- Accepted G2-D v0.3.7 normative donor SHA-256:
+  `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
+- Accepted G2-D repository addendum SHA-256:
+  `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
+- Historical pre-correction G2-D audit:
   `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
-- Accepted G2-D checkpoint:
+- Historical pre-correction G2-D checkpoint:
   `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
+- The old audit and checkpoint certify pre-correction bytes only.
+- Independent re-audit and additive successor reclosure are mandatory after a
+  separately authorized corrected implementation lands.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`.
+- G2-E3 is
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D`.
+- After corrected G2-D bytes land, G2-E3 becomes
+  `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit, additive
+  reclosure, and one fresh unchanged V06 PASS.
+- G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
 - RC2 remains `NOT_CLAIMED`.
@@ -32,6 +48,8 @@
 - A D5 or D6 validation PASS is not truth or authority.
 - RuntimeExecutionTopology is not authority.
 - Child results are not FinalOutput.
+- No successor baseline, FinalOutput, permission, packet, receipt, DRS write,
+  or real-world effect is claimed by this contract hop.
 - Important maintenance debt is recorded for post-Gate-2 treatment and is not
   a closure blocker.
 - An editable Git checkout from the repository root is the supported near-term

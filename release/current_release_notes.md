@@ -41,15 +41,19 @@ These are current engineering notes, not a public release announcement.
 - G2-C closure_commit_identity: `NOT_SELF_RECORDED`.
 - Accepted G2-D preflight commit:
   `2e1681a54c847beb106d9e57da250dac82ea6192`.
-- G2-D implementation basis commit:
+- Accepted G2-D v0.3.7 normative donor SHA-256:
+  `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
+- Accepted G2-D repository addendum SHA-256:
+  `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
+- Historical pre-correction G2-D implementation basis commit:
   `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
-- G2-D audit commit:
+- Historical pre-correction G2-D audit commit:
   `c0dc618a0b693fe55435f17a025789267bcb79ff`.
-- Accepted G2-D audit:
+- Historical pre-correction G2-D audit:
   `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
-- G2-D checkpoint:
+- Historical pre-correction G2-D checkpoint:
   `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
-- G2-D audit status: `PASS`; repair required: `false`; blocker count: `0`.
+- The old G2-D audit and checkpoint certify pre-correction bytes only.
 - G2-D closure_commit_identity: `NOT_SELF_RECORDED`.
 - R-H1A reconciled direct dependency declarations, the PEP-639 build metadata
   floor, canonical `AGPL-3.0-only` licensing, and a non-granting commercial
@@ -59,16 +63,24 @@ These are current engineering notes, not a public release announcement.
 - External clean-clone validation: `ACCEPTED_PASS`.
 - R-H1 is `CLOSED_PASS`.
 - G2-C is `CLOSED_PASS`.
-- G2-D is `CLOSED_PASS`.
+- Historical pre-correction G2-D is
+  `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
+- G2-D is `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- G2-D correction implementation authorization is `false`; no corrected
+  implementation byte exists.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E is `NEXT / NOT_STARTED / NOT_AUTHORIZED`.
-- G2-E implementation authorized: `false`.
-- G2-E implementation started: `false`.
+- G2-E3 is
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D`.
+- After corrected G2-D bytes land, G2-E3 becomes
+  `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit, additive
+  reclosure, and one fresh unchanged V06 PASS.
+- G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
-- No implementation repair occurred during the independent audit or this
-  closure synchronization.
-- No expensive G2-D test or runner is rerun during this synchronization; only
-  the single release-spine closure test is executed.
+- No corrected G2-D implementation byte is created in this contract-only hop.
+- Independent re-audit and additive successor reclosure are mandatory after a
+  separately authorized corrected implementation lands.
+- Only bounded contract-identity and release-spine checks run in this hop; no
+  G2-D runtime, D5, Living, Conformance, or public runner executes.
 - R-IP1 does not block G2-E or G2-F; private R-IP1 drafts may remain
   living through Gates 3-6.
 - Public release remains `NOT_CLAIMED`.
@@ -78,6 +90,8 @@ These are current engineering notes, not a public release announcement.
 - Production readiness remains `NOT_CLAIMED`.
 - Production security certification remains `NOT_CLAIMED`.
 - Provider, model, network, connector, and external-DRS calls remain zero.
+- No successor baseline, FinalOutput, permission, packet, receipt, or DRS write
+  is created or claimed.
 - Real-world effects remain zero.
 
 Current surfaces:
@@ -89,5 +103,6 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. G2-D closure does not close Gate 2 or
-start or authorize G2-E or G2-F.
+not standalone public architectures. Acceptance of the G2-D v0.3.7 correction
+contract does not implement corrected runtime bytes, close Gate 2, start G2-E4,
+or authorize G2-F.

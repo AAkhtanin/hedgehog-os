@@ -57,9 +57,9 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-D v0.3.7 corrected implementation REAUDIT_PENDING.
+Current checkpoint: G2-D v0.3.7 observed-work correction CLOSED_PASS.
 
-Current G2-D correction-contract facts:
+Current G2-D correction reclosure facts:
 
 - R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
 - R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
@@ -78,13 +78,23 @@ Current G2-D correction-contract facts:
 - Accepted G2-D addendum path: `docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md`.
 - Accepted G2-D v0.3.7 normative donor SHA-256: `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
 - Accepted G2-D addendum SHA-256: `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
+- Corrected G2-D implementation commit: `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
+- Corrected G2-D implementation parent: `3dcaabb7a231259c488643a652b92ee03d7faf52`.
+- Corrected G2-D implementation patch SHA-256: `be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279`.
+- Corrected G2-D owner evidence bundle SHA-256: `e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd`.
+- Independent corrected G2-D re-audit commit: `2eccb604fee89d7e79025337d3858d6dbfea5fbc`.
+- Independent corrected G2-D re-audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log`.
+- Independent corrected G2-D re-audit SHA-256: `c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3`.
+- Corrected G2-D successor checkpoint: `docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md`.
+- Corrected G2-D successor checkpoint SHA-256: `606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677`.
 - Historical pre-correction G2-D implementation basis: `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
 - Historical pre-correction G2-D audit commit: `c0dc618a0b693fe55435f17a025789267bcb79ff`.
 - Historical pre-correction G2-D audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
 - Historical pre-correction G2-D audit SHA-256: `ccc367ac92ad02e005c7968d152bf7810a772db94dd671e26e5d27f30d2d72aa`.
 - Historical pre-correction G2-D checkpoint: `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
 - The old audit and checkpoint certify pre-correction bytes only.
-- Closure commit identity: `NOT_SELF_RECORDED`.
+- Corrected closure commit subject: `Close G2-D v0.3.7 observed-work correction`.
+- Corrected closure commit identity: `NOT_SELF_RECORDED`.
 - R-H1 status: `CLOSED_PASS`.
 - Gate 1: `CLOSED_PASS`.
 - Two-Domain programme: `CLOSED_PASS`.
@@ -92,14 +102,15 @@ Current G2-D correction-contract facts:
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
 - Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D: `REAUDIT_PENDING`.
+- G2-D: `CLOSED_PASS`.
 - G2-D correction implementation authorized: `true`.
 - Corrected G2-D implementation byte exists: `true`.
-- Corrected G2-D implementation committed: `true` in this commit-ready projection.
+- Corrected G2-D implementation committed: `true`.
 - G2-D contract-only claim: `false`.
-- Corrected G2-D runtime acceptance claimed: `false`.
-- Independent G2-D re-audit passed: `false`.
-- Corrected G2-D closure claimed: `false`.
+- Corrected G2-D runtime acceptance claimed: `true`.
+- Independent G2-D re-audit passed: `true`.
+- Additive G2-D reclosure completed: `true`.
+- Corrected G2-D closure claimed: `true`.
 - Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
 - G2-E3: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - G2-E4: `NOT_STARTED_NOT_AUTHORIZED`.
@@ -123,11 +134,11 @@ Current G2-D correction-contract facts:
   handle, DRS write, FinalOutput, provider authority, connector authority, or
   real-world effect.
 - Provider, model, network, connector, and external-DRS calls remain zero.
-- Corrected G2-D implementation bytes exist, but corrected runtime acceptance
-  is not claimed.
-- Independent re-audit and additive successor reclosure remain mandatory.
-- The bounded implementation evidence is not an independent audit, corrected
-  closure, fresh G2-E3 V06 acceptance, or Gate-2 closure.
+- Corrected G2-D v0.3.7 is `CLOSED_PASS` after corrected implementation, full
+  owner execution evidence, independent re-audit, and additive successor
+  reclosure.
+- The independent re-audit is evidence, not authority or closure by itself.
+- Corrected G2-D closure is not fresh G2-E3 V06 acceptance or Gate-2 closure.
 - Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
 - R-IP1 does not block G2-E or G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.

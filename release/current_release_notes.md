@@ -54,7 +54,25 @@ These are current engineering notes, not a public release announcement.
 - Historical pre-correction G2-D checkpoint:
   `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
 - The old G2-D audit and checkpoint certify pre-correction bytes only.
-- G2-D closure_commit_identity: `NOT_SELF_RECORDED`.
+- Corrected G2-D implementation commit:
+  `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
+- Corrected G2-D implementation patch SHA-256:
+  `be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279`.
+- Corrected owner evidence bundle SHA-256:
+  `e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd`.
+- Independent corrected G2-D re-audit commit:
+  `2eccb604fee89d7e79025337d3858d6dbfea5fbc`.
+- Independent corrected G2-D re-audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log`.
+- Independent corrected G2-D re-audit SHA-256:
+  `c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3`.
+- Corrected G2-D successor checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md`.
+- Corrected G2-D successor checkpoint SHA-256:
+  `606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677`.
+- Corrected G2-D closure commit subject:
+  `Close G2-D v0.3.7 observed-work correction`.
+- Corrected G2-D closure_commit_identity: `NOT_SELF_RECORDED`.
 - R-H1A reconciled direct dependency declarations, the PEP-639 build metadata
   floor, canonical `AGPL-3.0-only` licensing, and a non-granting commercial
   licensing notice.
@@ -65,22 +83,20 @@ These are current engineering notes, not a public release announcement.
 - G2-C is `CLOSED_PASS`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D is `REAUDIT_PENDING`.
+- Corrected G2-D v0.3.7 is `CLOSED_PASS`.
 - G2-D correction implementation authorization is `true`; corrected
-  implementation bytes exist in this commit-ready projection.
-- Corrected implementation committed is `true`; contract-only claim, corrected
-  runtime acceptance, independent re-audit PASS, and corrected closure are all
-  `false`.
+  implementation bytes exist and are committed.
+- Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
+  and corrected closure are all `true`; contract-only claim is `false`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit,
-  additive reclosure, and one fresh unchanged V06 PASS.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until one fresh unchanged
+  owner-terminal V06 PASS.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - The old G2-D audit and checkpoint are
   `HISTORICAL_PRECORRECTION_EVIDENCE` only.
-- Independent re-audit and additive successor reclosure remain mandatory.
-- Bounded implementation evidence is not an independent audit, corrected
-  closure, or corrected runtime acceptance.
+- Independent re-audit and additive successor reclosure are complete.
+- The independent re-audit is evidence, not authority or closure by itself.
 - R-IP1 does not block G2-E or G2-F; private R-IP1 drafts may remain
   living through Gates 3-6.
 - Public release remains `NOT_CLAIMED`.
@@ -103,6 +119,6 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. The G2-D v0.3.7 corrected implementation
-candidate does not close Gate 2, start G2-E4, authorize G2-F, or replace the
-required independent re-audit and additive reclosure.
+not standalone public architectures. The G2-D v0.3.7 internal slice closure
+does not close Gate 2, validate G2-E3 on corrected bytes, start G2-E4,
+authorize G2-F, or create authority or real-world effect.

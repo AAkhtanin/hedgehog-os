@@ -38,9 +38,10 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 
 R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. The former
 G2-D `CLOSED_PASS` is immutable pre-correction evidence only. Corrected G2-D
-v0.3.7 implementation bytes are present at the commit-ready `REAUDIT_PENDING`
-boundary, without corrected runtime acceptance. Gate 2 remains `NOT_CLOSED`;
-G2-E3 remains `REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 remains not started and
+v0.3.7 is `CLOSED_PASS` after corrected implementation, full owner execution
+evidence, independent re-audit, and additive successor reclosure. Gate 2
+remains `NOT_CLOSED`; G2-E3 remains
+`REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 remains not started and
 unauthorized; and G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 
 ```text
@@ -66,22 +67,32 @@ g2c_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
 g2c_implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
 g2c_audit_commit: 72854bcdc85d19e9c6a6636f9a7eedd1929f03cb
 g2c_closure_commit_identity: NOT_SELF_RECORDED
-g2d_status: REAUDIT_PENDING
+g2d_status: CLOSED_PASS
 g2d_correction_implementation_authorized: true
 g2d_corrected_implementation_exists: true
 g2d_contract_only_claim: false
-g2d_corrected_runtime_acceptance_claimed: false
+g2d_corrected_runtime_acceptance_claimed: true
 g2d_corrected_implementation_committed: true
-g2d_independent_reaudit_passed: false
-g2d_corrected_closure_claimed: false
+g2d_corrected_implementation_commit: 27c6dfd10740103cddc13bac3ce35f917b5f30c5
+g2d_corrected_implementation_patch_sha256: be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279
+g2d_corrected_owner_evidence_bundle_sha256: e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd
+g2d_independent_reaudit_required: true
+g2d_independent_reaudit_passed: true
+g2d_independent_reaudit_commit: 2eccb604fee89d7e79025337d3858d6dbfea5fbc
+g2d_independent_reaudit_path: docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log
+g2d_independent_reaudit_sha256: c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3
+g2d_additive_reclosure_required: true
+g2d_additive_reclosure_completed: true
+g2d_corrected_closure_claimed: true
+g2d_corrected_checkpoint_path: docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md
+g2d_corrected_checkpoint_sha256: 606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677
+g2d_corrected_closure_commit_identity: NOT_SELF_RECORDED
 g2d_old_audit_checkpoint_class: HISTORICAL_PRECORRECTION_EVIDENCE
 g2d_accepted_normative_donor_sha256: 8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d
 g2d_accepted_repository_addendum_sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
 g2d_historical_precorrection_status: CLOSED_PASS_ON_PRECORRECTION_BYTES
 g2d_historical_precorrection_audit_status: PASS
 g2d_historical_precorrection_checkpoint_present: true
-g2d_independent_reaudit_required: true
-g2d_additive_reclosure_required: true
 g2d_preflight_commit: 2e1681a54c847beb106d9e57da250dac82ea6192
 g2d_historical_precorrection_implementation_basis_commit: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
 g2d_historical_precorrection_audit_commit: c0dc618a0b693fe55435f17a025789267bcb79ff
@@ -101,15 +112,14 @@ production_security_certification_claimed: false
 - Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, and
   G2-C are `CLOSED_PASS`.
 - Historical pre-correction G2-D is `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D is `REAUDIT_PENDING`.
+- G2-D is `CLOSED_PASS` on the corrected v0.3.7 bytes.
 - G2-D correction implementation authorization is `true`; corrected
-  implementation bytes exist in this commit-ready projection.
-- Corrected implementation committed is `true`; contract-only claim, corrected
-  runtime acceptance, independent re-audit PASS, and corrected closure are all
-  `false`.
+  implementation bytes exist and are committed.
+- Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
+  and corrected closure are all `true`; contract-only claim is `false`.
 - Gate 2 is `NOT_CLOSED`.
-- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit,
-  additive reclosure, and one fresh unchanged V06 PASS.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until one fresh unchanged
+  owner-terminal V06 PASS.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
@@ -124,11 +134,24 @@ production_security_certification_claimed: false
   `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
 - Historical pre-correction G2-D audit commit:
   `c0dc618a0b693fe55435f17a025789267bcb79ff`.
+- Corrected G2-D implementation commit:
+  `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
+- Corrected implementation patch SHA-256:
+  `be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279`.
+- Corrected owner evidence bundle SHA-256:
+  `e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd`.
+- Independent corrected G2-D re-audit commit:
+  `2eccb604fee89d7e79025337d3858d6dbfea5fbc`.
+- Independent corrected G2-D re-audit SHA-256:
+  `c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3`.
+- Corrected closure commit subject:
+  `Close G2-D v0.3.7 observed-work correction`.
+- Corrected closure commit identity: `NOT_SELF_RECORDED`.
 - The old G2-D audit and checkpoint certify pre-correction bytes only.
-- Independent re-audit and additive successor reclosure remain mandatory.
+- Independent re-audit and additive successor reclosure are complete.
 - The old G2-D audit and checkpoint are
   `HISTORICAL_PRECORRECTION_EVIDENCE` only.
-- Bounded implementation evidence is not corrected runtime acceptance.
+- The independent re-audit is evidence, not authority or closure by itself.
 - Real-world effects remain zero.
 - [Accepted R-H1 preflight](docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md)
 - [Accepted G2-C preflight](docs/execution_mode_router_g2_c_preflight_v01.md)
@@ -138,6 +161,8 @@ production_security_certification_claimed: false
 - [Accepted G2-D addendum](docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md)
 - [G2-D independent audit](docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log)
 - [G2-D checkpoint](docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md)
+- [Corrected G2-D independent re-audit](docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log)
+- [Corrected G2-D successor checkpoint](docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md)
 - [Current status overlay](release/current_status_overlay_v01.json)
 - [Claim-to-evidence index](release/claim_to_evidence_index.md)
 - [Current integration seam index](release/integration_seam_index.md)

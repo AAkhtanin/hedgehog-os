@@ -14,12 +14,11 @@
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES` only.
-- Current G2-D is `REAUDIT_PENDING`.
+- Corrected G2-D v0.3.7 is `CLOSED_PASS`.
 - G2-D correction implementation authorization is `true`; corrected
-  implementation bytes exist in this commit-ready projection.
-- Corrected implementation committed is `true`; contract-only claim, corrected
-  runtime acceptance, independent re-audit PASS, and corrected closure are all
-  `false`.
+  implementation bytes exist and are committed.
+- Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
+  and corrected closure are all `true`; contract-only claim is `false`.
 - Accepted G2-D v0.3.7 normative donor SHA-256:
   `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
 - Accepted G2-D repository addendum SHA-256:
@@ -28,12 +27,29 @@
   `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
 - Historical pre-correction G2-D checkpoint:
   `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
+- Corrected G2-D implementation commit:
+  `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
+- Corrected G2-D implementation patch SHA-256:
+  `be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279`.
+- Corrected owner evidence bundle SHA-256:
+  `e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd`.
+- Independent corrected G2-D re-audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log`.
+- Independent corrected G2-D re-audit commit:
+  `2eccb604fee89d7e79025337d3858d6dbfea5fbc`.
+- Independent corrected G2-D re-audit SHA-256:
+  `c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3`.
+- Corrected G2-D successor checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md`.
+- Corrected closure commit subject:
+  `Close G2-D v0.3.7 observed-work correction`.
+- Corrected closure commit identity: `NOT_SELF_RECORDED`.
 - The old audit and checkpoint certify pre-correction bytes only.
 - The old audit and checkpoint are `HISTORICAL_PRECORRECTION_EVIDENCE` only.
-- Independent re-audit and additive successor reclosure remain mandatory.
+- Independent re-audit and additive successor reclosure are complete.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit,
-  additive reclosure, and one fresh unchanged V06 PASS.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until one fresh unchanged
+  owner-terminal V06 PASS.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
@@ -48,7 +64,7 @@
 - RuntimeExecutionTopology is not authority.
 - Child results are not FinalOutput.
 - No successor baseline, FinalOutput, permission, packet, receipt, DRS write,
-  or real-world effect is claimed by this implementation candidate.
+  or real-world effect is claimed by this internal slice closure.
 - Important maintenance debt is recorded for post-Gate-2 treatment and is not
   a closure blocker.
 - An editable Git checkout from the repository root is the supported near-term

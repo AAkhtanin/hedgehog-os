@@ -2805,6 +2805,42 @@ def _fractal_runtime_prefixed_digest_v02(value: object, prefix: str) -> bool:
     ) is not None
 
 
+def _fractal_runtime_initial_queue_parent_form_valid_v02(
+    *,
+    artifact: KernelArtifactV01,
+    topology_artifact_id: str,
+) -> bool:
+    payload = _fractal_runtime_payload_v02(artifact)
+    parents = artifact.parent_refs
+    if (
+        payload is None
+        or payload.get("state") != "PENDING"
+        or payload.get("prior_state") is not None
+        or payload.get("predecessor_relation") != "INITIAL_NONE"
+        or not parents
+        or parents[0] != topology_artifact_id
+        or len(parents) != len(set(parents))
+    ):
+        return False
+    root = payload.get("parent_cell_id") is None
+    structural_count = 1 if root else 2
+    if len(parents) < structural_count:
+        return False
+    if not root and not _fractal_runtime_prefixed_digest_v02(
+        parents[1],
+        "frabi_queue_v02:",
+    ):
+        return False
+    suffix = parents[structural_count:]
+    return all(
+        _fractal_runtime_prefixed_digest_v02(
+            item,
+            "frobservedwork_v02:",
+        )
+        for item in suffix
+    )
+
+
 def _fractal_runtime_source_parent_envelope_valid_v02(
     *,
     rule: TransitionRuleV01,
@@ -2843,9 +2879,17 @@ def _fractal_runtime_source_parent_envelope_valid_v02(
             parents[0], "emabi_route_v01:"
         )
     if profile == "PENDING_QUEUE_SOURCE":
+        payload = _fractal_runtime_payload_v02(source_artifact)
+        if (
+            payload is not None
+            and payload.get("prior_state") is None
+            and payload.get("predecessor_relation") == "INITIAL_NONE"
+        ):
+            return _fractal_runtime_initial_queue_parent_form_valid_v02(
+                artifact=source_artifact,
+                topology_artifact_id=parents[0],
+            ) and topology(parents[0])
         return (
-            len(parents) == 1 and topology(parents[0])
-        ) or (
             len(parents) == 2
             and topology(parents[0])
             and queue(parents[1])
@@ -2928,15 +2972,9 @@ def _fractal_runtime_artifact_pair_valid_v02(
         if parents != (source_artifact.artifact_id,):
             return False
     elif parent_relation == "TOPOLOGY_TO_INITIAL_QUEUE":
-        if not (
-            parents == (source_artifact.artifact_id,)
-            or (
-                len(parents) == 2
-                and parents[0] == source_artifact.artifact_id
-                and _fractal_runtime_prefixed_digest_v02(
-                    parents[1], "frabi_queue_v02:"
-                )
-            )
+        if not _fractal_runtime_initial_queue_parent_form_valid_v02(
+            artifact=target_artifact,
+            topology_artifact_id=source_artifact.artifact_id,
         ):
             return False
     elif parent_relation == "QUEUE_SUCCESSOR_NO_RESULT":

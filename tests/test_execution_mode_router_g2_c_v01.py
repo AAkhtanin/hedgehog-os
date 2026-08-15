@@ -5986,9 +5986,21 @@ def test_c5_package_facade_signatures_all_and_import_direction_preserved():
     assert "__getattr__" not in init_text and "importlib" not in init_text
     assert "execution_mode_router_v01" not in ABI_PATH.read_text(encoding="utf-8")
     transition_text = TRANSITION_PATH.read_text(encoding="utf-8")
-    assert "execution_mode_router_v01" not in transition_text
-    assert "root_decision_v01" not in transition_text
-    assert "semantic_work_v01" not in transition_text
+    transition_tree = ast.parse(transition_text)
+    transition_imports: set[str] = set()
+    for node in ast.walk(transition_tree):
+        if isinstance(node, ast.Import):
+            transition_imports.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            transition_imports.add(module)
+            transition_imports.update(
+                f"{module}.{alias.name}" if module else alias.name
+                for alias in node.names
+            )
+    assert "hedgehog.kernel.execution_mode_router_v01" not in transition_imports
+    assert "hedgehog.kernel.root_decision_v01" not in transition_imports
+    assert "hedgehog.kernel.semantic_work_v01" not in transition_imports
     assert "execution_mode_router_v01" not in ROOT_DECISION_PATH.read_text(
         encoding="utf-8"
     )

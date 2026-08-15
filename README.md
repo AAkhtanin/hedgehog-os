@@ -37,11 +37,11 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 ## Current Engineering Boundary
 
 R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. The former
-G2-D `CLOSED_PASS` is immutable pre-correction evidence only. G2-D now has an
-accepted v0.3.7 correction contract with implementation pending and not
-authorized. Gate 2 remains `NOT_CLOSED`; G2-E3 remains accepted only on
-pre-correction G2-D bytes; G2-E4 remains not started and unauthorized; and G2-F
-remains `NOT_STARTED / NOT_AUTHORIZED`.
+G2-D `CLOSED_PASS` is immutable pre-correction evidence only. Corrected G2-D
+v0.3.7 implementation bytes are present at the commit-ready `REAUDIT_PENDING`
+boundary, without corrected runtime acceptance. Gate 2 remains `NOT_CLOSED`;
+G2-E3 remains `REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 remains not started and
+unauthorized; and G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 
 ```text
 workstream_id: R-H1
@@ -66,11 +66,15 @@ g2c_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
 g2c_implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
 g2c_audit_commit: 72854bcdc85d19e9c6a6636f9a7eedd1929f03cb
 g2c_closure_commit_identity: NOT_SELF_RECORDED
-g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
-g2d_correction_implementation_authorized: false
-g2d_corrected_implementation_exists: false
-g2d_contract_only_claim: true
+g2d_status: REAUDIT_PENDING
+g2d_correction_implementation_authorized: true
+g2d_corrected_implementation_exists: true
+g2d_contract_only_claim: false
 g2d_corrected_runtime_acceptance_claimed: false
+g2d_corrected_implementation_committed: true
+g2d_independent_reaudit_passed: false
+g2d_corrected_closure_claimed: false
+g2d_old_audit_checkpoint_class: HISTORICAL_PRECORRECTION_EVIDENCE
 g2d_accepted_normative_donor_sha256: 8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d
 g2d_accepted_repository_addendum_sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
 g2d_historical_precorrection_status: CLOSED_PASS_ON_PRECORRECTION_BYTES
@@ -82,7 +86,7 @@ g2d_preflight_commit: 2e1681a54c847beb106d9e57da250dac82ea6192
 g2d_historical_precorrection_implementation_basis_commit: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
 g2d_historical_precorrection_audit_commit: c0dc618a0b693fe55435f17a025789267bcb79ff
 g2d_closure_commit_identity: NOT_SELF_RECORDED
-g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D
+g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
 g2e3_post_corrected_g2d_landing_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
 g2e4_status: NOT_STARTED_NOT_AUTHORIZED
 g2f_status: NOT_STARTED
@@ -97,14 +101,15 @@ production_security_certification_claimed: false
 - Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, and
   G2-C are `CLOSED_PASS`.
 - Historical pre-correction G2-D is `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D is `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-D correction implementation authorization is `false`; no corrected
-  implementation byte exists.
+- G2-D is `REAUDIT_PENDING`.
+- G2-D correction implementation authorization is `true`; corrected
+  implementation bytes exist in this commit-ready projection.
+- Corrected implementation committed is `true`; contract-only claim, corrected
+  runtime acceptance, independent re-audit PASS, and corrected closure are all
+  `false`.
 - Gate 2 is `NOT_CLOSED`.
-- G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D`.
-- After corrected G2-D bytes land, G2-E3 becomes
-  `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit, additive
-  reclosure, and one fresh unchanged V06 PASS.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit,
+  additive reclosure, and one fresh unchanged V06 PASS.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
@@ -120,9 +125,10 @@ production_security_certification_claimed: false
 - Historical pre-correction G2-D audit commit:
   `c0dc618a0b693fe55435f17a025789267bcb79ff`.
 - The old G2-D audit and checkpoint certify pre-correction bytes only.
-- Independent re-audit and additive successor reclosure are mandatory after a
-  separately authorized corrected implementation lands.
-- No G2-D implementation or expensive execution gate runs in this contract hop.
+- Independent re-audit and additive successor reclosure remain mandatory.
+- The old G2-D audit and checkpoint are
+  `HISTORICAL_PRECORRECTION_EVIDENCE` only.
+- Bounded implementation evidence is not corrected runtime acceptance.
 - Real-world effects remain zero.
 - [Accepted R-H1 preflight](docs/clean_clone_licensing_release_spine_reconciliation_r_h1_preflight_v01.md)
 - [Accepted G2-C preflight](docs/execution_mode_router_g2_c_preflight_v01.md)

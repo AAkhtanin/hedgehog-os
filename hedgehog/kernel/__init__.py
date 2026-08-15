@@ -304,6 +304,7 @@ from hedgehog.kernel.fractal_runtime_v02 import (  # noqa: E402,F401
     FractalRuntimeValidationReportV02,
     FractalRuntimeSourceContextV02,
     FractalRuntimeExecutionBundleV02,
+    RuntimeObservedWorkContextV02,
     build_fractal_runtime_policy_v02,
     validate_fractal_runtime_policy_v02,
     fractal_runtime_policy_to_plain_data_v02,
@@ -380,6 +381,11 @@ from hedgehog.kernel.fractal_runtime_v02 import (  # noqa: E402,F401
     derive_fractal_child_cell_id_v02,
     build_fractal_runtime_source_context_v02,
     validate_fractal_runtime_source_context_v02,
+    project_runtime_observed_work_binding_kernel_artifact_v02,
+    build_runtime_observed_work_context_v02,
+    validate_runtime_observed_work_context_v02,
+    runtime_observed_work_context_to_plain_data_v02,
+    validate_runtime_observed_work_context_against_sources_v02,
     validate_runtime_topology_source_binding_against_g2c_v02,
     construct_runtime_execution_topology_v02,
     validate_runtime_execution_topology_against_sources_v02,
@@ -414,6 +420,7 @@ from hedgehog.kernel.fractal_runtime_v02 import (  # noqa: E402,F401
     build_fractal_runtime_causal_consumption_refs_v02,
     validate_fractal_runtime_causal_consumption_refs_v02,
     validate_fractal_runtime_causal_counterfactual_v02,
+    validate_runtime_observed_work_counterfactual_v02,
 )
 from hedgehog.kernel.transition_registry_v01 import (  # noqa: E402,F401
     build_fractal_runtime_transition_registry_profile_v02,

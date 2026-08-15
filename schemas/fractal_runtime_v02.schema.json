@@ -5117,7 +5117,8 @@
             "ABI_PROFILE",
             "CAUSAL_CONSUMPTION",
             "CAUSAL_COUNTERFACTUAL",
-            "COMPLETE_PROFILE"
+            "COMPLETE_PROFILE",
+            "OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"
           ]
         },
         "validated_object_id": {

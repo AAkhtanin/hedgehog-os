@@ -39,6 +39,7 @@ from hedgehog.kernel.abi_v01 import (
     KernelArtifactV01,
     build_kernel_artifact_v01,
     kernel_artifact_to_plain_dict_v01,
+    validate_kernel_artifact_bundle_v01,
     validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.integrity_replay_v01 import (
@@ -860,14 +861,19 @@ FUNCTION_FAMILIES = {
 def test_d1_static_surface_schema_import() -> None:
     assert MODULE_PATH.is_file() and SCHEMA_PATH.is_file()
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
-    assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 2
-    assert len(fr.G2D_TYPES_V02) == 20
+    assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
+    assert len(fr.G2D_TYPES_V02) == 21
+    assert fr.G2D_TYPES_V02[:20] == fr.SERIALIZED_G2D_TYPES_V02 + (
+        fr.FractalRuntimeSourceContextV02,
+        fr.FractalRuntimeExecutionBundleV02,
+    )
+    assert fr.G2D_TYPES_V02[-1] is fr.RuntimeObservedWorkContextV02
     assert all(item.__dataclass_params__.frozen for item in fr.G2D_TYPES_V02)
     public_functions = [
         name for name, value in vars(fr).items()
         if not name.startswith("_") and inspect.isfunction(value) and value.__module__ == fr.__name__
     ]
-    assert len(public_functions) == 110
+    assert len(public_functions) == 116
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
     expected_rows = re.findall(r"^\|\s*(\d+)\s*\|\s*D1\s*\|\s*`([^`]+)`\s*\|$", preflight, re.MULTILINE)
     assert len(expected_rows) == 74
@@ -891,14 +897,66 @@ def test_d1_static_surface_schema_import() -> None:
 
 def test_d1_canonical_types_fields_enums() -> None:
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
-    for cls in fr.G2D_TYPES_V02:
+    for cls in fr.G2D_TYPES_V02[:20]:
         expected_rows = _preflight_annotation_rows(cls.__name__)
-        assert [item.name for item in fields(cls)] == [name for name, _annotation in expected_rows]
+        actual_fields = [item.name for item in fields(cls)]
         actual_annotations = tuple(
             (name, re.sub(r"\s+", "", annotation))
             for name, annotation in cls.__annotations__.items()
         )
-        assert actual_annotations == expected_rows
+        if cls is fr.FractalRuntimeExecutionBundleV02:
+            assert actual_fields[:-1] == [
+                name for name, _annotation in expected_rows
+            ]
+            assert actual_fields[-1] == "observed_work_context"
+            assert actual_annotations[:-1] == expected_rows
+            assert actual_annotations[-1] == (
+                "observed_work_context",
+                "RuntimeObservedWorkContextV02|None",
+            )
+        else:
+            assert actual_fields == [
+                name for name, _annotation in expected_rows
+            ]
+            assert actual_annotations == expected_rows
+    assert tuple(fr.RuntimeObservedWorkContextV02.__annotations__) == (
+        "observed_work_context_id",
+        "context_version",
+        "context_profile_id",
+        "baseline_execution_bundle",
+        "baseline_bundle_anchor_sha256",
+        "runtime_source_binding_id",
+        "topology_id",
+        "topology_artifact_id",
+        "baseline_runtime_trace_id",
+        "baseline_runtime_report_id",
+        "baseline_report_artifact_id",
+        "execution_scope",
+        "whole_run_escalation_reason",
+        "whole_run_escalation_policy_id",
+        "ordered_direct_affected_node_ids",
+        "ordered_execution_node_ids",
+        "ordered_affected_cell_ids",
+        "ordered_direct_source_artifacts",
+        "ordered_supporting_artifacts",
+        "ordered_binding_artifacts",
+        "root_review_required",
+        "provider_calls",
+        "model_calls",
+        "network_calls",
+        "connector_calls",
+        "external_drs_calls",
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+        "final_output_created",
+        "drs_write_created",
+        "real_world_effects_count",
+    )
+    assert tuple(fr.FractalRuntimeExecutionBundleV02.__annotations__)[-1] == (
+        "observed_work_context"
+    )
     assert len(fields(fr.FractalRuntimeBudgetV02)) == 38
     assert len(fields(fr.FractalPartialFailureRecordV02)) == 23
     assert len(fields(fr.FractalBackpressureStateV02)) == 19
@@ -918,7 +976,17 @@ def test_d1_canonical_types_fields_enums() -> None:
         match = re.search(rf"^{name}=\(([^)]*)\)$", preflight, re.MULTILINE)
         assert match is not None, name
         expected = tuple(item for item in match.group(1).split(",") if item)
-        assert getattr(fr, name) == expected
+        actual = getattr(fr, name)
+        if name == "VALIDATION_TARGETS":
+            assert actual == (*expected, "OBSERVED_WORK_BINDINGS_AGAINST_SOURCES")
+        elif name == "CAUSAL_DECISION_EFFECTS":
+            assert actual == (
+                *expected,
+                "OBSERVED_WORK_INPUT",
+                "OBSERVED_WORK_CELL_BINDING",
+            )
+        else:
+            assert actual == expected
     module_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     assignments_by_name = {
         target.id: node.value
@@ -1738,7 +1806,7 @@ def test_d1_structural_validators_and_reasons() -> None:
     preflight_reasons = tuple(re.findall(r"^g2d_[a-z0-9_]+$", PREFLIGHT_PATH.read_text(encoding="utf-8"), re.MULTILINE))
     assert fr.PUBLIC_G2D_REASON_CODES == preflight_reasons
     assert len(fr.PUBLIC_G2D_REASON_CODES) == len(set(fr.PUBLIC_G2D_REASON_CODES)) == 220
-    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
     module_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     registry_node = next(
@@ -2102,9 +2170,9 @@ def test_private_g2d_finalize_pair_and_validation_hot_path_v02(
             row[1] for row in fr.IDENTITY_PROFILE_ROWS_V02 if row[0] is cls
         )
         assert rebuilder(value) == getattr(value, identity_field)
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
-    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
 
 
@@ -2306,9 +2374,9 @@ def test_private_g2d_source_topology_canonical_cache_v02(
     assert fr._TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_MAX_V02 == 16
     assert fr._TOPOLOGY_PARTS_SUCCESS_CACHE_MAX_V02 == 32
     assert fr._RETAINED_BASE_REPORTS_SUCCESS_CACHE_MAX_V02 == 32
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
-    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
     test_tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
     assert sum(
@@ -2500,10 +2568,10 @@ def test_private_g2d_root_result_structural_evidence_partition_v02() -> None:
             evidence_refs=aggregated_evidence,
         )
 
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
-    assert len(fr.G2D_TYPES_V02) == 20
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
+    assert len(fr.G2D_TYPES_V02) == 21
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
-    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
     test_tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
     assert sum(
@@ -2604,9 +2672,9 @@ def test_d1_import_and_zero_operation_boundary() -> None:
     source = MODULE_PATH.read_text(encoding="utf-8")
     for forbidden in ("FinalOutput(", "DRS write", "provider_call(", "network_call(", "connector_call("):
         assert forbidden not in source
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
     assert fr.D1_MODULE_PUBLIC_FUNCTION_COUNT == 74
-    assert fr.TOTAL_G2D_TYPE_COUNT == 20
+    assert fr.TOTAL_G2D_TYPE_COUNT == 21
     assert fr.SCHEMA_DEFINITION_COUNT == 18
 
 
@@ -3990,7 +4058,7 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 110
+    assert len(public_functions) == 116
     assert not callable(getattr(fr, "execute_fractal_runtime_v02", None))
     assert callable(getattr(fr, "build_fractal_runtime_execution_bundle_v02", None))
     module_source = MODULE_PATH.read_text(encoding="utf-8")
@@ -5902,7 +5970,8 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
     for name in amended:
         expected_signatures[name] = expected_signatures[name].replace(
             ") -> ",
-            settled_suffix + ") -> ",
+            settled_suffix
+            + ", observed_work_context: 'RuntimeObservedWorkContextV02 | None' = None) -> ",
         )
     for name, signature in expected_signatures.items():
         assert str(inspect.signature(getattr(fr, name))) == signature
@@ -5911,12 +5980,15 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 110
-    assert len(fr.G2D_TYPES_V02) == 20
+    assert len(public_functions) == 116
+    assert len(fr.G2D_TYPES_V02) == 21
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
-    assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 2
+    assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
-    assert len(fr.VALIDATION_TARGETS) == 34
+    assert len(fr.VALIDATION_TARGETS) == 35
+    assert fr.VALIDATION_TARGETS[-1] == (
+        "OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"
+    )
     assert len(fr.FAILURE_STAGES) == 30
     for activated in (
         "build_fractal_runtime_execution_bundle_v02",
@@ -6334,6 +6406,7 @@ def test_d3_profile_d_contextual_child_t06_t08_micro(
             settled_queue_entry_log=env["queue_log"],
             settled_cell_inputs=env["cell_inputs"],
             settled_scope_projections=env["scope_projections"],
+            observed_work_context=None,
         )
         assert type(omission_index) is int
         assert entry.lineage_refs[omission_index] == activation_parent_id
@@ -6347,6 +6420,7 @@ def test_d3_profile_d_contextual_child_t06_t08_micro(
             settled_queue_entry_log=env["queue_log"],
             settled_cell_inputs=env["cell_inputs"],
             settled_scope_projections=env["scope_projections"],
+            observed_work_context=None,
         )
         assert artifact == expected
         assert canonical_json_bytes_v01(
@@ -6415,6 +6489,7 @@ def test_d3_profile_d_contextual_mutation_matrix_micro(
             settled_queue_entry_log=env["queue_log"],
             settled_cell_inputs=cell_inputs,
             settled_scope_projections=env["scope_projections"],
+            observed_work_context=None,
         )
 
     labels: list[str] = []
@@ -8698,6 +8773,31 @@ _D4_PUBLIC_FUNCTION_NAMES_V02 = (
     "validate_fractal_runtime_causal_counterfactual_v02",
 )
 
+_E4C001_PUBLIC_FUNCTION_NAMES_V02 = (
+    "project_runtime_observed_work_binding_kernel_artifact_v02",
+    "build_runtime_observed_work_context_v02",
+    "validate_runtime_observed_work_context_v02",
+    "runtime_observed_work_context_to_plain_data_v02",
+    "validate_runtime_observed_work_context_against_sources_v02",
+    "validate_runtime_observed_work_counterfactual_v02",
+)
+
+_E4C001_CORRECTED_SIGNATURE_NAMES_V02 = (
+    "admit_runtime_execution_topology_v02",
+    "advance_fractal_cell_queue_v02",
+    "build_fractal_cell_input_from_queue_v02",
+    "validate_fractal_cell_input_against_sources_v02",
+    "evaluate_fractal_backpressure_v02",
+    "project_fractal_cell_queue_entry_kernel_artifact_v02",
+    "evaluate_fractal_runtime_state_transition_v02",
+    "validate_fractal_runtime_stage_bundle_v02",
+    "validate_fractal_runtime_abi_profile_v02",
+    "build_fractal_runtime_causal_consumption_refs_v02",
+    "validate_fractal_runtime_causal_consumption_refs_v02",
+    "build_fractal_runtime_execution_bundle_v02",
+    "run_fractal_runtime_v02",
+)
+
 _D4_TRANSITION_FUNCTION_NAMES_V02 = (
     "build_fractal_runtime_transition_registry_profile_v02",
     "validate_fractal_runtime_transition_registry_profile_v02",
@@ -8910,6 +9010,186 @@ def d4_complete_full_fractal_bundle(
     }
 
 
+def _e4c001_source_artifact_v02(
+    bundle: fr.FractalRuntimeExecutionBundleV02,
+    *,
+    payload: dict[str, object],
+    trace_ref: str,
+    predecessor: KernelArtifactV01 | None = None,
+    lifecycle_state: str = "VALIDATED",
+    source_component: str = "continuous_delta_runtime_v01",
+) -> KernelArtifactV01:
+    route_plain = kernel_artifact_to_plain_dict_v01(
+        bundle.source_context.route_eligibility_artifact
+    )
+    trace_refs = (trace_ref,) if predecessor is None else predecessor.trace_refs
+    parent_refs = (
+        ()
+        if predecessor is None
+        else (predecessor.artifact_id, *predecessor.parent_refs)
+    )
+    provisional = build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id="g2dobservedsource_v02:" + "0" * 64,
+        artifact_type="SemanticEvidence",
+        schema_version="v1",
+        transaction_id=bundle.topology.transaction_id,
+        owner_root_id=bundle.topology.owning_root_id,
+        source_component=source_component,
+        authority_class="EVIDENCE_ONLY",
+        lifecycle_state=lifecycle_state,
+        payload=payload,
+        trace_refs=trace_refs,
+        parent_refs=parent_refs,
+        time_envelope=route_plain["time_envelope"],
+    )
+    material = kernel_artifact_to_plain_dict_v01(provisional)
+    material.pop("artifact_id")
+    result = replace(
+        provisional,
+        artifact_id=(
+            "g2dobservedsource_v02:"
+            + domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_G2D_E4C001_SOURCE_ARTIFACT_V02",
+                payload=canonical_json_bytes_v01(material),
+            )
+        ),
+    )
+    assert validate_kernel_artifact_v01(result) == ()
+    return result
+
+
+@pytest.fixture(scope="module")
+def e4c001_observed_work_family_v02(
+    d4_complete_full_fractal_bundle: dict[str, object],
+) -> dict[str, object]:
+    baseline = d4_complete_full_fractal_bundle["bundle"]
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    child_inputs = tuple(
+        item for item in baseline.cell_inputs if item.parent_cell_id is not None
+    )
+    assert len(child_inputs) == 2
+    selected_input = child_inputs[-1]
+    selected_node = next(
+        item
+        for item in baseline.topology_nodes
+        if item.node_id == selected_input.ordered_node_ids[0]
+    )
+    payload_baseline = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "payload", "value": 0},
+        trace_ref="trace:e4c001:payload",
+    )
+    payload_observed = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "payload", "value": 1},
+        trace_ref="trace:e4c001:payload",
+        predecessor=payload_baseline,
+    )
+    lifecycle_baseline = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "lifecycle", "value": "stable"},
+        trace_ref="trace:e4c001:lifecycle",
+    )
+    lifecycle_observed = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "lifecycle", "value": "stable"},
+        trace_ref="trace:e4c001:lifecycle",
+        predecessor=lifecycle_baseline,
+        lifecycle_state="ROOT_ACCEPTED",
+    )
+    direct_sources = (
+        payload_baseline,
+        payload_observed,
+        lifecycle_baseline,
+        lifecycle_observed,
+    )
+
+    def bindings_for_scope(
+        execution_scope: str,
+    ) -> tuple[KernelArtifactV01, ...]:
+        kwargs = (
+            {}
+            if execution_scope == "SELECTIVE"
+            else {
+                "whole_run_escalation_reason": (
+                    "g2d_bounded_full_reconstruction_required"
+                ),
+                "whole_run_escalation_policy_id": (
+                    "fractal_runtime_whole_run_escalation_v02"
+                ),
+            }
+        )
+        return (
+            fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+                baseline_execution_bundle=baseline,
+                node=selected_node,
+                cell_input=selected_input,
+                baseline_source_artifact=payload_baseline,
+                observed_source_artifact=payload_observed,
+                changed_full_artifact_pointers=("/payload/value",),
+                execution_scope=execution_scope,
+                **kwargs,
+            ),
+            fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+                baseline_execution_bundle=baseline,
+                node=selected_node,
+                cell_input=selected_input,
+                baseline_source_artifact=lifecycle_baseline,
+                observed_source_artifact=lifecycle_observed,
+                changed_full_artifact_pointers=("/lifecycle_state",),
+                execution_scope=execution_scope,
+                **kwargs,
+            ),
+        )
+
+    selective_bindings = bindings_for_scope("SELECTIVE")
+    selective_context = fr.build_runtime_observed_work_context_v02(
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=tuple(reversed(direct_sources)),
+        supporting_artifacts=(),
+        binding_artifacts=tuple(reversed(selective_bindings)),
+        execution_scope="SELECTIVE",
+    )
+    selective_bundle = fr._d4_run_runtime_v02(
+        baseline.source_context,
+        observed_work_context=selective_context,
+    )
+    assert fr.validate_fractal_runtime_execution_bundle_v02(
+        selective_bundle
+    ).status == "PASS"
+
+    whole_bindings = bindings_for_scope("WHOLE_RUN_ESCALATION")
+    whole_context = fr.build_runtime_observed_work_context_v02(
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=tuple(reversed(direct_sources)),
+        supporting_artifacts=(),
+        binding_artifacts=tuple(reversed(whole_bindings)),
+        execution_scope="WHOLE_RUN_ESCALATION",
+        whole_run_escalation_reason=(
+            "g2d_bounded_full_reconstruction_required"
+        ),
+        whole_run_escalation_policy_id=(
+            "fractal_runtime_whole_run_escalation_v02"
+        ),
+    )
+    return {
+        "baseline": baseline,
+        "selected_input": selected_input,
+        "selected_node": selected_node,
+        "payload_baseline": payload_baseline,
+        "payload_observed": payload_observed,
+        "lifecycle_baseline": lifecycle_baseline,
+        "lifecycle_observed": lifecycle_observed,
+        "direct_sources": direct_sources,
+        "selective_bindings": selective_bindings,
+        "selective_context": selective_context,
+        "selective_bundle": selective_bundle,
+        "whole_bindings": whole_bindings,
+        "whole_context": whole_context,
+    }
+
+
 def test_d4_exact_public_surface_and_facade_v02() -> None:
     public_functions = tuple(
         name
@@ -8929,8 +9209,10 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
         if int(number) <= 110
     )
     assert len(rows) == 110
-    assert public_functions == tuple(row.split("(", 1)[0] for _number, row in rows)
-    assert public_functions[-20:] == _D4_PUBLIC_FUNCTION_NAMES_V02
+    historical_names = tuple(row.split("(", 1)[0] for _number, row in rows)
+    assert public_functions[:110] == historical_names
+    assert public_functions[90:110] == _D4_PUBLIC_FUNCTION_NAMES_V02
+    assert public_functions[110:] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
     module_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     actual = {
         node.name: node
@@ -8944,10 +9226,31 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
     for _number, signature in d4_rows:
         expected = ast.parse("def " + signature + ":\n pass").body[0]
         current = actual[signature.split("(", 1)[0]]
-        assert ast.dump(current.args, include_attributes=False) == ast.dump(
-            expected.args,
-            include_attributes=False,
-        )
+        if current.name in _E4C001_CORRECTED_SIGNATURE_NAMES_V02:
+            assert current.args.kwonlyargs[-1].arg == "observed_work_context"
+            assert ast.unparse(current.args.kwonlyargs[-1].annotation) == (
+                "RuntimeObservedWorkContextV02 | None"
+            )
+            assert isinstance(current.args.kw_defaults[-1], ast.Constant)
+            assert current.args.kw_defaults[-1].value is None
+            historical_args = ast.arguments(
+                posonlyargs=current.args.posonlyargs,
+                args=current.args.args,
+                vararg=current.args.vararg,
+                kwonlyargs=current.args.kwonlyargs[:-1],
+                kw_defaults=current.args.kw_defaults[:-1],
+                kwarg=current.args.kwarg,
+                defaults=current.args.defaults,
+            )
+            assert ast.dump(historical_args, include_attributes=False) == ast.dump(
+                expected.args,
+                include_attributes=False,
+            )
+        else:
+            assert ast.dump(current.args, include_attributes=False) == ast.dump(
+                expected.args,
+                include_attributes=False,
+            )
         assert ast.dump(current.returns, include_attributes=False) == ast.dump(
             expected.returns,
             include_attributes=False,
@@ -8965,16 +9268,17 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
         )
     package = importlib.import_module("hedgehog.kernel")
     g2d_names = tuple(item.__name__ for item in fr.G2D_TYPES_V02) + public_functions
-    assert len(g2d_names) == 130 and len(set(g2d_names)) == 130
+    assert len(g2d_names) == 137 and len(set(g2d_names)) == 137
+    assert fr.__all__ == g2d_names
     for name in g2d_names:
         assert getattr(package, name) is getattr(fr, name)
     for name in _D4_TRANSITION_FUNCTION_NAMES_V02:
         assert getattr(package, name) is getattr(transition_registry, name)
-    assert len(set((*g2d_names, *_D4_TRANSITION_FUNCTION_NAMES_V02))) == 136
+    assert len(set((*g2d_names, *_D4_TRANSITION_FUNCTION_NAMES_V02))) == 143
     assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 110
-    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 116
-    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 136
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 122
+    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 143
 
 
 def test_d4_revise_retry_and_no_progress_v02(
@@ -9597,6 +9901,1000 @@ def test_d4_root_report_status_and_outcome_projection_v02(
             "authority_created_count", "real_world_effects_count",
         )
     )
+
+
+def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_facade_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    family = e4c001_observed_work_family_v02
+    context = family["selective_context"]
+    baseline = family["baseline"]
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    assert baseline.observed_work_context is None
+    assert len(fr.G2D_TYPES_V02) == 21
+    assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
+    assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
+    assert fr.RUNTIME_ONLY_G2D_TYPES_V02[-1] is fr.RuntimeObservedWorkContextV02
+    assert len(fields(fr.FractalRuntimeExecutionBundleV02)) == 28
+    assert fields(fr.FractalRuntimeExecutionBundleV02)[-1].name == (
+        "observed_work_context"
+    )
+    public_functions = tuple(
+        name
+        for name, value in vars(fr).items()
+        if not name.startswith("_")
+        and inspect.isfunction(value)
+        and value.__module__ == fr.__name__
+    )
+    assert len(public_functions) == 116
+    assert public_functions[-6:] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
+    for name in _E4C001_CORRECTED_SIGNATURE_NAMES_V02:
+        parameter = tuple(inspect.signature(getattr(fr, name)).parameters.values())[-1]
+        assert parameter.name == "observed_work_context"
+        assert parameter.kind is inspect.Parameter.KEYWORD_ONLY
+        assert parameter.default is None
+        assert str(parameter.annotation) == "RuntimeObservedWorkContextV02 | None"
+    package = importlib.import_module("hedgehog.kernel")
+    for name in (
+        "RuntimeObservedWorkContextV02",
+        *_E4C001_PUBLIC_FUNCTION_NAMES_V02,
+    ):
+        assert getattr(package, name) is getattr(fr, name)
+    assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 122
+    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 143
+    assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
+    assert len(fr.VALIDATION_TARGETS) == 35
+    assert fr.VALIDATION_TARGETS[-1] == (
+        "OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"
+    )
+    assert len(fr.FAILURE_STAGES) == 30
+    assert len(fr.CAUSAL_DECISION_EFFECTS) == 14
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    assert len(schema["$defs"]) == 18
+    assert "RuntimeObservedWorkContextV02" not in schema["$defs"]
+    assert SCHEMA_PATH.read_text(encoding="utf-8").count(
+        '"OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"'
+    ) == 1
+    assert fr.validate_runtime_observed_work_context_v02(context).status == "PASS"
+    selected_node = family["selected_node"]
+    selected_input = family["selected_input"]
+    assert isinstance(selected_node, fr.RuntimeTopologyNodeV02)
+    assert isinstance(selected_input, fr.FractalCellInputV02)
+    validator_calls = 0
+    original_context_validator = fr.validate_runtime_observed_work_context_v02
+
+    def counted_context_validator(value: object) -> object:
+        nonlocal validator_calls
+        validator_calls += 1
+        return original_context_validator(value)
+
+    monkeypatch.setattr(
+        fr,
+        "validate_runtime_observed_work_context_v02",
+        counted_context_validator,
+    )
+    assert fr._observed_work_bindings_for_cell_node_v02(
+        context,
+        topology=baseline.topology,
+        cell_id=selected_input.cell_id,
+        node_id=selected_node.node_id,
+    ) == context.ordered_binding_artifacts
+    assert validator_calls == 0
+    plain = fr.runtime_observed_work_context_to_plain_data_v02(context)
+    assert "baseline_execution_bundle" not in plain
+    assert plain["baseline_bundle_anchor_sha256"] == (
+        context.baseline_bundle_anchor_sha256
+    )
+    assert tuple(plain) == tuple(sorted(plain))
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    test_names = tuple(
+        node.name
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
+    )
+    assert len(test_names) == 83
+    assert sum(name.startswith("test_e4c001_v03_") for name in test_names) == 8
+
+
+def test_e4c001_v03_binding_payload_full_artifact_pointer_and_canonical_order_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+) -> None:
+    family = e4c001_observed_work_family_v02
+    baseline = family["baseline"]
+    selected_node = family["selected_node"]
+    selected_input = family["selected_input"]
+    payload_baseline = family["payload_baseline"]
+    payload_observed = family["payload_observed"]
+    context = family["selective_context"]
+    bindings = family["selective_bindings"]
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(selected_node, fr.RuntimeTopologyNodeV02)
+    assert isinstance(selected_input, fr.FractalCellInputV02)
+    assert isinstance(payload_baseline, KernelArtifactV01)
+    assert isinstance(payload_observed, KernelArtifactV01)
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(bindings, tuple)
+    payload_binding = next(
+        item
+        for item in bindings
+        if _kernel_payload(item)["source_pair"]["baseline_identity_ref"]
+        == payload_baseline.artifact_id
+    )
+    payload = _kernel_payload(payload_binding)
+    assert tuple(payload) == (
+        "change_proof",
+        "execution",
+        "profile",
+        "safety",
+        "source_pair",
+        "topology_binding",
+    )
+    assert tuple(payload["change_proof"]) == (
+        "all_full_artifact_changed_pointers",
+        "consumed_changed_material_rows",
+        "whole_artifact_expanded",
+        "whole_payload_expanded",
+    )
+    assert payload["change_proof"]["all_full_artifact_changed_pointers"] == [
+        "/payload/value"
+    ]
+    assert payload["change_proof"]["consumed_changed_material_rows"] == [
+        {
+            "baseline_present": True,
+            "baseline_value_sha256": hashlib.sha256(b"0").hexdigest(),
+            "full_artifact_pointer": "/payload/value",
+            "observed_present": True,
+            "observed_value_sha256": hashlib.sha256(b"1").hexdigest(),
+            "payload_pointer": "/value",
+        }
+    ]
+    assert tuple(payload["safety"]) == tuple(sorted(payload["safety"]))
+    assert all(value in {False, 0} for value in payload["safety"].values())
+    canonical = fr.build_runtime_observed_work_context_v02(
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=family["direct_sources"],
+        supporting_artifacts=(),
+        binding_artifacts=bindings,
+        execution_scope="SELECTIVE",
+    )
+    assert canonical == context
+    whole_payload_binding = (
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=selected_node,
+            cell_input=selected_input,
+            baseline_source_artifact=payload_baseline,
+            observed_source_artifact=payload_observed,
+            changed_full_artifact_pointers=("/payload",),
+            execution_scope="SELECTIVE",
+        )
+    )
+    whole_artifact_binding = (
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=selected_node,
+            cell_input=selected_input,
+            baseline_source_artifact=payload_baseline,
+            observed_source_artifact=payload_observed,
+            changed_full_artifact_pointers=("",),
+            execution_scope="SELECTIVE",
+        )
+    )
+    assert _kernel_payload(whole_payload_binding)["change_proof"] == {
+        "all_full_artifact_changed_pointers": ["/payload/value"],
+        "consumed_changed_material_rows": payload["change_proof"][
+            "consumed_changed_material_rows"
+        ],
+        "whole_artifact_expanded": False,
+        "whole_payload_expanded": True,
+    }
+    assert _kernel_payload(whole_artifact_binding)["change_proof"][
+        "whole_artifact_expanded"
+    ] is True
+    envelope_observed = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "payload", "value": 0},
+        trace_ref="trace:e4c001:payload",
+        predecessor=payload_baseline,
+        source_component="observed_delta_source_v01",
+    )
+    envelope_binding = fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+        baseline_execution_bundle=baseline,
+        node=selected_node,
+        cell_input=selected_input,
+        baseline_source_artifact=payload_baseline,
+        observed_source_artifact=envelope_observed,
+        changed_full_artifact_pointers=("/source_component",),
+        execution_scope="SELECTIVE",
+    )
+    envelope_row = _kernel_payload(envelope_binding)["change_proof"][
+        "consumed_changed_material_rows"
+    ][0]
+    assert envelope_row["full_artifact_pointer"] == "/source_component"
+    assert envelope_row["payload_pointer"] is None
+    assert validate_kernel_artifact_v01(envelope_binding) == ()
+
+
+def test_e4c001_v03_root_and_child_stable_witness_mapping_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+) -> None:
+    family = e4c001_observed_work_family_v02
+    baseline = family["baseline"]
+    selected_input = family["selected_input"]
+    selected_node = family["selected_node"]
+    payload_baseline = family["payload_baseline"]
+    payload_observed = family["payload_observed"]
+    child_binding = family["selective_bindings"][0]
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(selected_input, fr.FractalCellInputV02)
+    assert isinstance(selected_node, fr.RuntimeTopologyNodeV02)
+    assert isinstance(payload_baseline, KernelArtifactV01)
+    assert isinstance(payload_observed, KernelArtifactV01)
+    assert isinstance(child_binding, KernelArtifactV01)
+    child_witness = _kernel_payload(child_binding)["topology_binding"]
+    parent_input = next(
+        item for item in baseline.cell_inputs if item.cell_id == selected_input.parent_cell_id
+    )
+    projection = next(
+        item
+        for item in baseline.scope_projections
+        if item.child_cell_id == selected_input.cell_id
+    )
+    canonical_child_index = parent_input.ordered_planned_child_cell_ids.index(
+        selected_input.cell_id
+    )
+    expected_child_id = fr.derive_fractal_child_cell_id_v02(
+        topology_seed_id=baseline.topology_seed.topology_seed_id,
+        parent_cell_id=parent_input.cell_id,
+        canonical_child_index=canonical_child_index,
+        accepted_mode=baseline.source_binding.accepted_mode,
+        selected_local_mode_profile_id=(
+            baseline.source_binding.selected_local_mode_profile_id
+        ),
+        source_mode_profile_set_id=(
+            baseline.source_binding.source_mode_profile_set_id
+        ),
+        child_scope_ref=projection.child_scope_ref,
+        runtime_policy_id=baseline.source_binding.runtime_policy_id,
+        required_capability_ids=(
+            baseline.source_binding.required_downstream_capability_ids
+        ),
+        forbidden_claims=baseline.source_context.runtime_policy.forbidden_claims,
+        child_depth=selected_input.cell_depth,
+    )
+    assert expected_child_id == selected_input.cell_id
+    assert child_witness["witness_class"] == "BASELINE_CHILD_ACTIVATION_INPUT"
+    assert child_witness["canonical_child_index"] == canonical_child_index
+    assert child_binding.parent_refs == (
+        baseline.topology_artifact.artifact_id,
+        payload_baseline.artifact_id,
+        payload_observed.artifact_id,
+        child_witness["activation_parent_queue_artifact_ref"],
+    )
+    root_input = next(item for item in baseline.cell_inputs if item.parent_cell_id is None)
+    root_node = next(
+        item
+        for item in baseline.topology_nodes
+        if item.node_id == root_input.ordered_node_ids[0]
+    )
+    expected_root_id = fr.derive_fractal_root_cell_id_v02(
+        source_binding_id=baseline.source_binding.source_binding_id,
+        runtime_policy_id=baseline.source_binding.runtime_policy_id,
+        accepted_mode=baseline.source_binding.accepted_mode,
+        accepted_scope_ref=baseline.source_binding.accepted_scope_ref,
+    )
+    assert expected_root_id == root_input.cell_id
+    root_binding = fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+        baseline_execution_bundle=baseline,
+        node=root_node,
+        cell_input=root_input,
+        baseline_source_artifact=payload_baseline,
+        observed_source_artifact=payload_observed,
+        changed_full_artifact_pointers=("/payload/value",),
+        execution_scope="SELECTIVE",
+    )
+    root_witness = _kernel_payload(root_binding)["topology_binding"]
+    assert root_witness["witness_class"] == "BASELINE_ROOT_CELL_INPUT"
+    assert root_witness["activation_parent_queue_artifact_ref"] is None
+    assert root_witness["canonical_child_index"] is None
+    assert root_binding.parent_refs == (
+        baseline.topology_artifact.artifact_id,
+        payload_baseline.artifact_id,
+        payload_observed.artifact_id,
+    )
+    foreign_node = next(
+        item
+        for item in baseline.topology_nodes
+        if item.node_id not in selected_input.ordered_node_ids
+    )
+    with pytest.raises(ValueError, match="g2d_topology_source_binding_invalid"):
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=foreign_node,
+            cell_input=selected_input,
+            baseline_source_artifact=payload_baseline,
+            observed_source_artifact=payload_observed,
+            changed_full_artifact_pointers=("/payload/value",),
+            execution_scope="SELECTIVE",
+        )
+    with pytest.raises(ValueError, match="g2d_topology_source_binding_invalid"):
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=selected_node,
+            cell_input=replace(selected_input, cell_id="frcell_v02:" + "0" * 64),
+            baseline_source_artifact=payload_baseline,
+            observed_source_artifact=payload_observed,
+            changed_full_artifact_pointers=("/payload/value",),
+            execution_scope="SELECTIVE",
+        )
+
+
+def test_e4c001_v03_t02_parent_envelope_and_settled_prefix_context_reconstruction_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+) -> None:
+    family = e4c001_observed_work_family_v02
+    baseline = family["baseline"]
+    bundle = family["selective_bundle"]
+    context = family["selective_context"]
+    selected_input = family["selected_input"]
+    selected_node = family["selected_node"]
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(selected_input, fr.FractalCellInputV02)
+    assert isinstance(selected_node, fr.RuntimeTopologyNodeV02)
+    binding_ids = tuple(item.artifact_id for item in context.ordered_binding_artifacts)
+    initial_index = next(
+        index
+        for index, entry in enumerate(bundle.queue_entries)
+        if entry.cell_id == selected_input.cell_id
+        and entry.node_id == selected_node.node_id
+        and entry.predecessor_queue_entry_id is None
+    )
+    initial_entry = bundle.queue_entries[initial_index]
+    initial_artifact = bundle.queue_artifacts[initial_index]
+    assert initial_artifact.parent_refs == (
+        bundle.topology_artifact.artifact_id,
+        initial_artifact.parent_refs[1],
+        *binding_ids,
+    )
+    baseline_initial = next(
+        artifact
+        for entry, artifact in zip(
+            baseline.queue_entries,
+            baseline.queue_artifacts,
+            strict=True,
+        )
+        if entry.cell_id == selected_input.cell_id
+        and entry.node_id == selected_node.node_id
+        and entry.predecessor_queue_entry_id is None
+    )
+    assert len(baseline_initial.parent_refs) == 2
+    registry = transition_registry.build_fractal_runtime_transition_registry_profile_v02()
+    decision = bundle.transition_decisions[initial_index + 1]
+    assert decision.rule_id.endswith("t02_topology_to_pending")
+    assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=registry,
+        source_artifact=bundle.topology_artifact,
+        target_artifact=initial_artifact,
+    ) == ()
+    successor_index = next(
+        index
+        for index, entry in enumerate(bundle.queue_entries)
+        if entry.cell_id == initial_entry.cell_id
+        and entry.node_id == initial_entry.node_id
+        and entry.predecessor_queue_entry_id == initial_entry.queue_entry_id
+    )
+    successor_artifact = bundle.queue_artifacts[successor_index]
+    assert successor_artifact.parent_refs[:2] == (
+        bundle.topology_artifact.artifact_id,
+        initial_artifact.artifact_id,
+    )
+    assert not set(binding_ids) & set(successor_artifact.parent_refs)
+    mutated_artifact = replace(
+        initial_artifact,
+        parent_refs=(
+            *initial_artifact.parent_refs[:2],
+            *reversed(initial_artifact.parent_refs[2:]),
+        ),
+    )
+    mutated_queue_artifacts = (
+        *bundle.queue_artifacts[:initial_index],
+        mutated_artifact,
+        *bundle.queue_artifacts[initial_index + 1:],
+    )
+    assert fr.validate_fractal_runtime_execution_bundle_v02(
+        replace(bundle, queue_artifacts=mutated_queue_artifacts)
+    ).status == "FAIL_CLOSED"
+    helper = next(
+        node
+        for node in ast.parse(
+            Path(transition_registry.__file__).read_text(encoding="utf-8")
+        ).body
+        if isinstance(node, ast.FunctionDef)
+        and node.name == "_fractal_runtime_initial_queue_parent_form_valid_v02"
+    )
+    payload_get_keys = {
+        call.args[0].value
+        for call in ast.walk(helper)
+        if isinstance(call, ast.Call)
+        and isinstance(call.func, ast.Attribute)
+        and call.func.attr == "get"
+        and isinstance(call.func.value, ast.Name)
+        and call.func.value.id == "payload"
+        and call.args
+        and isinstance(call.args[0], ast.Constant)
+        and isinstance(call.args[0].value, str)
+    }
+    assert {"state", "prior_state", "predecessor_relation", "parent_cell_id"}.issubset(
+        payload_get_keys
+    )
+    prefix_state = fr._d4_initialize_runtime_state_v02(
+        baseline.source_context,
+        observed_work_context=context,
+    )
+    prefix_indexes = fr._d4_indexes_v02(prefix_state)
+    live_global = prefix_indexes["live_head_by_axis"][(
+        "ROOT_GLOBAL_AND_CELL",
+        baseline.topology.root_cell_id,
+    )]
+    backpressure = fr.evaluate_fractal_backpressure_v02(
+        source_context=baseline.source_context,
+        topology=baseline.topology,
+        policy=baseline.source_context.runtime_policy,
+        global_budget=live_global,
+        queue_entries=fr._d4_latest_v02(prefix_state),
+        admission_round=1,
+        settled_budget_log=prefix_state["budgets"],
+        settled_queue_entry_log=prefix_state["queue_entries"],
+        settled_queue_artifact_log=prefix_state["queue_artifacts"],
+        settled_cell_inputs=prefix_state["cell_inputs"],
+        settled_scope_projections=prefix_state["scope_projections"],
+        settled_revise_observations=prefix_state["revise_observations"],
+        settled_backpressure_states=prefix_state["backpressure_states"],
+        settled_validation_reports=prefix_state["prefix_reports"],
+        observed_work_context=context,
+    )
+    assert backpressure is None or (
+        fr.validate_fractal_backpressure_state_v02(backpressure).status
+        == "PASS"
+    )
+
+
+def test_e4c001_v03_selective_granular_identity_propagation_and_unaffected_exclusion_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+) -> None:
+    family = e4c001_observed_work_family_v02
+    baseline = family["baseline"]
+    candidate = family["selective_bundle"]
+    context = family["selective_context"]
+    selected_input = family["selected_input"]
+    selected_node = family["selected_node"]
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(candidate, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(selected_input, fr.FractalCellInputV02)
+    assert isinstance(selected_node, fr.RuntimeTopologyNodeV02)
+    assert context.execution_scope == "SELECTIVE"
+    assert context.ordered_direct_affected_node_ids == (selected_node.node_id,)
+    assert context.ordered_affected_cell_ids == (selected_input.cell_id,)
+    selected = {selected_node.node_id}
+    changed = True
+    while changed:
+        changed = False
+        for edge in baseline.topology_edges:
+            if (
+                edge.cell_projection_class == "FRACTAL_LEAF_PROJECTION"
+                and edge.source_node_id in selected
+                and edge.target_node_id not in selected
+            ):
+                selected.add(edge.target_node_id)
+                changed = True
+    assert context.ordered_execution_node_ids == tuple(
+        node.node_id for node in baseline.topology_nodes if node.node_id in selected
+    )
+    assert candidate.source_context == baseline.source_context
+    assert candidate.source_binding == baseline.source_binding
+    assert candidate.topology_seed == baseline.topology_seed
+    assert candidate.topology_nodes == baseline.topology_nodes
+    assert candidate.topology_edges == baseline.topology_edges
+    assert candidate.runtime_assignments == baseline.runtime_assignments
+    assert candidate.topology == baseline.topology
+    assert candidate.topology_artifact == baseline.topology_artifact
+    baseline_input_by_cell = {item.cell_id: item for item in baseline.cell_inputs}
+    candidate_input_by_cell = {item.cell_id: item for item in candidate.cell_inputs}
+    assert candidate_input_by_cell[selected_input.cell_id] != selected_input
+    unselected_input = next(
+        item
+        for item in baseline.cell_inputs
+        if item.parent_cell_id is not None and item.cell_id != selected_input.cell_id
+    )
+    assert candidate_input_by_cell[unselected_input.cell_id] == unselected_input
+    baseline_queue_by_key = {
+        (entry.cell_id, entry.node_id, entry.snapshot_sequence): artifact
+        for entry, artifact in zip(
+            baseline.queue_entries,
+            baseline.queue_artifacts,
+            strict=True,
+        )
+    }
+    candidate_queue_by_key = {
+        (entry.cell_id, entry.node_id, entry.snapshot_sequence): artifact
+        for entry, artifact in zip(
+            candidate.queue_entries,
+            candidate.queue_artifacts,
+            strict=True,
+        )
+    }
+    unselected_keys = tuple(
+        key for key in baseline_queue_by_key if key[0] == unselected_input.cell_id
+    )
+    assert unselected_keys
+    assert all(
+        candidate_queue_by_key[key] == baseline_queue_by_key[key]
+        for key in unselected_keys
+    )
+    baseline_result_by_cell = {
+        result.cell_id: artifact
+        for result, artifact in zip(
+            baseline.cell_results,
+            baseline.result_artifacts,
+            strict=True,
+        )
+    }
+    candidate_result_by_cell = {
+        result.cell_id: artifact
+        for result, artifact in zip(
+            candidate.cell_results,
+            candidate.result_artifacts,
+            strict=True,
+        )
+    }
+    assert candidate_result_by_cell[unselected_input.cell_id] == (
+        baseline_result_by_cell[unselected_input.cell_id]
+    )
+    assert candidate_result_by_cell[selected_input.cell_id] != (
+        baseline_result_by_cell[selected_input.cell_id]
+    )
+    assert candidate.runtime_trace.trace_id != baseline.runtime_trace.trace_id
+    assert candidate.runtime_report.report_id != baseline.runtime_report.report_id
+    assert candidate.report_artifact.artifact_id != baseline.report_artifact.artifact_id
+    assert context.baseline_execution_bundle == baseline
+    assert context.baseline_execution_bundle.observed_work_context is None
+    unselected_initial_artifacts = tuple(
+        artifact
+        for entry, artifact in zip(
+            candidate.queue_entries,
+            candidate.queue_artifacts,
+            strict=True,
+        )
+        if entry.cell_id == unselected_input.cell_id
+        and entry.predecessor_queue_entry_id is None
+    )
+    binding_ids = {item.artifact_id for item in context.ordered_binding_artifacts}
+    assert all(
+        not binding_ids.intersection(artifact.parent_refs)
+        for artifact in unselected_initial_artifacts
+    )
+
+
+def test_e4c001_v03_parent_closed_stage_causal_and_complete_bundle_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+) -> None:
+    family = e4c001_observed_work_family_v02
+    bundle = family["selective_bundle"]
+    context = family["selective_context"]
+    baseline = family["baseline"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    stage_a, stage_b, stage_c = _d4_bundle_artifacts(bundle)
+    baseline_stages = _d4_bundle_artifacts(baseline)
+    assert tuple(map(len, (stage_a, stage_b, stage_c))) == tuple(
+        map(len, baseline_stages)
+    )
+    for stage, artifacts in zip(
+        ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"),
+        (stage_a, stage_b, stage_c),
+        strict=True,
+    ):
+        report = fr.validate_fractal_runtime_stage_bundle_v02(
+            stage=stage,
+            artifacts=artifacts,
+            source_context=bundle.source_context,
+            topology=bundle.topology,
+            topology_artifact=bundle.topology_artifact,
+            runtime_trace=bundle.runtime_trace,
+            queue_entries=bundle.queue_entries,
+            queue_artifacts=bundle.queue_artifacts,
+            cell_results=bundle.cell_results,
+            result_artifacts=bundle.result_artifacts,
+            runtime_report=bundle.runtime_report if stage == "STAGE_D_C" else None,
+            report_artifact=bundle.report_artifact if stage == "STAGE_D_C" else None,
+            observed_work_context=context,
+        )
+        assert report.status == "PASS"
+    assert fr.validate_fractal_runtime_abi_profile_v02(
+        stage_c,
+        source_context=bundle.source_context,
+        topology=bundle.topology,
+        topology_artifact=bundle.topology_artifact,
+        runtime_trace=bundle.runtime_trace,
+        queue_entries=bundle.queue_entries,
+        queue_artifacts=bundle.queue_artifacts,
+        cell_results=bundle.cell_results,
+        result_artifacts=bundle.result_artifacts,
+        runtime_report=bundle.runtime_report,
+        report_artifact=bundle.report_artifact,
+        observed_work_context=context,
+    ).status == "PASS"
+    assert fr.validate_fractal_runtime_causal_consumption_refs_v02(
+        bundle.causal_consumption_refs,
+        **_d4_validation_kwargs(bundle),
+        stage_d_c_artifacts=stage_c,
+        observed_work_context=context,
+    ).status == "PASS"
+    parent_closed = fr._observed_work_parent_closed_union_v02(
+        stage_artifacts=stage_c,
+        observed_work_context=context,
+    )
+    assert validate_kernel_artifact_bundle_v01(artifacts=parent_closed) == ()
+    positions = {item.artifact_id: index for index, item in enumerate(parent_closed)}
+    assert all(
+        positions[parent_id] < positions[artifact.artifact_id]
+        for artifact in parent_closed
+        for parent_id in artifact.parent_refs
+    )
+    observed_refs = tuple(
+        item
+        for item in bundle.causal_consumption_refs
+        if item.decision_effect
+        in {"OBSERVED_WORK_INPUT", "OBSERVED_WORK_CELL_BINDING"}
+    )
+    assert len(observed_refs) == 6
+    initial_artifact_ids = {
+        artifact.artifact_id
+        for entry, artifact in zip(
+            bundle.queue_entries,
+            bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.predecessor_queue_entry_id is None
+    }
+    binding_by_id = {
+        item.artifact_id: item for item in context.ordered_binding_artifacts
+    }
+    assert all(item.source_artifact_id in binding_by_id for item in observed_refs)
+    assert all(item.downstream_artifact_id in initial_artifact_ids for item in observed_refs)
+    queue_by_id = {item.artifact_id: item for item in bundle.queue_artifacts}
+    assert all(
+        item.source_artifact_id
+        in queue_by_id[item.downstream_artifact_id].parent_refs
+        for item in observed_refs
+    )
+    input_ids = {
+        item.artifact_id
+        for item in (
+            *context.ordered_direct_source_artifacts,
+            *context.ordered_supporting_artifacts,
+            *context.ordered_binding_artifacts,
+        )
+    }
+    assert not input_ids.intersection(bundle.runtime_trace.abi_artifact_refs)
+    assert all(
+        not input_ids.intersection(item.artifact_id for item in stage)
+        for stage in (stage_a, stage_b, stage_c)
+    )
+    assert fr.validate_fractal_runtime_execution_bundle_v02(bundle).status == "PASS"
+
+
+def test_e4c001_v03_counterfactual_rebuild_payload_and_envelope_changes_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    family = e4c001_observed_work_family_v02
+    bundle = family["selective_bundle"]
+    context = family["selective_context"]
+    baseline = family["baseline"]
+    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    captured_material: list[dict[str, object]] = []
+    original_counterfactual_identity = fr._observed_work_counterfactual_id_v02
+
+    def capture_counterfactual_identity(
+        material: dict[str, object],
+    ) -> str:
+        captured_material.append(material)
+        return original_counterfactual_identity(material)
+
+    monkeypatch.setattr(
+        fr,
+        "_observed_work_counterfactual_id_v02",
+        capture_counterfactual_identity,
+    )
+    binding_pairs = {
+        _kernel_payload(item)["source_pair"]["baseline_identity_ref"]: item
+        for item in context.ordered_binding_artifacts
+    }
+    payload_binding = binding_pairs[family["payload_baseline"].artifact_id]
+    lifecycle_binding = binding_pairs[family["lifecycle_baseline"].artifact_id]
+    payload_ref = next(
+        item
+        for item in bundle.causal_consumption_refs
+        if item.source_artifact_id == payload_binding.artifact_id
+        and item.reason_code == "used:g2d_observed_work_input"
+    )
+    lifecycle_ref = next(
+        item
+        for item in bundle.causal_consumption_refs
+        if item.source_artifact_id == lifecycle_binding.artifact_id
+        and item.reason_code == "used:g2d_observed_work_input"
+    )
+    payload_mutation = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "payload", "value": 2},
+        trace_ref="trace:e4c001:payload",
+        predecessor=family["payload_baseline"],
+    )
+    used = fr.validate_runtime_observed_work_counterfactual_v02(
+        execution_bundle=bundle,
+        observed_work_causal_ref=payload_ref,
+        mutated_observed_source_artifact=payload_mutation,
+    )
+    assert used.status == "PASS"
+    assert used.validation_target == "CAUSAL_COUNTERFACTUAL"
+    assert used.failure_stage == "NONE"
+    assert used.validated_object_id is not None
+    assert used.validated_object_id.startswith("frcounterfactual_v02:")
+    used_material = captured_material[-1]
+    assert tuple(used_material) == (
+        "baseline",
+        "candidate",
+        "preserved",
+        "profile",
+    )
+    assert tuple(used_material["baseline"]) == (
+        "affected_cell_input_ids",
+        "affected_result_artifact_ids",
+        "binding_artifact_ids",
+        "direct_initial_queue_artifact_ids",
+        "observed_work_context_id",
+        "report_artifact_id",
+        "runtime_report_id",
+        "runtime_trace_id",
+    )
+    assert tuple(used_material["candidate"]) == (
+        "affected_cell_input_ids",
+        "affected_result_artifact_ids",
+        "binding_artifact_ids",
+        "blocked_by_gate_causal_refs",
+        "counterfactual_disposition",
+        "direct_initial_queue_artifact_ids",
+        "mutated_observed_source_artifact",
+        "observed_work_causal_ref",
+        "observed_work_context_id",
+        "report_artifact_id",
+        "runtime_report_id",
+        "runtime_trace_id",
+    )
+    assert tuple(used_material["preserved"]) == (
+        "ordered_unaffected_artifact_ids",
+        "route_eligibility_artifact_id",
+        "runtime_source_binding_id",
+        "topology_artifact_id",
+        "topology_id",
+    )
+    assert used_material["profile"] == {
+        "counterfactual_profile_id": (
+            "fractal_runtime_observed_work_counterfactual_v02"
+        ),
+        "counterfactual_profile_version": "v0.2",
+        "validation_target": "CAUSAL_COUNTERFACTUAL",
+    }
+    assert used_material["candidate"]["counterfactual_disposition"] == "USED"
+    assert used_material["candidate"]["blocked_by_gate_causal_refs"] == []
+    assert all(
+        used_material["candidate"][key] is not None
+        for key in (
+            "runtime_trace_id",
+            "runtime_report_id",
+            "report_artifact_id",
+        )
+    )
+    assert used.validated_object_id == (
+        "frcounterfactual_v02:"
+        + domain_separated_sha256_hex_v01(
+            domain=(
+                "HEDGEHOG_FRACTAL_RUNTIME_V02_"
+                "OBSERVED_WORK_COUNTERFACTUAL"
+            ),
+            payload=canonical_json_bytes_v01(used_material),
+        )
+    )
+    assert fr.validate_runtime_observed_work_counterfactual_v02(
+        execution_bundle=bundle,
+        observed_work_causal_ref=payload_ref,
+        mutated_observed_source_artifact=payload_mutation,
+    ) == used
+    blocked_mutation = _e4c001_source_artifact_v02(
+        baseline,
+        payload={"source_class": "lifecycle", "value": "stable"},
+        trace_ref="trace:e4c001:lifecycle",
+        predecessor=family["lifecycle_baseline"],
+        lifecycle_state="BLOCKED_FAIL_CLOSED",
+    )
+    blocked = fr.validate_runtime_observed_work_counterfactual_v02(
+        execution_bundle=bundle,
+        observed_work_causal_ref=lifecycle_ref,
+        mutated_observed_source_artifact=blocked_mutation,
+    )
+    assert blocked.status == "PASS"
+    assert blocked.validated_object_id is not None
+    assert blocked.validated_object_id.startswith("frcounterfactual_v02:")
+    assert blocked.validated_object_id != used.validated_object_id
+    blocked_material = captured_material[-1]
+    assert blocked_material["candidate"]["counterfactual_disposition"] == (
+        "BLOCKED_BY_GATE"
+    )
+    blocked_refs = blocked_material["candidate"][
+        "blocked_by_gate_causal_refs"
+    ]
+    assert len(blocked_refs) == 1
+    blocked_ref = blocked_refs[0]
+    assert blocked_ref["source_artifact_id"] in blocked_material[
+        "candidate"
+    ]["binding_artifact_ids"]
+    assert blocked_ref["source_artifact_id"] not in blocked_material[
+        "baseline"
+    ]["binding_artifact_ids"]
+    assert (
+        blocked_ref["downstream_artifact_id"]
+        == lifecycle_ref.downstream_artifact_id
+    )
+    assert blocked_ref["output_field"] == lifecycle_ref.output_field
+    assert blocked_ref["decision_effect"] == "OBSERVED_WORK_INPUT"
+    assert blocked_ref["disposition"] == "BLOCKED_BY_GATE"
+    assert blocked_ref["reason_code"] == "gate:g2d_observed_work_input"
+    assert all(
+        blocked_material["candidate"][key] is None
+        for key in (
+            "runtime_trace_id",
+            "runtime_report_id",
+            "report_artifact_id",
+        )
+    )
+    assert blocked.validated_object_id == (
+        "frcounterfactual_v02:"
+        + domain_separated_sha256_hex_v01(
+            domain=(
+                "HEDGEHOG_FRACTAL_RUNTIME_V02_"
+                "OBSERVED_WORK_COUNTERFACTUAL"
+            ),
+            payload=canonical_json_bytes_v01(blocked_material),
+        )
+    )
+    assert fr.validate_fractal_runtime_causal_counterfactual_v02(
+        execution_bundle=bundle,
+        causal_ref=payload_ref,
+        mutated_source_artifact=payload_mutation,
+    ).status == "FAIL_CLOSED"
+    assert fr.validate_runtime_observed_work_counterfactual_v02(
+        execution_bundle=bundle,
+        observed_work_causal_ref=replace(
+            payload_ref,
+            decision_effect="OBSERVED_WORK_CELL_BINDING",
+        ),
+        mutated_observed_source_artifact=payload_mutation,
+    ).status == "FAIL_CLOSED"
+
+    selected_input = family["selected_input"]
+    assert isinstance(selected_input, fr.FractalCellInputV02)
+    second_node = next(
+        item
+        for item in baseline.topology_nodes
+        if item.node_id == selected_input.ordered_node_ids[1]
+    )
+    second_payload_binding = (
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=second_node,
+            cell_input=selected_input,
+            baseline_source_artifact=family["payload_baseline"],
+            observed_source_artifact=family["payload_observed"],
+            changed_full_artifact_pointers=("/payload/value",),
+            execution_scope="SELECTIVE",
+        )
+    )
+    shared_source_context = fr.build_runtime_observed_work_context_v02(
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=family["direct_sources"],
+        supporting_artifacts=(),
+        binding_artifacts=(
+            *context.ordered_binding_artifacts,
+            second_payload_binding,
+        ),
+        execution_scope="SELECTIVE",
+    )
+    shared_source_bundle = fr._d4_run_runtime_v02(
+        baseline.source_context,
+        observed_work_context=shared_source_context,
+    )
+    shared_payload_ref = next(
+        item
+        for item in shared_source_bundle.causal_consumption_refs
+        if item.source_artifact_id == payload_binding.artifact_id
+        and item.reason_code == "used:g2d_observed_work_input"
+    )
+    assert fr.validate_runtime_observed_work_counterfactual_v02(
+        execution_bundle=shared_source_bundle,
+        observed_work_causal_ref=shared_payload_ref,
+        mutated_observed_source_artifact=payload_mutation,
+    ).status == "PASS"
+
+
+def test_e4c001_v03_historical_none_and_whole_run_escalation_call_accounting_v02(
+    e4c001_observed_work_family_v02: dict[str, object],
+) -> None:
+    family = e4c001_observed_work_family_v02
+    baseline = family["baseline"]
+    whole_context = family["whole_context"]
+    selective_context = family["selective_context"]
+    assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
+    assert isinstance(whole_context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(selective_context, fr.RuntimeObservedWorkContextV02)
+    assert baseline.observed_work_context is None
+    whole_bundle, whole_report = fr.run_fractal_runtime_v02(
+        baseline.source_context,
+        observed_work_context=whole_context,
+    )
+    assert isinstance(whole_bundle, fr.FractalRuntimeExecutionBundleV02)
+    assert whole_report.status == "PASS"
+    assert whole_bundle.observed_work_context == whole_context
+    rejected_bundle, rejected_report = fr.run_fractal_runtime_v02(
+        baseline.source_context,
+        observed_work_context=selective_context,
+    )
+    assert rejected_bundle is None
+    assert rejected_report.status == "FAIL_CLOSED"
+    assert rejected_report.reason_codes == (
+        "g2d_topology_source_binding_invalid",
+    )
+    assert whole_context.execution_scope == "WHOLE_RUN_ESCALATION"
+    assert whole_context.whole_run_escalation_policy_id == (
+        "fractal_runtime_whole_run_escalation_v02"
+    )
+    assert whole_context.root_review_required is True
+    assert all(
+        getattr(whole_context, name) == 0
+        for name in (
+            "provider_calls",
+            "model_calls",
+            "network_calls",
+            "connector_calls",
+            "external_drs_calls",
+            "real_world_effects_count",
+        )
+    )
+    assert all(
+        getattr(whole_context, name) is False
+        for name in (
+            "authority_created",
+            "permission_created",
+            "action_commit_packet_created",
+            "receipt_created",
+            "final_output_created",
+            "drs_write_created",
+        )
+    )
+    assert fr.validate_fractal_runtime_execution_bundle_v02(
+        whole_bundle
+    ).status == "PASS"
 
 
 D5_CASE_ORDER_V02 = (

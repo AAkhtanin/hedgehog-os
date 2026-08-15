@@ -23,6 +23,7 @@ PYPROJECT_PATH = REPOSITORY_ROOT / "pyproject.toml"
 LICENSE_PATH = REPOSITORY_ROOT / "LICENSE"
 COMMERCIAL_NOTICE_PATH = REPOSITORY_ROOT / "COMMERCIAL-LICENSING.md"
 SIGNER_TEST_PATH = REPOSITORY_ROOT / "tests/test_root_signer_isolation_v01.py"
+TESTS_ROOT = REPOSITORY_ROOT / "tests"
 
 CANONICAL_GNU_SOURCE_DESCRIPTION = (
     "Complete GNU Affero General Public License version 3 text fetched by "
@@ -208,10 +209,20 @@ def test_pyproject_dependency_and_direct_import_contract() -> None:
     assert "setuptools" in build_backend_roots
     assert "setuptools" not in project_import_roots
 
+    repository_test_module_roots = {
+        path.stem
+        for path in repository_python_paths
+        if path.parent == TESTS_ROOT
+    }
     observed_roots: set[str] = set()
     ignored_roots = set(sys.stdlib_module_names) | REPOSITORY_IMPORT_ROOTS
     for path in repository_python_paths:
-        observed_roots.update(_direct_import_roots(path) - ignored_roots)
+        direct_import_roots = _direct_import_roots(path)
+        if path.parent == TESTS_ROOT:
+            direct_import_roots -= repository_test_module_roots
+        else:
+            assert direct_import_roots.isdisjoint(repository_test_module_roots)
+        observed_roots.update(direct_import_roots - ignored_roots)
 
     unknown_import_roots = observed_roots - project_import_roots
     assert unknown_import_roots == set()

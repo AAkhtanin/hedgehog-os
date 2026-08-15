@@ -14,10 +14,12 @@
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES` only.
-- Current G2-D is
-  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-D correction implementation authorization is `false`; no corrected
-  implementation byte exists.
+- Current G2-D is `REAUDIT_PENDING`.
+- G2-D correction implementation authorization is `true`; corrected
+  implementation bytes exist in this commit-ready projection.
+- Corrected implementation committed is `true`; contract-only claim, corrected
+  runtime acceptance, independent re-audit PASS, and corrected closure are all
+  `false`.
 - Accepted G2-D v0.3.7 normative donor SHA-256:
   `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
 - Accepted G2-D repository addendum SHA-256:
@@ -27,14 +29,11 @@
 - Historical pre-correction G2-D checkpoint:
   `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
 - The old audit and checkpoint certify pre-correction bytes only.
-- Independent re-audit and additive successor reclosure are mandatory after a
-  separately authorized corrected implementation lands.
+- The old audit and checkpoint are `HISTORICAL_PRECORRECTION_EVIDENCE` only.
+- Independent re-audit and additive successor reclosure remain mandatory.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is
-  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D`.
-- After corrected G2-D bytes land, G2-E3 becomes
-  `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit, additive
-  reclosure, and one fresh unchanged V06 PASS.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit,
+  additive reclosure, and one fresh unchanged V06 PASS.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
@@ -49,7 +48,7 @@
 - RuntimeExecutionTopology is not authority.
 - Child results are not FinalOutput.
 - No successor baseline, FinalOutput, permission, packet, receipt, DRS write,
-  or real-world effect is claimed by this contract hop.
+  or real-world effect is claimed by this implementation candidate.
 - Important maintenance debt is recorded for post-Gate-2 treatment and is not
   a closure blocker.
 - An editable Git checkout from the repository root is the supported near-term

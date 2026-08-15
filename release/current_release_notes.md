@@ -65,22 +65,22 @@ These are current engineering notes, not a public release announcement.
 - G2-C is `CLOSED_PASS`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D is `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-D correction implementation authorization is `false`; no corrected
-  implementation byte exists.
+- G2-D is `REAUDIT_PENDING`.
+- G2-D correction implementation authorization is `true`; corrected
+  implementation bytes exist in this commit-ready projection.
+- Corrected implementation committed is `true`; contract-only claim, corrected
+  runtime acceptance, independent re-audit PASS, and corrected closure are all
+  `false`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is
-  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D`.
-- After corrected G2-D bytes land, G2-E3 becomes
-  `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit, additive
-  reclosure, and one fresh unchanged V06 PASS.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit,
+  additive reclosure, and one fresh unchanged V06 PASS.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
-- No corrected G2-D implementation byte is created in this contract-only hop.
-- Independent re-audit and additive successor reclosure are mandatory after a
-  separately authorized corrected implementation lands.
-- Only bounded contract-identity and release-spine checks run in this hop; no
-  G2-D runtime, D5, Living, Conformance, or public runner executes.
+- The old G2-D audit and checkpoint are
+  `HISTORICAL_PRECORRECTION_EVIDENCE` only.
+- Independent re-audit and additive successor reclosure remain mandatory.
+- Bounded implementation evidence is not an independent audit, corrected
+  closure, or corrected runtime acceptance.
 - R-IP1 does not block G2-E or G2-F; private R-IP1 drafts may remain
   living through Gates 3-6.
 - Public release remains `NOT_CLAIMED`.
@@ -103,6 +103,6 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. Acceptance of the G2-D v0.3.7 correction
-contract does not implement corrected runtime bytes, close Gate 2, start G2-E4,
-or authorize G2-F.
+not standalone public architectures. The G2-D v0.3.7 corrected implementation
+candidate does not close Gate 2, start G2-E4, authorize G2-F, or replace the
+required independent re-audit and additive reclosure.

@@ -74,6 +74,43 @@ _POSITIVE_MODE_ROWS = (
     (DOMAIN_ORDER[1], "full_fractal", False, False),
 )
 
+_V036_VALIDATION_TARGETS_PREFIX = (
+    "FractalRuntimePolicyV02",
+    "FractalRuntimeBudgetV02",
+    "RuntimeTopologySourceBindingV02",
+    "RuntimeTopologySeedV02",
+    "RuntimeTopologyNodeV02",
+    "RuntimeTopologyEdgeV02",
+    "RuntimeAssignmentV02",
+    "RuntimeExecutionTopologyV02",
+    "ParentChildScopeProjectionV02",
+    "FractalCellInputV02",
+    "FractalCellQueueEntryV02",
+    "FractalReviseObservationV02",
+    "FractalPartialFailureRecordV02",
+    "FractalBackpressureStateV02",
+    "FractalCellResultV02",
+    "FractalRuntimeTraceV02",
+    "FractalRuntimeReportV02",
+    "SOURCE_CONTEXT_STRUCTURAL",
+    "SOURCE_BINDING_AGAINST_G2C",
+    "TOPOLOGY_AGAINST_SOURCES",
+    "SCOPE_PROJECTION_AGAINST_SOURCES",
+    "CELL_INPUT_AGAINST_SOURCES",
+    "RESULT_PROPOSAL",
+    "POST_VV_REPORT",
+    "GT_ADVISORY_REPORT",
+    "CELL_RESULT_PRECONDITIONS",
+    "RUNTIME_REPORT_AGAINST_SOURCES",
+    "STAGE_D_A",
+    "STAGE_D_B",
+    "STAGE_D_C",
+    "ABI_PROFILE",
+    "CAUSAL_CONSUMPTION",
+    "CAUSAL_COUNTERFACTUAL",
+    "COMPLETE_PROFILE",
+)
+
 _CONSTRUCTIVE_CASE_NUMBERS = (
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 42, 43, 45, 46, 48, 49, 50, 51,
     52, 53, 54, 55, 56, 57, 59, 60, 61, 63, 64, 66, 67, 68, 69, 70,
@@ -8862,7 +8899,10 @@ def _populate_accepted_matrix_proof_v02(
         _require_v02(
             fr.validate_fractal_runtime_validation_report_v02(pass_report) == ()
             and fr.validate_fractal_runtime_validation_report_v02(failure_report) == ()
-            and len(fr.VALIDATION_TARGETS) == 34
+            and fr.VALIDATION_TARGETS[:-1] == _V036_VALIDATION_TARGETS_PREFIX
+            and fr.VALIDATION_TARGETS[-1]
+            == "OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"
+            and len(fr.VALIDATION_TARGETS) == 35
             and len(fr.FAILURE_STAGES) == 30,
             "g2d5_validation_geometry_invalid",
         )
@@ -10357,7 +10397,11 @@ def _matrix_proof_valid_v02(
         return (
             details["validation_targets"] == list(fr.VALIDATION_TARGETS)
             and details["failure_stages"] == list(fr.FAILURE_STAGES)
-            and details["validation_target_count"] == 34
+            and details["validation_targets"][:-1]
+            == list(_V036_VALIDATION_TARGETS_PREFIX)
+            and details["validation_targets"][-1]
+            == "OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"
+            and details["validation_target_count"] == 35
             and details["failure_stage_count"] == 30
             and type(rows) is list
             and bool(rows)
@@ -10419,7 +10463,7 @@ def _matrix_proof_valid_v02(
             and details["terminal_report_status"] == "PASS"
             and details["root_owned_outcome"] is True
             and details["staged_public_function_counts"] == [74, 81, 90, 110]
-            and details["module_public_function_count"] == 110
+            and details["module_public_function_count"] == 116
         )
     if number == 68:
         rows = details["four_child_structural_rows"]

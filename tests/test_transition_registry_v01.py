@@ -1759,7 +1759,13 @@ def _g2d2_artifact_pair(
             "topology_seed_id": topology_seed_id,
         }
         source_parents = ("emabi_route_v01:" + "c" * 64,)
-        target_payload = {"topology_seed_id": topology_seed_id}
+        target_payload = {
+            "topology_seed_id": topology_seed_id,
+            "state": "PENDING",
+            "prior_state": None,
+            "predecessor_relation": "INITIAL_NONE",
+            "parent_cell_id": None,
+        }
         target_trace = (
             decision_id,
             topology_id,
@@ -1772,6 +1778,12 @@ def _g2d2_artifact_pair(
             "parent_cell_id": None,
             "node_id": "frnode_v02:" + "e" * 64,
         }
+        if rule_index in {2, 3}:
+            source_payload.update({
+                "state": "PENDING",
+                "prior_state": None,
+                "predecessor_relation": "INITIAL_NONE",
+            })
         source_parents = (
             (topology_artifact_id,)
             if rule_index in {2, 3}
@@ -1890,8 +1902,19 @@ def _g2d2_target_for_source(
     source,
     parent_refs: tuple[str, ...],
 ):
+    source_payload = kernel_artifact_to_plain_dict_v01(source)["payload"]
+    target_payload = kernel_artifact_to_plain_dict_v01(target)["payload"]
+    for field_name in (
+        "topology_seed_id",
+        "cell_id",
+        "parent_cell_id",
+        "node_id",
+    ):
+        if field_name in source_payload and field_name in target_payload:
+            target_payload[field_name] = source_payload[field_name]
     return _g2d2_rebuild_artifact(
         target,
+        payload=target_payload,
         parent_refs=tuple(
             source.artifact_id if parent == "SOURCE" else parent
             for parent in parent_refs
@@ -2247,18 +2270,45 @@ def test_g2d2_initial_and_queue_parent_geometry() -> None:
     topology_id = "frabi_topology_v02:" + "2" * 64
     parent_slot_id = "frabi_queue_v02:" + "3" * 64
     result_id = "frabi_result_v02:" + "4" * 64
+    binding_ids = (
+        "frobservedwork_v02:" + "5" * 64,
+        "frobservedwork_v02:" + "6" * 64,
+    )
 
     t02_source, t02_target = _g2d2_artifact_pair(registry.rules[1], 1)
     assert _g2d2_pair_errors(registry, 1, t02_source, t02_target) == ()
     child_target = _g2d2_rebuild_artifact(
         t02_target,
+        payload={
+            **kernel_artifact_to_plain_dict_v01(t02_target)["payload"],
+            "parent_cell_id": "frrootcell_v02:" + "7" * 64,
+        },
         parent_refs=(t02_source.artifact_id, parent_slot_id),
     )
     assert _g2d2_pair_errors(registry, 1, t02_source, child_target) == ()
+    root_context_target = _g2d2_rebuild_artifact(
+        t02_target,
+        parent_refs=(t02_source.artifact_id, *binding_ids),
+    )
+    child_context_target = _g2d2_rebuild_artifact(
+        t02_target,
+        payload={
+            **kernel_artifact_to_plain_dict_v01(t02_target)["payload"],
+            "parent_cell_id": "frrootcell_v02:" + "7" * 64,
+        },
+        parent_refs=(t02_source.artifact_id, parent_slot_id, *binding_ids),
+    )
+    assert _g2d2_pair_errors(
+        registry, 1, t02_source, root_context_target
+    ) == ()
+    assert _g2d2_pair_errors(
+        registry, 1, t02_source, child_context_target
+    ) == ()
     for bad_parents in (
         (t02_source.artifact_id, result_id),
         (topology_id, parent_slot_id),
         (t02_source.artifact_id, parent_slot_id, result_id),
+        (t02_source.artifact_id, parent_slot_id, "binding:foreign"),
     ):
         assert _g2d2_pair_errors(
             registry,
@@ -2266,6 +2316,19 @@ def test_g2d2_initial_and_queue_parent_geometry() -> None:
             t02_source,
             _g2d2_rebuild_artifact(t02_target, parent_refs=bad_parents),
         )
+    assert _g2d2_pair_errors(
+        registry,
+        1,
+        t02_source,
+        replace(
+            t02_target,
+            parent_refs=(
+                t02_source.artifact_id,
+                binding_ids[0],
+                binding_ids[0],
+            ),
+        ),
+    )
     assert _g2d2_pair_errors(
         registry,
         1,
@@ -2290,6 +2353,10 @@ def test_g2d2_initial_and_queue_parent_geometry() -> None:
         assert _g2d2_pair_errors(registry, rule_index, source, target) == ()
         child_source = _g2d2_rebuild_artifact(
             source,
+            payload={
+                **kernel_artifact_to_plain_dict_v01(source)["payload"],
+                "parent_cell_id": "frrootcell_v02:" + "7" * 64,
+            },
             parent_refs=(source.parent_refs[0], parent_slot_id),
         )
         child_target = _g2d2_target_for_source(
@@ -2299,6 +2366,37 @@ def test_g2d2_initial_and_queue_parent_geometry() -> None:
         )
         assert _g2d2_pair_errors(
             registry, rule_index, child_source, child_target
+        ) == ()
+        context_source = _g2d2_rebuild_artifact(
+            source,
+            parent_refs=(source.parent_refs[0], *binding_ids),
+        )
+        context_target = _g2d2_target_for_source(
+            target,
+            context_source,
+            (context_source.parent_refs[0], "SOURCE"),
+        )
+        assert _g2d2_pair_errors(
+            registry, rule_index, context_source, context_target
+        ) == ()
+        child_context_source = _g2d2_rebuild_artifact(
+            source,
+            payload={
+                **kernel_artifact_to_plain_dict_v01(source)["payload"],
+                "parent_cell_id": "frrootcell_v02:" + "7" * 64,
+            },
+            parent_refs=(source.parent_refs[0], parent_slot_id, *binding_ids),
+        )
+        child_context_target = _g2d2_target_for_source(
+            target,
+            child_context_source,
+            (child_context_source.parent_refs[0], "SOURCE"),
+        )
+        assert _g2d2_pair_errors(
+            registry,
+            rule_index,
+            child_context_source,
+            child_context_target,
         ) == ()
 
     for rule_index in range(4, 12):

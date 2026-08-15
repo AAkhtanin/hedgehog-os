@@ -57,7 +57,7 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-D v0.3.7 correction contract ACCEPTED / implementation pending.
+Current checkpoint: G2-D v0.3.7 corrected implementation REAUDIT_PENDING.
 
 Current G2-D correction-contract facts:
 
@@ -92,11 +92,16 @@ Current G2-D correction-contract facts:
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
 - Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D: `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-D correction implementation authorized: `false`.
-- Corrected G2-D implementation byte exists: `false`.
-- G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_PRECORRECTION_G2D`.
-- After corrected G2-D bytes land, G2-E3 becomes `REVALIDATION_PENDING_ON_CORRECTED_G2D` until independent re-audit, additive reclosure, and one fresh unchanged V06 PASS.
+- G2-D: `REAUDIT_PENDING`.
+- G2-D correction implementation authorized: `true`.
+- Corrected G2-D implementation byte exists: `true`.
+- Corrected G2-D implementation committed: `true` in this commit-ready projection.
+- G2-D contract-only claim: `false`.
+- Corrected G2-D runtime acceptance claimed: `false`.
+- Independent G2-D re-audit passed: `false`.
+- Corrected G2-D closure claimed: `false`.
+- Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
+- G2-E3: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - G2-E4: `NOT_STARTED_NOT_AUTHORIZED`.
 - Gate 2: `NOT_CLOSED`.
 - G2-F: `NOT_STARTED / NOT_AUTHORIZED`.
@@ -118,12 +123,11 @@ Current G2-D correction-contract facts:
   handle, DRS write, FinalOutput, provider authority, connector authority, or
   real-world effect.
 - Provider, model, network, connector, and external-DRS calls remain zero.
-- No corrected G2-D implementation byte exists in this contract-only hop.
-- Independent re-audit and additive successor reclosure are mandatory after a
-  separately authorized corrected implementation lands.
-- This contract synchronization executes only bounded contract and
-  release-spine checks; no G2-D runtime, D5, Living, Conformance, or public
-  runner is replayed.
+- Corrected G2-D implementation bytes exist, but corrected runtime acceptance
+  is not claimed.
+- Independent re-audit and additive successor reclosure remain mandatory.
+- The bounded implementation evidence is not an independent audit, corrected
+  closure, fresh G2-E3 V06 acceptance, or Gate-2 closure.
 - Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
 - R-IP1 does not block G2-E or G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.

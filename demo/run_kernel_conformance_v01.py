@@ -1151,7 +1151,7 @@ def _g2d_baseline_geometry_v04(report: object) -> dict[str, bool]:
             and len(details[59]["policy_profile_separation"]) == 5
             and details[67]["staged_public_function_counts"]
             == [74, 81, 90, 110]
-            and details[67]["module_public_function_count"] == 110
+            and details[67]["module_public_function_count"] == 116
             and details[67]["public_return_bundle_type"]
             == "FractalRuntimeExecutionBundleV02"
             and details[67]["terminal_report_target"] == "COMPLETE_PROFILE"

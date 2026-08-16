@@ -37,6 +37,7 @@ from hedgehog.kernel.abi_v01 import (
     causal_consumption_ref_to_plain_dict_v01,
     kernel_artifact_to_canonical_ref_v01,
     kernel_artifact_to_plain_dict_v01,
+    validate_causal_consumption_ref_v01,
     validate_kernel_artifact_v01,
 )
 from hedgehog.kernel.integrity_replay_v01 import (
@@ -2882,10 +2883,17 @@ def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
         if isinstance(node, ast.ImportFrom)
     )
     assert public_functions == (
-        QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS
+        QUARTET_FUNCTIONS
+        + E2_PUBLIC_FUNCTIONS
+        + E3_PUBLIC_FUNCTIONS
+        + E4_PUBLIC_FUNCTIONS
     )
     assert g2e.__all__ == (
-        TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS
+        TYPE_NAMES
+        + QUARTET_FUNCTIONS
+        + E2_PUBLIC_FUNCTIONS
+        + E3_PUBLIC_FUNCTIONS
+        + E4_PUBLIC_FUNCTIONS
     )
     assert len(g2e.PUBLIC_G2E_REASON_CODES_V01) == 88
     assert len(g2e.VALIDATION_TARGETS_V01) == 32
@@ -2895,7 +2903,7 @@ def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
         {"os", "pathlib", "time", "random", "socket", "requests", "subprocess"}
     )
     assert not any("tests" in item or "demo" in item for item in imports)
-    assert not hasattr(kernel, "WorldStateDeltaV01")
+    assert kernel.WorldStateDeltaV01 is g2e.WorldStateDeltaV01
     global_names = {
         target.id
         for node in tree.body
@@ -3416,8 +3424,8 @@ def test_e1_runtime_only_context_and_bundle_declarations_v01() -> None:
     assert all(bundle_annotations[field_name] is not object for field_name in artifact_fields)
     assert hasattr(g2e, "build_continuous_delta_source_context_v01")
     assert hasattr(g2e, "validate_continuous_delta_source_context_v01")
-    assert not hasattr(g2e, "build_continuous_delta_execution_bundle_v01")
-    assert not hasattr(g2e, "validate_continuous_delta_execution_bundle_v01")
+    assert hasattr(g2e, "build_continuous_delta_execution_bundle_v01")
+    assert hasattr(g2e, "validate_continuous_delta_execution_bundle_v01")
 
 
 def test_e1_abi_profile_declarations_and_future_slice_behavior_absent_v01() -> None:
@@ -3505,12 +3513,12 @@ def test_e1_abi_profile_declarations_and_future_slice_behavior_absent_v01() -> N
         "build_preservation_proof_v01",
     )
     assert all(hasattr(g2e, name) for name in present)
-    forbidden = (
+    implemented = (
         "execute_selective_recomputation_v01",
         "run_continuous_delta_runtime_v01",
-        "build_continuous_delta_transition_registry_profile_v01",
     )
-    assert all(not hasattr(g2e, name) for name in forbidden)
+    assert all(hasattr(g2e, name) for name in implemented)
+    assert not hasattr(g2e, "build_continuous_delta_transition_registry_profile_v01")
 
 
 def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
@@ -3524,17 +3532,19 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
     assert len(E2_BEHAVIORAL_FUNCTIONS) == 5
     e2_prefix = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
     assert public_functions[:45] == e2_prefix
-    assert len(public_functions) == 62
+    assert len(public_functions) == 89
     assert g2e.__all__[:65] == TYPE_NAMES + e2_prefix
-    assert len(g2e.__all__) == 82
-    assert public_functions[45:] == E3_PUBLIC_FUNCTIONS
+    assert len(g2e.__all__) == 109
+    assert public_functions[45:62] == E3_PUBLIC_FUNCTIONS
+    assert public_functions[62:] == E4_PUBLIC_FUNCTIONS
+    assert g2e.__all__[82:] == E4_PUBLIC_FUNCTIONS
     assert g2e.CONTINUOUS_DELTA_GRAPH_VERSION_V01 == "v0.1"
     assert g2e.MAX_DEPENDENCY_GRAPH_NODES_V01 == 256
     assert g2e.MAX_DEPENDENCY_GRAPH_EDGES_V01 == 1024
     assert g2e.MAX_AFFECTED_HOPS_V01 == 32
     assert len(E4_PUBLIC_FUNCTIONS) == 27
     for name in E4_PUBLIC_FUNCTIONS:
-        assert not hasattr(g2e, name)
+        assert hasattr(g2e, name)
     assert "source_context" not in inspect.signature(
         g2e.compute_affected_set_v01
     ).parameters
@@ -3593,8 +3603,9 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
         for node in test_tree.body
         if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
     )
-    assert len(test_names) == 50
+    assert len(test_names) == 68
     assert sum(name.startswith("test_e3_") for name in test_names) == 18
+    assert sum(name.startswith("test_e4_") for name in test_names) == 18
 
 
 def test_e2_four_quartets_identity_plain_data_and_schema_v01() -> None:
@@ -4473,8 +4484,8 @@ def test_e2_no_e3_source_context_invalidation_execution_or_facade_v01() -> None:
         "execute_selective_recomputation_v01",
         "run_continuous_delta_runtime_v01",
     }
-    assert not public_functions.intersection(forbidden)
-    assert not hasattr(kernel, "DeltaDependencyEdgeV01")
+    assert forbidden.issubset(public_functions)
+    assert kernel.DeltaDependencyEdgeV01 is g2e.DeltaDependencyEdgeV01
     top_level_functions = {
         node.name: node
         for node in tree.body
@@ -4502,13 +4513,12 @@ def test_e2_no_e3_source_context_invalidation_execution_or_facade_v01() -> None:
             called_names.add(node.func.id)
         elif isinstance(node.func, ast.Attribute):
             called_names.add(node.func.attr)
-    forbidden_execution_seams = {
+    assert {
         "execute_selective_recomputation_v01",
         "run_continuous_delta_runtime_v01",
-        "_d4_run_runtime_v02",
-    }
-    assert not defined_names.intersection(forbidden_execution_seams)
-    assert not called_names.intersection(forbidden_execution_seams)
+    }.issubset(defined_names)
+    assert "_d4_run_runtime_v02" not in defined_names
+    assert "_d4_run_runtime_v02" not in called_names
     imported_modules = {
         node.module or ""
         for node in ast.walk(tree)
@@ -4524,7 +4534,6 @@ def test_e2_no_e3_source_context_invalidation_execution_or_facade_v01() -> None:
         "demo" in module_name or "runner" in module_name
         for module_name in imported_modules
     )
-    assert "run_fractal_runtime_v02" not in called_names
     assert not called_names.intersection(
         {"provider_call", "model_call", "network_call", "connector_call"}
     )
@@ -4667,11 +4676,13 @@ def test_e3_exact_public_surface_and_slice_boundary_v01() -> None:
         if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
     )
     assert public_functions[:45] == QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
-    assert public_functions[45:] == E3_PUBLIC_FUNCTIONS
-    assert len(public_functions) == 62
+    assert public_functions[45:62] == E3_PUBLIC_FUNCTIONS
+    assert public_functions[62:] == E4_PUBLIC_FUNCTIONS
+    assert len(public_functions) == 89
     assert g2e.__all__[:65] == TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
-    assert g2e.__all__[65:] == E3_PUBLIC_FUNCTIONS
-    assert len(g2e.__all__) == 82
+    assert g2e.__all__[65:82] == E3_PUBLIC_FUNCTIONS
+    assert g2e.__all__[82:] == E4_PUBLIC_FUNCTIONS
+    assert len(g2e.__all__) == 109
     assert len(g2e.G2E_INVALIDATION_REASON_CLASSES_V01) == 10
     assert g2e.G2E_G2A_PACKET_RELATIONS_V01 == (
         "NOT_APPLICABLE",
@@ -4685,7 +4696,7 @@ def test_e3_exact_public_surface_and_slice_boundary_v01() -> None:
         "ROUTE_CURRENT",
         "ROUTE_REVALIDATION_REQUIRED",
     )
-    assert not any(
+    assert all(
         hasattr(g2e, name)
         for name in (
             "build_selective_recomputation_plan_from_affected_set_v01",
@@ -5393,7 +5404,7 @@ def test_e3_g2c_route_revalidation_terminal_before_e4_v01(
     assert report.report_status == "FAIL_CLOSED"
     assert report.ordered_route_revalidation_ids == (route_id,)
     assert "g2e_route_revalidation_required" in report.reason_codes
-    assert not hasattr(g2e, "build_selective_recomputation_plan_from_affected_set_v01")
+    assert hasattr(g2e, "build_selective_recomputation_plan_from_affected_set_v01")
 
 
 def test_e3_invalidation_report_artifact_and_t03_chain_v01(
@@ -5578,12 +5589,23 @@ def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
         and isinstance(node.func, ast.Attribute)
         and node.func.attr == "run_fractal_runtime_v02"
     ]
-    assert "run_fractal_runtime_v02" not in runtime_calls
+    whole_run_callers = tuple(
+        node.name
+        for node in runtime_tree.body
+        if isinstance(node, ast.FunctionDef)
+        and any(
+            isinstance(candidate, ast.Call)
+            and isinstance(candidate.func, ast.Attribute)
+            and candidate.func.attr == "run_fractal_runtime_v02"
+            for candidate in ast.walk(node)
+        )
+    )
+    assert whole_run_callers == ("_g2e4_execute_whole_run_escalation_v01",)
     assert "_d4_run_runtime_v02" not in runtime_calls
     assert len(test_run_calls) == 1
-    assert not hasattr(g2e, "execute_selective_recomputation_v01")
-    assert not hasattr(g2e, "run_continuous_delta_runtime_v01")
-    assert not hasattr(kernel, "ContinuousDeltaSourceContextV01")
+    assert hasattr(g2e, "execute_selective_recomputation_v01")
+    assert hasattr(g2e, "run_continuous_delta_runtime_v01")
+    assert kernel.ContinuousDeltaSourceContextV01 is g2e.ContinuousDeltaSourceContextV01
     e3_nodes = (
         node
         for node in test_tree.body
@@ -5593,6 +5615,933 @@ def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
     for path in (
         ROOT / "hedgehog/kernel/fractal_runtime_v02.py",
         ROOT / "hedgehog/kernel/root_decision_v01.py",
-        ROOT / "hedgehog/kernel/__init__.py",
     ):
         assert path.is_file()
+
+
+def _e4_input_family(
+    e3_baseline_fixture: dict[str, object],
+    *,
+    target_roles: tuple[str, ...] = ("ordinary",),
+) -> dict[str, object]:
+    family = _e3_delta_family(e3_baseline_fixture, target_roles=target_roles)
+    request = g2e.build_affected_set_request_v01(
+        delta=family["delta"],
+        graph=family["graph"],
+        trace_refs=(family["delta"].delta_id, family["graph"].graph_id),
+    )
+    affected = g2e.compute_affected_set_v01(
+        request=request,
+        delta=family["delta"],
+        graph=family["graph"],
+        source_bindings=(family["source_binding"],),
+        changed_field_bindings=(family["changed_field"],),
+        changed_artifact_bindings=(family["changed_artifact"],),
+        dependency_edges=family["dependency_edges"],
+        baseline_source_artifacts=family["baseline"],
+        observed_source_artifacts=family["observed"],
+    )
+    records, report = g2e.derive_invalidation_report_v01(
+        affected_set=affected,
+        delta=family["delta"],
+        source_context=family["context"],
+        source_bindings=(family["source_binding"],),
+        changed_field_bindings=(family["changed_field"],),
+        changed_artifact_bindings=(family["changed_artifact"],),
+        dependency_edges=family["dependency_edges"],
+        dependency_graph=family["graph"],
+    )
+    return {
+        **family,
+        "request": request,
+        "affected": affected,
+        "invalidation_records": records,
+        "invalidation_report": report,
+    }
+
+
+def _e4_plan_from_inputs(inputs: dict[str, object]) -> g2e.SelectiveRecomputationPlanV01:
+    return g2e.build_selective_recomputation_plan_from_affected_set_v01(
+        delta=inputs["delta"],
+        affected_set=inputs["affected"],
+        invalidation_records=inputs["invalidation_records"],
+        invalidation_report=inputs["invalidation_report"],
+        source_context=inputs["context"],
+        source_bindings=(inputs["source_binding"],),
+        changed_field_bindings=(inputs["changed_field"],),
+        changed_artifact_bindings=(inputs["changed_artifact"],),
+        dependency_edges=inputs["dependency_edges"],
+        dependency_graph=inputs["graph"],
+    )
+
+
+@pytest.fixture(scope="module")
+def e4_success_fixture(
+    e3_baseline_fixture: dict[str, object],
+) -> dict[str, object]:
+    inputs = _e4_input_family(e3_baseline_fixture)
+    plan = _e4_plan_from_inputs(inputs)
+    baseline_bytes = canonical_json_bytes_v01(
+        _e3_public_plain(inputs["context"].baseline_g2d_execution_bundle)
+    )
+    bundle, report = g2e.run_continuous_delta_runtime_v01(
+        source_context=inputs["context"],
+        source_bindings=(inputs["source_binding"],),
+        changed_field_bindings=(inputs["changed_field"],),
+        changed_artifact_bindings=(inputs["changed_artifact"],),
+        delta=inputs["delta"],
+        dependency_edges=inputs["dependency_edges"],
+        dependency_graph=inputs["graph"],
+    )
+    assert report.status == "PASS", report.reason_codes
+    assert type(bundle) is g2e.ContinuousDeltaExecutionBundleV01
+    assert bundle.recomputation_plan == plan
+    assert g2e.validate_continuous_delta_execution_bundle_v01(bundle).status == "PASS"
+    assert canonical_json_bytes_v01(
+        _e3_public_plain(inputs["context"].baseline_g2d_execution_bundle)
+    ) == baseline_bytes
+    return {
+        "inputs": inputs,
+        "plan": plan,
+        "bundle": bundle,
+        "report": report,
+        "baseline_bytes": baseline_bytes,
+    }
+
+
+def _e4_contextual_plan_report(
+    value: g2e.SelectiveRecomputationPlanV01,
+    inputs: dict[str, object],
+) -> g2e.ContinuousDeltaValidationReportV01:
+    return g2e.validate_selective_recomputation_plan_against_sources_v01(
+        value,
+        delta=inputs["delta"],
+        affected_set=inputs["affected"],
+        invalidation_records=inputs["invalidation_records"],
+        invalidation_report=inputs["invalidation_report"],
+        source_context=inputs["context"],
+        source_bindings=(inputs["source_binding"],),
+        changed_field_bindings=(inputs["changed_field"],),
+        changed_artifact_bindings=(inputs["changed_artifact"],),
+        dependency_edges=inputs["dependency_edges"],
+        dependency_graph=inputs["graph"],
+    )
+
+
+def _e4_root_outcome(
+    fixture: dict[str, object],
+    *,
+    phase: str,
+    outcome: str,
+) -> dict[str, object]:
+    bundle = fixture["bundle"]
+    inputs = fixture["inputs"]
+    assert type(bundle) is g2e.ContinuousDeltaExecutionBundleV01
+    if phase == "PLAN":
+        candidate = bundle.recomputation_plan
+        candidate_plain = g2e.selective_recomputation_plan_to_plain_data_v01(candidate)
+        time_source = bundle.plan_proposed_artifact
+        route_source = bundle.source_context.baseline_g2c_route_eligibility_artifact
+        parent_refs = (
+            bundle.plan_proposed_artifact.artifact_id,
+            route_source.artifact_id,
+            bundle.source_context.baseline_g2d_execution_bundle.report_artifact.artifact_id,
+        )
+        trace_refs = (
+            candidate.recomputation_plan_id,
+            bundle.delta.delta_id,
+            bundle.affected_result.affected_set_id,
+            bundle.invalidation_report.invalidation_report_id,
+        )
+        prior = {
+            "prior_decision": None,
+            "prior_decision_id": None,
+            "prior_selected_candidate_id": None,
+        }
+        validator_ids = ("continuous_delta_plan_against_sources_v01",)
+    else:
+        candidate = bundle.recomputation_result
+        candidate_plain = g2e.selective_recomputation_result_to_plain_data_v01(candidate)
+        time_source = bundle.recomputed_g2d_execution_bundle.report_artifact
+        parent_refs = (
+            bundle.plan_root_decision_artifact.artifact_id,
+            bundle.plan_accepted_artifact.artifact_id,
+            time_source.artifact_id,
+            bundle.preservation_proof_artifact.artifact_id,
+        )
+        trace_refs = (
+            bundle.plan_root_decision_result.decision_id,
+            candidate.recomputation_result_id,
+            bundle.recomputed_g2d_execution_bundle.runtime_report.report_id,
+            bundle.preservation_proof.preservation_proof_id,
+        )
+        prior = {
+            "prior_decision": "ACCEPT",
+            "prior_decision_id": bundle.plan_root_decision_result.decision_id,
+            "prior_selected_candidate_id": bundle.recomputation_plan.recomputation_plan_id,
+        }
+        validator_ids = (
+            "continuous_delta_result_against_plan_v01",
+            "fractal_runtime_execution_bundle_v02",
+            "continuous_delta_preservation_v01",
+        )
+    evidence_refs = tuple(
+        dict.fromkeys(
+            item.validation_report_id
+            for item in bundle.g2e_validation_reports
+            if item.status == "PASS"
+        )
+    )[:4]
+    return g2e._g2e4_root_review_v01(
+        phase=phase,
+        request_id=inputs["delta"].request_id,
+        candidate_id=(
+            candidate.recomputation_plan_id
+            if phase == "PLAN"
+            else candidate.recomputation_result_id
+        ),
+        candidate_plain=candidate_plain,
+        transaction_id=inputs["delta"].transaction_id,
+        target_root_id=inputs["delta"].owning_root_id,
+        topology_ref=bundle.recomputed_g2d_execution_bundle.topology.topology_id,
+        evidence_refs=evidence_refs,
+        validator_ids=validator_ids,
+        policy_id=inputs["delta"].observed_policy_version,
+        time_source_artifact=time_source,
+        root_kernel=inputs["context"].root_kernel,
+        artifact_parent_refs=parent_refs,
+        artifact_trace_refs=trace_refs,
+        prior_root_state=prior,
+        requested_outcome=outcome,
+    )
+
+
+def test_e4_exact_public_surface_schema_and_facade_geometry_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
+    public_functions = tuple(
+        node.name
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
+    )
+    historical = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS
+    assert len(g2e.CONTINUOUS_DELTA_TYPES_V01) == 20
+    assert len(g2e.SERIALIZED_CONTINUOUS_DELTA_TYPES_V01) == 18
+    assert len(g2e.RUNTIME_ONLY_CONTINUOUS_DELTA_TYPES_V01) == 2
+    assert public_functions[:62] == historical
+    assert public_functions[62:] == E4_PUBLIC_FUNCTIONS
+    assert len(public_functions) == 89
+    assert g2e.__all__[:82] == TYPE_NAMES + historical
+    assert g2e.__all__[82:] == E4_PUBLIC_FUNCTIONS
+    assert len(g2e.__all__) == 109
+    transition_names = (
+        "build_continuous_delta_transition_registry_profile_v01",
+        "validate_continuous_delta_transition_registry_profile_v01",
+        "continuous_delta_transition_registry_profile_to_plain_dict_v01",
+        "validate_continuous_delta_transition_decision_v01",
+        "continuous_delta_transition_decision_to_plain_dict_v01",
+        "rebuild_continuous_delta_transition_decision_identity_v01",
+    )
+    direct_names = TYPE_NAMES + public_functions + transition_names
+    assert len(direct_names) == 115
+    for name in TYPE_NAMES + public_functions:
+        assert getattr(kernel, name) is getattr(g2e, name)
+    for name in transition_names:
+        assert getattr(kernel, name) is getattr(transition, name)
+    assert len(kernel.__all__) == 19
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    assert len(schema["$defs"]) == 18
+    assert g2e.validate_continuous_delta_execution_bundle_v01(
+        e4_success_fixture["bundle"]
+    ).status == "PASS"
+
+
+def test_e4_five_quartets_identity_plain_data_and_schema_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    values = (
+        bundle.recomputation_plan,
+        bundle.recomputed_bindings[0],
+        bundle.recomputation_result,
+        bundle.runtime_trace,
+        bundle.runtime_report,
+    )
+    validators = (
+        g2e.validate_selective_recomputation_plan_v01,
+        g2e.validate_recomputed_artifact_binding_v01,
+        g2e.validate_selective_recomputation_result_v01,
+        g2e.validate_continuous_delta_runtime_trace_v01,
+        g2e.validate_continuous_delta_runtime_report_v01,
+    )
+    serializers = (
+        g2e.selective_recomputation_plan_to_plain_data_v01,
+        g2e.recomputed_artifact_binding_to_plain_data_v01,
+        g2e.selective_recomputation_result_to_plain_data_v01,
+        g2e.continuous_delta_runtime_trace_to_plain_data_v01,
+        g2e.continuous_delta_runtime_report_to_plain_data_v01,
+    )
+    rebuilders = (
+        g2e.rebuild_selective_recomputation_plan_identity_v01,
+        g2e.rebuild_recomputed_artifact_binding_identity_v01,
+        g2e.rebuild_selective_recomputation_result_identity_v01,
+        g2e.rebuild_continuous_delta_runtime_trace_identity_v01,
+        g2e.rebuild_continuous_delta_runtime_report_identity_v01,
+    )
+    definitions = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))["$defs"]
+    for value, validator, serializer, rebuilder in zip(
+        values, validators, serializers, rebuilders, strict=True
+    ):
+        assert validator(value).status == "PASS"
+        plain = serializer(value)
+        assert tuple(plain) == tuple(field.name for field in fields(type(value)))
+        Draft202012Validator(definitions[type(value).__name__]).validate(plain)
+        assert rebuilder(value) == getattr(value, fields(type(value))[0].name)
+        invalid = replace(value, **{fields(type(value))[0].name: "invalid"})
+        assert validator(invalid).status == "FAIL_CLOSED"
+
+
+def test_e4_selective_plan_from_affected_set_and_contextual_validation_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    inputs = e4_success_fixture["inputs"]
+    plan = e4_success_fixture["plan"]
+    assert plan == _e4_plan_from_inputs(inputs)
+    assert g2e.validate_selective_recomputation_plan_v01(plan).status == "PASS"
+    contextual = _e4_contextual_plan_report(plan, inputs)
+    assert contextual.status == "PASS"
+    assert contextual.validated_object_id == plan.recomputation_plan_id
+    assert plan.plan_status == "PASS"
+    assert plan.root_review_required and plan.max_provider_calls == 0
+    assert 0 < plan.max_work_items <= 256
+    assert 0 < plan.max_queue_entries <= 1024
+    bundle = e4_success_fixture["bundle"]
+    t02 = bundle.g2e_transition_decisions[1]
+    transition_suffix = (
+        t02.decision_id,
+        inputs["affected"].delta_id,
+        inputs["affected"].graph_id,
+    )
+    expected_affected_trace_refs = (
+        *(
+            item
+            for item in dict.fromkeys(inputs["affected"].trace_refs)
+            if item not in transition_suffix
+        ),
+        *transition_suffix,
+    )
+    assert (
+        bundle.affected_set_artifact.trace_refs
+        == expected_affected_trace_refs
+    )
+    assert len(expected_affected_trace_refs) == len(
+        set(expected_affected_trace_refs)
+    )
+    assert (
+        expected_affected_trace_refs.count(inputs["affected"].delta_id)
+        == 1
+    )
+    assert (
+        expected_affected_trace_refs.count(inputs["affected"].graph_id)
+        == 1
+    )
+    assert expected_affected_trace_refs[-3:] == transition_suffix
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        t02,
+        registry=registry,
+        source_artifact=bundle.delta_source_artifact,
+        target_artifact=bundle.affected_set_artifact,
+    ) == ()
+
+
+def test_e4_selective_plan_mutation_bounds_and_route_fail_closed_v01(
+    e3_baseline_fixture: dict[str, object],
+    e4_success_fixture: dict[str, object],
+) -> None:
+    plan = e4_success_fixture["plan"]
+    inputs = e4_success_fixture["inputs"]
+    over_bound = replace(plan, max_work_items=257)
+    assert g2e.validate_selective_recomputation_plan_v01(over_bound).status == "FAIL_CLOSED"
+    assert _e4_contextual_plan_report(over_bound, inputs).status == "FAIL_CLOSED"
+    copied_trace = replace(plan, trace_refs=(*plan.trace_refs, plan.trace_refs[0]))
+    assert g2e.validate_selective_recomputation_plan_v01(copied_trace).status == "FAIL_CLOSED"
+    route_inputs = _e4_input_family(e3_baseline_fixture, target_roles=("route",))
+    assert route_inputs["invalidation_report"].report_status == "FAIL_CLOSED"
+    assert "g2e_route_revalidation_required" in route_inputs["invalidation_report"].reason_codes
+    with pytest.raises(ValueError, match="g2e_route_revalidation_required"):
+        _e4_plan_from_inputs(route_inputs)
+
+
+def test_e4_plan_root_accept_pair_t04_t05_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    t04, t05 = bundle.g2e_transition_decisions[3:5]
+    assert bundle.plan_root_decision_result.decision == "ACCEPT"
+    assert bundle.plan_root_decision_result.selected_candidate_id == (
+        bundle.recomputation_plan.recomputation_plan_id
+    )
+    assert bundle.plan_root_decision_artifact.artifact_id.startswith(
+        "g2e_root_plan_decision_v01:"
+    )
+    plan_root_payload = kernel_artifact_to_plain_dict_v01(
+        bundle.plan_root_decision_artifact
+    )["payload"]
+    plan_root_plain = root_decision.root_decision_result_to_plain_dict_v01(
+        bundle.plan_root_decision_result
+    )
+    assert "transaction_id" not in plan_root_payload
+    assert bundle.plan_root_decision_artifact.transaction_id == (
+        plan_root_plain["transaction_id"]
+    )
+    assert plan_root_payload == {
+        key: value
+        for key, value in plan_root_plain.items()
+        if key != "transaction_id"
+    }
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        t04,
+        registry=registry,
+        source_artifact=bundle.plan_proposed_artifact,
+        target_artifact=bundle.plan_root_decision_artifact,
+    ) == ()
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        t05,
+        registry=registry,
+        source_artifact=bundle.plan_root_decision_artifact,
+        target_artifact=bundle.plan_accepted_artifact,
+    ) == ()
+
+
+def test_e4_plan_root_non_accept_matrix_t06_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    t06 = bundle.g2e_transition_decisions[5]
+    outcomes = (
+        "BLOCKED_FAIL_CLOSED",
+        "NEEDS_USER",
+        "NEEDS_MORE_EVIDENCE",
+        "DEFER",
+        "REJECT",
+        "NO_UPDATE",
+    )
+    for outcome in outcomes:
+        review = _e4_root_outcome(e4_success_fixture, phase="PLAN", outcome=outcome)
+        assert review["result"].decision == outcome
+        assert not review["result"].permission_created
+        assert not review["result"].final_output_created
+        assert not review["result"].effect_requested
+        blocked = g2e._g2e4_project_blocked_plan_artifact_v01(
+            plan=bundle.recomputation_plan,
+            proposed_artifact=bundle.plan_proposed_artifact,
+            root_result=review["result"],
+            root_artifact=review["artifact"],
+            t06=t06,
+            delta=bundle.delta,
+            source_context=bundle.source_context,
+        )
+        assert blocked.lifecycle_state == "BLOCKED_FAIL_CLOSED"
+        blocked_payload = kernel_artifact_to_plain_dict_v01(blocked)["payload"]
+        plan_plain = g2e.selective_recomputation_plan_to_plain_data_v01(
+            bundle.recomputation_plan
+        )
+        assert "trace_refs" not in blocked_payload
+        assert blocked.trace_refs == (
+            review["result"].decision_id,
+            review["result"].reason_code,
+            t06.decision_id,
+        )
+        assert blocked_payload == {
+            **{
+                key: value
+                for key, value in plan_plain.items()
+                if key != "trace_refs"
+            },
+            "root_decision": review["result"].decision,
+            "root_reason_code": review["result"].reason_code,
+        }
+        assert transition.validate_continuous_delta_transition_decision_v01(
+            t06,
+            registry=registry,
+            source_artifact=review["artifact"],
+            target_artifact=blocked,
+        ) == ()
+
+
+def test_e4_observed_work_context_and_minimal_affected_subtree_mapping_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    inputs = e4_success_fixture["inputs"]
+    recomputed = bundle.recomputed_g2d_execution_bundle
+    context = recomputed.observed_work_context
+    assert type(context) is g2d.RuntimeObservedWorkContextV02
+    assert context.execution_scope == "SELECTIVE"
+    assert g2d.validate_runtime_observed_work_context_v02(context).status == "PASS"
+    direct_sources = tuple(
+        item
+        for binding in bundle.source_bindings
+        for item in inputs["baseline"] + inputs["observed"]
+        if item.artifact_id
+        in {
+            binding.baseline_source_artifact_id,
+            binding.observed_source_artifact_id,
+        }
+    )
+    assert g2d.validate_runtime_observed_work_context_against_sources_v02(
+        context,
+        baseline_execution_bundle=inputs["context"].baseline_g2d_execution_bundle,
+        direct_source_artifacts=direct_sources,
+        supporting_artifacts=(),
+        binding_artifacts=context.ordered_binding_artifacts,
+    ).status == "PASS"
+    binding_payloads = tuple(
+        kernel_artifact_to_plain_dict_v01(item)["payload"]
+        for item in context.ordered_binding_artifacts
+    )
+    for payload in binding_payloads:
+        change_proof = payload["change_proof"]
+        pointers = tuple(change_proof["all_full_artifact_changed_pointers"])
+        assert "/payload/hold_status" in pointers
+        assert "/trace_refs/0" in pointers
+        assert len(pointers) == len(set(pointers))
+        assert change_proof["whole_artifact_expanded"] is False
+        assert change_proof["whole_payload_expanded"] is False
+        envelope_rows = tuple(
+            row
+            for row in change_proof["consumed_changed_material_rows"]
+            if row["payload_pointer"] is None
+        )
+        assert any(
+            row["full_artifact_pointer"] == "/trace_refs/0"
+            for row in envelope_rows
+        )
+    binding_rows = tuple(
+        payload["topology_binding"] for payload in binding_payloads
+    )
+    expected_retained_reports = (
+        g2d.validate_fractal_runtime_source_context_v02(
+            recomputed.source_context
+        ),
+        g2d.validate_runtime_topology_source_binding_against_g2c_v02(
+            recomputed.source_binding,
+            source_context=recomputed.source_context,
+        ),
+        g2d.validate_runtime_topology_seed_v02(recomputed.topology_seed),
+        g2d.validate_runtime_execution_topology_against_sources_v02(
+            recomputed.topology,
+            source_context=recomputed.source_context,
+        ),
+    )
+    assert recomputed.validation_reports[:4] == expected_retained_reports
+    assert tuple(item["node_ref"] for item in binding_rows) == (
+        context.ordered_direct_affected_node_ids
+    )
+    assert context.ordered_execution_node_ids == (
+        bundle.recomputation_plan.ordered_work_node_ids
+    )
+    assert tuple(dict.fromkeys(item["cell_ref"] for item in binding_rows)) == (
+        bundle.recomputation_plan.ordered_affected_cell_ids
+    )
+
+
+def test_e4_selective_execution_affected_only_unaffected_not_executed_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    plan = bundle.recomputation_plan
+    recomputed = bundle.recomputed_g2d_execution_bundle
+    executed_nodes = tuple(
+        dict.fromkeys(
+            node_id
+            for cell_input in recomputed.cell_inputs
+            for node_id in cell_input.ordered_node_ids
+        )
+    )
+    assert executed_nodes == plan.ordered_work_node_ids
+    baseline_bundle = bundle.source_context.baseline_g2d_execution_bundle
+    baseline_node_ids = baseline_bundle.topology.ordered_node_ids
+    context = recomputed.observed_work_context
+    assert context is not None
+    assert context.ordered_execution_node_ids == executed_nodes
+    direct_node_ids = context.ordered_direct_affected_node_ids
+    assert direct_node_ids
+    assert set(direct_node_ids).issubset(executed_nodes)
+    node_by_id = {item.node_id: item for item in baseline_bundle.topology_nodes}
+    assert tuple(node_by_id[item].node_kind for item in direct_node_ids) == (
+        "MEMORY_CONTEXT",
+    )
+    assert direct_node_ids != executed_nodes
+    unaffected_nodes = tuple(item for item in baseline_node_ids if item not in executed_nodes)
+    assert not set(unaffected_nodes).intersection(executed_nodes)
+    assert all(
+        entry.node_id in set(executed_nodes)
+        for entry in recomputed.queue_entries
+        if entry.state not in {"PARENT_RETURNED"}
+    )
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(recomputed).status == "PASS"
+
+
+def test_e4_recomputed_binding_predecessor_and_in_place_rejection_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    assert bundle.recomputed_bindings
+    for binding in bundle.recomputed_bindings:
+        assert g2e.validate_recomputed_artifact_binding_v01(binding).status == "PASS"
+        assert binding.prior_artifact_id != binding.new_artifact_id
+        assert binding.prior_payload_sha256 != binding.new_payload_sha256
+        with pytest.raises(ValueError, match="g2e_recomputation_in_place_forbidden"):
+            g2e.build_recomputed_artifact_binding_v01(
+                recomputation_plan_id=binding.recomputation_plan_id,
+                prior_artifact_id=binding.prior_artifact_id,
+                prior_payload_sha256=binding.prior_payload_sha256,
+                new_artifact_id=binding.prior_artifact_id,
+                new_payload_sha256=binding.prior_payload_sha256,
+                predecessor_relation=binding.predecessor_relation,
+                supersession_relation=binding.supersession_relation,
+                derivation_refs=binding.derivation_refs,
+                source_cell_id=binding.source_cell_id,
+                source_queue_entry_id=binding.source_queue_entry_id,
+                g2d_cell_result_ref=binding.g2d_cell_result_ref,
+                g2d_runtime_report_ref=binding.g2d_runtime_report_ref,
+                trace_refs=binding.trace_refs,
+            )
+
+
+def test_e4_partial_failure_backpressure_revise_no_progress_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    recomputed = e4_success_fixture["bundle"].recomputed_g2d_execution_bundle
+    granular_source = inspect.getsource(g2e._g2e4_execute_granular_g2d_v01)
+    assert (
+        "transition_runtime.build_fractal_runtime_transition_registry_profile_v02"
+        in granular_source
+    )
+    assert (
+        "transition_runtime.validate_fractal_runtime_transition_decision_v02"
+        in granular_source
+    )
+    assert (
+        "g2d_runtime.build_fractal_runtime_transition_registry_profile_v02"
+        not in granular_source
+    )
+    assert (
+        "g2d_runtime.validate_fractal_runtime_transition_decision_v02"
+        not in granular_source
+    )
+    for public_name in (
+        "evaluate_fractal_revise_observation_v02",
+        "record_fractal_partial_failure_v02",
+        "evaluate_fractal_backpressure_v02",
+    ):
+        assert hasattr(g2d, public_name)
+        assert public_name in granular_source
+    assert "while " not in granular_source
+    assert len({item.observation_id for item in recomputed.revise_observations}) == len(
+        recomputed.revise_observations
+    )
+    assert len({item.partial_failure_id for item in recomputed.partial_failures}) == len(
+        recomputed.partial_failures
+    )
+    assert len({item.backpressure_id for item in recomputed.backpressure_states}) == len(
+        recomputed.backpressure_states
+    )
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(recomputed).status == "PASS"
+
+
+def test_e4_preservation_full_bytes_and_immutable_baseline_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    proof = bundle.preservation_proof
+    assert g2e.validate_preservation_proof_v01(proof).status == "PASS"
+    assert proof.byte_identity_preserved
+    assert proof.ordered_before_artifact_sha256 == proof.ordered_after_artifact_sha256
+    assert proof.ordered_before_payload_sha256 == proof.ordered_after_payload_sha256
+    assert proof.ordered_before_identity_ids == proof.ordered_after_identity_ids
+    assert proof.before_cache_state_sha256 == proof.after_cache_state_sha256
+    assert proof.mutable_global_write_count == 0
+    assert proof.object_identity_used_as_proof is False
+    assert canonical_json_bytes_v01(
+        _e3_public_plain(bundle.source_context.baseline_g2d_execution_bundle)
+    ) == e4_success_fixture["baseline_bytes"]
+
+
+def test_e4_selective_result_against_plan_and_zero_operation_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    report = g2e.validate_selective_recomputation_result_against_plan_v01(
+        bundle.recomputation_result,
+        plan=bundle.recomputation_plan,
+        source_context=bundle.source_context,
+        delta_source_proposed_artifact=bundle.delta_source_proposed_artifact,
+        delta_source_artifact=bundle.delta_source_artifact,
+        dependency_graph_artifact=bundle.dependency_graph_artifact,
+        affected_set_artifact=bundle.affected_set_artifact,
+        invalidation_report_artifact=bundle.invalidation_report_artifact,
+        plan_proposed_artifact=bundle.plan_proposed_artifact,
+        plan_root_decision_input=bundle.plan_root_decision_input,
+        plan_root_decision_result=bundle.plan_root_decision_result,
+        plan_root_decision_artifact=bundle.plan_root_decision_artifact,
+        plan_accepted_artifact=bundle.plan_accepted_artifact,
+        recomputed_g2d_execution_bundle=bundle.recomputed_g2d_execution_bundle,
+        recomputed_bindings=bundle.recomputed_bindings,
+        preservation_proof=bundle.preservation_proof,
+        preservation_proof_artifact=bundle.preservation_proof_artifact,
+        g2e_transition_decisions=bundle.g2e_transition_decisions,
+        g2e_causal_consumption_refs=bundle.g2e_causal_consumption_refs,
+    )
+    assert report.status == "PASS"
+    result = bundle.recomputation_result
+    for field_name in (
+        "provider_calls",
+        "model_calls",
+        "network_calls",
+        "connector_calls",
+        "external_drs_calls",
+        "action_commit_packets_created",
+        "permissions_created",
+        "receipts_created",
+        "final_outputs_created",
+        "drs_writes",
+        "authority_created_count",
+        "real_world_effects_count",
+    ):
+        assert getattr(result, field_name) == 0
+
+
+def test_e4_final_root_accept_pair_t09_t10_and_anti_cycle_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    registry = transition.build_continuous_delta_transition_registry_profile_v01()
+    t09, t10 = bundle.g2e_transition_decisions[8:10]
+    assert bundle.final_root_decision_result.decision == "ACCEPT"
+    assert bundle.final_root_decision_result.selected_candidate_id == (
+        bundle.recomputation_result.recomputation_result_id
+    )
+    assert bundle.final_root_decision_artifact.artifact_id.startswith(
+        "g2e_root_final_decision_v01:"
+    )
+    final_root_payload = kernel_artifact_to_plain_dict_v01(
+        bundle.final_root_decision_artifact
+    )["payload"]
+    final_root_plain = root_decision.root_decision_result_to_plain_dict_v01(
+        bundle.final_root_decision_result
+    )
+    assert "transaction_id" not in final_root_payload
+    assert bundle.final_root_decision_artifact.transaction_id == (
+        final_root_plain["transaction_id"]
+    )
+    assert final_root_payload == {
+        key: value
+        for key, value in final_root_plain.items()
+        if key != "transaction_id"
+    }
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        t09,
+        registry=registry,
+        source_artifact=bundle.recomputed_g2d_execution_bundle.report_artifact,
+        target_artifact=bundle.final_root_decision_artifact,
+    ) == ()
+    assert transition.validate_continuous_delta_transition_decision_v01(
+        t10,
+        registry=registry,
+        source_artifact=bundle.final_root_decision_artifact,
+        target_artifact=bundle.runtime_report_artifact,
+    ) == ()
+    assert t10.decision_id not in bundle.runtime_trace.ordered_transition_decision_ids
+    assert t10.decision_id not in bundle.runtime_report_artifact.trace_refs
+    final_input_plain = root_decision.root_decision_input_to_plain_dict_v01(
+        bundle.final_root_decision_input
+    )
+    assert final_input_plain["prior_root_state"]["prior_decision_id"] == (
+        bundle.plan_root_decision_result.decision_id
+    )
+
+
+def test_e4_final_root_non_accept_matrix_fail_closed_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    outcomes = (
+        "BLOCKED_FAIL_CLOSED",
+        "NEEDS_USER",
+        "NEEDS_MORE_EVIDENCE",
+        "DEFER",
+        "REJECT",
+        "NO_UPDATE",
+    )
+    for outcome in outcomes:
+        review = _e4_root_outcome(e4_success_fixture, phase="FINAL", outcome=outcome)
+        assert review["result"].decision == outcome
+        assert review["artifact"].artifact_id.startswith(
+            "g2e_root_final_decision_v01:"
+        )
+        input_plain = root_decision.root_decision_input_to_plain_dict_v01(
+            review["input"]
+        )
+        assert input_plain["prior_root_state"]["prior_decision_id"] == (
+            e4_success_fixture["bundle"].plan_root_decision_result.decision_id
+        )
+        assert not review["result"].permission_created
+        assert not review["result"].final_output_created
+        assert not review["result"].effect_requested
+
+
+def test_e4_trace_report_artifact_transition_and_causal_closure_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    transition_ids = tuple(item.decision_id for item in bundle.g2e_transition_decisions)
+    assert len(transition_ids) == 10
+    assert tuple(
+        item.rule_id for item in bundle.g2e_transition_decisions
+    ) == (
+        "g2e_t01_delta_validate",
+        "g2e_t02_affected_set_derive",
+        "g2e_t03_invalidation_derive",
+        "g2e_t04_plan_root_review",
+        "g2e_t05_plan_root_accept",
+        "g2e_t06_plan_root_reject",
+        "g2e_t07_selective_recompute",
+        "g2e_t08_recompute_block",
+        "g2e_t09_parent_return",
+        "g2e_t10_report_finalize",
+    )
+    assert bundle.runtime_trace.ordered_transition_decision_ids == transition_ids[:9]
+    assert bundle.runtime_report.trace_id == bundle.runtime_trace.trace_id
+    assert bundle.runtime_report_artifact.lifecycle_state == "FINALIZED"
+    assert all(
+        validate_causal_consumption_ref_v01(item) == ()
+        for item in bundle.g2e_causal_consumption_refs
+    )
+    causal_plain = tuple(
+        causal_consumption_ref_to_plain_dict_v01(item)
+        for item in bundle.g2e_causal_consumption_refs
+    )
+    assert len(causal_plain) == len({canonical_json_bytes_v01(item) for item in causal_plain})
+
+
+def test_e4_complete_execution_bundle_public_validation_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    bundle = e4_success_fixture["bundle"]
+    assert len(fields(g2e.ContinuousDeltaExecutionBundleV01)) == 36
+    assert len(fields(g2d.FractalRuntimeExecutionBundleV02)) == 28
+    assert g2e.validate_continuous_delta_execution_bundle_v01(bundle).status == "PASS"
+    rebuilt = g2e.build_continuous_delta_execution_bundle_v01(
+        **{field.name: getattr(bundle, field.name) for field in fields(type(bundle))}
+    )
+    assert rebuilt == bundle
+    assert len(
+        {
+            item.artifact_id
+            for item in (
+                bundle.delta_source_proposed_artifact,
+                bundle.delta_source_artifact,
+                bundle.dependency_graph_artifact,
+                bundle.affected_set_artifact,
+                bundle.invalidation_report_artifact,
+                bundle.plan_proposed_artifact,
+                bundle.plan_accepted_artifact,
+                bundle.preservation_proof_artifact,
+                bundle.runtime_report_artifact,
+            )
+        }
+    ) == 9
+
+
+def test_e4_conditional_whole_run_escalation_and_selective_rejection_v01(
+    e4_success_fixture: dict[str, object],
+) -> None:
+    inputs = e4_success_fixture["inputs"]
+    plan = e4_success_fixture["plan"]
+    baseline = inputs["context"].baseline_g2d_execution_bundle
+    node_ids = baseline.topology.ordered_node_ids
+    cell_ids = tuple(dict.fromkeys(item.cell_id for item in baseline.cell_inputs))
+    full_plan = g2e.build_selective_recomputation_plan_v01(
+        delta_id=plan.delta_id,
+        affected_set_id=plan.affected_set_id,
+        invalidation_report_id=plan.invalidation_report_id,
+        source_route_eligibility_artifact_id=plan.source_route_eligibility_artifact_id,
+        source_topology_id=plan.source_topology_id,
+        accepted_mode=plan.accepted_mode,
+        accepted_scope_ref=plan.accepted_scope_ref,
+        ordered_affected_cell_ids=cell_ids,
+        ordered_affected_artifact_ids=plan.ordered_affected_artifact_ids,
+        ordered_work_node_ids=node_ids,
+        ordered_preserved_artifact_ids=(),
+        max_work_items=len(node_ids),
+        max_queue_entries=plan.max_queue_entries,
+        max_wall_time_units=plan.max_wall_time_units,
+        max_token_budget=plan.max_token_budget,
+        max_provider_calls=0,
+        transition_profile_id=plan.transition_profile_id,
+        root_review_required=True,
+        plan_status="PASS",
+        reason_codes=(),
+        trace_refs=plan.trace_refs,
+    )
+    whole_bundle, whole_report = g2e._g2e4_execute_whole_run_escalation_v01(
+        plan=full_plan,
+        source_context=inputs["context"],
+        source_bindings=(inputs["source_binding"],),
+        changed_field_bindings=(inputs["changed_field"],),
+        changed_artifact_bindings=(inputs["changed_artifact"],),
+        execution_scope="WHOLE_RUN_ESCALATION",
+    )
+    assert whole_report.status == "PASS" and whole_bundle is not None
+    assert whole_bundle.observed_work_context.execution_scope == "WHOLE_RUN_ESCALATION"
+    selective_bundle, selective_report = g2e._g2e4_execute_whole_run_escalation_v01(
+        plan=full_plan,
+        source_context=inputs["context"],
+        source_bindings=(inputs["source_binding"],),
+        changed_field_bindings=(inputs["changed_field"],),
+        changed_artifact_bindings=(inputs["changed_artifact"],),
+        execution_scope="SELECTIVE",
+    )
+    assert selective_bundle is None
+    assert selective_report.status == "FAIL_CLOSED"
+
+
+def test_e4_no_private_g2d_lower_mutation_e5_or_e6_surface_v01() -> None:
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imports = {
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    imports.update(
+        node.module or ""
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+    )
+    assert not any("tests" in name or "demo" in name for name in imports)
+    g2d_private_refs = {
+        node.attr
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == "g2d_runtime"
+        and node.attr.startswith("_")
+    }
+    assert g2d_private_refs == set()
+    assert "PlanGraph" not in source
+    assert "E5" not in source and "E6" not in source
+    assert "living_gauntlet" not in source and "kernel_conformance" not in source
+    assert source.count("g2d_runtime.run_fractal_runtime_v02") == 1
+    assert len(g2e.PUBLIC_G2E_REASON_CODES_V01) == 88
+    assert len(g2e.VALIDATION_TARGETS_V01) == 32
+    assert len(g2e.FAILURE_STAGES_V01) == 24
+    assert hashlib.sha256(SCHEMA_PATH.read_bytes()).hexdigest() == (
+        "6d2d2c8756ebf261724742ad14294094ee9ce04a28c0498b264164ec585d11f2"
+    )

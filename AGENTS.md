@@ -59,7 +59,7 @@ text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executo
 
 Current checkpoint: G2-D v0.3.7 observed-work correction CLOSED_PASS.
 
-Current G2-D correction reclosure facts:
+Current G2-D correction reclosure and G2-E v0.1.3 contract facts:
 
 - R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
 - R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
@@ -87,6 +87,15 @@ Current G2-D correction reclosure facts:
 - Independent corrected G2-D re-audit SHA-256: `c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3`.
 - Corrected G2-D successor checkpoint: `docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md`.
 - Corrected G2-D successor checkpoint SHA-256: `606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677`.
+- Accepted G2-E preflight SHA-256: `83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b`.
+- Accepted G2-E v0.1.3 addendum SHA-256: `2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8`.
+- Accepted G2-E v0.1.3 normative donor SHA-256: `17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56`.
+- Fresh post-reclosure G2-E3 V06 archive SHA-256: `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
+- G2-E3 baseline source observation SHA-256: `fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c`.
+- G2-E3 baseline member observation SHA-256: `fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467`.
+- G2-E3 baseline member identities SHA-256: `8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39`.
+- E4 public-seam constructibility register SHA-256: `a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2`.
+- E4 two-Root-pair register SHA-256: `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - Historical pre-correction G2-D implementation basis: `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
 - Historical pre-correction G2-D audit commit: `c0dc618a0b693fe55435f17a025789267bcb79ff`.
 - Historical pre-correction G2-D audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
@@ -112,8 +121,13 @@ Current G2-D correction reclosure facts:
 - Additive G2-D reclosure completed: `true`.
 - Corrected G2-D closure claimed: `true`.
 - Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
-- G2-E3: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
+- G2-E3 post-corrected-G2-D landing status: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- Fresh unchanged post-reclosure G2-E3 V06 passed: `true`.
+- G2-E4 contract: `ACCEPTED_IMPLEMENTATION_PENDING`.
 - G2-E4: `NOT_STARTED_NOT_AUTHORIZED`.
+- G2-E4 implementation authorized: `false`.
+- G2-E4 implementation started: `false`.
 - Gate 2: `NOT_CLOSED`.
 - G2-F: `NOT_STARTED / NOT_AUTHORIZED`.
 - Current architecture:
@@ -138,7 +152,8 @@ Current G2-D correction reclosure facts:
   owner execution evidence, independent re-audit, and additive successor
   reclosure.
 - The independent re-audit is evidence, not authority or closure by itself.
-- Corrected G2-D closure is not fresh G2-E3 V06 acceptance or Gate-2 closure.
+- The fresh G2-E3 V06 and accepted E4 contract do not start or authorize E4,
+  close Gate 2, create authority, or create a real-world effect.
 - Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
 - R-IP1 does not block G2-E or G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.

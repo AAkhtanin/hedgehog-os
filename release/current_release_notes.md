@@ -73,6 +73,24 @@ These are current engineering notes, not a public release announcement.
 - Corrected G2-D closure commit subject:
   `Close G2-D v0.3.7 observed-work correction`.
 - Corrected G2-D closure_commit_identity: `NOT_SELF_RECORDED`.
+- Accepted G2-E preflight SHA-256:
+  `83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b`.
+- Accepted G2-E v0.1.3 addendum SHA-256:
+  `2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8`.
+- Accepted G2-E v0.1.3 normative donor SHA-256:
+  `17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56`.
+- Fresh post-reclosure G2-E3 V06 archive SHA-256:
+  `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
+- G2-E3 baseline source observation SHA-256:
+  `fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c`.
+- G2-E3 baseline member observation SHA-256:
+  `fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467`.
+- G2-E3 baseline member identities SHA-256:
+  `8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39`.
+- E4 public-seam register SHA-256:
+  `a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2`.
+- E4 two-Root-pair register SHA-256:
+  `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - R-H1A reconciled direct dependency declarations, the PEP-639 build metadata
   floor, canonical `AGPL-3.0-only` licensing, and a non-granting commercial
   licensing notice.
@@ -89,9 +107,15 @@ These are current engineering notes, not a public release announcement.
 - Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
   and corrected closure are all `true`; contract-only claim is `false`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until one fresh unchanged
-  owner-terminal V06 PASS.
+- G2-E3 is
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one fresh
+  unchanged owner-terminal V06 PASS.
+- The post-corrected-G2-D landing status was
+  `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
+- G2-E4 implementation authorization and implementation started are both
+  `false`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - The old G2-D audit and checkpoint are
   `HISTORICAL_PRECORRECTION_EVIDENCE` only.
@@ -108,6 +132,8 @@ These are current engineering notes, not a public release announcement.
 - Provider, model, network, connector, and external-DRS calls remain zero.
 - No successor baseline, FinalOutput, permission, packet, receipt, or DRS write
   is created or claimed.
+- This contract hop claims no G2-E audit, checkpoint, closure, E5, E6, G2-F,
+  public release, production readiness, authority, or real-world effect.
 - Real-world effects remain zero.
 
 Current surfaces:
@@ -119,6 +145,7 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. The G2-D v0.3.7 internal slice closure
-does not close Gate 2, validate G2-E3 on corrected bytes, start G2-E4,
-authorize G2-F, or create authority or real-world effect.
+not standalone public architectures. G2-D v0.3.7 remains `CLOSED_PASS`; fresh
+G2-E3 V06 acceptance and the accepted G2-E4 contract do not close Gate 2,
+start or authorize G2-E4, authorize G2-F, or create authority or real-world
+effect.

@@ -40,9 +40,11 @@ R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. The former
 G2-D `CLOSED_PASS` is immutable pre-correction evidence only. Corrected G2-D
 v0.3.7 is `CLOSED_PASS` after corrected implementation, full owner execution
 evidence, independent re-audit, and additive successor reclosure. Gate 2
-remains `NOT_CLOSED`; G2-E3 remains
-`REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 remains not started and
-unauthorized; and G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
+remains `NOT_CLOSED`; G2-E3 is
+`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after the fresh
+unchanged post-reclosure V06; the G2-E4 contract is
+`ACCEPTED_IMPLEMENTATION_PENDING`; G2-E4 remains not started and unauthorized;
+and G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
 
 ```text
 workstream_id: R-H1
@@ -97,9 +99,24 @@ g2d_preflight_commit: 2e1681a54c847beb106d9e57da250dac82ea6192
 g2d_historical_precorrection_implementation_basis_commit: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
 g2d_historical_precorrection_audit_commit: c0dc618a0b693fe55435f17a025789267bcb79ff
 g2d_closure_commit_identity: NOT_SELF_RECORDED
-g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
+g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
 g2e3_post_corrected_g2d_landing_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
+g2e3_post_reclosure_v06_passed: true
+g2e3_post_reclosure_v06_archive_sha256: d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3
+g2e3_baseline_source_observation_sha256: fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c
+g2e3_baseline_member_observation_sha256: fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467
+g2e3_baseline_member_identities_sha256: 8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39
+g2e_accepted_preflight_sha256: 83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b
+g2e_accepted_addendum_revision: v0.1.3
+g2e_accepted_addendum_sha256: 2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8
+g2e_v013_normative_donor_sha256: 17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56
+g2e4_public_seam_register_sha256: a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2
+g2e4_two_root_pair_register_sha256: a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33
+g2e4_contract_accepted: true
+g2e4_contract_status: ACCEPTED_IMPLEMENTATION_PENDING
 g2e4_status: NOT_STARTED_NOT_AUTHORIZED
+g2e4_implementation_authorized: false
+g2e4_implementation_started: false
 g2f_status: NOT_STARTED
 g2f_implementation_authorized: false
 g2f_implementation_started: false
@@ -118,9 +135,14 @@ production_security_certification_claimed: false
 - Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
   and corrected closure are all `true`; contract-only claim is `false`.
 - Gate 2 is `NOT_CLOSED`.
-- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D` until one fresh unchanged
-  owner-terminal V06 PASS.
+- G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one
+  fresh unchanged owner-terminal V06 PASS on corrected G2-D.
+- The post-corrected-G2-D landing status was
+  `REVALIDATION_PENDING_ON_CORRECTED_G2D`; the post-reclosure V06 passed.
+- G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
 - G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
+- G2-E4 implementation authorization and implementation started are both
+  `false`.
 - G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
 - R-H1 audit: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
@@ -147,6 +169,16 @@ production_security_certification_claimed: false
 - Corrected closure commit subject:
   `Close G2-D v0.3.7 observed-work correction`.
 - Corrected closure commit identity: `NOT_SELF_RECORDED`.
+- Accepted G2-E v0.1.3 addendum SHA-256:
+  `2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8`.
+- Accepted G2-E v0.1.3 normative donor SHA-256:
+  `17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56`.
+- Fresh post-reclosure G2-E3 V06 archive SHA-256:
+  `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
+- E4 public-seam register SHA-256:
+  `a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2`.
+- E4 two-Root-pair register SHA-256:
+  `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - The old G2-D audit and checkpoint certify pre-correction bytes only.
 - Independent re-audit and additive successor reclosure are complete.
 - The old G2-D audit and checkpoint are
@@ -163,6 +195,8 @@ production_security_certification_claimed: false
 - [G2-D checkpoint](docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md)
 - [Corrected G2-D independent re-audit](docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log)
 - [Corrected G2-D successor checkpoint](docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md)
+- [Accepted G2-E preflight](docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md)
+- [Accepted G2-E v0.1.3 addendum](docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md)
 - [Current status overlay](release/current_status_overlay_v01.json)
 - [Claim-to-evidence index](release/claim_to_evidence_index.md)
 - [Current integration seam index](release/integration_seam_index.md)

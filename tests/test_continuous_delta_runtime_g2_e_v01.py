@@ -60,7 +60,42 @@ ADDENDUM_PATH = ROOT / (
     "post_acceptance_contract_addendum_v01.md"
 )
 ACCEPTED_ADDENDUM_SHA256 = (
+    "2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8"
+)
+ACCEPTED_V012_ADDENDUM_SHA256 = (
     "1041dbf3da320557d5eca948a13d0c4737e4e9b9ffac64c9453c97503527ca4c"
+)
+ACCEPTED_V013_DONOR_SHA256 = (
+    "17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56"
+)
+E4_PUBLIC_FUNCTIONS = (
+    "build_selective_recomputation_plan_v01",
+    "validate_selective_recomputation_plan_v01",
+    "selective_recomputation_plan_to_plain_data_v01",
+    "rebuild_selective_recomputation_plan_identity_v01",
+    "build_recomputed_artifact_binding_v01",
+    "validate_recomputed_artifact_binding_v01",
+    "recomputed_artifact_binding_to_plain_data_v01",
+    "rebuild_recomputed_artifact_binding_identity_v01",
+    "build_selective_recomputation_result_v01",
+    "validate_selective_recomputation_result_v01",
+    "selective_recomputation_result_to_plain_data_v01",
+    "rebuild_selective_recomputation_result_identity_v01",
+    "build_continuous_delta_runtime_trace_v01",
+    "validate_continuous_delta_runtime_trace_v01",
+    "continuous_delta_runtime_trace_to_plain_data_v01",
+    "rebuild_continuous_delta_runtime_trace_identity_v01",
+    "build_continuous_delta_runtime_report_v01",
+    "validate_continuous_delta_runtime_report_v01",
+    "continuous_delta_runtime_report_to_plain_data_v01",
+    "rebuild_continuous_delta_runtime_report_identity_v01",
+    "build_continuous_delta_execution_bundle_v01",
+    "validate_continuous_delta_execution_bundle_v01",
+    "build_selective_recomputation_plan_from_affected_set_v01",
+    "validate_selective_recomputation_plan_against_sources_v01",
+    "execute_selective_recomputation_v01",
+    "validate_selective_recomputation_result_against_plan_v01",
+    "run_continuous_delta_runtime_v01",
 )
 
 TYPE_NAMES = (
@@ -3497,11 +3532,8 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
     assert g2e.MAX_DEPENDENCY_GRAPH_NODES_V01 == 256
     assert g2e.MAX_DEPENDENCY_GRAPH_EDGES_V01 == 1024
     assert g2e.MAX_AFFECTED_HOPS_V01 == 32
-    for name in (
-        "build_selective_recomputation_plan_from_affected_set_v01",
-        "execute_selective_recomputation_v01",
-        "run_continuous_delta_runtime_v01",
-    ):
+    assert len(E4_PUBLIC_FUNCTIONS) == 27
+    for name in E4_PUBLIC_FUNCTIONS:
         assert not hasattr(g2e, name)
     assert "source_context" not in inspect.signature(
         g2e.compute_affected_set_v01
@@ -3509,21 +3541,60 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
     assert "source_context" not in inspect.signature(
         g2e.validate_affected_set_against_graph_v01
     ).parameters
-    addendum_text = ADDENDUM_PATH.read_text(encoding="utf-8")
-    assert "document_revision: v0.1.2" in addendum_text
-    assert "guardian_review_status: ACCEPTED" in addendum_text
-    assert (
-        "guardian_accepted_v012_pending_draft_sha256: "
-        "83e089679b73dcb5f43384ec788c53d86f59b350229bfb28859c8aa72db083dd"
-    ) in addendum_text
-    assert "PENDING_REVIEW" not in addendum_text
-    assert hashlib.sha256(ADDENDUM_PATH.read_bytes()).hexdigest() == (
-        ACCEPTED_ADDENDUM_SHA256
+    addendum_raw = ADDENDUM_PATH.read_bytes()
+    assert hashlib.sha256(addendum_raw).hexdigest() == ACCEPTED_ADDENDUM_SHA256
+    assert len(addendum_raw) == 81590
+    assert addendum_raw.count(b"\n") == 1814
+    donor_begin = b"----- BEGIN EXACT V0.1.3 PENDING DONOR BYTES -----\n"
+    donor_end = b"----- END EXACT V0.1.3 PENDING DONOR BYTES -----\n"
+    historical_begin = b"----- BEGIN EXACT V0.1.2 REPOSITORY BYTES -----\n"
+    historical_end = b"----- END EXACT V0.1.2 REPOSITORY BYTES -----\n"
+    assert addendum_raw.count(donor_begin) == 1
+    assert addendum_raw.count(donor_end) == 1
+    assert addendum_raw.count(historical_begin) == 1
+    assert addendum_raw.count(historical_end) == 1
+    active_prefix, remainder = addendum_raw.split(donor_begin, 1)
+    donor_raw, remainder = remainder.split(donor_end, 1)
+    between, remainder = remainder.split(historical_begin, 1)
+    historical_raw, suffix = remainder.split(historical_end, 1)
+    assert suffix == b""
+    assert hashlib.sha256(donor_raw).hexdigest() == ACCEPTED_V013_DONOR_SHA256
+    assert len(donor_raw) == 27273
+    assert donor_raw.count(b"\n") == 562
+    assert hashlib.sha256(historical_raw).hexdigest() == (
+        ACCEPTED_V012_ADDENDUM_SHA256
     )
-    assert "Version 0.1.1 remains controlling for PAC-01 through PAC-08" in addendum_text
-    assert "v0.1.2 addendum controls PAC-09 through PAC-12" in addendum_text
-    assert "does not self-authorize implementation" in addendum_text
-    assert "g2e3_implementation_authorized: false" in addendum_text
+    assert len(historical_raw) == 47873
+    assert historical_raw.count(b"\n") == 1133
+    active_text = active_prefix.decode("utf-8")
+    donor_text = donor_raw.decode("utf-8")
+    historical_text = historical_raw.decode("utf-8")
+    assert "document_revision: v0.1.3" in active_text
+    assert "guardian_review_status: ACCEPTED" in active_text
+    assert "guardian_review_status: PENDING" not in active_text
+    assert f"guardian_accepted_v013_pending_draft_sha256: {ACCEPTED_V013_DONOR_SHA256}" in active_text
+    assert "g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D" in active_text
+    assert "g2e4_contract_status: ACCEPTED_IMPLEMENTATION_PENDING" in active_text
+    assert "g2e4_status: NOT_STARTED_NOT_AUTHORIZED" in active_text
+    assert "implementation_authorized: false" in active_text
+    assert "implementation_started: false" in active_text
+    assert "e4_public_seam_register_sha256: a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2" in active_text
+    assert "e4_two_root_pair_register_sha256: a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33" in active_text
+    assert "schemas/continuous_delta_runtime_v01.schema.json` remains byte-frozen" in active_text
+    assert "document_status=PENDING_GUARDIAN_REVIEW" in donor_text
+    assert "Version 0.1.1 remains controlling for PAC-01 through PAC-08" in historical_text
+    assert "v0.1.2 addendum controls PAC-09 through PAC-12" in historical_text
+    assert "does not self-authorize implementation" in historical_text
+    assert "g2e3_implementation_authorized: false" in historical_text
+    assert between.startswith(b"\n")
+    test_tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    test_names = tuple(
+        node.name
+        for node in test_tree.body
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
+    )
+    assert len(test_names) == 50
+    assert sum(name.startswith("test_e3_") for name in test_names) == 18
 
 
 def test_e2_four_quartets_identity_plain_data_and_schema_v01() -> None:

@@ -1,3 +1,683 @@
+# G2-E Post-Acceptance Contract Addendum Version 0.1.3
+
+## Current Accepted v0.1.3 E4 Contract Metadata
+
+```text
+document_status: POST_ACCEPTANCE_E4_CONTRACT_ADDENDUM
+document_revision: v0.1.3
+guardian_review_status: ACCEPTED
+guardian_accepted_v013_pending_draft_sha256: 17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56
+applies_to_preflight: docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md
+applies_to_preflight_revision: v0.1.4
+applies_to_preflight_sha256: 83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b
+accepted_v012_basis_revision: v0.1.2
+accepted_v012_basis_sha256: 1041dbf3da320557d5eca948a13d0c4737e4e9b9ffac64c9453c97503527ca4c
+repository_basis_branch: main
+repository_basis_head: 48ab284ee7c1ba33400f0d0c7fe5656b4249b839
+repository_basis_origin_main: 48ab284ee7c1ba33400f0d0c7fe5656b4249b839
+repository_basis_subject: Close G2-D v0.3.7 observed-work correction
+corrected_g2d_status: CLOSED_PASS
+corrected_g2d_implementation_commit: 27c6dfd10740103cddc13bac3ce35f917b5f30c5
+corrected_g2d_independent_reaudit_commit: 2eccb604fee89d7e79025337d3858d6dbfea5fbc
+corrected_g2d_reclosure_commit: 48ab284ee7c1ba33400f0d0c7fe5656b4249b839
+corrected_g2d_checkpoint_sha256: 606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677
+g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
+g2e3_post_reclosure_v06_archive_sha256: d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3
+g2e3_baseline_source_observation_sha256: fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c
+g2e3_baseline_member_observation_sha256: fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467
+g2e3_baseline_member_identities_sha256: 8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39
+e4_public_seam_register_sha256: a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2
+e4_two_root_pair_register_sha256: a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33
+g2e4_contract_status: ACCEPTED_IMPLEMENTATION_PENDING
+g2e4_status: NOT_STARTED_NOT_AUTHORIZED
+gate2_status: NOT_CLOSED
+implementation_authorized: false
+implementation_started: false
+contract_hop_completed: true
+e4_implementation_repository_patch_created: false
+codex_implementation_prompt_prepared: false
+```
+
+This guardian-accepted v0.1.3 overlay controls the G2-E4 contract only. It is
+additive to the accepted G2-E v0.1.4 preflight and accepted v0.1.2 addendum.
+The complete accepted v0.1.2 repository bytes are retained verbatim below and
+remain controlling for PAC-01 through PAC-12, G2-E1 through G2-E3, and every
+unaffected law.
+
+The exact external pending donor with SHA-256
+`17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56`
+is accepted as the normative content donor for this v0.1.3 overlay. Its exact
+bytes are reproduced below. The active metadata above supersedes only the
+donor's status-only statements that describe the external donor as pending or
+not yet accepted. Its substantive constructibility, geometry, exact 27-operation
+API, selective/excalation, two-Root-pair, Transition, path, test-operation and
+nonclaim laws are accepted. Its `implementation_authorized=false`,
+`g2e4_started=false`, zero-authority/effect and separate-owner-authorization
+laws remain in force.
+
+This contract synchronizes the evidence-derived G2-E3 status to
+`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`. It accepts the E4
+contract and constructibility registers, but it does not self-authorize E4
+implementation. A separate explicit owner action is required before any E4
+runtime, test or facade byte may change.
+
+The accepted E4 geometry is exact unless a new guardian blocker is proven from
+current source: 20 public G2-E types; 18 serialized types and schema definitions;
+62 current plus 27 E4 canonical-module public functions for 89; module `__all__`
+82 to 109; six unchanged Transition-profile public functions; 95 total public
+functions; 115 direct package G2-E attributes; 88 reasons; 32 validation
+targets; 24 failure stages; seven G2-E ABI literals; nine successful G2-E
+artifact instances; two source instances; two plan instances; two Root reviews;
+and t01 through t10.
+
+The later separately authorized E4 implementation may change only:
+
+```text
+hedgehog/kernel/continuous_delta_runtime_v01.py
+tests/test_continuous_delta_runtime_g2_e_v01.py
+hedgehog/kernel/__init__.py
+```
+
+`schemas/continuous_delta_runtime_v01.schema.json` remains byte-frozen because
+the five E4 serialized definitions already match current Python. Every G2-C,
+G2-D, Root, Semantic Work, Trust, ABI, KernelArtifact schema, Transition,
+Integrity Replay, Post V&V and GT path remains frozen. A proven need to change a
+frozen path is a new guardian blocker, not implicit scope expansion.
+
+Root remains the only final authority. G2-C owns the accepted route. G2-D owns
+runtime topology and stable topology-node identities. Post V&V validates and GT
+advises. Plans, observed-work context, cells, reports, traces, Transition
+records, hashes, tests, audits and checkpoints create no authority, permission,
+ActionCommitPacket, receipt, FinalOutput, DRS write, successor baseline or
+real-world effect.
+
+No E5, E6, G2-F, Gate-2 closure, public release, RC2, production-readiness or
+production-security claim follows from this contract hop.
+
+===============================================================================
+ACCEPTED V0.1.3 NORMATIVE DONOR - EXACT EXTERNAL BYTES
+===============================================================================
+
+The bytes between the BEGIN and END markers are the exact accepted external
+normative donor. Its pending status metadata is superseded only as stated in the
+active accepted metadata above.
+
+----- BEGIN EXACT V0.1.3 PENDING DONOR BYTES -----
+HEDGEHOG OS / FRACTAL REFLEXIVE OS
+GATE 2 / G2-E POST-ACCEPTANCE ADDENDUM v0.1.3
+E4 CONTRACT PENDING NORMATIVE DRAFT V01
+
+document_status=PENDING_GUARDIAN_REVIEW
+document_revision=v0.1.3
+guardian_review_status=PENDING
+implementation_authorized=false
+g2e4_started=false
+repository_mutation_authorized=false
+
+This external document is a pending normative donor. It is not an accepted
+repository contract, not an implementation prompt, and not permission to edit
+or execute anything. It is an additive overlay to the accepted G2-E v0.1.4
+preflight and current accepted post-acceptance addendum. Every unaffected
+accepted ruling remains controlling unless a later guardian-accepted repository
+contract hop says otherwise.
+
+===============================================================================
+1. PENDING BASIS AND LIFECYCLE
+===============================================================================
+
+repository_basis=48ab284ee7c1ba33400f0d0c7fe5656b4249b839
+repository_subject=Close G2-D v0.3.7 observed-work correction
+corrected_g2d_implementation_commit=27c6dfd10740103cddc13bac3ce35f917b5f30c5
+corrected_g2d_implementation_patch_sha256=be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279
+corrected_g2d_independent_reaudit_commit=2eccb604fee89d7e79025337d3858d6dbfea5fbc
+corrected_g2d_independent_reaudit_sha256=c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3
+corrected_g2d_checkpoint_commit=48ab284ee7c1ba33400f0d0c7fe5656b4249b839
+corrected_g2d_checkpoint_sha256=606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677
+accepted_g2d_v037_addendum_sha256=29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
+accepted_g2e_preflight_sha256=83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b
+accepted_g2e_addendum_sha256=1041dbf3da320557d5eca948a13d0c4737e4e9b9ffac64c9453c97503527ca4c
+
+Fresh owner evidence:
+  archive=HEDGEHOG_G2E3_POST_RECLOSURE_V06_EVIDENCE_V01.tar.gz
+  archive_sha256=d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3
+  archive_bytes=8419
+  safe_regular_files=4
+  repository_mutated=false
+  focused_tier2=11/11_PASS
+  complete_g2e_file=50/50_PASS
+  baseline_g2d_calls=2
+  cross_process_digests_equal=true
+  two_process_acceptance=PASS
+  baseline_source_observation_sha256=fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c
+  baseline_member_observation_sha256=fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467
+  baseline_member_identities_sha256=8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39
+
+The source-observation digest is unchanged from historical E3. The two member
+digests changed because corrected G2-D appends runtime-only observed-work bundle
+geometry that E3 observes dynamically. This is expected and source-bound.
+
+Lifecycle frozen by this pending donor:
+  G2-D=CLOSED_PASS
+  evidence-derived G2-E3=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
+  G2-E4=NOT_STARTED_NOT_AUTHORIZED
+  Gate 2=NOT_CLOSED
+
+Repository status surfaces may still carry the pre-V06 pending G2-E3 status.
+Only a later separately authorized and accepted repository contract/status hop
+may synchronize those surfaces. This external donor performs no synchronization.
+
+===============================================================================
+2. CONSTRUCTIBILITY AND ROOT-PAIR DONORS
+===============================================================================
+
+The current corrected bytes produced these static external registers:
+
+  HEDGEHOG_G2E4_PUBLIC_SEAM_CONSTRUCTIBILITY_REGISTER_V02.txt
+    sha256=a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2
+    bytes=51171 LF=451 mode=0644
+    E4_PUBLIC_SEAM_CONSTRUCTIBILITY=PASS
+    MINIMAL_AFFECTED_SUBTREE_CONSTRUCTIBLE=YES
+    COMPLETE_RECOMPUTED_G2D_BUNDLE_CONSTRUCTIBLE=YES
+    CONDITIONAL_WHOLE_RUN_BOUNDARY=PASS
+    PRIVATE_G2D_DEPENDENCY=ABSENT
+    LOWER_LAYER_MUTATION_REQUIRED=NO
+
+  HEDGEHOG_G2E4_TWO_ROOT_PAIR_REGISTER_V01.txt
+    sha256=a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33
+    bytes=31374 LF=683 mode=0644
+    PLAN_ROOT_PAIR_CONSTRUCTIBLE=YES
+    FINAL_ROOT_PAIR_CONSTRUCTIBLE=YES
+    BOTH_ROOT_PAIRS_CONSTRUCTIBLE=YES
+    BOTH_ROOT_DECISION_ARTIFACTS_CONSTRUCTIBLE=YES
+    ACCEPT_AND_NON_ACCEPT_PATHS_FROZEN=YES
+    T04_T05_T06_BINDINGS_FROZEN=YES
+    T09_T10_BINDINGS_FROZEN=YES
+    ROOT_ONLY_AUTHORITY_PRESERVED=YES
+
+These registers reconstruct contracts from current source. They do not claim an
+E4 runtime PASS. Historical copied PASS labels and expected hashes are not
+executable proof.
+
+===============================================================================
+3. FROZEN E4 GEOMETRY
+===============================================================================
+
+Unless exact current source later proves a guardian blocker, E4 freezes:
+
+  current canonical G2-E public functions=62
+  E4 canonical-module public operations added=27
+  final canonical-module public functions=89
+  current module __all__ entries=82
+  final module __all__ entries=109
+  Transition-profile public functions=6 unchanged
+  total G2-E public functions=95
+  public G2-E types=20 unchanged
+  package direct G2-E attributes=115
+  package direct formula=20 types + 95 functions
+  package __all__=19 unchanged and byte-exact
+  serialized types=18 unchanged
+  schema definitions=18 unchanged
+  public reasons=88 unchanged
+  validation targets=32 unchanged
+  failure stages=24 unchanged
+  additive G2-E ABI literals=7 unchanged
+  successful G2-E artifact instances=9
+  ContinuousDeltaSource instances=2: PROPOSED and VALIDATED
+  SelectiveRecomputationPlan instances=2: PROPOSED and ROOT_ACCEPTED
+  Root reviews=2
+  G2-E Transition rules=10: t01 through t10
+
+The five E4 serialized structures already exist in current Python and schema:
+  SelectiveRecomputationPlanV01
+  RecomputedArtifactBindingV01
+  SelectiveRecomputationResultV01
+  ContinuousDeltaRuntimeTraceV01
+  ContinuousDeltaRuntimeReportV01.
+
+Their exact fields, order, required set and additionalProperties=false schema
+law match. ContinuousDeltaExecutionBundleV01 is the existing runtime-only
+36-field carrier. Schema mutation is therefore forbidden unless a later exact
+parity check establishes a guardian blocker.
+
+===============================================================================
+4. CURRENT OPERATION CLASSIFICATION
+===============================================================================
+
+ALREADY_IMPLEMENTED support operations:
+  all accepted G2-E1 through G2-E3 public builders, validators, plain-data and
+  identity rebuilders; source-context construction/validation; dependency
+  fingerprint and projection; affected-set computation/validation;
+  invalidation derivation/validation; preservation proof; and the six public
+  G2-E Transition-profile functions.
+
+STRUCTURE_ONLY E4 material:
+  the five frozen E4 serialized dataclasses and schema definitions, plus the
+  runtime-only ContinuousDeltaExecutionBundleV01 field declaration. A type or
+  schema declaration is not an implemented E4 operation.
+
+MISSING E4 operations:
+  all 27 operations in Section 5. No current public function with any of those
+  names exists. A later implementation must add exactly these operations and no
+  E5/E6 operation.
+
+===============================================================================
+5. EXACT 27 E4 PUBLIC OPERATIONS AND SIGNATURES
+===============================================================================
+
+The structural builders below accept every non-identity field in dataclass
+order and derive the leading identity. Validators return a real
+ContinuousDeltaValidationReportV01. Plain-data functions preserve exact field
+order. Identity rebuilders derive from the full non-ID material.
+
+1. build_selective_recomputation_plan_v01(
+     *, delta_id: str, affected_set_id: str, invalidation_report_id: str,
+     source_route_eligibility_artifact_id: str, source_topology_id: str,
+     accepted_mode: str, accepted_scope_ref: str,
+     ordered_affected_cell_ids: tuple[str, ...],
+     ordered_affected_artifact_ids: tuple[str, ...],
+     ordered_work_node_ids: tuple[str, ...],
+     ordered_preserved_artifact_ids: tuple[str, ...],
+     max_work_items: int, max_queue_entries: int,
+     max_wall_time_units: int, max_token_budget: int,
+     max_provider_calls: int, transition_profile_id: str,
+     root_review_required: bool, plan_status: str,
+     reason_codes: tuple[str, ...], trace_refs: tuple[str, ...],
+   ) -> SelectiveRecomputationPlanV01
+2. validate_selective_recomputation_plan_v01(
+     value: object,
+   ) -> ContinuousDeltaValidationReportV01
+3. selective_recomputation_plan_to_plain_data_v01(
+     value: SelectiveRecomputationPlanV01,
+   ) -> dict[str, object]
+4. rebuild_selective_recomputation_plan_identity_v01(
+     value: SelectiveRecomputationPlanV01,
+   ) -> str
+
+5. build_recomputed_artifact_binding_v01(
+     *, recomputation_plan_id: str, prior_artifact_id: str,
+     prior_payload_sha256: str, new_artifact_id: str,
+     new_payload_sha256: str, predecessor_relation: str,
+     supersession_relation: str, derivation_refs: tuple[str, ...],
+     source_cell_id: str, source_queue_entry_id: str,
+     g2d_cell_result_ref: str, g2d_runtime_report_ref: str,
+     trace_refs: tuple[str, ...],
+   ) -> RecomputedArtifactBindingV01
+6. validate_recomputed_artifact_binding_v01(
+     value: object,
+   ) -> ContinuousDeltaValidationReportV01
+7. recomputed_artifact_binding_to_plain_data_v01(
+     value: RecomputedArtifactBindingV01,
+   ) -> dict[str, object]
+8. rebuild_recomputed_artifact_binding_identity_v01(
+     value: RecomputedArtifactBindingV01,
+   ) -> str
+
+9. build_selective_recomputation_result_v01(
+     *, recomputation_plan_id: str, baseline_runtime_report_id: str,
+     recomputed_runtime_report_id: str, preservation_proof_id: str,
+     ordered_recomputed_binding_ids: tuple[str, ...],
+     ordered_invalidated_downstream_ids: tuple[str, ...],
+     ordered_recomputed_artifact_ids: tuple[str, ...],
+     ordered_preserved_artifact_ids: tuple[str, ...],
+     ordered_unresolved_artifact_ids: tuple[str, ...],
+     ordered_partial_failure_ids: tuple[str, ...],
+     parent_return_transition_decision_id: str, result_status: str,
+     reason_codes: tuple[str, ...], provider_calls: int, model_calls: int,
+     network_calls: int, connector_calls: int, external_drs_calls: int,
+     action_commit_packets_created: int, permissions_created: int,
+     receipts_created: int, final_outputs_created: int, drs_writes: int,
+     authority_created_count: int, real_world_effects_count: int,
+   ) -> SelectiveRecomputationResultV01
+10. validate_selective_recomputation_result_v01(
+      value: object,
+    ) -> ContinuousDeltaValidationReportV01
+11. selective_recomputation_result_to_plain_data_v01(
+      value: SelectiveRecomputationResultV01,
+    ) -> dict[str, object]
+12. rebuild_selective_recomputation_result_identity_v01(
+      value: SelectiveRecomputationResultV01,
+    ) -> str
+
+13. build_continuous_delta_runtime_trace_v01(
+      *, delta_id: str, graph_id: str, affected_set_id: str,
+      invalidation_report_id: str, preservation_proof_id: str,
+      recomputation_plan_id: str, recomputation_result_id: str,
+      plan_root_decision_input_id: str, plan_root_decision_id: str,
+      final_root_decision_input_id: str, final_root_decision_id: str,
+      ordered_transition_decision_ids: tuple[str, ...],
+      ordered_causal_ref_ids: tuple[str, ...],
+      ordered_source_artifact_ids: tuple[str, ...],
+      ordered_downstream_artifact_ids: tuple[str, ...],
+      provider_calls: int, model_calls: int, network_calls: int,
+      connector_calls: int, external_drs_calls: int,
+      real_world_effects_count: int,
+    ) -> ContinuousDeltaRuntimeTraceV01
+14. validate_continuous_delta_runtime_trace_v01(
+      value: object,
+    ) -> ContinuousDeltaValidationReportV01
+15. continuous_delta_runtime_trace_to_plain_data_v01(
+      value: ContinuousDeltaRuntimeTraceV01,
+    ) -> dict[str, object]
+16. rebuild_continuous_delta_runtime_trace_identity_v01(
+      value: ContinuousDeltaRuntimeTraceV01,
+    ) -> str
+
+17. build_continuous_delta_runtime_report_v01(
+      *, report_version: str, profile_id: str,
+      ordered_source_binding_ids: tuple[str, ...], baseline_report_id: str,
+      delta_id: str, graph_id: str, affected_set_id: str,
+      invalidation_report_id: str, preservation_proof_id: str,
+      recomputation_plan_id: str, recomputation_result_id: str,
+      trace_id: str, plan_root_decision_input_id: str,
+      plan_root_decision_id: str, final_root_decision_input_id: str,
+      final_root_decision_id: str, changed_count: int,
+      directly_affected_count: int, transitively_affected_count: int,
+      invalidated_count: int, recomputed_count: int, preserved_count: int,
+      unresolved_count: int, report_status: str,
+      reason_codes: tuple[str, ...], root_review_required: bool,
+      provider_calls: int, model_calls: int, network_calls: int,
+      connector_calls: int, external_drs_calls: int,
+      action_commit_packets_created: int, permissions_created: int,
+      receipts_created: int, final_outputs_created: int, drs_writes: int,
+      authority_created_count: int, real_world_effects_count: int,
+    ) -> ContinuousDeltaRuntimeReportV01
+18. validate_continuous_delta_runtime_report_v01(
+      value: object,
+    ) -> ContinuousDeltaValidationReportV01
+19. continuous_delta_runtime_report_to_plain_data_v01(
+      value: ContinuousDeltaRuntimeReportV01,
+    ) -> dict[str, object]
+20. rebuild_continuous_delta_runtime_report_identity_v01(
+      value: ContinuousDeltaRuntimeReportV01,
+    ) -> str
+
+21. build_continuous_delta_execution_bundle_v01(
+      *, source_context: ContinuousDeltaSourceContextV01,
+      source_bindings: tuple[DeltaSourceBindingV01, ...],
+      changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+      changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+      delta: WorldStateDeltaV01,
+      dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+      dependency_graph: DependencyGraphIndexV01,
+      affected_request: AffectedSetRequestV01,
+      affected_result: AffectedSetResultV01,
+      invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+      invalidation_report: InvalidationReportV01,
+      delta_source_proposed_artifact: KernelArtifactV01,
+      delta_source_artifact: KernelArtifactV01,
+      dependency_graph_artifact: KernelArtifactV01,
+      affected_set_artifact: KernelArtifactV01,
+      invalidation_report_artifact: KernelArtifactV01,
+      recomputation_plan: SelectiveRecomputationPlanV01,
+      plan_proposed_artifact: KernelArtifactV01,
+      plan_root_decision_input: RootDecisionInputV01,
+      plan_root_decision_result: RootDecisionResultV01,
+      plan_root_decision_artifact: KernelArtifactV01,
+      plan_accepted_artifact: KernelArtifactV01,
+      recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+      recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
+      preservation_proof: PreservationProofV01,
+      preservation_proof_artifact: KernelArtifactV01,
+      recomputation_result: SelectiveRecomputationResultV01,
+      g2e_validation_reports: tuple[ContinuousDeltaValidationReportV01, ...],
+      g2e_transition_decisions: tuple[TransitionDecisionV01, ...],
+      g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...],
+      final_root_decision_input: RootDecisionInputV01,
+      final_root_decision_result: RootDecisionResultV01,
+      final_root_decision_artifact: KernelArtifactV01,
+      runtime_trace: ContinuousDeltaRuntimeTraceV01,
+      runtime_report: ContinuousDeltaRuntimeReportV01,
+      runtime_report_artifact: KernelArtifactV01,
+    ) -> ContinuousDeltaExecutionBundleV01
+
+22. validate_continuous_delta_execution_bundle_v01(
+      value: object,
+    ) -> ContinuousDeltaValidationReportV01
+
+23. build_selective_recomputation_plan_from_affected_set_v01(
+      *, delta: WorldStateDeltaV01, affected_set: AffectedSetResultV01,
+      invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+      invalidation_report: InvalidationReportV01,
+      source_context: ContinuousDeltaSourceContextV01,
+      source_bindings: tuple[DeltaSourceBindingV01, ...],
+      changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+      changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+      dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+      dependency_graph: DependencyGraphIndexV01,
+    ) -> SelectiveRecomputationPlanV01
+
+24. validate_selective_recomputation_plan_against_sources_v01(
+      value: SelectiveRecomputationPlanV01,
+      *, delta: WorldStateDeltaV01, affected_set: AffectedSetResultV01,
+      invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+      invalidation_report: InvalidationReportV01,
+      source_context: ContinuousDeltaSourceContextV01,
+      source_bindings: tuple[DeltaSourceBindingV01, ...],
+      changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+      changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+      dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+      dependency_graph: DependencyGraphIndexV01,
+    ) -> ContinuousDeltaValidationReportV01
+
+25. execute_selective_recomputation_v01(
+      *, plan: SelectiveRecomputationPlanV01,
+      source_context: ContinuousDeltaSourceContextV01,
+      source_bindings: tuple[DeltaSourceBindingV01, ...],
+      changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+      changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+      delta: WorldStateDeltaV01,
+      dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+      dependency_graph: DependencyGraphIndexV01,
+      affected_request: AffectedSetRequestV01,
+      affected_result: AffectedSetResultV01,
+      invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+      invalidation_report: InvalidationReportV01,
+    ) -> tuple[
+      ContinuousDeltaExecutionBundleV01 | None,
+      ContinuousDeltaValidationReportV01,
+    ]
+
+26. validate_selective_recomputation_result_against_plan_v01(
+      value: SelectiveRecomputationResultV01,
+      *, plan: SelectiveRecomputationPlanV01,
+      source_context: ContinuousDeltaSourceContextV01,
+      delta_source_proposed_artifact: KernelArtifactV01,
+      delta_source_artifact: KernelArtifactV01,
+      dependency_graph_artifact: KernelArtifactV01,
+      affected_set_artifact: KernelArtifactV01,
+      invalidation_report_artifact: KernelArtifactV01,
+      plan_proposed_artifact: KernelArtifactV01,
+      plan_root_decision_input: RootDecisionInputV01,
+      plan_root_decision_result: RootDecisionResultV01,
+      plan_root_decision_artifact: KernelArtifactV01,
+      plan_accepted_artifact: KernelArtifactV01,
+      recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+      recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
+      preservation_proof: PreservationProofV01,
+      preservation_proof_artifact: KernelArtifactV01,
+      g2e_transition_decisions: tuple[TransitionDecisionV01, ...],
+      g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...],
+    ) -> ContinuousDeltaValidationReportV01
+
+27. run_continuous_delta_runtime_v01(
+      *, source_context: ContinuousDeltaSourceContextV01,
+      source_bindings: tuple[DeltaSourceBindingV01, ...],
+      changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+      changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+      delta: WorldStateDeltaV01,
+      dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+      dependency_graph: DependencyGraphIndexV01,
+    ) -> tuple[
+      ContinuousDeltaExecutionBundleV01 | None,
+      ContinuousDeltaValidationReportV01,
+    ]
+
+All 27 are G2-E4-owned. Shared lower-layer public calls are reused but are not
+counted. E5 runners/matrices and E6 Living/Conformance operations are excluded.
+
+===============================================================================
+6. CANONICAL E4 PATH
+===============================================================================
+
+The only accepted successful path is:
+
+  current validated G2-E3 source/evidence
+  -> build and validate SelectiveRecomputationPlanV01 PROPOSED
+  -> project proposed plan KernelArtifactV01
+  -> Pair-1 Root review
+  -> on ACCEPT, project ROOT_ACCEPTED plan artifact
+  -> build generic RuntimeObservedWorkContextV02 from actual G2-E baseline and
+     observed KernelArtifactV01 sources, public G2-D binding artifacts, and the
+     exact affected topology-node/cell mapping
+  -> validate context structurally and contextually through public G2-D seams
+  -> granular G2-D admission and execution of affected cells/nodes only
+  -> no unaffected queue, budget or result execution
+  -> ResultProposal -> Post V&V -> advisory GT -> cell result/return
+  -> public complete 28-field FractalRuntimeExecutionBundleV02 construction
+     and validation, including trailing observed_work_context
+  -> RecomputedArtifactBindingV01 objects
+  -> unaffected PreservationProofV01
+  -> SelectiveRecomputationResultV01
+  -> Pair-2 final Root review
+  -> runtime trace/report/artifact and exact t01-t10 plus causal carriage
+  -> return evidence to Root without successor baseline, FinalOutput or effect.
+
+Current G2-C owns the already Root-reviewed route. Current G2-D owns topology
+and stable topology-node IDs. Observed bytes enter source/binding/context,
+queue/result/trace/report and causal identity. Caller-selected refs cannot
+substitute for actual observed source objects. Baseline G2-C/G2-D objects and
+unaffected objects remain immutable.
+
+===============================================================================
+7. NORMAL SELECTIVE AND CONDITIONAL ESCALATION LAW
+===============================================================================
+
+Normal E4 is granular and uses only independently validated affected nodes.
+run_fractal_runtime_v02 is forbidden on that normal minimal selective path.
+
+The whole-run seam is CONDITIONAL_ESCALATION_ONLY. It is legal only when the
+independently validated affected closure equals every recomputable artifact in
+the bounded topology, or an exact named fail-closed policy requires full
+reconstruction. The context must be WHOLE_RUN_ESCALATION; SELECTIVE on the
+whole-run seam fails closed. Full coverage uses the same actual-source,
+binding, context and stable-witness law. The exact escalation reason is carried
+in the E4 report. Whole-run execution never substitutes for proof of granular
+constructibility.
+
+===============================================================================
+8. TWO ROOT PAIRS AND TRANSITION BINDINGS
+===============================================================================
+
+Pair 1 reviews the PROPOSED plan before any G2-D execution. Only ACCEPT with
+selected candidate equal to the exact plan permits t05, ROOT_ACCEPTED plan
+projection, and t07. BLOCKED_FAIL_CLOSED, NEEDS_USER, NEEDS_MORE_EVIDENCE,
+DEFER, REJECT and NO_UPDATE all follow terminal t06 and create no accepted
+plan or execution.
+
+Pair 2 reviews the exact result after the complete recomputed G2-D bundle,
+bindings and preservation proof. Only ACCEPT with selected candidate equal to
+the exact result permits t10 and final report acceptance. Every non-ACCEPT path
+creates no t10, accepted report artifact, or accepted E4 bundle.
+
+Both RootDecision KernelArtifactV01 projections use public Root plain-data plus
+generic ABI builders/validators. Plan and final artifacts have distinct ID
+domains, parents, traces, time sources, candidates and prior Root state. t04,
+t05, t06, t09 and t10 are frozen exactly by the two-Root-pair register. The
+trace/report excludes future t10 identity; t10 validates pre-existing source
+and target objects. Every identity graph is acyclic and source-bound.
+
+Root is the only final authority. Runtime, Post V&V, GT, Transition, causal
+refs, hashes, reports, tests, audits and checkpoints create no authority.
+
+===============================================================================
+9. PROSPECTIVE IMPLEMENTATION SCOPE
+===============================================================================
+
+The later separately authorized implementation scope is expected to be exact:
+
+  hedgehog/kernel/continuous_delta_runtime_v01.py = REQUIRED
+  tests/test_continuous_delta_runtime_g2_e_v01.py = REQUIRED
+  hedgehog/kernel/__init__.py = REQUIRED one-time additive direct exports
+  schemas/continuous_delta_runtime_v01.schema.json = NO_CHANGE
+
+All lower/shared paths remain frozen and read-only:
+  hedgehog/kernel/fractal_runtime_v02.py
+  schemas/fractal_runtime_v02.schema.json
+  hedgehog/kernel/transition_registry_v01.py
+  hedgehog/kernel/execution_mode_router_v01.py
+  hedgehog/kernel/root_decision_v01.py
+  hedgehog/kernel/semantic_work_v01.py
+  hedgehog/kernel/trust_model_v01.py
+  hedgehog/kernel/abi_v01.py
+  schemas/kernel_artifact_v01.schema.json
+  hedgehog/kernel/integrity_replay_v01.py
+  hedgehog/post_vv.py
+  hedgehog/gt_validator.py.
+
+A proven need to change any frozen path is a guardian BLOCKER, not implicit
+scope expansion.
+
+===============================================================================
+10. LATER TEST-OPERATION POLICY
+===============================================================================
+
+A later separately authorized implementation must:
+
+- print TEST_COMMAND_EXPANSION before each pytest command with exact selectors,
+  fixture/process expansion, expected public G2-D call count, forecast and hard
+  ceiling;
+- run static/no-import validation first;
+- run a microproof next;
+- run the focused complete failure class next;
+- run one bounded E4 acceptance contour last;
+- avoid complete G2-D, D5, Living, Conformance and full-repository pytest as an
+  iterative E4 debugger;
+- use owner-terminal execution for broad or transitively uncertain contours;
+- stop on first new failure without blind patch/rerun;
+- leave commit and push to a separate owner workflow.
+
+This pending donor runs none of those tests and grants no authority to run them.
+
+===============================================================================
+11. NONCLAIMS AND PENDING VERDICT
+===============================================================================
+
+This donor claims no E5 100-case runner/matrix, no E6 Living/Conformance
+extension, no G2-F, and no Gate-2 closure. It claims no public release, RC2,
+production readiness, production security, provider/network/connector/external
+DRS reliability, successor baseline, persistent event registry, accepted
+multi-delta history, authority from hashes/reports/audits/tests, permission,
+ActionCommitPacket, receipt, FinalOutput, DRS write, or real-world effect.
+
+Guardian acceptance of a later repository contract hop is required before any
+separate owner implementation authorization. This file is not that hop.
+
+G2E_V013_PENDING_DRAFT_CREATED=true
+G2D_STATUS=CLOSED_PASS
+G2E3_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
+G2E4_CONTRACT_GUARDIAN_STATUS=PENDING
+G2E4_IMPLEMENTATION_AUTHORIZED=false
+G2E4_STARTED=false
+GATE2_STATUS=NOT_CLOSED
+PUBLIC_SEAM_CONSTRUCTIBILITY=PASS
+BOTH_ROOT_PAIRS_CONSTRUCTIBLE=YES
+SCHEMA_MUTATION_REQUIRED=NO
+CODEX_IMPLEMENTATION_PROMPT_PREPARED=false
+
+END OF HEDGEHOG_G2E_V013_E4_CONTRACT_PENDING_DRAFT_V01
+----- END EXACT V0.1.3 PENDING DONOR BYTES -----
+
+===============================================================================
+HISTORICAL ACCEPTED V0.1.2 CONTENT - EXACT REPOSITORY BYTES
+===============================================================================
+
+The bytes between the BEGIN and END markers are the complete previously
+accepted v0.1.2 repository addendum. They remain controlling for PAC-01 through
+PAC-12, G2-E1 through G2-E3, and every unaffected ruling. Historical status
+statements inside that preserved content do not override the active v0.1.3
+metadata above.
+
+----- BEGIN EXACT V0.1.2 REPOSITORY BYTES -----
 # G2-E Post-Acceptance Contract Addendum Version 0.1.2
 
 ```text
@@ -1131,3 +1811,4 @@ PUSH_PERFORMED=false
 
 READY_FOR_GUARDIAN_V012_REVIEW=false
 ```
+----- END EXACT V0.1.2 REPOSITORY BYTES -----

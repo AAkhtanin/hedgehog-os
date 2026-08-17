@@ -36,15 +36,17 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
-R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. The former
-G2-D `CLOSED_PASS` is immutable pre-correction evidence only. Corrected G2-D
-v0.3.7 is `CLOSED_PASS` after corrected implementation, full owner execution
-evidence, independent re-audit, and additive successor reclosure. Gate 2
-remains `NOT_CLOSED`; G2-E3 is
-`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after the fresh
-unchanged post-reclosure V06; the G2-E4 contract is
-`ACCEPTED_IMPLEMENTATION_PENDING`; G2-E4 remains not started and unauthorized;
-and G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
+R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. G2-D
+v0.3.8 is `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`: it explicitly
+clarifies already controlling DESIGN_V03 semantics, records v0.3.7
+implementation nonconformance, and reopens the lifecycle without authorizing
+implementation. Historical v0.3.7 implementation, execution evidence,
+independent re-audit, checkpoint, and closure remain immutable evidence for
+their exact bytes only. G2-E3 remains
+`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`; G2-E4 is
+`IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`;
+No G2-E5, G2-E6, or G2-F work has started or been authorized; Gate 2 remains
+`NOT_CLOSED`.
 
 ```text
 workstream_id: R-H1
@@ -69,29 +71,51 @@ g2c_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
 g2c_implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
 g2c_audit_commit: 72854bcdc85d19e9c6a6636f9a7eedd1929f03cb
 g2c_closure_commit_identity: NOT_SELF_RECORDED
-g2d_status: CLOSED_PASS
-g2d_correction_implementation_authorized: true
-g2d_corrected_implementation_exists: true
-g2d_contract_only_claim: false
-g2d_corrected_runtime_acceptance_claimed: true
-g2d_corrected_implementation_committed: true
-g2d_corrected_implementation_commit: 27c6dfd10740103cddc13bac3ce35f917b5f30c5
-g2d_corrected_implementation_patch_sha256: be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279
-g2d_corrected_owner_evidence_bundle_sha256: e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd
+g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+g2d_correction_implementation_authorized: false
+g2d_corrected_implementation_exists: false
+g2d_contract_only_claim: true
+g2d_corrected_runtime_acceptance_claimed: false
+g2d_corrected_implementation_committed: false
+g2d_corrected_implementation_commit: NOT_CREATED
+g2d_corrected_implementation_patch_sha256: NOT_CREATED
+g2d_corrected_owner_evidence_bundle_sha256: NOT_CREATED
 g2d_independent_reaudit_required: true
-g2d_independent_reaudit_passed: true
-g2d_independent_reaudit_commit: 2eccb604fee89d7e79025337d3858d6dbfea5fbc
-g2d_independent_reaudit_path: docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log
-g2d_independent_reaudit_sha256: c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3
+g2d_independent_reaudit_passed: false
+g2d_independent_reaudit_commit: NOT_CREATED
+g2d_independent_reaudit_path: NOT_CREATED
+g2d_independent_reaudit_sha256: NOT_CREATED
 g2d_additive_reclosure_required: true
-g2d_additive_reclosure_completed: true
-g2d_corrected_closure_claimed: true
-g2d_corrected_checkpoint_path: docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md
-g2d_corrected_checkpoint_sha256: 606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677
+g2d_additive_reclosure_completed: false
+g2d_corrected_closure_claimed: false
+g2d_corrected_checkpoint_path: NOT_CREATED
+g2d_corrected_checkpoint_sha256: NOT_CREATED
 g2d_corrected_closure_commit_identity: NOT_SELF_RECORDED
 g2d_old_audit_checkpoint_class: HISTORICAL_PRECORRECTION_EVIDENCE
-g2d_accepted_normative_donor_sha256: 8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d
-g2d_accepted_repository_addendum_sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
+g2d_accepted_normative_donor_sha256: 91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454
+g2d_accepted_repository_addendum_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
+g2d_v037_implementation_nonconformance: true
+g2d_v038_contract_semantics_changed: false
+g2d_v038_role: EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING
+g2d_v038_directional_draft_review: APPROVE_WITH_MANDATORY_OVERLAY
+g2d_v038_directional_draft_sha256: 91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454
+g2d_v038_controlling_design_v03_sha256: 7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe
+g2d_v038_accepted_addendum_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
+g2d_v038_implementation_authorized: false
+g2d_v038_implementation_started: false
+g2d_v037_status: HISTORICAL_CLOSED_PASS_WITH_IMPLEMENTATION_NONCONFORMANCE
+g2d_v037_accepted_normative_donor_sha256: 8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d
+g2d_v037_accepted_addendum_sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
+g2d_v037_corrected_implementation_commit: 27c6dfd10740103cddc13bac3ce35f917b5f30c5
+g2d_v037_corrected_implementation_patch_sha256: be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279
+g2d_v037_owner_evidence_bundle_sha256: e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd
+g2d_v037_independent_reaudit_commit: 2eccb604fee89d7e79025337d3858d6dbfea5fbc
+g2d_v037_independent_reaudit_path: docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log
+g2d_v037_independent_reaudit_sha256: c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3
+g2d_v037_checkpoint_path: docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md
+g2d_v037_checkpoint_sha256: 606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677
+g2d_v037_closure_commit: 48ab284ee7c1ba33400f0d0c7fe5656b4249b839
+g2d_v037_evidence_classification: IMMUTABLE_HISTORICAL_EVIDENCE_FOR_V037_BYTES_ONLY
 g2d_historical_precorrection_status: CLOSED_PASS_ON_PRECORRECTION_BYTES
 g2d_historical_precorrection_audit_status: PASS
 g2d_historical_precorrection_checkpoint_present: true
@@ -114,12 +138,15 @@ g2e4_public_seam_register_sha256: a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b
 g2e4_two_root_pair_register_sha256: a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33
 g2e4_contract_accepted: true
 g2e4_contract_status: ACCEPTED_IMPLEMENTATION_PENDING
-g2e4_status: NOT_STARTED_NOT_AUTHORIZED
-g2e4_implementation_authorized: false
-g2e4_implementation_started: false
-g2f_status: NOT_STARTED
-g2f_implementation_authorized: false
-g2f_implementation_started: false
+g2e4_status: IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED
+g2e4_implementation_authorized: true
+g2e4_implementation_started: true
+g2e4_strict_subtree_implementation_committed: true
+g2e4_anti_gaming_acceptance: BLOCKED
+g2e4_anti_gaming_correction_authorized: false
+g2e5_status: NOT_STARTED_NOT_AUTHORIZED
+g2e6_status: NOT_STARTED_NOT_AUTHORIZED
+g2f_status: NOT_STARTED_NOT_AUTHORIZED
 public_release_claimed: false
 rc2_claimed: false
 production_readiness_claimed: false
@@ -129,28 +156,37 @@ production_security_certification_claimed: false
 - Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, and
   G2-C are `CLOSED_PASS`.
 - Historical pre-correction G2-D is `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D is `CLOSED_PASS` on the corrected v0.3.7 bytes.
-- G2-D correction implementation authorization is `true`; corrected
-  implementation bytes exist and are committed.
-- Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
-  and corrected closure are all `true`; contract-only claim is `false`.
+- G2-D v0.3.8 is
+  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
+- `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
+- `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
+- G2-D v0.3.8 implementation authorization and implementation started are
+  both `false`; this is a contract-only claim.
+- Historical v0.3.7 implementation, owner evidence, independent re-audit,
+  checkpoint, and closure remain immutable evidence for v0.3.7 bytes only.
 - Gate 2 is `NOT_CLOSED`.
 - G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one
   fresh unchanged owner-terminal V06 PASS on corrected G2-D.
 - The post-corrected-G2-D landing status was
   `REVALIDATION_PENDING_ON_CORRECTED_G2D`; the post-reclosure V06 passed.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
-- G2-E4 implementation authorization and implementation started are both
-  `false`.
-- G2-F is `NOT_STARTED / NOT_AUTHORIZED`.
+- G2-E4 is
+  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
+- The strict-subtree implementation is committed; anti-gaming acceptance is
+  blocked and its correction is not authorized by this contract hop.
+- G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
 - R-H1 audit: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
 - R-H1 checkpoint: `docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md`.
 - R-H1 is `CLOSED_PASS`.
-- Accepted G2-D v0.3.7 normative donor SHA-256:
-  `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
-- Accepted G2-D repository addendum SHA-256:
+- Accepted G2-D v0.3.8 directional draft SHA-256:
+  `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
+- Controlling DESIGN_V03 SHA-256:
+  `7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe`.
+- Accepted G2-D v0.3.8 repository addendum SHA-256:
+  `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
+- Historical accepted G2-D v0.3.7 repository addendum SHA-256:
   `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
 - Historical pre-correction G2-D implementation basis:
   `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
@@ -180,7 +216,8 @@ production_security_certification_claimed: false
 - E4 two-Root-pair register SHA-256:
   `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - The old G2-D audit and checkpoint certify pre-correction bytes only.
-- Independent re-audit and additive successor reclosure are complete.
+- Historical v0.3.7 independent re-audit and additive successor reclosure are
+  complete for v0.3.7 bytes only; v0.3.8 has neither yet.
 - The old G2-D audit and checkpoint are
   `HISTORICAL_PRECORRECTION_EVIDENCE` only.
 - The independent re-audit is evidence, not authority or closure by itself.
@@ -204,13 +241,11 @@ production_security_certification_claimed: false
 - [Current limitations](release/current_limitations.md)
 - [Current engineering notes](release/current_release_notes.md)
 
-The independent audit records four nonblocking maintenance-debt items for
-post-Gate-2 treatment: large explicit proof/validation functions, duplicated
-donor/proof construction, expensive cumulative Living/Conformance feedback,
-and two inactive historical private helpers. These do not reopen G2-D. The
-current project remains a proof-of-architecture reference kernel, not a public
-release, RC2, production-readiness result, or production-security
-certification.
+The accepted v0.3.8 clarification reopens G2-D because current v0.3.7 runtime
+bytes do not conform to the already controlling proof-based null-policy matrix.
+It authorizes no implementation. The current project remains a
+proof-of-architecture reference kernel, not a public release, RC2,
+production-readiness result, or production-security certification.
 <!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 
 ## Future Mathematical Profiles

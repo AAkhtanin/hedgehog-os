@@ -57,9 +57,9 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-D v0.3.7 observed-work correction CLOSED_PASS.
+Current checkpoint: G2-D v0.3.8 clarification contract accepted; implementation pending.
 
-Current G2-D correction reclosure and G2-E v0.1.3 contract facts:
+Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 
 - R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
 - R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
@@ -76,8 +76,11 @@ Current G2-D correction reclosure and G2-E v0.1.3 contract facts:
 - Accepted G2-D preflight path: `docs/fractal_runtime_v0_2_g2_d_preflight_v01.md`.
 - Accepted G2-D preflight SHA-256: `8e3ae3b04a9b622329e85529edb8a150739cc787b341f1609438dbde00412e79`.
 - Accepted G2-D addendum path: `docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md`.
-- Accepted G2-D v0.3.7 normative donor SHA-256: `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
-- Accepted G2-D addendum SHA-256: `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
+- Accepted G2-D v0.3.8 directional draft SHA-256: `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
+- Controlling DESIGN_V03 SHA-256: `7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe`.
+- Accepted G2-D v0.3.8 addendum SHA-256: `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
+- Historical accepted G2-D v0.3.7 normative donor SHA-256: `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
+- Historical accepted G2-D v0.3.7 addendum SHA-256: `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
 - Corrected G2-D implementation commit: `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
 - Corrected G2-D implementation parent: `3dcaabb7a231259c488643a652b92ee03d7faf52`.
 - Corrected G2-D implementation patch SHA-256: `be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279`.
@@ -111,25 +114,32 @@ Current G2-D correction reclosure and G2-E v0.1.3 contract facts:
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
 - Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D: `CLOSED_PASS`.
-- G2-D correction implementation authorized: `true`.
-- Corrected G2-D implementation byte exists: `true`.
-- Corrected G2-D implementation committed: `true`.
-- G2-D contract-only claim: `false`.
-- Corrected G2-D runtime acceptance claimed: `true`.
-- Independent G2-D re-audit passed: `true`.
-- Additive G2-D reclosure completed: `true`.
-- Corrected G2-D closure claimed: `true`.
+- G2-D: `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
+- `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
+- `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
+- G2-D v0.3.8 correction implementation authorized: `false`.
+- G2-D v0.3.8 implementation started: `false`.
+- G2-D v0.3.8 contract-only claim: `true`.
+- G2-D v0.3.8 runtime acceptance claimed: `false`.
+- G2-D v0.3.8 independent re-audit passed: `false`.
+- G2-D v0.3.8 additive reclosure completed: `false`.
+- G2-D v0.3.8 corrected closure claimed: `false`.
+- Historical v0.3.7 implementation, owner evidence, independent re-audit,
+  checkpoint, and reclosure remain immutable evidence for v0.3.7 bytes only.
 - Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
 - G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
 - G2-E3 post-corrected-G2-D landing status: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - Fresh unchanged post-reclosure G2-E3 V06 passed: `true`.
 - G2-E4 contract: `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4: `NOT_STARTED_NOT_AUTHORIZED`.
-- G2-E4 implementation authorized: `false`.
-- G2-E4 implementation started: `false`.
+- G2-E4: `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
+- G2-E4 strict-subtree implementation committed: `true`.
+- G2-E4 anti-gaming acceptance: `BLOCKED`.
+- G2-E4 anti-gaming correction authorized: `false`.
+- G2-E5: `NOT_STARTED_NOT_AUTHORIZED`.
+- G2-E6: `NOT_STARTED_NOT_AUTHORIZED`.
 - Gate 2: `NOT_CLOSED`.
-- G2-F: `NOT_STARTED / NOT_AUTHORIZED`.
+- G2-F: `NOT_STARTED_NOT_AUTHORIZED`.
 - Current architecture:
 
   ```text
@@ -148,12 +158,13 @@ Current G2-D correction reclosure and G2-E v0.1.3 contract facts:
   handle, DRS write, FinalOutput, provider authority, connector authority, or
   real-world effect.
 - Provider, model, network, connector, and external-DRS calls remain zero.
-- Corrected G2-D v0.3.7 is `CLOSED_PASS` after corrected implementation, full
-  owner execution evidence, independent re-audit, and additive successor
-  reclosure.
+- G2-D v0.3.8 does not alter DESIGN_V03 semantics. It explicitly records that
+  current v0.3.7 runtime bytes do not conform to the controlling proof-based
+  null-policy matrix and reopens the lifecycle without authorizing code.
 - The independent re-audit is evidence, not authority or closure by itself.
-- The fresh G2-E3 V06 and accepted E4 contract do not start or authorize E4,
-  close Gate 2, create authority, or create a real-world effect.
+- The fresh G2-E3 V06, committed E4 strict-subtree work, and this clarification
+  do not accept the E4 anti-gaming boundary, start E5/E6/F, close Gate 2,
+  create authority, or create a real-world effect.
 - Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
 - R-IP1 does not block G2-E or G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.

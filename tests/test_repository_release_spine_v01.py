@@ -42,7 +42,8 @@ AGENTS_CURRENT_BEGIN_MARKER = (
     "Current checkpoint: G2-C ExecutionModeRouter CLOSED_PASS."
 )
 AGENTS_G2D_CURRENT_BEGIN_MARKER = (
-    "Current checkpoint: G2-D v0.3.7 observed-work correction CLOSED_PASS."
+    "Current checkpoint: G2-D v0.3.8 clarification contract accepted; "
+    "implementation pending."
 )
 AGENTS_END_MARKER = "## Root-centered capability geometry"
 
@@ -91,9 +92,18 @@ G2D_ACCEPTED_ADDENDUM_PATH = (
     "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md"
 )
 G2D_ACCEPTED_ADDENDUM_SHA256 = (
-    "29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511"
+    "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6"
 )
 G2D_ACCEPTED_NORMATIVE_DONOR_SHA256 = (
+    "91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454"
+)
+G2D_CONTROLLING_DESIGN_V03_SHA256 = (
+    "7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe"
+)
+G2D_V037_ACCEPTED_ADDENDUM_SHA256 = (
+    "29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511"
+)
+G2D_V037_NORMATIVE_DONOR_SHA256 = (
     "8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d"
 )
 G2D_PRECORRECTION_ACCEPTED_ADDENDUM_SHA256 = (
@@ -163,6 +173,13 @@ G2D_CORRECTED_CLOSURE_CLAIM_WORDING = (
     "Gate 2 slice G2-D Fractal Runtime v0.2 with the accepted v0.3.7 "
     "observed-work correction is CLOSED_PASS."
 )
+G2D_V038_CONTRACT_CLAIM_ID = (
+    "claim_g2d_v038_clarification_contract_accepted_implementation_pending"
+)
+G2D_V038_CONTRACT_CLAIM_WORDING = (
+    "Gate 2 slice G2-D v0.3.8 clarification contract is accepted with "
+    "implementation pending and unauthorized."
+)
 G2D_CLOSURE_SUBJECT = "Close G2-D v0.3.7 observed-work correction"
 G2D_CLOSURE_PARENT = G2D_INDEPENDENT_REAUDIT_COMMIT
 G2D_CLOSURE_COMMIT = "48ab284ee7c1ba33400f0d0c7fe5656b4249b839"
@@ -224,7 +241,7 @@ G2D_CLOSURE_PATHS = (
     "tests/test_repository_release_spine_v01.py",
 )
 
-G2D_CURRENT_BOUNDARY_FIELDS = {
+G2D_V037_RECLOSURE_BOUNDARY_FIELDS = {
     "g2d_status": "CLOSED_PASS",
     "g2d_correction_implementation_authorized": True,
     "g2d_corrected_implementation_exists": True,
@@ -250,8 +267,84 @@ G2D_CURRENT_BOUNDARY_FIELDS = {
     "g2d_corrected_checkpoint_sha256": G2D_CHECKPOINT_SHA256,
     "g2d_corrected_closure_commit_identity": "NOT_SELF_RECORDED",
     "g2d_old_audit_checkpoint_class": "HISTORICAL_PRECORRECTION_EVIDENCE",
+    "g2d_accepted_normative_donor_sha256": G2D_V037_NORMATIVE_DONOR_SHA256,
+    "g2d_accepted_repository_addendum_sha256": (
+        G2D_V037_ACCEPTED_ADDENDUM_SHA256
+    ),
+    "g2d_historical_precorrection_status": "CLOSED_PASS_ON_PRECORRECTION_BYTES",
+    "g2d_historical_precorrection_implementation_basis_commit": (
+        G2D_IMPLEMENTATION_BASIS_COMMIT
+    ),
+    "g2d_historical_precorrection_audit_commit": G2D_AUDIT_COMMIT,
+    "g2d_historical_precorrection_audit_path": G2D_AUDIT_PATH,
+    "g2d_historical_precorrection_audit_sha256": G2D_AUDIT_SHA256,
+    "g2d_historical_precorrection_checkpoint_path": (
+        G2D_HISTORICAL_CHECKPOINT_PATH
+    ),
+    "g2d_historical_precorrection_checkpoint_sha256": (
+        G2D_HISTORICAL_CHECKPOINT_SHA256
+    ),
+    "g2d_historical_precorrection_evidence_only": True,
+}
+
+G2D_CURRENT_BOUNDARY_FIELDS = {
+    "g2d_status": "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+    "g2d_correction_implementation_authorized": False,
+    "g2d_corrected_implementation_exists": False,
+    "g2d_contract_only_claim": True,
+    "g2d_corrected_runtime_acceptance_claimed": False,
+    "g2d_corrected_implementation_committed": False,
+    "g2d_corrected_implementation_commit": "NOT_CREATED",
+    "g2d_corrected_implementation_patch_sha256": "NOT_CREATED",
+    "g2d_corrected_owner_evidence_bundle_sha256": "NOT_CREATED",
+    "g2d_independent_reaudit_required": True,
+    "g2d_independent_reaudit_passed": False,
+    "g2d_independent_reaudit_commit": "NOT_CREATED",
+    "g2d_independent_reaudit_path": "NOT_CREATED",
+    "g2d_independent_reaudit_sha256": "NOT_CREATED",
+    "g2d_additive_reclosure_required": True,
+    "g2d_additive_reclosure_completed": False,
+    "g2d_corrected_closure_claimed": False,
+    "g2d_corrected_checkpoint_path": "NOT_CREATED",
+    "g2d_corrected_checkpoint_sha256": "NOT_CREATED",
+    "g2d_corrected_closure_commit_identity": "NOT_SELF_RECORDED",
+    "g2d_old_audit_checkpoint_class": "HISTORICAL_PRECORRECTION_EVIDENCE",
     "g2d_accepted_normative_donor_sha256": G2D_ACCEPTED_NORMATIVE_DONOR_SHA256,
     "g2d_accepted_repository_addendum_sha256": G2D_ACCEPTED_ADDENDUM_SHA256,
+    "g2d_v037_implementation_nonconformance": True,
+    "g2d_v038_contract_semantics_changed": False,
+    "g2d_v038_role": "EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING",
+    "g2d_v038_directional_draft_review": "APPROVE_WITH_MANDATORY_OVERLAY",
+    "g2d_v038_directional_draft_sha256": G2D_ACCEPTED_NORMATIVE_DONOR_SHA256,
+    "g2d_v038_controlling_design_v03_sha256": (
+        G2D_CONTROLLING_DESIGN_V03_SHA256
+    ),
+    "g2d_v038_accepted_addendum_sha256": G2D_ACCEPTED_ADDENDUM_SHA256,
+    "g2d_v038_implementation_authorized": False,
+    "g2d_v038_implementation_started": False,
+    "g2d_v037_status": (
+        "HISTORICAL_CLOSED_PASS_WITH_IMPLEMENTATION_NONCONFORMANCE"
+    ),
+    "g2d_v037_accepted_normative_donor_sha256": (
+        G2D_V037_NORMATIVE_DONOR_SHA256
+    ),
+    "g2d_v037_accepted_addendum_sha256": G2D_V037_ACCEPTED_ADDENDUM_SHA256,
+    "g2d_v037_corrected_implementation_commit": (
+        G2D_CORRECTED_IMPLEMENTATION_COMMIT
+    ),
+    "g2d_v037_corrected_implementation_patch_sha256": (
+        G2D_CORRECTED_IMPLEMENTATION_PATCH_SHA256
+    ),
+    "g2d_v037_owner_evidence_bundle_sha256": G2D_OWNER_EVIDENCE_BUNDLE_SHA256,
+    "g2d_v037_independent_reaudit_commit": G2D_INDEPENDENT_REAUDIT_COMMIT,
+    "g2d_v037_independent_reaudit_path": G2D_INDEPENDENT_REAUDIT_PATH,
+    "g2d_v037_independent_reaudit_sha256": G2D_INDEPENDENT_REAUDIT_SHA256,
+    "g2d_v037_checkpoint_path": G2D_CHECKPOINT_PATH,
+    "g2d_v037_checkpoint_sha256": G2D_CHECKPOINT_SHA256,
+    "g2d_v037_closure_commit": G2D_CLOSURE_COMMIT,
+    "g2d_v037_evidence_classification": (
+        "IMMUTABLE_HISTORICAL_EVIDENCE_FOR_V037_BYTES_ONLY"
+    ),
     "g2d_historical_precorrection_status": "CLOSED_PASS_ON_PRECORRECTION_BYTES",
     "g2d_historical_precorrection_implementation_basis_commit": (
         G2D_IMPLEMENTATION_BASIS_COMMIT
@@ -292,9 +385,18 @@ G2E_CURRENT_BOUNDARY_FIELDS = {
     "g2e4_two_root_pair_register_sha256": G2E4_TWO_ROOT_PAIR_REGISTER_SHA256,
     "g2e4_contract_accepted": True,
     "g2e4_contract_status": "ACCEPTED_IMPLEMENTATION_PENDING",
-    "g2e4_status": "NOT_STARTED_NOT_AUTHORIZED",
-    "g2e4_implementation_authorized": False,
-    "g2e4_implementation_started": False,
+    "g2e4_status": (
+        "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_"
+        "ANTI_GAMING_ACCEPTANCE_BLOCKED"
+    ),
+    "g2e4_implementation_authorized": True,
+    "g2e4_implementation_started": True,
+    "g2e4_strict_subtree_implementation_committed": True,
+    "g2e4_anti_gaming_acceptance": "BLOCKED",
+    "g2e4_anti_gaming_correction_authorized": False,
+    "g2e5_status": "NOT_STARTED_NOT_AUTHORIZED",
+    "g2e6_status": "NOT_STARTED_NOT_AUTHORIZED",
+    "g2f_status": "NOT_STARTED_NOT_AUTHORIZED",
 }
 
 CURRENT_BOUNDARY_FIELDS = {
@@ -310,8 +412,17 @@ G2D_RECLOSURE_G2E_FIELDS = {
 }
 G2E_CONTRACT_TRANSITION_FIELDS = set(G2E_CURRENT_BOUNDARY_FIELDS) - {
     "g2e3_post_corrected_g2d_landing_status",
-    "g2e4_status",
 }
+G2D_V038_TRANSITION_FIELDS = {
+    key
+    for key in set(G2D_CURRENT_BOUNDARY_FIELDS)
+    | set(G2D_V037_RECLOSURE_BOUNDARY_FIELDS)
+    if G2D_CURRENT_BOUNDARY_FIELDS.get(key, "MISSING_CURRENT")
+    != G2D_V037_RECLOSURE_BOUNDARY_FIELDS.get(key, "MISSING_RECLOSURE")
+}
+CURRENT_TRANSITION_FIELDS = (
+    G2D_V038_TRANSITION_FIELDS | G2E_CONTRACT_TRANSITION_FIELDS
+)
 
 G2D_FROZEN_IMPLEMENTATION_SHA256 = {
     "hedgehog/kernel/fractal_runtime_v02.py": (
@@ -319,9 +430,6 @@ G2D_FROZEN_IMPLEMENTATION_SHA256 = {
     ),
     "schemas/fractal_runtime_v02.schema.json": (
         "a70ea31721a08c9edaaeb7c7aa6a91abb2e6c92b408fd72f22f1165b4baef4e8"
-    ),
-    "tests/test_fractal_runtime_g2_d_v02.py": (
-        "52da16aea1929bd7039e1222c27f1841c65388fcf5f123ff372957f0f82d694a"
     ),
     "demo/run_fractal_runtime_g2_d_v02.py": (
         "ead2127501c15f6c8ab01eab0c95c65a838008326004bb9ce290557a2fb890ff"
@@ -331,9 +439,6 @@ G2D_FROZEN_IMPLEMENTATION_SHA256 = {
     ),
     "tests/test_transition_registry_v01.py": (
         "6543bb228f6c9c8a8b064f55fb55b84e426320b51ca12243b04db9f8efa1ac67"
-    ),
-    "hedgehog/kernel/__init__.py": (
-        "e4b0578d26910fa6de9c8976395218544d4d5e10c55bcf96e6ce57b7475394cc"
     ),
     "demo/run_living_gauntlet_v01.py": (
         "d066cb9cd3a681acbc774ac3eb878dd54ac190ca1e1d8cb6a823bc1aa9513d00"
@@ -349,9 +454,6 @@ G2D_FROZEN_IMPLEMENTATION_SHA256 = {
     ),
     "tests/test_kernel_conformance_v01_runner.py": (
         "c2b36e6bb799e9c291abd5913c5494c637d09f154f6db7aed56c75d51eab1624"
-    ),
-    "hedgehog/kernel/continuous_delta_runtime_v01.py": (
-        "929f99da757647506f326c5c6cd17e2c7895f4c50bf4ed3f4e3b0d53fda743d3"
     ),
     "schemas/continuous_delta_runtime_v01.schema.json": (
         "6d2d2c8756ebf261724742ad14294094ee9ce04a28c0498b264164ec585d11f2"
@@ -372,8 +474,17 @@ G2D_HISTORICAL_G2E_DEPENDENCY_SHA256 = {
 }
 G2E_CONTRACT_UPDATED_SHA256 = {
     G2E_ACCEPTED_ADDENDUM_PATH: G2E_ACCEPTED_ADDENDUM_SHA256,
+    "hedgehog/kernel/continuous_delta_runtime_v01.py": (
+        "6e6679a592e45bc268d1bb8476c171111571f012f06fe5b65a030092b68ef6e0"
+    ),
     "tests/test_continuous_delta_runtime_g2_e_v01.py": (
-        "14eeb44754074595c80cc40ad6c1a89b0c181c0bc96b369e53f7ded7e4c88ab1"
+        "b4c355b6de16d7417c4b48710fbcd4f4ef70c2f7a1cfa68a1de1e8a716fd9e77"
+    ),
+    "hedgehog/kernel/__init__.py": (
+        "0925a20b439a7fc8be28fa4a9db353b164e57c74a93805b103465268d8d75b17"
+    ),
+    "tests/test_fractal_runtime_g2_d_v02.py": (
+        "5e64390078c899ed60c9e11a2ed00ce508e90b06b35aa91cdf5c401cdb6dcbcf"
     ),
 }
 
@@ -737,7 +848,7 @@ def _revert_g2d_boundary_transition(
         assert isinstance(checkpoint, dict)
         boundary = checkpoint["current_engineering_boundary_v01"]
     assert isinstance(boundary, dict)
-    for key, value in G2D_CURRENT_BOUNDARY_FIELDS.items():
+    for key, value in G2D_V037_RECLOSURE_BOUNDARY_FIELDS.items():
         assert boundary.pop(key) == value
     for key, value in G2D_RECLOSURE_G2E_FIELDS.items():
         assert boundary.pop(key) == value
@@ -896,31 +1007,59 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
         f"g2c_implementation_basis_commit: {G2C_IMPLEMENTATION_BASIS_COMMIT}",
         f"g2c_audit_commit: {G2C_AUDIT_COMMIT}",
         "g2c_closure_commit_identity: NOT_SELF_RECORDED",
-        "g2d_status: CLOSED_PASS",
-        "g2d_correction_implementation_authorized: true",
-        "g2d_corrected_implementation_exists: true",
-        "g2d_contract_only_claim: false",
-        "g2d_corrected_runtime_acceptance_claimed: true",
-        "g2d_corrected_implementation_committed: true",
-        f"g2d_corrected_implementation_commit: {G2D_CORRECTED_IMPLEMENTATION_COMMIT}",
-        "g2d_corrected_implementation_patch_sha256: "
-        f"{G2D_CORRECTED_IMPLEMENTATION_PATCH_SHA256}",
-        "g2d_corrected_owner_evidence_bundle_sha256: "
-        f"{G2D_OWNER_EVIDENCE_BUNDLE_SHA256}",
+        "g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "g2d_correction_implementation_authorized: false",
+        "g2d_corrected_implementation_exists: false",
+        "g2d_contract_only_claim: true",
+        "g2d_corrected_runtime_acceptance_claimed: false",
+        "g2d_corrected_implementation_committed: false",
+        "g2d_corrected_implementation_commit: NOT_CREATED",
+        "g2d_corrected_implementation_patch_sha256: NOT_CREATED",
+        "g2d_corrected_owner_evidence_bundle_sha256: NOT_CREATED",
         "g2d_independent_reaudit_required: true",
-        "g2d_independent_reaudit_passed: true",
-        f"g2d_independent_reaudit_commit: {G2D_INDEPENDENT_REAUDIT_COMMIT}",
-        f"g2d_independent_reaudit_path: {G2D_INDEPENDENT_REAUDIT_PATH}",
-        f"g2d_independent_reaudit_sha256: {G2D_INDEPENDENT_REAUDIT_SHA256}",
+        "g2d_independent_reaudit_passed: false",
+        "g2d_independent_reaudit_commit: NOT_CREATED",
+        "g2d_independent_reaudit_path: NOT_CREATED",
+        "g2d_independent_reaudit_sha256: NOT_CREATED",
         "g2d_additive_reclosure_required: true",
-        "g2d_additive_reclosure_completed: true",
-        "g2d_corrected_closure_claimed: true",
-        f"g2d_corrected_checkpoint_path: {G2D_CHECKPOINT_PATH}",
-        f"g2d_corrected_checkpoint_sha256: {G2D_CHECKPOINT_SHA256}",
+        "g2d_additive_reclosure_completed: false",
+        "g2d_corrected_closure_claimed: false",
+        "g2d_corrected_checkpoint_path: NOT_CREATED",
+        "g2d_corrected_checkpoint_sha256: NOT_CREATED",
         "g2d_corrected_closure_commit_identity: NOT_SELF_RECORDED",
         "g2d_old_audit_checkpoint_class: HISTORICAL_PRECORRECTION_EVIDENCE",
         f"g2d_accepted_normative_donor_sha256: {G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}",
         f"g2d_accepted_repository_addendum_sha256: {G2D_ACCEPTED_ADDENDUM_SHA256}",
+        "g2d_v037_implementation_nonconformance: true",
+        "g2d_v038_contract_semantics_changed: false",
+        "g2d_v038_role: EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING",
+        "g2d_v038_directional_draft_review: APPROVE_WITH_MANDATORY_OVERLAY",
+        f"g2d_v038_directional_draft_sha256: {G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}",
+        "g2d_v038_controlling_design_v03_sha256: "
+        f"{G2D_CONTROLLING_DESIGN_V03_SHA256}",
+        f"g2d_v038_accepted_addendum_sha256: {G2D_ACCEPTED_ADDENDUM_SHA256}",
+        "g2d_v038_implementation_authorized: false",
+        "g2d_v038_implementation_started: false",
+        "g2d_v037_status: "
+        "HISTORICAL_CLOSED_PASS_WITH_IMPLEMENTATION_NONCONFORMANCE",
+        "g2d_v037_accepted_normative_donor_sha256: "
+        f"{G2D_V037_NORMATIVE_DONOR_SHA256}",
+        f"g2d_v037_accepted_addendum_sha256: {G2D_V037_ACCEPTED_ADDENDUM_SHA256}",
+        "g2d_v037_corrected_implementation_commit: "
+        f"{G2D_CORRECTED_IMPLEMENTATION_COMMIT}",
+        "g2d_v037_corrected_implementation_patch_sha256: "
+        f"{G2D_CORRECTED_IMPLEMENTATION_PATCH_SHA256}",
+        "g2d_v037_owner_evidence_bundle_sha256: "
+        f"{G2D_OWNER_EVIDENCE_BUNDLE_SHA256}",
+        f"g2d_v037_independent_reaudit_commit: {G2D_INDEPENDENT_REAUDIT_COMMIT}",
+        f"g2d_v037_independent_reaudit_path: {G2D_INDEPENDENT_REAUDIT_PATH}",
+        "g2d_v037_independent_reaudit_sha256: "
+        f"{G2D_INDEPENDENT_REAUDIT_SHA256}",
+        f"g2d_v037_checkpoint_path: {G2D_CHECKPOINT_PATH}",
+        f"g2d_v037_checkpoint_sha256: {G2D_CHECKPOINT_SHA256}",
+        f"g2d_v037_closure_commit: {G2D_CLOSURE_COMMIT}",
+        "g2d_v037_evidence_classification: "
+        "IMMUTABLE_HISTORICAL_EVIDENCE_FOR_V037_BYTES_ONLY",
         "g2d_historical_precorrection_status: CLOSED_PASS_ON_PRECORRECTION_BYTES",
         "g2d_historical_precorrection_audit_status: PASS",
         "g2d_historical_precorrection_checkpoint_present: true",
@@ -947,12 +1086,16 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
         f"g2e4_two_root_pair_register_sha256: {G2E4_TWO_ROOT_PAIR_REGISTER_SHA256}",
         "g2e4_contract_accepted: true",
         "g2e4_contract_status: ACCEPTED_IMPLEMENTATION_PENDING",
-        "g2e4_status: NOT_STARTED_NOT_AUTHORIZED",
-        "g2e4_implementation_authorized: false",
-        "g2e4_implementation_started: false",
-        "g2f_status: NOT_STARTED",
-        "g2f_implementation_authorized: false",
-        "g2f_implementation_started: false",
+        "g2e4_status: "
+        "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED",
+        "g2e4_implementation_authorized: true",
+        "g2e4_implementation_started: true",
+        "g2e4_strict_subtree_implementation_committed: true",
+        "g2e4_anti_gaming_acceptance: BLOCKED",
+        "g2e4_anti_gaming_correction_authorized: false",
+        "g2e5_status: NOT_STARTED_NOT_AUTHORIZED",
+        "g2e6_status: NOT_STARTED_NOT_AUTHORIZED",
+        "g2f_status: NOT_STARTED_NOT_AUTHORIZED",
         "public_release_claimed: false",
         "rc2_claimed: false",
         "production_readiness_claimed: false",
@@ -1000,15 +1143,18 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
             f"R-H1 checkpoint: `{R_H1_CHECKPOINT_PATH}`",
             "R-H1 is `CLOSED_PASS`",
             "Historical pre-correction G2-D is `CLOSED_PASS_ON_PRECORRECTION_BYTES`",
-            "G2-D is `CLOSED_PASS` on the corrected v0.3.7 bytes",
-            "G2-D correction implementation authorization is `true`",
-            "implementation bytes exist and are committed",
+            "G2-D v0.3.8 is\n  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`",
+            "`V037_IMPLEMENTATION_NONCONFORMANCE=YES`",
+            "`V038_CONTRACT_SEMANTICS_CHANGED=NO`",
+            "`V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`",
+            "G2-D v0.3.8 implementation authorization and implementation started are",
+            "Historical v0.3.7 implementation, owner evidence, independent re-audit",
             "G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`",
             "The post-corrected-G2-D landing status was",
             "G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`",
-            "G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`",
-            "G2-E4 implementation authorization and implementation started are both",
-            "- G2-F is `NOT_STARTED / NOT_AUTHORIZED`",
+            "G2-E4 is\n  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`",
+            "The strict-subtree implementation is committed; anti-gaming acceptance is",
+            "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
             f"[Accepted G2-C preflight]({G2C_ACCEPTED_PREFLIGHT_PATH})",
             f"[G2-C independent audit]({G2C_AUDIT_PATH})",
             f"[G2-C checkpoint]({G2C_CHECKPOINT_PATH})",
@@ -1020,15 +1166,17 @@ def test_readme_current_boundary_install_and_license_are_bounded() -> None:
             f"[Corrected G2-D successor checkpoint]({G2D_CHECKPOINT_PATH})",
             f"[Accepted G2-E preflight]({G2E_ACCEPTED_PREFLIGHT_PATH})",
             f"[Accepted G2-E v0.1.3 addendum]({G2E_ACCEPTED_ADDENDUM_PATH})",
-            f"Accepted G2-D v0.3.7 normative donor SHA-256:\n  `{G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}`",
-            f"Accepted G2-D repository addendum SHA-256:\n  `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
+            f"Accepted G2-D v0.3.8 directional draft SHA-256:\n  `{G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}`",
+            f"Controlling DESIGN_V03 SHA-256:\n  `{G2D_CONTROLLING_DESIGN_V03_SHA256}`",
+            f"Accepted G2-D v0.3.8 repository addendum SHA-256:\n  `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
+            f"Historical accepted G2-D v0.3.7 repository addendum SHA-256:\n  `{G2D_V037_ACCEPTED_ADDENDUM_SHA256}`",
             f"Accepted G2-E v0.1.3 addendum SHA-256:\n  `{G2E_ACCEPTED_ADDENDUM_SHA256}`",
             f"Accepted G2-E v0.1.3 normative donor SHA-256:\n  `{G2E_V013_NORMATIVE_DONOR_SHA256}`",
             f"Fresh post-reclosure G2-E3 V06 archive SHA-256:\n  `{G2E3_V06_ARCHIVE_SHA256}`",
             f"E4 public-seam register SHA-256:\n  `{G2E4_PUBLIC_SEAM_REGISTER_SHA256}`",
             f"E4 two-Root-pair register SHA-256:\n  `{G2E4_TWO_ROOT_PAIR_REGISTER_SHA256}`",
             "The old G2-D audit and checkpoint certify pre-correction bytes only",
-            "Independent re-audit and additive successor reclosure are complete",
+            "Historical v0.3.7 independent re-audit and additive successor reclosure are",
             "The independent re-audit is evidence, not authority or closure by itself",
             "Real-world effects remain zero",
         ))
@@ -1099,8 +1247,14 @@ def test_agents_g2c_closure_block_is_exactly_bounded() -> None:
         f"Accepted G2-D preflight path: `{G2D_ACCEPTED_PREFLIGHT_PATH}`",
         f"Accepted G2-D preflight SHA-256: `{G2D_ACCEPTED_PREFLIGHT_SHA256}`",
         f"Accepted G2-D addendum path: `{G2D_ACCEPTED_ADDENDUM_PATH}`",
-        f"Accepted G2-D addendum SHA-256: `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
-        f"Accepted G2-D v0.3.7 normative donor SHA-256: `{G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}`",
+        f"Accepted G2-D v0.3.8 addendum SHA-256: `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
+        "Accepted G2-D v0.3.8 directional draft SHA-256: "
+        f"`{G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}`",
+        f"Controlling DESIGN_V03 SHA-256: `{G2D_CONTROLLING_DESIGN_V03_SHA256}`",
+        "Historical accepted G2-D v0.3.7 normative donor SHA-256: "
+        f"`{G2D_V037_NORMATIVE_DONOR_SHA256}`",
+        "Historical accepted G2-D v0.3.7 addendum SHA-256: "
+        f"`{G2D_V037_ACCEPTED_ADDENDUM_SHA256}`",
         f"Historical pre-correction G2-D implementation basis: `{G2D_IMPLEMENTATION_BASIS_COMMIT}`",
         f"Historical pre-correction G2-D audit commit: `{G2D_AUDIT_COMMIT}`",
         f"Historical pre-correction G2-D audit: `{G2D_AUDIT_PATH}`",
@@ -1139,29 +1293,35 @@ def test_agents_g2c_closure_block_is_exactly_bounded() -> None:
         "G2-B: `CLOSED_PASS`",
         "G2-C: `CLOSED_PASS`",
         "Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`",
-        "G2-D: `CLOSED_PASS`",
-        "G2-D correction implementation authorized: `true`",
-        "Corrected G2-D implementation byte exists: `true`",
-        "Corrected G2-D implementation committed: `true`",
-        "G2-D contract-only claim: `false`",
-        "Corrected G2-D runtime acceptance claimed: `true`",
-        "Independent G2-D re-audit passed: `true`",
-        "Additive G2-D reclosure completed: `true`",
-        "Corrected G2-D closure claimed: `true`",
+        "G2-D: `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`",
+        "`V037_IMPLEMENTATION_NONCONFORMANCE=YES`",
+        "`V038_CONTRACT_SEMANTICS_CHANGED=NO`",
+        "`V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`",
+        "G2-D v0.3.8 correction implementation authorized: `false`",
+        "G2-D v0.3.8 implementation started: `false`",
+        "G2-D v0.3.8 contract-only claim: `true`",
+        "G2-D v0.3.8 runtime acceptance claimed: `false`",
+        "G2-D v0.3.8 independent re-audit passed: `false`",
+        "G2-D v0.3.8 additive reclosure completed: `false`",
+        "G2-D v0.3.8 corrected closure claimed: `false`",
+        "Historical v0.3.7 implementation, owner evidence, independent re-audit",
         "Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`",
         "G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`",
         "G2-E3 post-corrected-G2-D landing status: `REVALIDATION_PENDING_ON_CORRECTED_G2D`",
         "Fresh unchanged post-reclosure G2-E3 V06 passed: `true`",
         "G2-E4 contract: `ACCEPTED_IMPLEMENTATION_PENDING`",
-        "G2-E4: `NOT_STARTED_NOT_AUTHORIZED`",
-        "G2-E4 implementation authorized: `false`",
-        "G2-E4 implementation started: `false`",
+        "G2-E4: `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`",
+        "G2-E4 strict-subtree implementation committed: `true`",
+        "G2-E4 anti-gaming acceptance: `BLOCKED`",
+        "G2-E4 anti-gaming correction authorized: `false`",
+        "G2-E5: `NOT_STARTED_NOT_AUTHORIZED`",
+        "G2-E6: `NOT_STARTED_NOT_AUTHORIZED`",
         "Gate 2: `NOT_CLOSED`",
-        "G2-F: `NOT_STARTED / NOT_AUTHORIZED`",
+        "G2-F: `NOT_STARTED_NOT_AUTHORIZED`",
         "Provider, model, network, connector, and external-DRS calls remain zero",
-        "Corrected G2-D v0.3.7 is `CLOSED_PASS` after corrected implementation",
+        "G2-D v0.3.8 does not alter DESIGN_V03 semantics",
         "The independent re-audit is evidence, not authority or closure by itself",
-        "The fresh G2-E3 V06 and accepted E4 contract do not start or authorize E4",
+        "The fresh G2-E3 V06, committed E4 strict-subtree work, and this clarification",
         "Public release: `NOT_CLAIMED`",
         "RC2: `NOT_CLAIMED`",
         "Production readiness: `NOT_CLAIMED`",
@@ -1234,9 +1394,17 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     assert boundary["g2e4_contract_status"] == (
         "ACCEPTED_IMPLEMENTATION_PENDING"
     )
-    assert boundary["g2e4_status"] == "NOT_STARTED_NOT_AUTHORIZED"
-    assert boundary["g2e4_implementation_authorized"] is False
-    assert boundary["g2e4_implementation_started"] is False
+    assert boundary["g2e4_status"] == (
+        "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_"
+        "ANTI_GAMING_ACCEPTANCE_BLOCKED"
+    )
+    assert boundary["g2e4_implementation_authorized"] is True
+    assert boundary["g2e4_implementation_started"] is True
+    assert boundary["g2e4_anti_gaming_acceptance"] == "BLOCKED"
+    assert boundary["g2e4_anti_gaming_correction_authorized"] is False
+    assert boundary["g2e5_status"] == "NOT_STARTED_NOT_AUTHORIZED"
+    assert boundary["g2e6_status"] == "NOT_STARTED_NOT_AUTHORIZED"
+    assert boundary["g2f_status"] == "NOT_STARTED_NOT_AUTHORIZED"
 
     reclosure_overlay = json.loads(
         _git_show(G2D_CLOSURE_COMMIT, "release/current_status_overlay_v01.json")
@@ -1249,7 +1417,7 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
         for key in set(boundary) | set(reclosure_boundary)
         if boundary.get(key, missing) != reclosure_boundary.get(key, missing)
     }
-    assert changed_since_reclosure == G2E_CONTRACT_TRANSITION_FIELDS
+    assert changed_since_reclosure == CURRENT_TRANSITION_FIELDS
     reverted_contract_overlay = copy.deepcopy(overlay)
     reverted_contract_overlay["current_engineering_boundary"] = reclosure_boundary
     assert reverted_contract_overlay == reclosure_overlay
@@ -1317,6 +1485,7 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2D_ACTIVE_CONTRACT_CLAIM_ID,
             G2D_CORRECTED_CLOSURE_CLAIM_ID,
             G2E_CONTRACT_CLAIM_ID,
+            G2D_V038_CONTRACT_CLAIM_ID,
         )
         closure_row = next(
             line
@@ -1408,8 +1577,8 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
         )
         assert G2D_ACTIVE_CONTRACT_CLAIM_WORDING in active_g2d_row
         assert "HISTORICAL_CONTRACT_HOP_COMPLETED" in active_g2d_row
-        assert G2D_ACCEPTED_NORMATIVE_DONOR_SHA256 in active_g2d_row
-        assert G2D_ACCEPTED_ADDENDUM_SHA256 in active_g2d_row
+        assert G2D_V037_NORMATIVE_DONOR_SHA256 in active_g2d_row
+        assert G2D_V037_ACCEPTED_ADDENDUM_SHA256 in active_g2d_row
         for path in (
             "tests/test_fractal_runtime_g2_d_v02.py",
             "tests/test_transition_registry_v01.py",
@@ -1475,7 +1644,9 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
         ):
             assert evidence_sha256 in g2e_contract_row
         for limitation in (
-            "G2-E4 is not implemented, started, or authorized",
+            "strict-subtree implementation is committed",
+            "anti-gaming acceptance is blocked",
+            "correction is not authorized",
             "Gate 2 is not closed",
             "no authority",
             "real-world effect",
@@ -1483,6 +1654,40 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             "public-release",
         ):
             assert limitation in g2e_contract_row
+        v038_row = next(
+            line
+            for line in claim_text.splitlines()
+            if f"| {G2D_V038_CONTRACT_CLAIM_ID} |" in line
+        )
+        assert G2D_V038_CONTRACT_CLAIM_WORDING in v038_row
+        assert "| CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING |" in v038_row
+        for path in (
+            "tests/test_fractal_runtime_g2_d_v02.py",
+            "tests/test_repository_release_spine_v01.py",
+            G2D_ACCEPTED_ADDENDUM_PATH,
+        ):
+            assert path in v038_row
+            assert (REPOSITORY_ROOT / path).exists()
+        for evidence_sha256 in (
+            G2D_ACCEPTED_NORMATIVE_DONOR_SHA256,
+            G2D_CONTROLLING_DESIGN_V03_SHA256,
+            G2D_ACCEPTED_ADDENDUM_SHA256,
+        ):
+            assert evidence_sha256 in v038_row
+        for required in (
+            "V037_IMPLEMENTATION_NONCONFORMANCE=YES",
+            "V038_CONTRACT_SEMANTICS_CHANGED=NO",
+            "V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING",
+            "implementation is not authorized or started",
+            "G2-E4 anti-gaming acceptance is blocked",
+            "G2-E5/E6/F are not started",
+            "Gate 2 is not closed",
+            "no authority",
+            "real-world effect",
+        ):
+            assert required in v038_row
+        assert "immutable evidence for v0.3.7 bytes only" in v038_row
+        assert G2D_CHECKPOINT_PATH not in v038_row
     for claim_id, paths in CLAIM_EVIDENCE_PATHS.items():
         row = next(
             line for line in claim_text.splitlines() if f"| {claim_id} |" in line
@@ -1562,14 +1767,18 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2C_CHECKPOINT_PATH,
             "Historical pre-correction G2-D is "
             "`CLOSED_PASS_ON_PRECORRECTION_BYTES` only",
-            "Corrected G2-D v0.3.7 is `CLOSED_PASS`",
-            "G2-D correction implementation authorization is `true`; corrected "
-            "implementation bytes exist and are committed",
-            "Corrected runtime acceptance, independent re-audit PASS, additive "
-            "reclosure, and corrected closure are all `true`; contract-only claim "
-            "is `false`",
+            "G2-D v0.3.8 is "
+            "`CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`",
+            "`V037_IMPLEMENTATION_NONCONFORMANCE=YES`",
+            "`V038_CONTRACT_SEMANTICS_CHANGED=NO`",
+            "`V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`",
+            "G2-D v0.3.8 implementation authorization, implementation started, "
+            "runtime acceptance, independent re-audit PASS, additive reclosure, "
+            "and corrected closure are all `false`; contract-only claim is `true`",
             G2D_ACCEPTED_NORMATIVE_DONOR_SHA256,
+            G2D_CONTROLLING_DESIGN_V03_SHA256,
             G2D_ACCEPTED_ADDENDUM_SHA256,
+            G2D_V037_ACCEPTED_ADDENDUM_SHA256,
             G2D_AUDIT_PATH,
             G2D_HISTORICAL_CHECKPOINT_PATH,
             G2D_CORRECTED_IMPLEMENTATION_COMMIT,
@@ -1582,7 +1791,8 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2D_CLOSURE_SUBJECT,
             "The old audit and checkpoint certify pre-correction bytes only",
             "The old audit and checkpoint are `HISTORICAL_PRECORRECTION_EVIDENCE` only",
-            "Independent re-audit and additive successor reclosure are complete",
+            "Historical v0.3.7 independent re-audit and additive successor "
+            "reclosure are complete for v0.3.7 bytes only; v0.3.8 has neither yet",
             "Gate 2 remains `NOT_CLOSED`",
             "G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`",
             "The G2-E3 post-corrected-G2-D landing status was "
@@ -1593,10 +1803,12 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2E4_PUBLIC_SEAM_REGISTER_SHA256,
             G2E4_TWO_ROOT_PAIR_REGISTER_SHA256,
             "G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`",
-            "G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`",
-            "G2-E4 implementation authorization and implementation started are both "
-            "`false`",
-            "G2-F remains `NOT_STARTED / NOT_AUTHORIZED`",
+            "G2-E4 status is "
+            "`IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_"
+            "ANTI_GAMING_ACCEPTANCE_BLOCKED`",
+            "strict-subtree implementation is committed; anti-gaming acceptance is "
+            "blocked and its correction is not authorized",
+            "G2-E5, G2-E6, and G2-F remain `NOT_STARTED_NOT_AUTHORIZED`",
             "Public release remains `NOT_CLAIMED`",
             "RC2 remains `NOT_CLAIMED`",
             "Production readiness remains `NOT_CLAIMED`",
@@ -1659,8 +1871,10 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2C_CHECKPOINT_PATH,
             "G2-C closure_commit_identity: `NOT_SELF_RECORDED`",
             f"Accepted G2-D preflight commit:\n  `{G2D_ACCEPTED_PREFLIGHT_COMMIT}`",
-            f"Accepted G2-D v0.3.7 normative donor SHA-256:\n  `{G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}`",
-            f"Accepted G2-D repository addendum SHA-256:\n  `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
+            f"Accepted G2-D v0.3.8 directional draft SHA-256:\n  `{G2D_ACCEPTED_NORMATIVE_DONOR_SHA256}`",
+            f"Controlling DESIGN_V03 SHA-256:\n  `{G2D_CONTROLLING_DESIGN_V03_SHA256}`",
+            f"Accepted G2-D v0.3.8 repository addendum SHA-256:\n  `{G2D_ACCEPTED_ADDENDUM_SHA256}`",
+            f"Historical accepted G2-D v0.3.7 repository addendum SHA-256:\n  `{G2D_V037_ACCEPTED_ADDENDUM_SHA256}`",
             "Historical pre-correction G2-D implementation basis commit:\n  "
             f"`{G2D_IMPLEMENTATION_BASIS_COMMIT}`",
             f"Historical pre-correction G2-D audit commit:\n  `{G2D_AUDIT_COMMIT}`",
@@ -1680,9 +1894,11 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             "G2-C is `CLOSED_PASS`",
             "Historical pre-correction G2-D is\n  "
             "`CLOSED_PASS_ON_PRECORRECTION_BYTES`",
-            "Corrected G2-D v0.3.7 is `CLOSED_PASS`",
-            "G2-D correction implementation authorization is `true`",
-            "implementation bytes exist and are committed",
+            "G2-D v0.3.8 is\n  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`",
+            "`V037_IMPLEMENTATION_NONCONFORMANCE=YES`",
+            "`V038_CONTRACT_SEMANTICS_CHANGED=NO`",
+            "`V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`",
+            "G2-D v0.3.8 implementation authorization, implementation started, runtime",
             "Gate 2 remains `NOT_CLOSED`",
             "G2-E3 is\n  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`",
             "The post-corrected-G2-D landing status was\n  "
@@ -1693,12 +1909,13 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             f"E4 public-seam register SHA-256:\n  `{G2E4_PUBLIC_SEAM_REGISTER_SHA256}`",
             f"E4 two-Root-pair register SHA-256:\n  `{G2E4_TWO_ROOT_PAIR_REGISTER_SHA256}`",
             "G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`",
-            "G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`",
-            "G2-E4 implementation authorization and implementation started are both",
-            "G2-F is `NOT_STARTED / NOT_AUTHORIZED`",
+            "G2-E4 status is\n  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_"
+            "ANTI_GAMING_ACCEPTANCE_BLOCKED`",
+            "strict-subtree implementation is committed; anti-gaming acceptance is",
+            "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
             "The old G2-D audit and checkpoint are\n  "
             "`HISTORICAL_PRECORRECTION_EVIDENCE` only",
-            "Independent re-audit and additive successor reclosure are complete",
+            "Historical v0.3.7 independent re-audit and additive successor reclosure are",
             "The independent re-audit is evidence, not authority or closure by itself",
             "Public release remains `NOT_CLAIMED`",
             "RC2 remains `NOT_CLAIMED`",
@@ -1720,12 +1937,16 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
         ))
     assert "Gate 2 remains `NOT_CLOSED`" in notes
     assert "G2-C is `CLOSED_PASS`" in notes
-    assert "Corrected G2-D v0.3.7 is `CLOSED_PASS`" in notes
+    assert "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING" in notes
     assert (
         "G2-E3 is\n  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`"
         in notes
     )
     assert "G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`" in notes
+    assert (
+        "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED"
+        in notes
+    )
 
 
 def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
@@ -1764,7 +1985,16 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
         assert "R-H1 is `CLOSED_PASS`" in current_text
         assert "Gate 2 remains `NOT_CLOSED`" in current_text
         assert "G2-C is `CLOSED_PASS`" in current_text
-        assert "Corrected G2-D v0.3.7 is `CLOSED_PASS`" in current_text
+        assert (
+            "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING"
+            in current_text
+        )
+        assert "V037_IMPLEMENTATION_NONCONFORMANCE=YES" in current_text
+        assert "V038_CONTRACT_SEMANTICS_CHANGED=NO" in current_text
+        assert (
+            "V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING"
+            in current_text
+        )
         assert "CLOSED_PASS_ON_PRECORRECTION_BYTES" in current_text
         assert "REVALIDATION_PENDING_ON_CORRECTED_G2D" in current_text
         active_text = "\n".join((
@@ -1777,11 +2007,15 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
             in active_text
         )
         assert "ACCEPTED_IMPLEMENTATION_PENDING" in active_text
-        assert "G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`" in current_text
+        assert (
+            "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_"
+            "ANTI_GAMING_ACCEPTANCE_BLOCKED"
+            in current_text
+        )
         boundary = _current_boundary()
         for key, value in G2E_CURRENT_BOUNDARY_FIELDS.items():
             assert boundary[key] == value
-        assert "G2-F is `NOT_STARTED / NOT_AUTHORIZED`" in current_text
+        assert "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`" in current_text
         _assert_absent(current_text, (
             "G2-C remains `NEXT / NOT_STARTED`",
             "G2-C is `NEXT / NOT_STARTED`",
@@ -1965,7 +2199,7 @@ def test_g2d_checkpoint_metadata_geometry_and_nonclaims_are_exact() -> None:
         "gate_id: gate2_g2d_fractal_runtime_v0_2_v037_correction",
         "gate_slice: G2-D",
         "corrected_g2d_status: CLOSED_PASS",
-        f"accepted_v037_addendum_sha256: {G2D_ACCEPTED_ADDENDUM_SHA256}",
+        f"accepted_v037_addendum_sha256: {G2D_V037_ACCEPTED_ADDENDUM_SHA256}",
         f"corrected_implementation_commit: {G2D_CORRECTED_IMPLEMENTATION_COMMIT}",
         "corrected_implementation_parent_commit: "
         f"{G2D_CORRECTED_IMPLEMENTATION_PARENT}",
@@ -2099,7 +2333,7 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
         if manifest_boundary.get(key, missing)
         != reclosure_manifest_boundary.get(key, missing)
     }
-    assert changed_since_reclosure == G2E_CONTRACT_TRANSITION_FIELDS
+    assert changed_since_reclosure == CURRENT_TRANSITION_FIELDS
     reverted_contract_manifest = copy.deepcopy(manifest)
     reverted_contract_manifest["current_checkpoint_status"][
         "current_engineering_boundary_v01"
@@ -2170,9 +2404,24 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
 
 
 def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
-    assert _sha256_bytes(
-        (REPOSITORY_ROOT / G2D_ACCEPTED_ADDENDUM_PATH).read_bytes()
-    ) == G2D_ACCEPTED_ADDENDUM_SHA256
+    addendum = (REPOSITORY_ROOT / G2D_ACCEPTED_ADDENDUM_PATH).read_bytes()
+    assert _sha256_bytes(addendum) == G2D_ACCEPTED_ADDENDUM_SHA256
+    historical_marker = (
+        b"===============================================================================\n"
+        b"HISTORICAL ACCEPTED V0.3.7 CONTENT - EXACT REPOSITORY BYTES\n"
+        b"===============================================================================\n"
+        b"\n"
+        b"The complete byte sequence below is the previously accepted v0.3.7 addendum.\n"
+        b"It remains immutable historical contract and evidence context for v0.3.7. Its\n"
+        b"embedded present-tense lifecycle statements do not override the active v0.3.8\n"
+        b"metadata and clarification above.\n"
+        b"\n"
+    )
+    assert addendum.count(historical_marker) == 1
+    _, historical_v037 = addendum.split(historical_marker, 1)
+    assert _sha256_bytes(historical_v037) == G2D_V037_ACCEPTED_ADDENDUM_SHA256
+    assert len(historical_v037) == 185220
+    assert historical_v037.count(b"\n") == 3532
     assert _sha256_bytes(
         _git_show(G2D_AUDIT_COMMIT, G2D_ACCEPTED_ADDENDUM_PATH)
     ) == G2D_PRECORRECTION_ACCEPTED_ADDENDUM_SHA256

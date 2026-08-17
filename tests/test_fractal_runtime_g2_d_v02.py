@@ -6150,14 +6150,153 @@ def d3_profile_d_contextual_micro_bundle(
     }
 
 
-def test_d3_post_acceptance_contract_addendum_v037_accepted() -> None:
+def test_d3_post_acceptance_contract_addendum_v038_accepted() -> None:
     raw = ADDENDUM_PATH.read_bytes()
-    text = raw.decode("utf-8")
     assert hashlib.sha256(raw).hexdigest() == (
+        "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6"
+    )
+    assert len(raw) == 197537
+    assert raw.count(b"\n") == 3828
+    v038_separator = (
+        b"===============================================================================\n"
+        b"HISTORICAL ACCEPTED V0.3.7 CONTENT - EXACT REPOSITORY BYTES\n"
+        b"===============================================================================\n"
+        b"\n"
+        b"The complete byte sequence below is the previously accepted v0.3.7 addendum.\n"
+        b"It remains immutable historical contract and evidence context for v0.3.7. Its\n"
+        b"embedded present-tense lifecycle statements do not override the active v0.3.8\n"
+        b"metadata and clarification above.\n"
+        b"\n"
+    )
+    assert raw.count(v038_separator) == 1
+    active_v038, historical_v037 = raw.split(v038_separator, 1)
+    assert hashlib.sha256(historical_v037).hexdigest() == (
         "29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511"
     )
-    assert len(raw) == 185220
-    assert raw.count(b"\n") == 3532
+    assert len(historical_v037) == 185220
+    assert historical_v037.count(b"\n") == 3532
+    assert raw.count(historical_v037) == 1
+    active_text = active_v038.decode("utf-8")
+    active_rows = (
+        "document_status: POST_ACCEPTANCE_CORRECTION_ADDENDUM",
+        "document_revision: v0.3.8",
+        "guardian_review_status: ACCEPTED",
+        "directional_draft_sha256: "
+        "91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454",
+        "directional_draft_review: APPROVE_WITH_MANDATORY_OVERLAY",
+        "mandatory_overlay_integrated: true",
+        "controlling_design_v03_sha256: "
+        "7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe",
+        "repository_basis_head: 0a741d20ebe9092685a1e1117da01438499168e5",
+        "repository_basis_origin_main: "
+        "0a741d20ebe9092685a1e1117da01438499168e5",
+        "repository_basis_subject: Correct G2-E4 strict selective subtree execution",
+        "V037_IMPLEMENTATION_NONCONFORMANCE: YES",
+        "V038_CONTRACT_SEMANTICS_CHANGED: NO",
+        "V038_ROLE: EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING",
+        "current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "implementation_authorized: false",
+        "implementation_started: false",
+        "current_g2e3_status: "
+        "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D",
+        "current_g2e4_status: "
+        "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED",
+        "g2e5_status: NOT_STARTED_NOT_AUTHORIZED",
+        "g2e6_status: NOT_STARTED_NOT_AUTHORIZED",
+        "g2f_status: NOT_STARTED_NOT_AUTHORIZED",
+        "gate2_status: NOT_CLOSED",
+    )
+    assert all(row in active_text for row in active_rows)
+    triad_rows = (
+        "execution_scope = SELECTIVE",
+        "execution_scope = WHOLE_RUN_ESCALATION",
+        "whole_run_escalation_reason = None",
+        "whole_run_escalation_reason = "
+        "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK",
+        "whole_run_escalation_reason = "
+        "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+        "whole_run_escalation_policy_id = None",
+        "whole_run_escalation_policy_id = an explicitly accepted policy ID",
+        "The accepted named-policy inventory is empty in v0.3.8.",
+    )
+    assert all(row in active_text for row in triad_rows)
+    negative_rows = (
+        "named-policy reason plus any nonempty but unapproved policy ID",
+        "arbitrary or substituted reason",
+        "arbitrary or substituted policy",
+        "empty, whitespace, sentinel, or foreign policy ID",
+        "forged closure",
+        "missing closure member",
+        "foreign node, cell, or artifact in the closure",
+        "strict subset with WHOLE_RUN_ESCALATION",
+        "full closure with SELECTIVE",
+        "proof reason plus non-null policy",
+        "named-policy reason plus null policy",
+        "binding or context identity substitution",
+        "a full ID inventory unsupported by actual source and binding evidence",
+    )
+    assert all(row in active_text for row in negative_rows)
+    implementation_paths = (
+        "hedgehog/kernel/fractal_runtime_v02.py",
+        "tests/test_fractal_runtime_g2_d_v02.py",
+        "AGENTS.md",
+        "README.md",
+        "specs/machine_manifest_v0_25.json",
+        "release/current_status_overlay_v01.json",
+        "release/claim_to_evidence_index.md",
+        "release/current_limitations.md",
+        "release/current_release_notes.md",
+        "tests/test_repository_release_spine_v01.py",
+    )
+    path_offsets = [active_text.index(f"`{path}`") for path in implementation_paths]
+    assert path_offsets == sorted(path_offsets)
+    lifecycle_rows = (
+        "G2-D = REAUDIT_PENDING",
+        "G2-D corrected closure claimed = false",
+        "G2-D independent re-audit passed = false",
+        "G2-E3 = REVALIDATION_PENDING_ON_CORRECTED_G2D",
+        "G2-E4 anti-gaming acceptance = BLOCKED_PENDING_G2D_RECLOSURE",
+        "G2D_IMPLEMENTATION_AUTHORIZED=false",
+        "G2D_IMPLEMENTATION_STARTED=false",
+        "G2E5_STATUS=NOT_STARTED_NOT_AUTHORIZED",
+        "G2E6_STATUS=NOT_STARTED_NOT_AUTHORIZED",
+        "G2F_STATUS=NOT_STARTED_NOT_AUTHORIZED",
+        "GATE2_STATUS=NOT_CLOSED",
+    )
+    assert all(row in active_text for row in lifecycle_rows)
+    execution_scope = active_text.split(
+        "The complete execution order is frozen:",
+        1,
+    )[1].split("No reset, revert, amend, rebase, squash, or force-push", 1)[0]
+    execution_steps = tuple(
+        " ".join(match.group(1).split()).rstrip(";.")
+        for match in re.finditer(
+            r"(?ms)^\d+\. (.*?)(?=^\d+\. |\Z)",
+            execution_scope,
+        )
+    )
+    assert execution_steps == (
+        "v0.3.8 clarification and lifecycle-reopening contract hop",
+        "owner contract review and separate contract commit and push",
+        "separately authorized G2-D implementation correction",
+        "complete bounded and cumulative evidence",
+        "implementation commit with REAUDIT_PENDING status",
+        "independent read-only re-audit on committed v0.3.8 bytes",
+        "additive successor checkpoint, reclosure, and release synchronization",
+        "corrected G2-D returns to CLOSED_PASS",
+        "one fresh unchanged G2-E3 V06",
+        "real G2-E4 whole-run anti-gaming correction",
+        "real G2-E4 revise, exact-repeat/no-progress, partial-failure, and "
+        "backpressure correction",
+        "final separate G2-E4 corrective commit",
+        "only then may G2-E5 be considered",
+    )
+    assert "No new public dataclass, serialized type, schema definition" in active_text
+    assert "Root remains the only final authority." in active_text
+    assert "G2-D imports no G2-E type or module." in active_text
+    assert "This contract-only hop authorizes no implementation." in active_text
+
+    text = historical_v037.decode("utf-8")
     separator = (
         b"\n===============================================================================\n"
         b"HISTORICAL ACCEPTED V0.3.6 CONTENT - EXACT PRE-CORRECTION REPOSITORY BYTES\n"

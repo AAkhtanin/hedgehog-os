@@ -14,14 +14,21 @@
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES` only.
-- Corrected G2-D v0.3.7 is `CLOSED_PASS`.
-- G2-D correction implementation authorization is `true`; corrected
-  implementation bytes exist and are committed.
-- Corrected runtime acceptance, independent re-audit PASS, additive reclosure,
-  and corrected closure are all `true`; contract-only claim is `false`.
-- Accepted G2-D v0.3.7 normative donor SHA-256:
-  `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
-- Accepted G2-D repository addendum SHA-256:
+- G2-D v0.3.8 is
+  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
+- `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
+- `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
+- G2-D v0.3.8 implementation authorization, implementation started, runtime
+  acceptance, independent re-audit PASS, additive reclosure, and corrected
+  closure are all `false`; contract-only claim is `true`.
+- Accepted G2-D v0.3.8 directional draft SHA-256:
+  `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
+- Controlling DESIGN_V03 SHA-256:
+  `7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe`.
+- Accepted G2-D v0.3.8 repository addendum SHA-256:
+  `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
+- Historical accepted G2-D v0.3.7 repository addendum SHA-256:
   `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
 - Historical pre-correction G2-D audit:
   `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
@@ -46,7 +53,8 @@
 - Corrected closure commit identity: `NOT_SELF_RECORDED`.
 - The old audit and checkpoint certify pre-correction bytes only.
 - The old audit and checkpoint are `HISTORICAL_PRECORRECTION_EVIDENCE` only.
-- Independent re-audit and additive successor reclosure are complete.
+- Historical v0.3.7 independent re-audit and additive successor reclosure are
+  complete for v0.3.7 bytes only; v0.3.8 has neither yet.
 - Gate 2 remains `NOT_CLOSED`.
 - G2-E3 is
   `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one fresh
@@ -64,10 +72,11 @@
 - E4 two-Root-pair register SHA-256:
   `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4 is `NOT_STARTED_NOT_AUTHORIZED`.
-- G2-E4 implementation authorization and implementation started are both
-  `false`; this contract hop does not implement or authorize E4.
-- G2-F remains `NOT_STARTED / NOT_AUTHORIZED`.
+- G2-E4 status is
+  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
+- The strict-subtree implementation is committed; anti-gaming acceptance is
+  blocked and its correction is not authorized by this contract hop.
+- G2-E5, G2-E6, and G2-F remain `NOT_STARTED_NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
 - RC2 remains `NOT_CLAIMED`.
 - Production readiness remains `NOT_CLAIMED`.
@@ -76,9 +85,10 @@
   persistence, provider reliability, connector trust, external/global DRS,
   fault tolerance, production security certification, public release, RC2, or
   performance beyond accepted bounded evidence.
-- The accepted G2-E4 contract does not claim a G2-E audit, checkpoint,
-  closure, E5, E6, G2-F action, successor baseline, authority, FinalOutput,
-  DRS write, provider/network/connector action, or real-world effect.
+- The accepted G2-E4 contract and committed strict-subtree implementation do
+  not claim anti-gaming acceptance, a G2-E audit, checkpoint, closure, E5, E6,
+  G2-F action, successor baseline, authority, FinalOutput, DRS write,
+  provider/network/connector action, or real-world effect.
 - A D5 or D6 validation PASS is not truth or authority.
 - RuntimeExecutionTopology is not authority.
 - Child results are not FinalOutput.

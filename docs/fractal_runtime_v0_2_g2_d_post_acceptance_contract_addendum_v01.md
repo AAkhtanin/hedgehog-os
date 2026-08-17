@@ -1,3 +1,299 @@
+# G2-D Post-Acceptance Contract Addendum Version 0.3.8
+
+## Current Accepted v0.3.8 Clarification and Lifecycle Reopening Metadata
+
+```text
+document_status: POST_ACCEPTANCE_CORRECTION_ADDENDUM
+document_revision: v0.3.8
+guardian_review_status: ACCEPTED
+directional_draft_sha256: 91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454
+directional_draft_review: APPROVE_WITH_MANDATORY_OVERLAY
+mandatory_overlay_integrated: true
+controlling_design_v03_sha256: 7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe
+repository_basis_branch: main
+repository_basis_head: 0a741d20ebe9092685a1e1117da01438499168e5
+repository_basis_origin_main: 0a741d20ebe9092685a1e1117da01438499168e5
+repository_basis_subject: Correct G2-E4 strict selective subtree execution
+V037_IMPLEMENTATION_NONCONFORMANCE: YES
+V038_CONTRACT_SEMANTICS_CHANGED: NO
+V038_ROLE: EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING
+current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+implementation_authorized: false
+implementation_started: false
+current_g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
+current_g2e4_status: IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED
+g2e5_status: NOT_STARTED_NOT_AUTHORIZED
+g2e6_status: NOT_STARTED_NOT_AUTHORIZED
+g2f_status: NOT_STARTED_NOT_AUTHORIZED
+gate2_status: NOT_CLOSED
+```
+
+This accepted v0.3.8 overlay is an explicit clarification of already
+controlling DESIGN_V03 semantics and an honest lifecycle reopening. It does
+not invent or change the null-policy proof branch. The v0.3.7 implementation
+failed to conform to the already controlling matrix, so its implementation,
+execution evidence, independent re-audit, checkpoint, and closure remain
+immutable historical evidence for their exact v0.3.7 bytes only.
+
+This contract-only hop authorizes no implementation. It changes no G2-D
+runtime, schema, demo, package facade, Transition Registry, G2-E runtime, or
+behavior. A separate explicit owner action is required before future v0.3.8
+implementation bytes may change.
+
+## 1. Clarification and Nonconformance Boundary
+
+The proof-based null-policy matrix was already controlling in DESIGN_V03.
+Version v0.3.8 makes that law explicit, records current implementation
+nonconformance, and reopens the G2-D lifecycle. The governing facts are exact:
+
+```text
+V037_IMPLEMENTATION_NONCONFORMANCE=YES
+V038_CONTRACT_SEMANTICS_CHANGED=NO
+V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING
+```
+
+The historical v0.3.7 corrected implementation commit
+`27c6dfd10740103cddc13bac3ce35f917b5f30c5`, independent re-audit commit
+`2eccb604fee89d7e79025337d3858d6dbfea5fbc`, and reclosure commit
+`48ab284ee7c1ba33400f0d0c7fe5656b4249b839` are not rewritten. Their evidence
+does not certify future v0.3.8 implementation bytes.
+
+## 2. Authority and Ownership Boundary
+
+- Root remains the only final authority.
+- G2-C owns the accepted Root-reviewed route.
+- G2-D owns RuntimeExecutionTopology and stable topology-node and cell IDs.
+- G2-E imports and calls only generic public G2-D seams.
+- G2-D imports no G2-E type or module.
+- PlanGraph remains historical and proof-donor material only.
+- RuntimeObservedWorkContextV02, binding artifacts, bundles, traces, reports,
+  hashes, tests, audits, and checkpoints create no authority.
+- No successor baseline, permission, ActionCommitPacket, receipt, FinalOutput,
+  DRS write, provider/model/network/connector authority, or real-world effect
+  is created or claimed.
+
+## 3. Local Binding Projector Responsibility
+
+The future corrected observed-work binding projector validates only local
+binding facts:
+
+- exact baseline and observed source objects;
+- exact topology, node, and cell witness for that binding;
+- the local execution scope, reason, and policy triad;
+- canonical payload, identity, parents, trace references, and zero-authority
+  counters.
+
+One binding artifact does not prove aggregate full closure. The local triad
+matrix is exact.
+
+### A. SELECTIVE
+
+```text
+execution_scope = SELECTIVE
+whole_run_escalation_reason = None
+whole_run_escalation_policy_id = None
+```
+
+### B. PROOF-BASED FULL CLOSURE
+
+```text
+execution_scope = WHOLE_RUN_ESCALATION
+whole_run_escalation_reason = AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK
+whole_run_escalation_policy_id = None
+```
+
+### C. NAMED POLICY
+
+```text
+execution_scope = WHOLE_RUN_ESCALATION
+whole_run_escalation_reason = FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION
+whole_run_escalation_policy_id = an explicitly accepted policy ID
+```
+
+The accepted named-policy inventory is empty in v0.3.8. Every nonempty policy
+ID therefore fails closed. A syntactically well-formed arbitrary string is not
+an accepted policy.
+
+Every other triad is invalid. In particular, SELECTIVE rejects either non-null
+whole-run field; proof-based full closure rejects a non-null policy; and the
+named-policy reason rejects a null, empty, whitespace, sentinel, malformed,
+foreign, substituted, or unapproved policy.
+
+## 4. Aggregate Closure Responsibility
+
+Only aggregate RuntimeObservedWorkContextV02 validation, complete-bundle
+validation, and public-run contextual validation may prove full closure. The
+future corrected aggregate validators must independently derive, rather than
+trust:
+
+1. the validated baseline topology and recomputable universe;
+2. direct affected node, cell, and artifact rows from actual validated source
+   and binding evidence;
+3. the parent-closed affected execution closure;
+4. the complete recomputable node, cell, and artifact universe;
+5. equality or strict inequality between those two sets.
+
+The proof-based whole-run branch passes only when the independently derived
+closure is exactly equal to every recomputable node, cell, and artifact in the
+bounded baseline topology.
+
+The following are forbidden substitutes for aggregate proof:
+
+- manually supplying every topology ID;
+- manually supplying every cell ID;
+- `replace(plan)` accommodation;
+- a specially crafted `full_plan` built only to satisfy a test;
+- caller assertions that closure is complete;
+- copied PASS, status, or reason values;
+- a binding artifact claiming aggregate closure by itself.
+
+## 5. Required Negative Matrix
+
+Future implementation tests must execute and fail closed for every row below:
+
+1. named-policy reason plus any nonempty but unapproved policy ID;
+2. arbitrary or substituted reason;
+3. arbitrary or substituted policy;
+4. empty, whitespace, sentinel, or foreign policy ID;
+5. forged closure;
+6. missing closure member;
+7. foreign node, cell, or artifact in the closure;
+8. strict subset with WHOLE_RUN_ESCALATION;
+9. full closure with SELECTIVE;
+10. proof reason plus non-null policy;
+11. named-policy reason plus null policy;
+12. binding or context identity substitution;
+13. a full ID inventory unsupported by actual source and binding evidence.
+
+These tests must exercise public construction and validation. Source-text
+inspection, caller-provided IDs, copied PASS labels, and manually fabricated
+aggregate proof do not satisfy the matrix.
+
+## 6. Identity Propagation and Complete-Bundle Law
+
+For the proof-based branch, the exact reason and Python `None` policy must be
+proven through the complete identity chain:
+
+- every relevant binding artifact payload and identity;
+- RuntimeObservedWorkContextV02 plain material and identity;
+- queue, input, and result lineage where current public contracts bind the
+  context;
+- runtime trace identity and references;
+- runtime report identity and references;
+- report KernelArtifact identity, parent, and trace material;
+- causal evidence and current trace binding;
+- the complete publicly validated 28-field
+  FractalRuntimeExecutionBundleV02.
+
+The JSON diagnostic value is `null`. No hidden sentinel, empty string,
+invented policy ID, or out-of-band sidecar may substitute for `None`.
+
+No new public dataclass, serialized type, schema definition, reason,
+validation target, failure stage, ABI literal, Transition rule, authority
+field, or effect field is authorized by this contract.
+
+## 7. Future Implementation Path and Lifecycle Ledger
+
+The future separately authorized implementation correction is expected to
+modify exactly these ten paths, in this order:
+
+1. `hedgehog/kernel/fractal_runtime_v02.py`
+2. `tests/test_fractal_runtime_g2_d_v02.py`
+3. `AGENTS.md`
+4. `README.md`
+5. `specs/machine_manifest_v0_25.json`
+6. `release/current_status_overlay_v01.json`
+7. `release/claim_to_evidence_index.md`
+8. `release/current_limitations.md`
+9. `release/current_release_notes.md`
+10. `tests/test_repository_release_spine_v01.py`
+
+That implementation prompt may not change this contract addendum, the G2-D
+schema, demo, Transition Registry, package facade, or any G2-E path. A proven
+need for another path is a blocker and not implicit scope expansion.
+
+The same future implementation commit must set the current lifecycle to:
+
+```text
+G2-D = REAUDIT_PENDING
+G2-D corrected closure claimed = false
+G2-D independent re-audit passed = false
+G2-E3 = REVALIDATION_PENDING_ON_CORRECTED_G2D
+G2-E4 anti-gaming acceptance = BLOCKED_PENDING_G2D_RECLOSURE
+Gate 2 = NOT_CLOSED
+```
+
+This avoids a separate lifecycle synchronization hop.
+
+The complete execution order is frozen:
+
+1. v0.3.8 clarification and lifecycle-reopening contract hop;
+2. owner contract review and separate contract commit and push;
+3. separately authorized G2-D implementation correction;
+4. complete bounded and cumulative evidence;
+5. implementation commit with REAUDIT_PENDING status;
+6. independent read-only re-audit on committed v0.3.8 bytes;
+7. additive successor checkpoint, reclosure, and release synchronization;
+8. corrected G2-D returns to CLOSED_PASS;
+9. one fresh unchanged G2-E3 V06;
+10. real G2-E4 whole-run anti-gaming correction;
+11. real G2-E4 revise, exact-repeat/no-progress, partial-failure, and
+    backpressure correction;
+12. final separate G2-E4 corrective commit;
+13. only then may G2-E5 be considered.
+
+No reset, revert, amend, rebase, squash, or force-push is permitted.
+
+## 8. G2-E4 Post-Reclosure Anti-Gaming Duty
+
+After G2-D v0.3.8 implementation, evidence, re-audit, reclosure, and a fresh
+unchanged G2-E3 V06, G2-E4 must be corrected in two behavioral areas:
+
+1. whole-run selection must be reached from independently derived full
+   affected closure through the normal E4 execution entry, not from a manually
+   built full plan;
+2. revise, exact-repeat/no-progress, partial-failure, and backpressure must
+   execute real public G2-D operations and produce nonempty typed carriers.
+
+Forbidden acceptance substitutes are callable-only checks, `hasattr`-only
+checks, function-name searches in source text, uniqueness assertions over
+empty tuples, manual PASS objects, skip or xfail, weakened strict-subtree or
+sibling-preservation assertions, and test-only projections replacing runtime
+behavior.
+
+## 9. Current Lifecycle and Nonclaims
+
+Current accepted state after this contract-only hop is exact:
+
+```text
+G2D_STATUS=CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+G2D_IMPLEMENTATION_AUTHORIZED=false
+G2D_IMPLEMENTATION_STARTED=false
+G2E3_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
+G2E4_STATUS=IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED
+G2E5_STATUS=NOT_STARTED_NOT_AUTHORIZED
+G2E6_STATUS=NOT_STARTED_NOT_AUTHORIZED
+G2F_STATUS=NOT_STARTED_NOT_AUTHORIZED
+GATE2_STATUS=NOT_CLOSED
+```
+
+Historical v0.3.7 implementation, execution evidence, independent re-audit,
+checkpoint, and closure remain immutable evidence for their exact bytes only.
+This contract claims no v0.3.8 implementation, execution evidence, audit,
+checkpoint, reclosure, G2-E5, G2-E6, G2-F, Gate-2 closure, public release, RC2,
+production readiness, production security, authority, permission, FinalOutput,
+DRS write, successor baseline, provider/model/network/connector operation, or
+real-world effect.
+
+===============================================================================
+HISTORICAL ACCEPTED V0.3.7 CONTENT - EXACT REPOSITORY BYTES
+===============================================================================
+
+The complete byte sequence below is the previously accepted v0.3.7 addendum.
+It remains immutable historical contract and evidence context for v0.3.7. Its
+embedded present-tense lifecycle statements do not override the active v0.3.8
+metadata and clarification above.
+
 # G2-D Post-Acceptance Contract Addendum Version 0.3.7
 
 ## Current Accepted v0.3.7 Correction Metadata

@@ -1703,12 +1703,16 @@ def _e3_bsep(request_id: str) -> dict[str, dict[str, object]]:
     }
 
 
-def _e3_g2d_source_family(g2b: dict[str, object]) -> dict[str, object]:
+def _e3_g2d_source_family(
+    g2b: dict[str, object],
+    *,
+    selected_mode: str = "memory_informed",
+) -> dict[str, object]:
     request_id = "request:g2e:e3"
     transaction_id = str(g2b["transaction_id"])
     bsep = _e3_bsep(request_id)
     profiles = []
-    selected_index = g2c.EXECUTABLE_EXECUTION_MODES_V01.index("memory_informed")
+    selected_index = g2c.EXECUTABLE_EXECUTION_MODES_V01.index(selected_mode)
     for index, candidate in enumerate(g2c.EXECUTABLE_EXECUTION_MODES_V01):
         not_required = candidate in {"sealed_replay", "direct_informational_reuse"}
         profiles.append(
@@ -1826,7 +1830,7 @@ def _e3_g2d_source_family(g2b: dict[str, object]) -> dict[str, object]:
         source_context=source,
     )
     assert route_report.validation_status == "PASS" and proposal is not None
-    assert proposal.selected_mode == "memory_informed"
+    assert proposal.selected_mode == selected_mode
     proposal_artifact = g2c.project_execution_mode_proposal_kernel_artifact_v01(
         proposal=proposal,
         router_input=router_input,
@@ -1971,6 +1975,27 @@ def _e3_kernel_artifact(
         trace_refs=("trace:" + artifact_id,),
         parent_refs=parent_refs,
         time_envelope=time_envelope or _e3_time_envelope(),
+    )
+
+
+def _e4_runtime_artifact_projection(
+    artifact: g2e.KernelArtifactV01,
+) -> g2e.KernelArtifactV01:
+    projected = kernel_artifact_to_plain_dict_v01(artifact)
+    projected_sha256 = hashlib.sha256(
+        canonical_json_bytes_v01(projected)
+    ).hexdigest()
+    return _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e4:runtime-projection:" + projected_sha256,
+        transaction_id=artifact.transaction_id,
+        payload={
+            "projection_profile_id": (
+                "g2e_baseline_runtime_artifact_projection_v01"
+            ),
+            "projected_runtime_artifact": projected,
+            "projected_runtime_artifact_sha256": projected_sha256,
+        },
+        parent_refs=(artifact.artifact_id,),
     )
 
 
@@ -2456,6 +2481,49 @@ def e3_baseline_fixture() -> dict[str, object]:
     }
 
 
+@pytest.fixture(scope="module")
+def e4_full_fractal_baseline_fixture() -> dict[str, object]:
+    g2b = _e3_g2b_family()
+    source_family = _e3_g2d_source_family(
+        g2b,
+        selected_mode="full_fractal",
+    )
+    source = source_family["source"]
+    assert type(source) is g2d.FractalRuntimeSourceContextV02
+    bundle, report = g2d.run_fractal_runtime_v02(source)
+    assert report.status == "PASS" and bundle is not None
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(bundle).status == "PASS"
+    child_inputs = tuple(
+        item for item in bundle.cell_inputs if item.parent_cell_id is not None
+    )
+    assert len(child_inputs) == 2
+    selected_input = child_inputs[-1]
+    sibling_input = child_inputs[0]
+    initial_queue_id = selected_input.ordered_initial_queue_entry_ids[0]
+    seed_artifact = next(
+        artifact
+        for entry, artifact in zip(
+            bundle.queue_entries,
+            bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.queue_entry_id == initial_queue_id
+    )
+    seed_projection = _e4_runtime_artifact_projection(seed_artifact)
+    g2a = _e3_g2a_family(str(g2b["transaction_id"]))
+    return {
+        "g2a": g2a,
+        "g2b": g2b,
+        "source_family": source_family,
+        "source": source,
+        "bundle": bundle,
+        "selected_input": selected_input,
+        "sibling_input": sibling_input,
+        "selected_seed_artifact": seed_artifact,
+        "selected_seed_projection": seed_projection,
+    }
+
+
 def _e3_changed_source_payloads(
     *,
     target_roles: tuple[str, ...],
@@ -2570,6 +2638,7 @@ def _e3_manifest_source_family(
     g2a: dict[str, object] | None = None,
     g2b: dict[str, object] | None = None,
     bundle: g2d.FractalRuntimeExecutionBundleV02 | None = None,
+    runtime_seed_projection: g2e.KernelArtifactV01 | None = None,
 ) -> dict[str, object]:
     baseline_payload, observed_payload = _e3_changed_source_payloads(
         target_roles=target_roles,
@@ -2595,7 +2664,12 @@ def _e3_manifest_source_family(
         transaction_id=transaction_id,
         payload={"dependent_role": "unrelated"},
     )
-    baseline = (changed, *by_role.values(), unrelated)
+    baseline = (
+        changed,
+        *by_role.values(),
+        unrelated,
+        *((runtime_seed_projection,) if runtime_seed_projection is not None else ()),
+    )
     observed_changed = _e3_kernel_artifact(
         artifact_id="artifact:g2e:e3:source:observed",
         transaction_id=transaction_id,
@@ -2603,12 +2677,24 @@ def _e3_manifest_source_family(
         parent_refs=(changed.artifact_id,),
     )
     observed = (observed_changed, *baseline[1:])
-    replay_edges = tuple(
-        ArtifactDependencyEdgeV01(
-            artifact_id=by_role[role].artifact_id,
-            depends_on_artifact_id=changed.artifact_id,
-        )
-        for role in target_roles
+    replay_edges = (
+        *(
+            ArtifactDependencyEdgeV01(
+                artifact_id=by_role[role].artifact_id,
+                depends_on_artifact_id=changed.artifact_id,
+            )
+            for role in target_roles
+        ),
+        *(
+            (
+                ArtifactDependencyEdgeV01(
+                    artifact_id=runtime_seed_projection.artifact_id,
+                    depends_on_artifact_id=changed.artifact_id,
+                ),
+            )
+            if runtime_seed_projection is not None
+            else ()
+        ),
     )
     profile = build_default_seal_profile_v01()
     manifest = build_artifact_manifest_v01(
@@ -2653,6 +2739,7 @@ def _e3_delta_family(
     baseline_fixture: dict[str, object],
     *,
     target_roles: tuple[str, ...] = ("ordinary",),
+    runtime_seed_projection: g2e.KernelArtifactV01 | None = None,
 ) -> dict[str, object]:
     bundle = baseline_fixture["bundle"]
     g2a = baseline_fixture["g2a"]
@@ -2668,6 +2755,7 @@ def _e3_delta_family(
         g2a=g2a,
         g2b=g2b,
         bundle=bundle,
+        runtime_seed_projection=runtime_seed_projection,
     )
     baseline = source_rows["baseline"]
     observed = source_rows["observed"]
@@ -5589,6 +5677,17 @@ def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
         and isinstance(node.func, ast.Attribute)
         and node.func.attr == "run_fractal_runtime_v02"
     ]
+    test_run_callers = tuple(
+        node.name
+        for node in test_tree.body
+        if isinstance(node, ast.FunctionDef)
+        and any(
+            isinstance(candidate, ast.Call)
+            and isinstance(candidate.func, ast.Attribute)
+            and candidate.func.attr == "run_fractal_runtime_v02"
+            for candidate in ast.walk(node)
+        )
+    )
     whole_run_callers = tuple(
         node.name
         for node in runtime_tree.body
@@ -5602,7 +5701,11 @@ def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
     )
     assert whole_run_callers == ("_g2e4_execute_whole_run_escalation_v01",)
     assert "_d4_run_runtime_v02" not in runtime_calls
-    assert len(test_run_calls) == 1
+    assert len(test_run_calls) == 2
+    assert test_run_callers == (
+        "e3_baseline_fixture",
+        "e4_full_fractal_baseline_fixture",
+    )
     assert hasattr(g2e, "execute_selective_recomputation_v01")
     assert hasattr(g2e, "run_continuous_delta_runtime_v01")
     assert kernel.ContinuousDeltaSourceContextV01 is g2e.ContinuousDeltaSourceContextV01
@@ -5620,11 +5723,15 @@ def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
 
 
 def _e4_input_family(
-    e3_baseline_fixture: dict[str, object],
+    baseline_fixture: dict[str, object],
     *,
     target_roles: tuple[str, ...] = ("ordinary",),
 ) -> dict[str, object]:
-    family = _e3_delta_family(e3_baseline_fixture, target_roles=target_roles)
+    family = _e3_delta_family(
+        baseline_fixture,
+        target_roles=target_roles,
+        runtime_seed_projection=baseline_fixture["selected_seed_projection"],
+    )
     request = g2e.build_affected_set_request_v01(
         delta=family["delta"],
         graph=family["graph"],
@@ -5677,9 +5784,9 @@ def _e4_plan_from_inputs(inputs: dict[str, object]) -> g2e.SelectiveRecomputatio
 
 @pytest.fixture(scope="module")
 def e4_success_fixture(
-    e3_baseline_fixture: dict[str, object],
+    e4_full_fractal_baseline_fixture: dict[str, object],
 ) -> dict[str, object]:
-    inputs = _e4_input_family(e3_baseline_fixture)
+    inputs = _e4_input_family(e4_full_fractal_baseline_fixture)
     plan = _e4_plan_from_inputs(inputs)
     baseline_bytes = canonical_json_bytes_v01(
         _e3_public_plain(inputs["context"].baseline_g2d_execution_bundle)
@@ -5957,7 +6064,7 @@ def test_e4_selective_plan_from_affected_set_and_contextual_validation_v01(
 
 
 def test_e4_selective_plan_mutation_bounds_and_route_fail_closed_v01(
-    e3_baseline_fixture: dict[str, object],
+    e4_full_fractal_baseline_fixture: dict[str, object],
     e4_success_fixture: dict[str, object],
 ) -> None:
     plan = e4_success_fixture["plan"]
@@ -5967,7 +6074,10 @@ def test_e4_selective_plan_mutation_bounds_and_route_fail_closed_v01(
     assert _e4_contextual_plan_report(over_bound, inputs).status == "FAIL_CLOSED"
     copied_trace = replace(plan, trace_refs=(*plan.trace_refs, plan.trace_refs[0]))
     assert g2e.validate_selective_recomputation_plan_v01(copied_trace).status == "FAIL_CLOSED"
-    route_inputs = _e4_input_family(e3_baseline_fixture, target_roles=("route",))
+    route_inputs = _e4_input_family(
+        e4_full_fractal_baseline_fixture,
+        target_roles=("route",),
+    )
     assert route_inputs["invalidation_report"].report_status == "FAIL_CLOSED"
     assert "g2e_route_revalidation_required" in route_inputs["invalidation_report"].reason_codes
     with pytest.raises(ValueError, match="g2e_route_revalidation_required"):
@@ -6148,6 +6258,56 @@ def test_e4_observed_work_context_and_minimal_affected_subtree_mapping_v01(
     assert tuple(dict.fromkeys(item["cell_ref"] for item in binding_rows)) == (
         bundle.recomputation_plan.ordered_affected_cell_ids
     )
+    baseline = inputs["context"].baseline_g2d_execution_bundle
+    selected_cell_id = bundle.recomputation_plan.ordered_affected_cell_ids[0]
+    selected_input = next(
+        item for item in baseline.cell_inputs if item.cell_id == selected_cell_id
+    )
+    selected_projection = next(
+        artifact
+        for artifact in inputs["baseline"]
+        if artifact.artifact_id in inputs["affected"].ordered_affected_ids
+        and kernel_artifact_to_plain_dict_v01(artifact)["payload"].get(
+            "projection_profile_id"
+        )
+        == "g2e_baseline_runtime_artifact_projection_v01"
+    )
+    ledger = g2e._g2e4_baseline_runtime_artifact_ledger_v01(baseline)
+    selected_row = g2e._g2e4_resolve_runtime_artifact_projection_v01(
+        source_artifact=selected_projection,
+        ledger=ledger,
+    )
+    assert selected_row is not None
+    selected_seed_artifact = inputs["context"].baseline_g2d_execution_bundle.queue_artifacts[
+        inputs["context"].baseline_g2d_execution_bundle.queue_entries.index(
+            selected_row["queue_entry"]
+        )
+    ]
+    projection_payload = kernel_artifact_to_plain_dict_v01(selected_projection)[
+        "payload"
+    ]
+    assert selected_projection.parent_refs == (selected_seed_artifact.artifact_id,)
+    assert canonical_json_bytes_v01(
+        projection_payload["projected_runtime_artifact"]
+    ) == canonical_json_bytes_v01(
+        kernel_artifact_to_plain_dict_v01(selected_seed_artifact)
+    )
+    assert projection_payload["projected_runtime_artifact_sha256"] == (
+        _e2_artifact_sha(selected_seed_artifact)
+    )
+    assert selected_row["cell_input"] == selected_input
+    assert selected_row["queue_entry"].cell_id == selected_input.cell_id
+    assert selected_row["queue_entry"].node_id == selected_input.ordered_node_ids[0]
+    assert selected_row["node"].node_id == context.ordered_direct_affected_node_ids[0]
+    assert context.ordered_affected_cell_ids == (selected_input.cell_id,)
+    assert context.ordered_execution_node_ids == selected_input.ordered_node_ids
+    assert 0 < len(context.ordered_execution_node_ids) < len(
+        baseline.topology.ordered_node_ids
+    )
+    derive_source = inspect.getsource(g2e._derive_selective_recomputation_plan_v01)
+    assert "role_to_node_kind" not in derive_source
+    assert "source_role" not in derive_source
+    assert "dependent_role" not in derive_source
 
 
 def test_e4_selective_execution_affected_only_unaffected_not_executed_v01(
@@ -6156,13 +6316,7 @@ def test_e4_selective_execution_affected_only_unaffected_not_executed_v01(
     bundle = e4_success_fixture["bundle"]
     plan = bundle.recomputation_plan
     recomputed = bundle.recomputed_g2d_execution_bundle
-    executed_nodes = tuple(
-        dict.fromkeys(
-            node_id
-            for cell_input in recomputed.cell_inputs
-            for node_id in cell_input.ordered_node_ids
-        )
-    )
+    executed_nodes = plan.ordered_work_node_ids
     assert executed_nodes == plan.ordered_work_node_ids
     baseline_bundle = bundle.source_context.baseline_g2d_execution_bundle
     baseline_node_ids = baseline_bundle.topology.ordered_node_ids
@@ -6174,15 +6328,416 @@ def test_e4_selective_execution_affected_only_unaffected_not_executed_v01(
     assert set(direct_node_ids).issubset(executed_nodes)
     node_by_id = {item.node_id: item for item in baseline_bundle.topology_nodes}
     assert tuple(node_by_id[item].node_kind for item in direct_node_ids) == (
-        "MEMORY_CONTEXT",
+        "SEMANTIC_ACTOR",
     )
     assert direct_node_ids != executed_nodes
     unaffected_nodes = tuple(item for item in baseline_node_ids if item not in executed_nodes)
+    assert unaffected_nodes
+    assert 0 < len(executed_nodes) < len(baseline_node_ids)
     assert not set(unaffected_nodes).intersection(executed_nodes)
+    selected_cell_id = plan.ordered_affected_cell_ids[0]
+    baseline_child_inputs = tuple(
+        item for item in baseline_bundle.cell_inputs if item.parent_cell_id is not None
+    )
+    assert len(baseline_child_inputs) == 2
+    selected_baseline_input = next(
+        item for item in baseline_child_inputs if item.cell_id == selected_cell_id
+    )
+    sibling_input = next(
+        item for item in baseline_child_inputs if item.cell_id != selected_cell_id
+    )
+    recomputed_input_by_cell = {item.cell_id: item for item in recomputed.cell_inputs}
+    assert recomputed_input_by_cell[selected_cell_id] != selected_baseline_input
+    assert recomputed_input_by_cell[sibling_input.cell_id] == sibling_input
+    assert canonical_json_bytes_v01(
+        _e3_public_plain(recomputed_input_by_cell[sibling_input.cell_id])
+    ) == canonical_json_bytes_v01(_e3_public_plain(sibling_input))
+    baseline_sibling_scopes = tuple(
+        item
+        for item in baseline_bundle.scope_projections
+        if item.child_cell_id == sibling_input.cell_id
+    )
+    candidate_sibling_scopes = tuple(
+        item
+        for item in recomputed.scope_projections
+        if item.child_cell_id == sibling_input.cell_id
+    )
+    assert len(baseline_sibling_scopes) == 1
+    assert candidate_sibling_scopes == baseline_sibling_scopes
+    assert canonical_json_bytes_v01(
+        _e3_public_plain(candidate_sibling_scopes[0])
+    ) == canonical_json_bytes_v01(_e3_public_plain(baseline_sibling_scopes[0]))
+    baseline_sibling_queue = tuple(
+        (entry, artifact)
+        for entry, artifact in zip(
+            baseline_bundle.queue_entries,
+            baseline_bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.cell_id == sibling_input.cell_id
+    )
+    candidate_sibling_queue = tuple(
+        (entry, artifact)
+        for entry, artifact in zip(
+            recomputed.queue_entries,
+            recomputed.queue_artifacts,
+            strict=True,
+        )
+        if entry.cell_id == sibling_input.cell_id
+    )
+    assert baseline_sibling_queue
+    assert candidate_sibling_queue == baseline_sibling_queue
+    assert tuple(
+        (
+            item[1].artifact_id,
+            _e2_artifact_sha(item[1]),
+            _e2_payload_sha(item[1]),
+            canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item[1])),
+        )
+        for item in candidate_sibling_queue
+    ) == tuple(
+        (
+            item[1].artifact_id,
+            _e2_artifact_sha(item[1]),
+            _e2_payload_sha(item[1]),
+            canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item[1])),
+        )
+        for item in baseline_sibling_queue
+    )
+    baseline_result_by_cell = {
+        item.cell_id: (item, artifact)
+        for item, artifact in zip(
+            baseline_bundle.cell_results,
+            baseline_bundle.result_artifacts,
+            strict=True,
+        )
+    }
+    candidate_result_by_cell = {
+        item.cell_id: (item, artifact)
+        for item, artifact in zip(
+            recomputed.cell_results,
+            recomputed.result_artifacts,
+            strict=True,
+        )
+    }
+    assert candidate_result_by_cell[sibling_input.cell_id] == (
+        baseline_result_by_cell[sibling_input.cell_id]
+    )
+    assert candidate_result_by_cell[selected_cell_id] != (
+        baseline_result_by_cell[selected_cell_id]
+    )
+    baseline_sibling_result_index = next(
+        index
+        for index, item in enumerate(baseline_bundle.cell_results)
+        if item.cell_id == sibling_input.cell_id
+    )
+    candidate_sibling_result_index = next(
+        index
+        for index, item in enumerate(recomputed.cell_results)
+        if item.cell_id == sibling_input.cell_id
+    )
+    assert recomputed.result_proposals[candidate_sibling_result_index] == (
+        baseline_bundle.result_proposals[baseline_sibling_result_index]
+    )
+    assert recomputed.post_vv_reports[candidate_sibling_result_index] == (
+        baseline_bundle.post_vv_reports[baseline_sibling_result_index]
+    )
+    assert recomputed.gt_advisory_reports[candidate_sibling_result_index] == (
+        baseline_bundle.gt_advisory_reports[baseline_sibling_result_index]
+    )
+    for candidate_value, baseline_value in (
+        (
+            recomputed.result_proposals[candidate_sibling_result_index],
+            baseline_bundle.result_proposals[baseline_sibling_result_index],
+        ),
+        (
+            recomputed.post_vv_reports[candidate_sibling_result_index],
+            baseline_bundle.post_vv_reports[baseline_sibling_result_index],
+        ),
+        (
+            recomputed.gt_advisory_reports[candidate_sibling_result_index],
+            baseline_bundle.gt_advisory_reports[baseline_sibling_result_index],
+        ),
+    ):
+        assert canonical_json_bytes_v01(candidate_value) == canonical_json_bytes_v01(
+            baseline_value
+        )
+    sibling_artifact = candidate_result_by_cell[sibling_input.cell_id][1]
+    assert (
+        sibling_artifact.artifact_id,
+        _e2_artifact_sha(sibling_artifact),
+        _e2_payload_sha(sibling_artifact),
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(sibling_artifact)),
+    ) == (
+        baseline_result_by_cell[sibling_input.cell_id][1].artifact_id,
+        _e2_artifact_sha(baseline_result_by_cell[sibling_input.cell_id][1]),
+        _e2_payload_sha(baseline_result_by_cell[sibling_input.cell_id][1]),
+        canonical_json_bytes_v01(
+            kernel_artifact_to_plain_dict_v01(
+                baseline_result_by_cell[sibling_input.cell_id][1]
+            )
+        ),
+    )
+    baseline_sibling_budgets = tuple(
+        item for item in baseline_bundle.budgets if item.owning_cell_id == sibling_input.cell_id
+    )
+    candidate_sibling_budgets = tuple(
+        item for item in recomputed.budgets if item.owning_cell_id == sibling_input.cell_id
+    )
+    assert candidate_sibling_budgets == baseline_sibling_budgets
+    sibling_transition_ids = {
+        entry.transition_decision_id for entry, _artifact in baseline_sibling_queue
+    }
+    assert tuple(
+        item
+        for item in recomputed.transition_decisions
+        if item.decision_id in sibling_transition_ids
+    ) == tuple(
+        item
+        for item in baseline_bundle.transition_decisions
+        if item.decision_id in sibling_transition_ids
+    )
+    assert recomputed.revise_observations == baseline_bundle.revise_observations
+    assert recomputed.partial_failures == baseline_bundle.partial_failures
+    assert recomputed.backpressure_states == baseline_bundle.backpressure_states
+    binding_ids = {item.artifact_id for item in context.ordered_binding_artifacts}
+    sibling_initial_artifacts = tuple(
+        artifact
+        for entry, artifact in candidate_sibling_queue
+        if entry.predecessor_queue_entry_id is None
+    )
+    assert sibling_initial_artifacts
     assert all(
-        entry.node_id in set(executed_nodes)
-        for entry in recomputed.queue_entries
-        if entry.state not in {"PARENT_RETURNED"}
+        not binding_ids.intersection(artifact.parent_refs)
+        for artifact in sibling_initial_artifacts
+    )
+    sibling_artifact_ids = {
+        *(artifact.artifact_id for _entry, artifact in baseline_sibling_queue),
+        baseline_result_by_cell[sibling_input.cell_id][1].artifact_id,
+    }
+    baseline_sibling_causal = tuple(
+        item
+        for item in baseline_bundle.causal_consumption_refs
+        if item.source_artifact_id in sibling_artifact_ids
+        or item.downstream_artifact_id in sibling_artifact_ids
+    )
+    candidate_sibling_causal = tuple(
+        item
+        for item in recomputed.causal_consumption_refs
+        if item.source_artifact_id in sibling_artifact_ids
+        or item.downstream_artifact_id in sibling_artifact_ids
+    )
+    assert baseline_sibling_causal
+    assert len(candidate_sibling_causal) == len(baseline_sibling_causal)
+    assert recomputed.runtime_trace.trace_id != baseline_bundle.runtime_trace.trace_id
+
+    def queue_artifact_role(
+        entry: object,
+    ) -> tuple[object, ...]:
+        return (
+            entry.cell_id,
+            entry.node_id,
+            entry.state,
+            entry.node_instance_sequence,
+            entry.snapshot_sequence,
+        )
+
+    baseline_queue_artifact_by_role = {
+        queue_artifact_role(entry): artifact
+        for entry, artifact in zip(
+            baseline_bundle.queue_entries,
+            baseline_bundle.queue_artifacts,
+            strict=True,
+        )
+    }
+    candidate_queue_artifact_by_role = {
+        queue_artifact_role(entry): artifact
+        for entry, artifact in zip(
+            recomputed.queue_entries,
+            recomputed.queue_artifacts,
+            strict=True,
+        )
+    }
+    assert len(baseline_queue_artifact_by_role) == len(
+        baseline_bundle.queue_artifacts
+    )
+    assert len(candidate_queue_artifact_by_role) == len(
+        recomputed.queue_artifacts
+    )
+    assert set(candidate_queue_artifact_by_role) == set(
+        baseline_queue_artifact_by_role
+    )
+
+    def result_artifact_role(
+        result: object,
+    ) -> tuple[object, ...]:
+        return (
+            result.cell_id,
+            result.parent_cell_id,
+            result.outcome,
+        )
+
+    baseline_result_artifact_by_role = {
+        result_artifact_role(result): artifact
+        for result, artifact in zip(
+            baseline_bundle.cell_results,
+            baseline_bundle.result_artifacts,
+            strict=True,
+        )
+    }
+    candidate_result_artifact_by_role = {
+        result_artifact_role(result): artifact
+        for result, artifact in zip(
+            recomputed.cell_results,
+            recomputed.result_artifacts,
+            strict=True,
+        )
+    }
+    assert len(baseline_result_artifact_by_role) == len(
+        baseline_bundle.result_artifacts
+    )
+    assert len(candidate_result_artifact_by_role) == len(
+        recomputed.result_artifacts
+    )
+    assert set(candidate_result_artifact_by_role) == set(
+        baseline_result_artifact_by_role
+    )
+
+    candidate_to_baseline_artifact_id = {
+        candidate_queue_artifact_by_role[role].artifact_id: (
+            baseline_queue_artifact_by_role[role].artifact_id
+        )
+        for role in baseline_queue_artifact_by_role
+    }
+    candidate_to_baseline_artifact_id.update(
+        {
+            candidate_result_artifact_by_role[role].artifact_id: (
+                baseline_result_artifact_by_role[role].artifact_id
+            )
+            for role in baseline_result_artifact_by_role
+        }
+    )
+    candidate_to_baseline_artifact_id[
+        recomputed.report_artifact.artifact_id
+    ] = baseline_bundle.report_artifact.artifact_id
+    changed_carrier_ids = {
+        candidate_id: baseline_id
+        for candidate_id, baseline_id in candidate_to_baseline_artifact_id.items()
+        if candidate_id != baseline_id
+    }
+    assert changed_carrier_ids
+    assert not sibling_artifact_ids.intersection(changed_carrier_ids)
+    changed_queue_roles = {
+        role
+        for role in baseline_queue_artifact_by_role
+        if candidate_queue_artifact_by_role[role].artifact_id
+        != baseline_queue_artifact_by_role[role].artifact_id
+    }
+    root_cell_id = next(
+        item.cell_id
+        for item in baseline_bundle.cell_inputs
+        if item.parent_cell_id is None
+    )
+    assert all(
+        role[0] in {selected_cell_id, root_cell_id}
+        for role in changed_queue_roles
+    )
+    changed_result_roles = {
+        role
+        for role in baseline_result_artifact_by_role
+        if candidate_result_artifact_by_role[role].artifact_id
+        != baseline_result_artifact_by_role[role].artifact_id
+    }
+    assert all(
+        role[0] in {selected_cell_id, root_cell_id}
+        for role in changed_result_roles
+    )
+
+    def baseline_causal_material(item: object) -> tuple[object, ...]:
+        assert item.trace_refs == (
+            item.source_artifact_id,
+            item.downstream_artifact_id,
+            baseline_bundle.runtime_trace.trace_id,
+        )
+        return (
+            item.producer_actor_id,
+            item.source_artifact_id,
+            item.output_field,
+            item.consumer_component,
+            item.downstream_artifact_id,
+            item.decision_effect,
+            item.disposition,
+            item.reason_code,
+            item.trace_refs,
+        )
+
+    def normalized_candidate_causal_material(
+        item: object,
+    ) -> tuple[object, ...]:
+        assert item.trace_refs == (
+            item.source_artifact_id,
+            item.downstream_artifact_id,
+            recomputed.runtime_trace.trace_id,
+        )
+        source_artifact_id = candidate_to_baseline_artifact_id.get(
+            item.source_artifact_id,
+            item.source_artifact_id,
+        )
+        downstream_artifact_id = candidate_to_baseline_artifact_id.get(
+            item.downstream_artifact_id,
+            item.downstream_artifact_id,
+        )
+        return (
+            item.producer_actor_id,
+            source_artifact_id,
+            item.output_field,
+            item.consumer_component,
+            downstream_artifact_id,
+            item.decision_effect,
+            item.disposition,
+            item.reason_code,
+            (
+                source_artifact_id,
+                downstream_artifact_id,
+                baseline_bundle.runtime_trace.trace_id,
+            ),
+        )
+
+    baseline_causal_materials = tuple(
+        baseline_causal_material(item)
+        for item in baseline_sibling_causal
+    )
+    candidate_causal_materials = tuple(
+        normalized_candidate_causal_material(item)
+        for item in candidate_sibling_causal
+    )
+    assert len(set(baseline_causal_materials)) == len(
+        baseline_causal_materials
+    )
+    assert len(set(candidate_causal_materials)) == len(
+        candidate_causal_materials
+    )
+    assert sorted(candidate_causal_materials) == sorted(
+        baseline_causal_materials
+    )
+    assert any(
+        item.source_artifact_id in changed_carrier_ids
+        or item.downstream_artifact_id in changed_carrier_ids
+        for item in candidate_sibling_causal
+    )
+    assert all(
+        item.decision_effect
+        not in {"OBSERVED_WORK_INPUT", "OBSERVED_WORK_CELL_BINDING"}
+        for item in candidate_sibling_causal
+    )
+    assert all(
+        item.source_artifact_id not in binding_ids
+        and item.downstream_artifact_id not in binding_ids
+        and not binding_ids.intersection(item.trace_refs)
+        for item in candidate_sibling_causal
+    )
+    assert canonical_json_bytes_v01(_e3_public_plain(baseline_bundle)) == (
+        e4_success_fixture["baseline_bytes"]
     )
     assert g2d.validate_fractal_runtime_execution_bundle_v02(recomputed).status == "PASS"
 
@@ -6192,10 +6747,46 @@ def test_e4_recomputed_binding_predecessor_and_in_place_rejection_v01(
 ) -> None:
     bundle = e4_success_fixture["bundle"]
     assert bundle.recomputed_bindings
+    recomputed = bundle.recomputed_g2d_execution_bundle
+    baseline = bundle.source_context.baseline_g2d_execution_bundle
+    queue_by_id = {item.queue_entry_id: item for item in recomputed.queue_entries}
+    result_by_id = {item.result_id: item for item in recomputed.cell_results}
+    sibling_cell_id = next(
+        item.cell_id
+        for item in baseline.cell_inputs
+        if item.parent_cell_id is not None
+        and item.cell_id not in bundle.recomputation_plan.ordered_affected_cell_ids
+    )
+    sibling_artifact_ids = {
+        artifact.artifact_id
+        for entry, artifact in zip(
+            baseline.queue_entries,
+            baseline.queue_artifacts,
+            strict=True,
+        )
+        if entry.cell_id == sibling_cell_id
+    }
+    sibling_artifact_ids.add(
+        next(
+            artifact.artifact_id
+            for result, artifact in zip(
+                baseline.cell_results,
+                baseline.result_artifacts,
+                strict=True,
+            )
+            if result.cell_id == sibling_cell_id
+        )
+    )
     for binding in bundle.recomputed_bindings:
         assert g2e.validate_recomputed_artifact_binding_v01(binding).status == "PASS"
         assert binding.prior_artifact_id != binding.new_artifact_id
         assert binding.prior_payload_sha256 != binding.new_payload_sha256
+        owner_result = result_by_id[binding.g2d_cell_result_ref]
+        source_queue = queue_by_id[binding.source_queue_entry_id]
+        assert binding.source_cell_id == owner_result.cell_id
+        assert source_queue.cell_id == binding.source_cell_id
+        assert binding.prior_artifact_id not in sibling_artifact_ids
+        assert binding.new_artifact_id not in sibling_artifact_ids
         with pytest.raises(ValueError, match="g2e_recomputation_in_place_forbidden"):
             g2e.build_recomputed_artifact_binding_v01(
                 recomputation_plan_id=binding.recomputation_plan_id,
@@ -6260,8 +6851,37 @@ def test_e4_preservation_full_bytes_and_immutable_baseline_v01(
 ) -> None:
     bundle = e4_success_fixture["bundle"]
     proof = bundle.preservation_proof
+    baseline = bundle.source_context.baseline_g2d_execution_bundle
+    sibling_cell_id = next(
+        item.cell_id
+        for item in baseline.cell_inputs
+        if item.parent_cell_id is not None
+        and item.cell_id not in bundle.recomputation_plan.ordered_affected_cell_ids
+    )
+    sibling_artifact_ids = {
+        artifact.artifact_id
+        for entry, artifact in zip(
+            baseline.queue_entries,
+            baseline.queue_artifacts,
+            strict=True,
+        )
+        if entry.cell_id == sibling_cell_id
+    }
+    sibling_artifact_ids.add(
+        next(
+            artifact.artifact_id
+            for result, artifact in zip(
+                baseline.cell_results,
+                baseline.result_artifacts,
+                strict=True,
+            )
+            if result.cell_id == sibling_cell_id
+        )
+    )
     assert g2e.validate_preservation_proof_v01(proof).status == "PASS"
     assert proof.byte_identity_preserved
+    assert sibling_artifact_ids
+    assert sibling_artifact_ids.issubset(proof.ordered_preserved_artifact_ids)
     assert proof.ordered_before_artifact_sha256 == proof.ordered_after_artifact_sha256
     assert proof.ordered_before_payload_sha256 == proof.ordered_after_payload_sha256
     assert proof.ordered_before_identity_ids == proof.ordered_after_identity_ids

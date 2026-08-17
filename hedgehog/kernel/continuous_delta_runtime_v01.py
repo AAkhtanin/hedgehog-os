@@ -6533,6 +6533,172 @@ def _selective_plan_source_errors_v01(
     return _ordered_reasons(errors)
 
 
+def _g2e4_baseline_runtime_artifact_ledger_v01(
+    baseline: FractalRuntimeExecutionBundleV02,
+) -> dict[str, dict[str, object]]:
+    if (
+        type(baseline) is not FractalRuntimeExecutionBundleV02
+        or validate_fractal_runtime_execution_bundle_v02(baseline).status != "PASS"
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    input_by_cell = {item.cell_id: item for item in baseline.cell_inputs}
+    node_by_id = {item.node_id: item for item in baseline.topology_nodes}
+    if (
+        len(input_by_cell) != len(baseline.cell_inputs)
+        or len(node_by_id) != len(baseline.topology_nodes)
+        or len(baseline.queue_entries) != len(baseline.queue_artifacts)
+        or len(baseline.cell_results) != len(baseline.result_artifacts)
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    ledger: dict[str, dict[str, object]] = {}
+    for entry, artifact in zip(
+        baseline.queue_entries, baseline.queue_artifacts, strict=True
+    ):
+        cell_input = input_by_cell.get(entry.cell_id)
+        node = node_by_id.get(entry.node_id)
+        if (
+            cell_input is None
+            or node is None
+            or entry.node_id not in cell_input.ordered_node_ids
+            or artifact.artifact_id in ledger
+        ):
+            raise ValueError("g2e_topology_binding_mismatch")
+        ledger[artifact.artifact_id] = {
+            "ownership_class": "CELL_QUEUE",
+            "artifact": artifact,
+            "queue_entry": entry,
+            "cell_input": cell_input,
+            "node": node,
+        }
+    for result, artifact in zip(
+        baseline.cell_results, baseline.result_artifacts, strict=True
+    ):
+        cell_input = input_by_cell.get(result.cell_id)
+        if cell_input is None or artifact.artifact_id in ledger:
+            raise ValueError("g2e_topology_binding_mismatch")
+        ledger[artifact.artifact_id] = {
+            "ownership_class": "CELL_RESULT",
+            "artifact": artifact,
+            "cell_result": result,
+            "cell_input": cell_input,
+        }
+    for ownership_class, artifact in (
+        ("WHOLE_RUNTIME_TOPOLOGY", baseline.topology_artifact),
+        ("WHOLE_RUNTIME_REPORT", baseline.report_artifact),
+    ):
+        if artifact.artifact_id in ledger:
+            raise ValueError("g2e_topology_binding_mismatch")
+        ledger[artifact.artifact_id] = {
+            "ownership_class": ownership_class,
+            "artifact": artifact,
+        }
+    return ledger
+
+
+def _g2e4_resolve_runtime_artifact_projection_v01(
+    *,
+    source_artifact: KernelArtifactV01,
+    ledger: dict[str, dict[str, object]],
+) -> dict[str, object] | None:
+    direct = ledger.get(source_artifact.artifact_id)
+    if direct is not None:
+        if source_artifact != direct["artifact"]:
+            raise ValueError("g2e_topology_binding_mismatch")
+        return direct
+    plain = kernel_artifact_to_plain_dict_v01(source_artifact)
+    payload = plain["payload"]
+    if (
+        type(payload) is not dict
+        or payload.get("projection_profile_id")
+        != "g2e_baseline_runtime_artifact_projection_v01"
+    ):
+        return None
+    if set(payload) != {
+        "projection_profile_id",
+        "projected_runtime_artifact",
+        "projected_runtime_artifact_sha256",
+    }:
+        raise ValueError("g2e_topology_binding_mismatch")
+    projected = payload["projected_runtime_artifact"]
+    projected_sha256 = payload["projected_runtime_artifact_sha256"]
+    if type(projected) is not dict or type(projected_sha256) is not str:
+        raise ValueError("g2e_topology_binding_mismatch")
+    projected_bytes = canonical_json_bytes_v01(projected)
+    if hashlib.sha256(projected_bytes).hexdigest() != projected_sha256:
+        raise ValueError("g2e_topology_binding_mismatch")
+    matches = tuple(
+        row
+        for row in ledger.values()
+        if canonical_json_bytes_v01(
+            kernel_artifact_to_plain_dict_v01(row["artifact"])
+        )
+        == projected_bytes
+    )
+    if len(matches) != 1:
+        raise ValueError("g2e_topology_binding_mismatch")
+    matched_artifact = matches[0]["artifact"]
+    if (
+        source_artifact.transaction_id != matched_artifact.transaction_id
+        or source_artifact.owner_root_id != matched_artifact.owner_root_id
+        or source_artifact.parent_refs != (matched_artifact.artifact_id,)
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    return matches[0]
+
+
+def _g2e4_validate_selected_child_witness_v01(
+    baseline: FractalRuntimeExecutionBundleV02,
+    cell_input: object,
+) -> None:
+    if cell_input not in baseline.cell_inputs or cell_input.parent_cell_id is None:
+        raise ValueError("g2e_topology_binding_mismatch")
+    parent_input = next(
+        (
+            item
+            for item in baseline.cell_inputs
+            if item.cell_id == cell_input.parent_cell_id
+        ),
+        None,
+    )
+    projection = next(
+        (
+            item
+            for item in baseline.scope_projections
+            if item.child_cell_id == cell_input.cell_id
+        ),
+        None,
+    )
+    if parent_input is None or projection is None:
+        raise ValueError("g2e_topology_binding_mismatch")
+    try:
+        canonical_child_index = parent_input.ordered_planned_child_cell_ids.index(
+            cell_input.cell_id
+        )
+    except ValueError as error:
+        raise ValueError("g2e_topology_binding_mismatch") from error
+    expected_cell_id = g2d_runtime.derive_fractal_child_cell_id_v02(
+        topology_seed_id=baseline.topology_seed.topology_seed_id,
+        parent_cell_id=parent_input.cell_id,
+        canonical_child_index=canonical_child_index,
+        accepted_mode=baseline.source_binding.accepted_mode,
+        selected_local_mode_profile_id=(
+            baseline.source_binding.selected_local_mode_profile_id
+        ),
+        source_mode_profile_set_id=(
+            baseline.source_binding.source_mode_profile_set_id
+        ),
+        child_scope_ref=projection.child_scope_ref,
+        runtime_policy_id=baseline.source_binding.runtime_policy_id,
+        required_capability_ids=(
+            baseline.source_binding.required_downstream_capability_ids
+        ),
+        forbidden_claims=baseline.source_context.runtime_policy.forbidden_claims,
+        child_depth=cell_input.cell_depth,
+    )
+    if expected_cell_id != cell_input.cell_id:
+        raise ValueError("g2e_topology_binding_mismatch")
+
+
 def _derive_selective_recomputation_plan_v01(
     *,
     delta: WorldStateDeltaV01,
@@ -6576,50 +6742,58 @@ def _derive_selective_recomputation_plan_v01(
         artifact.artifact_id: artifact
         for artifact in source_context.baseline_source_artifacts
     }
-    affected_source_artifacts = tuple(
-        source_artifact_by_id[artifact_id]
+    if any(
+        artifact_id not in source_artifact_by_id
         for artifact_id in affected_set.ordered_affected_ids
-        if artifact_id in source_artifact_by_id
-    )
-    if len(affected_source_artifacts) != len(affected_set.ordered_affected_ids):
+    ):
         raise ValueError("g2e_topology_binding_mismatch")
-    role_to_node_kind = {
-        "ordinary": "MEMORY_CONTEXT",
-        "packet": "MEMORY_CONTEXT",
-        "certificate": "MEMORY_CONTEXT",
-    }
-    affected_roles: list[str] = []
-    for artifact in affected_source_artifacts:
-        payload = _artifact_plain_v01(artifact).get("payload")
-        if type(payload) is not dict:
-            raise ValueError("g2e_topology_binding_mismatch")
-        role_values = tuple(
-            payload[key]
-            for key in ("source_role", "dependent_role")
-            if key in payload and type(payload[key]) is str
+    ledger = _g2e4_baseline_runtime_artifact_ledger_v01(baseline)
+    mapped_rows = tuple(
+        row
+        for artifact_id in affected_set.ordered_affected_ids
+        for row in (
+            _g2e4_resolve_runtime_artifact_projection_v01(
+                source_artifact=source_artifact_by_id[artifact_id],
+                ledger=ledger,
+            ),
         )
-        if len(role_values) != 1 or role_values[0] not in role_to_node_kind:
-            raise ValueError("g2e_topology_binding_mismatch")
-        if role_values[0] not in affected_roles:
-            affected_roles.append(role_values[0])
-    direct_node_kinds = tuple(
-        dict.fromkeys(role_to_node_kind[role] for role in affected_roles)
+        if row is not None
     )
-    if len(direct_node_kinds) != 1:
+    if any(
+        str(row["ownership_class"]).startswith("WHOLE_RUNTIME")
+        for row in mapped_rows
+    ):
         raise ValueError("g2e_topology_binding_mismatch")
-    direct_nodes = tuple(
-        node for node in baseline.topology_nodes if node.node_kind in direct_node_kinds
+    seed_rows = tuple(
+        row
+        for row in mapped_rows
+        if row["ownership_class"] == "CELL_QUEUE"
+        and row["queue_entry"].predecessor_queue_entry_id is None
     )
-    if len(direct_nodes) != len(direct_node_kinds):
+    if len(seed_rows) != 1 or any(
+        row["ownership_class"] != "CELL_QUEUE" for row in mapped_rows
+    ):
         raise ValueError("g2e_topology_binding_mismatch")
-    selected_node_ids = {node.node_id for node in direct_nodes}
+    seed = seed_rows[0]
+    selected_input = seed["cell_input"]
+    selected_node = seed["node"]
+    seed_entry = seed["queue_entry"]
+    if (
+        seed_entry.queue_entry_id not in selected_input.ordered_initial_queue_entry_ids
+        or selected_node.node_id not in selected_input.ordered_node_ids
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    _g2e4_validate_selected_child_witness_v01(baseline, selected_input)
+    selected_node_ids = {selected_node.node_id}
     changed = True
     while changed:
         changed = False
         for edge in baseline.topology_edges:
             if (
-                edge.source_node_id in selected_node_ids
+                edge.cell_projection_class == "FRACTAL_LEAF_PROJECTION"
+                and edge.source_node_id in selected_node_ids
                 and edge.target_node_id not in selected_node_ids
+                and edge.target_node_id in selected_input.ordered_node_ids
             ):
                 selected_node_ids.add(edge.target_node_id)
                 changed = True
@@ -6628,12 +6802,11 @@ def _derive_selective_recomputation_plan_v01(
         for node in baseline.topology_nodes
         if node.node_id in selected_node_ids
     )
-    affected_inputs = tuple(
-        cell_input
-        for cell_input in baseline.cell_inputs
-        if set(cell_input.ordered_node_ids).intersection(ordered_work_node_ids)
-    )
-    if not ordered_work_node_ids or not affected_inputs:
+    if (
+        ordered_work_node_ids != selected_input.ordered_node_ids
+        or not ordered_work_node_ids
+        or len(ordered_work_node_ids) >= len(topology.ordered_node_ids)
+    ):
         raise ValueError("g2e_topology_binding_mismatch")
     policy = baseline.source_context.runtime_policy
     registry = transition_runtime.build_continuous_delta_transition_registry_profile_v01()
@@ -6651,9 +6824,7 @@ def _derive_selective_recomputation_plan_v01(
         source_topology_id=topology.topology_id,
         accepted_mode=topology.accepted_mode,
         accepted_scope_ref=topology.accepted_scope_ref,
-        ordered_affected_cell_ids=tuple(
-            cell_input.cell_id for cell_input in affected_inputs
-        ),
+        ordered_affected_cell_ids=(selected_input.cell_id,),
         ordered_affected_artifact_ids=affected_set.ordered_affected_ids,
         ordered_work_node_ids=ordered_work_node_ids,
         ordered_preserved_artifact_ids=affected_set.ordered_unaffected_ids,
@@ -6823,8 +6994,12 @@ def _g2e4_prefix_arguments_v01(
 def _g2e4_refresh_prefix_reports_v01(state: dict[str, object]) -> None:
     base_reports = state["base_reports"]
     queue_entries = state["queue_entries"]
+    scope_reports = state["scope_reports"]
     input_reports = state["input_reports"]
-    if not all(type(item) is tuple for item in (base_reports, queue_entries, input_reports)):
+    if not all(
+        type(item) is tuple
+        for item in (base_reports, queue_entries, scope_reports, input_reports)
+    ):
         raise ValueError("g2d_validation_status_stage_mismatch")
     state["prefix_reports"] = (
         *base_reports,
@@ -6832,6 +7007,7 @@ def _g2e4_refresh_prefix_reports_v01(state: dict[str, object]) -> None:
             g2d_runtime.validate_fractal_cell_queue_entry_v02(item)
             for item in queue_entries
         ),
+        *scope_reports,
         *input_reports,
     )
 
@@ -6887,15 +7063,30 @@ def _g2e4_dependencies_v01(
     entry: object,
 ) -> tuple[object, ...]:
     edges = state["topology_edges"]
+    cell_input = next(
+        (item for item in state["cell_inputs"] if item.cell_id == entry.cell_id),
+        None,
+    )
     latest = {
         (item.cell_id, item.node_id): item
         for item in _g2e4_latest_queue_entries_v01(state)
     }
-    if type(edges) is not tuple:
+    if type(edges) is not tuple or cell_input is None:
         raise ValueError("g2d_queue_order_mismatch")
+    projected_node_ids = set(cell_input.ordered_node_ids)
+    projection_class = (
+        "ROOT_CELL_PROJECTION"
+        if cell_input.parent_cell_id is None
+        else "FRACTAL_LEAF_PROJECTION"
+    )
     dependencies: list[object] = []
     for edge in sorted(edges, key=lambda item: item.canonical_index):
-        if edge.target_node_id != entry.node_id:
+        if (
+            edge.target_node_id != entry.node_id
+            or edge.cell_projection_class != projection_class
+            or edge.source_node_id not in projected_node_ids
+            or edge.target_node_id not in projected_node_ids
+        ):
             continue
         dependency = latest.get((entry.cell_id, edge.source_node_id))
         if dependency is None or dependency.state not in {
@@ -6924,8 +7115,15 @@ def _g2e4_evaluate_queue_transition_v01(
     observed_output_refs: tuple[str, ...] = (),
     observed_evidence_refs: tuple[str, ...] = (),
     advisory_refs: tuple[str, ...] = (),
+    local_child_result: object | None = None,
+    local_child_result_artifact: KernelArtifactV01 | None = None,
     validation_report: object | None = None,
     parent_return_family: dict[str, object] | None = None,
+    cell_id: str | None = None,
+    parent_cell_id: str | None = None,
+    planned_child_cell_id: str | None = None,
+    cell_depth: int | None = None,
+    scope_ref: str | None = None,
 ) -> TransitionDecisionV01:
     topology = state["topology"]
     family = parent_return_family or {}
@@ -6938,22 +7136,28 @@ def _g2e4_evaluate_queue_transition_v01(
         cell_input=cell_input,
         cell_id=(
             current_entry.cell_id
-            if current_entry is not None
-            else topology.root_cell_id
+            if current_entry is not None and cell_id is None
+            else cell_id or topology.root_cell_id
         ),
         parent_cell_id=(
-            current_entry.parent_cell_id if current_entry is not None else None
+            current_entry.parent_cell_id
+            if current_entry is not None and parent_cell_id is None
+            else parent_cell_id
         ),
         planned_child_cell_id=(
             current_entry.planned_child_cell_id
-            if current_entry is not None
-            else None
+            if current_entry is not None and planned_child_cell_id is None
+            else planned_child_cell_id
         ),
-        cell_depth=current_entry.cell_depth if current_entry is not None else 0,
+        cell_depth=(
+            current_entry.cell_depth
+            if current_entry is not None and cell_depth is None
+            else cell_depth or 0
+        ),
         scope_ref=(
             current_entry.scope_ref
-            if current_entry is not None
-            else topology.accepted_scope_ref
+            if current_entry is not None and scope_ref is None
+            else scope_ref or topology.accepted_scope_ref
         ),
         cell_budget_before=cell_budget,
         global_budget_before=global_budget,
@@ -6962,8 +7166,8 @@ def _g2e4_evaluate_queue_transition_v01(
         observed_output_refs=observed_output_refs,
         observed_evidence_refs=observed_evidence_refs,
         advisory_refs=advisory_refs,
-        local_child_result=None,
-        local_child_result_artifact=None,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
         validation_report=validation_report,
         parent_return_pre_post_vv_terminal_queue_entries=family.get(
             "pre_post_vv_terminal_queue_entries", ()
@@ -6992,23 +7196,64 @@ def _g2e4_build_budget_successor_v01(
     transition_decision: TransitionDecisionV01 | None = None,
     cell_input: object | None = None,
     budget_state: str = "ACTIVE",
+    allocation_parent: object | None = None,
+    owning_cell_id: str | None = None,
+    budget_scope: str = "ROOT_GLOBAL_AND_CELL",
+    canonical_child_index: int | None = None,
+    allocation_queue_entries: tuple[object, ...] = (),
+    paired_cell_budget: object | None = None,
+    child_result: object | None = None,
 ) -> object:
     return g2d_runtime.build_fractal_runtime_budget_v02(
         policy=state["source_context"].runtime_policy,
         topology_seed=state["topology_seed"],
-        allocation_parent_budget=None,
+        allocation_parent_budget=allocation_parent,
         predecessor_budget=predecessor,
-        owning_cell_id=state["topology"].root_cell_id,
-        budget_scope="ROOT_GLOBAL_AND_CELL",
+        owning_cell_id=owning_cell_id or state["topology"].root_cell_id,
+        budget_scope=budget_scope,
         budget_state=budget_state,
         budget_event_kind=event,
         budget_context_input=cell_input,
-        canonical_child_index=None,
-        allocation_queue_entries=(),
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queue_entries,
         transition_decision=transition_decision,
-        paired_cell_budget=None,
-        child_result=None,
+        paired_cell_budget=paired_cell_budget,
+        child_result=child_result,
     )
+
+
+def _g2e4_live_budget_heads_v01(
+    state: dict[str, object],
+    cell_id: str,
+) -> tuple[object, object]:
+    topology = state["topology"]
+    budgets = state["budgets"]
+    if type(budgets) is not tuple:
+        raise ValueError("g2d_budget_invalid")
+    global_rows = tuple(
+        item
+        for item in budgets
+        if item.owning_cell_id == topology.root_cell_id
+        and item.budget_scope == "ROOT_GLOBAL_AND_CELL"
+    )
+    local_rows = tuple(item for item in budgets if item.owning_cell_id == cell_id)
+    if not global_rows or not local_rows:
+        raise ValueError("g2d_budget_invalid")
+    return local_rows[-1], global_rows[-1]
+
+
+def _g2e4_append_budget_pair_v01(
+    state: dict[str, object],
+    cell_budget: object,
+    global_budget: object,
+) -> None:
+    suffix = (global_budget,) if cell_budget is global_budget else (
+        cell_budget,
+        global_budget,
+    )
+    if any(item in state["budgets"] for item in suffix):
+        raise ValueError("g2d_budget_double_spend")
+    state["budgets"] = (*state["budgets"], *suffix)
 
 
 def _g2e4_append_queue_target_v01(
@@ -7026,6 +7271,8 @@ def _g2e4_append_queue_target_v01(
     observed_output_refs: tuple[str, ...] = (),
     observed_evidence_refs: tuple[str, ...] = (),
     advisory_refs: tuple[str, ...] = (),
+    local_child_result: object | None = None,
+    local_child_result_artifact: KernelArtifactV01 | None = None,
 ) -> tuple[object, KernelArtifactV01]:
     target = g2d_runtime.advance_fractal_cell_queue_v02(
         source_context=state["source_context"],
@@ -7037,8 +7284,8 @@ def _g2e4_append_queue_target_v01(
         cell_budget_after=cell_budget_after,
         global_budget_after=global_budget_after,
         dependencies=dependencies,
-        local_child_result=None,
-        local_child_result_artifact=None,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
         cell_instantiation_order=tuple(
             item.cell_id for item in state["cell_inputs"]
         ),
@@ -7056,7 +7303,7 @@ def _g2e4_append_queue_target_v01(
         topology_artifact=state["topology_artifact"],
         predecessor_artifact=current_artifact,
         activation_parent_artifact=None,
-        local_child_result_artifact=None,
+        local_child_result_artifact=local_child_result_artifact,
         source_context=state["source_context"],
         **_g2e4_prefix_arguments_v01(
             state,
@@ -7069,6 +7316,55 @@ def _g2e4_append_queue_target_v01(
     state["queue_decisions"] = (*state["queue_decisions"], transition_decision)
     _g2e4_refresh_prefix_reports_v01(state)
     return target, artifact
+
+
+def _g2e4_advance_budget_pair_v01(
+    state: dict[str, object],
+    *,
+    cell_input: object,
+    event: str,
+    transition_decision: TransitionDecisionV01,
+    budget_state: str = "ACTIVE",
+) -> tuple[object, object]:
+    cell_budget, global_budget = _g2e4_live_budget_heads_v01(
+        state, cell_input.cell_id
+    )
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    allocation_parent = (
+        None
+        if cell_budget.allocation_parent_budget_id is None
+        else budget_by_id.get(cell_budget.allocation_parent_budget_id)
+    )
+    if (
+        cell_budget.allocation_parent_budget_id is not None
+        and allocation_parent is None
+    ):
+        raise ValueError("g2d_budget_predecessor_invalid")
+    next_cell = _g2e4_build_budget_successor_v01(
+        state,
+        cell_budget,
+        event=event,
+        transition_decision=transition_decision,
+        cell_input=cell_input,
+        budget_state=budget_state,
+        allocation_parent=allocation_parent,
+        owning_cell_id=cell_input.cell_id,
+        budget_scope=cell_budget.budget_scope,
+    )
+    next_global = (
+        next_cell
+        if cell_input.parent_cell_id is None
+        else _g2e4_build_budget_successor_v01(
+            state,
+            global_budget,
+            event=event,
+            transition_decision=transition_decision,
+            cell_input=cell_input,
+            paired_cell_budget=next_cell,
+        )
+    )
+    _g2e4_append_budget_pair_v01(state, next_cell, next_global)
+    return next_cell, next_global
 
 
 def _g2e4_ready_and_start_node_v01(
@@ -7115,15 +7411,12 @@ def _g2e4_ready_and_start_node_v01(
         global_budget=global_anchor,
         dependencies=dependencies,
     )
-    predecessor = state["budgets"][-1]
-    start_budget = _g2e4_build_budget_successor_v01(
+    start_cell, start_global = _g2e4_advance_budget_pair_v01(
         state,
-        predecessor,
+        cell_input=cell_input,
         event="START_NODE",
         transition_decision=start_decision,
-        cell_input=cell_input,
     )
-    state["budgets"] = (*state["budgets"], start_budget)
     return _g2e4_append_queue_target_v01(
         state,
         current_entry=ready,
@@ -7131,8 +7424,8 @@ def _g2e4_ready_and_start_node_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=start_decision,
-        cell_budget_after=start_budget,
-        global_budget_after=start_budget,
+        cell_budget_after=start_cell,
+        global_budget_after=start_global,
         dependencies=dependencies,
     )
 
@@ -7143,6 +7436,7 @@ def _g2e4_local_observation_v01(
     node: object,
     cell_input: object,
     cell_budget: object,
+    global_budget: object,
     dependencies: tuple[object, ...],
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
     assignment = next(
@@ -7176,7 +7470,7 @@ def _g2e4_local_observation_v01(
         "parent_cell_id": cell_input.parent_cell_id,
         "scope_ref": cell_input.scope_ref,
         "cell_budget_before_id": cell_budget.budget_id,
-        "global_budget_before_id": cell_budget.budget_id,
+        "global_budget_before_id": global_budget.budget_id,
         "dependency_queue_entry_ids": [item.queue_entry_id for item in dependencies],
         "dependency_queue_artifact_ids": [
             artifact_by_queue[item.queue_entry_id].artifact_id
@@ -7228,12 +7522,15 @@ def _g2e4_complete_local_node_v01(
         cell_input=cell_input,
         dependencies=dependencies,
     )
-    running_budget = _g2e4_budget_by_id_v01(state)[running.cell_budget_id]
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    running_cell = budget_by_id[running.cell_budget_id]
+    running_global = budget_by_id[running.global_budget_id]
     outputs, evidence = _g2e4_local_observation_v01(
         state,
         node=node,
         cell_input=cell_input,
-        cell_budget=running_budget,
+        cell_budget=running_cell,
+        global_budget=running_global,
         dependencies=dependencies,
     )
     finish_decision = _g2e4_evaluate_queue_transition_v01(
@@ -7242,20 +7539,18 @@ def _g2e4_complete_local_node_v01(
         node=node,
         current_entry=running,
         cell_input=cell_input,
-        cell_budget=running_budget,
-        global_budget=running_budget,
+        cell_budget=running_cell,
+        global_budget=running_global,
         dependencies=dependencies,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
     )
-    finish_budget = _g2e4_build_budget_successor_v01(
+    finish_cell, finish_global = _g2e4_advance_budget_pair_v01(
         state,
-        state["budgets"][-1],
+        cell_input=cell_input,
         event="FINISH_NODE",
         transition_decision=finish_decision,
-        cell_input=cell_input,
     )
-    state["budgets"] = (*state["budgets"], finish_budget)
     validating, validating_artifact = _g2e4_append_queue_target_v01(
         state,
         current_entry=running,
@@ -7263,8 +7558,8 @@ def _g2e4_complete_local_node_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=finish_decision,
-        cell_budget_after=finish_budget,
-        global_budget_after=finish_budget,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
         dependencies=dependencies,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
@@ -7275,8 +7570,8 @@ def _g2e4_complete_local_node_v01(
         node=node,
         current_entry=validating,
         cell_input=cell_input,
-        cell_budget=finish_budget,
-        global_budget=finish_budget,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
         dependencies=dependencies,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
@@ -7288,8 +7583,8 @@ def _g2e4_complete_local_node_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=terminal_decision,
-        cell_budget_after=finish_budget,
-        global_budget_after=finish_budget,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
         dependencies=dependencies,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
@@ -7314,28 +7609,28 @@ def _g2e4_finish_report_node_v01(
         cell_input=cell_input,
         dependencies=dependencies,
     )
-    running_budget = _g2e4_budget_by_id_v01(state)[running.cell_budget_id]
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    running_cell = budget_by_id[running.cell_budget_id]
+    running_global = budget_by_id[running.global_budget_id]
     finish_decision = _g2e4_evaluate_queue_transition_v01(
         state,
         source_artifact=running_artifact,
         node=node,
         current_entry=running,
         cell_input=cell_input,
-        cell_budget=running_budget,
-        global_budget=running_budget,
+        cell_budget=running_cell,
+        global_budget=running_global,
         dependencies=dependencies,
         observed_output_refs=(observed_output_ref,),
         observed_evidence_refs=(observed_evidence_ref,),
         validation_report=validation_report,
     )
-    finish_budget = _g2e4_build_budget_successor_v01(
+    finish_cell, finish_global = _g2e4_advance_budget_pair_v01(
         state,
-        state["budgets"][-1],
+        cell_input=cell_input,
         event="FINISH_NODE",
         transition_decision=finish_decision,
-        cell_input=cell_input,
     )
-    state["budgets"] = (*state["budgets"], finish_budget)
     validating, validating_artifact = _g2e4_append_queue_target_v01(
         state,
         current_entry=running,
@@ -7343,8 +7638,8 @@ def _g2e4_finish_report_node_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=finish_decision,
-        cell_budget_after=finish_budget,
-        global_budget_after=finish_budget,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
         dependencies=dependencies,
         observed_output_refs=(observed_output_ref,),
         observed_evidence_refs=(observed_evidence_ref,),
@@ -7355,8 +7650,8 @@ def _g2e4_finish_report_node_v01(
         node=node,
         current_entry=validating,
         cell_input=cell_input,
-        cell_budget=finish_budget,
-        global_budget=finish_budget,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
         dependencies=dependencies,
         observed_output_refs=(observed_output_ref,),
         observed_evidence_refs=(observed_evidence_ref,),
@@ -7369,11 +7664,105 @@ def _g2e4_finish_report_node_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=terminal_decision,
-        cell_budget_after=finish_budget,
-        global_budget_after=finish_budget,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
         dependencies=dependencies,
         observed_output_refs=(observed_output_ref,),
         observed_evidence_refs=(observed_evidence_ref,),
+    )
+
+
+def _g2e4_finish_parent_slot_v01(
+    state: dict[str, object],
+    *,
+    running: object,
+    running_artifact: KernelArtifactV01,
+    node: object,
+    parent_input: object,
+    dependencies: tuple[object, ...],
+    child_result: object,
+    child_result_artifact: KernelArtifactV01,
+) -> tuple[object, KernelArtifactV01]:
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    running_cell = budget_by_id[running.cell_budget_id]
+    running_global = budget_by_id[running.global_budget_id]
+    finish_decision = _g2e4_evaluate_queue_transition_v01(
+        state,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=parent_input,
+        cell_budget=running_cell,
+        global_budget=running_global,
+        dependencies=dependencies,
+        queue_reason_codes=child_result.reason_codes,
+        observed_output_refs=(child_result_artifact.artifact_id,),
+        observed_evidence_refs=child_result.evidence_refs,
+        advisory_refs=(
+            child_result.post_vv_report_ref,
+            child_result.gt_advisory_ref,
+        ),
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+    finish_cell, finish_global = _g2e4_advance_budget_pair_v01(
+        state,
+        cell_input=parent_input,
+        event="FINISH_NODE",
+        transition_decision=finish_decision,
+    )
+    validating, validating_artifact = _g2e4_append_queue_target_v01(
+        state,
+        current_entry=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=parent_input,
+        transition_decision=finish_decision,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=child_result.reason_codes,
+        observed_output_refs=(child_result_artifact.artifact_id,),
+        observed_evidence_refs=child_result.evidence_refs,
+        advisory_refs=(
+            child_result.post_vv_report_ref,
+            child_result.gt_advisory_ref,
+        ),
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+    terminal_decision = _g2e4_evaluate_queue_transition_v01(
+        state,
+        source_artifact=validating_artifact,
+        node=node,
+        current_entry=validating,
+        cell_input=parent_input,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
+    )
+    return _g2e4_append_queue_target_v01(
+        state,
+        current_entry=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=parent_input,
+        transition_decision=terminal_decision,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+        local_child_result=child_result,
+        local_child_result_artifact=child_result_artifact,
     )
 
 
@@ -7384,11 +7773,13 @@ def _g2e4_finish_parent_return_v01(
     node: object,
     cell_input: object,
     pre_terminals: tuple[object, ...],
+    child_results: tuple[object, ...],
+    partial_failures: tuple[object, ...],
     proposal: dict[str, object],
     post_vv_report: dict[str, object],
     gt_advisory_report: dict[str, object],
     validation_reports: tuple[object, ...],
-) -> tuple[object, KernelArtifactV01, object]:
+) -> tuple[object, KernelArtifactV01, object, object]:
     dependencies = _g2e4_dependencies_v01(state, initial)
     running, running_artifact = _g2e4_ready_and_start_node_v01(
         state,
@@ -7403,22 +7794,24 @@ def _g2e4_finish_parent_return_v01(
     evidence = tuple(item["ref_id"] for item in proposal_evidence)
     family = {
         "pre_post_vv_terminal_queue_entries": pre_terminals,
-        "child_results": (),
-        "partial_failures": (),
+        "child_results": child_results,
+        "partial_failures": partial_failures,
         "result_proposal": proposal,
         "post_vv_report": post_vv_report,
         "gt_advisory_report": gt_advisory_report,
         "validation_reports": validation_reports,
     }
-    running_budget = _g2e4_budget_by_id_v01(state)[running.cell_budget_id]
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    running_cell = budget_by_id[running.cell_budget_id]
+    running_global = budget_by_id[running.global_budget_id]
     finish_decision = _g2e4_evaluate_queue_transition_v01(
         state,
         source_artifact=running_artifact,
         node=node,
         current_entry=running,
         cell_input=cell_input,
-        cell_budget=running_budget,
-        global_budget=running_budget,
+        cell_budget=running_cell,
+        global_budget=running_global,
         dependencies=dependencies,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
@@ -7428,14 +7821,12 @@ def _g2e4_finish_parent_return_v01(
         ),
         parent_return_family=family,
     )
-    finish_budget = _g2e4_build_budget_successor_v01(
+    finish_cell, finish_global = _g2e4_advance_budget_pair_v01(
         state,
-        state["budgets"][-1],
+        cell_input=cell_input,
         event="FINISH_NODE",
         transition_decision=finish_decision,
-        cell_input=cell_input,
     )
-    state["budgets"] = (*state["budgets"], finish_budget)
     validating, validating_artifact = _g2e4_append_queue_target_v01(
         state,
         current_entry=running,
@@ -7443,8 +7834,8 @@ def _g2e4_finish_parent_return_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=finish_decision,
-        cell_budget_after=finish_budget,
-        global_budget_after=finish_budget,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
         dependencies=dependencies,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
@@ -7459,8 +7850,8 @@ def _g2e4_finish_parent_return_v01(
         node=node,
         current_entry=validating,
         cell_input=cell_input,
-        cell_budget=finish_budget,
-        global_budget=finish_budget,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
         dependencies=dependencies,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
@@ -7477,8 +7868,8 @@ def _g2e4_finish_parent_return_v01(
         node=node,
         cell_input=cell_input,
         transition_decision=terminal_decision,
-        cell_budget_after=finish_budget,
-        global_budget_after=finish_budget,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
         dependencies=dependencies,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
@@ -7487,16 +7878,267 @@ def _g2e4_finish_parent_return_v01(
             gt_advisory_report["gt_report_id"],
         ),
     )
-    final_budget = _g2e4_build_budget_successor_v01(
+    final_cell, final_global = _g2e4_advance_budget_pair_v01(
         state,
-        state["budgets"][-1],
+        cell_input=cell_input,
         event="FINALIZE",
         transition_decision=terminal_decision,
-        cell_input=cell_input,
         budget_state="FINAL",
     )
-    state["budgets"] = (*state["budgets"], final_budget)
-    return terminal, terminal_artifact, final_budget
+    return terminal, terminal_artifact, final_cell, final_global
+
+
+def _g2e4_result_material_v01(
+    *,
+    cell_input: object,
+    pre_terminals: tuple[object, ...],
+    child_results: tuple[object, ...],
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    if any(item.state != "COMPLETED" for item in pre_terminals) or any(
+        item.outcome != "COMPLETED" for item in child_results
+    ):
+        raise ValueError("g2d_result_proposal_invalid")
+    outputs = _ordered_unique_v01(
+        tuple(
+            ref
+            for item in (*pre_terminals, *child_results)
+            for ref in (
+                item.observed_output_refs
+                if hasattr(item, "observed_output_refs")
+                else item.accepted_output_refs
+            )
+        )
+    )
+    evidence = _ordered_unique_v01(
+        (
+            *(ref for item in pre_terminals for ref in item.observed_evidence_refs),
+            *(ref for item in child_results for ref in item.evidence_refs),
+        )
+    )
+    if cell_input.parent_cell_id is not None:
+        activation_parent_id = pre_terminals[0].lineage_refs[7]
+        positions = tuple(
+            index for index, item in enumerate(evidence) if item == activation_parent_id
+        )
+        if len(positions) != 1:
+            raise ValueError("g2d_result_proposal_invalid")
+        position = positions[0]
+        evidence = evidence[:position] + evidence[position + 1 :]
+    elif child_results and any(
+        cell_input.cell_input_id in item.evidence_refs for item in child_results
+    ):
+        positions = tuple(
+            index
+            for index, item in enumerate(evidence)
+            if item == cell_input.cell_input_id
+        )
+        if len(positions) != 1:
+            raise ValueError("g2d_result_proposal_invalid")
+        position = positions[0]
+        evidence = evidence[:position] + evidence[position + 1 :]
+    if not outputs or not evidence:
+        raise ValueError("g2d_result_proposal_invalid")
+    return outputs, evidence
+
+
+def _g2e4_finalize_cell_v01(
+    state: dict[str, object],
+    *,
+    cell_input: object,
+    nodes: tuple[object, ...],
+    allocated_budget: object,
+    child_results: tuple[object, ...],
+) -> dict[str, object]:
+    initial_by_node = {
+        item.node_id: item
+        for item in state["queue_entries"]
+        if item.queue_entry_id in cell_input.ordered_initial_queue_entry_ids
+    }
+    if tuple(initial_by_node) != cell_input.ordered_node_ids:
+        raise ValueError("g2d_cell_input_invalid")
+    post_index = next(
+        index for index, node in enumerate(nodes) if node.node_kind == "POST_VV"
+    )
+    terminal_states = {"COMPLETED", "DEGRADED", "BLOCKED", "NEEDS_USER", "DEADEND"}
+    for node in nodes[:post_index]:
+        latest = {
+            (item.cell_id, item.node_id): item
+            for item in _g2e4_latest_queue_entries_v01(state)
+        }[(cell_input.cell_id, node.node_id)]
+        if latest.state in terminal_states:
+            continue
+        if node.node_kind not in {
+            "SEMANTIC_ACTOR",
+            "MEMORY_CONTEXT",
+            "FRACTAL_MERGE",
+        }:
+            raise ValueError("g2d_topology_node_invalid")
+        _g2e4_complete_local_node_v01(
+            state,
+            initial=initial_by_node[node.node_id],
+            node=node,
+            cell_input=cell_input,
+        )
+    latest = {
+        (item.cell_id, item.node_id): item
+        for item in _g2e4_latest_queue_entries_v01(state)
+    }
+    pre_terminals = tuple(
+        latest[(cell_input.cell_id, node.node_id)] for node in nodes[:post_index]
+    )
+    accepted_outputs, evidence_refs = _g2e4_result_material_v01(
+        cell_input=cell_input,
+        pre_terminals=pre_terminals,
+        child_results=child_results,
+    )
+    proposal = g2d_runtime.build_fractal_cell_result_proposal_v02(
+        source_context=state["source_context"],
+        topology=state["topology"],
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_terminals,
+        child_results=child_results,
+        partial_failures=(),
+        accepted_output_refs=accepted_outputs,
+        evidence_refs=evidence_refs,
+    )
+    proposal_report = g2d_runtime.validate_fractal_cell_result_proposal_v02(
+        proposal,
+        source_context=state["source_context"],
+        topology=state["topology"],
+        cell_input=cell_input,
+        pre_post_vv_terminal_queue_entries=pre_terminals,
+        child_results=child_results,
+        partial_failures=(),
+    )
+    source_time = (
+        state["source_context"].router_input.local_routing_snapshot.kt_asof_utc
+    )
+    post_vv_report = validate_result_proposal(proposal, checked_at=source_time)
+    post_report = g2d_runtime.validate_fractal_post_vv_report_v02(
+        post_vv_report,
+        result_proposal=proposal,
+        source_context=state["source_context"],
+    )
+    gt_advisory_report = validate_gt([post_vv_report], created_at=source_time)
+    gt_report = g2d_runtime.validate_fractal_gt_advisory_v02(
+        gt_advisory_report,
+        post_vv_report=post_vv_report,
+        source_context=state["source_context"],
+    )
+    transient_reports = (proposal_report, post_report, gt_report)
+    if any(item.status != "PASS" for item in transient_reports):
+        first = next(item for item in transient_reports if item.status != "PASS")
+        raise ValueError(first.reason_codes[0])
+    node_by_kind = {item.node_kind: item for item in nodes}
+    _g2e4_finish_report_node_v01(
+        state,
+        initial=initial_by_node[node_by_kind["POST_VV"].node_id],
+        node=node_by_kind["POST_VV"],
+        cell_input=cell_input,
+        validation_report=post_report,
+        observed_output_ref=post_vv_report["vv_report_id"],
+        observed_evidence_ref=proposal["proposal_id"],
+    )
+    _g2e4_finish_report_node_v01(
+        state,
+        initial=initial_by_node[node_by_kind["GT_ADVISORY"].node_id],
+        node=node_by_kind["GT_ADVISORY"],
+        cell_input=cell_input,
+        validation_report=gt_report,
+        observed_output_ref=gt_advisory_report["gt_report_id"],
+        observed_evidence_ref=post_vv_report["vv_report_id"],
+    )
+    _parent_terminal, _parent_artifact, final_cell, final_global = (
+        _g2e4_finish_parent_return_v01(
+            state,
+            initial=initial_by_node[node_by_kind["PARENT_RETURN"].node_id],
+            node=node_by_kind["PARENT_RETURN"],
+            cell_input=cell_input,
+            pre_terminals=pre_terminals,
+            child_results=child_results,
+            partial_failures=(),
+            proposal=proposal,
+            post_vv_report=post_vv_report,
+            gt_advisory_report=gt_advisory_report,
+            validation_reports=transient_reports,
+        )
+    )
+    latest = {
+        (item.cell_id, item.node_id): item
+        for item in _g2e4_latest_queue_entries_v01(state)
+    }
+    terminal_entries = tuple(
+        latest[(cell_input.cell_id, node.node_id)] for node in nodes
+    )
+    artifact_by_queue = _g2e4_artifact_by_queue_id_v01(state)
+    terminal_artifacts = tuple(
+        artifact_by_queue[item.queue_entry_id] for item in terminal_entries
+    )
+    pre_result_report = g2d_runtime.validate_fractal_cell_result_against_input_v02(
+        source_context=state["source_context"],
+        topology=state["topology"],
+        cell_input=cell_input,
+        terminal_queue_entries=terminal_entries,
+        child_results=child_results,
+        partial_failures=(),
+        result_proposal=proposal,
+        post_vv_report=post_vv_report,
+        gt_advisory_report=gt_advisory_report,
+        cell_budget=final_cell,
+        global_budget=final_global,
+    )
+    if pre_result_report.status != "PASS":
+        raise ValueError(pre_result_report.reason_codes[0])
+    result = g2d_runtime.build_fractal_cell_result_v02(
+        state["topology"],
+        cell_input,
+        terminal_entries,
+        child_results,
+        accepted_output_refs=accepted_outputs,
+        evidence_refs=evidence_refs,
+        pre_result_validation_report=pre_result_report,
+        post_vv_report=post_vv_report,
+        gt_advisory_report=gt_advisory_report,
+        partial_failures=(),
+        allocated_cell_budget=allocated_budget,
+        final_cell_budget=final_cell,
+        global_budget=final_global,
+    )
+    result_artifact_by_id = {
+        item.result_id: artifact
+        for item, artifact in zip(
+            state["cell_results"], state["result_artifacts"], strict=True
+        )
+    }
+    child_result_artifacts = tuple(
+        result_artifact_by_id[item.result_id] for item in child_results
+    )
+    result_artifact = g2d_runtime.project_fractal_cell_result_kernel_artifact_v02(
+        result,
+        topology_artifact=state["topology_artifact"],
+        terminal_queue_artifacts=terminal_artifacts,
+        child_result_artifacts=child_result_artifacts,
+        source_context=state["source_context"],
+    )
+    state["cell_results"] = (*state["cell_results"], result)
+    state["result_artifacts"] = (*state["result_artifacts"], result_artifact)
+    state["runtime_artifacts"] = (*state["runtime_artifacts"], result_artifact)
+    state["result_proposals"] = (*state["result_proposals"], proposal)
+    state["post_vv_reports"] = (*state["post_vv_reports"], post_vv_report)
+    state["gt_advisory_reports"] = (
+        *state["gt_advisory_reports"],
+        gt_advisory_report,
+    )
+    state["pre_result_reports"] = (
+        *state["pre_result_reports"],
+        pre_result_report,
+    )
+    return {
+        "result": result,
+        "result_artifact": result_artifact,
+        "final_cell_budget": final_cell,
+        "completion_global_budget": final_global,
+    }
 
 
 def _g2e4_observed_work_context_v01(
@@ -7544,12 +8186,44 @@ def _g2e4_observed_work_context_v01(
     )
     if not direct_node_ids:
         raise ValueError("g2e_topology_binding_mismatch")
+    ledger = _g2e4_baseline_runtime_artifact_ledger_v01(baseline)
+    plan_source_by_id = {
+        item.artifact_id: item
+        for item in source_context.baseline_source_artifacts
+    }
+    selected_rows = tuple(
+        row
+        for item in plan.ordered_affected_artifact_ids
+        for row in (
+            _g2e4_resolve_runtime_artifact_projection_v01(
+                source_artifact=plan_source_by_id[item],
+                ledger=ledger,
+            ),
+        )
+        if row is not None
+        and row["ownership_class"] == "CELL_QUEUE"
+        and row["queue_entry"].predecessor_queue_entry_id is None
+    )
+    if len(selected_rows) != 1:
+        raise ValueError("g2e_topology_binding_mismatch")
+    selected_cell_id = selected_rows[0]["cell_input"].cell_id
+    if selected_cell_id not in plan.ordered_affected_cell_ids:
+        raise ValueError("g2e_topology_binding_mismatch")
+    selected_cell_input = next(
+        (
+            item
+            for item in baseline.cell_inputs
+            if item.cell_id == selected_cell_id
+        ),
+        None,
+    )
+    if selected_cell_input is None:
+        raise ValueError("g2e_topology_binding_mismatch")
     binding_artifacts: list[KernelArtifactV01] = []
     for node_id in direct_node_ids:
         node = next(item for item in baseline.topology_nodes if item.node_id == node_id)
-        cell_input = next(
-            item for item in baseline.cell_inputs if node_id in item.ordered_node_ids
-        )
+        if node_id not in selected_cell_input.ordered_node_ids:
+            raise ValueError("g2e_topology_binding_mismatch")
         for source_binding in source_bindings:
             baseline_source_artifact = source_by_id[
                 source_binding.baseline_source_artifact_id
@@ -7579,7 +8253,7 @@ def _g2e4_observed_work_context_v01(
                 g2d_runtime.project_runtime_observed_work_binding_kernel_artifact_v02(
                     baseline_execution_bundle=baseline,
                     node=node,
-                    cell_input=cell_input,
+                    cell_input=selected_cell_input,
                     baseline_source_artifact=baseline_source_artifact,
                     observed_source_artifact=observed_source_artifact,
                     changed_full_artifact_pointers=pointers,
@@ -7607,7 +8281,7 @@ def _g2e4_observed_work_context_v01(
                 g2d_runtime.project_runtime_observed_work_binding_kernel_artifact_v02(
                     baseline_execution_bundle=baseline,
                     node=node,
-                    cell_input=cell_input,
+                    cell_input=selected_cell_input,
                     baseline_source_artifact=baseline_source_artifact,
                     observed_source_artifact=observed_source_artifact,
                     changed_full_artifact_pointers=tuple(
@@ -7651,7 +8325,410 @@ def _g2e4_observed_work_context_v01(
     return context
 
 
-def _g2e4_execute_granular_g2d_v01(
+def _g2e4_selective_prefix_state_v01(
+    *,
+    baseline: FractalRuntimeExecutionBundleV02,
+    plan: SelectiveRecomputationPlanV01,
+    observed_context: object,
+    transition_registry: object,
+    required_reports: tuple[object, ...],
+) -> dict[str, object]:
+    selected_input = next(
+        item
+        for item in baseline.cell_inputs
+        if item.cell_id == plan.ordered_affected_cell_ids[0]
+    )
+    root_input = next(item for item in baseline.cell_inputs if item.parent_cell_id is None)
+    sibling_inputs = tuple(
+        item
+        for item in baseline.cell_inputs
+        if item.parent_cell_id is not None and item.cell_id != selected_input.cell_id
+    )
+    if len(sibling_inputs) != 1:
+        raise ValueError("g2e_topology_binding_mismatch")
+    sibling_input = sibling_inputs[0]
+    queue_pairs = tuple(
+        zip(baseline.queue_entries, baseline.queue_artifacts, strict=True)
+    )
+    selected_initial_pair = next(
+        pair
+        for pair in queue_pairs
+        if pair[0].queue_entry_id
+        == selected_input.ordered_initial_queue_entry_ids[0]
+    )
+    if len(selected_initial_pair[1].parent_refs) < 2:
+        raise ValueError("g2e_topology_binding_mismatch")
+    activation_artifact_id = selected_initial_pair[1].parent_refs[1]
+    activation_index = next(
+        index
+        for index, pair in enumerate(queue_pairs)
+        if pair[1].artifact_id == activation_artifact_id
+    )
+    activation_entry, activation_artifact = queue_pairs[activation_index]
+    activation_node = next(
+        item
+        for item in baseline.topology_nodes
+        if item.node_id == activation_entry.node_id
+    )
+    if (
+        activation_entry.cell_id != root_input.cell_id
+        or activation_entry.state != "RUNNING"
+        or activation_entry.planned_child_cell_id != selected_input.cell_id
+        or activation_node.node_kind != "FRACTAL_CELL"
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    queue_entries = baseline.queue_entries[: activation_index + 1]
+    queue_artifacts = baseline.queue_artifacts[: activation_index + 1]
+    budget_index = next(
+        index
+        for index, item in enumerate(baseline.budgets)
+        if item.budget_id == activation_entry.global_budget_id
+    )
+    budgets = baseline.budgets[: budget_index + 1]
+    budget_ids = {item.budget_id for item in budgets}
+    if any(
+        item.cell_budget_id not in budget_ids or item.global_budget_id not in budget_ids
+        for item in queue_entries
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    cell_inputs = tuple(
+        item
+        for item in baseline.cell_inputs
+        if item.cell_id in {root_input.cell_id, sibling_input.cell_id}
+    )
+    scope_projections = tuple(
+        item
+        for item in baseline.scope_projections
+        if item.child_cell_id == sibling_input.cell_id
+    )
+    if cell_inputs != (root_input, sibling_input) or len(scope_projections) != 1:
+        raise ValueError("g2e_topology_binding_mismatch")
+    sibling_result_index = next(
+        index
+        for index, item in enumerate(baseline.cell_results)
+        if item.cell_id == sibling_input.cell_id
+    )
+    cell_results = (baseline.cell_results[sibling_result_index],)
+    result_artifacts = (baseline.result_artifacts[sibling_result_index],)
+    result_proposals = (baseline.result_proposals[sibling_result_index],)
+    post_vv_reports = (baseline.post_vv_reports[sibling_result_index],)
+    gt_advisory_reports = (baseline.gt_advisory_reports[sibling_result_index],)
+    proposal_id = result_proposals[0]["proposal_id"]
+    pre_result_reports = tuple(
+        item
+        for item in baseline.validation_reports
+        if item.validation_target == "CELL_RESULT_PRECONDITIONS"
+        and item.validated_object_id == proposal_id
+    )
+    if len(pre_result_reports) != 1:
+        raise ValueError("g2e_topology_binding_mismatch")
+    scope_ids = {item.projection_id for item in scope_projections}
+    input_ids = {item.cell_input_id for item in cell_inputs}
+    scope_reports = tuple(
+        item
+        for item in baseline.validation_reports
+        if item.validation_target == "SCOPE_PROJECTION_AGAINST_SOURCES"
+        and item.validated_object_id in scope_ids
+    )
+    input_reports = tuple(
+        item
+        for item in baseline.validation_reports
+        if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+        and item.validated_object_id in input_ids
+    )
+    if len(scope_reports) != 1 or len(input_reports) != 2:
+        raise ValueError("g2e_topology_binding_mismatch")
+    trace_artifact_refs = baseline.runtime_trace.abi_artifact_refs
+    topology_artifact_id = baseline.topology_artifact.artifact_id
+    if (
+        not trace_artifact_refs
+        or trace_artifact_refs[0] != topology_artifact_id
+        or trace_artifact_refs.count(topology_artifact_id) != 1
+        or trace_artifact_refs.count(activation_artifact_id) != 1
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    activation_runtime_index = trace_artifact_refs.index(activation_artifact_id)
+    if activation_runtime_index < 1:
+        raise ValueError("g2e_topology_binding_mismatch")
+    runtime_artifact_ids = trace_artifact_refs[
+        1 : activation_runtime_index + 1
+    ]
+    artifact_by_id = {
+        item.artifact_id: item
+        for item in (*baseline.queue_artifacts, *baseline.result_artifacts)
+    }
+    if (
+        topology_artifact_id in artifact_by_id
+        or any(item not in artifact_by_id for item in runtime_artifact_ids)
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    runtime_artifacts = tuple(
+        artifact_by_id[item] for item in runtime_artifact_ids
+    )
+    state: dict[str, object] = {
+        "source_context": baseline.source_context,
+        "observed_work_context": observed_context,
+        "topology": baseline.topology,
+        "transition_registry": transition_registry,
+        "topology_transition": baseline.transition_decisions[0],
+        "topology_artifact": baseline.topology_artifact,
+        "source_binding": baseline.source_binding,
+        "topology_seed": baseline.topology_seed,
+        "topology_nodes": baseline.topology_nodes,
+        "topology_edges": baseline.topology_edges,
+        "runtime_assignments": baseline.runtime_assignments,
+        "base_reports": required_reports,
+        "scope_reports": scope_reports,
+        "input_reports": input_reports,
+        "prefix_reports": (),
+        "budgets": budgets,
+        "queue_entries": queue_entries,
+        "queue_artifacts": queue_artifacts,
+        "runtime_artifacts": runtime_artifacts,
+        "queue_decisions": baseline.transition_decisions[1 : 1 + len(queue_entries)],
+        "cell_inputs": cell_inputs,
+        "scope_projections": scope_projections,
+        "revise_observations": (),
+        "partial_failures": (),
+        "backpressure_states": (),
+        "cell_results": cell_results,
+        "result_artifacts": result_artifacts,
+        "result_proposals": result_proposals,
+        "post_vv_reports": post_vv_reports,
+        "gt_advisory_reports": gt_advisory_reports,
+        "pre_result_reports": pre_result_reports,
+        "selected_baseline_input": selected_input,
+        "sibling_input": sibling_input,
+        "root_input": root_input,
+        "activation_entry": activation_entry,
+        "activation_artifact": activation_artifact,
+        "activation_node": activation_node,
+    }
+    _g2e4_refresh_prefix_reports_v01(state)
+    return state
+
+
+def _g2e4_activate_selected_child_v01(
+    state: dict[str, object],
+) -> dict[str, object]:
+    source = state["source_context"]
+    topology = state["topology"]
+    parent_input = state["root_input"]
+    selected_baseline_input = state["selected_baseline_input"]
+    slot_running = state["activation_entry"]
+    slot_artifact = state["activation_artifact"]
+    canonical_child_index = parent_input.ordered_planned_child_cell_ids.index(
+        selected_baseline_input.cell_id
+    )
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    allocation_parent = budget_by_id[parent_input.cell_budget_id]
+    _parent_budget, live_global = _g2e4_live_budget_heads_v01(
+        state, parent_input.cell_id
+    )
+    queue_by_id = {item.queue_entry_id: item for item in state["queue_entries"]}
+    allocation_queues = tuple(
+        queue_by_id[item] for item in parent_input.ordered_initial_queue_entry_ids
+    )
+    child_allocated = g2d_runtime.build_fractal_runtime_budget_v02(
+        policy=source.runtime_policy,
+        topology_seed=state["topology_seed"],
+        allocation_parent_budget=allocation_parent,
+        predecessor_budget=None,
+        owning_cell_id=selected_baseline_input.cell_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        budget_state="ALLOCATED",
+        budget_event_kind="INITIAL_ALLOCATION",
+        budget_context_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+        transition_decision=None,
+        paired_cell_budget=None,
+        child_result=None,
+    )
+    projection = g2d_runtime.project_parent_child_scope_v02(
+        source_context=source,
+        topology=topology,
+        parent_input=parent_input,
+        child_cell_id=selected_baseline_input.cell_id,
+        child_scope_ref=topology.accepted_scope_ref,
+        parent_budget=allocation_parent,
+        child_budget=child_allocated,
+        global_budget=live_global,
+    )
+    child_active = _g2e4_build_budget_successor_v01(
+        state,
+        child_allocated,
+        event="ACTIVATE",
+        cell_input=parent_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=selected_baseline_input.cell_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+    )
+    global_active = _g2e4_build_budget_successor_v01(
+        state,
+        live_global,
+        event="ACTIVATE",
+        cell_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+        paired_cell_budget=child_active,
+    )
+    child_create = _g2e4_build_budget_successor_v01(
+        state,
+        child_active,
+        event="CELL_CREATE",
+        cell_input=parent_input,
+        allocation_parent=allocation_parent,
+        owning_cell_id=selected_baseline_input.cell_id,
+        budget_scope="CHILD_CELL_LOCAL",
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+    )
+    global_create = _g2e4_build_budget_successor_v01(
+        state,
+        global_active,
+        event="CELL_CREATE",
+        cell_input=parent_input,
+        canonical_child_index=canonical_child_index,
+        allocation_queue_entries=allocation_queues,
+        paired_cell_budget=child_create,
+    )
+    state["budgets"] = (
+        *state["budgets"],
+        child_allocated,
+        child_active,
+        global_active,
+        child_create,
+        global_create,
+    )
+    state["scope_projections"] = (*state["scope_projections"], projection)
+    scope_report = g2d_runtime.validate_parent_child_scope_against_sources_v02(
+        projection,
+        source_context=source,
+        topology=topology,
+        parent_input=parent_input,
+        parent_budget=allocation_parent,
+        child_budget=child_allocated,
+        global_budget=live_global,
+    )
+    if scope_report.status != "PASS":
+        raise ValueError(scope_report.reason_codes[0])
+    state["scope_reports"] = (*state["scope_reports"], scope_report)
+    _g2e4_refresh_prefix_reports_v01(state)
+    child_nodes = tuple(
+        item
+        for item in state["topology_nodes"]
+        if item.node_id in selected_baseline_input.ordered_node_ids
+    )
+    if tuple(item.node_id for item in child_nodes) != (
+        selected_baseline_input.ordered_node_ids
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    admission_decisions = tuple(
+        _g2e4_evaluate_queue_transition_v01(
+            state,
+            source_artifact=state["topology_artifact"],
+            node=node,
+            current_entry=None,
+            cell_input=None,
+            cell_budget=child_create,
+            global_budget=global_create,
+            cell_id=selected_baseline_input.cell_id,
+            parent_cell_id=parent_input.cell_id,
+            cell_depth=selected_baseline_input.cell_depth,
+            scope_ref=projection.child_scope_ref,
+        )
+        for node in child_nodes
+    )
+    initial_entries = g2d_runtime.admit_runtime_execution_topology_v02(
+        source_context=source,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        topology_transition_decision=state["topology_transition"],
+        cell_id=selected_baseline_input.cell_id,
+        parent_cell_id=parent_input.cell_id,
+        parent_slot_artifact=slot_artifact,
+        cell_depth=selected_baseline_input.cell_depth,
+        scope_ref=projection.child_scope_ref,
+        cell_budget=child_create,
+        global_budget=global_create,
+        projected_nodes=child_nodes,
+        planned_child_cell_ids=(),
+        admission_decisions=admission_decisions,
+        cell_instantiation_order=(
+            *(item.cell_id for item in state["cell_inputs"]),
+            selected_baseline_input.cell_id,
+        ),
+        **_g2e4_prefix_arguments_v01(state),
+    )
+    initial_artifacts: list[KernelArtifactV01] = []
+    for entry, decision in zip(initial_entries, admission_decisions, strict=True):
+        next_entries = (*state["queue_entries"], entry)
+        artifact = g2d_runtime.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            entry,
+            topology_artifact=state["topology_artifact"],
+            predecessor_artifact=None,
+            activation_parent_artifact=slot_artifact,
+            local_child_result_artifact=None,
+            source_context=source,
+            **_g2e4_prefix_arguments_v01(
+                state,
+                settled_queue_entry_log=next_entries,
+            ),
+        )
+        state["queue_entries"] = next_entries
+        state["queue_artifacts"] = (*state["queue_artifacts"], artifact)
+        state["runtime_artifacts"] = (*state["runtime_artifacts"], artifact)
+        state["queue_decisions"] = (*state["queue_decisions"], decision)
+        initial_artifacts.append(artifact)
+        _g2e4_refresh_prefix_reports_v01(state)
+    child_input = g2d_runtime.build_fractal_cell_input_from_queue_v02(
+        source_context=source,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        cell_id=selected_baseline_input.cell_id,
+        parent_cell_id=parent_input.cell_id,
+        parent_input=parent_input,
+        parent_slot_artifact=slot_artifact,
+        scope_projection=projection,
+        cell_budget=child_create,
+        global_budget=global_create,
+        initial_queue_entries=initial_entries,
+        initial_queue_artifacts=tuple(initial_artifacts),
+        ordered_planned_child_cell_ids=(),
+        **_g2e4_prefix_arguments_v01(state),
+    )
+    input_report = g2d_runtime.validate_fractal_cell_input_against_sources_v02(
+        child_input,
+        source_context=source,
+        topology=topology,
+        topology_artifact=state["topology_artifact"],
+        parent_input=parent_input,
+        parent_slot_artifact=slot_artifact,
+        scope_projection=projection,
+        cell_budget=child_create,
+        global_budget=global_create,
+        queue_entries=initial_entries,
+        queue_artifacts=tuple(initial_artifacts),
+        **_g2e4_prefix_arguments_v01(state),
+    )
+    if input_report.status != "PASS":
+        raise ValueError(input_report.reason_codes[0])
+    state["cell_inputs"] = (*state["cell_inputs"], child_input)
+    state["input_reports"] = (*state["input_reports"], input_report)
+    _g2e4_refresh_prefix_reports_v01(state)
+    return {
+        "cell_input": child_input,
+        "nodes": child_nodes,
+        "initial_entries": initial_entries,
+        "allocated_budget": child_allocated,
+        "canonical_child_index": canonical_child_index,
+    }
+
+
+def _g2e4_retired_root_only_executor_v01(
     *,
     plan: SelectiveRecomputationPlanV01,
     source_context: ContinuousDeltaSourceContextV01,
@@ -7677,7 +8754,6 @@ def _g2e4_execute_granular_g2d_v01(
         tuple(item.node_id for item in nodes) != plan.ordered_work_node_ids
         or observed_context.ordered_execution_node_ids
         != plan.ordered_work_node_ids
-        or any(item.node_kind == "FRACTAL_CELL" for item in nodes)
     ):
         raise ValueError("g2e_topology_binding_mismatch")
     failure_branch_operations = (
@@ -8195,6 +9271,339 @@ def _g2e4_execute_granular_g2d_v01(
         gt_advisory_reports=(gt_advisory_report,),
         cell_results=(root_result,),
         result_artifacts=(result_artifact,),
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        transition_decisions=(
+            topology_transition,
+            *state["queue_decisions"],
+            parent_return,
+        ),
+        causal_consumption_refs=causal_refs,
+        observed_work_context=observed_context,
+    )
+    final_report = g2d_runtime.validate_fractal_runtime_execution_bundle_v02(bundle)
+    if final_report.status != "PASS":
+        raise ValueError(final_report.reason_codes[0])
+    return bundle
+
+
+def _g2e4_execute_granular_g2d_v01(
+    *,
+    plan: SelectiveRecomputationPlanV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    source_bindings: tuple[DeltaSourceBindingV01, ...],
+    changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
+    changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+) -> FractalRuntimeExecutionBundleV02:
+    baseline = source_context.baseline_g2d_execution_bundle
+    observed_context = _g2e4_observed_work_context_v01(
+        plan=plan,
+        source_context=source_context,
+        source_bindings=source_bindings,
+        changed_field_bindings=changed_field_bindings,
+        changed_artifact_bindings=changed_artifact_bindings,
+        execution_scope="SELECTIVE",
+    )
+    if (
+        len(plan.ordered_affected_cell_ids) != 1
+        or len(plan.ordered_work_node_ids) >= len(baseline.topology.ordered_node_ids)
+        or observed_context.ordered_affected_cell_ids
+        != plan.ordered_affected_cell_ids
+        or observed_context.ordered_execution_node_ids
+        != plan.ordered_work_node_ids
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    failure_branch_operations = (
+        g2d_runtime.evaluate_fractal_revise_observation_v02,
+        g2d_runtime.record_fractal_partial_failure_v02,
+        g2d_runtime.evaluate_fractal_backpressure_v02,
+    )
+    if not all(callable(operation) for operation in failure_branch_operations):
+        raise ValueError("g2e_recomputation_result_invalid")
+    source = baseline.source_context
+    topology = baseline.topology
+    binding_structure_report = (
+        g2d_runtime.validate_runtime_topology_source_binding_v02(
+            baseline.source_binding
+        )
+    )
+    required_reports = (
+        g2d_runtime.validate_fractal_runtime_source_context_v02(source),
+        g2d_runtime.validate_runtime_topology_source_binding_against_g2c_v02(
+            baseline.source_binding,
+            source_context=source,
+        ),
+        g2d_runtime.validate_runtime_topology_seed_v02(baseline.topology_seed),
+        g2d_runtime.validate_runtime_execution_topology_against_sources_v02(
+            topology,
+            source_context=source,
+        ),
+    )
+    if binding_structure_report.status != "PASS":
+        raise ValueError(binding_structure_report.reason_codes[0])
+    if any(item.status != "PASS" for item in required_reports):
+        first = next(item for item in required_reports if item.status != "PASS")
+        raise ValueError(first.reason_codes[0])
+    transition_registry = (
+        transition_runtime.build_fractal_runtime_transition_registry_profile_v02()
+    )
+    topology_transition = baseline.transition_decisions[0]
+    if transition_runtime.validate_fractal_runtime_transition_decision_v02(
+        topology_transition,
+        registry=transition_registry,
+        source_artifact=source.route_eligibility_artifact,
+        target_artifact=baseline.topology_artifact,
+    ):
+        raise ValueError("g2d_transition_decision_substituted")
+    state = _g2e4_selective_prefix_state_v01(
+        baseline=baseline,
+        plan=plan,
+        observed_context=observed_context,
+        transition_registry=transition_registry,
+        required_reports=required_reports,
+    )
+    child_context = _g2e4_activate_selected_child_v01(state)
+    selected_completion = _g2e4_finalize_cell_v01(
+        state,
+        cell_input=child_context["cell_input"],
+        nodes=child_context["nodes"],
+        allocated_budget=child_context["allocated_budget"],
+        child_results=(),
+    )
+    selected_result = selected_completion["result"]
+    selected_result_artifact = selected_completion["result_artifact"]
+    aggregate_budget = _g2e4_build_budget_successor_v01(
+        state,
+        selected_completion["completion_global_budget"],
+        event="CHILD_AGGREGATE",
+        cell_input=state["root_input"],
+        canonical_child_index=child_context["canonical_child_index"],
+        paired_cell_budget=selected_completion["final_cell_budget"],
+        child_result=selected_result,
+    )
+    state["budgets"] = (*state["budgets"], aggregate_budget)
+    slot_dependencies = _g2e4_dependencies_v01(
+        state,
+        state["activation_entry"],
+    )
+    _g2e4_finish_parent_slot_v01(
+        state,
+        running=state["activation_entry"],
+        running_artifact=state["activation_artifact"],
+        node=state["activation_node"],
+        parent_input=state["root_input"],
+        dependencies=slot_dependencies,
+        child_result=selected_result,
+        child_result_artifact=selected_result_artifact,
+    )
+    sibling_result = next(
+        item
+        for item in state["cell_results"]
+        if item.cell_id == state["sibling_input"].cell_id
+    )
+    root_completion = _g2e4_finalize_cell_v01(
+        state,
+        cell_input=state["root_input"],
+        nodes=baseline.topology_nodes,
+        allocated_budget=baseline.budgets[0],
+        child_results=(sibling_result, selected_result),
+    )
+    root_result = root_completion["result"]
+    root_result_artifact = root_completion["result_artifact"]
+    final_global_budget = root_completion["completion_global_budget"]
+    parent_return = g2d_runtime.evaluate_fractal_parent_return_transition_v02(
+        source_context=source,
+        root_result=root_result,
+        root_result_artifact=root_result_artifact,
+        ordered_cell_results=state["cell_results"],
+        transition_registry=transition_registry,
+    )
+    runtime_trace = g2d_runtime.build_fractal_runtime_trace_v02(
+        topology,
+        baseline.source_binding,
+        topology_artifact=baseline.topology_artifact,
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        state_transition_decisions=state["queue_decisions"],
+        cell_inputs=state["cell_inputs"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_abi_artifacts=state["runtime_artifacts"],
+        scope_projections=state["scope_projections"],
+        revise_observations=state["revise_observations"],
+        partial_failures=state["partial_failures"],
+        backpressure_states=state["backpressure_states"],
+        budgets=state["budgets"],
+        topology_transition_decision=topology_transition,
+        parent_return_transition_decision=parent_return,
+        root_result_artifact=root_result_artifact,
+    )
+    runtime_report = g2d_runtime.aggregate_fractal_runtime_report_v02(
+        topology=topology,
+        topology_artifact=baseline.topology_artifact,
+        source_binding=baseline.source_binding,
+        cell_results=state["cell_results"],
+        queue_entries=state["queue_entries"],
+        backpressure_states=state["backpressure_states"],
+        runtime_trace=runtime_trace,
+        final_global_budget=final_global_budget,
+        parent_return_transition_decision=parent_return,
+        root_result_artifact=root_result_artifact,
+    )
+    report_artifact = g2d_runtime.project_fractal_runtime_report_kernel_artifact_v02(
+        runtime_report,
+        topology_artifact=baseline.topology_artifact,
+        result_artifacts=state["result_artifacts"],
+        source_context=source,
+    )
+    if transition_runtime.validate_fractal_runtime_transition_decision_v02(
+        parent_return,
+        registry=transition_registry,
+        source_artifact=root_result_artifact,
+        target_artifact=report_artifact,
+    ):
+        raise ValueError("g2d_transition_decision_substituted")
+    report_validation = g2d_runtime.validate_fractal_runtime_report_against_sources_v02(
+        runtime_report,
+        source_context=source,
+        source_binding=baseline.source_binding,
+        topology=topology,
+        topology_artifact=baseline.topology_artifact,
+        cell_results=state["cell_results"],
+        queue_entries=state["queue_entries"],
+        backpressure_states=state["backpressure_states"],
+        runtime_trace=runtime_trace,
+        final_global_budget=final_global_budget,
+        parent_return_transition_decision=parent_return,
+        root_result_artifact=root_result_artifact,
+    )
+    artifact_by_id = {
+        item.artifact_id: item
+        for item in (
+            baseline.topology_artifact,
+            *state["queue_artifacts"],
+            *state["result_artifacts"],
+            report_artifact,
+        )
+    }
+    runtime_artifacts = tuple(
+        artifact_by_id[item] for item in runtime_trace.abi_artifact_refs
+    )
+    stage_a = (
+        source.proposal_artifact,
+        source.decision_artifact,
+        source.route_eligibility_artifact,
+        baseline.topology_artifact,
+    )
+    stage_by_name = {
+        "STAGE_D_A": stage_a,
+        "STAGE_D_B": (*stage_a[:3], *runtime_artifacts),
+        "STAGE_D_C": (*stage_a[:3], *runtime_artifacts, report_artifact),
+    }
+    stage_reports = tuple(
+        g2d_runtime.validate_fractal_runtime_stage_bundle_v02(
+            stage=stage,
+            artifacts=artifacts,
+            source_context=source,
+            topology=topology,
+            topology_artifact=baseline.topology_artifact,
+            runtime_trace=runtime_trace,
+            queue_entries=state["queue_entries"],
+            queue_artifacts=state["queue_artifacts"],
+            cell_results=state["cell_results"],
+            result_artifacts=state["result_artifacts"],
+            runtime_report=runtime_report if stage == "STAGE_D_C" else None,
+            report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+            observed_work_context=observed_context,
+        )
+        for stage, artifacts in stage_by_name.items()
+    )
+    if any(item.status != "PASS" for item in stage_reports):
+        first = next(item for item in stage_reports if item.status != "PASS")
+        raise ValueError(first.reason_codes[0])
+    stage_c = stage_by_name["STAGE_D_C"]
+    abi_report = g2d_runtime.validate_fractal_runtime_abi_profile_v02(
+        stage_c,
+        source_context=source,
+        topology=topology,
+        topology_artifact=baseline.topology_artifact,
+        runtime_trace=runtime_trace,
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        observed_work_context=observed_context,
+    )
+    if abi_report.status != "PASS":
+        raise ValueError(abi_report.reason_codes[0])
+    causal_refs = g2d_runtime.build_fractal_runtime_causal_consumption_refs_v02(
+        source_context=source,
+        topology=topology,
+        topology_artifact=baseline.topology_artifact,
+        runtime_assignments=baseline.runtime_assignments,
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        observed_work_context=observed_context,
+    )
+    causal_report = g2d_runtime.validate_fractal_runtime_causal_consumption_refs_v02(
+        causal_refs,
+        source_context=source,
+        topology=topology,
+        topology_artifact=baseline.topology_artifact,
+        runtime_assignments=baseline.runtime_assignments,
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
+        runtime_trace=runtime_trace,
+        runtime_report=runtime_report,
+        report_artifact=report_artifact,
+        stage_d_c_artifacts=stage_c,
+        observed_work_context=observed_context,
+    )
+    if causal_report.status != "PASS":
+        raise ValueError(causal_report.reason_codes[0])
+    retained_reports = (
+        *state["prefix_reports"],
+        *state["pre_result_reports"],
+        *(
+            g2d_runtime.validate_fractal_cell_result_v02(item)
+            for item in state["cell_results"]
+        ),
+        report_validation,
+        *stage_reports,
+    )
+    bundle = g2d_runtime.build_fractal_runtime_execution_bundle_v02(
+        source_context=source,
+        source_binding=baseline.source_binding,
+        topology_seed=baseline.topology_seed,
+        budgets=state["budgets"],
+        topology_nodes=baseline.topology_nodes,
+        topology_edges=baseline.topology_edges,
+        runtime_assignments=baseline.runtime_assignments,
+        topology=topology,
+        topology_artifact=baseline.topology_artifact,
+        queue_entries=state["queue_entries"],
+        queue_artifacts=state["queue_artifacts"],
+        scope_projections=state["scope_projections"],
+        cell_inputs=state["cell_inputs"],
+        revise_observations=state["revise_observations"],
+        partial_failures=state["partial_failures"],
+        backpressure_states=state["backpressure_states"],
+        validation_reports=retained_reports,
+        result_proposals=state["result_proposals"],
+        post_vv_reports=state["post_vv_reports"],
+        gt_advisory_reports=state["gt_advisory_reports"],
+        cell_results=state["cell_results"],
+        result_artifacts=state["result_artifacts"],
         runtime_trace=runtime_trace,
         runtime_report=runtime_report,
         report_artifact=report_artifact,
@@ -8859,9 +10268,11 @@ def _g2e4_recomputed_bindings_v01(
     recomputed: FractalRuntimeExecutionBundleV02,
 ) -> tuple[RecomputedArtifactBindingV01, ...]:
     root_result = recomputed.cell_results[-1]
-    source_queue_entry = recomputed.queue_entries[0]
     bindings: list[RecomputedArtifactBindingV01] = []
-    pairs: list[tuple[KernelArtifactV01, KernelArtifactV01, str]] = []
+    result_by_cell = {item.cell_id: item for item in recomputed.cell_results}
+    pairs: list[
+        tuple[KernelArtifactV01, KernelArtifactV01, str, object]
+    ] = []
     prior_queue_rows: dict[
         tuple[str, str, str, int, int], KernelArtifactV01
     ] = {}
@@ -8891,7 +10302,10 @@ def _g2e4_recomputed_bindings_v01(
         prior = prior_queue_rows.get(key)
         if prior is None:
             raise ValueError("g2e_recomputation_result_invalid")
-        pairs.append((prior, artifact, entry.queue_entry_id))
+        owner_result = result_by_cell.get(entry.cell_id)
+        if owner_result is None:
+            raise ValueError("g2e_recomputation_result_invalid")
+        pairs.append((prior, artifact, entry.queue_entry_id, owner_result))
     prior_results = {
         (result.cell_id, result.parent_cell_id, result.outcome): artifact
         for result, artifact in zip(
@@ -8907,21 +10321,24 @@ def _g2e4_recomputed_bindings_v01(
         if prior is None:
             raise ValueError("g2e_recomputation_result_invalid")
         queue_entry_id = (
-            result.ordered_terminal_queue_entry_ids[0]
+            result.ordered_terminal_queue_entry_ids[-1]
             if result.ordered_terminal_queue_entry_ids
-            else source_queue_entry.queue_entry_id
+            else ""
         )
-        pairs.append((prior, artifact, queue_entry_id))
+        if not queue_entry_id:
+            raise ValueError("g2e_recomputation_result_invalid")
+        pairs.append((prior, artifact, queue_entry_id, result))
     pairs.append(
         (
             baseline.report_artifact,
             recomputed.report_artifact,
-            source_queue_entry.queue_entry_id,
+            root_result.ordered_terminal_queue_entry_ids[-1],
+            root_result,
         )
     )
     seen_prior_ids: set[str] = set()
     seen_new_ids: set[str] = set()
-    for prior, new, queue_entry_id in pairs:
+    for prior, new, queue_entry_id, owner_result in pairs:
         prior_payload_sha = _artifact_payload_sha256_v01(prior)
         new_payload_sha = _artifact_payload_sha256_v01(new)
         if prior.artifact_id == new.artifact_id:
@@ -8949,12 +10366,12 @@ def _g2e4_recomputed_bindings_v01(
                 derivation_refs=(
                     plan.recomputation_plan_id,
                     recomputed.observed_work_context.observed_work_context_id,
-                    root_result.result_id,
+                    owner_result.result_id,
                     recomputed.runtime_report.report_id,
                 ),
-                source_cell_id=root_result.cell_id,
+                source_cell_id=owner_result.cell_id,
                 source_queue_entry_id=queue_entry_id,
-                g2d_cell_result_ref=root_result.result_id,
+                g2d_cell_result_ref=owner_result.result_id,
                 g2d_runtime_report_ref=recomputed.runtime_report.report_id,
                 trace_refs=(
                     recomputed.runtime_trace.trace_id,

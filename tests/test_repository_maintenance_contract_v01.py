@@ -131,6 +131,32 @@ def _direct_import_roots(path: Path) -> set[str]:
             roots.add(node.module.split(".", 1)[0])
     return roots
 
+def _run_isolated_import_probe(source: str, marker: str) -> None:
+    environment = dict(os.environ)
+    environment.update(
+        {
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONHASHSEED": "0",
+            "PYTHONPATH": ".",
+        }
+    )
+    completed = subprocess.run(
+        (sys.executable, "-c", source),
+        cwd=REPOSITORY_ROOT,
+        env=environment,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, (
+        marker,
+        completed.returncode,
+        completed.stdout,
+        completed.stderr,
+    )
+    assert completed.stdout.splitlines() == [marker]
+    assert completed.stderr == ""
+
 
 def _signer_test_requires_exact_cryptography_version() -> bool:
     tree = ast.parse(
@@ -245,6 +271,100 @@ def test_pyproject_dependency_and_direct_import_contract() -> None:
     assert (
         BUILD_SYSTEM_BACKEND_ROOT_TO_REQUIREMENT[backend_root]
         in build_requirements
+    )
+
+    _run_isolated_import_probe(
+        "\n".join(
+            (
+                "import hedgehog.drs_g2b_compatibility_v01 as compatibility",
+                "assert compatibility.LegacyDRSProjectionV01.__name__ == "
+                "'LegacyDRSProjectionV01'",
+                "print('IMPORT_PROBE_DRS_FIRST=PASS')",
+            )
+        ),
+        "IMPORT_PROBE_DRS_FIRST=PASS",
+    )
+    _run_isolated_import_probe(
+        "\n".join(
+            (
+                "import demo.run_fractal_runtime_g2_d_v02 as demo_module",
+                "assert demo_module.__name__ == "
+                "'demo.run_fractal_runtime_g2_d_v02'",
+                "print('IMPORT_PROBE_G2D_DEMO_FIRST=PASS')",
+            )
+        ),
+        "IMPORT_PROBE_G2D_DEMO_FIRST=PASS",
+    )
+    _run_isolated_import_probe(
+        "\n".join(
+            (
+                "import sys",
+                "import hedgehog.kernel as kernel",
+                "assert 'hedgehog.kernel.continuous_delta_runtime_v01' "
+                "not in sys.modules",
+                "assert len(kernel.__all__) == 19",
+                "assert len(kernel._CONTINUOUS_DELTA_FACADE_NAMES_V01) == 109",
+                "assert set(kernel._CONTINUOUS_DELTA_FACADE_NAMES_V01) "
+                "<= set(dir(kernel))",
+                "assert 'hedgehog.kernel.continuous_delta_runtime_v01' "
+                "not in sys.modules",
+                "import hedgehog.kernel.continuous_delta_runtime_v01 as g2e",
+                "import hedgehog.kernel.transition_registry_v01 as transition",
+                "assert tuple(kernel._CONTINUOUS_DELTA_FACADE_NAMES_V01) "
+                "== tuple(g2e.__all__)",
+                "assert all(getattr(kernel, name) is getattr(g2e, name) "
+                "for name in g2e.__all__)",
+                "transition_names = ("
+                "'build_continuous_delta_transition_registry_profile_v01', "
+                "'validate_continuous_delta_transition_registry_profile_v01', "
+                "'continuous_delta_transition_registry_profile_to_plain_dict_v01', "
+                "'validate_continuous_delta_transition_decision_v01', "
+                "'continuous_delta_transition_decision_to_plain_dict_v01', "
+                "'rebuild_continuous_delta_transition_decision_identity_v01')",
+                "assert all(getattr(kernel, name) is getattr(transition, name) "
+                "for name in transition_names)",
+                "assert len(kernel.__all__) == 19",
+                "print('IMPORT_PROBE_KERNEL_FACADE_IDENTITY=PASS')",
+            )
+        ),
+        "IMPORT_PROBE_KERNEL_FACADE_IDENTITY=PASS",
+    )
+    _run_isolated_import_probe(
+        "\n".join(
+            (
+                "from hedgehog.kernel import DeltaSourceBindingV01",
+                "import hedgehog.kernel.continuous_delta_runtime_v01 as g2e",
+                "assert DeltaSourceBindingV01 is g2e.DeltaSourceBindingV01",
+                "print('IMPORT_PROBE_FACADE_FROM_IMPORT=PASS')",
+            )
+        ),
+        "IMPORT_PROBE_FACADE_FROM_IMPORT=PASS",
+    )
+    _run_isolated_import_probe(
+        "\n".join(
+            (
+                "import hedgehog.kernel.continuous_delta_runtime_v01 as g2e",
+                "import hedgehog.kernel as kernel",
+                "assert kernel.ContinuousDeltaExecutionBundleV01 "
+                "is g2e.ContinuousDeltaExecutionBundleV01",
+                "print('IMPORT_PROBE_G2E_FIRST=PASS')",
+            )
+        ),
+        "IMPORT_PROBE_G2E_FIRST=PASS",
+    )
+    _run_isolated_import_probe(
+        "\n".join(
+            (
+                "import hedgehog.kernel as kernel",
+                "try:",
+                "    getattr(kernel, 'THIS_G2E_FACADE_NAME_DOES_NOT_EXIST')",
+                "except AttributeError:",
+                "    print('IMPORT_PROBE_UNKNOWN_NAME=PASS')",
+                "else:",
+                "    raise AssertionError('unknown_facade_name_accepted')",
+            )
+        ),
+        "IMPORT_PROBE_UNKNOWN_NAME=PASS",
     )
 
 

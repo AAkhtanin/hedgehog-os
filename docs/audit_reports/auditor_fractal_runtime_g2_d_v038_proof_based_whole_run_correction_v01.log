@@ -1,0 +1,459 @@
+HEDGEHOG OS / FRACTAL REFLEXIVE OS
+GATE 2 / G2-D v0.3.8
+INDEPENDENT RE-AUDIT OF PROOF-BASED WHOLE-RUN CORRECTION
+AFTER POST-IMPLEMENTATION LIFECYCLE SYNCHRONIZATION
+
+1. Metadata and Audit Boundary
+
+audit_id: auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01
+audit_status: PASS
+audit_mode: independent_read_only_non_repairing
+gate_slice: G2-D
+implementation_basis_commit: 3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e
+lifecycle_sync_commit: e66c8be08e753077b6a99eeb635bf6fe25ee4b90
+implementation_parent_commit: a2d04e03d2b3b1b2b0beeaf407234ae091ae8eb7
+audit_commit: NOT_YET_KNOWN
+accepted_v038_addendum_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
+implementation_patch_sha256: dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291
+lifecycle_sync_patch_sha256: a37067e9f84aeece2df4033b4da7a345fd2628e239fa03587b07e3d44eeea86d
+owner_evidence_bundle_sha256: 51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6
+prior_failed_audit_evidence_sha256: 5e76e332f2ab8851399e0239763664b34ed30d8b671c3345b610c37e6427b293
+lifecycle_sync_evidence_sha256: 8e3e906abcdf7e0f6975781d0cad10cb908d560e14fc734a8460660232031cae
+repair_required: false
+blocker_count: 0
+g2d_status_before_reclosure: REAUDIT_PENDING
+g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
+g2e4_status: BLOCKED_PENDING_G2D_RECLOSURE
+gate2_status: NOT_CLOSED
+
+This audit used complete byte reads, Git object and ancestry inspection, strict
+JSON parsing, Python AST parsing and compilation, semantic reconstruction of
+computed constants and inventories, and safe recursive archive inspection.
+It did not import repository runtime modules and did not run pytest, project
+runtime, demos, D5, Living, Conformance, V06, providers, models, connectors,
+network operations, external DRS, or effects.
+
+2. Exact Audited Git Basis
+
+branch: main
+HEAD: e66c8be08e753077b6a99eeb635bf6fe25ee4b90
+origin/main: e66c8be08e753077b6a99eeb635bf6fe25ee4b90
+remote origin refs/heads/main: e66c8be08e753077b6a99eeb635bf6fe25ee4b90
+HEAD subject: Synchronize G2-D v0.3.8 post-implementation lifecycle
+HEAD parent: 3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e
+origin URL: https://github.com/AAkhtanin/hedgehog-os.git
+entry worktree: clean
+entry staging: empty
+entry untracked set: empty
+entry operation state: no merge, rebase, cherry-pick, revert, or bisect
+entry git diff --check: PASS
+pre-action mismatch count: 0
+
+3. Post-Implementation Lifecycle-Sync Commit
+
+The lifecycle-sync patch was reconstructed with full-index binary Git diff.
+
+sha256: a37067e9f84aeece2df4033b4da7a345fd2628e239fa03587b07e3d44eeea86d
+bytes: 36559
+LF: 515
+paths: 8
+insertions: 154
+deletions: 95
+new/deleted/renamed/mode-changed paths: 0/0/0/0
+
+Exact paths and numstat:
+10 6 AGENTS.md
+13 11 README.md
+1 1 release/claim_to_evidence_index.md
+11 7 release/current_limitations.md
+11 7 release/current_release_notes.md
+4 4 release/current_status_overlay_v01.json
+4 4 specs/machine_manifest_v0_25.json
+100 55 tests/test_repository_release_spine_v01.py
+
+All eight current postimages are mode 0644:
+AGENTS.md sha256=cd22acce62f67eb7b780e7165e5ad1264b204bdca7953042fc33d618f6cb1bf7 bytes=95227 LF=1097
+README.md sha256=5ac9397a73b945aac8300ecdb569b483bee7dabc5ba6ddc4ccbb08fbb271f59e bytes=245662 LF=3943
+release/claim_to_evidence_index.md sha256=079749d7dc1afdeb2bbc7220f5be3f76c6612a4f7b79497e7804d0c2f81a9337 bytes=11588 LF=39
+release/current_limitations.md sha256=e417fcd327fd6c49e2d0239cf109841dc0b2a947b3b3392362342e16cb09720f bytes=6891 LF=123
+release/current_release_notes.md sha256=701fede8082d57e98b8c42c79c062fb38b125333ef941c806cf5830c3b24f71a bytes=8752 LF=168
+release/current_status_overlay_v01.json sha256=4c60bbc9c89806532cf211bda833d75297b7008300ae87794653d9f6b65bbd09 bytes=8946 LF=148
+specs/machine_manifest_v0_25.json sha256=a68ec36237c0484ec69f8fd2e2c87161a73393db629f2795208bbd611373d0aa bytes=162665 LF=3453
+tests/test_repository_release_spine_v01.py sha256=7339565e19f3886a85716dbd6e367ad0257638fa1687713851c4b965f537fbbc bytes=130058 LF=3046
+
+4. Accepted v0.3.8 Contract and Historical Evidence Boundary
+
+The accepted addendum is exact:
+path: docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md
+sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
+bytes: 197537
+LF: 3828
+active revision: v0.3.8
+
+V037_IMPLEMENTATION_NONCONFORMANCE=YES
+V038_CONTRACT_SEMANTICS_CHANGED=NO
+V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING
+
+The single retained historical v0.3.7 annex reconstructed exactly:
+sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
+bytes: 185220
+LF: 3532
+
+Historical evidence remains immutable and applies only to its exact bytes:
+v0.3.7 audit sha256: c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3
+v0.3.7 checkpoint sha256: 606d9f1c516ddbe86ec63fe93fc2126ae69bfbf3f8169879a6c1933162296677
+pre-correction audit sha256: ccc367ac92ad02e005c7968d152bf7810a772db94dd671e26e5d27f30d2d72aa
+pre-correction checkpoint sha256: f5bb19741ee992605ed772a282f4374bc3949508052edb09c8b3fdbbf210c1de
+No historical audit or checkpoint certifies v0.3.8 bytes.
+
+5. Exact Implementation Commit and Postimage Ledger
+
+implementation commit: 3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e
+parent: a2d04e03d2b3b1b2b0beeaf407234ae091ae8eb7
+subject: Implement G2-D v0.3.8 proof-based whole-run correction
+patch sha256: dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291
+patch bytes: 139535
+patch LF: 2783
+paths: 10
+insertions: 1626
+deletions: 370
+new/deleted/renamed/mode-changed paths: 0/0/0/0
+
+The exact ten implementation paths were recovered from the commit object. All
+ten commit-tree postimages and modes matched the accepted ledger. Current G2-D
+runtime and G2-D test bytes remain exact after lifecycle synchronization:
+hedgehog/kernel/fractal_runtime_v02.py sha256=33d42b280944783adc1e4a2ee86bf6ecf54ff9026bb67a0036cf0f98f2ddb00f bytes=795372 LF=18147 mode=0644
+tests/test_fractal_runtime_g2_d_v02.py sha256=59a370b9d642f473f0f827af941a12cca93ea1349d2861cd1ef4243f3507bae3 bytes=538965 LF=12490 mode=0644
+
+Protected dependencies remain exact:
+schemas/fractal_runtime_v02.schema.json sha256=a70ea31721a08c9edaaeb7c7aa6a91abb2e6c92b408fd72f22f1165b4baef4e8
+demo/run_fractal_runtime_g2_d_v02.py sha256=ead2127501c15f6c8ab01eab0c95c65a838008326004bb9ce290557a2fb890ff
+hedgehog/kernel/transition_registry_v01.py sha256=31492ba73aabc7139bc2bae17dbbd7bbf5b6c8496c8b64764faebeff3c2fc107
+hedgehog/kernel/__init__.py sha256=99b2847d4dac09827b0a56cd820302052139654314ff02789363480cc98df4e0
+
+6. Geometry and Public-Surface Audit
+
+public G2-D dataclass types: 21
+serialized types: 18
+runtime-only types: 3
+schema definitions: 18
+canonical-module public functions: 116
+Transition-profile public functions: 6
+total public functions: 122
+module __all__ entries: 137
+direct package G2-D attributes: 143
+validation targets: 35
+failure stages: 30
+public reason codes: 220
+Transition rules: 17
+FractalRuntimeExecutionBundleV02 fields: 28
+G2-D test functions/items: 83/92
+Transition test functions/items: 60/268
+D5 cases/split/accepted runs: 72/36-36/10
+
+Computed and starred inventories and parametrized item counts were reconstructed
+from AST/name bindings. No public signature, type, schema, reason, target,
+stage, Transition, module __all__, or facade geometry changed.
+
+7. Local Triad and Empty Named-Policy Inventory
+
+The single private local classifier enforces exactly:
+SELECTIVE -> reason None, policy None.
+PROOF_BASED_FULL_CLOSURE -> reason AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK, policy None.
+NAMED_POLICY -> reason FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION and an accepted policy ID.
+
+The accepted named-policy inventory is the exact empty tuple. No nonempty
+policy ID is accepted. The old magic policy and legacy reason literals are
+absent from current runtime semantics. Arbitrary scope, reason, policy, proof
+reason with non-null policy, named-policy reason with null or unapproved policy,
+and SELECTIVE with whole-run fields all fail closed.
+
+8. Binding-Projector Responsibility Audit
+
+The binding projector validates only the exact baseline/observed source pair,
+stable topology/node/cell witness, local triad, canonical identity, exact
+parents and traces, and zero-authority material. It calls the local triad
+classifier and does not call the aggregate closure classifier. One binding
+artifact does not claim or prove multi-binding full closure.
+
+9. Independent Aggregate Full-Closure Proof Audit
+
+The aggregate proof accepts only a validated baseline execution bundle and
+canonical validated binding artifacts. It accepts no caller-precomputed node,
+cell, artifact, closure inventory, boolean, or PASS label. It derives direct
+work rows from binding payloads, baseline recomputable rows from cell inputs,
+queue entries/artifacts, cell results/result artifacts and the report artifact,
+and parent-closed execution rows from topology and cell-projection laws.
+
+The classifier returns only STRICT_SUBSET, FULL_CLOSURE, or INVALID. The
+context builder and structural, contextual, complete-bundle, and public-run
+validators all call the same aggregate proof and require exact rederived
+ordered material. Positive full closure is built from actual baseline objects
+and public source/binding evidence. Strict-subset whole-run, full-closure
+SELECTIVE, forged, missing, foreign, reordered, ambiguous, and unsupported
+material fail closed.
+
+10. Public Run and Complete-Bundle Audit
+
+The public run preserves the historical context=None call law. For a non-null
+context it performs structural validation, contextual source/basis validation,
+local proof-class validation, and independently rederived FULL_CLOSURE before
+the internal admission/queue/budget executor. It validates the complete
+28-field result bundle. A SELECTIVE context on the public whole-run seam returns
+(None, FAIL_CLOSED) before runtime admission and does not raise through the
+public seam.
+
+11. Activation-Witness and Stage-D Parent-Closure Audit
+
+The support-closure helper derives ancestors from exact parent refs, includes
+baseline queue/result/report activation witnesses, coalesces duplicate-equal
+support, rejects duplicate-unequal, missing, foreign, inverted, cyclic and
+unknown-parent support, and emits deterministic parent-before-child order with
+lexical artifact-ID tie-break. Stage-D overlap is admitted only for
+canonical-byte-equal artifacts. Stable root and child witnesses are rederived
+from exact public baseline material.
+
+12. Identity, Trace, Report, and Causal Propagation Audit
+
+The proof reason and Python None policy are present in exact binding payload
+material and affect binding identity. Context identity rebuild is exact.
+Binding/context IDs enter only their exact queue and cell-input lineage. The
+current trace is bound into the runtime report; report-artifact parent/trace
+material and causal rows bind the current queue, result, report and trace
+family. No direct field is claimed where the contract proves only
+cryptographic or parent/trace lineage.
+
+13. Negative Matrix and Anti-Gaming Audit
+
+Executable evidence covers unapproved nonempty policy, arbitrary or substituted
+reason/policy, empty, whitespace, sentinel and foreign policy, proof reason with
+non-null policy, named-policy reason with null policy, strict subset as
+whole-run, full closure as SELECTIVE, forged or missing closure, foreign node,
+cell or artifact, binding/context identity substitution, and a complete ID
+inventory unsupported by actual source and binding evidence.
+
+The positive family uses baseline cell inputs and node objects and public
+projector/context builders. It does not use replace for positive construction,
+a manufactured full_plan, caller PASS labels, closure booleans, or private
+helper output as public acceptance evidence. No skip, xfail, callable-only,
+hasattr-only, source-name-only, empty-tuple uniqueness, or manual PASS
+substitution was found.
+
+14. Historical None, Strict-Subset, and Counterfactual Audit
+
+The historical context=None path remains explicit. The strict-selective family
+retains a nonempty proper subset and an exact unselected sibling. Candidate and
+baseline queue/result values for that sibling remain equal; no new sibling work
+is admitted. Historical and observed-work counterfactual APIs remain separate,
+their accepted domain/material law is preserved, and no authority or effect is
+created.
+
+15. Facade and Consumer-Maintenance Audit
+
+The three maintenance commits are separate ancestors and are outside the
+ten-path implementation commit:
+10aaf866da071cfd6ff460182bc64b4311477bff - Repair kernel G2-E facade import cycle
+51ffa86fbabfb81bf5b23ed5c7993b3251e7fe9d - Align G2-C facade test with lazy G2-E package facade
+a2d04e03d2b3b1b2b0beeaf407234ae091ae8eb7 - Align G2-E Transition facade test with kernel package facade
+
+The PEP-562 facade retains kernel.__all__ length 19, exactly 109 lazy G2-E
+names, six direct Transition facade names, canonical object identity,
+deterministic __dir__, and AttributeError for unknown names. It has no
+sys.modules manipulation, swallowed ImportError, preload, or import-order
+conditional. G2-C remains eager/direct and outside the lazy inventory. The
+G2-C and Transition consumer changes added exact facade assertions and did not
+weaken their accepted ownership boundaries.
+
+16. Performance and No-Hidden-State Audit
+
+No id()-based cache authority, mutable global registry, hidden reverse lookup,
+G2-E import, or PlanGraph ownership path was found. The only id() use is cycle
+detection in canonical plain-value projection. Existing success caches use
+exact canonical material and remain bounded. Validated boundaries dominate the
+observed-work lookups; performance changes do not bypass validation.
+
+17. Owner Execution Evidence Audit
+
+All archive levels were read as bytes and recursively inspected without unsafe
+extraction. Every member is a unique regular flat file; no absolute path,
+traversal, backslash, link, device, FIFO, duplicate name, conflicting semantic
+duplicate, or postimage conflict was found.
+
+Accepted owner archive:
+sha256: 51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6
+bytes: 1327796
+members: 30
+
+Nested G2-C archive:
+sha256: e7feb069dcc0e17594ff321be863d611377467fc5ac25be81aebee426229704a
+bytes: 865779
+
+Nested final cumulative archive:
+sha256: 2d441b5cc6f2c426044881424300d1eab8de9cf31b6f5b17be76d6e8710efdfc
+bytes: 409260
+
+Activation-witness support archive:
+sha256: 4122f241d0b0e7c604f7e4b0210b50e6462f8bd64678d917dfe24ba407a2a789
+bytes: 412514
+
+Reconciled execution evidence:
+Transition facade consumer focused: 1/1 PASS, calls 0/0
+complete Transition: 268/268 PASS, calls 0/0
+focused G2-D/Transition: 43/43 PASS, calls 3/3
+complete G2-C: 392/392 PASS, calls 0/0
+release plus maintenance: 23/23 PASS, calls 0/0
+shared compatibility: 64/64 PASS, calls 0/0
+complete G2-D plus Transition: 360/360 PASS, calls 30/30
+D5 child 1 and child 2: PASS
+D5 cases/split/accepted/public calls per process: 72/36-36/10/27-27
+D5 rendered sha256: ec05a8cf9377953abdf84b8a45af07afa3615bcaf78411be6a351fe895663f86
+D5 report ID: frg2dproof_v02:3bf2eb39b8e4e2ea0fe5b7517f677da3b784c43b75d60bce09fb69524c7cc2e1
+complete Living: 575/575 PASS, calls 27/27
+complete Kernel Conformance: 349/349 PASS, calls 27/27
+anti-gaming micro: 4/4 PASS, calls 3/3
+
+The watchdog controllers require no timeout, no repository mutation, no output
+reader failure and zero child return code before producing PASS. No evidence
+log or result contains a positive timeout, mutation, or reader-failure marker.
+No provider, model, network, connector, external DRS or real-world-effect
+operation was evidenced.
+
+18. Prior Failed Audit and Lifecycle-Sync Evidence
+
+The prior failed audit archive is exact:
+sha256: 5e76e332f2ab8851399e0239763664b34ed30d8b671c3345b610c37e6427b293
+bytes: 28040
+classification: HISTORICAL_FAILED_AUDIT_WITH_ONE_LIFECYCLE_BLOCKER
+
+Its structured register proves pre-action mismatch count zero, blocker count
+one, MATERIAL_LIFECYCLE_STATUS_MISMATCH, substantive registers 6.2 through
+6.14 PASS, and no repository mutation.
+
+The supplied lifecycle-sync evidence is exact after discovery:
+sha256: 8e3e906abcdf7e0f6975781d0cad10cb908d560e14fc734a8460660232031cae
+bytes: 194731
+outcome: PASS
+lifecycle-sync commit: e66c8be08e753077b6a99eeb635bf6fe25ee4b90
+focused lifecycle checks: 4/4 PASS, calls 0/0
+release plus maintenance: 23/23 PASS, calls 0/0
+
+19. Current Lifecycle Consistency Audit
+
+Machine Manifest and Status Overlay current-boundary objects are exactly equal.
+The active values are:
+g2d_status: REAUDIT_PENDING
+g2d_corrected_implementation_committed: true
+g2d_corrected_implementation_commit: 3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e
+g2d_corrected_implementation_patch_sha256: dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291
+g2d_corrected_owner_evidence_bundle_sha256: 51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6
+g2d_v038_full_acceptance_pending_owner: false
+g2d_independent_reaudit_required: true
+g2d_independent_reaudit_passed: false
+g2d_additive_reclosure_required: true
+g2d_additive_reclosure_completed: false
+g2d_corrected_closure_claimed: false
+g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
+g2e4_status: BLOCKED_PENDING_G2D_RECLOSURE
+g2e4_anti_gaming_acceptance: BLOCKED_PENDING_G2D_RECLOSURE
+g2e5_status: NOT_STARTED_NOT_AUTHORIZED
+g2e6_status: NOT_STARTED_NOT_AUTHORIZED
+g2f_status: NOT_STARTED_NOT_AUTHORIZED
+gate2_status: NOT_CLOSED
+
+The exact implementation commit, patch and owner-evidence identities are active
+on human surfaces and in the current claim row. README, Current Limitations and
+Current Release Notes state, after whitespace normalization, that full
+cumulative acceptance passed and was accepted by the owner. The stale pending
+owner narrative is absent from every active surface. The current checkpoint is
+"G2-D v0.3.8 implementation committed; independent re-audit pending."
+
+FULL_ACCEPTANCE_MARKER_FALSE=true
+PENDING_OWNER_NARRATIVE_ABSENT=true
+OWNER_ACCEPTANCE_NARRATIVE_PRESENT=true
+IMPLEMENTATION_IDENTITIES_EXACT=true
+LIFECYCLE_SYNC_COMMIT_EXACT=true
+CURRENT_LIFECYCLE_CONSISTENCY=PASS
+G2D_V038_LIFECYCLE_CLASSIFICATION=POST_IMPLEMENTATION_LIFECYCLE_CONSISTENT
+
+20. Authority and Zero-Operation Boundary
+
+Root remains the only final authority. G2-C owns the accepted Root-reviewed
+route. G2-D owns RuntimeExecutionTopology and stable topology-node/cell IDs.
+Post V&V validates and GT advises. Contexts, bindings, cells, results, reports,
+traces, hashes, tests and this audit create no authority. No permission,
+ActionCommitPacket, receipt, FinalOutput, DRS write, successor baseline,
+provider/model/network/connector authority, or real-world effect was created.
+This audit cannot close G2-D, accept G2-E4, or close Gate 2.
+
+21. Complete Audit Register
+
+REGISTER_6.1_GIT_SCOPE_ANCESTRY_LIFECYCLE=PASS
+REGISTER_6.2_EXACT_FROZEN_PUBLIC_GEOMETRY=PASS
+REGISTER_6.3_NO_NEW_SEMANTICS_LOCAL_TRIAD=PASS
+REGISTER_6.4_BINDING_PROJECTOR_RESPONSIBILITY=PASS
+REGISTER_6.5_INDEPENDENT_AGGREGATE_CLOSURE=PASS
+REGISTER_6.6_PUBLIC_RUN_COMPLETE_BUNDLE=PASS
+REGISTER_6.7_ACTIVATION_WITNESS_STAGE_D_CLOSURE=PASS
+REGISTER_6.8_STABLE_WITNESS_SOURCE_BOUND_IDENTITY=PASS
+REGISTER_6.9_NEGATIVE_MATRIX_ANTI_GAMING=PASS
+REGISTER_6.10_HISTORICAL_SELECTIVE_COUNTERFACTUAL=PASS
+REGISTER_6.11_FACADE_CONSUMER_MAINTENANCE=PASS
+REGISTER_6.12_PERFORMANCE_NO_HIDDEN_STATE=PASS
+REGISTER_6.13_OWNER_EVIDENCE_EXECUTABLE_CLOSURE=PASS
+REGISTER_6.14_AUTHORITY_ZERO_OPERATION=PASS
+REGISTER_6.15_CURRENT_LIFECYCLE_CONSISTENCY=PASS
+
+22. Blocker Register
+
+blocker_count: 0
+material_contract_contradictions: 0
+identity_law_failures: 0
+missing_proofs: 0
+lifecycle_status_mismatches: 0
+repair_required: false
+
+23. Independent Re-Audit Verdict
+
+INDEPENDENT_REAUDIT=PASS
+V038_IMPLEMENTATION_CONFORMS_TO_ACCEPTED_CONTRACT=true
+V038_CONTRACT_SEMANTICS_CHANGED=false
+POST_IMPLEMENTATION_LIFECYCLE_CONSISTENT=true
+PROOF_BASED_NULL_POLICY_BRANCH=PASS
+NAMED_POLICY_INVENTORY=EMPTY
+AGGREGATE_FULL_CLOSURE_PROOF=PASS
+ACTIVATION_WITNESS_SUPPORT_CLOSURE=PASS
+CORRECTED_G2D_CLOSED_PASS=false
+ADDITIVE_RECLOSURE_REQUIRED=true
+FRESH_G2E3_V06_REQUIRED_AFTER_RECLOSURE=true
+G2E4_ANTI_GAMING_REPAIR_REQUIRED_AFTER_V06=true
+
+24. Required Next Lifecycle Step
+
+This PASS is evidence only. After owner review and a separate audit-log commit,
+the next permitted action is additive successor checkpoint, reclosure and
+release synchronization. Corrected G2-D may return to CLOSED_PASS only through
+that separate lifecycle action. One fresh unchanged G2-E3 V06 must then pass
+before the two real G2-E4 anti-gaming corrections. G2-E5, G2-E6 and G2-F remain
+not started and unauthorized. Gate 2 remains not closed.
+
+25. Closing Flags
+
+G2D_V038_INDEPENDENT_REAUDIT_PREACTION_GUARD=PASS
+G2D_V038_INDEPENDENT_REAUDIT_REGISTER=PASS
+G2D_V038_INDEPENDENT_REAUDIT_BLOCKER_COUNT=0
+G2D_V038_LIFECYCLE_CLASSIFICATION=POST_IMPLEMENTATION_LIFECYCLE_CONSISTENT
+G2D_V038_INDEPENDENT_REAUDIT=PASS
+G2D_V038_IMPLEMENTATION_CONFORMS=true
+G2D_V038_CORRECTED_CLOSED_PASS=false
+G2D_V038_ADDITIVE_RECLOSURE_REQUIRED=true
+G2E3_STATUS=REVALIDATION_PENDING_ON_CORRECTED_G2D
+G2E4_STATUS=BLOCKED_PENDING_G2D_RECLOSURE
+G2E5_STARTED=false
+G2E6_STARTED=false
+G2F_STARTED=false
+GATE2_STATUS=NOT_CLOSED
+PYTEST_RUN=false
+RUNTIME_RUN=false
+STAGING_CHANGED=false
+COMMIT_CREATED=false
+PUSH_PERFORMED=false

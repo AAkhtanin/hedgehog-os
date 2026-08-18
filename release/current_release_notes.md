@@ -107,14 +107,14 @@ These are current engineering notes, not a public release announcement.
 - G2-C is `CLOSED_PASS`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D v0.3.8 is `REAUDIT_PENDING`.
+- G2-D v0.3.8 is `CLOSED_PASS`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
 - G2-D v0.3.8 implementation authorization, implementation started, corrected
   implementation existence, and committed status are `true`.
 - Runtime acceptance claim, independent re-audit PASS, additive reclosure,
-  and corrected closure remain `false`; contract-only claim is `false`.
+  and corrected closure are `true`; contract-only claim is `false`.
 - Full cumulative acceptance passed and was accepted by the owner.
 - G2-D v0.3.8 implementation commit:
   `3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e`.
@@ -122,20 +122,35 @@ These are current engineering notes, not a public release announcement.
   `dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291`.
 - G2-D v0.3.8 owner evidence bundle SHA-256:
   `51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6`.
+- G2-D v0.3.8 independent re-audit commit:
+  `edfa42198efa1d03097570d30b6364af1b567050`.
+- G2-D v0.3.8 independent re-audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log`.
+- G2-D v0.3.8 independent re-audit SHA-256:
+  `acd62cfcf3753a4c02c5f5187e64e8940cf3b3420f97850b0426583465996d67`.
+- G2-D v0.3.8 successor checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md`.
+- G2-D v0.3.8 successor checkpoint SHA-256:
+  `64e2c94f83e8dd2012d0f6f6d8f969bc08832b61194ce24668c6ec7a4eb96e6b`.
+- G2-D v0.3.8 closure commit subject:
+  `Close G2-D v0.3.8 proof-based whole-run correction`.
+- G2-D v0.3.8 closure commit identity: `NOT_SELF_RECORDED`.
 - Gate 2 remains `NOT_CLOSED`.
 - G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`; the prior unchanged V06
   PASS remains historical evidence for v0.3.7 bytes only.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
 - G2-E4 status and anti-gaming acceptance are
-  `BLOCKED_PENDING_G2D_RECLOSURE`.
+  `BLOCKED_PENDING_FRESH_G2E3_V06`.
 - The strict-subtree implementation remains committed; anti-gaming correction
-  stays blocked until G2-D v0.3.8 reclosure and fresh G2-E3 revalidation.
+  stays blocked until one fresh unchanged G2-E3 V06 passes.
 - G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
 - The old G2-D audit and checkpoint are
   `HISTORICAL_PRECORRECTION_EVIDENCE` only.
 - Historical v0.3.7 independent re-audit and additive successor reclosure are
-  complete for v0.3.7 bytes only; v0.3.8 has neither yet.
-- The independent re-audit is evidence, not authority or closure by itself.
+  complete for v0.3.7 bytes only. The separate v0.3.8 independent re-audit and
+  additive successor checkpoint establish the corrected slice reclosure.
+- The independent re-audit and checkpoint are evidence, not authority,
+  permission, or Gate-2 closure by themselves.
 - R-IP1 does not block G2-E or G2-F; private R-IP1 drafts may remain
   living through Gates 3-6.
 - Public release remains `NOT_CLAIMED`.
@@ -161,8 +176,8 @@ Current surfaces:
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
 not standalone public architectures. The owner-authorized committed v0.3.8 implementation
-corrects the proof-based null-policy nonconformance and remains
-`REAUDIT_PENDING`. Prior G2-E3 V06 acceptance and committed G2-E4
+corrects the proof-based null-policy nonconformance and is additively reclosed
+as `CLOSED_PASS`. Prior G2-E3 V06 acceptance and committed G2-E4
 strict-subtree work do not validate the new bytes, satisfy anti-gaming
 acceptance, close Gate 2, start G2-E5/E6/F, or create authority or real-world
 effect.

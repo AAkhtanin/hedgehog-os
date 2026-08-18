@@ -57,9 +57,9 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-D v0.3.8 implementation committed; independent re-audit pending.
+Current checkpoint: G2-D v0.3.8 proof-based whole-run correction CLOSED_PASS.
 
-Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
+Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
 
 - R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
 - R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
@@ -99,6 +99,15 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 - G2-E3 baseline member identities SHA-256: `8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39`.
 - E4 public-seam constructibility register SHA-256: `a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2`.
 - E4 two-Root-pair register SHA-256: `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
+- G2-D v0.3.8 post-implementation lifecycle sync commit: `e66c8be08e753077b6a99eeb635bf6fe25ee4b90`.
+- G2-D v0.3.8 independent re-audit commit: `edfa42198efa1d03097570d30b6364af1b567050`.
+- G2-D v0.3.8 independent re-audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log`.
+- G2-D v0.3.8 independent re-audit SHA-256: `acd62cfcf3753a4c02c5f5187e64e8940cf3b3420f97850b0426583465996d67`.
+- G2-D v0.3.8 independent re-audit evidence bundle SHA-256: `5e43b38b921f7035609e5ef3a33058325c4b529193ad82d87b70a84cd6ff363b`.
+- G2-D v0.3.8 successor checkpoint: `docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md`.
+- G2-D v0.3.8 successor checkpoint SHA-256: `64e2c94f83e8dd2012d0f6f6d8f969bc08832b61194ce24668c6ec7a4eb96e6b`.
+- G2-D v0.3.8 closure commit subject: `Close G2-D v0.3.8 proof-based whole-run correction`.
+- G2-D v0.3.8 closure commit identity: `NOT_SELF_RECORDED`.
 - Historical pre-correction G2-D implementation basis: `5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd`.
 - Historical pre-correction G2-D audit commit: `c0dc618a0b693fe55435f17a025789267bcb79ff`.
 - Historical pre-correction G2-D audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
@@ -114,7 +123,7 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
 - Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D: `REAUDIT_PENDING`.
+- G2-D: `CLOSED_PASS`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
@@ -129,11 +138,11 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 - G2-D v0.3.8 owner evidence bundle SHA-256:
   `51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6`.
 - G2-D v0.3.8 contract-only claim: `false`.
-- G2-D v0.3.8 runtime acceptance claimed: `false`.
+- G2-D v0.3.8 runtime acceptance claimed: `true`.
 - G2-D v0.3.8 full cumulative acceptance pending owner: `false`.
-- G2-D v0.3.8 independent re-audit passed: `false`.
-- G2-D v0.3.8 additive reclosure completed: `false`.
-- G2-D v0.3.8 corrected closure claimed: `false`.
+- G2-D v0.3.8 independent re-audit passed: `true`.
+- G2-D v0.3.8 additive reclosure completed: `true`.
+- G2-D v0.3.8 corrected closure claimed: `true`.
 - Historical v0.3.7 implementation, owner evidence, independent re-audit,
   checkpoint, and reclosure remain immutable evidence for v0.3.7 bytes only.
 - Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
@@ -141,9 +150,9 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 - G2-E3 post-corrected-G2-D landing status: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - Fresh unchanged post-reclosure G2-E3 V06 passed: `true`.
 - G2-E4 contract: `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4: `BLOCKED_PENDING_G2D_RECLOSURE`.
+- G2-E4: `BLOCKED_PENDING_FRESH_G2E3_V06`.
 - G2-E4 strict-subtree implementation committed: `true`.
-- G2-E4 anti-gaming acceptance: `BLOCKED_PENDING_G2D_RECLOSURE`.
+- G2-E4 anti-gaming acceptance: `BLOCKED_PENDING_FRESH_G2E3_V06`.
 - G2-E4 anti-gaming correction authorized: `false`.
 - G2-E5: `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-E6: `NOT_STARTED_NOT_AUTHORIZED`.
@@ -170,8 +179,9 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 - G2-D v0.3.8 does not alter DESIGN_V03 semantics. It records that v0.3.7
   runtime bytes did not conform to the controlling proof-based null-policy
   matrix; the owner-authorized committed implementation corrects that
-  nonconformance and remains `REAUDIT_PENDING`.
-- The independent re-audit is evidence, not authority or closure by itself.
+  nonconformance and is now additively reclosed as `CLOSED_PASS`.
+- The independent re-audit and successor checkpoint are evidence, not
+  authority, permission, or Gate-2 closure by themselves.
 - The prior G2-E3 V06 and committed E4 strict-subtree work remain historical
   evidence for their exact basis. They do not revalidate v0.3.8, accept the E4
   anti-gaming boundary, start E5/E6/F, close Gate 2, create authority, or

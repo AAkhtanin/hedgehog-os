@@ -3092,7 +3092,9 @@ def test_g2e_transition_public_surface_import_and_zero_authority_v01() -> None:
         "rebuild_continuous_delta_transition_decision_identity_v01",
     )
     assert public_functions[-6:] == expected
-    assert not hasattr(kernel_package, expected[0])
+    assert not set(expected).intersection(kernel_package.__all__)
+    for name in expected:
+        assert getattr(kernel_package, name) is getattr(transition, name)
     registry = transition.build_continuous_delta_transition_registry_profile_v01()
     source_artifact, target_artifact, decision = _g2e_artifact_pair(registry, 0)
     assert source_artifact.authority_class == "NON_AUTHORITY"

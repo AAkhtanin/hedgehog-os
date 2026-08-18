@@ -5983,7 +5983,64 @@ def test_c5_package_facade_signatures_all_and_import_direction_preserved():
     assert not set(direct).intersection(kernel.__all__)
     assert all(inspect.isfunction(getattr(router, name)) for name in router_functions)
     init_text = KERNEL_INIT_PATH.read_text(encoding="utf-8")
-    assert "__getattr__" not in init_text and "importlib" not in init_text
+    init_tree = ast.parse(init_text)
+    importlib_rows = tuple(
+        node
+        for node in init_tree.body
+        if (
+            isinstance(node, ast.Import)
+            and any(alias.name == "importlib" for alias in node.names)
+        )
+        or (
+            isinstance(node, ast.ImportFrom)
+            and node.module == "importlib"
+        )
+    )
+    assert len(importlib_rows) == 1
+    importlib_row = importlib_rows[0]
+    assert isinstance(importlib_row, ast.ImportFrom)
+    assert tuple((alias.name, alias.asname) for alias in importlib_row.names) == (
+        ("import_module", "_import_module"),
+    )
+    lazy_assignment = next(
+        node
+        for node in init_tree.body
+        if isinstance(node, ast.Assign)
+        and len(node.targets) == 1
+        and isinstance(node.targets[0], ast.Name)
+        and node.targets[0].id == "_CONTINUOUS_DELTA_FACADE_NAMES_V01"
+    )
+    lazy_names = ast.literal_eval(lazy_assignment.value)
+    assert isinstance(lazy_names, tuple)
+    assert len(lazy_names) == len(set(lazy_names)) == 109
+    assert not set(direct).intersection(lazy_names)
+    router_imports = tuple(
+        node
+        for node in init_tree.body
+        if isinstance(node, ast.ImportFrom)
+        and node.module == "hedgehog.kernel.execution_mode_router_v01"
+    )
+    assert len(router_imports) == 1
+    assert tuple(alias.name for alias in router_imports[0].names) == (
+        TYPE_NAMES + router_functions
+    )
+    getattr_nodes = tuple(
+        node
+        for node in init_tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "__getattr__"
+    )
+    assert len(getattr_nodes) == 1
+    getattr_text = ast.unparse(getattr_nodes[0])
+    assert "_CONTINUOUS_DELTA_FACADE_NAME_SET_V01" in getattr_text
+    assert "hedgehog.kernel.continuous_delta_runtime_v01" in getattr_text
+    assert "execution_mode_router_v01" not in getattr_text
+    assert any(
+        isinstance(node, ast.Raise)
+        and isinstance(node.exc, ast.Call)
+        and isinstance(node.exc.func, ast.Name)
+        and node.exc.func.id == "AttributeError"
+        for node in ast.walk(getattr_nodes[0])
+    )
     assert "execution_mode_router_v01" not in ABI_PATH.read_text(encoding="utf-8")
     transition_text = TRANSITION_PATH.read_text(encoding="utf-8")
     transition_tree = ast.parse(transition_text)

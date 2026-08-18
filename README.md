@@ -37,10 +37,11 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 ## Current Engineering Boundary
 
 R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. G2-D
-v0.3.8 is `REAUDIT_PENDING`: its owner-authorized implementation candidate
+v0.3.8 is `REAUDIT_PENDING`: its owner-authorized committed implementation
 corrects the v0.3.7 proof-based whole-run null-policy nonconformance without
-changing DESIGN_V03 semantics. Full cumulative acceptance remains pending the
-owner, and no v0.3.8 independent re-audit or additive reclosure is claimed.
+changing DESIGN_V03 semantics. Full cumulative acceptance passed and was
+accepted by the owner; no v0.3.8 independent re-audit or additive reclosure is
+claimed.
 Historical v0.3.7 implementation, execution evidence, independent re-audit,
 checkpoint, and closure remain immutable evidence for their exact bytes only.
 The G2-E3 revalidation boundary remains active; G2-E4 is
@@ -76,9 +77,9 @@ g2d_corrected_implementation_exists: true
 g2d_contract_only_claim: false
 g2d_corrected_runtime_acceptance_claimed: false
 g2d_corrected_implementation_committed: true
-g2d_corrected_implementation_commit: NOT_SELF_RECORDED
-g2d_corrected_implementation_patch_sha256: NOT_SELF_RECORDED
-g2d_corrected_owner_evidence_bundle_sha256: NOT_SELF_RECORDED
+g2d_corrected_implementation_commit: 3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e
+g2d_corrected_implementation_patch_sha256: dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291
+g2d_corrected_owner_evidence_bundle_sha256: 51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6
 g2d_independent_reaudit_required: true
 g2d_independent_reaudit_passed: false
 g2d_independent_reaudit_commit: NOT_CREATED
@@ -102,7 +103,7 @@ g2d_v038_controlling_design_v03_sha256: 7e32560ff19b95a8bd553072d855e8378d749c0f
 g2d_v038_accepted_addendum_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
 g2d_v038_implementation_authorized: true
 g2d_v038_implementation_started: true
-g2d_v038_full_acceptance_pending_owner: true
+g2d_v038_full_acceptance_pending_owner: false
 g2d_v037_status: HISTORICAL_CLOSED_PASS_WITH_IMPLEMENTATION_NONCONFORMANCE
 g2d_v037_accepted_normative_donor_sha256: 8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d
 g2d_v037_accepted_addendum_sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
@@ -161,8 +162,8 @@ production_security_certification_claimed: false
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
 - G2-D v0.3.8 implementation authorization and implementation started are
-  both `true`; corrected implementation bytes exist, but full cumulative
-  acceptance remains pending the owner.
+  both `true`; corrected implementation bytes exist, and full cumulative
+  acceptance passed and was accepted by the owner.
 - Historical v0.3.7 implementation, owner evidence, independent re-audit,
   checkpoint, and closure remain immutable evidence for v0.3.7 bytes only.
 - Gate 2 is `NOT_CLOSED`.
@@ -243,8 +244,9 @@ production_security_certification_claimed: false
 
 The accepted v0.3.8 clarification reopened G2-D because v0.3.7 runtime bytes did
 not conform to the already controlling proof-based null-policy matrix. The
-owner-authorized candidate corrects that implementation nonconformance and
-remains `REAUDIT_PENDING`; it is not `CLOSED_PASS`. The current project remains
+owner-authorized committed implementation corrects that implementation
+nonconformance and remains `REAUDIT_PENDING`; it is not `CLOSED_PASS`. The
+current project remains
 a proof-of-architecture reference kernel, not a public release, RC2,
 production-readiness result, or production-security certification.
 <!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->

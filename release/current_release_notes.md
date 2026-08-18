@@ -112,12 +112,16 @@ These are current engineering notes, not a public release announcement.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
 - G2-D v0.3.8 implementation authorization, implementation started, corrected
-  implementation existence, and intended committed status are `true`.
-- Runtime acceptance, independent re-audit PASS, additive reclosure, and
-  corrected closure are `false`; contract-only claim is `false`; full
-  cumulative acceptance remains pending the owner.
-- Future implementation commit, patch, and evidence identities are
-  `NOT_SELF_RECORDED` in candidate repository bytes.
+  implementation existence, and committed status are `true`.
+- Runtime acceptance claim, independent re-audit PASS, additive reclosure,
+  and corrected closure remain `false`; contract-only claim is `false`.
+- Full cumulative acceptance passed and was accepted by the owner.
+- G2-D v0.3.8 implementation commit:
+  `3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e`.
+- G2-D v0.3.8 implementation patch SHA-256:
+  `dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291`.
+- G2-D v0.3.8 owner evidence bundle SHA-256:
+  `51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6`.
 - Gate 2 remains `NOT_CLOSED`.
 - G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`; the prior unchanged V06
   PASS remains historical evidence for v0.3.7 bytes only.
@@ -156,7 +160,7 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. The owner-authorized v0.3.8 candidate
+not standalone public architectures. The owner-authorized committed v0.3.8 implementation
 corrects the proof-based null-policy nonconformance and remains
 `REAUDIT_PENDING`. Prior G2-E3 V06 acceptance and committed G2-E4
 strict-subtree work do not validate the new bytes, satisfy anti-gaming

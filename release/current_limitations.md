@@ -19,12 +19,16 @@
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
 - G2-D v0.3.8 implementation authorization, implementation started, corrected
-  implementation existence, and intended committed status are `true`.
-- Runtime acceptance, independent re-audit PASS, additive
-  reclosure, and corrected closure are `false`; contract-only claim is
-  `false`; full cumulative acceptance remains pending the owner.
-- The future implementation commit, candidate patch, and owner evidence bundle
-  identities are `NOT_SELF_RECORDED` in repository candidate bytes.
+  implementation existence, and committed status are `true`.
+- Runtime acceptance claim, independent re-audit PASS, additive reclosure,
+  and corrected closure remain `false`; contract-only claim is `false`.
+- Full cumulative acceptance passed and was accepted by the owner.
+- G2-D v0.3.8 implementation commit:
+  `3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e`.
+- G2-D v0.3.8 implementation patch SHA-256:
+  `dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291`.
+- G2-D v0.3.8 owner evidence bundle SHA-256:
+  `51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6`.
 - Accepted G2-D v0.3.8 directional draft SHA-256:
   `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
 - Controlling DESIGN_V03 SHA-256:
@@ -61,7 +65,7 @@
 - Gate 2 remains `NOT_CLOSED`.
 - G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - The prior fresh unchanged owner-terminal V06 PASS remains historical evidence
-  for v0.3.7 bytes and does not validate the v0.3.8 implementation candidate.
+  for v0.3.7 bytes and does not validate the committed v0.3.8 implementation.
 - Fresh post-reclosure G2-E3 V06 archive SHA-256:
   `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
 - Accepted G2-E v0.1.3 addendum SHA-256:

@@ -14,14 +14,17 @@
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES` only.
-- G2-D v0.3.8 is
-  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- G2-D v0.3.8 is `REAUDIT_PENDING`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
-- G2-D v0.3.8 implementation authorization, implementation started, runtime
-  acceptance, independent re-audit PASS, additive reclosure, and corrected
-  closure are all `false`; contract-only claim is `true`.
+- G2-D v0.3.8 implementation authorization, implementation started, corrected
+  implementation existence, and intended committed status are `true`.
+- Runtime acceptance, independent re-audit PASS, additive
+  reclosure, and corrected closure are `false`; contract-only claim is
+  `false`; full cumulative acceptance remains pending the owner.
+- The future implementation commit, candidate patch, and owner evidence bundle
+  identities are `NOT_SELF_RECORDED` in repository candidate bytes.
 - Accepted G2-D v0.3.8 directional draft SHA-256:
   `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
 - Controlling DESIGN_V03 SHA-256:
@@ -56,11 +59,9 @@
 - Historical v0.3.7 independent re-audit and additive successor reclosure are
   complete for v0.3.7 bytes only; v0.3.8 has neither yet.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is
-  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one fresh
-  unchanged owner-terminal V06 PASS.
-- The G2-E3 post-corrected-G2-D landing status was
-  `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- The prior fresh unchanged owner-terminal V06 PASS remains historical evidence
+  for v0.3.7 bytes and does not validate the v0.3.8 implementation candidate.
 - Fresh post-reclosure G2-E3 V06 archive SHA-256:
   `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
 - Accepted G2-E v0.1.3 addendum SHA-256:
@@ -72,10 +73,11 @@
 - E4 two-Root-pair register SHA-256:
   `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4 status is
-  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
-- The strict-subtree implementation is committed; anti-gaming acceptance is
-  blocked and its correction is not authorized by this contract hop.
+- G2-E4 status and anti-gaming acceptance are
+  `BLOCKED_PENDING_G2D_RECLOSURE`.
+- The strict-subtree implementation remains committed, but anti-gaming
+  correction cannot proceed until G2-D v0.3.8 reclosure and fresh G2-E3
+  revalidation.
 - G2-E5, G2-E6, and G2-F remain `NOT_STARTED_NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
 - RC2 remains `NOT_CLAIMED`.

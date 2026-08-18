@@ -107,25 +107,25 @@ These are current engineering notes, not a public release announcement.
 - G2-C is `CLOSED_PASS`.
 - Historical pre-correction G2-D is
   `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D v0.3.8 is
-  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- G2-D v0.3.8 is `REAUDIT_PENDING`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
-- G2-D v0.3.8 implementation authorization, implementation started, runtime
-  acceptance, independent re-audit PASS, additive reclosure, and corrected
-  closure are all `false`; contract-only claim is `true`.
+- G2-D v0.3.8 implementation authorization, implementation started, corrected
+  implementation existence, and intended committed status are `true`.
+- Runtime acceptance, independent re-audit PASS, additive reclosure, and
+  corrected closure are `false`; contract-only claim is `false`; full
+  cumulative acceptance remains pending the owner.
+- Future implementation commit, patch, and evidence identities are
+  `NOT_SELF_RECORDED` in candidate repository bytes.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is
-  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one fresh
-  unchanged owner-terminal V06 PASS.
-- The post-corrected-G2-D landing status was
-  `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`; the prior unchanged V06
+  PASS remains historical evidence for v0.3.7 bytes only.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4 status is
-  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
-- The strict-subtree implementation is committed; anti-gaming acceptance is
-  blocked and its correction is not authorized by this contract hop.
+- G2-E4 status and anti-gaming acceptance are
+  `BLOCKED_PENDING_G2D_RECLOSURE`.
+- The strict-subtree implementation remains committed; anti-gaming correction
+  stays blocked until G2-D v0.3.8 reclosure and fresh G2-E3 revalidation.
 - G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
 - The old G2-D audit and checkpoint are
   `HISTORICAL_PRECORRECTION_EVIDENCE` only.
@@ -156,7 +156,9 @@ Current surfaces:
 - [Current limitations](current_limitations.md)
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
-not standalone public architectures. The v0.3.8 clarification reopens G2-D
-without authorizing implementation. Fresh G2-E3 V06 acceptance and committed
-G2-E4 strict-subtree work do not satisfy anti-gaming acceptance, close Gate 2,
-start G2-E5/E6/F, or create authority or real-world effect.
+not standalone public architectures. The owner-authorized v0.3.8 candidate
+corrects the proof-based null-policy nonconformance and remains
+`REAUDIT_PENDING`. Prior G2-E3 V06 acceptance and committed G2-E4
+strict-subtree work do not validate the new bytes, satisfy anti-gaming
+acceptance, close Gate 2, start G2-E5/E6/F, or create authority or real-world
+effect.

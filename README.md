@@ -37,16 +37,15 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 ## Current Engineering Boundary
 
 R-H1, G2-A, G2-B, and G2-C ExecutionModeRouter are `CLOSED_PASS`. G2-D
-v0.3.8 is `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`: it explicitly
-clarifies already controlling DESIGN_V03 semantics, records v0.3.7
-implementation nonconformance, and reopens the lifecycle without authorizing
-implementation. Historical v0.3.7 implementation, execution evidence,
-independent re-audit, checkpoint, and closure remain immutable evidence for
-their exact bytes only. G2-E3 remains
-`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`; G2-E4 is
-`IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`;
-No G2-E5, G2-E6, or G2-F work has started or been authorized; Gate 2 remains
-`NOT_CLOSED`.
+v0.3.8 is `REAUDIT_PENDING`: its owner-authorized implementation candidate
+corrects the v0.3.7 proof-based whole-run null-policy nonconformance without
+changing DESIGN_V03 semantics. Full cumulative acceptance remains pending the
+owner, and no v0.3.8 independent re-audit or additive reclosure is claimed.
+Historical v0.3.7 implementation, execution evidence, independent re-audit,
+checkpoint, and closure remain immutable evidence for their exact bytes only.
+The G2-E3 revalidation boundary remains active; G2-E4 is
+`BLOCKED_PENDING_G2D_RECLOSURE`. No G2-E5, G2-E6, or G2-F work has started or
+been authorized; Gate 2 remains `NOT_CLOSED`.
 
 ```text
 workstream_id: R-H1
@@ -71,15 +70,15 @@ g2c_preflight_commit: 4b33c8106dbb3d7b50596630cd9dcdcf3f84cfac
 g2c_implementation_basis_commit: 27a866ca06a331b4169c56abac9a460334d75539
 g2c_audit_commit: 72854bcdc85d19e9c6a6636f9a7eedd1929f03cb
 g2c_closure_commit_identity: NOT_SELF_RECORDED
-g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
-g2d_correction_implementation_authorized: false
-g2d_corrected_implementation_exists: false
-g2d_contract_only_claim: true
+g2d_status: REAUDIT_PENDING
+g2d_correction_implementation_authorized: true
+g2d_corrected_implementation_exists: true
+g2d_contract_only_claim: false
 g2d_corrected_runtime_acceptance_claimed: false
-g2d_corrected_implementation_committed: false
-g2d_corrected_implementation_commit: NOT_CREATED
-g2d_corrected_implementation_patch_sha256: NOT_CREATED
-g2d_corrected_owner_evidence_bundle_sha256: NOT_CREATED
+g2d_corrected_implementation_committed: true
+g2d_corrected_implementation_commit: NOT_SELF_RECORDED
+g2d_corrected_implementation_patch_sha256: NOT_SELF_RECORDED
+g2d_corrected_owner_evidence_bundle_sha256: NOT_SELF_RECORDED
 g2d_independent_reaudit_required: true
 g2d_independent_reaudit_passed: false
 g2d_independent_reaudit_commit: NOT_CREATED
@@ -101,8 +100,9 @@ g2d_v038_directional_draft_review: APPROVE_WITH_MANDATORY_OVERLAY
 g2d_v038_directional_draft_sha256: 91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454
 g2d_v038_controlling_design_v03_sha256: 7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe
 g2d_v038_accepted_addendum_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
-g2d_v038_implementation_authorized: false
-g2d_v038_implementation_started: false
+g2d_v038_implementation_authorized: true
+g2d_v038_implementation_started: true
+g2d_v038_full_acceptance_pending_owner: true
 g2d_v037_status: HISTORICAL_CLOSED_PASS_WITH_IMPLEMENTATION_NONCONFORMANCE
 g2d_v037_accepted_normative_donor_sha256: 8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d
 g2d_v037_accepted_addendum_sha256: 29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511
@@ -123,7 +123,7 @@ g2d_preflight_commit: 2e1681a54c847beb106d9e57da250dac82ea6192
 g2d_historical_precorrection_implementation_basis_commit: 5e5d565eb6c2088db995cf9e5b3ccb0743f1c9cd
 g2d_historical_precorrection_audit_commit: c0dc618a0b693fe55435f17a025789267bcb79ff
 g2d_closure_commit_identity: NOT_SELF_RECORDED
-g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D
+g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
 g2e3_post_corrected_g2d_landing_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
 g2e3_post_reclosure_v06_passed: true
 g2e3_post_reclosure_v06_archive_sha256: d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3
@@ -138,11 +138,11 @@ g2e4_public_seam_register_sha256: a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b
 g2e4_two_root_pair_register_sha256: a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33
 g2e4_contract_accepted: true
 g2e4_contract_status: ACCEPTED_IMPLEMENTATION_PENDING
-g2e4_status: IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED
+g2e4_status: BLOCKED_PENDING_G2D_RECLOSURE
 g2e4_implementation_authorized: true
 g2e4_implementation_started: true
 g2e4_strict_subtree_implementation_committed: true
-g2e4_anti_gaming_acceptance: BLOCKED
+g2e4_anti_gaming_acceptance: BLOCKED_PENDING_G2D_RECLOSURE
 g2e4_anti_gaming_correction_authorized: false
 g2e5_status: NOT_STARTED_NOT_AUTHORIZED
 g2e6_status: NOT_STARTED_NOT_AUTHORIZED
@@ -156,25 +156,25 @@ production_security_certification_claimed: false
 - Gate 1, the Two-Domain All-Real Sealed Evidence Program, G2-A, G2-B, and
   G2-C are `CLOSED_PASS`.
 - Historical pre-correction G2-D is `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D v0.3.8 is
-  `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- G2-D v0.3.8 is `REAUDIT_PENDING`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
 - G2-D v0.3.8 implementation authorization and implementation started are
-  both `false`; this is a contract-only claim.
+  both `true`; corrected implementation bytes exist, but full cumulative
+  acceptance remains pending the owner.
 - Historical v0.3.7 implementation, owner evidence, independent re-audit,
   checkpoint, and closure remain immutable evidence for v0.3.7 bytes only.
 - Gate 2 is `NOT_CLOSED`.
-- G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D` after one
-  fresh unchanged owner-terminal V06 PASS on corrected G2-D.
-- The post-corrected-G2-D landing status was
-  `REVALIDATION_PENDING_ON_CORRECTED_G2D`; the post-reclosure V06 passed.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- The prior fresh unchanged owner-terminal V06 PASS remains historical evidence
+  for v0.3.7 bytes and is not acceptance evidence for the v0.3.8 implementation
+  candidate.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4 is
-  `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
-- The strict-subtree implementation is committed; anti-gaming acceptance is
-  blocked and its correction is not authorized by this contract hop.
+- G2-E4 is `BLOCKED_PENDING_G2D_RECLOSURE`.
+- The committed strict-subtree implementation remains historical current code;
+  anti-gaming correction stays blocked until G2-D v0.3.8 reclosure and fresh
+  G2-E3 revalidation.
 - G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
 - R-H1 independent audit synchronized for closure: `true`.
 - R-H1 audit: `docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log`.
@@ -241,10 +241,11 @@ production_security_certification_claimed: false
 - [Current limitations](release/current_limitations.md)
 - [Current engineering notes](release/current_release_notes.md)
 
-The accepted v0.3.8 clarification reopens G2-D because current v0.3.7 runtime
-bytes do not conform to the already controlling proof-based null-policy matrix.
-It authorizes no implementation. The current project remains a
-proof-of-architecture reference kernel, not a public release, RC2,
+The accepted v0.3.8 clarification reopened G2-D because v0.3.7 runtime bytes did
+not conform to the already controlling proof-based null-policy matrix. The
+owner-authorized candidate corrects that implementation nonconformance and
+remains `REAUDIT_PENDING`; it is not `CLOSED_PASS`. The current project remains
+a proof-of-architecture reference kernel, not a public release, RC2,
 production-readiness result, or production-security certification.
 <!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 

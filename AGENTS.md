@@ -57,7 +57,7 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-D v0.3.8 clarification contract accepted; implementation pending.
+Current checkpoint: G2-D v0.3.8 implementation candidate; independent re-audit pending.
 
 Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 
@@ -114,27 +114,32 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
 - Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D: `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- G2-D: `REAUDIT_PENDING`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
-- G2-D v0.3.8 correction implementation authorized: `false`.
-- G2-D v0.3.8 implementation started: `false`.
-- G2-D v0.3.8 contract-only claim: `true`.
+- G2-D v0.3.8 correction implementation authorized: `true`.
+- G2-D v0.3.8 implementation started: `true`.
+- G2-D v0.3.8 corrected implementation exists: `true`.
+- G2-D v0.3.8 corrected implementation committed: `true` in the intended
+  post-owner-commit lifecycle; commit and patch identities are
+  `NOT_SELF_RECORDED` in candidate bytes.
+- G2-D v0.3.8 contract-only claim: `false`.
 - G2-D v0.3.8 runtime acceptance claimed: `false`.
+- G2-D v0.3.8 full cumulative acceptance pending owner: `true`.
 - G2-D v0.3.8 independent re-audit passed: `false`.
 - G2-D v0.3.8 additive reclosure completed: `false`.
 - G2-D v0.3.8 corrected closure claimed: `false`.
 - Historical v0.3.7 implementation, owner evidence, independent re-audit,
   checkpoint, and reclosure remain immutable evidence for v0.3.7 bytes only.
 - Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
-- G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
+- G2-E3: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - G2-E3 post-corrected-G2-D landing status: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - Fresh unchanged post-reclosure G2-E3 V06 passed: `true`.
 - G2-E4 contract: `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4: `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
+- G2-E4: `BLOCKED_PENDING_G2D_RECLOSURE`.
 - G2-E4 strict-subtree implementation committed: `true`.
-- G2-E4 anti-gaming acceptance: `BLOCKED`.
+- G2-E4 anti-gaming acceptance: `BLOCKED_PENDING_G2D_RECLOSURE`.
 - G2-E4 anti-gaming correction authorized: `false`.
 - G2-E5: `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-E6: `NOT_STARTED_NOT_AUTHORIZED`.
@@ -158,13 +163,15 @@ Current G2-D v0.3.8 reopening and G2-E lifecycle facts:
   handle, DRS write, FinalOutput, provider authority, connector authority, or
   real-world effect.
 - Provider, model, network, connector, and external-DRS calls remain zero.
-- G2-D v0.3.8 does not alter DESIGN_V03 semantics. It explicitly records that
-  current v0.3.7 runtime bytes do not conform to the controlling proof-based
-  null-policy matrix and reopens the lifecycle without authorizing code.
+- G2-D v0.3.8 does not alter DESIGN_V03 semantics. It records that v0.3.7
+  runtime bytes did not conform to the controlling proof-based null-policy
+  matrix; the owner-authorized implementation candidate corrects that
+  nonconformance and remains `REAUDIT_PENDING`.
 - The independent re-audit is evidence, not authority or closure by itself.
-- The fresh G2-E3 V06, committed E4 strict-subtree work, and this clarification
-  do not accept the E4 anti-gaming boundary, start E5/E6/F, close Gate 2,
-  create authority, or create a real-world effect.
+- The prior G2-E3 V06 and committed E4 strict-subtree work remain historical
+  evidence for their exact basis. They do not revalidate v0.3.8, accept the E4
+  anti-gaming boundary, start E5/E6/F, close Gate 2, create authority, or
+  create a real-world effect.
 - Historical execution-representation references create no contract, adapter, migration, cleanup, compatibility workstream, or implementation slice.
 - R-IP1 does not block G2-E or G2-F.
 - Private R-IP1 drafts may remain living through Gates 3-6.

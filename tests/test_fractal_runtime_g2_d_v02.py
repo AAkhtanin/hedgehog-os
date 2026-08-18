@@ -9252,11 +9252,9 @@ def e4c001_observed_work_family_v02(
             if execution_scope == "SELECTIVE"
             else {
                 "whole_run_escalation_reason": (
-                    "g2d_bounded_full_reconstruction_required"
+                    "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
                 ),
-                "whole_run_escalation_policy_id": (
-                    "fractal_runtime_whole_run_escalation_v02"
-                ),
+                "whole_run_escalation_policy_id": None,
             }
         )
         return (
@@ -9298,19 +9296,77 @@ def e4c001_observed_work_family_v02(
         selective_bundle
     ).status == "PASS"
 
-    whole_bindings = bindings_for_scope("WHOLE_RUN_ESCALATION")
+    subset_whole_bindings = bindings_for_scope("WHOLE_RUN_ESCALATION")
+    node_by_id = {item.node_id: item for item in baseline.topology_nodes}
+    full_direct_sources: list[KernelArtifactV01] = []
+    full_bindings: list[KernelArtifactV01] = []
+    full_source_pairs: list[
+        tuple[
+            fr.FractalCellInputV02,
+            fr.RuntimeTopologyNodeV02,
+            KernelArtifactV01,
+            KernelArtifactV01,
+        ]
+    ] = []
+    source_index = 0
+    for cell_input in baseline.cell_inputs:
+        for node_id in cell_input.ordered_node_ids:
+            node = node_by_id[node_id]
+            source_index += 1
+            source_baseline = _e4c001_source_artifact_v02(
+                baseline,
+                payload={
+                    "source_class": "full_closure",
+                    "source_index": source_index,
+                    "value": 0,
+                },
+                trace_ref=f"trace:e4c001:full:{source_index}",
+            )
+            source_observed = _e4c001_source_artifact_v02(
+                baseline,
+                payload={
+                    "source_class": "full_closure",
+                    "source_index": source_index,
+                    "value": 1,
+                },
+                trace_ref=f"trace:e4c001:full:{source_index}",
+                predecessor=source_baseline,
+            )
+            full_direct_sources.extend((source_baseline, source_observed))
+            full_source_pairs.append(
+                (
+                    cell_input,
+                    node,
+                    source_baseline,
+                    source_observed,
+                )
+            )
+            full_bindings.append(
+                fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+                    baseline_execution_bundle=baseline,
+                    node=node,
+                    cell_input=cell_input,
+                    baseline_source_artifact=source_baseline,
+                    observed_source_artifact=source_observed,
+                    changed_full_artifact_pointers=("/payload/value",),
+                    execution_scope="WHOLE_RUN_ESCALATION",
+                    whole_run_escalation_reason=(
+                        "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+                    ),
+                    whole_run_escalation_policy_id=None,
+                )
+            )
+    whole_bindings = tuple(full_bindings)
     whole_context = fr.build_runtime_observed_work_context_v02(
         baseline_execution_bundle=baseline,
-        direct_source_artifacts=tuple(reversed(direct_sources)),
+        direct_source_artifacts=tuple(reversed(full_direct_sources)),
         supporting_artifacts=(),
         binding_artifacts=tuple(reversed(whole_bindings)),
         execution_scope="WHOLE_RUN_ESCALATION",
         whole_run_escalation_reason=(
-            "g2d_bounded_full_reconstruction_required"
+            "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
         ),
-        whole_run_escalation_policy_id=(
-            "fractal_runtime_whole_run_escalation_v02"
-        ),
+        whole_run_escalation_policy_id=None,
     )
     return {
         "baseline": baseline,
@@ -9324,6 +9380,9 @@ def e4c001_observed_work_family_v02(
         "selective_bindings": selective_bindings,
         "selective_context": selective_context,
         "selective_bundle": selective_bundle,
+        "subset_whole_bindings": subset_whole_bindings,
+        "full_direct_sources": tuple(full_direct_sources),
+        "full_source_pairs": tuple(full_source_pairs),
         "whole_bindings": whole_bindings,
         "whole_context": whole_context,
     }
@@ -10201,6 +10260,95 @@ def test_e4c001_v03_binding_payload_full_artifact_pointer_and_canonical_order_v0
         execution_scope="SELECTIVE",
     )
     assert canonical == context
+    proof_binding = family["subset_whole_bindings"][0]
+    assert isinstance(proof_binding, KernelArtifactV01)
+    proof_execution = _kernel_payload(proof_binding)["execution"]
+    assert proof_execution == {
+        "execution_scope": "WHOLE_RUN_ESCALATION",
+        "whole_run_escalation_policy_id": None,
+        "whole_run_escalation_reason": (
+            "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+        ),
+    }
+    assert validate_kernel_artifact_v01(proof_binding) == ()
+    assert proof_binding.artifact_id != payload_binding.artifact_id
+    assert proof_binding == (
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=selected_node,
+            cell_input=selected_input,
+            baseline_source_artifact=payload_baseline,
+            observed_source_artifact=payload_observed,
+            changed_full_artifact_pointers=("/payload/value",),
+            execution_scope="WHOLE_RUN_ESCALATION",
+            whole_run_escalation_reason=(
+                "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+            ),
+            whole_run_escalation_policy_id=None,
+        )
+    )
+    invalid_triads = (
+        (
+            "SELECTIVE",
+            "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK",
+            None,
+        ),
+        ("SELECTIVE", None, "foreign_policy_v02"),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK",
+            "foreign_policy_v02",
+        ),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+            None,
+        ),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+            "accepted_shape_but_unapproved_policy_v02",
+        ),
+        ("WHOLE_RUN_ESCALATION", "ARBITRARY_SUBSTITUTED_REASON", None),
+        ("WHOLE_RUN_ESCALATION", "ARBITRARY_SUBSTITUTED_REASON", "foreign"),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+            "",
+        ),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+            "   ",
+        ),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+            "NONE",
+        ),
+        (
+            "WHOLE_RUN_ESCALATION",
+            "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION",
+            "foreign:policy:v02",
+        ),
+        ("UNKNOWN_SCOPE", None, None),
+    )
+    for execution_scope, reason, policy_id in invalid_triads:
+        with pytest.raises(
+            ValueError,
+            match="g2d_topology_source_binding_invalid",
+        ):
+            fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+                baseline_execution_bundle=baseline,
+                node=selected_node,
+                cell_input=selected_input,
+                baseline_source_artifact=payload_baseline,
+                observed_source_artifact=payload_observed,
+                changed_full_artifact_pointers=("/payload/value",),
+                execution_scope=execution_scope,
+                whole_run_escalation_reason=reason,
+                whole_run_escalation_policy_id=policy_id,
+            )
     whole_payload_binding = (
         fr.project_runtime_observed_work_binding_kernel_artifact_v02(
             baseline_execution_bundle=baseline,
@@ -10268,12 +10416,14 @@ def test_e4c001_v03_root_and_child_stable_witness_mapping_v02(
     payload_baseline = family["payload_baseline"]
     payload_observed = family["payload_observed"]
     child_binding = family["selective_bindings"][0]
+    context = family["selective_context"]
     assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
     assert isinstance(selected_input, fr.FractalCellInputV02)
     assert isinstance(selected_node, fr.RuntimeTopologyNodeV02)
     assert isinstance(payload_baseline, KernelArtifactV01)
     assert isinstance(payload_observed, KernelArtifactV01)
     assert isinstance(child_binding, KernelArtifactV01)
+    assert isinstance(context, fr.RuntimeObservedWorkContextV02)
     child_witness = _kernel_payload(child_binding)["topology_binding"]
     parent_input = next(
         item for item in baseline.cell_inputs if item.cell_id == selected_input.parent_cell_id
@@ -10314,6 +10464,58 @@ def test_e4c001_v03_root_and_child_stable_witness_mapping_v02(
         payload_observed.artifact_id,
         child_witness["activation_parent_queue_artifact_ref"],
     )
+    baseline_artifact_by_id = {
+        item.artifact_id: item
+        for item in (
+            *baseline.queue_artifacts,
+            *baseline.result_artifacts,
+            baseline.report_artifact,
+        )
+    }
+    support_by_id = {
+        item.artifact_id: item for item in context.ordered_supporting_artifacts
+    }
+    activation_parent_id = child_witness[
+        "activation_parent_queue_artifact_ref"
+    ]
+    assert activation_parent_id in support_by_id
+    assert support_by_id[activation_parent_id] == baseline_artifact_by_id[
+        activation_parent_id
+    ]
+    assert set(support_by_id).issubset(baseline_artifact_by_id)
+    support_positions = {
+        item.artifact_id: index
+        for index, item in enumerate(context.ordered_supporting_artifacts)
+    }
+    carried_baseline_ids = {
+        baseline.source_context.proposal_artifact.artifact_id,
+        baseline.source_context.decision_artifact.artifact_id,
+        baseline.source_context.route_eligibility_artifact.artifact_id,
+        baseline.topology_artifact.artifact_id,
+    }
+    assert all(
+        parent_id in carried_baseline_ids
+        or support_positions[parent_id] < support_positions[artifact.artifact_id]
+        for artifact in context.ordered_supporting_artifacts
+        for parent_id in artifact.parent_refs
+    )
+    assert fr.build_runtime_observed_work_context_v02(
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=family["direct_sources"],
+        supporting_artifacts=context.ordered_supporting_artifacts,
+        binding_artifacts=family["selective_bindings"],
+        execution_scope="SELECTIVE",
+    ) == context
+    assert fr.build_runtime_observed_work_context_v02(
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=family["direct_sources"],
+        supporting_artifacts=(
+            *context.ordered_supporting_artifacts,
+            context.ordered_supporting_artifacts[0],
+        ),
+        binding_artifacts=family["selective_bindings"],
+        execution_scope="SELECTIVE",
+    ) == context
     root_input = next(item for item in baseline.cell_inputs if item.parent_cell_id is None)
     root_node = next(
         item
@@ -10370,6 +10572,101 @@ def test_e4c001_v03_root_and_child_stable_witness_mapping_v02(
             changed_full_artifact_pointers=("/payload/value",),
             execution_scope="SELECTIVE",
         )
+    with pytest.raises(ValueError, match="g2d_topology_source_binding_invalid"):
+        fr.build_runtime_observed_work_context_v02(
+            baseline_execution_bundle=baseline,
+            direct_source_artifacts=family["direct_sources"],
+            supporting_artifacts=(),
+            binding_artifacts=family["subset_whole_bindings"],
+            execution_scope="WHOLE_RUN_ESCALATION",
+            whole_run_escalation_reason=(
+                "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+            ),
+            whole_run_escalation_policy_id=None,
+        )
+    full_selective_bindings = tuple(
+        fr.project_runtime_observed_work_binding_kernel_artifact_v02(
+            baseline_execution_bundle=baseline,
+            node=node,
+            cell_input=cell_input,
+            baseline_source_artifact=source_baseline,
+            observed_source_artifact=source_observed,
+            changed_full_artifact_pointers=("/payload/value",),
+            execution_scope="SELECTIVE",
+        )
+        for cell_input, node, source_baseline, source_observed in family[
+            "full_source_pairs"
+        ]
+    )
+    with pytest.raises(ValueError, match="g2d_topology_source_binding_invalid"):
+        fr.build_runtime_observed_work_context_v02(
+            baseline_execution_bundle=baseline,
+            direct_source_artifacts=family["full_direct_sources"],
+            supporting_artifacts=(),
+            binding_artifacts=full_selective_bindings,
+            execution_scope="SELECTIVE",
+        )
+    whole_context = family["whole_context"]
+    selective_context = family["selective_context"]
+    assert isinstance(whole_context, fr.RuntimeObservedWorkContextV02)
+    assert isinstance(selective_context, fr.RuntimeObservedWorkContextV02)
+    all_node_ids = tuple(item.node_id for item in baseline.topology_nodes)
+    all_cell_ids = tuple(item.cell_id for item in baseline.cell_inputs)
+    invalid_contexts = (
+        replace(
+            selective_context,
+            ordered_direct_affected_node_ids=all_node_ids,
+            ordered_execution_node_ids=all_node_ids,
+            ordered_affected_cell_ids=all_cell_ids,
+        ),
+        replace(
+            whole_context,
+            ordered_direct_affected_node_ids=(
+                *whole_context.ordered_direct_affected_node_ids,
+                "frnode_v02:" + "f" * 64,
+            ),
+        ),
+        replace(
+            whole_context,
+            ordered_execution_node_ids=(
+                whole_context.ordered_execution_node_ids[:-1]
+            ),
+        ),
+        replace(
+            whole_context,
+            ordered_affected_cell_ids=(
+                *whole_context.ordered_affected_cell_ids,
+                "frcell_v02:" + "f" * 64,
+            ),
+        ),
+        replace(
+            whole_context,
+            ordered_binding_artifacts=(
+                *whole_context.ordered_binding_artifacts[:-1],
+                baseline.topology_artifact,
+            ),
+        ),
+        replace(
+            whole_context,
+            observed_work_context_id=selective_context.observed_work_context_id,
+        ),
+        replace(
+            whole_context,
+            ordered_binding_artifacts=(
+                replace(
+                    whole_context.ordered_binding_artifacts[0],
+                    artifact_id=(
+                        whole_context.ordered_binding_artifacts[1].artifact_id
+                    ),
+                ),
+                *whole_context.ordered_binding_artifacts[1:],
+            ),
+        ),
+    )
+    for invalid_context in invalid_contexts:
+        assert fr.validate_runtime_observed_work_context_v02(
+            invalid_context
+        ).status == "FAIL_CLOSED"
 
 
 def test_e4c001_v03_t02_parent_envelope_and_settled_prefix_context_reconstruction_v02(
@@ -10716,18 +11013,31 @@ def test_e4c001_v03_parent_closed_stage_causal_and_complete_bundle_v02(
         in queue_by_id[item.downstream_artifact_id].parent_refs
         for item in observed_refs
     )
-    input_ids = {
+    observed_input_ids = {
         item.artifact_id
         for item in (
             *context.ordered_direct_source_artifacts,
-            *context.ordered_supporting_artifacts,
             *context.ordered_binding_artifacts,
         )
     }
-    assert not input_ids.intersection(bundle.runtime_trace.abi_artifact_refs)
-    assert all(
-        not input_ids.intersection(item.artifact_id for item in stage)
+    support_by_id = {
+        item.artifact_id: item for item in context.ordered_supporting_artifacts
+    }
+    stage_by_id = {
+        item.artifact_id: item
         for stage in (stage_a, stage_b, stage_c)
+        for item in stage
+    }
+    assert not observed_input_ids.intersection(bundle.runtime_trace.abi_artifact_refs)
+    assert all(
+        not observed_input_ids.intersection(item.artifact_id for item in stage)
+        for stage in (stage_a, stage_b, stage_c)
+    )
+    support_stage_overlap = set(support_by_id).intersection(stage_by_id)
+    assert support_stage_overlap
+    assert all(
+        support_by_id[artifact_id] == stage_by_id[artifact_id]
+        for artifact_id in support_stage_overlap
     )
     assert fr.validate_fractal_runtime_execution_bundle_v02(bundle).status == "PASS"
 
@@ -10979,6 +11289,7 @@ def test_e4c001_v03_counterfactual_rebuild_payload_and_envelope_changes_v02(
 
 def test_e4c001_v03_historical_none_and_whole_run_escalation_call_accounting_v02(
     e4c001_observed_work_family_v02: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     family = e4c001_observed_work_family_v02
     baseline = family["baseline"]
@@ -10988,6 +11299,115 @@ def test_e4c001_v03_historical_none_and_whole_run_escalation_call_accounting_v02
     assert isinstance(whole_context, fr.RuntimeObservedWorkContextV02)
     assert isinstance(selective_context, fr.RuntimeObservedWorkContextV02)
     assert baseline.observed_work_context is None
+    assert whole_context.execution_scope == "WHOLE_RUN_ESCALATION"
+    assert whole_context.whole_run_escalation_reason == (
+        "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+    )
+    assert whole_context.whole_run_escalation_policy_id is None
+    assert fr.validate_runtime_observed_work_context_v02(
+        whole_context
+    ).status == "PASS"
+    assert fr.validate_runtime_observed_work_context_against_sources_v02(
+        whole_context,
+        baseline_execution_bundle=baseline,
+        direct_source_artifacts=family["full_direct_sources"],
+        supporting_artifacts=(),
+        binding_artifacts=family["whole_bindings"],
+    ).status == "PASS"
+    baseline_work_rows = tuple(
+        (node_id, cell_input.cell_id)
+        for cell_input in baseline.cell_inputs
+        for node_id in cell_input.ordered_node_ids
+    )
+    binding_rows = tuple(
+        (
+            _kernel_payload(binding)["topology_binding"]["node_ref"],
+            _kernel_payload(binding)["topology_binding"]["cell_ref"],
+        )
+        for binding in whole_context.ordered_binding_artifacts
+    )
+    assert len(binding_rows) == len(baseline_work_rows)
+    assert set(binding_rows) == set(baseline_work_rows)
+    assert whole_context.ordered_direct_affected_node_ids == tuple(
+        item.node_id for item in baseline.topology_nodes
+    )
+    assert whole_context.ordered_execution_node_ids == tuple(
+        item.node_id for item in baseline.topology_nodes
+    )
+    assert whole_context.ordered_affected_cell_ids == tuple(
+        item.cell_id for item in baseline.cell_inputs
+    )
+    whole_plain = fr.runtime_observed_work_context_to_plain_data_v02(
+        whole_context
+    )
+    assert whole_plain["whole_run_escalation_reason"] == (
+        "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+    )
+    assert whole_plain["whole_run_escalation_policy_id"] is None
+    identity_material = dict(whole_plain)
+    identity_material.pop("observed_work_context_id")
+    assert whole_context.observed_work_context_id == (
+        "frobservedctx_v02:"
+        + domain_separated_sha256_hex_v01(
+            domain="HEDGEHOG_FRACTAL_RUNTIME_V02_OBSERVED_WORK_CONTEXT",
+            payload=canonical_json_bytes_v01(identity_material),
+        )
+    )
+    for binding in whole_context.ordered_binding_artifacts:
+        execution = _kernel_payload(binding)["execution"]
+        assert execution == {
+            "execution_scope": "WHOLE_RUN_ESCALATION",
+            "whole_run_escalation_policy_id": None,
+            "whole_run_escalation_reason": (
+                "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+            ),
+        }
+        assert validate_kernel_artifact_v01(binding) == ()
+    whole_support_by_id = {
+        item.artifact_id: item
+        for item in whole_context.ordered_supporting_artifacts
+    }
+    baseline_support_by_id = {
+        item.artifact_id: item
+        for item in (
+            *baseline.queue_artifacts,
+            *baseline.result_artifacts,
+            baseline.report_artifact,
+        )
+    }
+    child_activation_parent_ids = {
+        _kernel_payload(binding)["topology_binding"][
+            "activation_parent_queue_artifact_ref"
+        ]
+        for binding in whole_context.ordered_binding_artifacts
+        if _kernel_payload(binding)["topology_binding"][
+            "activation_parent_queue_artifact_ref"
+        ]
+        is not None
+    }
+    assert child_activation_parent_ids
+    assert child_activation_parent_ids.issubset(whole_support_by_id)
+    assert set(whole_support_by_id).issubset(baseline_support_by_id)
+    assert all(
+        artifact == baseline_support_by_id[artifact.artifact_id]
+        for artifact in whole_context.ordered_supporting_artifacts
+    )
+    internal_runtime_calls = 0
+    original_runtime = fr._d4_run_runtime_v02
+
+    def counted_internal_runtime(
+        source_context: fr.FractalRuntimeSourceContextV02,
+        *,
+        observed_work_context: fr.RuntimeObservedWorkContextV02 | None = None,
+    ) -> fr.FractalRuntimeExecutionBundleV02:
+        nonlocal internal_runtime_calls
+        internal_runtime_calls += 1
+        return original_runtime(
+            source_context,
+            observed_work_context=observed_work_context,
+        )
+
+    monkeypatch.setattr(fr, "_d4_run_runtime_v02", counted_internal_runtime)
     whole_bundle, whole_report = fr.run_fractal_runtime_v02(
         baseline.source_context,
         observed_work_context=whole_context,
@@ -11004,10 +11424,78 @@ def test_e4c001_v03_historical_none_and_whole_run_escalation_call_accounting_v02
     assert rejected_report.reason_codes == (
         "g2d_topology_source_binding_invalid",
     )
-    assert whole_context.execution_scope == "WHOLE_RUN_ESCALATION"
-    assert whole_context.whole_run_escalation_policy_id == (
-        "fractal_runtime_whole_run_escalation_v02"
+    assert internal_runtime_calls == 1
+    initial_rows = tuple(
+        (entry, artifact)
+        for entry, artifact in zip(
+            whole_bundle.queue_entries,
+            whole_bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.predecessor_queue_entry_id is None
     )
+    initial_artifact_ids = {artifact.artifact_id for _entry, artifact in initial_rows}
+    for binding in whole_context.ordered_binding_artifacts:
+        topology_binding = _kernel_payload(binding)["topology_binding"]
+        matching = tuple(
+            artifact
+            for entry, artifact in initial_rows
+            if entry.node_id == topology_binding["node_ref"]
+            and entry.cell_id == topology_binding["cell_ref"]
+            and binding.artifact_id in artifact.parent_refs
+        )
+        assert len(matching) == 1
+        assert all(
+            binding.artifact_id not in artifact.parent_refs
+            for entry, artifact in initial_rows
+            if (
+                entry.node_id,
+                entry.cell_id,
+            )
+            != (
+                topology_binding["node_ref"],
+                topology_binding["cell_ref"],
+            )
+        )
+    assert all(
+        whole_context.observed_work_context_id in item.context_refs
+        for item in whole_bundle.cell_inputs
+    )
+    assert initial_artifact_ids.issubset(
+        set(whole_bundle.runtime_trace.abi_artifact_refs)
+    )
+    assert whole_bundle.runtime_report.runtime_trace_id == (
+        whole_bundle.runtime_trace.trace_id
+    )
+    assert whole_bundle.report_artifact.trace_refs[0] == (
+        whole_bundle.runtime_trace.trace_id
+    )
+    assert whole_bundle.report_artifact.parent_refs == (
+        whole_bundle.topology_artifact.artifact_id,
+        *(item.artifact_id for item in whole_bundle.result_artifacts),
+    )
+    observed_refs = tuple(
+        item
+        for item in whole_bundle.causal_consumption_refs
+        if item.decision_effect
+        in {"OBSERVED_WORK_INPUT", "OBSERVED_WORK_CELL_BINDING"}
+    )
+    assert observed_refs
+    assert {
+        item.artifact_id for item in whole_context.ordered_binding_artifacts
+    } == {item.source_artifact_id for item in observed_refs}
+    assert all(
+        item.downstream_artifact_id in initial_artifact_ids
+        and item.trace_refs[-1] == whole_bundle.runtime_trace.trace_id
+        for item in observed_refs
+    )
+    stage_c = _d4_bundle_artifacts(whole_bundle)[2]
+    assert fr.validate_fractal_runtime_causal_consumption_refs_v02(
+        whole_bundle.causal_consumption_refs,
+        **_d4_validation_kwargs(whole_bundle),
+        stage_d_c_artifacts=stage_c,
+        observed_work_context=whole_context,
+    ).status == "PASS"
     assert whole_context.root_review_required is True
     assert all(
         getattr(whole_context, name) == 0
@@ -11034,6 +11522,22 @@ def test_e4c001_v03_historical_none_and_whole_run_escalation_call_accounting_v02
     assert fr.validate_fractal_runtime_execution_bundle_v02(
         whole_bundle
     ).status == "PASS"
+    invalid_complete_contexts = (
+        replace(
+            whole_context,
+            ordered_execution_node_ids=(
+                whole_context.ordered_execution_node_ids[:-1]
+            ),
+        ),
+        replace(
+            whole_context,
+            whole_run_escalation_policy_id="foreign_policy_v02",
+        ),
+    )
+    for invalid_context in invalid_complete_contexts:
+        assert fr.validate_fractal_runtime_execution_bundle_v02(
+            replace(whole_bundle, observed_work_context=invalid_context)
+        ).status == "FAIL_CLOSED"
 
 
 D5_CASE_ORDER_V02 = (

@@ -310,6 +310,23 @@ CAUSAL_DISPOSITIONS = ("USED", "REJECTED", "IGNORED_WITH_REASON", "BLOCKED_BY_GA
 OBSERVED_WORK_EXECUTION_SCOPES = ("SELECTIVE", "WHOLE_RUN_ESCALATION")
 OBSERVED_WORK_CONTEXT_VERSION = "v0.2"
 OBSERVED_WORK_CONTEXT_PROFILE_ID = "fractal_runtime_observed_work_context_v02"
+_OBSERVED_WORK_PROOF_BASED_FULL_CLOSURE_REASON_V02 = (
+    "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+)
+_OBSERVED_WORK_NAMED_POLICY_REASON_V02 = (
+    "FAIL_CLOSED_POLICY_REQUIRES_FULL_RECONSTRUCTION"
+)
+_OBSERVED_WORK_ACCEPTED_NAMED_POLICY_IDS_V02: tuple[str, ...] = ()
+_OBSERVED_WORK_LOCAL_EXECUTION_CLASSES_V02 = (
+    "SELECTIVE",
+    "PROOF_BASED_FULL_CLOSURE",
+    "NAMED_POLICY",
+)
+_OBSERVED_WORK_AGGREGATE_CLOSURE_CLASSES_V02 = (
+    "STRICT_SUBSET",
+    "FULL_CLOSURE",
+    "INVALID",
+)
 
 NODE_OUTPUT_KIND_ROWS_V02 = (
     ("MEMORY_CONTEXT", "MEMORY_CONTEXT_OUTPUT"),
@@ -5593,6 +5610,39 @@ def _baseline_witness_material_v02(
     }
 
 
+def _observed_work_local_execution_class_v02(
+    *,
+    execution_scope: str,
+    whole_run_escalation_reason: str | None,
+    whole_run_escalation_policy_id: str | None,
+) -> str:
+    if type(execution_scope) is not str:
+        raise ValueError("g2d_topology_source_binding_invalid")
+    if execution_scope == "SELECTIVE":
+        if (
+            whole_run_escalation_reason is None
+            and whole_run_escalation_policy_id is None
+        ):
+            return "SELECTIVE"
+        raise ValueError("g2d_topology_source_binding_invalid")
+    if execution_scope != "WHOLE_RUN_ESCALATION":
+        raise ValueError("g2d_topology_source_binding_invalid")
+    if (
+        whole_run_escalation_reason
+        == _OBSERVED_WORK_PROOF_BASED_FULL_CLOSURE_REASON_V02
+        and whole_run_escalation_policy_id is None
+    ):
+        return "PROOF_BASED_FULL_CLOSURE"
+    if (
+        whole_run_escalation_reason == _OBSERVED_WORK_NAMED_POLICY_REASON_V02
+        and _ref_valid(whole_run_escalation_policy_id)
+        and whole_run_escalation_policy_id
+        in _OBSERVED_WORK_ACCEPTED_NAMED_POLICY_IDS_V02
+    ):
+        return "NAMED_POLICY"
+    raise ValueError("g2d_topology_source_binding_invalid")
+
+
 def _project_runtime_observed_work_binding_kernel_artifact_v02(
     *,
     baseline_execution_bundle: FractalRuntimeExecutionBundleV02,
@@ -5609,27 +5659,17 @@ def _project_runtime_observed_work_binding_kernel_artifact_v02(
         type(baseline_execution_bundle) is not FractalRuntimeExecutionBundleV02
         or type(baseline_source_artifact) is not KernelArtifactV01
         or type(observed_source_artifact) is not KernelArtifactV01
-        or execution_scope not in OBSERVED_WORK_EXECUTION_SCOPES
         or baseline_source_artifact.transaction_id
         != baseline_execution_bundle.topology.transaction_id
         or baseline_source_artifact.owner_root_id
         != baseline_execution_bundle.topology.owning_root_id
     ):
         raise ValueError("g2d_topology_source_binding_invalid")
-    if execution_scope == "SELECTIVE":
-        if (
-            whole_run_escalation_reason is not None
-            or whole_run_escalation_policy_id is not None
-        ):
-            raise ValueError("g2d_topology_source_binding_invalid")
-    elif not all(
-        _ref_valid(item)
-        for item in (
-            whole_run_escalation_reason,
-            whole_run_escalation_policy_id,
-        )
-    ):
-        raise ValueError("g2d_topology_source_binding_invalid")
+    _observed_work_local_execution_class_v02(
+        execution_scope=execution_scope,
+        whole_run_escalation_reason=whole_run_escalation_reason,
+        whole_run_escalation_policy_id=whole_run_escalation_policy_id,
+    )
     witness = _baseline_witness_material_v02(
         baseline_execution_bundle=baseline_execution_bundle,
         node=node,
@@ -5902,63 +5942,91 @@ def _canonical_supporting_artifacts_v02(
         raise ValueError("g2d_topology_source_binding_invalid")
     direct_ids = {item.artifact_id for item in direct_source_artifacts}
     binding_ids = {item.artifact_id for item in binding_artifacts}
-    by_id: dict[str, KernelArtifactV01] = {}
+    baseline_artifacts = (
+        baseline_execution_bundle.source_context.proposal_artifact,
+        baseline_execution_bundle.source_context.decision_artifact,
+        baseline_execution_bundle.source_context.route_eligibility_artifact,
+        baseline_execution_bundle.topology_artifact,
+        *baseline_execution_bundle.queue_artifacts,
+        *baseline_execution_bundle.result_artifacts,
+        baseline_execution_bundle.report_artifact,
+    )
+    baseline_by_id = {item.artifact_id: item for item in baseline_artifacts}
+    if (
+        len(baseline_by_id) != len(baseline_artifacts)
+        or (direct_ids | binding_ids) & set(baseline_by_id)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    carried_baseline_ids = {
+        baseline_execution_bundle.source_context.proposal_artifact.artifact_id,
+        baseline_execution_bundle.source_context.decision_artifact.artifact_id,
+        baseline_execution_bundle.source_context.route_eligibility_artifact.artifact_id,
+        baseline_execution_bundle.topology_artifact.artifact_id,
+    }
+    caller_by_id: dict[str, KernelArtifactV01] = {}
     for artifact in supporting_artifacts:
-        if artifact.artifact_id in direct_ids | binding_ids:
+        if (
+            artifact.artifact_id in direct_ids | binding_ids
+            or artifact.transaction_id
+            != baseline_execution_bundle.topology.transaction_id
+            or artifact.owner_root_id
+            != baseline_execution_bundle.topology.owning_root_id
+        ):
             raise ValueError("g2d_topology_source_binding_invalid")
-        prior = by_id.get(artifact.artifact_id)
+        prior = caller_by_id.get(artifact.artifact_id)
         if prior is not None and _canonical_json_bytes_v01(
             _kernel_artifact_to_plain_dict_v01(prior)
         ) != _canonical_json_bytes_v01(
             _kernel_artifact_to_plain_dict_v01(artifact)
         ):
             raise ValueError("g2d_topology_source_binding_invalid")
-        by_id[artifact.artifact_id] = artifact
-    if len(by_id) != len(supporting_artifacts):
-        raise ValueError("g2d_topology_source_binding_invalid")
-    baseline_ids = {
-        item.artifact_id
-        for item in (
-            baseline_execution_bundle.source_context.proposal_artifact,
-            baseline_execution_bundle.source_context.decision_artifact,
-            baseline_execution_bundle.source_context.route_eligibility_artifact,
-            baseline_execution_bundle.topology_artifact,
-            *baseline_execution_bundle.queue_artifacts,
-            *baseline_execution_bundle.result_artifacts,
-            baseline_execution_bundle.report_artifact,
-        )
-    }
-    if set(by_id) & baseline_ids:
-        raise ValueError("g2d_topology_source_binding_invalid")
-    known = direct_ids | binding_ids | baseline_ids | set(by_id)
-    if any(
-        parent not in known
-        for artifact in supporting_artifacts
-        for parent in artifact.parent_refs
-    ):
-        raise ValueError("g2d_topology_source_binding_invalid")
+        baseline_artifact = baseline_by_id.get(artifact.artifact_id)
+        if baseline_artifact is not None and _canonical_json_bytes_v01(
+            _kernel_artifact_to_plain_dict_v01(baseline_artifact)
+        ) != _canonical_json_bytes_v01(
+            _kernel_artifact_to_plain_dict_v01(artifact)
+        ):
+            raise ValueError("g2d_topology_source_binding_invalid")
+        caller_by_id[artifact.artifact_id] = artifact
+    available_by_id = {**baseline_by_id, **caller_by_id}
     required_support_ids: set[str] = set()
     pending_parent_ids = [
         parent_id
         for artifact in (*direct_source_artifacts, *binding_artifacts)
         for parent_id in artifact.parent_refs
-        if parent_id in by_id
     ]
     while pending_parent_ids:
         parent_id = pending_parent_ids.pop()
+        if parent_id in direct_ids | binding_ids | carried_baseline_ids:
+            continue
+        artifact = available_by_id.get(parent_id)
+        if artifact is None:
+            raise ValueError("g2d_topology_source_binding_invalid")
         if parent_id in required_support_ids:
             continue
         required_support_ids.add(parent_id)
-        pending_parent_ids.extend(
-            ancestor_id
-            for ancestor_id in by_id[parent_id].parent_refs
-            if ancestor_id in by_id
-        )
-    if required_support_ids != set(by_id):
+        pending_parent_ids.extend(artifact.parent_refs)
+    if not set(caller_by_id).issubset(required_support_ids):
         raise ValueError("g2d_topology_source_binding_invalid")
-    pending = dict(by_id)
+    support_by_id = {
+        artifact_id: (
+            caller_by_id[artifact_id]
+            if artifact_id in caller_by_id
+            else baseline_by_id[artifact_id]
+        )
+        for artifact_id in required_support_ids
+    }
+    known_parent_ids = set(support_by_id) | carried_baseline_ids
+    if any(
+        parent_id in direct_ids | binding_ids
+        or parent_id not in known_parent_ids
+        for artifact in support_by_id.values()
+        for parent_id in artifact.parent_refs
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    pending = dict(support_by_id)
     emitted: list[KernelArtifactV01] = []
-    emitted_ids = set(baseline_ids)
+    emitted_ids = set(carried_baseline_ids)
     while pending:
         ready = sorted(
             (
@@ -5982,9 +6050,52 @@ def _observed_work_execution_closure_v02(
     baseline_execution_bundle: FractalRuntimeExecutionBundleV02,
     direct_node_cell_rows: tuple[tuple[str, str], ...],
 ) -> tuple[str, ...]:
+    rows = _observed_work_execution_row_closure_v02(
+        baseline_execution_bundle=baseline_execution_bundle,
+        direct_node_cell_rows=direct_node_cell_rows,
+    )
+    selected = {node_id for node_id, _cell_id in rows}
+    return tuple(
+        node.node_id
+        for node in baseline_execution_bundle.topology_nodes
+        if node.node_id in selected
+    )
+
+
+def _observed_work_execution_row_closure_v02(
+    *,
+    baseline_execution_bundle: FractalRuntimeExecutionBundleV02,
+    direct_node_cell_rows: tuple[tuple[str, str], ...],
+) -> tuple[tuple[str, str], ...]:
     root_cell_id = baseline_execution_bundle.topology.root_cell_id
-    selected: set[str] = set()
+    input_by_cell = {
+        item.cell_id: item for item in baseline_execution_bundle.cell_inputs
+    }
+    node_position = {
+        item.node_id: index
+        for index, item in enumerate(baseline_execution_bundle.topology_nodes)
+    }
+    cell_position = {
+        item.cell_id: index
+        for index, item in enumerate(baseline_execution_bundle.cell_inputs)
+    }
+    if (
+        type(direct_node_cell_rows) is not tuple
+        or not direct_node_cell_rows
+        or len(input_by_cell) != len(baseline_execution_bundle.cell_inputs)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    selected: set[tuple[str, str]] = set()
     for direct_node_id, cell_id in direct_node_cell_rows:
+        cell_input = input_by_cell.get(cell_id)
+        if (
+            type(direct_node_id) is not str
+            or type(cell_id) is not str
+            or type(cell_input) is not FractalCellInputV02
+            or direct_node_id not in cell_input.ordered_node_ids
+            or direct_node_id not in node_position
+        ):
+            raise ValueError("g2d_topology_source_binding_invalid")
         projection_class = (
             "ROOT_CELL_PROJECTION"
             if cell_id == root_cell_id
@@ -5998,16 +6109,250 @@ def _observed_work_execution_closure_v02(
                 if (
                     edge.cell_projection_class == projection_class
                     and edge.source_node_id in cell_selected
+                    and edge.source_node_id in cell_input.ordered_node_ids
+                    and edge.target_node_id in cell_input.ordered_node_ids
                     and edge.target_node_id not in cell_selected
                 ):
                     cell_selected.add(edge.target_node_id)
                     changed = True
-        selected.update(cell_selected)
+        selected.update((node_id, cell_id) for node_id in cell_selected)
     return tuple(
+        sorted(
+            selected,
+            key=lambda row: (
+                node_position[row[0]],
+                cell_position[row[1]],
+            ),
+        )
+    )
+
+
+def _observed_work_aggregate_closure_proof_v02(
+    *,
+    baseline_execution_bundle: FractalRuntimeExecutionBundleV02,
+    ordered_binding_artifacts: tuple[KernelArtifactV01, ...],
+) -> dict[str, object]:
+    if (
+        type(baseline_execution_bundle) is not FractalRuntimeExecutionBundleV02
+        or baseline_execution_bundle.observed_work_context is not None
+        or type(ordered_binding_artifacts) is not tuple
+        or not ordered_binding_artifacts
+        or any(
+            type(item) is not KernelArtifactV01
+            for item in ordered_binding_artifacts
+        )
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    node_by_id = {
+        item.node_id: item
+        for item in baseline_execution_bundle.topology_nodes
+    }
+    node_position = {
+        item.node_id: index
+        for index, item in enumerate(baseline_execution_bundle.topology_nodes)
+    }
+    input_by_id = {
+        item.cell_input_id: item
+        for item in baseline_execution_bundle.cell_inputs
+    }
+    input_by_cell = {
+        item.cell_id: item
+        for item in baseline_execution_bundle.cell_inputs
+    }
+    cell_position = {
+        item.cell_id: index
+        for index, item in enumerate(baseline_execution_bundle.cell_inputs)
+    }
+    if (
+        len(node_by_id) != len(baseline_execution_bundle.topology_nodes)
+        or len(input_by_id) != len(baseline_execution_bundle.cell_inputs)
+        or len(input_by_cell) != len(baseline_execution_bundle.cell_inputs)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    baseline_work_rows = tuple(
+        sorted(
+            (
+                (node_id, cell_input.cell_id)
+                for cell_input in baseline_execution_bundle.cell_inputs
+                for node_id in cell_input.ordered_node_ids
+            ),
+            key=lambda row: (
+                node_position[row[0]],
+                cell_position[row[1]],
+            ),
+        )
+    )
+    baseline_work_set = set(baseline_work_rows)
+    if (
+        not baseline_work_rows
+        or len(baseline_work_set) != len(baseline_work_rows)
+        or {row[0] for row in baseline_work_rows} != set(node_by_id)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    baseline_queue_rows = tuple(
+        (
+            entry.cell_id,
+            entry.node_id,
+            entry.queue_entry_id,
+            artifact.artifact_id,
+        )
+        for entry, artifact in zip(
+            baseline_execution_bundle.queue_entries,
+            baseline_execution_bundle.queue_artifacts,
+            strict=True,
+        )
+    )
+    if (
+        not baseline_queue_rows
+        or any((row[1], row[0]) not in baseline_work_set for row in baseline_queue_rows)
+        or len({row[2] for row in baseline_queue_rows}) != len(baseline_queue_rows)
+        or len({row[3] for row in baseline_queue_rows}) != len(baseline_queue_rows)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    baseline_result_rows = tuple(
+        (result.cell_id, result.result_id, artifact.artifact_id)
+        for result, artifact in zip(
+            baseline_execution_bundle.cell_results,
+            baseline_execution_bundle.result_artifacts,
+            strict=True,
+        )
+    )
+    if (
+        not baseline_result_rows
+        or {row[0] for row in baseline_result_rows} != set(input_by_cell)
+        or len({row[1] for row in baseline_result_rows})
+        != len(baseline_result_rows)
+        or len({row[2] for row in baseline_result_rows})
+        != len(baseline_result_rows)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+
+    direct_rows: set[tuple[str, str]] = set()
+    for artifact in ordered_binding_artifacts:
+        payload = _observed_work_binding_payload_v02(artifact)
+        binding = payload.get("topology_binding")
+        if type(binding) is not dict:
+            raise ValueError("g2d_topology_source_binding_invalid")
+        node_id = binding.get("node_ref")
+        cell_id = binding.get("cell_ref")
+        cell_input_id = binding.get("baseline_cell_input_ref")
+        node = node_by_id.get(node_id)
+        cell_input = input_by_id.get(cell_input_id)
+        if (
+            type(node) is not RuntimeTopologyNodeV02
+            or type(cell_input) is not FractalCellInputV02
+            or cell_input.cell_id != cell_id
+            or node.node_id not in cell_input.ordered_node_ids
+            or (node.node_id, cell_input.cell_id) not in baseline_work_set
+            or binding.get("topology_ref")
+            != baseline_execution_bundle.topology.topology_id
+            or binding.get("topology_artifact_ref")
+            != baseline_execution_bundle.topology_artifact.artifact_id
+            or binding.get("runtime_source_binding_ref")
+            != baseline_execution_bundle.source_binding.source_binding_id
+        ):
+            raise ValueError("g2d_topology_source_binding_invalid")
+        direct_rows.add((node.node_id, cell_input.cell_id))
+    ordered_direct_rows = tuple(
+        sorted(
+            direct_rows,
+            key=lambda row: (
+                node_position[row[0]],
+                cell_position[row[1]],
+            ),
+        )
+    )
+    execution_rows = _observed_work_execution_row_closure_v02(
+        baseline_execution_bundle=baseline_execution_bundle,
+        direct_node_cell_rows=ordered_direct_rows,
+    )
+    execution_set = set(execution_rows)
+    if not execution_set or not execution_set.issubset(baseline_work_set):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    affected_cell_ids = tuple(
+        cell_input.cell_id
+        for cell_input in baseline_execution_bundle.cell_inputs
+        if any(row[1] == cell_input.cell_id for row in execution_rows)
+    )
+    affected_cell_set = set(affected_cell_ids)
+    affected_queue_artifact_ids = tuple(
+        row[3]
+        for row in baseline_queue_rows
+        if (row[1], row[0]) in execution_set
+    )
+    affected_result_artifact_ids = tuple(
+        row[2]
+        for row in baseline_result_rows
+        if row[0] in affected_cell_set
+    )
+    baseline_queue_artifact_ids = tuple(row[3] for row in baseline_queue_rows)
+    baseline_result_artifact_ids = tuple(row[2] for row in baseline_result_rows)
+    report_artifact_ids = (
+        (baseline_execution_bundle.report_artifact.artifact_id,)
+        if execution_rows == baseline_work_rows
+        and affected_queue_artifact_ids == baseline_queue_artifact_ids
+        and affected_result_artifact_ids == baseline_result_artifact_ids
+        else ()
+    )
+    if (
+        execution_rows == baseline_work_rows
+        and report_artifact_ids
+    ):
+        classification = "FULL_CLOSURE"
+    elif execution_set < baseline_work_set:
+        classification = "STRICT_SUBSET"
+    else:
+        classification = "INVALID"
+    if classification not in _OBSERVED_WORK_AGGREGATE_CLOSURE_CLASSES_V02:
+        raise ValueError("g2d_topology_source_binding_invalid")
+    ordered_direct_node_ids = tuple(
         node.node_id
         for node in baseline_execution_bundle.topology_nodes
-        if node.node_id in selected
+        if any(row[0] == node.node_id for row in ordered_direct_rows)
     )
+    ordered_execution_node_ids = tuple(
+        node.node_id
+        for node in baseline_execution_bundle.topology_nodes
+        if any(row[0] == node.node_id for row in execution_rows)
+    )
+    ordered_direct_cell_ids = tuple(
+        cell_input.cell_id
+        for cell_input in baseline_execution_bundle.cell_inputs
+        if any(row[1] == cell_input.cell_id for row in ordered_direct_rows)
+    )
+    return {
+        "affected_queue_artifact_ids": affected_queue_artifact_ids,
+        "affected_report_artifact_ids": report_artifact_ids,
+        "affected_result_artifact_ids": affected_result_artifact_ids,
+        "baseline_queue_artifact_ids": baseline_queue_artifact_ids,
+        "baseline_report_artifact_ids": (
+            baseline_execution_bundle.report_artifact.artifact_id,
+        ),
+        "baseline_result_artifact_ids": baseline_result_artifact_ids,
+        "baseline_work_rows": baseline_work_rows,
+        "classification": classification,
+        "ordered_affected_cell_ids": ordered_direct_cell_ids,
+        "ordered_direct_affected_node_ids": ordered_direct_node_ids,
+        "ordered_direct_work_rows": ordered_direct_rows,
+        "ordered_execution_node_ids": ordered_execution_node_ids,
+        "ordered_execution_work_rows": execution_rows,
+    }
+
+
+def _observed_work_aggregate_scope_valid_v02(
+    *,
+    local_execution_class: str,
+    aggregate_proof: dict[str, object],
+) -> bool:
+    classification = aggregate_proof.get("classification")
+    if local_execution_class == "SELECTIVE":
+        return classification == "STRICT_SUBSET"
+    if local_execution_class in {
+        "PROOF_BASED_FULL_CLOSURE",
+        "NAMED_POLICY",
+    }:
+        return classification == "FULL_CLOSURE"
+    return False
 
 
 def _runtime_observed_work_context_plain_unchecked_v02(
@@ -6062,23 +6407,13 @@ def _build_runtime_observed_work_context_v02(
             baseline_execution_bundle
         ).status
         != "PASS"
-        or execution_scope not in OBSERVED_WORK_EXECUTION_SCOPES
     ):
         raise ValueError("g2d_topology_source_binding_invalid")
-    if execution_scope == "SELECTIVE":
-        if (
-            whole_run_escalation_reason is not None
-            or whole_run_escalation_policy_id is not None
-        ):
-            raise ValueError("g2d_topology_source_binding_invalid")
-    elif not all(
-        _ref_valid(item)
-        for item in (
-            whole_run_escalation_reason,
-            whole_run_escalation_policy_id,
-        )
-    ):
-        raise ValueError("g2d_topology_source_binding_invalid")
+    local_execution_class = _observed_work_local_execution_class_v02(
+        execution_scope=execution_scope,
+        whole_run_escalation_reason=whole_run_escalation_reason,
+        whole_run_escalation_policy_id=whole_run_escalation_policy_id,
+    )
     ordered_bindings = _canonical_binding_artifacts_v02(
         baseline_execution_bundle=baseline_execution_bundle,
         binding_artifacts=binding_artifacts,
@@ -6181,36 +6516,25 @@ def _build_runtime_observed_work_context_v02(
         for parent_id in artifact.parent_refs
     ):
         raise ValueError("g2d_topology_source_binding_invalid")
-    direct_nodes: list[str] = []
-    affected_cells: list[str] = []
-    direct_node_cell_rows: list[tuple[str, str]] = []
-    for binding_artifact in ordered_bindings:
-        payload = _observed_work_binding_payload_v02(binding_artifact)
-        topology_binding = payload["topology_binding"]
-        assert isinstance(topology_binding, dict)
-        node_id = topology_binding["node_ref"]
-        cell_id = topology_binding["cell_ref"]
-        if node_id not in direct_nodes:
-            direct_nodes.append(node_id)
-        if cell_id not in affected_cells:
-            affected_cells.append(cell_id)
-        row = (node_id, cell_id)
-        if row not in direct_node_cell_rows:
-            direct_node_cell_rows.append(row)
-    node_order = {
-        item.node_id: index
-        for index, item in enumerate(baseline_execution_bundle.topology_nodes)
-    }
-    cell_order = {
-        item.cell_id: index
-        for index, item in enumerate(baseline_execution_bundle.cell_inputs)
-    }
-    ordered_direct_nodes = tuple(sorted(direct_nodes, key=node_order.__getitem__))
-    ordered_cells = tuple(sorted(affected_cells, key=cell_order.__getitem__))
-    execution_nodes = _observed_work_execution_closure_v02(
+    aggregate_proof = _observed_work_aggregate_closure_proof_v02(
         baseline_execution_bundle=baseline_execution_bundle,
-        direct_node_cell_rows=tuple(direct_node_cell_rows),
+        ordered_binding_artifacts=ordered_bindings,
     )
+    if not _observed_work_aggregate_scope_valid_v02(
+        local_execution_class=local_execution_class,
+        aggregate_proof=aggregate_proof,
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
+    ordered_direct_nodes = aggregate_proof[
+        "ordered_direct_affected_node_ids"
+    ]
+    ordered_cells = aggregate_proof["ordered_affected_cell_ids"]
+    execution_nodes = aggregate_proof["ordered_execution_node_ids"]
+    if not all(
+        type(item) is tuple
+        for item in (ordered_direct_nodes, ordered_cells, execution_nodes)
+    ):
+        raise ValueError("g2d_topology_source_binding_invalid")
     anchor = _baseline_bundle_anchor_sha256_v02(baseline_execution_bundle)
     provisional = RuntimeObservedWorkContextV02(
         observed_work_context_id="frobservedctx_v02:" + _ZERO_SHA256,
@@ -6358,7 +6682,6 @@ def _validate_runtime_observed_work_context_public_v02(
             or value.baseline_runtime_report_id != bundle.runtime_report.report_id
             or value.baseline_report_artifact_id
             != bundle.report_artifact.artifact_id
-            or value.execution_scope not in OBSERVED_WORK_EXECUTION_SCOPES
             or not value.ordered_direct_affected_node_ids
             or not value.ordered_execution_node_ids
             or not value.ordered_affected_cell_ids
@@ -6369,18 +6692,28 @@ def _validate_runtime_observed_work_context_public_v02(
             or any(type(item) is not bool or item for item in false_values)
         ):
             raise ValueError("g2d_topology_source_binding_invalid")
-        if value.execution_scope == "SELECTIVE":
-            if (
-                value.whole_run_escalation_reason is not None
-                or value.whole_run_escalation_policy_id is not None
-            ):
-                raise ValueError("g2d_topology_source_binding_invalid")
-        elif not all(
-            _ref_valid(item)
-            for item in (
-                value.whole_run_escalation_reason,
-                value.whole_run_escalation_policy_id,
+        local_execution_class = _observed_work_local_execution_class_v02(
+            execution_scope=value.execution_scope,
+            whole_run_escalation_reason=value.whole_run_escalation_reason,
+            whole_run_escalation_policy_id=(
+                value.whole_run_escalation_policy_id
+            ),
+        )
+        aggregate_proof = _observed_work_aggregate_closure_proof_v02(
+            baseline_execution_bundle=bundle,
+            ordered_binding_artifacts=value.ordered_binding_artifacts,
+        )
+        if (
+            not _observed_work_aggregate_scope_valid_v02(
+                local_execution_class=local_execution_class,
+                aggregate_proof=aggregate_proof,
             )
+            or value.ordered_direct_affected_node_ids
+            != aggregate_proof["ordered_direct_affected_node_ids"]
+            or value.ordered_execution_node_ids
+            != aggregate_proof["ordered_execution_node_ids"]
+            or value.ordered_affected_cell_ids
+            != aggregate_proof["ordered_affected_cell_ids"]
         ):
             raise ValueError("g2d_topology_source_binding_invalid")
         rebuilt_id = (
@@ -6471,8 +6804,29 @@ def _validate_runtime_observed_work_context_against_sources_public_v02(
                 value.whole_run_escalation_policy_id
             ),
         )
+        local_execution_class = _observed_work_local_execution_class_v02(
+            execution_scope=value.execution_scope,
+            whole_run_escalation_reason=value.whole_run_escalation_reason,
+            whole_run_escalation_policy_id=(
+                value.whole_run_escalation_policy_id
+            ),
+        )
+        aggregate_proof = _observed_work_aggregate_closure_proof_v02(
+            baseline_execution_bundle=baseline_execution_bundle,
+            ordered_binding_artifacts=expected.ordered_binding_artifacts,
+        )
         if (
             value != expected
+            or not _observed_work_aggregate_scope_valid_v02(
+                local_execution_class=local_execution_class,
+                aggregate_proof=aggregate_proof,
+            )
+            or value.ordered_direct_affected_node_ids
+            != aggregate_proof["ordered_direct_affected_node_ids"]
+            or value.ordered_execution_node_ids
+            != aggregate_proof["ordered_execution_node_ids"]
+            or value.ordered_affected_cell_ids
+            != aggregate_proof["ordered_affected_cell_ids"]
             or _canonical_json_bytes_v01(
                 _runtime_observed_work_context_plain_unchecked_v02(
                     value,
@@ -13171,17 +13525,49 @@ def validate_fractal_runtime_execution_bundle_v02(
             source_context=value.source_context
         ):
             raise ValueError("g2d_topology_source_binding_invalid")
-        if value.observed_work_context is not None and (
-            not _runtime_observed_work_context_self_valid_v02(
-                value.observed_work_context
+        if value.observed_work_context is not None:
+            observed_context = value.observed_work_context
+            if (
+                not _runtime_observed_work_context_self_valid_v02(
+                    observed_context
+                )
+                or observed_context.runtime_source_binding_id
+                != value.source_binding.source_binding_id
+                or observed_context.topology_id != value.topology.topology_id
+                or observed_context.topology_artifact_id
+                != value.topology_artifact.artifact_id
+            ):
+                raise ValueError("g2d_topology_source_binding_invalid")
+            local_execution_class = _observed_work_local_execution_class_v02(
+                execution_scope=observed_context.execution_scope,
+                whole_run_escalation_reason=(
+                    observed_context.whole_run_escalation_reason
+                ),
+                whole_run_escalation_policy_id=(
+                    observed_context.whole_run_escalation_policy_id
+                ),
             )
-            or value.observed_work_context.runtime_source_binding_id
-            != value.source_binding.source_binding_id
-            or value.observed_work_context.topology_id != value.topology.topology_id
-            or value.observed_work_context.topology_artifact_id
-            != value.topology_artifact.artifact_id
-        ):
-            raise ValueError("g2d_topology_source_binding_invalid")
+            aggregate_proof = _observed_work_aggregate_closure_proof_v02(
+                baseline_execution_bundle=(
+                    observed_context.baseline_execution_bundle
+                ),
+                ordered_binding_artifacts=(
+                    observed_context.ordered_binding_artifacts
+                ),
+            )
+            if (
+                not _observed_work_aggregate_scope_valid_v02(
+                    local_execution_class=local_execution_class,
+                    aggregate_proof=aggregate_proof,
+                )
+                or observed_context.ordered_direct_affected_node_ids
+                != aggregate_proof["ordered_direct_affected_node_ids"]
+                or observed_context.ordered_execution_node_ids
+                != aggregate_proof["ordered_execution_node_ids"]
+                or observed_context.ordered_affected_cell_ids
+                != aggregate_proof["ordered_affected_cell_ids"]
+            ):
+                raise ValueError("g2d_topology_source_binding_invalid")
         binding, seed, initial, nodes = _d3_reconstruct_topology_parts_v02(
             value.source_context,
             value.topology,
@@ -13790,23 +14176,63 @@ def run_fractal_runtime_v02(
         return None, source_report
     try:
         if observed_work_context is not None:
-            if (
-                not _runtime_observed_work_context_self_valid_v02(
-                    observed_work_context
+            structural_report = validate_runtime_observed_work_context_v02(
+                observed_work_context
+            )
+            contextual_report = (
+                validate_runtime_observed_work_context_against_sources_v02(
+                    observed_work_context,
+                    baseline_execution_bundle=(
+                        observed_work_context.baseline_execution_bundle
+                    ),
+                    direct_source_artifacts=(
+                        observed_work_context.ordered_direct_source_artifacts
+                    ),
+                    supporting_artifacts=(
+                        observed_work_context.ordered_supporting_artifacts
+                    ),
+                    binding_artifacts=(
+                        observed_work_context.ordered_binding_artifacts
+                    ),
                 )
-                or observed_work_context.execution_scope != "WHOLE_RUN_ESCALATION"
+            )
+            if (
+                structural_report.status != "PASS"
+                or contextual_report.status != "PASS"
                 or observed_work_context.baseline_execution_bundle.source_context
                 != source_context
             ):
                 raise ValueError("g2d_topology_source_binding_invalid")
-            full_node_ids = tuple(
-                item.node_id
-                for item in observed_work_context.baseline_execution_bundle.topology_nodes
+            local_execution_class = _observed_work_local_execution_class_v02(
+                execution_scope=observed_work_context.execution_scope,
+                whole_run_escalation_reason=(
+                    observed_work_context.whole_run_escalation_reason
+                ),
+                whole_run_escalation_policy_id=(
+                    observed_work_context.whole_run_escalation_policy_id
+                ),
+            )
+            aggregate_proof = _observed_work_aggregate_closure_proof_v02(
+                baseline_execution_bundle=(
+                    observed_work_context.baseline_execution_bundle
+                ),
+                ordered_binding_artifacts=(
+                    observed_work_context.ordered_binding_artifacts
+                ),
             )
             if (
-                observed_work_context.ordered_execution_node_ids != full_node_ids
-                and observed_work_context.whole_run_escalation_policy_id
-                != "fractal_runtime_whole_run_escalation_v02"
+                local_execution_class != "PROOF_BASED_FULL_CLOSURE"
+                or aggregate_proof["classification"] != "FULL_CLOSURE"
+                or not _observed_work_aggregate_scope_valid_v02(
+                    local_execution_class=local_execution_class,
+                    aggregate_proof=aggregate_proof,
+                )
+                or observed_work_context.ordered_direct_affected_node_ids
+                != aggregate_proof["ordered_direct_affected_node_ids"]
+                or observed_work_context.ordered_execution_node_ids
+                != aggregate_proof["ordered_execution_node_ids"]
+                or observed_work_context.ordered_affected_cell_ids
+                != aggregate_proof["ordered_affected_cell_ids"]
             ):
                 raise ValueError("g2d_topology_source_binding_invalid")
         bundle = _d4_run_runtime_v02(

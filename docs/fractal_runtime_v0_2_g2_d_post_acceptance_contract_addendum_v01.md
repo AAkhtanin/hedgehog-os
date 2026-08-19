@@ -1,3 +1,360 @@
+# G2-D Post-Acceptance Contract Addendum Version 0.3.9
+
+## Current Accepted v0.3.9 Clarification and Lifecycle Reopening Metadata
+
+```text
+document_status: POST_ACCEPTANCE_CORRECTION_ADDENDUM
+document_revision: v0.3.9
+guardian_review_status: ACCEPTED_WITH_MANDATORY_OVERLAY
+guardian_ruling: APPROVE_WITH_MANDATORY_OVERLAY
+accepted_v038_basis_revision: v0.3.8
+accepted_v038_basis_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6
+repository_basis_branch: main
+repository_basis_head: 4cf427f82a096383ae5873024787c19e56ac0fb5
+repository_basis_subject: Close G2-D v0.3.8 proof-based whole-run correction
+V038_IMPLEMENTATION_NONCONFORMANCE: YES
+V039_CONTRACT_SEMANTICS_CHANGED: NO
+V039_ROLE: EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING
+implementation_authorized: false
+implementation_started: false
+contract_hop_completed: true
+implementation_repository_patch_created: false
+isolated_worktree_strategy_approved: true
+e4_two_path_only_implementation_sufficient: false
+e4_public_end_to_end_carrier_overlay_required: true
+revised_guardian_decision_required: false
+current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+historical_v038_g2d_status: CLOSED_PASS_ON_V038_BYTES
+current_g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D
+post_v039_implementation_g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
+current_g2e4_status: IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED
+current_g2e4_anti_gaming_acceptance: BLOCKED_PENDING_G2D_V039_RECLOSURE
+g2e5_status: NOT_STARTED_NOT_AUTHORIZED
+g2e6_status: NOT_STARTED_NOT_AUTHORIZED
+g2f_status: NOT_STARTED_NOT_AUTHORIZED
+gate2_status: NOT_CLOSED
+```
+
+Version v0.3.9 introduces no new semantic law, type, field, public signature,
+schema definition, reason, validation target, failure stage, facade name,
+authority, or effect. It clarifies an existing accepted t12 duty, records that
+v0.3.8 did not conform to it, and reopens the lifecycle for one narrow
+implementation correction.
+
+This contract-only hop authorizes no implementation. It changes no runtime,
+schema, demo, facade, Transition Registry, G2-E runtime, Root, Post V&V, GT,
+G2-C, ABI, D5, Living, Conformance, or V06 bytes.
+
+## 1. Guardian Ruling and No-New-Semantics Boundary
+
+The controlling guardian result is exact:
+
+```text
+GUARDIAN_RULING=APPROVE_WITH_MANDATORY_OVERLAY
+PREACTION_HASH_LITERAL_DEFECT=YES
+G2D_V038_IMPLEMENTATION_NONCONFORMANCE=YES
+G2D_V039_CONTRACT_SEMANTICS_CHANGED=NO
+G2D_V039_LIFECYCLE_REOPENING_REQUIRED=YES
+E4_TWO_PATH_ONLY_IMPLEMENTATION_SUFFICIENT=NO
+ISOLATED_WORKTREE_STRATEGY_APPROVED=YES
+E4_PUBLIC_END_TO_END_CARRIER_OVERLAY_REQUIRED=YES
+REVISED_GUARDIAN_DECISION_REQUIRED=NO
+IMPLEMENTATION_AUTHORIZED=NO
+```
+
+The corrected `hedgehog/gt_validator.py` pre-action identity is
+`e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd`.
+The earlier shortened literal was a prompt defect, not a repository defect and
+not a new semantic issue.
+
+The accepted v0.3.8 contract, implementation, independent re-audit, and
+successor checkpoint remain immutable historical evidence for their exact
+v0.3.8 bytes. Their `CLOSED_PASS` classification is historical and does not
+certify future v0.3.9 bytes.
+
+## 2. Existing t12 Duty and Proven Implementation Nonconformance
+
+The accepted contract already requires t12 for a D3-local, child-result, gate,
+or structural revise no-progress mapping. Exact revise evidence is present only
+for revise no-progress. The D3-local VALIDATING source is replayed against its
+historical t06 origin. Non-PARENT_RETURN t08 through t12 decisions copy exact
+source observations and queue support reasons and create no budget successor.
+Queue support reasons and Transition decision reasons remain separate.
+
+The v0.3.8 implementation validates a non-eligible revise observation and then
+classifies VALIDATING work in this order:
+
+1. PARENT_RETURN;
+2. FRACTAL_CELL;
+3. every D3-local node kind;
+4. POST_VV or GT_ADVISORY;
+5. only then revise observation to DEADEND.
+
+Every valid node kind is consumed before the revise fallback. For the
+dependency-free D3-local source used by G2-E4, ordinary local material derives
+COMPLETED and masks the accepted revise-derived DEADEND. Therefore:
+
+```text
+V038_IMPLEMENTATION_NONCONFORMANCE=YES
+V039_CONTRACT_SEMANTICS_CHANGED=NO
+NEW_ARCHITECTURE_REQUIRED=NO
+G2D_PUBLIC_SURFACE_CHANGED=NO
+G2D_SCHEMA_CHANGED=NO
+```
+
+The existing `test_d4_revise_retry_and_no_progress_v02` proves construction of
+a non-eligible DEADEND revise observation but does not prove the complete
+public chain:
+
+```text
+evaluate_fractal_revise_observation_v02
+-> evaluate_fractal_runtime_state_transition_v02
+-> g2d_t12_validating_to_deadend
+-> advance_fractal_cell_queue_v02
+-> DEADEND queue entry and artifact
+```
+
+## 3. Future Narrow v0.3.9 Runtime Correction
+
+A later separately owner-authorized implementation may modify exactly:
+
+1. `hedgehog/kernel/fractal_runtime_v02.py`
+2. `tests/test_fractal_runtime_g2_d_v02.py`
+
+No schema, Transition Registry, facade, Root, G2-C, ABI, Post V&V, GT, public
+type, public field, public signature, public reason, validation target, failure
+stage, `__all__`, authority, or effect change is allowed.
+
+The runtime correction must:
+
+1. obtain the exact non-eligible revise observation through
+   `evaluate_fractal_revise_observation_v02`, not manual dataclass construction;
+2. preserve complete public validation of the revise observation;
+3. require exact D3-local VALIDATING source material and exact historical t06
+   origin replay;
+4. require exact source queue observations, evidence, advisories, and immutable
+   `queue_reason_codes`;
+5. select revise-derived DEADEND after exact revise validation but before the
+   generic D3-local allowed-outcome branch can mask it;
+6. call `evaluate_fractal_runtime_state_transition_v02` and return exact
+   `rule_id = g2d_t12_validating_to_deadend`,
+   `decision = RETURN_TO_ROOT`, and
+   `reason_code = g2d_transition_deadend_recorded`;
+7. preserve target queue reasons equal to source VALIDATING queue reasons and
+   `revise.reason_codes = ("g2d_no_progress_deadend",)`;
+8. create no budget successor for non-PARENT_RETURN t12;
+9. call `advance_fractal_cell_queue_v02` and produce the exact DEADEND queue
+   entry and queue artifact;
+10. preserve child-result, activation-gate, ordinary D3-local non-revise,
+    POST_VV, GT_ADVISORY, PARENT_RETURN, revise-eligible, backpressure, budget,
+    trace, and parent identity laws;
+11. prove exact-repeat/no-spin: identical revise evidence is deterministic and
+    bounded and cannot create an unbounded revision loop.
+
+## 4. Future Public t12 Test Duty
+
+The existing G2-D test family must be strengthened without adding a test
+function or parametrized item. It must:
+
+- use the public revise evaluator;
+- use the public state-transition evaluator;
+- require exact t12 rule, decision, and reason;
+- use public queue advance;
+- require exact DEADEND entry and artifact;
+- require copied source observations, evidence, advisories, and queue reasons;
+- require no budget successor;
+- require exact trace and parent identity;
+- reject wrong node, cell, budget, round, origin, and source tuples;
+- prove ordinary D3-local COMPLETED remains unchanged when revise is absent.
+
+## 5. Authority, Ownership, and Zero-Effect Boundary
+
+- Root remains the only final authority.
+- G2-C owns the accepted Root-reviewed route.
+- G2-D owns RuntimeExecutionTopology and stable topology-node and cell IDs.
+- G2-D imports no G2-E module or type.
+- PlanGraph remains historical and proof-donor material only.
+- Runtime contexts, bindings, queue entries, results, reports, traces, hashes,
+  tests, audits, checkpoints, and contract text create no authority.
+- Post V&V validates and GT advises; neither decides.
+- No successor baseline, permission, ActionCommitPacket, receipt, FinalOutput,
+  DRS write, provider/model/network/connector authority, external DRS action,
+  or real-world effect is created or claimed.
+
+## 6. Frozen Public Geometry and Protected Surfaces
+
+The future correction preserves the accepted G2-D geometry:
+
+```text
+public dataclass types = 21
+serialized types = 18
+runtime-only types = 3
+canonical-module public functions = 116
+module __all__ entries = 137
+direct package G2-D attributes = 143
+validation targets = 35
+failure stages = 30
+public reason codes = 220
+Transition rules = 17
+G2-D test function nodes = 83
+G2-D collected items = 92
+```
+
+The schema, demo, Transition Registry, package facade, Root, Post V&V, GT,
+G2-C, G2-E, D5, Living, Conformance, and V06 runner remain protected.
+
+## 7. Mandatory G2-E4 Public End-to-End Carrier Overlay
+
+After v0.3.9 implementation, acceptance, commit, independent re-audit,
+reclosure, and one fresh clean G2-E3 V06, the parked G2-E4 candidate resumes
+without being rebuilt from scratch.
+
+Final G2-E4 conditional behavior is accepted only through:
+
+```text
+run_continuous_delta_runtime_v01
+-> execute_selective_recomputation_v01
+-> public conditional branch
+```
+
+Private-helper-only evidence is forbidden. A private helper may remain only if
+it has a production caller in the public E4 call graph, its typed outputs are
+consumed by the public path, and the behavioral test does not call it directly
+as the execution under test.
+
+The required public chain is:
+
+```text
+revise / exact-repeat / no-progress
++ partial failure
++ backpressure
+-> complete G2-D evidence family
+-> SelectiveRecomputationResultV01
+-> ContinuousDeltaRuntimeTraceV01
+-> ContinuousDeltaRuntimeReportV01
+-> non-ACCEPT Root decision
+-> bundle = None
+-> report.status = FAIL_CLOSED
+```
+
+The public path carries nonempty revise observations, partial-failure IDs,
+unresolved IDs, and backpressure states; an exact public reason set; an exact
+report unresolved count; and a non-ACCEPT Root decision. t10, an accepted
+FINALIZED report artifact, and an accepted G2-E bundle are absent. Every
+authority and effect counter remains zero.
+
+Contextual validators may accept only the exact lawful FAIL_CLOSED profile.
+Missing, extra, duplicate, foreign, reordered, or success-laundered carriers
+fail closed. The normal strict-subtree PASS path remains unchanged and free of
+synthetic failure carriers.
+
+## 8. Future Acceptance and Exact Call Accounting
+
+Future v0.3.9 implementation acceptance includes:
+
+- one exact t12 focused node;
+- complete G2-D: 92/92 PASS;
+- complete Transition: 268/268 PASS;
+- complete G2-C: 392/392 PASS;
+- release plus maintenance: 23/23 PASS;
+- complete G2-D plus Transition: 360/360 PASS, calls 30/30;
+- D5 in two processes: 72 cases, 36/36 split, 10 accepted bundles, and 27/27
+  calls per process;
+- Living: 575/575 PASS, calls 27/27;
+- Kernel Conformance: 349/349 PASS, calls 27/27.
+
+After the implementation commit, G2-D is REAUDIT_PENDING. An independent
+read-only re-audit and additive reclosure are required before G2-D returns to
+CLOSED_PASS. One fresh unchanged logical G2-E3 V06 then runs in the clean
+isolated worktree before the primary dirty worktree is fast-forwarded.
+
+Final G2-E4 call accounting is controlling and exact:
+
+```text
+E4_PAIR_CALL_ACCOUNTING=2/2
+E4_FOCUSED_CALL_ACCOUNTING=2/2
+E4_COMPLETE_FILE_CALL_ACCOUNTING=3/3
+```
+
+Older 3/3, 3/3, and 4/4 expectations are historical and not controlling. No
+extra call may be added to satisfy a counter.
+
+## 9. Frozen Operational Order
+
+The complete operational order is frozen:
+
+1. v0.3.9 clarification and lifecycle-reopening contract in the isolated
+   worktree;
+2. contract commit and normal non-force push;
+3. narrow G2-D runtime and G2-D test correction in the isolated worktree;
+4. complete G2-D cumulative acceptance;
+5. implementation commit and normal non-force push;
+6. independent read-only re-audit;
+7. additive v0.3.9 reclosure;
+8. one fresh unchanged logical G2-E3 V06 in the clean isolated worktree;
+9. only after V06 PASS, guarded fast-forward of the original dirty primary
+   worktree to origin/main while proving the parked G2-E4 patch SHA-256 remains
+   `3c08807bcf8545b95ceca22ec13f1aa1cb2e8d2669ad72cf269ac2d077163aff`;
+10. resume the exact parked G2-E4 candidate;
+11. implement the public end-to-end conditional carrier overlay;
+12. run the anti-gaming pair 2/2;
+13. run complete G2-E4 18/18;
+14. run complete G2-E1 through G2-E4 68/68;
+15. transparent final G2-E4 corrective commit and normal push.
+
+The forbidden order is v0.3.9 reclosure, primary fast-forward, then V06. V06
+must occur before returning to the dirty G2-E4 checkout. No stash, reset,
+restore, checkout, amend, rebase, history rewrite, or force-push is required.
+
+## 10. Contract-Hop Scope and Current Lifecycle
+
+This contract-only candidate modifies exactly these ten isolated-worktree
+paths, in this order:
+
+1. `docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md`
+2. `tests/test_fractal_runtime_g2_d_v02.py`
+3. `AGENTS.md`
+4. `README.md`
+5. `specs/machine_manifest_v0_25.json`
+6. `release/current_status_overlay_v01.json`
+7. `release/claim_to_evidence_index.md`
+8. `release/current_limitations.md`
+9. `release/current_release_notes.md`
+10. `tests/test_repository_release_spine_v01.py`
+
+The active contract-only lifecycle is exact:
+
+```text
+G2D_STATUS=CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+G2D_IMPLEMENTATION_AUTHORIZED=false
+G2D_CORRECTED_V039_IMPLEMENTATION_EXISTS=false
+G2D_CONTRACT_ONLY_CLAIM=true
+HISTORICAL_V038_G2D_STATUS=CLOSED_PASS_ON_V038_BYTES
+G2E3_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D
+POST_V039_IMPLEMENTATION_G2E3_STATUS=REVALIDATION_PENDING_ON_CORRECTED_G2D
+G2E4_STRICT_SUBTREE_STATUS=IMPLEMENTED_COMMITTED_PASS
+G2E4_ANTI_GAMING_STATUS=BLOCKED_PENDING_G2D_V039_RECLOSURE
+G2E5_STATUS=NOT_STARTED_NOT_AUTHORIZED
+G2E6_STATUS=NOT_STARTED_NOT_AUTHORIZED
+G2F_STATUS=NOT_STARTED_NOT_AUTHORIZED
+GATE2_STATUS=NOT_CLOSED
+```
+
+Public release, RC2, production readiness, and production security
+certification remain NOT_CLAIMED. The contract creates no implementation,
+execution evidence, audit, checkpoint, reclosure, authority, permission,
+FinalOutput, DRS write, successor baseline, provider/model/network/connector
+operation, external DRS action, or real-world effect.
+
+===============================================================================
+HISTORICAL ACCEPTED V0.3.8 CONTENT - EXACT REPOSITORY BYTES
+===============================================================================
+
+The complete byte sequence below is the previously accepted v0.3.8 addendum.
+It remains immutable historical contract and evidence context for v0.3.8. Its
+embedded present-tense lifecycle statements do not override the active v0.3.9
+metadata and clarification above.
+
 # G2-D Post-Acceptance Contract Addendum Version 0.3.8
 
 ## Current Accepted v0.3.8 Clarification and Lifecycle Reopening Metadata

@@ -7,7 +7,6 @@
     "created_for": "Hedgehog OS / Fractal Reflexive OS proof-of-architecture demo",
     "scope": "single-node local demo with mock domain, local JSON DRS, deterministic stubs allowed"
   },
-
   "document_hierarchy": {
     "human_passport": "specs/human_passport_v0_25.md",
     "math_appendix": "specs/math_appendix_v0_3.md",
@@ -39,7 +38,6 @@
       "If documents conflict for current MVP implementation, Human Passport controls."
     ]
   },
-
   "current_checkpoint_status": {
     "metadata_sync_only": true,
     "manifest_does_not_override_human_passport": true,
@@ -64,39 +62,69 @@
       "gate2_status": "NOT_CLOSED",
       "g2c_status": "CLOSED_PASS",
       "g2c_implementation_authorized": true,
-      "g2d_status": "CLOSED_PASS",
-      "g2d_correction_implementation_authorized": true,
-      "g2d_corrected_implementation_exists": true,
-      "g2d_contract_only_claim": false,
-      "g2d_corrected_runtime_acceptance_claimed": true,
-      "g2d_corrected_implementation_committed": true,
-      "g2d_corrected_implementation_commit": "3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e",
-      "g2d_corrected_implementation_patch_sha256": "dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291",
-      "g2d_corrected_owner_evidence_bundle_sha256": "51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6",
+      "g2d_status": "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+      "g2d_correction_implementation_authorized": false,
+      "g2d_corrected_implementation_exists": false,
+      "g2d_contract_only_claim": true,
+      "g2d_corrected_runtime_acceptance_claimed": false,
+      "g2d_corrected_implementation_committed": false,
+      "g2d_corrected_implementation_commit": "NOT_CREATED",
+      "g2d_corrected_implementation_patch_sha256": "NOT_CREATED",
+      "g2d_corrected_owner_evidence_bundle_sha256": "NOT_CREATED",
       "g2d_independent_reaudit_required": true,
-      "g2d_independent_reaudit_passed": true,
-      "g2d_independent_reaudit_commit": "edfa42198efa1d03097570d30b6364af1b567050",
-      "g2d_independent_reaudit_path": "docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log",
-      "g2d_independent_reaudit_sha256": "acd62cfcf3753a4c02c5f5187e64e8940cf3b3420f97850b0426583465996d67",
+      "g2d_independent_reaudit_passed": false,
+      "g2d_independent_reaudit_commit": "NOT_CREATED",
+      "g2d_independent_reaudit_path": "NOT_CREATED",
+      "g2d_independent_reaudit_sha256": "NOT_CREATED",
       "g2d_additive_reclosure_required": true,
-      "g2d_additive_reclosure_completed": true,
-      "g2d_corrected_closure_claimed": true,
-      "g2d_corrected_checkpoint_path": "docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md",
-      "g2d_corrected_checkpoint_sha256": "64e2c94f83e8dd2012d0f6f6d8f969bc08832b61194ce24668c6ec7a4eb96e6b",
+      "g2d_additive_reclosure_completed": false,
+      "g2d_corrected_closure_claimed": false,
+      "g2d_corrected_checkpoint_path": "NOT_CREATED",
+      "g2d_corrected_checkpoint_sha256": "NOT_CREATED",
       "g2d_corrected_closure_commit_identity": "NOT_SELF_RECORDED",
       "g2d_old_audit_checkpoint_class": "HISTORICAL_PRECORRECTION_EVIDENCE",
       "g2d_accepted_normative_donor_sha256": "91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454",
-      "g2d_accepted_repository_addendum_sha256": "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6",
+      "g2d_accepted_repository_addendum_sha256": "1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445",
       "g2d_v037_implementation_nonconformance": true,
+      "g2d_v038_implementation_nonconformance": true,
       "g2d_v038_contract_semantics_changed": false,
       "g2d_v038_role": "EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING",
       "g2d_v038_directional_draft_review": "APPROVE_WITH_MANDATORY_OVERLAY",
       "g2d_v038_directional_draft_sha256": "91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454",
       "g2d_v038_controlling_design_v03_sha256": "7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe",
       "g2d_v038_accepted_addendum_sha256": "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6",
+      "g2d_v038_status": "CLOSED_PASS_ON_V038_BYTES",
       "g2d_v038_implementation_authorized": true,
       "g2d_v038_implementation_started": true,
+      "g2d_v038_corrected_implementation_exists": true,
+      "g2d_v038_corrected_implementation_committed": true,
+      "g2d_v038_corrected_implementation_commit": "3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e",
+      "g2d_v038_corrected_implementation_patch_sha256": "dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291",
+      "g2d_v038_corrected_owner_evidence_bundle_sha256": "51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6",
       "g2d_v038_full_acceptance_pending_owner": false,
+      "g2d_v038_independent_reaudit_passed": true,
+      "g2d_v038_independent_reaudit_commit": "edfa42198efa1d03097570d30b6364af1b567050",
+      "g2d_v038_independent_reaudit_path": "docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log",
+      "g2d_v038_independent_reaudit_sha256": "acd62cfcf3753a4c02c5f5187e64e8940cf3b3420f97850b0426583465996d67",
+      "g2d_v038_additive_reclosure_completed": true,
+      "g2d_v038_corrected_closure_claimed": true,
+      "g2d_v038_checkpoint_path": "docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md",
+      "g2d_v038_checkpoint_sha256": "64e2c94f83e8dd2012d0f6f6d8f969bc08832b61194ce24668c6ec7a4eb96e6b",
+      "g2d_v038_reclosure_commit": "4cf427f82a096383ae5873024787c19e56ac0fb5",
+      "g2d_v039_contract_semantics_changed": false,
+      "g2d_v039_role": "EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING",
+      "g2d_v039_guardian_ruling": "APPROVE_WITH_MANDATORY_OVERLAY",
+      "g2d_v039_accepted_v038_basis_sha256": "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6",
+      "g2d_v039_repository_basis_head": "4cf427f82a096383ae5873024787c19e56ac0fb5",
+      "g2d_v039_implementation_authorized": false,
+      "g2d_v039_implementation_started": false,
+      "g2d_v039_corrected_implementation_exists": false,
+      "g2d_v039_contract_hop_completed": true,
+      "g2d_v039_implementation_repository_patch_created": false,
+      "g2d_v039_isolated_worktree_strategy_approved": true,
+      "g2d_v039_e4_two_path_only_implementation_sufficient": false,
+      "g2d_v039_e4_public_end_to_end_carrier_overlay_required": true,
+      "g2d_v039_revised_guardian_decision_required": false,
       "g2d_v037_status": "HISTORICAL_CLOSED_PASS_WITH_IMPLEMENTATION_NONCONFORMANCE",
       "g2d_v037_accepted_normative_donor_sha256": "8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d",
       "g2d_v037_accepted_addendum_sha256": "29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511",
@@ -118,10 +146,11 @@
       "g2d_historical_precorrection_checkpoint_path": "docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md",
       "g2d_historical_precorrection_checkpoint_sha256": "f5bb19741ee992605ed772a282f4374bc3949508052edb09c8b3fdbbf210c1de",
       "g2d_historical_precorrection_evidence_only": true,
-      "g2e3_status": "REVALIDATION_PENDING_ON_CORRECTED_G2D",
+      "g2e3_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D",
       "g2e3_post_corrected_g2d_landing_status": "REVALIDATION_PENDING_ON_CORRECTED_G2D",
+      "g2e3_post_v039_implementation_status": "REVALIDATION_PENDING_ON_CORRECTED_G2D",
       "g2e3_post_reclosure_v06_passed": true,
-      "g2e3_post_reclosure_v06_archive_sha256": "d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3",
+      "g2e3_post_reclosure_v06_archive_sha256": "09bfe734048febfcf1ea32cc35195fb494b73c36a360163c8329aaf5e3fc2ca8",
       "g2e3_baseline_source_observation_sha256": "fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c",
       "g2e3_baseline_member_observation_sha256": "fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467",
       "g2e3_baseline_member_identities_sha256": "8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39",
@@ -133,11 +162,12 @@
       "g2e4_two_root_pair_register_sha256": "a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33",
       "g2e4_contract_accepted": true,
       "g2e4_contract_status": "ACCEPTED_IMPLEMENTATION_PENDING",
-      "g2e4_status": "BLOCKED_PENDING_FRESH_G2E3_V06",
+      "g2e4_status": "IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED",
       "g2e4_implementation_authorized": true,
       "g2e4_implementation_started": true,
       "g2e4_strict_subtree_implementation_committed": true,
-      "g2e4_anti_gaming_acceptance": "BLOCKED_PENDING_FRESH_G2E3_V06",
+      "g2e4_strict_subtree_status": "IMPLEMENTED_COMMITTED_PASS",
+      "g2e4_anti_gaming_acceptance": "BLOCKED_PENDING_G2D_V039_RECLOSURE",
       "g2e4_anti_gaming_correction_authorized": false,
       "g2e5_status": "NOT_STARTED_NOT_AUTHORIZED",
       "g2e6_status": "NOT_STARTED_NOT_AUTHORIZED",
@@ -454,160 +484,160 @@
     "full_semantic_e2e_wow_v1_1_root_alone_creates_final_output": true,
     "full_semantic_e2e_wow_v1_1_real_payment_count": 0,
     "full_semantic_e2e_wow_v1_1_real_shipment_release_count": 0,
-        "full_semantic_e2e_wow_v1_1_real_world_effects_count": 0,
-        "full_semantic_e2e_wow_v1_1_production_ready": false,
-        "full_semantic_e2e_wow_v1_1_public_auditor_ready": false,
-        "latest_full_semantic_e2e_live_evidence_wow_v1_1_coherence_checkpoint": "full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01",
-        "full_semantic_e2e_live_evidence_wow_v1_1_coherence_status": "PASS",
-        "full_semantic_e2e_live_evidence_wow_v1_1_coherence_audit_id": "auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01",
-        "full_semantic_e2e_live_evidence_wow_v1_1_coherence_audit_log": "docs/audit_reports/auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log",
-        "full_semantic_e2e_live_evidence_wow_v1_1_coherence_runtime_commit": "b4a3f31",
-        "full_semantic_e2e_live_evidence_wow_v1_1_coherence_preflight_commit": "4adebf4",
-        "full_semantic_e2e_live_evidence_wow_v1_1_existing_runner_remains_spine": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_new_bridge_runner_created": false,
-        "full_semantic_e2e_live_evidence_wow_v1_1_summary_in_live_mode": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_summary_pass_in_live_mode": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_coexistence_tested": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_summary_invoked_count": 1,
-        "full_semantic_e2e_live_evidence_wow_v1_1_summary_represented_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_summary_validation_passed_count": 1,
-        "full_semantic_e2e_live_evidence_wow_v1_1_summary_validation_failed_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_and_summary_coexistence_asserted_count": 1,
-        "full_semantic_e2e_live_evidence_wow_v1_1_semantic_evidence_claim_candidate_only": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_truth": false,
-        "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_authority": false,
-        "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_action_permission": false,
-        "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_final_output": false,
-        "full_semantic_e2e_live_evidence_wow_v1_1_closed_action_commit_packet_observed_only": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_closed_receipt_observed_only": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_mutated_closed_action_commit_packet_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_mutated_closed_receipt_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_created_action_commit_packet_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_created_receipt_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_executed_mock_payment_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_supplier_b_blocked": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_shipment_release_held": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_receipt_evidence_only": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_root_alone_creates_final_output": true,
-        "full_semantic_e2e_live_evidence_wow_v1_1_real_payment_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_real_shipment_release_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_real_world_effects_count": 0,
-        "full_semantic_e2e_live_evidence_wow_v1_1_production_ready": false,
-        "full_semantic_e2e_live_evidence_wow_v1_1_public_auditor_ready": false,
-        "latest_full_wow_v1_1_manual_live_gemini_bsep_topology_checkpoint": "full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01",
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_status": "PASS",
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_audit_id": "auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01",
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_audit_log": "docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log",
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_runtime_commit": "920e5b3",
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_preflight_commit": "b58226a",
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_monkeypatched_no_network_proof": true,
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_real_gemini_lane_executed": false,
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_existing_full_e2e_runner_remains_spine": true,
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_new_bridge_runner_created": false,
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_default_deterministic_lane_preserved": true,
-        "full_wow_v1_1_manual_live_gemini_bsep_topology_manual_lane_env_gated": true,
-        "full_wow_v1_1_manual_live_gemini_bsep_built_after_orchestrator_validation": true,
-        "full_wow_v1_1_manual_live_gemini_bsep_validated_before_architect": true,
-        "full_wow_v1_1_manual_live_gemini_architect_receives_bsep_context": true,
-        "full_wow_v1_1_manual_live_gemini_invalid_bsep_blocks_architect": true,
-        "full_wow_v1_1_manual_live_gemini_bsep_builder_accepts_architect_semantics": false,
-        "full_wow_v1_1_manual_live_gemini_raw_orchestrator_provider_text_to_architect_count": 0,
-        "full_wow_v1_1_manual_live_gemini_raw_orchestrator_prompt_to_architect_count": 0,
-        "full_wow_v1_1_manual_live_gemini_raw_user_request_text_to_architect_count": 0,
-        "full_wow_v1_1_manual_live_gemini_raw_secret_markers_to_architect_count": 0,
-        "full_wow_v1_1_manual_live_gemini_created_action_commit_packet_count": 0,
-        "full_wow_v1_1_manual_live_gemini_created_receipt_count": 0,
-        "full_wow_v1_1_manual_live_gemini_executed_mock_payment_count": 0,
-        "full_wow_v1_1_manual_live_gemini_executed_real_payment_count": 0,
-        "full_wow_v1_1_manual_live_gemini_released_shipment_count": 0,
-        "full_wow_v1_1_manual_live_gemini_real_world_effects_count": 0,
-        "full_wow_v1_1_manual_live_gemini_root_remains_final_authority": true,
-        "full_wow_v1_1_manual_live_gemini_production_ready": false,
-        "full_wow_v1_1_manual_live_gemini_public_auditor_ready": false,
-        "latest_full_wow_v1_1_manual_live_gemini_real_run_checkpoint": "full_wow_v1_1_manual_live_gemini_lane_real_run_v01",
-        "full_wow_v1_1_manual_live_gemini_real_run_status": "PASS",
-        "full_wow_v1_1_manual_live_gemini_real_run_audit_id": "auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01",
-        "full_wow_v1_1_manual_live_gemini_real_run_audit_log": "docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log",
-        "full_wow_v1_1_manual_live_gemini_real_run_id": "full_wow_v1_1_manual_live_gemini_real_20260705_232010",
-        "full_wow_v1_1_manual_live_gemini_real_run_base_commit": "121d22c",
-        "full_wow_v1_1_manual_live_gemini_real_run_audit_commit": "8318be9",
-        "full_wow_v1_1_manual_live_gemini_real_run_model": "gemini-2.5-flash",
-        "full_wow_v1_1_manual_live_gemini_real_run_contract_mode": "semantic_reasoning_adapter",
-        "full_wow_v1_1_manual_live_gemini_real_run_schema_mode": "json_mime_only",
-        "full_wow_v1_1_manual_live_gemini_real_run_executed": true,
-        "full_wow_v1_1_manual_live_gemini_real_run_monkeypatched_no_network_topology_proof": false,
-        "full_wow_v1_1_manual_live_gemini_orchestrator_validation_accepted": true,
-        "full_wow_v1_1_manual_live_gemini_architect_validation_accepted": true,
-        "full_wow_v1_1_manual_live_gemini_semantic_reasoning_adapter_used_for_both_roles": true,
-        "full_wow_v1_1_manual_live_gemini_architect_pre_delay_seconds": 30,
-        "full_wow_v1_1_manual_live_gemini_real_run_role_sequence": [
-          "orchestrator_provider_called",
-          "orchestrator_semantics_validated",
-          "orchestrator_semantics_canonicalized",
-          "bsep_built",
-          "bsep_validated",
-          "architect_prompt_built_from_bsep",
-          "architect_provider_called",
-          "architect_semantics_validated",
-          "architect_semantics_canonicalized"
-        ],
-        "full_wow_v1_1_manual_live_gemini_manual_live_gemini_lane_enabled_count": 1,
-        "full_wow_v1_1_manual_live_gemini_orchestrator_provider_call_count": 1,
-        "full_wow_v1_1_manual_live_gemini_architect_provider_call_count": 1,
-        "full_wow_v1_1_manual_live_gemini_live_model_call_count": 2,
-        "full_wow_v1_1_manual_live_gemini_gemini_called_count": 2,
-        "full_wow_v1_1_manual_live_gemini_network_used_count": 2,
-        "full_wow_v1_1_manual_live_gemini_bsep_created_count": 1,
-        "full_wow_v1_1_manual_live_gemini_bsep_validated_count": 1,
-        "full_wow_v1_1_manual_live_gemini_bsep_built_before_architect_count": 1,
-        "full_wow_v1_1_manual_live_gemini_architect_received_bsep_context_count": 1,
-        "full_wow_v1_1_manual_live_gemini_architect_called_before_bsep_validation_count": 0,
-        "full_wow_v1_1_manual_live_gemini_fail_closed_before_architect_on_invalid_bsep_count": 0,
-        "full_wow_v1_1_manual_live_gemini_provider_output_used_as_truth_count": 0,
-        "full_wow_v1_1_manual_live_gemini_provider_output_used_as_authority_count": 0,
-        "full_wow_v1_1_manual_live_gemini_provider_output_used_as_action_permission_count": 0,
-        "full_wow_v1_1_manual_live_gemini_provider_output_used_as_final_output_count": 0,
-        "full_wow_v1_1_manual_live_gemini_secret_scan_passed": true,
-        "full_wow_v1_1_manual_live_gemini_api_key_logged": false,
-        "full_wow_v1_1_manual_live_gemini_raw_bank_secret_logged": false,
-        "full_wow_v1_1_manual_live_gemini_raw_iban_logged": false,
-        "full_wow_v1_1_manual_live_gemini_sandbox_token_logged": false,
-        "full_wow_v1_1_manual_live_gemini_provider_owns_plangraph": false,
-        "full_wow_v1_1_manual_live_gemini_runtime_builds_local_plan_artifacts": true,
-        "latest_full_wow_v1_1_final_integrated_rollup_checkpoint": "full_wow_v1_1_final_integrated_rollup_v01",
-        "full_wow_v1_1_final_integrated_rollup_status": "PASS",
-        "full_wow_v1_1_final_integrated_rollup_audit_id": "auditor_full_wow_v1_1_final_integrated_rollup_v01",
-        "full_wow_v1_1_final_integrated_rollup_audit_log": "docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log",
-        "full_wow_v1_1_final_integrated_rollup_runner": "demo/run_full_wow_v1_1_final_integrated_rollup.py",
-        "full_wow_v1_1_final_integrated_rollup_tests": "tests/test_full_wow_v1_1_final_integrated_rollup_runner.py",
-        "full_wow_v1_1_final_integrated_rollup_audit_commit": "a958204",
-        "full_wow_v1_1_final_integrated_rollup_runner_commit": "f22d452",
-        "full_wow_v1_1_final_integrated_rollup_preflight_commit": "2993b46",
-        "full_wow_v1_1_final_integrated_rollup_real_gemini_docs_checkpoint_commit": "9c0ab75",
-        "full_wow_v1_1_final_integrated_rollup_real_gemini_audit_commit": "8318be9",
-        "full_wow_v1_1_final_integrated_rollup_real_gemini_runtime_base_commit": "121d22c",
-        "full_wow_v1_1_final_integrated_rollup_type": "deterministic_closed_evidence_observer",
-        "full_wow_v1_1_final_integrated_rollup_closed_evidence_observed_only": true,
-        "full_wow_v1_1_final_integrated_rollup_created_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_source_supplier_wow_summary_observed_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_source_human_walkthrough_observed_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_source_full_e2e_summary_observed_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_source_real_gemini_audit_observed_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_source_bsep_topology_audit_observed_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_real_gemini_lane_observed_count": 1,
-        "full_wow_v1_1_final_integrated_rollup_real_gemini_lane_rerun_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_called_gemini_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_network_used_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_provider_called_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_accessed_secrets_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_created_action_commit_packet_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_created_receipt_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_executed_mock_payment_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_executed_real_payment_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_released_shipment_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_called_bank_supplier_warehouse_api_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_real_world_effects_count": 0,
-        "full_wow_v1_1_final_integrated_rollup_production_ready": false,
+    "full_semantic_e2e_wow_v1_1_real_world_effects_count": 0,
+    "full_semantic_e2e_wow_v1_1_production_ready": false,
+    "full_semantic_e2e_wow_v1_1_public_auditor_ready": false,
+    "latest_full_semantic_e2e_live_evidence_wow_v1_1_coherence_checkpoint": "full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01",
+    "full_semantic_e2e_live_evidence_wow_v1_1_coherence_status": "PASS",
+    "full_semantic_e2e_live_evidence_wow_v1_1_coherence_audit_id": "auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01",
+    "full_semantic_e2e_live_evidence_wow_v1_1_coherence_audit_log": "docs/audit_reports/auditor_full_semantic_e2e_live_evidence_wow_v1_1_coherence_v01.log",
+    "full_semantic_e2e_live_evidence_wow_v1_1_coherence_runtime_commit": "b4a3f31",
+    "full_semantic_e2e_live_evidence_wow_v1_1_coherence_preflight_commit": "4adebf4",
+    "full_semantic_e2e_live_evidence_wow_v1_1_existing_runner_remains_spine": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_new_bridge_runner_created": false,
+    "full_semantic_e2e_live_evidence_wow_v1_1_summary_in_live_mode": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_summary_pass_in_live_mode": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_coexistence_tested": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_summary_invoked_count": 1,
+    "full_semantic_e2e_live_evidence_wow_v1_1_summary_represented_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_summary_validation_passed_count": 1,
+    "full_semantic_e2e_live_evidence_wow_v1_1_summary_validation_failed_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_and_summary_coexistence_asserted_count": 1,
+    "full_semantic_e2e_live_evidence_wow_v1_1_semantic_evidence_claim_candidate_only": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_truth": false,
+    "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_authority": false,
+    "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_action_permission": false,
+    "full_semantic_e2e_live_evidence_wow_v1_1_provider_output_used_as_final_output": false,
+    "full_semantic_e2e_live_evidence_wow_v1_1_closed_action_commit_packet_observed_only": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_closed_receipt_observed_only": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_mutated_closed_action_commit_packet_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_mutated_closed_receipt_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_created_action_commit_packet_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_created_receipt_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_live_evidence_executed_mock_payment_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_supplier_b_blocked": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_shipment_release_held": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_receipt_evidence_only": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_root_alone_creates_final_output": true,
+    "full_semantic_e2e_live_evidence_wow_v1_1_real_payment_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_real_shipment_release_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_real_world_effects_count": 0,
+    "full_semantic_e2e_live_evidence_wow_v1_1_production_ready": false,
+    "full_semantic_e2e_live_evidence_wow_v1_1_public_auditor_ready": false,
+    "latest_full_wow_v1_1_manual_live_gemini_bsep_topology_checkpoint": "full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01",
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_status": "PASS",
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_audit_id": "auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01",
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_audit_log": "docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_bsep_topology_repair_v01.log",
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_runtime_commit": "920e5b3",
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_preflight_commit": "b58226a",
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_monkeypatched_no_network_proof": true,
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_real_gemini_lane_executed": false,
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_existing_full_e2e_runner_remains_spine": true,
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_new_bridge_runner_created": false,
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_default_deterministic_lane_preserved": true,
+    "full_wow_v1_1_manual_live_gemini_bsep_topology_manual_lane_env_gated": true,
+    "full_wow_v1_1_manual_live_gemini_bsep_built_after_orchestrator_validation": true,
+    "full_wow_v1_1_manual_live_gemini_bsep_validated_before_architect": true,
+    "full_wow_v1_1_manual_live_gemini_architect_receives_bsep_context": true,
+    "full_wow_v1_1_manual_live_gemini_invalid_bsep_blocks_architect": true,
+    "full_wow_v1_1_manual_live_gemini_bsep_builder_accepts_architect_semantics": false,
+    "full_wow_v1_1_manual_live_gemini_raw_orchestrator_provider_text_to_architect_count": 0,
+    "full_wow_v1_1_manual_live_gemini_raw_orchestrator_prompt_to_architect_count": 0,
+    "full_wow_v1_1_manual_live_gemini_raw_user_request_text_to_architect_count": 0,
+    "full_wow_v1_1_manual_live_gemini_raw_secret_markers_to_architect_count": 0,
+    "full_wow_v1_1_manual_live_gemini_created_action_commit_packet_count": 0,
+    "full_wow_v1_1_manual_live_gemini_created_receipt_count": 0,
+    "full_wow_v1_1_manual_live_gemini_executed_mock_payment_count": 0,
+    "full_wow_v1_1_manual_live_gemini_executed_real_payment_count": 0,
+    "full_wow_v1_1_manual_live_gemini_released_shipment_count": 0,
+    "full_wow_v1_1_manual_live_gemini_real_world_effects_count": 0,
+    "full_wow_v1_1_manual_live_gemini_root_remains_final_authority": true,
+    "full_wow_v1_1_manual_live_gemini_production_ready": false,
+    "full_wow_v1_1_manual_live_gemini_public_auditor_ready": false,
+    "latest_full_wow_v1_1_manual_live_gemini_real_run_checkpoint": "full_wow_v1_1_manual_live_gemini_lane_real_run_v01",
+    "full_wow_v1_1_manual_live_gemini_real_run_status": "PASS",
+    "full_wow_v1_1_manual_live_gemini_real_run_audit_id": "auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01",
+    "full_wow_v1_1_manual_live_gemini_real_run_audit_log": "docs/audit_reports/auditor_full_wow_v1_1_manual_live_gemini_lane_real_run_v01.log",
+    "full_wow_v1_1_manual_live_gemini_real_run_id": "full_wow_v1_1_manual_live_gemini_real_20260705_232010",
+    "full_wow_v1_1_manual_live_gemini_real_run_base_commit": "121d22c",
+    "full_wow_v1_1_manual_live_gemini_real_run_audit_commit": "8318be9",
+    "full_wow_v1_1_manual_live_gemini_real_run_model": "gemini-2.5-flash",
+    "full_wow_v1_1_manual_live_gemini_real_run_contract_mode": "semantic_reasoning_adapter",
+    "full_wow_v1_1_manual_live_gemini_real_run_schema_mode": "json_mime_only",
+    "full_wow_v1_1_manual_live_gemini_real_run_executed": true,
+    "full_wow_v1_1_manual_live_gemini_real_run_monkeypatched_no_network_topology_proof": false,
+    "full_wow_v1_1_manual_live_gemini_orchestrator_validation_accepted": true,
+    "full_wow_v1_1_manual_live_gemini_architect_validation_accepted": true,
+    "full_wow_v1_1_manual_live_gemini_semantic_reasoning_adapter_used_for_both_roles": true,
+    "full_wow_v1_1_manual_live_gemini_architect_pre_delay_seconds": 30,
+    "full_wow_v1_1_manual_live_gemini_real_run_role_sequence": [
+      "orchestrator_provider_called",
+      "orchestrator_semantics_validated",
+      "orchestrator_semantics_canonicalized",
+      "bsep_built",
+      "bsep_validated",
+      "architect_prompt_built_from_bsep",
+      "architect_provider_called",
+      "architect_semantics_validated",
+      "architect_semantics_canonicalized"
+    ],
+    "full_wow_v1_1_manual_live_gemini_manual_live_gemini_lane_enabled_count": 1,
+    "full_wow_v1_1_manual_live_gemini_orchestrator_provider_call_count": 1,
+    "full_wow_v1_1_manual_live_gemini_architect_provider_call_count": 1,
+    "full_wow_v1_1_manual_live_gemini_live_model_call_count": 2,
+    "full_wow_v1_1_manual_live_gemini_gemini_called_count": 2,
+    "full_wow_v1_1_manual_live_gemini_network_used_count": 2,
+    "full_wow_v1_1_manual_live_gemini_bsep_created_count": 1,
+    "full_wow_v1_1_manual_live_gemini_bsep_validated_count": 1,
+    "full_wow_v1_1_manual_live_gemini_bsep_built_before_architect_count": 1,
+    "full_wow_v1_1_manual_live_gemini_architect_received_bsep_context_count": 1,
+    "full_wow_v1_1_manual_live_gemini_architect_called_before_bsep_validation_count": 0,
+    "full_wow_v1_1_manual_live_gemini_fail_closed_before_architect_on_invalid_bsep_count": 0,
+    "full_wow_v1_1_manual_live_gemini_provider_output_used_as_truth_count": 0,
+    "full_wow_v1_1_manual_live_gemini_provider_output_used_as_authority_count": 0,
+    "full_wow_v1_1_manual_live_gemini_provider_output_used_as_action_permission_count": 0,
+    "full_wow_v1_1_manual_live_gemini_provider_output_used_as_final_output_count": 0,
+    "full_wow_v1_1_manual_live_gemini_secret_scan_passed": true,
+    "full_wow_v1_1_manual_live_gemini_api_key_logged": false,
+    "full_wow_v1_1_manual_live_gemini_raw_bank_secret_logged": false,
+    "full_wow_v1_1_manual_live_gemini_raw_iban_logged": false,
+    "full_wow_v1_1_manual_live_gemini_sandbox_token_logged": false,
+    "full_wow_v1_1_manual_live_gemini_provider_owns_plangraph": false,
+    "full_wow_v1_1_manual_live_gemini_runtime_builds_local_plan_artifacts": true,
+    "latest_full_wow_v1_1_final_integrated_rollup_checkpoint": "full_wow_v1_1_final_integrated_rollup_v01",
+    "full_wow_v1_1_final_integrated_rollup_status": "PASS",
+    "full_wow_v1_1_final_integrated_rollup_audit_id": "auditor_full_wow_v1_1_final_integrated_rollup_v01",
+    "full_wow_v1_1_final_integrated_rollup_audit_log": "docs/audit_reports/auditor_full_wow_v1_1_final_integrated_rollup_v01.log",
+    "full_wow_v1_1_final_integrated_rollup_runner": "demo/run_full_wow_v1_1_final_integrated_rollup.py",
+    "full_wow_v1_1_final_integrated_rollup_tests": "tests/test_full_wow_v1_1_final_integrated_rollup_runner.py",
+    "full_wow_v1_1_final_integrated_rollup_audit_commit": "a958204",
+    "full_wow_v1_1_final_integrated_rollup_runner_commit": "f22d452",
+    "full_wow_v1_1_final_integrated_rollup_preflight_commit": "2993b46",
+    "full_wow_v1_1_final_integrated_rollup_real_gemini_docs_checkpoint_commit": "9c0ab75",
+    "full_wow_v1_1_final_integrated_rollup_real_gemini_audit_commit": "8318be9",
+    "full_wow_v1_1_final_integrated_rollup_real_gemini_runtime_base_commit": "121d22c",
+    "full_wow_v1_1_final_integrated_rollup_type": "deterministic_closed_evidence_observer",
+    "full_wow_v1_1_final_integrated_rollup_closed_evidence_observed_only": true,
+    "full_wow_v1_1_final_integrated_rollup_created_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_source_supplier_wow_summary_observed_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_source_human_walkthrough_observed_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_source_full_e2e_summary_observed_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_source_real_gemini_audit_observed_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_source_bsep_topology_audit_observed_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_real_gemini_lane_observed_count": 1,
+    "full_wow_v1_1_final_integrated_rollup_real_gemini_lane_rerun_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_called_gemini_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_network_used_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_provider_called_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_accessed_secrets_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_created_action_commit_packet_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_created_receipt_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_executed_mock_payment_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_executed_real_payment_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_released_shipment_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_called_bank_supplier_warehouse_api_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_real_world_effects_count": 0,
+    "full_wow_v1_1_final_integrated_rollup_production_ready": false,
     "full_wow_v1_1_final_integrated_rollup_public_auditor_ready": false,
     "latest_full_wow_v1_1_final_human_walkthrough_checkpoint": "full_wow_v1_1_final_human_walkthrough_v01",
     "full_wow_v1_1_final_human_walkthrough_status": "PASS",
@@ -1249,7 +1279,6 @@
     ],
     "manifest_auto_hardening_after_killer_demo_only": true
   },
-
   "closed_enterprise_boundary_stack": [
     {
       "name": "External DRS Pointer Protocol v0.1",
@@ -1383,7 +1412,6 @@
       "finding_a_schema_contract_drift_status": "closed_for_active_attractor_packet_contract"
     }
   ],
-
   "enterprise_boundary_metadata": {
     "root_remains_final_authority": true,
     "drs_reuse_is_authority": false,
@@ -1484,7 +1512,6 @@
     "root_bypassed": false,
     "manifest_auto_hardening_after_killer_demo_only": true
   },
-
   "production_boundary_design_docs_v01_facts": {
     "checkpoint_commit": "140a8f5",
     "production_boundary_design_docs_v01_status": "complete",
@@ -1511,7 +1538,6 @@
     "killer_demo_must_not_bypass_transition_matrix": true,
     "manifest_auto_hardening_after_killer_demo_only": true
   },
-
   "enterprise_killer_demo_v01_facts": {
     "proof_commit": "23a0cfe",
     "human_walkthrough_commit": "a8940f2",
@@ -1578,7 +1604,6 @@
     "next_layer_after_demo_a_completed": "Enterprise Document Killer Demo B v0.1",
     "next_layer_after_demo_a_status": "complete_through_docs_sync"
   },
-
   "enterprise_document_killer_demo_b_v01_facts": {
     "design_doc_commit": "bb1f7c2",
     "proof_commit": "46d9bfe",
@@ -1661,7 +1686,6 @@
     "evidence_kind_alignment_required": true,
     "next_hardening_after_demo_b_docs_sync": "Schema Contract Alignment / Runtime Schema Validation Hardening v0.1"
   },
-
   "compute_collapse_enterprise_bench_v01_metrics": {
     "benchmark_type": "deterministic_local_proof_only",
     "synthetic_estimate": true,
@@ -1678,7 +1702,6 @@
     "source_collectors_replayed": false,
     "source_collectors_replayed_count": 0
   },
-
   "kernel_enforcement_transition_matrix_v01_facts": {
     "proof_commit": "5acfc8a",
     "human_walkthrough_commit": "5212eec",
@@ -1724,7 +1747,6 @@
     "no_marennya": true,
     "no_up": true
   },
-
   "developer_facade_capability_manifest_ux_v01_facts": {
     "proof_commit": "dd18d5f",
     "human_walkthrough_commit": "85c7e56",
@@ -1778,7 +1800,6 @@
     "no_marennya": true,
     "no_up": true
   },
-
   "deferred_not_implemented_after_math_invariants_v04": {
     "external_global_drs_implementation": "deferred",
     "real_apis_connectors_actions": "deferred",
@@ -1797,7 +1818,6 @@
     "next_hardening_read_only_preflight_scan": "Schema Contract Alignment / Runtime Schema Validation Hardening v0.1",
     "manifest_auto_hardening_from_avf_drs_negative_traces_v01": "post_killer_demo_future_extension"
   },
-
   "project": {
     "project_id": "proj_hedgehog_os_demo",
     "title": "Hedgehog OS / Fractal Reflexive OS Demo",
@@ -1816,13 +1836,11 @@
       "description": "A simulated bureaucratic task used to demonstrate branching, forbidden vectors, dead-ends, DRS reuse, GT-TTL, Marennya reflections, and UP protocol templates."
     }
   },
-
   "architecture_level": {
     "v0_2": "ontology: entities, roles, invariants, DRS layers, Time, GT hooks",
     "v0_25": "algorithmic execution layer: how modules compute and interact",
     "v0_3_future": "modes, fractal limits, needle taxonomy, advanced policies"
   },
-
   "core_principles": [
     {
       "id": "principle_root_cognitive_authority",
@@ -1869,7 +1887,6 @@
       "statement": "Marennya and UP artifacts are written to Quarantine before promotion."
     }
   ],
-
   "actors": {
     "human_owner": {
       "id": "actor_human_owner",
@@ -1945,7 +1962,6 @@
       "authority_boundary": "inside_root_controlled_boundary"
     }
   },
-
   "roles": {
     "architect": {
       "id": "role_architect",
@@ -2050,7 +2066,6 @@
       ]
     }
   },
-
   "entities": {
     "intent": {
       "id_prefix": "intent_",
@@ -2117,7 +2132,6 @@
       "description": "Feedback from actual outcomes to future AVF scoring."
     }
   },
-
   "time_model": {
     "required": true,
     "time_axes": {
@@ -2156,7 +2170,6 @@
       "Architect output must include time_assumptions."
     ]
   },
-
   "execution_router": {
     "required": true,
     "purpose": "Select the cheapest safe execution mode instead of forcing every request through the full cognitive pipeline.",
@@ -2264,7 +2277,6 @@
       "L5 deferred reflection must not block immediate user response unless explicitly requested."
     ]
   },
-
   "drs": {
     "mode": "local_json_for_mvp",
     "model": "pointer_first_registry_resolver_index",
@@ -2335,18 +2347,28 @@
       "work": {
         "id": "layer_work",
         "description": "Canonical task outcomes, accepted facts, final decisions, successful and failed execution results.",
-        "direct_mutation_by": ["root_orchestrator"],
-        "forbidden_mutation_by": ["marenna", "up", "executor"]
+        "direct_mutation_by": [
+          "root_orchestrator"
+        ],
+        "forbidden_mutation_by": [
+          "marenna",
+          "up",
+          "executor"
+        ]
       },
       "thoughts": {
         "id": "layer_thoughts",
         "description": "Validated Marennya reflections, patches, lessons and intradomain improvements.",
-        "direct_mutation_by": ["root_orchestrator_after_validation"]
+        "direct_mutation_by": [
+          "root_orchestrator_after_validation"
+        ]
       },
       "up": {
         "id": "layer_up",
         "description": "Validated UP opportunities, protocol templates and cross-domain links.",
-        "direct_mutation_by": ["root_orchestrator_after_validation"]
+        "direct_mutation_by": [
+          "root_orchestrator_after_validation"
+        ]
       },
       "quarantine": {
         "id": "layer_quarantine",
@@ -2375,7 +2397,6 @@
       "hash"
     ]
   },
-
   "pipeline": {
     "id": "pipeline_core_v0_25",
     "steps": [
@@ -2401,7 +2422,10 @@
         "owner": "root_orchestrator",
         "input": "intent",
         "output": "world_state",
-        "must_use": ["temporal_query", "local_drs"]
+        "must_use": [
+          "temporal_query",
+          "local_drs"
+        ]
       },
       {
         "order": 4,
@@ -2482,7 +2506,11 @@
         "id": "step_root_final",
         "name": "Root Final Synthesis",
         "owner": "root_orchestrator",
-        "input": ["result_proposals", "vv_reports", "gt_report"],
+        "input": [
+          "result_proposals",
+          "vv_reports",
+          "gt_report"
+        ],
         "output": "final_output"
       },
       {
@@ -2490,7 +2518,11 @@
         "id": "step_drs_writeback",
         "name": "DRS Writeback",
         "owner": "root_orchestrator",
-        "input": ["final_output", "gt_report", "trace"],
+        "input": [
+          "final_output",
+          "gt_report",
+          "trace"
+        ],
         "output": "drs_records"
       },
       {
@@ -2498,12 +2530,18 @@
         "id": "step_marenna_up_hooks",
         "name": "Marennya and UP Hooks",
         "owner": "root_orchestrator",
-        "input": ["drs_records", "gt_report", "viability_feedback"],
-        "output": ["marenna_record_optional", "up_record_optional"]
+        "input": [
+          "drs_records",
+          "gt_report",
+          "viability_feedback"
+        ],
+        "output": [
+          "marenna_record_optional",
+          "up_record_optional"
+        ]
       }
     ]
   },
-
   "avf": {
     "id": "module_avf",
     "name": "Attractor Viability Field",
@@ -2566,7 +2604,6 @@
     },
     "output": "attractor_packet"
   },
-
   "fractal_dag_executor": {
     "id": "module_fractal_dag_executor",
     "name": "Fractal DAG Executor",
@@ -2594,7 +2631,6 @@
     ],
     "controlled_route_only_in_v0_25": true
   },
-
   "gt": {
     "id": "module_gt_validator",
     "name": "GTValidator",
@@ -2697,7 +2733,6 @@
       "top_two_thompson_sampling"
     ]
   },
-
   "marenna": {
     "id": "module_marenna",
     "name": "Marennya",
@@ -2738,7 +2773,6 @@
       "must_not_publish_without_validation"
     ]
   },
-
   "up": {
     "id": "module_up",
     "name": "UP!",
@@ -2776,7 +2810,6 @@
       "must_not_publish_without_validation"
     ]
   },
-
   "needles": {
     "systemic_needles": {
       "marenna": {
@@ -2859,49 +2892,55 @@
           {
             "vector_id": "official_online_request",
             "branching_hint": "vertical",
-            "capabilities_required": ["government_service_access"],
+            "capabilities_required": [
+              "government_service_access"
+            ],
             "default_features": {
               "rel": 0.95,
               "p_success": 0.75,
               "utility": 0.85,
               "cost": 0.25,
               "risk": 0.08,
-              "time_penalty": 0.10,
+              "time_penalty": 0.1,
               "policy_conflict": 0.0,
-              "gt_prior": 0.50,
-              "novelty": 0.10
+              "gt_prior": 0.5,
+              "novelty": 0.1
             }
           },
           {
             "vector_id": "personal_visit",
             "branching_hint": "vertical",
-            "capabilities_required": ["human_action"],
+            "capabilities_required": [
+              "human_action"
+            ],
             "default_features": {
               "rel": 0.75,
               "p_success": 0.55,
               "utility": 0.55,
-              "cost": 0.60,
+              "cost": 0.6,
               "risk": 0.18,
               "time_penalty": 0.35,
               "policy_conflict": 0.0,
-              "gt_prior": 0.40,
+              "gt_prior": 0.4,
               "novelty": 0.05
             }
           },
           {
             "vector_id": "legal_representative",
             "branching_hint": "hybrid",
-            "capabilities_required": ["legal_delegation"],
+            "capabilities_required": [
+              "legal_delegation"
+            ],
             "default_features": {
-              "rel": 0.70,
+              "rel": 0.7,
               "p_success": 0.65,
-              "utility": 0.60,
-              "cost": 0.70,
-              "risk": 0.10,
+              "utility": 0.6,
+              "cost": 0.7,
+              "risk": 0.1,
               "time_penalty": 0.25,
               "policy_conflict": 0.0,
               "gt_prior": 0.45,
-              "novelty": 0.10
+              "novelty": 0.1
             }
           },
           {
@@ -2909,8 +2948,8 @@
             "branching_hint": "forbidden",
             "capabilities_required": [],
             "default_features": {
-              "rel": 0.20,
-              "p_success": 0.10,
+              "rel": 0.2,
+              "p_success": 0.1,
               "utility": 0.0,
               "cost": 1.0,
               "risk": 1.0,
@@ -2934,22 +2973,21 @@
             "branching_hint": "hybrid",
             "requires_architect_creativity": true,
             "default_features": {
-              "rel": 0.50,
-              "p_success": 0.30,
-              "utility": 0.50,
-              "cost": 0.50,
-              "risk": 0.40,
-              "time_penalty": 0.30,
+              "rel": 0.5,
+              "p_success": 0.3,
+              "utility": 0.5,
+              "cost": 0.5,
+              "risk": 0.4,
+              "time_penalty": 0.3,
               "policy_conflict": 0.0,
               "gt_prior": 0.0,
-              "novelty": 0.90
+              "novelty": 0.9
             }
           }
         ]
       }
     ]
   },
-
   "policies": {
     "mvp_modes": {
       "default": {
@@ -2975,7 +3013,7 @@
       "explore": {
         "description": "Higher exploration mode for research or creative search.",
         "allow_exploration": true,
-        "exploration_epsilon": 0.20,
+        "exploration_epsilon": 0.2,
         "allow_marenna": true,
         "allow_up": true,
         "allow_external_drs": false,
@@ -2991,7 +3029,6 @@
       "privacy_violation"
     ]
   },
-
   "schemas": {
     "schema_dir": "schemas/",
     "required_schemas": [
@@ -3011,7 +3048,6 @@
       "final_output.schema.json"
     ]
   },
-
   "repository_layout": {
     "root": "hedgehog-os-demo/",
     "directories": {
@@ -3051,7 +3087,6 @@
       "demo/run_canonical_pipeline_trace.py": "Observable Zero Trust Runtime trace demo"
     }
   },
-
   "tests": {
     "required_invariant_tests": [
       {
@@ -3096,7 +3131,6 @@
       }
     ]
   },
-
   "implementation_phases": [
     {
       "phase": 1,
@@ -3412,7 +3446,6 @@
       ]
     }
   ],
-
   "forbidden_simplifications": [
     "Do not reduce the project to a chatbot.",
     "Do not allow Executor to create FinalOutput.",
@@ -3426,7 +3459,6 @@
     "Do not implement real external APIs in MVP.",
     "Do not start with UI before invariant tests pass."
   ],
-
   "allowed_simplifications_for_mvp": [
     "RootOrchestrator may be deterministic Python.",
     "Architect may be deterministic stub.",
@@ -3437,7 +3469,6 @@
     "Marennya and UP validation may be stubbed as explicit six-stage pipeline.",
     "Needles may be static JSON files."
   ],
-
   "success_criteria": [
     "Cold-start scenario runs end-to-end.",
     "Reuse scenario uses DRS records from prior run.",

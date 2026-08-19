@@ -6150,8 +6150,109 @@ def d3_profile_d_contextual_micro_bundle(
     }
 
 
-def test_d3_post_acceptance_contract_addendum_v038_accepted() -> None:
+def test_d3_post_acceptance_contract_addendum_v039_accepted() -> None:
     raw = ADDENDUM_PATH.read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == '1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445'
+    assert len(raw) == 212148
+    assert raw.count(b"\n") == 4185
+    v039_separator = (
+        b"===============================================================================\n"
+        b"HISTORICAL ACCEPTED V0.3.8 CONTENT - EXACT REPOSITORY BYTES\n"
+        b"===============================================================================\n"
+        b"\n"
+        b"The complete byte sequence below is the previously accepted v0.3.8 addendum.\n"
+        b"It remains immutable historical contract and evidence context for v0.3.8. Its\n"
+        b"embedded present-tense lifecycle statements do not override the active v0.3.9\n"
+        b"metadata and clarification above.\n"
+        b"\n"
+    )
+    assert raw.count(v039_separator) == 1
+    active_v039, historical_v038 = raw.split(v039_separator, 1)
+    assert hashlib.sha256(historical_v038).hexdigest() == (
+        "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6"
+    )
+    assert len(historical_v038) == 197537
+    assert historical_v038.count(b"\n") == 3828
+    assert raw.count(historical_v038) == 1
+    active_text_v039 = active_v039.decode("ascii")
+    required_rows_v039 = (
+        "document_revision: v0.3.9",
+        "guardian_review_status: ACCEPTED_WITH_MANDATORY_OVERLAY",
+        "guardian_ruling: APPROVE_WITH_MANDATORY_OVERLAY",
+        "accepted_v038_basis_sha256: 09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6",
+        "repository_basis_head: 4cf427f82a096383ae5873024787c19e56ac0fb5",
+        "V038_IMPLEMENTATION_NONCONFORMANCE: YES",
+        "V039_CONTRACT_SEMANTICS_CHANGED: NO",
+        "V039_ROLE: EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING",
+        "implementation_authorized: false",
+        "implementation_started: false",
+        "isolated_worktree_strategy_approved: true",
+        "e4_two_path_only_implementation_sufficient: false",
+        "e4_public_end_to_end_carrier_overlay_required: true",
+        "revised_guardian_decision_required: false",
+        "current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "historical_v038_g2d_status: CLOSED_PASS_ON_V038_BYTES",
+        "current_g2e3_status: IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D",
+        "post_v039_implementation_g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D",
+        "current_g2e4_anti_gaming_acceptance: BLOCKED_PENDING_G2D_V039_RECLOSURE",
+        "E4_PAIR_CALL_ACCOUNTING=2/2",
+        "E4_FOCUSED_CALL_ACCOUNTING=2/2",
+        "E4_COMPLETE_FILE_CALL_ACCOUNTING=3/3",
+        "GATE2_STATUS=NOT_CLOSED",
+    )
+    assert all(row in active_text_v039 for row in required_rows_v039)
+    for row in (
+        "evaluate_fractal_revise_observation_v02",
+        "evaluate_fractal_runtime_state_transition_v02",
+        "g2d_t12_validating_to_deadend",
+        "advance_fractal_cell_queue_v02",
+        "rule_id = g2d_t12_validating_to_deadend",
+        "decision = RETURN_TO_ROOT",
+        "reason_code = g2d_transition_deadend_recorded",
+        "revise.reason_codes = (\"g2d_no_progress_deadend\",)",
+        "run_continuous_delta_runtime_v01",
+        "execute_selective_recomputation_v01",
+        "bundle = None",
+        "report.status = FAIL_CLOSED",
+    ):
+        assert row in active_text_v039
+    contract_paths = (
+        "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md",
+        "tests/test_fractal_runtime_g2_d_v02.py",
+        "AGENTS.md",
+        "README.md",
+        "specs/machine_manifest_v0_25.json",
+        "release/current_status_overlay_v01.json",
+        "release/claim_to_evidence_index.md",
+        "release/current_limitations.md",
+        "release/current_release_notes.md",
+        "tests/test_repository_release_spine_v01.py",
+    )
+    contract_scope = active_text_v039.split(
+        "This contract-only candidate modifies exactly these ten", 1
+    )[1].split("The active contract-only lifecycle is exact:", 1)[0]
+    offsets = tuple(contract_scope.index("`" + path + "`") for path in contract_paths)
+    assert offsets == tuple(sorted(offsets))
+    future_paths = (
+        "hedgehog/kernel/fractal_runtime_v02.py",
+        "tests/test_fractal_runtime_g2_d_v02.py",
+    )
+    future_scope = active_text_v039.split(
+        "A later separately owner-authorized implementation may modify exactly:", 1
+    )[1].split("No schema, Transition Registry", 1)[0]
+    assert tuple(
+        path for path in future_paths if "`" + path + "`" in future_scope
+    ) == future_paths
+    operational = active_text_v039.split(
+        "The complete operational order is frozen:", 1
+    )[1].split("The forbidden order is", 1)[0]
+    assert operational.index("one fresh unchanged logical G2-E3 V06") < operational.index(
+        "guarded fast-forward of the original dirty primary"
+    )
+    assert "This contract-only hop authorizes no implementation." in active_text_v039
+    assert "Root remains the only final authority." in active_text_v039
+
+    raw = historical_v038
     assert hashlib.sha256(raw).hexdigest() == (
         "09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6"
     )

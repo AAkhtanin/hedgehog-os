@@ -12,89 +12,29 @@
   `docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log`.
 - Accepted G2-C checkpoint:
   `docs/execution_mode_router_g2_c_checkpoint_v01.md`.
-- Historical pre-correction G2-D is
-  `CLOSED_PASS_ON_PRECORRECTION_BYTES` only.
-- G2-D v0.3.8 is `CLOSED_PASS`.
-- `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
-- `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
-- `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
-- G2-D v0.3.8 implementation authorization, implementation started, corrected
-  implementation existence, and committed status are `true`.
-- Runtime acceptance claim, independent re-audit PASS, additive reclosure,
-  and corrected closure are `true`; contract-only claim is `false`.
-- Full cumulative acceptance passed and was accepted by the owner.
-- G2-D v0.3.8 implementation commit:
-  `3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e`.
-- G2-D v0.3.8 implementation patch SHA-256:
-  `dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291`.
-- G2-D v0.3.8 owner evidence bundle SHA-256:
-  `51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6`.
-- G2-D v0.3.8 independent re-audit commit:
-  `edfa42198efa1d03097570d30b6364af1b567050`.
-- G2-D v0.3.8 independent re-audit:
-  `docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log`.
-- G2-D v0.3.8 independent re-audit SHA-256:
-  `acd62cfcf3753a4c02c5f5187e64e8940cf3b3420f97850b0426583465996d67`.
-- G2-D v0.3.8 successor checkpoint:
-  `docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md`.
-- G2-D v0.3.8 successor checkpoint SHA-256:
-  `64e2c94f83e8dd2012d0f6f6d8f969bc08832b61194ce24668c6ec7a4eb96e6b`.
-- G2-D v0.3.8 closure commit subject:
-  `Close G2-D v0.3.8 proof-based whole-run correction`.
-- G2-D v0.3.8 closure commit identity: `NOT_SELF_RECORDED`.
-- Accepted G2-D v0.3.8 directional draft SHA-256:
-  `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
-- Controlling DESIGN_V03 SHA-256:
-  `7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe`.
-- Accepted G2-D v0.3.8 repository addendum SHA-256:
-  `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
-- Historical accepted G2-D v0.3.7 repository addendum SHA-256:
-  `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
-- Historical pre-correction G2-D audit:
-  `docs/audit_reports/auditor_fractal_runtime_g2_d_v02.log`.
-- Historical pre-correction G2-D checkpoint:
-  `docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md`.
-- Corrected G2-D implementation commit:
-  `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
-- Corrected G2-D implementation patch SHA-256:
-  `be594af310b2d13baf0e45283944bd68f56461126b6aa3fbbcaff541a58a0279`.
-- Corrected owner evidence bundle SHA-256:
-  `e49752fcd1c19dfe8ddf55a254b2d97f8c27688bc0c2371b6ad4ffe2ec5c9cdd`.
-- Independent corrected G2-D re-audit:
-  `docs/audit_reports/auditor_fractal_runtime_g2_d_v037_observed_work_correction_v01.log`.
-- Independent corrected G2-D re-audit commit:
-  `2eccb604fee89d7e79025337d3858d6dbfea5fbc`.
-- Independent corrected G2-D re-audit SHA-256:
-  `c31d1712593184317b03425c57c5fcebf19532cbfc3086981223bf32afd0e8a3`.
-- Corrected G2-D successor checkpoint:
-  `docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md`.
-- Corrected closure commit subject:
-  `Close G2-D v0.3.7 observed-work correction`.
-- Corrected closure commit identity: `NOT_SELF_RECORDED`.
-- The old audit and checkpoint certify pre-correction bytes only.
-- The old audit and checkpoint are `HISTORICAL_PRECORRECTION_EVIDENCE` only.
-- Historical v0.3.7 independent re-audit and additive successor reclosure are
-  complete for v0.3.7 bytes only. The separate v0.3.8 independent re-audit and
-  additive successor checkpoint establish the corrected slice reclosure.
+- Historical pre-correction and v0.3.7 G2-D evidence remains immutable for exact historical bytes only.
+- Historical G2-D v0.3.8 is `CLOSED_PASS_ON_V038_BYTES`.
+- Active G2-D v0.3.9 is `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- `V038_IMPLEMENTATION_NONCONFORMANCE=YES`.
+- `V039_CONTRACT_SEMANTICS_CHANGED=NO`.
+- `V039_ROLE=EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
+- G2-D v0.3.9 implementation authorization and implementation started are `false`.
+- Corrected v0.3.9 implementation existence, runtime acceptance, independent re-audit, additive reclosure, and corrected closure are `false`.
+- The active cumulative G2-D addendum SHA-256 is `1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445`.
+- The historical v0.3.8 addendum SHA-256 is `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
+- Historical v0.3.8 implementation commit: `3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e`.
+- Historical v0.3.8 implementation patch SHA-256: `dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291`.
+- Historical v0.3.8 independent re-audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log`.
+- Historical v0.3.8 checkpoint: `docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md`.
+- Historical v0.3.8 reclosure commit: `4cf427f82a096383ae5873024787c19e56ac0fb5`.
 - Gate 2 remains `NOT_CLOSED`.
-- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
-- The prior fresh unchanged owner-terminal V06 PASS remains historical evidence
-  for v0.3.7 bytes and does not validate the committed v0.3.8 implementation.
-- Fresh post-reclosure G2-E3 V06 archive SHA-256:
-  `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
-- Accepted G2-E v0.1.3 addendum SHA-256:
-  `2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8`.
-- Accepted G2-E v0.1.3 normative donor SHA-256:
-  `17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56`.
-- E4 public-seam register SHA-256:
-  `a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2`.
-- E4 two-Root-pair register SHA-256:
-  `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
+- G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D`.
+- After future v0.3.9 implementation, G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- Fresh G2-E3 V06 evidence on v0.3.8 has SHA-256 `09bfe734048febfcf1ea32cc35195fb494b73c36a360163c8329aaf5e3fc2ca8`; it does not certify future v0.3.9 bytes.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4 status and anti-gaming acceptance are
-  `BLOCKED_PENDING_FRESH_G2E3_V06`.
-- The strict-subtree implementation remains committed, but anti-gaming
-  correction cannot proceed until one fresh unchanged G2-E3 V06 passes.
+- G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
+- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_G2D_V039_RECLOSURE`.
+- The final E4 correction requires the public end-to-end conditional carrier overlay after v0.3.9 reclosure and a fresh clean V06.
 - G2-E5, G2-E6, and G2-F remain `NOT_STARTED_NOT_AUTHORIZED`.
 - Public release remains `NOT_CLAIMED`.
 - RC2 remains `NOT_CLAIMED`.

@@ -57,9 +57,9 @@ The current MVP focus is:
 
 text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executor integration → Root-native canonical trace → stable DRS writeback / audit → NeedleRuntime outcomes through Post V&V / real GTValidator / LocalDRS routing → Large Graph / Bounded Fractal Stress → DRS Graph Proximity / Lineage → Chaos Survival Showcase → Compute Collapse via DRS Reuse → DRS Layer Taxonomy → Typed DRS Lineage Edges → ReuseScore → Semantic Reuse Pipeline Integration → Root Semantic Reuse Decision/Gate/Final Traces → Semantic Reuse Authority Stack Audit → Root-native Semantic Reuse E2E Trace → Root-native Full Canonical E2E Trace → Optional Live Gemini Architect Smoke → Ordered Live Gemini Orchestrator-to-Architect Smoke → Controlled Orchestrator Matrix Gate → AVF / Attractor Formation from accepted Matrix → bounded Architect / Executor / Post V&V / GT / Root Final → local DRS audit/writeback → sandbox NeedleRuntime → bounded child fractal cell → live child Executor → DRS Lifecycle Semantics → ConflictCheck → Audit/hash-chain → Controlled Route Assembly → applied/fractal/coupling/bridge/Needle-safety proofs → External DRS Pointer Protocol v0.1 → Read-only Enterprise Connector Sandbox v0.1 → External Evidence Acceptance Gate v0.1 → Bounded LLM Semantic Executor Node v0.1 → Enterprise Chaos Pack v0.1 → Compute Collapse Enterprise Bench v0.1 → Math / Invariants Sync v0.4 complete → Kernel Enforcement / Transition Matrix Hardening v0.1 complete → Developer Facade / Capability Manifest UX v0.1 complete → Production Boundary Design Docs v0.1 complete as design documentation → Enterprise Killer Demo v0.1 / Demo A complete as Authority / Safety / Compute Collapse assembly proof → Enterprise Document Killer Demo B v0.1 complete as Document / Evidence Workflow applied proof → artifact_type Mapping / Runtime Artifact Vocabulary v0.1 Option A docs/spec map complete through audit → Long-lived DRS State / TTL / Aging Stress v0.1 complete through proof, audit, docs sync, human walkthrough, and human walkthrough audit → Full Suite Drift Repair Phase 1 complete through repair and audit → DRS Lineage / Provenance Pressure v0.1 complete through human walkthrough audit → Compromised Upstream Pack v0.1 CLOSED → STOP PROOF-ONLY EXPANSION GATE → Real Semantic Runtime MVP plan → only after explicit review: DRS Poisoning Resistance v0.1 and Economic Adversary v0.1 as gated / conditional protection layers, runtime/schema production DRS, external/global DRS, Marennya / UP, Negative Trace, Option B/C/D/E artifact vocabulary work, Public Auditor Packet / Whitepaper draft, Manifest Auto-Hardening after Killer Demo
 
-Current checkpoint: G2-D v0.3.8 proof-based whole-run correction CLOSED_PASS.
+Current checkpoint: G2-D v0.3.9 t12 revise-no-progress correction contract accepted; implementation pending and unauthorized.
 
-Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
+Current G2-D v0.3.9 contract and lifecycle facts:
 
 - R-H1 implementation basis: `c5ca150af2fbb7981e1ed8ee83d914570e14cdeb`.
 - R-H1 accepted independent audit commit: `056bc1c746b49699069a90766d067f1a77d205dc`.
@@ -78,7 +78,12 @@ Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
 - Accepted G2-D addendum path: `docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md`.
 - Accepted G2-D v0.3.8 directional draft SHA-256: `91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454`.
 - Controlling DESIGN_V03 SHA-256: `7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe`.
-- Accepted G2-D v0.3.8 addendum SHA-256: `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
+- Active G2-D v0.3.9 addendum SHA-256: `1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445`.
+- Historical accepted G2-D v0.3.8 addendum SHA-256: `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
+- Historical G2-D v0.3.8 implementation commit: `3d9cc2aac45d2923a9d9d5848a8f4f81d011b22e`.
+- Historical G2-D v0.3.8 implementation patch SHA-256: `dbb5e3010e3337b5da0a36cfb69f9597a090be6d14b256699945c5a6fb09c291`.
+- Historical G2-D v0.3.8 owner evidence SHA-256: `51e913b59a8a82ea3fc5b7688f02dc07e4d9bf15d487d23d879d0b30f6b938f6`.
+- Historical G2-D v0.3.8 reclosure commit: `4cf427f82a096383ae5873024787c19e56ac0fb5`.
 - Historical accepted G2-D v0.3.7 normative donor SHA-256: `8801e413f93765cc7059ce5e03e82e881b20cfd193f12551a60a0b90920bb63d`.
 - Historical accepted G2-D v0.3.7 addendum SHA-256: `29983cd17cbefe306de32cf045827fc927280bae5fdb0d7c9db50203a0ea6511`.
 - Corrected G2-D implementation commit: `27c6dfd10740103cddc13bac3ce35f917b5f30c5`.
@@ -93,18 +98,19 @@ Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
 - Accepted G2-E preflight SHA-256: `83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b`.
 - Accepted G2-E v0.1.3 addendum SHA-256: `2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8`.
 - Accepted G2-E v0.1.3 normative donor SHA-256: `17b9384db812d5078301a9b3d4335dd3351481e117929b6b04c1ff6a137f4a56`.
-- Fresh post-reclosure G2-E3 V06 archive SHA-256: `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
+- Historical pre-v0.3.8-reclosure G2-E3 V06 archive SHA-256: `d8630f68af26ab9ae1d925c0e236b71e1e2ac3e759a39f642af2fcf432e4ead3`.
+- Fresh G2-E3 V06 on G2-D v0.3.8 evidence SHA-256: `09bfe734048febfcf1ea32cc35195fb494b73c36a360163c8329aaf5e3fc2ca8`.
 - G2-E3 baseline source observation SHA-256: `fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c`.
 - G2-E3 baseline member observation SHA-256: `fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467`.
 - G2-E3 baseline member identities SHA-256: `8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39`.
 - E4 public-seam constructibility register SHA-256: `a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2`.
 - E4 two-Root-pair register SHA-256: `a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33`.
 - G2-D v0.3.8 post-implementation lifecycle sync commit: `e66c8be08e753077b6a99eeb635bf6fe25ee4b90`.
-- G2-D v0.3.8 independent re-audit commit: `edfa42198efa1d03097570d30b6364af1b567050`.
-- G2-D v0.3.8 independent re-audit: `docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log`.
+- Historical G2-D v0.3.8 independent re-audit commit: `edfa42198efa1d03097570d30b6364af1b567050`.
+- Historical G2-D v0.3.8 independent re-audit path: `docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log`.
 - G2-D v0.3.8 independent re-audit SHA-256: `acd62cfcf3753a4c02c5f5187e64e8940cf3b3420f97850b0426583465996d67`.
 - G2-D v0.3.8 independent re-audit evidence bundle SHA-256: `5e43b38b921f7035609e5ef3a33058325c4b529193ad82d87b70a84cd6ff363b`.
-- G2-D v0.3.8 successor checkpoint: `docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md`.
+- Historical G2-D v0.3.8 successor checkpoint: `docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md`.
 - G2-D v0.3.8 successor checkpoint SHA-256: `64e2c94f83e8dd2012d0f6f6d8f969bc08832b61194ce24668c6ec7a4eb96e6b`.
 - G2-D v0.3.8 closure commit subject: `Close G2-D v0.3.8 proof-based whole-run correction`.
 - G2-D v0.3.8 closure commit identity: `NOT_SELF_RECORDED`.
@@ -123,10 +129,23 @@ Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
 - G2-B: `CLOSED_PASS`.
 - G2-C: `CLOSED_PASS`.
 - Historical pre-correction G2-D: `CLOSED_PASS_ON_PRECORRECTION_BYTES`.
-- G2-D: `CLOSED_PASS`.
+- G2-D: `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`.
+- Historical G2-D v0.3.8: `CLOSED_PASS_ON_V038_BYTES`.
+- G2-D v0.3.9 implementation authorized: `false`.
+- G2-D v0.3.9 implementation started: `false`.
+- G2-D v0.3.9 corrected implementation exists: `false`.
+- G2-D contract-only claim: `true`.
 - `V037_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V038_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V038_ROLE=EXPLICIT_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
+- `V038_IMPLEMENTATION_NONCONFORMANCE=YES`.
+- `V039_CONTRACT_SEMANTICS_CHANGED=NO`.
+- `V039_ROLE=EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
+- Guardian ruling: `APPROVE_WITH_MANDATORY_OVERLAY`.
+- Isolated worktree strategy approved: `true`.
+- E4 two-path-only implementation sufficient: `false`.
+- E4 public end-to-end carrier overlay required: `true`.
+- Revised guardian decision required: `false`.
 - G2-D v0.3.8 correction implementation authorized: `true`.
 - G2-D v0.3.8 implementation started: `true`.
 - G2-D v0.3.8 corrected implementation exists: `true`.
@@ -146,13 +165,14 @@ Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
 - Historical v0.3.7 implementation, owner evidence, independent re-audit,
   checkpoint, and reclosure remain immutable evidence for v0.3.7 bytes only.
 - Old G2-D audit/checkpoint class: `HISTORICAL_PRECORRECTION_EVIDENCE`.
-- G2-E3: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
-- G2-E3 post-corrected-G2-D landing status: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D`.
+- G2-E3 after future v0.3.9 implementation: `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - Fresh unchanged post-reclosure G2-E3 V06 passed: `true`.
 - G2-E4 contract: `ACCEPTED_IMPLEMENTATION_PENDING`.
-- G2-E4: `BLOCKED_PENDING_FRESH_G2E3_V06`.
+- G2-E4: `IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED`.
 - G2-E4 strict-subtree implementation committed: `true`.
-- G2-E4 anti-gaming acceptance: `BLOCKED_PENDING_FRESH_G2E3_V06`.
+- G2-E4 strict subtree: `IMPLEMENTED_COMMITTED_PASS`.
+- G2-E4 anti-gaming acceptance: `BLOCKED_PENDING_G2D_V039_RECLOSURE`.
 - G2-E4 anti-gaming correction authorized: `false`.
 - G2-E5: `NOT_STARTED_NOT_AUTHORIZED`.
 - G2-E6: `NOT_STARTED_NOT_AUTHORIZED`.
@@ -172,6 +192,15 @@ Current G2-D v0.3.8 reclosure and G2-E lifecycle facts:
 
 - RuntimeExecutionTopology is not authority, a child cell is not Root, and a
   child result is not FinalOutput.
+- The accepted t12 semantic law already exists. v0.3.9 records a narrow v0.3.8 implementation nonconformance and reopens the lifecycle without changing semantics.
+- A future implementation may modify only `hedgehog/kernel/fractal_runtime_v02.py` and `tests/test_fractal_runtime_g2_d_v02.py`.
+- The clean isolated v0.3.9 V06 must pass before guarded fast-forward of the dirty primary worktree.
+- Final E4 call accounting is pair 2/2, focused 2/2, and complete file 3/3.
+- The parked primary E4 patch SHA-256 remains `3c08807bcf8545b95ceca22ec13f1aa1cb2e8d2669ad72cf269ac2d077163aff`.
+- Root is the only final authority.
+- G2-C owns the accepted Root-reviewed route.
+- G2-D owns RuntimeExecutionTopology and stable topology-node and cell IDs.
+- G2-D imports no G2-E module or type.
 - G2-D creates no truth, permission, ActionCommitPacket, receipt, effect
   handle, DRS write, FinalOutput, provider authority, connector authority, or
   real-world effect.

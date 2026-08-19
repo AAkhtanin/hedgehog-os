@@ -12929,15 +12929,58 @@ def evaluate_fractal_runtime_state_transition_v02(
                     raise ValueError("g2d_revise_observation_invalid")
                 rule_id = "t07"
             else:
+                revise_deadend = False
                 if revise_observation is not None:
+                    expected_revise_observation = evaluate_fractal_revise_observation_v02(
+                        topology=topology,
+                        cell_input=cell_input,
+                        queue_entry=current_entry,
+                        validation_report=validate_fractal_cell_queue_entry_v02(
+                            current_entry
+                        ),
+                        cell_budget_before=cell_budget_before,
+                        global_budget_before=global_budget_before,
+                        revision_index=revise_observation.revision_index,
+                        newly_validated_evidence_count=(
+                            revise_observation.newly_validated_evidence_count
+                        ),
+                        newly_resolved_constraints_count=(
+                            revise_observation.newly_resolved_constraints_count
+                        ),
+                        newly_accepted_outputs_count=(
+                            revise_observation.newly_accepted_outputs_count
+                        ),
+                        newly_introduced_conflicts_count=(
+                            revise_observation.newly_introduced_conflicts_count
+                        ),
+                        consecutive_non_positive_count=(
+                            revise_observation.consecutive_non_positive_count
+                        ),
+                    )
                     if (
-                        revise_by_id.get(revise_observation.observation_id)
+                        node.node_kind not in _D3_LOCAL_NODE_KINDS_V02
+                        or revise_by_id.get(revise_observation.observation_id)
                         != revise_observation
+                        or revise_observation != expected_revise_observation
+                        or _canonical_json_bytes_v01(
+                            fractal_revise_observation_to_plain_data_v02(
+                                revise_observation
+                            )
+                        )
+                        != _canonical_json_bytes_v01(
+                            fractal_revise_observation_to_plain_data_v02(
+                                expected_revise_observation
+                            )
+                        )
+                        or revise_observation.revise_eligible is not False
                         or revise_observation.derived_terminal_state != "DEADEND"
+                        or revise_observation.reason_codes
+                        != ("g2d_no_progress_deadend",)
                         or validation_report
                         != validate_fractal_revise_observation_v02(revise_observation)
                     ):
                         raise ValueError("g2d_revise_observation_invalid")
+                    revise_deadend = True
                 elif (
                     validation_report is not None
                     and node.node_kind not in {"POST_VV", "GT_ADVISORY"}
@@ -13062,7 +13105,11 @@ def evaluate_fractal_runtime_state_transition_v02(
                         or advisories != material["derived_advisory_refs"]
                     ):
                         raise ValueError("g2d_terminal_outcome_mapping_invalid")
-                    terminal_state = material["allowed_outcome"]
+                    terminal_state = (
+                        "DEADEND"
+                        if revise_deadend
+                        else material["allowed_outcome"]
+                    )
                 elif node.node_kind in {"POST_VV", "GT_ADVISORY"}:
                     expected_target = (
                         "POST_VV_REPORT"
@@ -13086,8 +13133,6 @@ def evaluate_fractal_runtime_state_transition_v02(
                             else "g2d_gt_advisory_invalid"
                         )
                     terminal_state = "COMPLETED"
-                elif revise_observation is not None:
-                    terminal_state = "DEADEND"
                 else:
                     return None
                 rule_id = dict(

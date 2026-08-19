@@ -9581,26 +9581,40 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
 
 
 def test_d4_revise_retry_and_no_progress_v02(
-    d4_complete_full_fractal_bundle: dict[str, object],
+    d3_full_fractal_micro_environment: dict[str, object],
 ) -> None:
-    bundle = d4_complete_full_fractal_bundle["bundle"]
-    assert isinstance(bundle, fr.FractalRuntimeExecutionBundleV02)
-    node_by_id = {item.node_id: item for item in bundle.topology_nodes}
-    validating = next(
-        item
-        for item in bundle.queue_entries
-        if item.state == "VALIDATING"
-        and node_by_id[item.node_id].node_kind in fr._D3_LOCAL_NODE_KINDS_V02
+    env = _d3_clone_environment(d3_full_fractal_micro_environment)
+    topology = env["topology"]
+    cell_input = env["cell_input"]
+    nodes = env["nodes"]
+    assert isinstance(topology, fr.RuntimeExecutionTopologyV02)
+    assert isinstance(cell_input, fr.FractalCellInputV02)
+    assert isinstance(nodes, tuple)
+    node = nodes[0]
+    assert isinstance(node, fr.RuntimeTopologyNodeV02)
+    assert node.node_kind in fr._D3_LOCAL_NODE_KINDS_V02
+
+    running, running_artifact, _start_budget = _d3_start_node(
+        env,
+        node_index=0,
     )
-    cell_input = next(item for item in bundle.cell_inputs if item.cell_id == validating.cell_id)
-    budget_by_id = {item.budget_id: item for item in bundle.budgets}
-    cell_budget = budget_by_id[validating.cell_budget_id]
-    global_budget = budget_by_id[validating.global_budget_id]
+    validating, validating_artifact, _finish_global = _d3_finish_running_local(
+        env,
+        running=running,
+        running_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+    )
+    indexes = _d3_indexes(env)
+    cell_budget = indexes["budget_by_id"][validating.cell_budget_id]
+    global_budget = indexes["budget_by_id"][validating.global_budget_id]
+    queue_validation = fr.validate_fractal_cell_queue_entry_v02(validating)
+    assert queue_validation.status == "PASS"
     observation = fr.evaluate_fractal_revise_observation_v02(
-        topology=bundle.topology,
+        topology=topology,
         cell_input=cell_input,
         queue_entry=validating,
-        validation_report=fr.validate_fractal_cell_queue_entry_v02(validating),
+        validation_report=queue_validation,
         cell_budget_before=cell_budget,
         global_budget_before=global_budget,
         revision_index=cell_input.initial_revise_count,
@@ -9610,7 +9624,10 @@ def test_d4_revise_retry_and_no_progress_v02(
         newly_introduced_conflicts_count=0,
         consecutive_non_positive_count=cell_budget.max_revise_count,
     )
-    assert fr.validate_fractal_revise_observation_v02(observation).status == "PASS"
+    observation_report = fr.validate_fractal_revise_observation_v02(observation)
+    assert observation_report.status == "PASS"
+    assert observation_report.validation_target == "FractalReviseObservationV02"
+    assert observation_report.validated_object_id == observation.observation_id
     assert observation.revise_eligible is False
     assert observation.derived_terminal_state == "DEADEND"
     assert observation.reason_codes == ("g2d_no_progress_deadend",)
@@ -9618,13 +9635,398 @@ def test_d4_revise_retry_and_no_progress_v02(
         cell_budget.budget_id,
         global_budget.budget_id,
     )
-    assert not bundle.revise_observations
+    assert observation.authority_created is False
+    assert observation.real_world_effects_count == 0
+    assert env["revise_observations"] == ()
+
+    def evaluate_transition(
+        branch: dict[str, object],
+        *,
+        revise: fr.FractalReviseObservationV02 | None = observation,
+        report: fr.FractalRuntimeValidationReportV02 | None = observation_report,
+        source_artifact: KernelArtifactV01 = validating_artifact,
+        selected_node: fr.RuntimeTopologyNodeV02 = node,
+        selected_cell_budget: fr.FractalRuntimeBudgetV02 = cell_budget,
+        selected_global_budget: fr.FractalRuntimeBudgetV02 = global_budget,
+        queue_reason_codes: tuple[str, ...] = validating.queue_reason_codes,
+        observed_output_refs: tuple[str, ...] = validating.observed_output_refs,
+        observed_evidence_refs: tuple[str, ...] = validating.observed_evidence_refs,
+        advisory_refs: tuple[str, ...] = validating.advisory_refs,
+    ) -> TransitionDecisionV01 | None:
+        return fr.evaluate_fractal_runtime_state_transition_v02(
+            source_context=branch["source"],
+            topology=branch["topology"],
+            source_artifact=source_artifact,
+            current_entry=validating,
+            node=selected_node,
+            cell_input=cell_input,
+            cell_id=validating.cell_id,
+            parent_cell_id=validating.parent_cell_id,
+            planned_child_cell_id=validating.planned_child_cell_id,
+            cell_depth=validating.cell_depth,
+            scope_ref=validating.scope_ref,
+            cell_budget_before=selected_cell_budget,
+            global_budget_before=selected_global_budget,
+            dependencies=(),
+            queue_reason_codes=queue_reason_codes,
+            observed_output_refs=observed_output_refs,
+            observed_evidence_refs=observed_evidence_refs,
+            advisory_refs=advisory_refs,
+            local_child_result=None,
+            local_child_result_artifact=None,
+            validation_report=report,
+            parent_return_pre_post_vv_terminal_queue_entries=(),
+            parent_return_child_results=(),
+            parent_return_partial_failures=(),
+            parent_return_result_proposal=None,
+            parent_return_post_vv_report=None,
+            parent_return_gt_advisory_report=None,
+            parent_return_validation_reports=(),
+            revise_observation=revise,
+            backpressure_state=None,
+            transition_registry=branch["registry"],
+            **_d3_prefix_kwargs(branch),
+        )
+
+    def advance_transition(
+        branch: dict[str, object],
+        decision: TransitionDecisionV01,
+    ) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
+        queue_log = branch["queue_log"]
+        artifact_log = branch["artifact_log"]
+        reports = branch["validation_reports"]
+        assert isinstance(queue_log, tuple)
+        assert isinstance(artifact_log, tuple)
+        assert isinstance(reports, tuple)
+        target = fr.advance_fractal_cell_queue_v02(
+            source_context=branch["source"],
+            topology=branch["topology"],
+            current_entry=validating,
+            node=node,
+            cell_input=cell_input,
+            transition_decision=decision,
+            cell_budget_after=cell_budget,
+            global_budget_after=global_budget,
+            dependencies=(),
+            local_child_result=None,
+            local_child_result_artifact=None,
+            cell_instantiation_order=tuple(
+                item.cell_id for item in branch["cell_inputs"]
+            ),
+            projected_node_ids=cell_input.ordered_node_ids,
+            round_start_queue_entries=_d3_latest(branch),
+            queue_reason_codes=validating.queue_reason_codes,
+            observed_output_refs=validating.observed_output_refs,
+            observed_evidence_refs=validating.observed_evidence_refs,
+            advisory_refs=validating.advisory_refs,
+            **_d3_prefix_kwargs(branch),
+        )
+        artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            target,
+            topology_artifact=branch["topology_artifact"],
+            predecessor_artifact=validating_artifact,
+            activation_parent_artifact=None,
+            local_child_result_artifact=None,
+            source_context=branch["source"],
+            **_d3_prefix_kwargs(
+                branch,
+                settled_queue_entry_log=queue_log + (target,),
+                settled_validation_reports=reports,
+            ),
+        )
+        branch["queue_log"] = queue_log + (target,)
+        branch["artifact_log"] = artifact_log + (artifact,)
+        branch["validation_reports"] = _d3_retained_reports(
+            branch,
+            branch["queue_log"],
+        )
+        return target, artifact
+
+    base_branch = _d3_clone_environment(env)
+    base_branch["revise_observations"] = (observation,)
+    budget_log_before = base_branch["budget_log"]
+    decision = evaluate_transition(base_branch)
+    repeated_decision = evaluate_transition(base_branch)
+    assert isinstance(decision, TransitionDecisionV01)
+    assert decision == repeated_decision
+    assert canonical_json_bytes_v01(
+        transition_registry.fractal_runtime_transition_decision_to_plain_dict_v02(
+            decision
+        )
+    ) == canonical_json_bytes_v01(
+        transition_registry.fractal_runtime_transition_decision_to_plain_dict_v02(
+            repeated_decision
+        )
+    )
+    assert decision.rule_id == "g2d_t12_validating_to_deadend"
+    assert decision.decision == "RETURN_TO_ROOT"
+    assert decision.reason_code == "g2d_transition_deadend_recorded"
+
+    first_branch = _d3_clone_environment(base_branch)
+    repeated_branch = _d3_clone_environment(base_branch)
+    terminal, terminal_artifact = advance_transition(first_branch, decision)
+    repeated_terminal, repeated_artifact = advance_transition(
+        repeated_branch,
+        repeated_decision,
+    )
+    assert terminal == repeated_terminal
+    assert terminal_artifact == repeated_artifact
+    assert canonical_json_bytes_v01(
+        fr.fractal_cell_queue_entry_to_plain_data_v02(terminal)
+    ) == canonical_json_bytes_v01(
+        fr.fractal_cell_queue_entry_to_plain_data_v02(repeated_terminal)
+    )
+    assert canonical_json_bytes_v01(
+        kernel_artifact_to_plain_dict_v01(terminal_artifact)
+    ) == canonical_json_bytes_v01(
+        kernel_artifact_to_plain_dict_v01(repeated_artifact)
+    )
+    assert terminal.state == "DEADEND"
+    assert terminal.prior_state == "VALIDATING"
+    assert terminal.predecessor_queue_entry_id == validating.queue_entry_id
+    assert terminal.transition_decision_id == decision.decision_id
+    assert terminal.queue_reason_codes == validating.queue_reason_codes
+    assert terminal.observed_output_refs == validating.observed_output_refs
+    assert terminal.observed_evidence_refs == validating.observed_evidence_refs
+    assert terminal.advisory_refs == validating.advisory_refs
+    assert terminal.cell_budget_id == validating.cell_budget_id
+    assert terminal.global_budget_id == validating.global_budget_id
+    assert terminal_artifact.parent_refs[:2] == (
+        first_branch["topology_artifact"].artifact_id,
+        validating_artifact.artifact_id,
+    )
+    assert validate_kernel_artifact_v01(terminal_artifact) == ()
+    assert fr.validate_fractal_cell_queue_entry_v02(terminal).status == "PASS"
+    assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+        decision,
+        registry=first_branch["registry"],
+        source_artifact=validating_artifact,
+        target_artifact=terminal_artifact,
+    ) == ()
+    terminal_indexes = _d3_indexes(first_branch)
+    assert terminal_indexes["latest_by_key"][(terminal.cell_id, terminal.node_id)] == terminal
+    assert terminal_indexes["artifact_by_queue_id"][terminal.queue_entry_id] == terminal_artifact
+    assert terminal_indexes["revise_by_id"] == {
+        observation.observation_id: observation
+    }
+    assert first_branch["budget_log"] == budget_log_before
+    assert repeated_branch["budget_log"] == budget_log_before
+    assert terminal.authority_created is False
+    assert terminal.permission_created is False
+    assert terminal.final_output_created is False
+    assert terminal.drs_write_created is False
+    assert terminal.real_world_effects_count == 0
+    assert "g2d_no_progress_deadend" not in terminal.queue_reason_codes
+    assert observation.reason_codes == ("g2d_no_progress_deadend",)
+
+    with pytest.raises(ValueError, match="g2d_terminal_queue_reentry_forbidden"):
+        fr.evaluate_fractal_runtime_state_transition_v02(
+            source_context=first_branch["source"],
+            topology=first_branch["topology"],
+            source_artifact=terminal_artifact,
+            current_entry=terminal,
+            node=node,
+            cell_input=cell_input,
+            cell_id=terminal.cell_id,
+            parent_cell_id=terminal.parent_cell_id,
+            planned_child_cell_id=terminal.planned_child_cell_id,
+            cell_depth=terminal.cell_depth,
+            scope_ref=terminal.scope_ref,
+            cell_budget_before=cell_budget,
+            global_budget_before=global_budget,
+            dependencies=(),
+            queue_reason_codes=terminal.queue_reason_codes,
+            observed_output_refs=terminal.observed_output_refs,
+            observed_evidence_refs=terminal.observed_evidence_refs,
+            advisory_refs=terminal.advisory_refs,
+            local_child_result=None,
+            local_child_result_artifact=None,
+            validation_report=None,
+            parent_return_pre_post_vv_terminal_queue_entries=(),
+            parent_return_child_results=(),
+            parent_return_partial_failures=(),
+            parent_return_result_proposal=None,
+            parent_return_post_vv_report=None,
+            parent_return_gt_advisory_report=None,
+            parent_return_validation_reports=(),
+            revise_observation=None,
+            backpressure_state=None,
+            transition_registry=first_branch["registry"],
+            **_d3_prefix_kwargs(first_branch),
+        )
+
+    ordinary_branch = _d3_clone_environment(env)
+    ordinary_decision = evaluate_transition(
+        ordinary_branch,
+        revise=None,
+        report=None,
+    )
+    assert isinstance(ordinary_decision, TransitionDecisionV01)
+    assert ordinary_decision.rule_id == "g2d_t08_validating_to_completed"
+    ordinary_terminal, _ordinary_artifact = advance_transition(
+        ordinary_branch,
+        ordinary_decision,
+    )
+    assert ordinary_terminal.state == "COMPLETED"
+    assert ordinary_terminal.queue_reason_codes == validating.queue_reason_codes
+    assert ordinary_branch["budget_log"] == budget_log_before
+
+    eligible = fr.evaluate_fractal_revise_observation_v02(
+        topology=topology,
+        cell_input=cell_input,
+        queue_entry=validating,
+        validation_report=queue_validation,
+        cell_budget_before=cell_budget,
+        global_budget_before=global_budget,
+        revision_index=cell_input.initial_revise_count,
+        newly_validated_evidence_count=1,
+        newly_resolved_constraints_count=0,
+        newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=0,
+        consecutive_non_positive_count=0,
+    )
+    eligible_report = fr.validate_fractal_revise_observation_v02(eligible)
+    eligible_branch = _d3_clone_environment(env)
+    eligible_branch["revise_observations"] = (eligible,)
+    eligible_decision = evaluate_transition(
+        eligible_branch,
+        revise=eligible,
+        report=eligible_report,
+        queue_reason_codes=(),
+        observed_output_refs=(),
+        observed_evidence_refs=(),
+        advisory_refs=(),
+    )
+    assert isinstance(eligible_decision, TransitionDecisionV01)
+    assert eligible.revise_eligible is True
+    assert eligible_decision.rule_id == "g2d_t07_validating_to_revise"
+    assert eligible_decision.rule_id != decision.rule_id
+
+    def assert_revise_rejected(candidate: fr.FractalReviseObservationV02) -> None:
+        branch = _d3_clone_environment(env)
+        branch["revise_observations"] = (candidate,)
+        with pytest.raises(ValueError):
+            evaluate_transition(
+                branch,
+                revise=candidate,
+                report=fr.validate_fractal_revise_observation_v02(candidate),
+            )
+
+    manually_forged = replace(
+        observation,
+        observation_id="frrevise_v02:" + "f" * 64,
+    )
+    invalid_observations = (
+        manually_forged,
+        _seal(replace(observation, derived_terminal_state=None)),
+        _seal(replace(observation, reason_codes=("g2d_revise_progress_valid",))),
+        _seal(replace(observation, revision_index=observation.revision_index + 1)),
+        _seal(replace(observation, cell_id="frrootcell_v02:" + "f" * 64)),
+        _seal(replace(observation, queue_entry_id="frqueue_v02:" + "f" * 64)),
+        _seal(replace(observation, cell_budget_before_id="frbudget_v02:" + "e" * 64)),
+        _seal(replace(observation, global_budget_before_id="frbudget_v02:" + "d" * 64)),
+        _seal(
+            replace(
+                observation,
+                newly_validated_evidence_count=1,
+            )
+        ),
+    )
+    for candidate in invalid_observations:
+        assert isinstance(candidate, fr.FractalReviseObservationV02)
+        assert_revise_rejected(candidate)
+
+    with pytest.raises(ValueError):
+        evaluate_transition(_d3_clone_environment(env))
+    stale_report_branch = _d3_clone_environment(base_branch)
+    with pytest.raises(ValueError):
+        evaluate_transition(stale_report_branch, report=queue_validation)
+    with pytest.raises(ValueError):
+        evaluate_transition(
+            base_branch,
+            selected_cell_budget=env["root_create"],
+        )
+    with pytest.raises(ValueError):
+        evaluate_transition(
+            base_branch,
+            selected_global_budget=env["root_create"],
+        )
+    non_local_node = next(item for item in nodes if item.node_kind == "POST_VV")
+    with pytest.raises(ValueError):
+        evaluate_transition(base_branch, selected_node=non_local_node)
+
+    for field_name, changed in (
+        (
+            "queue_reason_codes",
+            (*validating.queue_reason_codes, "g2d_no_progress_deadend"),
+        ),
+        ("observed_output_refs", (*validating.observed_output_refs, "output:foreign")),
+        (
+            "observed_evidence_refs",
+            (*validating.observed_evidence_refs, "evidence:foreign"),
+        ),
+        ("advisory_refs", (*validating.advisory_refs, "advisory:foreign")),
+    ):
+        with pytest.raises(ValueError):
+            evaluate_transition(base_branch, **{field_name: changed})
+
+    wrong_origin_branch = _d3_clone_environment(base_branch)
+    queue_log = wrong_origin_branch["queue_log"]
+    running_index = queue_log.index(running)
+    wrong_running = _seal(
+        replace(
+            running,
+            observed_evidence_refs=(*running.observed_evidence_refs, "evidence:foreign"),
+        )
+    )
+    wrong_origin_branch["queue_log"] = (
+        *queue_log[:running_index],
+        wrong_running,
+        *queue_log[running_index + 1 :],
+    )
+    with pytest.raises(ValueError):
+        evaluate_transition(wrong_origin_branch)
+
+    budget_attack = _d3_clone_environment(base_branch)
+    budget_successor = _d3_budget_successor(
+        budget_attack,
+        cell_budget,
+        event="REVISE",
+        decision=eligible_decision,
+        cell_input=cell_input,
+    )
+    budget_attack["budget_log"] = (*budget_attack["budget_log"], budget_successor)
+    with pytest.raises(ValueError, match="g2d_budget_event_pair_mismatch"):
+        fr.advance_fractal_cell_queue_v02(
+            source_context=budget_attack["source"],
+            topology=budget_attack["topology"],
+            current_entry=validating,
+            node=node,
+            cell_input=cell_input,
+            transition_decision=decision,
+            cell_budget_after=budget_successor,
+            global_budget_after=budget_successor,
+            dependencies=(),
+            local_child_result=None,
+            local_child_result_artifact=None,
+            cell_instantiation_order=tuple(
+                item.cell_id for item in budget_attack["cell_inputs"]
+            ),
+            projected_node_ids=cell_input.ordered_node_ids,
+            round_start_queue_entries=_d3_latest(budget_attack),
+            queue_reason_codes=validating.queue_reason_codes,
+            observed_output_refs=validating.observed_output_refs,
+            observed_evidence_refs=validating.observed_evidence_refs,
+            advisory_refs=validating.advisory_refs,
+            **_d3_prefix_kwargs(budget_attack),
+        )
+
     with pytest.raises(ValueError, match="g2d_revise_observation_invalid"):
         fr.evaluate_fractal_revise_observation_v02(
-            topology=bundle.topology,
+            topology=topology,
             cell_input=cell_input,
             queue_entry=validating,
-            validation_report=fr.validate_fractal_cell_queue_entry_v02(validating),
+            validation_report=queue_validation,
             cell_budget_before=cell_budget,
             global_budget_before=global_budget,
             revision_index=validating.snapshot_sequence + 1,

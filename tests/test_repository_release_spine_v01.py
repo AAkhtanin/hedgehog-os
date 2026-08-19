@@ -248,6 +248,34 @@ G2D_V039_CONTRACT_CLAIM_WORDING = (
     "is accepted with implementation pending and unauthorized."
 )
 G2D_V039_BASIS = "4cf427f82a096383ae5873024787c19e56ac0fb5"
+G2D_V039_CONTRACT_COMMIT = "8638a3c7d0c2774de161a5e52a8aa62ac9db2aa3"
+G2D_V039_CONTRACT_SUBJECT = (
+    "Accept G2-D v0.3.9 t12 revise-no-progress correction contract"
+)
+G2D_V039_CONTRACT_TEST_SHA256 = (
+    "b91b66dced57ab32779fc2b18ad567c2ab176f953fc2dba67205d268cf9edec5"
+)
+G2D_V039_IMPLEMENTATION_RUNTIME_SHA256 = (
+    "e1201de1f03d8d33353ae9edf026879214afab25eca6dcb9cd1670779b53bd08"
+)
+G2D_V039_IMPLEMENTATION_TEST_SHA256 = (
+    "8119d7bf3647652a71754e62baeccb12665b323dc3b36c762c841e4ad56ef5bf"
+)
+G2D_V039_IMPLEMENTATION_PATCH_SHA256 = (
+    "442b68cdff95fc06a1176fcb4c3d64323110e197b771d5e932db5215b3d8bc13"
+)
+G2D_V039_IMPLEMENTATION_PATCH_BYTES = 26107
+G2D_V039_IMPLEMENTATION_PATCH_LF = 560
+G2D_V039_IMPLEMENTATION_PATHS = (
+    "hedgehog/kernel/fractal_runtime_v02.py",
+    "tests/test_fractal_runtime_g2_d_v02.py",
+)
+G2D_V039_RELEASE_CONSUMER_MAINTENANCE_SUBJECT = (
+    "Align G2-D v0.3.9 release tests with implementation candidate"
+)
+G2D_V039_IMPLEMENTATION_SUBJECT = (
+    "Implement G2-D v0.3.9 t12 revise-no-progress correction"
+)
 G2D_V039_PRIMARY_PARKED_PATCH_SHA256 = (
     "3c08807bcf8545b95ceca22ec13f1aa1cb2e8d2669ad72cf269ac2d077163aff"
 )
@@ -2504,7 +2532,6 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
         G2D_CHECKPOINT_PATH: G2D_CHECKPOINT_SHA256,
         G2D_V038_INDEPENDENT_REAUDIT_PATH: G2D_V038_INDEPENDENT_REAUDIT_SHA256,
         G2D_V038_CHECKPOINT_PATH: G2D_V038_CHECKPOINT_SHA256,
-        "hedgehog/kernel/fractal_runtime_v02.py": G2D_V038_RUNTIME_SHA256,
         **G2D_FROZEN_IMPLEMENTATION_SHA256,
         **G2E_CONTRACT_UPDATED_SHA256,
         **G2D_FACADE_MAINTENANCE_SHA256,
@@ -2680,15 +2707,89 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
         transition_path,
     )
 
+    runtime_path = "hedgehog/kernel/fractal_runtime_v02.py"
+    test_path = "tests/test_fractal_runtime_g2_d_v02.py"
     assert _sha256_bytes(
-        (REPOSITORY_ROOT / "hedgehog/kernel/fractal_runtime_v02.py").read_bytes()
+        _git_show(G2D_V039_CONTRACT_COMMIT, runtime_path)
     ) == G2D_V038_RUNTIME_SHA256
     assert _sha256_bytes(
-        _git_show(G2D_V039_BASIS, "tests/test_fractal_runtime_g2_d_v02.py")
+        _git_show(G2D_V039_CONTRACT_COMMIT, test_path)
+    ) == G2D_V039_CONTRACT_TEST_SHA256
+    assert _sha256_bytes(
+        _git_show(G2D_V039_BASIS, test_path)
     ) == G2D_V038_TEST_SHA256
-    current_test_source = (
-        REPOSITORY_ROOT / "tests/test_fractal_runtime_g2_d_v02.py"
-    ).read_text(encoding="ascii")
+
+    current_runtime = (REPOSITORY_ROOT / runtime_path).read_bytes()
+    current_test = (REPOSITORY_ROOT / test_path).read_bytes()
+    current_runtime_sha256 = _sha256_bytes(current_runtime)
+    current_test_sha256 = _sha256_bytes(current_test)
+    status = subprocess.run(
+        ("git", "status", "--short", "--untracked-files=all"),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    staged = subprocess.run(
+        ("git", "diff", "--cached", "--name-only"),
+        cwd=REPOSITORY_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert staged == []
+    if current_runtime_sha256 == G2D_V038_RUNTIME_SHA256:
+        assert current_test_sha256 == G2D_V039_CONTRACT_TEST_SHA256
+        assert status == []
+    else:
+        assert current_runtime_sha256 == G2D_V039_IMPLEMENTATION_RUNTIME_SHA256
+        assert current_test_sha256 == G2D_V039_IMPLEMENTATION_TEST_SHA256
+        if status:
+            assert status == [
+                " M " + path for path in G2D_V039_IMPLEMENTATION_PATHS
+            ]
+            implementation_patch = subprocess.run(
+                ("git", "diff", "--no-ext-diff", "--full-index", "--binary"),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+            ).stdout
+        else:
+            assert subprocess.run(
+                ("git", "log", "-1", "--format=%s"),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip() == G2D_V039_IMPLEMENTATION_SUBJECT
+            assert subprocess.run(
+                ("git", "diff", "--name-only", "HEAD^", "HEAD"),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.splitlines() == list(G2D_V039_IMPLEMENTATION_PATHS)
+            implementation_patch = subprocess.run(
+                (
+                    "git",
+                    "diff",
+                    "--no-ext-diff",
+                    "--full-index",
+                    "--binary",
+                    "HEAD^",
+                    "HEAD",
+                ),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+            ).stdout
+        assert _sha256_bytes(implementation_patch) == (
+            G2D_V039_IMPLEMENTATION_PATCH_SHA256
+        )
+        assert len(implementation_patch) == G2D_V039_IMPLEMENTATION_PATCH_BYTES
+        assert implementation_patch.count(b"\n") == G2D_V039_IMPLEMENTATION_PATCH_LF
+
+    current_test_source = current_test.decode("ascii")
     assert len(re.findall(r"(?m)^def test_", current_test_source)) == 83
     assert current_test_source.count(
         "def test_d3_post_acceptance_contract_addendum_v039_accepted"
@@ -2696,11 +2797,9 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
     assert "def test_d3_post_acceptance_contract_addendum_v038_accepted" not in (
         current_test_source
     )
-    assert (
-        REPOSITORY_ROOT / "hedgehog/kernel/fractal_runtime_v02.py"
-    ).read_bytes() != _git_show(
+    assert current_runtime != _git_show(
         G2D_CORRECTED_IMPLEMENTATION_COMMIT,
-        "hedgehog/kernel/fractal_runtime_v02.py",
+        runtime_path,
     )
     for path, sha256 in G2D_HISTORICAL_G2E_DEPENDENCY_SHA256.items():
         historical_raw = _git_show(G2D_CORRECTED_IMPLEMENTATION_COMMIT, path)
@@ -2780,6 +2879,9 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
         text=True,
     ).stdout.splitlines()
     assert staged == []
+    exact_candidate_status = [
+        " M " + path for path in G2D_V039_IMPLEMENTATION_PATHS
+    ]
     if head == G2D_V039_BASIS:
         assert set(status) == {
             " M " + path for path in G2D_V039_CONTRACT_PATHS
@@ -2792,8 +2894,13 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
             capture_output=True,
             text=True,
         ).stdout.strip()
-        assert parent == G2D_V039_BASIS
-        assert status == []
+        subject = subprocess.run(
+            ("git", "log", "-1", "--format=%s"),
+            cwd=REPOSITORY_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
         changed = subprocess.run(
             ("git", "diff", "--name-only", "HEAD^", "HEAD"),
             cwd=REPOSITORY_ROOT,
@@ -2801,7 +2908,49 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
             capture_output=True,
             text=True,
         ).stdout.splitlines()
-        assert set(changed) == set(G2D_V039_CONTRACT_PATHS)
+        if head == G2D_V039_CONTRACT_COMMIT:
+            assert parent == G2D_V039_BASIS
+            assert subject == G2D_V039_CONTRACT_SUBJECT
+            assert set(changed) == set(G2D_V039_CONTRACT_PATHS)
+            assert status in ([], exact_candidate_status)
+        elif parent == G2D_V039_CONTRACT_COMMIT:
+            assert subject == G2D_V039_RELEASE_CONSUMER_MAINTENANCE_SUBJECT
+            assert changed == ["tests/test_repository_release_spine_v01.py"]
+            assert status == exact_candidate_status
+        else:
+            assert subject == G2D_V039_IMPLEMENTATION_SUBJECT
+            assert changed == list(G2D_V039_IMPLEMENTATION_PATHS)
+            assert status == []
+            maintenance_subject = subprocess.run(
+                ("git", "show", "-s", "--format=%s", parent),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            maintenance_parent = subprocess.run(
+                ("git", "rev-parse", parent + "^"),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            assert maintenance_subject == (
+                G2D_V039_RELEASE_CONSUMER_MAINTENANCE_SUBJECT
+            )
+            assert maintenance_parent == G2D_V039_CONTRACT_COMMIT
+    if status == exact_candidate_status:
+        candidate_patch = subprocess.run(
+            ("git", "diff", "--no-ext-diff", "--full-index", "--binary"),
+            cwd=REPOSITORY_ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert _sha256_bytes(candidate_patch) == (
+            G2D_V039_IMPLEMENTATION_PATCH_SHA256
+        )
+        assert len(candidate_patch) == G2D_V039_IMPLEMENTATION_PATCH_BYTES
+        assert candidate_patch.count(b"\n") == G2D_V039_IMPLEMENTATION_PATCH_LF
     assert _current_boundary()["g2d_v039_implementation_authorized"] is False
     assert _current_boundary()["g2d_v039_corrected_implementation_exists"] is False
 

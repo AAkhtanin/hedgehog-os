@@ -36,14 +36,15 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
-R-H1, G2-A, G2-B, and G2-C remain `CLOSED_PASS`. G2-D v0.3.9 is
-`REAUDIT_PENDING`: the exact owner-authorized implementation is committed and
-has passed full cumulative acceptance without changing the accepted t12
-revise-no-progress semantics. Independent re-audit and additive reclosure have
-not occurred. Historical G2-D v0.3.8 remains `CLOSED_PASS_ON_V038_BYTES` for
-its exact bytes. G2-E3 is now `REVALIDATION_PENDING_ON_CORRECTED_G2D`; its
-v0.3.8 acceptance remains immutable historical evidence. G2-E4 anti-gaming acceptance is
-`BLOCKED_PENDING_G2D_V039_RECLOSURE`. Gate 2 remains `NOT_CLOSED`.
+R-H1, G2-A, G2-B, G2-C, and corrected G2-D v0.3.9 are `CLOSED_PASS`.
+The exact G2-D implementation is committed, fully owner-accepted,
+independently re-audited, and additively reclosed without changing the accepted
+t12 revise-no-progress semantics. Historical G2-D v0.3.8 remains `CLOSED_PASS_ON_V038_BYTES`
+for its exact bytes. G2-E3 remains
+`REVALIDATION_PENDING_ON_CORRECTED_G2D`; its v0.3.8 acceptance remains
+immutable historical evidence. G2-E4 strict-subtree PASS is preserved while
+anti-gaming acceptance is `BLOCKED_PENDING_FRESH_G2E3_V06`. Gate 2 remains
+`NOT_CLOSED`.
 
 ```text
 profile_version: v0.1
@@ -66,7 +67,7 @@ g2b_status: CLOSED_PASS
 gate2_status: NOT_CLOSED
 g2c_status: CLOSED_PASS
 g2c_implementation_authorized: true
-g2d_status: REAUDIT_PENDING
+g2d_status: CLOSED_PASS
 g2d_contract_status: ACCEPTED_COMMITTED
 g2d_contract_commit: 8638a3c7d0c2774de161a5e52a8aa62ac9db2aa3
 g2d_release_consumer_maintenance_commit: b9d95605b960ce3837446b1bf38b665ce16f03fb
@@ -74,7 +75,7 @@ g2d_correction_implementation_authorized: false
 g2d_implementation_action_open: false
 g2d_corrected_implementation_exists: true
 g2d_contract_only_claim: false
-g2d_corrected_runtime_acceptance_claimed: false
+g2d_corrected_runtime_acceptance_claimed: true
 g2d_runtime_implementation_status: IMPLEMENTED_COMMITTED_FULL_ACCEPTANCE_PASS
 g2d_full_owner_acceptance_passed: true
 g2d_corrected_implementation_committed: true
@@ -83,15 +84,15 @@ g2d_corrected_implementation_parent_commit: b9d95605b960ce3837446b1bf38b665ce16f
 g2d_corrected_implementation_patch_sha256: 442b68cdff95fc06a1176fcb4c3d64323110e197b771d5e932db5215b3d8bc13
 g2d_corrected_owner_evidence_bundle_sha256: fac5596484fb5207632ec6083eeaf2d3cb7d2fa4cdb8f726762d1d635e9e34a0
 g2d_independent_reaudit_required: true
-g2d_independent_reaudit_passed: false
-g2d_independent_reaudit_commit: NOT_CREATED
-g2d_independent_reaudit_path: NOT_CREATED
-g2d_independent_reaudit_sha256: NOT_CREATED
+g2d_independent_reaudit_passed: true
+g2d_independent_reaudit_commit: 04892249fbac7ebb83b80e0a2c65c6b1b7a85c7a
+g2d_independent_reaudit_path: docs/audit_reports/auditor_fractal_runtime_g2_d_v039_t12_revise_no_progress_correction_v01.log
+g2d_independent_reaudit_sha256: 83d4b4451a2d00b0a44451cc5c37917cf409a0e0ecc8b1a75575d7df1caf71e8
 g2d_additive_reclosure_required: true
-g2d_additive_reclosure_completed: false
-g2d_corrected_closure_claimed: false
-g2d_corrected_checkpoint_path: NOT_CREATED
-g2d_corrected_checkpoint_sha256: NOT_CREATED
+g2d_additive_reclosure_completed: true
+g2d_corrected_closure_claimed: true
+g2d_corrected_checkpoint_path: docs/fractal_runtime_v0_2_g2_d_t12_revise_no_progress_correction_checkpoint_v01.md
+g2d_corrected_checkpoint_sha256: 6b8f12c46acc93742f2f36e2186d8e076b63c9d5392fb8212cd89d78147d6c0b
 g2d_corrected_closure_commit_identity: NOT_SELF_RECORDED
 g2d_old_audit_checkpoint_class: HISTORICAL_PRECORRECTION_EVIDENCE
 g2d_accepted_normative_donor_sha256: 91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454
@@ -189,7 +190,7 @@ g2e4_implementation_authorized: true
 g2e4_implementation_started: true
 g2e4_strict_subtree_implementation_committed: true
 g2e4_strict_subtree_status: IMPLEMENTED_COMMITTED_PASS
-g2e4_anti_gaming_acceptance: BLOCKED_PENDING_G2D_V039_RECLOSURE
+g2e4_anti_gaming_acceptance: BLOCKED_PENDING_FRESH_G2E3_V06
 g2e4_anti_gaming_correction_authorized: false
 g2e5_status: NOT_STARTED_NOT_AUTHORIZED
 g2e6_status: NOT_STARTED_NOT_AUTHORIZED
@@ -213,20 +214,20 @@ historical_nested_objects_are_current_queue_authority: false
 - `V038_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V039_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V039_ROLE=EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
-- G2-D v0.3.9 is `REAUDIT_PENDING`.
+- G2-D v0.3.9 is `CLOSED_PASS`.
 - The G2-D v0.3.9 contract is `ACCEPTED_COMMITTED`; the exact implementation
   is `IMPLEMENTED_COMMITTED_FULL_ACCEPTANCE_PASS`.
 - G2-D v0.3.9 implementation authorization for new edits and the implementation
   action are both `false`; corrected v0.3.9 implementation bytes exist and are committed.
-- Independent re-audit and corrected `CLOSED_PASS` are both `false`; additive
-  reclosure remains required.
+- Independent re-audit passed, corrected `CLOSED_PASS` is claimed, and the
+  required additive reclosure is complete.
 - Gate 2 remains `NOT_CLOSED`.
 - G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - Historical G2-E3 v0.3.8 acceptance remains
   `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D` for its exact basis.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
 - G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
-- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_G2D_V039_RECLOSURE`.
+- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_FRESH_G2E3_V06`.
 - G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
 - The clean isolated G2-E3 V06 must pass before the parked primary E4
   worktree is fast-forwarded.
@@ -247,6 +248,16 @@ historical_nested_objects_are_current_queue_authority: false
   `7e32560ff19b95a8bd553072d855e8378d749c0f5d17861b7dee9a1f2577c4fe`.
 - Active cumulative G2-D v0.3.9 addendum SHA-256:
   `1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445`.
+- G2-D v0.3.9 independent re-audit commit:
+  `04892249fbac7ebb83b80e0a2c65c6b1b7a85c7a`.
+- G2-D v0.3.9 independent re-audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v039_t12_revise_no_progress_correction_v01.log`.
+- G2-D v0.3.9 independent re-audit SHA-256:
+  `83d4b4451a2d00b0a44451cc5c37917cf409a0e0ecc8b1a75575d7df1caf71e8`.
+- G2-D v0.3.9 successor checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_t12_revise_no_progress_correction_checkpoint_v01.md`.
+- G2-D v0.3.9 successor checkpoint SHA-256:
+  `6b8f12c46acc93742f2f36e2186d8e076b63c9d5392fb8212cd89d78147d6c0b`.
 - Accepted G2-D v0.3.8 repository addendum SHA-256:
   `09db4ff2224e59c878b967ba634084d72cd01b36f86edfa5fca2e9750e976ea6`.
 - Historical G2-D v0.3.8 implementation commit:
@@ -305,6 +316,8 @@ historical_nested_objects_are_current_queue_authority: false
 - [Corrected G2-D successor checkpoint](docs/fractal_runtime_v0_2_g2_d_observed_work_correction_checkpoint_v01.md)
 - [G2-D v0.3.8 independent re-audit](docs/audit_reports/auditor_fractal_runtime_g2_d_v038_proof_based_whole_run_correction_v01.log)
 - [G2-D v0.3.8 successor checkpoint](docs/fractal_runtime_v0_2_g2_d_proof_based_whole_run_correction_checkpoint_v01.md)
+- [G2-D v0.3.9 independent re-audit](docs/audit_reports/auditor_fractal_runtime_g2_d_v039_t12_revise_no_progress_correction_v01.log)
+- [G2-D v0.3.9 successor checkpoint](docs/fractal_runtime_v0_2_g2_d_t12_revise_no_progress_correction_checkpoint_v01.md)
 - [Accepted G2-E preflight](docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md)
 - [Accepted G2-E v0.1.3 addendum](docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md)
 - [Current status overlay](release/current_status_overlay_v01.json)
@@ -316,9 +329,10 @@ historical_nested_objects_are_current_queue_authority: false
 
 The accepted t12 semantic law already exists. v0.3.9 records that v0.3.8
 runtime bytes did not conform to it. The narrow correction is implemented,
-committed, and fully owner-accepted, but remains `REAUDIT_PENDING`; no
-independent re-audit, additive reclosure, authority, permission, FinalOutput,
-DRS write, release, or real-world effect is claimed. The project remains a
+committed, fully owner-accepted, independently re-audited, and additively
+reclosed as `CLOSED_PASS`. One fresh unchanged G2-E3 V06 remains pending; no
+authority, permission, FinalOutput, DRS write, release, or real-world effect is
+claimed. The project remains a
 proof-of-architecture reference kernel, not a public release, RC2,
 production-readiness result, or production-security certification.
 <!-- END HEDGEHOG CURRENT ENGINEERING BOUNDARY -->

@@ -71,6 +71,18 @@ These are current engineering notes, not a public release announcement.
   `442b68cdff95fc06a1176fcb4c3d64323110e197b771d5e932db5215b3d8bc13`.
 - G2-D v0.3.9 full acceptance evidence SHA-256:
   `fac5596484fb5207632ec6083eeaf2d3cb7d2fa4cdb8f726762d1d635e9e34a0`.
+- G2-D v0.3.9 post-implementation lifecycle sync commit:
+  `f7feaa3170717ee6347a6d3d531f376ec857041a`.
+- G2-D v0.3.9 independent re-audit commit:
+  `04892249fbac7ebb83b80e0a2c65c6b1b7a85c7a`.
+- G2-D v0.3.9 independent re-audit:
+  `docs/audit_reports/auditor_fractal_runtime_g2_d_v039_t12_revise_no_progress_correction_v01.log`.
+- G2-D v0.3.9 independent re-audit SHA-256:
+  `83d4b4451a2d00b0a44451cc5c37917cf409a0e0ecc8b1a75575d7df1caf71e8`.
+- G2-D v0.3.9 successor checkpoint:
+  `docs/fractal_runtime_v0_2_g2_d_t12_revise_no_progress_correction_checkpoint_v01.md`.
+- G2-D v0.3.9 successor checkpoint SHA-256:
+  `6b8f12c46acc93742f2f36e2186d8e076b63c9d5392fb8212cd89d78147d6c0b`.
 - R-H1A reconciled direct dependency declarations, the PEP-639 build metadata
   floor, canonical `AGPL-3.0-only` licensing, and a non-granting commercial
   licensing notice.
@@ -80,23 +92,23 @@ These are current engineering notes, not a public release announcement.
 - R-H1 is `CLOSED_PASS`.
 - G2-C is `CLOSED_PASS`.
 - Historical G2-D v0.3.8 is `CLOSED_PASS_ON_V038_BYTES`.
-- G2-D v0.3.9 is `REAUDIT_PENDING`.
+- G2-D v0.3.9 is `CLOSED_PASS`.
 - `V038_IMPLEMENTATION_NONCONFORMANCE=YES`.
 - `V039_CONTRACT_SEMANTICS_CHANGED=NO`.
 - `V039_ROLE=EXPLICIT_IMPLEMENTATION_NONCONFORMANCE_CLARIFICATION_AND_LIFECYCLE_REOPENING`.
 - The v0.3.9 contract is `ACCEPTED_COMMITTED` and runtime implementation status is `IMPLEMENTED_COMMITTED_FULL_ACCEPTANCE_PASS`.
 - Corrected implementation existence, committed status, and full owner acceptance are `true`.
-- Implementation authorization for new edits, implementation action open, independent re-audit, additive reclosure completion, and corrected closure are `false`; additive reclosure remains required.
+- Implementation authorization for new edits and the implementation action remain `false`; independent re-audit, additive reclosure completion, and corrected closure are `true`.
 - G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
 - Historical G2-E3 v0.3.8 acceptance remains `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D`.
 - G2-E4 contract is `ACCEPTED_IMPLEMENTATION_PENDING`.
 - G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
-- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_G2D_V039_RECLOSURE`.
+- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_FRESH_G2E3_V06`.
 - G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
 - Gate 2 remains `NOT_CLOSED`.
 - Clean isolated V06 must pass before the parked primary E4 checkout is fast-forwarded.
 - Final E4 whole-run call accounting is 2/2, 2/2, and 3/3.
-- The v0.3.9 lifecycle synchronization creates no authority, permission, FinalOutput, DRS write, release, or effect.
+- The v0.3.9 additive reclosure creates no authority, permission, FinalOutput, DRS write, release, or effect.
 - R-IP1 does not block G2-E or G2-F; private R-IP1 drafts may remain
   living through Gates 3-6.
 - Public release remains `NOT_CLAIMED`.
@@ -122,7 +134,8 @@ Current surfaces:
 
 R-H1A, R-H1B, and R-H1C are maintenance slices inside Hedgehog OS. They are
 not standalone public architectures. Historical v0.3.8 remains closed for its exact bytes. The active v0.3.9
-implementation is committed, fully owner-accepted, and `REAUDIT_PENDING`.
+implementation is committed, fully owner-accepted, independently re-audited,
+and additively reclosed as `CLOSED_PASS`.
 Prior G2-E3 V06 evidence and committed G2-E4 strict-subtree work do not
 validate v0.3.9 bytes, satisfy anti-gaming acceptance, close Gate 2,
 start G2-E5/E6/F, or create authority or real-world effect.

@@ -6699,6 +6699,148 @@ def _g2e4_validate_selected_child_witness_v01(
         raise ValueError("g2e_topology_binding_mismatch")
 
 
+def _g2e4_classify_recomputation_scope_v01(
+    *,
+    baseline: FractalRuntimeExecutionBundleV02,
+    baseline_source_artifacts: tuple[KernelArtifactV01, ...],
+    ordered_affected_artifact_ids: tuple[str, ...],
+) -> dict[str, object]:
+    ledger = _g2e4_baseline_runtime_artifact_ledger_v01(baseline)
+    source_artifact_by_id = {
+        artifact.artifact_id: artifact for artifact in baseline_source_artifacts
+    }
+    if (
+        len(source_artifact_by_id) != len(baseline_source_artifacts)
+        or not ordered_affected_artifact_ids
+        or len(set(ordered_affected_artifact_ids))
+        != len(ordered_affected_artifact_ids)
+        or any(
+            artifact_id not in source_artifact_by_id
+            for artifact_id in ordered_affected_artifact_ids
+        )
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    mapped_rows = tuple(
+        row
+        for artifact_id in ordered_affected_artifact_ids
+        for row in (
+            _g2e4_resolve_runtime_artifact_projection_v01(
+                source_artifact=source_artifact_by_id[artifact_id],
+                ledger=ledger,
+            ),
+        )
+        if row is not None
+    )
+    if not mapped_rows or any(
+        row["ownership_class"] != "CELL_QUEUE"
+        or row["queue_entry"].predecessor_queue_entry_id is not None
+        or row["queue_entry"].queue_entry_id
+        not in row["cell_input"].ordered_initial_queue_entry_ids
+        or row["node"].node_id not in row["cell_input"].ordered_node_ids
+        for row in mapped_rows
+    ):
+        raise ValueError("g2e_topology_binding_mismatch")
+    direct_rows = tuple(
+        (row["cell_input"].cell_id, row["node"].node_id) for row in mapped_rows
+    )
+    if len(set(direct_rows)) != len(direct_rows):
+        raise ValueError("g2e_topology_binding_mismatch")
+    input_by_cell = {item.cell_id: item for item in baseline.cell_inputs}
+    baseline_work_rows = tuple(
+        (cell_input.cell_id, node_id)
+        for cell_input in baseline.cell_inputs
+        for node_id in cell_input.ordered_node_ids
+    )
+    execution_rows = set(direct_rows)
+    changed = True
+    while changed:
+        changed = False
+        for cell_id, source_node_id in tuple(execution_rows):
+            cell_input = input_by_cell.get(cell_id)
+            if cell_input is None:
+                raise ValueError("g2e_topology_binding_mismatch")
+            projection_class = (
+                "ROOT_CELL_PROJECTION"
+                if cell_input.parent_cell_id is None
+                else "FRACTAL_LEAF_PROJECTION"
+            )
+            for edge in baseline.topology_edges:
+                candidate = (cell_id, edge.target_node_id)
+                if (
+                    edge.cell_projection_class == projection_class
+                    and edge.source_node_id == source_node_id
+                    and edge.target_node_id in cell_input.ordered_node_ids
+                    and candidate not in execution_rows
+                ):
+                    execution_rows.add(candidate)
+                    changed = True
+    ordered_execution_rows = tuple(
+        row for row in baseline_work_rows if row in execution_rows
+    )
+    if len(ordered_execution_rows) != len(execution_rows):
+        raise ValueError("g2e_topology_binding_mismatch")
+    ordered_direct_rows = tuple(
+        row for row in baseline_work_rows if row in set(direct_rows)
+    )
+    ordered_affected_cell_ids = tuple(
+        cell_input.cell_id
+        for cell_input in baseline.cell_inputs
+        if any(row[0] == cell_input.cell_id for row in ordered_execution_rows)
+    )
+    ordered_execution_node_ids = tuple(
+        node.node_id
+        for node in baseline.topology_nodes
+        if any(row[1] == node.node_id for row in ordered_execution_rows)
+    )
+    if ordered_execution_rows == baseline_work_rows:
+        classification = "FULL_CLOSURE"
+    elif (
+        ordered_execution_rows
+        and len(ordered_execution_rows) < len(baseline_work_rows)
+        and len(ordered_affected_cell_ids) == 1
+    ):
+        selected_input = input_by_cell[ordered_affected_cell_ids[0]]
+        _g2e4_validate_selected_child_witness_v01(baseline, selected_input)
+        if ordered_execution_rows != tuple(
+            (selected_input.cell_id, node_id)
+            for node_id in selected_input.ordered_node_ids
+        ):
+            raise ValueError("g2e_topology_binding_mismatch")
+        classification = "STRICT_SUBSET"
+    else:
+        raise ValueError("g2e_topology_binding_mismatch")
+    queue_artifact_ids = tuple(
+        artifact.artifact_id
+        for entry, artifact in zip(
+            baseline.queue_entries, baseline.queue_artifacts, strict=True
+        )
+        if (entry.cell_id, entry.node_id) in execution_rows
+    )
+    affected_cells = set(ordered_affected_cell_ids)
+    result_artifact_ids = tuple(
+        artifact.artifact_id
+        for result, artifact in zip(
+            baseline.cell_results, baseline.result_artifacts, strict=True
+        )
+        if result.cell_id in affected_cells
+    )
+    return {
+        "classification": classification,
+        "baseline_work_rows": baseline_work_rows,
+        "ordered_direct_rows": ordered_direct_rows,
+        "ordered_execution_rows": ordered_execution_rows,
+        "ordered_affected_cell_ids": ordered_affected_cell_ids,
+        "ordered_execution_node_ids": ordered_execution_node_ids,
+        "affected_queue_artifact_ids": queue_artifact_ids,
+        "affected_result_artifact_ids": result_artifact_ids,
+        "report_artifact_id": (
+            baseline.report_artifact.artifact_id
+            if classification == "FULL_CLOSURE"
+            else None
+        ),
+    }
+
+
 def _derive_selective_recomputation_plan_v01(
     *,
     delta: WorldStateDeltaV01,
@@ -6728,84 +6870,16 @@ def _derive_selective_recomputation_plan_v01(
         raise ValueError(errors[0])
     baseline = source_context.baseline_g2d_execution_bundle
     topology = baseline.topology
-    source_artifact_ids = tuple(
-        artifact.artifact_id for artifact in source_context.baseline_source_artifacts
+    scope_proof = _g2e4_classify_recomputation_scope_v01(
+        baseline=baseline,
+        baseline_source_artifacts=source_context.baseline_source_artifacts,
+        ordered_affected_artifact_ids=affected_set.ordered_affected_ids,
     )
-    affected_source_ids = tuple(
-        artifact_id
-        for artifact_id in affected_set.ordered_affected_ids
-        if artifact_id in source_artifact_ids
-    )
-    if not affected_source_ids:
-        raise ValueError("g2e_topology_binding_mismatch")
-    source_artifact_by_id = {
-        artifact.artifact_id: artifact
-        for artifact in source_context.baseline_source_artifacts
-    }
-    if any(
-        artifact_id not in source_artifact_by_id
-        for artifact_id in affected_set.ordered_affected_ids
-    ):
-        raise ValueError("g2e_topology_binding_mismatch")
-    ledger = _g2e4_baseline_runtime_artifact_ledger_v01(baseline)
-    mapped_rows = tuple(
-        row
-        for artifact_id in affected_set.ordered_affected_ids
-        for row in (
-            _g2e4_resolve_runtime_artifact_projection_v01(
-                source_artifact=source_artifact_by_id[artifact_id],
-                ledger=ledger,
-            ),
-        )
-        if row is not None
-    )
-    if any(
-        str(row["ownership_class"]).startswith("WHOLE_RUNTIME")
-        for row in mapped_rows
-    ):
-        raise ValueError("g2e_topology_binding_mismatch")
-    seed_rows = tuple(
-        row
-        for row in mapped_rows
-        if row["ownership_class"] == "CELL_QUEUE"
-        and row["queue_entry"].predecessor_queue_entry_id is None
-    )
-    if len(seed_rows) != 1 or any(
-        row["ownership_class"] != "CELL_QUEUE" for row in mapped_rows
-    ):
-        raise ValueError("g2e_topology_binding_mismatch")
-    seed = seed_rows[0]
-    selected_input = seed["cell_input"]
-    selected_node = seed["node"]
-    seed_entry = seed["queue_entry"]
+    ordered_work_node_ids = scope_proof["ordered_execution_node_ids"]
+    ordered_affected_cell_ids = scope_proof["ordered_affected_cell_ids"]
     if (
-        seed_entry.queue_entry_id not in selected_input.ordered_initial_queue_entry_ids
-        or selected_node.node_id not in selected_input.ordered_node_ids
-    ):
-        raise ValueError("g2e_topology_binding_mismatch")
-    _g2e4_validate_selected_child_witness_v01(baseline, selected_input)
-    selected_node_ids = {selected_node.node_id}
-    changed = True
-    while changed:
-        changed = False
-        for edge in baseline.topology_edges:
-            if (
-                edge.cell_projection_class == "FRACTAL_LEAF_PROJECTION"
-                and edge.source_node_id in selected_node_ids
-                and edge.target_node_id not in selected_node_ids
-                and edge.target_node_id in selected_input.ordered_node_ids
-            ):
-                selected_node_ids.add(edge.target_node_id)
-                changed = True
-    ordered_work_node_ids = tuple(
-        node.node_id
-        for node in baseline.topology_nodes
-        if node.node_id in selected_node_ids
-    )
-    if (
-        ordered_work_node_ids != selected_input.ordered_node_ids
-        or not ordered_work_node_ids
-        or len(ordered_work_node_ids) >= len(topology.ordered_node_ids)
+        type(ordered_work_node_ids) is not tuple
+        or type(ordered_affected_cell_ids) is not tuple
     ):
         raise ValueError("g2e_topology_binding_mismatch")
     policy = baseline.source_context.runtime_policy
@@ -6824,7 +6898,7 @@ def _derive_selective_recomputation_plan_v01(
         source_topology_id=topology.topology_id,
         accepted_mode=topology.accepted_mode,
         accepted_scope_ref=topology.accepted_scope_ref,
-        ordered_affected_cell_ids=(selected_input.cell_id,),
+        ordered_affected_cell_ids=ordered_affected_cell_ids,
         ordered_affected_artifact_ids=affected_set.ordered_affected_ids,
         ordered_work_node_ids=ordered_work_node_ids,
         ordered_preserved_artifact_ids=affected_set.ordered_unaffected_ids,
@@ -7019,19 +7093,14 @@ def _g2e4_latest_queue_entries_v01(
     nodes = state["topology_nodes"]
     if type(queue_entries) is not tuple or type(nodes) is not tuple:
         raise ValueError("g2d_queue_order_mismatch")
-    by_key: dict[tuple[str, str], object] = {}
+    latest_by_key: dict[tuple[str, str], object] = {}
     for entry in queue_entries:
-        by_key[(entry.cell_id, entry.node_id)] = entry
-    ordered: list[object] = []
-    cell_order = tuple(
-        dict.fromkeys(entry.cell_id for entry in queue_entries)
+        latest_by_key[(entry.cell_id, entry.node_id)] = entry
+    return tuple(
+        entry
+        for entry in queue_entries
+        if latest_by_key[(entry.cell_id, entry.node_id)] == entry
     )
-    for cell_id in cell_order:
-        for node in nodes:
-            candidate = by_key.get((cell_id, node.node_id))
-            if candidate is not None:
-                ordered.append(candidate)
-    return tuple(ordered)
 
 
 def _g2e4_artifact_by_queue_id_v01(
@@ -7118,6 +7187,8 @@ def _g2e4_evaluate_queue_transition_v01(
     local_child_result: object | None = None,
     local_child_result_artifact: KernelArtifactV01 | None = None,
     validation_report: object | None = None,
+    revise_observation: object | None = None,
+    backpressure_state: object | None = None,
     parent_return_family: dict[str, object] | None = None,
     cell_id: str | None = None,
     parent_cell_id: str | None = None,
@@ -7178,8 +7249,8 @@ def _g2e4_evaluate_queue_transition_v01(
         parent_return_post_vv_report=family.get("post_vv_report"),
         parent_return_gt_advisory_report=family.get("gt_advisory_report"),
         parent_return_validation_reports=family.get("validation_reports", ()),
-        revise_observation=None,
-        backpressure_state=None,
+        revise_observation=revise_observation,
+        backpressure_state=backpressure_state,
         transition_registry=state["transition_registry"],
         **_g2e4_prefix_arguments_v01(state),
     )
@@ -7438,7 +7509,7 @@ def _g2e4_local_observation_v01(
     cell_budget: object,
     global_budget: object,
     dependencies: tuple[object, ...],
-) -> tuple[tuple[str, ...], tuple[str, ...]]:
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     assignment = next(
         item for item in state["runtime_assignments"] if item.node_id == node.node_id
     )
@@ -7451,6 +7522,24 @@ def _g2e4_local_observation_v01(
         if dependencies
         else cell_input.evidence_refs
     )
+    dependency_states = tuple(item.state for item in dependencies)
+    if "BLOCKED" in dependency_states:
+        outcome = "BLOCKED"
+    elif "NEEDS_USER" in dependency_states:
+        outcome = "NEEDS_USER"
+    elif "DEADEND" in dependency_states:
+        outcome = "DEADEND"
+    elif "DEGRADED" in dependency_states:
+        outcome = "DEGRADED"
+    else:
+        outcome = "COMPLETED"
+    reasons = {
+        "COMPLETED": (),
+        "DEGRADED": ("g2d_partial_failure_recorded",),
+        "BLOCKED": ("g2d_required_child_failure",),
+        "NEEDS_USER": ("g2d_resolvable_input_needs_user",),
+        "DEADEND": ("g2d_no_progress_deadend",),
+    }[outcome]
     core = {
         "profile_version": "v0.3.1",
         "topology_id": state["topology"].topology_id,
@@ -7476,7 +7565,7 @@ def _g2e4_local_observation_v01(
             artifact_by_queue[item.queue_entry_id].artifact_id
             for item in dependencies
         ],
-        "dependency_states": [item.state for item in dependencies],
+        "dependency_states": list(dependency_states),
         "dependency_reason_tuples": [
             list(item.queue_reason_codes) for item in dependencies
         ],
@@ -7500,11 +7589,18 @@ def _g2e4_local_observation_v01(
         "drs_write_created": False,
         "real_world_effects_count": 0,
     }
-    output = "d3local:output:" + domain_separated_sha256_hex_v01(
-        domain="HEDGEHOG_FRACTAL_RUNTIME_V02_D3_LOCAL_OBSERVATION_MATERIAL",
-        payload=canonical_json_bytes_v01(core),
+    outputs = (
+        (
+            "d3local:output:"
+            + domain_separated_sha256_hex_v01(
+                domain="HEDGEHOG_FRACTAL_RUNTIME_V02_D3_LOCAL_OBSERVATION_MATERIAL",
+                payload=canonical_json_bytes_v01(core),
+            ),
+        )
+        if outcome in {"COMPLETED", "DEGRADED"}
+        else ()
     )
-    return (output,), evidence
+    return reasons, outputs, evidence
 
 
 def _g2e4_complete_local_node_v01(
@@ -7525,7 +7621,7 @@ def _g2e4_complete_local_node_v01(
     budget_by_id = _g2e4_budget_by_id_v01(state)
     running_cell = budget_by_id[running.cell_budget_id]
     running_global = budget_by_id[running.global_budget_id]
-    outputs, evidence = _g2e4_local_observation_v01(
+    reasons, outputs, evidence = _g2e4_local_observation_v01(
         state,
         node=node,
         cell_input=cell_input,
@@ -7542,6 +7638,7 @@ def _g2e4_complete_local_node_v01(
         cell_budget=running_cell,
         global_budget=running_global,
         dependencies=dependencies,
+        queue_reason_codes=reasons,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
     )
@@ -7561,6 +7658,7 @@ def _g2e4_complete_local_node_v01(
         cell_budget_after=finish_cell,
         global_budget_after=finish_global,
         dependencies=dependencies,
+        queue_reason_codes=reasons,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
     )
@@ -7573,6 +7671,7 @@ def _g2e4_complete_local_node_v01(
         cell_budget=finish_cell,
         global_budget=finish_global,
         dependencies=dependencies,
+        queue_reason_codes=reasons,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
     )
@@ -7586,6 +7685,7 @@ def _g2e4_complete_local_node_v01(
         cell_budget_after=finish_cell,
         global_budget_after=finish_global,
         dependencies=dependencies,
+        queue_reason_codes=reasons,
         observed_output_refs=outputs,
         observed_evidence_refs=evidence,
     )
@@ -7789,9 +7889,32 @@ def _g2e4_finish_parent_return_v01(
         dependencies=dependencies,
     )
     proposal_evidence = proposal.get("evidence")
-    if type(proposal_evidence) is not list:
+    proposal_payload = proposal.get("result_payload")
+    if type(proposal_evidence) is not list or type(proposal_payload) is not dict:
         raise ValueError("g2d_parent_return_invalid")
     evidence = tuple(item["ref_id"] for item in proposal_evidence)
+    reason_values = {
+        *(reason for item in pre_terminals for reason in item.queue_reason_codes),
+        *(reason for item in partial_failures for reason in item.reason_codes),
+    }
+    if any(
+        reason not in g2d_runtime.PUBLIC_G2D_REASON_CODES_V02
+        for reason in reason_values
+    ):
+        raise ValueError("g2d_parent_return_invalid")
+    reason_codes = tuple(
+        reason
+        for reason in g2d_runtime.PUBLIC_G2D_REASON_CODES_V02
+        if reason in reason_values
+    )
+    proposal_status = proposal_payload.get("status")
+    if not reason_codes:
+        fallback_reason = {
+            "blocked": "g2d_required_child_failure",
+            "needs_user": "g2d_resolvable_input_needs_user",
+            "deadend": "g2d_no_progress_deadend",
+        }.get(proposal_status)
+        reason_codes = () if fallback_reason is None else (fallback_reason,)
     family = {
         "pre_post_vv_terminal_queue_entries": pre_terminals,
         "child_results": child_results,
@@ -7813,6 +7936,7 @@ def _g2e4_finish_parent_return_v01(
         cell_budget=running_cell,
         global_budget=running_global,
         dependencies=dependencies,
+        queue_reason_codes=reason_codes,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
         advisory_refs=(
@@ -7837,6 +7961,7 @@ def _g2e4_finish_parent_return_v01(
         cell_budget_after=finish_cell,
         global_budget_after=finish_global,
         dependencies=dependencies,
+        queue_reason_codes=reason_codes,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
         advisory_refs=(
@@ -7853,6 +7978,7 @@ def _g2e4_finish_parent_return_v01(
         cell_budget=finish_cell,
         global_budget=finish_global,
         dependencies=dependencies,
+        queue_reason_codes=reason_codes,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
         advisory_refs=(
@@ -7871,6 +7997,7 @@ def _g2e4_finish_parent_return_v01(
         cell_budget_after=finish_cell,
         global_budget_after=finish_global,
         dependencies=dependencies,
+        queue_reason_codes=reason_codes,
         observed_output_refs=(proposal["proposal_id"],),
         observed_evidence_refs=evidence,
         advisory_refs=(
@@ -7894,19 +8021,23 @@ def _g2e4_result_material_v01(
     pre_terminals: tuple[object, ...],
     child_results: tuple[object, ...],
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    if any(item.state != "COMPLETED" for item in pre_terminals) or any(
-        item.outcome != "COMPLETED" for item in child_results
+    terminal_states = {
+        "COMPLETED",
+        "DEGRADED",
+        "BLOCKED",
+        "NEEDS_USER",
+        "DEADEND",
+    }
+    if (
+        not pre_terminals
+        or any(item.state not in terminal_states for item in pre_terminals)
+        or any(item.outcome not in terminal_states for item in child_results)
     ):
         raise ValueError("g2d_result_proposal_invalid")
     outputs = _ordered_unique_v01(
-        tuple(
-            ref
-            for item in (*pre_terminals, *child_results)
-            for ref in (
-                item.observed_output_refs
-                if hasattr(item, "observed_output_refs")
-                else item.accepted_output_refs
-            )
+        (
+            *(ref for item in pre_terminals for ref in item.observed_output_refs),
+            *(ref for item in child_results for ref in item.accepted_output_refs),
         )
     )
     evidence = _ordered_unique_v01(
@@ -7948,6 +8079,7 @@ def _g2e4_finalize_cell_v01(
     nodes: tuple[object, ...],
     allocated_budget: object,
     child_results: tuple[object, ...],
+    partial_failures: tuple[object, ...],
 ) -> dict[str, object]:
     initial_by_node = {
         item.node_id: item
@@ -7975,7 +8107,7 @@ def _g2e4_finalize_cell_v01(
             raise ValueError("g2d_topology_node_invalid")
         _g2e4_complete_local_node_v01(
             state,
-            initial=initial_by_node[node.node_id],
+            initial=latest,
             node=node,
             cell_input=cell_input,
         )
@@ -7997,7 +8129,7 @@ def _g2e4_finalize_cell_v01(
         cell_input=cell_input,
         pre_post_vv_terminal_queue_entries=pre_terminals,
         child_results=child_results,
-        partial_failures=(),
+        partial_failures=partial_failures,
         accepted_output_refs=accepted_outputs,
         evidence_refs=evidence_refs,
     )
@@ -8008,7 +8140,7 @@ def _g2e4_finalize_cell_v01(
         cell_input=cell_input,
         pre_post_vv_terminal_queue_entries=pre_terminals,
         child_results=child_results,
-        partial_failures=(),
+        partial_failures=partial_failures,
     )
     source_time = (
         state["source_context"].router_input.local_routing_snapshot.kt_asof_utc
@@ -8030,9 +8162,13 @@ def _g2e4_finalize_cell_v01(
         first = next(item for item in transient_reports if item.status != "PASS")
         raise ValueError(first.reason_codes[0])
     node_by_kind = {item.node_kind: item for item in nodes}
+    latest = {
+        (item.cell_id, item.node_id): item
+        for item in _g2e4_latest_queue_entries_v01(state)
+    }
     _g2e4_finish_report_node_v01(
         state,
-        initial=initial_by_node[node_by_kind["POST_VV"].node_id],
+        initial=latest[(cell_input.cell_id, node_by_kind["POST_VV"].node_id)],
         node=node_by_kind["POST_VV"],
         cell_input=cell_input,
         validation_report=post_report,
@@ -8041,7 +8177,7 @@ def _g2e4_finalize_cell_v01(
     )
     _g2e4_finish_report_node_v01(
         state,
-        initial=initial_by_node[node_by_kind["GT_ADVISORY"].node_id],
+        initial=latest[(cell_input.cell_id, node_by_kind["GT_ADVISORY"].node_id)],
         node=node_by_kind["GT_ADVISORY"],
         cell_input=cell_input,
         validation_report=gt_report,
@@ -8051,12 +8187,14 @@ def _g2e4_finalize_cell_v01(
     _parent_terminal, _parent_artifact, final_cell, final_global = (
         _g2e4_finish_parent_return_v01(
             state,
-            initial=initial_by_node[node_by_kind["PARENT_RETURN"].node_id],
+            initial=latest[
+                (cell_input.cell_id, node_by_kind["PARENT_RETURN"].node_id)
+            ],
             node=node_by_kind["PARENT_RETURN"],
             cell_input=cell_input,
             pre_terminals=pre_terminals,
             child_results=child_results,
-            partial_failures=(),
+            partial_failures=partial_failures,
             proposal=proposal,
             post_vv_report=post_vv_report,
             gt_advisory_report=gt_advisory_report,
@@ -8080,7 +8218,7 @@ def _g2e4_finalize_cell_v01(
         cell_input=cell_input,
         terminal_queue_entries=terminal_entries,
         child_results=child_results,
-        partial_failures=(),
+        partial_failures=partial_failures,
         result_proposal=proposal,
         post_vv_report=post_vv_report,
         gt_advisory_report=gt_advisory_report,
@@ -8099,7 +8237,7 @@ def _g2e4_finalize_cell_v01(
         pre_result_validation_report=pre_result_report,
         post_vv_report=post_vv_report,
         gt_advisory_report=gt_advisory_report,
-        partial_failures=(),
+        partial_failures=partial_failures,
         allocated_cell_budget=allocated_budget,
         final_cell_budget=final_cell,
         global_budget=final_global,
@@ -8172,57 +8310,32 @@ def _g2e4_observed_work_context_v01(
     }
     if len(artifact_binding_by_source) != len(changed_artifact_bindings):
         raise ValueError("g2e_delta_binding_set_mismatch")
-    selected_node_ids = set(plan.ordered_work_node_ids)
-    selected_targets = {
-        edge.target_node_id
-        for edge in baseline.topology_edges
-        if edge.source_node_id in selected_node_ids
-        and edge.target_node_id in selected_node_ids
-    }
-    direct_node_ids = tuple(
-        node_id
-        for node_id in plan.ordered_work_node_ids
-        if node_id not in selected_targets
+    scope_proof = _g2e4_classify_recomputation_scope_v01(
+        baseline=baseline,
+        baseline_source_artifacts=source_context.baseline_source_artifacts,
+        ordered_affected_artifact_ids=plan.ordered_affected_artifact_ids,
     )
-    if not direct_node_ids:
+    if (
+        scope_proof["ordered_affected_cell_ids"]
+        != plan.ordered_affected_cell_ids
+        or scope_proof["ordered_execution_node_ids"]
+        != plan.ordered_work_node_ids
+    ):
         raise ValueError("g2e_topology_binding_mismatch")
-    ledger = _g2e4_baseline_runtime_artifact_ledger_v01(baseline)
-    plan_source_by_id = {
-        item.artifact_id: item
-        for item in source_context.baseline_source_artifacts
-    }
-    selected_rows = tuple(
-        row
-        for item in plan.ordered_affected_artifact_ids
-        for row in (
-            _g2e4_resolve_runtime_artifact_projection_v01(
-                source_artifact=plan_source_by_id[item],
-                ledger=ledger,
-            ),
-        )
-        if row is not None
-        and row["ownership_class"] == "CELL_QUEUE"
-        and row["queue_entry"].predecessor_queue_entry_id is None
-    )
-    if len(selected_rows) != 1:
-        raise ValueError("g2e_topology_binding_mismatch")
-    selected_cell_id = selected_rows[0]["cell_input"].cell_id
-    if selected_cell_id not in plan.ordered_affected_cell_ids:
-        raise ValueError("g2e_topology_binding_mismatch")
-    selected_cell_input = next(
-        (
-            item
-            for item in baseline.cell_inputs
-            if item.cell_id == selected_cell_id
-        ),
-        None,
-    )
-    if selected_cell_input is None:
+    input_by_cell = {item.cell_id: item for item in baseline.cell_inputs}
+    node_by_id = {item.node_id: item for item in baseline.topology_nodes}
+    direct_rows = scope_proof["ordered_direct_rows"]
+    if type(direct_rows) is not tuple or not direct_rows:
         raise ValueError("g2e_topology_binding_mismatch")
     binding_artifacts: list[KernelArtifactV01] = []
-    for node_id in direct_node_ids:
-        node = next(item for item in baseline.topology_nodes if item.node_id == node_id)
-        if node_id not in selected_cell_input.ordered_node_ids:
+    for cell_id, node_id in direct_rows:
+        cell_input = input_by_cell.get(cell_id)
+        node = node_by_id.get(node_id)
+        if (
+            cell_input is None
+            or node is None
+            or node_id not in cell_input.ordered_node_ids
+        ):
             raise ValueError("g2e_topology_binding_mismatch")
         for source_binding in source_bindings:
             baseline_source_artifact = source_by_id[
@@ -8253,7 +8366,7 @@ def _g2e4_observed_work_context_v01(
                 g2d_runtime.project_runtime_observed_work_binding_kernel_artifact_v02(
                     baseline_execution_bundle=baseline,
                     node=node,
-                    cell_input=selected_cell_input,
+                    cell_input=cell_input,
                     baseline_source_artifact=baseline_source_artifact,
                     observed_source_artifact=observed_source_artifact,
                     changed_full_artifact_pointers=pointers,
@@ -8281,7 +8394,7 @@ def _g2e4_observed_work_context_v01(
                 g2d_runtime.project_runtime_observed_work_binding_kernel_artifact_v02(
                     baseline_execution_bundle=baseline,
                     node=node,
-                    cell_input=selected_cell_input,
+                    cell_input=cell_input,
                     baseline_source_artifact=baseline_source_artifact,
                     observed_source_artifact=observed_source_artifact,
                     changed_full_artifact_pointers=tuple(
@@ -8338,7 +8451,9 @@ def _g2e4_selective_prefix_state_v01(
         for item in baseline.cell_inputs
         if item.cell_id == plan.ordered_affected_cell_ids[0]
     )
-    root_input = next(item for item in baseline.cell_inputs if item.parent_cell_id is None)
+    root_input = next(
+        item for item in baseline.cell_inputs if item.parent_cell_id is None
+    )
     sibling_inputs = tuple(
         item
         for item in baseline.cell_inputs
@@ -8497,6 +8612,7 @@ def _g2e4_selective_prefix_state_v01(
         "post_vv_reports": post_vv_reports,
         "gt_advisory_reports": gt_advisory_reports,
         "pre_result_reports": pre_result_reports,
+        "conditional_reports": (),
         "selected_baseline_input": selected_input,
         "sibling_input": sibling_input,
         "root_input": root_input,
@@ -8756,13 +8872,6 @@ def _g2e4_retired_root_only_executor_v01(
         != plan.ordered_work_node_ids
     ):
         raise ValueError("g2e_topology_binding_mismatch")
-    failure_branch_operations = (
-        g2d_runtime.evaluate_fractal_revise_observation_v02,
-        g2d_runtime.record_fractal_partial_failure_v02,
-        g2d_runtime.evaluate_fractal_backpressure_v02,
-    )
-    if not all(callable(operation) for operation in failure_branch_operations):
-        raise ValueError("g2e_recomputation_result_invalid")
     binding_structure_report = (
         g2d_runtime.validate_runtime_topology_source_binding_v02(
             baseline.source_binding
@@ -9295,6 +9404,7 @@ def _g2e4_execute_granular_g2d_v01(
     source_bindings: tuple[DeltaSourceBindingV01, ...],
     changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
     changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    invalidation_report: InvalidationReportV01,
 ) -> FractalRuntimeExecutionBundleV02:
     baseline = source_context.baseline_g2d_execution_bundle
     observed_context = _g2e4_observed_work_context_v01(
@@ -9314,13 +9424,6 @@ def _g2e4_execute_granular_g2d_v01(
         != plan.ordered_work_node_ids
     ):
         raise ValueError("g2e_topology_binding_mismatch")
-    failure_branch_operations = (
-        g2d_runtime.evaluate_fractal_revise_observation_v02,
-        g2d_runtime.record_fractal_partial_failure_v02,
-        g2d_runtime.evaluate_fractal_backpressure_v02,
-    )
-    if not all(callable(operation) for operation in failure_branch_operations):
-        raise ValueError("g2e_recomputation_result_invalid")
     source = baseline.source_context
     topology = baseline.topology
     binding_structure_report = (
@@ -9363,16 +9466,62 @@ def _g2e4_execute_granular_g2d_v01(
         transition_registry=transition_registry,
         required_reports=required_reports,
     )
+    conditional_failure = bool(
+        invalidation_report.ordered_packet_invalidation_candidate_ids
+    )
+    if conditional_failure:
+        _g2e4_available_backpressure_v01(baseline=baseline)
     child_context = _g2e4_activate_selected_child_v01(state)
+    if conditional_failure:
+        _g2e4_conditional_failure_scenarios_v01(
+            state,
+            child_context=child_context,
+        )
     selected_completion = _g2e4_finalize_cell_v01(
         state,
         cell_input=child_context["cell_input"],
         nodes=child_context["nodes"],
         allocated_budget=child_context["allocated_budget"],
         child_results=(),
+        partial_failures=(),
     )
     selected_result = selected_completion["result"]
     selected_result_artifact = selected_completion["result_artifact"]
+    if conditional_failure:
+        partial_failure = g2d_runtime.record_fractal_partial_failure_v02(
+            topology=state["topology"],
+            parent_input=state["root_input"],
+            child_result=selected_result,
+            failure_stage="CELL_RESULT_PRECONDITIONS",
+            reason_codes=("g2d_no_progress_deadend",),
+            source_reason_codes=selected_result.source_reason_codes,
+            evidence_refs=selected_result.evidence_refs,
+            allocated_cell_budget=child_context["allocated_budget"],
+            final_cell_budget=selected_completion["final_cell_budget"],
+            global_budget=selected_completion["completion_global_budget"],
+            required_child=True,
+            sibling_independent=True,
+        )
+        partial_report = (
+            g2d_runtime.validate_fractal_partial_failure_record_v02(
+                partial_failure
+            )
+        )
+        if (
+            partial_report.status != "PASS"
+            or partial_failure.retry_eligible
+            or not partial_failure.required_child
+            or not partial_failure.sibling_independent
+            or partial_failure.parent_disposition != "DEADEND"
+        ):
+            raise ValueError("g2d_partial_failure_invalid")
+        state["partial_failures"] = (partial_failure,)
+        state["conditional_reports"] = (
+            *state["conditional_reports"],
+            partial_report,
+        )
+    else:
+        partial_failure = None
     aggregate_budget = _g2e4_build_budget_successor_v01(
         state,
         selected_completion["completion_global_budget"],
@@ -9408,6 +9557,9 @@ def _g2e4_execute_granular_g2d_v01(
         nodes=baseline.topology_nodes,
         allocated_budget=baseline.budgets[0],
         child_results=(sibling_result, selected_result),
+        partial_failures=(
+            () if partial_failure is None else (partial_failure,)
+        ),
     )
     root_result = root_completion["result"]
     root_result_artifact = root_completion["result_artifact"]
@@ -9573,6 +9725,7 @@ def _g2e4_execute_granular_g2d_v01(
         raise ValueError(causal_report.reason_codes[0])
     retained_reports = (
         *state["prefix_reports"],
+        *state["conditional_reports"],
         *state["pre_result_reports"],
         *(
             g2d_runtime.validate_fractal_cell_result_v02(item)
@@ -9621,6 +9774,367 @@ def _g2e4_execute_granular_g2d_v01(
     return bundle
 
 
+def _g2e4_bundle_prefix_state_v01(
+    *,
+    bundle: FractalRuntimeExecutionBundleV02,
+    queue_end_index: int,
+) -> dict[str, object]:
+    if (
+        type(bundle) is not FractalRuntimeExecutionBundleV02
+        or validate_fractal_runtime_execution_bundle_v02(bundle).status != "PASS"
+        or type(queue_end_index) is not int
+        or queue_end_index < 0
+        or queue_end_index >= len(bundle.queue_entries)
+    ):
+        raise ValueError("g2e_recomputation_result_invalid")
+    queue_entries = bundle.queue_entries[: queue_end_index + 1]
+    queue_artifacts = bundle.queue_artifacts[: queue_end_index + 1]
+    queue_ids = {item.queue_entry_id for item in queue_entries}
+    cell_inputs = tuple(
+        item
+        for item in bundle.cell_inputs
+        if set(item.ordered_initial_queue_entry_ids).issubset(queue_ids)
+    )
+    cell_ids = {item.cell_id for item in cell_inputs}
+    scope_projections = tuple(
+        item
+        for item in bundle.scope_projections
+        if item.parent_cell_id in cell_ids and item.child_cell_id in cell_ids
+    )
+    required_budget_ids = {
+        budget_id
+        for entry in queue_entries
+        for budget_id in (entry.cell_budget_id, entry.global_budget_id)
+    }
+    budget_position = {
+        item.budget_id: index for index, item in enumerate(bundle.budgets)
+    }
+    if (
+        not cell_inputs
+        or any(item not in budget_position for item in required_budget_ids)
+    ):
+        raise ValueError("g2d_budget_invalid")
+    budgets = bundle.budgets[
+        : max(budget_position[item] for item in required_budget_ids) + 1
+    ]
+    scope_ids = {item.projection_id for item in scope_projections}
+    input_ids = {item.cell_input_id for item in cell_inputs}
+    scope_reports = tuple(
+        item
+        for item in bundle.validation_reports
+        if item.validation_target == "SCOPE_PROJECTION_AGAINST_SOURCES"
+        and item.validated_object_id in scope_ids
+    )
+    input_reports = tuple(
+        item
+        for item in bundle.validation_reports
+        if item.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+        and item.validated_object_id in input_ids
+    )
+    if (
+        len(scope_reports) != len(scope_projections)
+        or len(input_reports) != len(cell_inputs)
+    ):
+        raise ValueError("g2d_validation_status_stage_mismatch")
+    state: dict[str, object] = {
+        "source_context": bundle.source_context,
+        "observed_work_context": bundle.observed_work_context,
+        "topology": bundle.topology,
+        "transition_registry": (
+            transition_runtime.build_fractal_runtime_transition_registry_profile_v02()
+        ),
+        "topology_transition": bundle.transition_decisions[0],
+        "topology_artifact": bundle.topology_artifact,
+        "source_binding": bundle.source_binding,
+        "topology_seed": bundle.topology_seed,
+        "topology_nodes": bundle.topology_nodes,
+        "topology_edges": bundle.topology_edges,
+        "runtime_assignments": bundle.runtime_assignments,
+        "base_reports": bundle.validation_reports[:4],
+        "scope_reports": scope_reports,
+        "input_reports": input_reports,
+        "prefix_reports": (),
+        "budgets": budgets,
+        "queue_entries": queue_entries,
+        "queue_artifacts": queue_artifacts,
+        "runtime_artifacts": queue_artifacts,
+        "queue_decisions": bundle.transition_decisions[1 : 2 + queue_end_index],
+        "cell_inputs": cell_inputs,
+        "scope_projections": scope_projections,
+        "revise_observations": (),
+        "partial_failures": (),
+        "backpressure_states": (),
+        "cell_results": (),
+        "result_artifacts": (),
+        "result_proposals": (),
+        "post_vv_reports": (),
+        "gt_advisory_reports": (),
+        "pre_result_reports": (),
+    }
+    _g2e4_refresh_prefix_reports_v01(state)
+    return state
+
+
+def _g2e4_available_backpressure_v01(
+    *,
+    baseline: FractalRuntimeExecutionBundleV02,
+) -> None:
+    root_input = next(item for item in baseline.cell_inputs if item.parent_cell_id is None)
+    root_initial_ids = set(root_input.ordered_initial_queue_entry_ids)
+    queue_end_index = max(
+        index
+        for index, entry in enumerate(baseline.queue_entries)
+        if entry.queue_entry_id in root_initial_ids
+    )
+    state = _g2e4_bundle_prefix_state_v01(
+        bundle=baseline,
+        queue_end_index=queue_end_index,
+    )
+    _root_cell_budget, global_budget = _g2e4_live_budget_heads_v01(
+        state, root_input.cell_id
+    )
+    queue_entries = _g2e4_latest_queue_entries_v01(state)
+    backpressure = g2d_runtime.evaluate_fractal_backpressure_v02(
+        source_context=state["source_context"],
+        topology=state["topology"],
+        policy=state["source_context"].runtime_policy,
+        global_budget=global_budget,
+        queue_entries=queue_entries,
+        admission_round=max(
+            (item.admission_round for item in queue_entries), default=0
+        )
+        + 1,
+        **_g2e4_prefix_arguments_v01(state),
+    )
+    if backpressure is not None:
+        raise ValueError("g2d_backpressure_invalid")
+
+
+def _g2e4_conditional_failure_scenarios_v01(
+    state: dict[str, object],
+    *,
+    child_context: dict[str, object],
+) -> None:
+    cell_input = child_context["cell_input"]
+    nodes = child_context["nodes"]
+    initial_entries = child_context["initial_entries"]
+    node = next(item for item in nodes if item.node_kind == "SEMANTIC_ACTOR")
+    initial = next(item for item in initial_entries if item.node_id == node.node_id)
+    dependencies = _g2e4_dependencies_v01(state, initial)
+    artifact_by_queue = _g2e4_artifact_by_queue_id_v01(state)
+    budget_by_id = _g2e4_budget_by_id_v01(state)
+    initial_artifact = artifact_by_queue[initial.queue_entry_id]
+    cell_anchor = budget_by_id[initial.cell_budget_id]
+    global_anchor = budget_by_id[initial.global_budget_id]
+    ready_decision = _g2e4_evaluate_queue_transition_v01(
+        state,
+        source_artifact=initial_artifact,
+        node=node,
+        current_entry=initial,
+        cell_input=cell_input,
+        cell_budget=cell_anchor,
+        global_budget=global_anchor,
+        dependencies=dependencies,
+    )
+    ready, ready_artifact = _g2e4_append_queue_target_v01(
+        state,
+        current_entry=initial,
+        current_artifact=initial_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=ready_decision,
+        cell_budget_after=cell_anchor,
+        global_budget_after=global_anchor,
+        dependencies=dependencies,
+    )
+
+    _root_cell_budget, available_global = _g2e4_live_budget_heads_v01(
+        state, state["root_input"].cell_id
+    )
+    available_entries = _g2e4_latest_queue_entries_v01(state)
+    backpressure = g2d_runtime.evaluate_fractal_backpressure_v02(
+        source_context=state["source_context"],
+        topology=state["topology"],
+        policy=state["source_context"].runtime_policy,
+        global_budget=available_global,
+        queue_entries=available_entries,
+        admission_round=ready.admission_round,
+        **_g2e4_prefix_arguments_v01(state),
+    )
+    if backpressure is not None:
+        raise ValueError("g2d_backpressure_invalid")
+
+    start_decision = _g2e4_evaluate_queue_transition_v01(
+        state,
+        source_artifact=ready_artifact,
+        node=node,
+        current_entry=ready,
+        cell_input=cell_input,
+        cell_budget=cell_anchor,
+        global_budget=global_anchor,
+        dependencies=dependencies,
+    )
+    start_cell, start_global = _g2e4_advance_budget_pair_v01(
+        state,
+        cell_input=cell_input,
+        event="START_NODE",
+        transition_decision=start_decision,
+    )
+    running, running_artifact = _g2e4_append_queue_target_v01(
+        state,
+        current_entry=ready,
+        current_artifact=ready_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=start_decision,
+        cell_budget_after=start_cell,
+        global_budget_after=start_global,
+        dependencies=dependencies,
+    )
+    reasons, outputs, evidence = _g2e4_local_observation_v01(
+        state,
+        node=node,
+        cell_input=cell_input,
+        cell_budget=start_cell,
+        global_budget=start_global,
+        dependencies=dependencies,
+    )
+    finish_decision = _g2e4_evaluate_queue_transition_v01(
+        state,
+        source_artifact=running_artifact,
+        node=node,
+        current_entry=running,
+        cell_input=cell_input,
+        cell_budget=start_cell,
+        global_budget=start_global,
+        dependencies=dependencies,
+        queue_reason_codes=reasons,
+        observed_output_refs=outputs,
+        observed_evidence_refs=evidence,
+    )
+    finish_cell, finish_global = _g2e4_advance_budget_pair_v01(
+        state,
+        cell_input=cell_input,
+        event="FINISH_NODE",
+        transition_decision=finish_decision,
+    )
+    validating, validating_artifact = _g2e4_append_queue_target_v01(
+        state,
+        current_entry=running,
+        current_artifact=running_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=finish_decision,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=reasons,
+        observed_output_refs=outputs,
+        observed_evidence_refs=evidence,
+    )
+    queue_report = g2d_runtime.validate_fractal_cell_queue_entry_v02(validating)
+    revise_arguments = {
+        "topology": state["topology"],
+        "cell_input": cell_input,
+        "queue_entry": validating,
+        "validation_report": queue_report,
+        "cell_budget_before": finish_cell,
+        "global_budget_before": finish_global,
+        "revision_index": cell_input.initial_revise_count,
+        "newly_resolved_constraints_count": 0,
+        "newly_accepted_outputs_count": 0,
+        "newly_introduced_conflicts_count": 0,
+    }
+    positive_revise = g2d_runtime.evaluate_fractal_revise_observation_v02(
+        **revise_arguments,
+        newly_validated_evidence_count=1,
+        consecutive_non_positive_count=0,
+    )
+    positive_repeat = g2d_runtime.evaluate_fractal_revise_observation_v02(
+        **revise_arguments,
+        newly_validated_evidence_count=1,
+        consecutive_non_positive_count=0,
+    )
+    deadend_revise = g2d_runtime.evaluate_fractal_revise_observation_v02(
+        **revise_arguments,
+        newly_validated_evidence_count=0,
+        consecutive_non_positive_count=finish_cell.max_revise_count,
+    )
+    deadend_repeat = g2d_runtime.evaluate_fractal_revise_observation_v02(
+        **revise_arguments,
+        newly_validated_evidence_count=0,
+        consecutive_non_positive_count=finish_cell.max_revise_count,
+    )
+    positive_report = g2d_runtime.validate_fractal_revise_observation_v02(
+        positive_revise
+    )
+    deadend_report = g2d_runtime.validate_fractal_revise_observation_v02(
+        deadend_revise
+    )
+    if (
+        positive_revise != positive_repeat
+        or deadend_revise != deadend_repeat
+        or not positive_revise.revise_eligible
+        or positive_revise.progress_units <= 0
+        or deadend_revise.revise_eligible
+        or deadend_revise.derived_terminal_state != "DEADEND"
+        or deadend_revise.reason_codes != ("g2d_no_progress_deadend",)
+        or positive_report.status != "PASS"
+        or deadend_report.status != "PASS"
+    ):
+        raise ValueError("g2d_revise_observation_invalid")
+    state["revise_observations"] = (positive_revise, deadend_revise)
+    deadend_decision = _g2e4_evaluate_queue_transition_v01(
+        state,
+        source_artifact=validating_artifact,
+        node=node,
+        current_entry=validating,
+        cell_input=cell_input,
+        cell_budget=finish_cell,
+        global_budget=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+        validation_report=deadend_report,
+        revise_observation=deadend_revise,
+    )
+    if (
+        deadend_decision.rule_id != "g2d_t12_validating_to_deadend"
+        or deadend_decision.decision != "RETURN_TO_ROOT"
+        or deadend_decision.reason_code
+        != "g2d_transition_deadend_recorded"
+    ):
+        raise ValueError("g2d_revise_observation_invalid")
+    deadend, _deadend_artifact = _g2e4_append_queue_target_v01(
+        state,
+        current_entry=validating,
+        current_artifact=validating_artifact,
+        node=node,
+        cell_input=cell_input,
+        transition_decision=deadend_decision,
+        cell_budget_after=finish_cell,
+        global_budget_after=finish_global,
+        dependencies=dependencies,
+        queue_reason_codes=validating.queue_reason_codes,
+        observed_output_refs=validating.observed_output_refs,
+        observed_evidence_refs=validating.observed_evidence_refs,
+        advisory_refs=validating.advisory_refs,
+    )
+    if (
+        deadend.state != "DEADEND"
+        or deadend.queue_reason_codes != validating.queue_reason_codes
+        or deadend.cell_budget_id != validating.cell_budget_id
+        or deadend.global_budget_id != validating.global_budget_id
+    ):
+        raise ValueError("g2d_no_progress_deadend")
+    state["conditional_reports"] = (
+        positive_report,
+        deadend_report,
+    )
+
+
 def _g2e4_execute_whole_run_escalation_v01(
     *,
     plan: SelectiveRecomputationPlanV01,
@@ -9628,20 +10142,61 @@ def _g2e4_execute_whole_run_escalation_v01(
     source_bindings: tuple[DeltaSourceBindingV01, ...],
     changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
     changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...],
+    delta: WorldStateDeltaV01,
+    dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
+    dependency_graph: DependencyGraphIndexV01,
+    affected_request: AffectedSetRequestV01,
+    affected_result: AffectedSetResultV01,
+    invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
+    invalidation_report: InvalidationReportV01,
     execution_scope: str,
 ) -> tuple[FractalRuntimeExecutionBundleV02 | None, object]:
-    if execution_scope not in {"SELECTIVE", "WHOLE_RUN_ESCALATION"}:
+    independently_derived_plan = (
+        build_selective_recomputation_plan_from_affected_set_v01(
+            delta=delta,
+            affected_set=affected_result,
+            invalidation_records=invalidation_records,
+            invalidation_report=invalidation_report,
+            source_context=source_context,
+            source_bindings=source_bindings,
+            changed_field_bindings=changed_field_bindings,
+            changed_artifact_bindings=changed_artifact_bindings,
+            dependency_edges=dependency_edges,
+            dependency_graph=dependency_graph,
+        )
+    )
+    scope_proof = _g2e4_classify_recomputation_scope_v01(
+        baseline=source_context.baseline_g2d_execution_bundle,
+        baseline_source_artifacts=source_context.baseline_source_artifacts,
+        ordered_affected_artifact_ids=affected_result.ordered_affected_ids,
+    )
+    if (
+        type(affected_request) is not AffectedSetRequestV01
+        or affected_request.affected_request_id
+        != affected_result.affected_request_id
+        or plan != independently_derived_plan
+        or canonical_json_bytes_v01(
+            selective_recomputation_plan_to_plain_data_v01(plan)
+        )
+        != canonical_json_bytes_v01(
+            selective_recomputation_plan_to_plain_data_v01(
+                independently_derived_plan
+            )
+        )
+    ):
         raise ValueError("g2e_topology_binding_mismatch")
-    reason = (
-        "g2e_full_affected_closure_requires_reconstruction"
-        if execution_scope == "WHOLE_RUN_ESCALATION"
-        else None
-    )
-    policy_id = (
-        "fractal_runtime_whole_run_escalation_v02"
-        if execution_scope == "WHOLE_RUN_ESCALATION"
-        else None
-    )
+    if (
+        execution_scope == "WHOLE_RUN_ESCALATION"
+        and scope_proof["classification"] == "FULL_CLOSURE"
+    ):
+        reason = "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+    elif (
+        execution_scope == "SELECTIVE"
+        and scope_proof["classification"] == "STRICT_SUBSET"
+    ):
+        reason = None
+    else:
+        raise ValueError("g2e_topology_binding_mismatch")
     context = _g2e4_observed_work_context_v01(
         plan=plan,
         source_context=source_context,
@@ -9650,7 +10205,7 @@ def _g2e4_execute_whole_run_escalation_v01(
         changed_artifact_bindings=changed_artifact_bindings,
         execution_scope=execution_scope,
         whole_run_escalation_reason=reason,
-        whole_run_escalation_policy_id=policy_id,
+        whole_run_escalation_policy_id=None,
     )
     return g2d_runtime.run_fractal_runtime_v02(
         source_context.baseline_g2d_execution_bundle.source_context,
@@ -10268,6 +10823,13 @@ def _g2e4_recomputed_bindings_v01(
     recomputed: FractalRuntimeExecutionBundleV02,
 ) -> tuple[RecomputedArtifactBindingV01, ...]:
     root_result = recomputed.cell_results[-1]
+    conditional_failure = bool(
+        recomputed.revise_observations and recomputed.partial_failures
+    )
+    if bool(recomputed.revise_observations) != conditional_failure or bool(
+        recomputed.partial_failures
+    ) != conditional_failure or recomputed.backpressure_states:
+        raise ValueError("g2e_recomputation_result_invalid")
     bindings: list[RecomputedArtifactBindingV01] = []
     result_by_cell = {item.cell_id: item for item in recomputed.cell_results}
     pairs: list[
@@ -10301,6 +10863,8 @@ def _g2e4_recomputed_bindings_v01(
         )
         prior = prior_queue_rows.get(key)
         if prior is None:
+            if conditional_failure:
+                continue
             raise ValueError("g2e_recomputation_result_invalid")
         owner_result = result_by_cell.get(entry.cell_id)
         if owner_result is None:
@@ -10319,6 +10883,8 @@ def _g2e4_recomputed_bindings_v01(
             (result.cell_id, result.parent_cell_id, result.outcome)
         )
         if prior is None:
+            if conditional_failure:
+                continue
             raise ValueError("g2e_recomputation_result_invalid")
         queue_entry_id = (
             result.ordered_terminal_queue_entry_ids[-1]
@@ -10385,6 +10951,59 @@ def _g2e4_recomputed_bindings_v01(
     return tuple(bindings)
 
 
+def _g2e4_conditional_unresolved_artifact_ids_v01(
+    *,
+    plan: SelectiveRecomputationPlanV01,
+    source_context: ContinuousDeltaSourceContextV01,
+    recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
+) -> tuple[str, ...]:
+    baseline = source_context.baseline_g2d_execution_bundle
+    scope_proof = _g2e4_classify_recomputation_scope_v01(
+        baseline=baseline,
+        baseline_source_artifacts=source_context.baseline_source_artifacts,
+        ordered_affected_artifact_ids=plan.ordered_affected_artifact_ids,
+    )
+    runtime_scope_ids = {
+        *scope_proof["affected_queue_artifact_ids"],
+        *scope_proof["affected_result_artifact_ids"],
+    }
+    resolved_prior_ids = {
+        item.prior_artifact_id for item in recomputed_bindings
+    }
+    source_artifact_by_id = {
+        item.artifact_id: item
+        for item in source_context.baseline_source_artifacts
+    }
+    if len(source_artifact_by_id) != len(
+        source_context.baseline_source_artifacts
+    ):
+        raise ValueError("g2e_recomputation_result_invalid")
+    ledger = _g2e4_baseline_runtime_artifact_ledger_v01(baseline)
+    unresolved: list[str] = []
+    for source_artifact_id in plan.ordered_affected_artifact_ids:
+        source_artifact = source_artifact_by_id.get(source_artifact_id)
+        if source_artifact is None:
+            raise ValueError("g2e_recomputation_result_invalid")
+        row = _g2e4_resolve_runtime_artifact_projection_v01(
+            source_artifact=source_artifact,
+            ledger=ledger,
+        )
+        if row is None:
+            unresolved.append(source_artifact_id)
+            continue
+        runtime_artifact = row.get("artifact")
+        if type(runtime_artifact) is not KernelArtifactV01:
+            raise ValueError("g2e_recomputation_result_invalid")
+        if runtime_artifact.artifact_id not in runtime_scope_ids:
+            raise ValueError("g2e_recomputation_result_invalid")
+        if runtime_artifact.artifact_id not in resolved_prior_ids:
+            unresolved.append(source_artifact_id)
+    result = tuple(unresolved)
+    if not result:
+        raise ValueError("g2e_recomputation_result_invalid")
+    return result
+
+
 def _g2e4_preservation_family_v01(
     *,
     affected_result: AffectedSetResultV01,
@@ -10423,13 +11042,35 @@ def _g2e4_build_recomputation_result_v01(
     recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
     preservation_proof: PreservationProofV01,
 ) -> SelectiveRecomputationResultV01:
-    unresolved = invalidation_report.ordered_unresolved_artifact_ids
+    conditional_failure = bool(
+        recomputed_bundle.revise_observations
+        and recomputed_bundle.partial_failures
+    )
+    if recomputed_bundle.backpressure_states:
+        raise ValueError("g2e_recomputation_result_invalid")
+    if conditional_failure:
+        if not invalidation_report.ordered_packet_invalidation_candidate_ids:
+            raise ValueError("g2e_recomputation_result_invalid")
+        unresolved = _g2e4_conditional_unresolved_artifact_ids_v01(
+            plan=plan,
+            source_context=source_context,
+            recomputed_bindings=recomputed_bindings,
+        )
+    else:
+        unresolved = invalidation_report.ordered_unresolved_artifact_ids
     partial_failures = tuple(
         item.partial_failure_id for item in recomputed_bundle.partial_failures
     )
     reasons: tuple[str, ...] = ()
-    if unresolved or partial_failures:
-        reasons = ("g2e_recomputation_result_invalid",)
+    if conditional_failure:
+        reasons = _ordered_reasons(
+            (
+                "g2e_recomputation_no_progress",
+                "g2e_transition_selective_recomputation_blocked",
+            )
+        )
+    elif unresolved or partial_failures:
+        raise ValueError("g2e_recomputation_result_invalid")
     return build_selective_recomputation_result_v01(
         recomputation_plan_id=plan.recomputation_plan_id,
         baseline_runtime_report_id=(
@@ -10494,6 +11135,12 @@ def _g2e4_recomputation_result_errors_v01(
     g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...],
 ) -> tuple[str, ...]:
     errors: list[str] = list(_selective_recomputation_result_errors_v01(value))
+    conditional_failure = bool(
+        type(recomputed_g2d_execution_bundle)
+        is FractalRuntimeExecutionBundleV02
+        and recomputed_g2d_execution_bundle.revise_observations
+        and recomputed_g2d_execution_bundle.partial_failures
+    )
     if (
         _selective_recomputation_plan_errors_v01(plan)
         or validate_continuous_delta_source_context_v01(source_context).status
@@ -10651,11 +11298,93 @@ def _g2e4_recomputation_result_errors_v01(
             != tuple(item.new_artifact_id for item in recomputed_bindings)
             or value.ordered_preserved_artifact_ids
             != preservation_proof.ordered_preserved_artifact_ids
-            or value.ordered_unresolved_artifact_ids
-            or value.ordered_partial_failure_ids
             or value.parent_return_transition_decision_id
             != recomputed_g2d_execution_bundle.transition_decisions[-1].decision_id
+        ):
+            errors.append("g2e_recomputation_result_invalid")
+        if conditional_failure:
+            expected_unresolved = _g2e4_conditional_unresolved_artifact_ids_v01(
+                plan=plan,
+                source_context=source_context,
+                recomputed_bindings=recomputed_bindings,
+            )
+            expected_partial = tuple(
+                item.partial_failure_id
+                for item in recomputed_g2d_execution_bundle.partial_failures
+            )
+            expected_reasons = _ordered_reasons(
+                (
+                    "g2e_recomputation_no_progress",
+                    "g2e_transition_selective_recomputation_blocked",
+                )
+            )
+            invalidation_payload = _artifact_plain_v01(
+                invalidation_report_artifact
+            )["payload"]
+            packet_candidates = invalidation_payload.get(
+                "ordered_packet_invalidation_candidate_ids"
+            )
+            revise_observations = (
+                recomputed_g2d_execution_bundle.revise_observations
+            )
+            partial_failures = recomputed_g2d_execution_bundle.partial_failures
+            backpressure_states = (
+                recomputed_g2d_execution_bundle.backpressure_states
+            )
+            root_result = recomputed_g2d_execution_bundle.cell_results[-1]
+            runtime_trace = recomputed_g2d_execution_bundle.runtime_trace
+            if (
+                type(packet_candidates) is not list
+                or not packet_candidates
+                or len(revise_observations) != 2
+                or not revise_observations[0].revise_eligible
+                or revise_observations[0].progress_units <= 0
+                or revise_observations[1].revise_eligible
+                or revise_observations[1].derived_terminal_state != "DEADEND"
+                or revise_observations[1].reason_codes
+                != ("g2d_no_progress_deadend",)
+                or any(
+                    g2d_runtime.validate_fractal_revise_observation_v02(item).status
+                    != "PASS"
+                    for item in revise_observations
+                )
+                or any(
+                    g2d_runtime.validate_fractal_partial_failure_record_v02(item).status
+                    != "PASS"
+                    or item.retry_eligible
+                    or not item.required_child
+                    or not item.sibling_independent
+                    for item in partial_failures
+                )
+                or any(
+                    g2d_runtime.validate_fractal_backpressure_state_v02(item).status
+                    != "PASS"
+                    or item.backpressure_reason
+                    != "PARALLELISM_CAPACITY_EXHAUSTED"
+                    for item in backpressure_states
+                )
+                or backpressure_states
+                or runtime_trace.revise_observation_ids
+                != tuple(item.observation_id for item in revise_observations)
+                or runtime_trace.partial_failure_ids != expected_partial
+                or runtime_trace.backpressure_state_ids
+                != tuple(item.backpressure_id for item in backpressure_states)
+                or root_result.partial_failure_ids != expected_partial
+                or root_result.outcome != "DEADEND"
+                or value.ordered_unresolved_artifact_ids != expected_unresolved
+                or value.ordered_partial_failure_ids != expected_partial
+                or value.result_status != "FAIL_CLOSED"
+                or value.reason_codes != expected_reasons
+            ):
+                errors.append("g2e_recomputation_result_invalid")
+        elif (
+            recomputed_g2d_execution_bundle.revise_observations
+            or recomputed_g2d_execution_bundle.partial_failures
+            or recomputed_g2d_execution_bundle.backpressure_states
+            or value.ordered_unresolved_artifact_ids
+            or value.ordered_partial_failure_ids
             or value.result_status != "PASS"
+            or value.reason_codes
         ):
             errors.append("g2e_recomputation_result_invalid")
     return _ordered_reasons(errors)
@@ -10772,6 +11501,78 @@ def _g2e4_runtime_report_artifact_v01(
             "time_envelope"
         ],
     )
+
+
+def _g2e4_blocked_runtime_report_artifact_v01(
+    *,
+    report: ContinuousDeltaRuntimeReportV01,
+    accepted_plan_artifact: KernelArtifactV01,
+    recomputed_report_artifact: KernelArtifactV01,
+    preservation_proof_artifact: KernelArtifactV01,
+    final_root_artifact: KernelArtifactV01,
+    invalidation_report_artifact: KernelArtifactV01,
+    t08: TransitionDecisionV01,
+    carrier_refs: tuple[str, ...],
+) -> KernelArtifactV01:
+    if report.report_status != "FAIL_CLOSED" or not report.reason_codes:
+        raise ValueError("g2e_recomputation_result_invalid")
+    payload = continuous_delta_runtime_report_to_plain_data_v01(report)
+    time_envelope = _artifact_plain_v01(recomputed_report_artifact)[
+        "time_envelope"
+    ]
+    parent_refs = (
+        accepted_plan_artifact.artifact_id,
+        recomputed_report_artifact.artifact_id,
+        preservation_proof_artifact.artifact_id,
+        final_root_artifact.artifact_id,
+        invalidation_report_artifact.artifact_id,
+    )
+    trace_refs = _ordered_unique_v01(
+        (
+            report.trace_id,
+            report.plan_root_decision_id,
+            report.final_root_decision_id,
+            report.recomputation_result_id,
+            t08.decision_id,
+            *carrier_refs,
+        )
+    )
+    material = {
+        "abi_version": "v1.0",
+        "artifact_type": "ContinuousDeltaRuntimeReport",
+        "schema_version": "v0.1",
+        "transaction_id": recomputed_report_artifact.transaction_id,
+        "owner_root_id": recomputed_report_artifact.owner_root_id,
+        "source_component": "continuous_delta_runtime_v01",
+        "authority_class": "EVIDENCE_ONLY",
+        "lifecycle_state": "BLOCKED_FAIL_CLOSED",
+        "payload": payload,
+        "trace_refs": list(trace_refs),
+        "parent_refs": list(parent_refs),
+        "time_envelope": time_envelope,
+    }
+    artifact = build_kernel_artifact_v01(
+        abi_version="v1.0",
+        artifact_id=_g2e4_derived_id_v01(
+            "g2eabi_report_blocked_v01:",
+            "HEDGEHOG_G2E_CONTINUOUS_DELTA_RUNTIME_REPORT_BLOCKED_ARTIFACT_V01",
+            material,
+        ),
+        artifact_type="ContinuousDeltaRuntimeReport",
+        schema_version="v0.1",
+        transaction_id=recomputed_report_artifact.transaction_id,
+        owner_root_id=recomputed_report_artifact.owner_root_id,
+        source_component="continuous_delta_runtime_v01",
+        authority_class="EVIDENCE_ONLY",
+        lifecycle_state="BLOCKED_FAIL_CLOSED",
+        payload=payload,
+        trace_refs=trace_refs,
+        parent_refs=parent_refs,
+        time_envelope=time_envelope,
+    )
+    if validate_kernel_artifact_v01(artifact):
+        raise ValueError("g2e_recomputation_result_invalid")
+    return artifact
 
 
 def execute_selective_recomputation_v01(
@@ -10946,13 +11747,42 @@ def execute_selective_recomputation_v01(
             target_artifact=plan_accepted_artifact,
         ):
             raise ValueError("g2e_recomputation_result_invalid")
-        recomputed_bundle = _g2e4_execute_granular_g2d_v01(
-            plan=plan,
-            source_context=source_context,
-            source_bindings=source_bindings,
-            changed_field_bindings=changed_field_bindings,
-            changed_artifact_bindings=changed_artifact_bindings,
+        scope_proof = _g2e4_classify_recomputation_scope_v01(
+            baseline=baseline,
+            baseline_source_artifacts=source_context.baseline_source_artifacts,
+            ordered_affected_artifact_ids=affected_result.ordered_affected_ids,
         )
+        if scope_proof["classification"] == "STRICT_SUBSET":
+            recomputed_bundle = _g2e4_execute_granular_g2d_v01(
+                plan=plan,
+                source_context=source_context,
+                source_bindings=source_bindings,
+                changed_field_bindings=changed_field_bindings,
+                changed_artifact_bindings=changed_artifact_bindings,
+                invalidation_report=invalidation_report,
+            )
+        elif scope_proof["classification"] == "FULL_CLOSURE":
+            recomputed_bundle, whole_run_report = (
+                _g2e4_execute_whole_run_escalation_v01(
+                    plan=plan,
+                    source_context=source_context,
+                    source_bindings=source_bindings,
+                    changed_field_bindings=changed_field_bindings,
+                    changed_artifact_bindings=changed_artifact_bindings,
+                    delta=delta,
+                    dependency_edges=dependency_edges,
+                    dependency_graph=dependency_graph,
+                    affected_request=affected_request,
+                    affected_result=affected_result,
+                    invalidation_records=invalidation_records,
+                    invalidation_report=invalidation_report,
+                    execution_scope="WHOLE_RUN_ESCALATION",
+                )
+            )
+            if whole_run_report.status != "PASS" or recomputed_bundle is None:
+                raise ValueError("g2e_recomputation_result_invalid")
+        else:
+            raise ValueError("g2e_topology_binding_mismatch")
         if transition_runtime.validate_continuous_delta_transition_decision_v01(
             t07,
             registry=registry,
@@ -11057,6 +11887,18 @@ def execute_selective_recomputation_v01(
                     t07.decision_id,
                     recomputed_bundle.runtime_trace.trace_id,
                     recomputed_bundle.runtime_report.report_id,
+                    *(
+                        item.observation_id
+                        for item in recomputed_bundle.revise_observations
+                    ),
+                    *(
+                        item.partial_failure_id
+                        for item in recomputed_bundle.partial_failures
+                    ),
+                    *(
+                        item.backpressure_id
+                        for item in recomputed_bundle.backpressure_states
+                    ),
                 ),
             ),
         )
@@ -11099,6 +11941,265 @@ def execute_selective_recomputation_v01(
         if any(item.status != "PASS" for item in pre_final_reports):
             first = next(item for item in pre_final_reports if item.status != "PASS")
             raise ValueError(first.reason_codes[0])
+        if recomputation_result.result_status == "FAIL_CLOSED":
+            carrier_refs = (
+                *(
+                    item.observation_id
+                    for item in recomputed_bundle.revise_observations
+                ),
+                *(
+                    item.partial_failure_id
+                    for item in recomputed_bundle.partial_failures
+                ),
+                *(
+                    item.backpressure_id
+                    for item in recomputed_bundle.backpressure_states
+                ),
+                *recomputation_result.ordered_unresolved_artifact_ids,
+            )
+            if not carrier_refs:
+                raise ValueError("g2e_recomputation_result_invalid")
+            vv_refs = tuple(
+                str(item["vv_report_id"])
+                for item in recomputed_bundle.post_vv_reports
+            )
+            gt_refs = tuple(
+                str(item["gt_report_id"])
+                for item in recomputed_bundle.gt_advisory_reports
+            )
+            final_evidence_refs = _ordered_unique_v01(
+                (
+                    *vv_refs,
+                    *gt_refs,
+                    *(item.validation_report_id for item in pre_final_reports),
+                    *carrier_refs,
+                )
+            )
+            final_root = _g2e4_root_review_v01(
+                phase="FINAL",
+                request_id=delta.request_id,
+                candidate_id=recomputation_result.recomputation_result_id,
+                candidate_plain=selective_recomputation_result_to_plain_data_v01(
+                    recomputation_result
+                ),
+                transaction_id=delta.transaction_id,
+                target_root_id=delta.owning_root_id,
+                topology_ref=recomputed_bundle.topology.topology_id,
+                evidence_refs=final_evidence_refs,
+                validator_ids=(
+                    "continuous_delta_result_against_plan_v01",
+                    "fractal_runtime_execution_bundle_v02",
+                    "continuous_delta_preservation_v01",
+                ),
+                policy_id=delta.observed_policy_version,
+                time_source_artifact=recomputed_bundle.report_artifact,
+                root_kernel=source_context.root_kernel,
+                artifact_parent_refs=(
+                    plan_root_artifact.artifact_id,
+                    plan_accepted_artifact.artifact_id,
+                    recomputed_bundle.report_artifact.artifact_id,
+                    preservation_artifact.artifact_id,
+                ),
+                artifact_trace_refs=(
+                    plan_root_result.decision_id,
+                    recomputation_result.recomputation_result_id,
+                    recomputed_bundle.runtime_report.report_id,
+                    preservation_proof.preservation_proof_id,
+                    *carrier_refs,
+                ),
+                prior_root_state={
+                    "prior_decision": "ACCEPT",
+                    "prior_decision_id": plan_root_result.decision_id,
+                    "prior_selected_candidate_id": plan.recomputation_plan_id,
+                },
+                requested_outcome="BLOCKED_FAIL_CLOSED",
+            )
+            final_root_input = final_root["input"]
+            final_root_result = final_root["result"]
+            final_root_artifact = final_root["artifact"]
+            assert type(final_root_input) is RootDecisionInputV01
+            assert type(final_root_result) is RootDecisionResultV01
+            assert type(final_root_artifact) is KernelArtifactV01
+            if final_root_result.decision == "ACCEPT":
+                raise ValueError("g2e_recomputation_result_invalid")
+            t08, t09 = transitions[7], transitions[8]
+            if transition_runtime.validate_continuous_delta_transition_decision_v01(
+                t09,
+                registry=registry,
+                source_artifact=recomputed_bundle.report_artifact,
+                target_artifact=final_root_artifact,
+            ):
+                raise ValueError("g2e_recomputation_result_invalid")
+            t09_causal = _g2e4_causal_ref_v01(
+                producer_actor_id="fractal_runtime_v02",
+                source_artifact=recomputed_bundle.report_artifact,
+                output_field="/payload/report_id",
+                consumer_component="root_decision_v01",
+                downstream_artifact=final_root_artifact,
+                transition=t09,
+                disposition="USED",
+                trace_refs=(
+                    recomputed_bundle.runtime_report.report_id,
+                    recomputation_result.recomputation_result_id,
+                    preservation_proof.preservation_proof_id,
+                    final_root_input.decision_input_id,
+                    final_root["packet"].packet_id,
+                    t09.decision_id,
+                    *carrier_refs,
+                ),
+            )
+            failure_causal_refs = (*pre_final_causal_refs, t09_causal)
+            runtime_trace = build_continuous_delta_runtime_trace_v01(
+                delta_id=delta.delta_id,
+                graph_id=dependency_graph.graph_id,
+                affected_set_id=affected_result.affected_set_id,
+                invalidation_report_id=invalidation_report.invalidation_report_id,
+                preservation_proof_id=preservation_proof.preservation_proof_id,
+                recomputation_plan_id=plan.recomputation_plan_id,
+                recomputation_result_id=recomputation_result.recomputation_result_id,
+                plan_root_decision_input_id=plan_root_input.decision_input_id,
+                plan_root_decision_id=plan_root_result.decision_id,
+                final_root_decision_input_id=final_root_input.decision_input_id,
+                final_root_decision_id=final_root_result.decision_id,
+                ordered_transition_decision_ids=tuple(
+                    transitions[index].decision_id
+                    for index in (0, 1, 2, 3, 4, 6, 8, 7)
+                ),
+                ordered_causal_ref_ids=tuple(
+                    _g2e4_causal_ref_id_v01(item)
+                    for item in failure_causal_refs
+                ),
+                ordered_source_artifact_ids=(
+                    e3_artifacts["proposed"].artifact_id,
+                    e3_artifacts["validated"].artifact_id,
+                    e3_artifacts["graph"].artifact_id,
+                    e3_artifacts["affected"].artifact_id,
+                    e3_artifacts["invalidation"].artifact_id,
+                    plan_proposed_artifact.artifact_id,
+                    plan_accepted_artifact.artifact_id,
+                    preservation_artifact.artifact_id,
+                    recomputed_bundle.report_artifact.artifact_id,
+                ),
+                ordered_downstream_artifact_ids=(
+                    plan_root_artifact.artifact_id,
+                    recomputed_bundle.report_artifact.artifact_id,
+                    final_root_artifact.artifact_id,
+                ),
+                provider_calls=0,
+                model_calls=0,
+                network_calls=0,
+                connector_calls=0,
+                external_drs_calls=0,
+                real_world_effects_count=0,
+            )
+            runtime_report = build_continuous_delta_runtime_report_v01(
+                report_version="v0.1",
+                profile_id="continuous_delta_runtime_v01",
+                ordered_source_binding_ids=tuple(
+                    item.source_binding_id for item in source_bindings
+                ),
+                baseline_report_id=baseline.runtime_report.report_id,
+                delta_id=delta.delta_id,
+                graph_id=dependency_graph.graph_id,
+                affected_set_id=affected_result.affected_set_id,
+                invalidation_report_id=invalidation_report.invalidation_report_id,
+                preservation_proof_id=preservation_proof.preservation_proof_id,
+                recomputation_plan_id=plan.recomputation_plan_id,
+                recomputation_result_id=recomputation_result.recomputation_result_id,
+                trace_id=runtime_trace.trace_id,
+                plan_root_decision_input_id=plan_root_input.decision_input_id,
+                plan_root_decision_id=plan_root_result.decision_id,
+                final_root_decision_input_id=final_root_input.decision_input_id,
+                final_root_decision_id=final_root_result.decision_id,
+                changed_count=(
+                    len(changed_field_bindings) + len(changed_artifact_bindings)
+                ),
+                directly_affected_count=len(
+                    affected_result.ordered_directly_affected_ids
+                ),
+                transitively_affected_count=len(
+                    affected_result.ordered_transitively_affected_ids
+                ),
+                invalidated_count=len(
+                    invalidation_report.ordered_invalidated_artifact_ids
+                ),
+                recomputed_count=len(recomputed_bindings),
+                preserved_count=len(
+                    preservation_proof.ordered_preserved_artifact_ids
+                ),
+                unresolved_count=len(
+                    recomputation_result.ordered_unresolved_artifact_ids
+                ),
+                report_status="FAIL_CLOSED",
+                reason_codes=recomputation_result.reason_codes,
+                root_review_required=True,
+                provider_calls=0,
+                model_calls=0,
+                network_calls=0,
+                connector_calls=0,
+                external_drs_calls=0,
+                action_commit_packets_created=0,
+                permissions_created=0,
+                receipts_created=0,
+                final_outputs_created=0,
+                drs_writes=0,
+                authority_created_count=0,
+                real_world_effects_count=0,
+            )
+            runtime_report_artifact = (
+                _g2e4_blocked_runtime_report_artifact_v01(
+                    report=runtime_report,
+                    accepted_plan_artifact=plan_accepted_artifact,
+                    recomputed_report_artifact=recomputed_bundle.report_artifact,
+                    preservation_proof_artifact=preservation_artifact,
+                    final_root_artifact=final_root_artifact,
+                    invalidation_report_artifact=e3_artifacts["invalidation"],
+                    t08=t08,
+                    carrier_refs=carrier_refs,
+                )
+            )
+            if transition_runtime.validate_continuous_delta_transition_decision_v01(
+                t08,
+                registry=registry,
+                source_artifact=plan_accepted_artifact,
+                target_artifact=runtime_report_artifact,
+            ):
+                raise ValueError("g2e_recomputation_result_invalid")
+            t08_causal = _g2e4_causal_ref_v01(
+                producer_actor_id="continuous_delta_runtime_v01",
+                source_artifact=plan_accepted_artifact,
+                output_field="/payload/recomputation_plan_id",
+                consumer_component="continuous_delta_runtime_v01",
+                downstream_artifact=runtime_report_artifact,
+                transition=t08,
+                disposition="BLOCKED_BY_GATE",
+                trace_refs=(
+                    runtime_trace.trace_id,
+                    runtime_report.report_id,
+                    final_root_result.decision_id,
+                    t08.decision_id,
+                    *carrier_refs,
+                ),
+            )
+            final_reports = (
+                validate_continuous_delta_runtime_trace_v01(runtime_trace),
+                validate_continuous_delta_runtime_report_v01(runtime_report),
+            )
+            if (
+                any(item.status != "PASS" for item in final_reports)
+                or validate_causal_consumption_ref_v01(t08_causal)
+                or runtime_report_artifact.lifecycle_state
+                != "BLOCKED_FAIL_CLOSED"
+                or transitions[9].decision_id
+                in runtime_trace.ordered_transition_decision_ids
+            ):
+                raise ValueError("g2e_recomputation_result_invalid")
+            return None, _contextual_report_v01(
+                validation_target="ContinuousDeltaExecutionBundleV01",
+                validated_object_id=None,
+                failure_stage="bundle_final",
+                reason_codes=recomputation_result.reason_codes,
+            )
         vv_refs = tuple(
             str(item["vv_report_id"]) for item in recomputed_bundle.post_vv_reports
         )

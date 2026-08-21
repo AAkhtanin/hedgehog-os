@@ -2510,6 +2510,26 @@ def e4_full_fractal_baseline_fixture() -> dict[str, object]:
         if entry.queue_entry_id == initial_queue_id
     )
     seed_projection = _e4_runtime_artifact_projection(seed_artifact)
+    queue_artifact_by_entry_id = {
+        entry.queue_entry_id: artifact
+        for entry, artifact in zip(
+            bundle.queue_entries,
+            bundle.queue_artifacts,
+            strict=True,
+        )
+    }
+    full_seed_artifacts = tuple(
+        queue_artifact_by_entry_id[queue_entry_id]
+        for cell_input in bundle.cell_inputs
+        for queue_entry_id in cell_input.ordered_initial_queue_entry_ids
+    )
+    full_seed_projections = tuple(
+        _e4_runtime_artifact_projection(artifact)
+        for artifact in full_seed_artifacts
+    )
+    assert len(full_seed_artifacts) == sum(
+        len(item.ordered_node_ids) for item in bundle.cell_inputs
+    )
     g2a = _e3_g2a_family(str(g2b["transaction_id"]))
     return {
         "g2a": g2a,
@@ -2521,6 +2541,8 @@ def e4_full_fractal_baseline_fixture() -> dict[str, object]:
         "sibling_input": sibling_input,
         "selected_seed_artifact": seed_artifact,
         "selected_seed_projection": seed_projection,
+        "full_seed_artifacts": full_seed_artifacts,
+        "full_seed_projections": full_seed_projections,
     }
 
 
@@ -2639,7 +2661,17 @@ def _e3_manifest_source_family(
     g2b: dict[str, object] | None = None,
     bundle: g2d.FractalRuntimeExecutionBundleV02 | None = None,
     runtime_seed_projection: g2e.KernelArtifactV01 | None = None,
+    runtime_seed_projections: tuple[g2e.KernelArtifactV01, ...] = (),
 ) -> dict[str, object]:
+    if runtime_seed_projection is not None and runtime_seed_projections:
+        raise ValueError("runtime projection family is ambiguous")
+    projections = (
+        (runtime_seed_projection,)
+        if runtime_seed_projection is not None
+        else runtime_seed_projections
+    )
+    if len({item.artifact_id for item in projections}) != len(projections):
+        raise ValueError("runtime projection family contains duplicates")
     baseline_payload, observed_payload = _e3_changed_source_payloads(
         target_roles=target_roles,
         g2a=g2a,
@@ -2668,7 +2700,7 @@ def _e3_manifest_source_family(
         changed,
         *by_role.values(),
         unrelated,
-        *((runtime_seed_projection,) if runtime_seed_projection is not None else ()),
+        *projections,
     )
     observed_changed = _e3_kernel_artifact(
         artifact_id="artifact:g2e:e3:source:observed",
@@ -2686,14 +2718,11 @@ def _e3_manifest_source_family(
             for role in target_roles
         ),
         *(
-            (
-                ArtifactDependencyEdgeV01(
-                    artifact_id=runtime_seed_projection.artifact_id,
-                    depends_on_artifact_id=changed.artifact_id,
-                ),
+            ArtifactDependencyEdgeV01(
+                artifact_id=projection.artifact_id,
+                depends_on_artifact_id=changed.artifact_id,
             )
-            if runtime_seed_projection is not None
-            else ()
+            for projection in projections
         ),
     )
     profile = build_default_seal_profile_v01()
@@ -2740,6 +2769,7 @@ def _e3_delta_family(
     *,
     target_roles: tuple[str, ...] = ("ordinary",),
     runtime_seed_projection: g2e.KernelArtifactV01 | None = None,
+    runtime_seed_projections: tuple[g2e.KernelArtifactV01, ...] = (),
 ) -> dict[str, object]:
     bundle = baseline_fixture["bundle"]
     g2a = baseline_fixture["g2a"]
@@ -2756,6 +2786,7 @@ def _e3_delta_family(
         g2b=g2b,
         bundle=bundle,
         runtime_seed_projection=runtime_seed_projection,
+        runtime_seed_projections=runtime_seed_projections,
     )
     baseline = source_rows["baseline"]
     observed = source_rows["observed"]
@@ -5726,11 +5757,21 @@ def _e4_input_family(
     baseline_fixture: dict[str, object],
     *,
     target_roles: tuple[str, ...] = ("ordinary",),
+    full_closure: bool = False,
 ) -> dict[str, object]:
     family = _e3_delta_family(
         baseline_fixture,
         target_roles=target_roles,
-        runtime_seed_projection=baseline_fixture["selected_seed_projection"],
+        runtime_seed_projection=(
+            None
+            if full_closure
+            else baseline_fixture["selected_seed_projection"]
+        ),
+        runtime_seed_projections=(
+            baseline_fixture["full_seed_projections"]
+            if full_closure
+            else ()
+        ),
     )
     request = g2e.build_affected_set_request_v01(
         delta=family["delta"],
@@ -6807,43 +6848,462 @@ def test_e4_recomputed_binding_predecessor_and_in_place_rejection_v01(
 
 def test_e4_partial_failure_backpressure_revise_no_progress_v01(
     e4_success_fixture: dict[str, object],
+    e4_full_fractal_baseline_fixture: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    recomputed = e4_success_fixture["bundle"].recomputed_g2d_execution_bundle
-    granular_source = inspect.getsource(g2e._g2e4_execute_granular_g2d_v01)
-    assert (
-        "transition_runtime.build_fractal_runtime_transition_registry_profile_v02"
-        in granular_source
-    )
-    assert (
-        "transition_runtime.validate_fractal_runtime_transition_decision_v02"
-        in granular_source
-    )
-    assert (
-        "g2d_runtime.build_fractal_runtime_transition_registry_profile_v02"
-        not in granular_source
-    )
-    assert (
-        "g2d_runtime.validate_fractal_runtime_transition_decision_v02"
-        not in granular_source
-    )
-    for public_name in (
-        "evaluate_fractal_revise_observation_v02",
-        "record_fractal_partial_failure_v02",
-        "evaluate_fractal_backpressure_v02",
+    success_bundle = e4_success_fixture["bundle"]
+    success_recomputed = success_bundle.recomputed_g2d_execution_bundle
+    baseline = e4_success_fixture["inputs"][
+        "context"
+    ].baseline_g2d_execution_bundle
+    baseline_bytes = canonical_json_bytes_v01(_e3_public_plain(baseline))
+    success_bytes = canonical_json_bytes_v01(_e3_public_plain(success_recomputed))
+    assert success_recomputed.revise_observations == ()
+    assert success_recomputed.partial_failures == ()
+    assert success_recomputed.backpressure_states == ()
+    assert success_bundle.recomputation_result.result_status == "PASS"
+
+    captures: dict[str, list[tuple[tuple[object, ...], dict[str, object], object]]] = {}
+    originals: dict[tuple[object, str], object] = {}
+
+    def observe(module: object, name: str) -> None:
+        original = getattr(module, name)
+        originals[(module, name)] = original
+        captures.setdefault(name, [])
+
+        def wrapper(*args: object, **kwargs: object) -> object:
+            result = original(*args, **kwargs)
+            captures[name].append((args, kwargs, result))
+            return result
+
+        monkeypatch.setattr(module, name, wrapper)
+
+    for module, name in (
+        (g2d, "evaluate_fractal_revise_observation_v02"),
+        (g2d, "record_fractal_partial_failure_v02"),
+        (g2d, "evaluate_fractal_backpressure_v02"),
+        (g2d, "build_fractal_runtime_execution_bundle_v02"),
+        (g2e, "build_selective_recomputation_result_v01"),
+        (g2e, "validate_selective_recomputation_result_against_plan_v01"),
+        (g2e, "build_continuous_delta_runtime_trace_v01"),
+        (g2e, "build_continuous_delta_runtime_report_v01"),
+        (g2e, "build_continuous_delta_execution_bundle_v01"),
+        (g2e, "build_kernel_artifact_v01"),
+        (g2e, "build_causal_consumption_ref_v01"),
+        (root_decision, "decide_root_v01"),
     ):
-        assert hasattr(g2d, public_name)
-        assert public_name in granular_source
-    assert "while " not in granular_source
-    assert len({item.observation_id for item in recomputed.revise_observations}) == len(
-        recomputed.revise_observations
+        observe(module, name)
+
+    conditional_inputs = _e4_input_family(
+        e4_full_fractal_baseline_fixture,
+        target_roles=("packet",),
     )
-    assert len({item.partial_failure_id for item in recomputed.partial_failures}) == len(
-        recomputed.partial_failures
+    bundle, report = g2e.run_continuous_delta_runtime_v01(
+        source_context=conditional_inputs["context"],
+        source_bindings=(conditional_inputs["source_binding"],),
+        changed_field_bindings=(conditional_inputs["changed_field"],),
+        changed_artifact_bindings=(conditional_inputs["changed_artifact"],),
+        delta=conditional_inputs["delta"],
+        dependency_edges=conditional_inputs["dependency_edges"],
+        dependency_graph=conditional_inputs["graph"],
     )
-    assert len({item.backpressure_id for item in recomputed.backpressure_states}) == len(
-        recomputed.backpressure_states
+    expected_reasons = (
+        "g2e_recomputation_no_progress",
+        "g2e_transition_selective_recomputation_blocked",
     )
-    assert g2d.validate_fractal_runtime_execution_bundle_v02(recomputed).status == "PASS"
+    assert bundle is None
+    assert report.status == "FAIL_CLOSED"
+    assert report.reason_codes == expected_reasons
+
+    g2d_bundles = tuple(
+        row[2]
+        for row in captures["build_fractal_runtime_execution_bundle_v02"]
+        if type(row[2]) is g2d.FractalRuntimeExecutionBundleV02
+    )
+    assert len(g2d_bundles) == 1
+    failure_bundle = g2d_bundles[0]
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(
+        failure_bundle
+    ).status == "PASS"
+    revise_observations = failure_bundle.revise_observations
+    partial_failures = failure_bundle.partial_failures
+    backpressure_states = failure_bundle.backpressure_states
+    assert len(revise_observations) == 2
+    assert len(partial_failures) == 1
+    assert backpressure_states == ()
+    positive, deadend = revise_observations
+    public_revise_results = tuple(
+        row[2]
+        for row in captures["evaluate_fractal_revise_observation_v02"]
+        if type(row[2]) is g2d.FractalReviseObservationV02
+    )
+    assert len(public_revise_results) == 4
+    assert public_revise_results[0] == public_revise_results[1] == positive
+    assert public_revise_results[2] == public_revise_results[3] == deadend
+    assert positive.revise_eligible is True
+    assert positive.progress_units > 0
+    assert positive.derived_terminal_state is None
+    assert deadend.revise_eligible is False
+    assert deadend.derived_terminal_state == "DEADEND"
+    assert deadend.reason_codes == ("g2d_no_progress_deadend",)
+    assert all(
+        g2d.validate_fractal_revise_observation_v02(item).status == "PASS"
+        for item in revise_observations
+    )
+    deadend_entry = next(
+        item
+        for item in failure_bundle.queue_entries
+        if item.state == "DEADEND"
+        and item.node_id
+        == next(
+            node.node_id
+            for node in failure_bundle.topology_nodes
+            if node.node_kind == "SEMANTIC_ACTOR"
+            and node.node_id
+            in next(
+                cell.ordered_node_ids
+                for cell in failure_bundle.cell_inputs
+                if cell.cell_id == deadend.cell_id
+            )
+        )
+    )
+    validating_entry = next(
+        item
+        for item in failure_bundle.queue_entries
+        if item.queue_entry_id == deadend_entry.predecessor_queue_entry_id
+    )
+    assert validating_entry.state == "VALIDATING"
+    assert deadend_entry.queue_reason_codes == validating_entry.queue_reason_codes
+    assert "g2d_no_progress_deadend" not in validating_entry.queue_reason_codes
+    deadend_decision = next(
+        item
+        for item in failure_bundle.transition_decisions
+        if item.decision_id == deadend_entry.transition_decision_id
+    )
+    assert deadend_decision.rule_id == "g2d_t12_validating_to_deadend"
+    assert deadend_decision.decision == "RETURN_TO_ROOT"
+    assert deadend_decision.reason_code == "g2d_transition_deadend_recorded"
+    assert deadend_entry.cell_budget_id == validating_entry.cell_budget_id
+    assert deadend_entry.global_budget_id == validating_entry.global_budget_id
+
+    partial = partial_failures[0]
+    assert g2d.validate_fractal_partial_failure_record_v02(partial).status == "PASS"
+    assert partial.retry_eligible is False
+    assert partial.required_child is True
+    assert partial.sibling_independent is True
+    assert partial.parent_disposition == "DEADEND"
+    failed_child = next(
+        item for item in failure_bundle.cell_results if item.result_id == partial.child_result_id
+    )
+    root_result = failure_bundle.cell_results[-1]
+    assert failed_child.outcome == "DEADEND"
+    assert root_result.outcome == "DEADEND"
+    assert root_result.partial_failure_ids == (partial.partial_failure_id,)
+    assert failure_bundle.runtime_trace.revise_observation_ids == tuple(
+        item.observation_id for item in revise_observations
+    )
+    assert failure_bundle.runtime_trace.partial_failure_ids == (
+        partial.partial_failure_id,
+    )
+    assert failure_bundle.runtime_trace.backpressure_state_ids == tuple(
+        item.backpressure_id for item in backpressure_states
+    )
+
+    public_backpressure_calls = tuple(captures["evaluate_fractal_backpressure_v02"])
+    assert len(public_backpressure_calls) == 2
+    for (args, kwargs, result), (expected_geometry, expected_latest_count) in zip(
+        public_backpressure_calls,
+        (
+            ((0, 0, 0, 3), 7),
+            ((1, 1, 2, 1), 15),
+        ),
+        strict=True,
+    ):
+        assert args == ()
+        policy = kwargs["policy"]
+        global_budget = kwargs["global_budget"]
+        queue_entries = kwargs["queue_entries"]
+        settled_queue_entries = kwargs["settled_queue_entry_log"]
+        assert policy.max_parallelism == 3
+        latest_by_key = {
+            (item.cell_id, item.node_id): item
+            for item in settled_queue_entries
+        }
+        lawful_latest_frontier = tuple(
+            item
+            for item in settled_queue_entries
+            if latest_by_key[(item.cell_id, item.node_id)] == item
+        )
+        running_count = sum(item.state == "RUNNING" for item in queue_entries)
+        ready_count = sum(item.state == "READY" for item in queue_entries)
+        occupied = global_budget.current_parallelism + ready_count
+        residual = policy.max_parallelism - occupied
+        assert queue_entries == lawful_latest_frontier
+        assert len(queue_entries) == expected_latest_count
+        assert len(queue_entries) == len(
+            {(item.cell_id, item.node_id) for item in queue_entries}
+        )
+        assert running_count == global_budget.current_parallelism
+        assert (running_count, ready_count, occupied, residual) == expected_geometry
+        assert occupied + residual == policy.max_parallelism
+        assert result is None
+    assert "g2d_t03_pending_backpressure_defer" not in tuple(
+        item.rule_id for item in failure_bundle.transition_decisions
+    )
+    assert "g2d_transition_backpressure_deferred" not in tuple(
+        item.reason_code for item in failure_bundle.transition_decisions
+    )
+
+    results = tuple(
+        row[2]
+        for row in captures["build_selective_recomputation_result_v01"]
+        if type(row[2]) is g2e.SelectiveRecomputationResultV01
+    )
+    traces = tuple(
+        row[2]
+        for row in captures["build_continuous_delta_runtime_trace_v01"]
+        if type(row[2]) is g2e.ContinuousDeltaRuntimeTraceV01
+    )
+    reports = tuple(
+        row[2]
+        for row in captures["build_continuous_delta_runtime_report_v01"]
+        if type(row[2]) is g2e.ContinuousDeltaRuntimeReportV01
+    )
+    assert len(results) == len(traces) == len(reports) == 1
+    result = results[0]
+    trace = traces[0]
+    runtime_report = reports[0]
+    assert result.result_status == "FAIL_CLOSED"
+    assert result.reason_codes == expected_reasons
+    assert result.ordered_partial_failure_ids == (partial.partial_failure_id,)
+    assert result.ordered_unresolved_artifact_ids
+    assert set(result.ordered_unresolved_artifact_ids).issubset(
+        set(conditional_inputs["affected"].ordered_affected_ids)
+    )
+    assert g2e.validate_selective_recomputation_result_v01(result).status == "PASS"
+    contextual_reports = tuple(
+        row[2]
+        for row in captures[
+            "validate_selective_recomputation_result_against_plan_v01"
+        ]
+    )
+    assert contextual_reports[-1].status == "PASS"
+    assert g2e.validate_continuous_delta_runtime_trace_v01(trace).status == "PASS"
+    assert g2e.validate_continuous_delta_runtime_report_v01(
+        runtime_report
+    ).status == "PASS"
+    assert runtime_report.report_status == "FAIL_CLOSED"
+    assert runtime_report.reason_codes == expected_reasons
+    assert runtime_report.unresolved_count == len(
+        result.ordered_unresolved_artifact_ids
+    )
+    assert trace.recomputation_result_id == result.recomputation_result_id
+    assert "g2e_t10_report_finalize" not in tuple(
+        item.rule_id
+        for item in g2e._g2e4_transition_decisions_v01()
+        if item.decision_id in trace.ordered_transition_decision_ids
+    )
+
+    root_results = tuple(
+        row[2]
+        for row in captures["decide_root_v01"]
+        if type(row[2]) is root_decision.RootDecisionResultV01
+    )
+    assert tuple(item.decision for item in root_results) == (
+        "ACCEPT",
+        "BLOCKED_FAIL_CLOSED",
+    )
+    final_root = root_results[-1]
+    assert not final_root.permission_created
+    assert not final_root.final_output_created
+    assert not final_root.effect_requested
+    final_root_input = root_decision.root_decision_input_to_plain_dict_v01(
+        captures["decide_root_v01"][-1][1]["decision_input"]
+    )
+    required_root_evidence = set(
+        final_root_input["post_vv_bundle"]["required_evidence_refs"]
+    )
+    assert {
+        *(str(item["vv_report_id"]) for item in failure_bundle.post_vv_reports),
+        *(str(item["gt_report_id"]) for item in failure_bundle.gt_advisory_reports),
+        partial.partial_failure_id,
+        *result.ordered_unresolved_artifact_ids,
+    }.issubset(required_root_evidence)
+    blocked_reports = tuple(
+        row[2]
+        for row in captures["build_kernel_artifact_v01"]
+        if getattr(row[2], "artifact_type", None)
+        == "ContinuousDeltaRuntimeReport"
+        and getattr(row[2], "lifecycle_state", None) == "BLOCKED_FAIL_CLOSED"
+    )
+    assert len(blocked_reports) == 1
+    blocked_report = blocked_reports[0]
+    assert validate_kernel_artifact_v01(blocked_report) == ()
+    assert kernel_artifact_to_plain_dict_v01(blocked_report)["payload"] == (
+        g2e.continuous_delta_runtime_report_to_plain_data_v01(runtime_report)
+    )
+    causal_refs = tuple(
+        row[2]
+        for row in captures["build_causal_consumption_ref_v01"]
+        if validate_causal_consumption_ref_v01(row[2]) == ()
+    )
+    assert causal_refs
+    assert any(
+        partial.partial_failure_id in item.trace_refs for item in causal_refs
+    )
+    assert any(
+        item.downstream_artifact_id == blocked_report.artifact_id
+        and item.disposition == "BLOCKED_BY_GATE"
+        for item in causal_refs
+    )
+    assert captures["build_continuous_delta_execution_bundle_v01"] == []
+
+    contextual_call = captures[
+        "validate_selective_recomputation_result_against_plan_v01"
+    ][-1]
+    contextual_kwargs = contextual_call[1]
+    contextual_validator = originals[
+        (g2e, "validate_selective_recomputation_result_against_plan_v01")
+    ]
+    result_builder = originals[(g2e, "build_selective_recomputation_result_v01")]
+    result_material = {
+        field.name: getattr(result, field.name)
+        for field in fields(type(result))
+        if field.name != "recomputation_result_id"
+    }
+
+    def rebuilt_result(**changes: object) -> object:
+        return result_builder(**{**result_material, **changes})
+
+    negative_results = (
+        rebuilt_result(ordered_partial_failure_ids=()),
+        rebuilt_result(
+            ordered_partial_failure_ids=("g2d_partial_failure_v02:foreign",)
+        ),
+        rebuilt_result(ordered_unresolved_artifact_ids=("artifact:foreign",)),
+        rebuilt_result(
+            ordered_unresolved_artifact_ids=tuple(
+                reversed(result.ordered_unresolved_artifact_ids)
+            )
+        ),
+        rebuilt_result(
+            reason_codes=("g2e_recomputation_budget_exceeded", *expected_reasons)
+        ),
+    )
+    assert len(result.ordered_unresolved_artifact_ids) > 1
+    with pytest.raises(ValueError, match="g2e_recomputation_result_invalid"):
+        rebuilt_result(
+            ordered_partial_failure_ids=(
+                partial.partial_failure_id,
+                partial.partial_failure_id,
+            )
+        )
+    assert all(
+        contextual_validator(candidate, **contextual_kwargs).status
+        == "FAIL_CLOSED"
+        for candidate in negative_results
+    )
+    with pytest.raises(ValueError):
+        rebuilt_result(result_status="PASS", reason_codes=())
+
+    revise_call = captures["evaluate_fractal_revise_observation_v02"][0]
+    revise_kwargs = revise_call[1]
+    revise_evaluator = originals[(g2d, "evaluate_fractal_revise_observation_v02")]
+    selected_input = revise_kwargs["cell_input"]
+    sibling_input = next(
+        item
+        for item in failure_bundle.cell_inputs
+        if item.parent_cell_id is not None and item.cell_id != selected_input.cell_id
+    )
+    for changes, expected_error in (
+        ({"cell_input": sibling_input}, "g2d_revise_observation_invalid"),
+        (
+            {"cell_budget_before": revise_kwargs["global_budget_before"]},
+            "g2d_revise_observation_invalid",
+        ),
+        (
+            {"global_budget_before": revise_kwargs["cell_budget_before"]},
+            "g2d_revise_observation_invalid",
+        ),
+        (
+            {
+                "revision_index": revise_kwargs["queue_entry"].snapshot_sequence
+                + 1
+            },
+            "g2d_revise_observation_invalid",
+        ),
+        (
+            {
+                "queue_entry": replace(
+                    revise_kwargs["queue_entry"],
+                    queue_entry_id="frqueue_v02:foreign",
+                )
+            },
+            "g2d_queue_entry_invalid",
+        ),
+    ):
+        with pytest.raises(ValueError, match=expected_error):
+            revise_evaluator(**{**revise_kwargs, **changes})
+    assert g2d.validate_fractal_revise_observation_v02(
+        replace(deadend, reason_codes=("g2d_revise_progress_positive",))
+    ).status == "FAIL_CLOSED"
+    assert g2d.validate_fractal_revise_observation_v02(
+        replace(deadend, trace_refs=(*deadend.trace_refs[:-1], "trace:foreign"))
+    ).status == "FAIL_CLOSED"
+
+    partial_call = captures["record_fractal_partial_failure_v02"][0]
+    partial_recorder = originals[(g2d, "record_fractal_partial_failure_v02")]
+    with pytest.raises(ValueError, match="g2d_budget_predecessor_invalid"):
+        partial_recorder(
+            **{
+                **partial_call[1],
+                "allocated_cell_budget": partial_call[1]["global_budget"],
+            }
+        )
+    successful_child = next(
+        item
+        for item in success_recomputed.cell_results
+        if item.parent_cell_id is not None and item.outcome == "COMPLETED"
+    )
+    success_parent = next(
+        item
+        for item in success_recomputed.cell_inputs
+        if item.cell_id == successful_child.parent_cell_id
+    )
+    success_budget_by_id = {
+        item.budget_id: item for item in success_recomputed.budgets
+    }
+    with pytest.raises(ValueError, match="g2d_success_laundering_forbidden"):
+        partial_recorder(
+            topology=success_recomputed.topology,
+            parent_input=success_parent,
+            child_result=successful_child,
+            failure_stage="CELL_RESULT_PRECONDITIONS",
+            reason_codes=("g2d_required_child_failure",),
+            source_reason_codes=(),
+            evidence_refs=successful_child.evidence_refs,
+            allocated_cell_budget=success_budget_by_id[
+                successful_child.allocated_cell_budget_id
+            ],
+            final_cell_budget=success_budget_by_id[
+                successful_child.final_cell_budget_id
+            ],
+            global_budget=success_budget_by_id[successful_child.global_budget_id],
+            required_child=True,
+            sibling_independent=True,
+        )
+    final_root_call = captures["decide_root_v01"][-1]
+    assert root_decision.validate_root_decision_result_v01(
+        kernel=conditional_inputs["context"].root_kernel,
+        decision_input=final_root_call[1]["decision_input"],
+        result=replace(final_root, decision="ACCEPT"),
+    )
+
+    assert canonical_json_bytes_v01(_e3_public_plain(baseline)) == baseline_bytes
+    assert canonical_json_bytes_v01(_e3_public_plain(success_recomputed)) == success_bytes
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(
+        success_recomputed
+    ).status == "PASS"
 
 
 def test_e4_preservation_full_bytes_and_immutable_baseline_v01(
@@ -7080,55 +7540,294 @@ def test_e4_complete_execution_bundle_public_validation_v01(
 
 def test_e4_conditional_whole_run_escalation_and_selective_rejection_v01(
     e4_success_fixture: dict[str, object],
+    e4_full_fractal_baseline_fixture: dict[str, object],
 ) -> None:
-    inputs = e4_success_fixture["inputs"]
-    plan = e4_success_fixture["plan"]
-    baseline = inputs["context"].baseline_g2d_execution_bundle
-    node_ids = baseline.topology.ordered_node_ids
-    cell_ids = tuple(dict.fromkeys(item.cell_id for item in baseline.cell_inputs))
-    full_plan = g2e.build_selective_recomputation_plan_v01(
-        delta_id=plan.delta_id,
-        affected_set_id=plan.affected_set_id,
-        invalidation_report_id=plan.invalidation_report_id,
-        source_route_eligibility_artifact_id=plan.source_route_eligibility_artifact_id,
-        source_topology_id=plan.source_topology_id,
-        accepted_mode=plan.accepted_mode,
-        accepted_scope_ref=plan.accepted_scope_ref,
-        ordered_affected_cell_ids=cell_ids,
-        ordered_affected_artifact_ids=plan.ordered_affected_artifact_ids,
-        ordered_work_node_ids=node_ids,
-        ordered_preserved_artifact_ids=(),
-        max_work_items=len(node_ids),
-        max_queue_entries=plan.max_queue_entries,
-        max_wall_time_units=plan.max_wall_time_units,
-        max_token_budget=plan.max_token_budget,
-        max_provider_calls=0,
-        transition_profile_id=plan.transition_profile_id,
-        root_review_required=True,
-        plan_status="PASS",
-        reason_codes=(),
-        trace_refs=plan.trace_refs,
+    strict_inputs = e4_success_fixture["inputs"]
+    strict_plan = e4_success_fixture["plan"]
+    baseline = strict_inputs["context"].baseline_g2d_execution_bundle
+    full_inputs = _e4_input_family(
+        e4_full_fractal_baseline_fixture,
+        full_closure=True,
     )
-    whole_bundle, whole_report = g2e._g2e4_execute_whole_run_escalation_v01(
-        plan=full_plan,
-        source_context=inputs["context"],
-        source_bindings=(inputs["source_binding"],),
-        changed_field_bindings=(inputs["changed_field"],),
-        changed_artifact_bindings=(inputs["changed_artifact"],),
-        execution_scope="WHOLE_RUN_ESCALATION",
+    scope_proof = g2e._g2e4_classify_recomputation_scope_v01(
+        baseline=baseline,
+        baseline_source_artifacts=full_inputs["context"].baseline_source_artifacts,
+        ordered_affected_artifact_ids=full_inputs["affected"].ordered_affected_ids,
     )
-    assert whole_report.status == "PASS" and whole_bundle is not None
-    assert whole_bundle.observed_work_context.execution_scope == "WHOLE_RUN_ESCALATION"
-    selective_bundle, selective_report = g2e._g2e4_execute_whole_run_escalation_v01(
+    assert scope_proof["classification"] == "FULL_CLOSURE"
+    assert scope_proof["ordered_execution_rows"] == scope_proof["baseline_work_rows"]
+    assert scope_proof["ordered_affected_cell_ids"] == tuple(
+        item.cell_id for item in baseline.cell_inputs
+    )
+    assert scope_proof["ordered_execution_node_ids"] == (
+        baseline.topology.ordered_node_ids
+    )
+    assert scope_proof["affected_queue_artifact_ids"] == tuple(
+        item.artifact_id for item in baseline.queue_artifacts
+    )
+    assert scope_proof["affected_result_artifact_ids"] == tuple(
+        item.artifact_id for item in baseline.result_artifacts
+    )
+    assert scope_proof["report_artifact_id"] == baseline.report_artifact.artifact_id
+    bundle, report = g2e.run_continuous_delta_runtime_v01(
+        source_context=full_inputs["context"],
+        source_bindings=(full_inputs["source_binding"],),
+        changed_field_bindings=(full_inputs["changed_field"],),
+        changed_artifact_bindings=(full_inputs["changed_artifact"],),
+        delta=full_inputs["delta"],
+        dependency_edges=full_inputs["dependency_edges"],
+        dependency_graph=full_inputs["graph"],
+    )
+    assert report.status == "PASS", report.reason_codes
+    assert type(bundle) is g2e.ContinuousDeltaExecutionBundleV01
+    full_plan = bundle.recomputation_plan
+    assert full_plan == g2e.build_selective_recomputation_plan_from_affected_set_v01(
+        delta=full_inputs["delta"],
+        affected_set=full_inputs["affected"],
+        invalidation_records=full_inputs["invalidation_records"],
+        invalidation_report=full_inputs["invalidation_report"],
+        source_context=full_inputs["context"],
+        source_bindings=(full_inputs["source_binding"],),
+        changed_field_bindings=(full_inputs["changed_field"],),
+        changed_artifact_bindings=(full_inputs["changed_artifact"],),
+        dependency_edges=full_inputs["dependency_edges"],
+        dependency_graph=full_inputs["graph"],
+    )
+    whole_bundle = bundle.recomputed_g2d_execution_bundle
+    context = whole_bundle.observed_work_context
+    reason = "AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK"
+    assert context is not None
+    assert context.execution_scope == "WHOLE_RUN_ESCALATION"
+    assert context.whole_run_escalation_reason == reason
+    assert context.whole_run_escalation_policy_id is None
+    binding_ids = tuple(
+        item.artifact_id for item in context.ordered_binding_artifacts
+    )
+    assert binding_ids
+    assert all(
+        kernel_artifact_to_plain_dict_v01(item)["payload"]["execution"]
+        == {
+            "execution_scope": "WHOLE_RUN_ESCALATION",
+            "whole_run_escalation_policy_id": None,
+            "whole_run_escalation_reason": reason,
+        }
+        for item in context.ordered_binding_artifacts
+    )
+    initial_queue_artifacts = tuple(
+        artifact
+        for entry, artifact in zip(
+            whole_bundle.queue_entries,
+            whole_bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.predecessor_queue_entry_id is None
+    )
+    assert set(binding_ids).issubset(
+        {
+            parent
+            for artifact in initial_queue_artifacts
+            for parent in artifact.parent_refs
+        }
+    )
+    assert all(
+        artifact.artifact_id in whole_bundle.runtime_trace.abi_artifact_refs
+        for artifact in initial_queue_artifacts
+    )
+    assert whole_bundle.runtime_trace.trace_id == whole_bundle.runtime_report.runtime_trace_id
+    assert whole_bundle.runtime_trace.trace_id in whole_bundle.report_artifact.trace_refs
+    report_payload = kernel_artifact_to_plain_dict_v01(
+        whole_bundle.report_artifact
+    )["payload"]
+    assert report_payload["report_id"] == whole_bundle.runtime_report.report_id
+    assert whole_bundle.report_artifact.parent_refs == (
+        whole_bundle.topology_artifact.artifact_id,
+        *(item.artifact_id for item in whole_bundle.result_artifacts),
+    )
+    assert any(
+        whole_bundle.runtime_trace.trace_id in item.trace_refs
+        for item in whole_bundle.causal_consumption_refs
+    )
+    assert whole_bundle.source_context == baseline.source_context
+    assert whole_bundle.source_binding == baseline.source_binding
+    assert whole_bundle.topology_seed == baseline.topology_seed
+    assert whole_bundle.topology_nodes == baseline.topology_nodes
+    assert whole_bundle.topology_edges == baseline.topology_edges
+    assert whole_bundle.runtime_assignments == baseline.runtime_assignments
+    assert whole_bundle.topology == baseline.topology
+    assert whole_bundle.topology_artifact == baseline.topology_artifact
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(whole_bundle).status == "PASS"
+
+    selective_bundle, selective_report = g2e.execute_selective_recomputation_v01(
         plan=full_plan,
-        source_context=inputs["context"],
-        source_bindings=(inputs["source_binding"],),
-        changed_field_bindings=(inputs["changed_field"],),
-        changed_artifact_bindings=(inputs["changed_artifact"],),
-        execution_scope="SELECTIVE",
+        source_context=strict_inputs["context"],
+        source_bindings=(strict_inputs["source_binding"],),
+        changed_field_bindings=(strict_inputs["changed_field"],),
+        changed_artifact_bindings=(strict_inputs["changed_artifact"],),
+        delta=strict_inputs["delta"],
+        dependency_edges=strict_inputs["dependency_edges"],
+        dependency_graph=strict_inputs["graph"],
+        affected_request=strict_inputs["request"],
+        affected_result=strict_inputs["affected"],
+        invalidation_records=strict_inputs["invalidation_records"],
+        invalidation_report=strict_inputs["invalidation_report"],
     )
     assert selective_bundle is None
     assert selective_report.status == "FAIL_CLOSED"
+
+    with pytest.raises(ValueError):
+        g2e._g2e4_observed_work_context_v01(
+            plan=full_plan,
+            source_context=full_inputs["context"],
+            source_bindings=(full_inputs["source_binding"],),
+            changed_field_bindings=(full_inputs["changed_field"],),
+            changed_artifact_bindings=(full_inputs["changed_artifact"],),
+            execution_scope="SELECTIVE",
+        )
+    with pytest.raises(ValueError):
+        g2e._g2e4_observed_work_context_v01(
+            plan=strict_plan,
+            source_context=strict_inputs["context"],
+            source_bindings=(strict_inputs["source_binding"],),
+            changed_field_bindings=(strict_inputs["changed_field"],),
+            changed_artifact_bindings=(strict_inputs["changed_artifact"],),
+            execution_scope="WHOLE_RUN_ESCALATION",
+            whole_run_escalation_reason=reason,
+            whole_run_escalation_policy_id=None,
+        )
+    for substituted_reason, substituted_policy in (
+        ("POLICY_SELECTED_WHOLE_RUN", "policy:unapproved"),
+        ("AFFECTED_CLOSURE_EQUALS_ALL_RECOMPUTABLE_WORK", "policy:unapproved"),
+    ):
+        with pytest.raises(ValueError):
+            g2e._g2e4_observed_work_context_v01(
+                plan=full_plan,
+                source_context=full_inputs["context"],
+                source_bindings=(full_inputs["source_binding"],),
+                changed_field_bindings=(full_inputs["changed_field"],),
+                changed_artifact_bindings=(full_inputs["changed_artifact"],),
+                execution_scope="WHOLE_RUN_ESCALATION",
+                whole_run_escalation_reason=substituted_reason,
+                whole_run_escalation_policy_id=substituted_policy,
+            )
+
+    full_rows = scope_proof["baseline_work_rows"]
+    projection_coverage: list[
+        tuple[int, tuple[tuple[str, str], ...], str, dict[str, object]]
+    ] = []
+    full_projections = e4_full_fractal_baseline_fixture[
+        "full_seed_projections"
+    ]
+    for projection_index, _projection in enumerate(full_projections):
+        candidate_fixture = {
+            **e4_full_fractal_baseline_fixture,
+            "full_seed_projections": tuple(
+                item
+                for index, item in enumerate(full_projections)
+                if index != projection_index
+            ),
+        }
+        candidate_inputs = _e4_input_family(candidate_fixture, full_closure=True)
+        try:
+            candidate_proof = g2e._g2e4_classify_recomputation_scope_v01(
+                baseline=baseline,
+                baseline_source_artifacts=(
+                    candidate_inputs["context"].baseline_source_artifacts
+                ),
+                ordered_affected_artifact_ids=(
+                    candidate_inputs["affected"].ordered_affected_ids
+                ),
+            )
+            candidate_rows = candidate_proof["ordered_execution_rows"]
+            candidate_classification = candidate_proof["classification"]
+        except ValueError:
+            candidate_rows = ()
+            candidate_classification = "INVALID"
+        uniquely_supported_rows = tuple(
+            row for row in full_rows if row not in set(candidate_rows)
+        )
+        projection_coverage.append(
+            (
+                projection_index,
+                uniquely_supported_rows,
+                candidate_classification,
+                candidate_inputs,
+            )
+        )
+    assert len(projection_coverage) == len(full_projections)
+    selected_omission = next(
+        row for row in projection_coverage if row[1]
+    )
+    _omitted_index, missing_rows, partial_classification, partial_inputs = (
+        selected_omission
+    )
+    assert missing_rows[0] in full_rows
+    assert partial_classification in {"STRICT_SUBSET", "INVALID"}
+    assert partial_classification != "FULL_CLOSURE"
+    partial_bundle, partial_report = g2e.execute_selective_recomputation_v01(
+        plan=full_plan,
+        source_context=partial_inputs["context"],
+        source_bindings=(partial_inputs["source_binding"],),
+        changed_field_bindings=(partial_inputs["changed_field"],),
+        changed_artifact_bindings=(partial_inputs["changed_artifact"],),
+        delta=partial_inputs["delta"],
+        dependency_edges=partial_inputs["dependency_edges"],
+        dependency_graph=partial_inputs["graph"],
+        affected_request=partial_inputs["request"],
+        affected_result=partial_inputs["affected"],
+        invalidation_records=partial_inputs["invalidation_records"],
+        invalidation_report=partial_inputs["invalidation_report"],
+    )
+    assert partial_bundle is None
+    assert partial_report.status == "FAIL_CLOSED"
+    foreign_runtime_artifact = _e3_kernel_artifact(
+        artifact_id="artifact:g2e:e4:foreign-runtime-work",
+        transaction_id=baseline.source_context.router_input.transaction_id,
+        payload={"foreign_runtime_work": True},
+    )
+    foreign_fixture = {
+        **e4_full_fractal_baseline_fixture,
+        "full_seed_projections": (
+            *e4_full_fractal_baseline_fixture["full_seed_projections"],
+            _e4_runtime_artifact_projection(foreign_runtime_artifact),
+        ),
+    }
+    foreign_inputs = _e4_input_family(foreign_fixture, full_closure=True)
+    foreign_bundle, foreign_report = g2e.execute_selective_recomputation_v01(
+        plan=full_plan,
+        source_context=foreign_inputs["context"],
+        source_bindings=(foreign_inputs["source_binding"],),
+        changed_field_bindings=(foreign_inputs["changed_field"],),
+        changed_artifact_bindings=(foreign_inputs["changed_artifact"],),
+        delta=foreign_inputs["delta"],
+        dependency_edges=foreign_inputs["dependency_edges"],
+        dependency_graph=foreign_inputs["graph"],
+        affected_request=foreign_inputs["request"],
+        affected_result=foreign_inputs["affected"],
+        invalidation_records=foreign_inputs["invalidation_records"],
+        invalidation_report=foreign_inputs["invalidation_report"],
+    )
+    assert foreign_bundle is None
+    assert foreign_report.status == "FAIL_CLOSED"
+    forged_plan = replace(
+        full_plan,
+        ordered_affected_cell_ids=full_plan.ordered_affected_cell_ids[:-1],
+    )
+    forged_bundle, forged_report = g2e.execute_selective_recomputation_v01(
+        plan=forged_plan,
+        source_context=full_inputs["context"],
+        source_bindings=(full_inputs["source_binding"],),
+        changed_field_bindings=(full_inputs["changed_field"],),
+        delta=full_inputs["delta"],
+        changed_artifact_bindings=(full_inputs["changed_artifact"],),
+        dependency_edges=full_inputs["dependency_edges"],
+        dependency_graph=full_inputs["graph"],
+        affected_request=full_inputs["request"],
+        affected_result=full_inputs["affected"],
+        invalidation_records=full_inputs["invalidation_records"],
+        invalidation_report=full_inputs["invalidation_report"],
+    )
+    assert forged_bundle is None
+    assert forged_report.status == "FAIL_CLOSED"
 
 
 def test_e4_no_private_g2d_lower_mutation_e5_or_e6_surface_v01() -> None:

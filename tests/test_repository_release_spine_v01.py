@@ -417,13 +417,13 @@ G2D_V0310_LIFECYCLE_SYNC_PATHS = ('AGENTS.md',
  'release/current_status_overlay_v01.json',
  'specs/machine_manifest_v0_25.json',
  'tests/test_repository_release_spine_v01.py')
-G2D_V0310_LIFECYCLE_SYNC_COMMIT = 'NOT_CREATED'
+G2D_V0310_LIFECYCLE_SYNC_COMMIT = '5dbf1116afbb010b8737e6fa3150907b6e29ae48'
 G2D_V0310_IMPLEMENTATION_COMMIT = '41db6c6bfbf787c04d288c5ddb40e285118d06c1'
 G2D_V0310_IMPLEMENTATION_PARENT = '2c9f2060ab0abf6dffa270dac4ffd7095d091d08'
 G2D_V0310_IMPLEMENTATION_PATCH_SHA256 = 'f6ce9ada6fc2c557f0f1647d018b8f26b7d9a3d03ff3786dc5dda2a8c646ce94'
 G2D_V0310_OWNER_EVIDENCE_BUNDLE_SHA256 = '19b8695bafba7f9fff04eb9045d1e60b7e319d1d72f52c0f05724499c64de7d0'
 G2D_V0310_INDEPENDENT_REAUDIT_SUBJECT = 'Add G2-D v0.3.10 Profile-D correction independent re-audit'
-G2D_V0310_INDEPENDENT_REAUDIT_COMMIT = 'NOT_CREATED'
+G2D_V0310_INDEPENDENT_REAUDIT_COMMIT = '5001db910fcc6e68cbe03a527eccd9455d7bf063'
 G2D_V0310_CLOSURE_SUBJECT = 'Close G2-D v0.3.10 Profile-D t12 revise projection correction'
 G2D_V0310_RECLOSURE_PATHS = ('AGENTS.md',
  'README.md',
@@ -447,13 +447,14 @@ G2D_V0310_FINAL_SYNC_PATHS = ('AGENTS.md',
  'release/current_status_overlay_v01.json',
  'specs/machine_manifest_v0_25.json',
  'tests/test_repository_release_spine_v01.py')
-AGENTS_G2D_V0310_CURRENT_BEGIN_MARKER = 'Current checkpoint: G2-D v0.3.10 Profile-D correction REAUDIT_PENDING.'
+AGENTS_G2D_V0310_CURRENT_BEGIN_MARKER = 'Current checkpoint: G2-D v0.3.10 Profile-D correction CLOSED_PASS.'
 G2D_V0310_IMPLEMENTATION_CLAIM_ID = "claim_g2d_v0310_profile_d_t12_projection_implementation_reaudit_pending"
 G2D_V0310_CLOSURE_CLAIM_ID = "claim_g2d_v0310_profile_d_t12_projection_correction_closed_pass"
 G2E4_V0310_ACCEPTANCE_CLAIM_ID = "claim_g2e_v013_e4_anti_gaming_acceptance_pass"
-G2D_V0310_SUCCESSOR_CLAIM_IDS = ('claim_g2d_v0310_profile_d_t12_projection_implementation_reaudit_pending',)
-G2D_V0310_EXPECTED_SUCCESSOR_PHASE = 'post_i_sync'
-G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
+G2D_V0310_SUCCESSOR_CLAIM_IDS = ('claim_g2d_v0310_profile_d_t12_projection_implementation_reaudit_pending',
+ 'claim_g2d_v0310_profile_d_t12_projection_correction_closed_pass')
+G2D_V0310_EXPECTED_SUCCESSOR_PHASE = 'reclosure'
+G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'CLOSED_PASS',
  'g2d_contract_status': 'ACCEPTED_COMMITTED',
  'g2d_contract_commit': '99d6fbf3870b839852a4d3ea659eed548381f5ce',
  'g2d_release_consumer_maintenance_commit': '2c9f2060ab0abf6dffa270dac4ffd7095d091d08',
@@ -470,25 +471,25 @@ G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
  'g2d_corrected_implementation_patch_sha256': 'f6ce9ada6fc2c557f0f1647d018b8f26b7d9a3d03ff3786dc5dda2a8c646ce94',
  'g2d_corrected_owner_evidence_bundle_sha256': '19b8695bafba7f9fff04eb9045d1e60b7e319d1d72f52c0f05724499c64de7d0',
  'g2d_independent_reaudit_required': True,
- 'g2d_independent_reaudit_passed': False,
- 'g2d_independent_reaudit_commit': 'NOT_CREATED',
+ 'g2d_independent_reaudit_passed': True,
+ 'g2d_independent_reaudit_commit': '5001db910fcc6e68cbe03a527eccd9455d7bf063',
  'g2d_independent_reaudit_path': 'docs/audit_reports/auditor_fractal_runtime_g2_d_v0310_profile_d_t12_revise_projection_correction_v01.log',
- 'g2d_independent_reaudit_sha256': 'NOT_CREATED',
+ 'g2d_independent_reaudit_sha256': 'b1ff61f42158d914b9afcf48e0d3ef5f9f980288d134130031e79c631f5101b6',
  'g2d_additive_reclosure_required': True,
- 'g2d_additive_reclosure_completed': False,
- 'g2d_corrected_closure_claimed': False,
+ 'g2d_additive_reclosure_completed': True,
+ 'g2d_corrected_closure_claimed': True,
  'g2d_corrected_checkpoint_path': 'docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md',
- 'g2d_corrected_checkpoint_sha256': 'NOT_CREATED',
- 'g2d_corrected_closure_commit_identity': 'NOT_CREATED',
+ 'g2d_corrected_checkpoint_sha256': '226a96cb345a94e2f631fc7b914aafb5bbb7e3aaede924f10d3045d7491f72c0',
+ 'g2d_corrected_closure_commit_identity': 'NOT_SELF_RECORDED',
  'g2d_v0310_implementation_authorized': False,
  'g2d_v0310_implementation_started': True,
  'g2d_v0310_corrected_implementation_exists': True,
  'g2d_v0310_corrected_implementation_committed': True,
  'g2d_v0310_independent_reaudit_required': True,
- 'g2d_v0310_independent_reaudit_passed': False,
+ 'g2d_v0310_independent_reaudit_passed': True,
  'g2d_v0310_additive_reclosure_required': True,
- 'g2d_v0310_additive_reclosure_completed': False,
- 'g2d_v0310_status': 'REAUDIT_PENDING',
+ 'g2d_v0310_additive_reclosure_completed': True,
+ 'g2d_v0310_status': 'CLOSED_PASS',
  'g2e3_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
  'g2e3_post_v0310_implementation_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
  'g2e3_fresh_v06_required_after_v0310_reclosure': True,
@@ -498,7 +499,7 @@ G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
  'g2e3_v0310_fresh_member_observation_sha256': 'NOT_CREATED',
  'g2e3_v0310_fresh_member_identities_sha256': 'NOT_CREATED',
  'g2e4_strict_subtree_status': 'IMPLEMENTED_COMMITTED_PASS',
- 'g2e4_anti_gaming_acceptance': 'BLOCKED_PENDING_G2D_V0310_RECLOSURE',
+ 'g2e4_anti_gaming_acceptance': 'BLOCKED_PENDING_FRESH_G2E3_V06',
  'g2e4_anti_gaming_correction_authorized': False,
  'gate2_status': 'NOT_CLOSED'}
 G2D_TRANSITION_FACADE_CONSUMER_MAINTENANCE_COMMIT = (
@@ -735,7 +736,7 @@ G2D_V037_RECLOSURE_BOUNDARY_FIELDS = {
     "g2d_historical_precorrection_evidence_only": True,
 }
 
-G2D_CURRENT_BOUNDARY_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
+G2D_CURRENT_BOUNDARY_FIELDS = {'g2d_status': 'CLOSED_PASS',
  'g2d_contract_status': 'ACCEPTED_COMMITTED',
  'g2d_contract_commit': '99d6fbf3870b839852a4d3ea659eed548381f5ce',
  'g2d_release_consumer_maintenance_commit': '2c9f2060ab0abf6dffa270dac4ffd7095d091d08',
@@ -752,16 +753,16 @@ G2D_CURRENT_BOUNDARY_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
  'g2d_corrected_implementation_patch_sha256': 'f6ce9ada6fc2c557f0f1647d018b8f26b7d9a3d03ff3786dc5dda2a8c646ce94',
  'g2d_corrected_owner_evidence_bundle_sha256': '19b8695bafba7f9fff04eb9045d1e60b7e319d1d72f52c0f05724499c64de7d0',
  'g2d_independent_reaudit_required': True,
- 'g2d_independent_reaudit_passed': False,
- 'g2d_independent_reaudit_commit': 'NOT_CREATED',
+ 'g2d_independent_reaudit_passed': True,
+ 'g2d_independent_reaudit_commit': '5001db910fcc6e68cbe03a527eccd9455d7bf063',
  'g2d_independent_reaudit_path': 'docs/audit_reports/auditor_fractal_runtime_g2_d_v0310_profile_d_t12_revise_projection_correction_v01.log',
- 'g2d_independent_reaudit_sha256': 'NOT_CREATED',
+ 'g2d_independent_reaudit_sha256': 'b1ff61f42158d914b9afcf48e0d3ef5f9f980288d134130031e79c631f5101b6',
  'g2d_additive_reclosure_required': True,
- 'g2d_additive_reclosure_completed': False,
- 'g2d_corrected_closure_claimed': False,
+ 'g2d_additive_reclosure_completed': True,
+ 'g2d_corrected_closure_claimed': True,
  'g2d_corrected_checkpoint_path': 'docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md',
- 'g2d_corrected_checkpoint_sha256': 'NOT_CREATED',
- 'g2d_corrected_closure_commit_identity': 'NOT_CREATED',
+ 'g2d_corrected_checkpoint_sha256': '226a96cb345a94e2f631fc7b914aafb5bbb7e3aaede924f10d3045d7491f72c0',
+ 'g2d_corrected_closure_commit_identity': 'NOT_SELF_RECORDED',
  'g2d_old_audit_checkpoint_class': 'HISTORICAL_PRECORRECTION_EVIDENCE',
  'g2d_accepted_normative_donor_sha256': '91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454',
  'g2d_accepted_repository_addendum_sha256': '1655fbed584e24c980dda723d9e7521b4540ec528128f436ec4f458f7f40563d',
@@ -831,9 +832,9 @@ G2D_CURRENT_BOUNDARY_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
  'g2d_v0310_corrected_implementation_exists': True,
  'g2d_v0310_corrected_implementation_committed': True,
  'g2d_v0310_independent_reaudit_required': True,
- 'g2d_v0310_independent_reaudit_passed': False,
+ 'g2d_v0310_independent_reaudit_passed': True,
  'g2d_v0310_additive_reclosure_required': True,
- 'g2d_v0310_additive_reclosure_completed': False,
+ 'g2d_v0310_additive_reclosure_completed': True,
  'g2d_v0310_e4_public_backpressure_calls_required': 2,
  'g2d_v0310_e4_public_backpressure_geometry_required': [[0, 3], [2, 1]],
  'g2d_v0310_e4_public_backpressure_latest_queue_counts_required': [7, 15],
@@ -862,7 +863,7 @@ G2D_CURRENT_BOUNDARY_FIELDS = {'g2d_status': 'REAUDIT_PENDING',
  'g2d_historical_precorrection_checkpoint_path': 'docs/fractal_runtime_v0_2_g2_d_checkpoint_v01.md',
  'g2d_historical_precorrection_checkpoint_sha256': 'f5bb19741ee992605ed772a282f4374bc3949508052edb09c8b3fdbbf210c1de',
  'g2d_historical_precorrection_evidence_only': True,
- 'g2d_v0310_status': 'REAUDIT_PENDING'}
+ 'g2d_v0310_status': 'CLOSED_PASS'}
 
 G2E_CURRENT_BOUNDARY_FIELDS = {'g2e3_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
  'g2e3_historical_v038_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D',
@@ -888,7 +889,7 @@ G2E_CURRENT_BOUNDARY_FIELDS = {'g2e3_status': 'REVALIDATION_PENDING_ON_CORRECTED
  'g2e4_implementation_started': True,
  'g2e4_strict_subtree_implementation_committed': True,
  'g2e4_strict_subtree_status': 'IMPLEMENTED_COMMITTED_PASS',
- 'g2e4_anti_gaming_acceptance': 'BLOCKED_PENDING_G2D_V0310_RECLOSURE',
+ 'g2e4_anti_gaming_acceptance': 'BLOCKED_PENDING_FRESH_G2E3_V06',
  'g2e4_anti_gaming_correction_authorized': False,
  'g2e5_status': 'NOT_STARTED_NOT_AUTHORIZED',
  'g2e6_status': 'NOT_STARTED_NOT_AUTHORIZED',
@@ -2185,7 +2186,7 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
         for evidence in (
             "CLOSED_PASS", G2D_V0310_INDEPENDENT_REAUDIT_PATH,
             G2D_V0310_CHECKPOINT_PATH, G2D_V0310_INDEPENDENT_REAUDIT_COMMIT,
-            'NOT_CREATED',
+            'b1ff61f42158d914b9afcf48e0d3ef5f9f980288d134130031e79c631f5101b6',
         ):
             assert evidence in closure_claim_row
     if G2D_V0310_EXPECTED_SUCCESSOR_PHASE == "final_e4_sync":

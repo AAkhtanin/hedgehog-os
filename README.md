@@ -36,7 +36,7 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
-Active G2-D v0.3.10 is `REAUDIT_PENDING`; G2-E3 `REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 anti-gaming `BLOCKED_PENDING_G2D_V0310_RECLOSURE`; Gate 2 `NOT_CLOSED`.
+Active G2-D v0.3.10 is `CLOSED_PASS`; G2-E3 `REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 anti-gaming `BLOCKED_PENDING_FRESH_G2E3_V06`; Gate 2 `NOT_CLOSED`.
 
 The C/M narrative below is retained as historical boundary evidence and is superseded as a statement of current lifecycle state.
 
@@ -91,7 +91,7 @@ g2b_status: CLOSED_PASS
 gate2_status: NOT_CLOSED
 g2c_status: CLOSED_PASS
 g2c_implementation_authorized: true
-g2d_status: REAUDIT_PENDING
+g2d_status: CLOSED_PASS
 g2d_contract_status: ACCEPTED_COMMITTED
 g2d_contract_commit: 99d6fbf3870b839852a4d3ea659eed548381f5ce
 g2d_release_consumer_maintenance_commit: 2c9f2060ab0abf6dffa270dac4ffd7095d091d08
@@ -108,16 +108,16 @@ g2d_corrected_implementation_parent_commit: 2c9f2060ab0abf6dffa270dac4ffd7095d09
 g2d_corrected_implementation_patch_sha256: f6ce9ada6fc2c557f0f1647d018b8f26b7d9a3d03ff3786dc5dda2a8c646ce94
 g2d_corrected_owner_evidence_bundle_sha256: 19b8695bafba7f9fff04eb9045d1e60b7e319d1d72f52c0f05724499c64de7d0
 g2d_independent_reaudit_required: true
-g2d_independent_reaudit_passed: false
-g2d_independent_reaudit_commit: NOT_CREATED
+g2d_independent_reaudit_passed: true
+g2d_independent_reaudit_commit: 5001db910fcc6e68cbe03a527eccd9455d7bf063
 g2d_independent_reaudit_path: docs/audit_reports/auditor_fractal_runtime_g2_d_v0310_profile_d_t12_revise_projection_correction_v01.log
-g2d_independent_reaudit_sha256: NOT_CREATED
+g2d_independent_reaudit_sha256: b1ff61f42158d914b9afcf48e0d3ef5f9f980288d134130031e79c631f5101b6
 g2d_additive_reclosure_required: true
-g2d_additive_reclosure_completed: false
-g2d_corrected_closure_claimed: false
+g2d_additive_reclosure_completed: true
+g2d_corrected_closure_claimed: true
 g2d_corrected_checkpoint_path: docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md
-g2d_corrected_checkpoint_sha256: NOT_CREATED
-g2d_corrected_closure_commit_identity: NOT_CREATED
+g2d_corrected_checkpoint_sha256: 226a96cb345a94e2f631fc7b914aafb5bbb7e3aaede924f10d3045d7491f72c0
+g2d_corrected_closure_commit_identity: NOT_SELF_RECORDED
 g2d_old_audit_checkpoint_class: HISTORICAL_PRECORRECTION_EVIDENCE
 g2d_accepted_normative_donor_sha256: 91264cc9f6177edc1779d3d7553b4ef4484d3db196900380a987b3ae0ccc1454
 g2d_accepted_repository_addendum_sha256: 1655fbed584e24c980dda723d9e7521b4540ec528128f436ec4f458f7f40563d
@@ -187,9 +187,9 @@ g2d_v0310_implementation_started: true
 g2d_v0310_corrected_implementation_exists: true
 g2d_v0310_corrected_implementation_committed: true
 g2d_v0310_independent_reaudit_required: true
-g2d_v0310_independent_reaudit_passed: false
+g2d_v0310_independent_reaudit_passed: true
 g2d_v0310_additive_reclosure_required: true
-g2d_v0310_additive_reclosure_completed: false
+g2d_v0310_additive_reclosure_completed: true
 g2d_v0310_e4_public_backpressure_calls_required: 2
 g2d_v0310_e4_public_backpressure_geometry_required: [[0, 3], [2, 1]]
 g2d_v0310_e4_public_backpressure_latest_queue_counts_required: [7, 15]
@@ -242,7 +242,7 @@ g2e4_implementation_authorized: true
 g2e4_implementation_started: true
 g2e4_strict_subtree_implementation_committed: true
 g2e4_strict_subtree_status: IMPLEMENTED_COMMITTED_PASS
-g2e4_anti_gaming_acceptance: BLOCKED_PENDING_G2D_V0310_RECLOSURE
+g2e4_anti_gaming_acceptance: BLOCKED_PENDING_FRESH_G2E3_V06
 g2e4_anti_gaming_correction_authorized: false
 g2e5_status: NOT_STARTED_NOT_AUTHORIZED
 g2e6_status: NOT_STARTED_NOT_AUTHORIZED
@@ -256,7 +256,7 @@ accepted_pre_r_h1_audit: docs/audit_reports/auditor_drs_semantic_address_space_r
 r_h1_audit_path: docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log
 r_h1_checkpoint_path: docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md
 historical_nested_objects_are_current_queue_authority: false
-g2d_v0310_status: REAUDIT_PENDING
+g2d_v0310_status: CLOSED_PASS
 g2e3_v0310_fresh_v06_passed: false
 g2e3_v0310_fresh_v06_archive_sha256: NOT_CREATED
 g2e3_v0310_fresh_source_observation_sha256: NOT_CREATED

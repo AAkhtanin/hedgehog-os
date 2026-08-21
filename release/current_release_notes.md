@@ -1,5 +1,18 @@
 # Current Engineering Notes
 
+## Current v0.3.10 successor summary
+
+- Active status: `REAUDIT_PENDING`.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
+- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_G2D_V0310_RECLOSURE`.
+- Implementation commit is `41db6c6bfbf787c04d288c5ddb40e285118d06c1`.
+- Gate 2 remains `NOT_CLOSED`; real-world effects remain zero.
+
+## Historical C/M boundary — superseded as current state
+
+# Current Engineering Notes
+
 These are current engineering notes, not a public release announcement.
 
 ## G2-D v0.3.10 contract-only correction hop

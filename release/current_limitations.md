@@ -1,5 +1,18 @@
 # Current Limitations
 
+## Current v0.3.10 successor summary
+
+- Active G2-D v0.3.10 is `REAUDIT_PENDING`.
+- G2-E3 is `REVALIDATION_PENDING_ON_CORRECTED_G2D`.
+- G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
+- G2-E4 anti-gaming acceptance is `BLOCKED_PENDING_G2D_V0310_RECLOSURE`.
+- Implementation commit is `41db6c6bfbf787c04d288c5ddb40e285118d06c1`.
+- Gate 2 remains `NOT_CLOSED`; real-world effects remain zero.
+
+## Historical C/M boundary — superseded as current state
+
+# Current Limitations
+
 - R-H1, Gate 1, the Two-Domain programme, G2-A, G2-B, and G2-C are `CLOSED_PASS`.
 - Historical pre-correction, v0.3.7, and v0.3.8 G2-D evidence remains immutable for exact historical bytes only.
 - Historical G2-D v0.3.9 is `CLOSED_PASS_ON_V039_BYTES`; its cumulative addendum suffix SHA-256 is `1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445`.

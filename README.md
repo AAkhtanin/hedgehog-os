@@ -36,6 +36,11 @@ finally accepted. Audit/hash-chain records continuity, not truth.
 <!-- BEGIN HEDGEHOG CURRENT ENGINEERING BOUNDARY -->
 ## Current Engineering Boundary
 
+Active G2-D v0.3.10 is `REAUDIT_PENDING`; G2-E3 `REVALIDATION_PENDING_ON_CORRECTED_G2D`; G2-E4 anti-gaming `BLOCKED_PENDING_G2D_V0310_RECLOSURE`; Gate 2 `NOT_CLOSED`.
+
+The C/M narrative below is retained as historical boundary evidence and is superseded as a statement of current lifecycle state.
+
+
 R-H1, G2-A, G2-B, and G2-C are `CLOSED_PASS`. G2-D v0.3.9 remains
 `CLOSED_PASS_ON_V039_BYTES` for its exact historical bytes. Active G2-D
 v0.3.10 is a contract-only correction hop:
@@ -86,22 +91,22 @@ g2b_status: CLOSED_PASS
 gate2_status: NOT_CLOSED
 g2c_status: CLOSED_PASS
 g2c_implementation_authorized: true
-g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
-g2d_contract_status: ACCEPTED_IMPLEMENTATION_PENDING
-g2d_contract_commit: NOT_SELF_RECORDED
-g2d_release_consumer_maintenance_commit: NOT_STARTED
+g2d_status: REAUDIT_PENDING
+g2d_contract_status: ACCEPTED_COMMITTED
+g2d_contract_commit: 99d6fbf3870b839852a4d3ea659eed548381f5ce
+g2d_release_consumer_maintenance_commit: 2c9f2060ab0abf6dffa270dac4ffd7095d091d08
 g2d_correction_implementation_authorized: false
 g2d_implementation_action_open: false
-g2d_corrected_implementation_exists: false
-g2d_contract_only_claim: true
-g2d_corrected_runtime_acceptance_claimed: false
-g2d_runtime_implementation_status: NOT_IMPLEMENTED_NOT_AUTHORIZED
-g2d_full_owner_acceptance_passed: false
-g2d_corrected_implementation_committed: false
-g2d_corrected_implementation_commit: NOT_CREATED
-g2d_corrected_implementation_parent_commit: NOT_APPLICABLE
-g2d_corrected_implementation_patch_sha256: NOT_CREATED
-g2d_corrected_owner_evidence_bundle_sha256: NOT_CREATED
+g2d_corrected_implementation_exists: true
+g2d_contract_only_claim: false
+g2d_corrected_runtime_acceptance_claimed: true
+g2d_runtime_implementation_status: IMPLEMENTED_COMMITTED_FULL_ACCEPTANCE_PASS
+g2d_full_owner_acceptance_passed: true
+g2d_corrected_implementation_committed: true
+g2d_corrected_implementation_commit: 41db6c6bfbf787c04d288c5ddb40e285118d06c1
+g2d_corrected_implementation_parent_commit: 2c9f2060ab0abf6dffa270dac4ffd7095d091d08
+g2d_corrected_implementation_patch_sha256: f6ce9ada6fc2c557f0f1647d018b8f26b7d9a3d03ff3786dc5dda2a8c646ce94
+g2d_corrected_owner_evidence_bundle_sha256: 19b8695bafba7f9fff04eb9045d1e60b7e319d1d72f52c0f05724499c64de7d0
 g2d_independent_reaudit_required: true
 g2d_independent_reaudit_passed: false
 g2d_independent_reaudit_commit: NOT_CREATED
@@ -178,9 +183,9 @@ g2d_v0310_accepted_v039_basis_sha256: 1bbe028a4c757330b4ba94aec461e5bfbb1d1ef749
 g2d_v0310_repository_basis_head: 36c43db9045d56666e961b54b4f9b272079f41a8
 g2d_v0310_contract_hop_completed: true
 g2d_v0310_implementation_authorized: false
-g2d_v0310_implementation_started: false
-g2d_v0310_corrected_implementation_exists: false
-g2d_v0310_corrected_implementation_committed: false
+g2d_v0310_implementation_started: true
+g2d_v0310_corrected_implementation_exists: true
+g2d_v0310_corrected_implementation_committed: true
 g2d_v0310_independent_reaudit_required: true
 g2d_v0310_independent_reaudit_passed: false
 g2d_v0310_additive_reclosure_required: true
@@ -251,6 +256,12 @@ accepted_pre_r_h1_audit: docs/audit_reports/auditor_drs_semantic_address_space_r
 r_h1_audit_path: docs/audit_reports/auditor_clean_clone_licensing_release_spine_reconciliation_r_h1_v01.log
 r_h1_checkpoint_path: docs/clean_clone_licensing_release_spine_reconciliation_r_h1_checkpoint_v01.md
 historical_nested_objects_are_current_queue_authority: false
+g2d_v0310_status: REAUDIT_PENDING
+g2e3_v0310_fresh_v06_passed: false
+g2e3_v0310_fresh_v06_archive_sha256: NOT_CREATED
+g2e3_v0310_fresh_source_observation_sha256: NOT_CREATED
+g2e3_v0310_fresh_member_observation_sha256: NOT_CREATED
+g2e3_v0310_fresh_member_identities_sha256: NOT_CREATED
 ```
 
 - `V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE=YES`.

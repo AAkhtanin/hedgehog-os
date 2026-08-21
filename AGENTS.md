@@ -59,7 +59,7 @@ text Observable Zero Trust Runtime proof → Root-controlled Fractal DAG Executo
 
 Current checkpoint: G2-D v0.3.10 Profile-D correction CLOSED_PASS.
 
-Current successor facts: implementation `41db6c6bfbf787c04d288c5ddb40e285118d06c1`; G2-E3 `REVALIDATION_PENDING_ON_CORRECTED_G2D`; E4 anti-gaming `BLOCKED_PENDING_FRESH_G2E3_V06`; Gate 2 `NOT_CLOSED`.
+Current successor facts: implementation `41db6c6bfbf787c04d288c5ddb40e285118d06c1`; G2-E3 `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`; E4 anti-gaming `PASS`; Gate 2 `NOT_CLOSED`.
 
 Historical C/M boundary — superseded as current state
 

@@ -437,7 +437,7 @@ G2D_V0310_RECLOSURE_PATHS = ('AGENTS.md',
 G2D_V0310_E4_CODE_SUBJECT = 'Close G2-E4 anti-gaming acceptance correction'
 G2D_V0310_E4_CODE_PATHS = ('hedgehog/kernel/continuous_delta_runtime_v01.py',
  'tests/test_continuous_delta_runtime_g2_e_v01.py')
-G2D_V0310_E4_CODE_COMMIT = 'NOT_CREATED'
+G2D_V0310_E4_CODE_COMMIT = '21176be090cab9aa9b8ea9cce2ae052bed8039da'
 G2D_V0310_FINAL_SYNC_SUBJECT = 'Synchronize G2-E3 revalidation and G2-E4 acceptance'
 G2D_V0310_FINAL_SYNC_PATHS = ('AGENTS.md',
  'README.md',
@@ -452,8 +452,9 @@ G2D_V0310_IMPLEMENTATION_CLAIM_ID = "claim_g2d_v0310_profile_d_t12_projection_im
 G2D_V0310_CLOSURE_CLAIM_ID = "claim_g2d_v0310_profile_d_t12_projection_correction_closed_pass"
 G2E4_V0310_ACCEPTANCE_CLAIM_ID = "claim_g2e_v013_e4_anti_gaming_acceptance_pass"
 G2D_V0310_SUCCESSOR_CLAIM_IDS = ('claim_g2d_v0310_profile_d_t12_projection_implementation_reaudit_pending',
- 'claim_g2d_v0310_profile_d_t12_projection_correction_closed_pass')
-G2D_V0310_EXPECTED_SUCCESSOR_PHASE = 'reclosure'
+ 'claim_g2d_v0310_profile_d_t12_projection_correction_closed_pass',
+ 'claim_g2e_v013_e4_anti_gaming_acceptance_pass')
+G2D_V0310_EXPECTED_SUCCESSOR_PHASE = 'final_e4_sync'
 G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'CLOSED_PASS',
  'g2d_contract_status': 'ACCEPTED_COMMITTED',
  'g2d_contract_commit': '99d6fbf3870b839852a4d3ea659eed548381f5ce',
@@ -490,18 +491,36 @@ G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'CLOSED_PASS',
  'g2d_v0310_additive_reclosure_required': True,
  'g2d_v0310_additive_reclosure_completed': True,
  'g2d_v0310_status': 'CLOSED_PASS',
- 'g2e3_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
- 'g2e3_post_v0310_implementation_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
- 'g2e3_fresh_v06_required_after_v0310_reclosure': True,
- 'g2e3_v0310_fresh_v06_passed': False,
- 'g2e3_v0310_fresh_v06_archive_sha256': 'NOT_CREATED',
- 'g2e3_v0310_fresh_source_observation_sha256': 'NOT_CREATED',
- 'g2e3_v0310_fresh_member_observation_sha256': 'NOT_CREATED',
- 'g2e3_v0310_fresh_member_identities_sha256': 'NOT_CREATED',
+ 'g2e3_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D',
+ 'g2e3_post_v0310_implementation_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D',
+ 'g2e3_fresh_v06_required_after_v0310_reclosure': False,
+ 'g2e3_v0310_fresh_v06_passed': True,
+ 'g2e3_v0310_fresh_v06_archive_sha256': '8301e6886ab1400fabffe1c850205c73b02919dc844dffe119a42550eb92b4ba',
+ 'g2e3_v0310_fresh_source_observation_sha256': 'fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c',
+ 'g2e3_v0310_fresh_member_observation_sha256': 'fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467',
+ 'g2e3_v0310_fresh_member_identities_sha256': '8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39',
  'g2e4_strict_subtree_status': 'IMPLEMENTED_COMMITTED_PASS',
- 'g2e4_anti_gaming_acceptance': 'BLOCKED_PENDING_FRESH_G2E3_V06',
+ 'g2e4_anti_gaming_acceptance': 'PASS',
  'g2e4_anti_gaming_correction_authorized': False,
- 'gate2_status': 'NOT_CLOSED'}
+ 'gate2_status': 'NOT_CLOSED',
+ 'g2e3_post_reclosure_v06_passed': True,
+ 'g2e3_post_reclosure_v06_archive_sha256': '8301e6886ab1400fabffe1c850205c73b02919dc844dffe119a42550eb92b4ba',
+ 'g2e3_baseline_source_observation_sha256': 'fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c',
+ 'g2e3_baseline_member_observation_sha256': 'fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467',
+ 'g2e3_baseline_member_identities_sha256': '8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39',
+ 'g2e4_contract_status': 'HISTORICAL_CONTRACT_HOP_COMPLETED',
+ 'g2e4_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS',
+ 'g2e4_acceptance_correction_commit': '21176be090cab9aa9b8ea9cce2ae052bed8039da',
+ 'g2e4_acceptance_correction_patch_sha256': 'ea1b030bb40e52aeb30ea5d49599ba2e3a59f50398ef8d74234ab77e30842157',
+ 'g2e4_acceptance_owner_evidence_sha256': '92390ad076307a73473f1bb22b65748bbc2e25bcdccd6fe0250312d26b124b31',
+ 'g2e5_status': 'NOT_STARTED_NOT_AUTHORIZED',
+ 'g2e6_status': 'NOT_STARTED_NOT_AUTHORIZED',
+ 'g2f_status': 'NOT_STARTED_NOT_AUTHORIZED',
+ 'public_release_claimed': False,
+ 'rc2_claimed': False,
+ 'production_readiness_claimed': False,
+ 'production_security_certification_claimed': False,
+ 'g2e3_post_corrected_g2d_landing_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D'}
 G2D_TRANSITION_FACADE_CONSUMER_MAINTENANCE_COMMIT = (
     "a2d04e03d2b3b1b2b0beeaf407234ae091ae8eb7"
 )
@@ -865,14 +884,14 @@ G2D_CURRENT_BOUNDARY_FIELDS = {'g2d_status': 'CLOSED_PASS',
  'g2d_historical_precorrection_evidence_only': True,
  'g2d_v0310_status': 'CLOSED_PASS'}
 
-G2E_CURRENT_BOUNDARY_FIELDS = {'g2e3_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
+G2E_CURRENT_BOUNDARY_FIELDS = {'g2e3_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D',
  'g2e3_historical_v038_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_V038_G2D',
- 'g2e3_post_corrected_g2d_landing_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
+ 'g2e3_post_corrected_g2d_landing_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D',
  'g2e3_post_v039_implementation_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
- 'g2e3_post_v0310_implementation_status': 'REVALIDATION_PENDING_ON_CORRECTED_G2D',
- 'g2e3_fresh_v06_required_after_v0310_reclosure': True,
+ 'g2e3_post_v0310_implementation_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D',
+ 'g2e3_fresh_v06_required_after_v0310_reclosure': False,
  'g2e3_post_reclosure_v06_passed': True,
- 'g2e3_post_reclosure_v06_archive_sha256': '09bfe734048febfcf1ea32cc35195fb494b73c36a360163c8329aaf5e3fc2ca8',
+ 'g2e3_post_reclosure_v06_archive_sha256': '8301e6886ab1400fabffe1c850205c73b02919dc844dffe119a42550eb92b4ba',
  'g2e3_baseline_source_observation_sha256': 'fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c',
  'g2e3_baseline_member_observation_sha256': 'fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467',
  'g2e3_baseline_member_identities_sha256': '8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39',
@@ -883,22 +902,25 @@ G2E_CURRENT_BOUNDARY_FIELDS = {'g2e3_status': 'REVALIDATION_PENDING_ON_CORRECTED
  'g2e4_public_seam_register_sha256': 'a10be3df58ed7fbf32fcb853c7de93f76eec5b3070120b0f895b27340cf2aed2',
  'g2e4_two_root_pair_register_sha256': 'a8a8fd530d95ec4bce8a0faf14044c8b98f53973651cf65784a717d69e02ce33',
  'g2e4_contract_accepted': True,
- 'g2e4_contract_status': 'ACCEPTED_V0310_SCOPE_CORRECTION_IMPLEMENTATION_PENDING',
- 'g2e4_status': 'IMPLEMENTED_COMMITTED_STRICT_SUBTREE_PASS_ANTI_GAMING_ACCEPTANCE_BLOCKED',
+ 'g2e4_contract_status': 'HISTORICAL_CONTRACT_HOP_COMPLETED',
+ 'g2e4_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS',
  'g2e4_implementation_authorized': True,
  'g2e4_implementation_started': True,
  'g2e4_strict_subtree_implementation_committed': True,
  'g2e4_strict_subtree_status': 'IMPLEMENTED_COMMITTED_PASS',
- 'g2e4_anti_gaming_acceptance': 'BLOCKED_PENDING_FRESH_G2E3_V06',
+ 'g2e4_anti_gaming_acceptance': 'PASS',
  'g2e4_anti_gaming_correction_authorized': False,
  'g2e5_status': 'NOT_STARTED_NOT_AUTHORIZED',
  'g2e6_status': 'NOT_STARTED_NOT_AUTHORIZED',
  'g2f_status': 'NOT_STARTED_NOT_AUTHORIZED',
- 'g2e3_v0310_fresh_v06_passed': False,
- 'g2e3_v0310_fresh_v06_archive_sha256': 'NOT_CREATED',
- 'g2e3_v0310_fresh_source_observation_sha256': 'NOT_CREATED',
- 'g2e3_v0310_fresh_member_observation_sha256': 'NOT_CREATED',
- 'g2e3_v0310_fresh_member_identities_sha256': 'NOT_CREATED'}
+ 'g2e3_v0310_fresh_v06_passed': True,
+ 'g2e3_v0310_fresh_v06_archive_sha256': '8301e6886ab1400fabffe1c850205c73b02919dc844dffe119a42550eb92b4ba',
+ 'g2e3_v0310_fresh_source_observation_sha256': 'fb2687f08911e5420d03ec40fef02fde3794edc1e03d637df9f8d26c062b3f3c',
+ 'g2e3_v0310_fresh_member_observation_sha256': 'fbd40637c2082ec385204a53a2173695a2247b6cd8e908f34349d75d6a1e3467',
+ 'g2e3_v0310_fresh_member_identities_sha256': '8924a3971624823805d2ed7b99adff5a68ca96d07aa67bb516d744e7f3877b39',
+ 'g2e4_acceptance_correction_commit': '21176be090cab9aa9b8ea9cce2ae052bed8039da',
+ 'g2e4_acceptance_correction_patch_sha256': 'ea1b030bb40e52aeb30ea5d49599ba2e3a59f50398ef8d74234ab77e30842157',
+ 'g2e4_acceptance_owner_evidence_sha256': '92390ad076307a73473f1bb22b65748bbc2e25bcdccd6fe0250312d26b124b31'}
 
 CURRENT_BOUNDARY_FIELDS = {
     **G2D_CURRENT_BOUNDARY_FIELDS,
@@ -2198,8 +2220,8 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
         assert "| ACCEPTANCE_PASS |" in e4_claim_row
         for evidence in (
             "ACCEPTANCE_PASS", G2D_V0310_E4_CODE_COMMIT,
-            'NOT_CREATED', 'NOT_CREATED',
-            'NOT_CREATED',
+            'ea1b030bb40e52aeb30ea5d49599ba2e3a59f50398ef8d74234ab77e30842157', '92390ad076307a73473f1bb22b65748bbc2e25bcdccd6fe0250312d26b124b31',
+            '8301e6886ab1400fabffe1c850205c73b02919dc844dffe119a42550eb92b4ba',
         ):
             assert evidence in e4_claim_row
     for required in (

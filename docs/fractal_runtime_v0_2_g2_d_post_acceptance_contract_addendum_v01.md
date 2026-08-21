@@ -1,3 +1,554 @@
+# G2-D Post-Acceptance Contract Addendum Version 0.3.10
+
+## Current Accepted v0.3.10 Correction and E4 Scope-Reconciliation Metadata
+
+```text
+document_status: POST_ACCEPTANCE_CORRECTION_ADDENDUM
+document_revision: v0.3.10
+guardian_review_status: ACCEPTED_WITH_MANDATORY_NARROW_OVERLAY
+guardian_ruling: APPROVE_PROFILE_D_CORRECTION_AND_E4_BACKPRESSURE_SCOPE_RECONCILIATION
+accepted_v039_basis_revision: v0.3.9
+accepted_v039_basis_sha256: 1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445
+repository_basis_branch: main
+repository_basis_head: 36c43db9045d56666e961b54b4f9b272079f41a8
+repository_basis_origin_main: 36c43db9045d56666e961b54b4f9b272079f41a8
+V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE: YES
+V0310_G2D_RUNTIME_SEMANTICS_CHANGED: NO
+V0310_G2E4_ACCEPTANCE_OVERLAY_SEMANTICS_CHANGED: YES
+V0310_ROLE: EXPLICIT_PROFILE_D_T12_IMPLEMENTATION_NONCONFORMANCE_AND_E4_BACKPRESSURE_SCOPE_CORRECTION
+G2D_POSITIVE_BACKPRESSURE_LAW_CHANGED: NO
+G2D_PUBLIC_REVISE_SEMANTICS_CHANGED: NO
+implementation_authorized: false
+implementation_started: false
+contract_hop_completed: true
+implementation_repository_patch_created: false
+release_consumer_maintenance_authorized: true
+release_consumer_maintenance_required: true
+release_consumer_maintenance_status: NOT_STARTED
+release_consumer_maintenance_scope: tests/test_repository_release_spine_v01.py
+parked_primary_e4_patch_sha256: fe6cecec37512faad1c36eaea2a6ad61f4173998dfa09a993c0c889a1857dee0
+parked_primary_e4_patch_bytes: 117645
+parked_primary_e4_patch_lf: 2708
+parked_primary_e4_runtime_postimage_sha256: 825fb732504725d200761cb2dbfddbf0f6ca94b5b946f32b0bdc8b5876f1985f
+parked_primary_e4_test_postimage_sha256: 49982e9dbf1968550c46ddaf04770f1d5d81bfa3b6f32fc8612ee7ca631d456f
+g2e4_scope_correction_authorized: false
+g2e4_public_backpressure_calls_required: 2
+g2e4_public_backpressure_geometry_required: ((0,3),(2,1))
+g2e4_public_backpressure_latest_queue_counts_required: (7,15)
+g2e4_public_backpressure_results_required: NONE_NONE
+g2e4_nonempty_backpressure_state_required: false
+g2e4_explicit_public_revise_calls_required: 4
+g2d_internal_public_revise_calls_per_reconstruction_required: 0
+current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+historical_v039_g2d_status: CLOSED_PASS_ON_V039_BYTES
+current_g2e3_status: REVALIDATION_PENDING_ON_CORRECTED_G2D
+current_g2e4_strict_subtree_status: IMPLEMENTED_COMMITTED_PASS
+current_g2e4_anti_gaming_status: BLOCKED_PENDING_G2D_V0310_RECLOSURE
+g2e5_status: NOT_STARTED_NOT_AUTHORIZED
+g2e6_status: NOT_STARTED_NOT_AUTHORIZED
+g2f_status: NOT_STARTED_NOT_AUTHORIZED
+gate2_status: NOT_CLOSED
+```
+
+Version v0.3.10 records one implementation nonconformance in the accepted
+Profile-D child t12 projection and corrects one proven overconstraint in the
+G2-E4 acceptance overlay. These are separate scopes:
+
+- the accepted G2-D runtime semantics do not change;
+- the G2-D positive backpressure law does not change;
+- only the G2-E4 requirement to manufacture a nonempty backpressure carrier
+  in a lawful non-exhausted strict-selective frontier changes.
+
+This contract-only hop authorizes no implementation. It changes no runtime,
+schema, demo, facade, Transition Registry, G2-E runtime, Root, Post V&V, GT,
+G2-C, ABI, D5, Living, Conformance, or V06 byte.
+
+It does authorize one nonsemantic release-consumer maintenance hop after the
+contract commit and before any runtime authorization. That hop may modify only
+`tests/test_repository_release_spine_v01.py`. It creates no runtime or G2-D
+test implementation, changes no contract or semantic law, grants no authority,
+and claims no acceptance or closure.
+
+## 1. Guardian Ruling and Exact Supersession Boundary
+
+The controlling guardian result is exact:
+
+```text
+GUARDIAN_RULING=APPROVE_PROFILE_D_CORRECTION_AND_E4_BACKPRESSURE_SCOPE_RECONCILIATION
+V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE=YES
+V0310_G2D_RUNTIME_SEMANTICS_CHANGED=NO
+V0310_G2E4_ACCEPTANCE_OVERLAY_SEMANTICS_CHANGED=YES
+G2D_POSITIVE_BACKPRESSURE_LAW_CHANGED=NO
+G2D_PUBLIC_SURFACE_CHANGED=NO
+G2D_SCHEMA_CHANGED=NO
+NEW_ARCHITECTURE_REQUIRED=NO
+IMPLEMENTATION_AUTHORIZED=NO
+```
+
+This v0.3.10 overlay supersedes only:
+
+1. the v0.3.8 Section 8 statement that the standard G2-E4 conditional path
+   must produce a nonempty typed backpressure carrier; and
+2. the v0.3.9 Section 7 statement that the same public path must carry
+   nonempty backpressure states.
+
+It does not supersede the requirement to execute the real public G2-D
+backpressure operation. It does not supersede nonempty revise observations,
+partial-failure IDs, unresolved IDs, the exact public reason set, the final
+non-ACCEPT Root decision, strict sibling preservation, or any authority and
+zero-effect law.
+
+The complete accepted v0.3.9 addendum is retained byte-exact below. Every
+v0.3.9 law outside this exact supersession boundary remains controlling.
+
+## 2. Existing Profile-D t12 Duty and Proven v0.3.9 Nonconformance
+
+The accepted t12 law already permits a valid, settled, non-eligible revise
+observation to map an exact D3-local child `VALIDATING` occurrence to
+`DEADEND`. The observation must be produced by the public revise evaluator,
+must replay the exact historical t06 origin, and must preserve the source
+queue observations, evidence, advisories, queue reasons, cell, node, round,
+and budget identities.
+
+The v0.3.9 runtime reaches the correct public t12 decision and queue entry, but
+the Profile-D artifact projection later applies the ordinary local outcome
+again. For a dependency-free child D3-local node that ordinary material is
+`COMPLETED`; the projector therefore rejects the already accepted revise
+target `DEADEND`. The accepted semantic decision is correct and the later
+projection is nonconformant:
+
+```text
+V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE=YES
+V0310_G2D_RUNTIME_SEMANTICS_CHANGED=NO
+PROFILE_D_PUBLIC_T12_DECISION_REACHABLE=YES
+PROFILE_D_PUBLIC_T12_ARTIFACT_PROJECTION_CONFORMANT=NO
+```
+
+No Root-only substitution, ordinary `COMPLETED` laundering, manually built
+revise object, caller-selected outcome, or E4-side adapter may replace the
+Profile-D correction.
+
+The clean v0.3.9 transition reconstruction also calls the public
+`evaluate_fractal_revise_observation_v02` internally. Once the Profile-D
+projector consumes the same reconstruction, that nesting inflates captured
+public-call accounting (101 observed calls in the repaired contour, and more
+than four even without the projector). This is an implementation
+nonconformance, not a semantic-law change. E4 owns exactly four explicit
+public revise calls; internal transition/projector reconstruction owns zero
+public calls.
+
+## 3. Future Narrow G2-D v0.3.10 Runtime Correction
+
+A later separately owner-authorized implementation may modify exactly:
+
+1. `hedgehog/kernel/fractal_runtime_v02.py`
+2. `tests/test_fractal_runtime_g2_d_v02.py`
+
+No public type, field, signature, schema definition, reason, validation target,
+failure stage, Transition rule, facade name, authority, or effect law may
+change.
+
+The future correction must:
+
+1. consume settled revise observations already constructed through
+   `evaluate_fractal_revise_observation_v02`;
+2. require the exact child Profile-D topology, cell, node, queue, t06 origin,
+   source observations, evidence, advisories, queue reasons, and budget
+   identities;
+3. reconstruct and validate the settled observation through public semantics,
+   not object identity or a copied PASS label;
+4. select revise-derived `DEADEND` before the generic D3-local ordinary
+   outcome can mask it in Profile-D projection;
+5. preserve the exact t12 rule, decision, reason, target entry, target
+   artifact, copied queue support reasons, and no-budget-successor law;
+6. preserve ordinary dependency-free child `COMPLETED` when no accepted
+   revise-no-progress observation exists;
+7. place exact deterministic revise reconstruction behind one private helper;
+   the public evaluator delegates to it, while transition and Profile-D
+   projection call it directly and create no nested public calls;
+8. preserve exactly four explicit public E4 revise calls and zero internal
+   public revise calls per reconstruction;
+9. filter the already validated settled revise ledger for the exact
+   noneligible `DEADEND` observation bound to the Profile-D child topology,
+   cell, `VALIDATING` queue entry, and budget identities; require exactly one
+   such qualifying observation; permit the lawful eligible positive
+   observation bound to the same queue entry and revision without treating it
+   as a competing `DEADEND` candidate; and preserve contextual rejection of
+   missing, ambiguous, duplicate, foreign, reordered, wrong-cell, wrong-node,
+   wrong-round, wrong-origin, wrong-queue, and wrong-budget revise material;
+   and
+10. preserve exact-repeat/no-spin and all positive backpressure behavior.
+
+The existing public t12 test item must be strengthened without adding a test
+function or parametrized item. G2-D geometry remains 83 test functions and 92
+collected items. Private reconstruction is not a second semantic path: public
+and internal consumers must return the same canonical decision or fail closed.
+
+The local Profile-D selector must not require the total number of observations
+bound to the `VALIDATING` queue entry to equal one. The accepted E4 contour
+stores an eligible positive observation followed by a noneligible `DEADEND`
+observation on the same exact topology, cell, queue, budget, and revision
+binding. Only the latter qualifies for `DEADEND` projection. Zero qualifying
+observations is missing proof; more than one qualifying noneligible `DEADEND`
+observation is real local ambiguity. Either case fails closed. The lawful
+eligible positive observation is neither extra proof nor ambiguity, and its
+presence must not change the four-explicit/zero-internal public-call law.
+
+## 4. Proven Strict-Selective E4 Backpressure Geometry
+
+The standard conditional G2-E4 profile is a strict affected subtree. Its two
+required public backpressure evaluations observe different lawful frontiers
+in this exact order:
+
+```text
+call 1 baseline: max_parallelism=3, current_parallelism=0, latest READY=0,
+                 occupied=0, residual=3, lawful latest queue entries=7
+call 2 conditional: max_parallelism=3, current_parallelism=1, latest READY=1,
+                    occupied=2, residual=1, lawful latest queue entries=15
+public evaluate_fractal_backpressure_v02 calls = 2
+public results = (None, None)
+latest queue order = exact append-log order at both calls
+```
+
+Capacity is not exhausted at either call. No dependency-satisfied PENDING
+occurrence is blocked solely by zero residual capacity. Public G2-D therefore
+returns `None` twice exactly as designed.
+
+The unaffected sibling is already terminal and must remain byte-exact. The
+other selected child nodes are linearly dependency-bound. Creating an extra
+RUNNING, READY, or eligible PENDING occurrence would fabricate source work,
+execute an unaffected sibling, widen the affected closure, or violate stable
+topology and append-only history. Lowering `max_parallelism`, injecting a
+synthetic third slot, transplanting the separate full-fractal 3/3 witness, or
+constructing a fake `FractalBackpressureStateV02` is forbidden.
+
+The public nullable result is a semantic result. `None` is not a malformed
+typed state and must not be passed to
+`validate_fractal_backpressure_state_v02`.
+
+## 5. Preserved Positive G2-D Backpressure Law
+
+The accepted positive G2-D witness remains exact and unchanged:
+
+- two accepted parent FRACTAL_CELL occurrences are RUNNING;
+- one accepted child node occurrence is READY;
+- another accepted dependency-satisfied child occurrence is PENDING;
+- `occupied=3`, `residual=0`, and the public evaluator returns one typed
+  backpressure state;
+- exact t03 defer closure, reconsideration, capacity release, later admission,
+  append-only history, and no-spin behavior remain required.
+
+The existing
+`test_d3_s0_t03_postclosure_suppression_s1_no_spin_v035` remains a mandatory
+positive control. The future Profile-D correction may not change the public
+backpressure evaluator or weaken this witness.
+
+## 6. Corrected Mandatory G2-E4 Public End-to-End Overlay
+
+After v0.3.10 implementation, acceptance, commit, independent re-audit,
+additive reclosure, and one fresh unchanged G2-E3 V06, the parked G2-E4
+candidate resumes through the public path:
+
+```text
+run_continuous_delta_runtime_v01
+-> execute_selective_recomputation_v01
+-> public conditional branch
+```
+
+The conditional profile must execute and carry:
+
+```text
+two public backpressure evaluations at ((occupied,residual)=(0,3),(2,1))
+with latest queue counts (7,15) in append-log order -> (None, None)
++ exactly four explicit public revise evaluations
++ zero nested public revise evaluations from transition/projector reconstruction
++ nonempty revise observations including exact-repeat/no-progress
++ nonempty partial failures
++ nonempty unresolved artifact IDs
+-> complete publicly valid G2-D evidence family
+-> SelectiveRecomputationResultV01
+-> ContinuousDeltaRuntimeTraceV01
+-> ContinuousDeltaRuntimeReportV01
+-> non-ACCEPT Root decision
+-> bundle = None
+-> report.status = FAIL_CLOSED
+```
+
+The exact strict-selective conditional result is:
+
+```text
+recomputed_g2d_bundle.backpressure_states = ()
+runtime_trace.backpressure_state_ids = ()
+g2d_transition_backpressure_deferred = absent
+g2e_recomputation_budget_exceeded = absent
+result.reason_codes = (
+  g2e_recomputation_no_progress,
+  g2e_transition_selective_recomputation_blocked,
+)
+```
+
+The complete public path still requires exactly two public calls. Zero, one,
+three, or more calls fail acceptance. A non-`None` state at either frozen
+frontier, any t03 defer occurrence, any budget-exceeded reason, or any
+success-laundered carrier fails closed.
+
+Contextual validators must still reject missing, extra, duplicate, foreign,
+reordered, or success-laundered revise, partial-failure, and unresolved
+carriers. t10, an accepted FINALIZED report artifact, and an accepted E4
+bundle remain absent. The normal strict-subtree PASS path remains free of
+synthetic failure carriers.
+
+## 7. E4 Acceptance Assertions and Call Accounting
+
+The existing
+`test_e4_partial_failure_backpressure_revise_no_progress_v01` must prove,
+through captured public calls rather than a private helper:
+
+1. both call frontiers have `max_parallelism=3`;
+2. call 1 has `(current_parallelism, latest READY, occupied, residual) =
+   (0,0,0,3)` and exactly 7 lawful latest queue entries;
+3. call 2 has `(current_parallelism, latest READY, occupied, residual) =
+   (1,1,2,1)` and exactly 15 lawful latest queue entries;
+4. both queue-entry tuples are the exact append-log latest projections;
+5. the ordered public result tuple is `(None, None)`;
+6. backpressure state and trace-ID tuples are empty;
+7. no t03 transition or backpressure queue support reason exists;
+8. the exact two public E4 reasons exclude budget exhaustion;
+9. two stored revise observations in exact order -- eligible positive followed
+   by noneligible `DEADEND` -- share the exact `VALIDATING` queue and revision
+   binding, exactly one qualifies for Profile-D `DEADEND` projection, and the
+   partial failure plus nonempty unresolved IDs are publicly and contextually
+   valid;
+10. exactly four explicit public revise calls are observed and internal
+    transition/projector reconstruction adds zero public calls;
+11. a forged budget-exceeded reason fails contextual validation;
+12. the final Root decision is non-ACCEPT and no t10 or accepted bundle exists;
+13. the baseline and unaffected sibling canonical bytes remain unchanged.
+
+Final E4 call accounting remains controlling:
+
+```text
+E4_PAIR_CALL_ACCOUNTING=2/2
+E4_FOCUSED_CALL_ACCOUNTING=2/2
+E4_COMPLETE_FILE_CALL_ACCOUNTING=3/3
+```
+
+No extra call may be introduced to satisfy a counter.
+
+## 8. Preserved Geometry, Authority, and Protected Surfaces
+
+The future G2-D correction preserves:
+
+```text
+public dataclass types = 21
+serialized types = 18
+runtime-only types = 3
+canonical-module public functions = 116
+module __all__ entries = 137
+direct package G2-D attributes = 143
+validation targets = 35
+failure stages = 30
+public reason codes = 220
+Transition rules = 17
+G2-D test function nodes = 83
+G2-D collected items = 92
+```
+
+Root remains the only final authority. G2-C owns the accepted Root-reviewed
+route. G2-D owns RuntimeExecutionTopology and stable topology-node and cell
+IDs. G2-D imports no G2-E module or type. Post V&V validates and GT advises.
+
+No successor baseline, permission, ActionCommitPacket, receipt, FinalOutput,
+DRS write, provider/model/network/connector authority, external-DRS action,
+or real-world effect is created or claimed.
+
+The G2-D schema, demo, Transition Registry, package facade, Root, Post V&V,
+GT, G2-C, G2-E addendum and preflight, D5, Living, Conformance, roadmaps, and
+V06 runner remain protected in the contract-only hop.
+
+## 9. Future Acceptance and Reclosure
+
+### 9.1 Mandatory release-consumer maintenance bridge
+
+The contract commit cannot be followed directly by the two-path runtime
+repair. A mandatory one-path release-consumer maintenance commit must first
+align the release-spine test with the exact implementation candidate while
+preserving all historical checks.
+
+The exact commit subjects are reserved as:
+
+```text
+contract: Accept G2-D v0.3.10 Profile-D and E4 scope correction contract
+maintenance: Align G2-D v0.3.10 release tests with implementation candidate
+implementation: Implement G2-D v0.3.10 Profile-D t12 projection correction
+```
+
+The maintenance scope is exactly:
+
+```text
+tests/test_repository_release_spine_v01.py
+```
+
+The contract-commit release test must retain explicit `NOT_FROZEN`/zero
+placeholders for every prospective implementation runtime, test, and patch
+identity. Only after the contract commit exists may the exact two-path
+candidate be derived from its final G2-D contract-test bytes. The maintenance
+version must record the exact contract commit identity, materialize the exact
+derived runtime/test/patch SHA-256, byte, and LF identities, and activate the
+already-reviewed lifecycle state machine. No other line or path may change in
+that maintenance commit. The release test must distinguish and fail closed
+outside these exact states:
+
+| State | HEAD / parent law | Dirty paths | Runtime SHA-256 | G2-D test SHA-256 |
+|---|---|---|---|---|
+| PRE_CONTRACT_DIRTY | HEAD `36c43db9045d56666e961b54b4f9b272079f41a8` | exact ten contract paths | historical v0.3.9 | contract-only v0.3.10 |
+| POST_CONTRACT_PRE_MAINTENANCE_CLEAN | unique contract commit, parent basis, exact subject and ten-path diff | none | historical v0.3.9 | contract-only v0.3.10 |
+| MAINTENANCE_CANDIDATE_DIRTY | HEAD contract commit | only release-spine test | historical v0.3.9 | contract-only v0.3.10 |
+| POST_MAINTENANCE_CLEAN | unique maintenance commit, parent contract, exact subject and one-path diff | none | historical v0.3.9 | contract-only v0.3.10 |
+| IMPLEMENTATION_CANDIDATE_DIRTY | HEAD maintenance commit | exact runtime plus G2-D test | exact maintenance-pinned candidate | exact maintenance-pinned candidate |
+| POST_IMPLEMENTATION_CLEAN | unique implementation commit, parent maintenance, exact subject and two-path diff | none | same implementation runtime | same implementation test |
+
+The exact future implementation candidate remains `PENDING_FULL_ACCEPTANCE`
+and unauthorized by this contract hop. To avoid a recursive hash dependency
+between the cumulative addendum and the G2-D test that validates it, exact
+runtime, test, and full-index patch SHA/byte/LF identities are absent from the
+contract-commit release-test bytes and are owned only by the one-path
+maintenance version of the release-spine test:
+
+```text
+runtime_identity: PINNED_BY_RELEASE_CONSUMER_MAINTENANCE
+test_identity: PINNED_BY_RELEASE_CONSUMER_MAINTENANCE
+full_index_patch_identity: PINNED_BY_RELEASE_CONSUMER_MAINTENANCE
+implementation_candidate_status: PENDING_FULL_ACCEPTANCE_NOT_AUTHORIZED
+```
+
+Both the dirty two-path implementation diff and the committed implementation
+diff must match that full-index patch identity. Exact parent, subject, path,
+hash, byte, and LF checks may not be weakened or replaced by status labels.
+
+All B -> C -> M -> I work and later G2-D reclosure must occur in a
+clean isolated Git worktree. The real primary worktree remains parked with its exact
+two-path dirty G2-E4 runtime/test patch throughout this lifecycle. Applying
+the G2-D contract, maintenance, implementation, audit, or reclosure directly
+on top of that primary dirt is forbidden. The primary patch may be restored
+only by guarded fast-forward after v0.3.10 reclosure and a fresh unchanged
+G2-E3 V06 PASS; its bytes may not be rewritten, stashed, reset, or absorbed
+into any G2-D commit.
+
+The parked owner-primary identity is exact:
+
+```text
+patch_sha256: fe6cecec37512faad1c36eaea2a6ad61f4173998dfa09a993c0c889a1857dee0
+patch_bytes: 117645
+patch_lf: 2708
+runtime_postimage_sha256: 825fb732504725d200761cb2dbfddbf0f6ca94b5b946f32b0bdc8b5876f1985f
+test_postimage_sha256: 49982e9dbf1968550c46ddaf04770f1d5d81bfa3b6f32fc8612ee7ca631d456f
+```
+
+### 9.2 Runtime acceptance and reclosure
+
+Future v0.3.10 implementation acceptance preserves the existing cumulative
+contours:
+
+- one strengthened Profile-D t12 focused node;
+- complete G2-D: 92/92 PASS;
+- complete Transition: 268/268 PASS;
+- complete G2-C: 392/392 PASS;
+- release plus maintenance: 23/23 PASS;
+- complete G2-D plus Transition: 360/360 PASS, calls 30/30;
+- D5 in two processes: 72 cases, 36/36 split, 10 accepted bundles, and 27/27
+  calls per process;
+- Living: 575/575 PASS, calls 27/27;
+- Kernel Conformance: 349/349 PASS, calls 27/27.
+
+After the implementation commit, G2-D is `REAUDIT_PENDING`. An independent
+read-only re-audit and additive successor checkpoint/reclosure are mandatory
+before G2-D returns to `CLOSED_PASS`.
+
+The future audit path is reserved as:
+
+`docs/audit_reports/auditor_fractal_runtime_g2_d_v0310_profile_d_t12_revise_projection_correction_v01.log`
+
+The future checkpoint path is reserved as:
+
+`docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md`
+
+No G2-E checkpoint is created at E4. The accepted G2-E preflight reserves its
+checkpoint for the later post-E6 audit and closure hop.
+
+## 10. Frozen Operational Order
+
+The operational order is exact:
+
+1. accept and commit this v0.3.10 contract-only hop;
+2. prepare and validate the one-path release-consumer maintenance candidate;
+3. commit only `tests/test_repository_release_spine_v01.py` with the exact
+   maintenance subject and the contract commit as its sole parent;
+4. obtain separate explicit owner authorization for the narrow G2-D runtime
+   and existing-test correction;
+5. apply exactly the pinned two-path implementation candidate;
+6. run complete cumulative G2-D acceptance;
+7. commit the exact G2-D correction as `REAUDIT_PENDING` with the maintenance
+   commit as its sole parent;
+8. synchronize the post-implementation lifecycle surfaces;
+9. perform an independent read-only re-audit on exact committed bytes;
+10. add the v0.3.10 successor checkpoint and reclose G2-D;
+11. run one fresh unchanged G2-E3 V06 on the reclosed v0.3.10 bytes;
+12. only after V06 PASS, resume the parked dirty G2-E4 candidate;
+13. apply the bounded E4 corrections, including the corrected backpressure
+    absence law;
+14. run the anti-gaming pair 2/2;
+15. run complete G2-E4 18/18;
+16. run complete G2-E1 through G2-E4 68/68;
+17. create a transparent final G2-E4 corrective commit.
+
+No stash, reset, restore, checkout, amend, rebase, history rewrite, or
+force-push is required by this contract.
+
+## 11. Exact Contract-Hop Scope and Lifecycle
+
+This contract-only candidate modifies exactly these ten paths, in this order:
+
+1. `docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md`
+2. `tests/test_fractal_runtime_g2_d_v02.py`
+3. `AGENTS.md`
+4. `README.md`
+5. `specs/machine_manifest_v0_25.json`
+6. `release/current_status_overlay_v01.json`
+7. `release/claim_to_evidence_index.md`
+8. `release/current_limitations.md`
+9. `release/current_release_notes.md`
+10. `tests/test_repository_release_spine_v01.py`
+
+The active contract-only lifecycle is exact:
+
+```text
+G2D_STATUS=CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING
+G2D_IMPLEMENTATION_AUTHORIZED=false
+G2D_CORRECTED_V0310_IMPLEMENTATION_EXISTS=false
+G2D_CONTRACT_ONLY_CLAIM=true
+HISTORICAL_V039_G2D_STATUS=CLOSED_PASS_ON_V039_BYTES
+G2E3_STATUS=REVALIDATION_PENDING_ON_CORRECTED_G2D
+G2E4_STRICT_SUBTREE_STATUS=IMPLEMENTED_COMMITTED_PASS
+G2E4_ANTI_GAMING_STATUS=BLOCKED_PENDING_G2D_V0310_RECLOSURE
+G2E5_STATUS=NOT_STARTED_NOT_AUTHORIZED
+G2E6_STATUS=NOT_STARTED_NOT_AUTHORIZED
+G2F_STATUS=NOT_STARTED_NOT_AUTHORIZED
+GATE2_STATUS=NOT_CLOSED
+```
+
+Public release, RC2, production readiness, and production security
+certification remain `NOT_CLAIMED`.
+
+===============================================================================
+HISTORICAL ACCEPTED V0.3.9 CONTENT - EXACT REPOSITORY BYTES
+===============================================================================
+
+The complete byte sequence below is the previously accepted cumulative
+v0.3.9 addendum. It remains immutable historical contract and evidence context
+for its exact bytes. Its embedded present-tense lifecycle statements do not
+override the active v0.3.10 metadata and rulings above.
+
 # G2-D Post-Acceptance Contract Addendum Version 0.3.9
 
 ## Current Accepted v0.3.9 Clarification and Lifecycle Reopening Metadata

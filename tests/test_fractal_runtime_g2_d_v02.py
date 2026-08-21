@@ -6150,8 +6150,161 @@ def d3_profile_d_contextual_micro_bundle(
     }
 
 
-def test_d3_post_acceptance_contract_addendum_v039_accepted() -> None:
-    raw = ADDENDUM_PATH.read_bytes()
+def test_d3_post_acceptance_contract_addendum_v0310_accepted() -> None:
+    complete_raw = ADDENDUM_PATH.read_bytes()
+    assert hashlib.sha256(complete_raw).hexdigest() == (
+        "1655fbed584e24c980dda723d9e7521b4540ec528128f436ec4f458f7f40563d"
+    )
+    assert len(complete_raw) == 237495
+    assert complete_raw.count(b"\n") == 4736
+    v0310_separator = (
+        b"===============================================================================\n"
+        b"HISTORICAL ACCEPTED V0.3.9 CONTENT - EXACT REPOSITORY BYTES\n"
+        b"===============================================================================\n"
+        b"\n"
+        b"The complete byte sequence below is the previously accepted cumulative\n"
+        b"v0.3.9 addendum. It remains immutable historical contract and evidence context\n"
+        b"for its exact bytes. Its embedded present-tense lifecycle statements do not\n"
+        b"override the active v0.3.10 metadata and rulings above.\n"
+        b"\n"
+    )
+    assert complete_raw.count(v0310_separator) == 1
+    active_v0310, historical_v039 = complete_raw.split(v0310_separator, 1)
+    assert hashlib.sha256(historical_v039).hexdigest() == (
+        "1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445"
+    )
+    assert len(historical_v039) == 212148
+    assert historical_v039.count(b"\n") == 4185
+    assert complete_raw.count(historical_v039) == 1
+    active_text_v0310 = active_v0310.decode("ascii")
+    required_rows_v0310 = (
+        "document_revision: v0.3.10",
+        "guardian_review_status: ACCEPTED_WITH_MANDATORY_NARROW_OVERLAY",
+        "guardian_ruling: APPROVE_PROFILE_D_CORRECTION_AND_E4_BACKPRESSURE_SCOPE_RECONCILIATION",
+        "accepted_v039_basis_sha256: 1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445",
+        "repository_basis_head: 36c43db9045d56666e961b54b4f9b272079f41a8",
+        "V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE: YES",
+        "V0310_G2D_RUNTIME_SEMANTICS_CHANGED: NO",
+        "V0310_G2E4_ACCEPTANCE_OVERLAY_SEMANTICS_CHANGED: YES",
+        "V0310_ROLE: EXPLICIT_PROFILE_D_T12_IMPLEMENTATION_NONCONFORMANCE_AND_E4_BACKPRESSURE_SCOPE_CORRECTION",
+        "G2D_POSITIVE_BACKPRESSURE_LAW_CHANGED: NO",
+        "G2D_PUBLIC_REVISE_SEMANTICS_CHANGED: NO",
+        "g2e4_public_backpressure_calls_required: 2",
+        "g2e4_public_backpressure_geometry_required: ((0,3),(2,1))",
+        "g2e4_public_backpressure_latest_queue_counts_required: (7,15)",
+        "g2e4_public_backpressure_results_required: NONE_NONE",
+        "g2e4_nonempty_backpressure_state_required: false",
+        "g2e4_explicit_public_revise_calls_required: 4",
+        "g2d_internal_public_revise_calls_per_reconstruction_required: 0",
+        "release_consumer_maintenance_authorized: true",
+        "release_consumer_maintenance_required: true",
+        "release_consumer_maintenance_status: NOT_STARTED",
+        "release_consumer_maintenance_scope: tests/test_repository_release_spine_v01.py",
+        "parked_primary_e4_patch_sha256: fe6cecec37512faad1c36eaea2a6ad61f4173998dfa09a993c0c889a1857dee0",
+        "parked_primary_e4_patch_bytes: 117645",
+        "parked_primary_e4_patch_lf: 2708",
+        "parked_primary_e4_runtime_postimage_sha256: 825fb732504725d200761cb2dbfddbf0f6ca94b5b946f32b0bdc8b5876f1985f",
+        "parked_primary_e4_test_postimage_sha256: 49982e9dbf1968550c46ddaf04770f1d5d81bfa3b6f32fc8612ee7ca631d456f",
+        "current_g2d_status: CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "historical_v039_g2d_status: CLOSED_PASS_ON_V039_BYTES",
+        "current_g2e4_anti_gaming_status: BLOCKED_PENDING_G2D_V0310_RECLOSURE",
+        "G2D_CORRECTED_V0310_IMPLEMENTATION_EXISTS=false",
+        "GATE2_STATUS=NOT_CLOSED",
+    )
+    assert all(row in active_text_v0310 for row in required_rows_v0310)
+    for row in (
+        "public evaluate_fractal_backpressure_v02 calls = 2",
+        "public results = (None, None)",
+        "occupied=0, residual=3, lawful latest queue entries=7",
+        "occupied=2, residual=1, lawful latest queue entries=15",
+        "latest queue order = exact append-log order at both calls",
+        "exactly four explicit public revise evaluations",
+        "zero nested public revise evaluations from transition/projector reconstruction",
+        "Align G2-D v0.3.10 release tests with implementation candidate",
+        "It creates no runtime or G2-D\n"
+        "test implementation",
+        "runtime_identity: PINNED_BY_RELEASE_CONSUMER_MAINTENANCE",
+        "test_identity: PINNED_BY_RELEASE_CONSUMER_MAINTENANCE",
+        "full_index_patch_identity: PINNED_BY_RELEASE_CONSUMER_MAINTENANCE",
+        "clean isolated Git worktree",
+        "recomputed_g2d_bundle.backpressure_states = ()",
+        "runtime_trace.backpressure_state_ids = ()",
+        "g2d_transition_backpressure_deferred = absent",
+        "g2e_recomputation_budget_exceeded = absent",
+        "g2e_recomputation_no_progress",
+        "g2e_transition_selective_recomputation_blocked",
+        "test_d3_s0_t03_postclosure_suppression_s1_no_spin_v035",
+        "test_e4_partial_failure_backpressure_revise_no_progress_v01",
+        "E4_PAIR_CALL_ACCOUNTING=2/2",
+        "E4_FOCUSED_CALL_ACCOUNTING=2/2",
+        "E4_COMPLETE_FILE_CALL_ACCOUNTING=3/3",
+    ):
+        assert row in active_text_v0310
+    active_normalized_v0310 = " ".join(active_text_v0310.split())
+    assert "directly on top of that primary dirt is forbidden" in (
+        active_normalized_v0310
+    )
+    assert "explicit `NOT_FROZEN`/zero placeholders" in active_normalized_v0310
+    for selector_law in (
+        "must not require the total number of observations bound to the "
+        "`VALIDATING` queue entry to equal one",
+        "stores an eligible positive observation followed by a noneligible "
+        "`DEADEND` observation on the same exact topology, cell, queue, budget, "
+        "and revision binding",
+        "more than one qualifying noneligible `DEADEND` observation is real "
+        "local ambiguity",
+        "The lawful eligible positive observation is neither extra proof nor "
+        "ambiguity",
+        "exactly one qualifies for Profile-D `DEADEND` projection",
+    ):
+        assert selector_law in active_normalized_v0310
+    contract_paths_v0310 = (
+        "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md",
+        "tests/test_fractal_runtime_g2_d_v02.py",
+        "AGENTS.md",
+        "README.md",
+        "specs/machine_manifest_v0_25.json",
+        "release/current_status_overlay_v01.json",
+        "release/claim_to_evidence_index.md",
+        "release/current_limitations.md",
+        "release/current_release_notes.md",
+        "tests/test_repository_release_spine_v01.py",
+    )
+    contract_scope_v0310 = active_text_v0310.split(
+        "This contract-only candidate modifies exactly these ten", 1
+    )[1].split("The active contract-only lifecycle is exact:", 1)[0]
+    offsets_v0310 = tuple(
+        contract_scope_v0310.index("`" + path + "`")
+        for path in contract_paths_v0310
+    )
+    assert offsets_v0310 == tuple(sorted(offsets_v0310))
+    future_scope_v0310 = active_text_v0310.split(
+        "A later separately owner-authorized implementation may modify exactly:",
+        1,
+    )[1].split("No public type", 1)[0]
+    assert future_scope_v0310.count(
+        "`hedgehog/kernel/fractal_runtime_v02.py`"
+    ) == 1
+    assert future_scope_v0310.count(
+        "`tests/test_fractal_runtime_g2_d_v02.py`"
+    ) == 1
+    operational_v0310 = active_text_v0310.split(
+        "The operational order is exact:", 1
+    )[1].split("No stash", 1)[0]
+    assert operational_v0310.index(
+        "commit only `tests/test_repository_release_spine_v01.py`"
+    ) < operational_v0310.index(
+        "obtain separate explicit owner authorization"
+    )
+    assert operational_v0310.index(
+        "run one fresh unchanged G2-E3 V06"
+    ) < operational_v0310.index("resume the parked dirty G2-E4 candidate")
+    assert "This contract-only hop authorizes no implementation." in (
+        active_text_v0310
+    )
+    assert "Root remains the only final authority." in active_text_v0310
+
+    raw = historical_v039
     assert hashlib.sha256(raw).hexdigest() == '1bbe028a4c757330b4ba94aec461e5bfbb1d1ef7496a68593dc20106c4867445'
     assert len(raw) == 212148
     assert raw.count(b"\n") == 4185

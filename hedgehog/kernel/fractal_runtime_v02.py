@@ -9060,6 +9060,7 @@ def _d3_profile_d_omission_index_v02(
     settled_cell_inputs: tuple[FractalCellInputV02, ...],
     settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...],
     observed_work_context: RuntimeObservedWorkContextV02 | None,
+    settled_revise_observations: tuple[FractalReviseObservationV02, ...],
 ) -> int | None:
     if (
         type(queue_entry) is not FractalCellQueueEntryV02
@@ -9228,6 +9229,51 @@ def _d3_profile_d_omission_index_v02(
         dependencies=origin["dependencies"],
         indexes=profile_indexes,
     )
+    revise_deadend = False
+    if pair == ("VALIDATING", "DEADEND"):
+        cell_budget = budget_by_id.get(validating_entry.cell_budget_id)
+        global_budget = budget_by_id.get(validating_entry.global_budget_id)
+        if (
+            type(cell_budget) is not FractalRuntimeBudgetV02
+            or type(global_budget) is not FractalRuntimeBudgetV02
+        ):
+            raise ValueError("g2d_queue_artifact_lineage_invalid")
+        bound_noneligible_revise = tuple(
+            item
+            for item in settled_revise_observations
+            if (
+                type(item) is FractalReviseObservationV02
+                and item.topology_id == topology.topology_id
+                and item.cell_id == queue_entry.cell_id
+                and item.queue_entry_id == validating_entry.queue_entry_id
+                and item.revise_eligible is False
+            )
+        )
+        if len(bound_noneligible_revise) == 1:
+            observation = bound_noneligible_revise[0]
+            observation_is_exact_deadend = (
+                observation.cell_budget_before_id == cell_budget.budget_id
+                and observation.global_budget_before_id == global_budget.budget_id
+                and observation.derived_terminal_state == "DEADEND"
+                and observation.reason_codes == ("g2d_no_progress_deadend",)
+                and validate_fractal_revise_observation_v02(observation).status
+                == "PASS"
+            )
+            try:
+                if not observation_is_exact_deadend:
+                    raise ValueError("g2d_revise_observation_invalid")
+                _d3_exact_revise_observation_reconstruction_v02(
+                    observation,
+                    topology=topology,
+                    cell_input=cell_input,
+                    queue_entry=validating_entry,
+                    cell_budget_before=cell_budget,
+                    global_budget_before=global_budget,
+                )
+            except ValueError:
+                revise_deadend = False
+            else:
+                revise_deadend = True
     if (
         validating_entry.queue_reason_codes
         != material["derived_queue_reason_codes"]
@@ -9241,6 +9287,7 @@ def _d3_profile_d_omission_index_v02(
         or (
             pair[1] != "VALIDATING"
             and queue_entry.state != material["allowed_outcome"]
+            and not revise_deadend
         )
     ):
         raise ValueError("g2d_queue_artifact_lineage_invalid")
@@ -9276,6 +9323,7 @@ def _d3_expected_queue_artifact_against_prefix_v02(
     settled_cell_inputs: tuple[FractalCellInputV02, ...],
     settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...],
     observed_work_context: RuntimeObservedWorkContextV02 | None,
+    settled_revise_observations: tuple[FractalReviseObservationV02, ...],
 ) -> KernelArtifactV01:
     omission_index = _d3_profile_d_omission_index_v02(
         queue_entry=entry,
@@ -9287,6 +9335,7 @@ def _d3_expected_queue_artifact_against_prefix_v02(
         settled_cell_inputs=settled_cell_inputs,
         settled_scope_projections=settled_scope_projections,
         observed_work_context=observed_work_context,
+        settled_revise_observations=settled_revise_observations,
     )
     if omission_index is None:
         return _d3_build_queue_artifact_v02(
@@ -9554,6 +9603,7 @@ def _d3_validate_settled_runtime_prefix_v02(
                 settled_cell_inputs=settled_cell_inputs,
                 settled_scope_projections=settled_scope_projections,
                 observed_work_context=observed_work_context,
+                settled_revise_observations=settled_revise_observations,
             )
             if (
                 artifact != expected_artifact
@@ -11677,6 +11727,7 @@ def project_fractal_cell_queue_entry_kernel_artifact_v02(
         settled_cell_inputs=settled_cell_inputs,
         settled_scope_projections=settled_scope_projections,
         observed_work_context=observed_work_context,
+        settled_revise_observations=settled_revise_observations,
     )
     if _validate_fractal_runtime_transition_decision_v02(
         decision,
@@ -12931,31 +12982,15 @@ def evaluate_fractal_runtime_state_transition_v02(
             else:
                 revise_deadend = False
                 if revise_observation is not None:
-                    expected_revise_observation = evaluate_fractal_revise_observation_v02(
-                        topology=topology,
-                        cell_input=cell_input,
-                        queue_entry=current_entry,
-                        validation_report=validate_fractal_cell_queue_entry_v02(
-                            current_entry
-                        ),
-                        cell_budget_before=cell_budget_before,
-                        global_budget_before=global_budget_before,
-                        revision_index=revise_observation.revision_index,
-                        newly_validated_evidence_count=(
-                            revise_observation.newly_validated_evidence_count
-                        ),
-                        newly_resolved_constraints_count=(
-                            revise_observation.newly_resolved_constraints_count
-                        ),
-                        newly_accepted_outputs_count=(
-                            revise_observation.newly_accepted_outputs_count
-                        ),
-                        newly_introduced_conflicts_count=(
-                            revise_observation.newly_introduced_conflicts_count
-                        ),
-                        consecutive_non_positive_count=(
-                            revise_observation.consecutive_non_positive_count
-                        ),
+                    expected_revise_observation = (
+                        _d3_exact_revise_observation_reconstruction_v02(
+                            revise_observation,
+                            topology=topology,
+                            cell_input=cell_input,
+                            queue_entry=current_entry,
+                            cell_budget_before=cell_budget_before,
+                            global_budget_before=global_budget_before,
+                        )
                     )
                     if (
                         node.node_kind not in _D3_LOCAL_NODE_KINDS_V02
@@ -14011,7 +14046,7 @@ def validate_fractal_gt_advisory_v02(
         )
 
 
-def evaluate_fractal_revise_observation_v02(
+def _d3_reconstruct_fractal_revise_observation_v02(
     *,
     topology: RuntimeExecutionTopologyV02,
     cell_input: FractalCellInputV02,
@@ -14049,6 +14084,85 @@ def evaluate_fractal_revise_observation_v02(
         max_consecutive_non_positive_count=cell_budget_before.max_revise_count,
         cell_budget_before=cell_budget_before,
         global_budget_before=global_budget_before,
+    )
+
+
+def _d3_exact_revise_observation_reconstruction_v02(
+    observation: object,
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    queue_entry: FractalCellQueueEntryV02,
+    cell_budget_before: FractalRuntimeBudgetV02,
+    global_budget_before: FractalRuntimeBudgetV02,
+) -> FractalReviseObservationV02:
+    if type(observation) is not FractalReviseObservationV02:
+        raise ValueError("g2d_revise_observation_invalid")
+    expected = _d3_reconstruct_fractal_revise_observation_v02(
+        topology=topology,
+        cell_input=cell_input,
+        queue_entry=queue_entry,
+        validation_report=validate_fractal_cell_queue_entry_v02(queue_entry),
+        cell_budget_before=cell_budget_before,
+        global_budget_before=global_budget_before,
+        revision_index=observation.revision_index,
+        newly_validated_evidence_count=(
+            observation.newly_validated_evidence_count
+        ),
+        newly_resolved_constraints_count=(
+            observation.newly_resolved_constraints_count
+        ),
+        newly_accepted_outputs_count=(
+            observation.newly_accepted_outputs_count
+        ),
+        newly_introduced_conflicts_count=(
+            observation.newly_introduced_conflicts_count
+        ),
+        consecutive_non_positive_count=(
+            observation.consecutive_non_positive_count
+        ),
+    )
+    if (
+        observation != expected
+        or _canonical_json_bytes_v01(
+            fractal_revise_observation_to_plain_data_v02(observation)
+        )
+        != _canonical_json_bytes_v01(
+            fractal_revise_observation_to_plain_data_v02(expected)
+        )
+    ):
+        raise ValueError("g2d_revise_observation_invalid")
+    return expected
+
+
+def evaluate_fractal_revise_observation_v02(
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    cell_input: FractalCellInputV02,
+    queue_entry: FractalCellQueueEntryV02,
+    validation_report: FractalRuntimeValidationReportV02,
+    cell_budget_before: FractalRuntimeBudgetV02,
+    global_budget_before: FractalRuntimeBudgetV02,
+    revision_index: int,
+    newly_validated_evidence_count: int,
+    newly_resolved_constraints_count: int,
+    newly_accepted_outputs_count: int,
+    newly_introduced_conflicts_count: int,
+    consecutive_non_positive_count: int,
+) -> FractalReviseObservationV02:
+    return _d3_reconstruct_fractal_revise_observation_v02(
+        topology=topology,
+        cell_input=cell_input,
+        queue_entry=queue_entry,
+        validation_report=validation_report,
+        cell_budget_before=cell_budget_before,
+        global_budget_before=global_budget_before,
+        revision_index=revision_index,
+        newly_validated_evidence_count=newly_validated_evidence_count,
+        newly_resolved_constraints_count=newly_resolved_constraints_count,
+        newly_accepted_outputs_count=newly_accepted_outputs_count,
+        newly_introduced_conflicts_count=newly_introduced_conflicts_count,
+        consecutive_non_positive_count=consecutive_non_positive_count,
     )
 
 

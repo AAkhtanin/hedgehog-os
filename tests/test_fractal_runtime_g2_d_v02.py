@@ -6800,6 +6800,7 @@ def test_d3_profile_d_contextual_child_t06_t08_micro(
             settled_cell_inputs=env["cell_inputs"],
             settled_scope_projections=env["scope_projections"],
             observed_work_context=None,
+            settled_revise_observations=env["revise_observations"],
         )
         assert type(omission_index) is int
         assert entry.lineage_refs[omission_index] == activation_parent_id
@@ -6814,6 +6815,7 @@ def test_d3_profile_d_contextual_child_t06_t08_micro(
             settled_cell_inputs=env["cell_inputs"],
             settled_scope_projections=env["scope_projections"],
             observed_work_context=None,
+            settled_revise_observations=env["revise_observations"],
         )
         assert artifact == expected
         assert canonical_json_bytes_v01(
@@ -6883,6 +6885,7 @@ def test_d3_profile_d_contextual_mutation_matrix_micro(
             settled_cell_inputs=cell_inputs,
             settled_scope_projections=env["scope_projections"],
             observed_work_context=None,
+            settled_revise_observations=env["revise_observations"],
         )
 
     labels: list[str] = []
@@ -9735,6 +9738,8 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
 
 def test_d4_revise_retry_and_no_progress_v02(
     d3_full_fractal_micro_environment: dict[str, object],
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     env = _d3_clone_environment(d3_full_fractal_micro_environment)
     topology = env["topology"]
@@ -9798,9 +9803,12 @@ def test_d4_revise_retry_and_no_progress_v02(
         revise: fr.FractalReviseObservationV02 | None = observation,
         report: fr.FractalRuntimeValidationReportV02 | None = observation_report,
         source_artifact: KernelArtifactV01 = validating_artifact,
+        selected_current_entry: fr.FractalCellQueueEntryV02 = validating,
         selected_node: fr.RuntimeTopologyNodeV02 = node,
+        selected_cell_input: fr.FractalCellInputV02 = cell_input,
         selected_cell_budget: fr.FractalRuntimeBudgetV02 = cell_budget,
         selected_global_budget: fr.FractalRuntimeBudgetV02 = global_budget,
+        selected_dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
         queue_reason_codes: tuple[str, ...] = validating.queue_reason_codes,
         observed_output_refs: tuple[str, ...] = validating.observed_output_refs,
         observed_evidence_refs: tuple[str, ...] = validating.observed_evidence_refs,
@@ -9810,17 +9818,17 @@ def test_d4_revise_retry_and_no_progress_v02(
             source_context=branch["source"],
             topology=branch["topology"],
             source_artifact=source_artifact,
-            current_entry=validating,
+            current_entry=selected_current_entry,
             node=selected_node,
-            cell_input=cell_input,
-            cell_id=validating.cell_id,
-            parent_cell_id=validating.parent_cell_id,
-            planned_child_cell_id=validating.planned_child_cell_id,
-            cell_depth=validating.cell_depth,
-            scope_ref=validating.scope_ref,
+            cell_input=selected_cell_input,
+            cell_id=selected_current_entry.cell_id,
+            parent_cell_id=selected_current_entry.parent_cell_id,
+            planned_child_cell_id=selected_current_entry.planned_child_cell_id,
+            cell_depth=selected_current_entry.cell_depth,
+            scope_ref=selected_current_entry.scope_ref,
             cell_budget_before=selected_cell_budget,
             global_budget_before=selected_global_budget,
-            dependencies=(),
+            dependencies=selected_dependencies,
             queue_reason_codes=queue_reason_codes,
             observed_output_refs=observed_output_refs,
             observed_evidence_refs=observed_evidence_refs,
@@ -9844,6 +9852,18 @@ def test_d4_revise_retry_and_no_progress_v02(
     def advance_transition(
         branch: dict[str, object],
         decision: TransitionDecisionV01,
+        *,
+        selected_current_entry: fr.FractalCellQueueEntryV02 = validating,
+        selected_current_artifact: KernelArtifactV01 = validating_artifact,
+        selected_node: fr.RuntimeTopologyNodeV02 = node,
+        selected_cell_input: fr.FractalCellInputV02 = cell_input,
+        selected_cell_budget: fr.FractalRuntimeBudgetV02 = cell_budget,
+        selected_global_budget: fr.FractalRuntimeBudgetV02 = global_budget,
+        selected_dependencies: tuple[fr.FractalCellQueueEntryV02, ...] = (),
+        queue_reason_codes: tuple[str, ...] = validating.queue_reason_codes,
+        observed_output_refs: tuple[str, ...] = validating.observed_output_refs,
+        observed_evidence_refs: tuple[str, ...] = validating.observed_evidence_refs,
+        advisory_refs: tuple[str, ...] = validating.advisory_refs,
     ) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
         queue_log = branch["queue_log"]
         artifact_log = branch["artifact_log"]
@@ -9854,30 +9874,30 @@ def test_d4_revise_retry_and_no_progress_v02(
         target = fr.advance_fractal_cell_queue_v02(
             source_context=branch["source"],
             topology=branch["topology"],
-            current_entry=validating,
-            node=node,
-            cell_input=cell_input,
+            current_entry=selected_current_entry,
+            node=selected_node,
+            cell_input=selected_cell_input,
             transition_decision=decision,
-            cell_budget_after=cell_budget,
-            global_budget_after=global_budget,
-            dependencies=(),
+            cell_budget_after=selected_cell_budget,
+            global_budget_after=selected_global_budget,
+            dependencies=selected_dependencies,
             local_child_result=None,
             local_child_result_artifact=None,
             cell_instantiation_order=tuple(
                 item.cell_id for item in branch["cell_inputs"]
             ),
-            projected_node_ids=cell_input.ordered_node_ids,
+            projected_node_ids=selected_cell_input.ordered_node_ids,
             round_start_queue_entries=_d3_latest(branch),
-            queue_reason_codes=validating.queue_reason_codes,
-            observed_output_refs=validating.observed_output_refs,
-            observed_evidence_refs=validating.observed_evidence_refs,
-            advisory_refs=validating.advisory_refs,
+            queue_reason_codes=queue_reason_codes,
+            observed_output_refs=observed_output_refs,
+            observed_evidence_refs=observed_evidence_refs,
+            advisory_refs=advisory_refs,
             **_d3_prefix_kwargs(branch),
         )
         artifact = fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
             target,
             topology_artifact=branch["topology_artifact"],
-            predecessor_artifact=validating_artifact,
+            predecessor_artifact=selected_current_artifact,
             activation_parent_artifact=None,
             local_child_result_artifact=None,
             source_context=branch["source"],
@@ -10189,6 +10209,368 @@ def test_d4_revise_retry_and_no_progress_v02(
             newly_introduced_conflicts_count=0,
             consecutive_non_positive_count=0,
         )
+
+    profile_d = d3_profile_d_contextual_micro_bundle
+    profile_env = profile_d["env"]
+    child_node = profile_d["node"]
+    child_input = profile_d["child_input"]
+    child_dependencies = profile_d["dependencies"]
+    child_validating = profile_d["validating"]
+    child_validating_artifact = profile_d["validating_artifact"]
+    ordinary_child_terminal = profile_d["terminal"]
+    ordinary_child_terminal_artifact = profile_d["terminal_artifact"]
+    activation_parent_id = profile_d["activation_parent_id"]
+    assert isinstance(profile_env, dict)
+    assert isinstance(child_node, fr.RuntimeTopologyNodeV02)
+    assert isinstance(child_input, fr.FractalCellInputV02)
+    assert isinstance(child_dependencies, tuple) and child_dependencies == ()
+    assert isinstance(child_validating, fr.FractalCellQueueEntryV02)
+    assert isinstance(child_validating_artifact, KernelArtifactV01)
+    assert isinstance(ordinary_child_terminal, fr.FractalCellQueueEntryV02)
+    assert isinstance(ordinary_child_terminal_artifact, KernelArtifactV01)
+    assert isinstance(activation_parent_id, str)
+    assert child_validating.parent_cell_id is not None
+    assert child_node.node_kind in fr._D3_LOCAL_NODE_KINDS_V02
+    assert (child_validating.prior_state, child_validating.state) == (
+        "RUNNING",
+        "VALIDATING",
+    )
+    assert (ordinary_child_terminal.prior_state, ordinary_child_terminal.state) == (
+        "VALIDATING",
+        "COMPLETED",
+    )
+
+    def profile_d_pre_t08_branch() -> dict[str, object]:
+        branch = _d3_clone_environment(profile_env)
+        queue_log = branch["queue_log"]
+        artifact_log = branch["artifact_log"]
+        assert isinstance(queue_log, tuple) and queue_log[-1] == ordinary_child_terminal
+        assert (
+            isinstance(artifact_log, tuple)
+            and artifact_log[-1] == ordinary_child_terminal_artifact
+        )
+        branch["queue_log"] = queue_log[:-1]
+        branch["artifact_log"] = artifact_log[:-1]
+        branch["revise_observations"] = ()
+        branch["validation_reports"] = _d3_retained_reports(
+            branch,
+            branch["queue_log"],
+        )
+        prefix_indexes = _d3_indexes(branch)
+        assert prefix_indexes["latest_by_key"][
+            (child_validating.cell_id, child_validating.node_id)
+        ] == child_validating
+        return branch
+
+    child_prefix = profile_d_pre_t08_branch()
+    child_prefix_indexes = _d3_indexes(child_prefix)
+    child_cell_budget = child_prefix_indexes["budget_by_id"][
+        child_validating.cell_budget_id
+    ]
+    child_global_budget = child_prefix_indexes["budget_by_id"][
+        child_validating.global_budget_id
+    ]
+    assert isinstance(child_cell_budget, fr.FractalRuntimeBudgetV02)
+    assert isinstance(child_global_budget, fr.FractalRuntimeBudgetV02)
+    child_queue_validation = fr.validate_fractal_cell_queue_entry_v02(
+        child_validating
+    )
+    assert child_queue_validation.status == "PASS"
+    child_observation = fr.evaluate_fractal_revise_observation_v02(
+        topology=child_prefix["topology"],
+        cell_input=child_input,
+        queue_entry=child_validating,
+        validation_report=child_queue_validation,
+        cell_budget_before=child_cell_budget,
+        global_budget_before=child_global_budget,
+        revision_index=child_input.initial_revise_count,
+        newly_validated_evidence_count=0,
+        newly_resolved_constraints_count=0,
+        newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=0,
+        consecutive_non_positive_count=child_cell_budget.max_revise_count,
+    )
+    child_observation_report = fr.validate_fractal_revise_observation_v02(
+        child_observation
+    )
+    assert child_observation_report.status == "PASS"
+    assert child_observation.revise_eligible is False
+    assert child_observation.derived_terminal_state == "DEADEND"
+    assert child_observation.reason_codes == ("g2d_no_progress_deadend",)
+    assert child_observation.cell_id == child_validating.cell_id
+    assert child_observation.queue_entry_id == child_validating.queue_entry_id
+    child_eligible_observation = fr.evaluate_fractal_revise_observation_v02(
+        topology=child_prefix["topology"],
+        cell_input=child_input,
+        queue_entry=child_validating,
+        validation_report=child_queue_validation,
+        cell_budget_before=child_cell_budget,
+        global_budget_before=child_global_budget,
+        revision_index=child_input.initial_revise_count,
+        newly_validated_evidence_count=1,
+        newly_resolved_constraints_count=0,
+        newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=0,
+        consecutive_non_positive_count=0,
+    )
+    assert (
+        fr.validate_fractal_revise_observation_v02(child_eligible_observation).status
+        == "PASS"
+    )
+    assert child_eligible_observation.revise_eligible is True
+    assert child_eligible_observation.observation_id != child_observation.observation_id
+    assert child_eligible_observation.cell_id == child_observation.cell_id
+    assert child_eligible_observation.queue_entry_id == child_observation.queue_entry_id
+    second_child_deadend_observation = fr.evaluate_fractal_revise_observation_v02(
+        topology=child_prefix["topology"],
+        cell_input=child_input,
+        queue_entry=child_validating,
+        validation_report=child_queue_validation,
+        cell_budget_before=child_cell_budget,
+        global_budget_before=child_global_budget,
+        revision_index=child_input.initial_revise_count,
+        newly_validated_evidence_count=0,
+        newly_resolved_constraints_count=0,
+        newly_accepted_outputs_count=0,
+        newly_introduced_conflicts_count=1,
+        consecutive_non_positive_count=child_cell_budget.max_revise_count,
+    )
+    assert (
+        fr.validate_fractal_revise_observation_v02(
+            second_child_deadend_observation
+        ).status
+        == "PASS"
+    )
+    assert second_child_deadend_observation.revise_eligible is False
+    assert second_child_deadend_observation.derived_terminal_state == "DEADEND"
+    assert second_child_deadend_observation.reason_codes == (
+        "g2d_no_progress_deadend",
+    )
+    assert second_child_deadend_observation.observation_id != (
+        child_observation.observation_id
+    )
+
+    def evaluate_child_transition(
+        branch: dict[str, object],
+        *,
+        revise: fr.FractalReviseObservationV02 | None = child_observation,
+        report: fr.FractalRuntimeValidationReportV02 | None = (
+            child_observation_report
+        ),
+    ) -> TransitionDecisionV01 | None:
+        return evaluate_transition(
+            branch,
+            revise=revise,
+            report=report,
+            source_artifact=child_validating_artifact,
+            selected_current_entry=child_validating,
+            selected_node=child_node,
+            selected_cell_input=child_input,
+            selected_cell_budget=child_cell_budget,
+            selected_global_budget=child_global_budget,
+            selected_dependencies=child_dependencies,
+            queue_reason_codes=child_validating.queue_reason_codes,
+            observed_output_refs=child_validating.observed_output_refs,
+            observed_evidence_refs=child_validating.observed_evidence_refs,
+            advisory_refs=child_validating.advisory_refs,
+        )
+
+    def advance_child_transition(
+        branch: dict[str, object],
+        selected_decision: TransitionDecisionV01,
+    ) -> tuple[fr.FractalCellQueueEntryV02, KernelArtifactV01]:
+        return advance_transition(
+            branch,
+            selected_decision,
+            selected_current_entry=child_validating,
+            selected_current_artifact=child_validating_artifact,
+            selected_node=child_node,
+            selected_cell_input=child_input,
+            selected_cell_budget=child_cell_budget,
+            selected_global_budget=child_global_budget,
+            selected_dependencies=child_dependencies,
+            queue_reason_codes=child_validating.queue_reason_codes,
+            observed_output_refs=child_validating.observed_output_refs,
+            observed_evidence_refs=child_validating.observed_evidence_refs,
+            advisory_refs=child_validating.advisory_refs,
+        )
+
+    first_child_branch = profile_d_pre_t08_branch()
+    repeated_child_branch = profile_d_pre_t08_branch()
+    first_child_branch["revise_observations"] = (child_observation,)
+    repeated_child_branch["revise_observations"] = (child_observation,)
+    child_budget_log_before = first_child_branch["budget_log"]
+    child_decision = evaluate_child_transition(first_child_branch)
+    repeated_child_decision = evaluate_child_transition(repeated_child_branch)
+    assert isinstance(child_decision, TransitionDecisionV01)
+    assert isinstance(repeated_child_decision, TransitionDecisionV01)
+    assert child_decision == repeated_child_decision
+    assert canonical_json_bytes_v01(
+        transition_registry.fractal_runtime_transition_decision_to_plain_dict_v02(
+            child_decision
+        )
+    ) == canonical_json_bytes_v01(
+        transition_registry.fractal_runtime_transition_decision_to_plain_dict_v02(
+            repeated_child_decision
+        )
+    )
+    assert child_decision.rule_id == "g2d_t12_validating_to_deadend"
+    assert child_decision.decision == "RETURN_TO_ROOT"
+    assert child_decision.reason_code == "g2d_transition_deadend_recorded"
+
+    child_terminal, child_terminal_artifact = advance_child_transition(
+        first_child_branch,
+        child_decision,
+    )
+    repeated_child_terminal, repeated_child_terminal_artifact = (
+        advance_child_transition(
+            repeated_child_branch,
+            repeated_child_decision,
+        )
+    )
+    assert child_terminal == repeated_child_terminal
+    assert child_terminal_artifact == repeated_child_terminal_artifact
+    assert canonical_json_bytes_v01(
+        fr.fractal_cell_queue_entry_to_plain_data_v02(child_terminal)
+    ) == canonical_json_bytes_v01(
+        fr.fractal_cell_queue_entry_to_plain_data_v02(repeated_child_terminal)
+    )
+    assert canonical_json_bytes_v01(
+        kernel_artifact_to_plain_dict_v01(child_terminal_artifact)
+    ) == canonical_json_bytes_v01(
+        kernel_artifact_to_plain_dict_v01(repeated_child_terminal_artifact)
+    )
+    assert (child_terminal.prior_state, child_terminal.state) == (
+        "VALIDATING",
+        "DEADEND",
+    )
+    assert child_terminal.predecessor_queue_entry_id == child_validating.queue_entry_id
+    assert child_terminal.transition_decision_id == child_decision.decision_id
+    assert child_terminal.queue_reason_codes == child_validating.queue_reason_codes
+    assert child_terminal.observed_output_refs == child_validating.observed_output_refs
+    assert child_terminal.observed_evidence_refs == child_validating.observed_evidence_refs
+    assert child_terminal.advisory_refs == child_validating.advisory_refs
+    assert child_terminal.lineage_refs.count(activation_parent_id) == 2
+    assert child_terminal_artifact.parent_refs == (
+        first_child_branch["topology_artifact"].artifact_id,
+        child_validating_artifact.artifact_id,
+    )
+    assert child_terminal_artifact.trace_refs.count(activation_parent_id) == 1
+    assert validate_kernel_artifact_v01(child_terminal_artifact) == ()
+    assert transition_registry.validate_fractal_runtime_transition_decision_v02(
+        child_decision,
+        registry=first_child_branch["registry"],
+        source_artifact=child_validating_artifact,
+        target_artifact=child_terminal_artifact,
+    ) == ()
+    child_terminal_indexes = _d3_indexes(first_child_branch)
+    assert child_terminal_indexes["latest_by_key"][
+        (child_terminal.cell_id, child_terminal.node_id)
+    ] == child_terminal
+    assert child_terminal_indexes["artifact_by_queue_id"][
+        child_terminal.queue_entry_id
+    ] == child_terminal_artifact
+    assert child_terminal_indexes["revise_by_id"] == {
+        child_observation.observation_id: child_observation
+    }
+    assert first_child_branch["budget_log"] == child_budget_log_before
+    assert repeated_child_branch["budget_log"] == child_budget_log_before
+    assert child_terminal.authority_created is False
+    assert child_terminal.permission_created is False
+    assert child_terminal.final_output_created is False
+    assert child_terminal.drs_write_created is False
+    assert child_terminal.real_world_effects_count == 0
+
+    def project_child_terminal_with_revise_prefix(
+        observations: tuple[fr.FractalReviseObservationV02, ...],
+    ) -> KernelArtifactV01:
+        branch = profile_d_pre_t08_branch()
+        queue_log = branch["queue_log"]
+        reports = branch["validation_reports"]
+        assert isinstance(queue_log, tuple)
+        assert isinstance(reports, tuple)
+        return fr.project_fractal_cell_queue_entry_kernel_artifact_v02(
+            child_terminal,
+            topology_artifact=branch["topology_artifact"],
+            predecessor_artifact=child_validating_artifact,
+            activation_parent_artifact=None,
+            local_child_result_artifact=None,
+            source_context=branch["source"],
+            **_d3_prefix_kwargs(
+                branch,
+                settled_queue_entry_log=queue_log + (child_terminal,),
+                settled_revise_observations=observations,
+                settled_validation_reports=reports,
+            ),
+        )
+
+    public_revise_calls = 0
+    public_revise_evaluator = fr.evaluate_fractal_revise_observation_v02
+
+    def counted_public_revise_evaluator(**kwargs: object) -> object:
+        nonlocal public_revise_calls
+        public_revise_calls += 1
+        return public_revise_evaluator(**kwargs)
+
+    with monkeypatch.context() as public_call_guard:
+        public_call_guard.setattr(
+            fr,
+            "evaluate_fractal_revise_observation_v02",
+            counted_public_revise_evaluator,
+        )
+        assert project_child_terminal_with_revise_prefix(
+            (child_observation,)
+        ) == child_terminal_artifact
+    assert public_revise_calls == 0
+
+    forged_child_observation = replace(
+        child_observation,
+        observation_id="frrevise_v02:" + "f" * 64,
+    )
+    assert (
+        fr.validate_fractal_revise_observation_v02(forged_child_observation).status
+        == "FAIL_CLOSED"
+    )
+    with pytest.raises(
+        ValueError,
+        match="g2d_queue_artifact_lineage_invalid",
+    ):
+        project_child_terminal_with_revise_prefix(())
+    for candidate_observations in (
+        (forged_child_observation,),
+        (child_observation, child_observation),
+    ):
+        with pytest.raises(
+            ValueError,
+            match="g2d_revise_observation_invalid",
+        ):
+            project_child_terminal_with_revise_prefix(candidate_observations)
+    assert project_child_terminal_with_revise_prefix(
+        (child_eligible_observation, child_observation)
+    ) == child_terminal_artifact
+    with pytest.raises(ValueError, match="g2d_queue_artifact_lineage_invalid"):
+        project_child_terminal_with_revise_prefix(
+            (child_observation, second_child_deadend_observation)
+        )
+
+    ordinary_child_branch = profile_d_pre_t08_branch()
+    ordinary_child_decision = evaluate_child_transition(
+        ordinary_child_branch,
+        revise=None,
+        report=None,
+    )
+    assert isinstance(ordinary_child_decision, TransitionDecisionV01)
+    assert ordinary_child_decision.rule_id == "g2d_t08_validating_to_completed"
+    rebuilt_ordinary_terminal, rebuilt_ordinary_artifact = advance_child_transition(
+        ordinary_child_branch,
+        ordinary_child_decision,
+    )
+    assert rebuilt_ordinary_terminal == ordinary_child_terminal
+    assert rebuilt_ordinary_artifact == ordinary_child_terminal_artifact
+    assert ordinary_child_branch["budget_log"] == child_budget_log_before
+    assert _d3_indexes(ordinary_child_branch)["latest_by_key"][
+        (rebuilt_ordinary_terminal.cell_id, rebuilt_ordinary_terminal.node_id)
+    ] == rebuilt_ordinary_terminal
 
 
 def test_d4_partial_failure_and_parent_return_v02(

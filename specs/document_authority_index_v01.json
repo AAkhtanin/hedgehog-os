@@ -1,0 +1,326 @@
+{
+  "schema_version": "1.0.0",
+  "generated_for_head": "931645dc724c54d635f32dabfca4b62fbc9a39a2",
+  "current_normative_documents": [
+    {
+      "path": "specs/current_architecture_lock_v01.md",
+      "status": "current_normative_architecture_lock",
+      "current_authority": true,
+      "authority_scope": "current_global_architecture_law",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "first source of truth for current architecture and authority law"
+    }
+  ],
+  "current_operational_documents": [
+    {
+      "path": "AGENTS.md",
+      "status": "current_operational_view_after_s1",
+      "current_authority": true,
+      "authority_scope": "operational_instructions_subordinate_to_architecture_lock",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "bounded coding-assistant operations subordinate to the architecture lock"
+    },
+    {
+      "path": "README.md",
+      "status": "current_public_engineering_view_after_s1",
+      "current_authority": false,
+      "authority_scope": "public_engineering_view_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "public engineering overview; not an independent normative source"
+    },
+    {
+      "path": "release/successor_context_manifest_v01.json",
+      "status": "s1_prepared_successor_context_candidate_pending_s2_s3",
+      "current_authority": false,
+      "authority_scope": "successor_context_selection_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "pending bounded-context candidate for S1 review and authorized S2/S3 sanitation only; not ready for permanent onboarding and creates no runtime or architecture authority"
+    }
+  ],
+  "current_technical_annexes": [
+    {
+      "path": "docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md",
+      "status": "accepted_gate1_checkpoint",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "Gate-1 closure and authority-boundary annex"
+    },
+    {
+      "path": "docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md",
+      "status": "accepted_gate2_g2a_checkpoint",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "scoped action-packet lifecycle annex"
+    },
+    {
+      "path": "docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md",
+      "status": "accepted_gate2_g2b_checkpoint",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "scoped memory, time, and reuse annex"
+    },
+    {
+      "path": "docs/execution_mode_router_g2_c_checkpoint_v01.md",
+      "status": "accepted_gate2_g2c_checkpoint",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "scoped route-proposal and Root-review annex"
+    },
+    {
+      "path": "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md",
+      "status": "accepted_cumulative_gate2_g2d_contract",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "scoped runtime-topology contract annex"
+    },
+    {
+      "path": "docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md",
+      "status": "accepted_current_gate2_g2d_checkpoint",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "current corrected G2-D closure annex"
+    },
+    {
+      "path": "docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md",
+      "status": "accepted_repository_gate_continuation_contract",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "in-repository Gate-2 sequence and G2-E continuation roadmap; lifecycle read with current status sources"
+    },
+    {
+      "path": "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
+      "status": "accepted_cumulative_gate2_g2e_contract",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "scoped G2-E contract annex through accepted E4"
+    },
+    {
+      "path": "release/current_status_overlay_v01.json",
+      "status": "current_lifecycle_metadata_view",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "current status metadata; never architecture or Root authority"
+    },
+    {
+      "path": "release/claim_to_evidence_index.md",
+      "status": "current_claim_evidence_navigation",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "claim-to-evidence navigation only"
+    },
+    {
+      "path": "release/current_limitations.md",
+      "status": "current_limitations_view",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "current non-claims and limitations view"
+    },
+    {
+      "path": "release/current_release_notes.md",
+      "status": "current_engineering_notes_view",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "engineering status notes; not a public release declaration"
+    }
+  ],
+  "historical_documents": [
+    {
+      "path": "specs/human_passport_v0_25.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/human_passport_v0_25.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": "specs/current_architecture_lock_v01.md"
+    },
+    {
+      "path": "specs/math_appendix_v0_3.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/math_appendix_v0_3.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": null
+    },
+    {
+      "path": "specs/machine_manifest_v0_25.json",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/machine_manifest_v0_25.json",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": "specs/document_authority_index_v01.json"
+    },
+    {
+      "path": "specs/schema_package_v0_25_reference.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/schema_package_v0_25_reference.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": null
+    },
+    {
+      "path": "specs/invariants.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/invariants.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": "specs/current_architecture_lock_v01.md"
+    },
+    {
+      "path": "specs/demo_baseline_v0_25.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/demo_baseline_v0_25.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": "README.md"
+    },
+    {
+      "path": "specs/demo_scenario.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/demo_scenario.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": "README.md"
+    },
+    {
+      "path": "specs/legacy_mapping.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:specs/legacy_mapping.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": null
+    },
+    {
+      "path": "docs/passport_geometry_root_needles.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:docs/passport_geometry_root_needles.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": "specs/current_architecture_lock_v01.md"
+    },
+    {
+      "path": "docs/strategic_expansion_map.md",
+      "status": "historical_reference",
+      "historical_git_ref": "931645dc724c54d635f32dabfca4b62fbc9a39a2:docs/strategic_expansion_map.md",
+      "current_authority": false,
+      "onboarding_allowed": false,
+      "preservation": "byte history in Git",
+      "current_replacement": null
+    }
+  ],
+  "audit_only_sources": [
+    {
+      "path": "docs/audit_reports/**",
+      "status": "audit_only",
+      "current_authority": false,
+      "authority_scope": "audit_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": false,
+      "role": "immutable review evidence opened only by explicit request"
+    },
+    {
+      "path": "docs/evidence/**",
+      "status": "evidence_only",
+      "current_authority": false,
+      "authority_scope": "audit_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": false,
+      "role": "evidence artifacts, not current implementation law"
+    },
+    {
+      "path": "release/completion_manifest.json",
+      "status": "frozen_gate1_evidence",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "accepted frozen runtime-act evidence, not current project closure authority"
+    },
+    {
+      "path": "release/integration_seam_index.json",
+      "status": "frozen_gate1_evidence",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "accepted frozen Gate-1 seam evidence"
+    },
+    {
+      "path": "release/integration_seam_index.md",
+      "status": "historical_release_basis_overlay",
+      "current_authority": false,
+      "authority_scope": "status_or_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "R-H1 implementation-basis navigation, not current Gate-2 seam authority"
+    }
+  ],
+  "excluded_from_successor_onboarding": [
+    "specs/human_passport_v0_25.md",
+    "specs/math_appendix_v0_3.md",
+    "specs/machine_manifest_v0_25.json",
+    "specs/schema_package_v0_25_reference.md",
+    "specs/invariants.md",
+    "specs/demo_baseline_v0_25.md",
+    "specs/demo_scenario.md",
+    "specs/legacy_mapping.md",
+    "docs/passport_geometry_root_needles.md",
+    "docs/strategic_expansion_map.md",
+    "docs/audit_reports/**",
+    "docs/evidence/**",
+    "docs/showcase/**"
+  ],
+  "source_of_truth_order": [
+    "specs/current_architecture_lock_v01.md",
+    "accepted current Kernel and Gate runtime contracts plus focused tests",
+    "accepted current Gate planning contracts, addenda, and successor checkpoints within their named scope",
+    "current release status and claim-to-evidence surfaces",
+    "AGENTS.md",
+    "README.md"
+  ],
+  "notes": [
+    "AGENTS.md becomes the current operational view only with this S1 sanitation patch.",
+    "README.md becomes the current public engineering view only with this S1 sanitation patch.",
+    "The full owner-supplied gate roadmap is not tracked and must not be fabricated; the accepted G2-E preflight is the repository-local gate-continuation source.",
+    "Current technical annex authority is limited to the annex's accepted contract or status scope and cannot override the Current Architecture Lock.",
+    "Historical and audit evidence is discoverable by explicit file request or the recorded Git object reference, never through automatic onboarding.",
+    "S1 does not claim later runtime or schema vocabulary retirement, Gate-2 closure, E5 implementation, public release, or production readiness.",
+    "The successor-context candidate remains blocked from permanent onboarding until its listed S2/S3 repairs close and a later authorized closure marks it ready.",
+    "Named Gate authority cannot redefine global topology, Root sovereignty, BSEP, runtime ownership, or another Gate's contract."
+  ]
+}

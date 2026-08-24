@@ -151,6 +151,17 @@
       "role": "engineering status notes; not a public release declaration"
     }
   ],
+  "future_reference_documents": [
+    {
+      "path": "specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md",
+      "status": "future_reference_non_current",
+      "current_authority": false,
+      "authority_scope": "future_research_reference_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": false,
+      "role": "Future mathematical extension roadmap; not current runtime, Gate contract, implementation, completion claim, or architecture authority."
+    }
+  ],
   "historical_documents": [
     {
       "path": "specs/human_passport_v0_25.md",
@@ -303,7 +314,8 @@
     "docs/strategic_expansion_map.md",
     "docs/audit_reports/**",
     "docs/evidence/**",
-    "docs/showcase/**"
+    "docs/showcase/**",
+    "specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
   ],
   "source_of_truth_order": [
     "specs/current_architecture_lock_v01.md",

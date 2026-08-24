@@ -1,14 +1,12 @@
 {
   "schema_version": "1.0.0",
   "base_head": "931645dc724c54d635f32dabfca4b62fbc9a39a2",
-  "manifest_status": "S1_PREPARED_PENDING_S2_S3",
+  "manifest_status": "S2_CLOSED_PENDING_S3",
   "onboarding_ready": false,
   "blocking_repairs": [
-    "S2_STRUCTURED_RATIONALE_VOCABULARY_REPAIR",
-    "S2_SUPPLIER_ADAPTER_EVENT_VOCABULARY_REPAIR",
     "S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION"
   ],
-  "purpose": "Bounded successor-context candidate prepared by S1 and blocked from permanent successor onboarding until the listed S2/S3 repairs close. Existing E1-E4 runtime/test targets are included only as accepted pre-E5 bytes; no frozen E5 candidate byte is present or authorized by this manifest.",
+  "purpose": "Bounded successor-context candidate prepared by S1, updated after S2 vocabulary closure, and blocked from permanent successor onboarding until S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION closes. Existing E1-E4 runtime/test targets are included only as accepted pre-E5 bytes; no frozen E5 candidate byte is present or authorized by this manifest.",
   "always_include": [
     "AGENTS.md",
     "README.md",

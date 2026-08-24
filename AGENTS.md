@@ -121,11 +121,12 @@ baseline bytes; the demo target is absent.
 ## Bounded context and onboarding
 
 The [Successor Context Manifest](release/successor_context_manifest_v01.json)
-is currently `S1_PREPARED_PENDING_S2_S3`; its `onboarding_ready` value is
-`false`. It may be used only for S1 review and authorized S2/S3 sanitation. A
-permanent successor assistant must not be onboarded until a later authorized
-closure updates the manifest to a ready state. The frozen E5 transplant remains
-prohibited at this point.
+is currently `S2_CLOSED_PENDING_S3`; its `onboarding_ready` value is `false`.
+The S2 structured-rationale and Supplier-adapter event vocabulary repairs are
+closed. `S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION` remains blocking. The manifest
+may be used only for authorized S3 sanitation and review. Permanent successor
+onboarding remains prohibited until a later authorized closure updates the
+manifest to a ready state. The frozen E5 transplant remains prohibited.
 
 Within that scope, the manifest is an allowlist, not a suggestion to load the
 whole repository. Expand context only for a named current contract, focused

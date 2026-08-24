@@ -15,12 +15,37 @@ GUARD_PATH = REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py
 CONTROL_PATHS = (
     "AGENTS.md",
     "README.md",
+    "demo/run_full_wow_v1_2_product_trace.py",
+    "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+    (
+        "hedgehog/domains/supplier_water_filter/"
+        "sealed_evidence_package_adapter_v01.py"
+    ),
+    "hedgehog/structured_rationale.py",
     "specs/current_architecture_lock_v01.md",
     "specs/document_authority_index_v01.json",
     "release/successor_context_manifest_v01.json",
     "tests/test_active_architecture_authority_v01.py",
+    "tests/test_full_wow_v1_2_product_trace_runner.py",
+    "tests/test_repository_release_spine_v01.py",
+    "tests/test_semantic_reasoning_adapter_core.py",
+    "tests/test_structured_rationale_core.py",
+    "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+    (
+        "tests/"
+        "test_supplier_water_filter_sealed_evidence_package_adapter_v01.py"
+    ),
     "tools/check_active_architecture_authority_v01.py",
 )
+READ_ONLY_CONTROL_PATHS = (
+    "README.md",
+    "specs/current_architecture_lock_v01.md",
+)
+FUTURE_REFERENCE_PATH = (
+    "specs/future/quantum/"
+    "hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
+)
+FUTURE_REFERENCE_MANIFEST_EXCLUSION = "specs/future/**"
 
 
 @pytest.fixture
@@ -36,6 +61,14 @@ def isolated_control_plane(tmp_path: Path) -> Path:
         check=True,
         capture_output=True,
         text=True,
+    )
+    exclude_path = tmp_path / ".git/info/exclude"
+    exclude_path.write_text(
+        exclude_path.read_text(encoding="utf-8")
+        + "\n"
+        + "\n".join(READ_ONLY_CONTROL_PATHS)
+        + "\n",
+        encoding="utf-8",
     )
     return tmp_path
 
@@ -209,6 +242,211 @@ def test_required_current_classification_missing_fails(
     assert "authority_index.current_operational_documents.missing:AGENTS.md" in completed.stdout
 
 
+def test_future_reference_category_missing_fails(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    authority_index.pop("future_reference_documents")
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "authority_index.top_level_shape" in completed.stdout
+    assert (
+        "authority_index.future_reference_documents.missing:"
+        + FUTURE_REFERENCE_PATH
+        in completed.stdout
+    )
+
+
+def test_future_reference_marked_current_authority_fails(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    entry = authority_index["future_reference_documents"][0]
+    entry["current_authority"] = True
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert f"future_reference.current_authority:{FUTURE_REFERENCE_PATH}" in (
+        completed.stdout
+    )
+
+
+def test_future_reference_using_global_architecture_scope_fails(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    entry = authority_index["future_reference_documents"][0]
+    entry["authority_scope"] = "current_global_architecture_law"
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert f"future_reference.authority_scope:{FUTURE_REFERENCE_PATH}" in (
+        completed.stdout
+    )
+    assert f"authority_index.global_scope_not_lock:{FUTURE_REFERENCE_PATH}" in (
+        completed.stdout
+    )
+
+
+def test_future_reference_may_not_override_architecture_lock(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    entry = authority_index["future_reference_documents"][0]
+    entry["may_override_architecture_lock"] = True
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        f"future_reference.may_override_architecture_lock:{FUTURE_REFERENCE_PATH}"
+        in completed.stdout
+    )
+
+
+def test_future_reference_cannot_be_onboarded(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    entry = authority_index["future_reference_documents"][0]
+    entry["onboarding_allowed"] = True
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert f"future_reference.onboarding_allowed:{FUTURE_REFERENCE_PATH}" in (
+        completed.stdout
+    )
+
+
+def test_future_reference_role_cannot_claim_implementation(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    entry = authority_index["future_reference_documents"][0]
+    entry["role"] = "current runtime implementation authority"
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert f"future_reference.role:{FUTURE_REFERENCE_PATH}" in completed.stdout
+
+
+def test_future_reference_index_exclusion_missing_fails(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    authority_index["excluded_from_successor_onboarding"].remove(
+        FUTURE_REFERENCE_PATH
+    )
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "future_reference.index_exclusion_missing" in completed.stdout
+    assert f"future_reference.not_index_excluded:{FUTURE_REFERENCE_PATH}" in (
+        completed.stdout
+    )
+
+
+def test_future_reference_in_source_of_truth_order_fails(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = (
+        isolated_control_plane / "specs/document_authority_index_v01.json"
+    )
+    authority_index = json.loads(index_path.read_text(encoding="utf-8"))
+    authority_index["source_of_truth_order"].append(FUTURE_REFERENCE_PATH)
+    index_path.write_text(
+        json.dumps(authority_index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        f"future_reference.in_source_of_truth_order:{FUTURE_REFERENCE_PATH}"
+        in completed.stdout
+    )
+
+
+def test_future_reference_manifest_exclusion_missing_fails(
+    isolated_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_control_plane / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["exclude_globs"].remove(FUTURE_REFERENCE_MANIFEST_EXCLUSION)
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "successor_manifest.exclude_globs.missing_retired:"
+        + FUTURE_REFERENCE_MANIFEST_EXCLUSION
+        in completed.stdout
+    )
+
+
 def test_required_retired_family_exclusion_missing_fails(
     isolated_control_plane: Path,
 ) -> None:
@@ -376,15 +614,15 @@ def test_document_may_override_architecture_lock_fails(
     )
 
 
-def test_agents_missing_pending_s2_s3_warning_fails(
+def test_agents_missing_s3_warning_fails(
     isolated_control_plane: Path,
 ) -> None:
     agents_path = isolated_control_plane / "AGENTS.md"
     original = agents_path.read_text(encoding="utf-8")
-    status = "S1_PREPARED_PENDING_S2_S3"
-    assert status in original
+    warning = "`S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION` remains blocking."
+    assert warning in original
     agents_path.write_text(
-        original.replace(status, "removed_pending_s2_s3_status"),
+        original.replace(warning, "removed S3 warning"),
         encoding="utf-8",
     )
 
@@ -392,7 +630,75 @@ def test_agents_missing_pending_s2_s3_warning_fails(
 
     assert completed.returncode == 1
     assert (
-        "current_document.missing_onboarding_warning:AGENTS.md:manifest_status"
+        "current_document.missing_onboarding_warning:AGENTS.md:s3_blocking"
+        in completed.stdout
+    )
+
+
+@pytest.mark.parametrize(
+    "closed_s2_repair",
+    (
+        "S2_STRUCTURED_RATIONALE_VOCABULARY_REPAIR",
+        "S2_SUPPLIER_ADAPTER_EVENT_VOCABULARY_REPAIR",
+    ),
+)
+def test_closed_s2_blocker_reintroduced_fails(
+    isolated_control_plane: Path,
+    closed_s2_repair: str,
+) -> None:
+    manifest_path = (
+        isolated_control_plane / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["blocking_repairs"].append(closed_s2_repair)
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "successor_manifest.blocking_repairs.exact" in completed.stdout
+
+
+def test_structured_rationale_positive_residue_reintroduced_fails(
+    isolated_control_plane: Path,
+) -> None:
+    source_path = isolated_control_plane / "hedgehog/structured_rationale.py"
+    retired_value = "bounded_" + "plan" + "_" + "graph"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8")
+        + f'\n_REINTRODUCED = "{retired_value}"\n',
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "s2.structured_rationale.retired_positive:0" in completed.stdout
+
+
+def test_supplier_event_residue_reintroduced_fails(
+    isolated_control_plane: Path,
+) -> None:
+    source_path = (
+        isolated_control_plane
+        / "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py"
+    )
+    retired_event = "runtime_" + "plan" + "graph_compiled"
+    source_path.write_text(
+        source_path.read_text(encoding="utf-8")
+        + f'\n_REINTRODUCED_EVENT = "{retired_event}"\n',
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s2.supplier_event.retired:"
+        "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py"
         in completed.stdout
     )
 

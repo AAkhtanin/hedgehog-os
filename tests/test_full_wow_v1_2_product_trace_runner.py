@@ -27,7 +27,7 @@ REQUIRED_STEP_IDS = {
     "top_level_semantic_route_observed_from_v1_1",
     "bsep_membrane_observed_from_v1_1",
     "top_level_live_semantic_architect_observed_from_v1_1",
-    "runtime_plangraph_compiled",
+    "runtime_execution_topology_materialized",
     "fractal_branch_cells_dispatched",
     "branch_result_proposals_collected",
     "post_vv_validated",
@@ -53,6 +53,8 @@ REQUIRED_CARD_FIELDS = {
     "trace_id",
     "evidence_id",
 }
+
+RETIRED_RUNTIME_EVENT = "runtime_" + "plan" + "graph_compiled"
 
 REQUIRED_BRANCH_IDS = {
     "warehouse_branch",
@@ -101,7 +103,7 @@ REQUIRED_AUTHORITY_FACTS = {
     "AVF cannot create ActionCommitPacket, receipt, payment, or shipment release.",
     "CandidateVector is not truth.",
     "AVF/advisory is not authority.",
-    "Runtime owns PlanGraph/local plan artifacts.",
+    "Runtime materializes and owns RuntimeExecutionTopology locally.",
     "Provider does not own PlanGraph.",
     "PlanGraph is not authority.",
     "Branch ResultProposal is not FinalOutput.",
@@ -252,8 +254,38 @@ def test_v1_2_product_trace_transition_cards_present() -> None:
         by_step["top_level_live_semantic_architect_observed_from_v1_1"][
             "next_step"
         ]
-        == "runtime_plangraph_compiled"
+        == "runtime_execution_topology_materialized"
     )
+
+
+def test_runtime_execution_topology_event_preserves_lifecycle_and_authority() -> None:
+    report = _report()
+    cards = report["transition_cards"]
+    ordered_step_ids = tuple(card["step_id"] for card in cards)
+    assert ordered_step_ids[10:13] == (
+        "top_level_live_semantic_architect_observed_from_v1_1",
+        "runtime_execution_topology_materialized",
+        "fractal_branch_cells_dispatched",
+    )
+    assert RETIRED_RUNTIME_EVENT not in ordered_step_ids
+
+    topology_event = cards[11]
+    assert topology_event["actor_or_module"] == "runtime"
+    assert topology_event["output_summary"] == (
+        "Local runtime materialized RuntimeExecutionTopology."
+    )
+    assert topology_event["does_not_authorize"] == (
+        "authority, permission, effect, receipt, or Root final"
+    )
+    assert topology_event["next_step"] == "fractal_branch_cells_dispatched"
+
+    runtime_plan = report["runtime_plan"]
+    assert runtime_plan["runtime_execution_topology_materialized_count"] == 1
+    assert runtime_plan["runtime_execution_topology_owned_by_local_runtime"] is True
+    assert RETIRED_RUNTIME_EVENT + "_count" not in runtime_plan
+    assert report["business_boundaries"]["root_remains_final_authority"] is True
+    assert report["real_world_effects_count"] == 0
+    assert len(cards) == 23
 
 
 def test_v1_2_product_trace_fractal_branches_present() -> None:
@@ -917,7 +949,7 @@ def test_v1_2_product_trace_rendered_sections() -> None:
         assert section in rendered
     assert "real Gemini Semantic Architect" in rendered
     assert "Architect semantic validation accepted" in rendered
-    assert "runtime retained PlanGraph ownership" in rendered
+    assert "local runtime materialized and owned RuntimeExecutionTopology" in rendered
     assert "DRS found prior traces" in rendered
     assert "DRS classified them as context" in rendered
     assert "DRS did not authorize payment" in rendered

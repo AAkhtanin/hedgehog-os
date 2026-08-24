@@ -1601,6 +1601,175 @@ def _g2d_v0310_legacy_lifecycle_state_v01() -> tuple[str, str, str | None, str |
     )
 
 
+def _g2d_v0310_protected_paths_v01() -> frozenset[str]:
+    return frozenset(
+        (
+            G2D_ACCEPTED_PREFLIGHT_PATH,
+            G2D_AUDIT_PATH,
+            G2D_HISTORICAL_CHECKPOINT_PATH,
+            G2D_INDEPENDENT_REAUDIT_PATH,
+            G2D_CHECKPOINT_PATH,
+            G2D_V038_INDEPENDENT_REAUDIT_PATH,
+            G2D_V038_CHECKPOINT_PATH,
+            G2D_V039_INDEPENDENT_REAUDIT_PATH,
+            G2D_V039_CHECKPOINT_PATH,
+            G2D_ACCEPTED_ADDENDUM_PATH,
+            G2D_V0310_INDEPENDENT_REAUDIT_PATH,
+            G2D_V0310_CHECKPOINT_PATH,
+            *G2D_V0310_IMPLEMENTATION_PATHS,
+            *G2D_V0310_E4_CODE_PATHS,
+            *G2D_FROZEN_IMPLEMENTATION_SHA256,
+            *G2E_CONTRACT_UPDATED_SHA256,
+            *G2D_FACADE_MAINTENANCE_SHA256,
+        )
+    )
+
+
+def _porcelain_paths_v01(status: tuple[str, ...]) -> frozenset[str]:
+    paths: set[str] = set()
+    for row in status:
+        assert len(row) >= 4
+        assert row[2] == " "
+        rendered_path = row[3:]
+        assert rendered_path
+        if row[0] in {"R", "C"} or row[1] in {"R", "C"}:
+            old_path, separator, new_path = rendered_path.partition(" -> ")
+            assert separator == " -> "
+            assert old_path and new_path
+            paths.update((old_path, new_path))
+        else:
+            paths.add(rendered_path)
+    return frozenset(paths)
+
+
+def _g2d_v0310_terminal_phase_v01(
+    *,
+    head: str,
+    final_sync_commit: str,
+    final_sync_is_ancestor: bool,
+    status: tuple[str, ...],
+) -> str:
+    assert final_sync_is_ancestor
+    protected_dirty = (
+        _porcelain_paths_v01(status) & _g2d_v0310_protected_paths_v01()
+    )
+    assert protected_dirty == frozenset()
+    if head == final_sync_commit and status == ():
+        return "POST_FINAL_E4_SYNC_CLEAN"
+    return "POST_FINAL_E4_SYNC_SUCCESSOR"
+
+
+def _assert_g2d_v0310_terminal_rejected_v01(
+    *,
+    head: str,
+    final_sync_commit: str,
+    final_sync_is_ancestor: bool,
+    status: tuple[str, ...],
+) -> None:
+    try:
+        _g2d_v0310_terminal_phase_v01(
+            head=head,
+            final_sync_commit=final_sync_commit,
+            final_sync_is_ancestor=final_sync_is_ancestor,
+            status=status,
+        )
+    except AssertionError:
+        return
+    raise AssertionError(
+        "terminal lifecycle case was accepted: "
+        f"{head=}, {final_sync_commit=}, {final_sync_is_ancestor=}, {status=}"
+    )
+
+
+def test_g2d_v0310_terminal_accepts_exact_and_unrelated_successor_dirt() -> None:
+    final_sync = "f" * 40
+    descendant = "d" * 40
+    unrelated_status = (
+        " M AGENTS.md",
+        " M hedgehog/structured_rationale.py",
+        "M  specs/document_authority_index_v01.json",
+        "?? tests/test_active_architecture_authority_v01.py",
+    )
+
+    assert _g2d_v0310_terminal_phase_v01(
+        head=final_sync,
+        final_sync_commit=final_sync,
+        final_sync_is_ancestor=True,
+        status=(),
+    ) == "POST_FINAL_E4_SYNC_CLEAN"
+    assert _g2d_v0310_terminal_phase_v01(
+        head=final_sync,
+        final_sync_commit=final_sync,
+        final_sync_is_ancestor=True,
+        status=unrelated_status,
+    ) == "POST_FINAL_E4_SYNC_SUCCESSOR"
+    assert _g2d_v0310_terminal_phase_v01(
+        head=descendant,
+        final_sync_commit=final_sync,
+        final_sync_is_ancestor=True,
+        status=unrelated_status,
+    ) == "POST_FINAL_E4_SYNC_SUCCESSOR"
+
+
+def test_g2d_v0310_terminal_rejects_non_descendant() -> None:
+    final_sync = "f" * 40
+    descendant = "d" * 40
+    _assert_g2d_v0310_terminal_rejected_v01(
+        head=descendant,
+        final_sync_commit=final_sync,
+        final_sync_is_ancestor=False,
+        status=(),
+    )
+def test_g2d_v0310_terminal_rejects_exact_protected_dirty_intersection() -> None:
+    final_sync = "f" * 40
+    descendant = "d" * 40
+    assert _porcelain_paths_v01(("R  old/path -> new/path",)) == frozenset(
+        {"old/path", "new/path"}
+    )
+
+    rejected_cases = (
+        {
+            "head": descendant,
+            "final_sync_commit": final_sync,
+            "final_sync_is_ancestor": True,
+            "status": (" M " + G2D_V0310_IMPLEMENTATION_PATHS[0],),
+        },
+        {
+            "head": descendant,
+            "final_sync_commit": final_sync,
+            "final_sync_is_ancestor": True,
+            "status": ("M  " + G2D_V0310_IMPLEMENTATION_PATHS[1],),
+        },
+        {
+            "head": descendant,
+            "final_sync_commit": final_sync,
+            "final_sync_is_ancestor": True,
+            "status": ("?? " + G2D_V0310_E4_CODE_PATHS[1],),
+        },
+        {
+            "head": descendant,
+            "final_sync_commit": final_sync,
+            "final_sync_is_ancestor": True,
+            "status": (
+                " M hedgehog/structured_rationale.py",
+                " M " + G2D_ACCEPTED_ADDENDUM_PATH,
+            ),
+        },
+        {
+            "head": descendant,
+            "final_sync_commit": final_sync,
+            "final_sync_is_ancestor": True,
+            "status": (
+                "R  "
+                + G2D_V0310_IMPLEMENTATION_PATHS[0]
+                + " -> moved/runtime.py",
+            ),
+        },
+    )
+    for rejected in rejected_cases:
+        _assert_g2d_v0310_terminal_rejected_v01(**rejected)
+
+
 def _g2d_v0310_successor_state_v01() -> tuple[str, str, str, str]:
     head = subprocess.run(
         ("git", "rev-parse", "HEAD"), cwd=REPOSITORY_ROOT, check=True,
@@ -1615,7 +1784,6 @@ def _g2d_v0310_successor_state_v01() -> tuple[str, str, str, str]:
         ("git", "diff", "--cached", "--name-only"), cwd=REPOSITORY_ROOT,
         check=True, capture_output=True, text=True,
     ).stdout.splitlines()
-    assert staged == []
 
     def unique(subject: str) -> tuple[str, str] | None:
         rows = _git_commits_with_subject_v0310(subject)
@@ -1630,6 +1798,8 @@ def _g2d_v0310_successor_state_v01() -> tuple[str, str, str, str]:
     closure = unique(G2D_V0310_CLOSURE_SUBJECT)
     e4 = unique(G2D_V0310_E4_CODE_SUBJECT)
     final_sync = unique(G2D_V0310_FINAL_SYNC_SUBJECT)
+    if final_sync is None:
+        assert staged == []
 
     assert contract == (G2D_V0310_CONTRACT_COMMIT, G2D_V0310_BASIS)
     assert maintenance is not None and maintenance[1] == contract[0]
@@ -1693,8 +1863,19 @@ def _g2d_v0310_successor_state_v01() -> tuple[str, str, str, str]:
         + ["?? " + G2D_V0310_CHECKPOINT_PATH]
     )
     if final_sync is not None:
-        assert head == final_sync[0] and status == []
-        phase = "POST_FINAL_E4_SYNC_CLEAN"
+        ancestor = subprocess.run(
+            ("git", "merge-base", "--is-ancestor", final_sync[0], head),
+            cwd=REPOSITORY_ROOT,
+            check=False,
+            capture_output=True,
+        )
+        assert ancestor.returncode in {0, 1}
+        phase = _g2d_v0310_terminal_phase_v01(
+            head=head,
+            final_sync_commit=final_sync[0],
+            final_sync_is_ancestor=ancestor.returncode == 0,
+            status=tuple(status),
+        )
     elif e4 is not None:
         assert head == e4[0] and (status == [] or sorted(status) == dirty_sync)
         phase = "POST_E4_CLEAN" if not status else "FINAL_E4_SYNC_CANDIDATE_DIRTY"
@@ -1723,6 +1904,7 @@ def _g2d_v0310_lifecycle_state_v01() -> tuple[str, str, str | None, str | None]:
         "POST_RECLOSURE_CLEAN", "POST_E4_CLEAN", "FINAL_E4_SYNC_CANDIDATE_DIRTY",
         "E4_CODE_CANDIDATE_DIRTY",
         "POST_FINAL_E4_SYNC_CLEAN",
+        "POST_FINAL_E4_SYNC_SUCCESSOR",
     }
     # Preserve the historical helper's bounded two-phase public contract for
     # exact legacy tests.  Successor-aware tests consume the exact phase from
@@ -1731,58 +1913,10 @@ def _g2d_v0310_lifecycle_state_v01() -> tuple[str, str, str | None, str | None]:
 
 
 def _current_boundary() -> dict[str, object]:
-    manifest = _read_json(MANIFEST_PATH)
-    checkpoint = manifest["current_checkpoint_status"]
-    assert isinstance(checkpoint, dict)
-    boundary = checkpoint["current_engineering_boundary_v01"]
+    overlay = _read_json(OVERLAY_PATH)
+    boundary = overlay["current_engineering_boundary"]
     assert isinstance(boundary, dict)
     return boundary
-
-
-def _readme_block(raw: bytes) -> bytes:
-    begin = README_BEGIN_MARKER.encode("utf-8")
-    end = README_END_MARKER.encode("utf-8")
-    assert raw.count(begin) == 1
-    assert raw.count(end) == 1
-    begin_offset = raw.index(begin)
-    end_offset = raw.index(end)
-    assert begin_offset < end_offset
-    assert begin not in raw[begin_offset + len(begin) : end_offset]
-    return raw[begin_offset : end_offset + len(end)]
-
-
-def _readme_without_block(raw: bytes) -> bytes:
-    block = _readme_block(raw)
-    return raw.replace(block, b"", 1)
-
-
-def _agents_block(raw: bytes) -> bytes:
-    successor_start = AGENTS_G2D_V0310_CURRENT_BEGIN_MARKER.encode("utf-8")
-    starts = (successor_start,) if successor_start in raw else tuple(
-        marker.encode("utf-8")
-        for marker in (
-            AGENTS_BEGIN_MARKER,
-            AGENTS_CURRENT_BEGIN_MARKER,
-            AGENTS_G2D_CURRENT_BEGIN_MARKER,
-            AGENTS_G2D_V039_CLOSED_BEGIN_MARKER,
-            AGENTS_G2D_V039_CONTRACT_BEGIN_MARKER,
-            AGENTS_G2D_V038_BEGIN_MARKER,
-        )
-        if marker.encode("utf-8") in raw
-    )
-    end = AGENTS_END_MARKER.encode("utf-8")
-    assert len(starts) == 1
-    assert raw.count(starts[0]) == 1
-    assert raw.count(end) == 1
-    begin_offset = raw.index(starts[0])
-    end_offset = raw.index(end)
-    assert begin_offset < end_offset
-    return raw[begin_offset:end_offset]
-
-
-def _agents_without_block(raw: bytes) -> bytes:
-    block = _agents_block(raw)
-    return raw.replace(block, b"", 1)
 
 
 def _revert_g2c_boundary_transition(
@@ -1953,136 +2087,104 @@ def test_current_boundary_has_exact_supported_lifecycle_geometry() -> None:
         _assert_closed_boundary(boundary)
 
 
-def test_readme_current_boundary_install_and_license_are_bounded() -> None:
-    raw = README_PATH.read_bytes()
-    text = raw.decode("utf-8")
-    block = _readme_block(raw).decode("utf-8")
-    boundary = _current_boundary()
-    assert _readme_without_block(raw) == _readme_without_block(
-        _git_show(G2D_V0310_BASIS, "README.md")
-    )
-    block_lines = block.splitlines()
-    for key, value in boundary.items():
-        rendered = json.dumps(value) if type(value) is bool else str(value)
-        assert block_lines.count(f"{key}: {rendered}") == 1, key
+def test_readme_current_engineering_view_and_license_are_bounded() -> None:
+    text = README_PATH.read_text(encoding="utf-8")
+    normalized = " ".join(text.split())
+    for heading in (
+        "## What Hedgehog OS is",
+        "## Current Root-centered topology",
+        "## What the current reference runtime demonstrates",
+        "## Current capabilities and checkpoints",
+        "## Evidence and historical checkpoint navigation",
+        "## Run the current Living Gauntlet and Kernel Conformance",
+        "## Claims and non-claims",
+        "## Where integrators extend the Kernel",
+    ):
+        assert text.count(heading) == 1
     for required in (
-        "G2-D v0.3.9 remains",
-        "`CLOSED_PASS_ON_V039_BYTES`",
-        "Active G2-D",
-        "`CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`",
-        "positive 3/3 backpressure law do not change",
-        "exactly two public",
-        "append-log-latest queue entries",
-        "Both lawful calls return `None`",
-        "mandatory nonsemantic maintenance",
-        "only `tests/test_repository_release_spine_v01.py`",
-        "clean isolated worktree",
-        "fe6cecec37512faad1c36eaea2a6ad61f4173998dfa09a993c0c889a1857dee0",
-        "independent re-audit, additive reclosure, and fresh V06 remain pending",
-        "`V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE=YES`",
-        "`V0310_G2D_RUNTIME_SEMANTICS_CHANGED=NO`",
-        "`V0310_G2E4_ACCEPTANCE_OVERLAY_SEMANTICS_CHANGED=YES`",
-        "`G2D_POSITIVE_BACKPRESSURE_LAW_CHANGED=NO`",
-        G2D_V0310_ACCEPTED_ADDENDUM_SHA256,
-        G2D_V039_ACCEPTED_ADDENDUM_SHA256,
-        G2D_V0310_INDEPENDENT_REAUDIT_PATH,
-        G2D_V0310_CHECKPOINT_PATH,
-        "Public release, RC2, production readiness, production security",
-        f"[Accepted G2-D addendum]({G2D_ACCEPTED_ADDENDUM_PATH})",
+        "[Current Architecture Lock](specs/current_architecture_lock_v01.md)",
+        "BSEP is the canonical semantic membrane",
+        "RuntimeExecutionTopology is locally materialized",
+        "Root is the sole local final and commit authority",
+        "Gate 1 is `CLOSED_PASS`",
+        "G2-D is `CLOSED_PASS`",
+        "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
+        "[Document Authority Index](specs/document_authority_index_v01.json)",
+        "[Successor Context Manifest](release/successor_context_manifest_v01.json)",
+        "[LICENSE](LICENSE)",
+        "[COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md)",
     ):
-        assert required in block
-    for stale in (
-        "DEPRECATED_PRE_V0310_G2D_STATUS_LITERAL",
-        "g2d_correction_implementation_authorized: true",
-        "DEPRECATED_PRE_V0310_CHECKPOINT_LITERAL",
-        "BLOCKED_PENDING_G2D_V039_RECLOSURE",
-        "BLOCKED_PENDING_G2D_RECLOSURE",
-        "g2d_v0310_implementation_authorized: true",
-        "DEPRECATED_PRE_V0310_IMPLEMENTATION_EXISTS_LITERAL",
-    ):
-        assert stale not in block
-    assert "python3 -m venv .venv" in text
-    assert ".venv/bin/python -m pip install -e ." in text
-    assert ".venv/bin/python -m pip check" in text
+        assert required in normalized, required
+    assert "Gate 2 remains `NOT_CLOSED`" in normalized
+    assert "does not claim production readiness" in normalized
+    assert "physical-world effects, or Gate-2 closure" in normalized
+    assert "From an installed editable checkout with `.venv` available" in text
     assert ".venv/bin/python -m demo.run_kernel_conformance_v01" in text
     assert ".venv/bin/python -m demo.run_living_gauntlet_v01" in text
-    assert "This README section does not" in text
-    assert "itself claim an external clean-clone result" in text
+    assert README_BEGIN_MARKER not in text
+    assert README_END_MARKER not in text
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as handle:
         project = tomllib.load(handle)["project"]
     assert project["license"] == "AGPL-3.0-only"
     assert project["license-files"] == ["LICENSE"]
-    assert "`AGPL-3.0-only`" in text
-    assert "[LICENSE](LICENSE)" in text
-    assert "[COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md)" in text
-    assert "non-granting" in text
-    assert "not a granted license" in text
 
-def test_agents_g2c_closure_block_is_exactly_bounded() -> None:
-    raw = AGENTS_PATH.read_bytes()
-    block = _agents_block(raw).decode("utf-8")
-    assert _agents_without_block(raw) == _agents_without_block(
-        _git_show(G2D_V0310_BASIS, "AGENTS.md")
-    )
-    required = (
-        AGENTS_G2D_V0310_CURRENT_BEGIN_MARKER,
-        f"Active cumulative v0.3.10 addendum SHA-256: `{G2D_V0310_ACCEPTED_ADDENDUM_SHA256}`",
-        f"Historical v0.3.9 suffix SHA-256: `{G2D_V039_ACCEPTED_ADDENDUM_SHA256}`",
-        f"Repository basis: `{G2D_V0310_BASIS}`",
-        "`V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE=YES`",
-        "`V0310_G2D_RUNTIME_SEMANTICS_CHANGED=NO`",
-        "`V0310_G2E4_ACCEPTANCE_OVERLAY_SEMANTICS_CHANGED=YES`",
-        "`G2D_POSITIVE_BACKPRESSURE_LAW_CHANGED=NO`",
-        "Guardian ruling: `APPROVE_PROFILE_D_CORRECTION_AND_E4_BACKPRESSURE_SCOPE_RECONCILIATION`",
-        "G2-D: `CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING`",
-        "G2-D v0.3.10 contract hop completed: `true`",
-        "Mandatory release-consumer maintenance: authorized and required, status `NOT_STARTED`, exact scope `tests/test_repository_release_spine_v01.py`",
-        "Contract-commit release-test bytes retain future-identity placeholders",
-        "G2-D v0.3.10 implementation authorized: `false`",
-        "G2-D v0.3.10 implementation started: `false`",
-        "G2-D v0.3.10 corrected implementation exists: `false`",
-        "G2-D v0.3.10 contract-only claim: `true`",
-        "G2-D v0.3.10 independent re-audit passed: `false`",
-        "G2-D v0.3.10 additive reclosure completed: `false`",
-        "Historical G2-D v0.3.9: `CLOSED_PASS_ON_V039_BYTES`",
-        f"Historical v0.3.9 runtime SHA-256: `{G2D_V039_IMPLEMENTATION_RUNTIME_SHA256}`",
-        f"Historical v0.3.9 test SHA-256: `{G2D_V039_IMPLEMENTATION_TEST_SHA256}`",
-        f"Historical v0.3.9 implementation commit: `{G2D_V039_IMPLEMENTATION_COMMIT}`",
-        f"Future v0.3.10 audit: `{G2D_V0310_INDEPENDENT_REAUDIT_PATH}` (`NOT_CREATED`)",
-        f"Future v0.3.10 checkpoint: `{G2D_V0310_CHECKPOINT_PATH}` (`NOT_CREATED`)",
-        "G2-E3: `REVALIDATION_PENDING_ON_CORRECTED_G2D`",
-        "G2-E4 strict subtree: `IMPLEMENTED_COMMITTED_PASS`",
-        "G2-E4 anti-gaming acceptance: `BLOCKED_PENDING_G2D_V0310_RECLOSURE`",
-        "B -> C -> M -> I and G2-D reclosure run only in a clean isolated Git worktree",
-        "Parked owner-primary E4 patch identity is `fe6cecec37512faad1c36eaea2a6ad61f4173998dfa09a993c0c889a1857dee0`, `117645` bytes, `2708` LF",
-        "Both queue tuples are exact append-log latest projections and results are `(None, None)`",
-        "The separate lawful G2-D 3/3 positive backpressure witness remains mandatory and unchanged",
-        "Root remains the only final authority",
-        "G2-C owns the accepted Root-reviewed route",
-        "G2-D owns RuntimeExecutionTopology and stable topology-node/cell IDs",
-        "Public release, RC2, production readiness, production security certification, and successor baseline remain `NOT_CLAIMED`",
-        "real-world effects remain zero",
-    )
-    for value in required:
-        assert block.count(value) == 1, value
-    for stale in (
-        "G2-D: `REAUDIT_PENDING`",
-        "BLOCKED_PENDING_G2D_V039_RECLOSURE",
-        "BLOCKED_PENDING_G2D_RECLOSURE",
-        "G2-D v0.3.10 implementation authorized: `true`",
-        "G2-D v0.3.10 corrected implementation exists: `true`",
+
+def test_agents_current_operational_surface_is_exactly_bounded() -> None:
+    text = AGENTS_PATH.read_text(encoding="utf-8")
+    normalized = " ".join(text.split())
+    for heading in (
+        "## Source-of-truth order",
+        "## Canonical runtime",
+        "## Current authority law",
+        "## Current Gate status and E5 handoff",
+        "## Worktree discipline",
+        "## Test and commit discipline",
+        "## Bounded context and onboarding",
+        "## Current navigation",
     ):
-        assert stale not in block
+        assert text.count(heading) == 1
+    for required in (
+        "[Current Architecture Lock](specs/current_architecture_lock_v01.md)",
+        "[Document Authority Index](specs/document_authority_index_v01.json)",
+        "BSEP is the canonical semantic membrane",
+        "RuntimeExecutionTopology is materialized and owned locally by runtime",
+        "Root is the sole local final and commit authority",
+        "Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`",
+        "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
+        "S2_CLOSED_PENDING_S3",
+        "S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION",
+        "Permanent successor onboarding remains prohibited",
+        "The frozen E5 transplant remains prohibited",
+    ):
+        assert required in normalized, required
+    source_order = text.split("## Source-of-truth order", 1)[1].split(
+        "## Canonical runtime", 1
+    )[0]
+    assert source_order.index("1. [Current Architecture Lock]") < (
+        source_order.index("2. Accepted current Kernel and Gate runtime contracts")
+    )
+    assert "subordinate to the" in text.split("## Source-of-truth order", 1)[0]
+    for stale_marker in (
+        AGENTS_BEGIN_MARKER,
+        AGENTS_CURRENT_BEGIN_MARKER,
+        AGENTS_G2D_CURRENT_BEGIN_MARKER,
+        AGENTS_G2D_V039_CLOSED_BEGIN_MARKER,
+        AGENTS_G2D_V039_CONTRACT_BEGIN_MARKER,
+        AGENTS_G2D_V038_BEGIN_MARKER,
+        AGENTS_G2D_V0310_CURRENT_BEGIN_MARKER,
+        AGENTS_END_MARKER,
+    ):
+        assert stale_marker not in text
     for route_step in (
         "BSEP",
-        "semantic proposal",
-        "G2-C Root-reviewed ExecutionModeRouteEligibility",
+        "Semantic Architect proposal",
         "runtime-owned RuntimeExecutionTopology",
-        "bounded runtime execution",
-        "ResultProposal / Post V&V / GT / PARENT_RETURN",
-        "Root",
+        "bounded actors / executors / child cells",
+        "ResultProposal / receipts / boundary snapshots",
+        "terminal GT advisory",
+        "independent local Root decision(s)",
     ):
-        assert route_step in block
+        assert route_step in text
 
 def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     overlay = _read_json(OVERLAY_PATH)
@@ -2827,11 +2929,18 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
 
 
 def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
+    historical_heading = "## Historical C/M boundary — superseded as current state"
+    limitations = LIMITATIONS_PATH.read_text(encoding="utf-8")
+    notes = NOTES_PATH.read_text(encoding="utf-8")
+    assert limitations.count(historical_heading) == 1
+    assert notes.count(historical_heading) == 1
+    current_limitations = limitations.split(historical_heading, 1)[0]
+    current_notes = notes.split(historical_heading, 1)[0]
     active_status_text = "\n".join((
-        _readme_block(README_PATH.read_bytes()).decode("utf-8"),
-        _agents_block(AGENTS_PATH.read_bytes()).decode("utf-8"),
-        LIMITATIONS_PATH.read_text(encoding="utf-8"),
-        NOTES_PATH.read_text(encoding="utf-8"),
+        README_PATH.read_text(encoding="utf-8"),
+        AGENTS_PATH.read_text(encoding="utf-8"),
+        current_limitations,
+        current_notes,
         json.dumps(_read_json(OVERLAY_PATH), sort_keys=True),
     ))
     active_text = active_status_text + "\n" + CLAIM_INDEX_PATH.read_text(
@@ -2840,30 +2949,19 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
     lowered = active_text.lower()
     for required in (
         "CLOSED_PASS",
-        "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
-        "ACCEPTED_IMPLEMENTATION_PENDING",
-        "CLOSED_PASS_ON_V039_BYTES",
-        "V039_PROFILE_D_IMPLEMENTATION_NONCONFORMANCE=YES",
-        "V0310_G2D_RUNTIME_SEMANTICS_CHANGED=NO",
-        "V0310_G2E4_ACCEPTANCE_OVERLAY_SEMANTICS_CHANGED=YES",
-        "G2D_POSITIVE_BACKPRESSURE_LAW_CHANGED=NO",
-        "REVALIDATION_PENDING_ON_CORRECTED_G2D",
+        "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D",
         "IMPLEMENTED_COMMITTED_PASS",
-        "BLOCKED_PENDING_G2D_V0310_RECLOSURE",
+        "G2-E4 anti-gaming acceptance is `PASS`",
         "NOT_STARTED_NOT_AUTHORIZED",
         "NOT_CLOSED",
-        G2D_V0310_ACCEPTED_ADDENDUM_SHA256,
-        G2D_V039_ACCEPTED_ADDENDUM_SHA256,
-        G2D_V0310_BASIS,
-        G2D_V0310_INDEPENDENT_REAUDIT_PATH,
-        G2D_V0310_CHECKPOINT_PATH,
-        G2D_V039_IMPLEMENTATION_COMMIT,
-        G2D_V039_IMPLEMENTATION_PATCH_SHA256,
-        G2D_V039_INDEPENDENT_REAUDIT_PATH,
-        G2D_V039_CHECKPOINT_PATH,
+        G2D_V0310_IMPLEMENTATION_COMMIT,
+        "real-world effects remain zero",
     ):
         assert required in active_text
     for forbidden in (
+        "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
+        "ACCEPTED_IMPLEMENTATION_PENDING",
+        "BLOCKED_PENDING_G2D_V0310_RECLOSURE",
         "BLOCKED_PENDING_G2D_V039_RECLOSURE",
         "BLOCKED_PENDING_G2D_RECLOSURE",
         "full cumulative acceptance remains pending the owner",
@@ -4145,7 +4243,11 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
     expected_successor_phases = {
         'post_i_sync': {'SYNC_CANDIDATE_DIRTY', 'POST_SYNC_CLEAN', 'AUDIT_CANDIDATE_DIRTY', 'POST_AUDIT_CLEAN'},
         'reclosure': {'RECLOSURE_CANDIDATE_DIRTY', 'POST_RECLOSURE_CLEAN', 'E4_CODE_CANDIDATE_DIRTY', 'POST_E4_CLEAN'},
-        'final_e4_sync': {'FINAL_E4_SYNC_CANDIDATE_DIRTY', 'POST_FINAL_E4_SYNC_CLEAN'},
+        'final_e4_sync': {
+            'FINAL_E4_SYNC_CANDIDATE_DIRTY',
+            'POST_FINAL_E4_SYNC_CLEAN',
+            'POST_FINAL_E4_SYNC_SUCCESSOR',
+        },
     }
     assert successor_phase in expected_successor_phases[G2D_V0310_EXPECTED_SUCCESSOR_PHASE]
     addendum = (
@@ -4209,7 +4311,7 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
         capture_output=True,
         text=True,
     ).stdout.splitlines()
-    assert staged == []
+    assert set(staged).isdisjoint(_g2d_v0310_protected_paths_v01())
     exact_reclosure_status = [
         " M " + path
         for path in G2D_V039_RECLOSURE_PATHS
@@ -4235,6 +4337,7 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
         "POST_E4_CLEAN",
         "FINAL_E4_SYNC_CANDIDATE_DIRTY",
         "POST_FINAL_E4_SYNC_CLEAN",
+        "POST_FINAL_E4_SYNC_SUCCESSOR",
     }
     assert head == lifecycle_head
     if lifecycle_state == "PRE_CONTRACT_DIRTY":
@@ -4579,6 +4682,7 @@ def test_g2d_closure_scope_is_exact_before_and_after_owner_commit() -> None:
     ).returncode == 0
 
 def test_quantum_roadmap_identity_metadata_and_amendment_are_exact() -> None:
+    assert ROADMAP_PATH.is_file()
     raw = ROADMAP_PATH.read_bytes()
     text = raw.decode("utf-8", errors="strict")
     lines = text.splitlines()
@@ -4590,6 +4694,9 @@ def test_quantum_roadmap_identity_metadata_and_amendment_are_exact() -> None:
     assert b"\x00" not in raw
     assert b"\r" not in raw
     assert raw.endswith(b"\n")
+    assert raw == _git_show(
+        "HEAD", ROADMAP_PATH.relative_to(REPOSITORY_ROOT).as_posix()
+    )
     for required in (
         "document_id: hedgehog_quantum_mathematical_extension_roadmap_v2_0",
         "document_status: FUTURE_POST_GATE6_ENGINEERING_DESIGN",
@@ -4632,55 +4739,83 @@ def test_quantum_roadmap_identity_metadata_and_amendment_are_exact() -> None:
 
 
 def test_quantum_future_design_content_is_exact_and_non_implementing() -> None:
-    readme = README_PATH.read_text(encoding="utf-8")
-    passport = HUMAN_PASSPORT_PATH.read_text(encoding="utf-8")
-    math_appendix = MATH_APPENDIX_PATH.read_text(encoding="utf-8")
+    roadmap_path = ROADMAP_PATH.relative_to(REPOSITORY_ROOT).as_posix()
+    expected_reference = {
+        "path": roadmap_path,
+        "status": "future_reference_non_current",
+        "current_authority": False,
+        "onboarding_allowed": False,
+        "authority_scope": "future_research_reference_only",
+        "may_override_architecture_lock": False,
+        "role": (
+            "Future mathematical extension roadmap; not current runtime, Gate "
+            "contract, implementation, completion claim, or architecture authority."
+        ),
+    }
+    authority_index = _read_json(
+        REPOSITORY_ROOT / "specs/document_authority_index_v01.json"
+    )
+    assert authority_index["future_reference_documents"] == [expected_reference]
+    for category in (
+        "current_normative_documents",
+        "current_operational_documents",
+        "current_technical_annexes",
+        "audit_only_sources",
+    ):
+        assert roadmap_path not in {
+            entry["path"] for entry in authority_index[category]
+        }
+    assert roadmap_path not in authority_index["source_of_truth_order"]
+    assert roadmap_path in authority_index["excluded_from_successor_onboarding"]
+
+    successor_context = _read_json(
+        REPOSITORY_ROOT / "release/successor_context_manifest_v01.json"
+    )
+    for category in (
+        "always_include",
+        "include_current_gate_sources",
+        "include_current_gate_tests",
+        "include_current_release_sources",
+        "authority_documents",
+    ):
+        assert roadmap_path not in successor_context[category]
+    assert "specs/future/**" in successor_context["exclude_globs"]
+
+    roadmap = ROADMAP_PATH.read_text(encoding="utf-8")
+    metadata = roadmap.split("```text\n", 1)[1].split("\n```", 1)[0]
+    for nonclaim in (
+        "document_status: FUTURE_POST_GATE6_ENGINEERING_DESIGN",
+        "current_release_claim: false",
+        "normative_for_current_gate_1_to_gate_6_runtime: false",
+        "changes_current_six_gate_strategy: NO",
+        "quantum_advantage_claimed: NO",
+    ):
+        assert metadata.splitlines().count(nonclaim) == 1
+
     limitations = LIMITATIONS_PATH.read_text(encoding="utf-8")
     notes = NOTES_PATH.read_text(encoding="utf-8")
-
-    assert readme.count(README_QUANTUM_SECTION) == 1
-    assert readme.count(ROADMAP_PATH.relative_to(REPOSITORY_ROOT).as_posix()) == 1
-    assert "Status: future post-Gate-6 design only; not implemented" in readme
-    assert "quantum advantage not claimed" in readme
-
-    assert passport.count(PASSPORT_QUANTUM_SECTION) == 1
-    assert passport.count("### Computational Substrate Neutrality") == 1
-    assert passport.count(
-        "Hedgehog does not make intelligence deterministic. "
-        "It makes the ownership of action deterministic."
-    ) == 1
-
-    assert math_appendix.count(MATH_QUANTUM_SECTION) == 1
-    assert math_appendix.endswith(MATH_QUANTUM_SECTION + "\n")
-    assert "may be extended after Gate 6" in MATH_QUANTUM_SECTION
-    assert "not a claim that the current runtime contains" in MATH_QUANTUM_SECTION
-
-    manifest = _read_json(MANIFEST_PATH)
-    hierarchy = manifest["document_hierarchy"]
-    assert isinstance(hierarchy, dict)
-    profiles = hierarchy["future_design_profiles"]
-    assert isinstance(profiles, list)
-    matching = [
-        profile
-        for profile in profiles
-        if isinstance(profile, dict)
-        and profile.get("profile_id") == "quantum_mathematical_extension_v2_0"
-    ]
-    assert matching == [QUANTUM_FUTURE_PROFILE]
-
     assert limitations.count(QUANTUM_LIMITATION) == 1
-    for forbidden_claim in (
-        "The Quantum-Inspired Mathematical Extension is implemented",
-        "Quantum AVF is implemented",
-        "quantum advantage is claimed",
-    ):
-        assert forbidden_claim not in limitations
     assert notes.count(QUANTUM_ENGINEERING_NOTE) == 1
     note_line = next(
         line for line in notes.splitlines() if line == QUANTUM_ENGINEERING_NOTE
     )
     assert "published" not in note_line.lower()
     assert "publicly released" not in note_line.lower()
+
+    current_claim_surfaces = "\n".join(
+        (
+            README_PATH.read_text(encoding="utf-8"),
+            AGENTS_PATH.read_text(encoding="utf-8"),
+            json.dumps(_read_json(OVERLAY_PATH), sort_keys=True),
+        )
+    )
+    for forbidden_current_claim in (
+        "The Quantum-Inspired Mathematical Extension is implemented",
+        "Quantum AVF is implemented",
+        "physical quantum-state result is implemented",
+        "quantum advantage is claimed",
+    ):
+        assert forbidden_current_claim not in current_claim_surfaces
 
     assert REPOSITORY_RELEASE_SPINE_TEST_MODIFIED is True
     assert OTHER_TESTS_MODIFIED is False

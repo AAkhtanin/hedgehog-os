@@ -278,7 +278,7 @@ _KERNEL_STEP_IDS = (
     "top_level_semantic_route_observed_from_v1_1",
     "bsep_membrane_observed_from_v1_1",
     "top_level_live_semantic_architect_observed_from_v1_1",
-    "runtime_plangraph_compiled",
+    "runtime_execution_topology_materialized",
     "fractal_branch_cells_dispatched",
     "branch_result_proposals_collected",
     "post_vv_validated",

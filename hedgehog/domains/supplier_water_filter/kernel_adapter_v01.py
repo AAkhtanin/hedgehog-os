@@ -51,7 +51,7 @@ _SOURCE_REPORT_HASH_DOMAIN = (
     "hedgehog.domains.supplier_water_filter.source_report.v01"
 )
 _EXPECTED_SOURCE_REPORT_HASH = (
-    "06bae328a4d8629ac25850362b43a2a554d18c61016f3501531f8bd0da141366"
+    "4c72d34880b959928499fe1917556f29f42351a05d6cdc7a8844ced3059bbc3a"
 )
 _SOURCE_CARD_HASH_DOMAIN = (
     "hedgehog.domains.supplier_water_filter.source_transition_card.v01"
@@ -90,7 +90,7 @@ _STEP_IDS = (
     "top_level_semantic_route_observed_from_v1_1",
     "bsep_membrane_observed_from_v1_1",
     "top_level_live_semantic_architect_observed_from_v1_1",
-    "runtime_plangraph_compiled",
+    "runtime_execution_topology_materialized",
     "fractal_branch_cells_dispatched",
     "branch_result_proposals_collected",
     "post_vv_validated",
@@ -114,8 +114,8 @@ _EXPECTED_SOURCE_CARD_HASHES = (
     "898d6c78765af8eab21eb73e11083195e8ce252fc721a98149c679024fd0d247",
     "b6a3a284928e1b9a3be7ed97b17c0eab06d4cbb1fc972a9483354601bb2c04da",
     "5e42f65023fd468b3369c06c5812c8f69435dd637cfe3703cd3e8ac7f9a65f66",
-    "b2d8e405b195fd5f3980cac28c923ca5f3b0fbce3e120f2e5b60e82d1f8d5b03",
-    "f5e0f1acaaff861005444e67d6757cdba58d4c5bb9b29cf738311e21b3a98bb9",
+    "87f36e3c9e54297e17e99dc96098555f366b8a57d818150190ba82464ad3bf85",
+    "118ca3fe32e9cc6fcf39b9a8bec5084a378b0213ed340ec5b21132c2a1d83db7",
     "d093609dd8c6246c367d263f05d3d352335b4892aea5d8e0bdf637c3e0c48a30",
     "48a0ecd610dac237d0f4d4602efca340c293dddd75338a235a384f85016f3198",
     "8743886df64328c33a2509b56324689c2f6c756d6be3617a6083a5685aaf77b9",
@@ -232,7 +232,12 @@ _STEP_MAPPING = (
     ("top_level_semantic_route_observed_from_v1_1", "SemanticEvidence", "EVIDENCE_ONLY", "VALIDATED"),
     ("bsep_membrane_observed_from_v1_1", "BSEPProjection", "EVIDENCE_ONLY", "VALIDATED"),
     ("top_level_live_semantic_architect_observed_from_v1_1", "SemanticArchitectProposal", "ADVISORY", "VALIDATED"),
-    ("runtime_plangraph_compiled", "RuntimeExecutionTopology", "NON_AUTHORITY", "VALIDATED"),
+    (
+        "runtime_execution_topology_materialized",
+        "RuntimeExecutionTopology",
+        "NON_AUTHORITY",
+        "VALIDATED",
+    ),
     ("fractal_branch_cells_dispatched", "RuntimeExecutionTopology", "NON_AUTHORITY", "VALIDATED"),
     ("branch_result_proposals_collected", "ResultProposal", "ADVISORY", "VALIDATED"),
     ("post_vv_validated", "PostVVReport", "ADVISORY", "VALIDATED"),

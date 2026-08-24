@@ -406,8 +406,11 @@ def build_architect_structured_rationale(
             plan_shape_reason,
             (
                 {
-                    "shape": "bounded_plan_graph",
-                    "reason": "PlanGraph remains advisory until validated",
+                    "shape": "bounded_semantic_work",
+                    "reason": (
+                        "bounded semantic proposal remains advisory until local "
+                        "validation"
+                    ),
                 },
             ),
         ),
@@ -415,8 +418,12 @@ def build_architect_structured_rationale(
             node_selection_reasoning,
             (
                 {
-                    "node_scope": "allowed_node_kinds",
-                    "reason": "nodes must pass contract validation",
+                    "node_scope": "bounded_semantic_work",
+                    "reason": (
+                        "semantic proposal does not assign execution nodes; "
+                        "RuntimeExecutionTopology is materialized and owned by "
+                        "local runtime"
+                    ),
                 },
             ),
         ),
@@ -424,8 +431,11 @@ def build_architect_structured_rationale(
             executor_constraint_reasoning,
             (
                 {
-                    "executor_scope": "allowed_executor_ids",
-                    "reason": "executor choices are constrained metadata",
+                    "executor_scope": "bounded_semantic_work",
+                    "reason": (
+                        "semantic proposal does not assign executors; runtime "
+                        "owns RuntimeExecutionTopology executor assignments"
+                    ),
                 },
             ),
         ),
@@ -443,7 +453,7 @@ def build_architect_structured_rationale(
             (
                 {
                     "validators": (
-                        "PlanGraph contract",
+                        "semantic_work_contract",
                         "Post V&V",
                         "GT/LGT",
                         "Root final authority",

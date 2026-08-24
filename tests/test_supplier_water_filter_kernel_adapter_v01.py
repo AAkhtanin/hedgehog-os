@@ -63,6 +63,8 @@ EXPECTED_MODULE_IDS = (
     "bank_b_hedgehog_native_preview",
 )
 
+RETIRED_RUNTIME_EVENT = "runtime_" + "plan" + "graph_compiled"
+
 
 @pytest.fixture(scope="module")
 def source_report() -> dict[str, object]:
@@ -284,12 +286,57 @@ def test_source_identity_and_geometry_are_accepted(source_report, result):
     assert result.result_proposal_count == 8
 
 
+def test_current_topology_event_is_runtime_owned_non_authority(result):
+    artifact = result.kernel_artifacts[11]
+    plain = abi.kernel_artifact_to_plain_dict_v01(artifact)
+    assert artifact.artifact_id == (
+        "supplier_water_filter_artifact:12:"
+        "runtime_execution_topology_materialized"
+    )
+    assert artifact.artifact_type == "RuntimeExecutionTopology"
+    assert artifact.authority_class == "NON_AUTHORITY"
+    assert artifact.lifecycle_state == "VALIDATED"
+    assert artifact.parent_refs == (result.kernel_artifacts[10].artifact_id,)
+    assert result.kernel_artifacts[12].parent_refs == (artifact.artifact_id,)
+    assert plain["payload"]["step_id"] == (
+        "runtime_execution_topology_materialized"
+    )
+    assert RETIRED_RUNTIME_EVENT not in repr(plain)
+
+
+def test_retired_topology_event_has_no_compatibility_input_path(source_report):
+    changed = copy.deepcopy(source_report)
+    changed["transition_cards"][10]["next_step"] = RETIRED_RUNTIME_EVENT
+    changed["transition_cards"][11]["step_id"] = RETIRED_RUNTIME_EVENT
+    errors = adapter._source_report_errors(changed)
+    assert "supplier_water_filter_source_geometry_mismatch" in errors
+    assert "supplier_water_filter_source_report_hash_mismatch" in errors
+    with pytest.raises(ValueError):
+        adapter.build_supplier_water_filter_kernel_adapter_result_v01(
+            source_report=changed
+        )
+
+
+def test_topology_vocabulary_repair_preserves_root_effect_and_reference_behavior(
+    source_report, result
+):
+    assert result.multiroot_outcome.expected_root_ids == (adapter.OWNER_ROOT_ID,)
+    assert len(result.multiroot_outcome.root_decisions) == 1
+    assert result.multiroot_outcome.root_decisions[0].outcome_class == "HELD"
+    assert source_report["business_boundaries"]["root_remains_final_authority"]
+    assert source_report["real_world_effects_count"] == result.real_world_effects_count == 0
+    assert result.transition_card_count == 23
+    assert result.dependency_edge_count == 22
+    assert result.fractal_branch_count == 8
+    assert result.result_proposal_count == 8
+
+
 def test_complete_source_report_identity_is_exact(source_report, result):
     assert adapter._source_report_hash(source_report) == (
         adapter._EXPECTED_SOURCE_REPORT_HASH
     )
     assert adapter._EXPECTED_SOURCE_REPORT_HASH == (
-        "06bae328a4d8629ac25850362b43a2a554d18c61016f3501531f8bd0da141366"
+        "4c72d34880b959928499fe1917556f29f42351a05d6cdc7a8844ced3059bbc3a"
     )
     assert adapter._source_report_errors(source_report) == ()
     assert adapter.build_supplier_water_filter_kernel_adapter_result_v01(

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import hedgehog.structured_rationale as rationale
 
 
@@ -52,6 +54,32 @@ def test_valid_architect_structured_rationale_is_accepted() -> None:
     assert validation["accepted"] is True
     assert validation["reasons"] == ()
     assert validation["rationale_type"] == artifact["rationale_type"]
+
+    artifact_text = repr(artifact)
+    assert "bounded_semantic_work" in artifact_text
+    assert "semantic_work_contract" in artifact_text
+    assert "RuntimeExecutionTopology" in artifact_text
+    assert "owned by local runtime" in artifact_text
+    assert "Plan" + "Graph" not in artifact_text
+    assert "plan" + "_" + "graph" not in artifact_text
+    assert "Attractor" + "Packet" not in artifact_text
+    assert "attractor" + "_" + "packet" not in artifact_text
+
+
+@pytest.mark.parametrize(
+    "retired_keyword",
+    (
+        "bounded_" + "plan" + "_" + "graph",
+        "attractor" + "_" + "packet",
+    ),
+)
+def test_architect_retired_vocabulary_has_no_compatibility_keyword(
+    retired_keyword: str,
+) -> None:
+    with pytest.raises(TypeError):
+        rationale.build_architect_structured_rationale(
+            **{retired_keyword: ({"shape": "proposal"},)}
+        )
 
 
 def test_non_mapping_rationale_rejected() -> None:

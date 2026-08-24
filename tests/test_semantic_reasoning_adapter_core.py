@@ -60,7 +60,7 @@ def _valid_architect_payload(**overrides: Any) -> dict[str, Any]:
         "required_validators": (
             "ArchitectPlanContextPacket validation",
             "structured rationale validation",
-            "PlanGraph contract",
+            "semantic_work_contract",
             "ResultProposal boundary",
             "Root final authority",
         ),
@@ -71,14 +71,18 @@ def _valid_architect_payload(**overrides: Any) -> dict[str, Any]:
         "connector_command_claimed": False,
         "drs_write_claimed": False,
         "root_bypass_claimed": False,
-        "plan_shape_reasoning": ("use bounded advisory review nodes",),
-        "node_intent_reasoning": ("review uncertainty and return to Root",),
-        "executor_constraint_reasoning": ("local executor is advisory only",),
+        "plan_shape_reasoning": ("describe bounded semantic work",),
+        "node_intent_reasoning": (
+            "identify semantic review obligations and return to Root",
+        ),
+        "executor_constraint_reasoning": (
+            "semantic proposal does not assign runtime executors",
+        ),
         "forbidden_surface_reasoning": (
             "no action, connector, or final surface is allowed",
         ),
         "validator_coverage_reasoning": (
-            "PlanGraph, ResultProposal, and Root boundaries remain required",
+            "SemanticWork, ResultProposal, and Root boundaries remain required",
         ),
         "return_to_root_reasoning": ("all proposal artifacts return to Root",),
         "uncertainty_notes": ("evidence gaps remain visible",),

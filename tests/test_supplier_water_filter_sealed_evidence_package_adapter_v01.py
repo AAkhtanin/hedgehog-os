@@ -95,7 +95,7 @@ EXPECTED_ARTIFACT_PROVENANCE = (
     ("supplier_water_filter_artifact:09:top_level_semantic_route_observed_from_v1_1", "top_level_semantic_route_observed_from_v1_1", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
     ("supplier_water_filter_artifact:10:bsep_membrane_observed_from_v1_1", "bsep_membrane_observed_from_v1_1", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
     ("supplier_water_filter_artifact:11:top_level_live_semantic_architect_observed_from_v1_1", "top_level_live_semantic_architect_observed_from_v1_1", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
-    ("supplier_water_filter_artifact:12:runtime_plangraph_compiled", "runtime_plangraph_compiled", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
+    ("supplier_water_filter_artifact:12:runtime_execution_topology_materialized", "runtime_execution_topology_materialized", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
     ("supplier_water_filter_artifact:13:fractal_branch_cells_dispatched", "fractal_branch_cells_dispatched", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
     ("supplier_water_filter_artifact:14:branch_result_proposals_collected", "branch_result_proposals_collected", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
     ("supplier_water_filter_artifact:15:post_vv_validated", "post_vv_validated", "EXECUTED_DETERMINISTIC_RUNTIME", "supplier_nine_scenario_index"),
@@ -108,6 +108,8 @@ EXPECTED_ARTIFACT_PROVENANCE = (
     ("supplier_water_filter_artifact:22:mock_bank_sandbox_receipt_observed", "mock_bank_sandbox_receipt_observed", "CORRIDOR_EVIDENCE", "supplier_packet_corridor_receipt_evidence"),
     ("supplier_water_filter_artifact:23:final_state_summary", "final_state_summary", "ROOT_DECISION_EVIDENCE", "supplier_root_multiroot_evidence"),
 )
+
+RETIRED_RUNTIME_EVENT = "runtime_" + "plan" + "graph_compiled"
 
 
 def _safe_report() -> dict[str, object]:
@@ -506,6 +508,12 @@ def test_exact_23_row_artifact_provenance_is_frozen(result, kernel_result):
         )
     )
     assert tuple(observed) == expected
+    assert observed[11][0:2] == (
+        "supplier_water_filter_artifact:12:"
+        "runtime_execution_topology_materialized",
+        "runtime_execution_topology_materialized",
+    )
+    assert RETIRED_RUNTIME_EVENT not in repr(observed)
     packet_row = observed[20]
     assert packet_row[1:] == (
         "root_created_mock_action_commit_packet_observed",

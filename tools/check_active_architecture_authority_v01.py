@@ -19,12 +19,26 @@ MANIFEST_PATH = "release/successor_context_manifest_v01.json"
 ALLOWED_CHANGED_PATHS = frozenset(
     {
         "AGENTS.md",
-        "README.md",
-        LOCK_PATH,
         INDEX_PATH,
         MANIFEST_PATH,
+        "demo/run_full_wow_v1_2_product_trace.py",
+        "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+        (
+            "hedgehog/domains/supplier_water_filter/"
+            "sealed_evidence_package_adapter_v01.py"
+        ),
+        "hedgehog/structured_rationale.py",
         "tools/check_active_architecture_authority_v01.py",
         "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+        "tests/test_full_wow_v1_2_product_trace_runner.py",
+        "tests/test_semantic_reasoning_adapter_core.py",
+        "tests/test_structured_rationale_core.py",
+        "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+        (
+            "tests/"
+            "test_supplier_water_filter_sealed_evidence_package_adapter_v01.py"
+        ),
     }
 )
 
@@ -34,6 +48,7 @@ AUTHORITY_INDEX_KEYS = (
     "current_normative_documents",
     "current_operational_documents",
     "current_technical_annexes",
+    "future_reference_documents",
     "historical_documents",
     "audit_only_sources",
     "excluded_from_successor_onboarding",
@@ -211,17 +226,16 @@ REQUIRED_DEFERRED_E5_PATHS = frozenset(
     }
 )
 
-REQUIRED_MANIFEST_STATUS = "S1_PREPARED_PENDING_S2_S3"
+REQUIRED_MANIFEST_STATUS = "S2_CLOSED_PENDING_S3"
 REQUIRED_BLOCKING_REPAIRS = (
-    "S2_STRUCTURED_RATIONALE_VOCABULARY_REPAIR",
-    "S2_SUPPLIER_ADAPTER_EVENT_VOCABULARY_REPAIR",
     "S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION",
 )
 REQUIRED_MANIFEST_PURPOSE = (
-    "Bounded successor-context candidate prepared by S1 and blocked from permanent "
-    "successor onboarding until the listed S2/S3 repairs close. Existing E1-E4 "
-    "runtime/test targets are included only as accepted pre-E5 bytes; no frozen E5 "
-    "candidate byte is present or authorized by this manifest."
+    "Bounded successor-context candidate prepared by S1, updated after S2 vocabulary "
+    "closure, and blocked from permanent successor onboarding until "
+    "S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION closes. Existing E1-E4 runtime/test "
+    "targets are included only as accepted pre-E5 bytes; no frozen E5 candidate byte "
+    "is present or authorized by this manifest."
 )
 
 GLOBAL_ARCHITECTURE_SCOPE = "current_global_architecture_law"
@@ -231,6 +245,7 @@ SUCCESSOR_CONTEXT_SCOPE = "successor_context_selection_only"
 NAMED_GATE_SCOPE = "named_gate_contract_only"
 STATUS_EVIDENCE_SCOPE = "status_or_evidence_only"
 AUDIT_EVIDENCE_SCOPE = "audit_evidence_only"
+FUTURE_REFERENCE_SCOPE = "future_research_reference_only"
 KNOWN_AUTHORITY_SCOPES = frozenset(
     {
         GLOBAL_ARCHITECTURE_SCOPE,
@@ -240,30 +255,50 @@ KNOWN_AUTHORITY_SCOPES = frozenset(
         NAMED_GATE_SCOPE,
         STATUS_EVIDENCE_SCOPE,
         AUDIT_EVIDENCE_SCOPE,
+        FUTURE_REFERENCE_SCOPE,
     }
 )
 BOUNDED_AUTHORITATIVE_SCOPES = frozenset({OPERATIONAL_SCOPE, NAMED_GATE_SCOPE})
 
 REQUIRED_AGENTS_ONBOARDING_WARNINGS = (
-    ("manifest_status", "S1_PREPARED_PENDING_S2_S3"),
+    ("manifest_status", "S2_CLOSED_PENDING_S3"),
     ("onboarding_ready", "its `onboarding_ready` value is `false`"),
     (
-        "authorized_sanitation_only",
-        "It may be used only for S1 review and authorized S2/S3 sanitation.",
+        "s2_repairs_closed",
+        "The S2 structured-rationale and Supplier-adapter event vocabulary repairs "
+        "are closed.",
+    ),
+    (
+        "s3_blocking",
+        "`S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION` remains blocking.",
+    ),
+    (
+        "authorized_s3_only",
+        "The manifest may be used only for authorized S3 sanitation and review.",
     ),
     (
         "permanent_successor_blocked",
-        "A permanent successor assistant must not be onboarded until a later "
-        "authorized closure updates the manifest to a ready state.",
+        "Permanent successor onboarding remains prohibited until a later authorized "
+        "closure updates the manifest to a ready state.",
     ),
     (
         "frozen_e5_prohibited",
-        "The frozen E5 transplant remains prohibited at this point.",
+        "The frozen E5 transplant remains prohibited.",
     ),
 )
 REQUIRED_GATE_SCOPE_NOTE = (
     "Named Gate authority cannot redefine global topology, Root sovereignty, "
     "BSEP, runtime ownership, or another Gate's contract."
+)
+
+FUTURE_REFERENCE_PATH = (
+    "specs/future/quantum/"
+    "hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
+)
+FUTURE_REFERENCE_MANIFEST_EXCLUSION = "specs/future/**"
+FUTURE_REFERENCE_ROLE = (
+    "Future mathematical extension roadmap; not current runtime, Gate contract, "
+    "implementation, completion claim, or architecture authority."
 )
 
 REQUIRED_CURRENT_CLASSIFICATIONS = {
@@ -388,6 +423,15 @@ REQUIRED_CURRENT_CLASSIFICATIONS = {
             False,
         ),
     },
+    "future_reference_documents": {
+        FUTURE_REFERENCE_PATH: (
+            "future_reference_non_current",
+            False,
+            False,
+            FUTURE_REFERENCE_SCOPE,
+            False,
+        ),
+    },
     "audit_only_sources": {
         "docs/audit_reports/**": (
             "audit_only",
@@ -490,7 +534,7 @@ REQUIRED_EXCLUDE_GLOBS = frozenset(
         "docs/audit_reports/**",
         "docs/evidence/**",
         "docs/showcase/**",
-        "specs/future/**",
+        FUTURE_REFERENCE_MANIFEST_EXCLUSION,
         "demo/run_human_*.py",
         "tests/test_human_*_runner.py",
         "demo/run_live_*.py",
@@ -522,6 +566,24 @@ FORBIDDEN_DIRECT_TERMS = (
 )
 REQUIRED_CURRENT_TERMS = ("BSEP", "RuntimeExecutionTopology")
 SCANNED_CURRENT_DOCUMENTS = ("AGENTS.md", "README.md", LOCK_PATH)
+
+STRUCTURED_RATIONALE_PATH = "hedgehog/structured_rationale.py"
+SUPPLIER_EVENT_SOURCE_PATHS = (
+    "demo/run_full_wow_v1_2_product_trace.py",
+    "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+    (
+        "hedgehog/domains/supplier_water_filter/"
+        "sealed_evidence_package_adapter_v01.py"
+    ),
+)
+_RETIRED_TITLE_PLAN = "Plan" + "Graph"
+_RETIRED_SUPPLIER_EVENT = "runtime_" + "plan" + "graph_compiled"
+_REQUIRED_SUPPLIER_EVENT = "runtime_execution_topology_materialized"
+_RETIRED_STRUCTURED_POSITIVE_TERMS = (
+    "bounded_" + _RETIRED_PLAN_STEM,
+    _RETIRED_TITLE_PLAN + " remains advisory until validated",
+    _RETIRED_TITLE_PLAN + " contract",
+)
 
 
 class DuplicateJSONKeyError(ValueError):
@@ -729,6 +791,7 @@ def _validate_authority_index(
         "current_normative_documents",
         "current_operational_documents",
         "current_technical_annexes",
+        "future_reference_documents",
         "audit_only_sources",
     ):
         entries = _validate_document_entries(
@@ -841,6 +904,13 @@ def _validate_authority_index(
                 )
                 if authority_scope != expected_audit_scope:
                     failures.append(f"authority_index.audit.scope:{path}")
+            if category == "future_reference_documents":
+                if current_authority is not False:
+                    failures.append(f"future_reference.current_authority:{path}")
+                if authority_scope != FUTURE_REFERENCE_SCOPE:
+                    failures.append(f"future_reference.authority_scope:{path}")
+                if entry.get("onboarding_allowed") is not False:
+                    failures.append(f"future_reference.onboarding_allowed:{path}")
 
     manifest_entries = {
         entry.get("path"): entry
@@ -866,6 +936,12 @@ def _validate_authority_index(
     for entry in category_entries.get("audit_only_sources", ()):
         if entry.get("current_authority") is not False:
             failures.append(f"authority_index.audit_has_authority:{entry.get('path')}")
+    for entry in category_entries.get("future_reference_documents", ()):
+        path = entry.get("path")
+        if entry.get("may_override_architecture_lock") is not False:
+            failures.append(f"future_reference.may_override_architecture_lock:{path}")
+        if path == FUTURE_REFERENCE_PATH and entry.get("role") != FUTURE_REFERENCE_ROLE:
+            failures.append(f"future_reference.role:{path}")
 
     categories_by_path: dict[str, list[str]] = {}
     for category, entries in category_entries.items():
@@ -896,6 +972,18 @@ def _validate_authority_index(
     for path in historical_paths:
         if path not in excluded:
             failures.append(f"historical.not_index_excluded:{path}")
+    if FUTURE_REFERENCE_PATH not in excluded:
+        failures.append("future_reference.index_exclusion_missing")
+    future_paths = {
+        entry.get("path")
+        for entry in category_entries.get("future_reference_documents", ())
+        if isinstance(entry.get("path"), str)
+    }
+    for path in sorted(future_paths):
+        if any(path in source for source in source_order):
+            failures.append(f"future_reference.in_source_of_truth_order:{path}")
+        if path not in excluded:
+            failures.append(f"future_reference.not_index_excluded:{path}")
     return historical_entries
 
 
@@ -1068,6 +1156,36 @@ def _validate_current_documents(repo_root: Path, failures: list[str]) -> None:
                     )
 
 
+def _validate_s2_vocabulary(repo_root: Path, failures: list[str]) -> None:
+    try:
+        structured_text = (repo_root / STRUCTURED_RATIONALE_PATH).read_text(
+            encoding="utf-8"
+        )
+    except (OSError, UnicodeError) as exc:
+        failures.append(
+            f"s2.structured_rationale.read:{type(exc).__name__}"
+        )
+    else:
+        for index, retired_term in enumerate(_RETIRED_STRUCTURED_POSITIVE_TERMS):
+            if retired_term in structured_text:
+                failures.append(
+                    f"s2.structured_rationale.retired_positive:{index}"
+                )
+
+    for relative_path in SUPPLIER_EVENT_SOURCE_PATHS:
+        try:
+            source_text = (repo_root / relative_path).read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            failures.append(
+                f"s2.supplier_event.read:{relative_path}:{type(exc).__name__}"
+            )
+            continue
+        if _RETIRED_SUPPLIER_EVENT in source_text:
+            failures.append(f"s2.supplier_event.retired:{relative_path}")
+        if _REQUIRED_SUPPLIER_EVENT not in source_text:
+            failures.append(f"s2.supplier_event.current_missing:{relative_path}")
+
+
 def _validate_deliverable_paths(repo_root: Path, failures: list[str]) -> None:
     for relative_path in sorted(ALLOWED_CHANGED_PATHS):
         if not (repo_root / relative_path).is_file():
@@ -1137,6 +1255,7 @@ def collect_failures(
     }
     _validate_manifest(successor_manifest, failures, historical_paths)
     _validate_current_documents(root, failures)
+    _validate_s2_vocabulary(root, failures)
     _validate_deliverable_paths(root, failures)
     observed_changed_paths = _git_changed_paths(root, failures)
     _validate_changed_paths(observed_changed_paths, failures)

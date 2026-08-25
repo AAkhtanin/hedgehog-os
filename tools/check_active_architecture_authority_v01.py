@@ -8,6 +8,7 @@ import ast
 import fnmatch
 import json
 from pathlib import Path, PurePosixPath
+import re
 import subprocess
 from typing import Iterable, Sequence
 
@@ -761,6 +762,20 @@ _RETIRED_STRUCTURED_POSITIVE_TERMS = (
     _RETIRED_TITLE_PLAN + " remains advisory until validated",
     _RETIRED_TITLE_PLAN + " contract",
 )
+_FORBIDDEN_E5_TOPOLOGY_OWNERSHIP_PATTERNS = (
+    re.compile(
+        r"(?<![A-Za-z0-9])(?:provider|model)[\s_-]*"
+        r"(?:owns?|owned|creates?|created|materializes?|materialized)[\s_-]*"
+        r"(?:runtime[\s_-]*execution[\s_-]*)?topology\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(?<![A-Za-z0-9])(?:runtime[\s_-]*execution[\s_-]*)?topology"
+        r"[\s_-]*(?:is[\s_-]*)?(?:owned|created|materialized)[\s_-]*by"
+        r"[\s_-]*(?:provider|model)\b",
+        re.IGNORECASE,
+    ),
+)
 
 
 class DuplicateJSONKeyError(ValueError):
@@ -1246,9 +1261,9 @@ def _validate_manifest(
     value: dict[str, object] | None,
     failures: list[str],
     historical_paths: Iterable[str],
-) -> tuple[str, ...]:
+) -> tuple[tuple[str, ...], frozenset[str]]:
     if value is None:
-        return ()
+        return (), frozenset()
     if tuple(value) != MANIFEST_KEYS:
         failures.append("successor_manifest.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
@@ -1392,7 +1407,7 @@ def _validate_manifest(
             failures.append(f"historical.in_successor_context:{path}")
         if path not in exclude_paths:
             failures.append(f"historical.not_manifest_excluded:{path}")
-    return tuple(sorted(onboarding_paths))
+    return tuple(sorted(onboarding_paths)), frozenset(deferred_paths)
 
 
 def _validate_retired_records(
@@ -2117,6 +2132,71 @@ def _validate_current_import_graph(
         failures.append(f"s3.package_facade.retired_export:{retired}")
 
 
+def _validate_deferred_e5_content(
+    repo_root: Path,
+    failures: list[str],
+) -> None:
+    """Reject retired positive vocabulary and topology-ownership claims.
+
+    The focused E5 test and runner may contain exact negative assertions or
+    non-claim fields for retired vocabulary. Import isolation for all three
+    deferred paths is enforced separately by ``_validate_current_import_graph``.
+    """
+
+    folded_forbidden = tuple(term.casefold() for term in FORBIDDEN_DIRECT_TERMS)
+    for relative_path in sorted(REQUIRED_DEFERRED_E5_PATHS):
+        path = repo_root / relative_path
+        if not path.exists():
+            # A deferred candidate may be absent from the clean successor tree.
+            continue
+        try:
+            source = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            failures.append(
+                f"s3.e5_runtime.read:{relative_path}:{type(exc).__name__}"
+            )
+            continue
+        lines = source.splitlines()
+        for index, folded_term in enumerate(folded_forbidden):
+            contaminated = False
+            for line in lines:
+                if folded_term not in line.casefold():
+                    continue
+                compact = "".join(line.split()).casefold()
+                negative_nonclaim = (
+                    folded_term == ("plan" + "_" + "graph")
+                    and compact
+                    in {
+                        '"plan_graph_claimed":false,',
+                        "'plan_graph_claimed':false,",
+                    }
+                )
+                negative_assertion = (
+                    folded_term == ("plan" + "graph")
+                    and compact
+                    in {
+                        'assert"plangraph"notinsource',
+                        "assert'plangraph'notinsource",
+                    }
+                )
+                if not negative_nonclaim and not negative_assertion:
+                    contaminated = True
+                    break
+            if contaminated:
+                failures.append(
+                    f"s3.e5_runtime.retired_positive:{relative_path}:{index}"
+                )
+        for line_number, line in enumerate(lines, start=1):
+            if any(
+                pattern.search(line)
+                for pattern in _FORBIDDEN_E5_TOPOLOGY_OWNERSHIP_PATTERNS
+            ):
+                failures.append(
+                    "s3.e5_runtime.provider_owned_topology:"
+                    f"{relative_path}:{line_number}"
+                )
+
+
 def _validate_current_documents(repo_root: Path, failures: list[str]) -> None:
     folded_forbidden = tuple(term.casefold() for term in FORBIDDEN_DIRECT_TERMS)
     for relative_path in SCANNED_CURRENT_DOCUMENTS:
@@ -2223,9 +2303,22 @@ def _git_changed_paths(repo_root: Path, failures: list[str]) -> set[str]:
     return changed
 
 
-def _validate_changed_paths(changed_paths: Iterable[str], failures: list[str]) -> None:
+def _validate_changed_paths(
+    changed_paths: Iterable[str],
+    manifest_allowed_changed_paths: Iterable[str],
+    failures: list[str],
+) -> None:
     changed = set(changed_paths)
-    unexpected = sorted(changed - ALLOWED_CHANGED_PATHS)
+    allowed = ALLOWED_CHANGED_PATHS | frozenset(
+        path
+        for path in manifest_allowed_changed_paths
+        if _valid_relative_path(path)
+    )
+    unexpected = sorted(
+        path
+        for path in changed
+        if not _valid_relative_path(path) or path not in allowed
+    )
     for path in unexpected:
         failures.append(f"worktree.unexpected_changed_path:{path}")
 
@@ -2261,7 +2354,7 @@ def collect_failures(
         for entry in historical_entries
         if isinstance(entry.get("path"), str)
     }
-    onboarding_paths = _validate_manifest(
+    onboarding_paths, manifest_allowed_changed_paths = _validate_manifest(
         successor_manifest, failures, historical_paths
     )
     _validate_s3_inventory(root, retired_inventory, failures)
@@ -2269,11 +2362,16 @@ def collect_failures(
     _validate_release_succession(completion_manifest, seam_index, failures)
     _validate_conformance_profiles(root, failures)
     _validate_current_import_graph(root, onboarding_paths, failures)
+    _validate_deferred_e5_content(root, failures)
     _validate_current_documents(root, failures)
     _validate_s2_vocabulary(root, failures)
     _validate_deliverable_paths(root, failures)
     observed_changed_paths = _git_changed_paths(root, failures)
-    _validate_changed_paths(observed_changed_paths, failures)
+    _validate_changed_paths(
+        observed_changed_paths,
+        manifest_allowed_changed_paths,
+        failures,
+    )
     return tuple(sorted(set(failures)))
 
 

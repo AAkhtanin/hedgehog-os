@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import runpy
 import shutil
 import subprocess
 import sys
@@ -12,6 +13,11 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 GUARD_PATH = REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"
+DEFERRED_E5_PATHS = (
+    "hedgehog/kernel/continuous_delta_runtime_v01.py",
+    "tests/test_continuous_delta_runtime_g2_e_v01.py",
+    "demo/run_continuous_delta_runtime_g2_e_v01.py",
+)
 MUTABLE_CONTROL_PATHS = (
     "AGENTS.md",
     "demo/run_kernel_conformance_v01.py",
@@ -112,6 +118,66 @@ def isolated_control_plane(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
     return tmp_path
+
+
+@pytest.fixture
+def isolated_clean_e5_control_plane(isolated_control_plane: Path) -> Path:
+    deferred_demo = isolated_control_plane / DEFERRED_E5_PATHS[2]
+    deferred_demo.parent.mkdir(parents=True, exist_ok=True)
+    deferred_demo.write_text(
+        "# Isolated deferred-E5 demo placeholder.\n",
+        encoding="utf-8",
+    )
+    subprocess.run(
+        ("git", "add", "-f", "--", "."),
+        cwd=isolated_control_plane,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        (
+            "git",
+            "-c",
+            "user.name=Authority Guard Test",
+            "-c",
+            "user.email=authority-guard-test@example.invalid",
+            "commit",
+            "-q",
+            "-m",
+            "isolated control-plane baseline",
+        ),
+        cwd=isolated_control_plane,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return isolated_control_plane
+
+
+def _dirty_deferred_e5_paths(root: Path, relative_paths: tuple[str, ...]) -> None:
+    for index, relative_path in enumerate(relative_paths):
+        path = root / relative_path
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + f"\n# isolated deferred-E5 dirt {index}\n",
+            encoding="utf-8",
+        )
+
+
+def _short_status_paths(root: Path) -> set[str]:
+    completed = subprocess.run(
+        ("git", "status", "--short", "--untracked-files=all"),
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return {
+        line[3:]
+        for line in completed.stdout.splitlines()
+        if len(line) >= 4
+    }
 
 
 def _run_guard(
@@ -894,6 +960,318 @@ def test_removing_exact_g2b_path_from_allowlist_while_dirty_fails(
         "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
         in completed.stdout
     )
+
+
+def test_clean_post_s3_control_plane_passes(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    assert _short_status_paths(isolated_clean_e5_control_plane) == set()
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 0, completed.stdout
+    assert completed.stdout == "ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\n"
+    assert completed.stderr == ""
+
+
+def test_all_exact_deferred_e5_paths_may_be_dirty(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    _dirty_deferred_e5_paths(
+        isolated_clean_e5_control_plane,
+        DEFERRED_E5_PATHS,
+    )
+    assert _short_status_paths(isolated_clean_e5_control_plane) == set(
+        DEFERRED_E5_PATHS
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 0, completed.stdout
+    assert completed.stdout == "ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\n"
+
+
+@pytest.mark.parametrize(
+    "dirty_paths",
+    (
+        (DEFERRED_E5_PATHS[0],),
+        (DEFERRED_E5_PATHS[1],),
+        (DEFERRED_E5_PATHS[2],),
+        (DEFERRED_E5_PATHS[0], DEFERRED_E5_PATHS[1]),
+        (DEFERRED_E5_PATHS[0], DEFERRED_E5_PATHS[2]),
+        (DEFERRED_E5_PATHS[1], DEFERRED_E5_PATHS[2]),
+    ),
+)
+def test_any_one_or_two_exact_deferred_e5_paths_may_be_dirty(
+    isolated_clean_e5_control_plane: Path,
+    dirty_paths: tuple[str, ...],
+) -> None:
+    _dirty_deferred_e5_paths(isolated_clean_e5_control_plane, dirty_paths)
+    assert _short_status_paths(isolated_clean_e5_control_plane) == set(
+        dirty_paths
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 0, completed.stdout
+    assert completed.stdout == "ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\n"
+
+
+def test_exact_deferred_e5_set_plus_unexpected_path_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    _dirty_deferred_e5_paths(
+        isolated_clean_e5_control_plane,
+        DEFERRED_E5_PATHS,
+    )
+    unexpected_path = isolated_clean_e5_control_plane / "unexpected_post_s3.txt"
+    unexpected_path.write_text("unexpected\n", encoding="utf-8")
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "worktree.unexpected_changed_path:unexpected_post_s3.txt"
+        in completed.stdout
+    )
+
+
+@pytest.mark.parametrize(
+    "unexpected_path",
+    (
+        "demo/run_continuous_delta_runtime_g2_e_v01_extra.py",
+        "hedgehog/kernel/unexpected_post_s3_runtime.py",
+        "tests/test_unexpected_post_s3_runtime.py",
+    ),
+)
+def test_neighboring_or_unrelated_runtime_test_path_fails(
+    isolated_clean_e5_control_plane: Path,
+    unexpected_path: str,
+) -> None:
+    path = isolated_clean_e5_control_plane / unexpected_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("unexpected = True\n", encoding="utf-8")
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        f"worktree.unexpected_changed_path:{unexpected_path}"
+        in completed.stdout
+    )
+
+
+def test_renaming_deferred_e5_path_to_unapproved_neighbor_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    source = DEFERRED_E5_PATHS[2]
+    destination = "demo/run_continuous_delta_runtime_g2_e_v01_extra.py"
+    subprocess.run(
+        ("git", "mv", "--", source, destination),
+        cwd=isolated_clean_e5_control_plane,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        f"worktree.unexpected_changed_path:{destination}"
+        in completed.stdout
+    )
+
+
+def test_noncanonical_dot_slash_deferred_e5_path_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_clean_e5_control_plane
+        / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["deferred_e5_transplant"][0]["path"] == (
+        DEFERRED_E5_PATHS[0]
+    )
+    manifest["deferred_e5_transplant"][0]["path"] = (
+        "./" + DEFERRED_E5_PATHS[0]
+    )
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "successor_manifest.deferred_e5_transplant[0].path"
+        in completed.stdout
+    )
+    assert (
+        "successor_manifest.deferred_e5_transplant.paths"
+        in completed.stdout
+    )
+
+
+def test_dot_slash_unexpected_changed_path_fails_exact_membership() -> None:
+    guard_namespace = runpy.run_path(str(GUARD_PATH))
+    failures: list[str] = []
+
+    guard_namespace["_validate_changed_paths"](
+        {"./unexpected_post_s3.py"},
+        DEFERRED_E5_PATHS,
+        failures,
+    )
+
+    assert failures == [
+        "worktree.unexpected_changed_path:./unexpected_post_s3.py"
+    ]
+
+
+def test_removed_manifest_e5_path_cannot_authorize_its_dirt(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    removed_path = DEFERRED_E5_PATHS[2]
+    manifest_path = (
+        isolated_clean_e5_control_plane
+        / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["deferred_e5_transplant"] = [
+        entry
+        for entry in manifest["deferred_e5_transplant"]
+        if entry["path"] != removed_path
+    ]
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    _dirty_deferred_e5_paths(
+        isolated_clean_e5_control_plane,
+        (removed_path,),
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "successor_manifest.deferred_e5_transplant.paths"
+        in completed.stdout
+    )
+    assert (
+        f"worktree.unexpected_changed_path:{removed_path}"
+        in completed.stdout
+    )
+
+
+def test_retired_import_in_allowed_e5_path_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    runtime_path = isolated_clean_e5_control_plane / DEFERRED_E5_PATHS[0]
+    runtime_path.write_text(
+        runtime_path.read_text(encoding="utf-8")
+        + "\nimport hedgehog.root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.E5_RETIRED_IMPORTS:hedgehog.root_orchestrator"
+        in completed.stdout
+    )
+
+
+def test_retired_positive_vocabulary_in_allowed_e5_runtime_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    runtime_path = isolated_clean_e5_control_plane / DEFERRED_E5_PATHS[0]
+    retired_term = "Plan" + "Graph"
+    runtime_path.write_text(
+        runtime_path.read_text(encoding="utf-8")
+        + f'\n_RETIRED_POSITIVE = "{retired_term}"\n',
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.e5_runtime.retired_positive:"
+        + DEFERRED_E5_PATHS[0]
+        + ":0"
+        in completed.stdout
+    )
+
+
+def test_provider_owned_topology_claim_in_allowed_e5_runtime_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    runtime_path = isolated_clean_e5_control_plane / DEFERRED_E5_PATHS[0]
+    runtime_path.write_text(
+        runtime_path.read_text(encoding="utf-8")
+        + "\n_PROVIDER_OWNED_TOPOLOGY = True\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.e5_runtime.provider_owned_topology:"
+        + DEFERRED_E5_PATHS[0]
+        in completed.stdout
+    )
+
+
+def test_successor_readiness_false_after_s3_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_clean_e5_control_plane
+        / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["blocking_repairs"] == []
+    manifest["onboarding_ready"] = False
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert "successor_manifest.onboarding_ready" in completed.stdout
+    assert (
+        "successor_manifest.not_ready_without_blocking_repairs"
+        in completed.stdout
+    )
+
+
+def test_nonempty_blocking_repairs_under_ready_manifest_fails(
+    isolated_clean_e5_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_clean_e5_control_plane
+        / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["onboarding_ready"] is True
+    manifest["blocking_repairs"] = ["REINTRODUCED_POST_S3_BLOCKER"]
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_clean_e5_control_plane)
+
+    assert completed.returncode == 1
+    assert "successor_manifest.blocking_repairs.exact" in completed.stdout
+    assert "successor_manifest.ready_with_blocking_repairs" in completed.stdout
 
 
 def test_historical_act_added_to_current_v06_refs_fails(

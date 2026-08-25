@@ -1,0 +1,90 @@
+{
+  "schema_surface_id": "current_schema_surface_v01",
+  "schema_surface_status": "CURRENT_SCHEMA_SURFACE_ISOLATED",
+  "generated_from_head": "237501110159f1adb6d8a4c5e9482d618e5a8187",
+  "current_schema_paths": [
+    "schemas/common.schema.json",
+    "schemas/continuous_delta_runtime_v01.schema.json",
+    "schemas/drs_meaning_record_v01.schema.json",
+    "schemas/drs_memory_resolution_v01.schema.json",
+    "schemas/drs_semantic_address_v01.schema.json",
+    "schemas/execution_mode_router_v01.schema.json",
+    "schemas/fractal_runtime_v02.schema.json",
+    "schemas/gt_report.schema.json",
+    "schemas/kernel_artifact_v01.schema.json",
+    "schemas/result_proposal.schema.json",
+    "schemas/reuse_certificate_v01.schema.json",
+    "schemas/semantic_work_v01.schema.json",
+    "schemas/time_envelope.schema.json",
+    "schemas/vv_report.schema.json"
+  ],
+  "retired_schema_paths": [
+    "schemas/attractor_packet.schema.json",
+    "schemas/plan_graph.schema.json"
+  ],
+  "current_loader_or_registry_refs": [
+    {
+      "source_path": "hedgehog/post_vv.py",
+      "schema_paths": [
+        "schemas/common.schema.json",
+        "schemas/result_proposal.schema.json",
+        "schemas/time_envelope.schema.json",
+        "schemas/vv_report.schema.json"
+      ],
+      "role": "current_runtime_local_schema_loader"
+    },
+    {
+      "source_path": "demo/run_living_gauntlet_v01.py",
+      "schema_paths": [
+        "schemas/kernel_artifact_v01.schema.json",
+        "schemas/semantic_work_v01.schema.json"
+      ],
+      "role": "current_living_conformance_schema_validation"
+    },
+    {
+      "source_path": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py",
+      "schema_paths": [
+        "schemas/drs_meaning_record_v01.schema.json",
+        "schemas/drs_memory_resolution_v01.schema.json",
+        "schemas/drs_semantic_address_v01.schema.json",
+        "schemas/reuse_certificate_v01.schema.json"
+      ],
+      "role": "accepted_current_gate_schema_conformance"
+    },
+    {
+      "source_path": "tests/test_execution_mode_router_g2_c_v01.py",
+      "schema_paths": [
+        "schemas/execution_mode_router_v01.schema.json"
+      ],
+      "role": "accepted_current_gate_schema_conformance"
+    },
+    {
+      "source_path": "tests/test_fractal_runtime_g2_d_v02.py",
+      "schema_paths": [
+        "schemas/fractal_runtime_v02.schema.json"
+      ],
+      "role": "accepted_current_gate_schema_conformance"
+    },
+    {
+      "source_path": "tests/test_continuous_delta_runtime_g2_e_v01.py",
+      "schema_paths": [
+        "schemas/continuous_delta_runtime_v01.schema.json"
+      ],
+      "role": "accepted_pre_e5_gate_schema_conformance"
+    },
+    {
+      "source_path": "hedgehog/gt_validator.py",
+      "schema_paths": [
+        "schemas/gt_report.schema.json"
+      ],
+      "role": "current_terminal_gt_contract_registry_reference"
+    }
+  ],
+  "isolation_invariants": [
+    "RETIRED_SCHEMAS_ARE_NOT_CURRENT",
+    "RETIRED_SCHEMAS_EXCLUDED_FROM_SUCCESSOR_ONBOARDING",
+    "RETIRED_SCHEMAS_NOT_REGISTERED_BY_CURRENT_LOADER",
+    "GIT_BYTE_PRESERVATION_ALLOWED",
+    "HISTORICAL_TEST_REFERENCES_OUTSIDE_CURRENT_CONFORMANCE_ONLY"
+  ]
+}

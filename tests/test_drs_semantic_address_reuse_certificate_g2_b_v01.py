@@ -25,7 +25,10 @@ from hedgehog.kernel.integrity_replay_v01 import canonical_json_bytes_v01
 from hedgehog.kernel.integrity_replay_v01 import (
     domain_separated_sha256_hex_v01,
 )
-from hedgehog.local_drs_resolver import SemanticDRSRecordInput
+from hedgehog.local_drs_resolver import (
+    SemanticDRSRecordInput,
+    _g2b_action_request_reason_v01,
+)
 from hedgehog.local_drs_v02 import (
     DRSFreshnessEnvelope,
     DRSRecordV02,
@@ -8843,9 +8846,7 @@ def test_g2b_reuse_certificate_expires_at_exact_valid_to() -> None:
 
 
 def _b4_request_reason(text: str) -> str | None:
-    from hedgehog.root_orchestrator import RootOrchestrator
-
-    return RootOrchestrator._classify_g2b_shortcut_request(text)
+    return _g2b_action_request_reason_v01(text)
 
 
 def test_g2b_payment_request_cannot_take_answer_shortcut() -> None:
@@ -8905,16 +8906,40 @@ def test_g2b_receipt_creation_cannot_take_answer_shortcut() -> None:
 
 
 def test_g2b_caller_boolean_cannot_authorize_shortcut() -> None:
-    from hedgehog.root_orchestrator import RootOrchestrator
-
-    signature = inspect.signature(RootOrchestrator.process_event)
-    assert tuple(signature.parameters)[-2:] == (
-        "g2b_resolution_report",
-        "g2b_use_time",
+    signature = inspect.signature(
+        reuse.validate_existing_root_shortcut_decision_v01
     )
-    assert signature.parameters["allow_direct_reuse"].default is False
-    assert signature.parameters["g2b_resolution_report"].default is None
-    assert signature.parameters["g2b_use_time"].default is None
+    assert tuple(signature.parameters) == (
+        "resolution_report",
+        "root_kernel",
+        "root_decision_input",
+        "root_decision_result",
+        "use_time",
+    )
+    assert all(
+        parameter.kind is inspect.Parameter.KEYWORD_ONLY
+        and parameter.default is inspect.Parameter.empty
+        for parameter in signature.parameters.values()
+    )
+    assert "allow_direct_reuse" not in signature.parameters
+
+    fixture = _b4_fixture()
+    assert _b4_validate(fixture) == (True, ())
+    unbound_report = _reidentify(
+        replace(
+            fixture["report"],
+            root_shortcut_projection=None,
+            reuse_certificate=None,
+        )
+    )
+    assert resolution.validate_drs_resolution_report_v01(unbound_report) == (
+        True,
+        (),
+    )
+    assert _b4_validate(fixture, report=unbound_report) == (
+        False,
+        ("drs_root_projection_invalid",),
+    )
 
 
 def test_g2b_valid_informational_shortcut_skips_only_allowed_heavy_actors() -> None:

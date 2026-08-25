@@ -12,9 +12,56 @@ import pytest
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 GUARD_PATH = REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"
-CONTROL_PATHS = (
+MUTABLE_CONTROL_PATHS = (
     "AGENTS.md",
+    "demo/run_kernel_conformance_v01.py",
+    "demo/run_living_gauntlet_v01.py",
+    "hedgehog/kernel/conformance_v01.py",
+    "release/completion_manifest.json",
+    "release/current_schema_surface_v01.json",
+    "release/integration_seam_index.json",
+    "release/retired_architecture_inventory_v01.json",
+    "release/successor_context_manifest_v01.json",
+    "specs/document_authority_index_v01.json",
+    "tests/test_active_architecture_authority_v01.py",
+    "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py",
+    "tests/test_kernel_conformance_v01_runner.py",
+    "tests/test_living_gauntlet_v01_runner.py",
+    "tests/test_repository_release_spine_v01.py",
+    "tools/check_active_architecture_authority_v01.py",
+)
+CURRENT_SCHEMA_PATHS = (
+    "schemas/common.schema.json",
+    "schemas/continuous_delta_runtime_v01.schema.json",
+    "schemas/drs_meaning_record_v01.schema.json",
+    "schemas/drs_memory_resolution_v01.schema.json",
+    "schemas/drs_semantic_address_v01.schema.json",
+    "schemas/execution_mode_router_v01.schema.json",
+    "schemas/fractal_runtime_v02.schema.json",
+    "schemas/gt_report.schema.json",
+    "schemas/kernel_artifact_v01.schema.json",
+    "schemas/result_proposal.schema.json",
+    "schemas/reuse_certificate_v01.schema.json",
+    "schemas/semantic_work_v01.schema.json",
+    "schemas/time_envelope.schema.json",
+    "schemas/vv_report.schema.json",
+)
+RETIRED_PATHS = (
+    "schemas/attractor_packet.schema.json",
+    "schemas/plan_graph.schema.json",
+    "hedgehog/architect.py",
+    "hedgehog/architect_prompt_compiler.py",
+    "hedgehog/executor.py",
+    "hedgehog/fractal_dag_executor.py",
+    "hedgehog/llm_architect.py",
+    "hedgehog/root_orchestrator.py",
+    "hedgehog/trace_reporter.py",
+    "demo/run_all_layers_applied_super_smoke.py",
+    "tests/test_all_layers_applied_super_smoke_runner.py",
+)
+READ_ONLY_CONTROL_PATHS = (
     "README.md",
+    "specs/current_architecture_lock_v01.md",
     "demo/run_full_wow_v1_2_product_trace.py",
     "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
     (
@@ -22,25 +69,19 @@ CONTROL_PATHS = (
         "sealed_evidence_package_adapter_v01.py"
     ),
     "hedgehog/structured_rationale.py",
-    "specs/current_architecture_lock_v01.md",
-    "specs/document_authority_index_v01.json",
-    "release/successor_context_manifest_v01.json",
-    "tests/test_active_architecture_authority_v01.py",
-    "tests/test_full_wow_v1_2_product_trace_runner.py",
-    "tests/test_repository_release_spine_v01.py",
-    "tests/test_semantic_reasoning_adapter_core.py",
-    "tests/test_structured_rationale_core.py",
-    "tests/test_supplier_water_filter_kernel_adapter_v01.py",
-    (
-        "tests/"
-        "test_supplier_water_filter_sealed_evidence_package_adapter_v01.py"
-    ),
-    "tools/check_active_architecture_authority_v01.py",
+    "hedgehog/post_vv.py",
+    "hedgehog/gt_validator.py",
+    "hedgehog/__init__.py",
+    "hedgehog/kernel/__init__.py",
+    "hedgehog/kernel/continuous_delta_runtime_v01.py",
+    "tests/test_continuous_delta_runtime_g2_e_v01.py",
+    "tests/test_execution_mode_router_g2_c_v01.py",
+    "tests/test_fractal_runtime_g2_d_v02.py",
+    "tests/test_continuous_delta_runtime_g2_e_v01.py",
+    *CURRENT_SCHEMA_PATHS,
+    *RETIRED_PATHS,
 )
-READ_ONLY_CONTROL_PATHS = (
-    "README.md",
-    "specs/current_architecture_lock_v01.md",
-)
+CONTROL_PATHS = tuple(dict.fromkeys((*MUTABLE_CONTROL_PATHS, *READ_ONLY_CONTROL_PATHS)))
 FUTURE_REFERENCE_PATH = (
     "specs/future/quantum/"
     "hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
@@ -73,8 +114,12 @@ def isolated_control_plane(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def _run_guard(root: Path) -> subprocess.CompletedProcess[str]:
-    command = [sys.executable, str(GUARD_PATH), "--root", str(root)]
+def _run_guard(
+    root: Path,
+    *,
+    guard_path: Path = GUARD_PATH,
+) -> subprocess.CompletedProcess[str]:
+    command = [sys.executable, str(guard_path), "--root", str(root)]
     environment = dict(os.environ)
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     return subprocess.run(
@@ -470,35 +515,16 @@ def test_required_retired_family_exclusion_missing_fails(
     )
 
 
-def test_onboarding_ready_true_with_blocking_repairs_fails(
+def test_blocking_repair_reintroduced_while_onboarding_ready_fails(
     isolated_control_plane: Path,
 ) -> None:
     manifest_path = (
         isolated_control_plane / "release/successor_context_manifest_v01.json"
     )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["blocking_repairs"]
-    manifest["onboarding_ready"] = True
-    manifest_path.write_text(
-        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
-
-    completed = _run_guard(isolated_control_plane)
-
-    assert completed.returncode == 1
-    assert "successor_manifest.onboarding_ready" in completed.stdout
-
-
-def test_blocking_repairs_removed_while_onboarding_not_ready_fails(
-    isolated_control_plane: Path,
-) -> None:
-    manifest_path = (
-        isolated_control_plane / "release/successor_context_manifest_v01.json"
-    )
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest["onboarding_ready"] is False
-    manifest["blocking_repairs"] = []
+    assert manifest["onboarding_ready"] is True
+    assert manifest["blocking_repairs"] == []
+    manifest["blocking_repairs"] = ["S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION"]
     manifest_path.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -508,6 +534,28 @@ def test_blocking_repairs_removed_while_onboarding_not_ready_fails(
 
     assert completed.returncode == 1
     assert "successor_manifest.blocking_repairs.exact" in completed.stdout
+    assert "successor_manifest.ready_with_blocking_repairs" in completed.stdout
+
+
+def test_onboarding_not_ready_with_no_blocking_repairs_fails(
+    isolated_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_control_plane / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["blocking_repairs"] == []
+    manifest["onboarding_ready"] = False
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "successor_manifest.onboarding_ready" in completed.stdout
+    assert "successor_manifest.not_ready_without_blocking_repairs" in completed.stdout
 
 
 def test_successor_manifest_marked_current_authority_fails(
@@ -614,12 +662,15 @@ def test_document_may_override_architecture_lock_fails(
     )
 
 
-def test_agents_missing_s3_warning_fails(
+def test_agents_missing_s3_closure_warning_fails(
     isolated_control_plane: Path,
 ) -> None:
     agents_path = isolated_control_plane / "AGENTS.md"
     original = agents_path.read_text(encoding="utf-8")
-    warning = "`S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION` remains blocking."
+    warning = (
+        "S1 document-authority succession, S2 vocabulary\n"
+        "repair, and S3 active-schema and retired-subsystem isolation are closed."
+    )
     assert warning in original
     agents_path.write_text(
         original.replace(warning, "removed S3 warning"),
@@ -630,7 +681,7 @@ def test_agents_missing_s3_warning_fails(
 
     assert completed.returncode == 1
     assert (
-        "current_document.missing_onboarding_warning:AGENTS.md:s3_blocking"
+        "current_document.missing_onboarding_warning:AGENTS.md:s1_s2_s3_closed"
         in completed.stdout
     )
 
@@ -735,5 +786,587 @@ def test_unexpected_changed_path_fails(isolated_control_plane: Path) -> None:
     assert completed.returncode == 1
     assert (
         "worktree.unexpected_changed_path:hedgehog/unexpected_change.py"
+        in completed.stdout
+    )
+
+
+def test_exact_approved_g2b_test_path_is_accepted(
+    isolated_control_plane: Path,
+) -> None:
+    approved_path = (
+        isolated_control_plane
+        / "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+    )
+    approved_path.write_text(
+        approved_path.read_text(encoding="utf-8") + "\n# approved dirty path\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 0, completed.stdout
+    assert completed.stdout == "ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\n"
+
+
+def test_neighboring_g2b_test_path_is_rejected(
+    isolated_control_plane: Path,
+) -> None:
+    neighboring_path = (
+        isolated_control_plane
+        / "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01_extra.py"
+    )
+    neighboring_path.write_text("unexpected = True\n", encoding="utf-8")
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "worktree.unexpected_changed_path:"
+        "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01_extra.py"
+        in completed.stdout
+    )
+
+
+def test_arbitrary_tests_path_is_rejected(
+    isolated_control_plane: Path,
+) -> None:
+    arbitrary_path = isolated_control_plane / "tests/test_unapproved_s3_path.py"
+    arbitrary_path.write_text("unexpected = True\n", encoding="utf-8")
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "worktree.unexpected_changed_path:tests/test_unapproved_s3_path.py"
+        in completed.stdout
+    )
+
+
+def test_approved_g2b_path_plus_unexpected_second_path_is_rejected(
+    isolated_control_plane: Path,
+) -> None:
+    approved_path = (
+        isolated_control_plane
+        / "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+    )
+    approved_path.write_text(
+        approved_path.read_text(encoding="utf-8") + "\n# approved dirty path\n",
+        encoding="utf-8",
+    )
+    unexpected_path = isolated_control_plane / "tests/test_second_dirty_path.py"
+    unexpected_path.write_text("unexpected = True\n", encoding="utf-8")
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "worktree.unexpected_changed_path:tests/test_second_dirty_path.py"
+        in completed.stdout
+    )
+    assert (
+        "worktree.unexpected_changed_path:"
+        "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+        not in completed.stdout
+    )
+
+
+def test_removing_exact_g2b_path_from_allowlist_while_dirty_fails(
+    isolated_control_plane: Path,
+) -> None:
+    local_guard = (
+        isolated_control_plane / "tools/check_active_architecture_authority_v01.py"
+    )
+    guard_source = local_guard.read_text(encoding="utf-8")
+    allowlist_entry = (
+        '        "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py",\n'
+    )
+    assert allowlist_entry in guard_source
+    local_guard.write_text(
+        guard_source.replace(allowlist_entry, "", 1),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane, guard_path=local_guard)
+
+    assert completed.returncode == 1
+    assert (
+        "worktree.unexpected_changed_path:"
+        "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+        in completed.stdout
+    )
+
+
+def test_historical_act_added_to_current_v06_refs_fails(
+    isolated_control_plane: Path,
+) -> None:
+    source_path = isolated_control_plane / "hedgehog/kernel/conformance_v01.py"
+    source = source_path.read_text(encoding="utf-8")
+    marker = (
+        '_V06_CURRENT_ACTIVE_GAUNTLET_REFS = (\n'
+        '    "airline_deterministic_transaction_runtime",\n'
+    )
+    assert marker in source
+    source_path.write_text(
+        source.replace(
+            marker,
+            marker + '    "all_layers_invariant_super_smoke",\n',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "s3.kernel_conformance.old_act_in_current_profile" in completed.stdout
+
+
+def test_historical_act_removed_from_frozen_v05_profile_fails(
+    isolated_control_plane: Path,
+) -> None:
+    completion_path = isolated_control_plane / "release/completion_manifest.json"
+    completion = json.loads(completion_path.read_text(encoding="utf-8"))
+    historical_refs = completion["kernel_conformance_profiles"]["historical_v0_5"][
+        "active_gauntlet_refs"
+    ]
+    historical_refs.remove("all_layers_invariant_super_smoke")
+    completion_path.write_text(
+        json.dumps(completion, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "s3.release.completion.historical_profile_exact" in completed.stdout
+
+
+def test_historical_act_id_rebound_to_current_runner_fails(
+    isolated_control_plane: Path,
+) -> None:
+    runner_path = isolated_control_plane / "demo/run_kernel_conformance_v01.py"
+    source = runner_path.read_text(encoding="utf-8")
+    marker = "_ACT_SOURCES = {\n"
+    assert marker in source
+    runner_path.write_text(
+        source.replace(
+            marker,
+            marker
+            + '    "all_layers_invariant_super_smoke": '
+            + '("demo.current_rebind", "collect_current_rebind"),\n',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.kernel_conformance_runner.historical_act_rebound"
+        in completed.stdout
+    )
+
+
+def test_living_gauntlet_importing_historical_runner_fails(
+    isolated_control_plane: Path,
+) -> None:
+    living_path = isolated_control_plane / "demo/run_living_gauntlet_v01.py"
+    living_path.write_text(
+        living_path.read_text(encoding="utf-8")
+        + "\nimport demo.run_all_layers_applied_super_smoke\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.LIVING_GAUNTLET_RETIRED_IMPORTS:"
+        "demo.run_all_layers_applied_super_smoke"
+        in completed.stdout
+    )
+
+
+def test_historical_act_marked_current_in_release_index_fails(
+    isolated_control_plane: Path,
+) -> None:
+    completion_path = isolated_control_plane / "release/completion_manifest.json"
+    completion = json.loads(completion_path.read_text(encoding="utf-8"))
+    historical = next(
+        record
+        for record in completion["evidence_only_references"]
+        if record.get("act_id") == "all_layers_invariant_super_smoke"
+    )
+    current_record = dict(historical)
+    current_record["status"] = "ACTIVE"
+    completion["active_runtime_acts"].append(current_record)
+    completion_path.write_text(
+        json.dumps(completion, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "s3.release.completion.historical_act_current" in completed.stdout
+
+
+def test_required_current_claim_mapping_removed_fails(
+    isolated_control_plane: Path,
+) -> None:
+    completion_path = isolated_control_plane / "release/completion_manifest.json"
+    completion = json.loads(completion_path.read_text(encoding="utf-8"))
+    completion["current_regression_claim_mapping"].pop("receipt_evidence_only")
+    completion_path.write_text(
+        json.dumps(completion, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "s3.release.completion.claim_mapping_exact" in completed.stdout
+
+
+def test_historical_v05_cannot_become_default_profile(
+    isolated_control_plane: Path,
+) -> None:
+    source_path = isolated_control_plane / "hedgehog/kernel/conformance_v01.py"
+    source = source_path.read_text(encoding="utf-8")
+    current = (
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE = "
+        "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT"
+    )
+    assert current in source
+    source_path.write_text(
+        source.replace(
+            current,
+            "DEFAULT_KERNEL_CONFORMANCE_PROFILE = "
+            "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.kernel_conformance.profile_exact:DEFAULT_KERNEL_CONFORMANCE_PROFILE"
+        in completed.stdout
+    )
+
+
+def test_unregistered_current_act_id_fails(
+    isolated_control_plane: Path,
+) -> None:
+    source_path = isolated_control_plane / "hedgehog/kernel/conformance_v01.py"
+    source = source_path.read_text(encoding="utf-8")
+    marker = (
+        '_V06_CURRENT_ACTIVE_GAUNTLET_REFS = (\n'
+        '    "airline_deterministic_transaction_runtime",\n'
+    )
+    assert marker in source
+    source_path.write_text(
+        source.replace(
+            marker,
+            marker + '    "unregistered_current_act",\n',
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.kernel_conformance.profile_exact:"
+        "_V06_CURRENT_ACTIVE_GAUNTLET_REFS"
+        in completed.stdout
+    )
+
+
+def test_current_act_reading_historical_pass_log_fails(
+    isolated_control_plane: Path,
+) -> None:
+    living_path = isolated_control_plane / "demo/run_living_gauntlet_v01.py"
+    living_path.write_text(
+        living_path.read_text(encoding="utf-8")
+        + (
+            '\n_HISTORICAL_PASS = Path('
+            '"docs/audit_reports/historical_gate1.log").read_text()\n'
+        ),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert "s3.living_gauntlet.historical_pass_consumption" in completed.stdout
+
+
+def test_retired_schema_added_to_current_schema_surface_fails(
+    isolated_control_plane: Path,
+) -> None:
+    surface_path = (
+        isolated_control_plane / "release/current_schema_surface_v01.json"
+    )
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+    surface["current_schema_paths"].append("schemas/plan_graph.schema.json")
+    surface_path.write_text(
+        json.dumps(surface, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.current_schema_surface.retired_schema_current:"
+        "schemas/plan_graph.schema.json"
+        in completed.stdout
+    )
+
+
+def test_retired_path_included_in_successor_context_fails(
+    isolated_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_control_plane / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["include_current_gate_sources"].append("hedgehog/root_orchestrator.py")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "successor_manifest.exclusion_conflict_path:hedgehog/root_orchestrator.py"
+        in completed.stdout
+    )
+
+
+def test_s3_inventory_cannot_claim_global_architecture_authority(
+    isolated_control_plane: Path,
+) -> None:
+    index_path = isolated_control_plane / "specs/document_authority_index_v01.json"
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    inventory_entry = next(
+        entry
+        for entry in index["current_operational_documents"]
+        if entry["path"] == "release/retired_architecture_inventory_v01.json"
+    )
+    inventory_entry["authority_scope"] = "current_global_architecture_law"
+    index_path.write_text(
+        json.dumps(index, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "authority_index.global_scope_not_lock:"
+        "release/retired_architecture_inventory_v01.json"
+        in completed.stdout
+    )
+
+
+def test_retired_import_from_current_gate2_test_fails(
+    isolated_control_plane: Path,
+) -> None:
+    gate2_path = (
+        isolated_control_plane
+        / "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+    )
+    gate2_path.write_text(
+        gate2_path.read_text(encoding="utf-8")
+        + "\nimport hedgehog.root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.CURRENT_GATE2_RETIRED_IMPORTS:"
+        "hedgehog.root_orchestrator"
+        in completed.stdout
+    )
+
+
+def test_transitive_retired_import_from_living_gauntlet_fails(
+    isolated_control_plane: Path,
+) -> None:
+    conformance_runner = (
+        isolated_control_plane / "demo/run_kernel_conformance_v01.py"
+    )
+    conformance_runner.write_text(
+        conformance_runner.read_text(encoding="utf-8")
+        + "\nimport hedgehog.root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.LIVING_GAUNTLET_RETIRED_IMPORTS:"
+        "hedgehog.root_orchestrator"
+        in completed.stdout
+    )
+
+
+def test_retired_import_from_e5_scope_fails(
+    isolated_control_plane: Path,
+) -> None:
+    e5_path = (
+        isolated_control_plane / "hedgehog/kernel/continuous_delta_runtime_v01.py"
+    )
+    e5_path.write_text(
+        e5_path.read_text(encoding="utf-8")
+        + "\nimport hedgehog.root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.E5_RETIRED_IMPORTS:hedgehog.root_orchestrator"
+        in completed.stdout
+    )
+
+
+def test_retired_export_from_current_package_facade_fails(
+    isolated_control_plane: Path,
+) -> None:
+    facade_path = isolated_control_plane / "hedgehog/__init__.py"
+    facade_path.write_text(
+        facade_path.read_text(encoding="utf-8")
+        + "\nfrom hedgehog import root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.package_facade.retired_export:hedgehog.root_orchestrator"
+        in completed.stdout
+    )
+
+
+def test_retired_path_removed_from_successor_exclusions_fails(
+    isolated_control_plane: Path,
+) -> None:
+    manifest_path = (
+        isolated_control_plane / "release/successor_context_manifest_v01.json"
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["exclude_paths"].remove("hedgehog/root_orchestrator.py")
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "successor_manifest.exclude_paths.missing_s3:hedgehog/root_orchestrator.py"
+        in completed.stdout
+    )
+
+
+def test_onboarding_ready_fails_when_current_retired_import_exists(
+    isolated_control_plane: Path,
+) -> None:
+    manifest = json.loads(
+        (
+            isolated_control_plane / "release/successor_context_manifest_v01.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert manifest["onboarding_ready"] is True
+    living_path = isolated_control_plane / "demo/run_living_gauntlet_v01.py"
+    living_path.write_text(
+        living_path.read_text(encoding="utf-8")
+        + "\nimport hedgehog.root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.LIVING_GAUNTLET_RETIRED_IMPORTS:"
+        "hedgehog.root_orchestrator"
+        in completed.stdout
+    )
+
+
+def test_historical_retired_import_outside_successor_scope_is_allowed(
+    isolated_control_plane: Path,
+) -> None:
+    historical_test = (
+        isolated_control_plane / "tests/test_all_layers_applied_super_smoke_runner.py"
+    )
+    historical_test.write_text(
+        historical_test.read_text(encoding="utf-8")
+        + "\nimport hedgehog.root_orchestrator\n",
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 0, completed.stdout
+
+
+def test_dynamic_retired_import_from_current_gate2_test_fails(
+    isolated_control_plane: Path,
+) -> None:
+    gate2_path = (
+        isolated_control_plane
+        / "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+    )
+    gate2_path.write_text(
+        gate2_path.read_text(encoding="utf-8")
+        + (
+            "\nimport importlib\n"
+            '_RETIRED_DYNAMIC = importlib.import_module("hedgehog.executor")\n'
+        ),
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.import_graph.CURRENT_GATE2_RETIRED_IMPORTS:hedgehog.executor"
+        in completed.stdout
+    )
+
+
+def test_current_loader_registering_retired_schema_fails(
+    isolated_control_plane: Path,
+) -> None:
+    loader_path = isolated_control_plane / "hedgehog/post_vv.py"
+    loader_path.write_text(
+        loader_path.read_text(encoding="utf-8")
+        + '\n_RETIRED_SCHEMA = "schemas/plan_graph.schema.json"\n',
+        encoding="utf-8",
+    )
+
+    completed = _run_guard(isolated_control_plane)
+
+    assert completed.returncode == 1
+    assert (
+        "s3.current_schema_surface.retired_registration:"
+        "hedgehog/post_vv.py:schemas/plan_graph.schema.json"
         in completed.stdout
     )

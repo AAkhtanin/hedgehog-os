@@ -11,16 +11,6 @@
       "status": "ACTIVE"
     },
     {
-      "act_id": "all_layers_invariant_super_smoke",
-      "claim_ids": [
-        "claim_invariant_runtime_execution"
-      ],
-      "focused_test": "tests/test_all_layers_applied_super_smoke_runner.py",
-      "source_module": "demo.run_all_layers_applied_super_smoke",
-      "source_symbol": "collect_all_layers_applied_super_smoke",
-      "status": "ACTIVE"
-    },
-    {
       "act_id": "generic_integrity_replay",
       "claim_ids": [
         "claim_generic_integrity_replay_execution",
@@ -134,6 +124,119 @@
     }
   ],
   "document_id": "living_release_completion_manifest_v01",
+  "current_kernel_conformance_profile": "kernel_conformance_v0_6_current",
+  "kernel_conformance_profiles": {
+    "historical_v0_5": {
+      "profile_id": "kernel_conformance_v0_5_historical",
+      "profile_version": "v0.5",
+      "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+      "default_current": false,
+      "active_gauntlet_refs": [
+        "airline_deterministic_transaction_runtime",
+        "all_layers_invariant_super_smoke",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
+        "fractal_runtime"
+      ],
+      "historical_act_id": "all_layers_invariant_super_smoke"
+    },
+    "current_v0_6": {
+      "profile_id": "kernel_conformance_v0_6_current",
+      "profile_version": "v0.6",
+      "profile_status": "CURRENT_ACTIVE",
+      "default_current": true,
+      "active_gauntlet_refs": [
+        "airline_deterministic_transaction_runtime",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
+        "fractal_runtime"
+      ],
+      "historical_profile_ref": "kernel_conformance_v0_5_historical",
+      "historical_act_id_rebound": false
+    }
+  },
+  "current_regression_claim_mapping": {
+    "root_sole_local_final_commit_authority": [
+      "root_decision_kernel",
+      "action_packet_lifecycle",
+      "fractal_runtime"
+    ],
+    "no_superroot_exists": [
+      "generic_multiroot"
+    ],
+    "bsep_semantic_membrane": [
+      "execution_mode_router",
+      "fractal_runtime"
+    ],
+    "runtime_execution_topology_runtime_owned": [
+      "fractal_runtime"
+    ],
+    "provider_model_advisory_only": [
+      "semantic_work_contract",
+      "fractal_runtime"
+    ],
+    "actor_output_cannot_create_final_output": [
+      "semantic_work_contract",
+      "fractal_runtime"
+    ],
+    "resultproposal_postvv_terminal_gt_before_root": [
+      "fractal_runtime"
+    ],
+    "drs_retrieval_reuse_no_authority": [
+      "drs_semantic_address_and_reuse_certificate"
+    ],
+    "receipt_evidence_only": [
+      "effect_firewall",
+      "action_packet_lifecycle"
+    ],
+    "effect_capability_bounded_corridor_only": [
+      "effect_firewall"
+    ],
+    "airline_supplier_same_authority_law": [
+      "airline_deterministic_transaction_runtime",
+      "supplier_water_filter_portability",
+      "action_packet_lifecycle"
+    ],
+    "real_world_effects_zero": [
+      "airline_deterministic_transaction_runtime",
+      "generic_integrity_replay",
+      "root_signer_isolation_conformance",
+      "semantic_work_contract",
+      "domain_neutral_kernel_abi",
+      "causal_consumption",
+      "transition_registry",
+      "root_decision_kernel",
+      "effect_firewall",
+      "generic_multiroot",
+      "supplier_water_filter_portability",
+      "action_packet_lifecycle",
+      "drs_semantic_address_and_reuse_certificate",
+      "execution_mode_router",
+      "fractal_runtime"
+    ]
+  },
   "evidence_only_references": [
     {
       "act_id": "airline_all_real_frozen_reference",
@@ -147,6 +250,24 @@
       "focused_test": "tests/test_living_gauntlet_v01_runner.py",
       "notes": "Frozen committed reference evidence; never executed or replayed by the living gauntlet.",
       "status": "EVIDENCE_ONLY"
+    },
+    {
+      "act_id": "all_layers_invariant_super_smoke",
+      "claim_ids": [
+        "claim_invariant_runtime_execution"
+      ],
+      "evidence_paths": [
+        "demo/run_all_layers_applied_super_smoke.py",
+        "tests/test_all_layers_applied_super_smoke_runner.py"
+      ],
+      "focused_test": "tests/test_all_layers_applied_super_smoke_runner.py",
+      "source_module": "demo.run_all_layers_applied_super_smoke",
+      "source_symbol": "collect_all_layers_applied_super_smoke",
+      "historical_profile_ref": "kernel_conformance_v0_5_historical",
+      "current_execution_enabled": false,
+      "successor_onboarding_allowed": false,
+      "notes": "Immutable historical Gate-1 v0.5 act identity and evidence. It is not executed by current Living Gauntlet or current Kernel Conformance and is never rebound to another implementation.",
+      "status": "HISTORICAL_EVIDENCE_ONLY"
     }
   ],
   "limitations": [
@@ -260,17 +381,17 @@
       "runtime_ref": "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01:collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
       "statement": "The living gauntlet executes the deterministic Airline transaction collector and derives its result from the returned report."
     },
-    {
+  {
       "act_ids": [
         "all_layers_invariant_super_smoke"
       ],
-      "claim_class": "EXECUTED_RUNTIME",
+      "claim_class": "HISTORICAL_EVIDENCE_ONLY",
       "claim_id": "claim_invariant_runtime_execution",
       "evidence_ref": "demo/run_all_layers_applied_super_smoke.py",
       "focused_test_ref": "tests/test_all_layers_applied_super_smoke_runner.py",
       "limitation_ref": "limitation_deterministic_local_scaffold",
-      "runtime_ref": "demo.run_all_layers_applied_super_smoke:collect_all_layers_applied_super_smoke",
-      "statement": "The living gauntlet executes the all-layers invariant super-smoke and validates its returned runtime structure."
+      "runtime_ref": "not_executed:kernel_conformance_v0_5_historical",
+      "statement": "The all-layers invariant super-smoke remains immutable historical Gate-1 v0.5 evidence. Current v0.6 regression coverage is supplied only by the named existing current acts in current_regression_claim_mapping; the historical act is not executed or rebound."
     },
     {
       "act_ids": [
@@ -438,9 +559,9 @@
       "focused_test_ref": "tests/test_kernel_conformance_v01_runner.py",
       "limitation_ref": "limitation_g1e_kernel_conformance_scope",
       "runtime_ref": "demo.run_living_gauntlet_v01:collect_kernel_conformance_closure_gauntlet_act_v01",
-      "statement": "The Living Gauntlet executes machine-readable Gate-1 runtime conformance derived from twelve executed source acts plus ten executed negative conformance checks, producing two domain results with no stored synthetic PASS and zero provider, network, Gemini, authority, permission, and real-world effect counts. This is not production certification, and final independent audit and consolidated documentation closure remain pending."
+      "statement": "The Living Gauntlet executes the current v0.6 machine-readable Kernel Conformance profile derived from fifteen current act results plus fifty executed negative conformance checks, producing fourteen category results and two domain results with no stored synthetic PASS and zero provider, network, Gemini, authority, permission, and real-world effect counts. Historical v0.5 remains evidence only. This is not production certification, and final independent audit and consolidated documentation closure remain pending."
     }
   ],
-  "runner_version": "v1.0",
+  "runner_version": "v1.5",
   "version": "v0.1"
 }

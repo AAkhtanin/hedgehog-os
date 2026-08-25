@@ -121,12 +121,18 @@ baseline bytes; the demo target is absent.
 ## Bounded context and onboarding
 
 The [Successor Context Manifest](release/successor_context_manifest_v01.json)
-is currently `S2_CLOSED_PENDING_S3`; its `onboarding_ready` value is `false`.
-The S2 structured-rationale and Supplier-adapter event vocabulary repairs are
-closed. `S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION` remains blocking. The manifest
-may be used only for authorized S3 sanitation and review. Permanent successor
-onboarding remains prohibited until a later authorized closure updates the
-manifest to a ready state. The frozen E5 transplant remains prohibited.
+is `SUCCESSOR_ONBOARDING_READY`; its `onboarding_ready` value is `true` and its
+blocking-repair list is empty. S1 document-authority succession, S2 vocabulary
+repair, and S3 active-schema and retired-subsystem isolation are closed. The
+bounded successor context is architecture-clean and ready for guarded
+reintegration.
+
+Permanent assistant onboarding occurs only after the sanitation changes are
+reintegrated into the primary worktree and the three deferred E5 paths are
+verified against the owner's exact frozen hashes. The primary dirty E5
+worktree remains untouched, and the E5 transplant remains prohibited until a
+separate authorization. Retired schemas and subsystem files are historical
+byte evidence only: no compatibility, migration, alias, or revival path exists.
 
 Within that scope, the manifest is an allowlist, not a suggestion to load the
 whole repository. Expand context only for a named current contract, focused
@@ -149,8 +155,8 @@ python3 tools/check_active_architecture_authority_v01.py
 - Claim navigation: [claim-to-evidence index](release/claim_to_evidence_index.md)
 - Release spine: [engineering notes](release/current_release_notes.md),
   [limitations](release/current_limitations.md),
-  [frozen completion evidence](release/completion_manifest.json), and
-  [frozen seam evidence](release/integration_seam_index.json)
+  [current completion/profile index](release/completion_manifest.json), and
+  [current seam/profile index](release/integration_seam_index.json)
 - Operator entrypoint: [deterministic gauntlet commands](release/one_command_gauntlet.md)
 
 The full owner-supplied Gate roadmap is not tracked in this worktree. The

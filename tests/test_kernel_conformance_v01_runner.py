@@ -112,7 +112,7 @@ EXPECTED_PROBES = (
     *G2C_EXPECTED_PROBES,
     *G2D_EXPECTED_PROBES,
 )
-GATE1_EXPECTED_ACTIVE_REFS = (
+HISTORICAL_V05_GATE1_ACTIVE_REFS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
@@ -126,16 +126,75 @@ GATE1_EXPECTED_ACTIVE_REFS = (
     "generic_multiroot",
     "supplier_water_filter_portability",
 )
-G2A_EXPECTED_ACTIVE_REFS = (
-    *GATE1_EXPECTED_ACTIVE_REFS,
+HISTORICAL_V05_G2A_ACTIVE_REFS = (
+    *HISTORICAL_V05_GATE1_ACTIVE_REFS,
     "action_packet_lifecycle",
 )
-G2B_EXPECTED_ACTIVE_REFS = (
-    *G2A_EXPECTED_ACTIVE_REFS,
+HISTORICAL_V05_G2B_ACTIVE_REFS = (
+    *HISTORICAL_V05_G2A_ACTIVE_REFS,
     "drs_semantic_address_and_reuse_certificate",
 )
-G2C_EXPECTED_ACTIVE_REFS = (*G2B_EXPECTED_ACTIVE_REFS, "execution_mode_router")
-EXPECTED_ACTIVE_REFS = (*G2C_EXPECTED_ACTIVE_REFS, "fractal_runtime")
+HISTORICAL_V05_G2C_ACTIVE_REFS = (
+    *HISTORICAL_V05_G2B_ACTIVE_REFS,
+    "execution_mode_router",
+)
+HISTORICAL_V05_ACTIVE_REFS = (
+    *HISTORICAL_V05_G2C_ACTIVE_REFS,
+    "fractal_runtime",
+)
+EXPECTED_ACTIVE_REFS = (
+    "airline_deterministic_transaction_runtime",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
+EXPECTED_CLAIM_TO_CURRENT_ACT = (
+    (
+        "root_sole_local_final_commit_authority",
+        ("root_decision_kernel", "action_packet_lifecycle", "fractal_runtime"),
+    ),
+    ("no_superroot_exists", ("generic_multiroot",)),
+    (
+        "bsep_semantic_membrane",
+        ("execution_mode_router", "fractal_runtime"),
+    ),
+    ("runtime_execution_topology_runtime_owned", ("fractal_runtime",)),
+    (
+        "provider_model_advisory_only",
+        ("semantic_work_contract", "fractal_runtime"),
+    ),
+    (
+        "actor_output_cannot_create_final_output",
+        ("semantic_work_contract", "fractal_runtime"),
+    ),
+    ("resultproposal_postvv_terminal_gt_before_root", ("fractal_runtime",)),
+    (
+        "drs_retrieval_reuse_no_authority",
+        ("drs_semantic_address_and_reuse_certificate",),
+    ),
+    ("receipt_evidence_only", ("effect_firewall", "action_packet_lifecycle")),
+    ("effect_capability_bounded_corridor_only", ("effect_firewall",)),
+    (
+        "airline_supplier_same_authority_law",
+        (
+            "airline_deterministic_transaction_runtime",
+            "supplier_water_filter_portability",
+            "action_packet_lifecycle",
+        ),
+    ),
+    ("real_world_effects_zero", EXPECTED_ACTIVE_REFS),
+)
 DATACLASS_FIELDS = {
     "ConformanceCountersV01": (
         "category_result_count",
@@ -193,7 +252,11 @@ DATACLASS_FIELDS = {
     ),
     "KernelConformanceReportV01": (
         "report_id",
+        "profile_id",
         "conformance_version",
+        "historical_profile_ref",
+        "claim_to_current_act",
+        "current_act_count",
         "implementation_commit",
         "category_results",
         "domain_results",
@@ -206,6 +269,7 @@ DATACLASS_FIELDS = {
     ),
 }
 PUBLIC_FUNCTIONS = (
+    "kernel_conformance_profile_metadata_v01",
     "build_conformance_category_result_v01",
     "validate_conformance_category_result_v01",
     "build_domain_conformance_result_v01",
@@ -221,7 +285,15 @@ PUBLIC_FUNCTIONS = (
     "negative_conformance_result_to_plain_dict_v01",
     "kernel_conformance_report_to_plain_dict_v01",
 )
+PACKAGE_PUBLIC_FUNCTIONS = tuple(
+    name
+    for name in PUBLIC_FUNCTIONS
+    if name != "kernel_conformance_profile_metadata_v01"
+)
 _PUBLIC_FUNCTION_SIGNATURES = {
+    "kernel_conformance_profile_metadata_v01": (
+        "(profile_id: 'str') -> 'dict[str, object]'"
+    ),
     "build_conformance_category_result_v01": (
         "(*, category_id: 'str', check_results: "
         "'tuple[tuple[str, bool], ...]', evidence_refs: 'tuple[str, ...]', "
@@ -437,6 +509,53 @@ def _report(*, commit: str = "abcdef0", categories=None, domains=None, negatives
     )
 
 
+def _historical_profile_fields(active_refs):
+    return {
+        "profile_id": conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+        "historical_profile_ref": (
+            conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        ),
+        "claim_to_current_act": (),
+        "current_act_count": len(active_refs),
+    }
+
+
+def _assert_historical_report_geometry(report):
+    assert report.profile_id == conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    assert report.historical_profile_ref == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
+    assert report.claim_to_current_act == ()
+    assert report.current_act_count == len(report.active_gauntlet_refs)
+    conformance._require_report_geometry(
+        report.category_results,
+        report.domain_results,
+        report.negative_test_results,
+        report.active_gauntlet_refs,
+        conformance_version=report.conformance_version,
+    )
+    assert not any(
+        conformance.validate_conformance_category_result_v01(item)
+        for item in report.category_results
+    )
+    assert not any(
+        conformance.validate_domain_conformance_result_v01(item)
+        for item in report.domain_results
+    )
+    assert not any(
+        conformance.validate_negative_conformance_result_v01(item)
+        for item in report.negative_test_results
+    )
+    assert report.counters == conformance._derive_counters(
+        report.category_results,
+        report.domain_results,
+        report.negative_test_results,
+        report.active_gauntlet_refs,
+        report.evidence_refs,
+    )
+    assert report.report_id == conformance._report_id(report)
+
+
 def _historical_v01_report():
     categories = tuple(_category(item) for item in GATE1_EXPECTED_CATEGORIES)
     domains = tuple(_domain(item) for item in EXPECTED_DOMAINS)
@@ -444,19 +563,20 @@ def _historical_v01_report():
     evidence_refs = ("evidence:kernel:conformance:v0.1",)
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
+        **_historical_profile_fields(HISTORICAL_V05_GATE1_ACTIVE_REFS),
         conformance_version="v0.1",
         implementation_commit="abcdef0",
         category_results=categories,
         domain_results=domains,
         negative_test_results=negatives,
-        active_gauntlet_refs=GATE1_EXPECTED_ACTIVE_REFS,
+        active_gauntlet_refs=HISTORICAL_V05_GATE1_ACTIVE_REFS,
         evidence_refs=evidence_refs,
         limitations=("limitation:kernel:conformance:v0.1",),
         counters=conformance._derive_counters(
             categories,
             domains,
             negatives,
-            GATE1_EXPECTED_ACTIVE_REFS,
+            HISTORICAL_V05_GATE1_ACTIVE_REFS,
             evidence_refs,
         ),
         final_status=conformance.STATUS_PASS,
@@ -507,7 +627,7 @@ def test_public_dataclasses_are_frozen_and_slotted(name):
     assert "__slots__" in vars(cls)
 
 
-@pytest.mark.parametrize("name", (*DATACLASS_FIELDS, *PUBLIC_FUNCTIONS))
+@pytest.mark.parametrize("name", (*DATACLASS_FIELDS, *PACKAGE_PUBLIC_FUNCTIONS))
 def test_package_exposes_conformance_surface(name):
     assert getattr(kernel, name) is getattr(conformance, name)
 
@@ -534,7 +654,7 @@ def test_future_annotations_binding_is_absent():
     (
         ("MODULE_ID", "kernel_conformance_v01"),
         ("SLICE_ID", "domain_neutral_reference_kernel_gate1_g1e"),
-        ("CONFORMANCE_VERSION", "v0.5"),
+        ("CONFORMANCE_VERSION", "v0.6"),
         ("STATUS_PASS", "PASS"),
         ("STATUS_FAIL_CLOSED", "FAIL_CLOSED"),
         ("CONFORMANCE_STATUSES", ("PASS", "FAIL_CLOSED")),
@@ -547,6 +667,104 @@ def test_constants_are_exact(name, expected):
     assert getattr(conformance, name) == expected
     if isinstance(expected, tuple):
         assert type(getattr(conformance, name)) is tuple
+
+
+def test_v05_historical_and_v06_current_profiles_are_exact_and_distinct():
+    historical = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
+    current = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    )
+    assert conformance.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    )
+    assert runner.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
+        runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    )
+    assert historical == {
+        "profile_id": "kernel_conformance_v0_5_historical",
+        "profile_version": "v0.5",
+        "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+        "default_current": False,
+        "active_gauntlet_refs": list(HISTORICAL_V05_ACTIVE_REFS),
+        "historical_act_id": "all_layers_invariant_super_smoke",
+    }
+    assert current == {
+        "profile_id": "kernel_conformance_v0_6_current",
+        "profile_version": "v0.6",
+        "profile_status": "CURRENT_ACTIVE",
+        "default_current": True,
+        "active_gauntlet_refs": list(EXPECTED_ACTIVE_REFS),
+        "historical_profile_ref": "kernel_conformance_v0_5_historical",
+        "historical_act_id_rebound": False,
+        "claim_to_current_act": {
+            claim_id: list(act_ids)
+            for claim_id, act_ids in EXPECTED_CLAIM_TO_CURRENT_ACT
+        },
+        "current_act_count": 15,
+    }
+    assert tuple(historical["active_gauntlet_refs"]) == (
+        conformance._V05_HISTORICAL_ACTIVE_GAUNTLET_REFS
+    )
+    assert tuple(current["active_gauntlet_refs"]) == (
+        conformance._V06_CURRENT_ACTIVE_GAUNTLET_REFS
+    )
+    assert "all_layers_invariant_super_smoke" not in EXPECTED_ACTIVE_REFS
+    assert "all_layers_invariant_super_smoke" not in runner._ACT_SOURCES
+
+
+def test_profile_metadata_is_non_executing_independent_data_and_unknown_fails():
+    historical = runner.kernel_conformance_profile_metadata_v01(
+        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
+    historical["active_gauntlet_refs"].append("forged")
+    assert runner.kernel_conformance_profile_metadata_v01(
+        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )["active_gauntlet_refs"] == list(HISTORICAL_V05_ACTIVE_REFS)
+    with pytest.raises(ValueError, match="^kernel_conformance_profile_unknown$"):
+        runner.kernel_conformance_profile_metadata_v01("unknown_profile")
+
+
+def test_current_report_rejects_historical_default_claim_loss_and_old_act_rebind():
+    report = _report()
+    forged_profile = conformance._replace_report_id(
+        replace(
+            report,
+            profile_id=conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+        )
+    )
+    forged_claims = conformance._replace_report_id(
+        replace(report, claim_to_current_act=report.claim_to_current_act[:-1])
+    )
+    old_refs = (
+        report.active_gauntlet_refs[:1]
+        + ("all_layers_invariant_super_smoke",)
+        + report.active_gauntlet_refs[1:]
+    )
+    forged_old_act = conformance._replace_report_id(
+        replace(
+            report,
+            active_gauntlet_refs=old_refs,
+            current_act_count=len(old_refs),
+            counters=conformance._derive_counters(
+                report.category_results,
+                report.domain_results,
+                report.negative_test_results,
+                old_refs,
+                report.evidence_refs,
+            ),
+        )
+    )
+    assert "kernel_conformance_report_invalid" in (
+        conformance.validate_kernel_conformance_report_v01(forged_profile)
+    )
+    assert "kernel_conformance_report_invalid" in (
+        conformance.validate_kernel_conformance_report_v01(forged_claims)
+    )
+    reasons = conformance.validate_kernel_conformance_report_v01(forged_old_act)
+    assert "kernel_conformance_report_invalid" in reasons
+    assert "conformance_report_geometry_invalid" in reasons
 
 
 @pytest.mark.parametrize("category_id", EXPECTED_CATEGORIES)
@@ -700,6 +918,13 @@ def test_report_pass_geometry_and_counters_are_derived():
     report = _report()
     assert report.final_status == "PASS"
     assert conformance.validate_kernel_conformance_report_v01(report) == ()
+    assert report.profile_id == conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    assert report.conformance_version == "v0.6"
+    assert report.historical_profile_ref == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
+    assert report.claim_to_current_act == EXPECTED_CLAIM_TO_CURRENT_ACT
+    assert report.current_act_count == len(EXPECTED_ACTIVE_REFS) == 15
     assert (
         len(report.category_results),
         len(report.domain_results),
@@ -708,7 +933,7 @@ def test_report_pass_geometry_and_counters_are_derived():
     assert report.counters.category_pass_count == 14
     assert report.counters.domain_pass_count == 2
     assert report.counters.negative_pass_count == 50
-    assert report.counters.active_gauntlet_ref_count == 16
+    assert report.counters.active_gauntlet_ref_count == 15
 
 
 def test_final_report_rejects_arbitrary_synthetic_check_geometry_after_rehash():
@@ -1024,14 +1249,17 @@ def test_canonical_negative_geometry_is_exact(standalone_report, index):
     assert result.evidence_refs
 
 
-def test_completion_claim_uses_honest_negative_check_wording():
+def test_completion_claim_uses_exact_current_v06_geometry_wording():
     manifest = json.loads(COMPLETION_MANIFEST_PATH.read_text(encoding="utf-8"))
     claim = next(
         item
         for item in manifest["public_claims"]
         if item["claim_id"] == "claim_kernel_conformance_closure_execution"
     )
-    assert "ten executed negative conformance checks" in claim["statement"]
+    assert "fifteen current act results" in claim["statement"]
+    assert "fifty executed negative conformance checks" in claim["statement"]
+    assert "fourteen category results and two domain results" in claim["statement"]
+    assert "Historical v0.5 remains evidence only" in claim["statement"]
     assert "direct negative probes" not in claim["statement"]
 
 
@@ -1207,7 +1435,9 @@ def test_runner_does_not_call_supplier_source_collector():
 
 def test_render_contains_only_summary_geometry(standalone_report):
     rendered = runner.render_kernel_conformance_v01(standalone_report)
-    assert "kernel_conformance_v01 v0.4" in rendered
+    assert "kernel_conformance_v01 v0.6" in rendered
+    assert "profile_id=kernel_conformance_v0_6_current" in rendered
+    assert "current_act_count=15" in rendered
     assert "final_status=PASS" in rendered
     for forbidden in ("manifest_hash=", "adapter_id=", "artifact_id=", "invoice", "shipment_sh"):
         assert forbidden not in rendered.lower()
@@ -1218,10 +1448,8 @@ def test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category
 ):
     historical = _historical_v01_report()
     historical_v02 = _historical_v02_report(standalone_report)
-    assert conformance.validate_kernel_conformance_report_v01(historical) == ()
-    assert conformance.validate_kernel_conformance_report_v01(
-        historical_v02
-    ) == ()
+    _assert_historical_report_geometry(historical)
+    _assert_historical_report_geometry(historical_v02)
     assert (
         len(historical.category_results),
         len(historical.domain_results),
@@ -1253,7 +1481,10 @@ def test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category
     )
     assert conformance.CATEGORY_IDS[:10] == GATE1_EXPECTED_CATEGORIES
     assert conformance.NEGATIVE_PROBE_IDS[:10] == GATE1_EXPECTED_PROBES
-    assert conformance._ACTIVE_GAUNTLET_REFS[:12] == GATE1_EXPECTED_ACTIVE_REFS
+    assert conformance._GATE1_ACTIVE_GAUNTLET_REFS_V01 == (
+        HISTORICAL_V05_GATE1_ACTIVE_REFS
+    )
+    assert conformance._ACTIVE_GAUNTLET_REFS == EXPECTED_ACTIVE_REFS
     assert tuple(
         (item.category_id, item.required_check_ids)
         for item in standalone_report.category_results[:10]
@@ -1275,9 +1506,10 @@ def test_g2a6_conformance_v02_preserves_v01_geometry_and_adds_lifecycle_category
     assert standalone_report.negative_test_results[:20] == (
         historical_v02.negative_test_results
     )
-    assert standalone_report.active_gauntlet_refs[:13] == (
-        historical_v02.active_gauntlet_refs
+    assert historical_v02.active_gauntlet_refs == (
+        HISTORICAL_V05_G2A_ACTIVE_REFS
     )
+    assert standalone_report.active_gauntlet_refs == EXPECTED_ACTIVE_REFS
     assert tuple(item.name for item in fields(conformance.KernelConformanceReportV01)) == (
         DATACLASS_FIELDS["KernelConformanceReportV01"]
     )
@@ -1484,7 +1716,7 @@ def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect(
         first_conformance.counters.negative_pass_count,
     ) == (14, 2, 50)
     assert first_living["final_status"] == living.STATUS_PASS
-    assert first_living["counters"]["active_act_pass_count"] == 17
+    assert first_living["counters"]["active_act_pass_count"] == 16
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1543,10 +1775,11 @@ _G2B_EXPECTED_PROBES = (
 def _historical_v02_report(current):
     categories = current.category_results[:11]
     negatives = current.negative_test_results[:20]
-    active_refs = current.active_gauntlet_refs[:13]
+    active_refs = HISTORICAL_V05_G2A_ACTIVE_REFS
     evidence_refs = current.evidence_refs
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
+        **_historical_profile_fields(active_refs),
         conformance_version="v0.2",
         implementation_commit=current.implementation_commit,
         category_results=categories,
@@ -1570,10 +1803,11 @@ def _historical_v02_report(current):
 def _historical_v03_report(current):
     categories = current.category_results[:12]
     negatives = current.negative_test_results[:30]
-    active_refs = current.active_gauntlet_refs[:14]
+    active_refs = HISTORICAL_V05_G2B_ACTIVE_REFS
     evidence_refs = current.evidence_refs
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
+        **_historical_profile_fields(active_refs),
         conformance_version="v0.3",
         implementation_commit=current.implementation_commit,
         category_results=categories,
@@ -1597,10 +1831,11 @@ def _historical_v03_report(current):
 def _historical_v04_report(current):
     categories = current.category_results[:13]
     negatives = current.negative_test_results[:40]
-    active_refs = current.active_gauntlet_refs[:15]
+    active_refs = HISTORICAL_V05_G2C_ACTIVE_REFS
     evidence_refs = current.evidence_refs
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
+        **_historical_profile_fields(active_refs),
         conformance_version="v0.4",
         implementation_commit=current.implementation_commit,
         category_results=categories,
@@ -1633,15 +1868,9 @@ def test_g2b6_conformance_v03_preserves_v02_geometry(
     historical_v01 = _historical_v01_report()
     historical_v02 = _historical_v02_report(standalone_report)
     historical_v03 = _historical_v03_report(standalone_report)
-    assert conformance.validate_kernel_conformance_report_v01(
-        historical_v01
-    ) == ()
-    assert conformance.validate_kernel_conformance_report_v01(
-        historical_v02
-    ) == ()
-    assert conformance.validate_kernel_conformance_report_v01(
-        historical_v03
-    ) == ()
+    _assert_historical_report_geometry(historical_v01)
+    _assert_historical_report_geometry(historical_v02)
+    _assert_historical_report_geometry(historical_v03)
     assert (
         len(historical_v01.category_results),
         len(historical_v01.domain_results),
@@ -1866,7 +2095,7 @@ def test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect():
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
         first_conformance.counters.active_gauntlet_ref_count,
-    ) == (14, 2, 50, 16)
+    ) == (14, 2, 50, 15)
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1915,17 +2144,13 @@ def test_c6_conformance_v04_preserves_v03_and_appends_exact_geometry(
 ):
     historical_v03 = _historical_v03_report(standalone_report)
     historical_v04 = _historical_v04_report(standalone_report)
-    assert conformance.CONFORMANCE_VERSION == "v0.5"
+    assert conformance.CONFORMANCE_VERSION == "v0.6"
     assert conformance._G2B_CONFORMANCE_VERSION_V03 == "v0.3"
     assert conformance._G2C_CONFORMANCE_VERSION_V04 == "v0.4"
     assert runner._G2C_RUNNER_VERSION_V03 == "v0.3"
-    assert runner.RUNNER_VERSION == "v0.4"
-    assert conformance.validate_kernel_conformance_report_v01(
-        historical_v03
-    ) == ()
-    assert conformance.validate_kernel_conformance_report_v01(
-        historical_v04
-    ) == ()
+    assert runner.RUNNER_VERSION == "v0.6"
+    _assert_historical_report_geometry(historical_v03)
+    _assert_historical_report_geometry(historical_v04)
     assert historical_v04.conformance_version == "v0.4"
     assert historical_v04.category_results[:12] == historical_v03.category_results
     assert historical_v04.negative_test_results[:30] == (
@@ -1943,7 +2168,7 @@ def test_c6_conformance_v04_preserves_v03_and_appends_exact_geometry(
         *G2C_EXPECTED_PROBES,
     )
     assert historical_v04.active_gauntlet_refs == (
-        *G2B_EXPECTED_ACTIVE_REFS,
+        *HISTORICAL_V05_G2B_ACTIVE_REFS,
         "execution_mode_router",
     )
     counters = historical_v04.counters
@@ -2076,21 +2301,30 @@ G2D_EXPECTED_CHECKS = (
 )
 
 
-def test_d6_conformance_v05_appends_exact_g2d_geometry(standalone_report):
+def test_d6_conformance_v06_succeeds_historical_v05_with_current_geometry(
+    standalone_report,
+):
     historical_v04 = _historical_v04_report(standalone_report)
-    assert conformance.CONFORMANCE_VERSION == "v0.5"
+    assert conformance.CONFORMANCE_VERSION == "v0.6"
+    assert conformance._G2D_CONFORMANCE_VERSION_V05 == "v0.5"
     assert conformance._G2C_CONFORMANCE_VERSION_V04 == "v0.4"
-    assert runner.RUNNER_VERSION == "v0.4"
+    assert runner.RUNNER_VERSION == "v0.6"
     assert runner._G2C_RUNNER_VERSION_V03 == "v0.3"
-    assert conformance.validate_kernel_conformance_report_v01(historical_v04) == ()
+    _assert_historical_report_geometry(historical_v04)
     assert conformance.validate_kernel_conformance_report_v01(standalone_report) == ()
-    assert standalone_report.conformance_version == "v0.5"
+    assert standalone_report.conformance_version == "v0.6"
+    assert standalone_report.profile_id == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    )
+    assert standalone_report.historical_profile_ref == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
     assert standalone_report.category_results[:13] == historical_v04.category_results
     assert standalone_report.negative_test_results[:40] == (
         historical_v04.negative_test_results
     )
-    assert standalone_report.active_gauntlet_refs[:15] == (
-        historical_v04.active_gauntlet_refs
+    assert historical_v04.active_gauntlet_refs == (
+        HISTORICAL_V05_G2C_ACTIVE_REFS
     )
     assert tuple(item.category_id for item in standalone_report.category_results) == (
         *G2C_EXPECTED_CATEGORIES,
@@ -2101,9 +2335,15 @@ def test_d6_conformance_v05_appends_exact_g2d_geometry(standalone_report):
         *G2C_EXPECTED_PROBES,
         *G2D_EXPECTED_PROBES,
     )
-    assert standalone_report.active_gauntlet_refs == (
-        *G2C_EXPECTED_ACTIVE_REFS,
-        "fractal_runtime",
+    assert standalone_report.active_gauntlet_refs == EXPECTED_ACTIVE_REFS
+    assert "all_layers_invariant_super_smoke" not in (
+        standalone_report.active_gauntlet_refs
+    )
+    assert standalone_report.claim_to_current_act == EXPECTED_CLAIM_TO_CURRENT_ACT
+    assert runner._V05_HISTORICAL_BASE_ACT_IDS == HISTORICAL_V05_ACTIVE_REFS
+    assert runner._BASE_ACT_IDS == EXPECTED_ACTIVE_REFS
+    assert runner.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
+        runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
     )
     assert (
         standalone_report.counters.category_result_count,
@@ -2113,7 +2353,7 @@ def test_d6_conformance_v05_appends_exact_g2d_geometry(standalone_report):
         standalone_report.counters.negative_result_count,
         standalone_report.counters.negative_pass_count,
         standalone_report.counters.active_gauntlet_ref_count,
-    ) == (14, 14, 2, 2, 50, 50, 16)
+    ) == (14, 14, 2, 2, 50, 50, 15)
 
 
 def test_d6_historical_v01_through_v04_remain_exact_and_mixed_geometry_fails(
@@ -2128,8 +2368,8 @@ def test_d6_historical_v01_through_v04_remain_exact_and_mixed_geometry_fails(
     versions = ("v0.1", "v0.2", "v0.3", "v0.4")
     for report, version in zip(historical, versions, strict=True):
         assert report.conformance_version == version
-        assert conformance.validate_kernel_conformance_report_v01(report) == ()
-        for foreign_version in (*versions, "v0.5"):
+        _assert_historical_report_geometry(report)
+        for foreign_version in (*versions, "v0.5", "v0.6"):
             if foreign_version == version:
                 continue
             forged = _reversion(report, foreign_version)

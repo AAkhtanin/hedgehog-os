@@ -19,10 +19,6 @@ from demo import (
 )
 from demo import run_execution_mode_router_g2_c_v01 as _g2c
 from demo import run_fractal_runtime_g2_d_v02 as _g2d
-from demo.run_all_layers_applied_super_smoke import (
-    collect_all_layers_applied_super_smoke,
-    validate_all_layers_applied_super_smoke_report_consistency,
-)
 from demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 import (
     collect_tri_party_airline_ticket_purchase_mock_e2e_v01,
 )
@@ -166,12 +162,36 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v1.4"
+RUNNER_VERSION = "v1.5"
 _GATE1_RELEASE_RUNNER_VERSION_V10 = "v1.0"
 _G2A_RUNNER_VERSION_V11 = "v1.1"
 _G2B_RUNNER_VERSION_V12 = "v1.2"
 _G2C_RUNNER_VERSION_V13 = "v1.3"
 _RELEASE_INDEX_VERSION = "v0.1"
+
+KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL = (
+    "kernel_conformance_v0_5_historical"
+)
+KERNEL_CONFORMANCE_PROFILE_V06_CURRENT = "kernel_conformance_v0_6_current"
+DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05 = (
+    "airline_deterministic_transaction_runtime",
+    "all_layers_invariant_super_smoke",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -179,6 +199,7 @@ STATUS_EVIDENCE_ONLY = "EVIDENCE_ONLY"
 STATUS_PLANNED_NOT_ACTIVE = "PLANNED_NOT_ACTIVE"
 STATUS_ACTIVE = "ACTIVE"
 STATUS_REFERENCE_ONLY = "REFERENCE_ONLY"
+STATUS_HISTORICAL_EVIDENCE_ONLY = "HISTORICAL_EVIDENCE_ONLY"
 
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 _COMPLETION_MANIFEST_PATH = _REPOSITORY_ROOT / "release/completion_manifest.json"
@@ -202,10 +223,20 @@ _MANIFEST_FIELD_NAMES = frozenset(
         "public_claims",
         "runner_version",
         "version",
+        "current_kernel_conformance_profile",
+        "kernel_conformance_profiles",
+        "current_regression_claim_mapping",
     }
 )
 _SEAM_INDEX_FIELD_NAMES = frozenset(
-    {"document_id", "index_status", "seams", "version"}
+    {
+        "current_kernel_conformance_profile",
+        "document_id",
+        "historical_kernel_conformance_profile",
+        "index_status",
+        "seams",
+        "version",
+    }
 )
 _SEAM_FIELD_NAMES = frozenset(
     {
@@ -221,14 +252,10 @@ _SEAM_FIELD_NAMES = frozenset(
         "status",
     }
 )
-_GATE1_ACTIVE_ACT_SOURCES_V10 = {
+_GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15 = {
     "airline_deterministic_transaction_runtime": (
         "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01",
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
-    ),
-    "all_layers_invariant_super_smoke": (
-        "demo.run_all_layers_applied_super_smoke",
-        "collect_all_layers_applied_super_smoke",
     ),
     "generic_integrity_replay": (
         "demo.run_living_gauntlet_v01",
@@ -275,9 +302,11 @@ _GATE1_ACTIVE_ACT_SOURCES_V10 = {
         "collect_kernel_conformance_closure_gauntlet_act_v01",
     ),
 }
-_GATE1_ACTIVE_ACT_IDS_V10 = tuple(_GATE1_ACTIVE_ACT_SOURCES_V10)
+_GATE1_CURRENT_ACTIVE_ACT_IDS_V15 = tuple(
+    _GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15
+)
 _G2A_ACTIVE_ACT_SOURCES_V11 = {
-    **_GATE1_ACTIVE_ACT_SOURCES_V10,
+    **_GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15,
     "action_packet_lifecycle": (
         "demo.run_living_gauntlet_v01",
         "collect_action_packet_lifecycle_gauntlet_act_v01",
@@ -311,9 +340,77 @@ _ACTIVE_ACT_SOURCES = {
     ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
+CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06 = (
+    "airline_deterministic_transaction_runtime",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
+CURRENT_REGRESSION_CLAIM_TO_ACTS_V06 = (
+    (
+        "root_sole_local_final_commit_authority",
+        (
+            "root_decision_kernel",
+            "action_packet_lifecycle",
+            "fractal_runtime",
+        ),
+    ),
+    ("no_superroot_exists", ("generic_multiroot",)),
+    (
+        "bsep_semantic_membrane",
+        ("execution_mode_router", "fractal_runtime"),
+    ),
+    (
+        "runtime_execution_topology_runtime_owned",
+        ("fractal_runtime",),
+    ),
+    (
+        "provider_model_advisory_only",
+        ("semantic_work_contract", "fractal_runtime"),
+    ),
+    (
+        "actor_output_cannot_create_final_output",
+        ("semantic_work_contract", "fractal_runtime"),
+    ),
+    (
+        "resultproposal_postvv_terminal_gt_before_root",
+        ("fractal_runtime",),
+    ),
+    (
+        "drs_retrieval_reuse_no_authority",
+        ("drs_semantic_address_and_reuse_certificate",),
+    ),
+    (
+        "receipt_evidence_only",
+        ("effect_firewall", "action_packet_lifecycle"),
+    ),
+    (
+        "effect_capability_bounded_corridor_only",
+        ("effect_firewall",),
+    ),
+    (
+        "airline_supplier_same_authority_law",
+        (
+            "airline_deterministic_transaction_runtime",
+            "supplier_water_filter_portability",
+            "action_packet_lifecycle",
+        ),
+    ),
+    ("real_world_effects_zero", CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06),
+)
 _EXECUTED_RUNTIME_ACT_IDS = (
     "airline_deterministic_transaction_runtime",
-    "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
     "transition_registry",
     "root_decision_kernel",
@@ -328,15 +425,16 @@ _EXECUTED_CONFORMANCE_ACT_IDS = (
     "generic_multiroot",
     "kernel_conformance_closure",
 )
-_EVIDENCE_ONLY_ACT_IDS = ("airline_all_real_frozen_reference",)
+_EVIDENCE_ONLY_ACT_IDS = (
+    "airline_all_real_frozen_reference",
+    "all_layers_invariant_super_smoke",
+)
+_HISTORICAL_EVIDENCE_ACT_IDS = ("all_layers_invariant_super_smoke",)
 _PLANNED_ACT_IDS: tuple[str, ...] = ()
 _PLANNED_SEAM_IDS: tuple[str, ...] = ()
 _CURRENT_SEAMS = {
     "deterministic_airline_reference_collector": _ACTIVE_ACT_SOURCES[
         "airline_deterministic_transaction_runtime"
-    ],
-    "all_layers_invariant_super_smoke_collector": _ACTIVE_ACT_SOURCES[
-        "all_layers_invariant_super_smoke"
     ],
     "airline_transaction_artifact_ledger_reference": (
         "hedgehog.domains.airline.transaction_artifact_ledger_v01",
@@ -427,9 +525,14 @@ _CURRENT_SEAMS = {
         "collect_kernel_conformance_v01",
     ),
 }
+_HISTORICAL_SEAMS = {
+    "all_layers_invariant_super_smoke_collector": (
+        "demo.run_all_layers_applied_super_smoke",
+        "collect_all_layers_applied_super_smoke",
+    ),
+}
 _CURRENT_SEAM_STATUSES = {
     "deterministic_airline_reference_collector": STATUS_ACTIVE,
-    "all_layers_invariant_super_smoke_collector": STATUS_ACTIVE,
     "airline_transaction_artifact_ledger_reference": STATUS_REFERENCE_ONLY,
     "airline_crypto_artifact_seal_reference": STATUS_REFERENCE_ONLY,
     "airline_sealed_trace_replay_reference": STATUS_REFERENCE_ONLY,
@@ -582,7 +685,6 @@ _G2C_COUNTER_FIELD_NAMES_V13 = frozenset(
         "evidence_only_entry_count",
         "evidence_only_executed_count",
         "generic_integrity_replay_execution_count",
-        "invariant_collector_execution_count",
         "planned_act_count",
         "planned_executed_count",
         "real_world_effects_count",
@@ -614,26 +716,6 @@ _COUNTER_FIELD_NAMES = frozenset(
     (*_G2C_COUNTER_FIELD_NAMES_V13, "fractal_runtime_execution_count")
 )
 _LIVING_VERSION_GEOMETRY = {
-    _GATE1_RELEASE_RUNNER_VERSION_V10: (
-        _GATE1_ACTIVE_ACT_IDS_V10,
-        _GATE1_ACTIVE_ACT_SOURCES_V10,
-        _GATE1_COUNTER_FIELD_NAMES_V10,
-    ),
-    _G2A_RUNNER_VERSION_V11: (
-        _G2A_ACTIVE_ACT_IDS_V11,
-        _G2A_ACTIVE_ACT_SOURCES_V11,
-        _G2A_COUNTER_FIELD_NAMES_V11,
-    ),
-    _G2B_RUNNER_VERSION_V12: (
-        _G2B_ACTIVE_ACT_IDS_V12,
-        _G2B_ACTIVE_ACT_SOURCES_V12,
-        _G2B_COUNTER_FIELD_NAMES_V12,
-    ),
-    _G2C_RUNNER_VERSION_V13: (
-        _G2C_ACTIVE_ACT_IDS_V13,
-        _G2C_ACTIVE_ACT_SOURCES_V13,
-        _G2C_COUNTER_FIELD_NAMES_V13,
-    ),
     RUNNER_VERSION: (
         _ACTIVE_ACT_IDS,
         _ACTIVE_ACT_SOURCES,
@@ -917,7 +999,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("runner_version", _GATE1_RELEASE_RUNNER_VERSION_V10),
+        ("runner_version", RUNNER_VERSION),
         ("manifest_status", "ACTIVE_GATE1_G1E"),
     ):
         if manifest.get(key) != expected:
@@ -932,7 +1014,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors.extend(id_errors)
     planned_ids, id_errors = _record_ids(planned, "act_id", "planned_act")
     errors.extend(id_errors)
-    if active_ids != _GATE1_ACTIVE_ACT_IDS_V10:
+    if active_ids != _GATE1_CURRENT_ACTIVE_ACT_IDS_V15:
         errors.append("active_act_ids_mismatch")
     if evidence_ids != _EVIDENCE_ONLY_ACT_IDS:
         errors.append("evidence_only_act_ids_mismatch")
@@ -948,7 +1030,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
                 continue
             if record.get("status") != STATUS_ACTIVE:
                 errors.append(f"active_act_status_invalid:{record.get('act_id', '')}")
-            expected_source = _GATE1_ACTIVE_ACT_SOURCES_V10.get(
+            expected_source = _GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15.get(
                 record.get("act_id")
             )
             if expected_source is not None and (
@@ -969,7 +1051,12 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
         for record in evidence:
             if not isinstance(record, dict):
                 continue
-            if record.get("status") != STATUS_EVIDENCE_ONLY:
+            expected_status = (
+                STATUS_HISTORICAL_EVIDENCE_ONLY
+                if record.get("act_id") in _HISTORICAL_EVIDENCE_ACT_IDS
+                else STATUS_EVIDENCE_ONLY
+            )
+            if record.get("status") != expected_status:
                 errors.append("evidence_only_status_invalid")
             if not _is_string_list(record.get("evidence_paths")):
                 errors.append("evidence_only_paths_invalid")
@@ -1021,7 +1108,11 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     class_to_ids = {
         "EXECUTED_RUNTIME": set(_EXECUTED_RUNTIME_ACT_IDS),
         "EXECUTED_CONFORMANCE": set(_EXECUTED_CONFORMANCE_ACT_IDS),
-        STATUS_EVIDENCE_ONLY: set(_EVIDENCE_ONLY_ACT_IDS),
+        STATUS_EVIDENCE_ONLY: set(_EVIDENCE_ONLY_ACT_IDS)
+        - set(_HISTORICAL_EVIDENCE_ACT_IDS),
+        STATUS_HISTORICAL_EVIDENCE_ONLY: set(
+            _HISTORICAL_EVIDENCE_ACT_IDS
+        ),
         STATUS_PLANNED_NOT_ACTIVE: set(_PLANNED_ACT_IDS),
     }
     if isinstance(claims, list):
@@ -1142,6 +1233,45 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
 
     if not _is_string_list(manifest.get("non_claims")):
         errors.append("completion_manifest_non_claims_invalid")
+
+    expected_claim_mapping = {
+        claim_id: list(act_ids)
+        for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+    }
+    expected_profiles = {
+        "historical_v0_5": {
+            "profile_id": KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+            "profile_version": "v0.5",
+            "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+            "default_current": False,
+            "active_gauntlet_refs": list(
+                HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05
+            ),
+            "historical_act_id": "all_layers_invariant_super_smoke",
+        },
+        "current_v0_6": {
+            "profile_id": KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+            "profile_version": "v0.6",
+            "profile_status": "CURRENT_ACTIVE",
+            "default_current": True,
+            "active_gauntlet_refs": list(
+                CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
+            ),
+            "historical_profile_ref": (
+                KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            ),
+            "historical_act_id_rebound": False,
+        },
+    }
+    if (
+        manifest.get("current_kernel_conformance_profile")
+        != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    ):
+        errors.append("completion_manifest_current_profile_mismatch")
+    if manifest.get("kernel_conformance_profiles") != expected_profiles:
+        errors.append("completion_manifest_profile_geometry_mismatch")
+    if manifest.get("current_regression_claim_mapping") != expected_claim_mapping:
+        errors.append("completion_manifest_claim_mapping_mismatch")
     return tuple(dict.fromkeys(errors))
 
 
@@ -1158,10 +1288,24 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
+    if (
+        index.get("current_kernel_conformance_profile")
+        != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    ):
+        errors.append("integration_seam_current_profile_mismatch")
+    if (
+        index.get("historical_kernel_conformance_profile")
+        != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    ):
+        errors.append("integration_seam_historical_profile_mismatch")
     seams = index.get("seams")
     seam_ids, id_errors = _record_ids(seams, "seam_id", "seam")
     errors.extend(id_errors)
-    expected_seam_ids = set(_CURRENT_SEAMS) | set(_PLANNED_SEAM_IDS)
+    expected_seam_ids = (
+        set(_CURRENT_SEAMS)
+        | set(_HISTORICAL_SEAMS)
+        | set(_PLANNED_SEAM_IDS)
+    )
     if set(seam_ids) != expected_seam_ids:
         errors.append("integration_seam_ids_mismatch")
     if set(_CURRENT_SEAMS) - set(seam_ids):
@@ -1178,6 +1322,7 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
             status = seam.get("status")
             if status not in {
                 STATUS_ACTIVE,
+                STATUS_HISTORICAL_EVIDENCE_ONLY,
                 STATUS_REFERENCE_ONLY,
                 STATUS_PLANNED_NOT_ACTIVE,
             }:
@@ -1202,6 +1347,14 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
                     errors.append(f"planned_seam_status_invalid:{seam_id}")
                 if seam.get("source_symbol") is not None:
                     errors.append(f"planned_seam_symbol_present:{seam_id}")
+            elif seam_id in _HISTORICAL_SEAMS:
+                if status != STATUS_HISTORICAL_EVIDENCE_ONLY:
+                    errors.append(f"historical_seam_status_invalid:{seam_id}")
+                if (
+                    seam.get("source_module"),
+                    seam.get("source_symbol"),
+                ) != _HISTORICAL_SEAMS[seam_id]:
+                    errors.append(f"historical_seam_source_mismatch:{seam_id}")
             if seam_id != "effect_firewall" and seam.get("effect_access") != "NONE":
                 errors.append(f"seam_effect_access_forbidden:{seam_id}")
                 errors.append("integration_seam_non_firewall_effect_access_forbidden")
@@ -1414,66 +1567,6 @@ def _airline_act_result(report: Any) -> LivingGauntletActResultV01:
         errors.append("airline_real_world_effects_nonzero_or_missing")
     if not no_real_connector_or_action:
         errors.append("airline_real_connector_or_action_reported")
-    state = STATUS_PASS if not errors else STATUS_FAIL_CLOSED
-    return LivingGauntletActResultV01(
-        act_id=act_id,
-        errors=tuple(dict.fromkeys(errors)),
-        executed=True,
-        no_real_connector_or_action=no_real_connector_or_action,
-        real_world_effects_count=effects,
-        root_authority_preserved=root_authority_preserved,
-        runtime_status=str(runtime_status),
-        source_module=source_module,
-        source_symbol=source_symbol,
-        state=state,
-    )
-
-
-def _super_smoke_act_result(report: Any) -> LivingGauntletActResultV01:
-    act_id = _ACTIVE_ACT_IDS[1]
-    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
-    errors: list[str] = []
-    summary = getattr(report, "summary", None)
-    root_final = getattr(report, "super_smoke_root_final", None)
-    input_mode = getattr(report, "input_mode", None)
-    runtime_status = (
-        summary.get("all_layers_applied_super_smoke_status", "MISSING")
-        if isinstance(summary, Mapping)
-        else "MISSING"
-    )
-    try:
-        consistency_passed = (
-            validate_all_layers_applied_super_smoke_report_consistency(report) is True
-        )
-    except Exception:
-        consistency_passed = False
-    if runtime_status != STATUS_PASS:
-        errors.append("super_smoke_runtime_status_not_pass")
-    if not consistency_passed:
-        errors.append("super_smoke_consistency_validation_failed")
-    root_authority_preserved = bool(
-        isinstance(summary, Mapping)
-        and summary.get("root_remains_final_authority") is True
-        and isinstance(root_final, Mapping)
-        and root_final.get("root_final_authority_preserved") is True
-    )
-    no_real_connector_or_action = bool(
-        isinstance(summary, Mapping)
-        and summary.get("no_real_external_action_executed") is True
-        and summary.get("no_completed_external_action_created") is True
-        and summary.get("gemini_called") is False
-        and summary.get("network_called") is False
-        and summary.get("production_autonomy_claimed") is False
-        and isinstance(input_mode, Mapping)
-        and input_mode.get("real_external_action") is False
-        and input_mode.get("live_network_used") is False
-        and input_mode.get("gemini_called") is False
-    )
-    effects = 0 if no_real_connector_or_action else -1
-    if not root_authority_preserved:
-        errors.append("super_smoke_root_authority_not_preserved")
-    if not no_real_connector_or_action:
-        errors.append("super_smoke_real_connector_or_action_reported")
     state = STATUS_PASS if not errors else STATUS_FAIL_CLOSED
     return LivingGauntletActResultV01(
         act_id=act_id,
@@ -4250,12 +4343,6 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
-        "invariant_collector_execution_count": sum(
-            isinstance(row, Mapping)
-            and row.get("act_id") == "all_layers_invariant_super_smoke"
-            and row.get("executed") is True
-            for row in active_rows
-        ),
         "planned_act_count": len(planned_rows),
         "planned_executed_count": sum(
             isinstance(row, Mapping) and row.get("executed") is True
@@ -5078,66 +5165,59 @@ def collect_living_gauntlet_base_act_results_v01(
 ) -> tuple[dict[str, object], ...]:
     collectors = (
         (
-            _ACTIVE_ACT_IDS[0],
+            "airline_deterministic_transaction_runtime",
             lambda: _airline_act_result(
                 collect_tri_party_airline_ticket_purchase_mock_e2e_v01()
             ),
             "airline_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[1],
-            lambda: _super_smoke_act_result(
-                collect_all_layers_applied_super_smoke()
-            ),
-            "super_smoke_collector_failed",
-        ),
-        (
-            _ACTIVE_ACT_IDS[2],
+            "generic_integrity_replay",
             collect_generic_integrity_replay_gauntlet_act_v01,
             "generic_integrity_replay_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[3],
+            "root_signer_isolation_conformance",
             collect_root_signer_isolation_gauntlet_act_v01,
             "root_signer_isolation_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[4],
+            "semantic_work_contract",
             collect_semantic_work_contract_gauntlet_act_v01,
             "semantic_work_contract_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[5],
+            "domain_neutral_kernel_abi",
             collect_domain_neutral_kernel_abi_gauntlet_act_v01,
             "domain_neutral_kernel_abi_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[6],
+            "causal_consumption",
             collect_causal_consumption_gauntlet_act_v01,
             "causal_consumption_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[7],
+            "transition_registry",
             collect_transition_registry_gauntlet_act_v01,
             "transition_registry_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[8],
+            "root_decision_kernel",
             collect_root_decision_kernel_gauntlet_act_v01,
             "root_decision_kernel_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[9],
+            "effect_firewall",
             collect_effect_firewall_gauntlet_act_v01,
             "effect_firewall_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[10],
+            "generic_multiroot",
             collect_generic_multiroot_gauntlet_act_v01,
             "generic_multiroot_collector_failed",
         ),
         (
-            _ACTIVE_ACT_IDS[11],
+            "supplier_water_filter_portability",
             collect_supplier_water_filter_portability_gauntlet_act_v01,
             "supplier_water_filter_collector_failed",
         ),
@@ -5169,11 +5249,19 @@ def _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
         passed = (
             not validation_errors
             and report.final_status == STATUS_PASS
-            and report.conformance_version == "v0.5"
+            and report.profile_id == KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+            and report.conformance_version == "v0.6"
+            and report.historical_profile_ref
+            == KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            and report.claim_to_current_act
+            == CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+            and report.current_act_count
+            == len(CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06)
             and len(report.category_results) == 14
             and len(report.domain_results) == 2
             and len(report.negative_test_results) == 50
-            and len(report.active_gauntlet_refs) == 16
+            and report.active_gauntlet_refs
+            == CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
             and all(item.status == STATUS_PASS for item in report.category_results)
             and all(item.status == STATUS_PASS for item in report.domain_results)
             and all(
@@ -5343,7 +5431,7 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             "act_id": record["act_id"],
             "evidence_paths": list(record["evidence_paths"]),
             "executed": False,
-            "state": STATUS_EVIDENCE_ONLY,
+            "state": record.get("status", STATUS_EVIDENCE_ONLY),
         }
         for record in manifest.get("evidence_only_references", [])
         if isinstance(record, dict)
@@ -5452,6 +5540,14 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     report: dict[str, Any] = {
         "runner_id": RUNNER_ID,
         "runner_version": RUNNER_VERSION,
+        "kernel_conformance_profile": KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+        "historical_kernel_conformance_profile": (
+            KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        ),
+        "current_regression_claim_mapping": {
+            claim_id: list(act_ids)
+            for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+        },
         "active_act_results": active_result_rows,
         "evidence_only_entries": evidence_entries,
         "planned_entries": planned_entries,
@@ -5480,6 +5576,9 @@ def validate_living_gauntlet_report_v01(
     required_fields = {
         "runner_id",
         "runner_version",
+        "kernel_conformance_profile",
+        "historical_kernel_conformance_profile",
+        "current_regression_claim_mapping",
         "active_act_results",
         "evidence_only_entries",
         "planned_entries",
@@ -5494,6 +5593,22 @@ def validate_living_gauntlet_report_v01(
         errors.append("living_gauntlet_report_field_surface_mismatch")
     if report.get("runner_id") != RUNNER_ID:
         errors.append("living_gauntlet_runner_id_mismatch")
+    if (
+        report.get("kernel_conformance_profile")
+        != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    ):
+        errors.append("living_gauntlet_current_profile_mismatch")
+    if (
+        report.get("historical_kernel_conformance_profile")
+        != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    ):
+        errors.append("living_gauntlet_historical_profile_mismatch")
+    expected_claim_mapping = {
+        claim_id: list(act_ids)
+        for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+    }
+    if report.get("current_regression_claim_mapping") != expected_claim_mapping:
+        errors.append("living_gauntlet_claim_mapping_mismatch")
     version_geometry = _LIVING_VERSION_GEOMETRY.get(
         report.get("runner_version")
     )
@@ -5568,7 +5683,12 @@ def validate_living_gauntlet_report_v01(
                 continue
             if frozenset(entry) != _EVIDENCE_RESULT_FIELD_NAMES:
                 errors.append("report_evidence_only_field_surface_mismatch")
-            if entry.get("state") != STATUS_EVIDENCE_ONLY:
+            expected_state = (
+                STATUS_HISTORICAL_EVIDENCE_ONLY
+                if entry.get("act_id") in _HISTORICAL_EVIDENCE_ACT_IDS
+                else STATUS_EVIDENCE_ONLY
+            )
+            if entry.get("state") != expected_state:
                 errors.append("report_evidence_only_state_invalid")
             if entry.get("executed") is not False:
                 errors.append("report_evidence_only_counted_as_executed")
@@ -5645,6 +5765,9 @@ def validate_living_gauntlet_report_v01(
 def render_living_gauntlet_v01(report: Mapping[str, Any]) -> str:
     lines = [
         f"living_gauntlet: {report['runner_id']} {report['runner_version']}",
+        f"kernel_conformance_profile={report['kernel_conformance_profile']}",
+        "historical_kernel_conformance_profile="
+        f"{report['historical_kernel_conformance_profile']}",
         "",
         "[ACTIVE EXECUTED ACTS]",
     ]

@@ -97,8 +97,14 @@ from hedgehog.kernel.trust_model_v01 import (
 
 RUNNER_ID = "kernel_conformance_v01"
 _G2C_RUNNER_VERSION_V03 = "v0.3"
-RUNNER_VERSION = "v0.4"
+RUNNER_VERSION = "v0.6"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
+
+KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL = (
+    "kernel_conformance_v0_5_historical"
+)
+KERNEL_CONFORMANCE_PROFILE_V06_CURRENT = "kernel_conformance_v0_6_current"
+DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
 
 _COMMIT_PATTERN = re.compile(r"^[0-9a-f]{7,40}$")
 _G2C_TRANSITION_FUNCTION_NAMES_V03 = (
@@ -109,7 +115,7 @@ _G2C_TRANSITION_FUNCTION_NAMES_V03 = (
     "execution_mode_transition_decision_to_plain_dict_v01",
     "rebuild_execution_mode_transition_decision_identity_v01",
 )
-_GATE1_BASE_ACT_IDS_V01 = (
+_V05_HISTORICAL_BASE_ACT_IDS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
     "generic_integrity_replay",
@@ -122,20 +128,28 @@ _GATE1_BASE_ACT_IDS_V01 = (
     "effect_firewall",
     "generic_multiroot",
     "supplier_water_filter_portability",
-)
-_G2A_BASE_ACT_IDS_V02 = (
-    *_GATE1_BASE_ACT_IDS_V01,
     "action_packet_lifecycle",
-)
-_G2B_BASE_ACT_IDS_V03 = (
-    *_G2A_BASE_ACT_IDS_V02,
     "drs_semantic_address_and_reuse_certificate",
-)
-_G2C_BASE_ACT_IDS_V03 = (
-    *_G2B_BASE_ACT_IDS_V03,
     "execution_mode_router",
+    "fractal_runtime",
 )
-_BASE_ACT_IDS = (*_G2C_BASE_ACT_IDS_V03, "fractal_runtime")
+_BASE_ACT_IDS = (
+    "airline_deterministic_transaction_runtime",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
 _ACT_FIELDS = frozenset(
     {
         "act_id",
@@ -154,10 +168,6 @@ _ACT_SOURCES = {
     "airline_deterministic_transaction_runtime": (
         "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01",
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
-    ),
-    "all_layers_invariant_super_smoke": (
-        "demo.run_all_layers_applied_super_smoke",
-        "collect_all_layers_applied_super_smoke",
     ),
     "generic_integrity_replay": (
         "demo.run_living_gauntlet_v01",
@@ -263,6 +273,14 @@ def resolve_current_implementation_commit_v01() -> str:
         return value
     except Exception:
         raise ValueError("implementation_commit_resolution_failed") from None
+
+
+def kernel_conformance_profile_metadata_v01(
+    profile_id: str = DEFAULT_KERNEL_CONFORMANCE_PROFILE,
+) -> dict[str, object]:
+    """Expose profile geometry without executing historical profile acts."""
+
+    return conformance.kernel_conformance_profile_metadata_v01(profile_id)
 
 
 def collect_kernel_conformance_v01(
@@ -439,6 +457,16 @@ def validate_kernel_conformance_runtime_v01(
             errors.append("kernel_conformance_negative_geometry_invalid")
         if report.active_gauntlet_refs != _BASE_ACT_IDS:
             errors.append("kernel_conformance_active_refs_invalid")
+        if (
+            report.profile_id != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+            or report.conformance_version != "v0.6"
+            or report.historical_profile_ref
+            != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            or report.claim_to_current_act
+            != conformance.CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+            or report.current_act_count != len(_BASE_ACT_IDS)
+        ):
+            errors.append("kernel_conformance_profile_invalid")
         if report.final_status != conformance.STATUS_PASS:
             errors.append("kernel_conformance_not_pass")
         counters = report.counters
@@ -446,7 +474,7 @@ def validate_kernel_conformance_runtime_v01(
             counters.category_pass_count != 14
             or counters.domain_pass_count != 2
             or counters.negative_pass_count != 50
-            or counters.active_gauntlet_ref_count != 16
+            or counters.active_gauntlet_ref_count != len(_BASE_ACT_IDS)
             or any(
                 value != 0
                 for value in (
@@ -476,6 +504,9 @@ def render_kernel_conformance_v01(
     counters = report.counters
     lines = [
         f"kernel_conformance: {RUNNER_ID} {RUNNER_VERSION}",
+        f"profile_id={report.profile_id}",
+        f"historical_profile_ref={report.historical_profile_ref}",
+        f"current_act_count={report.current_act_count}",
         f"implementation_commit={report.implementation_commit}",
         "",
         "[CATEGORY RESULTS]",
@@ -520,7 +551,7 @@ def main() -> int:
         return 0
     except Exception:
         print(
-            "kernel_conformance: kernel_conformance_v01 v0.4\n"
+            "kernel_conformance: kernel_conformance_v01 v0.6\n"
             "final_status=FAIL_CLOSED\n",
             end="",
         )

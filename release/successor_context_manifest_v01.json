@@ -1,12 +1,10 @@
 {
   "schema_version": "1.0.0",
   "base_head": "931645dc724c54d635f32dabfca4b62fbc9a39a2",
-  "manifest_status": "S2_CLOSED_PENDING_S3",
-  "onboarding_ready": false,
-  "blocking_repairs": [
-    "S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION"
-  ],
-  "purpose": "Bounded successor-context candidate prepared by S1, updated after S2 vocabulary closure, and blocked from permanent successor onboarding until S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION closes. Existing E1-E4 runtime/test targets are included only as accepted pre-E5 bytes; no frozen E5 candidate byte is present or authorized by this manifest.",
+  "manifest_status": "SUCCESSOR_ONBOARDING_READY",
+  "onboarding_ready": true,
+  "blocking_repairs": [],
+  "purpose": "Architecture-clean bounded successor context after S1 document-authority succession, S2 vocabulary repair, and S3 active-schema and retired-subsystem isolation. It is ready for guarded reintegration. Permanent assistant onboarding occurs only after reintegration into the primary worktree and exact frozen-E5 hash verification; no frozen E5 candidate byte is present or authorized by this manifest.",
   "always_include": [
     "AGENTS.md",
     "README.md",
@@ -83,7 +81,9 @@
     "release/one_command_gauntlet.md",
     "release/completion_manifest.json",
     "release/integration_seam_index.json",
-    "release/integration_seam_index.md"
+    "release/integration_seam_index.md",
+    "release/retired_architecture_inventory_v01.json",
+    "release/current_schema_surface_v01.json"
   ],
   "include_current_gate_sources": [
     "docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md",
@@ -184,7 +184,9 @@
     "release/one_command_gauntlet.md",
     "release/completion_manifest.json",
     "release/integration_seam_index.json",
-    "release/integration_seam_index.md"
+    "release/integration_seam_index.md",
+    "release/retired_architecture_inventory_v01.json",
+    "release/current_schema_surface_v01.json"
   ],
   "exclude_paths": [
     "specs/human_passport_v0_25.md",
@@ -210,10 +212,12 @@
     "hedgehog/bounded_actor_contracts.py",
     "hedgehog/root_orchestrator.py",
     "hedgehog/executor.py",
+    "hedgehog/trace_reporter.py",
     "hedgehog/needle_runtime.py",
     "schemas/needle.schema.json",
     "schemas/attractor_packet.schema.json",
     "schemas/plan_graph.schema.json",
+    "demo/run_all_layers_applied_super_smoke.py",
     "demo/run_architect_from_bounded_attractor_packet.py",
     "demo/run_avf_attractor_from_accepted_matrix.py",
     "demo/run_dag_executor_from_valid_plan_graph.py",
@@ -245,6 +249,8 @@
     "tests/test_executor_no_final_output.py",
     "tests/test_root_orchestrator_runtime.py",
     "tests/test_controlled_root_orchestrator_route_assembly_runner.py",
+    "tests/test_all_layers_applied_super_smoke_runner.py",
+    "tests/test_trace_reporter_runtime.py",
     "tests/test_post_vv_runtime.py",
     "tests/test_gt_validator_runtime.py",
     "tests/test_up_never_mutates_work.py",

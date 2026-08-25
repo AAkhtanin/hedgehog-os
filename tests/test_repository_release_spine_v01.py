@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import copy
 import hashlib
 import json
@@ -439,6 +440,9 @@ G2D_V0310_E4_CODE_PATHS = ('hedgehog/kernel/continuous_delta_runtime_v01.py',
  'tests/test_continuous_delta_runtime_g2_e_v01.py')
 G2D_V0310_E4_CODE_COMMIT = '21176be090cab9aa9b8ea9cce2ae052bed8039da'
 G2D_V0310_FINAL_SYNC_SUBJECT = 'Synchronize G2-E3 revalidation and G2-E4 acceptance'
+G2D_V0310_FINAL_SYNC_COMMIT = (
+    "931645dc724c54d635f32dabfca4b62fbc9a39a2"
+)
 G2D_V0310_FINAL_SYNC_PATHS = ('AGENTS.md',
  'README.md',
  'release/claim_to_evidence_index.md',
@@ -1146,6 +1150,122 @@ FROZEN_EVIDENCE = {
     },
 }
 
+# The v0.5 paths below remain immutable at the accepted final-sync Git object.
+# Their original constants above intentionally remain unchanged.  The current
+# working-tree successors are frozen independently by the v0.6 profiles.
+KERNEL_CONFORMANCE_V05_HISTORICAL_SHA256 = {
+    path: G2D_FROZEN_IMPLEMENTATION_SHA256[path]
+    for path in (
+        "hedgehog/kernel/conformance_v01.py",
+        "demo/run_living_gauntlet_v01.py",
+        "tests/test_living_gauntlet_v01_runner.py",
+        "demo/run_kernel_conformance_v01.py",
+        "tests/test_kernel_conformance_v01_runner.py",
+    )
+}
+KERNEL_CONFORMANCE_V05_HISTORICAL_SHA256.update(
+    {
+        evidence["path"]: evidence["sha256"]
+        for evidence in FROZEN_EVIDENCE.values()
+    }
+)
+
+KERNEL_CONFORMANCE_V06_CURRENT_SHA256 = {
+    "hedgehog/kernel/conformance_v01.py": (
+        "93460bfd6262b9fec221c454637d27afbb346f3e444740c55e7e2496af866b91"
+    ),
+    "demo/run_living_gauntlet_v01.py": (
+        "72ace8d6060dd66ddfc09e205a0e1cf5e019419dbd3786b2152ba533c8f64905"
+    ),
+    "tests/test_living_gauntlet_v01_runner.py": (
+        "4125cf936d81ffdd503d4ad6dcb6bfffb22b21d163999996b403aeb9f41854ff"
+    ),
+    "demo/run_kernel_conformance_v01.py": (
+        "75accdcda30fa9d66771b15bfdaf417f65cd27319e5beb3fb7edca32284a2e30"
+    ),
+    "tests/test_kernel_conformance_v01_runner.py": (
+        "562d2a96ab01373e9cff7d37badf7e68a089e2b9ad0351fd7081aa62540a3ac5"
+    ),
+}
+RELEASE_SPINE_V06_CURRENT_SHA256 = {
+    "release/completion_manifest.json": (
+        "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9"
+    ),
+    "release/integration_seam_index.json": (
+        "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03"
+    ),
+}
+V06_CURRENT_SUCCEEDED_SHA256 = {
+    **KERNEL_CONFORMANCE_V06_CURRENT_SHA256,
+    **RELEASE_SPINE_V06_CURRENT_SHA256,
+}
+G2D_STILL_FROZEN_IMPLEMENTATION_SHA256 = {
+    path: sha256
+    for path, sha256 in G2D_FROZEN_IMPLEMENTATION_SHA256.items()
+    if path not in KERNEL_CONFORMANCE_V06_CURRENT_SHA256
+}
+KERNEL_CONFORMANCE_V05_HISTORICAL_ACTIVE_REFS = (
+    "airline_deterministic_transaction_runtime",
+    "all_layers_invariant_super_smoke",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
+KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS = tuple(
+    act_id
+    for act_id in KERNEL_CONFORMANCE_V05_HISTORICAL_ACTIVE_REFS
+    if act_id != "all_layers_invariant_super_smoke"
+)
+KERNEL_CONFORMANCE_V06_REQUIRED_CLAIM_MAPPING = {
+    "root_sole_local_final_commit_authority": [
+        "root_decision_kernel",
+        "action_packet_lifecycle",
+        "fractal_runtime",
+    ],
+    "no_superroot_exists": ["generic_multiroot"],
+    "bsep_semantic_membrane": [
+        "execution_mode_router",
+        "fractal_runtime",
+    ],
+    "runtime_execution_topology_runtime_owned": ["fractal_runtime"],
+    "provider_model_advisory_only": [
+        "semantic_work_contract",
+        "fractal_runtime",
+    ],
+    "actor_output_cannot_create_final_output": [
+        "semantic_work_contract",
+        "fractal_runtime",
+    ],
+    "resultproposal_postvv_terminal_gt_before_root": ["fractal_runtime"],
+    "drs_retrieval_reuse_no_authority": [
+        "drs_semantic_address_and_reuse_certificate"
+    ],
+    "receipt_evidence_only": [
+        "effect_firewall",
+        "action_packet_lifecycle",
+    ],
+    "effect_capability_bounded_corridor_only": ["effect_firewall"],
+    "airline_supplier_same_authority_law": [
+        "airline_deterministic_transaction_runtime",
+        "supplier_water_filter_portability",
+        "action_packet_lifecycle",
+    ],
+    "real_world_effects_zero": list(
+        KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS
+    ),
+}
+
 IN_PROGRESS_BOUNDARY = {
     "profile_version": "v0.1",
     "boundary_id": "current_engineering_boundary_v01",
@@ -1271,6 +1391,120 @@ def _read_json(path: Path) -> dict[str, object]:
     return value
 
 
+def _release_profile_succession_errors_v01(
+    completion: dict[str, object],
+    seam_index: dict[str, object],
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    old_act_id = "all_layers_invariant_super_smoke"
+    old_module = "demo.run_all_layers_applied_super_smoke"
+    old_symbol = "collect_all_layers_applied_super_smoke"
+    profiles = completion.get("kernel_conformance_profiles")
+    if not isinstance(profiles, dict):
+        return ("kernel_conformance_profiles_missing",)
+    historical = profiles.get("historical_v0_5")
+    current = profiles.get("current_v0_6")
+    if not isinstance(historical, dict):
+        errors.append("historical_v05_profile_missing")
+        historical = {}
+    if not isinstance(current, dict):
+        errors.append("current_v06_profile_missing")
+        current = {}
+    if tuple(historical.get("active_gauntlet_refs", ())) != (
+        KERNEL_CONFORMANCE_V05_HISTORICAL_ACTIVE_REFS
+    ):
+        errors.append("historical_v05_active_refs_changed")
+    if (
+        historical.get("profile_id")
+        != "kernel_conformance_v0_5_historical"
+        or historical.get("profile_version") != "v0.5"
+        or historical.get("profile_status") != "HISTORICAL_EVIDENCE_ONLY"
+        or historical.get("default_current") is not False
+        or historical.get("historical_act_id") != old_act_id
+    ):
+        errors.append("historical_v05_profile_invalid")
+    current_refs = tuple(current.get("active_gauntlet_refs", ()))
+    if current_refs != KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS:
+        errors.append("current_v06_active_refs_changed")
+    if old_act_id in current_refs:
+        errors.append("historical_act_current_reintroduction")
+    if (
+        completion.get("current_kernel_conformance_profile")
+        != "kernel_conformance_v0_6_current"
+        or current.get("profile_id") != "kernel_conformance_v0_6_current"
+        or current.get("profile_version") != "v0.6"
+        or current.get("profile_status") != "CURRENT_ACTIVE"
+        or current.get("default_current") is not True
+        or current.get("historical_profile_ref")
+        != "kernel_conformance_v0_5_historical"
+        or current.get("historical_act_id_rebound") is not False
+    ):
+        errors.append("current_v06_profile_invalid")
+    mapping = completion.get("current_regression_claim_mapping")
+    if mapping != KERNEL_CONFORMANCE_V06_REQUIRED_CLAIM_MAPPING:
+        errors.append("current_v06_claim_mapping_incomplete")
+    if isinstance(mapping, dict) and any(
+        not isinstance(act_ids, list)
+        or not act_ids
+        or not set(act_ids).issubset(current_refs)
+        for act_ids in mapping.values()
+    ):
+        errors.append("current_v06_claim_mapping_unknown_act")
+
+    active_records = completion.get("active_runtime_acts")
+    if not isinstance(active_records, list):
+        errors.append("current_active_records_invalid")
+        active_records = []
+    if any(
+        isinstance(record, dict) and record.get("act_id") == old_act_id
+        for record in active_records
+    ):
+        errors.append("historical_act_marked_current")
+    evidence_records = completion.get("evidence_only_references")
+    old_evidence = [
+        record
+        for record in evidence_records
+        if isinstance(record, dict) and record.get("act_id") == old_act_id
+    ] if isinstance(evidence_records, list) else []
+    if len(old_evidence) != 1:
+        errors.append("historical_act_evidence_record_missing")
+    elif (
+        old_evidence[0].get("status") != "HISTORICAL_EVIDENCE_ONLY"
+        or old_evidence[0].get("current_execution_enabled") is not False
+        or old_evidence[0].get("successor_onboarding_allowed") is not False
+        or old_evidence[0].get("source_module") != old_module
+        or old_evidence[0].get("source_symbol") != old_symbol
+    ):
+        errors.append("historical_act_identity_rebound")
+
+    if (
+        seam_index.get("current_kernel_conformance_profile")
+        != "kernel_conformance_v0_6_current"
+        or seam_index.get("historical_kernel_conformance_profile")
+        != "kernel_conformance_v0_5_historical"
+    ):
+        errors.append("release_seam_profile_selection_invalid")
+    seams = seam_index.get("seams")
+    old_seams = [
+        seam
+        for seam in seams
+        if isinstance(seam, dict)
+        and seam.get("seam_id")
+        == "all_layers_invariant_super_smoke_collector"
+    ] if isinstance(seams, list) else []
+    if len(old_seams) != 1:
+        errors.append("historical_act_seam_missing")
+    elif (
+        old_seams[0].get("status") != "HISTORICAL_EVIDENCE_ONLY"
+        or old_seams[0].get("source_module") != old_module
+        or old_seams[0].get("source_symbol") != old_symbol
+        or old_seams[0].get("current_mode")
+        != "HISTORICAL_PROFILE_METADATA_ONLY"
+    ):
+        errors.append("historical_act_seam_rebound")
+    return tuple(dict.fromkeys(errors))
+
+
 def _nested_mapping_keys(value: object) -> set[str]:
     if isinstance(value, dict):
         return set(value) | {
@@ -1300,6 +1534,83 @@ def _git_show(commit: str, path: str) -> bytes:
         f"{completed.stderr.decode('utf-8', errors='replace')}"
     )
     return completed.stdout
+
+
+def _hash_profile_errors_v01(
+    profile: dict[str, str],
+    *,
+    byte_loader,
+    expected_paths: frozenset[str] | None = None,
+) -> tuple[str, ...]:
+    errors: list[str] = []
+    if expected_paths is not None and frozenset(profile) != expected_paths:
+        errors.append("hash_profile_paths_mismatch")
+    for path, expected_sha256 in profile.items():
+        if (
+            type(path) is not str
+            or not path
+            or type(expected_sha256) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None
+        ):
+            errors.append(f"hash_profile_entry_invalid:{path}")
+            continue
+        try:
+            observed = _sha256_bytes(byte_loader(path))
+        except Exception:
+            errors.append(f"hash_profile_bytes_unavailable:{path}")
+            continue
+        if observed != expected_sha256:
+            errors.append(f"hash_profile_mismatch:{path}")
+    return tuple(dict.fromkeys(errors))
+
+
+def _historical_v05_hash_profile_errors_v01(
+    profile: dict[str, str] = KERNEL_CONFORMANCE_V05_HISTORICAL_SHA256,
+) -> tuple[str, ...]:
+    return _hash_profile_errors_v01(
+        profile,
+        byte_loader=lambda path: _git_show(G2D_V0310_FINAL_SYNC_COMMIT, path),
+        expected_paths=frozenset(KERNEL_CONFORMANCE_V05_HISTORICAL_SHA256),
+    )
+
+
+def _current_v06_hash_profile_errors_v01(
+    profile: dict[str, str] = V06_CURRENT_SUCCEEDED_SHA256,
+    *,
+    byte_loader=None,
+) -> tuple[str, ...]:
+    loader = (
+        (lambda path: (REPOSITORY_ROOT / path).read_bytes())
+        if byte_loader is None
+        else byte_loader
+    )
+    return _hash_profile_errors_v01(
+        profile,
+        byte_loader=loader,
+        expected_paths=frozenset(V06_CURRENT_SUCCEEDED_SHA256),
+    )
+
+
+def _accepted_final_sync_is_ancestor_v01(
+    *,
+    ancestor: str = G2D_V0310_FINAL_SYNC_COMMIT,
+    descendant: str = "HEAD",
+) -> bool:
+    commit_exists = subprocess.run(
+        ("git", "cat-file", "-e", f"{ancestor}^{{commit}}"),
+        cwd=REPOSITORY_ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if commit_exists.returncode != 0:
+        return False
+    result = subprocess.run(
+        ("git", "merge-base", "--is-ancestor", ancestor, descendant),
+        cwd=REPOSITORY_ROOT,
+        check=False,
+        capture_output=True,
+    )
+    return result.returncode == 0
 
 
 def _git_commits_with_subject_v0310(subject: str) -> tuple[tuple[str, str], ...]:
@@ -1618,7 +1929,7 @@ def _g2d_v0310_protected_paths_v01() -> frozenset[str]:
             G2D_V0310_CHECKPOINT_PATH,
             *G2D_V0310_IMPLEMENTATION_PATHS,
             *G2D_V0310_E4_CODE_PATHS,
-            *G2D_FROZEN_IMPLEMENTATION_SHA256,
+            *G2D_STILL_FROZEN_IMPLEMENTATION_SHA256,
             *G2E_CONTRACT_UPDATED_SHA256,
             *G2D_FACADE_MAINTENANCE_SHA256,
         )
@@ -1686,7 +1997,10 @@ def test_g2d_v0310_terminal_accepts_exact_and_unrelated_successor_dirt() -> None
     descendant = "d" * 40
     unrelated_status = (
         " M AGENTS.md",
+        " M demo/run_living_gauntlet_v01.py",
+        " M hedgehog/kernel/conformance_v01.py",
         " M hedgehog/structured_rationale.py",
+        " M release/completion_manifest.json",
         "M  specs/document_authority_index_v01.json",
         "?? tests/test_active_architecture_authority_v01.py",
     )
@@ -1750,6 +2064,12 @@ def test_g2d_v0310_terminal_rejects_exact_protected_dirty_intersection() -> None
             "head": descendant,
             "final_sync_commit": final_sync,
             "final_sync_is_ancestor": True,
+            "status": (" M demo/run_fractal_runtime_g2_d_v02.py",),
+        },
+        {
+            "head": descendant,
+            "final_sync_commit": final_sync,
+            "final_sync_is_ancestor": True,
             "status": (
                 " M hedgehog/structured_rationale.py",
                 " M " + G2D_ACCEPTED_ADDENDUM_PATH,
@@ -1800,6 +2120,8 @@ def _g2d_v0310_successor_state_v01() -> tuple[str, str, str, str]:
     final_sync = unique(G2D_V0310_FINAL_SYNC_SUBJECT)
     if final_sync is None:
         assert staged == []
+    else:
+        assert final_sync[0] == G2D_V0310_FINAL_SYNC_COMMIT
 
     assert contract == (G2D_V0310_CONTRACT_COMMIT, G2D_V0310_BASIS)
     assert maintenance is not None and maintenance[1] == contract[0]
@@ -2151,10 +2473,10 @@ def test_agents_current_operational_surface_is_exactly_bounded() -> None:
         "Root is the sole local final and commit authority",
         "Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`",
         "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
-        "S2_CLOSED_PENDING_S3",
-        "S3_ACTIVE_SCHEMA_AND_LEGACY_ISOLATION",
-        "Permanent successor onboarding remains prohibited",
-        "The frozen E5 transplant remains prohibited",
+        "SUCCESSOR_ONBOARDING_READY",
+        "S1 document-authority succession, S2 vocabulary repair, and S3 active-schema and retired-subsystem isolation are closed",
+        "Permanent assistant onboarding occurs only after the sanitation changes are reintegrated",
+        "the E5 transplant remains prohibited until a separate authorization",
     ):
         assert required in normalized, required
     source_order = text.split("## Source-of-truth order", 1)[1].split(
@@ -2273,9 +2595,175 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
 
 def test_frozen_gate1_release_evidence_hashes_are_exact() -> None:
     for evidence in FROZEN_EVIDENCE.values():
-        path = REPOSITORY_ROOT / evidence["path"]
-        assert path.is_file()
-        assert _sha256_bytes(path.read_bytes()) == evidence["sha256"]
+        historical = _git_show(
+            G2D_V0310_FINAL_SYNC_COMMIT, evidence["path"]
+        )
+        assert _sha256_bytes(historical) == evidence["sha256"]
+    assert _current_v06_hash_profile_errors_v01() == ()
+
+
+def test_v05_historical_hash_profile_rejects_changed_constant() -> None:
+    mutated = dict(KERNEL_CONFORMANCE_V05_HISTORICAL_SHA256)
+    path = next(iter(mutated))
+    mutated[path] = "0" * 64
+    assert f"hash_profile_mismatch:{path}" in (
+        _historical_v05_hash_profile_errors_v01(mutated)
+    )
+
+
+def test_v06_current_hash_profile_rejects_changed_worktree_bytes() -> None:
+    path = next(iter(V06_CURRENT_SUCCEEDED_SHA256))
+
+    def changed_loader(candidate: str) -> bytes:
+        raw = (REPOSITORY_ROOT / candidate).read_bytes()
+        return raw + b"\x00" if candidate == path else raw
+
+    assert f"hash_profile_mismatch:{path}" in (
+        _current_v06_hash_profile_errors_v01(
+            byte_loader=changed_loader
+        )
+    )
+
+
+def test_v05_final_sync_commit_exists_and_is_current_ancestor() -> None:
+    assert _accepted_final_sync_is_ancestor_v01()
+    assert not _accepted_final_sync_is_ancestor_v01(
+        ancestor="0" * 40
+    )
+    assert not _accepted_final_sync_is_ancestor_v01(
+        ancestor="HEAD",
+        descendant=G2D_V0310_FINAL_SYNC_COMMIT,
+    )
+
+
+def test_release_profile_succession_is_exact() -> None:
+    completion = _read_json(
+        REPOSITORY_ROOT / "release/completion_manifest.json"
+    )
+    seams = _read_json(
+        REPOSITORY_ROOT / "release/integration_seam_index.json"
+    )
+    assert _release_profile_succession_errors_v01(completion, seams) == ()
+
+    from hedgehog.kernel import conformance_v01 as conformance
+
+    historical = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
+    current = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    )
+    assert conformance.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    )
+    assert tuple(historical["active_gauntlet_refs"]) == (
+        KERNEL_CONFORMANCE_V05_HISTORICAL_ACTIVE_REFS
+    )
+    assert tuple(current["active_gauntlet_refs"]) == (
+        KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS
+    )
+    assert current["current_act_count"] == 15
+    assert current["claim_to_current_act"] == (
+        KERNEL_CONFORMANCE_V06_REQUIRED_CLAIM_MAPPING
+    )
+    assert "all_layers_invariant_super_smoke" not in (
+        current["active_gauntlet_refs"]
+    )
+
+    living_tree = ast.parse(
+        (
+            REPOSITORY_ROOT / "demo/run_living_gauntlet_v01.py"
+        ).read_text(encoding="utf-8")
+    )
+    imported_modules = {
+        node.module
+        for node in ast.walk(living_tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    }
+    assert "demo.run_all_layers_applied_super_smoke" not in imported_modules
+
+
+def test_release_profile_rejects_historical_tuple_removal() -> None:
+    completion = _read_json(
+        REPOSITORY_ROOT / "release/completion_manifest.json"
+    )
+    seams = _read_json(
+        REPOSITORY_ROOT / "release/integration_seam_index.json"
+    )
+    mutated = copy.deepcopy(completion)
+    del mutated["kernel_conformance_profiles"]["historical_v0_5"][
+        "active_gauntlet_refs"
+    ][1]
+    assert "historical_v05_active_refs_changed" in (
+        _release_profile_succession_errors_v01(mutated, seams)
+    )
+
+
+def test_release_profile_rejects_retired_current_ref_and_rebinding() -> None:
+    completion = _read_json(
+        REPOSITORY_ROOT / "release/completion_manifest.json"
+    )
+    seams = _read_json(
+        REPOSITORY_ROOT / "release/integration_seam_index.json"
+    )
+    retired_current = copy.deepcopy(completion)
+    retired_current["kernel_conformance_profiles"]["current_v0_6"][
+        "active_gauntlet_refs"
+    ].insert(1, "all_layers_invariant_super_smoke")
+    assert "historical_act_current_reintroduction" in (
+        _release_profile_succession_errors_v01(retired_current, seams)
+    )
+
+    rebound = copy.deepcopy(completion)
+    historical = next(
+        item
+        for item in rebound["evidence_only_references"]
+        if item["act_id"] == "all_layers_invariant_super_smoke"
+    )
+    historical["source_module"] = "demo.run_living_gauntlet_v01"
+    assert "historical_act_identity_rebound" in (
+        _release_profile_succession_errors_v01(rebound, seams)
+    )
+
+
+def test_release_profile_rejects_v05_default_and_unknown_current_act() -> None:
+    completion = _read_json(
+        REPOSITORY_ROOT / "release/completion_manifest.json"
+    )
+    seams = _read_json(
+        REPOSITORY_ROOT / "release/integration_seam_index.json"
+    )
+    historical_default = copy.deepcopy(completion)
+    historical_default["current_kernel_conformance_profile"] = (
+        "kernel_conformance_v0_5_historical"
+    )
+    assert "current_v06_profile_invalid" in (
+        _release_profile_succession_errors_v01(historical_default, seams)
+    )
+
+    unknown = copy.deepcopy(completion)
+    unknown["kernel_conformance_profiles"]["current_v0_6"][
+        "active_gauntlet_refs"
+    ].append("unregistered_current_act")
+    assert "current_v06_active_refs_changed" in (
+        _release_profile_succession_errors_v01(unknown, seams)
+    )
+
+
+def test_release_profile_rejects_removed_current_claim_mapping() -> None:
+    completion = _read_json(
+        REPOSITORY_ROOT / "release/completion_manifest.json"
+    )
+    seams = _read_json(
+        REPOSITORY_ROOT / "release/integration_seam_index.json"
+    )
+    mutated = copy.deepcopy(completion)
+    del mutated["current_regression_claim_mapping"][
+        "bsep_semantic_membrane"
+    ]
+    assert "current_v06_claim_mapping_incomplete" in (
+        _release_profile_succession_errors_v01(mutated, seams)
+    )
 
 
 def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
@@ -3068,8 +3556,12 @@ def test_g2c_preflight_audit_and_protected_bytes_are_exact() -> None:
         (REPOSITORY_ROOT / G2C_CHECKPOINT_PATH).read_bytes()
     ) == G2C_CHECKPOINT_SHA256
     for path in PROTECTED_PATHS_AT_G2C_AUDIT:
-        current = (REPOSITORY_ROOT / path).read_bytes()
-        assert current == _git_show(G2C_AUDIT_COMMIT_BASELINE, path), path
+        frozen = (
+            _git_show(G2D_V0310_FINAL_SYNC_COMMIT, path)
+            if path in V06_CURRENT_SUCCEEDED_SHA256
+            else (REPOSITORY_ROOT / path).read_bytes()
+        )
+        assert frozen == _git_show(G2C_AUDIT_COMMIT_BASELINE, path), path
 
 
 def test_g2c_closure_history_has_exact_scope_and_preservation() -> None:
@@ -3810,6 +4302,8 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
     ) == audit_overlay
 
 def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
+    assert _accepted_final_sync_is_ancestor_v01()
+    assert _historical_v05_hash_profile_errors_v01() == ()
     current_addendum = (
         REPOSITORY_ROOT / G2D_ACCEPTED_ADDENDUM_PATH
     ).read_bytes()
@@ -3877,7 +4371,8 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
         G2D_V038_CHECKPOINT_PATH: G2D_V038_CHECKPOINT_SHA256,
         G2D_V039_INDEPENDENT_REAUDIT_PATH: G2D_V039_INDEPENDENT_REAUDIT_SHA256,
         G2D_V039_CHECKPOINT_PATH: G2D_V039_CHECKPOINT_SHA256,
-        **G2D_FROZEN_IMPLEMENTATION_SHA256,
+        **G2D_STILL_FROZEN_IMPLEMENTATION_SHA256,
+        **V06_CURRENT_SUCCEEDED_SHA256,
         **G2E_CONTRACT_UPDATED_SHA256,
         **G2D_FACADE_MAINTENANCE_SHA256,
     }
@@ -3902,10 +4397,11 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
         G2D_V038_INDEPENDENT_REAUDIT_COMMIT,
         G2D_V038_INDEPENDENT_REAUDIT_PATH,
     )
-    for path in G2D_FROZEN_IMPLEMENTATION_SHA256:
-        assert (REPOSITORY_ROOT / path).read_bytes() == _git_show(
-            G2D_CORRECTED_IMPLEMENTATION_COMMIT,
-            path,
+    for path, sha256 in G2D_FROZEN_IMPLEMENTATION_SHA256.items():
+        historical = _git_show(G2D_V0310_FINAL_SYNC_COMMIT, path)
+        assert _sha256_bytes(historical) == sha256, path
+        assert historical == _git_show(
+            G2D_CORRECTED_IMPLEMENTATION_COMMIT, path
         ), path
 
     facade_commit_row = subprocess.run(
@@ -4211,15 +4707,20 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
     for path, sha256 in G2D_HISTORICAL_G2E_DEPENDENCY_SHA256.items():
         historical_raw = _git_show(G2D_CORRECTED_IMPLEMENTATION_COMMIT, path)
         assert _sha256_bytes(historical_raw) == sha256, path
-    for path in (
-        "release/completion_manifest.json",
-        "release/integration_seam_index.json",
-        "specs/human_passport_v0_25.md",
-    ):
-        assert (REPOSITORY_ROOT / path).read_bytes() == _git_show(
-            G2D_INDEPENDENT_REAUDIT_COMMIT,
-            path,
+    for evidence in FROZEN_EVIDENCE.values():
+        path = evidence["path"]
+        historical = _git_show(G2D_V0310_FINAL_SYNC_COMMIT, path)
+        assert historical == _git_show(
+            G2D_INDEPENDENT_REAUDIT_COMMIT, path
         )
+        assert _sha256_bytes(historical) == evidence["sha256"]
+    assert _current_v06_hash_profile_errors_v01() == ()
+    assert (
+        REPOSITORY_ROOT / "specs/human_passport_v0_25.md"
+    ).read_bytes() == _git_show(
+        G2D_INDEPENDENT_REAUDIT_COMMIT,
+        "specs/human_passport_v0_25.md",
+    )
     implementation_patch = subprocess.run(
         (
             "git",

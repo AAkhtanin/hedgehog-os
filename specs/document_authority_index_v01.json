@@ -33,12 +33,30 @@
     },
     {
       "path": "release/successor_context_manifest_v01.json",
-      "status": "s1_prepared_successor_context_candidate_pending_s2_s3",
+      "status": "successor_onboarding_ready_after_s3",
       "current_authority": false,
       "authority_scope": "successor_context_selection_only",
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
-      "role": "pending bounded-context candidate for S1 review and authorized S2/S3 sanitation only; not ready for permanent onboarding and creates no runtime or architecture authority"
+      "role": "architecture-clean bounded-context selection for guarded reintegration; permanent onboarding remains conditional on reintegration and exact E5 hash preservation and creates no runtime or architecture authority"
+    },
+    {
+      "path": "release/retired_architecture_inventory_v01.json",
+      "status": "s3_retired_architecture_inventory",
+      "current_authority": false,
+      "authority_scope": "retired_architecture_inventory_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "machine-readable inventory of byte-preserved retired schemas, modules, and historical runner families; not architecture or runtime authority"
+    },
+    {
+      "path": "release/current_schema_surface_v01.json",
+      "status": "s3_current_schema_surface_index",
+      "current_authority": false,
+      "authority_scope": "current_schema_surface_index_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "machine-readable current schema selection and isolation index; not a schema loader, registry, implementation, or architecture authority"
     }
   ],
   "current_technical_annexes": [
@@ -275,21 +293,21 @@
     },
     {
       "path": "release/completion_manifest.json",
-      "status": "frozen_gate1_evidence",
+      "status": "current_release_completion_and_profile_index",
       "current_authority": false,
       "authority_scope": "status_or_evidence_only",
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
-      "role": "accepted frozen runtime-act evidence, not current project closure authority"
+      "role": "current runtime-act and conformance-profile succession index preserving historical Gate-1 references; not current project closure or architecture authority"
     },
     {
       "path": "release/integration_seam_index.json",
-      "status": "frozen_gate1_evidence",
+      "status": "current_release_integration_and_profile_index",
       "current_authority": false,
       "authority_scope": "status_or_evidence_only",
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
-      "role": "accepted frozen Gate-1 seam evidence"
+      "role": "current integration-seam and conformance-profile succession index preserving historical Gate-1 seam identity; not architecture authority"
     },
     {
       "path": "release/integration_seam_index.md",

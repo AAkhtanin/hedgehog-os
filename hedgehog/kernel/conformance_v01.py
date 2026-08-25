@@ -21,11 +21,18 @@ del annotations
 
 MODULE_ID = "kernel_conformance_v01"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
-CONFORMANCE_VERSION = "v0.5"
+CONFORMANCE_VERSION = "v0.6"
 _GATE1_CONFORMANCE_VERSION_V01 = "v0.1"
 _G2A_CONFORMANCE_VERSION_V02 = "v0.2"
 _G2B_CONFORMANCE_VERSION_V03 = "v0.3"
 _G2C_CONFORMANCE_VERSION_V04 = "v0.4"
+_G2D_CONFORMANCE_VERSION_V05 = "v0.5"
+
+KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL = (
+    "kernel_conformance_v0_5_historical"
+)
+KERNEL_CONFORMANCE_PROFILE_V06_CURRENT = "kernel_conformance_v0_6_current"
+DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -157,7 +164,81 @@ _G2C_ACTIVE_GAUNTLET_REFS_V04 = (
     *_G2B_ACTIVE_GAUNTLET_REFS_V03,
     "execution_mode_router",
 )
-_ACTIVE_GAUNTLET_REFS = (*_G2C_ACTIVE_GAUNTLET_REFS_V04, "fractal_runtime")
+_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS = (
+    *_G2C_ACTIVE_GAUNTLET_REFS_V04,
+    "fractal_runtime",
+)
+_V06_CURRENT_ACTIVE_GAUNTLET_REFS = (
+    "airline_deterministic_transaction_runtime",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
+_ACTIVE_GAUNTLET_REFS = _V06_CURRENT_ACTIVE_GAUNTLET_REFS
+
+CURRENT_REGRESSION_CLAIM_TO_ACTS_V06 = (
+    (
+        "root_sole_local_final_commit_authority",
+        (
+            "root_decision_kernel",
+            "action_packet_lifecycle",
+            "fractal_runtime",
+        ),
+    ),
+    ("no_superroot_exists", ("generic_multiroot",)),
+    (
+        "bsep_semantic_membrane",
+        ("execution_mode_router", "fractal_runtime"),
+    ),
+    (
+        "runtime_execution_topology_runtime_owned",
+        ("fractal_runtime",),
+    ),
+    (
+        "provider_model_advisory_only",
+        ("semantic_work_contract", "fractal_runtime"),
+    ),
+    (
+        "actor_output_cannot_create_final_output",
+        ("semantic_work_contract", "fractal_runtime"),
+    ),
+    (
+        "resultproposal_postvv_terminal_gt_before_root",
+        ("fractal_runtime",),
+    ),
+    (
+        "drs_retrieval_reuse_no_authority",
+        ("drs_semantic_address_and_reuse_certificate",),
+    ),
+    (
+        "receipt_evidence_only",
+        ("effect_firewall", "action_packet_lifecycle"),
+    ),
+    (
+        "effect_capability_bounded_corridor_only",
+        ("effect_firewall",),
+    ),
+    (
+        "airline_supplier_same_authority_law",
+        (
+            "airline_deterministic_transaction_runtime",
+            "supplier_water_filter_portability",
+            "action_packet_lifecycle",
+        ),
+    ),
+    ("real_world_effects_zero", _V06_CURRENT_ACTIVE_GAUNTLET_REFS),
+)
 _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
     (
         "DomainPackConformance",
@@ -592,7 +673,11 @@ class NegativeConformanceResultV01:
 @_dataclass(frozen=True, slots=True)
 class KernelConformanceReportV01:
     report_id: str
+    profile_id: str
     conformance_version: str
+    historical_profile_ref: str
+    claim_to_current_act: tuple[tuple[str, tuple[str, ...]], ...]
+    current_act_count: int
     implementation_commit: str
     category_results: tuple[ConformanceCategoryResultV01, ...]
     domain_results: tuple[DomainConformanceResultV01, ...]
@@ -602,6 +687,40 @@ class KernelConformanceReportV01:
     limitations: tuple[str, ...]
     counters: ConformanceCountersV01
     final_status: str
+
+
+def kernel_conformance_profile_metadata_v01(
+    profile_id: str,
+) -> dict[str, object]:
+    """Return immutable-profile metadata; this never executes a profile."""
+
+    if profile_id == KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL:
+        return {
+            "profile_id": KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+            "profile_version": _G2D_CONFORMANCE_VERSION_V05,
+            "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+            "default_current": False,
+            "active_gauntlet_refs": list(
+                _V05_HISTORICAL_ACTIVE_GAUNTLET_REFS
+            ),
+            "historical_act_id": "all_layers_invariant_super_smoke",
+        }
+    if profile_id == KERNEL_CONFORMANCE_PROFILE_V06_CURRENT:
+        return {
+            "profile_id": KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+            "profile_version": CONFORMANCE_VERSION,
+            "profile_status": "CURRENT_ACTIVE",
+            "default_current": True,
+            "active_gauntlet_refs": list(_V06_CURRENT_ACTIVE_GAUNTLET_REFS),
+            "historical_profile_ref": KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+            "historical_act_id_rebound": False,
+            "claim_to_current_act": {
+                claim_id: list(act_ids)
+                for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+            },
+            "current_act_count": len(_V06_CURRENT_ACTIVE_GAUNTLET_REFS),
+        }
+    raise ValueError("kernel_conformance_profile_unknown")
 
 
 def build_conformance_category_result_v01(
@@ -821,7 +940,11 @@ def build_kernel_conformance_report_v01(
         )
         provisional = KernelConformanceReportV01(
             report_id="0" * 64,
+            profile_id=KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
             conformance_version=CONFORMANCE_VERSION,
+            historical_profile_ref=KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+            claim_to_current_act=CURRENT_REGRESSION_CLAIM_TO_ACTS_V06,
+            current_act_count=len(active_gauntlet_refs),
             implementation_commit=implementation_commit,
             category_results=category_results,
             domain_results=domain_results,
@@ -1044,6 +1167,7 @@ def _report_errors(report: object) -> tuple[str, ...]:
     errors: list[str] = []
     if (
         not _valid_text(report.report_id)
+        or report.profile_id != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
         or type(report.conformance_version) is not str
         or report.conformance_version
         not in (
@@ -1051,8 +1175,15 @@ def _report_errors(report: object) -> tuple[str, ...]:
             _G2A_CONFORMANCE_VERSION_V02,
             _G2B_CONFORMANCE_VERSION_V03,
             _G2C_CONFORMANCE_VERSION_V04,
+            _G2D_CONFORMANCE_VERSION_V05,
             CONFORMANCE_VERSION,
         )
+        or report.historical_profile_ref
+        != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        or report.claim_to_current_act
+        != CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+        or report.current_act_count != len(report.active_gauntlet_refs)
+        or report.current_act_count != len(_V06_CURRENT_ACTIVE_GAUNTLET_REFS)
         or not _valid_commit(report.implementation_commit)
         or type(report.final_status) is not str
         or report.final_status not in CONFORMANCE_STATUSES
@@ -1142,6 +1273,12 @@ def _require_report_geometry(
         expected_active_refs = _G2C_ACTIVE_GAUNTLET_REFS_V04
         expected_category_geometry = _G2C_EXPECTED_CATEGORY_CHECK_IDS_V04
         expected_negative_geometry = _G2C_EXPECTED_NEGATIVE_GEOMETRY_V04
+    elif conformance_version == _G2D_CONFORMANCE_VERSION_V05:
+        category_ids = CATEGORY_IDS
+        negative_probe_ids = NEGATIVE_PROBE_IDS
+        expected_active_refs = _V05_HISTORICAL_ACTIVE_GAUNTLET_REFS
+        expected_category_geometry = _EXPECTED_CATEGORY_CHECK_IDS
+        expected_negative_geometry = _EXPECTED_NEGATIVE_GEOMETRY
     elif conformance_version == CONFORMANCE_VERSION:
         category_ids = CATEGORY_IDS
         negative_probe_ids = NEGATIVE_PROBE_IDS
@@ -1422,7 +1559,11 @@ def _replace_negative_id(
 def _replace_report_id(report: KernelConformanceReportV01) -> KernelConformanceReportV01:
     return KernelConformanceReportV01(
         report_id=_report_id(report),
+        profile_id=report.profile_id,
         conformance_version=report.conformance_version,
+        historical_profile_ref=report.historical_profile_ref,
+        claim_to_current_act=report.claim_to_current_act,
+        current_act_count=report.current_act_count,
         implementation_commit=report.implementation_commit,
         category_results=report.category_results,
         domain_results=report.domain_results,
@@ -1535,7 +1676,14 @@ def _counters_plain(counters: ConformanceCountersV01) -> dict[str, object]:
 def _report_plain(report: KernelConformanceReportV01) -> dict[str, object]:
     return {
         "report_id": report.report_id,
+        "profile_id": report.profile_id,
         "conformance_version": report.conformance_version,
+        "historical_profile_ref": report.historical_profile_ref,
+        "claim_to_current_act": {
+            claim_id: list(act_ids)
+            for claim_id, act_ids in report.claim_to_current_act
+        },
+        "current_act_count": report.current_act_count,
         "implementation_commit": report.implementation_commit,
         "category_results": [_category_plain(item) for item in report.category_results],
         "domain_results": [_domain_plain(item) for item in report.domain_results],

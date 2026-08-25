@@ -1,5 +1,7 @@
 {
   "document_id": "living_release_integration_seam_index_v01",
+  "current_kernel_conformance_profile": "kernel_conformance_v0_6_current",
+  "historical_kernel_conformance_profile": "kernel_conformance_v0_5_historical",
   "index_status": "ACTIVE_GATE1_G1E",
   "seams": [
     {
@@ -16,15 +18,15 @@
     },
     {
       "authority_status": "OBSERVES_ROOT_BOUNDARY",
-      "current_mode": "DETERMINISTIC_LOCAL_COLLECTOR",
+      "current_mode": "HISTORICAL_PROFILE_METADATA_ONLY",
       "effect_access": "NONE",
-      "gate1_target": "living_invariant_reference_act",
-      "notes": "Executed once by the living gauntlet as the current invariant act.",
+      "gate1_target": "kernel_conformance_v0_5_historical",
+      "notes": "Immutable historical Gate-1 v0.5 act identity and evidence only. Current regression execution is disabled, successor onboarding is excluded, current v0.6 uses named existing current acts, and the old act ID is never rebound.",
       "seam_class": "INVARIANT_COLLECTOR",
       "seam_id": "all_layers_invariant_super_smoke_collector",
       "source_module": "demo.run_all_layers_applied_super_smoke",
       "source_symbol": "collect_all_layers_applied_super_smoke",
-      "status": "ACTIVE"
+      "status": "HISTORICAL_EVIDENCE_ONLY"
     },
     {
       "authority_status": "NON_ROOT_INTEGRITY_RECONSTRUCTION",
@@ -283,7 +285,7 @@
       "current_mode": "DETERMINISTIC_MACHINE_READABLE_GATE1_CONFORMANCE",
       "effect_access": "NONE",
       "gate1_target": "kernel_conformance_closure",
-      "notes": "Executes exact ten-category, two-domain, and ten-negative-probe conformance with PASS derived from execution and no stored synthetic PASS. It creates no authority or permission, has no effect access, performs no provider, network, or Gemini call, makes no production-certification claim, and leaves final independent audit and consolidated documentation closure pending.",
+      "notes": "Executes the current v0.6 profile with exact fourteen-category, two-domain, fifty-negative-probe, and fifteen-active-reference geometry, with PASS derived from execution and no stored synthetic PASS. Historical v0.5 remains evidence only. It creates no authority or permission, has no effect access, performs no provider, network, or Gemini call, makes no production-certification claim, and leaves final independent audit and consolidated documentation closure pending.",
       "seam_class": "RELEASE_CONFORMANCE",
       "seam_id": "kernel_conformance_report",
       "source_module": "demo.run_kernel_conformance_v01",

@@ -1,0 +1,132 @@
+{
+  "inventory_id": "retired_architecture_inventory_v01",
+  "inventory_status": "S3_CURRENT_ISOLATION_BASELINE",
+  "architecture_lock_ref": "specs/current_architecture_lock_v01.md",
+  "generated_from_head": "237501110159f1adb6d8a4c5e9482d618e5a8187",
+  "retired_schema_paths": [
+    {
+      "path": "schemas/attractor_packet.schema.json",
+      "classification": "RETIRED_SCHEMA_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Superseded schema retained only as historical byte evidence; it is not part of the current schema surface."
+    },
+    {
+      "path": "schemas/plan_graph.schema.json",
+      "classification": "RETIRED_SCHEMA_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Superseded schema retained only as historical byte evidence; it is not part of the current schema surface."
+    }
+  ],
+  "retired_runtime_reference_paths": [
+    {
+      "path": "hedgehog/architect.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired provider-owned planning subsystem module; current semantic work is proposal-only and current topology is runtime-owned."
+    },
+    {
+      "path": "hedgehog/llm_architect.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired model-facing planning subsystem module; provider output has no current execution or authority role."
+    },
+    {
+      "path": "hedgehog/architect_prompt_compiler.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired prompt compiler bound to the retired planning-schema subsystem."
+    },
+    {
+      "path": "hedgehog/executor.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired executor bound to the superseded planning representation."
+    },
+    {
+      "path": "hedgehog/fractal_dag_executor.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired fractal executor; current RuntimeExecutionTopology is materialized and owned by accepted runtime."
+    },
+    {
+      "path": "hedgehog/root_orchestrator.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired orchestrator subsystem that is not the accepted current Root Decision Kernel or Kernel ABI seam."
+    },
+    {
+      "path": "hedgehog/trace_reporter.py",
+      "classification": "RETIRED_RUNTIME_REFERENCE",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Retired reporting surface coupled to the retired planning and Root-Orchestrator subsystem."
+    }
+  ],
+  "historical_demo_test_families": [
+    {
+      "path": "demo/run_all_layers_applied_super_smoke.py",
+      "classification": "HISTORICAL_DEMO_OR_TEST",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Historical Gate-1 all-layers act runner; its closure evidence remains immutable but it is not a current regression act."
+    },
+    {
+      "path": "tests/test_all_layers_applied_super_smoke_runner.py",
+      "classification": "HISTORICAL_DEMO_OR_TEST",
+      "current_runtime_allowed": false,
+      "current_schema_registration_allowed": false,
+      "current_export_allowed": false,
+      "successor_onboarding_allowed": false,
+      "preservation": "BYTE_HISTORY_IN_GIT",
+      "reason": "Historical focused test for the frozen all-layers Gate-1 evidence profile; excluded from current conformance and onboarding."
+    }
+  ],
+  "forbidden_current_uses": [
+    "IMPORT_FROM_CURRENT_KERNEL_GATE_OR_E5",
+    "EXPORT_FROM_CURRENT_PACKAGE_FACADE",
+    "REGISTER_AS_CURRENT_SCHEMA",
+    "INCLUDE_IN_SUCCESSOR_ONBOARDING",
+    "INVOKE_FROM_CURRENT_LIVING_GAUNTLET_OR_KERNEL_CONFORMANCE",
+    "WRAP_ALIAS_MIGRATE_OR_REVIVE"
+  ],
+  "preservation_law": "Retired paths remain byte-preserved in Git and may be opened only as explicitly requested historical evidence; S3 does not edit, move, delete, or execute them as current conformance.",
+  "onboarding_law": "Every retired path and historical runner family listed here is excluded from automatic successor onboarding and cannot establish current runtime, Gate, schema, or architecture authority."
+}

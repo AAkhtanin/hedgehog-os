@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import ast
-from dataclasses import FrozenInstanceError, fields, is_dataclass, replace
+from collections import Counter
+from collections.abc import Mapping
+from dataclasses import dataclass, FrozenInstanceError, fields, is_dataclass, replace
+from datetime import datetime, timezone
 import hashlib
 import inspect
 import json
@@ -9,6 +12,7 @@ import math
 import os
 from pathlib import Path
 import re
+import time
 import types
 from typing import get_args, get_origin, get_type_hints
 
@@ -3000,6 +3004,14 @@ def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
         node.module or ""
         for node in ast.walk(tree)
         if isinstance(node, ast.ImportFrom)
+    )
+    imports.update(
+        (node.module + "." + alias.name)
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+        and node.module is not None
+        for alias in node.names
+        if alias.name != "*"
     )
     assert public_functions == (
         QUARTET_FUNCTIONS
@@ -7513,6 +7525,158 @@ def test_e4_complete_execution_bundle_public_validation_v01(
     e4_success_fixture: dict[str, object],
 ) -> None:
     bundle = e4_success_fixture["bundle"]
+
+    def reseal_artifact(
+        artifact: g2e.KernelArtifactV01,
+        *,
+        label: str,
+        **changes: object,
+    ) -> g2e.KernelArtifactV01:
+        plain = kernel_artifact_to_plain_dict_v01(artifact)
+        material = {
+            field_name: changes.get(field_name, plain[field_name])
+            for field_name in (
+                "abi_version",
+                "artifact_type",
+                "schema_version",
+                "transaction_id",
+                "owner_root_id",
+                "source_component",
+                "authority_class",
+                "lifecycle_state",
+                "payload",
+                "trace_refs",
+                "parent_refs",
+                "time_envelope",
+            )
+        }
+        prefix = artifact.artifact_id.split(":", 1)[0] + ":"
+        artifact_id = prefix + g2e.domain_separated_sha256_hex_v01(
+            domain="HEDGEHOG_G2E_E4_BUNDLE_PROFILE_MUTATION_V01:" + label,
+            payload=canonical_json_bytes_v01(material),
+        )
+        return build_kernel_artifact_v01(
+            abi_version=str(material["abi_version"]),
+            artifact_id=artifact_id,
+            artifact_type=str(material["artifact_type"]),
+            schema_version=str(material["schema_version"]),
+            transaction_id=str(material["transaction_id"]),
+            owner_root_id=str(material["owner_root_id"]),
+            source_component=str(material["source_component"]),
+            authority_class=str(material["authority_class"]),
+            lifecycle_state=str(material["lifecycle_state"]),
+            payload=material["payload"],
+            trace_refs=tuple(material["trace_refs"]),
+            parent_refs=tuple(material["parent_refs"]),
+            time_envelope=material["time_envelope"],
+        )
+
+    def assert_bundle_reason(
+        field_name: str,
+        artifact: g2e.KernelArtifactV01,
+        reason: str,
+        *,
+        propagate: bool = True,
+    ) -> None:
+        assert validate_kernel_artifact_v01(artifact) == ()
+        candidate = replace(bundle, **{field_name: artifact})
+        if propagate:
+            chain_fields = (
+                "delta_source_proposed_artifact",
+                "delta_source_artifact",
+                "dependency_graph_artifact",
+                "affected_set_artifact",
+                "invalidation_report_artifact",
+                "plan_proposed_artifact",
+                "plan_root_decision_artifact",
+                "plan_accepted_artifact",
+                "preservation_proof_artifact",
+                "final_root_decision_artifact",
+                "runtime_report_artifact",
+            )
+            changed_index = chain_fields.index(field_name)
+            identity_map = {
+                getattr(bundle, field_name).artifact_id: artifact.artifact_id
+            }
+            replacements = {field_name: artifact}
+            for downstream_field in chain_fields[changed_index + 1 :]:
+                original = getattr(bundle, downstream_field)
+                if downstream_field == "plan_root_decision_artifact":
+                    current_plan = replacements.get(
+                        "plan_proposed_artifact", bundle.plan_proposed_artifact
+                    )
+                    updated = g2e._g2e4_root_decision_artifact_v01(
+                        prefix="g2e_root_plan_decision_v01:",
+                        domain="HEDGEHOG_G2E_PLAN_ROOT_DECISION_ARTIFACT_V01",
+                        result=bundle.plan_root_decision_result,
+                        parent_refs=(
+                            current_plan.artifact_id,
+                            bundle.source_context.baseline_g2c_route_eligibility_artifact.artifact_id,
+                            bundle.source_context.baseline_g2d_execution_bundle.report_artifact.artifact_id,
+                        ),
+                        trace_refs=tuple(
+                            identity_map.get(ref, ref)
+                            for ref in original.trace_refs
+                        ),
+                        time_source_artifact=current_plan,
+                    )
+                elif downstream_field == "final_root_decision_artifact":
+                    updated = g2e._g2e4_root_decision_artifact_v01(
+                        prefix="g2e_root_final_decision_v01:",
+                        domain="HEDGEHOG_G2E_FINAL_ROOT_DECISION_ARTIFACT_V01",
+                        result=bundle.final_root_decision_result,
+                        parent_refs=(
+                            replacements.get(
+                                "plan_root_decision_artifact",
+                                bundle.plan_root_decision_artifact,
+                            ).artifact_id,
+                            replacements.get(
+                                "plan_accepted_artifact",
+                                bundle.plan_accepted_artifact,
+                            ).artifact_id,
+                            bundle.recomputed_g2d_execution_bundle.report_artifact.artifact_id,
+                            replacements.get(
+                                "preservation_proof_artifact",
+                                bundle.preservation_proof_artifact,
+                            ).artifact_id,
+                        ),
+                        trace_refs=tuple(
+                            identity_map.get(ref, ref)
+                            for ref in original.trace_refs
+                        ),
+                        time_source_artifact=(
+                            bundle.recomputed_g2d_execution_bundle.report_artifact
+                        ),
+                    )
+                else:
+                    parents = tuple(
+                        identity_map.get(ref, ref) for ref in original.parent_refs
+                    )
+                    traces = tuple(
+                        identity_map.get(ref, ref) for ref in original.trace_refs
+                    )
+                    if parents == original.parent_refs and traces == original.trace_refs:
+                        continue
+                    updated = reseal_artifact(
+                        original,
+                        label=field_name + ":propagate:" + downstream_field,
+                        parent_refs=parents,
+                        trace_refs=traces,
+                    )
+                replacements[downstream_field] = updated
+                identity_map[original.artifact_id] = updated.artifact_id
+            candidate = replace(bundle, **replacements)
+        report = g2e.validate_continuous_delta_execution_bundle_v01(candidate)
+        assert report.status == "FAIL_CLOSED"
+        assert report.reason_codes == (reason,)
+        with pytest.raises(ValueError, match="^" + reason + "$"):
+            g2e.build_continuous_delta_execution_bundle_v01(
+                **{
+                    field.name: getattr(candidate, field.name)
+                    for field in fields(type(candidate))
+                }
+            )
+
     assert len(fields(g2e.ContinuousDeltaExecutionBundleV01)) == 36
     assert len(fields(g2d.FractalRuntimeExecutionBundleV02)) == 28
     assert g2e.validate_continuous_delta_execution_bundle_v01(bundle).status == "PASS"
@@ -7536,6 +7700,158 @@ def test_e4_complete_execution_bundle_public_validation_v01(
             )
         }
     ) == 9
+    profile_artifacts = (
+        ("delta_source_proposed_artifact", bundle.delta_source_proposed_artifact),
+        ("dependency_graph_artifact", bundle.dependency_graph_artifact),
+        ("affected_set_artifact", bundle.affected_set_artifact),
+        ("invalidation_report_artifact", bundle.invalidation_report_artifact),
+        ("preservation_proof_artifact", bundle.preservation_proof_artifact),
+        ("plan_proposed_artifact", bundle.plan_proposed_artifact),
+        ("runtime_report_artifact", bundle.runtime_report_artifact),
+    )
+    for field_name, artifact in profile_artifacts:
+        plain = kernel_artifact_to_plain_dict_v01(artifact)
+        alternatives = {
+            "artifact_type": (
+                "SemanticEvidence"
+                if artifact.artifact_type != "SemanticEvidence"
+                else "ValidatedEvidence"
+            ),
+            "lifecycle_state": (
+                "VALIDATED"
+                if artifact.lifecycle_state != "VALIDATED"
+                else "PROPOSED"
+            ),
+            "authority_class": (
+                "NON_AUTHORITY"
+                if artifact.authority_class != "NON_AUTHORITY"
+                else "EVIDENCE_ONLY"
+            ),
+            "source_component": artifact.source_component + ".mutated",
+            "payload": {
+                **plain["payload"],
+                "semantic_profile_probe": True,
+            },
+        }
+        for profile_field, replacement_value in alternatives.items():
+            mutated = reseal_artifact(
+                artifact,
+                label=field_name + ":" + profile_field,
+                **{profile_field: replacement_value},
+            )
+            assert_bundle_reason(
+                field_name, mutated, "g2e_object_invalid"
+            )
+    for field_name, artifact in (
+        ("delta_source_artifact", bundle.delta_source_artifact),
+        ("plan_accepted_artifact", bundle.plan_accepted_artifact),
+    ):
+        assert_bundle_reason(
+            field_name,
+            reseal_artifact(
+                artifact,
+                label=field_name + ":lifecycle-instance",
+                source_component=artifact.source_component + ".mutated",
+            ),
+            "g2e_object_invalid",
+        )
+    envelope_artifact = bundle.dependency_graph_artifact
+    envelope_probes = (
+        ("schema_version", "v0.2"),
+        ("transaction_id", "transaction:g2e:e4:foreign"),
+        ("owner_root_id", "root:g2e:e4:foreign"),
+    )
+    for envelope_field, replacement_value in envelope_probes:
+        assert_bundle_reason(
+            "dependency_graph_artifact",
+            replace(
+                envelope_artifact,
+                **{envelope_field: replacement_value},
+            ),
+            "g2e_object_invalid",
+            propagate=False,
+        )
+        assert_bundle_reason(
+            "dependency_graph_artifact",
+            reseal_artifact(
+                envelope_artifact,
+                label="envelope:" + envelope_field,
+                **{envelope_field: replacement_value},
+            ),
+            "g2e_object_invalid",
+        )
+    parent_mutation = reseal_artifact(
+        bundle.dependency_graph_artifact,
+        label="case89:parents",
+        parent_refs=(
+            *bundle.dependency_graph_artifact.parent_refs,
+            bundle.source_context.baseline_g2d_execution_bundle.report_artifact.artifact_id,
+        ),
+    )
+    trace_mutation = reseal_artifact(
+        bundle.affected_set_artifact,
+        label="case89:traces",
+        trace_refs=(
+            *bundle.affected_set_artifact.trace_refs,
+            "trace:g2e:e4:case89:foreign",
+        ),
+    )
+    time_plain = kernel_artifact_to_plain_dict_v01(
+        bundle.invalidation_report_artifact
+    )["time_envelope"]
+    time_mutation = reseal_artifact(
+        bundle.invalidation_report_artifact,
+        label="case89:time",
+        time_envelope={
+            **time_plain,
+            "pt_created_at": "2026-08-01T00:00:01+00:00",
+        },
+    )
+    plan_relation_mutation = reseal_artifact(
+        bundle.plan_accepted_artifact,
+        label="case89:plan-relation",
+        parent_refs=tuple(reversed(bundle.plan_accepted_artifact.parent_refs)),
+    )
+    for field_name, artifact in (
+        ("dependency_graph_artifact", parent_mutation),
+        ("affected_set_artifact", trace_mutation),
+        ("invalidation_report_artifact", time_mutation),
+        ("plan_accepted_artifact", plan_relation_mutation),
+    ):
+        assert_bundle_reason(field_name, artifact, "g2e_object_invalid")
+    assert_bundle_reason(
+        "plan_root_decision_artifact",
+        bundle.final_root_decision_artifact,
+        "g2e_authority_boundary_violated",
+        propagate=False,
+    )
+    identity_only = replace(
+        bundle.dependency_graph_artifact,
+        artifact_id="g2eabi_graph_v01:" + ("0" * 64),
+    )
+    assert_bundle_reason(
+        "dependency_graph_artifact",
+        identity_only,
+        "g2e_identity_mismatch",
+    )
+    canonical_public_functions = tuple(
+        node.name
+        for node in ast.parse(MODULE_PATH.read_text(encoding="ascii")).body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and not node.name.startswith("_")
+    )
+    assert len(canonical_public_functions) == 89
+    assert len(g2e.__all__) == 109
+    transition_names = (
+        "build_continuous_delta_transition_registry_profile_v01",
+        "validate_continuous_delta_transition_registry_profile_v01",
+        "continuous_delta_transition_registry_profile_to_plain_dict_v01",
+        "validate_continuous_delta_transition_decision_v01",
+        "continuous_delta_transition_decision_to_plain_dict_v01",
+        "rebuild_continuous_delta_transition_decision_identity_v01",
+    )
+    direct_names = TYPE_NAMES + canonical_public_functions + transition_names
+    assert len(direct_names) == 115
 
 
 def test_e4_conditional_whole_run_escalation_and_selective_rejection_v01(
@@ -7864,3 +8180,8003 @@ def test_e4_no_private_g2d_lower_mutation_e5_or_e6_surface_v01() -> None:
     assert hashlib.sha256(SCHEMA_PATH.read_bytes()).hexdigest() == (
         "6d2d2c8756ebf261724742ad14294094ee9ce04a28c0498b264164ec585d11f2"
     )
+
+
+E5_RUNNER_PATH = ROOT / "demo/run_continuous_delta_runtime_g2_e_v01.py"
+E5_CONSTRUCTIVE_ORDER = (
+    "g2e_case:travel:hold_expiry:v01",
+    "g2e_case:travel:price_change:v01",
+    "g2e_case:travel:policy_change:v01",
+    "g2e_case:travel:unrelated_preference:v01",
+    "g2e_case:travel:repeat_idempotent:v01",
+    "g2e_case:warehouse:water_filter_stock:v01",
+    "g2e_case:warehouse:evidence_validity:v01",
+    "g2e_case:warehouse:policy_change:v01",
+    "g2e_case:warehouse:safe_sibling:v01",
+    "g2e_case:warehouse:repeat_idempotent:v01",
+)
+E5_NEGATIVE_ROWS = (
+    ("malformed_delta_identity", "delta_id", "g2e_identity_mismatch"),
+    ("unvalidated_delta_source", "source_validation", "g2e_delta_source_unvalidated"),
+    ("stale_baseline", "baseline_report_or_graph", "g2e_delta_baseline_stale"),
+    ("future_observation", "observed_at_utc", "g2e_delta_future_observation"),
+    ("invalid_time_window", "validity_window", "g2e_delta_time_invalid"),
+    ("duplicate_changed_field", "ordered_changed_bindings", "g2e_delta_duplicate_binding"),
+    ("conflicting_duplicate_delta", "conflicting_changed_bindings", "g2e_delta_conflicting_duplicate"),
+    ("unknown_field_path", "json_pointer", "g2e_delta_field_path_invalid"),
+    ("unknown_changed_artifact", "artifact_id", "g2e_delta_artifact_binding_invalid"),
+    ("cross_transaction_substitution", "transaction_id", "g2e_delta_cross_transaction"),
+    ("cross_domain_substitution", "domain_id", "g2e_delta_source_unvalidated"),
+    ("cross_root_substitution", "owning_root_id", "g2e_delta_cross_root"),
+    ("policy_version_substitution", "policy_version", "g2e_delta_policy_version_mismatch"),
+    ("schema_version_substitution", "schema_versions", "g2e_delta_schema_version_mismatch"),
+    ("dependency_fingerprint_forgery", "dependency_fingerprint_after", "g2e_dependency_fingerprint_forgery"),
+    ("dependency_digest_role_collision", "fingerprint_typed_role", "g2e_dependency_fingerprint_role_collision"),
+    ("source_history_substitution", "source_history_hash", "g2e_dependency_source_history_mismatch"),
+    ("missing_dependency_edge", "ordered_edge_ids", "g2e_dependency_graph_missing_edge"),
+    ("extra_unrelated_dependency_edge", "edge_source_or_dependent", "g2e_dependency_edge_unknown_source"),
+    ("duplicate_dependency_edge", "edge_identity_pair", "g2e_dependency_edge_duplicate"),
+    ("self_dependency_edge", "dependent_equals_dependency", "g2e_dependency_edge_self"),
+    ("dependency_cycle", "ordered_graph_edges", "g2e_dependency_graph_cycle"),
+    ("unknown_dependency_artifact", "dependency_artifact_id", "g2e_dependency_edge_unknown_source"),
+    ("unknown_dependent_artifact", "dependent_artifact_id", "g2e_dependency_edge_unknown_dependent"),
+    ("graph_version_substitution", "graph_version", "g2e_dependency_graph_version_mismatch"),
+    ("graph_edge_reordering", "canonical_order", "g2e_dependency_graph_ordering_invalid"),
+    ("graph_node_bound_overflow", "node_count", "g2e_dependency_graph_bounds_exceeded"),
+    ("graph_edge_bound_overflow", "edge_count", "g2e_dependency_graph_bounds_exceeded"),
+    ("graph_hop_bound_overflow", "maximum_path", "g2e_affected_hop_bound_exceeded"),
+    ("omitted_direct_dependent", "ordered_directly_affected_ids", "g2e_affected_reachable_omitted"),
+    ("omitted_transitive_dependent", "ordered_transitively_affected_ids", "g2e_affected_reachable_omitted"),
+    ("injected_unrelated_affected_artifact", "affected_partition", "g2e_affected_unrelated_injected"),
+    ("affected_set_reordering", "ordered_affected_ids", "g2e_affected_ordering_invalid"),
+    ("affected_closure_proof_forgery", "closure_proof_sha256", "g2e_affected_proof_invalid"),
+    ("invalidation_reason_substitution", "invalidation_reason_class", "g2e_invalidation_reason_invalid"),
+    ("deletion_disguised_as_invalidation", "deleted", "g2e_invalidation_deletion_forbidden"),
+    ("invalidation_predecessor_mismatch", "predecessor_artifact_id", "g2e_invalidation_predecessor_mismatch"),
+    ("invalidation_supersession_mismatch", "superseded_by_artifact_id", "g2e_invalidation_supersession_mismatch"),
+    ("preserved_payload_mutation", "preserved_payload_hash", "g2e_preserved_artifact_changed"),
+    ("preserved_identity_mutation", "preserved_identity", "g2e_preserved_identity_changed"),
+    ("hidden_cache_mutation", "no_cache_state", "g2e_preservation_cache_mutation"),
+    ("in_place_recomputation", "prior_and_new_identity", "g2e_recomputation_in_place_forbidden"),
+    ("stale_reuse_certificate_retained_current", "g2b_certificate_currentness", "g2e_invalidation_g2b_reuse_still_current"),
+    ("packet_kept_executable_after_invalidation", "g2a_present_eligibility", "g2e_invalidation_g2a_root_binding_required"),
+    ("packet_revoked_without_root_seam", "g2a_revocation_binding", "g2e_invalidation_g2a_root_binding_required"),
+    ("route_reused_after_bound_source_change", "route_or_topology_binding", "g2e_route_revalidation_required"),
+    ("child_input_topology_mismatch", "cell_input_topology", "g2e_recomputation_plan_invalid"),
+    ("result_report_binding_mismatch", "g2d_result_report", "g2e_recomputation_result_invalid"),
+    ("post_vv_gt_binding_mismatch", "post_vv_gt_refs", "g2e_recomputation_result_invalid"),
+    ("direct_root_decision_bypass", "root_review_transition", "g2e_authority_boundary_violated"),
+    ("caller_supplied_pass_reason_status", "validation_report", "g2e_status_invalid"),
+    ("object_identity_presented_as_proof", "preservation_proof", "g2e_preservation_proof_invalid"),
+    (
+        "repeated_delta_spin",
+        "repeated_work_frontier",
+        (
+            "g2e_recomputation_no_progress",
+            "g2e_transition_selective_recomputation_blocked",
+        ),
+    ),
+    ("hidden_mutable_global_state", "independent_call_result", "g2e_preservation_cache_mutation"),
+    ("unbounded_affected_closure", "closure_limits", "g2e_dependency_graph_bounds_exceeded"),
+    ("nonzero_provider_calls", "provider_calls", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_model_calls", "model_calls", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_network_calls", "network_calls", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_connector_calls", "connector_calls", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_external_drs_calls", "external_drs_calls", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_drs_writes", "drs_writes", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_action_packets", "action_commit_packets_created", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_permissions", "permissions_created", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_receipts", "receipts_created", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_final_outputs", "final_outputs_created", "g2e_zero_operation_boundary_violated"),
+    ("nonzero_authority", "authority_created_count", "g2e_authority_boundary_violated"),
+    ("nonzero_real_world_effects", "real_world_effects_count", "g2e_zero_operation_boundary_violated"),
+    ("missing_changed_binding_carrier", "delta_referenced_binding", "g2e_delta_binding_set_mismatch"),
+    ("unreferenced_changed_binding_injection", "unreferenced_binding", "g2e_delta_binding_set_mismatch"),
+    ("source_binding_set_mismatch", "ordered_source_binding_ids", "g2e_delta_source_binding_set_mismatch"),
+    ("dependency_edge_carrier_mismatch", "ordered_edge_ids", "g2e_dependency_edge_set_mismatch"),
+    ("graph_basis_identity_mismatch", "graph_basis_sha256", "g2e_dependency_graph_basis_mismatch"),
+    ("source_replay_edge_fingerprint_mismatch", "source_replay_edge_sha256", "g2e_dependency_replay_edge_mismatch"),
+    ("source_payload_pointer_unavailable", "source_payload_pointer", "g2e_dependency_source_payload_unavailable"),
+    ("baseline_observed_source_pair_substitution", "source_pair", "g2e_delta_source_binding_set_mismatch"),
+    ("observed_source_payload_hash_mismatch", "observed_payload_hash", "g2e_delta_artifact_binding_invalid"),
+    ("dependency_fingerprint_before_after_swap", "fingerprint_arguments", "g2e_dependency_fingerprint_mismatch"),
+    ("invalidation_binding_carrier_omission", "triggering_binding", "g2e_invalidation_record_invalid"),
+    ("selective_execution_carrier_omission", "execution_carrier", "g2e_recomputation_plan_invalid"),
+    ("recomputed_g2d_result_report_ref_substitution", "result_report_preservation_partial", "g2e_recomputation_result_invalid"),
+    ("preserved_full_artifact_bytes_mutation", "canonical_artifact_bytes", "g2e_preserved_artifact_changed"),
+    ("unsupported_sequential_delta", "delta_sequence_or_prior_delta", "g2e_repeated_delta_conflict"),
+    ("plan_root_review_carrier_substitution", "plan_root_carriers", "g2e_recomputation_plan_invalid"),
+    ("final_root_review_carrier_substitution", "final_root_carriers", "g2e_recomputation_result_invalid"),
+    ("root_acceptance_outcome_forgery", "root_acceptance_or_effect", "g2e_authority_boundary_violated"),
+    ("transition_rule_eleven_field_substitution", "transition_rule_fields", "g2e_object_invalid"),
+    ("transition_rule_order_or_terminal_path_forgery", "transition_order_terminal", "g2e_object_invalid"),
+    ("abi_projection_profile_substitution", "abi_profile_fields", "g2e_object_invalid"),
+    ("abi_parent_trace_or_root_artifact_substitution", "abi_parent_trace_root", "g2e_object_invalid"),
+    ("identity_prefix_or_domain_collision", "identity_prefix_or_domain", "g2e_identity_mismatch"),
+)
+E5_NEGATIVE_ORDER = tuple(
+    "g2e_case:negative:" + suffix + ":v01"
+    for suffix, _axis, _reason in E5_NEGATIVE_ROWS
+)
+E5_TRANSITION_RULE_IDS = (
+    "g2e_t01_delta_validate",
+    "g2e_t02_affected_set_derive",
+    "g2e_t03_invalidation_derive",
+    "g2e_t04_plan_root_review",
+    "g2e_t05_plan_root_accept",
+    "g2e_t06_plan_root_reject",
+    "g2e_t07_selective_recompute",
+    "g2e_t08_recompute_block",
+    "g2e_t09_parent_return",
+    "g2e_t10_report_finalize",
+)
+E5_TRANSITION_RULE_FIELDS = (
+    "rule_id",
+    "abi_major_version",
+    "source_artifact_type",
+    "source_lifecycle_state",
+    "actor_role",
+    "attempted_effect",
+    "target_artifact_type",
+    "required_guards",
+    "decision",
+    "reason_code",
+    "root_commit_required",
+)
+E5_ABI_ARTIFACT_FIELDS = (
+    "delta_source_proposed_artifact",
+    "dependency_graph_artifact",
+    "affected_set_artifact",
+    "invalidation_report_artifact",
+    "preservation_proof_artifact",
+    "plan_proposed_artifact",
+    "runtime_report_artifact",
+)
+E5_ABI_PROFILE_FIELDS = (
+    "artifact_type",
+    "lifecycle_state",
+    "authority_class",
+    "source_component",
+    "payload",
+)
+E5_CASE89_ARTIFACT_FIELDS = (
+    "delta_source_proposed_artifact",
+    "delta_source_artifact",
+    "dependency_graph_artifact",
+    "affected_set_artifact",
+    "invalidation_report_artifact",
+    "plan_proposed_artifact",
+    "plan_accepted_artifact",
+    "preservation_proof_artifact",
+    "runtime_report_artifact",
+)
+
+
+def _e5_reason_tuple(reason: str | tuple[str, ...]) -> tuple[str, ...]:
+    return (reason,) if type(reason) is str else reason
+
+
+def _e5_expected_subcase_specs(
+    suffix: str, axis: str, reason: str | tuple[str, ...]
+) -> tuple[tuple[str, str, str | tuple[str, ...]], ...]:
+    if suffix == "injected_unrelated_affected_artifact":
+        return (
+            ("unrelated_injection", axis, "g2e_affected_unrelated_injected"),
+            ("pointer_suppression", axis, "g2e_affected_reachable_omitted"),
+        )
+    if suffix == "route_reused_after_bound_source_change":
+        return (
+            ("route_source_revalidation", axis, "g2e_route_revalidation_required"),
+            ("lower_topology_substitution", axis, "g2e_delta_source_unvalidated"),
+        )
+    if suffix == "selective_execution_carrier_omission":
+        return tuple(
+            (name, axis, item_reason)
+            for name, item_reason in (
+                ("pre_execution_carrier", "g2e_recomputation_plan_invalid"),
+                ("post_execution_bundle", "g2e_recomputation_result_invalid"),
+                ("post_execution_partial_failure", "g2e_recomputation_result_invalid"),
+                ("post_execution_recomputed_binding", "g2e_recomputation_result_invalid"),
+                ("post_execution_g2e_evidence", "g2e_recomputation_result_invalid"),
+            )
+        )
+    if suffix == "recomputed_g2d_result_report_ref_substitution":
+        return tuple(
+            (name, axis, "g2e_recomputation_result_invalid")
+            for name in (
+                "g2d_cell_result_ref",
+                "g2d_runtime_report_ref",
+                "preservation_proof_ref",
+                "partial_failure_id",
+            )
+        )
+    if suffix == "plan_root_review_carrier_substitution":
+        return tuple(
+            (
+                name,
+                axis,
+                "g2e_authority_boundary_violated"
+                if name in {"target_root", "transaction", "root_artifact"}
+                else "g2e_recomputation_plan_invalid"
+                if name == "selected_carrier"
+                else "g2e_recomputation_result_invalid",
+            )
+            for name in (
+                "root_input",
+                "root_result",
+                "selected_carrier",
+                "prior_decision",
+                "target_root",
+                "transaction",
+                "root_artifact",
+            )
+        )
+    if suffix == "final_root_review_carrier_substitution":
+        return tuple(
+            (
+                name,
+                axis,
+                "g2e_authority_boundary_violated"
+                if name in {"target_root", "transaction", "root_artifact"}
+                else "g2e_recomputation_result_invalid",
+            )
+            for name in (
+                "root_input",
+                "root_result",
+                "selected_carrier",
+                "g2d_report",
+                "preservation_proof",
+                "prior_decision",
+                "target_root",
+                "transaction",
+                "root_artifact",
+            )
+        )
+    if suffix == "root_acceptance_outcome_forgery":
+        return tuple(
+            (name, axis, "g2e_authority_boundary_violated")
+            for name in (
+                "forged_accept",
+                "nonzero_permission",
+                "nonzero_final_output",
+                "nonzero_effect",
+            )
+        )
+    if suffix == "transition_rule_eleven_field_substitution":
+        return tuple(
+            (
+                f"rule_{rule_index:02d}_{field_name}",
+                field_name,
+                "g2e_object_invalid",
+            )
+            for rule_index in range(1, 11)
+            for field_name in E5_TRANSITION_RULE_FIELDS
+        )
+    if suffix == "transition_rule_order_or_terminal_path_forgery":
+        return tuple(
+            (name, axis, item_reason)
+            for name, item_reason in (
+                ("missing_rule", "g2e_object_invalid"),
+                ("duplicate_rule", "g2e_object_invalid"),
+                ("extra_rule", "g2e_object_invalid"),
+                ("reordered_rules", "g2e_object_invalid"),
+                ("t06_nonterminal", "g2e_object_invalid"),
+                ("t08_nonterminal", "g2e_object_invalid"),
+                ("t10_trace_insertion", "g2e_identity_mismatch"),
+                ("non_accept_finalization", "g2e_authority_boundary_violated"),
+            )
+        )
+    if suffix == "abi_projection_profile_substitution":
+        return tuple(
+            (
+                f"profile_{profile_index:02d}_{field_name}",
+                field_name,
+                "g2e_object_invalid",
+            )
+            for profile_index in range(1, 8)
+            for field_name in E5_ABI_PROFILE_FIELDS
+        )
+    if suffix == "abi_parent_trace_or_root_artifact_substitution":
+        return (
+            *tuple(
+                (
+                    f"{family}:{index:02d}:{field_name}",
+                    family,
+                    "g2e_object_invalid",
+                )
+                for family in ("parent_ids", "trace_refs", "time_envelope")
+                for index, field_name in enumerate(
+                    E5_CASE89_ARTIFACT_FIELDS, start=1
+                )
+            ),
+            ("plan_relation", "plan_relation", "g2e_object_invalid"),
+            (
+                "shared_root_artifact",
+                "shared_root_artifact",
+                "g2e_authority_boundary_violated",
+            ),
+        )
+    if suffix == "identity_prefix_or_domain_collision":
+        return (
+            ("serialized_prefix", axis, "g2e_identity_mismatch"),
+            ("abi_prefix_domain", axis, "g2e_identity_mismatch"),
+            (
+                "cross_role_fingerprint",
+                axis,
+                "g2e_dependency_fingerprint_role_collision",
+            ),
+        )
+    return ((suffix, axis, reason),)
+
+
+# Frozen independently from runner constants and report evidence.
+E5_NEGATIVE_OPERATION_LEDGER = (
+    (
+        "g2e_case:negative:malformed_delta_identity:v01",
+        "malformed_delta_identity",
+        ("g2e_identity_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:unvalidated_delta_source:v01",
+        "unvalidated_delta_source",
+        ("g2e_delta_source_unvalidated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:stale_baseline:v01",
+        "stale_baseline",
+        ("g2e_delta_baseline_stale",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.derive_invalidation_report_v01",
+        "kw:delta",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:future_observation:v01",
+        "future_observation",
+        ("g2e_delta_future_observation",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:invalid_time_window:v01",
+        "invalid_time_window",
+        ("g2e_delta_time_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "kw:delta",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:duplicate_changed_field:v01",
+        "duplicate_changed_field",
+        ("g2e_delta_duplicate_binding",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "kw:changed_field_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:conflicting_duplicate_delta:v01",
+        "conflicting_duplicate_delta",
+        ("g2e_delta_conflicting_duplicate",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "kw:changed_field_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:unknown_field_path:v01",
+        "unknown_field_path",
+        ("g2e_delta_field_path_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_changed_field_binding_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ChangedFieldBindingV01",
+    ),
+    (
+        "g2e_case:negative:unknown_changed_artifact:v01",
+        "unknown_changed_artifact",
+        ("g2e_delta_artifact_binding_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "kw:changed_artifact_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:cross_transaction_substitution:v01",
+        "cross_transaction_substitution",
+        ("g2e_delta_cross_transaction",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:cross_domain_substitution:v01",
+        "cross_domain_substitution",
+        ("g2e_delta_source_unvalidated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:cross_root_substitution:v01",
+        "cross_root_substitution",
+        ("g2e_delta_cross_root",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:policy_version_substitution:v01",
+        "policy_version_substitution",
+        ("g2e_delta_policy_version_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+        "kw:policy_version",
+        "builtins.str",
+    ),
+    (
+        "g2e_case:negative:schema_version_substitution:v01",
+        "schema_version_substitution",
+        ("g2e_delta_schema_version_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+        "kw:schema_versions",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:dependency_fingerprint_forgery:v01",
+        "dependency_fingerprint_forgery",
+        ("g2e_dependency_fingerprint_forgery",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "kw:delta",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:dependency_digest_role_collision:v01",
+        "dependency_digest_role_collision",
+        ("g2e_dependency_fingerprint_role_collision",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+        "kw:profile",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyFingerprintProfileV01",
+    ),
+    (
+        "g2e_case:negative:source_history_substitution:v01",
+        "source_history_substitution",
+        ("g2e_dependency_source_history_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+        "kw:source_history_hash",
+        "builtins.str",
+    ),
+    (
+        "g2e_case:negative:missing_dependency_edge:v01",
+        "missing_dependency_edge",
+        ("g2e_dependency_graph_missing_edge",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:extra_unrelated_dependency_edge:v01",
+        "extra_unrelated_dependency_edge",
+        ("g2e_dependency_edge_unknown_source",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:duplicate_dependency_edge:v01",
+        "duplicate_dependency_edge",
+        ("g2e_dependency_edge_duplicate",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:self_dependency_edge:v01",
+        "self_dependency_edge",
+        ("g2e_dependency_edge_self",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:dependency_cycle:v01",
+        "dependency_cycle",
+        ("g2e_dependency_graph_cycle",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:unknown_dependency_artifact:v01",
+        "unknown_dependency_artifact",
+        ("g2e_dependency_edge_unknown_source",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:unknown_dependent_artifact:v01",
+        "unknown_dependent_artifact",
+        ("g2e_dependency_edge_unknown_dependent",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:graph_version_substitution:v01",
+        "graph_version_substitution",
+        ("g2e_dependency_graph_version_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_graph_index_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyGraphIndexV01",
+    ),
+    (
+        "g2e_case:negative:graph_edge_reordering:v01",
+        "graph_edge_reordering",
+        ("g2e_dependency_graph_ordering_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_delta_dependency_edge_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DeltaDependencyEdgeV01",
+    ),
+    (
+        "g2e_case:negative:graph_node_bound_overflow:v01",
+        "graph_node_bound_overflow",
+        ("g2e_dependency_graph_bounds_exceeded",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_graph_index_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyGraphIndexV01",
+    ),
+    (
+        "g2e_case:negative:graph_edge_bound_overflow:v01",
+        "graph_edge_bound_overflow",
+        ("g2e_dependency_graph_bounds_exceeded",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_graph_index_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyGraphIndexV01",
+    ),
+    (
+        "g2e_case:negative:graph_hop_bound_overflow:v01",
+        "graph_hop_bound_overflow",
+        ("g2e_affected_hop_bound_exceeded",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "kw:graph",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyGraphIndexV01",
+    ),
+    (
+        "g2e_case:negative:omitted_direct_dependent:v01",
+        "omitted_direct_dependent",
+        ("g2e_affected_reachable_omitted",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.AffectedSetResultV01",
+    ),
+    (
+        "g2e_case:negative:omitted_transitive_dependent:v01",
+        "omitted_transitive_dependent",
+        ("g2e_affected_reachable_omitted",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.AffectedSetResultV01",
+    ),
+    (
+        "g2e_case:negative:injected_unrelated_affected_artifact:v01",
+        "unrelated_injection",
+        ("g2e_affected_unrelated_injected",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.AffectedSetResultV01",
+    ),
+    (
+        "g2e_case:negative:injected_unrelated_affected_artifact:v01",
+        "pointer_suppression",
+        ("g2e_affected_reachable_omitted",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.AffectedSetResultV01",
+    ),
+    (
+        "g2e_case:negative:affected_set_reordering:v01",
+        "affected_set_reordering",
+        ("g2e_affected_ordering_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.AffectedSetResultV01",
+    ),
+    (
+        "g2e_case:negative:affected_closure_proof_forgery:v01",
+        "affected_closure_proof_forgery",
+        ("g2e_affected_proof_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.AffectedSetResultV01",
+    ),
+    (
+        "g2e_case:negative:invalidation_reason_substitution:v01",
+        "invalidation_reason_substitution",
+        ("g2e_invalidation_reason_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_artifact_invalidation_record_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ArtifactInvalidationRecordV01",
+    ),
+    (
+        "g2e_case:negative:deletion_disguised_as_invalidation:v01",
+        "deletion_disguised_as_invalidation",
+        ("g2e_invalidation_deletion_forbidden",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_artifact_invalidation_record_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ArtifactInvalidationRecordV01",
+    ),
+    (
+        "g2e_case:negative:invalidation_predecessor_mismatch:v01",
+        "invalidation_predecessor_mismatch",
+        ("g2e_invalidation_predecessor_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_artifact_invalidation_record_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ArtifactInvalidationRecordV01",
+    ),
+    (
+        "g2e_case:negative:invalidation_supersession_mismatch:v01",
+        "invalidation_supersession_mismatch",
+        ("g2e_invalidation_supersession_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_artifact_invalidation_record_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ArtifactInvalidationRecordV01",
+    ),
+    (
+        "g2e_case:negative:preserved_payload_mutation:v01",
+        "preserved_payload_mutation",
+        ("g2e_preserved_artifact_changed",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.build_preservation_proof_v01",
+        "kw:ordered_after_payload_sha256",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:preserved_identity_mutation:v01",
+        "preserved_identity_mutation",
+        ("g2e_preserved_identity_changed",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.build_preservation_proof_v01",
+        "kw:ordered_after_identity_ids",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:hidden_cache_mutation:v01",
+        "hidden_cache_mutation",
+        ("g2e_preservation_cache_mutation",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_preservation_proof_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.PreservationProofV01",
+    ),
+    (
+        "g2e_case:negative:in_place_recomputation:v01",
+        "in_place_recomputation",
+        ("g2e_recomputation_in_place_forbidden",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_recomputed_artifact_binding_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.RecomputedArtifactBindingV01",
+    ),
+    (
+        "g2e_case:negative:stale_reuse_certificate_retained_current:v01",
+        "stale_reuse_certificate_retained_current",
+        ("g2e_invalidation_g2b_reuse_still_current",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.build_invalidation_report_v01",
+        "kw:records",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:packet_kept_executable_after_invalidation:v01",
+        "packet_kept_executable_after_invalidation",
+        ("g2e_invalidation_g2a_root_binding_required",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.build_invalidation_report_v01",
+        "kw:records",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:packet_revoked_without_root_seam:v01",
+        "packet_revoked_without_root_seam",
+        ("g2e_invalidation_g2a_root_binding_required",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.build_invalidation_report_v01",
+        "kw:records",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:route_reused_after_bound_source_change:v01",
+        "route_source_revalidation",
+        ("g2e_route_revalidation_required",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:route_reused_after_bound_source_change:v01",
+        "lower_topology_substitution",
+        ("g2e_delta_source_unvalidated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaSourceContextV01",
+    ),
+    (
+        "g2e_case:negative:child_input_topology_mismatch:v01",
+        "child_input_topology_mismatch",
+        ("g2e_recomputation_plan_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_plan_against_sources_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationPlanV01",
+    ),
+    (
+        "g2e_case:negative:result_report_binding_mismatch:v01",
+        "result_report_binding_mismatch",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:post_vv_gt_binding_mismatch:v01",
+        "post_vv_gt_binding_mismatch",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:direct_root_decision_bypass:v01",
+        "direct_root_decision_bypass",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:caller_supplied_pass_reason_status:v01",
+        "caller_supplied_pass_reason_status",
+        ("g2e_status_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaValidationReportV01",
+    ),
+    (
+        "g2e_case:negative:object_identity_presented_as_proof:v01",
+        "object_identity_presented_as_proof",
+        ("g2e_preservation_proof_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_preservation_proof_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.PreservationProofV01",
+    ),
+    (
+        "g2e_case:negative:repeated_delta_spin:v01",
+        "repeated_delta_spin",
+        ("g2e_recomputation_no_progress", "g2e_transition_selective_recomputation_blocked",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.run_continuous_delta_runtime_v01",
+        "kw:delta",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:hidden_mutable_global_state:v01",
+        "hidden_mutable_global_state",
+        ("g2e_preservation_cache_mutation",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_preservation_proof_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.PreservationProofV01",
+    ),
+    (
+        "g2e_case:negative:unbounded_affected_closure:v01",
+        "unbounded_affected_closure",
+        ("g2e_dependency_graph_bounds_exceeded",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_graph_index_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyGraphIndexV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_provider_calls:v01",
+        "nonzero_provider_calls",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_model_calls:v01",
+        "nonzero_model_calls",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_network_calls:v01",
+        "nonzero_network_calls",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_connector_calls:v01",
+        "nonzero_connector_calls",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_external_drs_calls:v01",
+        "nonzero_external_drs_calls",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_drs_writes:v01",
+        "nonzero_drs_writes",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_action_packets:v01",
+        "nonzero_action_packets",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_permissions:v01",
+        "nonzero_permissions",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_receipts:v01",
+        "nonzero_receipts",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_final_outputs:v01",
+        "nonzero_final_outputs",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_authority:v01",
+        "nonzero_authority",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:nonzero_real_world_effects:v01",
+        "nonzero_real_world_effects",
+        ("g2e_zero_operation_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:missing_changed_binding_carrier:v01",
+        "missing_changed_binding_carrier",
+        ("g2e_delta_binding_set_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "kw:changed_field_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:unreferenced_changed_binding_injection:v01",
+        "unreferenced_changed_binding_injection",
+        ("g2e_delta_binding_set_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "kw:changed_field_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:source_binding_set_mismatch:v01",
+        "source_binding_set_mismatch",
+        ("g2e_delta_source_binding_set_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "kw:source_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:dependency_edge_carrier_mismatch:v01",
+        "dependency_edge_carrier_mismatch",
+        ("g2e_dependency_edge_set_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "kw:dependency_edges",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:graph_basis_identity_mismatch:v01",
+        "graph_basis_identity_mismatch",
+        ("g2e_dependency_graph_basis_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_graph_index_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyGraphIndexV01",
+    ),
+    (
+        "g2e_case:negative:source_replay_edge_fingerprint_mismatch:v01",
+        "source_replay_edge_fingerprint_mismatch",
+        ("g2e_dependency_replay_edge_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_delta_dependency_edge_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DeltaDependencyEdgeV01",
+    ),
+    (
+        "g2e_case:negative:source_payload_pointer_unavailable:v01",
+        "source_payload_pointer_unavailable",
+        ("g2e_dependency_source_payload_unavailable",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "kw:edge_projection_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:baseline_observed_source_pair_substitution:v01",
+        "baseline_observed_source_pair_substitution",
+        ("g2e_delta_source_binding_set_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+        "kw:observed_source_artifacts",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:observed_source_payload_hash_mismatch:v01",
+        "observed_source_payload_hash_mismatch",
+        ("g2e_delta_artifact_binding_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "kw:changed_artifact_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:dependency_fingerprint_before_after_swap:v01",
+        "dependency_fingerprint_before_after_swap",
+        ("g2e_dependency_fingerprint_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+        "kw:source_artifacts",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:invalidation_binding_carrier_omission:v01",
+        "invalidation_binding_carrier_omission",
+        ("g2e_invalidation_record_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_artifact_invalidation_record_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ArtifactInvalidationRecordV01",
+    ),
+    (
+        "g2e_case:negative:selective_execution_carrier_omission:v01",
+        "pre_execution_carrier",
+        ("g2e_recomputation_plan_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_plan_against_sources_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationPlanV01",
+    ),
+    (
+        "g2e_case:negative:selective_execution_carrier_omission:v01",
+        "post_execution_bundle",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:selective_execution_carrier_omission:v01",
+        "post_execution_partial_failure",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:selective_execution_carrier_omission:v01",
+        "post_execution_recomputed_binding",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "kw:recomputed_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:selective_execution_carrier_omission:v01",
+        "post_execution_g2e_evidence",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "kw:g2e_causal_consumption_refs",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:recomputed_g2d_result_report_ref_substitution:v01",
+        "g2d_cell_result_ref",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "kw:recomputed_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:recomputed_g2d_result_report_ref_substitution:v01",
+        "g2d_runtime_report_ref",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "kw:recomputed_bindings",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:recomputed_g2d_result_report_ref_substitution:v01",
+        "preservation_proof_ref",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:recomputed_g2d_result_report_ref_substitution:v01",
+        "partial_failure_id",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:preserved_full_artifact_bytes_mutation:v01",
+        "preserved_full_artifact_bytes_mutation",
+        ("g2e_preserved_artifact_changed",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.build_preservation_proof_v01",
+        "kw:ordered_after_artifact_sha256",
+        "builtins.tuple",
+    ),
+    (
+        "g2e_case:negative:unsupported_sequential_delta:v01",
+        "unsupported_sequential_delta",
+        ("g2e_repeated_delta_conflict",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "root_input",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "root_result",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "selected_carrier",
+        ("g2e_recomputation_plan_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_plan_against_sources_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationPlanV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "prior_decision",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "target_root",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "transaction",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "root_artifact",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "root_input",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "root_result",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "selected_carrier",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.SelectiveRecomputationResultV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "g2d_report",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "kw:recomputed_g2d_execution_bundle",
+        "hedgehog.kernel.fractal_runtime_v02.FractalRuntimeExecutionBundleV02",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "preservation_proof",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+        "kw:preservation_proof",
+        "hedgehog.kernel.continuous_delta_runtime_v01.PreservationProofV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "prior_decision",
+        ("g2e_recomputation_result_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "target_root",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "transaction",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "root_artifact",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+        "forged_accept",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+        "nonzero_permission",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+        "nonzero_final_output",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+        "nonzero_effect",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_01_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_02_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_03_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_04_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_05_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_06_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_07_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_08_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_09_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_rule_id",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_abi_major_version",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_source_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_source_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_actor_role",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_attempted_effect",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_target_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_required_guards",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_decision",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_reason_code",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+        "rule_10_root_commit_required",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "missing_rule",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "duplicate_rule",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "extra_rule",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "reordered_rules",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "t06_nonterminal",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "t08_nonterminal",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+        "arg:0",
+        "hedgehog.kernel.transition_registry_v01.TransitionRegistryV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "t10_trace_insertion",
+        ("g2e_identity_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "non_accept_finalization",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_01_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_01_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_01_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_01_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_01_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_02_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_02_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_02_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_02_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_02_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_03_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_03_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_03_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_03_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_03_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_04_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_04_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_04_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_04_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_04_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_05_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_05_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_05_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_05_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_05_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_06_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_06_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_06_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_06_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_06_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_07_artifact_type",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_07_lifecycle_state",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_07_authority_class",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_07_source_component",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "profile_07_payload",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:01:delta_source_proposed_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:02:delta_source_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:03:dependency_graph_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:04:affected_set_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:05:invalidation_report_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:06:plan_proposed_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:07:plan_accepted_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:08:preservation_proof_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "parent_ids:09:runtime_report_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:01:delta_source_proposed_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:02:delta_source_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:03:dependency_graph_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:04:affected_set_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:05:invalidation_report_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:06:plan_proposed_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:07:plan_accepted_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:08:preservation_proof_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "trace_refs:09:runtime_report_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:01:delta_source_proposed_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:02:delta_source_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:03:dependency_graph_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:04:affected_set_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:05:invalidation_report_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:06:plan_proposed_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:07:plan_accepted_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:08:preservation_proof_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "time_envelope:09:runtime_report_artifact",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "plan_relation",
+        ("g2e_object_invalid",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "shared_root_artifact",
+        ("g2e_authority_boundary_violated",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:identity_prefix_or_domain_collision:v01",
+        "serialized_prefix",
+        ("g2e_identity_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.WorldStateDeltaV01",
+    ),
+    (
+        "g2e_case:negative:identity_prefix_or_domain_collision:v01",
+        "abi_prefix_domain",
+        ("g2e_identity_mismatch",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+        "arg:0",
+        "hedgehog.kernel.continuous_delta_runtime_v01.ContinuousDeltaExecutionBundleV01",
+    ),
+    (
+        "g2e_case:negative:identity_prefix_or_domain_collision:v01",
+        "cross_role_fingerprint",
+        ("g2e_dependency_fingerprint_role_collision",),
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+        "kw:profile",
+        "hedgehog.kernel.continuous_delta_runtime_v01.DependencyFingerprintProfileV01",
+    ),
+)
+E5_NEGATIVE_OPERATION_BY_KEY = {
+    (case_id, subcase_name): (
+        expected_reasons,
+        validator,
+        locator,
+        carrier_type,
+    )
+    for (
+        case_id,
+        subcase_name,
+        expected_reasons,
+        validator,
+        locator,
+        carrier_type,
+    ) in E5_NEGATIVE_OPERATION_LEDGER
+}
+E5_V11_REPAIRED_DUPLICATE_RECIPE_PAIRS = (
+    (
+        (
+            "g2e_case:negative:omitted_transitive_dependent:v01",
+            "omitted_transitive_dependent",
+        ),
+        (
+            "g2e_case:negative:injected_unrelated_affected_artifact:v01",
+            "pointer_suppression",
+        ),
+    ),
+    (
+        (
+            "g2e_case:negative:selective_execution_carrier_omission:v01",
+            "post_execution_partial_failure",
+        ),
+        (
+            "g2e_case:negative:recomputed_g2d_result_report_ref_substitution:"
+            "v01",
+            "partial_failure_id",
+        ),
+    ),
+    (
+        (
+            "g2e_case:negative:result_report_binding_mismatch:v01",
+            "result_report_binding_mismatch",
+        ),
+        (
+            "g2e_case:negative:final_root_review_carrier_substitution:v01",
+            "selected_carrier",
+        ),
+    ),
+    (
+        (
+            "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+            "forged_accept",
+        ),
+        (
+            "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:"
+            "v01",
+            "non_accept_finalization",
+        ),
+    ),
+    (
+        (
+            "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+            "rule_06_decision",
+        ),
+        (
+            "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:"
+            "v01",
+            "t06_nonterminal",
+        ),
+    ),
+    (
+        (
+            "g2e_case:negative:transition_rule_eleven_field_substitution:v01",
+            "rule_08_decision",
+        ),
+        (
+            "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:"
+            "v01",
+            "t08_nonterminal",
+        ),
+    ),
+)
+E5_NEGATIVE_MONITORED_TARGET_CENSUS = (
+    "hedgehog.kernel.continuous_delta_runtime_v01.build_invalidation_report_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.build_preservation_proof_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.derive_invalidation_report_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.run_continuous_delta_runtime_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_request_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_against_graph_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_artifact_invalidation_record_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_changed_field_binding_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_execution_bundle_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_source_context_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_delta_dependency_edge_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_fingerprint_against_sources_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_dependency_graph_index_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_preservation_proof_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_recomputed_artifact_binding_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_plan_against_sources_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_against_plan_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_selective_recomputation_result_v01",
+    "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+    "hedgehog.kernel.transition_registry_v01.validate_continuous_delta_transition_registry_profile_v01",
+)
+E5_NEGATIVE_SETUP_CASE_LEDGER_V08: tuple[
+    tuple[str, str, str, tuple[str, ...], int], ...
+] = (
+    (
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        29,
+    ),
+    (
+        "g2e_case:negative:abi_projection_profile_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        35,
+    ),
+    (
+        "g2e_case:negative:affected_closure_proof_forgery:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:affected_set_reordering:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:baseline_observed_source_pair_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:caller_supplied_pass_reason_status:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:child_input_topology_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:conflicting_duplicate_delta:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_request_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:conflicting_duplicate_delta:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:cross_domain_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:cross_root_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:cross_transaction_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:deletion_disguised_as_invalidation:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:dependency_digest_role_collision:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:dependency_edge_carrier_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:dependency_fingerprint_before_after_swap:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:dependency_fingerprint_forgery:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_request_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:direct_root_decision_bypass:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:duplicate_changed_field:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_affected_set_request_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:duplicate_changed_field:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:final_root_review_carrier_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        9,
+    ),
+    (
+        "g2e_case:negative:future_observation:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:graph_basis_identity_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:graph_edge_bound_overflow:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:graph_edge_reordering:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:graph_hop_bound_overflow:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.project_integrity_replay_dependency_edges_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:graph_node_bound_overflow:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:graph_version_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:hidden_cache_mutation:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:hidden_mutable_global_state:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:identity_prefix_or_domain_collision:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        3,
+    ),
+    (
+        "g2e_case:negative:in_place_recomputation:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:injected_unrelated_affected_artifact:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        2,
+    ),
+    (
+        "g2e_case:negative:invalid_time_window:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:invalidation_binding_carrier_omission:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:invalidation_predecessor_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:invalidation_reason_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:invalidation_supersession_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:malformed_delta_identity:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:missing_changed_binding_carrier:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_action_packets:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_authority:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_connector_calls:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_drs_writes:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_external_drs_calls:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_final_outputs:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_model_calls:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_network_calls:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_permissions:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_provider_calls:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_real_world_effects:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:nonzero_receipts:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:object_identity_presented_as_proof:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:observed_source_payload_hash_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:omitted_direct_dependent:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:omitted_transitive_dependent:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:plan_root_review_carrier_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        7,
+    ),
+    (
+        "g2e_case:negative:policy_version_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:post_vv_gt_binding_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:recomputed_g2d_result_report_ref_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        4,
+    ),
+    (
+        "g2e_case:negative:repeated_delta_spin:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:result_report_binding_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        4,
+    ),
+    (
+        "g2e_case:negative:route_reused_after_bound_source_change:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        2,
+    ),
+    (
+        "g2e_case:negative:schema_version_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:selective_execution_carrier_omission:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        5,
+    ),
+    (
+        "g2e_case:negative:source_binding_set_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:source_history_substitution:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:source_replay_edge_fingerprint_mismatch:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:stale_baseline:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.compute_affected_set_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        2,
+    ),
+    (
+        "g2e_case:negative:unbounded_affected_closure:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:unknown_changed_artifact:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_world_state_delta_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:unknown_field_path:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:unreferenced_changed_binding_injection:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:unsupported_sequential_delta:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+    (
+        "g2e_case:negative:unvalidated_delta_source:v01",
+        "hedgehog.kernel.continuous_delta_runtime_v01.validate_continuous_delta_validation_report_v01",
+        "return",
+        (),
+        1,
+    ),
+)
+
+
+def _e5_setup_subcase_names(
+    case_id: str, expected_count: int
+) -> tuple[str, ...]:
+    names = tuple(
+        subcase_name
+        for operation_case_id, subcase_name, *_rest
+        in E5_NEGATIVE_OPERATION_LEDGER
+        if operation_case_id == case_id
+    )
+    if (
+        case_id
+        == "g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01"
+        and expected_count == 2
+    ):
+        return ("t10_trace_insertion", "non_accept_finalization")
+    assert len(names) == expected_count
+    return names
+
+
+E5_NEGATIVE_SETUP_LEDGER = tuple(
+    (
+        case_id,
+        subcase_name,
+        validator,
+        result_kind,
+        reason_codes,
+    )
+    for case_id, validator, result_kind, reason_codes, count
+    in E5_NEGATIVE_SETUP_CASE_LEDGER_V08
+    for subcase_name in _e5_setup_subcase_names(case_id, count)
+)
+assert len(E5_NEGATIVE_SETUP_LEDGER) == 168
+E5_ZERO_COUNTER_FIELDS = (
+    "provider_calls",
+    "model_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "final_outputs_created",
+    "drs_writes",
+    "authority_created_count",
+    "real_world_effects_count",
+)
+E5_RUNTIME_TRACE_ZERO_COUNTER_FIELDS = (
+    "provider_calls",
+    "model_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "real_world_effects_count",
+)
+E5_SEMANTIC_CALL_DOMAIN = "HEDGEHOG_G2E5_SEMANTIC_CALL_FINGERPRINT_V01"
+E5_SEMANTIC_RESULT_DOMAIN = "HEDGEHOG_G2E5_SEMANTIC_RESULT_V01"
+E5_MUTATED_ARGUMENT_DOMAIN = "HEDGEHOG_G2E5_MUTATED_ARGUMENT_V01"
+E5_COMPOSITIONAL_BINDING_PROFILE_V02 = (
+    "HEDGEHOG_G2E5_COMPOSITIONAL_BINDING_V02"
+)
+_E5_COMPOSITIONAL_BINDING_DOMAIN_V02 = (
+    b"HEDGEHOG_G2E5_COMPOSITIONAL_BINDING_V02\x00"
+)
+E5_FORBIDDEN_EXTERNAL_PREFIXES = (
+    "requests",
+    "httpx",
+    "urllib",
+    "socket",
+    "google",
+    "openai",
+    "anthropic",
+    "gemini",
+    "telegram",
+    "hedgehog.providers",
+    "hedgehog.connectors",
+    "hedgehog.external_drs",
+    "hedgehog.live",
+)
+
+
+def _e5_forbidden_external_target(name: str) -> bool:
+    return any(
+        name == prefix or name.startswith(prefix + ".")
+        for prefix in E5_FORBIDDEN_EXTERNAL_PREFIXES
+    )
+
+
+def _e5_static_import_and_call_targets(
+    source: str,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    tree = ast.parse(source)
+    import_targets: list[str] = []
+    aliases: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                import_targets.append(alias.name)
+                local_name = alias.asname or alias.name.split(".")[0]
+                aliases[local_name] = (
+                    alias.name if alias.asname else alias.name.split(".")[0]
+                )
+        elif isinstance(node, ast.ImportFrom):
+            source_module = node.module or ""
+            if source_module:
+                import_targets.append(source_module)
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                complete_target = (
+                    source_module + "." + alias.name
+                    if source_module
+                    else alias.name
+                )
+                import_targets.append(complete_target)
+                aliases[alias.asname or alias.name] = complete_target
+
+    def dotted_name(node: ast.AST) -> str | None:
+        if isinstance(node, ast.Name):
+            return node.id
+        if isinstance(node, ast.Attribute):
+            base = dotted_name(node.value)
+            return None if base is None else base + "." + node.attr
+        return None
+
+    call_targets: list[str] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        target = dotted_name(node.func)
+        if target is None:
+            continue
+        first, separator, rest = target.partition(".")
+        resolved = aliases.get(first, first)
+        if separator:
+            resolved += "." + rest
+        call_targets.append(resolved)
+    return tuple(import_targets), tuple(call_targets)
+
+
+def _e5_transitive_negative_public_targets(source: str) -> tuple[str, ...]:
+    tree = ast.parse(source)
+    functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    roots = (
+        "_build_negative_case",
+        "_ordinary_negative_subcase",
+        "_matrix_negative_subcase",
+        "_execute_conditional_negative_inputs",
+    )
+    assert all(name in functions for name in roots)
+    module_aliases: dict[str, str] = {}
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name in {
+                    "hedgehog.kernel.continuous_delta_runtime_v01",
+                    "hedgehog.kernel.transition_registry_v01",
+                }:
+                    module_aliases[alias.asname or alias.name.split(".")[0]] = (
+                        alias.name
+                    )
+    prefixes = {
+        "hedgehog.kernel.continuous_delta_runtime_v01": (
+            "hedgehog.kernel.continuous_delta_runtime_v01."
+        ),
+        "hedgehog.kernel.transition_registry_v01": (
+            "hedgehog.kernel.transition_registry_v01."
+        ),
+    }
+    exact_builders = {
+        "build_invalidation_report_v01",
+        "build_preservation_proof_v01",
+    }
+
+    def is_monitored_name(name: str) -> bool:
+        return name.startswith(
+            ("validate_", "compute_", "derive_", "project_", "run_continuous_delta_")
+        ) or name in exact_builders
+
+    pending = list(roots)
+    visited: set[str] = set()
+    targets: set[str] = set()
+    while pending:
+        function_name = pending.pop()
+        if function_name in visited:
+            continue
+        visited.add(function_name)
+        function = functions[function_name]
+        local_module_aliases = dict(module_aliases)
+        changed = True
+        while changed:
+            changed = False
+            for node in ast.walk(function):
+                if (
+                    isinstance(node, ast.Assign)
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                    and isinstance(node.value, ast.Name)
+                    and node.value.id in local_module_aliases
+                    and node.targets[0].id not in local_module_aliases
+                ):
+                    local_module_aliases[node.targets[0].id] = (
+                        local_module_aliases[node.value.id]
+                    )
+                    changed = True
+        for node in ast.walk(function):
+            if isinstance(node, ast.Name) and node.id in functions:
+                pending.append(node.id)
+            if (
+                isinstance(node, ast.Attribute)
+                and isinstance(node.value, ast.Name)
+                and node.value.id in local_module_aliases
+                and is_monitored_name(node.attr)
+            ):
+                module_name = local_module_aliases[node.value.id]
+                targets.add(prefixes[module_name] + node.attr)
+    return tuple(sorted(targets))
+
+
+_E5_PROGRESS_MONOTONIC_ORIGIN = time.perf_counter()
+_E5_RUNTIME_RECEIPT_PREFIX = "@@HEDGEHOG_G2E5_RUNTIME_RECEIPT_V11@@"
+_E5_RUNTIME_RECEIPT_PATTERN = re.compile(
+    re.escape(_E5_RUNTIME_RECEIPT_PREFIX)
+    + r"(?P<marker>[^\r\n]+) MONOTONIC_SECONDS="
+    + r"(?:0|[1-9][0-9]*)\.[0-9]{6} UTC="
+    + r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:"
+    + r"[0-9]{2}:[0-9]{2}\.[0-9]{6}Z"
+)
+
+
+def _e5_runtime_receipt_markers(log_text: str) -> tuple[str, ...]:
+    markers: list[str] = []
+    for line in log_text.splitlines():
+        match = _E5_RUNTIME_RECEIPT_PATTERN.fullmatch(line)
+        if match is not None:
+            markers.append(match.group("marker"))
+    return tuple(markers)
+
+
+def _e5_require_exact_runtime_receipts(
+    log_text: str, expected: tuple[str, ...]
+) -> None:
+    if Counter(_e5_runtime_receipt_markers(log_text)) != Counter(expected):
+        raise AssertionError("g2e5_grouped_receipt_count_invalid")
+
+
+def _e5_progress_marker(marker: str) -> None:
+    utc = datetime.now(timezone.utc).isoformat(timespec="microseconds").replace(
+        "+00:00", "Z"
+    )
+    elapsed = time.perf_counter() - _E5_PROGRESS_MONOTONIC_ORIGIN
+    print(
+        "\n"
+        + _E5_RUNTIME_RECEIPT_PREFIX
+        + marker
+        + " MONOTONIC_SECONDS="
+        + format(elapsed, ".6f")
+        + " UTC="
+        + utc,
+        flush=True,
+    )
+
+
+def _e5_contains_exact_object(
+    material: object, target: object, seen: set[int] | None = None
+) -> bool:
+    if material is target:
+        return True
+    if seen is None:
+        seen = set()
+    material_id = id(material)
+    if material_id in seen:
+        return False
+    seen.add(material_id)
+    if isinstance(material, Mapping):
+        return any(
+            _e5_contains_exact_object(value, target, seen)
+            for value in material.values()
+        )
+    if type(material) in {tuple, list}:
+        return any(
+            _e5_contains_exact_object(value, target, seen) for value in material
+        )
+    return False
+
+
+def _e5_qualified_type_name(value: object) -> str:
+    value_type = type(value)
+    return value_type.__module__ + "." + value_type.__qualname__
+
+
+def _e5_semantic_projection_build(
+    value: object,
+    memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+) -> tuple[dict[str, object], bool]:
+    cacheable = type(value) is tuple or (
+        is_dataclass(value) and not isinstance(value, type)
+    )
+    if memo is not None and cacheable:
+        cached = memo.get(id(value))
+        if cached is not None and cached[0] is value:
+            return cached[1], True
+    if value is None:
+        result = {"kind": "none"}
+        immutable = True
+    elif type(value) is bool:
+        result = {"kind": "bool", "value": value}
+        immutable = True
+    elif type(value) is int:
+        result = {"kind": "int", "value": str(value)}
+        immutable = True
+    elif type(value) is float:
+        assert math.isfinite(value)
+        result = {"kind": "float", "value": value.hex()}
+        immutable = True
+    elif type(value) is str:
+        result = {"kind": "str", "value": value}
+        immutable = True
+    elif type(value) is bytes:
+        result = {"kind": "bytes", "hex": value.hex()}
+        immutable = True
+    elif type(value) is tuple:
+        rows = [_e5_semantic_projection_build(item, memo) for item in value]
+        result = {
+            "kind": "tuple",
+            "items": [row[0] for row in rows],
+        }
+        immutable = all(row[1] for row in rows)
+    elif type(value) is list:
+        result = {
+            "kind": "list",
+            "items": [
+                _e5_semantic_projection_build(item, memo)[0]
+                for item in value
+            ],
+        }
+        immutable = False
+    elif isinstance(value, Mapping):
+        assert all(type(key) is str for key in value)
+        result = {
+            "kind": "mapping",
+            "items": [
+                [key, _e5_semantic_projection_build(value[key], memo)[0]]
+                for key in sorted(value)
+            ],
+        }
+        immutable = False
+    elif is_dataclass(value) and not isinstance(value, type):
+        rows = [
+            (
+                field.name,
+                _e5_semantic_projection_build(
+                    getattr(value, field.name), memo
+                ),
+            )
+            for field in fields(value)
+        ]
+        result = {
+            "kind": "dataclass",
+            "type": _e5_qualified_type_name(value),
+            "fields": [
+                [field_name, projection]
+                for field_name, (projection, _immutable) in rows
+            ],
+        }
+        immutable = all(row[1][1] for row in rows)
+    else:
+        raise AssertionError(
+            "unsupported E5 semantic projection type: "
+            + _e5_qualified_type_name(value)
+        )
+    if memo is not None and cacheable and immutable:
+        memo[id(value)] = (value, result)
+    return result, immutable
+
+
+def _e5_semantic_projection(
+    value: object,
+    memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+) -> dict[str, object]:
+    return _e5_semantic_projection_build(value, memo)[0]
+
+
+def _e5_framed_sha256(domain: str, value: object) -> str:
+    payload = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("ascii")
+    return hashlib.sha256(domain.encode("ascii") + b"\x00" + payload).hexdigest()
+
+
+def _e5_semantic_projection_bytes(
+    value: object,
+    memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+) -> bytes:
+    return json.dumps(
+        _e5_semantic_projection(value, memo),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("ascii")
+
+
+@dataclass(frozen=True)
+class _E5BindingNodeV02:
+    digest: str
+    length: int
+    immutable: bool
+
+
+def _e5_v02_u64(value: int) -> bytes:
+    assert type(value) is int and 0 <= value < 1 << 64
+    return value.to_bytes(8, "big")
+
+
+def _e5_v02_frame(tag: str, parts: tuple[bytes, ...]) -> bytes:
+    assert type(tag) is str and tag and tag.isascii()
+    assert type(parts) is tuple and all(type(part) is bytes for part in parts)
+    return b"".join(
+        (
+            tag.encode("ascii"),
+            b"\x00",
+            _e5_v02_u64(len(parts)),
+            *tuple(_e5_v02_u64(len(part)) + part for part in parts),
+        )
+    )
+
+
+def _e5_v02_node(
+    tag: str, parts: tuple[bytes, ...], *, immutable: bool
+) -> _E5BindingNodeV02:
+    material = _E5_COMPOSITIONAL_BINDING_DOMAIN_V02 + _e5_v02_frame(
+        tag, parts
+    )
+    return _E5BindingNodeV02(
+        hashlib.sha256(material).hexdigest(), len(material), immutable
+    )
+
+
+def _e5_v02_child(
+    tag: str, role: bytes, child: _E5BindingNodeV02
+) -> bytes:
+    return _e5_v02_frame(
+        tag,
+        (role, bytes.fromhex(child.digest), _e5_v02_u64(child.length)),
+    )
+
+
+def _e5_v02_value_node(
+    value: object,
+    memo: dict[int, tuple[object, _E5BindingNodeV02]] | None = None,
+    active: set[int] | None = None,
+) -> _E5BindingNodeV02:
+    if active is None:
+        active = set()
+    params = (
+        getattr(type(value), "__dataclass_params__", None)
+        if is_dataclass(value) and not isinstance(value, type)
+        else None
+    )
+    cacheable = type(value) is tuple or bool(
+        params is not None and params.frozen
+    )
+    if memo is not None and cacheable:
+        cached = memo.get(id(value))
+        if cached is not None and cached[0] is value:
+            return cached[1]
+    compound = (
+        type(value) in {tuple, list}
+        or isinstance(value, Mapping)
+        or (is_dataclass(value) and not isinstance(value, type))
+    )
+    value_id = id(value)
+    if compound:
+        if value_id in active:
+            raise AssertionError("g2e5_v02_cycle_invalid")
+        active.add(value_id)
+    try:
+        if value is None:
+            node = _e5_v02_node("none", (), immutable=True)
+        elif type(value) is bool:
+            node = _e5_v02_node(
+                "bool", (b"true" if value else b"false",), immutable=True
+            )
+        elif type(value) is int:
+            encoded = str(value).encode("ascii")
+            if int(encoded.decode("ascii")) != value:
+                raise AssertionError("g2e5_v02_int_invalid")
+            node = _e5_v02_node("int", (encoded,), immutable=True)
+        elif type(value) is float:
+            if not math.isfinite(value):
+                raise AssertionError("g2e5_v02_float_invalid")
+            node = _e5_v02_node(
+                "float", (value.hex().encode("ascii"),), immutable=True
+            )
+        elif type(value) is str:
+            node = _e5_v02_node(
+                "str", (value.encode("utf-8"),), immutable=True
+            )
+        elif type(value) is bytes:
+            node = _e5_v02_node("bytes", (value,), immutable=True)
+        elif type(value) in {tuple, list}:
+            children = tuple(
+                _e5_v02_value_node(item, memo, active) for item in value
+            )
+            node = _e5_v02_node(
+                "tuple" if type(value) is tuple else "list",
+                tuple(
+                    _e5_v02_child(
+                        "position", _e5_v02_u64(index), child
+                    )
+                    for index, child in enumerate(children)
+                ),
+                immutable=(
+                    type(value) is tuple
+                    and all(child.immutable for child in children)
+                ),
+            )
+        elif isinstance(value, Mapping):
+            assert all(type(key) is str for key in value)
+            rows = tuple(
+                (key, _e5_v02_value_node(value[key], memo, active))
+                for key in sorted(value)
+            )
+            node = _e5_v02_node(
+                "mapping",
+                tuple(
+                    _e5_v02_child("key", key.encode("utf-8"), child)
+                    for key, child in rows
+                ),
+                immutable=False,
+            )
+        elif is_dataclass(value) and not isinstance(value, type):
+            rows = tuple(
+                (
+                    field.name,
+                    _e5_v02_value_node(
+                        getattr(value, field.name), memo, active
+                    ),
+                )
+                for field in fields(value)
+            )
+            node = _e5_v02_node(
+                "dataclass",
+                (
+                    _e5_qualified_type_name(value).encode("utf-8"),
+                    *tuple(
+                        _e5_v02_child(
+                            "field", name.encode("utf-8"), child
+                        )
+                        for name, child in rows
+                    ),
+                ),
+                immutable=bool(
+                    params is not None
+                    and params.frozen
+                    and all(child.immutable for _name, child in rows)
+                ),
+            )
+        else:
+            raise AssertionError(
+                "g2e5_v02_type_unsupported:" + _e5_qualified_type_name(value)
+            )
+    finally:
+        if compound:
+            active.remove(value_id)
+    if memo is not None and cacheable and node.immutable:
+        memo[id(value)] = (value, node)
+    return node
+
+
+def _e5_v02_plain(node: _E5BindingNodeV02) -> dict[str, object]:
+    return {
+        "profile_id": E5_COMPOSITIONAL_BINDING_PROFILE_V02,
+        "sha256": node.digest,
+        "semantic_length": node.length,
+    }
+
+
+def _e5_v02_value_binding(
+    value: object,
+    memo: dict[int, tuple[object, _E5BindingNodeV02]] | None = None,
+) -> dict[str, object]:
+    return _e5_v02_plain(_e5_v02_value_node(value, memo))
+
+
+def _e5_v02_call_binding(
+    validator: str,
+    args: tuple[object, ...],
+    kwargs: Mapping[str, object],
+    memo: dict[int, tuple[object, _E5BindingNodeV02]] | None = None,
+) -> dict[str, object]:
+    assert type(validator) is str and validator
+    assert type(args) is tuple and all(type(key) is str for key in kwargs)
+    active: set[int] = set()
+    positional = tuple(
+        _e5_v02_value_node(value, memo, active) for value in args
+    )
+    keywords = tuple(
+        (key, _e5_v02_value_node(kwargs[key], memo, active))
+        for key in sorted(kwargs)
+    )
+    return _e5_v02_plain(
+        _e5_v02_node(
+            "call",
+            (
+                validator.encode("utf-8"),
+                _e5_v02_u64(len(positional)),
+                *tuple(
+                    _e5_v02_child(
+                        "argument", _e5_v02_u64(index), child
+                    )
+                    for index, child in enumerate(positional)
+                ),
+                _e5_v02_u64(len(keywords)),
+                *tuple(
+                    _e5_v02_child(
+                        "keyword", key.encode("utf-8"), child
+                    )
+                    for key, child in keywords
+                ),
+            ),
+            immutable=False,
+        )
+    )
+
+
+def _e5_v02_result_binding(
+    result_kind: str,
+    result: object,
+    memo: dict[int, tuple[object, _E5BindingNodeV02]] | None = None,
+) -> dict[str, object]:
+    assert result_kind in {"return", "value_error"}
+    if result_kind == "value_error":
+        assert type(result) is str
+    child = _e5_v02_value_node(result, memo)
+    return _e5_v02_plain(
+        _e5_v02_node(
+            "result:" + result_kind,
+            (_e5_v02_child("value", b"value", child),),
+            immutable=False,
+        )
+    )
+
+
+def _e5_carrier_identity(value: object) -> str:
+    if is_dataclass(value) and not isinstance(value, type):
+        for field in fields(value):
+            candidate = getattr(value, field.name)
+            if field.name.endswith("_id") and type(candidate) is str and candidate:
+                return candidate
+    return "NONE"
+
+
+def _e5_import_runner() -> types.ModuleType:
+    import importlib.util
+    import sys
+
+    module_name = "hedgehog_g2e5_public_runner_v01"
+    spec = importlib.util.spec_from_file_location(module_name, E5_RUNNER_PATH)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.fixture(scope="module")
+def e5_report_fixture() -> dict[str, object]:
+    import http.client
+    import socket
+    import sys
+    import time
+    import urllib.request
+
+    public_calls: list[dict[str, object]] = []
+    dependency_edge_calls: list[tuple[g2e.DeltaDependencyEdgeV01, ...]] = []
+    dependency_graph_calls: list[g2e.DependencyGraphIndexV01] = []
+    affected_set_calls: list[g2e.AffectedSetResultV01] = []
+    selective_bundle_calls: list[g2e.ContinuousDeltaExecutionBundleV01] = []
+    semantic_calls: list[dict[str, object]] = []
+    constructive_calls: list[dict[str, object]] = []
+    evidence_binding_inputs: list[object] = []
+    exact_tuple_return_calls: list[dict[str, object]] = []
+    private_execution_materials: list[dict[str, object]] = []
+    network_sink_calls: list[str] = []
+    stage_timings: dict[str, list[float]] = {
+        "two_public_baselines": [],
+        "constructive_cases": [],
+        "ordinary_negative_cases": [],
+        "transition_rows": [],
+        "abi_rows": [],
+        "case89_rows": [],
+        "report_sealing_validation": [],
+        "independent_external_oracles": [],
+    }
+    semantic_depth = 0
+    semantic_call_id = 0
+    constructive_call_id = 0
+    selective_occurrence_id = 0
+    active_selective_occurrence_token: str | None = None
+    active_negative_case_id: str | None = None
+    active_negative_subcase_key: tuple[str, str] | None = None
+    semantic_projection_memo: dict[
+        int, tuple[object, dict[str, object]]
+    ] = {}
+    compositional_binding_memo: dict[
+        int, tuple[object, _E5BindingNodeV02]
+    ] = {}
+    original_g2d = g2d.run_fractal_runtime_v02
+    original_edge_projection = g2e.project_integrity_replay_dependency_edges_v01
+    original_graph_builder = g2e.build_dependency_graph_index_v01
+    original_affected = g2e.compute_affected_set_v01
+    original_selective = g2e.run_continuous_delta_runtime_v01
+
+    def record_constructive_call(
+        operation: str,
+        args: tuple[object, ...],
+        kwargs: dict[str, object],
+        result: object,
+        *,
+        selective_occurrence_token: str | None = None,
+        parent_selective_occurrence_token: str | None = None,
+    ) -> None:
+        nonlocal constructive_call_id
+        constructive_calls.append(
+            {
+                "call_id": constructive_call_id,
+                "operation": operation,
+                "args": args,
+                "kwargs": kwargs,
+                "result": result,
+                "selective_occurrence_token": selective_occurrence_token,
+                "parent_selective_occurrence_token": (
+                    parent_selective_occurrence_token
+                ),
+                "phase": (
+                    "negative"
+                    if active_negative_case_id is not None
+                    else "constructive"
+                ),
+                "negative_case_id": active_negative_case_id,
+            }
+        )
+        constructive_call_id += 1
+
+    def observed_public_run(
+        source_context: g2d.FractalRuntimeSourceContextV02,
+        *,
+        observed_work_context: g2d.RuntimeObservedWorkContextV02 | None = None,
+    ) -> tuple[
+        g2d.FractalRuntimeExecutionBundleV02 | None,
+        g2d.FractalRuntimeValidationReportV02,
+    ]:
+        operation_started = time.perf_counter()
+        result = original_g2d(
+            source_context,
+            observed_work_context=observed_work_context,
+        )
+        stage_timings["two_public_baselines"].append(
+            time.perf_counter() - operation_started
+        )
+        bundle_bytes = _e5_semantic_projection_bytes(
+            result[0], semantic_projection_memo
+        )
+        report_bytes = _e5_semantic_projection_bytes(
+            result[1], semantic_projection_memo
+        )
+        return_bytes = _e5_semantic_projection_bytes(
+            result, semantic_projection_memo
+        )
+        public_calls.append(
+            {
+                "domain_id": source_context.decision.domain_id,
+                "transaction_id": source_context.router_input.transaction_id,
+                "args": (source_context,),
+                "kwargs": {"observed_work_context": observed_work_context},
+                "bundle": result[0],
+                "report": result[1],
+                "bundle_sha256": hashlib.sha256(bundle_bytes).hexdigest(),
+                "bundle_byte_length": len(bundle_bytes),
+                "report_sha256": hashlib.sha256(report_bytes).hexdigest(),
+                "report_byte_length": len(report_bytes),
+                "return_tuple_sha256": hashlib.sha256(return_bytes).hexdigest(),
+                "return_tuple_byte_length": len(return_bytes),
+                "result": result,
+                "result_sha256": _e5_framed_sha256(
+                    E5_SEMANTIC_RESULT_DOMAIN,
+                    {
+                        "kind": "return",
+                        "value": _e5_semantic_projection(
+                            result, semantic_projection_memo
+                        ),
+                    },
+                ),
+            }
+        )
+        _e5_progress_marker(
+            "BASELINE_RETURNED=" + source_context.decision.domain_id
+        )
+        return result
+
+    def observed_edge_projection(**kwargs: object) -> object:
+        result = original_edge_projection(**kwargs)
+        graph_basis, edges = result
+        dependency_edge_calls.append(edges)
+        record_constructive_call(
+            "project_integrity_replay_dependency_edges_v01",
+            (),
+            dict(kwargs),
+            result,
+        )
+        return result
+
+    def observed_graph_builder(**kwargs: object) -> object:
+        graph = original_graph_builder(**kwargs)
+        dependency_graph_calls.append(graph)
+        record_constructive_call(
+            "build_dependency_graph_index_v01",
+            (),
+            dict(kwargs),
+            graph,
+        )
+        return graph
+
+    def observed_affected(**kwargs: object) -> object:
+        affected = original_affected(**kwargs)
+        affected_set_calls.append(affected)
+        record_constructive_call(
+            "compute_affected_set_v01",
+            (),
+            dict(kwargs),
+            affected,
+            parent_selective_occurrence_token=(
+                active_selective_occurrence_token
+            ),
+        )
+        return affected
+
+    def observed_selective(**kwargs: object) -> object:
+        nonlocal selective_occurrence_id, active_selective_occurrence_token
+        occurrence_token = f"selective_occurrence:{selective_occurrence_id:03d}"
+        selective_occurrence_id += 1
+        parent_token = active_selective_occurrence_token
+        active_selective_occurrence_token = occurrence_token
+        try:
+            result = original_selective(**kwargs)
+        finally:
+            active_selective_occurrence_token = parent_token
+        bundle, report = result
+        if bundle is not None:
+            selective_bundle_calls.append(bundle)
+        record_constructive_call(
+            "run_continuous_delta_runtime_v01",
+            (),
+            dict(kwargs),
+            result,
+            selective_occurrence_token=occurrence_token,
+            parent_selective_occurrence_token=parent_token,
+        )
+        return result
+
+    def result_reasons(value: object) -> tuple[str, ...]:
+        if type(value) is g2e.ContinuousDeltaValidationReportV01:
+            return value.reason_codes
+        carrier_reasons = getattr(value, "reason_codes", None)
+        if type(carrier_reasons) is tuple and all(
+            type(item) is str for item in carrier_reasons
+        ):
+            return carrier_reasons
+        if type(value) is tuple:
+            if all(type(item) is str for item in value):
+                return value
+            for item in value:
+                reasons = result_reasons(item)
+                if reasons:
+                    return reasons
+        return ()
+
+    def semantic_wrapper(
+        qualified_name: str, operation: object
+    ) -> object:
+        def wrapped(*args: object, **kwargs: object) -> object:
+            nonlocal semantic_call_id, semantic_depth
+            call_id = semantic_call_id
+            semantic_call_id += 1
+            depth = semantic_depth
+            semantic_depth += 1
+
+            def formal_bindings(
+                *, result_kind: str, result: object, reasons: tuple[str, ...]
+            ) -> tuple[dict[str, object], dict[str, object]] | None:
+                if depth != 0 or active_negative_subcase_key is None:
+                    return None
+                expected = E5_NEGATIVE_OPERATION_BY_KEY.get(
+                    active_negative_subcase_key
+                )
+                assert expected is not None
+                (
+                    expected_reasons,
+                    expected_validator,
+                    locator,
+                    expected_type,
+                ) = expected
+                if (
+                    qualified_name != expected_validator
+                    or reasons != expected_reasons
+                ):
+                    return None
+                if locator.startswith("arg:"):
+                    mutated = args[int(locator[4:])]
+                else:
+                    mutated = kwargs[locator[3:]]
+                if _e5_qualified_type_name(mutated) != expected_type:
+                    return None
+                return (
+                    _e5_v02_call_binding(
+                        qualified_name,
+                        tuple(args),
+                        dict(kwargs),
+                        compositional_binding_memo,
+                    ),
+                    _e5_v02_result_binding(
+                        result_kind,
+                        result,
+                        compositional_binding_memo,
+                    ),
+                )
+            try:
+                result = operation(*args, **kwargs)
+            except ValueError as exc:
+                assert len(exc.args) == 1 and type(exc.args[0]) is str
+                reasons = (exc.args[0],)
+                bindings = formal_bindings(
+                    result_kind="value_error",
+                    result=exc.args[0],
+                    reasons=reasons,
+                )
+                semantic_calls.append(
+                    {
+                        "call_id": call_id,
+                        "depth": depth,
+                        "validator": qualified_name,
+                        "semantic_call_fingerprint": (
+                            None if bindings is None else bindings[0]["sha256"]
+                        ),
+                        "semantic_call_semantic_length": (
+                            None
+                            if bindings is None
+                            else bindings[0]["semantic_length"]
+                        ),
+                        "semantic_result_sha256": (
+                            None if bindings is None else bindings[1]["sha256"]
+                        ),
+                        "semantic_result_semantic_length": (
+                            None
+                            if bindings is None
+                            else bindings[1]["semantic_length"]
+                        ),
+                        "reason_codes": reasons,
+                        "args": tuple(args),
+                        "kwargs": dict(kwargs),
+                        "result_kind": "value_error",
+                        "result": exc.args[0],
+                        "phase": (
+                            "negative"
+                            if active_negative_case_id is not None
+                            else "constructive"
+                        ),
+                        "negative_case_id": active_negative_case_id,
+                        "negative_subcase_key": active_negative_subcase_key,
+                    }
+                )
+                raise
+            else:
+                reasons = result_reasons(result)
+                bindings = formal_bindings(
+                    result_kind="return",
+                    result=result,
+                    reasons=reasons,
+                )
+                semantic_calls.append(
+                    {
+                        "call_id": call_id,
+                        "depth": depth,
+                        "validator": qualified_name,
+                        "semantic_call_fingerprint": (
+                            None if bindings is None else bindings[0]["sha256"]
+                        ),
+                        "semantic_call_semantic_length": (
+                            None
+                            if bindings is None
+                            else bindings[0]["semantic_length"]
+                        ),
+                        "semantic_result_sha256": (
+                            None if bindings is None else bindings[1]["sha256"]
+                        ),
+                        "semantic_result_semantic_length": (
+                            None
+                            if bindings is None
+                            else bindings[1]["semantic_length"]
+                        ),
+                        "reason_codes": reasons,
+                        "args": tuple(args),
+                        "kwargs": dict(kwargs),
+                        "result_kind": "return",
+                        "result": result,
+                        "phase": (
+                            "negative"
+                            if active_negative_case_id is not None
+                            else "constructive"
+                        ),
+                        "negative_case_id": active_negative_case_id,
+                        "negative_subcase_key": active_negative_subcase_key,
+                    }
+                )
+                return result
+            finally:
+                semantic_depth -= 1
+
+        return wrapped
+
+    g2d.run_fractal_runtime_v02 = observed_public_run
+    g2e.project_integrity_replay_dependency_edges_v01 = observed_edge_projection
+    g2e.build_dependency_graph_index_v01 = observed_graph_builder
+    g2e.compute_affected_set_v01 = observed_affected
+    g2e.run_continuous_delta_runtime_v01 = observed_selective
+    semantic_originals: list[tuple[object, str, object]] = []
+    for qualified_name in E5_NEGATIVE_MONITORED_TARGET_CENSUS:
+        if qualified_name.startswith(
+            "hedgehog.kernel.continuous_delta_runtime_v01."
+        ):
+            module = g2e
+            function_name = qualified_name.rsplit(".", 1)[1]
+        else:
+            assert qualified_name.startswith(
+                "hedgehog.kernel.transition_registry_v01."
+            )
+            module = transition
+            function_name = qualified_name.rsplit(".", 1)[1]
+        original = getattr(module, function_name)
+        semantic_originals.append((module, function_name, original))
+        setattr(
+            module,
+            function_name,
+            semantic_wrapper(qualified_name, original),
+        )
+    collector_invocations = 0
+    network_originals: list[tuple[object, str, object]] = []
+    exact_tuple_originals: list[tuple[object, str, object]] = []
+
+    def install_exact_tuple_spy(
+        owner: object, name: str, qualified_name: str
+    ) -> None:
+        original = getattr(owner, name)
+        exact_tuple_originals.append((owner, name, original))
+
+        def observed(*args: object, **kwargs: object) -> object:
+            exact_return = original(*args, **kwargs)
+            caller = sys._getframe(1)
+            caller_module = caller.f_globals.get("__name__")
+            if type(exact_return) is tuple and caller_module == runner.__name__:
+                exact_tuple_return_calls.append(
+                    {
+                        "validator": qualified_name,
+                        "caller_module": caller_module,
+                        "caller_function": caller.f_code.co_name,
+                        "args": args,
+                        "kwargs": kwargs,
+                        "result": exact_return,
+                    }
+                )
+            return exact_return
+
+        setattr(owner, name, observed)
+
+    def install_network_sentinel(owner: object, name: str, label: str) -> None:
+        original = getattr(owner, name)
+        network_originals.append((owner, name, original))
+
+        def blocked(*args: object, **kwargs: object) -> object:
+            network_sink_calls.append(label)
+            raise AssertionError("forbidden E5 network sink called: " + label)
+
+        setattr(owner, name, blocked)
+
+    try:
+        runner = _e5_import_runner()
+        assert public_calls == []
+        for owner, name, qualified_name in (
+            (
+                drs_resolution,
+                "validate_drs_resolution_report_v01",
+                "hedgehog.drs_memory_resolution_v01.validate_drs_resolution_report_v01",
+            ),
+            (
+                reuse_certificate,
+                "validate_reuse_certificate_v01",
+                "hedgehog.reuse_certificate_v01.validate_reuse_certificate_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_action_invalidation_evidence_against_packet_v01",
+                "hedgehog.action_commit_packet_v02.validate_action_invalidation_evidence_against_packet_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_action_commit_packet_registry_v02",
+                "hedgehog.action_commit_packet_v02.validate_action_commit_packet_registry_v02",
+            ),
+            (
+                action_commit_packet,
+                "validate_action_packet_present_eligibility_inspection_v01",
+                "hedgehog.action_commit_packet_v02.validate_action_packet_present_eligibility_inspection_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_revocation_candidate_v01",
+                "hedgehog.action_commit_packet_v02.validate_revocation_candidate_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_revocation_candidate_against_packet_v01",
+                "hedgehog.action_commit_packet_v02.validate_revocation_candidate_against_packet_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_dependency_set_candidate_record_v01",
+                "hedgehog.action_commit_packet_v02.validate_dependency_set_candidate_record_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_dependency_set_candidate_v01",
+                "hedgehog.action_commit_packet_v02.validate_dependency_set_candidate_v01",
+            ),
+            (
+                action_commit_packet,
+                "validate_action_dependency_current_observation_v01",
+                "hedgehog.action_commit_packet_v02.validate_action_dependency_current_observation_v01",
+            ),
+            (
+                g2c,
+                "route_execution_mode_v01",
+                "hedgehog.kernel.execution_mode_router_v01.route_execution_mode_v01",
+            ),
+            (
+                g2c,
+                "review_execution_mode_proposal_v01",
+                "hedgehog.kernel.execution_mode_router_v01.review_execution_mode_proposal_v01",
+            ),
+            (
+                runner.travel_corridor,
+                "validate_airline_hold_commit_packet_v01",
+                "hedgehog.domains.airline.ticket_purchase_corridor_v01.validate_airline_hold_commit_packet_v01",
+            ),
+            (
+                runner.travel_corridor,
+                "validate_airline_offer_packet_v01",
+                "hedgehog.domains.airline.ticket_purchase_corridor_v01.validate_airline_offer_packet_v01",
+            ),
+            (
+                runner.travel_binding,
+                "validate_client_root_travel_constraint_set_v01",
+                "hedgehog.domains.airline.semantic_to_contract_binding_v01.validate_client_root_travel_constraint_set_v01",
+            ),
+        ):
+            install_exact_tuple_spy(owner, name, qualified_name)
+        original_semantic_return_binding = runner._semantic_return_binding
+        original_semantic_return_witness = runner._semantic_return_witness
+        original_build_negative_case = runner._build_negative_case
+        original_ordinary_negative_subcase = runner._ordinary_negative_subcase
+        original_matrix_negative_subcase = runner._matrix_negative_subcase
+        original_execute_conditional_negative_inputs = (
+            runner._execute_conditional_negative_inputs
+        )
+        original_execute_case_inputs = runner._execute_case_inputs
+        original_report_validator = (
+            runner.validate_continuous_delta_runtime_g2_e_report_v01
+        )
+        private_helper_originals: list[tuple[str, object]] = []
+
+        def observe_private_helper(name: str) -> None:
+            original = getattr(runner, name)
+            private_helper_originals.append((name, original))
+
+            def observed(*args: object, **kwargs: object) -> object:
+                result = original(*args, **kwargs)
+                private_execution_materials.append(
+                    {"helper": name, "result": result}
+                )
+                return result
+
+            setattr(runner, name, observed)
+
+        for private_helper_name in (
+            "_build_g2b_family",
+            "_build_g2a_family",
+            "_build_g2d_source_context",
+            "_build_case_inputs",
+            "_g2a_pending_negative_setup",
+            "_g2a_revocation_candidate",
+        ):
+            observe_private_helper(private_helper_name)
+
+        def observed_semantic_return_binding(
+            value: object,
+            memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+        ) -> object:
+            evidence_binding_inputs.append(value)
+            return original_semantic_return_binding(value, memo)
+
+        runner._semantic_return_binding = observed_semantic_return_binding
+
+        def observed_semantic_return_witness(
+            value: object,
+            memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+        ) -> object:
+            evidence_binding_inputs.append(value)
+            return original_semantic_return_witness(value, memo)
+
+        runner._semantic_return_witness = observed_semantic_return_witness
+
+        def observed_build_negative_case(*args: object, **kwargs: object) -> object:
+            nonlocal active_negative_case_id
+            row = kwargs.get("row")
+            assert type(row) is tuple and len(row) == 3
+            suffix = row[0]
+            timing_key = (
+                "transition_rows"
+                if suffix.startswith("transition_rule_")
+                else "abi_rows"
+                if suffix == "abi_projection_profile_substitution"
+                else "case89_rows"
+                if suffix == "abi_parent_trace_or_root_artifact_substitution"
+                else "ordinary_negative_cases"
+            )
+            started_at = time.perf_counter()
+            prior = active_negative_case_id
+            active_negative_case_id = "g2e_case:negative:" + suffix + ":v01"
+            _e5_progress_marker(
+                "NEGATIVE_CASE_STARTED=" + active_negative_case_id
+            )
+            try:
+                result = original_build_negative_case(*args, **kwargs)
+                _e5_progress_marker(
+                    "NEGATIVE_CASE_RETURNED=" + active_negative_case_id
+                )
+                return result
+            finally:
+                stage_timings[timing_key].append(
+                    time.perf_counter() - started_at
+                )
+                active_negative_case_id = prior
+
+        runner._build_negative_case = observed_build_negative_case
+
+        def observed_ordinary_negative_subcase(
+            *args: object, **kwargs: object
+        ) -> object:
+            nonlocal active_negative_subcase_key
+            case_id = kwargs.get("case_id")
+            subcase_name = kwargs.get("subcase_name")
+            assert type(case_id) is str and type(subcase_name) is str
+            prior = active_negative_subcase_key
+            active_negative_subcase_key = (case_id, subcase_name)
+            _e5_progress_marker(
+                "NEGATIVE_SUBCASE_STARTED=" + case_id + ":" + subcase_name
+            )
+            try:
+                result = original_ordinary_negative_subcase(*args, **kwargs)
+                _e5_progress_marker(
+                    "NEGATIVE_SUBCASE_RETURNED="
+                    + case_id
+                    + ":"
+                    + subcase_name
+                )
+                return result
+            finally:
+                active_negative_subcase_key = prior
+
+        def observed_matrix_negative_subcase(
+            *args: object, **kwargs: object
+        ) -> object:
+            nonlocal active_negative_subcase_key
+            case_id = kwargs.get("case_id")
+            subcase_name = kwargs.get("subcase_name")
+            assert type(case_id) is str and type(subcase_name) is str
+            prior = active_negative_subcase_key
+            active_negative_subcase_key = (case_id, subcase_name)
+            _e5_progress_marker(
+                "NEGATIVE_SUBCASE_STARTED=" + case_id + ":" + subcase_name
+            )
+            try:
+                result = original_matrix_negative_subcase(*args, **kwargs)
+                _e5_progress_marker(
+                    "NEGATIVE_SUBCASE_RETURNED="
+                    + case_id
+                    + ":"
+                    + subcase_name
+                )
+                return result
+            finally:
+                active_negative_subcase_key = prior
+
+        runner._ordinary_negative_subcase = observed_ordinary_negative_subcase
+        runner._matrix_negative_subcase = observed_matrix_negative_subcase
+
+        def observed_execute_case_inputs(
+            *args: object, **kwargs: object
+        ) -> object:
+            inputs = args[0] if args else kwargs.get("inputs")
+            assert type(inputs) is dict and type(inputs.get("case_id")) is str
+            case_id = inputs["case_id"]
+            _e5_progress_marker("CONSTRUCTIVE_CASE_STARTED=" + case_id)
+            started_at = time.perf_counter()
+            try:
+                result = original_execute_case_inputs(*args, **kwargs)
+                private_execution_materials.append(
+                    {"helper": "_execute_case_inputs", "result": result}
+                )
+                _e5_progress_marker("CONSTRUCTIVE_CASE_RETURNED=" + case_id)
+                return result
+            finally:
+                stage_timings["constructive_cases"].append(
+                    time.perf_counter() - started_at
+                )
+
+        runner._execute_case_inputs = observed_execute_case_inputs
+
+        def observed_report_validator(
+            *args: object, **kwargs: object
+        ) -> object:
+            _e5_progress_marker("REPORT_VALIDATION_STARTED=1")
+            started_at = time.perf_counter()
+            try:
+                result = original_report_validator(*args, **kwargs)
+                _e5_progress_marker("REPORT_VALIDATION_RETURNED=1")
+                return result
+            finally:
+                stage_timings["report_sealing_validation"].append(
+                    time.perf_counter() - started_at
+                )
+
+        runner.validate_continuous_delta_runtime_g2_e_report_v01 = (
+            observed_report_validator
+        )
+
+        def observed_execute_conditional_negative_inputs(
+            *args: object, **kwargs: object
+        ) -> object:
+            nonlocal active_negative_case_id, active_negative_subcase_key
+            prior = active_negative_case_id
+            prior_subcase = active_negative_subcase_key
+            active_negative_case_id = (
+                "g2e_case:negative:repeated_delta_spin:v01"
+            )
+            active_negative_subcase_key = (
+                active_negative_case_id,
+                "repeated_delta_spin",
+            )
+            _e5_progress_marker(
+                "NEGATIVE_SUBCASE_STARTED="
+                + active_negative_case_id
+                + ":repeated_delta_spin"
+            )
+            try:
+                result = original_execute_conditional_negative_inputs(
+                    *args, **kwargs
+                )
+                _e5_progress_marker(
+                    "NEGATIVE_SUBCASE_RETURNED="
+                    + active_negative_case_id
+                    + ":repeated_delta_spin"
+                )
+                return result
+            finally:
+                active_negative_case_id = prior
+                active_negative_subcase_key = prior_subcase
+
+        runner._execute_conditional_negative_inputs = (
+            observed_execute_conditional_negative_inputs
+        )
+        install_network_sentinel(
+            socket, "create_connection", "socket.create_connection"
+        )
+        install_network_sentinel(
+            socket.socket, "connect", "socket.socket.connect"
+        )
+        install_network_sentinel(
+            urllib.request, "urlopen", "urllib.request.urlopen"
+        )
+        install_network_sentinel(
+            http.client.HTTPSConnection,
+            "connect",
+            "http.client.HTTPSConnection.connect",
+        )
+        install_network_sentinel(
+            http.client.HTTPConnection,
+            "connect",
+            "http.client.HTTPConnection.connect",
+        )
+        requests_sessions = sys.modules.get("requests.sessions")
+        if requests_sessions is not None:
+            install_network_sentinel(
+                requests_sessions.Session,
+                "request",
+                "requests.sessions.Session.request",
+            )
+        httpx_module = sys.modules.get("httpx")
+        if httpx_module is not None:
+            install_network_sentinel(
+                httpx_module.Client,
+                "request",
+                "httpx.Client.request",
+            )
+            install_network_sentinel(
+                httpx_module.AsyncClient,
+                "request",
+                "httpx.AsyncClient.request",
+            )
+        _e5_progress_marker("COLLECTOR_STARTED=1")
+        started = time.perf_counter()
+        collector_invocations += 1
+        report = runner.collect_continuous_delta_runtime_g2_e_v01()
+        elapsed = time.perf_counter() - started
+        _e5_progress_marker(
+            "COLLECTOR_RETURNED=1 ELAPSED_SECONDS=" + format(elapsed, ".6f")
+        )
+        assert len(public_calls) == 2
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(report)
+        rendered_once = runner.render_continuous_delta_runtime_g2_e_v01(report)
+        rendered_twice = runner.render_continuous_delta_runtime_g2_e_v01(report)
+        assert len(public_calls) == 2
+    finally:
+        if "runner" in locals() and "original_semantic_return_binding" in locals():
+            runner._semantic_return_binding = original_semantic_return_binding
+            runner._semantic_return_witness = original_semantic_return_witness
+            runner._build_negative_case = original_build_negative_case
+            runner._ordinary_negative_subcase = original_ordinary_negative_subcase
+            runner._matrix_negative_subcase = original_matrix_negative_subcase
+            runner._execute_conditional_negative_inputs = (
+                original_execute_conditional_negative_inputs
+            )
+            runner._execute_case_inputs = original_execute_case_inputs
+            runner.validate_continuous_delta_runtime_g2_e_report_v01 = (
+                original_report_validator
+            )
+            for name, original in reversed(private_helper_originals):
+                setattr(runner, name, original)
+        for owner, name, original in reversed(network_originals):
+            setattr(owner, name, original)
+        for module, function_name, original in reversed(semantic_originals):
+            setattr(module, function_name, original)
+        for owner, name, original in reversed(exact_tuple_originals):
+            setattr(owner, name, original)
+        g2d.run_fractal_runtime_v02 = original_g2d
+        g2e.project_integrity_replay_dependency_edges_v01 = original_edge_projection
+        g2e.build_dependency_graph_index_v01 = original_graph_builder
+        g2e.compute_affected_set_v01 = original_affected
+        g2e.run_continuous_delta_runtime_v01 = original_selective
+    return {
+        "runner": runner,
+        "report": report,
+        "public_calls": tuple(public_calls),
+        "collector_invocations": collector_invocations,
+        "elapsed": elapsed,
+        "rendered_once": rendered_once,
+        "rendered_twice": rendered_twice,
+        "dependency_edge_calls": tuple(dependency_edge_calls),
+        "dependency_graph_calls": tuple(dependency_graph_calls),
+        "affected_set_calls": tuple(affected_set_calls),
+        "selective_bundle_calls": tuple(selective_bundle_calls),
+        "semantic_calls": tuple(semantic_calls),
+        "constructive_calls": tuple(constructive_calls),
+        "network_sink_calls": tuple(network_sink_calls),
+        "evidence_binding_inputs": tuple(evidence_binding_inputs),
+        "exact_tuple_return_calls": tuple(exact_tuple_return_calls),
+        "private_execution_materials": tuple(private_execution_materials),
+        "stage_timings": stage_timings,
+    }
+
+
+def _e5_validate_negative_actual_call_oracle(
+    report: object, fixture: dict[str, object]
+) -> dict[str, object]:
+    _e5_progress_marker("EXTERNAL_ORACLE_STARTED=NEGATIVE")
+    evidence_rows = tuple(
+        (case, subcase, json.loads(subcase.evidence_material_json))
+        for case in report.case_results[10:]
+        for subcase in case.subcase_results
+    )
+    negative_calls = tuple(
+        call
+        for call in fixture["semantic_calls"]
+        if call["depth"] == 0 and call["phase"] == "negative"
+    )
+    consumed: set[int] = set()
+    matched: dict[str, dict[str, object]] = {}
+    for case, subcase, material in evidence_rows:
+        subcase_name = subcase.subcase_id.rsplit(":subcase:", 1)[1]
+        expected = E5_NEGATIVE_OPERATION_BY_KEY[(case.case_id, subcase_name)]
+        expected_reasons, validator, locator, carrier_type = expected
+        candidates = tuple(
+            call
+            for call in negative_calls
+            if call["negative_subcase_key"] == (case.case_id, subcase_name)
+            and call["negative_case_id"] == case.case_id
+            and call["validator"] == validator
+            and call["reason_codes"] == expected_reasons
+        )
+        if len(candidates) != 1:
+            raise AssertionError("g2e5_negative_external_actual_call_mismatch")
+        call = candidates[0]
+        if call["call_id"] in consumed:
+            raise AssertionError("g2e5_negative_external_actual_call_mismatch")
+        if locator.startswith("arg:"):
+            mutated_argument = call["args"][int(locator[4:])]
+        else:
+            mutated_argument = call["kwargs"][locator[3:]]
+        call_binding = _e5_v02_call_binding(
+            validator, call["args"], call["kwargs"], {}
+        )
+        result_binding = _e5_v02_result_binding(
+            call["result_kind"], call["result"], {}
+        )
+        mutated_binding = _e5_v02_value_binding(mutated_argument, {})
+        expected_material = {
+            "compositional_binding_profile_id": (
+                E5_COMPOSITIONAL_BINDING_PROFILE_V02
+            ),
+            "semantic_call_fingerprint": call_binding["sha256"],
+            "semantic_call_semantic_length": call_binding["semantic_length"],
+            "mutated_carrier_sha256": mutated_binding["sha256"],
+            "mutated_carrier_semantic_length": mutated_binding[
+                "semantic_length"
+            ],
+            "semantic_result_sha256": result_binding["sha256"],
+            "semantic_result_semantic_length": result_binding[
+                "semantic_length"
+            ],
+            "public_semantic_validator": validator,
+            "mutated_argument_locator": locator,
+            "mutated_carrier_type": carrier_type,
+            "mutated_carrier_id": _e5_carrier_identity(mutated_argument),
+            "returned_reason_codes": list(expected_reasons),
+        }
+        if any(material[key] != value for key, value in expected_material.items()):
+            raise AssertionError("g2e5_negative_external_actual_call_mismatch")
+        if (
+            _e5_qualified_type_name(mutated_argument) != carrier_type
+            or call["semantic_call_fingerprint"] != call_binding["sha256"]
+            or call["semantic_call_semantic_length"]
+            != call_binding["semantic_length"]
+            or call["semantic_result_sha256"] != result_binding["sha256"]
+            or call["semantic_result_semantic_length"]
+            != result_binding["semantic_length"]
+        ):
+            raise AssertionError("g2e5_negative_external_actual_call_mismatch")
+        consumed.add(call["call_id"])
+        matched[subcase.subcase_id] = call
+    setup_calls = tuple(
+        call for call in negative_calls if call["call_id"] not in consumed
+    )
+    observed_setup = Counter(
+        (
+            call["negative_case_id"],
+            call["negative_subcase_key"][1],
+            call["validator"],
+            call["result_kind"],
+            call["reason_codes"],
+        )
+        for call in setup_calls
+    )
+    expected_setup = Counter(E5_NEGATIVE_SETUP_LEDGER)
+    if (
+        len(evidence_rows) != 296
+        or len(consumed) != 296
+        or len(setup_calls) != 168
+        or observed_setup != expected_setup
+    ):
+        raise AssertionError("g2e5_negative_external_actual_call_mismatch")
+    result = {
+        "matched_calls_by_subcase": matched,
+        "consumed_call_ids": frozenset(consumed),
+        "setup_calls": setup_calls,
+    }
+    if report is fixture["report"]:
+        fixture["_negative_actual_call_oracle"] = result
+    _e5_progress_marker("EXTERNAL_ORACLE_RETURNED=NEGATIVE")
+    return result
+
+
+def _e5_actual_binding(
+    value: object,
+    memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+) -> dict[str, object]:
+    payload = _e5_semantic_projection_bytes(value, memo)
+    return {
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "byte_length": len(payload),
+    }
+
+
+def _e5_actual_witness(
+    value: object,
+    memo: dict[int, tuple[object, dict[str, object]]] | None = None,
+) -> dict[str, object]:
+    projection = _e5_semantic_projection(value, memo)
+    payload = json.dumps(
+        projection,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("ascii")
+    return {
+        "semantic_projection": projection,
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "byte_length": len(payload),
+    }
+
+
+def _e5_validate_constructive_actual_return_oracle(
+    report: object,
+    fixture: dict[str, object],
+) -> dict[str, object]:
+    if (
+        report is fixture["report"]
+        and "_constructive_actual_return_oracle" in fixture
+    ):
+        return fixture["_constructive_actual_return_oracle"]
+    _e5_progress_marker("EXTERNAL_ORACLE_STARTED=C2_C3")
+    oracle_started = time.perf_counter()
+    semantic_projection_memo: dict[
+        int, tuple[object, dict[str, object]]
+    ] = {}
+
+    def actual_binding(value: object) -> dict[str, object]:
+        return _e5_actual_binding(value, semantic_projection_memo)
+
+    def actual_witness(value: object) -> dict[str, object]:
+        return _e5_actual_witness(value, semantic_projection_memo)
+
+    all_rows = tuple(fixture["constructive_calls"])
+    case53_id = "g2e_case:negative:repeated_delta_spin:v01"
+    stale_id = "g2e_case:negative:stale_baseline:v01"
+    rows = tuple(
+        row
+        for row in all_rows
+        if row["phase"] == "constructive"
+        or row["negative_case_id"] == case53_id
+        or (
+            row["negative_case_id"] == stale_id
+            and row["operation"] == "compute_affected_set_v01"
+        )
+    )
+    factual_call_ids = {row["call_id"] for row in rows}
+    negative_setup_rows = tuple(
+        row for row in all_rows if row["call_id"] not in factual_call_ids
+    )
+    edge_rows = tuple(
+        row
+        for row in rows
+        if row["operation"]
+        == "project_integrity_replay_dependency_edges_v01"
+    )
+    graph_rows = tuple(
+        row
+        for row in rows
+        if row["operation"] == "build_dependency_graph_index_v01"
+    )
+    affected_rows = tuple(
+        row
+        for row in rows
+        if row["operation"] == "compute_affected_set_v01"
+    )
+    selective_rows = tuple(
+        row
+        for row in rows
+        if row["operation"] == "run_continuous_delta_runtime_v01"
+    )
+    assert len(edge_rows) == 11
+    assert len(graph_rows) == 11
+    assert len(affected_rows) == 22
+    assert len(selective_rows) == 10
+    assert len(rows) == 54
+    assert len({row["call_id"] for row in rows}) == 54
+    evidence_binding_inputs = fixture["evidence_binding_inputs"]
+    if not all(
+        any(bound is row["result"] for bound in evidence_binding_inputs)
+        for row in selective_rows
+        if row["result"][0] is not None
+    ):
+        raise AssertionError(
+            "g2e5_c2_selective_return_witness_identity_mismatch"
+        )
+    assert len(
+        {
+            row["selective_occurrence_token"]
+            for row in selective_rows
+        }
+    ) == 10
+    consumed: set[int] = set()
+    case_rows: dict[str, dict[str, object]] = {}
+
+    def consume(row: dict[str, object]) -> None:
+        assert row["call_id"] not in consumed
+        consumed.add(row["call_id"])
+
+    for case in report.case_results[:10]:
+        material = json.loads(case.evidence_material_json)
+        chain = material["constructive_call_chain"]
+        projection_evidence = chain["graph_projection"]
+        graph_evidence = chain["graph_construction"]
+        affected_evidence = chain["affected_set_computation"]
+        expected_selective_count = (
+            0
+            if case.observed_outcome != "SELECTIVE_RECOMPUTATION_PASS"
+            else 2
+            if case.case_id.endswith("repeat_idempotent:v01")
+            else 1
+        )
+        graph_candidates = []
+        for graph_row in graph_rows:
+            graph_object = graph_row["result"]
+            if actual_witness(graph_object) != graph_evidence[
+                "graph_witness"
+            ]:
+                continue
+            occurrence_rows = tuple(
+                row
+                for row in selective_rows
+                if row["kwargs"]["dependency_graph"] is graph_object
+            )
+            if len(occurrence_rows) == expected_selective_count:
+                graph_candidates.append((graph_row, occurrence_rows))
+        assert len(graph_candidates) == 1
+        graph_row, selected_selective_rows = graph_candidates[0]
+        graph_object = graph_row["result"]
+        edge_candidates = tuple(
+            row
+            for row in edge_rows
+            if graph_row["kwargs"]["dependency_edges"] is row["result"][1]
+            and graph_row["call_id"] > row["call_id"]
+        )
+        assert len(edge_candidates) == 1
+        edge_row = edge_candidates[0]
+        if not any(
+            bound is edge_row["result"] for bound in evidence_binding_inputs
+        ):
+            raise AssertionError(
+                "g2e5_c2_constructive_projection_witness_identity_mismatch"
+            )
+        dependency_edges = edge_row["result"][1]
+        outer_affected_candidates = tuple(
+            row
+            for row in affected_rows
+            if row["parent_selective_occurrence_token"] is None
+            and row["kwargs"]["graph"] is graph_object
+            and graph_row["call_id"] < row["call_id"]
+            and actual_witness(row["kwargs"]["request"])
+            == affected_evidence["request_witness"]
+            and actual_witness(row["kwargs"]["delta"])
+            == affected_evidence["kwargs_delta_witness"]
+            and actual_witness(row["result"])
+            == affected_evidence["affected_result_witness"]
+            and (
+                not selected_selective_rows
+                or row["call_id"]
+                < min(item["call_id"] for item in selected_selective_rows)
+            )
+        )
+        assert len(outer_affected_candidates) == 1
+        outer_affected_row = outer_affected_candidates[0]
+        affected_request = outer_affected_row["kwargs"]["request"]
+        delta = outer_affected_row["kwargs"]["delta"]
+        affected_result = outer_affected_row["result"]
+        selected_selective_rows = tuple(
+            sorted(selected_selective_rows, key=lambda row: row["call_id"])
+        )
+        assert all(
+            row["kwargs"]["dependency_edges"] is dependency_edges
+            and row["kwargs"]["delta"] is delta
+            and row["parent_selective_occurrence_token"] is None
+            for row in selected_selective_rows
+        )
+        assert chain["proof_boundary"] == (
+            "standalone_witness_integrity_plus_external_actual_return_oracle"
+        )
+        assert projection_evidence == {
+            "graph_basis_sha256": edge_row["result"][0],
+            "ordered_dependency_edge_ids": [
+                edge.edge_id for edge in dependency_edges
+            ],
+            "return_witness": actual_witness(edge_row["result"]),
+            "dependency_edges_binding": actual_binding(dependency_edges),
+        }
+        assert graph_evidence == {
+            "graph_id": graph_object.graph_id,
+            "graph_basis_sha256": graph_object.graph_basis_sha256,
+            "ordered_edge_ids": list(graph_object.ordered_edge_ids),
+            "graph_witness": actual_witness(graph_object),
+        }
+        assert graph_row["kwargs"]["dependency_edges"] is dependency_edges
+        assert affected_evidence == {
+            "affected_request_id": affected_request.affected_request_id,
+            "request_graph_id": affected_request.graph_id,
+            "request_delta_id": affected_request.delta_id,
+            "kwargs_graph_id": graph_object.graph_id,
+            "kwargs_delta_id": delta.delta_id,
+            "returned_affected_request_id": (
+                affected_result.affected_request_id
+            ),
+            "returned_affected_set_id": affected_result.affected_set_id,
+            "returned_graph_id": affected_result.graph_id,
+            "returned_delta_id": affected_result.delta_id,
+            "request_witness": actual_witness(affected_request),
+            "kwargs_graph_binding": actual_binding(graph_object),
+            "kwargs_delta_witness": actual_witness(delta),
+            "affected_result_witness": actual_witness(affected_result),
+        }
+        assert outer_affected_row["kwargs"]["graph"] is graph_object
+        assert affected_request.graph_id == graph_object.graph_id
+        assert affected_request.delta_id == delta.delta_id == case.delta_id
+        assert affected_result.graph_id == graph_object.graph_id
+        assert affected_result.delta_id == case.delta_id
+        selective_evidence = chain["selective_execution"]
+        if expected_selective_count == 0:
+            assert selected_selective_rows == ()
+            assert selective_evidence is None
+        else:
+            assert type(selective_evidence) is list
+            assert len(selective_evidence) == expected_selective_count
+        nested_rows: list[dict[str, object]] = []
+        for selective_row, recorded in zip(
+            selected_selective_rows,
+            selective_evidence or (),
+            strict=True,
+        ):
+            token = selective_row["selective_occurrence_token"]
+            assert type(token) is str
+            nested_matches = tuple(
+                row
+                for row in affected_rows
+                if row["parent_selective_occurrence_token"] == token
+            )
+            assert len(nested_matches) == 1
+            nested_row = nested_matches[0]
+            bundle, validation_report = selective_row["result"]
+            assert type(bundle) is g2e.ContinuousDeltaExecutionBundleV01
+            assert validation_report.status == "PASS"
+            assert nested_row["kwargs"]["request"] is bundle.affected_request
+            assert nested_row["result"] is bundle.affected_result
+            assert nested_row["kwargs"]["graph"] is graph_object
+            assert nested_row["kwargs"]["delta"] is delta
+            assert bundle.dependency_graph is graph_object
+            assert bundle.dependency_edges is dependency_edges
+            assert bundle.delta is delta
+            assert _e5_semantic_projection_bytes(
+                bundle.affected_request
+            ) == _e5_semantic_projection_bytes(affected_request)
+            assert _e5_semantic_projection_bytes(
+                bundle.affected_result
+            ) == _e5_semantic_projection_bytes(affected_result)
+            expected_recorded = {
+                "dependency_graph_id": graph_object.graph_id,
+                "delta_id": delta.delta_id,
+                "affected_request_id": bundle.affected_request.affected_request_id,
+                "affected_set_id": bundle.affected_result.affected_set_id,
+                "recomputation_result_id": (
+                    bundle.recomputation_result.recomputation_result_id
+                ),
+                "runtime_report_id": bundle.runtime_report.report_id,
+                "validation_report_status": validation_report.status,
+                "dependency_graph_binding": actual_binding(
+                    selective_row["kwargs"]["dependency_graph"]
+                ),
+                "dependency_edges_binding": actual_binding(
+                    selective_row["kwargs"]["dependency_edges"]
+                ),
+                "delta_binding": actual_binding(
+                    selective_row["kwargs"]["delta"]
+                ),
+                "bundle_dependency_graph_binding": actual_binding(
+                    bundle.dependency_graph
+                ),
+                "bundle_dependency_edges_binding": actual_binding(
+                    bundle.dependency_edges
+                ),
+                "bundle_delta_binding": actual_binding(bundle.delta),
+                "bundle_affected_request_binding": actual_binding(
+                    bundle.affected_request
+                ),
+                "bundle_affected_result_binding": actual_binding(
+                    bundle.affected_result
+                ),
+                "bundle_binding": actual_binding(bundle),
+                "validation_report_binding": actual_binding(
+                    validation_report
+                ),
+                "return_tuple_binding": actual_binding(
+                    selective_row["result"]
+                ),
+                "external_actual_return_required": True,
+            }
+            if recorded != expected_recorded:
+                raise AssertionError(
+                    "g2e5_c2_external_actual_return_mismatch"
+                )
+            consume(selective_row)
+            consume(nested_row)
+            nested_rows.append(nested_row)
+        consume(edge_row)
+        consume(graph_row)
+        consume(outer_affected_row)
+        case_rows[case.case_id] = {
+            "edge": edge_row,
+            "graph": graph_row,
+            "outer_affected": outer_affected_row,
+            "selective": selected_selective_rows,
+            "nested_affected": tuple(nested_rows),
+        }
+    assert len(consumed) == 48
+    remaining_selective = tuple(
+        row for row in selective_rows if row["call_id"] not in consumed
+    )
+    assert len(remaining_selective) == 1
+    conditional_selective = remaining_selective[0]
+    conditional_bundle, conditional_report = conditional_selective["result"]
+    assert conditional_bundle is None
+    assert conditional_report.status == "FAIL_CLOSED"
+    assert conditional_report.reason_codes == (
+        "g2e_recomputation_no_progress",
+        "g2e_transition_selective_recomputation_blocked",
+    )
+    assert conditional_report.return_to_root_required is True
+    assert conditional_report.root_review_required is False
+    for name in E5_ZERO_COUNTER_FIELDS:
+        if hasattr(conditional_report, name):
+            assert getattr(conditional_report, name) == 0
+    for name in (
+        "authority_created",
+        "permission_created",
+        "action_commit_packet_created",
+        "receipt_created",
+        "final_output_created",
+        "drs_write_created",
+    ):
+        assert getattr(conditional_report, name) is False
+    conditional_graph = conditional_selective["kwargs"]["dependency_graph"]
+    conditional_edges = conditional_selective["kwargs"]["dependency_edges"]
+    conditional_token = conditional_selective[
+        "selective_occurrence_token"
+    ]
+    conditional_nested = tuple(
+        row
+        for row in affected_rows
+        if row["parent_selective_occurrence_token"] == conditional_token
+    )
+    conditional_graph_rows = tuple(
+        row
+        for row in graph_rows
+        if row["result"] is conditional_graph
+        and row["call_id"] not in consumed
+    )
+    conditional_edge_rows = tuple(
+        row
+        for row in edge_rows
+        if row["result"][1] is conditional_edges
+        and row["call_id"] not in consumed
+    )
+    conditional_outer = tuple(
+        row
+        for row in affected_rows
+        if row["parent_selective_occurrence_token"] is None
+        and row["kwargs"]["graph"] is conditional_graph
+        and row["call_id"] not in consumed
+        and row["call_id"] < conditional_selective["call_id"]
+    )
+    assert len(conditional_nested) == 1
+    assert len(conditional_graph_rows) == 1
+    assert len(conditional_edge_rows) == 1
+    assert len(conditional_outer) == 1
+    conditional_graph_row = conditional_graph_rows[0]
+    conditional_edge_row = conditional_edge_rows[0]
+    conditional_outer_row = conditional_outer[0]
+    conditional_nested_row = conditional_nested[0]
+    conditional_delta = conditional_selective["kwargs"]["delta"]
+    case53_case = next(
+        case for case in report.case_results if case.case_id == case53_id
+    )
+    assert len(case53_case.subcase_results) == 1
+    case53_material = json.loads(
+        case53_case.subcase_results[0].evidence_material_json
+    )
+    case53_witness = case53_material.get(
+        "case53_graph_projection_return_witness"
+    )
+    if case53_witness != actual_witness(conditional_edge_row["result"]):
+        raise AssertionError(
+            "g2e5_case53_graph_projection_witness_external_mismatch"
+        )
+    if not any(
+        bound is conditional_edge_row["result"]
+        for bound in evidence_binding_inputs
+    ):
+        raise AssertionError(
+            "g2e5_case53_graph_projection_witness_identity_mismatch"
+        )
+    assert conditional_edge_row["result"][1] is conditional_edges
+    assert (
+        conditional_graph_row["kwargs"]["dependency_edges"]
+        is conditional_edges
+    )
+    assert conditional_graph_row["result"] is conditional_graph
+    assert conditional_outer_row["kwargs"]["graph"] is conditional_graph
+    assert conditional_outer_row["kwargs"]["delta"] is conditional_delta
+    assert conditional_nested_row["kwargs"]["graph"] is conditional_graph
+    assert conditional_nested_row["kwargs"]["delta"] is conditional_delta
+    assert _e5_semantic_projection_bytes(
+        conditional_outer_row["kwargs"]["request"],
+        semantic_projection_memo,
+    ) == _e5_semantic_projection_bytes(
+        conditional_nested_row["kwargs"]["request"],
+        semantic_projection_memo,
+    )
+    assert _e5_semantic_projection_bytes(
+        conditional_outer_row["result"], semantic_projection_memo
+    ) == _e5_semantic_projection_bytes(
+        conditional_nested_row["result"], semantic_projection_memo
+    )
+    conditional_semantic_rows = tuple(
+        row
+        for row in fixture["semantic_calls"]
+        if row["depth"] == 0
+        and row["validator"].endswith(
+            ".run_continuous_delta_runtime_v01"
+        )
+        and row["result"] is conditional_selective["result"]
+    )
+    assert len(conditional_semantic_rows) == 1
+    conditional_semantic = conditional_semantic_rows[0]
+    assert set(conditional_semantic["kwargs"]) == set(
+        conditional_selective["kwargs"]
+    )
+    assert all(
+        conditional_semantic["kwargs"][name]
+        is conditional_selective["kwargs"][name]
+        for name in conditional_semantic["kwargs"]
+    )
+    for row in (
+        conditional_edge_row,
+        conditional_graph_row,
+        conditional_outer_row,
+        conditional_nested_row,
+        conditional_selective,
+    ):
+        consume(row)
+    remaining = tuple(row for row in rows if row["call_id"] not in consumed)
+    assert len(remaining) == 1
+    stale_affected = remaining[0]
+    assert stale_affected["operation"] == "compute_affected_set_v01"
+    assert stale_affected["parent_selective_occurrence_token"] is None
+    stale_semantic_rows = tuple(
+        row
+        for row in fixture["semantic_calls"]
+        if row["depth"] == 0
+        and row["validator"].endswith(".derive_invalidation_report_v01")
+        and row["kwargs"].get("affected_set") is stale_affected["result"]
+        and row["kwargs"].get("delta")
+        is stale_affected["kwargs"]["delta"]
+    )
+    assert len(stale_semantic_rows) == 1
+    consume(stale_affected)
+    assert len(consumed) == 54
+    result = {
+        "case_rows": case_rows,
+        "case53_selective": conditional_selective,
+        "case53_edge_projection": conditional_edge_row,
+        "case53_semantic": conditional_semantic,
+        "stale_baseline_affected": stale_affected,
+        "stale_baseline_semantic": stale_semantic_rows[0],
+        "consumed_call_ids": frozenset(consumed),
+        "negative_setup_rows": negative_setup_rows,
+    }
+    if report is fixture["report"]:
+        fixture["_constructive_actual_return_oracle"] = result
+    fixture["stage_timings"]["independent_external_oracles"].append(
+        time.perf_counter() - oracle_started
+    )
+    _e5_progress_marker("EXTERNAL_ORACLE_RETURNED=C2_C3")
+    return result
+
+
+def _e5_validate_c4_actual_runtime_oracle(
+    report: object,
+    fixture: dict[str, object],
+) -> dict[str, object]:
+    if report is fixture["report"] and "_c4_actual_runtime_oracle" in fixture:
+        return fixture["_c4_actual_runtime_oracle"]
+    _e5_progress_marker("EXTERNAL_ORACLE_STARTED=C4")
+    oracle_started = time.perf_counter()
+    constructive = report.case_results[:10]
+    safe_case = constructive[8]
+    assert safe_case.case_id == "g2e_case:warehouse:safe_sibling:v01"
+    safe_material = json.loads(safe_case.evidence_material_json)["safe_sibling"]
+    public_calls = tuple(fixture["public_calls"])
+    warehouse_calls = tuple(
+        call
+        for call in public_calls
+        if call["domain_id"] == "WAREHOUSE_MAINTENANCE_INFORMATION"
+    )
+    assert len(warehouse_calls) == 1
+    warehouse_baseline = warehouse_calls[0]["bundle"]
+    assert type(warehouse_baseline) is g2d.FractalRuntimeExecutionBundleV02
+    children = tuple(
+        cell
+        for cell in warehouse_baseline.cell_inputs
+        if cell.parent_cell_id is not None
+    )
+    assert len(children) == 2
+    sibling_queue_entry_id = children[0].ordered_initial_queue_entry_ids[0]
+    baseline_matches = tuple(
+        artifact
+        for entry, artifact in zip(
+            warehouse_baseline.queue_entries,
+            warehouse_baseline.queue_artifacts,
+            strict=True,
+        )
+        if entry.queue_entry_id == sibling_queue_entry_id
+    )
+    assert len(baseline_matches) == 1
+    baseline_sibling = baseline_matches[0]
+    c2_oracle = _e5_validate_constructive_actual_return_oracle(
+        report, fixture
+    )
+    safe_rows = c2_oracle["case_rows"][safe_case.case_id]
+    assert len(safe_rows["selective"]) == 1
+    safe_call = safe_rows["selective"][0]
+    safe_bundle, safe_validation = safe_call["result"]
+    assert type(safe_bundle) is g2e.ContinuousDeltaExecutionBundleV01
+    assert type(safe_validation) is g2e.ContinuousDeltaValidationReportV01
+    assert safe_validation.status == "PASS"
+    assert safe_validation.reason_codes == ()
+    assert safe_validation.source_reason_codes == ()
+    assert safe_validation.validated_object_id == safe_bundle.runtime_report.report_id
+    assert safe_validation.return_to_root_required is False
+    assert safe_validation.root_review_required is False
+    assert safe_validation.authority_created is False
+    assert safe_validation.permission_created is False
+    assert safe_validation.action_commit_packet_created is False
+    assert safe_validation.receipt_created is False
+    assert safe_validation.final_output_created is False
+    assert safe_validation.drs_write_created is False
+    assert safe_validation.real_world_effects_count == 0
+    public_bundle_validation = (
+        g2e.validate_continuous_delta_execution_bundle_v01(safe_bundle)
+    )
+    assert type(public_bundle_validation) is g2e.ContinuousDeltaValidationReportV01
+    assert public_bundle_validation.status == "PASS"
+    assert public_bundle_validation.reason_codes == ()
+    assert public_bundle_validation.source_reason_codes == ()
+    assert public_bundle_validation.validated_object_id == (
+        safe_bundle.runtime_report.report_id
+    )
+    assert public_bundle_validation.return_to_root_required is False
+    assert public_bundle_validation.root_review_required is False
+    assert public_bundle_validation.authority_created is False
+    assert public_bundle_validation.permission_created is False
+    assert public_bundle_validation.action_commit_packet_created is False
+    assert public_bundle_validation.receipt_created is False
+    assert public_bundle_validation.final_output_created is False
+    assert public_bundle_validation.drs_write_created is False
+    assert public_bundle_validation.real_world_effects_count == 0
+    recomputed_matches = tuple(
+        artifact
+        for entry, artifact in zip(
+            safe_bundle.recomputed_g2d_execution_bundle.queue_entries,
+            safe_bundle.recomputed_g2d_execution_bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.queue_entry_id == sibling_queue_entry_id
+    )
+    assert len(recomputed_matches) == 1
+    recomputed_sibling = recomputed_matches[0]
+    baseline_plain = kernel_artifact_to_plain_dict_v01(baseline_sibling)
+    recomputed_plain = kernel_artifact_to_plain_dict_v01(recomputed_sibling)
+    baseline_bytes = canonical_json_bytes_v01(baseline_plain)
+    recomputed_bytes = canonical_json_bytes_v01(recomputed_plain)
+    baseline_payload_bytes = canonical_json_bytes_v01(baseline_plain["payload"])
+    recomputed_payload_bytes = canonical_json_bytes_v01(
+        recomputed_plain["payload"]
+    )
+    baseline_hash = hashlib.sha256(baseline_bytes).hexdigest()
+    recomputed_hash = hashlib.sha256(recomputed_bytes).hexdigest()
+    baseline_payload_hash = hashlib.sha256(baseline_payload_bytes).hexdigest()
+    recomputed_payload_hash = hashlib.sha256(
+        recomputed_payload_bytes
+    ).hexdigest()
+    projection_matches = []
+    for artifact in safe_bundle.source_context.baseline_source_artifacts:
+        plain = kernel_artifact_to_plain_dict_v01(artifact)
+        payload = plain["payload"]
+        if (
+            artifact.parent_refs == (baseline_sibling.artifact_id,)
+            and type(payload) is dict
+            and set(payload)
+            == {
+                "projection_profile_id",
+                "projected_runtime_artifact",
+                "projected_runtime_artifact_sha256",
+            }
+            and payload["projection_profile_id"]
+            == "g2e_baseline_runtime_artifact_projection_v01"
+            and payload["projected_runtime_artifact"] == baseline_plain
+            and payload["projected_runtime_artifact_sha256"] == baseline_hash
+        ):
+            projection_matches.append((artifact, plain))
+    assert len(projection_matches) == 1
+    sibling_projection, projection_plain = projection_matches[0]
+    projection_bytes = canonical_json_bytes_v01(projection_plain)
+    projection_payload_bytes = canonical_json_bytes_v01(
+        projection_plain["payload"]
+    )
+    runtime_id = baseline_sibling.artifact_id
+    projection_id = sibling_projection.artifact_id
+    assert runtime_id == recomputed_sibling.artifact_id
+    assert baseline_bytes == recomputed_bytes
+    assert baseline_payload_bytes == recomputed_payload_bytes
+    assert projection_id == "artifact:g2e5:runtime-projection:" + baseline_hash
+    assert projection_id != runtime_id
+    assert not runtime_id.startswith("artifact:g2e5:runtime-projection:")
+    invalidation_ids = tuple(
+        record.artifact_id for record in safe_bundle.invalidation_records
+    )
+    assert safe_case.ordered_invalidated_ids == invalidation_ids
+    for artifact_id in (runtime_id, projection_id):
+        assert artifact_id not in safe_case.ordered_changed_ids
+        assert artifact_id not in safe_case.ordered_directly_affected_ids
+        assert artifact_id not in safe_case.ordered_transitively_affected_ids
+        assert artifact_id not in safe_bundle.affected_result.ordered_affected_ids
+        assert artifact_id not in invalidation_ids
+        assert artifact_id not in safe_case.ordered_invalidated_ids
+        assert artifact_id not in (
+            safe_bundle.recomputation_result.ordered_recomputed_artifact_ids
+        )
+    protected_sibling_ids = {runtime_id, projection_id}
+    touching_bindings = tuple(
+        binding
+        for binding in safe_bundle.recomputed_bindings
+        if binding.prior_artifact_id in protected_sibling_ids
+        or binding.new_artifact_id in protected_sibling_ids
+    )
+    assert touching_bindings == ()
+    binding_rows = [
+        {
+            "recomputed_binding_id": binding.recomputed_binding_id,
+            "prior_artifact_id": binding.prior_artifact_id,
+            "new_artifact_id": binding.new_artifact_id,
+        }
+        for binding in safe_bundle.recomputed_bindings
+    ]
+    binding_ids = tuple(row["recomputed_binding_id"] for row in binding_rows)
+    assert binding_ids == (
+        safe_bundle.recomputation_result.ordered_recomputed_binding_ids
+    )
+    assert safe_case.ordered_recomputed_ids == (
+        safe_bundle.recomputation_result.ordered_recomputed_artifact_ids
+    )
+    proof = safe_bundle.preservation_proof
+    proof_rows = tuple(
+        index
+        for index, artifact_id in enumerate(
+            proof.ordered_preserved_artifact_ids
+        )
+        if artifact_id == runtime_id
+    )
+    assert len(proof_rows) == 1
+    proof_index = proof_rows[0]
+    expected_proof_rows = [
+        {
+            "row_index": proof_index,
+            "preserved_artifact_id": runtime_id,
+            "before_identity_id": proof.ordered_before_identity_ids[proof_index],
+            "after_identity_id": proof.ordered_after_identity_ids[proof_index],
+            "before_payload_sha256": (
+                proof.ordered_before_payload_sha256[proof_index]
+            ),
+            "after_payload_sha256": (
+                proof.ordered_after_payload_sha256[proof_index]
+            ),
+            "before_artifact_sha256": (
+                proof.ordered_before_artifact_sha256[proof_index]
+            ),
+            "after_artifact_sha256": (
+                proof.ordered_after_artifact_sha256[proof_index]
+            ),
+        }
+    ]
+    assert expected_proof_rows[0] == {
+        "row_index": proof_index,
+        "preserved_artifact_id": runtime_id,
+        "before_identity_id": runtime_id,
+        "after_identity_id": runtime_id,
+        "before_payload_sha256": baseline_payload_hash,
+        "after_payload_sha256": recomputed_payload_hash,
+        "before_artifact_sha256": baseline_hash,
+        "after_artifact_sha256": recomputed_hash,
+    }
+    expected_safe_material = {
+        "proof_boundary": (
+            "standalone_canonical_integrity_plus_external_actual_runtime_oracle"
+        ),
+        "artifact_id": runtime_id,
+        "artifact_sha256": baseline_hash,
+        "payload_sha256": baseline_payload_hash,
+        "canonical_artifact_bytes_sha256": baseline_hash,
+        "canonical_artifact_byte_length": len(baseline_bytes),
+        "canonical_payload_byte_length": len(baseline_payload_bytes),
+        "queue_entry_id": sibling_queue_entry_id,
+        "runtime_artifact_id": runtime_id,
+        "projection_artifact_plain": projection_plain,
+        "baseline_runtime_artifact_plain": baseline_plain,
+        "recomputed_runtime_artifact_plain": recomputed_plain,
+        "baseline_queue_artifact_row": {
+            "queue_entry_id": sibling_queue_entry_id,
+            "artifact_id": runtime_id,
+            "artifact_sha256": baseline_hash,
+        },
+        "recomputed_queue_artifact_row": {
+            "queue_entry_id": sibling_queue_entry_id,
+            "artifact_id": runtime_id,
+            "artifact_sha256": recomputed_hash,
+        },
+        "preservation_proof_rows": expected_proof_rows,
+        "recomputed_binding_rows": binding_rows,
+        "projection_artifact_id": projection_id,
+        "projection_artifact_sha256": hashlib.sha256(
+            projection_bytes
+        ).hexdigest(),
+        "projection_artifact_byte_length": len(projection_bytes),
+        "projection_payload_sha256": hashlib.sha256(
+            projection_payload_bytes
+        ).hexdigest(),
+        "projection_payload_byte_length": len(projection_payload_bytes),
+        "projection_parent_runtime_artifact_id": runtime_id,
+        "projection_embedded_runtime_artifact_sha256": baseline_hash,
+        "projection_embedded_runtime_artifact_byte_length": len(baseline_bytes),
+        "baseline_runtime_payload_sha256": baseline_payload_hash,
+        "baseline_runtime_payload_byte_length": len(baseline_payload_bytes),
+        "recomputed_runtime_payload_sha256": recomputed_payload_hash,
+        "recomputed_runtime_payload_byte_length": len(recomputed_payload_bytes),
+        "baseline_runtime_artifact_sha256": baseline_hash,
+        "baseline_runtime_artifact_byte_length": len(baseline_bytes),
+        "recomputed_runtime_artifact_sha256": recomputed_hash,
+        "recomputed_runtime_artifact_byte_length": len(recomputed_bytes),
+        "invalidation_record_artifact_ids": list(invalidation_ids),
+        "ordered_recomputed_binding_ids": list(binding_ids),
+        "result_ordered_recomputed_binding_ids": list(
+            safe_bundle.recomputation_result.ordered_recomputed_binding_ids
+        ),
+        "result_ordered_recomputed_artifact_ids": list(
+            safe_bundle.recomputation_result.ordered_recomputed_artifact_ids
+        ),
+        "sibling_touching_recomputed_binding_ids": [],
+        "sibling_touching_prior_artifact_ids": [],
+        "sibling_touching_new_artifact_ids": [],
+        "preservation_row_index": proof_index,
+        "preservation_before_identity_id": runtime_id,
+        "preservation_after_identity_id": runtime_id,
+        "preservation_before_payload_sha256": baseline_payload_hash,
+        "preservation_after_payload_sha256": recomputed_payload_hash,
+        "preservation_before_artifact_sha256": baseline_hash,
+        "preservation_after_artifact_sha256": recomputed_hash,
+    }
+    if set(safe_material) != set(expected_safe_material):
+        raise AssertionError("g2e5_c4_external_actual_runtime_key_mismatch")
+    if safe_material != expected_safe_material:
+        raise AssertionError("g2e5_c4_external_actual_runtime_mismatch")
+    for carrier in (
+        safe_bundle.recomputation_result,
+        safe_bundle.runtime_report,
+    ):
+        assert all(getattr(carrier, name) == 0 for name in E5_ZERO_COUNTER_FIELDS)
+    assert type(safe_bundle.runtime_trace) is g2e.ContinuousDeltaRuntimeTraceV01
+    assert tuple(
+        name
+        for name in E5_ZERO_COUNTER_FIELDS
+        if hasattr(safe_bundle.runtime_trace, name)
+    ) == E5_RUNTIME_TRACE_ZERO_COUNTER_FIELDS
+    assert all(
+        getattr(safe_bundle.runtime_trace, name) == 0
+        for name in E5_RUNTIME_TRACE_ZERO_COUNTER_FIELDS
+    )
+    for root_result in (
+        safe_bundle.plan_root_decision_result,
+        safe_bundle.final_root_decision_result,
+    ):
+        assert root_result.permission_created is False
+        assert root_result.final_output_created is False
+        assert root_result.effect_requested is False
+    result = {
+        "safe_case": safe_case,
+        "safe_material": safe_material,
+        "expected_safe_material": expected_safe_material,
+        "baseline_sibling": baseline_sibling,
+        "recomputed_sibling": recomputed_sibling,
+        "projection": sibling_projection,
+        "bundle": safe_bundle,
+        "validation_report": safe_validation,
+    }
+    if report is fixture["report"]:
+        fixture["_c4_actual_runtime_oracle"] = result
+    fixture["stage_timings"]["independent_external_oracles"].append(
+        time.perf_counter() - oracle_started
+    )
+    _e5_progress_marker("EXTERNAL_ORACLE_RETURNED=C4")
+    return result
+
+
+def test_e5_public_runner_surface_import_boundary_and_protected_bytes_v01(
+    e5_report_fixture: dict[str, object],
+) -> None:
+    import subprocess
+
+    runner = e5_report_fixture["runner"]
+    assert isinstance(runner, types.ModuleType)
+    expected_public_names = (
+        "ContinuousDeltaRuntimeG2ESubcaseResultV01",
+        "ContinuousDeltaRuntimeG2ECaseResultV01",
+        "ContinuousDeltaRuntimeG2EReportV01",
+        "collect_continuous_delta_runtime_g2_e_v01",
+        "validate_continuous_delta_runtime_g2_e_report_v01",
+        "continuous_delta_runtime_g2_e_report_to_plain_data_v01",
+        "render_continuous_delta_runtime_g2_e_v01",
+        "main",
+    )
+    assert runner.__all__ == expected_public_names
+    for name in expected_public_names:
+        assert name in vars(runner)
+    assert tuple(
+        field.name
+        for field in fields(runner.ContinuousDeltaRuntimeG2ESubcaseResultV01)
+    ) == (
+        "subcase_id",
+        "mutated_axis",
+        "validation_target",
+        "expected_reason_codes",
+        "observed_reason_codes",
+        "validation_report_id",
+        "evidence_refs",
+        "evidence_material_json",
+        "evidence_sha256",
+        "final_status",
+    )
+    assert len(fields(runner.ContinuousDeltaRuntimeG2ECaseResultV01)) == 40
+    assert len(fields(runner.ContinuousDeltaRuntimeG2EReportV01)) == 28
+    assert tuple(inspect.signature(
+        runner.collect_continuous_delta_runtime_g2_e_v01
+    ).parameters) == ()
+    assert tuple(inspect.signature(
+        runner.validate_continuous_delta_runtime_g2_e_report_v01
+    ).parameters) == ("value",)
+    source = E5_RUNNER_PATH.read_text(encoding="ascii")
+    tree = ast.parse(source)
+    imports, resolved_call_targets = _e5_static_import_and_call_targets(
+        source
+    )
+    assert not any(name == "tests" or name.startswith("tests.") for name in imports)
+    assert not any(_e5_forbidden_external_target(name) for name in imports)
+    assert not any(
+        _e5_forbidden_external_target(name)
+        for name in resolved_call_targets
+    )
+    unused_imports, unused_calls = _e5_static_import_and_call_targets(
+        "from hedgehog import providers\n"
+    )
+    assert any(_e5_forbidden_external_target(name) for name in unused_imports)
+    assert unused_calls == ()
+    aliased_imports, aliased_calls = _e5_static_import_and_call_targets(
+        "from hedgehog import providers as p\np.send()\n"
+    )
+    assert any(_e5_forbidden_external_target(name) for name in aliased_imports)
+    assert any(_e5_forbidden_external_target(name) for name in aliased_calls)
+    client_imports, client_calls = _e5_static_import_and_call_targets(
+        "from hedgehog.providers import client as c\nc.send()\n"
+    )
+    assert any(_e5_forbidden_external_target(name) for name in client_imports)
+    assert any(_e5_forbidden_external_target(name) for name in client_calls)
+    safe_imports, safe_calls = _e5_static_import_and_call_targets(
+        "from hedgehog import providersafe\nprovidersafe.send()\n"
+    )
+    assert not any(_e5_forbidden_external_target(name) for name in safe_imports)
+    assert not any(_e5_forbidden_external_target(name) for name in safe_calls)
+    assert not any(
+        isinstance(node, ast.Subscript)
+        and isinstance(node.value, ast.Attribute)
+        and node.value.attr == "reason_codes"
+        and isinstance(node.slice, ast.Constant)
+        and node.slice.value == 0
+        for node in ast.walk(tree)
+    )
+    assert "_d4_run_runtime_v02" not in source
+    assert "collect_fractal_runtime_g2_d_v02" not in source
+    assert "run_two_domain_airline_all_real_program_v01" not in source
+    assert "run_two_domain_supplier_water_filter_program_v01" not in source
+    assert "def _route_binding_payload" not in source
+    assert source.count("g2d.run_fractal_runtime_v02") == 1
+    assert "HEDGEHOG_G2E5_COMPOSITIONAL_BINDING_V02" in source
+    assert len(E5_NEGATIVE_OPERATION_BY_KEY) == 296
+    assert {
+        row[3] for row in E5_NEGATIVE_OPERATION_LEDGER
+    } <= set(E5_NEGATIVE_MONITORED_TARGET_CENSUS)
+    assert {
+        row[2] for row in E5_NEGATIVE_SETUP_LEDGER
+    } <= set(E5_NEGATIVE_MONITORED_TARGET_CENSUS)
+    negative_targets = _e5_transitive_negative_public_targets(source)
+    assert len(negative_targets) == 23
+    assert set(negative_targets) == set(E5_NEGATIVE_MONITORED_TARGET_CENSUS)
+    valid_receipt = (
+        _E5_RUNTIME_RECEIPT_PREFIX
+        + "COLLECTOR_STARTED=1 MONOTONIC_SECONDS=1.000000 "
+        + "UTC=2026-08-26T12:34:56.000000Z"
+    )
+    hostile_log = "\n".join(
+        (
+            "tests/example.py::test_node " + valid_receipt,
+            valid_receipt,
+            "source_text = " + repr(valid_receipt),
+            "Traceback context: " + valid_receipt,
+            _E5_RUNTIME_RECEIPT_PREFIX + "COLLECTOR_STARTED=1",
+            valid_receipt + " SUFFIX",
+        )
+    )
+    assert _e5_runtime_receipt_markers(hostile_log) == (
+        "COLLECTOR_STARTED=1",
+    )
+    _e5_require_exact_runtime_receipts(
+        hostile_log, ("COLLECTOR_STARTED=1",)
+    )
+    with pytest.raises(
+        AssertionError, match="g2e5_grouped_receipt_count_invalid"
+    ):
+        _e5_require_exact_runtime_receipts(
+            valid_receipt + "\n" + valid_receipt,
+            ("COLLECTOR_STARTED=1",),
+        )
+    for exact_return_name in (
+        "report_validation_result",
+        "certificate_validation_result",
+        "invalidation_validation_result",
+        "registry_validation_result",
+        "inspection_validation_result",
+        "candidate_validation_result",
+        "contextual_validation_result",
+        "route_result",
+        "review_result",
+        "record_validation_result",
+        "graph_projection_result",
+        "invalidation_result",
+        "selective_result",
+        "baseline_result",
+    ):
+        assert exact_return_name + " =" in source
+    retention_roots = (
+        *e5_report_fixture["private_execution_materials"],
+        *e5_report_fixture["public_calls"],
+        *e5_report_fixture["constructive_calls"],
+        *e5_report_fixture["semantic_calls"],
+    )
+    exact_tuple_calls = e5_report_fixture["exact_tuple_return_calls"]
+    assert exact_tuple_calls
+    assert all(call["caller_module"] == runner.__name__ for call in exact_tuple_calls)
+    unretained_exact_tuple_calls = tuple(
+        call
+        for call in exact_tuple_calls
+        if not any(
+            _e5_contains_exact_object(root, call["result"])
+            for root in retention_roots
+        )
+    )
+    assert unretained_exact_tuple_calls == ()
+    execution_materials = tuple(
+        row["result"]
+        for row in e5_report_fixture["private_execution_materials"]
+        if row["helper"] == "_execute_case_inputs"
+    )
+    retained_invalidation_results = tuple(
+        material["invalidation_result"]
+        for material in execution_materials
+        if material["invalidation_result"] is not None
+    )
+    assert retained_invalidation_results
+    assert all(
+        sum(
+            call["validator"].endswith(".derive_invalidation_report_v01")
+            and call["result"] is exact_return
+            for call in e5_report_fixture["semantic_calls"]
+        )
+        == 1
+        for exact_return in retained_invalidation_results
+    )
+    assert "_public_rejection_subcase" not in source
+    assert "build_continuous_delta_validation_report_v01" not in source
+    assert len(
+        tuple(
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr
+            == "validate_continuous_delta_validation_report_v01"
+        )
+    ) == 3
+    runtime_tree = ast.parse(MODULE_PATH.read_text(encoding="ascii"))
+    runtime_public_functions = tuple(
+        node.name
+        for node in runtime_tree.body
+        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
+    )
+    assert len(runtime_public_functions) == 89
+    assert len(g2e.__all__) == 109
+    assert len(tuple(name for name in dir(kernel) if name in (
+        *(item.__name__ for item in g2e.CONTINUOUS_DELTA_TYPES_V01),
+        *runtime_public_functions,
+        "build_continuous_delta_transition_registry_profile_v01",
+        "validate_continuous_delta_transition_registry_profile_v01",
+        "continuous_delta_transition_registry_profile_to_plain_dict_v01",
+        "validate_continuous_delta_transition_decision_v01",
+        "continuous_delta_transition_decision_to_plain_dict_v01",
+        "rebuild_continuous_delta_transition_decision_identity_v01",
+    ))) == 115
+    protected = {
+        MODULE_PATH: "97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a",
+        SCHEMA_PATH: "6d2d2c8756ebf261724742ad14294094ee9ce04a28c0498b264164ec585d11f2",
+        ROOT / "hedgehog/kernel/fractal_runtime_v02.py": "917caabd0c3e2033cfc57be71771abf9a87558e945b3d4f6713c48cd8796aa01",
+        ROOT / "hedgehog/kernel/__init__.py": "99b2847d4dac09827b0a56cd820302052139654314ff02789363480cc98df4e0",
+        PREFLIGHT_PATH: "83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b",
+        ADDENDUM_PATH: "2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8",
+        ROOT / "release/current_status_overlay_v01.json": "0ff6fe00b0cb7ce84550f0f76706c5cef40208810729ffc066f1a60e31378ad7",
+    }
+    for path, expected_sha256 in protected.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == expected_sha256
+    head_test = subprocess.run(
+        ("git", "show", "HEAD:tests/test_continuous_delta_runtime_g2_e_v01.py"),
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    assert hashlib.sha256(head_test).hexdigest() == (
+        "438fafc7647f0c2b453f763f9425e2565792eaa7321b9726969e6bbf39c386d3"
+    )
+    status = subprocess.run(
+        ("git", "status", "--short", "--untracked-files=all"),
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert set(status) == {
+        " M hedgehog/kernel/continuous_delta_runtime_v01.py",
+        "?? demo/run_continuous_delta_runtime_g2_e_v01.py",
+        " M tests/test_continuous_delta_runtime_g2_e_v01.py",
+    }
+    staged = subprocess.run(
+        ("git", "diff", "--cached", "--name-only"),
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert staged == []
+    _e5_progress_marker("E5_TEST_COMPLETED=public_surface")
+
+
+def test_e5_two_domain_baselines_constructive_geometry_and_call_accounting_v01(
+    e5_report_fixture: dict[str, object],
+) -> None:
+    report = e5_report_fixture["report"]
+    public_calls = e5_report_fixture["public_calls"]
+    bundle_calls = e5_report_fixture["selective_bundle_calls"]
+    semantic_projection_memo: dict[
+        int, tuple[object, dict[str, object]]
+    ] = {}
+    assert report.domain_order == (
+        "TRAVEL_POLICY_INFORMATION",
+        "WAREHOUSE_MAINTENANCE_INFORMATION",
+    )
+    assert tuple(call["domain_id"] for call in public_calls) == report.domain_order
+    assert len(public_calls) == report.explicit_public_g2d_baseline_call_count == 2
+    assert len({call["return_tuple_sha256"] for call in public_calls}) == 2
+    assert report.accepted_baseline_bundle_count == 2
+    assert all(
+        type(call["bundle"]) is g2d.FractalRuntimeExecutionBundleV02
+        for call in public_calls
+    )
+    assert all(call["report"].status == "PASS" for call in public_calls)
+    evidence_binding_inputs = e5_report_fixture["evidence_binding_inputs"]
+    assert all(
+        any(bound is call["result"] for bound in evidence_binding_inputs)
+        for call in public_calls
+    )
+    constructive = report.case_results[:10]
+    assert tuple(case.case_id for case in constructive) == E5_CONSTRUCTIVE_ORDER
+    assert tuple(case.domain_id for case in constructive[:5]) == (
+        "TRAVEL_POLICY_INFORMATION",
+    ) * 5
+    assert tuple(case.domain_id for case in constructive[5:]) == (
+        "WAREHOUSE_MAINTENANCE_INFORMATION",
+    ) * 5
+    assert len({case.baseline_runtime_report_id for case in constructive}) == 2
+    assert all(case.case_class == "CONSTRUCTIVE" for case in constructive)
+    assert all(case.final_status == "PASS" for case in constructive)
+    expected_outcomes = (
+        "SELECTIVE_RECOMPUTATION_PASS",
+        "SELECTIVE_RECOMPUTATION_PASS",
+        "ROUTE_REVALIDATION_REQUIRED",
+        "CONTEXT_ONLY_PRESERVED",
+        "SELECTIVE_RECOMPUTATION_PASS",
+        "SELECTIVE_RECOMPUTATION_PASS",
+        "SELECTIVE_RECOMPUTATION_PASS",
+        "ROUTE_REVALIDATION_REQUIRED",
+        "SELECTIVE_RECOMPUTATION_PASS",
+        "SELECTIVE_RECOMPUTATION_PASS",
+    )
+    assert tuple(case.expected_outcome for case in constructive) == expected_outcomes
+    assert tuple(case.observed_outcome for case in constructive) == expected_outcomes
+    oracle = _e5_validate_constructive_actual_return_oracle(
+        report, e5_report_fixture
+    )
+    case_rows = oracle["case_rows"]
+    assert len(case_rows) == 10
+    assert len(oracle["consumed_call_ids"]) == 54
+    for case in constructive:
+        material = json.loads(case.evidence_material_json)
+        baseline_call = next(
+            call
+            for call in public_calls
+            if call["bundle"].runtime_report.report_id
+            == case.baseline_runtime_report_id
+        )
+        baseline_evidence = material["baseline_public_return"]
+        assert baseline_evidence == {
+            "runtime_report_id": case.baseline_runtime_report_id,
+            "bundle": {
+                "sha256": baseline_call["bundle_sha256"],
+                "byte_length": baseline_call["bundle_byte_length"],
+            },
+            "validation_report": {
+                "sha256": baseline_call["report_sha256"],
+                "byte_length": baseline_call["report_byte_length"],
+            },
+            "return_tuple": {
+                "sha256": baseline_call["return_tuple_sha256"],
+                "byte_length": baseline_call["return_tuple_byte_length"],
+            },
+        }
+        physical = case_rows[case.case_id]
+        graph = physical["graph"]["result"]
+        affected = physical["outer_affected"]["result"]
+        edges = physical["edge"]["result"][1]
+        carriers = material["carrier_material"]
+        partitions = material["partitions"]
+        assert type(graph) is g2e.DependencyGraphIndexV01
+        assert all(type(edge) is g2e.DeltaDependencyEdgeV01 for edge in edges)
+        assert carriers["dependency_graph_id"] == graph.graph_id
+        assert tuple(carriers["dependency_edge_ids"]) == tuple(
+            edge.edge_id for edge in edges
+        )
+        assert carriers["affected_set_id"] == affected.affected_set_id
+        assert tuple(partitions["changed"]) == case.ordered_changed_ids
+        assert tuple(partitions["direct"]) == case.ordered_directly_affected_ids
+        assert tuple(partitions["transitive"]) == (
+            case.ordered_transitively_affected_ids
+        )
+        assert tuple(partitions["affected"]) == affected.ordered_affected_ids
+        assert material["observed_outcome"] == case.observed_outcome
+        if case.continuous_delta_runtime_report_id is None:
+            assert physical["selective"] == ()
+            assert carriers["selective_bundle_type"] is None
+            assert case.ordered_root_review_ids == ()
+        else:
+            first_bundle = physical["selective"][0]["result"][0]
+            assert type(first_bundle) is g2e.ContinuousDeltaExecutionBundleV01
+            assert first_bundle.recomputation_result.recomputation_result_id == (
+                case.recomputation_result_id
+            )
+            assert first_bundle.runtime_report.report_id == (
+                case.continuous_delta_runtime_report_id
+            )
+            assert tuple(carriers["root_review_ids"]) == (
+                first_bundle.plan_root_decision_result.decision_id,
+                first_bundle.final_root_decision_result.decision_id,
+            )
+    for repeat_index, source_index in ((4, 0), (9, 5)):
+        repeat_case = constructive[repeat_index]
+        source_case = constructive[source_index]
+        repeat_rows = case_rows[repeat_case.case_id]
+        source_rows = case_rows[source_case.case_id]
+        calls = repeat_rows["selective"]
+        assert len(calls) == 2
+        assert repeat_rows["graph"]["result"] is not source_rows["graph"]["result"]
+        assert _e5_semantic_projection_bytes(
+            repeat_rows["graph"]["result"], semantic_projection_memo
+        ) == _e5_semantic_projection_bytes(
+            source_rows["graph"]["result"], semantic_projection_memo
+        )
+        first_bundle, first_report = calls[0]["result"]
+        second_bundle, second_report = calls[1]["result"]
+        assert first_bundle is not second_bundle
+        assert first_report is not second_report
+        first_bundle_bytes = _e5_semantic_projection_bytes(
+            first_bundle, semantic_projection_memo
+        )
+        second_bundle_bytes = _e5_semantic_projection_bytes(
+            second_bundle, semantic_projection_memo
+        )
+        first_report_bytes = _e5_semantic_projection_bytes(
+            first_report, semantic_projection_memo
+        )
+        second_report_bytes = _e5_semantic_projection_bytes(
+            second_report, semantic_projection_memo
+        )
+        first_return_bytes = _e5_semantic_projection_bytes(
+            calls[0]["result"], semantic_projection_memo
+        )
+        second_return_bytes = _e5_semantic_projection_bytes(
+            calls[1]["result"], semantic_projection_memo
+        )
+        assert first_bundle_bytes == second_bundle_bytes
+        assert first_report_bytes == second_report_bytes
+        assert first_return_bytes == second_return_bytes
+        repeat = json.loads(repeat_case.evidence_material_json)[
+            "repeat_execution"
+        ]
+        assert repeat["independent_execution_count"] == 2
+        assert repeat["bundle_same_object"] is False
+        assert repeat["report_same_object"] is False
+        assert repeat["bundle_bytes_equal"] is True
+        assert repeat["report_bytes_equal"] is True
+        assert repeat["return_tuple_bytes_equal"] is True
+        assert repeat["first_bundle_sha256"] == hashlib.sha256(
+            first_bundle_bytes
+        ).hexdigest()
+        assert repeat["second_bundle_sha256"] == hashlib.sha256(
+            second_bundle_bytes
+        ).hexdigest()
+        assert repeat["first_report_sha256"] == hashlib.sha256(
+            first_report_bytes
+        ).hexdigest()
+        assert repeat["second_report_sha256"] == hashlib.sha256(
+            second_report_bytes
+        ).hexdigest()
+        assert repeat["first_return_tuple_sha256"] == hashlib.sha256(
+            first_return_bytes
+        ).hexdigest()
+        assert repeat["second_return_tuple_sha256"] == hashlib.sha256(
+            second_return_bytes
+        ).hexdigest()
+        assert repeat["bundle_byte_length"] == len(first_bundle_bytes)
+        assert repeat["bundle_byte_length"] == len(second_bundle_bytes)
+        assert repeat["report_byte_length"] == len(first_report_bytes)
+        assert repeat["report_byte_length"] == len(second_report_bytes)
+        assert repeat["return_tuple_byte_length"] == len(first_return_bytes)
+        assert repeat["return_tuple_byte_length"] == len(second_return_bytes)
+    safe_case = constructive[8]
+    c4_oracle = _e5_validate_c4_actual_runtime_oracle(
+        report, e5_report_fixture
+    )
+    safe_material = json.loads(safe_case.evidence_material_json)["safe_sibling"]
+    assert safe_material == c4_oracle["expected_safe_material"]
+    warehouse_baseline_call = next(
+        call
+        for call in public_calls
+        if call["domain_id"] == "WAREHOUSE_MAINTENANCE_INFORMATION"
+    )
+    warehouse_baseline = warehouse_baseline_call["bundle"]
+    children = tuple(
+        cell
+        for cell in warehouse_baseline.cell_inputs
+        if cell.parent_cell_id is not None
+    )
+    assert len(children) == 2
+    sibling_queue_entry_id = children[0].ordered_initial_queue_entry_ids[0]
+    baseline_sibling = next(
+        artifact
+        for entry, artifact in zip(
+            warehouse_baseline.queue_entries,
+            warehouse_baseline.queue_artifacts,
+            strict=True,
+        )
+        if entry.queue_entry_id == sibling_queue_entry_id
+    )
+    safe_rows = case_rows[safe_case.case_id]
+    assert len(safe_rows["selective"]) == 1
+    safe_call = safe_rows["selective"][0]
+    safe_bundle, safe_validation = safe_call["result"]
+    assert type(safe_bundle) is g2e.ContinuousDeltaExecutionBundleV01
+    assert safe_validation.status == "PASS"
+    safe_bundle_validation = (
+        g2e.validate_continuous_delta_execution_bundle_v01(safe_bundle)
+    )
+    assert type(safe_bundle_validation) is g2e.ContinuousDeltaValidationReportV01
+    assert safe_bundle_validation.status == "PASS"
+    assert safe_bundle_validation.reason_codes == ()
+    assert safe_bundle_validation.source_reason_codes == ()
+    assert safe_bundle_validation.validated_object_id == (
+        safe_bundle.runtime_report.report_id
+    )
+    assert safe_bundle_validation.return_to_root_required is False
+    assert safe_bundle_validation.root_review_required is False
+    assert safe_bundle_validation.authority_created is False
+    assert safe_bundle_validation.permission_created is False
+    assert safe_bundle_validation.action_commit_packet_created is False
+    assert safe_bundle_validation.receipt_created is False
+    assert safe_bundle_validation.final_output_created is False
+    assert safe_bundle_validation.drs_write_created is False
+    assert safe_bundle_validation.real_world_effects_count == 0
+    recomputed_sibling = next(
+        artifact
+        for entry, artifact in zip(
+            safe_bundle.recomputed_g2d_execution_bundle.queue_entries,
+            safe_bundle.recomputed_g2d_execution_bundle.queue_artifacts,
+            strict=True,
+        )
+        if entry.queue_entry_id == sibling_queue_entry_id
+    )
+    baseline_plain = kernel_artifact_to_plain_dict_v01(baseline_sibling)
+    recomputed_plain = kernel_artifact_to_plain_dict_v01(recomputed_sibling)
+    baseline_bytes = canonical_json_bytes_v01(baseline_plain)
+    recomputed_bytes = canonical_json_bytes_v01(recomputed_plain)
+    baseline_payload_bytes = canonical_json_bytes_v01(baseline_plain["payload"])
+    recomputed_payload_bytes = canonical_json_bytes_v01(
+        recomputed_plain["payload"]
+    )
+    projection_candidates = []
+    for artifact in safe_bundle.source_context.baseline_source_artifacts:
+        plain = kernel_artifact_to_plain_dict_v01(artifact)
+        payload = plain["payload"]
+        if (
+            artifact.parent_refs == (baseline_sibling.artifact_id,)
+            and type(payload) is dict
+            and payload.get("projection_profile_id")
+            == "g2e_baseline_runtime_artifact_projection_v01"
+            and payload.get("projected_runtime_artifact") == baseline_plain
+        ):
+            projection_candidates.append((artifact, plain))
+    assert len(projection_candidates) == 1
+    sibling_projection, projection_plain = projection_candidates[0]
+    projection_bytes = canonical_json_bytes_v01(projection_plain)
+    projection_payload_bytes = canonical_json_bytes_v01(
+        projection_plain["payload"]
+    )
+    baseline_hash = hashlib.sha256(baseline_bytes).hexdigest()
+    recomputed_hash = hashlib.sha256(recomputed_bytes).hexdigest()
+    baseline_payload_hash = hashlib.sha256(baseline_payload_bytes).hexdigest()
+    recomputed_payload_hash = hashlib.sha256(
+        recomputed_payload_bytes
+    ).hexdigest()
+    assert baseline_sibling.artifact_id == recomputed_sibling.artifact_id
+    assert baseline_bytes == recomputed_bytes
+    assert baseline_payload_bytes == recomputed_payload_bytes
+    runtime_id = baseline_sibling.artifact_id
+    projection_id = sibling_projection.artifact_id
+    assert projection_id != runtime_id
+    assert projection_id == "artifact:g2e5:runtime-projection:" + baseline_hash
+    assert not runtime_id.startswith("artifact:g2e5:runtime-projection:")
+    invalidated_ids = tuple(
+        record.artifact_id for record in safe_bundle.invalidation_records
+    )
+    assert safe_case.ordered_invalidated_ids == invalidated_ids
+    for artifact_id in (runtime_id, projection_id):
+        assert artifact_id not in safe_case.ordered_changed_ids
+        assert artifact_id not in safe_case.ordered_directly_affected_ids
+        assert artifact_id not in safe_case.ordered_transitively_affected_ids
+        assert artifact_id not in safe_bundle.affected_result.ordered_affected_ids
+        assert artifact_id not in invalidated_ids
+        assert artifact_id not in safe_case.ordered_invalidated_ids
+        assert artifact_id not in (
+            safe_bundle.recomputation_result.ordered_recomputed_artifact_ids
+        )
+    touching_bindings = tuple(
+        binding
+        for binding in safe_bundle.recomputed_bindings
+        if runtime_id in (binding.prior_artifact_id, binding.new_artifact_id)
+        or projection_id
+        in (binding.prior_artifact_id, binding.new_artifact_id)
+    )
+    assert touching_bindings == ()
+    actual_binding_ids = tuple(
+        binding.recomputed_binding_id
+        for binding in safe_bundle.recomputed_bindings
+    )
+    assert actual_binding_ids == (
+        safe_bundle.recomputation_result.ordered_recomputed_binding_ids
+    )
+    assert safe_case.ordered_recomputed_ids == (
+        safe_bundle.recomputation_result.ordered_recomputed_artifact_ids
+    )
+    proof = safe_bundle.preservation_proof
+    matching_rows = tuple(
+        index
+        for index, artifact_id in enumerate(
+            proof.ordered_preserved_artifact_ids
+        )
+        if artifact_id == runtime_id
+    )
+    assert len(matching_rows) == 1
+    proof_index = matching_rows[0]
+    assert proof.ordered_before_identity_ids[proof_index] == runtime_id
+    assert proof.ordered_after_identity_ids[proof_index] == runtime_id
+    assert proof.ordered_before_payload_sha256[proof_index] == (
+        baseline_payload_hash
+    )
+    assert proof.ordered_after_payload_sha256[proof_index] == (
+        recomputed_payload_hash
+    )
+    assert proof.ordered_before_artifact_sha256[proof_index] == baseline_hash
+    assert proof.ordered_after_artifact_sha256[proof_index] == recomputed_hash
+    assert safe_material["artifact_id"] == runtime_id
+    assert safe_material["runtime_artifact_id"] == runtime_id
+    assert safe_material["projection_artifact_id"] == projection_id
+    assert safe_material["projection_artifact_plain"] == projection_plain
+    assert safe_material["baseline_runtime_artifact_plain"] == baseline_plain
+    assert safe_material["recomputed_runtime_artifact_plain"] == recomputed_plain
+    assert safe_material["projection_parent_runtime_artifact_id"] == runtime_id
+    assert safe_material["projection_artifact_sha256"] == hashlib.sha256(
+        projection_bytes
+    ).hexdigest()
+    assert safe_material["projection_payload_sha256"] == hashlib.sha256(
+        projection_payload_bytes
+    ).hexdigest()
+    assert safe_material["artifact_sha256"] == baseline_hash
+    assert safe_material["payload_sha256"] == baseline_payload_hash
+    assert safe_material["baseline_queue_artifact_row"] == {
+        "queue_entry_id": sibling_queue_entry_id,
+        "artifact_id": runtime_id,
+        "artifact_sha256": baseline_hash,
+    }
+    assert safe_material["recomputed_queue_artifact_row"] == {
+        "queue_entry_id": sibling_queue_entry_id,
+        "artifact_id": runtime_id,
+        "artifact_sha256": recomputed_hash,
+    }
+    assert safe_material["preservation_row_index"] == proof_index
+    assert safe_material["preservation_proof_rows"] == [
+        {
+            "row_index": proof_index,
+            "preserved_artifact_id": runtime_id,
+            "before_identity_id": runtime_id,
+            "after_identity_id": runtime_id,
+            "before_payload_sha256": baseline_payload_hash,
+            "after_payload_sha256": recomputed_payload_hash,
+            "before_artifact_sha256": baseline_hash,
+            "after_artifact_sha256": recomputed_hash,
+        }
+    ]
+    expected_binding_rows = [
+        {
+            "recomputed_binding_id": binding.recomputed_binding_id,
+            "prior_artifact_id": binding.prior_artifact_id,
+            "new_artifact_id": binding.new_artifact_id,
+        }
+        for binding in safe_bundle.recomputed_bindings
+    ]
+    assert safe_material["recomputed_binding_rows"] == expected_binding_rows
+    assert safe_material["sibling_touching_recomputed_binding_ids"] == []
+    assert safe_material["sibling_touching_prior_artifact_ids"] == []
+    assert safe_material["sibling_touching_new_artifact_ids"] == []
+    for carrier in (
+        safe_bundle.recomputation_result,
+        safe_bundle.runtime_report,
+    ):
+        assert all(
+            getattr(carrier, name) == 0 for name in E5_ZERO_COUNTER_FIELDS
+        )
+    assert type(safe_bundle.runtime_trace) is g2e.ContinuousDeltaRuntimeTraceV01
+    assert tuple(
+        name
+        for name in E5_ZERO_COUNTER_FIELDS
+        if hasattr(safe_bundle.runtime_trace, name)
+    ) == E5_RUNTIME_TRACE_ZERO_COUNTER_FIELDS
+    assert all(
+        getattr(safe_bundle.runtime_trace, name) == 0
+        for name in E5_RUNTIME_TRACE_ZERO_COUNTER_FIELDS
+    )
+    for root_result in (
+        safe_bundle.plan_root_decision_result,
+        safe_bundle.final_root_decision_result,
+    ):
+        assert root_result.permission_created is False
+        assert root_result.final_output_created is False
+        assert root_result.effect_requested is False
+    assert len(bundle_calls) == 9
+    _e5_progress_marker("E5_TEST_COMPLETED=constructive_geometry")
+
+
+
+
+
+def test_e5_negative_matrix_exact_reasons_and_subcases_v01(
+    e5_report_fixture: dict[str, object],
+) -> None:
+    report = e5_report_fixture["report"]
+    negative = report.case_results[10:]
+    assert len(negative) == 90
+    assert len(E5_NEGATIVE_ROWS) == 90
+    assert tuple(case.case_id for case in negative) == E5_NEGATIVE_ORDER
+    assert all(case.case_class == "NEGATIVE" for case in negative)
+    assert all(case.observed_outcome == "FAIL_CLOSED" for case in negative)
+    assert all(case.subcase_results for case in negative)
+    assert all(
+        subcase.expected_reason_codes == subcase.observed_reason_codes
+        for case in negative
+        for subcase in case.subcase_results
+    )
+    evidence_rows = tuple(
+        (case, subcase, json.loads(subcase.evidence_material_json))
+        for case in negative
+        for subcase in case.subcase_results
+    )
+    direct_report_case = (
+        "g2e_case:negative:caller_supplied_pass_reason_status:v01"
+    )
+    assert all(
+        row[2]["caller_supplied_rejection_report"] is False
+        for row in evidence_rows
+    )
+    for case, (suffix, axis, reason) in zip(
+        negative, E5_NEGATIVE_ROWS, strict=True
+    ):
+        expected_specs = _e5_expected_subcase_specs(suffix, axis, reason)
+        assert tuple(
+            (
+                subcase.subcase_id,
+                subcase.mutated_axis,
+                subcase.expected_reason_codes,
+                subcase.observed_reason_codes,
+            )
+            for subcase in case.subcase_results
+        ) == tuple(
+            (
+                case.case_id + ":subcase:" + name,
+                subcase_axis,
+                _e5_reason_tuple(subcase_reason),
+                _e5_reason_tuple(subcase_reason),
+            )
+            for name, subcase_axis, subcase_reason in expected_specs
+        )
+    claimed_fingerprints = tuple(
+        material["semantic_call_fingerprint"]
+        for _case, _subcase, material in evidence_rows
+    )
+    assert len(evidence_rows) == 296
+    assert len(E5_NEGATIVE_OPERATION_LEDGER) == 296
+    assert len(set(claimed_fingerprints)) == len(claimed_fingerprints)
+    expected_operations = {
+        case_id + ":subcase:" + subcase_name: (
+            expected_reasons,
+            validator,
+            locator,
+            carrier_type,
+        )
+        for (
+            case_id,
+            subcase_name,
+            expected_reasons,
+            validator,
+            locator,
+            carrier_type,
+        ) in E5_NEGATIVE_OPERATION_LEDGER
+    }
+    assert len(expected_operations) == 296
+    negative_oracle = _e5_validate_negative_actual_call_oracle(
+        report, e5_report_fixture
+    )
+    matched_calls_by_subcase = negative_oracle["matched_calls_by_subcase"]
+    assert len(negative_oracle["consumed_call_ids"]) == 296
+    assert len(negative_oracle["setup_calls"]) == 168
+    assert all(
+        not material["public_semantic_validator"].endswith(
+            "validate_continuous_delta_validation_report_v01"
+        )
+        for case, _subcase, material in evidence_rows
+        if case.case_id != direct_report_case
+    )
+    direct_rows = tuple(
+        material
+        for case, _subcase, material in evidence_rows
+        if case.case_id == direct_report_case
+    )
+    assert len(direct_rows) == 1
+    assert direct_rows[0]["mutated_carrier_type"].endswith(
+        ".ContinuousDeltaValidationReportV01"
+    )
+    assert direct_rows[0]["public_semantic_validator"].endswith(
+        "validate_continuous_delta_validation_report_v01"
+    )
+    by_id = {case.case_id: case for case in negative}
+    case53 = by_id["g2e_case:negative:repeated_delta_spin:v01"]
+    assert len(case53.subcase_results) == 1
+    case53_call = matched_calls_by_subcase[
+        case53.subcase_results[0].subcase_id
+    ]
+    factual_case53_call = _e5_validate_constructive_actual_return_oracle(
+        report, e5_report_fixture
+    )["case53_selective"]
+    assert factual_case53_call["result"] is case53_call["result"]
+    assert set(factual_case53_call["kwargs"]) == set(case53_call["kwargs"])
+    assert all(
+        factual_case53_call["kwargs"][name] is case53_call["kwargs"][name]
+        for name in case53_call["kwargs"]
+    )
+    case53_bundle, case53_report = case53_call["result"]
+    assert case53_bundle is None
+    assert case53_report.status == "FAIL_CLOSED"
+    assert case53_report.reason_codes == (
+        "g2e_recomputation_no_progress",
+        "g2e_transition_selective_recomputation_blocked",
+    )
+    assert case53_report.return_to_root_required is True
+    assert case53_report.root_review_required is False
+    assert case53_report.authority_created is False
+    assert case53_report.permission_created is False
+    assert case53_report.action_commit_packet_created is False
+    assert case53_report.receipt_created is False
+    assert case53_report.final_output_created is False
+    assert case53_report.drs_write_created is False
+    assert case53_report.real_world_effects_count == 0
+    assert len(by_id["g2e_case:negative:injected_unrelated_affected_artifact:v01"].subcase_results) == 2
+    assert len(by_id["g2e_case:negative:route_reused_after_bound_source_change:v01"].subcase_results) == 2
+    assert len(by_id["g2e_case:negative:selective_execution_carrier_omission:v01"].subcase_results) == 5
+    assert len(by_id["g2e_case:negative:recomputed_g2d_result_report_ref_substitution:v01"].subcase_results) == 4
+    assert len(by_id["g2e_case:negative:plan_root_review_carrier_substitution:v01"].subcase_results) == 7
+    assert len(by_id["g2e_case:negative:final_root_review_carrier_substitution:v01"].subcase_results) == 9
+    assert len(by_id["g2e_case:negative:root_acceptance_outcome_forgery:v01"].subcase_results) == 4
+    assert len(by_id["g2e_case:negative:transition_rule_eleven_field_substitution:v01"].subcase_results) == 110
+    assert len(by_id["g2e_case:negative:transition_rule_order_or_terminal_path_forgery:v01"].subcase_results) == 8
+    transition_rows = by_id[
+        "g2e_case:negative:transition_rule_eleven_field_substitution:v01"
+    ].subcase_results
+    abi_rows = by_id[
+        "g2e_case:negative:abi_projection_profile_substitution:v01"
+    ].subcase_results
+    case89_rows = by_id[
+        "g2e_case:negative:abi_parent_trace_or_root_artifact_substitution:v01"
+    ].subcase_results
+    assert len(transition_rows) == 110
+    assert len(abi_rows) == 35
+    assert len(case89_rows) == 29
+    transition_material = tuple(
+        json.loads(item.evidence_material_json) for item in transition_rows
+    )
+    assert tuple(
+        (
+            material["governed_rule_id"],
+            material["governed_rule_field"],
+        )
+        for material in transition_material
+    ) == tuple(
+        (rule_id, field_name)
+        for rule_id in E5_TRANSITION_RULE_IDS
+        for field_name in E5_TRANSITION_RULE_FIELDS
+    )
+    assert len(
+        {material["semantic_call_fingerprint"] for material in transition_material}
+    ) == 110
+    assert len(
+        {material["mutated_carrier_sha256"] for material in transition_material}
+    ) == 110
+    abi_material = tuple(
+        json.loads(item.evidence_material_json) for item in abi_rows
+    )
+    assert tuple(
+        (
+            material["governed_artifact_field"],
+            material["governed_profile_field"],
+        )
+        for material in abi_material
+    ) == tuple(
+        (artifact_field, profile_field)
+        for artifact_field in E5_ABI_ARTIFACT_FIELDS
+        for profile_field in E5_ABI_PROFILE_FIELDS
+    )
+    assert len(
+        {material["semantic_call_fingerprint"] for material in abi_material}
+    ) == 35
+    assert len(
+        {material["mutated_carrier_sha256"] for material in abi_material}
+    ) == 35
+    case89_material = tuple(
+        json.loads(item.evidence_material_json) for item in case89_rows
+    )
+    assert tuple(
+        (
+            material["governed_case89_family"],
+            material["governed_artifact_field"],
+        )
+        for material in case89_material[:-2]
+    ) == tuple(
+        (family, artifact_field)
+        for family in ("parent_ids", "trace_refs", "time_envelope")
+        for artifact_field in E5_CASE89_ARTIFACT_FIELDS
+    )
+    assert case89_material[-2]["governed_case89_family"] == "plan_relation"
+    assert case89_material[-1]["governed_case89_family"] == (
+        "shared_root_artifact"
+    )
+    assert len(
+        {material["semantic_call_fingerprint"] for material in case89_material}
+    ) == 29
+    assert len(
+        {material["mutated_carrier_sha256"] for material in case89_material}
+    ) == 29
+    assert tuple(item.mutated_axis for item in abi_rows) == (
+        "artifact_type",
+        "lifecycle_state",
+        "authority_class",
+        "source_component",
+        "payload",
+    ) * 7
+    assert tuple(
+        sum(1 for item in case89_rows if item.mutated_axis == family)
+        for family in (
+            "parent_ids",
+            "trace_refs",
+            "time_envelope",
+            "plan_relation",
+            "shared_root_artifact",
+        )
+    ) == (9, 9, 9, 1, 1)
+    assert all(
+        item.observed_reason_codes == ("g2e_object_invalid",)
+        for item in case89_rows[:-1]
+    )
+    assert case89_rows[-1].observed_reason_codes == (
+        "g2e_authority_boundary_violated",
+    )
+    evidence_by_case = {
+        case.case_id: tuple(
+            json.loads(subcase.evidence_material_json)
+            for subcase in case.subcase_results
+        )
+        for case in negative
+    }
+    evidence_by_subcase_id = {
+        subcase.subcase_id: json.loads(subcase.evidence_material_json)
+        for case in negative
+        for subcase in case.subcase_results
+    }
+    for left_key, right_key in E5_V11_REPAIRED_DUPLICATE_RECIPE_PAIRS:
+        left_id = left_key[0] + ":subcase:" + left_key[1]
+        right_id = right_key[0] + ":subcase:" + right_key[1]
+        left_material = evidence_by_subcase_id[left_id]
+        right_material = evidence_by_subcase_id[right_id]
+        left_call = matched_calls_by_subcase[left_id]
+        right_call = matched_calls_by_subcase[right_id]
+
+        def actual_bindings(
+            key: tuple[str, str], call: dict[str, object]
+        ) -> tuple[dict[str, object], dict[str, object]]:
+            _reasons, validator, locator, _carrier_type = (
+                E5_NEGATIVE_OPERATION_BY_KEY[key]
+            )
+            if locator.startswith("arg:"):
+                mutated_argument = call["args"][int(locator[4:])]
+            else:
+                mutated_argument = call["kwargs"][locator[3:]]
+            return (
+                _e5_v02_call_binding(
+                    validator, call["args"], call["kwargs"], {}
+                ),
+                _e5_v02_value_binding(mutated_argument, {}),
+            )
+
+        left_call_binding, left_mutated_binding = actual_bindings(
+            left_key, left_call
+        )
+        right_call_binding, right_mutated_binding = actual_bindings(
+            right_key, right_call
+        )
+        assert left_call_binding["sha256"] == left_material[
+            "semantic_call_fingerprint"
+        ]
+        assert right_call_binding["sha256"] == right_material[
+            "semantic_call_fingerprint"
+        ]
+        assert left_mutated_binding["sha256"] == left_material[
+            "mutated_carrier_sha256"
+        ]
+        assert right_mutated_binding["sha256"] == right_material[
+            "mutated_carrier_sha256"
+        ]
+        assert left_call_binding != right_call_binding
+        assert left_mutated_binding != right_mutated_binding
+    for left_suffix, right_suffix in (
+        (
+            "preserved_payload_mutation",
+            "preserved_full_artifact_bytes_mutation",
+        ),
+        ("hidden_cache_mutation", "hidden_mutable_global_state"),
+        (
+            "packet_kept_executable_after_invalidation",
+            "packet_revoked_without_root_seam",
+        ),
+        ("result_report_binding_mismatch", "post_vv_gt_binding_mismatch"),
+    ):
+        left = evidence_by_case[
+            "g2e_case:negative:" + left_suffix + ":v01"
+        ][0]
+        right = evidence_by_case[
+            "g2e_case:negative:" + right_suffix + ":v01"
+        ][0]
+        assert left["semantic_call_fingerprint"] != right[
+            "semantic_call_fingerprint"
+        ]
+        assert left["mutated_carrier_sha256"] != right[
+            "mutated_carrier_sha256"
+        ]
+    for suffix, expected_count in (
+        ("plan_root_review_carrier_substitution", 7),
+        ("final_root_review_carrier_substitution", 9),
+    ):
+        rows = evidence_by_case["g2e_case:negative:" + suffix + ":v01"]
+        assert len(rows) == expected_count
+        assert len(
+            {row["semantic_call_fingerprint"] for row in rows}
+        ) == expected_count
+        assert len(
+            {row["mutated_carrier_sha256"] for row in rows}
+        ) == expected_count
+    assert len(by_id["g2e_case:negative:identity_prefix_or_domain_collision:v01"].subcase_results) == 3
+    zero_axes = negative[55:67]
+    assert len(zero_axes) == 12
+    assert len({case.ordered_unresolved_or_blocked_ids for case in zero_axes}) == 12
+    runner_source = E5_RUNNER_PATH.read_text(encoding="ascii")
+    assert "_public_rejection_subcase" not in runner_source
+    assert "build_continuous_delta_validation_report_v01" not in runner_source
+    _e5_progress_marker("E5_TEST_COMPLETED=negative_matrix")
+
+
+def test_e5_sealed_report_validation_and_repeated_compact_json_bytes_v01(
+    e5_report_fixture: dict[str, object],
+) -> None:
+    runner = e5_report_fixture["runner"]
+    report = e5_report_fixture["report"]
+    rendered_once = e5_report_fixture["rendered_once"]
+    rendered_twice = e5_report_fixture["rendered_twice"]
+    assert runner.validate_continuous_delta_runtime_g2_e_report_v01(report) is report
+    plain = runner.continuous_delta_runtime_g2_e_report_to_plain_data_v01(report)
+    assert tuple(plain) == tuple(field.name for field in fields(type(report)))
+    assert rendered_once == rendered_twice
+    assert rendered_once.endswith("\n")
+    assert rendered_once.count("\n") == 1
+    assert rendered_once.encode("ascii").decode("ascii") == rendered_once
+    assert json.loads(rendered_once) == plain
+    assert json.dumps(
+        plain, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ) + "\n" == rendered_once
+    assert re.fullmatch(r"[0-9a-f]{64}", report.sealed_evidence_sha256)
+    assert report.report_id.startswith("g2eproof_v01:")
+    assert re.fullmatch(r"g2eproof_v01:[0-9a-f]{64}", report.report_id)
+    with pytest.raises(ValueError, match="g2e5_report_identity_invalid"):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            replace(report, report_id="g2eproof_v01:" + ("0" * 64))
+        )
+    with pytest.raises(ValueError, match="g2e5_seal_invalid"):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            replace(report, sealed_evidence_sha256="0" * 64)
+        )
+
+    def domain_hash(domain: str, value: object) -> str:
+        raw = json.dumps(
+            value, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        ).encode("ascii")
+        return hashlib.sha256(domain.encode("ascii") + b"\x00" + raw).hexdigest()
+
+    def reseal_case_material(
+        case_index: int,
+        material: dict[str, object],
+        *,
+        subcase_results: tuple[object, ...] | None = None,
+    ) -> object:
+        source_case = report.case_results[case_index]
+        material_json = json.dumps(
+            material, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        )
+        changed_case = replace(
+            source_case,
+            **(
+                {}
+                if subcase_results is None
+                else {"subcase_results": subcase_results}
+            ),
+            evidence_material_json=material_json,
+            evidence_sha256=domain_hash(
+                "HEDGEHOG_G2E_TWO_DOMAIN_CASE_EVIDENCE_V01", material
+            ),
+        )
+        changed_cases = (
+            *report.case_results[:case_index],
+            changed_case,
+            *report.case_results[case_index + 1 :],
+        )
+        baseline_ids = tuple(
+            dict.fromkeys(
+                case.baseline_runtime_report_id
+                for case in changed_cases
+                if case.baseline_runtime_report_id is not None
+            )
+        )
+        sealed_material = {
+            "domain_order": report.domain_order,
+            "baseline_runtime_report_ids": baseline_ids,
+            "case_order": tuple(case.case_id for case in changed_cases),
+            "case_evidence_sha256": tuple(
+                case.evidence_sha256 for case in changed_cases
+            ),
+            "constructive_case_count": report.constructive_case_count,
+            "negative_case_count": report.negative_case_count,
+            "total_case_count": report.total_case_count,
+            "accepted_baseline_bundle_count": (
+                report.accepted_baseline_bundle_count
+            ),
+            "explicit_public_g2d_baseline_call_count": (
+                report.explicit_public_g2d_baseline_call_count
+            ),
+            "source_collectors_replayed": report.source_collectors_replayed,
+            "source_evidence_mode": report.source_evidence_mode,
+            "zero_counters": tuple(
+                sum(getattr(case, name) for case in changed_cases)
+                for name in E5_ZERO_COUNTER_FIELDS
+            ),
+            "final_status": report.final_status,
+            "reason_codes": report.reason_codes,
+        }
+        changed_report = replace(
+            report,
+            case_results=changed_cases,
+            sealed_evidence_sha256=domain_hash(
+                "HEDGEHOG_G2E_TWO_DOMAIN_SEALED_EVIDENCE_V01",
+                sealed_material,
+            ),
+        )
+        identity_material = (
+            runner.continuous_delta_runtime_g2_e_report_to_plain_data_v01(
+                changed_report, validate=False
+            )
+        )
+        identity_material.pop("report_id")
+        return replace(
+            changed_report,
+            report_id="g2eproof_v01:"
+            + domain_hash(
+                "HEDGEHOG_G2E_TWO_DOMAIN_REPORT_ID_V01",
+                identity_material,
+            ),
+        )
+
+    def reseal_subcase_material(
+        case_index: int,
+        subcase_index: int,
+        material: dict[str, object],
+    ) -> object:
+        source_case = report.case_results[case_index]
+        source_subcase = source_case.subcase_results[subcase_index]
+        material_json = json.dumps(
+            material, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+        )
+        changed_subcase = replace(
+            source_subcase,
+            evidence_material_json=material_json,
+            evidence_sha256=domain_hash(
+                "HEDGEHOG_G2E_TWO_DOMAIN_SUBCASE_EVIDENCE_V01", material
+            ),
+        )
+        changed_subcases = (
+            *source_case.subcase_results[:subcase_index],
+            changed_subcase,
+            *source_case.subcase_results[subcase_index + 1 :],
+        )
+        case_material = json.loads(source_case.evidence_material_json)
+        case_material["subcase_evidence_sha256"] = [
+            subcase.evidence_sha256 for subcase in changed_subcases
+        ]
+        return reseal_case_material(
+            case_index,
+            case_material,
+            subcase_results=changed_subcases,
+        )
+
+    def rewrite_witness(witness: dict[str, object]) -> None:
+        raw = json.dumps(
+            witness["semantic_projection"],
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+        ).encode("ascii")
+        witness["sha256"] = hashlib.sha256(raw).hexdigest()
+        witness["byte_length"] = len(raw)
+
+    def projected_field(
+        witness: dict[str, object], field_name: str
+    ) -> list[object]:
+        return next(
+            row
+            for row in witness["semantic_projection"]["fields"]
+            if row[0] == field_name
+        )
+
+    @dataclass(frozen=True)
+    class MutableNestedCarrierV01:
+        payload: object
+
+    @dataclass(frozen=True)
+    class AlternateMutableNestedCarrierV01:
+        payload: object
+
+    v02_samples = (
+        None,
+        False,
+        1,
+        1.25,
+        "value",
+        b"value",
+        ("a", 1),
+        ["a", 1],
+        {"a": 1, "b": (2,)},
+        MutableNestedCarrierV01(("frozen", 1)),
+    )
+    for sample in v02_samples:
+        assert runner._compositional_value_binding_v02(sample) == (
+            _e5_v02_value_binding(sample)
+        )
+    distinct_v02_pairs = (
+        (1, "1"),
+        (True, 1),
+        (("a",), ["a"]),
+        ({"a": 1}, {"a": 2}),
+        (
+            MutableNestedCarrierV01(("x",)),
+            AlternateMutableNestedCarrierV01(("x",)),
+        ),
+        (
+            MutableNestedCarrierV01(("x",)),
+            MutableNestedCarrierV01(("y",)),
+        ),
+    )
+    assert all(
+        _e5_v02_value_binding(left) != _e5_v02_value_binding(right)
+        for left, right in distinct_v02_pairs
+    )
+    mapping_key_before = {"left_key": "same_value"}
+    mapping_key_after = {"right_key": "same_value"}
+    independent_mapping_before = _e5_v02_value_binding(mapping_key_before)
+    independent_mapping_after = _e5_v02_value_binding(mapping_key_after)
+    assert independent_mapping_before != independent_mapping_after
+    assert runner._compositional_value_binding_v02(mapping_key_after) == (
+        independent_mapping_after
+    )
+    forged_negative_material = json.loads(
+        report.case_results[10].subcase_results[0].evidence_material_json
+    )
+    forged_negative_material["semantic_call_semantic_length"] += 1
+    forged_negative_length_report = reseal_subcase_material(
+        10, 0, forged_negative_material
+    )
+    assert runner.validate_continuous_delta_runtime_g2_e_report_v01(
+        forged_negative_length_report
+    ) is forged_negative_length_report
+    with pytest.raises(
+        AssertionError, match="g2e5_negative_external_actual_call_mismatch"
+    ):
+        _e5_validate_negative_actual_call_oracle(
+            forged_negative_length_report, e5_report_fixture
+        )
+
+    case53_case_index = next(
+        index
+        for index, case in enumerate(report.case_results)
+        if case.case_id == "g2e_case:negative:repeated_delta_spin:v01"
+    )
+    case53_subcase = report.case_results[
+        case53_case_index
+    ].subcase_results[0]
+    case53_material = json.loads(case53_subcase.evidence_material_json)
+    assert "case53_graph_projection_return_witness" in case53_material
+    case53_material.pop("case53_graph_projection_return_witness")
+    with pytest.raises(
+        ValueError,
+        match="^g2e5_case53_graph_projection_witness_invalid$",
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_subcase_material(case53_case_index, 0, case53_material)
+        )
+    call_a = _e5_v02_call_binding(
+        "validator:a", ("left", "right"), {"key": 1}
+    )
+    for call_b in (
+        _e5_v02_call_binding(
+            "validator:a", ("right", "left"), {"key": 1}
+        ),
+        _e5_v02_call_binding(
+            "validator:a", ("left", "right"), {"renamed": 1}
+        ),
+        _e5_v02_call_binding(
+            "validator:a", ("left",), {"key": 1, "moved": "right"}
+        ),
+        _e5_v02_call_binding(
+            "validator:b", ("left", "right"), {"key": 1}
+        ),
+        _e5_v02_call_binding("validator:a", ("left",), {"key": 1}),
+    ):
+        assert call_b != call_a
+    assert _e5_v02_result_binding("return", "reason") != (
+        _e5_v02_result_binding("value_error", "reason")
+    )
+    with pytest.raises(AssertionError, match="g2e5_v02"):
+        _e5_v02_value_binding(float("inf"))
+    cyclic: list[object] = []
+    cyclic.append(cyclic)
+    with pytest.raises(AssertionError, match="g2e5_v02_cycle_invalid"):
+        _e5_v02_value_binding(cyclic)
+
+    mutable_carrier = MutableNestedCarrierV01(
+        {"deep": [{"value": "before"}]}
+    )
+    runner_v02_before = runner._compositional_call_binding_v02(
+        "mutable_nested_cache_probe_v02", (mutable_carrier,), {}
+    )
+    independent_v02_before = _e5_v02_call_binding(
+        "mutable_nested_cache_probe_v02", (mutable_carrier,), {}
+    )
+    assert runner_v02_before == independent_v02_before
+    runner_memo: dict[int, tuple[object, dict[str, object]]] = {}
+    independent_memo: dict[int, tuple[object, dict[str, object]]] = {}
+    runner_binding_before = runner._semantic_return_binding(
+        mutable_carrier, runner_memo
+    )
+    runner_call_before = runner._framed_semantic_sha256(
+        E5_SEMANTIC_CALL_DOMAIN,
+        {
+            "validator": "mutable_nested_cache_probe_v01",
+            "args": runner._semantic_projection(
+                (mutable_carrier,), runner_memo
+            ),
+            "kwargs": runner._semantic_projection({}, runner_memo),
+        },
+    )
+    independent_before = _e5_framed_sha256(
+        E5_SEMANTIC_CALL_DOMAIN,
+        {
+            "validator": "mutable_nested_cache_probe_v01",
+            "args": _e5_semantic_projection(
+                (mutable_carrier,), independent_memo
+            ),
+            "kwargs": _e5_semantic_projection({}, independent_memo),
+        },
+    )
+    mutable_carrier.payload["deep"][0]["value"] = "after"
+    runner_v02_after = runner._compositional_call_binding_v02(
+        "mutable_nested_cache_probe_v02", (mutable_carrier,), {}
+    )
+    independent_v02_after = _e5_v02_call_binding(
+        "mutable_nested_cache_probe_v02", (mutable_carrier,), {}
+    )
+    assert runner_v02_after == independent_v02_after
+    assert runner_v02_before != runner_v02_after
+    runner_binding_after = runner._semantic_return_binding(
+        mutable_carrier, runner_memo
+    )
+    runner_call_after = runner._framed_semantic_sha256(
+        E5_SEMANTIC_CALL_DOMAIN,
+        {
+            "validator": "mutable_nested_cache_probe_v01",
+            "args": runner._semantic_projection(
+                (mutable_carrier,), runner_memo
+            ),
+            "kwargs": runner._semantic_projection({}, runner_memo),
+        },
+    )
+    independent_after = _e5_framed_sha256(
+        E5_SEMANTIC_CALL_DOMAIN,
+        {
+            "validator": "mutable_nested_cache_probe_v01",
+            "args": _e5_semantic_projection(
+                (mutable_carrier,), independent_memo
+            ),
+            "kwargs": _e5_semantic_projection({}, independent_memo),
+        },
+    )
+    assert runner_binding_before != runner_binding_after
+    assert runner_call_before != runner_call_after
+    assert independent_before != independent_after
+
+    for forged_projection in (
+        {"kind": "int", "value": "+1"},
+        {"kind": "int", "value": "01"},
+        {"kind": "float", "value": " 0x1.0000000000000p+0"},
+        {"kind": "bytes", "hex": " aa"},
+    ):
+        with pytest.raises(ValueError, match="g2e5_semantic_projection"):
+            runner._semantic_projection_to_plain(forged_projection)
+
+    for projection_location in ("outer", "edges", "basis"):
+        projection_material = json.loads(
+            report.case_results[0].evidence_material_json
+        )
+        projection_evidence = projection_material[
+            "constructive_call_chain"
+        ]["graph_projection"]
+        projection_witness = projection_evidence["return_witness"]
+        projection_document = projection_witness["semantic_projection"]
+        if projection_location == "outer":
+            projection_document["unexpected"] = {"kind": "none"}
+        elif projection_location == "edges":
+            projection_document["items"][1]["unexpected"] = {
+                "kind": "none"
+            }
+        else:
+            projection_document["items"][0]["unexpected"] = {
+                "kind": "none"
+            }
+        rewrite_witness(projection_witness)
+        with pytest.raises(
+            ValueError, match="^g2e5_c2_projection_decode_invalid$"
+        ):
+            runner.validate_continuous_delta_runtime_g2_e_report_v01(
+                reseal_case_material(0, projection_material)
+            )
+
+    c2_material = json.loads(report.case_results[0].evidence_material_json)
+    c2_material["constructive_call_chain"]["graph_construction"][
+        "graph_id"
+    ] += ":coherent-false"
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_cross_stage_relation_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, c2_material)
+        )
+
+    graph_policy_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    graph_policy_chain = graph_policy_material["constructive_call_chain"]
+    graph_policy_witness = graph_policy_chain["graph_construction"][
+        "graph_witness"
+    ]
+    policy_row = projected_field(graph_policy_witness, "policy_version")
+    policy_row[1] = {
+        "kind": "str",
+        "value": policy_row[1]["value"] + ":stale-id",
+    }
+    rewrite_witness(graph_policy_witness)
+    graph_policy_chain["affected_set_computation"][
+        "kwargs_graph_binding"
+    ] = {
+        "sha256": graph_policy_witness["sha256"],
+        "byte_length": graph_policy_witness["byte_length"],
+    }
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_graph_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, graph_policy_material)
+        )
+
+    edge_replay_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    edge_projection_evidence = edge_replay_material[
+        "constructive_call_chain"
+    ]["graph_projection"]
+    edge_return_witness = edge_projection_evidence["return_witness"]
+    edge_tuple_projection = edge_return_witness["semantic_projection"][
+        "items"
+    ][1]
+    first_edge_projection = edge_tuple_projection["items"][0]
+    first_edge_trace_row = next(
+        row
+        for row in first_edge_projection["fields"]
+        if row[0] == "trace_refs"
+    )
+    first_edge_trace_row[1]["items"].append(
+        {"kind": "str", "value": "trace:g2e5:stale-edge-id"}
+    )
+    rewrite_witness(edge_return_witness)
+    edge_tuple_raw = json.dumps(
+        edge_tuple_projection,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("ascii")
+    edge_projection_evidence["dependency_edges_binding"] = {
+        "sha256": hashlib.sha256(edge_tuple_raw).hexdigest(),
+        "byte_length": len(edge_tuple_raw),
+    }
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_edge_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, edge_replay_material)
+        )
+
+    request_identity_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    request_identity_witness = request_identity_material[
+        "constructive_call_chain"
+    ]["affected_set_computation"]["request_witness"]
+    request_trace_row = projected_field(
+        request_identity_witness, "trace_refs"
+    )
+    request_trace_row[1]["items"].append(
+        {"kind": "str", "value": "trace:g2e5:stale-request-id"}
+    )
+    rewrite_witness(request_identity_witness)
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_request_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, request_identity_material)
+        )
+
+    delta_zero_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    delta_zero_witness = delta_zero_material["constructive_call_chain"][
+        "affected_set_computation"
+    ]["kwargs_delta_witness"]
+    projected_field(delta_zero_witness, "real_world_effects_count")[1] = {
+        "kind": "int",
+        "value": "1",
+    }
+    rewrite_witness(delta_zero_witness)
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_delta_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, delta_zero_material)
+        )
+
+    affected_counter_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    affected_counter_witness = affected_counter_material[
+        "constructive_call_chain"
+    ]["affected_set_computation"]["affected_result_witness"]
+    visited_row = projected_field(
+        affected_counter_witness, "visited_node_count"
+    )
+    visited_row[1] = {
+        "kind": "int",
+        "value": str(int(visited_row[1]["value"]) + 1),
+    }
+    rewrite_witness(affected_counter_witness)
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_affected_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, affected_counter_material)
+        )
+
+    unhashable_node_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    unhashable_graph_witness = unhashable_node_material[
+        "constructive_call_chain"
+    ]["graph_construction"]["graph_witness"]
+    ordered_nodes_row = projected_field(
+        unhashable_graph_witness, "ordered_node_ids"
+    )
+    ordered_nodes_row[1]["items"][0] = {
+        "kind": "list",
+        "items": [{"kind": "str", "value": "unhashable-node"}],
+    }
+    rewrite_witness(unhashable_graph_witness)
+    unhashable_node_material["constructive_call_chain"][
+        "affected_set_computation"
+    ]["kwargs_graph_binding"] = {
+        "sha256": unhashable_graph_witness["sha256"],
+        "byte_length": unhashable_graph_witness["byte_length"],
+    }
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_graph_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(0, unhashable_node_material)
+        )
+
+    policy_graph_material = json.loads(
+        report.case_results[2].evidence_material_json
+    )
+    policy_graph = policy_graph_material["constructive_call_chain"][
+        "graph_construction"
+    ]
+    graph_projection = policy_graph["graph_witness"]["semantic_projection"]
+    ordered_edge_row = next(
+        row
+        for row in graph_projection["fields"]
+        if row[0] == "ordered_edge_ids"
+    )
+    ordered_edge_row[1] = {"kind": "tuple", "items": []}
+    graph_projection_bytes = json.dumps(
+        graph_projection,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("ascii")
+    policy_graph["graph_witness"]["sha256"] = hashlib.sha256(
+        graph_projection_bytes
+    ).hexdigest()
+    policy_graph["graph_witness"]["byte_length"] = len(
+        graph_projection_bytes
+    )
+    policy_graph_material["constructive_call_chain"][
+        "affected_set_computation"
+    ]["kwargs_graph_binding"] = {
+        "sha256": policy_graph["graph_witness"]["sha256"],
+        "byte_length": policy_graph["graph_witness"]["byte_length"],
+    }
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_graph_carrier_identity_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(2, policy_graph_material)
+        )
+
+    repeat_length_material = json.loads(
+        report.case_results[4].evidence_material_json
+    )
+    repeat_length_material["repeat_execution"]["bundle_byte_length"] += 1
+    with pytest.raises(
+        ValueError, match="^g2e5_c2_cross_stage_relation_invalid$"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(4, repeat_length_material)
+        )
+
+    c2_boundary_material = json.loads(
+        report.case_results[0].evidence_material_json
+    )
+    c2_boundary_material["constructive_call_chain"]["selective_execution"][
+        0
+    ]["bundle_binding"] = {
+        "sha256": "f" * 64,
+        "byte_length": 1,
+    }
+    c2_boundary_report = reseal_case_material(0, c2_boundary_material)
+    assert runner.validate_continuous_delta_runtime_g2_e_report_v01(
+        c2_boundary_report
+    ) is c2_boundary_report
+    with pytest.raises(
+        AssertionError, match="g2e5_c2_external_actual_return_mismatch"
+    ):
+        _e5_validate_constructive_actual_return_oracle(
+            c2_boundary_report,
+            e5_report_fixture,
+        )
+
+    def rebuild_kernel_plain(plain: dict[str, object]) -> dict[str, object]:
+        rebuilt = build_kernel_artifact_v01(
+            abi_version=plain["abi_version"],
+            artifact_id=plain["artifact_id"],
+            artifact_type=plain["artifact_type"],
+            schema_version=plain["schema_version"],
+            transaction_id=plain["transaction_id"],
+            owner_root_id=plain["owner_root_id"],
+            source_component=plain["source_component"],
+            authority_class=plain["authority_class"],
+            lifecycle_state=plain["lifecycle_state"],
+            payload=plain["payload"],
+            trace_refs=tuple(plain["trace_refs"]),
+            parent_refs=tuple(plain["parent_refs"]),
+            time_envelope=plain["time_envelope"],
+        )
+        assert validate_kernel_artifact_v01(rebuilt) == ()
+        return kernel_artifact_to_plain_dict_v01(rebuilt)
+
+    c4_profile_material = json.loads(
+        report.case_results[8].evidence_material_json
+    )
+    c4_profile_safe = c4_profile_material["safe_sibling"]
+    profile_projection_plain = c4_profile_safe["projection_artifact_plain"]
+    profile_projection_plain["payload"]["projection_profile_id"] = (
+        "g2e_baseline_runtime_artifact_projection_v01:substituted"
+    )
+    profile_projection_plain = rebuild_kernel_plain(profile_projection_plain)
+    profile_projection_bytes = canonical_json_bytes_v01(
+        profile_projection_plain
+    )
+    profile_projection_payload_bytes = canonical_json_bytes_v01(
+        profile_projection_plain["payload"]
+    )
+    c4_profile_safe["projection_artifact_plain"] = profile_projection_plain
+    c4_profile_safe["projection_artifact_sha256"] = hashlib.sha256(
+        profile_projection_bytes
+    ).hexdigest()
+    c4_profile_safe["projection_artifact_byte_length"] = len(
+        profile_projection_bytes
+    )
+    c4_profile_safe["projection_payload_sha256"] = hashlib.sha256(
+        profile_projection_payload_bytes
+    ).hexdigest()
+    c4_profile_safe["projection_payload_byte_length"] = len(
+        profile_projection_payload_bytes
+    )
+    with pytest.raises(ValueError, match="g2e5_safe_sibling_evidence_invalid"):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(8, c4_profile_material)
+        )
+
+    for protected_role in ("prior_artifact_id", "new_artifact_id"):
+        c4_binding_material = json.loads(
+            report.case_results[8].evidence_material_json
+        )
+        c4_binding_safe = c4_binding_material["safe_sibling"]
+        assert c4_binding_safe["recomputed_binding_rows"]
+        c4_binding_safe["recomputed_binding_rows"][0][protected_role] = (
+            c4_binding_safe["projection_artifact_id"]
+        )
+        with pytest.raises(
+            ValueError,
+            match="g2e5_safe_sibling_binding_role_invalid",
+        ):
+            runner.validate_continuous_delta_runtime_g2_e_report_v01(
+                reseal_case_material(8, c4_binding_material)
+            )
+
+    c4_alternate_material = json.loads(
+        report.case_results[8].evidence_material_json
+    )
+    c4_alternate_safe = c4_alternate_material["safe_sibling"]
+    alternate_runtime_plain = c4_alternate_safe[
+        "baseline_runtime_artifact_plain"
+    ]
+    alternate_runtime_plain["payload"] = {
+        **alternate_runtime_plain["payload"],
+        "g2e5_v07_coherent_alternate": True,
+    }
+    alternate_runtime_plain = rebuild_kernel_plain(alternate_runtime_plain)
+    alternate_runtime_bytes = canonical_json_bytes_v01(
+        alternate_runtime_plain
+    )
+    alternate_runtime_payload_bytes = canonical_json_bytes_v01(
+        alternate_runtime_plain["payload"]
+    )
+    alternate_runtime_hash = hashlib.sha256(
+        alternate_runtime_bytes
+    ).hexdigest()
+    alternate_runtime_payload_hash = hashlib.sha256(
+        alternate_runtime_payload_bytes
+    ).hexdigest()
+    alternate_projection_plain = c4_alternate_safe["projection_artifact_plain"]
+    alternate_projection_id = (
+        "artifact:g2e5:runtime-projection:" + alternate_runtime_hash
+    )
+    alternate_projection_plain["artifact_id"] = alternate_projection_id
+    alternate_projection_plain["trace_refs"] = [
+        "trace:" + alternate_projection_id
+    ]
+    alternate_projection_plain["payload"][
+        "projected_runtime_artifact"
+    ] = alternate_runtime_plain
+    alternate_projection_plain["payload"][
+        "projected_runtime_artifact_sha256"
+    ] = alternate_runtime_hash
+    alternate_projection_plain = rebuild_kernel_plain(
+        alternate_projection_plain
+    )
+    alternate_projection_bytes = canonical_json_bytes_v01(
+        alternate_projection_plain
+    )
+    alternate_projection_payload_bytes = canonical_json_bytes_v01(
+        alternate_projection_plain["payload"]
+    )
+    alternate_projection_hash = hashlib.sha256(
+        alternate_projection_bytes
+    ).hexdigest()
+    alternate_projection_payload_hash = hashlib.sha256(
+        alternate_projection_payload_bytes
+    ).hexdigest()
+    runtime_id = c4_alternate_safe["runtime_artifact_id"]
+    c4_alternate_safe.update(
+        {
+            "artifact_sha256": alternate_runtime_hash,
+            "payload_sha256": alternate_runtime_payload_hash,
+            "canonical_artifact_bytes_sha256": alternate_runtime_hash,
+            "canonical_artifact_byte_length": len(alternate_runtime_bytes),
+            "canonical_payload_byte_length": len(
+                alternate_runtime_payload_bytes
+            ),
+            "projection_artifact_plain": alternate_projection_plain,
+            "baseline_runtime_artifact_plain": alternate_runtime_plain,
+            "recomputed_runtime_artifact_plain": alternate_runtime_plain,
+            "baseline_queue_artifact_row": {
+                "queue_entry_id": c4_alternate_safe["queue_entry_id"],
+                "artifact_id": runtime_id,
+                "artifact_sha256": alternate_runtime_hash,
+            },
+            "recomputed_queue_artifact_row": {
+                "queue_entry_id": c4_alternate_safe["queue_entry_id"],
+                "artifact_id": runtime_id,
+                "artifact_sha256": alternate_runtime_hash,
+            },
+            "projection_artifact_id": alternate_projection_id,
+            "projection_artifact_sha256": alternate_projection_hash,
+            "projection_artifact_byte_length": len(alternate_projection_bytes),
+            "projection_payload_sha256": alternate_projection_payload_hash,
+            "projection_payload_byte_length": len(
+                alternate_projection_payload_bytes
+            ),
+            "projection_embedded_runtime_artifact_sha256": (
+                alternate_runtime_hash
+            ),
+            "projection_embedded_runtime_artifact_byte_length": len(
+                alternate_runtime_bytes
+            ),
+            "baseline_runtime_payload_sha256": alternate_runtime_payload_hash,
+            "baseline_runtime_payload_byte_length": len(
+                alternate_runtime_payload_bytes
+            ),
+            "recomputed_runtime_payload_sha256": alternate_runtime_payload_hash,
+            "recomputed_runtime_payload_byte_length": len(
+                alternate_runtime_payload_bytes
+            ),
+            "baseline_runtime_artifact_sha256": alternate_runtime_hash,
+            "baseline_runtime_artifact_byte_length": len(alternate_runtime_bytes),
+            "recomputed_runtime_artifact_sha256": alternate_runtime_hash,
+            "recomputed_runtime_artifact_byte_length": len(
+                alternate_runtime_bytes
+            ),
+            "preservation_before_payload_sha256": alternate_runtime_payload_hash,
+            "preservation_after_payload_sha256": alternate_runtime_payload_hash,
+            "preservation_before_artifact_sha256": alternate_runtime_hash,
+            "preservation_after_artifact_sha256": alternate_runtime_hash,
+        }
+    )
+    c4_alternate_safe["preservation_proof_rows"][0].update(
+        {
+            "before_payload_sha256": alternate_runtime_payload_hash,
+            "after_payload_sha256": alternate_runtime_payload_hash,
+            "before_artifact_sha256": alternate_runtime_hash,
+            "after_artifact_sha256": alternate_runtime_hash,
+        }
+    )
+    c4_alternate_report = reseal_case_material(8, c4_alternate_material)
+    assert runner.validate_continuous_delta_runtime_g2_e_report_v01(
+        c4_alternate_report
+    ) is c4_alternate_report
+    with pytest.raises(
+        AssertionError, match="g2e5_c4_external_actual_runtime_mismatch"
+    ):
+        _e5_validate_c4_actual_runtime_oracle(
+            c4_alternate_report, e5_report_fixture
+        )
+
+    c4_material = json.loads(report.case_results[8].evidence_material_json)
+    c4_safe = c4_material["safe_sibling"]
+    runtime_id = c4_safe["runtime_artifact_id"]
+    projection_id = c4_safe["projection_artifact_id"]
+    c4_safe.update(
+        {
+            "artifact_id": projection_id,
+            "runtime_artifact_id": projection_id,
+            "projection_parent_runtime_artifact_id": projection_id,
+            "preservation_before_identity_id": projection_id,
+            "preservation_after_identity_id": projection_id,
+            "projection_artifact_id": runtime_id,
+        }
+    )
+    with pytest.raises(ValueError, match="g2e5_safe_sibling_evidence_invalid"):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            reseal_case_material(8, c4_material)
+        )
+
+    false_case = report.case_results[10]
+    false_material = json.loads(false_case.evidence_material_json)
+    false_material["negative_case_accepted_as_success"] = True
+    false_json = json.dumps(
+        false_material, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    )
+    false_case = replace(
+        false_case,
+        expected_outcome="SELECTIVE_RECOMPUTATION_PASS",
+        observed_outcome="SELECTIVE_RECOMPUTATION_PASS",
+        evidence_material_json=false_json,
+        evidence_sha256=domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_CASE_EVIDENCE_V01", false_material
+        ),
+    )
+    false_cases = (*report.case_results[:10], false_case, *report.case_results[11:])
+    baseline_ids = tuple(
+        dict.fromkeys(
+            case.baseline_runtime_report_id
+            for case in false_cases
+            if case.baseline_runtime_report_id is not None
+        )
+    )
+    sealed_material = {
+        "domain_order": report.domain_order,
+        "baseline_runtime_report_ids": baseline_ids,
+        "case_order": tuple(case.case_id for case in false_cases),
+        "case_evidence_sha256": tuple(case.evidence_sha256 for case in false_cases),
+        "constructive_case_count": report.constructive_case_count,
+        "negative_case_count": report.negative_case_count,
+        "total_case_count": report.total_case_count,
+        "accepted_baseline_bundle_count": report.accepted_baseline_bundle_count,
+        "explicit_public_g2d_baseline_call_count": (
+            report.explicit_public_g2d_baseline_call_count
+        ),
+        "source_collectors_replayed": report.source_collectors_replayed,
+        "source_evidence_mode": report.source_evidence_mode,
+        "zero_counters": tuple(
+            sum(getattr(case, name) for case in false_cases)
+            for name in E5_ZERO_COUNTER_FIELDS
+        ),
+        "final_status": report.final_status,
+        "reason_codes": report.reason_codes,
+    }
+    false_report = replace(
+        report,
+        case_results=false_cases,
+        sealed_evidence_sha256=domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_SEALED_EVIDENCE_V01", sealed_material
+        ),
+    )
+    identity_material = runner.continuous_delta_runtime_g2_e_report_to_plain_data_v01(
+        false_report, validate=False
+    )
+    identity_material.pop("report_id")
+    false_report = replace(
+        false_report,
+        report_id="g2eproof_v01:"
+        + domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_REPORT_ID_V01", identity_material
+        ),
+    )
+    with pytest.raises(ValueError, match="g2e5_case_outcome_invalid"):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(false_report)
+
+    transition_case_index = 10 + 85
+    transition_case = report.case_results[transition_case_index]
+    first_subcase = transition_case.subcase_results[0]
+    second_subcase = transition_case.subcase_results[1]
+    first_subcase_material = json.loads(first_subcase.evidence_material_json)
+    second_subcase_material = json.loads(second_subcase.evidence_material_json)
+    for key in (
+        "compositional_binding_profile_id",
+        "semantic_call_fingerprint",
+        "semantic_call_semantic_length",
+        "mutated_carrier_sha256",
+        "mutated_carrier_semantic_length",
+        "semantic_result_sha256",
+        "semantic_result_semantic_length",
+        "public_semantic_validator",
+        "mutated_argument_locator",
+        "mutated_carrier_type",
+        "mutated_carrier_id",
+    ):
+        second_subcase_material[key] = first_subcase_material[key]
+    duplicated_subcase_json = json.dumps(
+        second_subcase_material,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    )
+    duplicated_subcase = replace(
+        second_subcase,
+        evidence_material_json=duplicated_subcase_json,
+        evidence_sha256=domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_SUBCASE_EVIDENCE_V01",
+            second_subcase_material,
+        ),
+    )
+    duplicated_subcases = (
+        first_subcase,
+        duplicated_subcase,
+        *transition_case.subcase_results[2:],
+    )
+    duplicated_case_material = json.loads(
+        transition_case.evidence_material_json
+    )
+    duplicated_case_material["subcase_evidence_sha256"] = [
+        subcase.evidence_sha256 for subcase in duplicated_subcases
+    ]
+    duplicated_case_json = json.dumps(
+        duplicated_case_material,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    )
+    duplicated_case = replace(
+        transition_case,
+        subcase_results=duplicated_subcases,
+        evidence_material_json=duplicated_case_json,
+        evidence_sha256=domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_CASE_EVIDENCE_V01",
+            duplicated_case_material,
+        ),
+    )
+    duplicated_cases = (
+        *report.case_results[:transition_case_index],
+        duplicated_case,
+        *report.case_results[transition_case_index + 1 :],
+    )
+    duplicated_baseline_ids = tuple(
+        dict.fromkeys(
+            case.baseline_runtime_report_id
+            for case in duplicated_cases
+            if case.baseline_runtime_report_id is not None
+        )
+    )
+    duplicated_sealed_material = {
+        "domain_order": report.domain_order,
+        "baseline_runtime_report_ids": duplicated_baseline_ids,
+        "case_order": tuple(case.case_id for case in duplicated_cases),
+        "case_evidence_sha256": tuple(
+            case.evidence_sha256 for case in duplicated_cases
+        ),
+        "constructive_case_count": report.constructive_case_count,
+        "negative_case_count": report.negative_case_count,
+        "total_case_count": report.total_case_count,
+        "accepted_baseline_bundle_count": report.accepted_baseline_bundle_count,
+        "explicit_public_g2d_baseline_call_count": (
+            report.explicit_public_g2d_baseline_call_count
+        ),
+        "source_collectors_replayed": report.source_collectors_replayed,
+        "source_evidence_mode": report.source_evidence_mode,
+        "zero_counters": tuple(
+            sum(getattr(case, name) for case in duplicated_cases)
+            for name in E5_ZERO_COUNTER_FIELDS
+        ),
+        "final_status": report.final_status,
+        "reason_codes": report.reason_codes,
+    }
+    duplicated_report = replace(
+        report,
+        case_results=duplicated_cases,
+        sealed_evidence_sha256=domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_SEALED_EVIDENCE_V01",
+            duplicated_sealed_material,
+        ),
+    )
+    duplicated_identity_material = (
+        runner.continuous_delta_runtime_g2_e_report_to_plain_data_v01(
+            duplicated_report, validate=False
+        )
+    )
+    duplicated_identity_material.pop("report_id")
+    duplicated_report = replace(
+        duplicated_report,
+        report_id="g2eproof_v01:"
+        + domain_hash(
+            "HEDGEHOG_G2E_TWO_DOMAIN_REPORT_ID_V01",
+            duplicated_identity_material,
+        ),
+    )
+    with pytest.raises(
+        ValueError, match="g2e5_negative_evidence_not_one_to_one"
+    ):
+        runner.validate_continuous_delta_runtime_g2_e_report_v01(
+            duplicated_report
+        )
+    _e5_progress_marker("E5_TEST_COMPLETED=sealed_report")
+
+
+def test_e5_zero_operation_authority_effect_and_bounded_performance_v01(
+    e5_report_fixture: dict[str, object],
+) -> None:
+    report = e5_report_fixture["report"]
+    assert e5_report_fixture["collector_invocations"] == 1
+    assert e5_report_fixture["network_sink_calls"] == ()
+    assert type(e5_report_fixture["elapsed"]) is float
+    assert math.isfinite(e5_report_fixture["elapsed"])
+    assert e5_report_fixture["elapsed"] > 0.0
+    stage_summary = {
+        name: {
+            "calls": len(values),
+            "seconds": round(sum(values), 6),
+        }
+        for name, values in sorted(
+            e5_report_fixture["stage_timings"].items()
+        )
+    }
+    _e5_progress_marker(
+        "G2E5_STAGE_TIMINGS="
+        + json.dumps(
+            stage_summary,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+        )
+    )
+    assert report.constructive_case_count == 10
+    assert report.negative_case_count == 90
+    assert report.total_case_count == 100
+    assert report.source_collectors_replayed is False
+    assert report.source_evidence_mode == "public_builder_constructed_baselines"
+    bundle_calls = e5_report_fixture["selective_bundle_calls"]
+    assert bundle_calls
+    for bundle in bundle_calls:
+        assert all(
+            getattr(bundle.recomputation_result, name) == 0
+            for name in E5_ZERO_COUNTER_FIELDS
+        )
+        assert all(
+            getattr(bundle.runtime_report, name) == 0
+            for name in E5_ZERO_COUNTER_FIELDS
+        )
+        assert bundle.plan_root_decision_result.permission_created is False
+        assert bundle.plan_root_decision_result.final_output_created is False
+        assert bundle.plan_root_decision_result.effect_requested is False
+        assert bundle.final_root_decision_result.permission_created is False
+        assert bundle.final_root_decision_result.final_output_created is False
+        assert bundle.final_root_decision_result.effect_requested is False
+    assert all(getattr(report, name) == 0 for name in E5_ZERO_COUNTER_FIELDS)
+    assert all(
+        getattr(case, name) == 0
+        for case in report.case_results
+        for name in E5_ZERO_COUNTER_FIELDS
+    )
+    assert all(
+        subcase.final_status == "PASS"
+        for case in report.case_results
+        for subcase in case.subcase_results
+    )
+    assert all(case.final_outputs_created == 0 for case in report.case_results)
+    assert all(case.permissions_created == 0 for case in report.case_results)
+    assert all(case.authority_created_count == 0 for case in report.case_results)
+    assert all(case.real_world_effects_count == 0 for case in report.case_results)
+    constructive_material = tuple(
+        json.loads(case.evidence_material_json)
+        for case in report.case_results[:10]
+    )
+    assert all(
+        set(material["observed_zero_counters"]) == set(E5_ZERO_COUNTER_FIELDS)
+        and all(value == 0 for value in material["observed_zero_counters"].values())
+        for material in constructive_material
+    )
+    imported_modules, resolved_calls = _e5_static_import_and_call_targets(
+        E5_RUNNER_PATH.read_text(encoding="ascii")
+    )
+    assert not any(
+        _e5_forbidden_external_target(module)
+        for module in imported_modules
+    )
+    assert not any(
+        _e5_forbidden_external_target(target) for target in resolved_calls
+    )
+    constructive_oracle = e5_report_fixture.get(
+        "_constructive_actual_return_oracle"
+    )
+    if type(constructive_oracle) is not dict:
+        raise AssertionError("g2e5_constructive_oracle_result_missing")
+    factual_call_ids = constructive_oracle["consumed_call_ids"]
+    negative_setup_rows = tuple(constructive_oracle["negative_setup_rows"])
+    all_constructive_rows = tuple(e5_report_fixture["constructive_calls"])
+    negative_setup_call_ids = {
+        row["call_id"] for row in negative_setup_rows
+    }
+    assert type(factual_call_ids) is frozenset
+    assert len(factual_call_ids) == 54
+    assert tuple(
+        (row["phase"], row["negative_case_id"], row["operation"])
+        for row in negative_setup_rows
+    ) == (
+        (
+            "negative",
+            "g2e_case:negative:graph_hop_bound_overflow:v01",
+            "project_integrity_replay_dependency_edges_v01",
+        ),
+        (
+            "negative",
+            "g2e_case:negative:graph_hop_bound_overflow:v01",
+            "build_dependency_graph_index_v01",
+        ),
+    )
+    assert factual_call_ids.isdisjoint(negative_setup_call_ids)
+    assert {
+        row["call_id"] for row in all_constructive_rows
+    } == factual_call_ids | negative_setup_call_ids
+    factual_rows = tuple(
+        row
+        for row in all_constructive_rows
+        if row["call_id"] in factual_call_ids
+    )
+    factual_counts = {
+        operation: sum(
+            row["operation"] == operation for row in factual_rows
+        )
+        for operation in (
+            "project_integrity_replay_dependency_edges_v01",
+            "build_dependency_graph_index_v01",
+            "compute_affected_set_v01",
+            "run_continuous_delta_runtime_v01",
+        )
+    }
+    negative_oracle = e5_report_fixture.get("_negative_actual_call_oracle")
+    if type(negative_oracle) is not dict:
+        raise AssertionError("g2e5_negative_oracle_result_missing")
+    c4_oracle = _e5_validate_c4_actual_runtime_oracle(
+        report, e5_report_fixture
+    )
+    _e5_progress_marker(
+        "G2E5_V11_METRICS="
+        + json.dumps(
+            {
+                "collector_elapsed_seconds": e5_report_fixture["elapsed"],
+                "collector_invocations": e5_report_fixture[
+                    "collector_invocations"
+                ],
+                "constructive_execution_occurrences": len(
+                    e5_report_fixture["stage_timings"]["constructive_cases"]
+                ),
+                "explicit_public_g2d_baseline_calls": len(
+                    e5_report_fixture["public_calls"]
+                ),
+                "factual_call_counts": factual_counts,
+                "factual_call_total": len(factual_rows),
+                "formal_negative_subcases": sum(
+                    len(case.subcase_results)
+                    for case in report.case_results[10:]
+                ),
+                "negative_setup_calls": len(negative_oracle["setup_calls"]),
+                "report_id": report.report_id,
+                "rendered_report_bytes": len(
+                    e5_report_fixture["rendered_once"].encode("ascii")
+                ),
+                "safe_sibling_projection_artifact_id": (
+                    c4_oracle["projection"].artifact_id
+                ),
+                "safe_sibling_runtime_artifact_id": (
+                    c4_oracle["baseline_sibling"].artifact_id
+                ),
+                "sealed_evidence_sha256": report.sealed_evidence_sha256,
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+        )
+    )
+    _e5_progress_marker("E5_TEST_COMPLETED=zero_effect_performance")

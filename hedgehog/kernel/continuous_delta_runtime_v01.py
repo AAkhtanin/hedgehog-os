@@ -6187,6 +6187,230 @@ def rebuild_continuous_delta_runtime_report_identity_v01(
     return _rebuild(value, ContinuousDeltaRuntimeReportV01)
 
 
+def _bundle_artifact_semantic_reason_v01(
+    value: ContinuousDeltaExecutionBundleV01,
+) -> str | None:
+    transitions = value.g2e_transition_decisions
+    t01, t02, t03, t04, t05 = transitions[:5]
+    baseline = value.source_context.baseline_g2d_execution_bundle
+    route_artifact = value.source_context.baseline_g2c_route_eligibility_artifact
+    recomputed_report_artifact = value.recomputed_g2d_execution_bundle.report_artifact
+
+    plan_root_local = _g2e4_root_decision_artifact_v01(
+        prefix="g2e_root_plan_decision_v01:",
+        domain="HEDGEHOG_G2E_PLAN_ROOT_DECISION_ARTIFACT_V01",
+        result=value.plan_root_decision_result,
+        parent_refs=(
+            value.plan_proposed_artifact.artifact_id,
+            route_artifact.artifact_id,
+            baseline.report_artifact.artifact_id,
+        ),
+        trace_refs=(
+            value.plan_root_decision_input.decision_input_id,
+            value.plan_root_decision_input.root_review_packet.packet_id,
+            value.recomputation_plan.recomputation_plan_id,
+            value.delta.delta_id,
+            value.affected_result.affected_set_id,
+            value.invalidation_report.invalidation_report_id,
+        ),
+        time_source_artifact=value.plan_proposed_artifact,
+    )
+    final_root_local = _g2e4_root_decision_artifact_v01(
+        prefix="g2e_root_final_decision_v01:",
+        domain="HEDGEHOG_G2E_FINAL_ROOT_DECISION_ARTIFACT_V01",
+        result=value.final_root_decision_result,
+        parent_refs=(
+            value.plan_root_decision_artifact.artifact_id,
+            value.plan_accepted_artifact.artifact_id,
+            recomputed_report_artifact.artifact_id,
+            value.preservation_proof_artifact.artifact_id,
+        ),
+        trace_refs=(
+            value.final_root_decision_input.decision_input_id,
+            value.final_root_decision_input.root_review_packet.packet_id,
+            value.plan_root_decision_result.decision_id,
+            value.recomputation_result.recomputation_result_id,
+            value.recomputed_g2d_execution_bundle.runtime_report.report_id,
+            value.preservation_proof.preservation_proof_id,
+        ),
+        time_source_artifact=recomputed_report_artifact,
+    )
+    if (
+        value.plan_root_decision_artifact != plan_root_local
+        or value.final_root_decision_artifact != final_root_local
+        or value.plan_root_decision_artifact.artifact_id
+        == value.final_root_decision_artifact.artifact_id
+    ):
+        return "g2e_authority_boundary_violated"
+
+    expected_proposed = _project_delta_source_proposed_artifact_v01(
+        delta=value.delta,
+        baseline_route_artifact=route_artifact,
+        baseline_g2d_report_artifact=baseline.report_artifact,
+        baseline_source_artifacts=value.source_context.baseline_source_artifacts,
+        observed_source_artifacts=value.source_context.observed_source_artifacts,
+    )
+    expected_validated = _project_delta_source_validated_artifact_v01(
+        delta=value.delta,
+        proposed_source_artifact=expected_proposed,
+        t01_decision_id=t01.decision_id,
+        baseline_route_artifact=route_artifact,
+        baseline_g2d_report_artifact=baseline.report_artifact,
+        baseline_source_artifacts=value.source_context.baseline_source_artifacts,
+        observed_source_artifacts=value.source_context.observed_source_artifacts,
+    )
+    expected_graph = _project_dependency_graph_artifact_v01(
+        graph=value.dependency_graph,
+        delta=value.delta,
+        validated_delta_source_artifact=expected_validated,
+        baseline_route_artifact=route_artifact,
+        baseline_source_artifacts=value.source_context.baseline_source_artifacts,
+    )
+    expected_affected = _project_affected_set_artifact_v01(
+        affected_result=value.affected_result,
+        delta=value.delta,
+        validated_delta_source_artifact=expected_validated,
+        dependency_graph_artifact=expected_graph,
+        baseline_route_artifact=route_artifact,
+        t02_decision_id=t02.decision_id,
+    )
+    expected_invalidation = _project_invalidation_report_artifact_v01(
+        report=value.invalidation_report,
+        affected_set_artifact=expected_affected,
+        validated_delta_source_artifact=expected_validated,
+        dependency_graph_artifact=expected_graph,
+        baseline_route_artifact=route_artifact,
+        delta=value.delta,
+        t03_decision_id=t03.decision_id,
+    )
+    expected_plan_proposed = _g2e4_project_plan_proposed_artifact_v01(
+        plan=value.recomputation_plan,
+        delta=value.delta,
+        source_context=value.source_context,
+        dependency_graph_artifact=expected_graph,
+        affected_set_artifact=expected_affected,
+        invalidation_report_artifact=expected_invalidation,
+    )
+    expected_plan_root = _g2e4_root_decision_artifact_v01(
+        prefix="g2e_root_plan_decision_v01:",
+        domain="HEDGEHOG_G2E_PLAN_ROOT_DECISION_ARTIFACT_V01",
+        result=value.plan_root_decision_result,
+        parent_refs=(
+            expected_plan_proposed.artifact_id,
+            route_artifact.artifact_id,
+            baseline.report_artifact.artifact_id,
+        ),
+        trace_refs=plan_root_local.trace_refs,
+        time_source_artifact=expected_plan_proposed,
+    )
+    expected_plan_accepted = _g2e4_project_plan_accepted_artifact_v01(
+        plan=value.recomputation_plan,
+        proposed_artifact=expected_plan_proposed,
+        root_input=value.plan_root_decision_input,
+        root_result=value.plan_root_decision_result,
+        root_artifact=expected_plan_root,
+        t04=t04,
+        t05=t05,
+        delta=value.delta,
+        source_context=value.source_context,
+    )
+    expected_preservation = _project_preservation_proof_artifact_v01(
+        proof=value.preservation_proof,
+        root_accepted_plan_artifact=expected_plan_accepted,
+        invalidation_report_artifact=expected_invalidation,
+        recomputed_g2d_report_artifact=recomputed_report_artifact,
+        delta=value.delta,
+        recomputed_g2d_runtime_trace_id=(
+            value.recomputed_g2d_execution_bundle.runtime_trace.trace_id
+        ),
+    )
+    expected_final_root = _g2e4_root_decision_artifact_v01(
+        prefix="g2e_root_final_decision_v01:",
+        domain="HEDGEHOG_G2E_FINAL_ROOT_DECISION_ARTIFACT_V01",
+        result=value.final_root_decision_result,
+        parent_refs=(
+            expected_plan_root.artifact_id,
+            expected_plan_accepted.artifact_id,
+            recomputed_report_artifact.artifact_id,
+            expected_preservation.artifact_id,
+        ),
+        trace_refs=final_root_local.trace_refs,
+        time_source_artifact=recomputed_report_artifact,
+    )
+    expected_report = _g2e4_runtime_report_artifact_v01(
+        report=value.runtime_report,
+        accepted_plan_artifact=expected_plan_accepted,
+        recomputed_report_artifact=recomputed_report_artifact,
+        preservation_proof_artifact=expected_preservation,
+        final_root_artifact=expected_final_root,
+        invalidation_report_artifact=expected_invalidation,
+    )
+    actual = (
+        value.delta_source_proposed_artifact,
+        value.delta_source_artifact,
+        value.dependency_graph_artifact,
+        value.affected_set_artifact,
+        value.invalidation_report_artifact,
+        value.plan_proposed_artifact,
+        value.plan_root_decision_artifact,
+        value.plan_accepted_artifact,
+        value.preservation_proof_artifact,
+        value.final_root_decision_artifact,
+        value.runtime_report_artifact,
+    )
+    expected = (
+        expected_proposed,
+        expected_validated,
+        expected_graph,
+        expected_affected,
+        expected_invalidation,
+        expected_plan_proposed,
+        expected_plan_root,
+        expected_plan_accepted,
+        expected_preservation,
+        expected_final_root,
+        expected_report,
+    )
+    identity_map = {
+        supplied.artifact_id: canonical.artifact_id
+        for supplied, canonical in zip(actual, expected, strict=True)
+    }
+
+    def normalize_refs(refs: tuple[str, ...]) -> tuple[str, ...]:
+        return tuple(identity_map.get(ref, ref) for ref in refs)
+
+    for supplied, canonical in zip(actual, expected, strict=True):
+        supplied_plain = kernel_artifact_to_plain_dict_v01(supplied)
+        canonical_plain = kernel_artifact_to_plain_dict_v01(canonical)
+        if any(
+            supplied_plain[field_name] != canonical_plain[field_name]
+            for field_name in (
+                "abi_version",
+                "artifact_type",
+                "schema_version",
+                "transaction_id",
+                "owner_root_id",
+                "lifecycle_state",
+                "authority_class",
+                "source_component",
+                "payload",
+                "time_envelope",
+            )
+        ):
+            return "g2e_object_invalid"
+        if (
+            normalize_refs(supplied.parent_refs) != canonical.parent_refs
+            or normalize_refs(supplied.trace_refs) != canonical.trace_refs
+        ):
+            return "g2e_object_invalid"
+    if any(
+        supplied.artifact_id != canonical.artifact_id
+        for supplied, canonical in zip(actual, expected, strict=True)
+    ):
+        return "g2e_identity_mismatch"
+    return None
+
+
 def _continuous_delta_execution_bundle_errors_v01(
     value: object,
 ) -> tuple[str, ...]:
@@ -6265,7 +6489,7 @@ def _continuous_delta_execution_bundle_errors_v01(
         != "PASS"
     ):
         errors.append("g2e_recomputation_result_invalid")
-    if (
+    root_carrier_invalid = bool(
         root_runtime.validate_root_decision_input_v01(
             kernel=value.source_context.root_kernel,
             decision_input=value.plan_root_decision_input,
@@ -6284,8 +6508,17 @@ def _continuous_delta_execution_bundle_errors_v01(
             decision_input=value.final_root_decision_input,
             result=value.final_root_decision_result,
         )
-    ):
+    )
+    if root_carrier_invalid:
         errors.append("g2e_recomputation_result_invalid")
+    elif (
+        value.recomputation_result.result_status == "PASS"
+        and (
+            value.plan_root_decision_result.decision != "ACCEPT"
+            or value.final_root_decision_result.decision != "ACCEPT"
+        )
+    ):
+        return ("g2e_authority_boundary_violated",)
     if (
         type(value.g2e_transition_decisions) is not tuple
         or len(value.g2e_transition_decisions) != 10
@@ -6310,6 +6543,13 @@ def _continuous_delta_execution_bundle_errors_v01(
         ))
     ):
         errors.append("g2e_recomputation_result_invalid")
+    if not errors:
+        try:
+            artifact_reason = _bundle_artifact_semantic_reason_v01(value)
+        except Exception:
+            artifact_reason = "g2e_object_invalid"
+        if artifact_reason is not None:
+            return (artifact_reason,)
     if (
         type(value.g2e_causal_consumption_refs) is not tuple
         or any(

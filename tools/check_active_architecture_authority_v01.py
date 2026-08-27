@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import ast
 import fnmatch
+import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -14,9 +15,14 @@ from typing import Iterable, Sequence
 
 
 BASE_HEAD = "931645dc724c54d635f32dabfca4b62fbc9a39a2"
+E5_IMPLEMENTATION_BASIS_COMMIT = "f582701208b603463a03d404aa841c302a8221d6"
 LOCK_PATH = "specs/current_architecture_lock_v01.md"
 INDEX_PATH = "specs/document_authority_index_v01.json"
 MANIFEST_PATH = "release/successor_context_manifest_v01.json"
+E6_RECONCILIATION_ANNEX_PATH = (
+    "docs/continuous_delta_runtime_v0_1_"
+    "g2_e6_sanitized_basis_reconciliation_addendum_v01.md"
+)
 RETIRED_INVENTORY_PATH = "release/retired_architecture_inventory_v01.json"
 CURRENT_SCHEMA_SURFACE_PATH = "release/current_schema_surface_v01.json"
 COMPLETION_MANIFEST_PATH = "release/completion_manifest.json"
@@ -24,28 +30,42 @@ SEAM_INDEX_PATH = "release/integration_seam_index.json"
 CONFORMANCE_SOURCE_PATH = "hedgehog/kernel/conformance_v01.py"
 KERNEL_CONFORMANCE_RUNNER_PATH = "demo/run_kernel_conformance_v01.py"
 LIVING_GAUNTLET_PATH = "demo/run_living_gauntlet_v01.py"
+LIVING_GAUNTLET_TEST_PATH = "tests/test_living_gauntlet_v01_runner.py"
+KERNEL_CONFORMANCE_TEST_PATH = "tests/test_kernel_conformance_v01_runner.py"
 
-ALLOWED_CHANGED_PATHS = frozenset(
+CLASS_A_RECONCILIATION_PATHS = frozenset(
     {
-        "AGENTS.md",
+        E6_RECONCILIATION_ANNEX_PATH,
+        LOCK_PATH,
         INDEX_PATH,
         MANIFEST_PATH,
-        RETIRED_INVENTORY_PATH,
-        CURRENT_SCHEMA_SURFACE_PATH,
-        "demo/run_kernel_conformance_v01.py",
-        "demo/run_living_gauntlet_v01.py",
-        "hedgehog/kernel/conformance_v01.py",
-        "release/completion_manifest.json",
-        "release/current_schema_surface_v01.json",
-        "release/integration_seam_index.json",
-        "release/retired_architecture_inventory_v01.json",
         "tools/check_active_architecture_authority_v01.py",
         "tests/test_active_architecture_authority_v01.py",
-        "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py",
-        "tests/test_kernel_conformance_v01_runner.py",
-        "tests/test_living_gauntlet_v01_runner.py",
         "tests/test_repository_release_spine_v01.py",
     }
+)
+CLASS_B_E6_IMPLEMENTATION_PATHS = frozenset(
+    {
+        LIVING_GAUNTLET_PATH,
+        LIVING_GAUNTLET_TEST_PATH,
+        CONFORMANCE_SOURCE_PATH,
+        KERNEL_CONFORMANCE_RUNNER_PATH,
+        KERNEL_CONFORMANCE_TEST_PATH,
+    }
+)
+
+CLASS_A_COMMITTED_NAME_STATUS = {
+    path: "A" if path == E6_RECONCILIATION_ANNEX_PATH else "M"
+    for path in CLASS_A_RECONCILIATION_PATHS
+}
+CLASS_B_COMMITTED_NAME_STATUS = {
+    path: "M" for path in CLASS_B_E6_IMPLEMENTATION_PATHS
+}
+POST_E6_LIVING_ACCEPTANCE_TEST = (
+    "test_living_gauntlet_v16_continuous_delta_runtime_acceptance_v01"
+)
+POST_E6_CONFORMANCE_ACCEPTANCE_TEST = (
+    "test_kernel_conformance_v07_continuous_delta_runtime_acceptance_v01"
 )
 
 AUTHORITY_INDEX_KEYS = (
@@ -74,7 +94,7 @@ MANIFEST_KEYS = (
     "include_current_release_sources",
     "exclude_paths",
     "exclude_globs",
-    "deferred_e5_transplant",
+    "committed_e5_basis",
     "authority_documents",
     "historical_access_method",
     "validation_command",
@@ -97,7 +117,16 @@ HISTORICAL_ENTRY_KEYS = (
     "preservation",
     "current_replacement",
 )
-DEFERRED_ENTRY_KEYS = ("path", "status")
+COMMITTED_E5_ENTRY_KEYS = ("path", "sha256", "bytes", "lf")
+COMMITTED_E5_BASIS_KEYS = (
+    "implementation_commit",
+    "implementation_subject",
+    "status",
+    "paths",
+    "e6_implementation_status",
+    "g2e_status",
+    "gate2_status",
+)
 
 REQUIRED_HISTORICAL_PATHS = (
     "specs/human_passport_v0_25.md",
@@ -122,6 +151,7 @@ REQUIRED_ALWAYS_INCLUDE = frozenset(
         CURRENT_SCHEMA_SURFACE_PATH,
         "docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md",
         "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
+        E6_RECONCILIATION_ANNEX_PATH,
         "hedgehog/__init__.py",
         "hedgehog/drs.py",
         "hedgehog/local_drs_resolver.py",
@@ -140,6 +170,8 @@ REQUIRED_ALWAYS_INCLUDE = frozenset(
         "hedgehog/kernel/execution_mode_router_v01.py",
         "hedgehog/kernel/fractal_runtime_v02.py",
         "hedgehog/kernel/continuous_delta_runtime_v01.py",
+        "demo/run_continuous_delta_runtime_g2_e_v01.py",
+        "tests/test_continuous_delta_runtime_g2_e_v01.py",
         "hedgehog/time_model.py",
         "hedgehog/domains/airline/kernel_adapter_v01.py",
         "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
@@ -196,6 +228,7 @@ REQUIRED_GATE_SOURCES = frozenset(
         "schemas/execution_mode_router_v01.schema.json",
         "schemas/fractal_runtime_v02.schema.json",
         "schemas/continuous_delta_runtime_v01.schema.json",
+        "demo/run_continuous_delta_runtime_g2_e_v01.py",
         "demo/run_kernel_conformance_v01.py",
         "demo/run_living_gauntlet_v01.py",
     }
@@ -229,13 +262,92 @@ REQUIRED_RELEASE_SOURCES = frozenset(
         CURRENT_SCHEMA_SURFACE_PATH,
     }
 )
-REQUIRED_DEFERRED_E5_PATHS = frozenset(
+REQUIRED_E5_PATHS = frozenset(
     {
         "hedgehog/kernel/continuous_delta_runtime_v01.py",
         "tests/test_continuous_delta_runtime_g2_e_v01.py",
         "demo/run_continuous_delta_runtime_g2_e_v01.py",
     }
 )
+
+FROZEN_E5_IDENTITIES = {
+    "hedgehog/kernel/continuous_delta_runtime_v01.py": (
+        "97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a",
+        519719,
+        12927,
+    ),
+    "demo/run_continuous_delta_runtime_g2_e_v01.py": (
+        "5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c",
+        381288,
+        9267,
+    ),
+    "tests/test_continuous_delta_runtime_g2_e_v01.py": (
+        "8d26d45a71334172b73fa30125b0e3ddfff74aeb66431af56594d75f9a7f4d8b",
+        661888,
+        16182,
+    ),
+}
+PRE_E6_CLASS_B_IDENTITIES = {
+    LIVING_GAUNTLET_PATH: (
+        "72ace8d6060dd66ddfc09e205a0e1cf5e019419dbd3786b2152ba533c8f64905",
+        226590,
+        5823,
+    ),
+    LIVING_GAUNTLET_TEST_PATH: (
+        "4125cf936d81ffdd503d4ad6dcb6bfffb22b21d163999996b403aeb9f41854ff",
+        189925,
+        5175,
+    ),
+    CONFORMANCE_SOURCE_PATH: (
+        "93460bfd6262b9fec221c454637d27afbb346f3e444740c55e7e2496af866b91",
+        62485,
+        1749,
+    ),
+    KERNEL_CONFORMANCE_RUNNER_PATH: (
+        "75accdcda30fa9d66771b15bfdaf417f65cd27319e5beb3fb7edca32284a2e30",
+        115121,
+        2993,
+    ),
+    KERNEL_CONFORMANCE_TEST_PATH: (
+        "562d2a96ab01373e9cff7d37badf7e68a089e2b9ad0351fd7081aa62540a3ac5",
+        96905,
+        2554,
+    ),
+}
+FROZEN_PREDECESSOR_EVIDENCE_IDENTITIES = {
+    COMPLETION_MANIFEST_PATH: (
+        "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9",
+        30628,
+        567,
+    ),
+    SEAM_INDEX_PATH: (
+        "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03",
+        15589,
+        297,
+    ),
+}
+CLASS_A_CONTROL_SURFACE_IDENTITIES = {
+    E6_RECONCILIATION_ANNEX_PATH: (
+        "1050079c7ea159f56e8645fad4e7398b008faa005a8597a05befa13ae0c65e60",
+        17033,
+        401,
+    ),
+    LOCK_PATH: (
+        "f2299fe6330d91f6e328df3b323b299d0b58c0cddfb2721495444358d5e5ebb0",
+        7725,
+        169,
+    ),
+    INDEX_PATH: (
+        "718b1bfb03f5ccef78db5ca4ffebc9a58024352db80f8bf1b11a5925a8200eec",
+        15964,
+        365,
+    ),
+    MANIFEST_PATH: (
+        "e06dc5821efcda885c465349231d58270094d35342a2552b585bda754b685a76",
+        14893,
+        327,
+    ),
+}
 
 REQUIRED_MANIFEST_STATUS = "SUCCESSOR_ONBOARDING_READY"
 REQUIRED_BLOCKING_REPAIRS: tuple[str, ...] = ()
@@ -308,6 +420,601 @@ HISTORICAL_V05_ACTIVE_REFS = (
 )
 CURRENT_V06_ACTIVE_REFS = tuple(
     act_id for act_id in HISTORICAL_V05_ACTIVE_REFS if act_id != _HISTORICAL_ACT_ID
+)
+POST_E6_PROFILE_ID = "kernel_conformance_v0_7_current"
+POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID = "kernel_conformance_v0_6_historical"
+PRE_E6_LIVING_ACT_IDS = (
+    "airline_deterministic_transaction_runtime",
+    "generic_integrity_replay",
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "generic_multiroot",
+    "supplier_water_filter_portability",
+    "kernel_conformance_closure",
+    "action_packet_lifecycle",
+    "drs_semantic_address_and_reuse_certificate",
+    "execution_mode_router",
+    "fractal_runtime",
+)
+POST_E6_LIVING_ACT_IDS = (*PRE_E6_LIVING_ACT_IDS, "continuous_delta_runtime")
+POST_E6_ACTIVE_REFS = (*CURRENT_V06_ACTIVE_REFS, "continuous_delta_runtime")
+PRE_E6_CATEGORY_CHECK_IDS = (
+    (
+        "DomainPackConformance",
+        (
+            "airline_domain_pass",
+            "supplier_domain_pass",
+            "shared_integrity_contract",
+            "shared_replay_contract",
+            "zero_kernel_law_changes",
+        ),
+    ),
+    (
+        "RootAdapterConformance",
+        (
+            "both_domains_preserve_root",
+            "root_decision_act_pass",
+            "domain_authority_creation_zero",
+            "no_superroot",
+        ),
+    ),
+    (
+        "CorridorAdapterConformance",
+        (
+            "airline_corridor_pass",
+            "supplier_mock_corridor_contained",
+            "corridor_law_unchanged",
+            "no_real_connector_or_action",
+        ),
+    ),
+    (
+        "SemanticProviderConformance",
+        (
+            "trust_model_pass",
+            "semantic_work_pass",
+            "providers_advisory_only",
+            "external_calls_zero",
+        ),
+    ),
+    (
+        "ReplayCompatibility",
+        (
+            "airline_replay_pass",
+            "supplier_replay_pass",
+            "replay_rerun_counts_zero",
+            "replay_creates_no_authority_or_effect",
+        ),
+    ),
+    (
+        "CryptoCompatibility",
+        (
+            "both_anchored_checks_pass",
+            "both_unanchored_checks_explicit",
+            "no_false_unanchored_pass",
+            "no_production_signer_identity",
+            "airline_signature_false",
+            "root_attestation_deferred",
+        ),
+    ),
+    (
+        "SignerIsolationConformance",
+        (
+            "own_root_signatures_verify",
+            "cross_root_misuse_blocked",
+            "no_pki_claim",
+            "no_key_persistence",
+        ),
+    ),
+    (
+        "TransitionRegistryConformance",
+        (
+            "registry_act_pass",
+            "unknown_transition_blocked",
+            "registry_immutable",
+            "no_rule_injection",
+        ),
+    ),
+    (
+        "EffectFirewallConformance",
+        (
+            "firewall_act_pass",
+            "widened_scope_blocked",
+            "firewall_sole_effect_owner",
+            "domain_adapters_no_effect_access",
+            "real_effects_zero",
+        ),
+    ),
+    (
+        "MultiRootConformance",
+        (
+            "three_root_pass",
+            "four_root_pass",
+            "mixed_visible",
+            "incomplete_visible",
+            "duplicate_root_blocked",
+            "reserved_root_blocked",
+            "authority_transfer_zero",
+            "permission_transfer_zero",
+            "no_superroot",
+        ),
+    ),
+    (
+        "ActionPacketLifecycleConformance",
+        (
+            "canonical_identity",
+            "canonical_time",
+            "legal_transitions",
+            "unknown_transition_block",
+            "root_only_authority_changes",
+            "registry_non_authority",
+            "corridor_freshness_enforcement",
+            "receipt_non_authority",
+            "replay_non_execution",
+            "cross_domain_invariance",
+        ),
+    ),
+    (
+        "DRSSemanticAddressReuseCertificateConformance",
+        (
+            "canonical_identity",
+            "time",
+            "pointer_policy",
+            "eligibility",
+            "ranking",
+            "descent",
+            "root_shortcut",
+            "certificate_non_authority",
+            "action_boundary",
+            "cross_domain_invariance",
+        ),
+    ),
+    (
+        "ExecutionModeRouterConformance",
+        (
+            "two_domain_ten_case_report",
+            "all_five_root_outcomes",
+            "seventeen_step_order",
+            "source_binding_and_derived_query",
+            "one_abi_profile_and_stage_bundles",
+            "one_transition_profile_and_root_lineage",
+            "route_eligibility_and_direct_bypass",
+            "package_facade_and_import_boundary",
+            "negative_matrix_and_domain_invariance",
+            "zero_operations",
+        ),
+    ),
+    (
+        "FractalRuntimeConformance",
+        (
+            "policy_identity_and_staged_surface",
+            "executable_templates_and_child_activation",
+            "queue_input_outcome_and_result_order",
+            "paired_budget_events_and_backpressure",
+            "resultproposal_unique_gt_kt_validation",
+            "pre_root_four_artifact_abi_partitions",
+            "transition_profile_and_root_only_report",
+            "causal_pointer_reason_and_root_outcome",
+            "two_domain_seventy_two_case_boundary",
+            "zero_authority_and_operations",
+        ),
+    ),
+)
+E6_CATEGORY_CHECK_IDS = (
+    "delta_source_identity_and_changed_field_binding",
+    "dependency_fingerprint_profile_and_role_separation",
+    "dependency_graph_bounds_order_and_acyclicity",
+    "affected_set_complete_and_minimal",
+    "invalidation_without_deletion",
+    "preservation_and_new_identity_recomputation",
+    "g2a_g2b_g2c_g2d_source_binding",
+    "repeated_delta_idempotency_and_no_spin",
+    "two_domain_selective_recomputation",
+    "zero_authority_and_operations",
+)
+POST_E6_CATEGORY_CHECK_IDS = (
+    *PRE_E6_CATEGORY_CHECK_IDS,
+    ("ContinuousDeltaRuntimeConformance", E6_CATEGORY_CHECK_IDS),
+)
+PRE_E6_NEGATIVE_PROBE_IDS = (
+    "manifest_hash_mismatch",
+    "replay_hash_mismatch",
+    "cross_root_signer_misuse",
+    "unknown_transition",
+    "root_hard_failure_not_overridden",
+    "effect_firewall_scope_widening",
+    "multiroot_duplicate_root",
+    "multiroot_reserved_root",
+    "airline_adapter_effect_access_forbidden",
+    "supplier_adapter_effect_counter_rejected",
+    "action_packet_identity_forgery",
+    "action_packet_time_forgery",
+    "action_packet_illegal_transition",
+    "action_packet_unknown_transition",
+    "action_packet_root_authority_forgery",
+    "action_packet_registry_authority_forgery",
+    "action_packet_corridor_freshness_forgery",
+    "action_packet_receipt_authority_forgery",
+    "action_packet_replay_execution_forgery",
+    "action_packet_cross_domain_substitution",
+    "drs_address_identity_forgery",
+    "drs_time_query_forgery",
+    "drs_pointer_policy_forgery",
+    "drs_eligibility_order_forgery",
+    "drs_ranking_ineligible_selection_forgery",
+    "drs_memory_descent_budget_forgery",
+    "drs_root_shortcut_authority_forgery",
+    "reuse_certificate_cross_binding_forgery",
+    "drs_action_reuse_forgery",
+    "drs_cross_domain_substitution",
+    "execution_mode_report_identity_forgery",
+    "execution_mode_case_order_forgery",
+    "execution_mode_selected_row_forgery",
+    "execution_mode_root_outcome_forgery",
+    "execution_mode_transition_lineage_forgery",
+    "execution_mode_route_eligibility_forgery",
+    "execution_mode_conflict_state_forgery",
+    "execution_mode_cross_domain_substitution",
+    "execution_mode_operation_order_forgery",
+    "execution_mode_zero_operation_forgery",
+    "fractal_runtime_report_identity_forgery",
+    "fractal_runtime_route_eligibility_substitution",
+    "fractal_runtime_direct_root_decision_bypass",
+    "fractal_runtime_mode_profile_forgery",
+    "fractal_runtime_scope_budget_widening",
+    "fractal_runtime_queue_transition_forgery",
+    "fractal_runtime_recursive_capability_forgery",
+    "fractal_runtime_no_progress_forgery",
+    "fractal_runtime_child_authority_forgery",
+    "fractal_runtime_zero_operation_forgery",
+)
+E6_NEGATIVE_PROBE_IDS = (
+    "continuous_delta_report_identity_forgery",
+    "continuous_delta_source_substitution",
+    "continuous_delta_dependency_fingerprint_forgery",
+    "continuous_delta_graph_edge_forgery",
+    "continuous_delta_affected_set_omission",
+    "continuous_delta_unrelated_artifact_injection",
+    "continuous_delta_invalidation_deletion_forgery",
+    "continuous_delta_preserved_artifact_mutation",
+    "continuous_delta_root_authority_forgery",
+    "continuous_delta_zero_operation_forgery",
+)
+POST_E6_NEGATIVE_PROBE_IDS = (*PRE_E6_NEGATIVE_PROBE_IDS, *E6_NEGATIVE_PROBE_IDS)
+PRESERVED_DOMAIN_IDS = ("airline", "supplier_water_filter")
+PRESERVED_DOMAIN_GEOMETRY = (
+    (
+        "airline",
+        "hedgehog.domains.airline.kernel_adapter_v01",
+        (
+            "demo.run_living_gauntlet_v01:"
+            "collect_generic_integrity_replay_gauntlet_act_v01"
+        ),
+        (
+            "airline_act_executed",
+            "airline_adapter_validated",
+            "airline_generic_unanchored_exact",
+            "airline_generic_anchored_pass",
+            "airline_generic_replay_pass",
+            "airline_causal_bundle_valid",
+            "airline_root_authority_preserved",
+            "airline_effect_access_none",
+            "airline_real_effects_zero",
+            "airline_frozen_reference_remains_evidence_only",
+            "airline_signature_verified_remains_false",
+            "airline_root_attestation_not_claimed",
+        ),
+        (
+            "hedgehog/domains/airline/kernel_adapter_v01.py",
+            "tests/test_airline_kernel_adapter_v01.py",
+        ),
+        ("limitation_g1d1_frozen_airline_projection_only",),
+    ),
+    (
+        "supplier_water_filter",
+        "hedgehog.domains.supplier_water_filter.kernel_adapter_v01",
+        (
+            "demo.run_living_gauntlet_v01:"
+            "collect_supplier_water_filter_portability_gauntlet_act_v01"
+        ),
+        (
+            "supplier_act_executed",
+            "supplier_exact_source_contract",
+            "supplier_adapter_validated",
+            "supplier_generic_unanchored_exact",
+            "supplier_generic_anchored_pass",
+            "supplier_generic_replay_pass",
+            "supplier_causal_bundle_valid",
+            "supplier_multiroot_mixed_visible",
+            "supplier_root_authority_preserved",
+            "supplier_effect_access_none",
+            "supplier_real_effects_zero",
+            "supplier_b_blocked",
+            "shipment_held",
+            "receipt_evidence_only",
+        ),
+        (
+            "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+            "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+        ),
+        ("limitation_g1d2_supplier_water_filter_projection_only",),
+    ),
+)
+
+PRE_E6_LIVING_EXECUTED_RUNTIME_ACT_IDS = (
+    "airline_deterministic_transaction_runtime",
+    "generic_integrity_replay",
+    "transition_registry",
+    "root_decision_kernel",
+    "effect_firewall",
+    "supplier_water_filter_portability",
+)
+POST_E6_LIVING_EXECUTED_RUNTIME_ACT_IDS = (
+    *PRE_E6_LIVING_EXECUTED_RUNTIME_ACT_IDS,
+    "continuous_delta_runtime",
+)
+PRE_E6_LIVING_EXECUTED_CONFORMANCE_ACT_IDS = (
+    "root_signer_isolation_conformance",
+    "semantic_work_contract",
+    "domain_neutral_kernel_abi",
+    "causal_consumption",
+    "generic_multiroot",
+    "kernel_conformance_closure",
+)
+LIVING_EVIDENCE_ONLY_ACT_IDS = (
+    "airline_all_real_frozen_reference",
+    _HISTORICAL_ACT_ID,
+)
+LIVING_HISTORICAL_EVIDENCE_ACT_IDS = (_HISTORICAL_ACT_ID,)
+
+# These repr digests freeze insertion order, exact Python container type, keys,
+# and values for the bounded source/seam maps without duplicating large maps.
+PRE_E6_LIVING_ACTIVE_SOURCES_REPR_SHA256 = (
+    "931f2754d830fb8b0987ea46a790c3e054bf8f3393da9541588c8096e1cc24dc"
+)
+POST_E6_LIVING_ACTIVE_SOURCES_REPR_SHA256 = (
+    "12436b3490f1d0cc5e2c275d9202633ed5255e1c0402dfe1cce02d8efb7f8af4"
+)
+LIVING_CURRENT_SEAMS_REPR_SHA256 = (
+    "559b30638e0f69f58cf173d0a04d7efeda4035abc419369209e154b17c071206"
+)
+PRE_E6_CONFORMANCE_ACT_SOURCES_REPR_SHA256 = (
+    "4729a796314e6b78011ec723f09e2ed6269fa54f40289d36cbdb2d838d663bf6"
+)
+POST_E6_CONFORMANCE_ACT_SOURCES_REPR_SHA256 = (
+    "e4e25ea012c5fd1bec34072a9361e145f45a5d86d432b7002450cedd38dda4b0"
+)
+
+CORE_PHASE_CRITICAL_NAMES = frozenset(
+    {
+        "CONFORMANCE_VERSION",
+        "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL",
+        "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT",
+        "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL",
+        "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT",
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE",
+        "CATEGORY_IDS",
+        "DOMAIN_IDS",
+        "NEGATIVE_PROBE_IDS",
+        "_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS",
+        "_V06_CURRENT_ACTIVE_GAUNTLET_REFS",
+        "_V06_HISTORICAL_ACTIVE_GAUNTLET_REFS",
+        "_V07_CURRENT_ACTIVE_GAUNTLET_REFS",
+        "_ACTIVE_GAUNTLET_REFS",
+        "_EXPECTED_CATEGORY_CHECK_IDS",
+        "_EXPECTED_DOMAIN_GEOMETRY",
+    }
+)
+RUNNER_PHASE_CRITICAL_NAMES = frozenset(
+    {
+        "RUNNER_VERSION",
+        "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL",
+        "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT",
+        "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL",
+        "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT",
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE",
+        "_V05_HISTORICAL_BASE_ACT_IDS",
+        "_V06_HISTORICAL_BASE_ACT_IDS",
+        "_BASE_ACT_IDS",
+        "_ACT_SOURCES",
+    }
+)
+LIVING_PHASE_CRITICAL_NAMES = frozenset(
+    {
+        "RUNNER_VERSION",
+        "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL",
+        "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT",
+        "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL",
+        "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT",
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE",
+        "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05",
+        "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06",
+        "CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06",
+        "CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07",
+        "_ACTIVE_ACT_SOURCES",
+        "_ACTIVE_ACT_IDS",
+        "_CURRENT_SEAMS",
+        "_EXECUTED_RUNTIME_ACT_IDS",
+        "_EXECUTED_CONFORMANCE_ACT_IDS",
+        "_EVIDENCE_ONLY_ACT_IDS",
+        "_HISTORICAL_EVIDENCE_ACT_IDS",
+        "_HISTORICAL_SEAMS",
+    }
+)
+
+POST_E6_SHARED_REPORT_ASSERTION_FIELDS = frozenset(
+    {
+        "continuous_delta_runtime_execution_count",
+        "continuous_delta_runtime_public_validation_status",
+        "continuous_delta_runtime_report_sha256",
+        "continuous_delta_runtime_report_bytes",
+        "shared_conformance_e5_collector_calls",
+        "shared_conformance_e5_report_sha256",
+        "shared_conformance_e5_report_bytes",
+        "continuous_delta_runtime_second_execution_count",
+        "continuous_delta_runtime_cache_reuse_count",
+        "continuous_delta_runtime_test_fixture_substitution_count",
+        "continuous_delta_runtime_private_g2d_calls",
+        "continuous_delta_runtime_reconstructed_case_count",
+    }
+)
+POST_E6_SHARED_FIXED_REPORT_VALUES = (
+    ("continuous_delta_runtime_execution_count", 1),
+    ("continuous_delta_runtime_public_validation_status", "PASS"),
+    ("shared_conformance_e5_collector_calls", 0),
+    ("continuous_delta_runtime_second_execution_count", 0),
+    ("continuous_delta_runtime_cache_reuse_count", 0),
+    ("continuous_delta_runtime_test_fixture_substitution_count", 0),
+    ("continuous_delta_runtime_private_g2d_calls", 0),
+    ("continuous_delta_runtime_reconstructed_case_count", 0),
+)
+POST_E6_SHARED_SHA256_FIELDS = (
+    "continuous_delta_runtime_report_sha256",
+    "shared_conformance_e5_report_sha256",
+)
+POST_E6_SHARED_BYTE_COUNT_FIELDS = (
+    "continuous_delta_runtime_report_bytes",
+    "shared_conformance_e5_report_bytes",
+)
+POST_E6_LIVING_GEOMETRY_ASSERTIONS = (
+    ("runner_version", "v1.6"),
+    ("kernel_conformance_profile", POST_E6_PROFILE_ID),
+    (
+        "historical_kernel_conformance_profile",
+        POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID,
+    ),
+    ("active_act_results", POST_E6_LIVING_ACT_IDS),
+)
+POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS = (
+    ("conformance_version", "v0.7"),
+    ("profile_id", POST_E6_PROFILE_ID),
+    ("historical_profile_ref", POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID),
+    ("category_results", tuple(item[0] for item in POST_E6_CATEGORY_CHECK_IDS)),
+    ("category_results", POST_E6_CATEGORY_CHECK_IDS),
+    ("negative_test_results", POST_E6_NEGATIVE_PROBE_IDS),
+    ("active_gauntlet_refs", POST_E6_ACTIVE_REFS),
+    ("domain_results", PRESERVED_DOMAIN_IDS),
+)
+
+CRITICAL_MUTATING_METHODS_V03 = frozenset(
+    {
+        "update",
+        "setdefault",
+        "pop",
+        "popitem",
+        "clear",
+        "__setitem__",
+        "__delitem__",
+        "setitem",
+        "delitem",
+        "append",
+        "extend",
+        "insert",
+        "remove",
+        "reverse",
+        "sort",
+        "add",
+        "discard",
+        "difference_update",
+        "intersection_update",
+        "symmetric_difference_update",
+        "__iadd__",
+        "__iand__",
+        "__imul__",
+        "__ior__",
+        "__isub__",
+        "__ixor__",
+    }
+)
+CRITICAL_READ_ONLY_CALLS_V03 = frozenset(
+    {
+        "all",
+        "any",
+        "dict",
+        "enumerate",
+        "frozenset",
+        "isinstance",
+        "iter",
+        "len",
+        "list",
+        "repr",
+        "reversed",
+        "set",
+        "sorted",
+        "str",
+        "tuple",
+        "zip",
+    }
+)
+CRITICAL_READ_ONLY_METHODS_V03 = frozenset(
+    {"copy", "get", "items", "keys", "values"}
+)
+
+HISTORICAL_EVIDENCE_STRUCTURAL_ALLOWLIST_V03 = (
+    (
+        "kernel_conformance",
+        "module",
+        "binding:_GATE1_ACTIVE_GAUNTLET_REFS_V01",
+    ),
+    (
+        "kernel_conformance",
+        "module",
+        "binding:_G2A_ACTIVE_GAUNTLET_REFS_V02",
+    ),
+    (
+        "kernel_conformance",
+        "module",
+        "binding:_G2B_ACTIVE_GAUNTLET_REFS_V03",
+    ),
+    (
+        "kernel_conformance",
+        "module",
+        "binding:_G2C_ACTIVE_GAUNTLET_REFS_V04",
+    ),
+    (
+        "kernel_conformance",
+        "module",
+        "binding:_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS",
+    ),
+    (
+        "kernel_conformance",
+        "function:kernel_conformance_profile_metadata_v01",
+        "return_field:historical_act_id",
+    ),
+    (
+        "kernel_conformance_runner",
+        "module",
+        "binding:_V05_HISTORICAL_BASE_ACT_IDS",
+    ),
+    (
+        "living_gauntlet",
+        "module",
+        "binding:HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05",
+    ),
+    (
+        "living_gauntlet",
+        "module",
+        "binding:_EVIDENCE_ONLY_ACT_IDS",
+    ),
+    (
+        "living_gauntlet",
+        "module",
+        "binding:_HISTORICAL_EVIDENCE_ACT_IDS",
+    ),
+    (
+        "living_gauntlet",
+        "module",
+        "binding:_HISTORICAL_SEAMS",
+    ),
+    (
+        "living_gauntlet",
+        "function:_validate_completion_manifest_v01",
+        "binding:expected_profiles.historical_v0_5.historical_act_id",
+    ),
 )
 CURRENT_REGRESSION_CLAIM_TO_ACTS = (
     (
@@ -569,6 +1276,13 @@ REQUIRED_CURRENT_CLASSIFICATIONS = {
             NAMED_GATE_SCOPE,
             False,
         ),
+        E6_RECONCILIATION_ANNEX_PATH: (
+            "accepted_g2e6_sanitized_basis_reconciliation_contract",
+            True,
+            True,
+            NAMED_GATE_SCOPE,
+            False,
+        ),
         "release/current_status_overlay_v01.json": (
             "current_lifecycle_metadata_view",
             False,
@@ -824,6 +1538,30 @@ def _static_value(node: ast.AST, values: dict[str, object]) -> object:
                     value_node, values
                 )
         return result
+    if isinstance(node, ast.Subscript):
+        container = _static_value(node.value, values)
+        key = _static_value(node.slice, values)
+        try:
+            return container[key]  # type: ignore[index]
+        except (KeyError, IndexError, TypeError):
+            raise StaticValueUnavailable from None
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "tuple"
+        and len(node.args) == 1
+        and not node.keywords
+    ):
+        value = _static_value(node.args[0], values)
+        if not isinstance(value, (tuple, list, dict)):
+            raise StaticValueUnavailable
+        return tuple(value)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        left = _static_value(node.left, values)
+        right = _static_value(node.right, values)
+        if type(left) is type(right) and isinstance(left, (str, bytes, tuple, list)):
+            return left + right
+        raise StaticValueUnavailable
     raise StaticValueUnavailable
 
 
@@ -886,6 +1624,28 @@ def _load_json(path: Path, code: str, failures: list[str]) -> dict[str, object] 
     return value
 
 
+def _file_identity(path: Path) -> tuple[str, int, int] | None:
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return None
+    return hashlib.sha256(data).hexdigest(), len(data), data.count(b"\n")
+
+
+def _validate_exact_identities(
+    repo_root: Path,
+    expected: dict[str, tuple[str, int, int]],
+    code: str,
+    failures: list[str],
+) -> None:
+    for relative_path, expected_identity in expected.items():
+        identity = _file_identity(repo_root / relative_path)
+        if identity is None:
+            failures.append(f"{code}.missing:{relative_path}")
+        elif identity != expected_identity:
+            failures.append(f"{code}.identity:{relative_path}")
+
+
 def _valid_relative_pattern(value: object) -> bool:
     if (
         not isinstance(value, str)
@@ -900,6 +1660,242 @@ def _valid_relative_pattern(value: object) -> bool:
         and str(path) == value
         and all(part not in {"", ".", ".."} for part in path.parts)
     )
+
+
+def _load_reconciliation_contract(
+    repo_root: Path,
+    failures: list[str],
+) -> dict[str, object] | None:
+    path = repo_root / E6_RECONCILIATION_ANNEX_PATH
+    try:
+        source = path.read_text(encoding="ascii")
+    except (OSError, UnicodeError) as exc:
+        failures.append(f"e6.annex.read:{type(exc).__name__}")
+        return None
+    begin = "<!-- BEGIN HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_V01 -->"
+    end = "<!-- END HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_V01 -->"
+    if source.count(begin) != 1 or source.count(end) != 1:
+        failures.append("e6.annex.machine_block.markers")
+        return None
+    block = source.split(begin, 1)[1].split(end, 1)[0].strip()
+    if not block.startswith("```json\n") or not block.endswith("\n```"):
+        failures.append("e6.annex.machine_block.fence")
+        return None
+    try:
+        value = json.loads(
+            block[len("```json\n") : -len("\n```")],
+            object_pairs_hook=_reject_duplicate_keys,
+        )
+    except (json.JSONDecodeError, DuplicateJSONKeyError):
+        failures.append("e6.annex.machine_block.json")
+        return None
+    if not isinstance(value, dict):
+        failures.append("e6.annex.machine_block.root_type")
+        return None
+    return value
+
+
+def _validate_reconciliation_contract(
+    value: dict[str, object] | None,
+    failures: list[str],
+) -> None:
+    if value is None:
+        return
+    exact_scalars = {
+        "protocol": "HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_V01",
+        "contract_status": "CLASS_A_RECONCILIATION_ONLY",
+        "repository_basis_commit": E5_IMPLEMENTATION_BASIS_COMMIT,
+        "repository_basis_subject": (
+            "Implement G2-E5 continuous delta runtime acceptance"
+        ),
+        "conflict_class": "STALE_E6_PROFILE_AND_RELEASE_GEOMETRY",
+        "ARCHITECTURE_CONFLICT": False,
+        "E5_INVALIDATED": False,
+        "G2E_REDESIGN_REQUIRED": False,
+        "E6_IMPLEMENTATION_STATUS": "NOT_STARTED_NOT_AUTHORIZED_BY_CLASS_A",
+        "G2E_STATUS": "NOT_CLOSED",
+        "GATE2_STATUS": "NOT_CLOSED",
+        "PUBLIC_RELEASE_STATUS": "NOT_CLAIMED",
+        "RC2_STATUS": "NOT_CLAIMED",
+        "PRODUCTION_READINESS_STATUS": "NOT_CLAIMED",
+        "AUTHORITY_CREATED": False,
+        "PERMISSION_CREATED": False,
+        "ACTION_PACKET_CREATED": False,
+        "RECEIPT_CREATED": False,
+        "FINAL_OUTPUT_CREATED": False,
+        "EXTERNAL_ACTION_CREATED": False,
+        "REAL_WORLD_EFFECTS_COUNT": 0,
+    }
+    for key, expected in exact_scalars.items():
+        if value.get(key) != expected:
+            failures.append(f"e6.annex.exact:{key}")
+
+    archive = value.get("accepted_reconciliation_archive")
+    expected_archive = {
+        "path": (
+            "/Users/admin/Downloads/"
+            "HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_"
+            "20260826T181617Z.tar.gz"
+        ),
+        "sha256": (
+            "5a9e2efdd8718cba9abd671b989ba4613fe0b79160e0994c9f023e3ac1ebbc6b"
+        ),
+        "bytes": 28990,
+        "status": "READ_ONLY_BOUNDED_RECONCILIATION_EVIDENCE",
+    }
+    if archive != expected_archive:
+        failures.append("e6.annex.reconciliation_archive.exact")
+
+    current = value.get("current_pre_e6")
+    if not isinstance(current, dict):
+        failures.append("e6.annex.current_pre_e6.type")
+        current = {}
+    current_expected = {
+        "phase_id": "PRE_E6_RECONCILED",
+        "living_version": "v1.5",
+        "living_act_ids": list(PRE_E6_LIVING_ACT_IDS),
+        "living_act_count": 16,
+        "conformance_core_version": "v0.6",
+        "conformance_runner_version": "v0.6",
+        "current_profile_id": CURRENT_PROFILE_ID,
+        "immediate_historical_profile_id": HISTORICAL_PROFILE_ID,
+        "historical_v0_5_active_refs": list(HISTORICAL_V05_ACTIVE_REFS),
+        "category_ids": [item[0] for item in PRE_E6_CATEGORY_CHECK_IDS],
+        "category_count": 14,
+        "domain_ids": list(PRESERVED_DOMAIN_IDS),
+        "domain_count": 2,
+        "negative_probe_ids": list(PRE_E6_NEGATIVE_PROBE_IDS),
+        "negative_probe_count": 50,
+        "active_refs": list(CURRENT_V06_ACTIVE_REFS),
+        "active_ref_count": 15,
+        "all_layers_invariant_super_smoke": (
+            "HISTORICAL_EVIDENCE_ONLY_NOT_CURRENT"
+        ),
+    }
+    if current != current_expected:
+        failures.append("e6.annex.current_pre_e6.exact")
+
+    successor = value.get("future_post_e6")
+    if not isinstance(successor, dict):
+        failures.append("e6.annex.future_post_e6.type")
+        successor = {}
+    successor_expected = {
+        "phase_id": "POST_E6_SUCCESSOR",
+        "living_version": "v1.6",
+        "living_immediate_historical_version": "v1.5",
+        "living_preserved_prefix_count": 16,
+        "living_appended_act_id": "continuous_delta_runtime",
+        "living_appended_act_position": 17,
+        "living_resulting_act_count": 17,
+        "conformance_core_version": "v0.7",
+        "conformance_runner_version": "v0.7",
+        "current_profile_id": POST_E6_PROFILE_ID,
+        "immediate_historical_profile_id": (
+            POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID
+        ),
+        "preserved_earlier_profile_id": HISTORICAL_PROFILE_ID,
+        "profile_succession": [
+            HISTORICAL_PROFILE_ID,
+            POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID,
+            POST_E6_PROFILE_ID,
+        ],
+        "preserved_category_prefix_count": 14,
+        "appended_category_id": "ContinuousDeltaRuntimeConformance",
+        "appended_category_position": 15,
+        "resulting_category_count": 15,
+        "appended_check_ids": list(E6_CATEGORY_CHECK_IDS),
+        "preserved_negative_probe_prefix_count": 50,
+        "appended_probe_ids": list(E6_NEGATIVE_PROBE_IDS),
+        "appended_probe_positions": list(range(51, 61)),
+        "resulting_negative_probe_count": 60,
+        "preserved_active_ref_prefix_count": 15,
+        "appended_active_ref_id": "continuous_delta_runtime",
+        "appended_active_ref_position": 16,
+        "resulting_active_ref_count": 16,
+        "preserved_domain_ids": list(PRESERVED_DOMAIN_IDS),
+        "all_layers_invariant_super_smoke": (
+            "HISTORICAL_EVIDENCE_ONLY_NEVER_REBOUND"
+        ),
+    }
+    if successor != successor_expected:
+        failures.append("e6.annex.future_post_e6.exact")
+
+    e5 = value.get("committed_e5_basis")
+    expected_e5 = {
+        "implementation_commit": E5_IMPLEMENTATION_BASIS_COMMIT,
+        "status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+        "paths": [
+            {
+                "path": path,
+                "sha256": identity[0],
+                "bytes": identity[1],
+                "lf": identity[2],
+            }
+            for path, identity in FROZEN_E5_IDENTITIES.items()
+        ],
+    }
+    if e5 != expected_e5:
+        failures.append("e6.annex.committed_e5_basis.exact")
+
+    predecessor = value.get("frozen_predecessor_evidence")
+    expected_predecessor = {
+        "completion_manifest_path": COMPLETION_MANIFEST_PATH,
+        "completion_manifest_sha256": (
+            FROZEN_PREDECESSOR_EVIDENCE_IDENTITIES[COMPLETION_MANIFEST_PATH][0]
+        ),
+        "integration_seam_index_path": SEAM_INDEX_PATH,
+        "integration_seam_index_sha256": (
+            FROZEN_PREDECESSOR_EVIDENCE_IDENTITIES[SEAM_INDEX_PATH][0]
+        ),
+        "classification": "FROZEN_PREDECESSOR_EVIDENCE_NOT_CURRENT_E6_PASS",
+    }
+    if predecessor != expected_predecessor:
+        failures.append("e6.annex.frozen_predecessor_evidence.exact")
+
+    path_classes = value.get("path_classes")
+    if not isinstance(path_classes, dict):
+        failures.append("e6.annex.path_classes.type")
+        path_classes = {}
+    class_a = path_classes.get("CLASS_A_CONTRACT_OR_CONTROL_PLANE_RECONCILIATION")
+    class_b = path_classes.get("CLASS_B_E6_IMPLEMENTATION")
+    if not isinstance(class_a, list) or set(class_a) != set(CLASS_A_RECONCILIATION_PATHS):
+        failures.append("e6.annex.path_classes.class_a_exact")
+    if not isinstance(class_b, list) or set(class_b) != set(CLASS_B_E6_IMPLEMENTATION_PATHS):
+        failures.append("e6.annex.path_classes.class_b_exact")
+    class_values = [item for item in path_classes.values() if isinstance(item, list)]
+    seen: set[str] = set()
+    for items in class_values:
+        overlap = seen & set(items)
+        if overlap:
+            failures.append("e6.annex.path_classes.overlap")
+        seen.update(items)
+
+    call_ownership = value.get("call_ownership")
+    expected_call_ownership = {
+        "direct_conformance_e5_collector_calls": 1,
+        "living_e5_collector_calls": 1,
+        "living_shared_conformance_builder_e5_collector_calls": 0,
+        "shared_report_law": (
+            "SAME_SEALED_CANONICAL_PUBLICLY_VALIDATED_E5_REPORT"
+        ),
+        "proof_law": (
+            "SEALED_CANONICAL_IDENTITY_AND_BYTES_NOT_PYTHON_OBJECT_IDENTITY"
+        ),
+        "global_cache_allowed": False,
+        "cross_invocation_reuse_allowed": False,
+        "stale_report_allowed": False,
+        "test_fixture_as_current_report_allowed": False,
+        "consumer_reconstructs_e5_cases": False,
+        "consumer_imports_tests": False,
+        "consumer_calls_private_g2d": False,
+        "consumer_calls_second_delta_runtime": False,
+        "accepted_e5_call_characterization_seconds_approximate": 2040,
+        "direct_conformance_operational_hang_guard_seconds": 7200,
+        "full_living_operational_hang_guard_seconds": 10800,
+        "hang_guards_are_latency_or_gate_claims": False,
+    }
+    if call_ownership != expected_call_ownership:
+        failures.append("e6.annex.call_ownership.exact")
 
 
 def _valid_relative_path(value: object) -> bool:
@@ -1294,7 +2290,8 @@ def _validate_manifest(
         for required_phrase in (
             "S3 active-schema and retired-subsystem isolation",
             "guarded reintegration",
-            "exact frozen-E5 hash verification",
+            "exact committed E5 implementation basis",
+            "does not authorize Class-B E6 implementation",
         ):
             if required_phrase not in purpose:
                 failures.append(
@@ -1348,30 +2345,58 @@ def _validate_manifest(
     for path in sorted(required_authority_documents - set(authority_documents)):
         failures.append(f"successor_manifest.authority_documents.missing:{path}")
 
-    deferred_value = value.get("deferred_e5_transplant")
-    deferred_paths: list[str] = []
-    if not isinstance(deferred_value, list):
-        failures.append("successor_manifest.deferred_e5_transplant.type")
+    committed = value.get("committed_e5_basis")
+    committed_paths: list[str] = []
+    if not isinstance(committed, dict):
+        failures.append("successor_manifest.committed_e5_basis.type")
+        committed = {}
+    elif tuple(committed) != COMMITTED_E5_BASIS_KEYS:
+        failures.append("successor_manifest.committed_e5_basis.shape")
+    expected_basis_values = {
+        "implementation_commit": E5_IMPLEMENTATION_BASIS_COMMIT,
+        "implementation_subject": (
+            "Implement G2-E5 continuous delta runtime acceptance"
+        ),
+        "status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+        "e6_implementation_status": "NOT_STARTED_NOT_AUTHORIZED_BY_CLASS_A",
+        "g2e_status": "NOT_CLOSED",
+        "gate2_status": "NOT_CLOSED",
+    }
+    for key, expected in expected_basis_values.items():
+        if committed.get(key) != expected:
+            failures.append(f"successor_manifest.committed_e5_basis.{key}")
+    committed_entries = committed.get("paths")
+    if not isinstance(committed_entries, list):
+        failures.append("successor_manifest.committed_e5_basis.paths.type")
     else:
-        for index, entry in enumerate(deferred_value):
-            code = f"successor_manifest.deferred_e5_transplant[{index}]"
+        for index, entry in enumerate(committed_entries):
+            code = f"successor_manifest.committed_e5_basis.paths[{index}]"
             if not isinstance(entry, dict):
                 failures.append(f"{code}.type")
                 continue
-            if tuple(entry) != DEFERRED_ENTRY_KEYS:
+            if tuple(entry) != COMMITTED_E5_ENTRY_KEYS:
                 failures.append(f"{code}.shape")
                 continue
             path = entry.get("path")
             if not _valid_relative_path(path):
                 failures.append(f"{code}.path")
                 continue
-            deferred_paths.append(path)
-            if entry.get("status") != "DEFERRED_UNTIL_BYTE_EXACT_TRANSPLANT":
-                failures.append(f"{code}.status")
-        if len(set(deferred_paths)) != len(deferred_paths):
-            failures.append("successor_manifest.deferred_e5_transplant.duplicate")
-    if set(deferred_paths) != set(REQUIRED_DEFERRED_E5_PATHS):
-        failures.append("successor_manifest.deferred_e5_transplant.paths")
+            committed_paths.append(path)
+            expected_identity = FROZEN_E5_IDENTITIES.get(path)
+            if expected_identity is None:
+                failures.append(f"{code}.unexpected_path")
+                continue
+            expected_sha, expected_bytes, expected_lf = expected_identity
+            if entry.get("sha256") != expected_sha:
+                failures.append(f"{code}.sha256")
+            if entry.get("bytes") != expected_bytes:
+                failures.append(f"{code}.bytes")
+            if entry.get("lf") != expected_lf:
+                failures.append(f"{code}.lf")
+        if len(set(committed_paths)) != len(committed_paths):
+            failures.append("successor_manifest.committed_e5_basis.paths.duplicate")
+    if set(committed_paths) != set(REQUIRED_E5_PATHS):
+        failures.append("successor_manifest.committed_e5_basis.paths.exact")
 
     onboarding_paths: set[str] = set()
     for key in (
@@ -1407,7 +2432,7 @@ def _validate_manifest(
             failures.append(f"historical.in_successor_context:{path}")
         if path not in exclude_paths:
             failures.append(f"historical.not_manifest_excluded:{path}")
-    return tuple(sorted(onboarding_paths)), frozenset(deferred_paths)
+    return tuple(sorted(onboarding_paths)), frozenset()
 
 
 def _validate_retired_records(
@@ -1783,6 +2808,4890 @@ def _assignment_is_name(
     return False
 
 
+def _assignment_reference_name(
+    tree: ast.Module | None,
+    assignment_name: str,
+) -> str | None:
+    if tree is None:
+        return None
+    for statement in tree.body:
+        value: ast.AST | None = None
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and statement.targets[0].id == assignment_name
+        ):
+            value = statement.value
+        elif (
+            isinstance(statement, ast.AnnAssign)
+            and isinstance(statement.target, ast.Name)
+            and statement.target.id == assignment_name
+        ):
+            value = statement.value
+        if isinstance(value, ast.Name):
+            return value.id
+    return None
+
+
+def _bound_name_ids(target: ast.AST) -> frozenset[str]:
+    if isinstance(target, ast.Name):
+        return frozenset({target.id})
+    if isinstance(target, (ast.Tuple, ast.List)):
+        return frozenset(
+            name
+            for element in target.elts
+            for name in _bound_name_ids(element)
+        )
+    if isinstance(target, ast.Starred):
+        return _bound_name_ids(target.value)
+    return frozenset()
+
+
+def _expression_uses_names_v03(node: ast.AST, names: set[str]) -> bool:
+    return any(
+        isinstance(child, ast.Name)
+        and isinstance(child.ctx, ast.Load)
+        and child.id in names
+        for child in ast.walk(node)
+    )
+
+
+def _mutable_alias_expression_v03(
+    node: ast.AST,
+    names: set[str],
+    root_names: set[str] | frozenset[str] = frozenset(),
+) -> bool:
+    if isinstance(node, ast.Name):
+        return node.id in names
+    if isinstance(node, (ast.BoolOp, ast.IfExp)):
+        return _expression_uses_names_v03(node, names)
+    if isinstance(node, ast.Subscript):
+        if isinstance(node.value, (ast.Tuple, ast.List, ast.Set, ast.Dict)):
+            return _expression_uses_names_v03(node.value, names)
+        return (
+            isinstance(node.value, ast.Name)
+            and node.value.id in names
+            and node.value.id not in root_names
+        )
+    if isinstance(node, ast.Attribute):
+        return (
+            node.attr in CRITICAL_MUTATING_METHODS_V03
+            and _expression_uses_names_v03(node.value, names)
+        )
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set, ast.Dict)):
+        return _expression_uses_names_v03(node, names)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+        return (
+            node.func.attr in CRITICAL_READ_ONLY_METHODS_V03
+            and _expression_uses_names_v03(node.func.value, names)
+        )
+    if isinstance(node, ast.Attribute):
+        return False
+    return False
+
+
+def _scope_nodes_v03(statements: Sequence[ast.stmt]) -> tuple[ast.AST, ...]:
+    result: list[ast.AST] = []
+    stack: list[ast.AST] = list(reversed(statements))
+    while stack:
+        node = stack.pop()
+        result.append(node)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            definition_nodes: list[ast.AST] = [
+                *node.decorator_list,
+                *node.args.defaults,
+                *(
+                    item
+                    for item in node.args.kw_defaults
+                    if item is not None
+                ),
+            ]
+            stack.extend(reversed(definition_nodes))
+            continue
+        if isinstance(node, ast.ClassDef):
+            definition_nodes = [
+                *node.decorator_list,
+                *node.bases,
+                *(keyword.value for keyword in node.keywords),
+            ]
+            stack.extend(reversed(definition_nodes))
+            continue
+        if isinstance(node, ast.Lambda):
+            definition_nodes = [
+                *node.args.defaults,
+                *(
+                    item
+                    for item in node.args.kw_defaults
+                    if item is not None
+                ),
+            ]
+            stack.extend(reversed(definition_nodes))
+            continue
+        stack.extend(reversed(tuple(ast.iter_child_nodes(node))))
+    return tuple(result)
+
+
+def _module_level_bound_names_v05(tree: ast.Module) -> frozenset[str]:
+    names: set[str] = set()
+    for statement in tree.body:
+        targets: tuple[ast.AST, ...] = ()
+        if isinstance(statement, ast.Assign):
+            targets = tuple(statement.targets)
+        elif isinstance(statement, (ast.AnnAssign, ast.AugAssign)):
+            targets = (statement.target,)
+        elif isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            names.add(statement.name)
+        elif isinstance(statement, (ast.Import, ast.ImportFrom)):
+            for alias in statement.names:
+                names.add(
+                    alias.asname
+                    or (
+                        alias.name
+                        if isinstance(statement, ast.ImportFrom)
+                        else alias.name.split(".", 1)[0]
+                    )
+                )
+        for target in targets:
+            names.update(_bound_name_ids(target))
+    return frozenset(names)
+
+
+class _DirectScopeBindingsV05(ast.NodeVisitor):
+    def __init__(self) -> None:
+        self.names: set[str] = set()
+        self.global_names: set[str] = set()
+        self.nonlocal_names: set[str] = set()
+
+    def _target(self, target: ast.AST) -> None:
+        self.names.update(_bound_name_ids(target))
+
+    def visit_Assign(self, node: ast.Assign) -> None:
+        for target in node.targets:
+            self._target(target)
+        self.visit(node.value)
+
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
+        self._target(node.target)
+        if node.value is not None:
+            self.visit(node.value)
+
+    def visit_AugAssign(self, node: ast.AugAssign) -> None:
+        self._target(node.target)
+        self.visit(node.value)
+
+    def visit_NamedExpr(self, node: ast.NamedExpr) -> None:
+        self._target(node.target)
+        self.visit(node.value)
+
+    def visit_For(self, node: ast.For) -> None:
+        self._target(node.target)
+        self.visit(node.iter)
+        for statement in (*node.body, *node.orelse):
+            self.visit(statement)
+
+    visit_AsyncFor = visit_For
+
+    def visit_With(self, node: ast.With) -> None:
+        for item in node.items:
+            self.visit(item.context_expr)
+            if item.optional_vars is not None:
+                self._target(item.optional_vars)
+        for statement in node.body:
+            self.visit(statement)
+
+    visit_AsyncWith = visit_With
+
+    def visit_ExceptHandler(self, node: ast.ExceptHandler) -> None:
+        if node.name is not None:
+            self.names.add(node.name)
+        for statement in node.body:
+            self.visit(statement)
+
+    def visit_Import(self, node: ast.Import) -> None:
+        self.names.update(
+            alias.asname or alias.name.split(".", 1)[0]
+            for alias in node.names
+        )
+
+    def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+        self.names.update(alias.asname or alias.name for alias in node.names)
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        self.names.add(node.name)
+
+    visit_AsyncFunctionDef = visit_FunctionDef
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        self.names.add(node.name)
+
+    def visit_Lambda(self, node: ast.Lambda) -> None:
+        return None
+
+    def visit_ListComp(self, node: ast.ListComp) -> None:
+        return None
+
+    visit_SetComp = visit_ListComp
+    visit_DictComp = visit_ListComp
+    visit_GeneratorExp = visit_ListComp
+
+    def visit_Global(self, node: ast.Global) -> None:
+        self.global_names.update(node.names)
+
+    def visit_Nonlocal(self, node: ast.Nonlocal) -> None:
+        self.nonlocal_names.update(node.names)
+
+
+def _scope_bindings_v05(
+    scope: ast.Module | ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda | ast.ClassDef,
+) -> frozenset[str]:
+    visitor = _DirectScopeBindingsV05()
+    if isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+        visitor.names.update(_argument_binding_names_v03(scope.args))
+    statements: Sequence[ast.stmt]
+    if isinstance(scope, ast.Lambda):
+        visitor.visit(scope.body)
+        statements = ()
+    else:
+        statements = scope.body
+    for statement in statements:
+        visitor.visit(statement)
+    visitor.names.difference_update(visitor.global_names | visitor.nonlocal_names)
+    return frozenset(visitor.names)
+
+
+def _lexical_scope_chains_v05(
+    tree: ast.Module,
+) -> dict[int, tuple[frozenset[str], ...]]:
+    chains: dict[int, tuple[frozenset[str], ...]] = {}
+    module_bindings = _scope_bindings_v05(tree)
+
+    def walk(node: ast.AST, chain: tuple[frozenset[str], ...]) -> None:
+        chains[id(node)] = chain
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            definition_nodes = (
+                *node.decorator_list,
+                *node.args.defaults,
+                *(value for value in node.args.kw_defaults if value is not None),
+                *(
+                    argument.annotation
+                    for argument in (
+                        *node.args.posonlyargs,
+                        *node.args.args,
+                        *node.args.kwonlyargs,
+                    )
+                    if argument.annotation is not None
+                ),
+                *(tuple([node.args.vararg.annotation]) if node.args.vararg is not None and node.args.vararg.annotation is not None else ()),
+                *(tuple([node.args.kwarg.annotation]) if node.args.kwarg is not None and node.args.kwarg.annotation is not None else ()),
+                *(tuple([node.returns]) if node.returns is not None else ()),
+            )
+            for child in definition_nodes:
+                walk(child, chain)
+            body_chain = (*chain, _scope_bindings_v05(node))
+            for statement in node.body:
+                walk(statement, body_chain)
+            return
+        if isinstance(node, ast.Lambda):
+            for child in (
+                *node.args.defaults,
+                *(value for value in node.args.kw_defaults if value is not None),
+            ):
+                walk(child, chain)
+            walk(node.body, (*chain, _scope_bindings_v05(node)))
+            return
+        if isinstance(node, ast.ClassDef):
+            for child in (
+                *node.decorator_list,
+                *node.bases,
+                *(keyword.value for keyword in node.keywords),
+            ):
+                walk(child, chain)
+            class_chain = (*chain, _scope_bindings_v05(node))
+            for statement in node.body:
+                walk(statement, class_chain)
+            return
+        for child in ast.iter_child_nodes(node):
+            walk(child, chain)
+
+    chains[id(tree)] = (module_bindings,)
+    for statement in tree.body:
+        walk(statement, (module_bindings,))
+    return chains
+
+
+def _lexical_builtin_is_exact_v05(
+    chains: dict[int, tuple[frozenset[str], ...]],
+    node: ast.AST,
+    name: str,
+) -> bool:
+    return all(name not in bindings for bindings in chains.get(id(node), ()))
+
+
+def _module_exact_import_bindings_v05(tree: ast.Module) -> dict[str, str]:
+    imported_targets: dict[str, list[str]] = {}
+    nonimport_bindings: set[str] = set()
+
+    class ModuleExecutionBindings(ast.NodeVisitor):
+        def bind(self, target: ast.AST) -> None:
+            nonimport_bindings.update(_bound_name_ids(target))
+
+        def visit_Import(self, node: ast.Import) -> None:
+            for alias in node.names:
+                bound = alias.asname or alias.name.split(".", 1)[0]
+                target = alias.name if alias.asname else bound
+                imported_targets.setdefault(bound, []).append(target)
+
+        def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+            if node.level != 0:
+                for alias in node.names:
+                    if alias.name != "*":
+                        nonimport_bindings.add(alias.asname or alias.name)
+                return
+            module = node.module or ""
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                bound = alias.asname or alias.name
+                target = f"{module}.{alias.name}" if module else alias.name
+                imported_targets.setdefault(bound, []).append(target)
+
+        def visit_Assign(self, node: ast.Assign) -> None:
+            for target in node.targets:
+                self.bind(target)
+            self.visit(node.value)
+
+        def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
+            self.bind(node.target)
+            self.visit(node.annotation)
+            if node.value is not None:
+                self.visit(node.value)
+
+        def visit_AugAssign(self, node: ast.AugAssign) -> None:
+            self.bind(node.target)
+            self.visit(node.value)
+
+        def visit_NamedExpr(self, node: ast.NamedExpr) -> None:
+            self.bind(node.target)
+            self.visit(node.value)
+
+        def visit_Delete(self, node: ast.Delete) -> None:
+            for target in node.targets:
+                self.bind(target)
+
+        def visit_For(self, node: ast.For) -> None:
+            self.bind(node.target)
+            self.visit(node.iter)
+            for statement in (*node.body, *node.orelse):
+                self.visit(statement)
+
+        visit_AsyncFor = visit_For
+
+        def visit_With(self, node: ast.With) -> None:
+            for item in node.items:
+                self.visit(item.context_expr)
+                if item.optional_vars is not None:
+                    self.bind(item.optional_vars)
+            for statement in node.body:
+                self.visit(statement)
+
+        visit_AsyncWith = visit_With
+
+        def visit_ExceptHandler(self, node: ast.ExceptHandler) -> None:
+            if node.name is not None:
+                nonimport_bindings.add(node.name)
+            if node.type is not None:
+                self.visit(node.type)
+            for statement in node.body:
+                self.visit(statement)
+
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+            nonimport_bindings.add(node.name)
+            for expression in _definition_time_expressions_v05(node):
+                self.visit(expression)
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+
+        def visit_ClassDef(self, node: ast.ClassDef) -> None:
+            nonimport_bindings.add(node.name)
+            for expression in _definition_time_expressions_v05(node):
+                self.visit(expression)
+
+        def visit_Lambda(self, node: ast.Lambda) -> None:
+            for expression in _definition_time_expressions_v05(node):
+                self.visit(expression)
+
+    visitor = ModuleExecutionBindings()
+    for statement in tree.body:
+        visitor.visit(statement)
+    return {
+        binding: targets[0]
+        for binding, targets in imported_targets.items()
+        if binding not in nonimport_bindings
+        and targets
+        and all(target == targets[0] for target in targets)
+    }
+
+
+def _lexical_module_is_exact_v05(
+    tree: ast.Module,
+    chains: dict[int, tuple[frozenset[str], ...]],
+    node: ast.AST,
+    binding: str,
+    module_name: str,
+) -> bool:
+    chain = chains.get(id(node), ())
+    if any(binding in names for names in chain[1:]):
+        return False
+    return _module_exact_import_bindings_v05(tree).get(binding) == module_name
+
+
+def _identity_preserving_root_expression_v05(
+    node: ast.AST,
+    roots: set[str] | frozenset[str],
+) -> bool:
+    if isinstance(node, ast.Name):
+        return node.id in roots
+    if isinstance(node, ast.Starred):
+        return _identity_preserving_root_expression_v05(node.value, roots)
+    if isinstance(node, ast.NamedExpr):
+        return _identity_preserving_root_expression_v05(node.value, roots)
+    if isinstance(node, ast.IfExp):
+        return any(
+            _identity_preserving_root_expression_v05(value, roots)
+            for value in (node.body, node.orelse)
+        )
+    if isinstance(node, ast.BoolOp):
+        return any(
+            _identity_preserving_root_expression_v05(value, roots)
+            for value in node.values
+        )
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return any(
+            _identity_preserving_root_expression_v05(value, roots)
+            for value in node.elts
+        )
+    if isinstance(node, ast.Dict):
+        return any(
+            value is not None
+            and _identity_preserving_root_expression_v05(value, roots)
+            for value in (*node.keys, *node.values)
+        )
+    if isinstance(node, ast.Subscript) and isinstance(
+        node.value, (ast.Tuple, ast.List)
+    ):
+        return _identity_preserving_root_expression_v05(node.value, roots)
+    return False
+
+
+def _identity_aliases_v05(
+    tree: ast.Module,
+    roots: set[str] | frozenset[str],
+) -> frozenset[str]:
+    """Close exact-object aliases without treating container members as roots."""
+
+    aliases = set(roots)
+    changed = True
+    while changed:
+        changed = False
+        for node in ast.walk(tree):
+            targets: tuple[ast.AST, ...] = ()
+            value: ast.AST | None = None
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+                value = node.value
+            elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, ast.NamedExpr):
+                targets = (node.target,)
+                value = node.value
+            if value is None or isinstance(value, ast.Call):
+                continue
+            if not _identity_preserving_root_expression_v05(value, aliases):
+                continue
+            before = len(aliases)
+            for target in targets:
+                if isinstance(target, (ast.Name, ast.Tuple, ast.List, ast.Starred)):
+                    aliases.update(_bound_name_ids(target))
+            changed = changed or len(aliases) != before
+    return frozenset(aliases)
+
+
+def _critical_scope_escape_failures_v05(
+    tree: ast.Module,
+    *,
+    label: str,
+    mutable_names: set[str],
+) -> tuple[str, ...]:
+    alias_names = set(_identity_aliases_v05(tree, mutable_names))
+    failures: set[str] = set()
+    class_node_ids = {
+        id(child)
+        for class_node in ast.walk(tree)
+        if isinstance(class_node, ast.ClassDef)
+        for statement in class_node.body
+        for child in ast.walk(statement)
+    }
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)):
+            if any(
+                _expression_uses_names_v03(expression, alias_names)
+                for expression in _definition_time_expressions_v05(node)
+            ):
+                failures.add(f"{label}.mutable_scope_escape:definition")
+        if isinstance(node, ast.Lambda) and _identity_preserving_root_expression_v05(
+            node.body, alias_names
+        ):
+            failures.add(f"{label}.mutable_scope_escape:lambda_return")
+        if isinstance(node, (ast.Return, ast.Yield, ast.YieldFrom)):
+            if node.value is not None and _identity_preserving_root_expression_v05(
+                node.value, alias_names
+            ):
+                failures.add(
+                    f"{label}.mutable_scope_escape:{type(node).__name__}"
+                )
+        if isinstance(
+            node,
+            (ast.GeneratorExp, ast.ListComp, ast.SetComp, ast.DictComp),
+        ) and _expression_uses_names_v03(node, alias_names):
+            failures.add(f"{label}.mutable_scope_escape:comprehension")
+        targets: tuple[ast.AST, ...] = ()
+        value: ast.AST | None = None
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+            value = node.value
+        elif isinstance(node, ast.AnnAssign) and node.value is not None:
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.NamedExpr):
+            targets = (node.target,)
+            value = node.value
+        if value is None or not _identity_preserving_root_expression_v05(
+            value, alias_names
+        ):
+            continue
+        if id(node) in class_node_ids:
+            failures.add(f"{label}.mutable_scope_escape:class_storage")
+        if any(
+            isinstance(target, (ast.Attribute, ast.Subscript))
+            for target in targets
+        ):
+            failures.add(f"{label}.mutable_scope_escape:storage")
+    return tuple(sorted(failures))
+
+
+def _phase_critical_mutation_failures_v03(
+    tree: ast.Module,
+    *,
+    label: str,
+    critical_names: frozenset[str],
+    values: dict[str, object],
+) -> tuple[str, ...]:
+    mutable_names = {
+        name
+        for name in critical_names
+        if type(values.get(name)) in {dict, list, set}
+    }
+    if not mutable_names:
+        return ()
+    failures: set[str] = set()
+    failures.update(
+        _critical_scope_escape_failures_v05(
+            tree,
+            label=label,
+            mutable_names=mutable_names,
+        )
+    )
+    failures.update(
+        _dynamic_namespace_failures_v05(
+            tree,
+            label=f"{label}.critical_namespace",
+            protected_names=frozenset(mutable_names),
+        )
+    )
+    failures.update(
+        _module_capability_failures_v05(
+            tree,
+            label=f"{label}.critical_builtin_authority",
+            module_name="builtins",
+            protected_attributes=CRITICAL_READ_ONLY_CALLS_V03,
+        )
+    )
+    lexical_chains = _lexical_scope_chains_v05(tree)
+    function_groups: dict[str, list[ast.FunctionDef | ast.AsyncFunctionDef]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            function_groups.setdefault(node.name, []).append(node)
+    local_functions = {
+        name: rows[0]
+        for name, rows in function_groups.items()
+        if len(rows) == 1
+    }
+    active_local_calls: set[tuple[int, tuple[str, ...]]] = set()
+
+    def analyze_scope(
+        statements: Sequence[ast.stmt],
+        inherited_aliases: set[str],
+    ) -> None:
+        nodes = _scope_nodes_v03(statements)
+        aliases = set(inherited_aliases)
+        changed = True
+        while changed:
+            changed = False
+            for node in nodes:
+                targets: tuple[ast.AST, ...] = ()
+                value: ast.AST | None = None
+                if isinstance(node, ast.Assign):
+                    targets = tuple(node.targets)
+                    value = node.value
+                elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                    targets = (node.target,)
+                    value = node.value
+                elif isinstance(node, ast.NamedExpr):
+                    targets = (node.target,)
+                    value = node.value
+                elif isinstance(node, (ast.For, ast.AsyncFor)):
+                    targets = (node.target,)
+                    value = node.iter
+                elif isinstance(node, ast.comprehension):
+                    targets = (node.target,)
+                    value = node.iter
+                elif isinstance(node, (ast.With, ast.AsyncWith)):
+                    for item in node.items:
+                        if (
+                            item.optional_vars is not None
+                            and _mutable_alias_expression_v03(
+                                item.context_expr, aliases, mutable_names
+                            )
+                        ):
+                            before = len(aliases)
+                            aliases.update(_bound_name_ids(item.optional_vars))
+                            changed = changed or len(aliases) != before
+                    continue
+                if value is None or not _mutable_alias_expression_v03(
+                    value, aliases, mutable_names
+                ):
+                    continue
+                for target in targets:
+                    before = len(aliases)
+                    aliases.update(_bound_name_ids(target))
+                    changed = changed or len(aliases) != before
+
+        for node in nodes:
+            if isinstance(node, (ast.Assign, ast.AnnAssign, ast.NamedExpr)):
+                targets = (
+                    tuple(node.targets)
+                    if isinstance(node, ast.Assign)
+                    else (node.target,)
+                )
+                value = node.value
+                if value is not None and _mutable_alias_expression_v03(
+                    value, aliases, mutable_names
+                ):
+                    if any(
+                        isinstance(target, (ast.Attribute, ast.Subscript))
+                        for target in targets
+                    ):
+                        failures.add(f"{label}.mutable_escape:storage")
+                for target in targets:
+                    if (
+                        isinstance(target, (ast.Attribute, ast.Subscript))
+                        and _expression_uses_names_v03(target, aliases)
+                    ):
+                        failures.add(
+                            f"{label}.mutable_write:{type(node).__name__}"
+                        )
+            elif isinstance(node, ast.AugAssign):
+                if (
+                    _expression_uses_names_v03(node.target, aliases)
+                    or bool(_bound_name_ids(node.target) & aliases)
+                    or _target_root_name_v03(node.target) in aliases
+                ):
+                    failures.add(f"{label}.mutable_write:AugAssign")
+            elif isinstance(node, ast.Delete):
+                if any(
+                    _expression_uses_names_v03(target, aliases)
+                    for target in node.targets
+                ):
+                    failures.add(f"{label}.mutable_write:Delete")
+            elif isinstance(node, (ast.Return, ast.Yield, ast.YieldFrom)):
+                value = node.value
+                if value is not None and _mutable_alias_expression_v03(
+                    value, aliases, mutable_names
+                ):
+                    failures.add(
+                        f"{label}.mutable_escape:{type(node).__name__}"
+                    )
+            if not isinstance(node, ast.Call):
+                continue
+            called = _dotted_ast_name(node.func) or ""
+            call_leaf = called.split(".")[-1]
+            tainted_arguments = any(
+                _expression_uses_names_v03(argument, aliases)
+                for argument in node.args
+            ) or any(
+                _expression_uses_names_v03(keyword.value, aliases)
+                for keyword in node.keywords
+            )
+            tainted_receiver = (
+                isinstance(node.func, ast.Attribute)
+                and _expression_uses_names_v03(node.func.value, aliases)
+            )
+            tainted_callable = _expression_uses_names_v03(
+                node.func, aliases
+            )
+            if call_leaf in CRITICAL_MUTATING_METHODS_V03 and (
+                tainted_receiver or tainted_arguments or tainted_callable
+            ):
+                failures.add(f"{label}.mutable_call:{call_leaf}")
+                continue
+            local_function = local_functions.get(call_leaf)
+            if tainted_arguments and local_function is not None:
+                tainted_parameters = _tainted_call_parameters_v03(
+                    node, local_function, aliases
+                )
+                token = (id(local_function), tuple(sorted(tainted_parameters)))
+                if token not in active_local_calls:
+                    active_local_calls.add(token)
+                    analyze_scope(local_function.body, tainted_parameters)
+                    active_local_calls.remove(token)
+                continue
+            if tainted_callable and not tainted_receiver:
+                failures.add(f"{label}.mutable_escape:{called or call_leaf}")
+                continue
+            if tainted_receiver:
+                if call_leaf not in CRITICAL_READ_ONLY_METHODS_V03:
+                    failures.add(
+                        f"{label}.mutable_escape:{called or call_leaf}"
+                    )
+                continue
+            if (
+                tainted_arguments
+                and not (
+                    isinstance(node.func, ast.Name)
+                    and node.func.id in CRITICAL_READ_ONLY_CALLS_V03
+                    and _lexical_builtin_is_exact_v05(
+                        lexical_chains, node, node.func.id
+                    )
+                )
+            ):
+                failures.add(f"{label}.mutable_escape:{called or call_leaf}")
+
+        for node in nodes:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                parameters = _argument_binding_names_v03(node.args)
+                defaults = (
+                    *node.args.defaults,
+                    *(item for item in node.args.kw_defaults if item is not None),
+                )
+                if any(
+                    _expression_uses_names_v03(default, aliases)
+                    for default in defaults
+                ):
+                    failures.add(f"{label}.mutable_escape:function_default")
+                analyze_scope(node.body, aliases - set(parameters))
+            elif isinstance(node, ast.ClassDef):
+                analyze_scope(node.body, aliases)
+            elif isinstance(node, ast.Lambda):
+                parameters = _argument_binding_names_v03(node.args)
+                analyze_scope(
+                    (ast.Expr(value=node.body),),
+                    aliases - set(parameters),
+                )
+
+    analyze_scope(tree.body, set(mutable_names))
+    return tuple(sorted(failures))
+
+
+def _phase_critical_assignments_v02(
+    source_path: Path,
+    label: str,
+    critical_names: frozenset[str],
+    failures: list[str],
+) -> tuple[
+    dict[str, object],
+    dict[str, ast.AST],
+    ast.Module | None,
+    str,
+]:
+    """Extract one exact, bounded module binding for each critical name."""
+
+    try:
+        source = source_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        failures.append(f"{label}.read:{type(exc).__name__}")
+        return {}, {}, None, ""
+    try:
+        tree = ast.parse(source, filename=str(source_path))
+    except SyntaxError:
+        failures.append(f"{label}.syntax")
+        return {}, {}, None, source
+
+    direct_nodes: dict[str, list[ast.AST]] = {}
+    permitted_statement_ids: set[int] = set()
+    values: dict[str, object] = {}
+    for statement in tree.body:
+        name: str | None = None
+        value_node: ast.AST | None = None
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+        ):
+            name = statement.targets[0].id
+            value_node = statement.value
+        elif (
+            isinstance(statement, ast.AnnAssign)
+            and isinstance(statement.target, ast.Name)
+            and statement.value is not None
+        ):
+            name = statement.target.id
+            value_node = statement.value
+        if name is not None and value_node is not None:
+            permitted_statement_ids.add(id(statement))
+            if name in critical_names:
+                direct_nodes.setdefault(name, []).append(value_node)
+            try:
+                values[name] = _static_value(value_node, values)
+            except StaticValueUnavailable:
+                values.pop(name, None)
+
+    module_bound_names = _module_level_bound_names_v05(tree)
+    for name, nodes in direct_nodes.items():
+        for value_node in nodes:
+            shadowed_calls = {
+                call.func.id
+                for call in ast.walk(value_node)
+                if isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Name)
+                and call.func.id in CRITICAL_READ_ONLY_CALLS_V03
+                and call.func.id in module_bound_names
+            }
+            if shadowed_calls:
+                failures.append(
+                    f"{label}.critical_builtin_shadow:{name}:"
+                    f"{','.join(sorted(shadowed_calls))}"
+                )
+
+    invalid_bindings: set[tuple[str, str]] = set()
+    for node in ast.walk(tree):
+        targets: tuple[ast.AST, ...] = ()
+        kind = type(node).__name__
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+        elif isinstance(node, ast.AnnAssign):
+            targets = (node.target,)
+        elif isinstance(node, ast.AugAssign):
+            targets = (node.target,)
+        elif isinstance(node, ast.NamedExpr):
+            targets = (node.target,)
+        elif isinstance(node, (ast.For, ast.AsyncFor)):
+            targets = (node.target,)
+        elif isinstance(node, (ast.With, ast.AsyncWith)):
+            targets = tuple(
+                item.optional_vars
+                for item in node.items
+                if item.optional_vars is not None
+            )
+        elif isinstance(node, ast.comprehension):
+            targets = (node.target,)
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            for name in _bound_name_ids(target) & critical_names:
+                if id(node) not in permitted_statement_ids:
+                    invalid_bindings.add((name, kind))
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            if node.name in critical_names:
+                invalid_bindings.add((node.name, kind))
+        elif isinstance(node, (ast.Global, ast.Nonlocal)):
+            for name in set(node.names) & critical_names:
+                invalid_bindings.add((name, kind))
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            for alias in node.names:
+                bound = alias.asname or alias.name.split(".", 1)[0]
+                if bound in critical_names:
+                    invalid_bindings.add((bound, kind))
+        elif isinstance(node, ast.Call):
+            call_name = node.func.id if isinstance(node.func, ast.Name) else ""
+            if call_name in {"exec", "eval", "globals", "locals"}:
+                failures.append(f"{label}.dynamic_namespace:{call_name}")
+            if call_name == "setattr" and len(node.args) >= 2:
+                attribute = node.args[1]
+                if (
+                    isinstance(attribute, ast.Constant)
+                    and attribute.value in critical_names
+                ):
+                    invalid_bindings.add((str(attribute.value), "setattr"))
+        if isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+            assignment_targets = (
+                tuple(node.targets)
+                if isinstance(node, (ast.Assign, ast.Delete))
+                else (node.target,)
+            )
+            for target in assignment_targets:
+                if not isinstance(target, ast.Subscript):
+                    continue
+                names = {
+                    child.value
+                    for child in ast.walk(target.slice)
+                    if isinstance(child, ast.Constant)
+                    and isinstance(child.value, str)
+                }
+                for name in names & critical_names:
+                    invalid_bindings.add((name, "dynamic_subscript"))
+
+    failures.extend(
+        _phase_critical_mutation_failures_v03(
+            tree,
+            label=label,
+            critical_names=critical_names,
+            values=values,
+        )
+    )
+
+    result: dict[str, object] = {}
+    result_nodes: dict[str, ast.AST] = {}
+    for name in sorted(critical_names):
+        nodes = direct_nodes.get(name, [])
+        matching_invalid = sorted(
+            kind for invalid_name, kind in invalid_bindings if invalid_name == name
+        )
+        if len(nodes) > 1:
+            failures.append(f"{label}.binding_duplicate:{name}")
+        if matching_invalid:
+            failures.append(
+                f"{label}.binding_dynamic:{name}:{','.join(matching_invalid)}"
+            )
+        if len(nodes) != 1 or matching_invalid:
+            continue
+        try:
+            value = _static_value(nodes[0], values)
+        except StaticValueUnavailable:
+            failures.append(f"{label}.binding_unresolved:{name}")
+            continue
+        result[name] = value
+        result_nodes[name] = nodes[0]
+    return result, result_nodes, tree, source
+
+
+def _repr_sha256(value: object) -> str:
+    return hashlib.sha256(repr(value).encode("ascii")).hexdigest()
+
+
+def _critical_shape_matches(
+    node: ast.AST,
+    expected: object,
+    expected_reference: str | None,
+) -> bool:
+    if expected_reference is not None:
+        return isinstance(node, ast.Name) and node.id == expected_reference
+    if type(expected) is str:
+        return isinstance(node, ast.Constant) and type(node.value) is str
+    if type(expected) is tuple:
+        return isinstance(node, (ast.Tuple, ast.Name)) or (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "tuple"
+            and len(node.args) == 1
+            and not node.keywords
+        )
+    if type(expected) is dict:
+        return isinstance(node, ast.Dict)
+    return False
+
+
+def _validate_critical_value_set_v02(
+    *,
+    label: str,
+    values: dict[str, object],
+    nodes: dict[str, ast.AST],
+    all_names: frozenset[str],
+    expected_values: dict[str, object],
+    expected_references: dict[str, str],
+    expected_repr_digests: dict[str, tuple[type[object], str]],
+    failures: list[str],
+) -> None:
+    required = set(expected_values) | set(expected_repr_digests)
+    for name in sorted(required):
+        if name not in values or name not in nodes:
+            failures.append(f"{label}.binding_missing:{name}")
+            continue
+        value = values[name]
+        expected = expected_values.get(name)
+        if name in expected_repr_digests:
+            expected_type, expected_digest = expected_repr_digests[name]
+            if type(value) is not expected_type or _repr_sha256(value) != expected_digest:
+                failures.append(f"{label}.binding_value:{name}")
+            expected = {} if expected_type is dict else ()
+        elif type(value) is not type(expected) or value != expected:
+            failures.append(f"{label}.binding_value:{name}")
+        if not _critical_shape_matches(
+            nodes[name], expected, expected_references.get(name)
+        ):
+            failures.append(f"{label}.binding_shape:{name}")
+    for name in sorted(all_names - required):
+        if name in nodes or name in values:
+            failures.append(f"{label}.binding_forbidden:{name}")
+
+
+def _validate_phase_critical_bindings_v02(
+    phase: str | None,
+    core_values: dict[str, object],
+    core_nodes: dict[str, ast.AST],
+    runner_values: dict[str, object],
+    runner_nodes: dict[str, ast.AST],
+    living_values: dict[str, object],
+    living_nodes: dict[str, ast.AST],
+    failures: list[str],
+) -> None:
+    if phase not in {"PRE_E6_RECONCILED", "POST_E6_SUCCESSOR"}:
+        return
+    post = phase == "POST_E6_SUCCESSOR"
+    current_refs = POST_E6_ACTIVE_REFS if post else CURRENT_V06_ACTIVE_REFS
+    category_checks = POST_E6_CATEGORY_CHECK_IDS if post else PRE_E6_CATEGORY_CHECK_IDS
+    probes = POST_E6_NEGATIVE_PROBE_IDS if post else PRE_E6_NEGATIVE_PROBE_IDS
+    profile_name = (
+        "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT"
+        if post
+        else "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT"
+    )
+    profile_value = POST_E6_PROFILE_ID if post else CURRENT_PROFILE_ID
+
+    core_expected = {
+        "CONFORMANCE_VERSION": "v0.7" if post else "v0.6",
+        "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL": HISTORICAL_PROFILE_ID,
+        profile_name: profile_value,
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE": profile_value,
+        "CATEGORY_IDS": tuple(item[0] for item in category_checks),
+        "DOMAIN_IDS": PRESERVED_DOMAIN_IDS,
+        "NEGATIVE_PROBE_IDS": probes,
+        "_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS": HISTORICAL_V05_ACTIVE_REFS,
+        "_ACTIVE_GAUNTLET_REFS": current_refs,
+        "_EXPECTED_CATEGORY_CHECK_IDS": category_checks,
+        "_EXPECTED_DOMAIN_GEOMETRY": PRESERVED_DOMAIN_GEOMETRY,
+    }
+    if post:
+        core_expected.update(
+            {
+                "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL": (
+                    POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID
+                ),
+                "_V06_HISTORICAL_ACTIVE_GAUNTLET_REFS": CURRENT_V06_ACTIVE_REFS,
+                "_V07_CURRENT_ACTIVE_GAUNTLET_REFS": POST_E6_ACTIVE_REFS,
+            }
+        )
+    else:
+        core_expected["_V06_CURRENT_ACTIVE_GAUNTLET_REFS"] = CURRENT_V06_ACTIVE_REFS
+    _validate_critical_value_set_v02(
+        label="e6.phase.critical.core",
+        values=core_values,
+        nodes=core_nodes,
+        all_names=CORE_PHASE_CRITICAL_NAMES,
+        expected_values=core_expected,
+        expected_references={"DEFAULT_KERNEL_CONFORMANCE_PROFILE": profile_name},
+        expected_repr_digests={},
+        failures=failures,
+    )
+
+    runner_expected = {
+        "RUNNER_VERSION": "v0.7" if post else "v0.6",
+        "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL": HISTORICAL_PROFILE_ID,
+        profile_name: profile_value,
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE": profile_value,
+        "_V05_HISTORICAL_BASE_ACT_IDS": HISTORICAL_V05_ACTIVE_REFS,
+        "_BASE_ACT_IDS": current_refs,
+    }
+    if post:
+        runner_expected["KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL"] = (
+            POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID
+        )
+        runner_expected["_V06_HISTORICAL_BASE_ACT_IDS"] = CURRENT_V06_ACTIVE_REFS
+    runner_digest = (
+        POST_E6_CONFORMANCE_ACT_SOURCES_REPR_SHA256
+        if post
+        else PRE_E6_CONFORMANCE_ACT_SOURCES_REPR_SHA256
+    )
+    _validate_critical_value_set_v02(
+        label="e6.phase.critical.runner",
+        values=runner_values,
+        nodes=runner_nodes,
+        all_names=RUNNER_PHASE_CRITICAL_NAMES,
+        expected_values=runner_expected,
+        expected_references={"DEFAULT_KERNEL_CONFORMANCE_PROFILE": profile_name},
+        expected_repr_digests={"_ACT_SOURCES": (dict, runner_digest)},
+        failures=failures,
+    )
+
+    living_expected = {
+        "RUNNER_VERSION": "v1.6" if post else "v1.5",
+        "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL": HISTORICAL_PROFILE_ID,
+        profile_name: profile_value,
+        "DEFAULT_KERNEL_CONFORMANCE_PROFILE": profile_value,
+        "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05": (
+            HISTORICAL_V05_ACTIVE_REFS
+        ),
+        "_ACTIVE_ACT_IDS": POST_E6_LIVING_ACT_IDS if post else PRE_E6_LIVING_ACT_IDS,
+        "_EXECUTED_RUNTIME_ACT_IDS": (
+            POST_E6_LIVING_EXECUTED_RUNTIME_ACT_IDS
+            if post
+            else PRE_E6_LIVING_EXECUTED_RUNTIME_ACT_IDS
+        ),
+        "_EXECUTED_CONFORMANCE_ACT_IDS": (
+            PRE_E6_LIVING_EXECUTED_CONFORMANCE_ACT_IDS
+        ),
+        "_EVIDENCE_ONLY_ACT_IDS": LIVING_EVIDENCE_ONLY_ACT_IDS,
+        "_HISTORICAL_EVIDENCE_ACT_IDS": LIVING_HISTORICAL_EVIDENCE_ACT_IDS,
+        "_HISTORICAL_SEAMS": {
+            "all_layers_invariant_super_smoke_collector": (
+                _HISTORICAL_RUNNER_MODULE,
+                _HISTORICAL_RUNNER_SYMBOL,
+            )
+        },
+    }
+    if post:
+        living_expected.update(
+            {
+                "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL": (
+                    POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID
+                ),
+                "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06": (
+                    CURRENT_V06_ACTIVE_REFS
+                ),
+                "CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07": POST_E6_ACTIVE_REFS,
+            }
+        )
+    else:
+        living_expected["CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06"] = (
+            CURRENT_V06_ACTIVE_REFS
+        )
+    living_digest = (
+        POST_E6_LIVING_ACTIVE_SOURCES_REPR_SHA256
+        if post
+        else PRE_E6_LIVING_ACTIVE_SOURCES_REPR_SHA256
+    )
+    _validate_critical_value_set_v02(
+        label="e6.phase.critical.living",
+        values=living_values,
+        nodes=living_nodes,
+        all_names=LIVING_PHASE_CRITICAL_NAMES,
+        expected_values=living_expected,
+        expected_references={"DEFAULT_KERNEL_CONFORMANCE_PROFILE": profile_name},
+        expected_repr_digests={
+            "_ACTIVE_ACT_SOURCES": (dict, living_digest),
+            "_CURRENT_SEAMS": (dict, LIVING_CURRENT_SEAMS_REPR_SHA256),
+        },
+        failures=failures,
+    )
+
+
+def _expected_pre_e6_phase_state_v01() -> dict[str, object]:
+    return {
+        "living_version": "v1.5",
+        "living_act_ids": PRE_E6_LIVING_ACT_IDS,
+        "living_profile_v05": HISTORICAL_PROFILE_ID,
+        "living_profile_v06_current": CURRENT_PROFILE_ID,
+        "living_profile_v06_historical": None,
+        "living_profile_v07_current": None,
+        "living_default_profile_ref": "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT",
+        "living_v05_refs": HISTORICAL_V05_ACTIVE_REFS,
+        "living_v06_historical_refs": None,
+        "living_current_refs": CURRENT_V06_ACTIVE_REFS,
+        "core_version": "v0.6",
+        "core_profile_v05": HISTORICAL_PROFILE_ID,
+        "core_profile_v06_current": CURRENT_PROFILE_ID,
+        "core_profile_v06_historical": None,
+        "core_profile_v07_current": None,
+        "core_default_profile_ref": "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT",
+        "core_v05_refs": HISTORICAL_V05_ACTIVE_REFS,
+        "core_v06_historical_refs": None,
+        "core_current_refs": CURRENT_V06_ACTIVE_REFS,
+        "runner_version": "v0.6",
+        "runner_profile_v05": HISTORICAL_PROFILE_ID,
+        "runner_profile_v06_current": CURRENT_PROFILE_ID,
+        "runner_profile_v06_historical": None,
+        "runner_profile_v07_current": None,
+        "runner_default_profile_ref": "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT",
+        "runner_v05_refs": HISTORICAL_V05_ACTIVE_REFS,
+        "runner_v06_historical_refs": None,
+        "runner_current_refs": CURRENT_V06_ACTIVE_REFS,
+        "category_ids": tuple(item[0] for item in PRE_E6_CATEGORY_CHECK_IDS),
+        "category_check_ids": PRE_E6_CATEGORY_CHECK_IDS,
+        "negative_probe_ids": PRE_E6_NEGATIVE_PROBE_IDS,
+        "domain_ids": PRESERVED_DOMAIN_IDS,
+        "domain_geometry": PRESERVED_DOMAIN_GEOMETRY,
+        "historical_all_layers_current": False,
+        "historical_v05_evidence_preserved": True,
+        "focused_test_phase": "PRE_E6_RECONCILED",
+    }
+
+
+def _expected_post_e6_phase_state_v01() -> dict[str, object]:
+    return {
+        "living_version": "v1.6",
+        "living_act_ids": POST_E6_LIVING_ACT_IDS,
+        "living_profile_v05": HISTORICAL_PROFILE_ID,
+        "living_profile_v06_current": None,
+        "living_profile_v06_historical": (
+            POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID
+        ),
+        "living_profile_v07_current": POST_E6_PROFILE_ID,
+        "living_default_profile_ref": "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT",
+        "living_v05_refs": HISTORICAL_V05_ACTIVE_REFS,
+        "living_v06_historical_refs": CURRENT_V06_ACTIVE_REFS,
+        "living_current_refs": POST_E6_ACTIVE_REFS,
+        "core_version": "v0.7",
+        "core_profile_v05": HISTORICAL_PROFILE_ID,
+        "core_profile_v06_current": None,
+        "core_profile_v06_historical": POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID,
+        "core_profile_v07_current": POST_E6_PROFILE_ID,
+        "core_default_profile_ref": "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT",
+        "core_v05_refs": HISTORICAL_V05_ACTIVE_REFS,
+        "core_v06_historical_refs": CURRENT_V06_ACTIVE_REFS,
+        "core_current_refs": POST_E6_ACTIVE_REFS,
+        "runner_version": "v0.7",
+        "runner_profile_v05": HISTORICAL_PROFILE_ID,
+        "runner_profile_v06_current": None,
+        "runner_profile_v06_historical": (
+            POST_E6_IMMEDIATE_HISTORICAL_PROFILE_ID
+        ),
+        "runner_profile_v07_current": POST_E6_PROFILE_ID,
+        "runner_default_profile_ref": "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT",
+        "runner_v05_refs": HISTORICAL_V05_ACTIVE_REFS,
+        "runner_v06_historical_refs": CURRENT_V06_ACTIVE_REFS,
+        "runner_current_refs": POST_E6_ACTIVE_REFS,
+        "category_ids": tuple(item[0] for item in POST_E6_CATEGORY_CHECK_IDS),
+        "category_check_ids": POST_E6_CATEGORY_CHECK_IDS,
+        "negative_probe_ids": POST_E6_NEGATIVE_PROBE_IDS,
+        "domain_ids": PRESERVED_DOMAIN_IDS,
+        "domain_geometry": PRESERVED_DOMAIN_GEOMETRY,
+        "historical_all_layers_current": False,
+        "historical_v05_evidence_preserved": True,
+        "focused_test_phase": "POST_E6_SUCCESSOR",
+    }
+
+
+def _classify_e6_phase_v01(
+    state: dict[str, object],
+) -> tuple[str | None, tuple[str, ...]]:
+    versions = (
+        state.get("living_version"),
+        state.get("core_version"),
+        state.get("runner_version"),
+    )
+    if versions == ("v1.5", "v0.6", "v0.6"):
+        phase = "PRE_E6_RECONCILED"
+        expected = _expected_pre_e6_phase_state_v01()
+        code = "e6.phase.pre"
+    elif versions == ("v1.6", "v0.7", "v0.7"):
+        phase = "POST_E6_SUCCESSOR"
+        expected = _expected_post_e6_phase_state_v01()
+        code = "e6.phase.post"
+    else:
+        failures = ["e6.phase.version_hybrid"]
+        expected_versions = {
+            "living_version": {"v1.5", "v1.6"},
+            "core_version": {"v0.6", "v0.7"},
+            "runner_version": {"v0.6", "v0.7"},
+        }
+        for key, allowed in expected_versions.items():
+            if state.get(key) not in allowed:
+                failures.append(f"e6.phase.{key}")
+        return None, tuple(sorted(failures))
+
+    failures = [
+        f"{code}.{key}"
+        for key, expected_value in expected.items()
+        if state.get(key) != expected_value
+    ]
+    if state.get("historical_all_layers_current") is not False:
+        failures.append("e6.phase.historical_all_layers_rebound")
+    if state.get("historical_v05_evidence_preserved") is not True:
+        failures.append("e6.phase.historical_v05_evidence_erased")
+    return phase if not failures else None, tuple(sorted(set(failures)))
+
+
+def _dotted_ast_name(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        prefix = _dotted_ast_name(node.value)
+        return f"{prefix}.{node.attr}" if prefix else node.attr
+    return None
+
+
+def _module_import_targets_v02(tree: ast.Module) -> dict[str, str]:
+    targets: dict[str, str] = {}
+    for statement in tree.body:
+        if isinstance(statement, ast.Import):
+            for alias in statement.names:
+                bound = alias.asname or alias.name.split(".", 1)[0]
+                targets[bound] = alias.name if alias.asname else bound
+        elif isinstance(statement, ast.ImportFrom) and statement.level == 0:
+            module = statement.module or ""
+            for alias in statement.names:
+                if alias.name == "*":
+                    continue
+                bound = alias.asname or alias.name
+                targets[bound] = f"{module}.{alias.name}" if module else alias.name
+    return targets
+
+
+def _module_import_binding_counts_v03(tree: ast.Module) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for statement in tree.body:
+        if isinstance(statement, ast.Import):
+            aliases = statement.names
+        elif isinstance(statement, ast.ImportFrom) and statement.level == 0:
+            aliases = statement.names
+        else:
+            continue
+        for alias in aliases:
+            if alias.name == "*":
+                continue
+            bound = alias.asname or alias.name.split(".", 1)[0]
+            counts[bound] = counts.get(bound, 0) + 1
+    return counts
+
+
+def _resolved_call_target_v02(
+    node: ast.AST,
+    import_targets: dict[str, str],
+) -> str | None:
+    dotted = _dotted_ast_name(node)
+    if not dotted:
+        return None
+    first, *rest = dotted.split(".")
+    if first not in import_targets:
+        return dotted
+    return ".".join((import_targets[first], *rest))
+
+
+def _argument_binding_names_v03(arguments: ast.arguments) -> frozenset[str]:
+    result = {
+        argument.arg
+        for argument in (
+            *arguments.posonlyargs,
+            *arguments.args,
+            *arguments.kwonlyargs,
+        )
+    }
+    if arguments.vararg is not None:
+        result.add(arguments.vararg.arg)
+    if arguments.kwarg is not None:
+        result.add(arguments.kwarg.arg)
+    return frozenset(result)
+
+
+def _tainted_call_parameters_v03(
+    call: ast.Call,
+    function: ast.FunctionDef | ast.AsyncFunctionDef,
+    aliases: set[str],
+) -> set[str]:
+    positional = (*function.args.posonlyargs, *function.args.args)
+    tainted: set[str] = set()
+    for index, argument in enumerate(call.args):
+        if not _expression_uses_names_v03(argument, aliases):
+            continue
+        if isinstance(argument, ast.Starred) or index >= len(positional):
+            tainted.update(_argument_binding_names_v03(function.args))
+        else:
+            tainted.add(positional[index].arg)
+    keyword_names = {argument.arg for argument in function.args.kwonlyargs}
+    keyword_names.update(argument.arg for argument in positional)
+    for keyword in call.keywords:
+        if not _expression_uses_names_v03(keyword.value, aliases):
+            continue
+        if keyword.arg is None:
+            tainted.update(_argument_binding_names_v03(function.args))
+        elif keyword.arg in keyword_names:
+            tainted.add(keyword.arg)
+    return tainted
+
+
+def _target_root_name_v03(node: ast.AST) -> str | None:
+    current = node
+    while isinstance(current, (ast.Attribute, ast.Subscript)):
+        current = current.value
+    return current.id if isinstance(current, ast.Name) else None
+
+
+_PROVENANCE_NONE_V04 = 0
+_PROVENANCE_DERIVED_V04 = 1
+_PROVENANCE_CONTAINER_V04 = 2
+_PROVENANCE_IDENTITY_V04 = 3
+
+
+def _expression_provenance_v04(
+    node: ast.AST,
+    bindings: dict[str, int],
+) -> int:
+    if isinstance(node, ast.Name):
+        return bindings.get(node.id, _PROVENANCE_NONE_V04)
+    if isinstance(node, ast.Starred):
+        return _expression_provenance_v04(node.value, bindings)
+    if isinstance(node, ast.NamedExpr):
+        return _expression_provenance_v04(node.value, bindings)
+    if isinstance(node, ast.IfExp):
+        return max(
+            _expression_provenance_v04(node.body, bindings),
+            _expression_provenance_v04(node.orelse, bindings),
+        )
+    if isinstance(node, ast.BoolOp):
+        return max(
+            (
+                _expression_provenance_v04(value, bindings)
+                for value in node.values
+            ),
+            default=_PROVENANCE_NONE_V04,
+        )
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        if any(
+            _expression_provenance_v04(element, bindings)
+            != _PROVENANCE_NONE_V04
+            for element in node.elts
+        ):
+            return _PROVENANCE_CONTAINER_V04
+        return _PROVENANCE_NONE_V04
+    if isinstance(node, ast.Dict):
+        if any(
+            child is not None
+            and _expression_provenance_v04(child, bindings)
+            != _PROVENANCE_NONE_V04
+            for child in (*node.keys, *node.values)
+        ):
+            return _PROVENANCE_CONTAINER_V04
+        return _PROVENANCE_NONE_V04
+    if isinstance(node, ast.Subscript):
+        parent = _expression_provenance_v04(node.value, bindings)
+        if parent == _PROVENANCE_CONTAINER_V04:
+            return _PROVENANCE_IDENTITY_V04
+        if parent != _PROVENANCE_NONE_V04:
+            return _PROVENANCE_DERIVED_V04
+        return _PROVENANCE_NONE_V04
+    if isinstance(node, ast.Attribute):
+        parent = _expression_provenance_v04(node.value, bindings)
+        return (
+            _PROVENANCE_DERIVED_V04
+            if parent != _PROVENANCE_NONE_V04
+            else _PROVENANCE_NONE_V04
+        )
+    child_kinds = tuple(
+        _expression_provenance_v04(child, bindings)
+        for child in ast.iter_child_nodes(node)
+    )
+    if any(kind != _PROVENANCE_NONE_V04 for kind in child_kinds):
+        return _PROVENANCE_DERIVED_V04
+    return _PROVENANCE_NONE_V04
+
+
+def _propagate_provenance_target_v04(
+    target: ast.AST,
+    kind: int,
+    bindings: dict[str, int],
+) -> bool:
+    if kind == _PROVENANCE_NONE_V04:
+        return False
+    changed = False
+    if isinstance(target, ast.Name):
+        if bindings.get(target.id, _PROVENANCE_NONE_V04) < kind:
+            bindings[target.id] = kind
+            changed = True
+    elif isinstance(target, (ast.Tuple, ast.List)):
+        child_kind = (
+            _PROVENANCE_IDENTITY_V04
+            if kind in {_PROVENANCE_IDENTITY_V04, _PROVENANCE_CONTAINER_V04}
+            else kind
+        )
+        for element in target.elts:
+            changed = (
+                _propagate_provenance_target_v04(
+                    element, child_kind, bindings
+                )
+                or changed
+            )
+    elif isinstance(target, ast.Starred):
+        changed = _propagate_provenance_target_v04(
+            target.value, kind, bindings
+        )
+    return changed
+
+
+def _provenance_bindings_v04(
+    root: ast.AST,
+    initial: dict[str, int],
+) -> dict[str, int]:
+    bindings = dict(initial)
+    nodes = tuple(ast.walk(root))
+    changed = True
+    while changed:
+        changed = False
+        for node in nodes:
+            targets: tuple[ast.AST, ...] = ()
+            value: ast.AST | None = None
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+                value = node.value
+            elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, ast.NamedExpr):
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+                targets = (node.target,)
+                value = node.iter
+            elif isinstance(node, (ast.With, ast.AsyncWith)):
+                for item in node.items:
+                    if item.optional_vars is None:
+                        continue
+                    kind = _expression_provenance_v04(
+                        item.context_expr, bindings
+                    )
+                    changed = (
+                        _propagate_provenance_target_v04(
+                            item.optional_vars, kind, bindings
+                        )
+                        or changed
+                    )
+                continue
+            if value is None:
+                continue
+            kind = _expression_provenance_v04(value, bindings)
+            for target in targets:
+                changed = (
+                    _propagate_provenance_target_v04(
+                        target, kind, bindings
+                    )
+                    or changed
+                )
+    return bindings
+
+
+def _binding_events_v04(
+    tree: ast.Module,
+    names: frozenset[str],
+    *,
+    permitted_module_imports: dict[str, str] | None = None,
+) -> tuple[str, ...]:
+    permitted = permitted_module_imports or {}
+    top_level_imports = {
+        id(statement)
+        for statement in tree.body
+        if isinstance(statement, (ast.Import, ast.ImportFrom))
+    }
+    events: set[str] = set()
+    for node in ast.walk(tree):
+        targets: tuple[ast.AST, ...] = ()
+        kind = type(node).__name__
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+        elif isinstance(node, (ast.AnnAssign, ast.AugAssign, ast.NamedExpr)):
+            targets = (node.target,)
+        elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+            targets = (node.target,)
+        elif isinstance(node, (ast.With, ast.AsyncWith)):
+            targets = tuple(
+                item.optional_vars
+                for item in node.items
+                if item.optional_vars is not None
+            )
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            for name in _bound_name_ids(target) & names:
+                events.add(f"{name}:{kind}")
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if node.name in names:
+                events.add(f"{node.name}:{kind}")
+            for name in _argument_binding_names_v03(node.args) & names:
+                events.add(f"{name}:{kind}_parameter")
+        elif isinstance(node, ast.Lambda):
+            for name in _argument_binding_names_v03(node.args) & names:
+                events.add(f"{name}:Lambda_parameter")
+        elif isinstance(node, ast.ClassDef) and node.name in names:
+            events.add(f"{node.name}:ClassDef")
+        elif isinstance(node, ast.ExceptHandler) and node.name in names:
+            events.add(f"{node.name}:ExceptHandler")
+        elif isinstance(node, (ast.Global, ast.Nonlocal)):
+            for name in set(node.names) & names:
+                events.add(f"{name}:{kind}")
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            module = node.module or "" if isinstance(node, ast.ImportFrom) else ""
+            for alias in node.names:
+                bound = alias.asname or (
+                    alias.name
+                    if isinstance(node, ast.ImportFrom)
+                    else alias.name.split(".", 1)[0]
+                )
+                if bound not in names:
+                    continue
+                target = (
+                    f"{module}.{alias.name}" if module else alias.name
+                )
+                if (
+                    id(node) in top_level_imports
+                    and permitted.get(bound) == target
+                ):
+                    continue
+                events.add(f"{bound}:{kind}")
+    return tuple(sorted(events))
+
+
+def _unshadowed_builtin_v04(tree: ast.Module, name: str) -> bool:
+    return not _binding_events_v04(tree, frozenset({name}))
+
+
+class _LexicalBindingVisitorV03(ast.NodeVisitor):
+    def __init__(
+        self,
+        root: ast.FunctionDef | ast.AsyncFunctionDef | None,
+        protected: frozenset[str],
+        module_aliases: frozenset[str],
+    ) -> None:
+        self.root = root
+        self.protected = protected
+        self.module_aliases = set(module_aliases)
+        self.events: set[str] = set()
+
+    def _propagate_module_alias(self, target: ast.AST, value: ast.AST) -> None:
+        if not (
+            isinstance(value, ast.Name)
+            and value.id in self.module_aliases
+        ):
+            return
+        self.module_aliases.update(_bound_name_ids(target))
+
+    def _target(self, target: ast.AST, kind: str) -> None:
+        for name in _bound_name_ids(target) & self.protected:
+            self.events.add(f"{name}:{kind}")
+        root = _target_root_name_v03(target)
+        if isinstance(target, (ast.Attribute, ast.Subscript)) and (
+            root in self.module_aliases
+            or _expression_uses_names_v03(target, self.module_aliases)
+        ):
+            self.events.add(f"{root}:module_{kind}")
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        if node is self.root:
+            for name in _argument_binding_names_v03(node.args) & self.protected:
+                self.events.add(f"{name}:parameter")
+            for statement in node.body:
+                self.visit(statement)
+            return
+        if node.name in self.protected:
+            self.events.add(f"{node.name}:FunctionDef")
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+        if node is self.root:
+            for name in _argument_binding_names_v03(node.args) & self.protected:
+                self.events.add(f"{name}:parameter")
+            for statement in node.body:
+                self.visit(statement)
+            return
+        if node.name in self.protected:
+            self.events.add(f"{node.name}:AsyncFunctionDef")
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+        if node.name in self.protected:
+            self.events.add(f"{node.name}:ClassDef")
+
+    def visit_Lambda(self, node: ast.Lambda) -> None:
+        for name in _argument_binding_names_v03(node.args) & self.protected:
+            self.events.add(f"{name}:lambda_parameter")
+
+    def visit_Assign(self, node: ast.Assign) -> None:
+        for target in node.targets:
+            self._propagate_module_alias(target, node.value)
+            self._target(target, "Assign")
+        self.visit(node.value)
+
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
+        if node.value is not None:
+            self._propagate_module_alias(node.target, node.value)
+        self._target(node.target, "AnnAssign")
+        if node.value is not None:
+            self.visit(node.value)
+
+    def visit_AugAssign(self, node: ast.AugAssign) -> None:
+        self._target(node.target, "AugAssign")
+        self.visit(node.value)
+
+    def visit_NamedExpr(self, node: ast.NamedExpr) -> None:
+        self._propagate_module_alias(node.target, node.value)
+        self._target(node.target, "NamedExpr")
+        self.visit(node.value)
+
+    def visit_Delete(self, node: ast.Delete) -> None:
+        for target in node.targets:
+            self._target(target, "Delete")
+
+    def visit_For(self, node: ast.For) -> None:
+        self._target(node.target, "For")
+        self.generic_visit(node)
+
+    def visit_AsyncFor(self, node: ast.AsyncFor) -> None:
+        self._target(node.target, "AsyncFor")
+        self.generic_visit(node)
+
+    def visit_comprehension(self, node: ast.comprehension) -> None:
+        self._target(node.target, "comprehension")
+        self.generic_visit(node)
+
+    def visit_With(self, node: ast.With) -> None:
+        for item in node.items:
+            if item.optional_vars is not None:
+                self._target(item.optional_vars, "With")
+        self.generic_visit(node)
+
+    def visit_AsyncWith(self, node: ast.AsyncWith) -> None:
+        for item in node.items:
+            if item.optional_vars is not None:
+                self._target(item.optional_vars, "AsyncWith")
+        self.generic_visit(node)
+
+    def visit_ExceptHandler(self, node: ast.ExceptHandler) -> None:
+        if node.name in self.protected:
+            self.events.add(f"{node.name}:ExceptHandler")
+        self.generic_visit(node)
+
+    def visit_Import(self, node: ast.Import) -> None:
+        for alias in node.names:
+            bound = alias.asname or alias.name.split(".", 1)[0]
+            if bound in self.protected:
+                self.events.add(f"{bound}:Import")
+
+    def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+        for alias in node.names:
+            bound = alias.asname or alias.name
+            if bound in self.protected:
+                self.events.add(f"{bound}:ImportFrom")
+
+    def visit_Global(self, node: ast.Global) -> None:
+        for name in set(node.names) & self.protected:
+            self.events.add(f"{name}:Global")
+
+    def visit_Nonlocal(self, node: ast.Nonlocal) -> None:
+        for name in set(node.names) & self.protected:
+            self.events.add(f"{name}:Nonlocal")
+
+    def visit_Call(self, node: ast.Call) -> None:
+        called = (_dotted_ast_name(node.func) or "").split(".")[-1]
+        if called in {"setattr", "delattr"} and node.args:
+            root = _target_root_name_v03(node.args[0])
+            if root in self.module_aliases:
+                self.events.add(f"{root}:{called}")
+        if (
+            isinstance(node.func, ast.Attribute)
+            and node.func.attr in CRITICAL_MUTATING_METHODS_V03
+            and _expression_uses_names_v03(
+                node.func.value, self.module_aliases
+            )
+        ):
+            self.events.add(f"module:{node.func.attr}")
+        if any(
+            _expression_uses_names_v03(argument, self.module_aliases)
+            for argument in node.args
+        ) or any(
+            _expression_uses_names_v03(keyword.value, self.module_aliases)
+            for keyword in node.keywords
+        ):
+            self.events.add("module:call_escape")
+        self.generic_visit(node)
+
+
+def _lexical_shadow_events_v03(
+    root: ast.FunctionDef | ast.AsyncFunctionDef,
+    *,
+    protected: frozenset[str],
+    module_aliases: frozenset[str],
+) -> tuple[str, ...]:
+    visitor = _LexicalBindingVisitorV03(root, protected, module_aliases)
+    visitor.visit(root)
+    return tuple(sorted(visitor.events))
+
+
+def _module_shadow_events_v03(
+    tree: ast.Module,
+    *,
+    protected: frozenset[str],
+    module_aliases: frozenset[str],
+    permitted_import_targets: dict[str, str],
+) -> tuple[str, ...]:
+    visitor = _LexicalBindingVisitorV03(None, protected, module_aliases)
+    for statement in tree.body:
+        if isinstance(statement, (ast.Import, ast.ImportFrom)):
+            aliases = statement.names
+            for alias in aliases:
+                bound = alias.asname or alias.name.split(".", 1)[0]
+                if bound in protected and bound not in permitted_import_targets:
+                    visitor.events.add(f"{bound}:module_import")
+            continue
+        visitor.visit(statement)
+    return tuple(sorted(visitor.events))
+
+
+def _public_module_provenance_failures_v04(
+    tree: ast.Module,
+    *,
+    module_aliases: frozenset[str],
+    collector_name: str,
+    validator_name: str,
+) -> tuple[str, ...]:
+    if not module_aliases:
+        return ()
+    bindings = {
+        name: _PROVENANCE_IDENTITY_V04 for name in module_aliases
+    }
+    changed = True
+    nodes = tuple(ast.walk(tree))
+    while changed:
+        changed = False
+        for node in nodes:
+            targets: tuple[ast.AST, ...] = ()
+            value: ast.AST | None = None
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+                value = node.value
+            elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, ast.NamedExpr):
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+                targets = (node.target,)
+                value = node.iter
+            if value is None or any(
+                isinstance(child, ast.Call) for child in ast.walk(value)
+            ):
+                continue
+            kind = _expression_provenance_v04(value, bindings)
+            for target in targets:
+                changed = (
+                    _propagate_provenance_target_v04(
+                        target, kind, bindings
+                    )
+                    or changed
+                )
+    failures: set[str] = set()
+    allowed_attributes = {collector_name, validator_name}
+    for node in ast.walk(tree):
+        targets: tuple[ast.AST, ...] = ()
+        value: ast.AST | None = None
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+            value = node.value
+        elif isinstance(node, ast.AnnAssign):
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.NamedExpr):
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.AugAssign):
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            if isinstance(target, (ast.Attribute, ast.Subscript)) and (
+                _expression_provenance_v04(target, bindings)
+                != _PROVENANCE_NONE_V04
+            ):
+                failures.add("public_module_mutated")
+            if (
+                value is not None
+                and isinstance(target, (ast.Attribute, ast.Subscript))
+                and _expression_provenance_v04(value, bindings)
+                != _PROVENANCE_NONE_V04
+            ):
+                failures.add("public_module_stored")
+        if isinstance(node, (ast.Return, ast.Yield, ast.YieldFrom)):
+            value = node.value
+            if (
+                value is not None
+                and _expression_provenance_v04(value, bindings)
+                != _PROVENANCE_NONE_V04
+            ):
+                failures.add("public_module_escaped")
+        if not isinstance(node, ast.Call):
+            continue
+        receiver_kind = (
+            _expression_provenance_v04(node.func.value, bindings)
+            if isinstance(node.func, ast.Attribute)
+            else _PROVENANCE_NONE_V04
+        )
+        tainted_arguments = any(
+            _expression_provenance_v04(argument, bindings)
+            != _PROVENANCE_NONE_V04
+            for argument in node.args
+        ) or any(
+            _expression_provenance_v04(keyword.value, bindings)
+            != _PROVENANCE_NONE_V04
+            for keyword in node.keywords
+        )
+        if receiver_kind != _PROVENANCE_NONE_V04:
+            if not (
+                isinstance(node.func.value, ast.Name)
+                and node.func.value.id in module_aliases
+                and node.func.attr in allowed_attributes
+            ):
+                failures.add("public_module_callable_or_mutation")
+        if tainted_arguments:
+            failures.add("public_module_call_escape")
+    return tuple(sorted(failures))
+
+
+def _transparent_collector_spies_v02(
+    function: ast.FunctionDef,
+    public_collector: str,
+    import_targets: dict[str, str],
+    protected_bindings: frozenset[str],
+    module_aliases: frozenset[str],
+) -> frozenset[str]:
+    valid: set[str] = set()
+    fresh_recorders: set[str] = set()
+    for statement in function.body:
+        if not (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and isinstance(statement.value, ast.List)
+            and not statement.value.elts
+        ):
+            continue
+        recorder = statement.targets[0].id
+        binding_count = 0
+        for node in ast.walk(function):
+            targets: tuple[ast.AST, ...] = ()
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+            elif isinstance(node, (ast.AnnAssign, ast.AugAssign, ast.NamedExpr)):
+                targets = (node.target,)
+            elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+                targets = (node.target,)
+            elif isinstance(node, (ast.With, ast.AsyncWith)):
+                targets = tuple(
+                    item.optional_vars
+                    for item in node.items
+                    if item.optional_vars is not None
+                )
+            elif isinstance(node, ast.Delete):
+                targets = tuple(node.targets)
+            binding_count += sum(
+                recorder in _bound_name_ids(target) for target in targets
+            )
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+                binding_count += int(
+                    recorder in _argument_binding_names_v03(node.args)
+                )
+        if binding_count == 1:
+            fresh_recorders.add(recorder)
+
+    for statement in function.body:
+        if not isinstance(statement, ast.FunctionDef) or statement.decorator_list:
+            continue
+        if (
+            statement.args.defaults
+            or any(item is not None for item in statement.args.kw_defaults)
+            or len(statement.body) != 3
+            or not isinstance(statement.body[-1], ast.Return)
+        ):
+            continue
+        if _lexical_shadow_events_v03(
+            statement,
+            protected=protected_bindings,
+            module_aliases=module_aliases,
+        ):
+            continue
+        first = statement.body[0]
+        returned = statement.body[-1].value
+        if not (
+            isinstance(first, ast.Assign)
+            and len(first.targets) == 1
+            and isinstance(first.targets[0], ast.Name)
+            and isinstance(first.value, ast.Call)
+            and _resolved_call_target_v02(first.value.func, import_targets)
+            == public_collector
+            and isinstance(returned, ast.Name)
+            and returned.id == first.targets[0].id
+        ):
+            continue
+        result_name = first.targets[0].id
+        middle = statement.body[1]
+        if not (
+            isinstance(middle, ast.Expr)
+            and isinstance(middle.value, ast.Call)
+            and isinstance(middle.value.func, ast.Attribute)
+            and isinstance(middle.value.func.value, ast.Name)
+            and middle.value.func.value.id in fresh_recorders
+            and middle.value.func.attr == "append"
+            and len(middle.value.args) == 1
+            and isinstance(middle.value.args[0], ast.Name)
+            and middle.value.args[0].id == result_name
+            and not middle.value.keywords
+        ):
+            continue
+        valid.add(statement.name)
+    return frozenset(valid)
+
+
+def _module_literal_values_v03(tree: ast.Module) -> dict[str, object]:
+    direct: dict[str, list[tuple[ast.stmt, ast.AST]]] = {}
+    for statement in tree.body:
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+        ):
+            direct.setdefault(statement.targets[0].id, []).append(
+                (statement, statement.value)
+            )
+        elif (
+            isinstance(statement, ast.AnnAssign)
+            and isinstance(statement.target, ast.Name)
+            and statement.value is not None
+        ):
+            direct.setdefault(statement.target.id, []).append(
+                (statement, statement.value)
+            )
+    invalid: set[str] = set()
+    permitted = {
+        id(statement)
+        for rows in direct.values()
+        for statement, _value in rows
+        if len(rows) == 1
+    }
+    for node in ast.walk(tree):
+        targets: tuple[ast.AST, ...] = ()
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+        elif isinstance(node, (ast.AnnAssign, ast.AugAssign, ast.NamedExpr)):
+            targets = (node.target,)
+        elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+            targets = (node.target,)
+        elif isinstance(node, (ast.With, ast.AsyncWith)):
+            targets = tuple(
+                item.optional_vars
+                for item in node.items
+                if item.optional_vars is not None
+            )
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            if id(node) not in permitted:
+                invalid.update(_bound_name_ids(target))
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            invalid.add(node.name)
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            invalid.update(
+                alias.asname or alias.name.split(".", 1)[0]
+                for alias in node.names
+            )
+        elif isinstance(node, (ast.Global, ast.Nonlocal)):
+            invalid.update(node.names)
+        elif isinstance(node, ast.Call):
+            called = (_dotted_ast_name(node.func) or "").split(".")[-1]
+            if called in {"exec", "eval", "globals", "locals"}:
+                invalid.update(direct)
+    pending = [
+        (name, rows[0][1])
+        for name, rows in direct.items()
+        if len(rows) == 1 and name not in invalid
+    ]
+    values: dict[str, object] = {}
+    while pending:
+        remaining: list[tuple[str, ast.AST]] = []
+        progressed = False
+        for name, node in pending:
+            try:
+                values[name] = _static_value(node, values)
+                progressed = True
+            except StaticValueUnavailable:
+                remaining.append((name, node))
+        if not progressed:
+            break
+        pending = remaining
+    return values
+
+
+def _direct_report_field_v03(node: ast.AST, report_name: str) -> str | None:
+    if (
+        isinstance(node, ast.Subscript)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == report_name
+        and isinstance(node.slice, ast.Constant)
+        and type(node.slice.value) is str
+    ):
+        return node.slice.value
+    if (
+        isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == report_name
+    ):
+        return node.attr
+    return None
+
+
+def _report_rooted_fields_v03(
+    node: ast.AST,
+    report_name: str,
+) -> frozenset[str]:
+    return frozenset(
+        field
+        for child in ast.walk(node)
+        if (field := _direct_report_field_v03(child, report_name)) is not None
+    )
+
+
+def _static_equals_v03(
+    node: ast.AST,
+    expected: object,
+    module_values: dict[str, object],
+) -> bool:
+    try:
+        value = _static_value(node, module_values)
+    except StaticValueUnavailable:
+        return False
+    return type(value) is type(expected) and value == expected
+
+
+def _assertion_comparisons_v03(assertions: Sequence[ast.Assert]) -> tuple[ast.Compare, ...]:
+    return tuple(
+        node
+        for assertion in assertions
+        for node in ast.walk(assertion.test)
+        if isinstance(node, ast.Compare)
+        and len(node.ops) == 1
+        and len(node.comparators) == 1
+    )
+
+
+def _has_exact_validation_success_v03(
+    comparisons: Sequence[ast.Compare],
+    validation_name: str,
+) -> bool:
+    for comparison in comparisons:
+        if not isinstance(comparison.ops[0], ast.Eq):
+            continue
+        left = comparison.left
+        right = comparison.comparators[0]
+        for actual, expected in ((left, right), (right, left)):
+            if (
+                isinstance(actual, ast.Name)
+                and actual.id == validation_name
+                and isinstance(expected, ast.Tuple)
+                and not expected.elts
+            ):
+                return True
+    return False
+
+
+def _has_report_expected_comparison_v03(
+    comparisons: Sequence[ast.Compare],
+    *,
+    report_name: str,
+    field: str,
+    expected: object,
+    module_values: dict[str, object],
+    direct: bool,
+) -> bool:
+    for comparison in comparisons:
+        if not isinstance(comparison.ops[0], ast.Eq):
+            continue
+        left = comparison.left
+        right = comparison.comparators[0]
+        if ast.dump(left, include_attributes=False) == ast.dump(
+            right, include_attributes=False
+        ):
+            continue
+        for actual, expected_node in ((left, right), (right, left)):
+            actual_matches = (
+                _direct_report_field_v03(actual, report_name) == field
+                if direct
+                else field in _report_rooted_fields_v03(actual, report_name)
+            )
+            if actual_matches and _static_equals_v03(
+                expected_node, expected, module_values
+            ):
+                return True
+    return False
+
+
+def _geometry_projection_matches_v03(
+    node: ast.AST,
+    *,
+    report_name: str,
+    field: str,
+    expected: object,
+    living: bool,
+) -> bool:
+    scalar_fields = (
+        {
+            "runner_version",
+            "kernel_conformance_profile",
+            "historical_kernel_conformance_profile",
+        }
+        if living
+        else {
+            "conformance_version",
+            "profile_id",
+            "historical_profile_ref",
+            "active_gauntlet_refs",
+        }
+    )
+    if field in scalar_fields:
+        return _direct_report_field_v03(node, report_name) == field
+    if not (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "tuple"
+        and len(node.args) == 1
+        and not node.keywords
+        and isinstance(node.args[0], ast.GeneratorExp)
+    ):
+        return False
+    generator = node.args[0]
+    if len(generator.generators) != 1:
+        return False
+    comprehension = generator.generators[0]
+    if (
+        comprehension.ifs
+        or comprehension.is_async
+        or not isinstance(comprehension.target, ast.Name)
+        or _direct_report_field_v03(comprehension.iter, report_name) != field
+    ):
+        return False
+    item_name = comprehension.target.id
+    element = generator.elt
+    if living:
+        return (
+            field == "active_act_results"
+            and isinstance(element, ast.Subscript)
+            and isinstance(element.value, ast.Name)
+            and element.value.id == item_name
+            and isinstance(element.slice, ast.Constant)
+            and element.slice.value == "act_id"
+        )
+    attribute = (
+        element.attr
+        if isinstance(element, ast.Attribute)
+        and isinstance(element.value, ast.Name)
+        and element.value.id == item_name
+        else None
+    )
+    if field == "category_results" and expected == tuple(
+        item[0] for item in POST_E6_CATEGORY_CHECK_IDS
+    ):
+        return attribute == "category_id"
+    if field == "category_results" and expected == POST_E6_CATEGORY_CHECK_IDS:
+        return (
+            isinstance(element, ast.Tuple)
+            and len(element.elts) == 2
+            and all(
+                isinstance(child, ast.Attribute)
+                and isinstance(child.value, ast.Name)
+                and child.value.id == item_name
+                for child in element.elts
+            )
+            and tuple(child.attr for child in element.elts)
+            == ("category_id", "required_check_ids")
+        )
+    if field == "negative_test_results":
+        return attribute == "probe_id"
+    if field == "domain_results":
+        return attribute == "domain_id"
+    return False
+
+
+def _has_geometry_comparison_v03(
+    comparisons: Sequence[ast.Compare],
+    *,
+    report_name: str,
+    field: str,
+    expected: object,
+    module_values: dict[str, object],
+    living: bool,
+) -> bool:
+    for comparison in comparisons:
+        if not isinstance(comparison.ops[0], ast.Eq):
+            continue
+        left = comparison.left
+        right = comparison.comparators[0]
+        if ast.dump(left, include_attributes=False) == ast.dump(
+            right, include_attributes=False
+        ):
+            continue
+        for actual, expected_node in ((left, right), (right, left)):
+            if _geometry_projection_matches_v03(
+                actual,
+                report_name=report_name,
+                field=field,
+                expected=expected,
+                living=living,
+            ) and _static_equals_v03(expected_node, expected, module_values):
+                return True
+    return False
+
+
+def _has_distinct_report_field_relation_v03(
+    comparisons: Sequence[ast.Compare],
+    *,
+    report_name: str,
+    first_field: str,
+    second_field: str,
+) -> bool:
+    for comparison in comparisons:
+        if not isinstance(comparison.ops[0], ast.Eq):
+            continue
+        left_field = _direct_report_field_v03(comparison.left, report_name)
+        right_field = _direct_report_field_v03(
+            comparison.comparators[0], report_name
+        )
+        if {left_field, right_field} == {first_field, second_field}:
+            return True
+    return False
+
+
+def _has_length_check_v03(
+    comparisons: Sequence[ast.Compare],
+    *,
+    report_name: str,
+    field: str,
+    expected_length: int,
+) -> bool:
+    for comparison in comparisons:
+        if not isinstance(comparison.ops[0], ast.Eq):
+            continue
+        for actual, expected in (
+            (comparison.left, comparison.comparators[0]),
+            (comparison.comparators[0], comparison.left),
+        ):
+            if not (
+                isinstance(actual, ast.Call)
+                and isinstance(actual.func, ast.Name)
+                and actual.func.id == "len"
+                and len(actual.args) == 1
+                and not actual.keywords
+                and _direct_report_field_v03(actual.args[0], report_name) == field
+            ):
+                continue
+            if isinstance(expected, ast.Constant) and expected.value == expected_length:
+                return True
+    return False
+
+
+def _has_hex_alphabet_check_v03(
+    comparisons: Sequence[ast.Compare],
+    *,
+    report_name: str,
+    field: str,
+) -> bool:
+    for comparison in comparisons:
+        if not isinstance(comparison.ops[0], ast.LtE):
+            continue
+        left = comparison.left
+        right = comparison.comparators[0]
+        if not (
+            isinstance(left, ast.Call)
+            and isinstance(left.func, ast.Name)
+            and left.func.id == "set"
+            and len(left.args) == 1
+            and not left.keywords
+            and _direct_report_field_v03(left.args[0], report_name) == field
+            and isinstance(right, ast.Call)
+            and isinstance(right.func, ast.Name)
+            and right.func.id == "set"
+            and len(right.args) == 1
+            and not right.keywords
+            and isinstance(right.args[0], ast.Constant)
+            and right.args[0].value == "0123456789abcdef"
+        ):
+            continue
+        return True
+    return False
+
+
+def _has_positive_field_check_v03(
+    comparisons: Sequence[ast.Compare],
+    *,
+    report_name: str,
+    field: str,
+) -> bool:
+    for comparison in comparisons:
+        left = comparison.left
+        right = comparison.comparators[0]
+        operator = comparison.ops[0]
+        if (
+            isinstance(operator, ast.Gt)
+            and _direct_report_field_v03(left, report_name) == field
+            and isinstance(right, ast.Constant)
+            and right.value == 0
+        ) or (
+            isinstance(operator, ast.Lt)
+            and isinstance(left, ast.Constant)
+            and left.value == 0
+            and _direct_report_field_v03(right, report_name) == field
+        ):
+            return True
+    return False
+
+
+def _tautological_assertion_v03(
+    assertion: ast.Assert,
+    *,
+    report_name: str | None,
+    validation_name: str | None,
+) -> bool:
+    test = assertion.test
+    if isinstance(test, (ast.Tuple, ast.List, ast.Dict, ast.Set)):
+        return True
+    if isinstance(test, ast.Name) and test.id in {report_name, validation_name}:
+        return True
+    for comparison in (
+        node for node in ast.walk(test) if isinstance(node, ast.Compare)
+    ):
+        sides = (comparison.left, *comparison.comparators)
+        if len(sides) == 2 and ast.dump(
+            sides[0], include_attributes=False
+        ) == ast.dump(sides[1], include_attributes=False):
+            if any(
+                isinstance(node, ast.Name)
+                and node.id in {report_name, validation_name}
+                for side in sides
+                for node in ast.walk(side)
+            ) or all(isinstance(side, ast.Constant) for side in sides):
+                return True
+    return False
+
+
+def _actual_return_lineage_failures_v03(
+    function: ast.FunctionDef,
+    *,
+    tree: ast.Module,
+    report_name: str | None,
+    validation_name: str | None,
+    collector_statement: ast.Assign | None,
+    validator_statement: ast.Assign | None,
+    qualified_validator: str,
+    import_targets: dict[str, str],
+) -> tuple[str, ...]:
+    protected = {
+        name for name in (report_name, validation_name) if name is not None
+    }
+    if not protected:
+        return ()
+    failures: set[str] = set()
+    allowed_assignments = {
+        id(statement)
+        for statement in (collector_statement, validator_statement)
+        if statement is not None
+    }
+    report_bindings = (
+        _provenance_bindings_v04(
+            function,
+            {report_name: _PROVENANCE_IDENTITY_V04},
+        )
+        if report_name is not None
+        else {}
+    )
+    report_identity_aliases = {
+        name
+        for name, kind in report_bindings.items()
+        if kind in {
+            _PROVENANCE_IDENTITY_V04,
+            _PROVENANCE_CONTAINER_V04,
+        }
+    }
+    proof_builtin_names = frozenset({"len", "set", "tuple"})
+    shadowed_proof_builtins = set(
+        proof_builtin_names & _module_level_bound_names_v05(tree)
+    )
+    shadowed_proof_builtins.update(
+        event.split(":", 1)[0]
+        for event in _binding_events_v04(function, proof_builtin_names)
+    )
+    unshadowed_proof_builtins = (
+        proof_builtin_names - shadowed_proof_builtins
+    )
+    for node in ast.walk(function):
+        targets: tuple[ast.AST, ...] = ()
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+        elif isinstance(node, ast.AnnAssign):
+            targets = (node.target,)
+        elif isinstance(node, ast.AugAssign):
+            targets = (node.target,)
+        elif isinstance(node, ast.NamedExpr):
+            targets = (node.target,)
+        elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+            targets = (node.target,)
+        elif isinstance(node, (ast.With, ast.AsyncWith)):
+            targets = tuple(
+                item.optional_vars
+                for item in node.items
+                if item.optional_vars is not None
+            )
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            root = _target_root_name_v03(target)
+            names = _bound_name_ids(target)
+            if set(names) & protected or root in protected:
+                if not (
+                    id(node) in allowed_assignments
+                    and isinstance(target, ast.Name)
+                    and target.id in protected
+                ):
+                    failures.add("binding_reassigned_or_mutated")
+            if report_name is None:
+                continue
+            value: ast.AST | None = None
+            if isinstance(node, (ast.Assign, ast.AnnAssign, ast.NamedExpr)):
+                value = node.value
+            elif isinstance(node, ast.AugAssign):
+                value = node.value
+            value_kind = (
+                _expression_provenance_v04(value, report_bindings)
+                if value is not None
+                else _PROVENANCE_NONE_V04
+            )
+            target_names = set(_bound_name_ids(target))
+            target_kind = _expression_provenance_v04(
+                target, report_bindings
+            )
+            if isinstance(target, (ast.Attribute, ast.Subscript)) and (
+                target_kind != _PROVENANCE_NONE_V04
+                or value_kind != _PROVENANCE_NONE_V04
+            ):
+                failures.add("actual_report_storage_or_mutation")
+            if target_names & report_identity_aliases:
+                if (
+                    id(node) not in allowed_assignments
+                    and value_kind == _PROVENANCE_NONE_V04
+                ):
+                    failures.add("actual_report_alias_replaced")
+            if (
+                isinstance(target, ast.Name)
+                and value_kind == _PROVENANCE_CONTAINER_V04
+            ):
+                failures.add("actual_report_stored")
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if node is not function and node.name in protected:
+                failures.add("binding_reassigned_or_mutated")
+            if _argument_binding_names_v03(node.args) & protected:
+                failures.add("binding_shadowed_by_parameter")
+        elif isinstance(node, ast.ClassDef) and node.name in protected:
+            failures.add("binding_reassigned_or_mutated")
+        elif isinstance(node, (ast.Global, ast.Nonlocal)):
+            if set(node.names) & protected:
+                failures.add("binding_namespace_escape")
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            for alias in node.names:
+                bound = alias.asname or alias.name.split(".", 1)[0]
+                if bound in protected:
+                    failures.add("binding_reassigned_or_mutated")
+        if isinstance(node, (ast.Return, ast.Yield, ast.YieldFrom)):
+            value = node.value
+            if (
+                value is not None
+                and _expression_provenance_v04(value, report_bindings)
+                != _PROVENANCE_NONE_V04
+            ):
+                failures.add("actual_report_escaped_or_mutated")
+        if not isinstance(node, ast.Call) or report_name is None:
+            continue
+        report_in_arguments = any(
+            _expression_provenance_v04(argument, report_bindings)
+            != _PROVENANCE_NONE_V04
+            for argument in node.args
+        ) or any(
+            _expression_provenance_v04(keyword.value, report_bindings)
+            != _PROVENANCE_NONE_V04
+            for keyword in node.keywords
+        )
+        report_receiver = (
+            isinstance(node.func, ast.Attribute)
+            and _expression_provenance_v04(
+                node.func.value, report_bindings
+            )
+            != _PROVENANCE_NONE_V04
+        )
+        report_callable = (
+            _expression_provenance_v04(node.func, report_bindings)
+            != _PROVENANCE_NONE_V04
+            and not report_receiver
+        )
+        if not report_in_arguments and not report_receiver and not report_callable:
+            continue
+        called = _resolved_call_target_v02(node.func, import_targets) or ""
+        leaf = called.split(".")[-1]
+        if called == qualified_validator:
+            continue
+        if (
+            isinstance(node.func, ast.Name)
+            and node.func.id in unshadowed_proof_builtins
+        ):
+            continue
+        if leaf in CRITICAL_MUTATING_METHODS_V03:
+            failures.add("actual_report_escaped_or_mutated")
+            continue
+        failures.add("actual_report_escaped_or_mutated")
+    return tuple(sorted(failures))
+
+
+def _static_string_v05(node: ast.AST) -> str | None:
+    try:
+        value = _static_value(node, {})
+    except StaticValueUnavailable:
+        return None
+    return value if type(value) is str else None
+
+
+def _definition_time_expressions_v05(
+    node: ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda | ast.ClassDef,
+) -> tuple[ast.AST, ...]:
+    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        annotations = tuple(
+            argument.annotation
+            for argument in (
+                *node.args.posonlyargs,
+                *node.args.args,
+                *node.args.kwonlyargs,
+            )
+            if argument.annotation is not None
+        )
+        if node.args.vararg is not None and node.args.vararg.annotation is not None:
+            annotations += (node.args.vararg.annotation,)
+        if node.args.kwarg is not None and node.args.kwarg.annotation is not None:
+            annotations += (node.args.kwarg.annotation,)
+        if node.returns is not None:
+            annotations += (node.returns,)
+        return (
+            *node.decorator_list,
+            *node.args.defaults,
+            *(item for item in node.args.kw_defaults if item is not None),
+            *annotations,
+        )
+    if isinstance(node, ast.Lambda):
+        annotations = tuple(
+            argument.annotation
+            for argument in (
+                *node.args.posonlyargs,
+                *node.args.args,
+                *node.args.kwonlyargs,
+            )
+            if argument.annotation is not None
+        )
+        if node.args.vararg is not None and node.args.vararg.annotation is not None:
+            annotations += (node.args.vararg.annotation,)
+        if node.args.kwarg is not None and node.args.kwarg.annotation is not None:
+            annotations += (node.args.kwarg.annotation,)
+        return (
+            *node.args.defaults,
+            *(item for item in node.args.kw_defaults if item is not None),
+            *annotations,
+        )
+    return (*node.decorator_list, *node.bases, *(item.value for item in node.keywords))
+
+
+def _module_identity_expression_v05(
+    node: ast.AST,
+    *,
+    aliases: set[str],
+    getter_names: set[str],
+    module_name: str,
+    import_targets: dict[str, str],
+) -> bool:
+    if isinstance(node, ast.Name):
+        return node.id in aliases or (
+            module_name == "builtins" and node.id == "__builtins__"
+        )
+    if isinstance(node, ast.Starred):
+        return _module_identity_expression_v05(
+            node.value,
+            aliases=aliases,
+            getter_names=getter_names,
+            module_name=module_name,
+            import_targets=import_targets,
+        )
+    if isinstance(node, ast.NamedExpr):
+        return _module_identity_expression_v05(
+            node.value,
+            aliases=aliases,
+            getter_names=getter_names,
+            module_name=module_name,
+            import_targets=import_targets,
+        )
+    if isinstance(node, ast.IfExp):
+        return any(
+            _module_identity_expression_v05(
+                value,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            )
+            for value in (node.body, node.orelse)
+        )
+    if isinstance(node, ast.BoolOp):
+        return any(
+            _module_identity_expression_v05(
+                value,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            )
+            for value in node.values
+        )
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return any(
+            _module_identity_expression_v05(
+                value,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            )
+            for value in node.elts
+        )
+    if isinstance(node, ast.Dict):
+        return any(
+            value is not None
+            and _module_identity_expression_v05(
+                value,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            )
+            for value in (*node.keys, *node.values)
+        )
+    if isinstance(node, ast.Subscript):
+        dotted = _dotted_ast_name(node.value) or ""
+        if dotted.endswith("sys.modules") or dotted == "sys.modules":
+            return _static_string_v05(node.slice) == module_name
+        if isinstance(node.value, (ast.Tuple, ast.List, ast.Dict)):
+            return any(
+                _module_identity_expression_v05(
+                    element,
+                    aliases=aliases,
+                    getter_names=getter_names,
+                    module_name=module_name,
+                    import_targets=import_targets,
+                )
+                for element in (
+                    node.value.elts
+                    if isinstance(node.value, (ast.Tuple, ast.List))
+                    else (*node.value.keys, *node.value.values)
+                )
+                if element is not None
+            )
+        return False
+    if isinstance(node, ast.Call):
+        if isinstance(node.func, ast.Lambda):
+            return _module_identity_expression_v05(
+                node.func.body,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            )
+        called = _resolved_call_target_v02(node.func, import_targets) or ""
+        leaf = called.split(".")[-1]
+        if isinstance(node.func, ast.Name) and node.func.id in getter_names:
+            return True
+        if leaf in {"import_module", "__import__"} and node.args:
+            return _static_string_v05(node.args[0]) == module_name
+    return False
+
+
+def _module_capability_failures_v05(
+    tree: ast.Module,
+    *,
+    label: str,
+    module_name: str,
+    protected_attributes: frozenset[str],
+) -> tuple[str, ...]:
+    import_targets = _module_import_targets_v02(tree)
+    aliases = {
+        binding
+        for binding, target in import_targets.items()
+        if target == module_name
+    }
+    if module_name == "builtins":
+        aliases.add("__builtins__")
+    getter_names: set[str] = set()
+    changed = True
+    nodes = tuple(ast.walk(tree))
+    while changed:
+        changed = False
+        for node in nodes:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if any(
+                    returned.value is not None
+                    and _module_identity_expression_v05(
+                        returned.value,
+                        aliases=aliases,
+                        getter_names=getter_names,
+                        module_name=module_name,
+                        import_targets=import_targets,
+                    )
+                    for returned in ast.walk(node)
+                    if isinstance(returned, ast.Return)
+                ) and node.name not in getter_names:
+                    getter_names.add(node.name)
+                    changed = True
+            targets: tuple[ast.AST, ...] = ()
+            value: ast.AST | None = None
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+                value = node.value
+            elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, ast.NamedExpr):
+                targets = (node.target,)
+                value = node.value
+            if value is None or not _module_identity_expression_v05(
+                value,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            ):
+                continue
+            before = len(aliases)
+            for target in targets:
+                aliases.update(_bound_name_ids(target))
+            changed = changed or len(aliases) != before
+
+    failures: set[str] = set()
+    class_node_ids = {
+        id(child)
+        for class_node in ast.walk(tree)
+        if isinstance(class_node, ast.ClassDef)
+        for statement in class_node.body
+        for child in ast.walk(statement)
+    }
+    for node in nodes:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)):
+            if any(
+                _module_identity_expression_v05(
+                    expression,
+                    aliases=aliases,
+                    getter_names=getter_names,
+                    module_name=module_name,
+                    import_targets=import_targets,
+                )
+                for expression in _definition_time_expressions_v05(node)
+            ):
+                failures.add(f"{label}.definition_time_escape")
+        if isinstance(node, ast.Lambda) and _module_identity_expression_v05(
+            node.body,
+            aliases=aliases,
+            getter_names=getter_names,
+            module_name=module_name,
+            import_targets=import_targets,
+        ):
+            failures.add(f"{label}.call_return_escape")
+        if isinstance(node, ast.Return) and node.value is not None and _module_identity_expression_v05(
+            node.value,
+            aliases=aliases,
+            getter_names=getter_names,
+            module_name=module_name,
+            import_targets=import_targets,
+        ):
+            failures.add(f"{label}.call_return_escape")
+
+        targets: tuple[ast.AST, ...] = ()
+        value: ast.AST | None = None
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+            value = node.value
+        elif isinstance(node, ast.AnnAssign) and node.value is not None:
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.AugAssign):
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.NamedExpr):
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            target_root = _target_root_name_v03(target)
+            target_is_module = target_root in aliases or _module_identity_expression_v05(
+                target,
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            )
+            if isinstance(target, (ast.Attribute, ast.Subscript)):
+                target_is_module = target_is_module or (
+                    _module_identity_expression_v05(
+                        target.value,
+                        aliases=aliases,
+                        getter_names=getter_names,
+                        module_name=module_name,
+                        import_targets=import_targets,
+                    )
+                )
+            protected = False
+            if isinstance(target, ast.Attribute):
+                protected = target.attr in protected_attributes or target.attr == "__dict__"
+            elif isinstance(target, ast.Subscript):
+                protected = _static_string_v05(target.slice) in protected_attributes
+                if isinstance(target.value, ast.Attribute) and target.value.attr == "__dict__":
+                    target_is_module = _module_identity_expression_v05(
+                        target.value.value,
+                        aliases=aliases,
+                        getter_names=getter_names,
+                        module_name=module_name,
+                        import_targets=import_targets,
+                    )
+            if target_is_module and protected:
+                failures.add(f"{label}.attribute_mutation")
+            if (
+                value is not None
+                and _module_identity_expression_v05(
+                    value,
+                    aliases=aliases,
+                    getter_names=getter_names,
+                    module_name=module_name,
+                    import_targets=import_targets,
+                )
+                and (
+                    id(node) in class_node_ids
+                    or isinstance(value, (ast.Tuple, ast.List, ast.Set, ast.Dict))
+                )
+            ):
+                failures.add(f"{label}.storage_escape")
+            if (
+                value is not None
+                and isinstance(target, (ast.Attribute, ast.Subscript))
+                and _module_identity_expression_v05(
+                    value,
+                    aliases=aliases,
+                    getter_names=getter_names,
+                    module_name=module_name,
+                    import_targets=import_targets,
+                )
+            ):
+                failures.add(f"{label}.storage_escape")
+        if not isinstance(node, ast.Call):
+            continue
+        called = _resolved_call_target_v02(node.func, import_targets) or ""
+        leaf = called.split(".")[-1]
+        if leaf in {"setattr", "delattr"} and len(node.args) >= 2:
+            if _module_identity_expression_v05(
+                node.args[0],
+                aliases=aliases,
+                getter_names=getter_names,
+                module_name=module_name,
+                import_targets=import_targets,
+            ) and _static_string_v05(node.args[1]) in protected_attributes:
+                failures.add(f"{label}.attribute_mutation")
+        if isinstance(node.func, ast.Attribute) and node.func.attr in {
+            "__setitem__",
+            "__delitem__",
+            "update",
+            "pop",
+            "clear",
+        }:
+            receiver = node.func.value
+            receiver_is_dict = (
+                isinstance(receiver, ast.Attribute)
+                and receiver.attr == "__dict__"
+                and _module_identity_expression_v05(
+                    receiver.value,
+                    aliases=aliases,
+                    getter_names=getter_names,
+                    module_name=module_name,
+                    import_targets=import_targets,
+                )
+            )
+            keys = {
+                value
+                for argument in (*node.args, *(item.value for item in node.keywords))
+                for value in (
+                    [_static_string_v05(argument)]
+                    if _static_string_v05(argument) is not None
+                    else []
+                )
+            }
+            if receiver_is_dict and (not keys or keys & protected_attributes):
+                failures.add(f"{label}.attribute_mutation")
+    return tuple(sorted(failures))
+
+
+def _dynamic_namespace_failures_v05(
+    tree: ast.Module,
+    *,
+    label: str,
+    protected_names: frozenset[str],
+) -> tuple[str, ...]:
+    import_targets = _module_import_targets_v02(tree)
+    failures: set[str] = set()
+    namespace_aliases: set[str] = set()
+    namespace_callable_aliases: set[str] = set()
+
+    def namespace_callable(node: ast.AST) -> bool:
+        if isinstance(node, ast.Name) and node.id in namespace_callable_aliases:
+            return True
+        called = _resolved_call_target_v02(node, import_targets) or ""
+        return called.split(".")[-1] in {"globals", "locals", "vars"}
+
+    def namespace_expression(node: ast.AST) -> bool:
+        if isinstance(node, ast.Name) and node.id in {
+            "__builtins__",
+            *namespace_aliases,
+        }:
+            return True
+        if isinstance(node, ast.Call):
+            return namespace_callable(node.func)
+        if isinstance(node, ast.Attribute) and node.attr == "__dict__":
+            return True
+        if isinstance(node, ast.Subscript):
+            dotted = _dotted_ast_name(node.value) or ""
+            if dotted == "sys.modules" or dotted.endswith(".sys.modules"):
+                return True
+            return namespace_expression(node.value)
+        if isinstance(node, (ast.Tuple, ast.List)):
+            return any(namespace_expression(value) for value in node.elts)
+        if isinstance(node, ast.BoolOp):
+            return any(namespace_expression(value) for value in node.values)
+        if isinstance(node, ast.IfExp):
+            return namespace_expression(node.body) or namespace_expression(
+                node.orelse
+            )
+        return False
+
+    changed = True
+    nodes = tuple(ast.walk(tree))
+    while changed:
+        changed = False
+        for node in nodes:
+            targets: tuple[ast.AST, ...] = ()
+            value: ast.AST | None = None
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+                value = node.value
+            elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                targets = (node.target,)
+                value = node.value
+            elif isinstance(node, ast.NamedExpr):
+                targets = (node.target,)
+                value = node.value
+            if value is None:
+                continue
+            bound = {
+                name for target in targets for name in _bound_name_ids(target)
+            }
+            if namespace_callable(value):
+                before = len(namespace_callable_aliases)
+                namespace_callable_aliases.update(bound)
+                changed = changed or len(namespace_callable_aliases) != before
+            if namespace_expression(value):
+                before = len(namespace_aliases)
+                namespace_aliases.update(bound)
+                changed = changed or len(namespace_aliases) != before
+
+    for node in nodes:
+        targets: tuple[ast.AST, ...] = ()
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+        elif isinstance(node, (ast.AnnAssign, ast.AugAssign, ast.NamedExpr)):
+            targets = (node.target,)
+        elif isinstance(node, ast.Delete):
+            targets = tuple(node.targets)
+        for target in targets:
+            if not isinstance(target, ast.Subscript):
+                continue
+            key = _static_string_v05(target.slice)
+            if key in protected_names and namespace_expression(target.value):
+                failures.add(f"{label}.dynamic_namespace_mutation")
+        if not isinstance(node, ast.Call):
+            continue
+        called = _resolved_call_target_v02(node.func, import_targets) or ""
+        leaf = called.split(".")[-1]
+        if leaf in {"exec", "eval"} or (
+            isinstance(node.func, ast.Name)
+            and node.func.id in {"exec", "eval"}
+        ):
+            if any(
+                name in (text or "")
+                for name in protected_names
+                for text in (_static_string_v05(argument) for argument in node.args)
+            ):
+                failures.add(f"{label}.dynamic_namespace_mutation")
+        if isinstance(node.func, ast.Attribute) and node.func.attr in {
+            "__setitem__",
+            "__delitem__",
+            "update",
+            "pop",
+        }:
+            if namespace_expression(node.func.value):
+                keys = {
+                    value
+                    for argument in node.args
+                    for value in [_static_string_v05(argument)]
+                    if value is not None
+                }
+                if not keys or keys & protected_names:
+                    failures.add(f"{label}.dynamic_namespace_mutation")
+        if leaf in {"setattr", "delattr"} and len(node.args) >= 2:
+            if namespace_expression(node.args[0]) and (
+                _static_string_v05(node.args[1]) in protected_names
+            ):
+                failures.add(f"{label}.dynamic_namespace_mutation")
+    return tuple(sorted(failures))
+
+
+def _post_e6_public_binding_use_failures_v05(
+    tree: ast.Module,
+    function: ast.FunctionDef,
+    *,
+    label: str,
+    public_module: str,
+    qualified_collector: str,
+    qualified_validator: str,
+    import_targets: dict[str, str],
+) -> tuple[str, ...]:
+    prefix = f"e6.phase.post.test_contract.{label}"
+    protected = {
+        name
+        for name, target in import_targets.items()
+        if target in {public_module, qualified_collector, qualified_validator}
+    }
+    allowed_load_ids: set[int] = set()
+    for node in ast.walk(function):
+        if not isinstance(node, ast.Call):
+            continue
+        if _resolved_call_target_v02(node.func, import_targets) not in {
+            qualified_collector,
+            qualified_validator,
+        }:
+            continue
+        if isinstance(node.func, ast.Name):
+            allowed_load_ids.add(id(node.func))
+        elif isinstance(node.func, ast.Attribute) and isinstance(
+            node.func.value, ast.Name
+        ):
+            allowed_load_ids.add(id(node.func.value))
+    failures: set[str] = set()
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Name)
+            and isinstance(node.ctx, ast.Load)
+            and node.id in protected
+            and id(node) not in allowed_load_ids
+        ):
+            failures.add(f"{prefix}.public_binding_escape")
+        if isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign, ast.Delete)):
+            targets = (
+                tuple(node.targets)
+                if isinstance(node, (ast.Assign, ast.Delete))
+                else (node.target,)
+            )
+            for target in targets:
+                if (
+                    isinstance(target, ast.Attribute)
+                    and target.attr
+                    in {"__code__", "__defaults__", "__kwdefaults__"}
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id in protected
+                ):
+                    failures.add(f"{prefix}.public_callable_mutation")
+    return tuple(sorted(failures))
+
+
+def _post_e6_dynamic_capability_failures_v05(
+    tree: ast.Module,
+    *,
+    label: str,
+) -> tuple[str, ...]:
+    """Reject dynamic namespace machinery absent from the accepted test form."""
+
+    prefix = f"e6.phase.post.test_contract.{label}"
+    forbidden_leaf_names = {
+        "__import__",
+        "delattr",
+        "eval",
+        "exec",
+        "globals",
+        "import_module",
+        "locals",
+        "setattr",
+        "vars",
+    }
+    failures: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            leaf = (_dotted_ast_name(node.func) or "").split(".")[-1]
+            if leaf in forbidden_leaf_names:
+                failures.add(f"{prefix}.dynamic_capability")
+        if isinstance(node, ast.Attribute) and node.attr in {
+            "__code__",
+            "__defaults__",
+            "__kwdefaults__",
+        }:
+            failures.add(f"{prefix}.dynamic_capability")
+        if isinstance(node, ast.Name) and node.id == "__builtins__":
+            failures.add(f"{prefix}.dynamic_capability")
+        if isinstance(node, ast.Attribute) and (
+            _dotted_ast_name(node) or ""
+        ).endswith("sys.modules"):
+            failures.add(f"{prefix}.dynamic_capability")
+    return tuple(sorted(failures))
+
+
+def _post_e6_semantic_normal_form_failures_v05(
+    tree: ast.Module,
+    function: ast.FunctionDef,
+    *,
+    label: str,
+    public_module: str,
+    qualified_collector: str,
+    qualified_validator: str,
+    import_targets: dict[str, str],
+) -> tuple[str, ...]:
+    prefix = f"e6.phase.post.test_contract.{label}"
+    failures: set[str] = set()
+    arguments = function.args
+    if (
+        arguments.posonlyargs
+        or arguments.args
+        or arguments.kwonlyargs
+        or arguments.vararg is not None
+        or arguments.kwarg is not None
+        or arguments.defaults
+        or any(item is not None for item in arguments.kw_defaults)
+        or function.returns is not None
+        or function.type_comment is not None
+        or function.decorator_list
+    ):
+        failures.add(f"{prefix}.semantic_normal_form:signature")
+
+    public_imports = []
+    for statement in tree.body:
+        if isinstance(statement, ast.Import):
+            if any(alias.name == public_module for alias in statement.names):
+                public_imports.append(statement)
+        elif isinstance(statement, ast.ImportFrom) and statement.module == public_module:
+            if any(
+                alias.name
+                in {
+                    qualified_collector.rsplit(".", 1)[-1],
+                    qualified_validator.rsplit(".", 1)[-1],
+                }
+                for alias in statement.names
+            ):
+                public_imports.append(statement)
+    if len(public_imports) != 1:
+        failures.add(f"{prefix}.semantic_normal_form:public_import")
+    else:
+        public_import = public_imports[0]
+        if isinstance(public_import, ast.Import):
+            if not (
+                len(public_import.names) == 1
+                and public_import.names[0].name == public_module
+                and public_import.names[0].asname == "public_runner"
+            ):
+                failures.add(f"{prefix}.semantic_normal_form:public_import")
+        else:
+            expected = {
+                qualified_collector.rsplit(".", 1)[-1],
+                qualified_validator.rsplit(".", 1)[-1],
+            }
+            if len(public_import.names) != 2 or {
+                alias.name for alias in public_import.names
+            } != expected:
+                failures.add(f"{prefix}.semantic_normal_form:public_import")
+
+    first_assert = next(
+        (index for index, statement in enumerate(function.body) if isinstance(statement, ast.Assert)),
+        len(function.body),
+    )
+    setup = function.body[:first_assert]
+    assertions = function.body[first_assert:]
+    if not assertions or any(not isinstance(statement, ast.Assert) for statement in assertions):
+        failures.add(f"{prefix}.semantic_normal_form:assertion_tail")
+
+    access = (
+        (lambda field: f"report[{field!r}]")
+        if label == "living"
+        else (lambda field: f"report.{field}")
+    )
+    canonical_assertion_expressions = [
+        "validation == ()",
+        *(
+            f"{access(field)} == {expected!r}"
+            for field, expected in POST_E6_SHARED_FIXED_REPORT_VALUES
+        ),
+        (
+            f"{access(POST_E6_SHARED_SHA256_FIELDS[0])} == "
+            f"{access(POST_E6_SHARED_SHA256_FIELDS[1])}"
+        ),
+        *(
+            f"len({access(field)}) == 64"
+            for field in POST_E6_SHARED_SHA256_FIELDS
+        ),
+        *(
+            f"set({access(field)}) <= set('0123456789abcdef')"
+            for field in POST_E6_SHARED_SHA256_FIELDS
+        ),
+        (
+            f"{access(POST_E6_SHARED_BYTE_COUNT_FIELDS[0])} == "
+            f"{access(POST_E6_SHARED_BYTE_COUNT_FIELDS[1])}"
+        ),
+        *(
+            f"{access(field)} > 0"
+            for field in POST_E6_SHARED_BYTE_COUNT_FIELDS
+        ),
+    ]
+    if label == "living":
+        canonical_assertion_expressions.extend(
+            (
+                f"{access(field)} == {expected!r}"
+                for field, expected in POST_E6_LIVING_GEOMETRY_ASSERTIONS[:-1]
+            )
+        )
+        canonical_assertion_expressions.append(
+            "tuple(row['act_id'] for row in "
+            f"{access('active_act_results')}) == "
+            f"{POST_E6_LIVING_GEOMETRY_ASSERTIONS[-1][1]!r}"
+        )
+    else:
+        canonical_assertion_expressions.extend(
+            (
+                f"{access(field)} == {expected!r}"
+                for field, expected in POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS[:3]
+            )
+        )
+        canonical_assertion_expressions.extend(
+            (
+                "tuple(item.category_id for item in report.category_results) == "
+                f"{POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS[3][1]!r}",
+                "tuple((item.category_id, item.required_check_ids) for item in "
+                "report.category_results) == "
+                f"{POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS[4][1]!r}",
+                "tuple(item.probe_id for item in report.negative_test_results) == "
+                f"{POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS[5][1]!r}",
+                f"{access('active_gauntlet_refs')} == "
+                f"{POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS[6][1]!r}",
+                "tuple(item.domain_id for item in report.domain_results) == "
+                f"{POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS[7][1]!r}",
+            )
+        )
+    module_literal_values = _module_literal_values_v03(tree)
+
+    class ModuleLiteralNormalizer(ast.NodeTransformer):
+        def visit_Name(self, node: ast.Name) -> ast.AST:
+            if (
+                isinstance(node.ctx, ast.Load)
+                and node.id in module_literal_values
+            ):
+                replacement = ast.parse(
+                    repr(module_literal_values[node.id]),
+                    mode="eval",
+                ).body
+                return ast.copy_location(replacement, node)
+            return node
+
+    def semantic_assertion_dump(statement: ast.stmt) -> str:
+        normalized = ast.parse(ast.unparse(statement)).body[0]
+        normalized = ModuleLiteralNormalizer().visit(normalized)
+        return ast.dump(
+            normalized,
+            annotate_fields=True,
+            include_attributes=False,
+        )
+
+    canonical_assertions = tuple(
+        semantic_assertion_dump(statement)
+        for statement in ast.parse(
+            "\n".join(
+                f"assert {expression}"
+                for expression in canonical_assertion_expressions
+            )
+            + "\n"
+        ).body
+    )
+    actual_assertions = tuple(map(semantic_assertion_dump, assertions))
+    if actual_assertions != canonical_assertions:
+        failures.add(f"{prefix}.semantic_normal_form:assertion_tail")
+
+    def exact_assign_call(
+        statement: ast.stmt,
+        *,
+        target: str,
+        called: frozenset[str],
+        argument: str | None,
+    ) -> bool:
+        if not (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and statement.targets[0].id == target
+            and isinstance(statement.value, ast.Call)
+            and not statement.value.keywords
+        ):
+            return False
+        resolved = _resolved_call_target_v02(statement.value.func, import_targets)
+        if resolved not in called:
+            return False
+        if argument is None:
+            return not statement.value.args
+        return (
+            len(statement.value.args) == 1
+            and isinstance(statement.value.args[0], ast.Name)
+            and statement.value.args[0].id == argument
+        )
+
+    direct = (
+        len(setup) == 2
+        and exact_assign_call(
+            setup[0],
+            target="report",
+            called=frozenset({qualified_collector}),
+            argument=None,
+        )
+        and exact_assign_call(
+            setup[1],
+            target="validation",
+            called=frozenset({qualified_validator}),
+            argument="report",
+        )
+    )
+    spy = False
+    if (
+        len(setup) == 4
+        and isinstance(setup[0], ast.Assign)
+        and len(setup[0].targets) == 1
+        and isinstance(setup[0].targets[0], ast.Name)
+        and setup[0].targets[0].id == "calls"
+        and isinstance(setup[0].value, ast.List)
+        and not setup[0].value.elts
+        and isinstance(setup[1], ast.FunctionDef)
+        and setup[1].name == "counted_collector"
+    ):
+        counted = setup[1]
+        counted_args = counted.args
+        exact_signature = (
+            not counted.decorator_list
+            and not counted_args.posonlyargs
+            and not counted_args.args
+            and not counted_args.kwonlyargs
+            and counted_args.vararg is not None
+            and counted_args.vararg.arg == "args"
+            and counted_args.vararg.annotation is None
+            and counted_args.kwarg is not None
+            and counted_args.kwarg.arg == "kwargs"
+            and counted_args.kwarg.annotation is None
+            and not counted_args.defaults
+            and not any(item is not None for item in counted_args.kw_defaults)
+            and counted.returns is None
+            and counted.type_comment is None
+        )
+        exact_body = False
+        if len(counted.body) == 3:
+            first, second, third = counted.body
+            exact_body = (
+                isinstance(first, ast.Assign)
+                and len(first.targets) == 1
+                and isinstance(first.targets[0], ast.Name)
+                and first.targets[0].id == "exact_return"
+                and isinstance(first.value, ast.Call)
+                and _resolved_call_target_v02(first.value.func, import_targets)
+                == qualified_collector
+                and len(first.value.args) == 1
+                and isinstance(first.value.args[0], ast.Starred)
+                and isinstance(first.value.args[0].value, ast.Name)
+                and first.value.args[0].value.id == "args"
+                and len(first.value.keywords) == 1
+                and first.value.keywords[0].arg is None
+                and isinstance(first.value.keywords[0].value, ast.Name)
+                and first.value.keywords[0].value.id == "kwargs"
+                and isinstance(second, ast.Expr)
+                and isinstance(second.value, ast.Call)
+                and isinstance(second.value.func, ast.Attribute)
+                and isinstance(second.value.func.value, ast.Name)
+                and second.value.func.value.id == "calls"
+                and second.value.func.attr == "append"
+                and len(second.value.args) == 1
+                and isinstance(second.value.args[0], ast.Name)
+                and second.value.args[0].id == "exact_return"
+                and not second.value.keywords
+                and isinstance(third, ast.Return)
+                and isinstance(third.value, ast.Name)
+                and third.value.id == "exact_return"
+            )
+        spy = (
+            exact_signature
+            and exact_body
+            and exact_assign_call(
+                setup[2],
+                target="report",
+                called=frozenset({"counted_collector"}),
+                argument=None,
+            )
+            and exact_assign_call(
+                setup[3],
+                target="validation",
+                called=frozenset({qualified_validator}),
+                argument="report",
+            )
+        )
+    if not direct and not spy:
+        failures.add(f"{prefix}.semantic_normal_form:setup")
+    return tuple(sorted(failures))
+
+
+def _validate_post_e6_test_contract_v02(
+    path: Path,
+    *,
+    living: bool,
+) -> tuple[str, ...]:
+    label = "living" if living else "conformance"
+    try:
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(path))
+    except (OSError, UnicodeError, SyntaxError) as exc:
+        return (f"e6.phase.post.test_contract.{label}.parse:{type(exc).__name__}",)
+
+    function_name = (
+        POST_E6_LIVING_ACCEPTANCE_TEST
+        if living
+        else POST_E6_CONFORMANCE_ACCEPTANCE_TEST
+    )
+    collector_name = (
+        "collect_living_gauntlet_v01"
+        if living
+        else "collect_kernel_conformance_v01"
+    )
+    validator_name = (
+        "validate_living_gauntlet_report_v01"
+        if living
+        else "validate_kernel_conformance_runtime_v01"
+    )
+    public_module = (
+        "demo.run_living_gauntlet_v01"
+        if living
+        else "demo.run_kernel_conformance_v01"
+    )
+    qualified_collector = f"{public_module}.{collector_name}"
+    qualified_validator = f"{public_module}.{validator_name}"
+    import_targets = _module_import_targets_v02(tree)
+    matches = [
+        node
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == function_name
+    ]
+    failures: list[str] = []
+    prefix = f"e6.phase.post.test_contract.{label}"
+    if len(matches) != 1:
+        return (f"{prefix}.function_count",)
+    function = matches[0]
+    failures.extend(
+        _post_e6_semantic_normal_form_failures_v05(
+            tree,
+            function,
+            label=label,
+            public_module=public_module,
+            qualified_collector=qualified_collector,
+            qualified_validator=qualified_validator,
+            import_targets=import_targets,
+        )
+    )
+    failures.extend(
+        _post_e6_public_binding_use_failures_v05(
+            tree,
+            function,
+            label=label,
+            public_module=public_module,
+            qualified_collector=qualified_collector,
+            qualified_validator=qualified_validator,
+            import_targets=import_targets,
+        )
+    )
+    failures.extend(
+        _post_e6_dynamic_capability_failures_v05(tree, label=label)
+    )
+    public_binding_names = frozenset(
+        {
+            collector_name,
+            validator_name,
+            *(
+                binding
+                for binding, target in import_targets.items()
+                if target in {
+                    qualified_collector,
+                    qualified_validator,
+                }
+            ),
+        }
+    )
+    failures.extend(
+        _dynamic_namespace_failures_v05(
+            tree,
+            label=f"{prefix}.dynamic_namespace_authority",
+            protected_names=public_binding_names,
+        )
+    )
+    failures.extend(
+        _dynamic_namespace_failures_v05(
+            tree,
+            label=f"{prefix}.assertion_builtin_namespace",
+            protected_names=frozenset({"len", "set", "tuple"}),
+        )
+    )
+    failures.extend(
+        _module_capability_failures_v05(
+            tree,
+            label=f"{prefix}.public_module_authority",
+            module_name=public_module,
+            protected_attributes=frozenset(
+                {collector_name, validator_name}
+            ),
+        )
+    )
+    failures.extend(
+        _module_capability_failures_v05(
+            tree,
+            label=f"{prefix}.assertion_builtin_authority",
+            module_name="builtins",
+            protected_attributes=frozenset({"len", "set", "tuple"}),
+        )
+    )
+    if function.decorator_list:
+        failures.append(f"{prefix}.decorated")
+    forbidden_pytest_calls = {
+        (_dotted_ast_name(node.func) or "").split(".")[-1]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and (_dotted_ast_name(node.func) or "").split(".")[-1]
+        in {"skip", "skipif", "xfail", "importorskip"}
+    }
+    forbidden_pytest_marks = {
+        _dotted_ast_name(node)
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Attribute)
+        and (_dotted_ast_name(node) or "").split(".")[-1]
+        in {"skip", "skipif", "xfail"}
+    }
+    if forbidden_pytest_calls or forbidden_pytest_marks:
+        failures.append(f"{prefix}.skip_or_xfail")
+    if any(
+        isinstance(node, (ast.Import, ast.ImportFrom))
+        and any(
+            alias.name == "tests" or alias.name.startswith("tests.")
+            for alias in node.names
+        )
+        for node in ast.walk(tree)
+    ):
+        failures.append(f"{prefix}.test_import")
+
+    unreachable = False
+    reachable: list[ast.stmt] = []
+    for statement in function.body:
+        if unreachable:
+            failures.append(f"{prefix}.unreachable_evidence")
+            break
+        reachable.append(statement)
+        if isinstance(statement, (ast.Return, ast.Raise)):
+            unreachable = True
+    if any(
+        isinstance(statement, (ast.Pass, ast.If, ast.For, ast.While, ast.Try, ast.With, ast.Match))
+        for statement in reachable
+    ):
+        failures.append(f"{prefix}.dead_or_controlled_evidence")
+
+    forbidden_names = {
+        name
+        for node in ast.walk(function)
+        for name in (
+            [node.id] if isinstance(node, ast.Name) else
+            [node.attr] if isinstance(node, ast.Attribute) else []
+        )
+        if any(marker in name.casefold() for marker in ("mock", "patch", "monkeypatch"))
+    }
+    if forbidden_names:
+        failures.append(f"{prefix}.substituted_surface")
+
+    public_names = frozenset({collector_name, validator_name})
+    exact_imported_names = frozenset(
+        name
+        for name, target in import_targets.items()
+        if target in {qualified_collector, qualified_validator, public_module}
+    )
+    module_aliases = frozenset(
+        name for name, target in import_targets.items() if target == public_module
+    )
+    protected_bindings = public_names | exact_imported_names
+    permitted_public_imports = {
+        name: target
+        for name, target in import_targets.items()
+        if target in {qualified_collector, qualified_validator, public_module}
+    }
+    import_counts = _module_import_binding_counts_v03(tree)
+    if any(import_counts.get(name, 0) != 1 for name in exact_imported_names):
+        failures.append(f"{prefix}.public_import_binding_count")
+    if _module_shadow_events_v03(
+        tree,
+        protected=protected_bindings,
+        module_aliases=module_aliases,
+        permitted_import_targets=import_targets,
+    ):
+        failures.append(f"{prefix}.public_surface_shadowed")
+    if _binding_events_v04(
+        tree,
+        protected_bindings,
+        permitted_module_imports=permitted_public_imports,
+    ):
+        failures.append(f"{prefix}.public_surface_shadowed")
+    if _public_module_provenance_failures_v04(
+        tree,
+        module_aliases=module_aliases,
+        collector_name=collector_name,
+        validator_name=validator_name,
+    ):
+        failures.append(f"{prefix}.public_surface_provenance")
+    proof_operators = frozenset({"len", "set", "tuple"})
+    if (
+        proof_operators & _module_level_bound_names_v05(tree)
+        or _binding_events_v04(function, proof_operators)
+    ):
+        failures.append(f"{prefix}.assertion_operator_shadowed")
+    if _lexical_shadow_events_v03(
+        function,
+        protected=protected_bindings,
+        module_aliases=module_aliases,
+    ):
+        failures.append(f"{prefix}.public_surface_shadowed")
+    if any(
+        _lexical_shadow_events_v03(
+            nested,
+            protected=protected_bindings,
+            module_aliases=module_aliases,
+        )
+        for nested in function.body
+        if isinstance(nested, (ast.FunctionDef, ast.AsyncFunctionDef))
+    ):
+        failures.append(f"{prefix}.public_surface_shadowed")
+
+    transparent_spies = _transparent_collector_spies_v02(
+        function,
+        qualified_collector,
+        import_targets,
+        protected_bindings,
+        module_aliases,
+    )
+    if any(
+        _lexical_shadow_events_v03(
+            function,
+            protected=frozenset({spy}),
+            module_aliases=module_aliases,
+        )
+        != (f"{spy}:FunctionDef",)
+        for spy in transparent_spies
+    ):
+        failures.append(f"{prefix}.public_surface_shadowed")
+    report_name: str | None = None
+    collector_statement: ast.Assign | None = None
+    collector_index = -1
+    for index, statement in enumerate(reachable):
+        if not (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and isinstance(statement.value, ast.Call)
+        ):
+            continue
+        called = _resolved_call_target_v02(statement.value.func, import_targets)
+        if called == qualified_collector or called in transparent_spies:
+            if report_name is not None:
+                failures.append(f"{prefix}.collector_count")
+                continue
+            report_name = statement.targets[0].id
+            collector_statement = statement
+            collector_index = index
+    if report_name is None:
+        failures.append(f"{prefix}.collector_missing")
+
+    validation_name: str | None = None
+    validator_statement: ast.Assign | None = None
+    validator_index = -1
+    for index, statement in enumerate(reachable):
+        call: ast.Call | None = None
+        target_name: str | None = None
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and isinstance(statement.value, ast.Call)
+        ):
+            call = statement.value
+            target_name = statement.targets[0].id
+        if call is None:
+            continue
+        called = _resolved_call_target_v02(call.func, import_targets)
+        if called != qualified_validator:
+            continue
+        if (
+            report_name is None
+            or len(call.args) != 1
+            or not isinstance(call.args[0], ast.Name)
+            or call.args[0].id != report_name
+        ):
+            failures.append(f"{prefix}.validator_dataflow")
+            continue
+        if validation_name is not None:
+            failures.append(f"{prefix}.validator_count")
+            continue
+        validation_name = target_name
+        validator_statement = statement
+        validator_index = index
+    if validation_name is None:
+        failures.append(f"{prefix}.validator_missing")
+    if validator_index <= collector_index:
+        failures.append(f"{prefix}.call_order")
+    resolved_calls = tuple(
+        _resolved_call_target_v02(node.func, import_targets)
+        for node in ast.walk(function)
+        if isinstance(node, ast.Call)
+    )
+    if resolved_calls.count(qualified_collector) != 1:
+        failures.append(f"{prefix}.collector_occurrence_count")
+    if resolved_calls.count(qualified_validator) != 1:
+        failures.append(f"{prefix}.validator_occurrence_count")
+    if any(
+        target is not None
+        and (
+            target.endswith(".collect_continuous_delta_runtime_g2_e_v01")
+            or target.endswith(".run_continuous_delta_runtime_v01")
+            or (
+                ("g2_d" in target or "fractal_runtime" in target)
+                and any(part.startswith("_") for part in target.split("."))
+            )
+        )
+        for target in resolved_calls
+    ):
+        failures.append(f"{prefix}.forbidden_runtime_substitution")
+    if _actual_return_lineage_failures_v03(
+        function,
+        tree=tree,
+        report_name=report_name,
+        validation_name=validation_name,
+        collector_statement=collector_statement,
+        validator_statement=validator_statement,
+        qualified_validator=qualified_validator,
+        import_targets=import_targets,
+    ):
+        failures.append(f"{prefix}.actual_return_lineage")
+
+    assertions = [
+        statement
+        for statement in reachable
+        if isinstance(statement, ast.Assert)
+    ]
+    if any(
+        not (
+            isinstance(assertion.test, ast.Compare)
+            and len(assertion.test.ops) == 1
+            and len(assertion.test.comparators) == 1
+        )
+        for assertion in assertions
+    ):
+        failures.append(f"{prefix}.nonflat_assertion")
+    if any(
+        isinstance(assertion.test, ast.Constant) and bool(assertion.test.value)
+        for assertion in assertions
+    ):
+        failures.append(f"{prefix}.constant_assertion")
+    if any(
+        _tautological_assertion_v03(
+            assertion,
+            report_name=report_name,
+            validation_name=validation_name,
+        )
+        for assertion in assertions
+    ):
+        failures.append(f"{prefix}.tautological_assertion")
+    comparisons = _assertion_comparisons_v03(assertions)
+    module_values = _module_literal_values_v03(tree)
+    if validation_name is None or not _has_exact_validation_success_v03(
+        comparisons, validation_name
+    ):
+        failures.append(f"{prefix}.validation_success_contract")
+    if report_name is None:
+        failures.append(f"{prefix}.actual_return_assertion_missing")
+    else:
+        for field, expected in POST_E6_SHARED_FIXED_REPORT_VALUES:
+            if not _has_report_expected_comparison_v03(
+                comparisons,
+                report_name=report_name,
+                field=field,
+                expected=expected,
+                module_values=module_values,
+                direct=True,
+            ):
+                failures.append(f"{prefix}.shared_field_contract:{field}")
+        hash_first, hash_second = POST_E6_SHARED_SHA256_FIELDS
+        if not _has_distinct_report_field_relation_v03(
+            comparisons,
+            report_name=report_name,
+            first_field=hash_first,
+            second_field=hash_second,
+        ):
+            failures.append(f"{prefix}.shared_hash_relation")
+        for field in POST_E6_SHARED_SHA256_FIELDS:
+            if not _has_length_check_v03(
+                comparisons,
+                report_name=report_name,
+                field=field,
+                expected_length=64,
+            ) or not _has_hex_alphabet_check_v03(
+                comparisons,
+                report_name=report_name,
+                field=field,
+            ):
+                failures.append(f"{prefix}.shared_hash_format:{field}")
+        bytes_first, bytes_second = POST_E6_SHARED_BYTE_COUNT_FIELDS
+        if not _has_distinct_report_field_relation_v03(
+            comparisons,
+            report_name=report_name,
+            first_field=bytes_first,
+            second_field=bytes_second,
+        ):
+            failures.append(f"{prefix}.shared_byte_relation")
+        for field in POST_E6_SHARED_BYTE_COUNT_FIELDS:
+            if not _has_positive_field_check_v03(
+                comparisons,
+                report_name=report_name,
+                field=field,
+            ):
+                failures.append(f"{prefix}.shared_byte_positive:{field}")
+        geometry = (
+            POST_E6_LIVING_GEOMETRY_ASSERTIONS
+            if living
+            else POST_E6_CONFORMANCE_GEOMETRY_ASSERTIONS
+        )
+        for field, expected in geometry:
+            if not _has_geometry_comparison_v03(
+                comparisons,
+                report_name=report_name,
+                field=field,
+                expected=expected,
+                module_values=module_values,
+                living=living,
+            ):
+                failures.append(
+                    f"{prefix}.geometry_field_contract:{field}:"
+                    f"{_repr_sha256(expected)}"
+                )
+
+    if not (
+        any(target == qualified_collector for target in import_targets.values())
+        or any(target == public_module for target in import_targets.values())
+    ):
+        failures.append(f"{prefix}.collector_import")
+    if not (
+        any(target == qualified_validator for target in import_targets.values())
+        or any(target == public_module for target in import_targets.values())
+    ):
+        failures.append(f"{prefix}.validator_import")
+    return tuple(sorted(set(failures)))
+
+
+def _post_e6_test_contract_present(path: Path, *, living: bool) -> bool:
+    return not _validate_post_e6_test_contract_v02(path, living=living)
+
+
+def _historical_module_bindings_v03(label: str) -> frozenset[str]:
+    return frozenset(
+        context.removeprefix("binding:")
+        for surface, enclosing, context in HISTORICAL_EVIDENCE_STRUCTURAL_ALLOWLIST_V03
+        if surface == label
+        and enclosing == "module"
+        and context.startswith("binding:")
+    )
+
+
+def _dict_value_for_key_v03(mapping: ast.Dict, key: str) -> ast.AST | None:
+    for key_node, value_node in zip(mapping.keys, mapping.values, strict=True):
+        if isinstance(key_node, ast.Constant) and key_node.value == key:
+            return value_node
+    return None
+
+
+def _historical_allowed_node_ids_v03(
+    tree: ast.Module,
+    label: str,
+) -> frozenset[int]:
+    allowed: set[int] = set()
+    module_bindings = _historical_module_bindings_v03(label)
+    for statement in tree.body:
+        value: ast.AST | None = None
+        name: str | None = None
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+        ):
+            name = statement.targets[0].id
+            value = statement.value
+        elif (
+            isinstance(statement, ast.AnnAssign)
+            and isinstance(statement.target, ast.Name)
+            and statement.value is not None
+        ):
+            name = statement.target.id
+            value = statement.value
+        if name in module_bindings and value is not None:
+            allowed.update(
+                id(node)
+                for node in ast.walk(value)
+                if isinstance(node, ast.Constant)
+                and node.value
+                in {
+                    _HISTORICAL_ACT_ID,
+                    _HISTORICAL_RUNNER_MODULE,
+                    _HISTORICAL_RUNNER_SYMBOL,
+                }
+            )
+
+    functions = {
+        node.name: node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    if label == "kernel_conformance":
+        function = functions.get("kernel_conformance_profile_metadata_v01")
+        if function is not None:
+            for returned in (
+                node.value
+                for node in ast.walk(function)
+                if isinstance(node, ast.Return) and isinstance(node.value, ast.Dict)
+            ):
+                profile = _dict_value_for_key_v03(returned, "profile_id")
+                historical = _dict_value_for_key_v03(
+                    returned, "historical_act_id"
+                )
+                if (
+                    isinstance(profile, ast.Name)
+                    and profile.id == "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL"
+                    and isinstance(historical, ast.Constant)
+                    and historical.value == _HISTORICAL_ACT_ID
+                ):
+                    allowed.update(id(node) for node in ast.walk(historical))
+    elif label == "living_gauntlet":
+        function = functions.get("_validate_completion_manifest_v01")
+        if function is not None:
+            for assignment in (
+                node
+                for node in ast.walk(function)
+                if isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == "expected_profiles"
+                and isinstance(node.value, ast.Dict)
+            ):
+                historical_profile = _dict_value_for_key_v03(
+                    assignment.value, "historical_v0_5"
+                )
+                if isinstance(historical_profile, ast.Dict):
+                    historical = _dict_value_for_key_v03(
+                        historical_profile, "historical_act_id"
+                    )
+                    if (
+                        isinstance(historical, ast.Constant)
+                        and historical.value == _HISTORICAL_ACT_ID
+                    ):
+                        allowed.update(id(node) for node in ast.walk(historical))
+    return frozenset(allowed)
+
+
+def _historical_alias_expression_v03(node: ast.AST, aliases: set[str]) -> bool:
+    return _expression_uses_names_v03(node, aliases)
+
+
+def _historical_current_binding_v03(
+    target: ast.AST,
+    *,
+    allowed_historical_bindings: frozenset[str],
+) -> bool:
+    names = set(_bound_name_ids(target))
+    root = _target_root_name_v03(target)
+    if root is not None:
+        names.add(root)
+    critical = (
+        CORE_PHASE_CRITICAL_NAMES
+        | RUNNER_PHASE_CRITICAL_NAMES
+        | LIVING_PHASE_CRITICAL_NAMES
+    )
+    for name in names:
+        if name in allowed_historical_bindings:
+            continue
+        folded = name.casefold()
+        if name in critical:
+            return True
+        if any(marker in folded for marker in ("dispatch", "registry")):
+            return True
+        if any(marker in folded for marker in ("source", "seam", "profile", "runner")) and not folded.startswith(
+            ("expected_", "historical_", "evidence_", "module_", "symbol_")
+        ):
+            return True
+    return False
+
+
+def _historical_scope_escape_failures_v05(
+    tree: ast.Module,
+    *,
+    label: str,
+    historical_bindings: frozenset[str],
+) -> tuple[str, ...]:
+    raw_aliases = set(_identity_aliases_v05(tree, historical_bindings))
+    failures: set[str] = set()
+    class_node_ids = {
+        id(child)
+        for class_node in ast.walk(tree)
+        if isinstance(class_node, ast.ClassDef)
+        for statement in class_node.body
+        for child in ast.walk(statement)
+    }
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)):
+            if any(
+                _expression_uses_names_v03(expression, raw_aliases)
+                for expression in _definition_time_expressions_v05(node)
+            ):
+                failures.add(
+                    f"e6.phase.historical.{label}.tainted_scope_definition"
+                )
+        if isinstance(node, ast.Lambda) and _identity_preserving_root_expression_v05(
+            node.body, raw_aliases
+        ):
+            failures.add(
+                f"e6.phase.historical.{label}.tainted_scope_return"
+            )
+        if isinstance(node, (ast.Return, ast.Yield, ast.YieldFrom)):
+            if node.value is not None and _identity_preserving_root_expression_v05(
+                node.value, raw_aliases
+            ):
+                failures.add(
+                    f"e6.phase.historical.{label}.tainted_scope_return"
+                )
+        if isinstance(
+            node,
+            (ast.GeneratorExp, ast.ListComp, ast.SetComp, ast.DictComp),
+        ) and _expression_uses_names_v03(node, raw_aliases):
+            failures.add(
+                f"e6.phase.historical.{label}.tainted_scope_container"
+            )
+        targets: tuple[ast.AST, ...] = ()
+        value: ast.AST | None = None
+        if isinstance(node, ast.Assign):
+            targets = tuple(node.targets)
+            value = node.value
+        elif isinstance(node, ast.AnnAssign) and node.value is not None:
+            targets = (node.target,)
+            value = node.value
+        elif isinstance(node, ast.NamedExpr):
+            targets = (node.target,)
+            value = node.value
+        if value is None or not _identity_preserving_root_expression_v05(
+            value, raw_aliases
+        ):
+            continue
+        if id(node) in class_node_ids:
+            failures.add(
+                f"e6.phase.historical.{label}.tainted_scope_class_storage"
+            )
+        if any(
+            isinstance(target, (ast.Attribute, ast.Subscript))
+            for target in targets
+        ):
+            failures.add(
+                f"e6.phase.historical.{label}.tainted_scope_storage"
+            )
+    return tuple(sorted(failures))
+
+
+def _historical_taint_failures_v03(
+    tree: ast.Module,
+    *,
+    label: str,
+) -> tuple[str, ...]:
+    historical_bindings = _historical_module_bindings_v03(label)
+    failures: set[str] = set()
+    failures.update(
+        _historical_scope_escape_failures_v05(
+            tree,
+            label=label,
+            historical_bindings=historical_bindings,
+        )
+    )
+    failures.update(
+        _module_capability_failures_v05(
+            tree,
+            label=f"e6.phase.historical.{label}.json_authority",
+            module_name="json",
+            protected_attributes=frozenset({"dumps", "loads"}),
+        )
+    )
+    function_groups: dict[str, list[ast.FunctionDef | ast.AsyncFunctionDef]] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            function_groups.setdefault(node.name, []).append(node)
+    local_functions = {
+        name: rows[0]
+        for name, rows in function_groups.items()
+        if len(rows) == 1
+    }
+    active_local_calls: set[tuple[int, tuple[str, ...]]] = set()
+    safe_builtins = frozenset(
+        {
+        "all",
+        "any",
+        "bool",
+        "dict",
+        "enumerate",
+        "frozenset",
+        "isinstance",
+        "iter",
+        "len",
+        "list",
+        "print",
+        "repr",
+        "set",
+        "sorted",
+        "str",
+        "sum",
+        "tuple",
+        "zip",
+        }
+    )
+    lexical_chains = _lexical_scope_chains_v05(tree)
+    historical_import_targets = _module_import_targets_v02(tree)
+    safe_methods = {
+        "copy",
+        "get",
+        "isdisjoint",
+        "issubset",
+        "issuperset",
+        "items",
+        "keys",
+        "values",
+    }
+
+    def analyze_scope(
+        statements: Sequence[ast.stmt],
+        inherited_aliases: set[str],
+    ) -> None:
+        nodes = _scope_nodes_v03(statements)
+        aliases = set(inherited_aliases)
+        binding_counts: dict[str, int] = {}
+        fresh_candidates: set[str] = set()
+        for node in nodes:
+            targets: tuple[ast.AST, ...] = ()
+            if isinstance(node, ast.Assign):
+                targets = tuple(node.targets)
+                if (
+                    len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                    and isinstance(node.value, (ast.List, ast.Dict, ast.Set))
+                    and (
+                        (isinstance(node.value, (ast.List, ast.Set)) and not node.value.elts)
+                        or (isinstance(node.value, ast.Dict) and not node.value.keys)
+                    )
+                ):
+                    fresh_candidates.add(node.targets[0].id)
+            elif isinstance(node, ast.AnnAssign):
+                targets = (node.target,)
+                if (
+                    isinstance(node.target, ast.Name)
+                    and isinstance(node.value, (ast.List, ast.Dict, ast.Set))
+                    and (
+                        (isinstance(node.value, (ast.List, ast.Set)) and not node.value.elts)
+                        or (isinstance(node.value, ast.Dict) and not node.value.keys)
+                    )
+                ):
+                    fresh_candidates.add(node.target.id)
+            elif isinstance(node, (ast.AugAssign, ast.NamedExpr)):
+                targets = (node.target,)
+            elif isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension)):
+                targets = (node.target,)
+            elif isinstance(node, (ast.With, ast.AsyncWith)):
+                targets = tuple(
+                    item.optional_vars
+                    for item in node.items
+                    if item.optional_vars is not None
+                )
+            elif isinstance(node, ast.Delete):
+                targets = tuple(node.targets)
+            for target in targets:
+                for name in _bound_name_ids(target):
+                    binding_counts[name] = binding_counts.get(name, 0) + 1
+        fresh_containers = {
+            name
+            for name in fresh_candidates
+            if binding_counts.get(name) == 1 and name not in aliases
+        }
+        string_containers = {
+            node.target.id
+            for node in nodes
+            if isinstance(node, ast.AnnAssign)
+            and isinstance(node.target, ast.Name)
+            and node.target.id in fresh_containers
+            and isinstance(node.annotation, ast.Subscript)
+            and isinstance(node.annotation.value, ast.Name)
+            and node.annotation.value.id == "list"
+            and isinstance(node.annotation.slice, ast.Name)
+            and node.annotation.slice.id == "str"
+        }
+        safe_string_receivers = {
+            name
+            for node in nodes
+            if isinstance(node, (ast.For, ast.AsyncFor, ast.comprehension))
+            and isinstance(node.iter, ast.Name)
+            and node.iter.id in string_containers
+            for name in _bound_name_ids(node.target)
+        }
+        changed = True
+        while changed:
+            changed = False
+            for node in nodes:
+                targets: tuple[ast.AST, ...] = ()
+                value: ast.AST | None = None
+                if isinstance(node, ast.Assign):
+                    targets = tuple(node.targets)
+                    value = node.value
+                elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                    targets = (node.target,)
+                    value = node.value
+                elif isinstance(node, ast.NamedExpr):
+                    targets = (node.target,)
+                    value = node.value
+                elif isinstance(node, (ast.For, ast.AsyncFor)):
+                    targets = (node.target,)
+                    value = node.iter
+                elif isinstance(node, ast.comprehension):
+                    targets = (node.target,)
+                    value = node.iter
+                if value is None or not _historical_alias_expression_v03(
+                    value, aliases
+                ):
+                    continue
+                for target in targets:
+                    before = len(aliases)
+                    aliases.update(_bound_name_ids(target))
+                    changed = changed or len(aliases) != before
+            for node in nodes:
+                if not (
+                    isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Attribute)
+                    and isinstance(node.func.value, ast.Name)
+                    and node.func.value.id in fresh_containers
+                    and node.func.attr in {"append", "extend"}
+                    and any(
+                        _expression_uses_names_v03(argument, aliases)
+                        for argument in node.args
+                    )
+                ):
+                    continue
+                before = len(aliases)
+                aliases.add(node.func.value.id)
+                changed = changed or len(aliases) != before
+
+        for node in nodes:
+            if isinstance(node, (ast.Assign, ast.AnnAssign, ast.NamedExpr)):
+                targets = (
+                    tuple(node.targets)
+                    if isinstance(node, ast.Assign)
+                    else (node.target,)
+                )
+                value = node.value
+                if value is not None and _historical_alias_expression_v03(
+                    value, aliases
+                ):
+                    for target in targets:
+                        if _historical_current_binding_v03(
+                            target,
+                            allowed_historical_bindings=historical_bindings,
+                        ):
+                            failures.add(
+                                f"e6.phase.historical.{label}."
+                                "tainted_current_binding"
+                            )
+            if not isinstance(node, ast.Call):
+                continue
+            called = _dotted_ast_name(node.func) or ""
+            leaf = called.split(".")[-1]
+            tainted_func = _expression_uses_names_v03(node.func, aliases)
+            tainted_args = any(
+                _expression_uses_names_v03(argument, aliases)
+                for argument in node.args
+            ) or any(
+                _expression_uses_names_v03(keyword.value, aliases)
+                for keyword in node.keywords
+            )
+            tainted_receiver = (
+                isinstance(node.func, ast.Attribute)
+                and _expression_uses_names_v03(node.func.value, aliases)
+            )
+            inert_container_call = (
+                isinstance(node.func, ast.Attribute)
+                and isinstance(node.func.value, ast.Name)
+                and node.func.value.id in fresh_containers
+                and node.func.attr in {"append", "extend"}
+            )
+            inert_string_call = (
+                isinstance(node.func, ast.Attribute)
+                and isinstance(node.func.value, ast.Name)
+                and node.func.value.id in safe_string_receivers
+                and node.func.attr in {"endswith", "startswith"}
+            )
+            if leaf in {"import_module", "__import__"} and tainted_args:
+                failures.add(f"e6.phase.historical.{label}.tainted_import")
+            if leaf == "getattr" and tainted_args:
+                failures.add(f"e6.phase.historical.{label}.tainted_getattr")
+            if tainted_func and not tainted_receiver:
+                failures.add(
+                    f"e6.phase.historical.{label}.tainted_callable:"
+                    f"{called or leaf}"
+                )
+            if (
+                tainted_args
+                and isinstance(node.func, ast.Attribute)
+                and _historical_current_binding_v03(
+                    node.func.value,
+                    allowed_historical_bindings=historical_bindings,
+                )
+            ):
+                failures.add(
+                    f"e6.phase.historical.{label}.tainted_current_binding"
+                )
+            local_function = local_functions.get(leaf)
+            if tainted_args and local_function is not None:
+                if leaf in safe_builtins:
+                    failures.add(
+                        f"e6.phase.historical.{label}.tainted_escape"
+                    )
+                tainted_parameters = _tainted_call_parameters_v03(
+                    node, local_function, aliases
+                )
+                token = (id(local_function), tuple(sorted(tainted_parameters)))
+                if token not in active_local_calls:
+                    active_local_calls.add(token)
+                    analyze_scope(local_function.body, tainted_parameters)
+                    active_local_calls.remove(token)
+                continue
+            if (
+                tainted_receiver
+                and leaf not in safe_methods
+                and not inert_container_call
+                and not inert_string_call
+            ):
+                failures.add(
+                    f"e6.phase.historical.{label}.tainted_callable:"
+                    f"{called or leaf}"
+                )
+            elif (
+                tainted_args
+                and not (
+                    (
+                        isinstance(node.func, ast.Name)
+                        and node.func.id in safe_builtins
+                        and _lexical_builtin_is_exact_v05(
+                            lexical_chains, node, node.func.id
+                        )
+                    )
+                    or (
+                        isinstance(node.func, ast.Attribute)
+                        and isinstance(node.func.value, ast.Name)
+                        and (
+                            (
+                                node.func.value.id == "dict"
+                                and node.func.attr == "fromkeys"
+                                and _lexical_builtin_is_exact_v05(
+                                    lexical_chains, node, "dict"
+                                )
+                            )
+                            or (
+                                historical_import_targets.get(
+                                    node.func.value.id
+                                )
+                                == "json"
+                                and node.func.attr in {"dumps", "loads"}
+                                and _lexical_module_is_exact_v05(
+                                    tree,
+                                    lexical_chains,
+                                    node,
+                                    node.func.value.id,
+                                    "json",
+                                )
+                            )
+                        )
+                    )
+                )
+                and leaf not in safe_methods
+                and not inert_container_call
+            ):
+                failures.add(
+                    f"e6.phase.historical.{label}.tainted_escape:"
+                    f"{called or leaf}"
+                )
+
+        for node in nodes:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                parameters = _argument_binding_names_v03(node.args)
+                analyze_scope(node.body, aliases - set(parameters))
+            elif isinstance(node, ast.ClassDef):
+                analyze_scope(node.body, aliases)
+            elif isinstance(node, ast.Lambda):
+                parameters = _argument_binding_names_v03(node.args)
+                analyze_scope(
+                    (ast.Expr(value=node.body),),
+                    aliases - set(parameters),
+                )
+
+    analyze_scope(tree.body, set(historical_bindings))
+    return tuple(sorted(failures))
+
+
+def _validate_historical_non_rebinding_v02(
+    tree: ast.Module | None,
+    *,
+    label: str,
+    allowed_evidence_assignments: frozenset[str],
+    failures: list[str],
+) -> None:
+    if tree is None:
+        return
+    expected_bindings = _historical_module_bindings_v03(label)
+    if allowed_evidence_assignments != expected_bindings:
+        failures.append(f"e6.phase.historical.{label}.allowlist_mismatch")
+    allowed_nodes = _historical_allowed_node_ids_v03(tree, label)
+    module_values: dict[str, object] = {}
+    for statement in tree.body:
+        name: str | None = None
+        value: ast.AST | None = None
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+        ):
+            name = statement.targets[0].id
+            value = statement.value
+        elif (
+            isinstance(statement, ast.AnnAssign)
+            and isinstance(statement.target, ast.Name)
+        ):
+            name = statement.target.id
+            value = statement.value
+        if name is not None and value is not None:
+            try:
+                module_values[name] = _static_value(value, module_values)
+            except StaticValueUnavailable:
+                module_values.pop(name, None)
+    for node in ast.walk(tree):
+        try:
+            static_node_value = _static_value(node, {})
+        except StaticValueUnavailable:
+            static_node_value = None
+        if (
+            isinstance(static_node_value, str)
+            and static_node_value
+            in {
+                _HISTORICAL_ACT_ID,
+                _HISTORICAL_RUNNER_MODULE,
+                _HISTORICAL_RUNNER_SYMBOL,
+            }
+            and id(node) not in allowed_nodes
+        ):
+            failures.append(f"e6.phase.historical.{label}.static_rebound")
+        if isinstance(node, ast.Constant) and node.value in {
+            _HISTORICAL_ACT_ID,
+            _HISTORICAL_RUNNER_MODULE,
+            _HISTORICAL_RUNNER_SYMBOL,
+        }:
+            if id(node) not in allowed_nodes:
+                failures.append(f"e6.phase.historical.{label}.literal_rebound")
+        elif isinstance(node, ast.Import):
+            if any(
+                alias.name == _HISTORICAL_RUNNER_MODULE
+                or alias.name.startswith(_HISTORICAL_RUNNER_MODULE + ".")
+                for alias in node.names
+            ):
+                failures.append(f"e6.phase.historical.{label}.import_rebound")
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            if (
+                module == _HISTORICAL_RUNNER_MODULE
+                or module.startswith(_HISTORICAL_RUNNER_MODULE + ".")
+                or any(
+                    alias.name == _HISTORICAL_RUNNER_SYMBOL
+                    or f"{module}.{alias.name}" == _HISTORICAL_RUNNER_MODULE
+                    for alias in node.names
+                )
+            ):
+                failures.append(f"e6.phase.historical.{label}.import_from_rebound")
+        elif isinstance(node, ast.Name) and node.id == _HISTORICAL_RUNNER_SYMBOL:
+            if id(node) not in allowed_nodes:
+                failures.append(f"e6.phase.historical.{label}.symbol_rebound")
+        elif isinstance(node, ast.Attribute) and node.attr == _HISTORICAL_RUNNER_SYMBOL:
+            if id(node) not in allowed_nodes:
+                failures.append(f"e6.phase.historical.{label}.attribute_rebound")
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            if node.name == _HISTORICAL_RUNNER_SYMBOL:
+                failures.append(f"e6.phase.historical.{label}.local_rebound")
+        if isinstance(node, ast.Call):
+            called = (_dotted_ast_name(node.func) or "").split(".")[-1]
+            if called in {"__import__", "import_module"} and node.args:
+                try:
+                    imported = _static_value(node.args[0], module_values)
+                except StaticValueUnavailable:
+                    imported = None
+                if imported == _HISTORICAL_RUNNER_MODULE:
+                    failures.append(
+                        f"e6.phase.historical.{label}.dynamic_import_rebound"
+                    )
+    if any(
+        isinstance(node, ast.Call)
+        and (
+            (_dotted_ast_name(node.func) or "").split(".")[-1]
+            == _HISTORICAL_RUNNER_SYMBOL
+        )
+        for node in ast.walk(tree)
+    ):
+        failures.append(f"e6.phase.historical.{label}.call_rebound")
+    failures.extend(_historical_taint_failures_v03(tree, label=label))
+
+
+def _derive_e6_phase_state_v01(
+    repo_root: Path,
+    failures: list[str],
+) -> tuple[dict[str, object], ast.Module | None, ast.Module | None, ast.Module | None, str, str, str]:
+    core, core_nodes, core_tree, core_source = _phase_critical_assignments_v02(
+        repo_root / CONFORMANCE_SOURCE_PATH,
+        "e6.phase.kernel_conformance",
+        CORE_PHASE_CRITICAL_NAMES,
+        failures,
+    )
+    runner, runner_nodes, runner_tree, runner_source = _phase_critical_assignments_v02(
+        repo_root / KERNEL_CONFORMANCE_RUNNER_PATH,
+        "e6.phase.kernel_conformance_runner",
+        RUNNER_PHASE_CRITICAL_NAMES,
+        failures,
+    )
+    living, living_nodes, living_tree, living_source = _phase_critical_assignments_v02(
+        repo_root / LIVING_GAUNTLET_PATH,
+        "e6.phase.living_gauntlet",
+        LIVING_PHASE_CRITICAL_NAMES,
+        failures,
+    )
+    living_sources = living.get("_ACTIVE_ACT_SOURCES")
+    living_act_ids = (
+        tuple(living_sources) if isinstance(living_sources, dict) else None
+    )
+    living_evidence = living.get("_EVIDENCE_ONLY_ACT_IDS")
+    historical_preserved = all(
+        isinstance(value, tuple) and _HISTORICAL_ACT_ID in value
+        for value in (
+            core.get("_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS"),
+            runner.get("_V05_HISTORICAL_BASE_ACT_IDS"),
+            living.get("HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05"),
+            living_evidence,
+        )
+    )
+    current_collections = (
+        core.get("_ACTIVE_GAUNTLET_REFS"),
+        runner.get("_BASE_ACT_IDS"),
+        living_act_ids,
+        tuple(living.get("_CURRENT_SEAMS", {}))
+        if isinstance(living.get("_CURRENT_SEAMS"), dict)
+        else None,
+        living.get("_EXECUTED_RUNTIME_ACT_IDS"),
+        living.get("_EXECUTED_CONFORMANCE_ACT_IDS"),
+    )
+    historical_current = any(
+        isinstance(value, tuple) and _HISTORICAL_ACT_ID in value
+        for value in current_collections
+    )
+
+    test_identities = {
+        path: _file_identity(repo_root / path)
+        for path in (LIVING_GAUNTLET_TEST_PATH, KERNEL_CONFORMANCE_TEST_PATH)
+    }
+    if all(
+        test_identities[path] == PRE_E6_CLASS_B_IDENTITIES[path]
+        for path in test_identities
+    ):
+        focused_test_phase = "PRE_E6_RECONCILED"
+    elif _post_e6_test_contract_present(
+        repo_root / LIVING_GAUNTLET_TEST_PATH, living=True
+    ) and _post_e6_test_contract_present(
+        repo_root / KERNEL_CONFORMANCE_TEST_PATH, living=False
+    ):
+        focused_test_phase = "POST_E6_SUCCESSOR"
+    else:
+        focused_test_phase = "HYBRID_OR_INVALID"
+
+    state = {
+        "living_version": living.get("RUNNER_VERSION"),
+        "living_act_ids": living_act_ids,
+        "living_profile_v05": living.get(
+            "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL"
+        ),
+        "living_profile_v06_current": living.get(
+            "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT"
+        ),
+        "living_profile_v06_historical": living.get(
+            "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL"
+        ),
+        "living_profile_v07_current": living.get(
+            "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT"
+        ),
+        "living_default_profile_ref": _assignment_reference_name(
+            living_tree, "DEFAULT_KERNEL_CONFORMANCE_PROFILE"
+        ),
+        "living_v05_refs": living.get(
+            "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05"
+        ),
+        "living_v06_historical_refs": living.get(
+            "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06"
+        ),
+        "living_current_refs": living.get(
+            "CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07",
+            living.get("CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06"),
+        ),
+        "core_version": core.get("CONFORMANCE_VERSION"),
+        "core_profile_v05": core.get(
+            "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL"
+        ),
+        "core_profile_v06_current": core.get(
+            "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT"
+        ),
+        "core_profile_v06_historical": core.get(
+            "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL"
+        ),
+        "core_profile_v07_current": core.get(
+            "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT"
+        ),
+        "core_default_profile_ref": _assignment_reference_name(
+            core_tree, "DEFAULT_KERNEL_CONFORMANCE_PROFILE"
+        ),
+        "core_v05_refs": core.get("_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS"),
+        "core_v06_historical_refs": core.get(
+            "_V06_HISTORICAL_ACTIVE_GAUNTLET_REFS"
+        ),
+        "core_current_refs": core.get(
+            "_V07_CURRENT_ACTIVE_GAUNTLET_REFS",
+            core.get("_V06_CURRENT_ACTIVE_GAUNTLET_REFS"),
+        ),
+        "runner_version": runner.get("RUNNER_VERSION"),
+        "runner_profile_v05": runner.get(
+            "KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL"
+        ),
+        "runner_profile_v06_current": runner.get(
+            "KERNEL_CONFORMANCE_PROFILE_V06_CURRENT"
+        ),
+        "runner_profile_v06_historical": runner.get(
+            "KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL"
+        ),
+        "runner_profile_v07_current": runner.get(
+            "KERNEL_CONFORMANCE_PROFILE_V07_CURRENT"
+        ),
+        "runner_default_profile_ref": _assignment_reference_name(
+            runner_tree, "DEFAULT_KERNEL_CONFORMANCE_PROFILE"
+        ),
+        "runner_v05_refs": runner.get("_V05_HISTORICAL_BASE_ACT_IDS"),
+        "runner_v06_historical_refs": runner.get(
+            "_V06_HISTORICAL_BASE_ACT_IDS"
+        ),
+        "runner_current_refs": runner.get("_BASE_ACT_IDS"),
+        "category_ids": core.get("CATEGORY_IDS"),
+        "category_check_ids": core.get("_EXPECTED_CATEGORY_CHECK_IDS"),
+        "negative_probe_ids": core.get("NEGATIVE_PROBE_IDS"),
+        "domain_ids": core.get("DOMAIN_IDS"),
+        "domain_geometry": core.get("_EXPECTED_DOMAIN_GEOMETRY"),
+        "historical_all_layers_current": historical_current,
+        "historical_v05_evidence_preserved": historical_preserved,
+        "focused_test_phase": focused_test_phase,
+    }
+    version_tuple = (
+        state.get("living_version"),
+        state.get("core_version"),
+        state.get("runner_version"),
+    )
+    binding_phase = (
+        "PRE_E6_RECONCILED"
+        if version_tuple == ("v1.5", "v0.6", "v0.6")
+        else "POST_E6_SUCCESSOR"
+        if version_tuple == ("v1.6", "v0.7", "v0.7")
+        else None
+    )
+    _validate_phase_critical_bindings_v02(
+        binding_phase,
+        core,
+        core_nodes,
+        runner,
+        runner_nodes,
+        living,
+        living_nodes,
+        failures,
+    )
+    _validate_historical_non_rebinding_v02(
+        core_tree,
+        label="kernel_conformance",
+        allowed_evidence_assignments=frozenset(
+            {
+                "_GATE1_ACTIVE_GAUNTLET_REFS_V01",
+                "_G2A_ACTIVE_GAUNTLET_REFS_V02",
+                "_G2B_ACTIVE_GAUNTLET_REFS_V03",
+                "_G2C_ACTIVE_GAUNTLET_REFS_V04",
+                "_V05_HISTORICAL_ACTIVE_GAUNTLET_REFS",
+            }
+        ),
+        failures=failures,
+    )
+    _validate_historical_non_rebinding_v02(
+        runner_tree,
+        label="kernel_conformance_runner",
+        allowed_evidence_assignments=frozenset(
+            {"_V05_HISTORICAL_BASE_ACT_IDS"}
+        ),
+        failures=failures,
+    )
+    _validate_historical_non_rebinding_v02(
+        living_tree,
+        label="living_gauntlet",
+        allowed_evidence_assignments=frozenset(
+            {
+                "HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05",
+                "_EVIDENCE_ONLY_ACT_IDS",
+                "_HISTORICAL_EVIDENCE_ACT_IDS",
+                "_HISTORICAL_SEAMS",
+            }
+        ),
+        failures=failures,
+    )
+    return (
+        state,
+        core_tree,
+        runner_tree,
+        living_tree,
+        core_source,
+        runner_source,
+        living_source,
+    )
+
+
 def _reads_historical_pass_material(tree: ast.Module | None) -> bool:
     if tree is None:
         return False
@@ -1817,6 +7726,73 @@ def _reads_historical_pass_material(tree: ast.Module | None) -> bool:
 
 
 def _validate_conformance_profiles(repo_root: Path, failures: list[str]) -> None:
+    (
+        phase_state,
+        phase_core_tree,
+        phase_runner_tree,
+        phase_living_tree,
+        phase_core_source,
+        phase_runner_source,
+        phase_living_source,
+    ) = _derive_e6_phase_state_v01(repo_root, failures)
+    phase, phase_failures = _classify_e6_phase_v01(phase_state)
+    failures.extend(phase_failures)
+    _validate_phase_path_ledger_v02(repo_root, phase, failures)
+    pre_e6_versions = (
+        phase_state.get("living_version"),
+        phase_state.get("core_version"),
+        phase_state.get("runner_version"),
+    ) == ("v1.5", "v0.6", "v0.6")
+    if phase == "PRE_E6_RECONCILED" or pre_e6_versions:
+        _validate_exact_identities(
+            repo_root,
+            PRE_E6_CLASS_B_IDENTITIES,
+            "e6.phase.pre.class_b",
+            failures,
+        )
+    elif phase == "POST_E6_SUCCESSOR":
+        report_fields = set(
+            _class_fields(phase_core_tree, "KernelConformanceReportV01")
+        )
+        for field in (
+            "profile_id",
+            "historical_profile_ref",
+            "claim_to_current_act",
+            "current_act_count",
+            "active_gauntlet_refs",
+        ):
+            if field not in report_fields:
+                failures.append(
+                    f"e6.phase.post.kernel_conformance.report_field_missing:{field}"
+                )
+        living_fields = set(
+            _class_fields(phase_living_tree, "LivingGauntletReportV01")
+        )
+        for field in (
+            "kernel_conformance_profile",
+            "historical_kernel_conformance_profile",
+            "current_regression_claim_mapping",
+        ):
+            if field not in living_fields and field not in phase_living_source:
+                failures.append(
+                    f"e6.phase.post.living_gauntlet.report_field_missing:{field}"
+                )
+        for label, tree, source in (
+            ("kernel_conformance", phase_core_tree, phase_core_source),
+            ("kernel_conformance_runner", phase_runner_tree, phase_runner_source),
+            ("living_gauntlet", phase_living_tree, phase_living_source),
+        ):
+            if label != "living_gauntlet" and (
+                _HISTORICAL_RUNNER_MODULE in source
+                or _HISTORICAL_RUNNER_SYMBOL in source
+            ):
+                failures.append(f"e6.phase.post.{label}.historical_runner_reference")
+            if _reads_historical_pass_material(tree):
+                failures.append(f"e6.phase.post.{label}.historical_pass_consumption")
+        return
+    else:
+        return
+
     values, tree, source = _static_assignments(
         repo_root / CONFORMANCE_SOURCE_PATH,
         "s3.kernel_conformance",
@@ -2104,7 +8080,7 @@ def _validate_current_import_graph(
             KERNEL_CONFORMANCE_RUNNER_PATH,
             "tests/test_kernel_conformance_v01_runner.py",
         },
-        "e5": set(REQUIRED_DEFERRED_E5_PATHS),
+        "e5": set(REQUIRED_E5_PATHS),
     }
     scope_paths["current_gate1"] = current_python - scope_paths["current_gate2"]
     scope_paths["current_gate1"].update(
@@ -2132,7 +8108,7 @@ def _validate_current_import_graph(
         failures.append(f"s3.package_facade.retired_export:{retired}")
 
 
-def _validate_deferred_e5_content(
+def _validate_committed_e5_content(
     repo_root: Path,
     failures: list[str],
 ) -> None:
@@ -2140,14 +8116,14 @@ def _validate_deferred_e5_content(
 
     The focused E5 test and runner may contain exact negative assertions or
     non-claim fields for retired vocabulary. Import isolation for all three
-    deferred paths is enforced separately by ``_validate_current_import_graph``.
+    committed paths is enforced separately by ``_validate_current_import_graph``.
     """
 
     folded_forbidden = tuple(term.casefold() for term in FORBIDDEN_DIRECT_TERMS)
-    for relative_path in sorted(REQUIRED_DEFERRED_E5_PATHS):
+    for relative_path in sorted(REQUIRED_E5_PATHS):
         path = repo_root / relative_path
         if not path.exists():
-            # A deferred candidate may be absent from the clean successor tree.
+            failures.append(f"s3.e5_runtime.missing:{relative_path}")
             continue
         try:
             source = path.read_text(encoding="utf-8")
@@ -2230,6 +8206,150 @@ def _validate_current_documents(repo_root: Path, failures: list[str]) -> None:
                     )
 
 
+def _validate_e5_basis_ancestry_v02(
+    repo_root: Path,
+    failures: list[str],
+) -> None:
+    try:
+        object_check = subprocess.run(
+            (
+                "git",
+                "cat-file",
+                "-e",
+                f"{E5_IMPLEMENTATION_BASIS_COMMIT}^{{commit}}",
+            ),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        failures.append(f"e6.committed_e5.git_object:{type(exc).__name__}")
+        return
+    if object_check.returncode != 0:
+        if not (repo_root / ".git").exists():
+            failures.append(
+                f"e6.committed_e5.git_object:exit_{object_check.returncode}"
+            )
+        else:
+            failures.append("e6.committed_e5.basis_object_missing")
+        return
+    try:
+        ancestor = subprocess.run(
+            (
+                "git",
+                "merge-base",
+                "--is-ancestor",
+                E5_IMPLEMENTATION_BASIS_COMMIT,
+                "HEAD",
+            ),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        failures.append(f"e6.committed_e5.git_ancestry:{type(exc).__name__}")
+        return
+    if ancestor.returncode == 1:
+        failures.append("e6.committed_e5.basis_not_ancestor")
+    elif ancestor.returncode != 0:
+        failures.append(
+            f"e6.committed_e5.ancestry_indeterminate:exit_{ancestor.returncode}"
+        )
+
+
+def _validate_e6_class_a_control_plane(
+    repo_root: Path,
+    authority_index: dict[str, object] | None,
+    successor_manifest: dict[str, object] | None,
+    failures: list[str],
+) -> None:
+    _validate_exact_identities(
+        repo_root,
+        CLASS_A_CONTROL_SURFACE_IDENTITIES,
+        "e6.class_a.control_surface",
+        failures,
+    )
+    _validate_exact_identities(
+        repo_root,
+        FROZEN_E5_IDENTITIES,
+        "e6.committed_e5",
+        failures,
+    )
+    _validate_exact_identities(
+        repo_root,
+        FROZEN_PREDECESSOR_EVIDENCE_IDENTITIES,
+        "e6.frozen_predecessor_evidence",
+        failures,
+    )
+    if CLASS_A_RECONCILIATION_PATHS & CLASS_B_E6_IMPLEMENTATION_PATHS:
+        failures.append("e6.path_classes.class_a_class_b_overlap")
+    if len(CLASS_A_RECONCILIATION_PATHS) != 7:
+        failures.append("e6.path_classes.class_a_count")
+    if len(CLASS_B_E6_IMPLEMENTATION_PATHS) != 5:
+        failures.append("e6.path_classes.class_b_count")
+
+    annex = _load_reconciliation_contract(repo_root, failures)
+    _validate_reconciliation_contract(annex, failures)
+
+    stale_markers = (
+        "deferred_e5_transplant",
+        "DEFERRED_UNTIL_BYTE_EXACT_TRANSPLANT",
+        "frozen E5 candidate exists only",
+        "three deferred E5 paths",
+    )
+    for relative_path in (LOCK_PATH, MANIFEST_PATH, E6_RECONCILIATION_ANNEX_PATH):
+        try:
+            source = (repo_root / relative_path).read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            continue
+        for marker in stale_markers:
+            if marker in source:
+                failures.append(
+                    f"e6.class_a.stale_e5_current_fact:{relative_path}:{marker}"
+                )
+
+    if authority_index is not None:
+        entries = authority_index.get("current_technical_annexes")
+        matching = [
+            entry
+            for entry in entries
+            if isinstance(entries, list)
+            and isinstance(entry, dict)
+            and entry.get("path") == E6_RECONCILIATION_ANNEX_PATH
+        ] if isinstance(entries, list) else []
+        if len(matching) != 1:
+            failures.append("e6.class_a.annex_authority_entry.count")
+        elif matching[0] != {
+            "path": E6_RECONCILIATION_ANNEX_PATH,
+            "status": "accepted_g2e6_sanitized_basis_reconciliation_contract",
+            "current_authority": True,
+            "authority_scope": NAMED_GATE_SCOPE,
+            "may_override_architecture_lock": False,
+            "onboarding_allowed": True,
+            "role": (
+                "sanitized G2-E6 profile, version, geometry, call-ownership, "
+                "and phased-path reconciliation only; subordinate to the "
+                "Current Architecture Lock"
+            ),
+        }:
+            failures.append("e6.class_a.annex_authority_entry.exact")
+
+    if successor_manifest is not None:
+        onboarding_lists = (
+            successor_manifest.get("always_include"),
+            successor_manifest.get("include_current_gate_sources"),
+            successor_manifest.get("authority_documents"),
+        )
+        if any(
+            not isinstance(items, list)
+            or E6_RECONCILIATION_ANNEX_PATH not in items
+            for items in onboarding_lists
+        ):
+            failures.append("e6.class_a.annex_onboarding.exact")
+
+    _validate_e5_basis_ancestry_v02(repo_root, failures)
+
+
 def _validate_s2_vocabulary(repo_root: Path, failures: list[str]) -> None:
     try:
         structured_text = (repo_root / STRUCTURED_RATIONALE_PATH).read_text(
@@ -2261,12 +8381,17 @@ def _validate_s2_vocabulary(repo_root: Path, failures: list[str]) -> None:
 
 
 def _validate_deliverable_paths(repo_root: Path, failures: list[str]) -> None:
-    for relative_path in sorted(ALLOWED_CHANGED_PATHS):
+    for relative_path in sorted(
+        CLASS_A_RECONCILIATION_PATHS | CLASS_B_E6_IMPLEMENTATION_PATHS
+    ):
         if not (repo_root / relative_path).is_file():
             failures.append(f"deliverable.missing:{relative_path}")
 
 
-def _git_changed_paths(repo_root: Path, failures: list[str]) -> set[str]:
+def _git_status_entries_v02(
+    repo_root: Path,
+    failures: list[str],
+) -> tuple[tuple[str, str, str | None], ...]:
     try:
         completed = subprocess.run(
             ("git", "status", "--porcelain=v1", "-z", "--untracked-files=all"),
@@ -2276,13 +8401,13 @@ def _git_changed_paths(repo_root: Path, failures: list[str]) -> set[str]:
         )
     except OSError as exc:
         failures.append(f"worktree.git_status:{type(exc).__name__}")
-        return set()
+        return ()
     if completed.returncode != 0:
         failures.append(f"worktree.git_status:exit_{completed.returncode}")
-        return set()
+        return ()
 
     fields = completed.stdout.split(b"\0")
-    changed: set[str] = set()
+    entries: list[tuple[str, str, str | None]] = []
     index = 0
     while index < len(fields):
         record = fields[index]
@@ -2293,34 +8418,213 @@ def _git_changed_paths(repo_root: Path, failures: list[str]) -> set[str]:
             failures.append("worktree.git_status:malformed_record")
             continue
         status = record[:2].decode("ascii", errors="replace")
-        changed.add(record[3:].decode("utf-8", errors="surrogateescape"))
+        path = record[3:].decode("utf-8", errors="surrogateescape")
+        source: str | None = None
         if "R" in status or "C" in status:
             if index >= len(fields) or not fields[index]:
                 failures.append("worktree.git_status:missing_rename_source")
             else:
-                changed.add(fields[index].decode("utf-8", errors="surrogateescape"))
+                source = fields[index].decode(
+                    "utf-8", errors="surrogateescape"
+                )
                 index += 1
-    return changed
+        entries.append((status, path, source))
+    return tuple(entries)
+
+
+def _git_committed_entries_v02(
+    repo_root: Path,
+    failures: list[str],
+) -> tuple[tuple[str, str, str | None], ...]:
+    try:
+        completed = subprocess.run(
+            (
+                "git",
+                "diff",
+                "--name-status",
+                "-z",
+                "--find-renames",
+                "--find-copies",
+                f"{E5_IMPLEMENTATION_BASIS_COMMIT}..HEAD",
+            ),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        failures.append(f"e6.path_ledger.git_diff:{type(exc).__name__}")
+        return ()
+    if completed.returncode != 0:
+        failures.append(f"e6.path_ledger.git_diff:exit_{completed.returncode}")
+        return ()
+    fields = [field for field in completed.stdout.split(b"\0") if field]
+    entries: list[tuple[str, str, str | None]] = []
+    index = 0
+    while index < len(fields):
+        status = fields[index].decode("ascii", errors="replace")
+        index += 1
+        if index >= len(fields):
+            failures.append("e6.path_ledger.git_diff:malformed_record")
+            break
+        path = fields[index].decode("utf-8", errors="surrogateescape")
+        index += 1
+        source: str | None = None
+        if status.startswith(("R", "C")):
+            if index >= len(fields):
+                failures.append("e6.path_ledger.git_diff:missing_rename_target")
+                break
+            source, path = path, fields[index].decode(
+                "utf-8", errors="surrogateescape"
+            )
+            index += 1
+        entries.append((status, path, source))
+    return tuple(entries)
+
+
+def _git_head_v02(repo_root: Path, failures: list[str]) -> str | None:
+    try:
+        completed = subprocess.run(
+            ("git", "rev-parse", "--verify", "HEAD"),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as exc:
+        failures.append(f"e6.path_ledger.git_head:{type(exc).__name__}")
+        return None
+    if completed.returncode != 0:
+        failures.append(f"e6.path_ledger.git_head:exit_{completed.returncode}")
+        return None
+    head = completed.stdout.strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", head):
+        failures.append("e6.path_ledger.git_head:invalid")
+        return None
+    return head
+
+
+def _entry_map_v02(
+    entries: Sequence[tuple[str, str, str | None]],
+    *,
+    label: str,
+    failures: list[str],
+) -> dict[str, str]:
+    result: dict[str, str] = {}
+    for status, path, source in entries:
+        if not _valid_relative_path(path):
+            failures.append(f"{label}.invalid_path:{path}")
+        if source is not None:
+            if not _valid_relative_path(source):
+                failures.append(f"{label}.invalid_source:{source}")
+            failures.append(f"{label}.rename_or_copy:{source}->{path}")
+        if path in result:
+            failures.append(f"{label}.duplicate_path:{path}")
+        result[path] = status
+    return result
+
+
+def _classify_phase_path_ledger_v02(
+    *,
+    head: str,
+    phase: str | None,
+    committed_entries: Sequence[tuple[str, str, str | None]],
+    worktree_entries: Sequence[tuple[str, str, str | None]],
+) -> tuple[str, ...]:
+    failures: list[str] = []
+    committed = _entry_map_v02(
+        committed_entries,
+        label="e6.path_ledger.committed",
+        failures=failures,
+    )
+    worktree = _entry_map_v02(
+        worktree_entries,
+        label="e6.path_ledger.worktree",
+        failures=failures,
+    )
+    class_a = dict(CLASS_A_COMMITTED_NAME_STATUS)
+    class_b = dict(CLASS_B_COMMITTED_NAME_STATUS)
+    class_a_and_b = {**class_a, **class_b}
+
+    expected_committed: dict[str, str]
+    expected_worktree: dict[str, str]
+    if head == E5_IMPLEMENTATION_BASIS_COMMIT and phase == "PRE_E6_RECONCILED":
+        expected_committed = {}
+        expected_worktree = class_a
+    elif head != E5_IMPLEMENTATION_BASIS_COMMIT and phase == "PRE_E6_RECONCILED":
+        expected_committed = class_a
+        expected_worktree = {}
+    elif head != E5_IMPLEMENTATION_BASIS_COMMIT and phase == "POST_E6_SUCCESSOR":
+        if worktree:
+            expected_committed = class_a
+            expected_worktree = class_b
+        else:
+            expected_committed = class_a_and_b
+            expected_worktree = {}
+    else:
+        expected_committed = {}
+        expected_worktree = {}
+        failures.append("e6.path_ledger.phase_head_combination")
+
+    for path in sorted(set(committed) - set(expected_committed)):
+        failures.append(f"e6.path_ledger.committed_unexpected:{path}")
+    for path in sorted(set(expected_committed) - set(committed)):
+        failures.append(f"e6.path_ledger.committed_missing:{path}")
+    for path in sorted(set(committed) & set(expected_committed)):
+        if committed[path] != expected_committed[path]:
+            failures.append(
+                f"e6.path_ledger.committed_status:{path}:"
+                f"{committed[path]}!={expected_committed[path]}"
+            )
+
+    for path in sorted(set(worktree) - set(expected_worktree)):
+        failures.append(f"worktree.unexpected_changed_path:{path}")
+    for path in sorted(set(expected_worktree) - set(worktree)):
+        failures.append(f"e6.path_ledger.worktree_missing:{path}")
+    for path in sorted(set(worktree) & set(expected_worktree)):
+        expected_kind = expected_worktree[path]
+        permitted = (
+            {"??", "A "}
+            if expected_kind == "A"
+            else {" M", "M "}
+        )
+        if worktree[path] not in permitted:
+            failures.append(
+                f"e6.path_ledger.worktree_status:{path}:{worktree[path]}"
+            )
+    return tuple(sorted(set(failures)))
+
+
+def _validate_phase_path_ledger_v02(
+    repo_root: Path,
+    phase: str | None,
+    failures: list[str],
+) -> None:
+    head = _git_head_v02(repo_root, failures)
+    committed = _git_committed_entries_v02(repo_root, failures)
+    worktree = _git_status_entries_v02(repo_root, failures)
+    if head is None:
+        return
+    failures.extend(
+        _classify_phase_path_ledger_v02(
+            head=head,
+            phase=phase,
+            committed_entries=committed,
+            worktree_entries=worktree,
+        )
+    )
 
 
 def _validate_changed_paths(
     changed_paths: Iterable[str],
-    manifest_allowed_changed_paths: Iterable[str],
+    _unused_manifest_paths: Iterable[str],
     failures: list[str],
 ) -> None:
-    changed = set(changed_paths)
-    allowed = ALLOWED_CHANGED_PATHS | frozenset(
-        path
-        for path in manifest_allowed_changed_paths
-        if _valid_relative_path(path)
-    )
-    unexpected = sorted(
-        path
-        for path in changed
-        if not _valid_relative_path(path) or path not in allowed
-    )
-    for path in unexpected:
-        failures.append(f"worktree.unexpected_changed_path:{path}")
+    """Compatibility helper; production acceptance uses the phase ledger."""
+
+    allowed = CLASS_A_RECONCILIATION_PATHS | CLASS_B_E6_IMPLEMENTATION_PATHS
+    for path in sorted(set(changed_paths)):
+        if not _valid_relative_path(path) or path not in allowed:
+            failures.append(f"worktree.unexpected_changed_path:{path}")
 
 
 def collect_failures(
@@ -2354,24 +8658,24 @@ def collect_failures(
         for entry in historical_entries
         if isinstance(entry.get("path"), str)
     }
-    onboarding_paths, manifest_allowed_changed_paths = _validate_manifest(
+    onboarding_paths, _manifest_allowed_changed_paths = _validate_manifest(
         successor_manifest, failures, historical_paths
+    )
+    _validate_e6_class_a_control_plane(
+        root,
+        authority_index,
+        successor_manifest,
+        failures,
     )
     _validate_s3_inventory(root, retired_inventory, failures)
     _validate_current_schema_surface(root, current_schema_surface, failures)
     _validate_release_succession(completion_manifest, seam_index, failures)
     _validate_conformance_profiles(root, failures)
     _validate_current_import_graph(root, onboarding_paths, failures)
-    _validate_deferred_e5_content(root, failures)
+    _validate_committed_e5_content(root, failures)
     _validate_current_documents(root, failures)
     _validate_s2_vocabulary(root, failures)
     _validate_deliverable_paths(root, failures)
-    observed_changed_paths = _git_changed_paths(root, failures)
-    _validate_changed_paths(
-        observed_changed_paths,
-        manifest_allowed_changed_paths,
-        failures,
-    )
     return tuple(sorted(set(failures)))
 
 

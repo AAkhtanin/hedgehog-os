@@ -133,6 +133,15 @@
       "role": "scoped G2-E contract annex through accepted E4"
     },
     {
+      "path": "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
+      "status": "accepted_g2e6_sanitized_basis_reconciliation_contract",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "sanitized G2-E6 profile, version, geometry, call-ownership, and phased-path reconciliation only; subordinate to the Current Architecture Lock"
+    },
+    {
       "path": "release/current_status_overlay_v01.json",
       "status": "current_lifecycle_metadata_view",
       "current_authority": false,

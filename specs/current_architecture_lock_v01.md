@@ -119,24 +119,29 @@ replay result, or cross-Root message may bypass this boundary.
 - Outcome writeback is local, Root-controlled, and non-authorizing for future
   decisions.
 
-## 8. Current Gate-2 / E5 continuation boundary
+## 8. Current Gate-2 / G2-E continuation boundary
 
 Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`. G2-E3 is
 `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`. G2-E4 selective
-runtime and anti-gaming acceptance are `PASS`. Gate 2 remains `NOT_CLOSED`;
-G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
+runtime and anti-gaming acceptance are `PASS`. G2-E5 is
+`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS` at implementation commit
+`f582701208b603463a03d404aa841c302a8221d6` on these exact frozen bytes:
 
-The frozen E5 candidate exists only in the owner's original dirty worktree and
-is intentionally absent from this clean successor. Its deferred transplant
-targets are:
+- `hedgehog/kernel/continuous_delta_runtime_v01.py`, SHA-256
+  `97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a`;
+- `demo/run_continuous_delta_runtime_g2_e_v01.py`, SHA-256
+  `5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c`;
+- `tests/test_continuous_delta_runtime_g2_e_v01.py`, SHA-256
+  `8d26d45a71334172b73fa30125b0e3ddfff74aeb66431af56594d75f9a7f4d8b`.
 
-- `hedgehog/kernel/continuous_delta_runtime_v01.py`;
-- `tests/test_continuous_delta_runtime_g2_e_v01.py`;
-- `demo/run_continuous_delta_runtime_g2_e_v01.py`.
-
-Current committed pre-E5 bytes remain the accepted baseline. No assistant may
-copy, reconstruct, implement, normalize, or partially merge the candidate
-without a separately authorized byte-exact transplant.
+G2-E6 is not implemented. The stale post-sanitation profile literals in the
+original G2-E planning contract are superseded only within their named E6
+integration scope by
+`docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md`.
+That Class-A annex establishes an exact future Living `v1.6` / Conformance
+`v0.7` append-only target but does not authorize the Class-B implementation.
+G2-E and Gate 2 remain `NOT_CLOSED`; G2-F remains
+`NOT_STARTED_NOT_AUTHORIZED`.
 
 ## 9. Historical-document law
 
@@ -152,7 +157,8 @@ contracts, or current scoped Gate status.
 ## 10. Onboarding law
 
 Onboarding starts with this lock, the authority index, `AGENTS.md`, and the
-successor context manifest. Use
+successor context manifest. For G2-E6 profile or path interpretation, also
+load the scoped sanitized-basis reconciliation annex named in Section 8. Use
 `release/successor_context_manifest_v01.json` as an allowlist; do not bulk-load
 repository history, audit archives, retired donor families, or excluded
 governance files.

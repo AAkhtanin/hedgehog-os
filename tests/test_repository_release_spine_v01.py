@@ -1006,21 +1006,31 @@ G2E4_V0310_RUNTIME_PATH = "hedgehog/kernel/continuous_delta_runtime_v01.py"
 G2E4_V0310_TEST_PATH = "tests/test_continuous_delta_runtime_g2_e_v01.py"
 G2E4_V0310_RUNTIME_SHA256 = '6eec2a20d0035a12beb47df6989a106bc0d87cefb00cc7434733fd0b79d8bd0e'
 G2E4_V0310_TEST_SHA256 = '438fafc7647f0c2b453f763f9425e2565792eaa7321b9726969e6bbf39c386d3'
+G2E5_COMMITTED_RUNTIME_SHA256 = (
+    "97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a"
+)
+G2E5_COMMITTED_TEST_SHA256 = (
+    "8d26d45a71334172b73fa30125b0e3ddfff74aeb66431af56594d75f9a7f4d8b"
+)
 
 
 def _g2d_v0310_bind_exact_e4_candidate_hashes_v01() -> str:
     paths = (G2E4_V0310_RUNTIME_PATH, G2E4_V0310_TEST_PATH)
     historical = tuple(G2E_CONTRACT_UPDATED_SHA256[path] for path in paths)
-    successor = (G2E4_V0310_RUNTIME_SHA256, G2E4_V0310_TEST_SHA256)
+    e4_successor = (G2E4_V0310_RUNTIME_SHA256, G2E4_V0310_TEST_SHA256)
+    committed_e5 = (G2E5_COMMITTED_RUNTIME_SHA256, G2E5_COMMITTED_TEST_SHA256)
     observed = tuple(
         hashlib.sha256((REPOSITORY_ROOT / path).read_bytes()).hexdigest()
         for path in paths
     )
     if observed == historical:
         return "HISTORICAL_E4_CONTRACT_BYTES"
-    assert observed == successor
-    G2E_CONTRACT_UPDATED_SHA256.update(dict(zip(paths, successor)))
-    return "EXACT_E4_CORRECTION_BYTES"
+    if observed == e4_successor:
+        G2E_CONTRACT_UPDATED_SHA256.update(dict(zip(paths, e4_successor)))
+        return "EXACT_E4_CORRECTION_BYTES"
+    assert observed == committed_e5
+    G2E_CONTRACT_UPDATED_SHA256.update(dict(zip(paths, committed_e5)))
+    return "EXACT_COMMITTED_E5_ACCEPTANCE_BYTES"
 
 
 G2E4_V0310_ACTIVE_BYTES_BINDING = (
@@ -5321,3 +5331,262 @@ def test_quantum_future_design_content_is_exact_and_non_implementing() -> None:
     assert REPOSITORY_RELEASE_SPINE_TEST_MODIFIED is True
     assert OTHER_TESTS_MODIFIED is False
     assert RUNTIME_TESTS_MODIFIED is False
+
+
+def _g2e6_reconciliation_contract_v01() -> dict[str, object]:
+    path = REPOSITORY_ROOT / (
+        "docs/continuous_delta_runtime_v0_1_"
+        "g2_e6_sanitized_basis_reconciliation_addendum_v01.md"
+    )
+    source = path.read_text(encoding="ascii")
+    begin = (
+        "<!-- BEGIN HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_V01 -->"
+        "\n```json\n"
+    )
+    end = (
+        "\n```\n"
+        "<!-- END HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_V01 -->"
+    )
+    assert source.count(begin) == 1
+    assert source.count(end) == 1
+    payload = source.split(begin, 1)[1].split(end, 1)[0]
+    return json.loads(payload)
+
+
+def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
+    annex_path = (
+        "docs/continuous_delta_runtime_v0_1_"
+        "g2_e6_sanitized_basis_reconciliation_addendum_v01.md"
+    )
+    contract = _g2e6_reconciliation_contract_v01()
+    assert contract["protocol"] == (
+        "HEDGEHOG_G2E6_SANITIZED_BASIS_RECONCILIATION_V01"
+    )
+    assert contract["contract_status"] == "CLASS_A_RECONCILIATION_ONLY"
+    assert contract["repository_basis_commit"] == (
+        "f582701208b603463a03d404aa841c302a8221d6"
+    )
+    assert contract["conflict_class"] == (
+        "STALE_E6_PROFILE_AND_RELEASE_GEOMETRY"
+    )
+    assert contract["ARCHITECTURE_CONFLICT"] is False
+    assert contract["E5_INVALIDATED"] is False
+    assert contract["G2E_REDESIGN_REQUIRED"] is False
+
+    authority_index = _read_json(
+        REPOSITORY_ROOT / "specs/document_authority_index_v01.json"
+    )
+    matching = [
+        entry
+        for entry in authority_index["current_technical_annexes"]
+        if entry["path"] == annex_path
+    ]
+    assert matching == [
+        {
+            "path": annex_path,
+            "status": (
+                "accepted_g2e6_sanitized_basis_reconciliation_contract"
+            ),
+            "current_authority": True,
+            "authority_scope": "named_gate_contract_only",
+            "may_override_architecture_lock": False,
+            "onboarding_allowed": True,
+            "role": (
+                "sanitized G2-E6 profile, version, geometry, call-ownership, "
+                "and phased-path reconciliation only; subordinate to the "
+                "Current Architecture Lock"
+            ),
+        }
+    ]
+
+    manifest = _read_json(
+        REPOSITORY_ROOT / "release/successor_context_manifest_v01.json"
+    )
+    for key in (
+        "always_include",
+        "include_current_gate_sources",
+        "authority_documents",
+    ):
+        assert annex_path in manifest[key]
+    assert "deferred_e5_transplant" not in manifest
+    assert "deferred_e5_transplant" not in json.dumps(manifest, sort_keys=True)
+    assert manifest["committed_e5_basis"] == {
+        "implementation_commit": (
+            "f582701208b603463a03d404aa841c302a8221d6"
+        ),
+        "implementation_subject": (
+            "Implement G2-E5 continuous delta runtime acceptance"
+        ),
+        "status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+        "paths": [
+            {
+                "path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+                "sha256": (
+                    "97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a"
+                ),
+                "bytes": 519719,
+                "lf": 12927,
+            },
+            {
+                "path": "demo/run_continuous_delta_runtime_g2_e_v01.py",
+                "sha256": (
+                    "5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c"
+                ),
+                "bytes": 381288,
+                "lf": 9267,
+            },
+            {
+                "path": "tests/test_continuous_delta_runtime_g2_e_v01.py",
+                "sha256": (
+                    "8d26d45a71334172b73fa30125b0e3ddfff74aeb66431af56594d75f9a7f4d8b"
+                ),
+                "bytes": 661888,
+                "lf": 16182,
+            },
+        ],
+        "e6_implementation_status": "NOT_STARTED_NOT_AUTHORIZED_BY_CLASS_A",
+        "g2e_status": "NOT_CLOSED",
+        "gate2_status": "NOT_CLOSED",
+    }
+
+
+def test_g2e6_class_a_geometry_paths_and_call_ownership_are_exact() -> None:
+    contract = _g2e6_reconciliation_contract_v01()
+    current = contract["current_pre_e6"]
+    successor = contract["future_post_e6"]
+    ownership = contract["call_ownership"]
+    paths = contract["path_classes"]
+
+    assert current["phase_id"] == "PRE_E6_RECONCILED"
+    assert current["living_version"] == "v1.5"
+    assert current["living_act_count"] == 16
+    assert current["conformance_core_version"] == "v0.6"
+    assert current["conformance_runner_version"] == "v0.6"
+    assert current["category_count"] == 14
+    assert current["domain_count"] == 2
+    assert current["negative_probe_count"] == 50
+    assert current["active_ref_count"] == 15
+    assert current["all_layers_invariant_super_smoke"] == (
+        "HISTORICAL_EVIDENCE_ONLY_NOT_CURRENT"
+    )
+
+    assert successor["phase_id"] == "POST_E6_SUCCESSOR"
+    assert successor["living_version"] == "v1.6"
+    assert successor["living_immediate_historical_version"] == "v1.5"
+    assert successor["living_preserved_prefix_count"] == 16
+    assert successor["living_appended_act_id"] == "continuous_delta_runtime"
+    assert successor["living_appended_act_position"] == 17
+    assert successor["living_resulting_act_count"] == 17
+    assert successor["conformance_core_version"] == "v0.7"
+    assert successor["conformance_runner_version"] == "v0.7"
+    assert successor["preserved_category_prefix_count"] == 14
+    assert successor["appended_category_id"] == (
+        "ContinuousDeltaRuntimeConformance"
+    )
+    assert successor["appended_category_position"] == 15
+    assert successor["resulting_category_count"] == 15
+    assert successor["preserved_negative_probe_prefix_count"] == 50
+    assert successor["appended_probe_positions"] == list(range(51, 61))
+    assert successor["resulting_negative_probe_count"] == 60
+    assert successor["preserved_active_ref_prefix_count"] == 15
+    assert successor["appended_active_ref_id"] == "continuous_delta_runtime"
+    assert successor["appended_active_ref_position"] == 16
+    assert successor["resulting_active_ref_count"] == 16
+    assert successor["preserved_domain_ids"] == current["domain_ids"]
+    assert successor["all_layers_invariant_super_smoke"] == (
+        "HISTORICAL_EVIDENCE_ONLY_NEVER_REBOUND"
+    )
+
+    assert ownership == {
+        "direct_conformance_e5_collector_calls": 1,
+        "living_e5_collector_calls": 1,
+        "living_shared_conformance_builder_e5_collector_calls": 0,
+        "shared_report_law": (
+            "SAME_SEALED_CANONICAL_PUBLICLY_VALIDATED_E5_REPORT"
+        ),
+        "proof_law": (
+            "SEALED_CANONICAL_IDENTITY_AND_BYTES_NOT_PYTHON_OBJECT_IDENTITY"
+        ),
+        "global_cache_allowed": False,
+        "cross_invocation_reuse_allowed": False,
+        "stale_report_allowed": False,
+        "test_fixture_as_current_report_allowed": False,
+        "consumer_reconstructs_e5_cases": False,
+        "consumer_imports_tests": False,
+        "consumer_calls_private_g2d": False,
+        "consumer_calls_second_delta_runtime": False,
+        "accepted_e5_call_characterization_seconds_approximate": 2040,
+        "direct_conformance_operational_hang_guard_seconds": 7200,
+        "full_living_operational_hang_guard_seconds": 10800,
+        "hang_guards_are_latency_or_gate_claims": False,
+    }
+    assert paths["CLASS_A_CONTRACT_OR_CONTROL_PLANE_RECONCILIATION"] == [
+        (
+            "docs/continuous_delta_runtime_v0_1_"
+            "g2_e6_sanitized_basis_reconciliation_addendum_v01.md"
+        ),
+        "specs/current_architecture_lock_v01.md",
+        "specs/document_authority_index_v01.json",
+        "release/successor_context_manifest_v01.json",
+        "tools/check_active_architecture_authority_v01.py",
+        "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+    ]
+    assert paths["CLASS_B_E6_IMPLEMENTATION"] == [
+        "demo/run_living_gauntlet_v01.py",
+        "tests/test_living_gauntlet_v01_runner.py",
+        "hedgehog/kernel/conformance_v01.py",
+        "demo/run_kernel_conformance_v01.py",
+        "tests/test_kernel_conformance_v01_runner.py",
+    ]
+    assert not (
+        set(paths["CLASS_A_CONTRACT_OR_CONTROL_PLANE_RECONCILIATION"])
+        & set(paths["CLASS_B_E6_IMPLEMENTATION"])
+    )
+
+
+def test_g2e6_class_a_frozen_predecessor_evidence_and_nonclaims_are_exact() -> None:
+    assert _sha256_bytes(
+        (REPOSITORY_ROOT / "release/completion_manifest.json").read_bytes()
+    ) == "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9"
+    assert _sha256_bytes(
+        (REPOSITORY_ROOT / "release/integration_seam_index.json").read_bytes()
+    ) == "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03"
+
+    contract = _g2e6_reconciliation_contract_v01()
+    assert contract["frozen_predecessor_evidence"] == {
+        "completion_manifest_path": "release/completion_manifest.json",
+        "completion_manifest_sha256": (
+            "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9"
+        ),
+        "integration_seam_index_path": (
+            "release/integration_seam_index.json"
+        ),
+        "integration_seam_index_sha256": (
+            "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03"
+        ),
+        "classification": (
+            "FROZEN_PREDECESSOR_EVIDENCE_NOT_CURRENT_E6_PASS"
+        ),
+    }
+    assert contract["E6_IMPLEMENTATION_STATUS"] == (
+        "NOT_STARTED_NOT_AUTHORIZED_BY_CLASS_A"
+    )
+    assert contract["G2E_STATUS"] == "NOT_CLOSED"
+    assert contract["GATE2_STATUS"] == "NOT_CLOSED"
+    assert contract["PUBLIC_RELEASE_STATUS"] == "NOT_CLAIMED"
+    assert contract["RC2_STATUS"] == "NOT_CLAIMED"
+    assert contract["PRODUCTION_READINESS_STATUS"] == "NOT_CLAIMED"
+    assert contract["AUTHORITY_CREATED"] is False
+    assert contract["PERMISSION_CREATED"] is False
+    assert contract["ACTION_PACKET_CREATED"] is False
+    assert contract["RECEIPT_CREATED"] is False
+    assert contract["FINAL_OUTPUT_CREATED"] is False
+    assert contract["EXTERNAL_ACTION_CREATED"] is False
+    assert contract["REAL_WORLD_EFFECTS_COUNT"] == 0
+
+    lock = (
+        REPOSITORY_ROOT / "specs/current_architecture_lock_v01.md"
+    ).read_text(encoding="utf-8")
+    assert "G2-E6 is not implemented" in lock
+    assert "G2-E and Gate 2 remain `NOT_CLOSED`" in lock

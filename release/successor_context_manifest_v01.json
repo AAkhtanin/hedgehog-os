@@ -4,7 +4,7 @@
   "manifest_status": "SUCCESSOR_ONBOARDING_READY",
   "onboarding_ready": true,
   "blocking_repairs": [],
-  "purpose": "Architecture-clean bounded successor context after S1 document-authority succession, S2 vocabulary repair, and S3 active-schema and retired-subsystem isolation. It is ready for guarded reintegration. Permanent assistant onboarding occurs only after reintegration into the primary worktree and exact frozen-E5 hash verification; no frozen E5 candidate byte is present or authorized by this manifest.",
+  "purpose": "Architecture-clean bounded successor context after S1 document-authority succession, S2 vocabulary repair, S3 active-schema and retired-subsystem isolation, guarded reintegration, and the exact committed E5 implementation basis. The Class-A G2-E6 sanitized-basis annex is onboarded only for named profile, version, geometry, call-ownership, and phased-path reconciliation; it does not authorize Class-B E6 implementation or create runtime or architecture authority.",
   "always_include": [
     "AGENTS.md",
     "README.md",
@@ -23,6 +23,7 @@
     "docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
+    "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
     "hedgehog/__init__.py",
     "hedgehog/context_packets.py",
     "hedgehog/drs.py",
@@ -56,6 +57,8 @@
     "hedgehog/kernel/execution_mode_router_v01.py",
     "hedgehog/kernel/fractal_runtime_v02.py",
     "hedgehog/kernel/continuous_delta_runtime_v01.py",
+    "demo/run_continuous_delta_runtime_g2_e_v01.py",
+    "tests/test_continuous_delta_runtime_g2_e_v01.py",
     "hedgehog/kernel/conformance_v01.py",
     "hedgehog/time_model.py",
     "hedgehog/domains/airline/kernel_adapter_v01.py",
@@ -98,6 +101,7 @@
     "docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
+    "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
     "hedgehog/__init__.py",
     "hedgehog/context_packets.py",
     "hedgehog/drs.py",
@@ -153,6 +157,7 @@
     "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
     "demo/run_execution_mode_router_g2_c_v01.py",
     "demo/run_fractal_runtime_g2_d_v02.py",
+    "demo/run_continuous_delta_runtime_g2_e_v01.py",
     "demo/run_kernel_conformance_v01.py",
     "demo/run_living_gauntlet_v01.py"
   ],
@@ -281,24 +286,39 @@
     "**/__pycache__/**",
     "**/*.pyc"
   ],
-  "deferred_e5_transplant": [
-    {
-      "path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
-      "status": "DEFERRED_UNTIL_BYTE_EXACT_TRANSPLANT"
-    },
-    {
-      "path": "tests/test_continuous_delta_runtime_g2_e_v01.py",
-      "status": "DEFERRED_UNTIL_BYTE_EXACT_TRANSPLANT"
-    },
-    {
-      "path": "demo/run_continuous_delta_runtime_g2_e_v01.py",
-      "status": "DEFERRED_UNTIL_BYTE_EXACT_TRANSPLANT"
-    }
-  ],
+  "committed_e5_basis": {
+    "implementation_commit": "f582701208b603463a03d404aa841c302a8221d6",
+    "implementation_subject": "Implement G2-E5 continuous delta runtime acceptance",
+    "status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "paths": [
+      {
+        "path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+        "sha256": "97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a",
+        "bytes": 519719,
+        "lf": 12927
+      },
+      {
+        "path": "demo/run_continuous_delta_runtime_g2_e_v01.py",
+        "sha256": "5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c",
+        "bytes": 381288,
+        "lf": 9267
+      },
+      {
+        "path": "tests/test_continuous_delta_runtime_g2_e_v01.py",
+        "sha256": "8d26d45a71334172b73fa30125b0e3ddfff74aeb66431af56594d75f9a7f4d8b",
+        "bytes": 661888,
+        "lf": 16182
+      }
+    ],
+    "e6_implementation_status": "NOT_STARTED_NOT_AUTHORIZED_BY_CLASS_A",
+    "g2e_status": "NOT_CLOSED",
+    "gate2_status": "NOT_CLOSED"
+  },
   "authority_documents": [
     "specs/current_architecture_lock_v01.md",
     "specs/document_authority_index_v01.json",
     "release/successor_context_manifest_v01.json",
+    "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
     "AGENTS.md",
     "README.md"
   ],

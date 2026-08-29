@@ -1,18 +1,43 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from contextlib import contextmanager
 from dataclasses import replace
 import ast
 import hashlib
-import importlib
 import json
 from pathlib import Path
 from typing import Any, Callable
 
 import pytest
+from unittest import mock as _mock
 
-from demo import run_living_gauntlet_v01 as runner
-from demo import run_kernel_conformance_v01 as conformance_runner
+import demo as _demo
+import demo.run_kernel_conformance_v01 as _seam_kernel_conformance
+import demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 as _seam_airline
+from demo.run_living_gauntlet_v01 import (
+    collect_living_gauntlet_v01,
+    validate_living_gauntlet_report_v01,
+)
+import hedgehog.action_commit_packet as _seam_action_packet
+import hedgehog.context_packets as _seam_context_packets
+import hedgehog.fractal_fulfillment as _seam_fractal_fulfillment
+import hedgehog.mock_connector_sandbox as _seam_connector
+import hedgehog.semantic_reasoning_adapter as _seam_semantic_reasoning
+import hedgehog.structured_rationale as _seam_structured_rationale
+import hedgehog.domains.airline.crypto_artifact_seal_v01 as _seam_airline_crypto
+import hedgehog.domains.airline.kernel_adapter_v01 as _seam_airline_adapter
+import hedgehog.domains.airline.sealed_trace_replay_v01 as _seam_airline_replay
+import hedgehog.domains.airline.transaction_artifact_ledger_v01 as _seam_airline_ledger
+import hedgehog.domains.supplier_water_filter.kernel_adapter_v01 as _seam_supplier_adapter
+import hedgehog.kernel.abi_v01 as _seam_abi
+import hedgehog.kernel.effect_firewall_v01 as _seam_effect_firewall
+import hedgehog.kernel.integrity_replay_v01 as _seam_integrity_replay
+import hedgehog.kernel.multiroot_v01 as _seam_multiroot
+import hedgehog.kernel.root_decision_v01 as _seam_root_decision
+import hedgehog.kernel.semantic_work_v01 as _seam_semantic_work
+import hedgehog.kernel.transition_registry_v01 as _seam_transition_registry
+import hedgehog.kernel.trust_model_v01 as _seam_trust_model
 from hedgehog.kernel import conformance_v01 as conformance
 from hedgehog.kernel import root_signer_isolation_v01 as signer
 
@@ -22,22 +47,159 @@ COMPLETION_MANIFEST_PATH = REPOSITORY_ROOT / "release/completion_manifest.json"
 SEAM_INDEX_PATH = REPOSITORY_ROOT / "release/integration_seam_index.json"
 RUNNER_PATH = REPOSITORY_ROOT / "demo/run_living_gauntlet_v01.py"
 
+_CURRENT_SEAM_MODULES = {
+    "demo.run_kernel_conformance_v01": _seam_kernel_conformance,
+    "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01": _seam_airline,
+    "hedgehog.action_commit_packet": _seam_action_packet,
+    "hedgehog.context_packets": _seam_context_packets,
+    "hedgehog.fractal_fulfillment": _seam_fractal_fulfillment,
+    "hedgehog.mock_connector_sandbox": _seam_connector,
+    "hedgehog.semantic_reasoning_adapter": _seam_semantic_reasoning,
+    "hedgehog.structured_rationale": _seam_structured_rationale,
+    "hedgehog.domains.airline.crypto_artifact_seal_v01": _seam_airline_crypto,
+    "hedgehog.domains.airline.kernel_adapter_v01": _seam_airline_adapter,
+    "hedgehog.domains.airline.sealed_trace_replay_v01": _seam_airline_replay,
+    "hedgehog.domains.airline.transaction_artifact_ledger_v01": _seam_airline_ledger,
+    "hedgehog.domains.supplier_water_filter.kernel_adapter_v01": (
+        _seam_supplier_adapter
+    ),
+    "hedgehog.kernel.abi_v01": _seam_abi,
+    "hedgehog.kernel.effect_firewall_v01": _seam_effect_firewall,
+    "hedgehog.kernel.integrity_replay_v01": _seam_integrity_replay,
+    "hedgehog.kernel.multiroot_v01": _seam_multiroot,
+    "hedgehog.kernel.root_decision_v01": _seam_root_decision,
+    "hedgehog.kernel.root_signer_isolation_v01": signer,
+    "hedgehog.kernel.semantic_work_v01": _seam_semantic_work,
+    "hedgehog.kernel.transition_registry_v01": _seam_transition_registry,
+    "hedgehog.kernel.trust_model_v01": _seam_trust_model,
+}
+
+
+@contextmanager
+def _patch_scope():
+    patchers = []
+
+    def replace_attribute(target, name, value):
+        patcher = _mock.patch.object(target, name, value)
+        patcher.start()
+        patchers.append(patcher)
+
+    try:
+        yield replace_attribute
+    finally:
+        for patcher in reversed(patchers):
+            patcher.stop()
+
+
+@pytest.fixture
+def _patches():
+    with _patch_scope() as replace_attribute:
+        yield replace_attribute
+
+
+def test_living_gauntlet_v16_continuous_delta_runtime_acceptance_v01():
+    report = collect_living_gauntlet_v01()
+    validation = validate_living_gauntlet_report_v01(report)
+    assert validation == ()
+    assert report["continuous_delta_runtime_execution_count"] == 1
+    assert report["continuous_delta_runtime_public_validation_status"] == "PASS"
+    assert report["shared_conformance_e5_collector_calls"] == 0
+    assert report["continuous_delta_runtime_second_execution_count"] == 0
+    assert report["continuous_delta_runtime_cache_reuse_count"] == 0
+    assert report["continuous_delta_runtime_test_fixture_substitution_count"] == 0
+    assert report["continuous_delta_runtime_private_g2d_calls"] == 0
+    assert report["continuous_delta_runtime_reconstructed_case_count"] == 0
+    assert report["continuous_delta_runtime_report_sha256"] == report[
+        "shared_conformance_e5_report_sha256"
+    ]
+    assert len(report["continuous_delta_runtime_report_sha256"]) == 64
+    assert len(report["shared_conformance_e5_report_sha256"]) == 64
+    assert set(report["continuous_delta_runtime_report_sha256"]) <= set(
+        "0123456789abcdef"
+    )
+    assert set(report["shared_conformance_e5_report_sha256"]) <= set(
+        "0123456789abcdef"
+    )
+    assert report["continuous_delta_runtime_report_bytes"] == report[
+        "shared_conformance_e5_report_bytes"
+    ]
+    assert report["continuous_delta_runtime_report_bytes"] > 0
+    assert report["shared_conformance_e5_report_bytes"] > 0
+    assert report["runner_version"] == "v1.6"
+    assert (
+        report["kernel_conformance_profile"]
+        == "kernel_conformance_v0_7_current"
+    )
+    assert (
+        report["historical_kernel_conformance_profile"]
+        == "kernel_conformance_v0_6_historical"
+    )
+    assert tuple(row["act_id"] for row in report["active_act_results"]) == (
+        "airline_deterministic_transaction_runtime",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "kernel_conformance_closure",
+        "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
+        "fractal_runtime",
+        "continuous_delta_runtime",
+    )
+
+
+_SHARED_E5_REPORT_FOR_INTERNAL_BUILDER = None
+
 
 @pytest.fixture(scope="module", autouse=True)
-def _shared_d5_report():
-    original = runner._g2d.collect_fractal_runtime_g2_d_v02
-    report = original()
-    assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(report) == ()
-    runner._g2d.collect_fractal_runtime_g2_d_v02 = lambda: report
+def _shared_e5_report_for_internal_builder():
+    global _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER
+    report = (
+        _demo.run_living_gauntlet_v01._g2e.
+        collect_continuous_delta_runtime_g2_e_v01()
+    )
+    report, _report_sha256, _report_bytes = (
+        _demo.run_living_gauntlet_v01._validated_e5_receipt_v01(report)
+    )
+    _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER = report
     try:
         yield report
     finally:
-        runner._g2d.collect_fractal_runtime_g2_d_v02 = original
+        _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER = None
+
+
+def _collect_living_internal_for_test_v01():
+    assert _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER is not None
+    return (
+        _demo.run_living_gauntlet_v01.
+        _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
+            _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER
+        )
+    )
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _shared_d5_report():
+    original = _demo.run_living_gauntlet_v01._g2d.collect_fractal_runtime_g2_d_v02
+    report = original()
+    assert _demo.run_living_gauntlet_v01._g2d.validate_fractal_runtime_g2_d_report_v02(report) == ()
+    _demo.run_living_gauntlet_v01._g2d.collect_fractal_runtime_g2_d_v02 = lambda: report
+    try:
+        yield report
+    finally:
+        _demo.run_living_gauntlet_v01._g2d.collect_fractal_runtime_g2_d_v02 = original
 
 
 @pytest.fixture(scope="module")
 def report(_shared_d5_report) -> dict[str, Any]:
-    return runner.collect_living_gauntlet_v01()
+    return _collect_living_internal_for_test_v01()
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -47,7 +209,7 @@ def _json(path: Path) -> dict[str, Any]:
 
 
 def _active_index(act_id: str) -> int:
-    return runner._ACTIVE_ACT_IDS.index(act_id)
+    return _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS.index(act_id)
 
 
 def _active_result(report: dict[str, Any], act_id: str) -> dict[str, Any]:
@@ -69,8 +231,8 @@ def _mutated_manifest_path(
 
 
 def test_release_indexes_parse_as_strict_json() -> None:
-    completion = runner._load_strict_json_object(COMPLETION_MANIFEST_PATH)
-    seams = runner._load_strict_json_object(SEAM_INDEX_PATH)
+    completion = _demo.run_living_gauntlet_v01._load_strict_json_object(COMPLETION_MANIFEST_PATH)
+    seams = _demo.run_living_gauntlet_v01._load_strict_json_object(SEAM_INDEX_PATH)
 
     assert completion["document_id"] == "living_release_completion_manifest_v01"
     assert seams["document_id"] == "living_release_integration_seam_index_v01"
@@ -80,10 +242,10 @@ def test_release_indexes_have_exact_required_top_level_fields() -> None:
     completion = _json(COMPLETION_MANIFEST_PATH)
     seams = _json(SEAM_INDEX_PATH)
 
-    assert set(completion) == runner._MANIFEST_FIELD_NAMES
-    assert set(seams) == runner._SEAM_INDEX_FIELD_NAMES
-    assert runner._validate_completion_manifest_v01(completion) == ()
-    assert runner._validate_integration_seam_index_v01(seams) == ()
+    assert set(completion) == _demo.run_living_gauntlet_v01._MANIFEST_FIELD_NAMES
+    assert set(seams) == _demo.run_living_gauntlet_v01._SEAM_INDEX_FIELD_NAMES
+    assert _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(completion) == ()
+    assert _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(seams) == ()
 
 
 def test_release_index_ids_are_unique() -> None:
@@ -107,11 +269,11 @@ def test_release_index_ids_are_unique() -> None:
 def test_current_seam_symbols_are_importable() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
     current = [
-        seam for seam in seams if seam["seam_id"] in runner._CURRENT_SEAMS
+        seam for seam in seams if seam["seam_id"] in _demo.run_living_gauntlet_v01._CURRENT_SEAMS
     ]
 
     for seam in current:
-        module = importlib.import_module(seam["source_module"])
+        module = _CURRENT_SEAM_MODULES[seam["source_module"]]
         assert getattr(module, seam["source_symbol"]) is not None
 
 
@@ -121,19 +283,19 @@ def test_historical_all_layers_seam_is_not_imported_as_current() -> None:
         for item in _json(SEAM_INDEX_PATH)["seams"]
         if item["seam_id"] == "all_layers_invariant_super_smoke_collector"
     )
-    assert seam["status"] == runner.STATUS_HISTORICAL_EVIDENCE_ONLY
-    assert seam["seam_id"] not in runner._CURRENT_SEAMS
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY
+    assert seam["seam_id"] not in _demo.run_living_gauntlet_v01._CURRENT_SEAMS
     assert seam["source_module"] not in {
-        source[0] for source in runner._ACTIVE_ACT_SOURCES.values()
+        source[0] for source in _demo.run_living_gauntlet_v01._ACTIVE_ACT_SOURCES.values()
     }
 
 
 def test_planned_seams_are_not_current_runtime() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
-    planned = [seam for seam in seams if seam["seam_id"] in runner._PLANNED_SEAM_IDS]
+    planned = [seam for seam in seams if seam["seam_id"] in _demo.run_living_gauntlet_v01._PLANNED_SEAM_IDS]
 
-    assert len(planned) == len(runner._PLANNED_SEAM_IDS)
-    assert all(seam["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for seam in planned)
+    assert len(planned) == len(_demo.run_living_gauntlet_v01._PLANNED_SEAM_IDS)
+    assert all(seam["status"] == _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE for seam in planned)
     assert all(seam["source_symbol"] is None for seam in planned)
     assert all(seam["effect_access"] == "NONE" for seam in planned)
 
@@ -143,14 +305,14 @@ def test_active_airline_act_executes_and_passes(report: dict[str, Any]) -> None:
 
     assert result["act_id"] == "airline_deterministic_transaction_runtime"
     assert result["executed"] is True
-    assert result["runtime_status"] == runner.STATUS_PASS
-    assert result["state"] == runner.STATUS_PASS
+    assert result["runtime_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
+    assert result["state"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert result["root_authority_preserved"] is True
     assert result["real_world_effects_count"] == 0
 
 
 def test_historical_super_smoke_is_metadata_only(report: dict[str, Any]) -> None:
-    assert "all_layers_invariant_super_smoke" not in runner._ACTIVE_ACT_IDS
+    assert "all_layers_invariant_super_smoke" not in _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS
     assert "all_layers_invariant_super_smoke" not in {
         item["act_id"] for item in report["active_act_results"]
     }
@@ -159,29 +321,34 @@ def test_historical_super_smoke_is_metadata_only(report: dict[str, Any]) -> None
         for item in report["evidence_only_entries"]
         if item["act_id"] == "all_layers_invariant_super_smoke"
     )
-    assert historical["state"] == runner.STATUS_HISTORICAL_EVIDENCE_ONLY
+    assert historical["state"] == _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY
     assert historical["executed"] is False
 
 
-def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.MonkeyPatch) -> None:
-    original_airline = runner.collect_tri_party_airline_ticket_purchase_mock_e2e_v01
-    original_generic = runner.collect_generic_integrity_replay_gauntlet_act_v01
-    original_signer = runner.collect_root_signer_isolation_gauntlet_act_v01
-    original_semantic = runner.collect_semantic_work_contract_gauntlet_act_v01
-    original_abi = runner.collect_domain_neutral_kernel_abi_gauntlet_act_v01
-    original_causal = runner.collect_causal_consumption_gauntlet_act_v01
-    original_transition = runner.collect_transition_registry_gauntlet_act_v01
-    original_root_decision = runner.collect_root_decision_kernel_gauntlet_act_v01
-    original_effect_firewall = runner.collect_effect_firewall_gauntlet_act_v01
-    original_multiroot = runner.collect_generic_multiroot_gauntlet_act_v01
+def test_all_active_collectors_are_called_exactly_once(_patches) -> None:
+    original_airline = _demo.run_living_gauntlet_v01.collect_tri_party_airline_ticket_purchase_mock_e2e_v01
+    original_generic = _demo.run_living_gauntlet_v01.collect_generic_integrity_replay_gauntlet_act_v01
+    original_signer = _demo.run_living_gauntlet_v01.collect_root_signer_isolation_gauntlet_act_v01
+    original_semantic = _demo.run_living_gauntlet_v01.collect_semantic_work_contract_gauntlet_act_v01
+    original_abi = _demo.run_living_gauntlet_v01.collect_domain_neutral_kernel_abi_gauntlet_act_v01
+    original_causal = _demo.run_living_gauntlet_v01.collect_causal_consumption_gauntlet_act_v01
+    original_transition = _demo.run_living_gauntlet_v01.collect_transition_registry_gauntlet_act_v01
+    original_root_decision = _demo.run_living_gauntlet_v01.collect_root_decision_kernel_gauntlet_act_v01
+    original_effect_firewall = _demo.run_living_gauntlet_v01.collect_effect_firewall_gauntlet_act_v01
+    original_multiroot = _demo.run_living_gauntlet_v01.collect_generic_multiroot_gauntlet_act_v01
     original_supplier = (
-        runner.collect_supplier_water_filter_portability_gauntlet_act_v01
+        _demo.run_living_gauntlet_v01.collect_supplier_water_filter_portability_gauntlet_act_v01
     )
     original_conformance = (
-        runner._collect_kernel_conformance_closure_from_validated_fractal_runtime_v01
+        _demo.run_living_gauntlet_v01._collect_kernel_conformance_closure_from_validated_fractal_runtime_v01
     )
-    original_lifecycle = runner.collect_action_packet_lifecycle_gauntlet_act_v01
-    original_g2d = runner._g2d.collect_fractal_runtime_g2_d_v02
+    original_lifecycle = _demo.run_living_gauntlet_v01.collect_action_packet_lifecycle_gauntlet_act_v01
+    original_g2d = _demo.run_living_gauntlet_v01._g2d.collect_fractal_runtime_g2_d_v02
+    original_e5 = (
+        _demo.run_living_gauntlet_v01._g2e.
+        collect_continuous_delta_runtime_g2_e_v01
+    )
+    shared_e5_receipts = []
     calls = {
         "airline": 0,
         "generic": 0,
@@ -197,60 +364,84 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         "conformance": 0,
         "lifecycle": 0,
         "g2d": 0,
+        "e5": 0,
     }
 
     def airline_wrapper() -> dict[str, Any]:
         calls["airline"] += 1
         return original_airline()
 
-    def generic_wrapper() -> runner.LivingGauntletActResultV01:
+    def generic_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["generic"] += 1
         return original_generic()
 
-    def signer_wrapper() -> runner.LivingGauntletActResultV01:
+    def signer_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["signer"] += 1
         return original_signer()
 
-    def semantic_wrapper() -> runner.LivingGauntletActResultV01:
+    def semantic_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["semantic"] += 1
         return original_semantic()
 
-    def abi_wrapper() -> runner.LivingGauntletActResultV01:
+    def abi_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["abi"] += 1
         return original_abi()
 
-    def causal_wrapper() -> runner.LivingGauntletActResultV01:
+    def causal_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["causal"] += 1
         return original_causal()
 
-    def transition_wrapper() -> runner.LivingGauntletActResultV01:
+    def transition_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["transition"] += 1
         return original_transition()
 
-    def root_decision_wrapper() -> runner.LivingGauntletActResultV01:
+    def root_decision_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["root_decision"] += 1
         return original_root_decision()
 
-    def effect_firewall_wrapper() -> runner.LivingGauntletActResultV01:
+    def effect_firewall_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["effect_firewall"] += 1
         return original_effect_firewall()
 
-    def multiroot_wrapper() -> runner.LivingGauntletActResultV01:
+    def multiroot_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["multiroot"] += 1
         return original_multiroot()
 
-    def supplier_wrapper() -> runner.LivingGauntletActResultV01:
+    def supplier_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["supplier"] += 1
         return original_supplier()
 
     def conformance_wrapper(
         active_act_results,
         fractal_runtime_report,
-    ) -> runner.LivingGauntletActResultV01:
+        continuous_delta_runtime_report,
+        continuous_delta_runtime_report_sha256,
+        continuous_delta_runtime_report_bytes,
+    ) -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["conformance"] += 1
-        return original_conformance(active_act_results, fractal_runtime_report)
+        canonical_bytes = (
+            _demo.run_living_gauntlet_v01._g2e.
+            render_continuous_delta_runtime_g2_e_v01(
+                continuous_delta_runtime_report
+            ).encode("utf-8")
+        )
+        shared_e5_receipts.append(
+            (
+                hashlib.sha256(canonical_bytes).hexdigest(),
+                len(canonical_bytes),
+                continuous_delta_runtime_report_sha256,
+                continuous_delta_runtime_report_bytes,
+            )
+        )
+        return original_conformance(
+            active_act_results,
+            fractal_runtime_report,
+            continuous_delta_runtime_report,
+            continuous_delta_runtime_report_sha256,
+            continuous_delta_runtime_report_bytes,
+        )
 
-    def lifecycle_wrapper() -> runner.LivingGauntletActResultV01:
+    def lifecycle_wrapper() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         calls["lifecycle"] += 1
         return original_lifecycle()
 
@@ -258,80 +449,91 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         calls["g2d"] += 1
         return original_g2d()
 
-    monkeypatch.setattr(
-        runner,
+    def e5_wrapper():
+        calls["e5"] += 1
+        return original_e5()
+
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
         airline_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_generic_integrity_replay_gauntlet_act_v01",
         generic_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_root_signer_isolation_gauntlet_act_v01",
         signer_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_semantic_work_contract_gauntlet_act_v01",
         semantic_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
         abi_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_causal_consumption_gauntlet_act_v01",
         causal_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_transition_registry_gauntlet_act_v01",
         transition_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_root_decision_kernel_gauntlet_act_v01",
         root_decision_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_effect_firewall_gauntlet_act_v01",
         effect_firewall_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_generic_multiroot_gauntlet_act_v01",
         multiroot_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_supplier_water_filter_portability_gauntlet_act_v01",
         supplier_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_kernel_conformance_closure_from_validated_fractal_runtime_v01",
         conformance_wrapper,
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_action_packet_lifecycle_gauntlet_act_v01",
         lifecycle_wrapper,
     )
-    monkeypatch.setattr(
-        runner._g2d,
+    _patches(
+        _demo.run_living_gauntlet_v01._g2d,
         "collect_fractal_runtime_g2_d_v02",
         g2d_wrapper,
     )
+    _patches(
+        _demo.run_living_gauntlet_v01._g2e,
+        "collect_continuous_delta_runtime_g2_e_v01",
+        e5_wrapper,
+    )
 
-    exact_once_report = runner.collect_living_gauntlet_v01()
+    exact_once_report = (
+        _demo.run_living_gauntlet_v01.collect_living_gauntlet_v01()
+    )
 
-    assert exact_once_report["final_status"] == runner.STATUS_PASS
+    assert exact_once_report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert calls == {
         "airline": 1,
         "generic": 1,
@@ -347,8 +549,18 @@ def test_all_active_collectors_are_called_exactly_once(monkeypatch: pytest.Monke
         "conformance": 1,
         "lifecycle": 1,
         "g2d": 1,
+        "e5": 1,
     }
-    assert exact_once_report["counters"]["active_collector_execution_count"] == 16
+    assert exact_once_report["counters"]["active_collector_execution_count"] == 17
+    assert shared_e5_receipts == [
+        (
+            exact_once_report["continuous_delta_runtime_report_sha256"],
+            exact_once_report["continuous_delta_runtime_report_bytes"],
+            exact_once_report["shared_conformance_e5_report_sha256"],
+            exact_once_report["shared_conformance_e5_report_bytes"],
+        )
+    ]
+    assert exact_once_report["shared_conformance_e5_collector_calls"] == 0
 
 
 def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> None:
@@ -356,7 +568,7 @@ def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> Non
 
     assert len(entries) == 2
     assert entries[0]["act_id"] == "airline_all_real_frozen_reference"
-    assert entries[0]["state"] == runner.STATUS_EVIDENCE_ONLY
+    assert entries[0]["state"] == _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY
     assert entries[0]["executed"] is False
     assert entries[1] == {
         "act_id": "all_layers_invariant_super_smoke",
@@ -365,7 +577,7 @@ def test_frozen_all_real_evidence_is_not_executed(report: dict[str, Any]) -> Non
             "tests/test_all_layers_applied_super_smoke_runner.py",
         ],
         "executed": False,
-        "state": runner.STATUS_HISTORICAL_EVIDENCE_ONLY,
+        "state": _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY,
     }
     assert report["counters"]["evidence_only_executed_count"] == 0
 
@@ -379,8 +591,8 @@ def test_planned_signer_isolation_is_not_pass(report: dict[str, Any]) -> None:
         for record in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
         if record["act_id"] == "root_signer_isolation_conformance"
     )
-    assert indexed["status"] == runner.STATUS_ACTIVE
-    assert indexed["status"] != runner.STATUS_PASS
+    assert indexed["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
+    assert indexed["status"] != _demo.run_living_gauntlet_v01.STATUS_PASS
 
 
 def test_planned_supplier_portability_is_now_active_and_passes(
@@ -396,8 +608,8 @@ def test_planned_supplier_portability_is_now_active_and_passes(
     ]
     assert len(matching) == 1
     supplier = matching[0]
-    assert supplier["state"] == runner.STATUS_PASS
-    assert supplier["runtime_status"] == runner.STATUS_PASS
+    assert supplier["state"] == _demo.run_living_gauntlet_v01.STATUS_PASS
+    assert supplier["runtime_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert supplier["executed"] is True
     assert supplier["root_authority_preserved"] is True
     assert supplier["no_real_connector_or_action"] is True
@@ -408,7 +620,8 @@ def test_nonzero_real_world_effects_fail_closed(report: dict[str, Any]) -> None:
     mutated = deepcopy(report)
     mutated["active_act_results"][0]["real_world_effects_count"] = 1
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_real_world_effects_nonzero:airline_deterministic_transaction_runtime" in errors
@@ -421,7 +634,8 @@ def test_lost_root_authority_fails_closed(report: dict[str, Any]) -> None:
         "root_authority_preserved"
     ] = False
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_root_authority_lost:generic_integrity_replay" in errors
@@ -431,9 +645,10 @@ def test_active_fail_closed_state_with_success_counters_is_rejected(
     report: dict[str, Any],
 ) -> None:
     mutated = deepcopy(report)
-    mutated["active_act_results"][0]["state"] = runner.STATUS_FAIL_CLOSED
+    mutated["active_act_results"][0]["state"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert (
@@ -448,9 +663,10 @@ def test_active_runtime_status_not_pass_is_rejected(
     report: dict[str, Any],
 ) -> None:
     mutated = deepcopy(report)
-    mutated["active_act_results"][0]["runtime_status"] = runner.STATUS_FAIL_CLOSED
+    mutated["active_act_results"][0]["runtime_status"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert (
@@ -467,7 +683,8 @@ def test_nonempty_nested_active_errors_are_rejected(
         "nested_failure"
     ]
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_active_act_errors_present:generic_integrity_replay" in errors
@@ -483,7 +700,8 @@ def test_active_source_identity_tampering_is_rejected(
         mutated = deepcopy(report)
         mutated["active_act_results"][0][field] = value
 
-        accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+        errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+        accepted = not errors
 
         assert accepted is False
         assert (
@@ -501,7 +719,8 @@ def test_missing_or_extra_active_result_field_is_rejected(
     extra["active_act_results"][0]["unexpected"] = True
 
     for mutated in (missing, extra):
-        accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+        errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+        accepted = not errors
 
         assert accepted is False
         assert (
@@ -516,72 +735,73 @@ def test_caller_supplied_counters_inconsistent_with_rows_are_rejected(
     mutated = deepcopy(report)
     mutated["counters"]["active_collector_execution_count"] = 1
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_counter_mismatch:active_collector_execution_count" in errors
 
 
 def test_collector_exception_preserves_unknown_aggregate_effect_count(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def fail_airline() -> dict[str, Any]:
         raise RuntimeError("deterministic test failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
         fail_airline,
     )
 
-    failed = runner.collect_living_gauntlet_v01()
-    final_section = runner.render_living_gauntlet_v01(failed).split(
+    failed = _collect_living_internal_for_test_v01()
+    final_section = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(failed).split(
         "[FINAL STATUS]", 1
     )[1]
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert failed["active_act_results"][0]["real_world_effects_count"] == -1
     assert failed["counters"]["real_world_effects_count"] == -1
     assert "real_world_effects_count=-1" in final_section
     assert "real_world_effects_count=0" not in final_section
 
 
-def test_collector_failure_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_collector_failure_fails_closed(_patches) -> None:
     def fail_airline() -> dict[str, Any]:
         raise RuntimeError("deterministic test failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
         fail_airline,
     )
 
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert failed["active_act_results"][0]["state"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    assert failed["active_act_results"][0]["state"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "airline_collector_failed" in failed["validation_errors"]
 
 
 def test_missing_manifest_field_fails_closed(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     path = _mutated_manifest_path(
         tmp_path,
         lambda manifest: manifest.pop("non_claims"),
     )
-    monkeypatch.setattr(runner, "_COMPLETION_MANIFEST_PATH", path)
+    _patches(_demo.run_living_gauntlet_v01, "_COMPLETION_MANIFEST_PATH", path)
 
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "completion_manifest_field_surface_mismatch" in failed["validation_errors"]
 
 
 def test_duplicate_act_id_fails_closed(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def duplicate(manifest: dict[str, Any]) -> None:
         manifest["active_runtime_acts"].append(
@@ -589,18 +809,18 @@ def test_duplicate_act_id_fails_closed(
         )
 
     path = _mutated_manifest_path(tmp_path, duplicate)
-    monkeypatch.setattr(runner, "_COMPLETION_MANIFEST_PATH", path)
+    _patches(_demo.run_living_gauntlet_v01, "_COMPLETION_MANIFEST_PATH", path)
 
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "active_act_duplicate_id" in failed["validation_errors"]
     assert "completion_manifest_duplicate_act_id" in failed["validation_errors"]
 
 
 def test_unknown_status_fails_closed(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def unknown(manifest: dict[str, Any]) -> None:
         record = next(
@@ -611,11 +831,11 @@ def test_unknown_status_fails_closed(
         record["status"] = "UNKNOWN"
 
     path = _mutated_manifest_path(tmp_path, unknown)
-    monkeypatch.setattr(runner, "_COMPLETION_MANIFEST_PATH", path)
+    _patches(_demo.run_living_gauntlet_v01, "_COMPLETION_MANIFEST_PATH", path)
 
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "active_act_status_invalid:kernel_conformance_closure" in failed[
         "validation_errors"
     ]
@@ -623,7 +843,7 @@ def test_unknown_status_fails_closed(
 
 def test_evidence_only_act_cannot_satisfy_active_claim(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def reclassify(manifest: dict[str, Any]) -> None:
         claim = next(
@@ -634,11 +854,11 @@ def test_evidence_only_act_cannot_satisfy_active_claim(
         claim["claim_class"] = "EXECUTED_RUNTIME"
 
     path = _mutated_manifest_path(tmp_path, reclassify)
-    monkeypatch.setattr(runner, "_COMPLETION_MANIFEST_PATH", path)
+    _patches(_demo.run_living_gauntlet_v01, "_COMPLETION_MANIFEST_PATH", path)
 
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "public_claim_classification_mismatch:claim_airline_all_real_frozen_evidence" in failed[
         "validation_errors"
     ]
@@ -646,7 +866,7 @@ def test_evidence_only_act_cannot_satisfy_active_claim(
 
 def test_stale_planned_claim_fails_closed(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def reclassify(manifest: dict[str, Any]) -> None:
         manifest["public_claims"].append(
@@ -663,18 +883,18 @@ def test_stale_planned_claim_fails_closed(
         )
 
     path = _mutated_manifest_path(tmp_path, reclassify)
-    monkeypatch.setattr(runner, "_COMPLETION_MANIFEST_PATH", path)
+    _patches(_demo.run_living_gauntlet_v01, "_COMPLETION_MANIFEST_PATH", path)
 
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "completion_manifest_stale_planned_claim" in failed[
         "validation_errors"
     ]
 
 
 def test_renderer_contains_all_required_sections(report: dict[str, Any]) -> None:
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
 
     for section in (
         "[ACTIVE EXECUTED ACTS]",
@@ -689,8 +909,8 @@ def test_renderer_contains_all_required_sections(report: dict[str, Any]) -> None
 
 
 def test_serialization_and_rendering_are_deterministic(report: dict[str, Any]) -> None:
-    first_render = runner.render_living_gauntlet_v01(report)
-    second_render = runner.render_living_gauntlet_v01(deepcopy(report))
+    first_render = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
+    second_render = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(deepcopy(report))
     first_json = json.dumps(report, sort_keys=True, separators=(",", ":"))
     second_json = json.dumps(deepcopy(report), sort_keys=True, separators=(",", ":"))
 
@@ -736,18 +956,18 @@ def test_runner_performs_no_tmp_or_raw_evidence_access() -> None:
 
 def test_main_returns_zero_only_for_pass(
     report: dict[str, Any],
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    monkeypatch.setattr(runner, "collect_living_gauntlet_v01", lambda: report)
-    assert runner.main() == 0
+    _patches(_demo.run_living_gauntlet_v01, "collect_living_gauntlet_v01", lambda: report)
+    assert _demo.run_living_gauntlet_v01.main() == 0
     assert "final_status=PASS" in capsys.readouterr().out
 
     failed = deepcopy(report)
-    failed["final_status"] = runner.STATUS_FAIL_CLOSED
+    failed["final_status"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     failed["validation_errors"] = ("forced_test_failure",)
-    monkeypatch.setattr(runner, "collect_living_gauntlet_v01", lambda: failed)
-    assert runner.main() != 0
+    _patches(_demo.run_living_gauntlet_v01, "collect_living_gauntlet_v01", lambda: failed)
+    assert _demo.run_living_gauntlet_v01.main() != 0
     assert "final_status=FAIL_CLOSED" in capsys.readouterr().out
 
 
@@ -777,18 +997,18 @@ def test_manifest_stores_no_synthetic_pass_for_indexed_acts() -> None:
         for record in manifest[field]
     ]
 
-    assert runner.STATUS_PASS not in statuses
-    assert statuses.count(runner.STATUS_ACTIVE) == 12
-    assert statuses.count(runner.STATUS_EVIDENCE_ONLY) == 1
-    assert statuses.count(runner.STATUS_HISTORICAL_EVIDENCE_ONLY) == 1
-    assert statuses.count(runner.STATUS_PLANNED_NOT_ACTIVE) == 0
+    assert _demo.run_living_gauntlet_v01.STATUS_PASS not in statuses
+    assert statuses.count(_demo.run_living_gauntlet_v01.STATUS_ACTIVE) == 12
+    assert statuses.count(_demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY) == 1
+    assert statuses.count(_demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY) == 1
+    assert statuses.count(_demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE) == 0
 
 
 def test_generic_integrity_replay_act_is_active() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
     active = {record["act_id"]: record for record in manifest["active_runtime_acts"]}
 
-    assert active["generic_integrity_replay"]["status"] == runner.STATUS_ACTIVE
+    assert active["generic_integrity_replay"]["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert active["generic_integrity_replay"]["source_symbol"] == (
         "collect_generic_integrity_replay_gauntlet_act_v01"
     )
@@ -806,17 +1026,17 @@ def test_generic_integrity_replay_act_executes_and_passes(
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": "collect_generic_integrity_replay_gauntlet_act_v01",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
 
 
-def test_successful_report_has_sixteen_active_acts(report: dict[str, Any]) -> None:
-    assert len(report["active_act_results"]) == 16
-    assert report["counters"]["active_act_count"] == 16
-    assert report["counters"]["active_act_pass_count"] == 16
+def test_successful_report_has_seventeen_active_acts(report: dict[str, Any]) -> None:
+    assert len(report["active_act_results"]) == 17
+    assert report["counters"]["active_act_count"] == 17
+    assert report["counters"]["active_act_pass_count"] == 17
     assert report["counters"]["active_act_fail_closed_count"] == 0
 
 
@@ -837,7 +1057,7 @@ def test_generic_execution_counter_is_one(report: dict[str, Any]) -> None:
 
 
 def test_generic_act_source_identity_is_canonical() -> None:
-    assert runner._ACTIVE_ACT_SOURCES["generic_integrity_replay"] == (
+    assert _demo.run_living_gauntlet_v01._ACTIVE_ACT_SOURCES["generic_integrity_replay"] == (
         "demo.run_living_gauntlet_v01",
         "collect_generic_integrity_replay_gauntlet_act_v01",
     )
@@ -849,9 +1069,9 @@ def test_generic_active_seam_is_importable() -> None:
         for record in _json(SEAM_INDEX_PATH)["seams"]
         if record["seam_id"] == "generic_integrity_replay_core"
     )
-    module = importlib.import_module(seam["source_module"])
+    module = _CURRENT_SEAM_MODULES[seam["source_module"]]
 
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert getattr(module, seam["source_symbol"]) is not None
 
 
@@ -862,7 +1082,7 @@ def test_generic_adapter_seam_is_active_frozen_airline_projection() -> None:
         if record["seam_id"] == "generic_integrity_replay_adapter"
     )
 
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert seam["source_module"] == "hedgehog.domains.airline.kernel_adapter_v01"
     assert seam["source_symbol"] == "build_airline_kernel_adapter_result_v01"
     assert seam["effect_access"] == "NONE"
@@ -875,7 +1095,7 @@ def test_g1a1_integrity_replay_seam_remains_active() -> None:
         for item in _json(SEAM_INDEX_PATH)["seams"]
         if item["seam_id"] == "generic_integrity_replay_adapter"
     )
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert seam["effect_access"] == "NONE"
     assert seam["gate1_target"] == "generic_integrity_replay"
 
@@ -922,7 +1142,7 @@ def test_frozen_airline_reference_remains_evidence_only() -> None:
     record = _json(COMPLETION_MANIFEST_PATH)["evidence_only_references"][0]
 
     assert record["act_id"] == "airline_all_real_frozen_reference"
-    assert record["status"] == runner.STATUS_EVIDENCE_ONLY
+    assert record["status"] == _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY
 
 
 def test_historical_all_layers_identity_is_not_rebound() -> None:
@@ -932,16 +1152,16 @@ def test_historical_all_layers_identity_is_not_rebound() -> None:
         for item in manifest["evidence_only_references"]
         if item["act_id"] == "all_layers_invariant_super_smoke"
     )
-    assert historical["status"] == runner.STATUS_HISTORICAL_EVIDENCE_ONLY
+    assert historical["status"] == _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY
     assert historical["current_execution_enabled"] is False
     assert historical["successor_onboarding_allowed"] is False
     assert historical["historical_profile_ref"] == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
     )
     assert "all_layers_invariant_super_smoke" not in {
         item["act_id"] for item in manifest["active_runtime_acts"]
     }
-    assert "all_layers_invariant_super_smoke" not in runner._ACTIVE_ACT_SOURCES
+    assert "all_layers_invariant_super_smoke" not in _demo.run_living_gauntlet_v01._ACTIVE_ACT_SOURCES
     historical_claim = next(
         item
         for item in manifest["public_claims"]
@@ -949,7 +1169,7 @@ def test_historical_all_layers_identity_is_not_rebound() -> None:
     )
     assert historical_claim["act_ids"] == ["all_layers_invariant_super_smoke"]
     assert historical_claim["claim_class"] == (
-        runner.STATUS_HISTORICAL_EVIDENCE_ONLY
+        _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY
     )
     assert historical_claim["runtime_ref"] == (
         "not_executed:kernel_conformance_v0_5_historical"
@@ -968,47 +1188,47 @@ def test_historical_all_layers_identity_cannot_be_rebound_as_current() -> None:
         "collect_rebound_current_act_v01"
     )
 
-    errors = runner._validate_completion_manifest_v01(manifest)
+    errors = _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
 
     assert "active_act_ids_mismatch" in errors
     assert "completion_manifest_duplicate_act_id" in errors
 
 
 def test_generic_act_exception_fails_full_report_closed(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
-    def fail_generic() -> runner.LivingGauntletActResultV01:
+    def fail_generic() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         raise RuntimeError("test-only failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_generic_integrity_replay_gauntlet_act_v01",
         fail_generic,
     )
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "generic_integrity_replay_collector_failed" in failed["validation_errors"]
 
 
 def test_generic_act_failure_preserves_unknown_effect_count(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def fail_fixtures() -> tuple[dict[str, Any], ...]:
         raise ValueError("test-only failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_generic_integrity_replay_fixture_records_v01",
         fail_fixtures,
     )
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
 
     assert _active_result(failed, "generic_integrity_replay")[
         "real_world_effects_count"
     ] == -1
     assert failed["counters"]["real_world_effects_count"] == -1
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
 
 
 def test_counter_tampering_cannot_hide_generic_failure(
@@ -1016,11 +1236,12 @@ def test_counter_tampering_cannot_hide_generic_failure(
 ) -> None:
     mutated = deepcopy(report)
     generic = _active_result(mutated, "generic_integrity_replay")
-    generic["state"] = runner.STATUS_FAIL_CLOSED
-    generic["runtime_status"] = runner.STATUS_FAIL_CLOSED
+    generic["state"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    generic["runtime_status"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     generic["errors"] = ["generic_failure"]
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_counter_mismatch:active_act_pass_count" in errors
@@ -1035,7 +1256,8 @@ def test_generic_source_identity_tampering_is_rejected(
         "source_symbol"
     ] = "tampered"
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_active_source_identity_mismatch:generic_integrity_replay" in errors
@@ -1047,9 +1269,10 @@ def test_generic_active_row_cannot_be_evidence_only(
     mutated = deepcopy(report)
     _active_result(mutated, "generic_integrity_replay")[
         "state"
-    ] = runner.STATUS_EVIDENCE_ONLY
+    ] = _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_active_act_state_unknown:generic_integrity_replay" in errors
@@ -1061,16 +1284,17 @@ def test_generic_active_row_cannot_be_planned(
     mutated = deepcopy(report)
     _active_result(mutated, "generic_integrity_replay")[
         "state"
-    ] = runner.STATUS_PLANNED_NOT_ACTIVE
+    ] = _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE
 
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
 
     assert accepted is False
     assert "report_active_act_state_unknown:generic_integrity_replay" in errors
 
 
 def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
-    active_section = runner.render_living_gauntlet_v01(report).split(
+    active_section = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report).split(
         "[EVIDENCE-ONLY REFERENCES]", 1
     )[0]
 
@@ -1078,14 +1302,14 @@ def test_renderer_shows_generic_active_act(report: dict[str, Any]) -> None:
     assert "state=PASS" in active_section
 
 
-def test_runner_version_is_current_v15(report: dict[str, Any]) -> None:
-    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
-    assert runner._G2C_RUNNER_VERSION_V13 == "v1.3"
-    assert runner.RUNNER_VERSION == "v1.5"
-    assert report["runner_version"] == "v1.5"
+def test_runner_version_is_current_v16(report: dict[str, Any]) -> None:
+    assert _demo.run_living_gauntlet_v01._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert _demo.run_living_gauntlet_v01._G2C_RUNNER_VERSION_V13 == "v1.3"
+    assert _demo.run_living_gauntlet_v01.RUNNER_VERSION == "v1.6"
+    assert report["runner_version"] == "v1.6"
     assert (
         report["kernel_conformance_profile"]
-        == runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        == _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
 
 
@@ -1112,7 +1336,7 @@ def test_current_and_historical_profile_metadata_are_exact(
         "execution_mode_router",
         "fractal_runtime",
     )
-    current_refs = (
+    sanitized_v06_refs = (
         "airline_deterministic_transaction_runtime",
         "generic_integrity_replay",
         "root_signer_isolation_conformance",
@@ -1129,40 +1353,60 @@ def test_current_and_historical_profile_metadata_are_exact(
         "execution_mode_router",
         "fractal_runtime",
     )
+    current_v07_refs = (*sanitized_v06_refs, "continuous_delta_runtime")
     assert (
-        runner.HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05
+        _demo.run_living_gauntlet_v01.HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05
         == historical_refs
     )
-    assert runner.CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06 == current_refs
+    assert (
+        _demo.run_living_gauntlet_v01.HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
+        == sanitized_v06_refs
+    )
+    assert (
+        _demo.run_living_gauntlet_v01.CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07
+        == current_v07_refs
+    )
     assert manifest["current_kernel_conformance_profile"] == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        "kernel_conformance_v0_6_current"
     )
     assert report["historical_kernel_conformance_profile"] == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
+    )
+    assert report["kernel_conformance_profile"] == (
+        _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
     assert profiles["historical_v0_5"] == {
-        "profile_id": runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
+        "profile_id": _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
         "profile_version": "v0.5",
-        "profile_status": runner.STATUS_HISTORICAL_EVIDENCE_ONLY,
+        "profile_status": _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY,
         "default_current": False,
         "active_gauntlet_refs": list(historical_refs),
         "historical_act_id": "all_layers_invariant_super_smoke",
     }
     assert profiles["current_v0_6"] == {
-        "profile_id": runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+        "profile_id": "kernel_conformance_v0_6_current",
         "profile_version": "v0.6",
         "profile_status": "CURRENT_ACTIVE",
         "default_current": True,
-        "active_gauntlet_refs": list(current_refs),
+        "active_gauntlet_refs": list(sanitized_v06_refs),
         "historical_profile_ref": (
-            runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
         ),
         "historical_act_id_rebound": False,
     }
-    assert "all_layers_invariant_super_smoke" not in current_refs
-    assert report["current_regression_claim_mapping"] == (
-        manifest["current_regression_claim_mapping"]
-    )
+    assert "all_layers_invariant_super_smoke" not in current_v07_refs
+    assert manifest["current_regression_claim_mapping"] == {
+        claim_id: list(act_ids)
+        for claim_id, act_ids in (
+            _demo.run_living_gauntlet_v01.CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+        )
+    }
+    assert report["current_regression_claim_mapping"] == {
+        claim_id: list(act_ids)
+        for claim_id, act_ids in (
+            _demo.run_living_gauntlet_v01.CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
+        )
+    }
 
 
 def test_current_profile_claim_mapping_removal_fails_closed(
@@ -1172,7 +1416,8 @@ def test_current_profile_claim_mapping_removal_fails_closed(
     mutated["current_regression_claim_mapping"].pop(
         "root_sole_local_final_commit_authority"
     )
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert "living_gauntlet_claim_mapping_mismatch" in errors
 
@@ -1247,7 +1492,7 @@ def test_signer_act_is_active_in_completion_manifest() -> None:
         for record in _json(COMPLETION_MANIFEST_PATH)["active_runtime_acts"]
     }
     record = active["root_signer_isolation_conformance"]
-    assert record["status"] == runner.STATUS_ACTIVE
+    assert record["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert record["source_module"] == "demo.run_living_gauntlet_v01"
     assert record["source_symbol"] == (
         "collect_root_signer_isolation_gauntlet_act_v01"
@@ -1263,14 +1508,14 @@ def test_signer_act_executes_and_passes(report: dict[str, Any]) -> None:
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": "collect_root_signer_isolation_gauntlet_act_v01",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
 
 
-def test_all_sixteen_current_active_act_ids_are_exact(
+def test_all_seventeen_current_active_act_ids_are_exact(
     report: dict[str, Any],
 ) -> None:
     assert tuple(row["act_id"] for row in report["active_act_results"]) == (
@@ -1290,8 +1535,9 @@ def test_all_sixteen_current_active_act_ids_are_exact(
         "drs_semantic_address_and_reuse_certificate",
         "execution_mode_router",
         "fractal_runtime",
+        "continuous_delta_runtime",
     )
-    assert report["counters"]["active_collector_execution_count"] == 16
+    assert report["counters"]["active_act_count"] == 17
 
 
 def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
@@ -1299,7 +1545,7 @@ def test_signer_execution_counter_is_one(report: dict[str, Any]) -> None:
 
 
 def test_signer_source_identity_is_canonical() -> None:
-    assert runner._ACTIVE_ACT_SOURCES["root_signer_isolation_conformance"] == (
+    assert _demo.run_living_gauntlet_v01._ACTIVE_ACT_SOURCES["root_signer_isolation_conformance"] == (
         "demo.run_living_gauntlet_v01",
         "collect_root_signer_isolation_gauntlet_act_v01",
     )
@@ -1327,7 +1573,7 @@ def test_signer_seam_transitioned_in_place_and_is_unique() -> None:
         "seam_id": "root_signer_isolation_conformance",
         "source_module": "hedgehog.kernel.root_signer_isolation_v01",
         "source_symbol": "verify_root_signature_v01",
-        "status": runner.STATUS_ACTIVE,
+        "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
     }
 
 
@@ -1394,7 +1640,7 @@ def test_non_claims_do_not_claim_airline_attestation_or_production_identity() ->
 
 
 def test_signer_fixture_metrics_are_exact() -> None:
-    assert runner._collect_root_signer_isolation_fixture_metrics_v01() == {
+    assert _demo.run_living_gauntlet_v01._collect_root_signer_isolation_fixture_metrics_v01() == {
         "capability_count": 3,
         "own_signature_pass_count": 3,
         "cross_root_signing_blocked_count": 6,
@@ -1409,38 +1655,38 @@ def test_signer_fixture_metrics_are_exact() -> None:
 
 
 def test_signer_exception_fails_full_report_closed(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
-    def fail_signer() -> runner.LivingGauntletActResultV01:
+    def fail_signer() -> _demo.run_living_gauntlet_v01.LivingGauntletActResultV01:
         raise RuntimeError("test-only failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_root_signer_isolation_gauntlet_act_v01",
         fail_signer,
     )
-    failed = runner.collect_living_gauntlet_v01()
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    failed = _collect_living_internal_for_test_v01()
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "root_signer_isolation_collector_failed" in failed["validation_errors"]
 
 
 def test_signer_failure_preserves_unknown_aggregate_effects(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def fail_fixture() -> dict[str, int]:
         raise OSError("test-only failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_root_signer_isolation_fixture_metrics_v01",
         fail_fixture,
     )
-    failed = runner.collect_living_gauntlet_v01()
+    failed = _collect_living_internal_for_test_v01()
     assert _active_result(failed, "root_signer_isolation_conformance")[
         "real_world_effects_count"
     ] == -1
     assert failed["counters"]["real_world_effects_count"] == -1
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
 
 
 def test_counter_tampering_cannot_hide_signer_failure(
@@ -1448,10 +1694,11 @@ def test_counter_tampering_cannot_hide_signer_failure(
 ) -> None:
     mutated = deepcopy(report)
     signer_row = _active_result(mutated, "root_signer_isolation_conformance")
-    signer_row["state"] = runner.STATUS_FAIL_CLOSED
-    signer_row["runtime_status"] = runner.STATUS_FAIL_CLOSED
+    signer_row["state"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    signer_row["runtime_status"] = _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     signer_row["errors"] = ["signer_failure"]
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert "report_counter_mismatch:active_act_pass_count" in errors
     assert "report_counter_mismatch:active_act_fail_closed_count" in errors
@@ -1464,7 +1711,8 @@ def test_signer_source_identity_tampering_is_rejected(
     _active_result(mutated, "root_signer_isolation_conformance")[
         "source_symbol"
     ] = "tampered"
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert (
         "report_active_source_identity_mismatch:root_signer_isolation_conformance"
@@ -1473,7 +1721,7 @@ def test_signer_source_identity_tampering_is_rejected(
 
 
 @pytest.mark.parametrize(
-    "invalid_state", (runner.STATUS_EVIDENCE_ONLY, runner.STATUS_PLANNED_NOT_ACTIVE)
+    "invalid_state", (_demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY, _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE)
 )
 def test_signer_active_row_cannot_be_non_active_state(
     report: dict[str, Any], invalid_state: str
@@ -1482,7 +1730,8 @@ def test_signer_active_row_cannot_be_non_active_state(
     _active_result(mutated, "root_signer_isolation_conformance")[
         "state"
     ] = invalid_state
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert (
         "report_active_act_state_unknown:root_signer_isolation_conformance"
@@ -1491,7 +1740,7 @@ def test_signer_active_row_cannot_be_non_active_state(
 
 
 def test_renderer_shows_signer_as_active(report: dict[str, Any]) -> None:
-    active_section = runner.render_living_gauntlet_v01(report).split(
+    active_section = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report).split(
         "[EVIDENCE-ONLY REFERENCES]", 1
     )[0]
     assert "act_id=root_signer_isolation_conformance" in active_section
@@ -1514,17 +1763,26 @@ def test_renderer_shows_signer_as_active(report: dict[str, Any]) -> None:
 def test_report_and_render_expose_no_cryptographic_material(
     report: dict[str, Any], forbidden: str
 ) -> None:
-    serialized = json.dumps(report, sort_keys=True, default=list)
-    rendered = runner.render_living_gauntlet_v01(report)
+    report_without_noncryptographic_receipt = dict(report)
+    assert (
+        report_without_noncryptographic_receipt.pop(
+            "continuous_delta_runtime_private_g2d_calls"
+        )
+        == 0
+    )
+    serialized = json.dumps(
+        report_without_noncryptographic_receipt, sort_keys=True, default=list
+    )
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert forbidden.lower() not in serialized.lower()
     assert forbidden.lower() not in rendered.lower()
 
 
 def test_two_complete_collections_are_identical_despite_ephemeral_keys() -> None:
-    first = runner.collect_living_gauntlet_v01()
-    second = runner.collect_living_gauntlet_v01()
+    first = _collect_living_internal_for_test_v01()
+    second = _collect_living_internal_for_test_v01()
     assert first == second
-    assert runner.render_living_gauntlet_v01(first) == runner.render_living_gauntlet_v01(second)
+    assert _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(first) == _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(second)
     assert json.dumps(first, sort_keys=True, separators=(",", ":"), default=list) == json.dumps(
         second, sort_keys=True, separators=(",", ":"), default=list
     )
@@ -1578,7 +1836,7 @@ def test_executed_claim_classes_are_not_interchangeable(
         item for item in manifest["public_claims"] if item["claim_id"] == claim_id
     )
     claim["claim_class"] = wrong_class
-    errors = runner._validate_completion_manifest_v01(manifest)
+    errors = _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     assert f"public_claim_classification_mismatch:{claim_id}" in errors
 
 
@@ -1590,7 +1848,7 @@ def test_public_claim_empty_act_ids_fail_closed() -> None:
         if item["claim_id"] == "claim_root_signer_isolation_conformance_execution"
     )
     claim["act_ids"] = []
-    errors = runner._validate_completion_manifest_v01(manifest)
+    errors = _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     assert (
         "public_claim_act_ids_invalid:"
         "claim_root_signer_isolation_conformance_execution"
@@ -1600,13 +1858,13 @@ def test_public_claim_empty_act_ids_fail_closed() -> None:
 @pytest.mark.parametrize(
     ("seam_id", "wrong_status"),
     (
-        ("root_signer_isolation_conformance", runner.STATUS_REFERENCE_ONLY),
-        ("generic_integrity_replay_core", runner.STATUS_REFERENCE_ONLY),
+        ("root_signer_isolation_conformance", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+        ("generic_integrity_replay_core", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
         (
             "airline_transaction_artifact_ledger_reference",
-            runner.STATUS_ACTIVE,
+            _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
         ),
-        ("core_context_packets", runner.STATUS_PLANNED_NOT_ACTIVE),
+        ("core_context_packets", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
     ),
 )
 def test_current_seam_status_mutations_fail_closed(
@@ -1616,14 +1874,14 @@ def test_current_seam_status_mutations_fail_closed(
     index = _json(SEAM_INDEX_PATH)
     seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
     seam["status"] = wrong_status
-    errors = runner._validate_integration_seam_index_v01(index)
+    errors = _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     assert f"current_seam_status_mismatch:{seam_id}" in errors
 
 
 def test_cross_root_unrelated_value_error_is_not_isolation_evidence(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
-    original = runner.sign_root_owned_commitment_v01
+    original = _demo.run_living_gauntlet_v01.sign_root_owned_commitment_v01
 
     def unrelated_reason(**kwargs: object) -> signer.RootSignatureV01:
         capability = kwargs["capability"]
@@ -1632,20 +1890,20 @@ def test_cross_root_unrelated_value_error_is_not_isolation_evidence(
             raise ValueError("signature_generation_failed")
         return original(**kwargs)  # type: ignore[arg-type]
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "sign_root_owned_commitment_v01",
         unrelated_reason,
     )
-    result = runner.collect_root_signer_isolation_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    result = _demo.run_living_gauntlet_v01.collect_root_signer_isolation_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.real_world_effects_count == -1
 
 
 def test_generic_blocked_verification_is_not_isolation_evidence(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
-    original = runner.verify_root_signature_v01
+    original = _demo.run_living_gauntlet_v01.verify_root_signature_v01
 
     def incomplete_block(**kwargs: object) -> signer.RootSignatureVerificationResultV01:
         result = original(**kwargs)
@@ -1660,9 +1918,9 @@ def test_generic_blocked_verification_is_not_isolation_evidence(
             )
         return result
 
-    monkeypatch.setattr(runner, "verify_root_signature_v01", incomplete_block)
-    result = runner.collect_root_signer_isolation_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    _patches(_demo.run_living_gauntlet_v01, "verify_root_signature_v01", incomplete_block)
+    result = _demo.run_living_gauntlet_v01.collect_root_signer_isolation_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.real_world_effects_count == -1
 
 
@@ -1670,16 +1928,16 @@ def test_exact_current_seam_status_map_matches_unchanged_index() -> None:
     seams = {
         item["seam_id"]: item["status"]
         for item in _json(SEAM_INDEX_PATH)["seams"]
-        if item["seam_id"] in runner._CURRENT_SEAMS
+        if item["seam_id"] in _demo.run_living_gauntlet_v01._CURRENT_SEAMS
     }
-    assert seams == runner._CURRENT_SEAM_STATUSES
+    assert seams == _demo.run_living_gauntlet_v01._CURRENT_SEAM_STATUSES
 
 
 def test_unchanged_release_json_still_validates_for_g1a2() -> None:
-    assert runner._validate_completion_manifest_v01(
+    assert _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(
         _json(COMPLETION_MANIFEST_PATH)
     ) == ()
-    assert runner._validate_integration_seam_index_v01(
+    assert _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(
         _json(SEAM_INDEX_PATH)
     ) == ()
 
@@ -1699,7 +1957,7 @@ def test_semantic_work_act_is_active_in_completion_manifest() -> None:
         "focused_test": "tests/test_semantic_work_v01.py",
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": "collect_semantic_work_contract_gauntlet_act_v01",
-        "status": runner.STATUS_ACTIVE,
+        "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
     }
 
 
@@ -1711,16 +1969,16 @@ def test_semantic_work_act_executes_and_passes(report: dict[str, Any]) -> None:
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": "collect_semantic_work_contract_gauntlet_act_v01",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
     assert report["counters"]["semantic_work_contract_execution_count"] == 1
 
 
 def test_semantic_work_fixture_geometry_is_exact() -> None:
-    metrics = runner._collect_semantic_work_fixture_metrics_v01()
+    metrics = _demo.run_living_gauntlet_v01._collect_semantic_work_fixture_metrics_v01()
     assert {
         key: metrics[key]
         for key in (
@@ -1774,7 +2032,7 @@ def test_semantic_work_claim_is_exact_conformance_class() -> None:
     assert (
         "public_claim_classification_mismatch:"
         "claim_semantic_work_contract_conformance_execution"
-    ) in runner._validate_completion_manifest_v01(manifest)
+    ) in _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
 
 
 @pytest.mark.parametrize(
@@ -1865,11 +2123,11 @@ def test_g1b1_seams_are_active_and_importable(
     seams = _json(SEAM_INDEX_PATH)["seams"]
     matching = [item for item in seams if item["seam_id"] == seam_id]
     assert len(matching) == 1
-    assert matching[0]["status"] == runner.STATUS_ACTIVE
+    assert matching[0]["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert matching[0]["effect_access"] == "NONE"
     assert matching[0]["source_module"] == module
     assert matching[0]["source_symbol"] == symbol
-    assert getattr(importlib.import_module(module), symbol) is not None
+    assert getattr(_CURRENT_SEAM_MODULES[module], symbol) is not None
 
 
 @pytest.mark.parametrize(
@@ -1884,16 +2142,16 @@ def test_semantic_donor_seams_remain_active(seam_id: str) -> None:
     seam = next(
         item for item in _json(SEAM_INDEX_PATH)["seams"] if item["seam_id"] == seam_id
     )
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
 
 
 @pytest.mark.parametrize(
     ("seam_id", "wrong_status"),
     (
-        ("kernel_trust_model_core", runner.STATUS_REFERENCE_ONLY),
-        ("semantic_work_contract_core", runner.STATUS_REFERENCE_ONLY),
-        ("kernel_trust_model_core", runner.STATUS_PLANNED_NOT_ACTIVE),
-        ("semantic_work_contract_core", runner.STATUS_PLANNED_NOT_ACTIVE),
+        ("kernel_trust_model_core", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+        ("semantic_work_contract_core", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+        ("kernel_trust_model_core", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
+        ("semantic_work_contract_core", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
     ),
 )
 def test_g1b1_current_seam_status_mutation_fails_closed(
@@ -1904,7 +2162,7 @@ def test_g1b1_current_seam_status_mutation_fails_closed(
     seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
     seam["status"] = wrong_status
     assert f"current_seam_status_mismatch:{seam_id}" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -1916,20 +2174,20 @@ def test_g1b1_active_seam_cannot_gain_effect_access(seam_id: str) -> None:
     seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
     seam["effect_access"] = "BOUNDED"
     assert f"seam_effect_access_forbidden:{seam_id}" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
 def test_semantic_act_exception_fails_full_report_closed(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_semantic_work_contract_gauntlet_act_v01",
         lambda: (_ for _ in ()).throw(RuntimeError("test-only")),
     )
-    failed = runner.collect_living_gauntlet_v01()
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    failed = _collect_living_internal_for_test_v01()
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "semantic_work_contract_collector_failed" in failed["validation_errors"]
     assert _active_result(failed, "semantic_work_contract")[
         "real_world_effects_count"
@@ -1938,15 +2196,15 @@ def test_semantic_act_exception_fails_full_report_closed(
 
 
 def test_semantic_fixture_failure_is_sanitized(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_semantic_work_fixture_metrics_v01",
         lambda: (_ for _ in ()).throw(OSError("sensitive test payload")),
     )
-    result = runner.collect_semantic_work_contract_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    result = _demo.run_living_gauntlet_v01.collect_semantic_work_contract_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.errors == ("semantic_work_contract_conformance_failed",)
     assert result.real_world_effects_count == -1
 
@@ -1958,7 +2216,8 @@ def test_semantic_source_identity_tampering_is_rejected(
     _active_result(mutated, "semantic_work_contract")[
         "source_symbol"
     ] = "tampered"
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert "report_active_source_identity_mismatch:semantic_work_contract" in errors
 
@@ -1969,32 +2228,34 @@ def test_counter_tampering_cannot_hide_semantic_failure(
     mutated = deepcopy(report)
     _active_result(mutated, "semantic_work_contract").update(
         {
-            "state": runner.STATUS_FAIL_CLOSED,
-            "runtime_status": runner.STATUS_FAIL_CLOSED,
+            "state": _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
+            "runtime_status": _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
             "errors": ["semantic_failure"],
         }
     )
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert "report_counter_mismatch:active_act_pass_count" in errors
     assert "report_counter_mismatch:active_act_fail_closed_count" in errors
 
 
 @pytest.mark.parametrize(
-    "invalid_state", (runner.STATUS_EVIDENCE_ONLY, runner.STATUS_PLANNED_NOT_ACTIVE)
+    "invalid_state", (_demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY, _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE)
 )
 def test_semantic_active_row_cannot_be_non_active(
     report: dict[str, Any], invalid_state: str
 ) -> None:
     mutated = deepcopy(report)
     _active_result(mutated, "semantic_work_contract")["state"] = invalid_state
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert "report_active_act_state_unknown:semantic_work_contract" in errors
 
 
 def test_renderer_shows_semantic_work_as_active(report: dict[str, Any]) -> None:
-    active = runner.render_living_gauntlet_v01(report).split(
+    active = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report).split(
         "[EVIDENCE-ONLY REFERENCES]", 1
     )[0]
     assert "act_id=semantic_work_contract" in active
@@ -2017,7 +2278,7 @@ def test_report_exposes_no_semantic_fixture_payload(
     report: dict[str, Any], forbidden: str
 ) -> None:
     serialized = json.dumps(report, sort_keys=True, default=list).lower()
-    rendered = runner.render_living_gauntlet_v01(report).lower()
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report).lower()
     assert forbidden.lower() not in serialized
     assert forbidden.lower() not in rendered
 
@@ -2025,7 +2286,7 @@ def test_report_exposes_no_semantic_fixture_payload(
 def test_g1b1_report_geometry_and_prior_acts_remain_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["final_status"] == runner.STATUS_PASS
+    assert report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert report["counters"]["real_world_effects_count"] == 0
     assert _active_result(report, "generic_integrity_replay")["act_id"] == (
         "generic_integrity_replay"
@@ -2069,7 +2330,7 @@ def test_g1b2_active_records_are_exact(
         "focused_test": "tests/test_kernel_abi_v01.py",
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": source_symbol,
-        "status": runner.STATUS_ACTIVE,
+        "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
     }
 
 
@@ -2104,10 +2365,10 @@ def test_g1b2_acts_execute_and_pass(
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": source_symbol,
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
     assert report["counters"][counter] == 1
 
@@ -2123,7 +2384,7 @@ def test_g1b2_acts_execute_and_pass(
     ),
 )
 def test_g1b2_source_identities_are_exact(act_id: str, source_symbol: str) -> None:
-    assert runner._ACTIVE_ACT_SOURCES[act_id] == (
+    assert _demo.run_living_gauntlet_v01._ACTIVE_ACT_SOURCES[act_id] == (
         "demo.run_living_gauntlet_v01",
         source_symbol,
     )
@@ -2176,7 +2437,7 @@ def test_g1b2_claim_reclassified_as_runtime_fails_closed(claim_id: str) -> None:
     )
     claim["claim_class"] = "EXECUTED_RUNTIME"
     assert f"public_claim_classification_mismatch:{claim_id}" in (
-        runner._validate_completion_manifest_v01(manifest)
+        _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     )
 
 
@@ -2253,18 +2514,18 @@ def test_g1b2_seams_are_unique_active_and_importable(
     assert seam["source_symbol"] == symbol
     assert seam["seam_class"] == seam_class
     assert seam["current_mode"] == mode
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert seam["effect_access"] == "NONE"
-    assert getattr(importlib.import_module(seam["source_module"]), symbol)
+    assert getattr(_CURRENT_SEAM_MODULES[seam["source_module"]], symbol)
 
 
 @pytest.mark.parametrize(
     ("seam_id", "wrong_status"),
     (
-        ("kernel_abi_core", runner.STATUS_REFERENCE_ONLY),
-        ("kernel_abi_core", runner.STATUS_PLANNED_NOT_ACTIVE),
-        ("causal_consumption_core", runner.STATUS_REFERENCE_ONLY),
-        ("causal_consumption_core", runner.STATUS_PLANNED_NOT_ACTIVE),
+        ("kernel_abi_core", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+        ("kernel_abi_core", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
+        ("causal_consumption_core", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+        ("causal_consumption_core", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
     ),
 )
 def test_g1b2_seam_status_mutations_fail_closed(
@@ -2274,7 +2535,7 @@ def test_g1b2_seam_status_mutations_fail_closed(
     seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
     seam["status"] = wrong_status
     assert f"current_seam_status_mismatch:{seam_id}" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -2284,7 +2545,7 @@ def test_g1b2_active_seams_cannot_gain_effect_access(seam_id: str) -> None:
     seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
     seam["effect_access"] = "BOUNDED"
     assert f"seam_effect_access_forbidden:{seam_id}" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -2293,12 +2554,12 @@ def test_g1b2_seams_remain_active_without_effect_access() -> None:
         item["seam_id"]: item for item in _json(SEAM_INDEX_PATH)["seams"]
     }
     for seam_id in ("kernel_abi_core", "causal_consumption_core"):
-        assert seams[seam_id]["status"] == runner.STATUS_ACTIVE
+        assert seams[seam_id]["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
         assert seams[seam_id]["effect_access"] == "NONE"
 
 
 def test_kernel_abi_fixture_metrics_are_exact() -> None:
-    assert runner._collect_kernel_abi_fixture_metrics_v01() == {
+    assert _demo.run_living_gauntlet_v01._collect_kernel_abi_fixture_metrics_v01() == {
         "artifact_count": 6,
         "valid_artifact_count": 6,
         "canonical_ref_count": 6,
@@ -2318,7 +2579,7 @@ def test_kernel_abi_fixture_metrics_are_exact() -> None:
 
 
 def test_causal_fixture_metrics_are_exact() -> None:
-    metrics = runner._collect_causal_consumption_fixture_metrics_v01()
+    metrics = _demo.run_living_gauntlet_v01._collect_causal_consumption_fixture_metrics_v01()
     assert metrics["causal_source_artifact_count"] == 4
     assert metrics["causal_downstream_artifact_count"] == 4
     assert metrics["causal_ref_count"] == 4
@@ -2363,18 +2624,18 @@ def test_causal_fixture_metrics_are_exact() -> None:
     ),
 )
 def test_g1b2_collector_exception_fails_complete_report_closed(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
     collector_name: str,
     index: int,
     reason: str,
 ) -> None:
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         collector_name,
         lambda: (_ for _ in ()).throw(RuntimeError("caller text")),
     )
-    failed = runner.collect_living_gauntlet_v01()
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    failed = _collect_living_internal_for_test_v01()
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert reason in failed["validation_errors"]
     assert failed["active_act_results"][index]["real_world_effects_count"] == -1
     assert failed["counters"]["real_world_effects_count"] == -1
@@ -2397,18 +2658,18 @@ def test_g1b2_collector_exception_fails_complete_report_closed(
     ),
 )
 def test_g1b2_fixture_exception_is_sanitized(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
     metrics_name: str,
     collector_name: str,
     reason: str,
 ) -> None:
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         metrics_name,
         lambda: (_ for _ in ()).throw(OSError("caller secret")),
     )
-    result = getattr(runner, collector_name)()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    result = getattr(_demo.run_living_gauntlet_v01, collector_name)()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.errors == (reason,)
     assert result.real_world_effects_count == -1
 
@@ -2422,7 +2683,8 @@ def test_g1b2_source_identity_tampering_fails(
 ) -> None:
     mutated = deepcopy(report)
     mutated["active_act_results"][index]["source_symbol"] = "tampered"
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert f"report_active_source_identity_mismatch:{act_id}" in errors
 
@@ -2437,12 +2699,13 @@ def test_counter_tampering_cannot_hide_g1b2_failure(
     mutated = deepcopy(report)
     mutated["active_act_results"][index].update(
         {
-            "state": runner.STATUS_FAIL_CLOSED,
-            "runtime_status": runner.STATUS_FAIL_CLOSED,
+            "state": _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
+            "runtime_status": _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
             "errors": [f"{act_id}_failure"],
         }
     )
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert "report_counter_mismatch:active_act_pass_count" in errors
     assert "report_counter_mismatch:active_act_fail_closed_count" in errors
@@ -2451,10 +2714,10 @@ def test_counter_tampering_cannot_hide_g1b2_failure(
 @pytest.mark.parametrize(
     ("index", "act_id", "invalid_state"),
     (
-        (4, "domain_neutral_kernel_abi", runner.STATUS_EVIDENCE_ONLY),
-        (4, "domain_neutral_kernel_abi", runner.STATUS_PLANNED_NOT_ACTIVE),
-        (5, "causal_consumption", runner.STATUS_EVIDENCE_ONLY),
-        (5, "causal_consumption", runner.STATUS_PLANNED_NOT_ACTIVE),
+        (4, "domain_neutral_kernel_abi", _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY),
+        (4, "domain_neutral_kernel_abi", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
+        (5, "causal_consumption", _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY),
+        (5, "causal_consumption", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
     ),
 )
 def test_g1b2_active_acts_cannot_be_non_active(
@@ -2462,7 +2725,8 @@ def test_g1b2_active_acts_cannot_be_non_active(
 ) -> None:
     mutated = deepcopy(report)
     mutated["active_act_results"][index]["state"] = invalid_state
-    accepted, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    accepted = not errors
     assert accepted is False
     assert f"report_active_act_state_unknown:{act_id}" in errors
 
@@ -2471,7 +2735,7 @@ def test_g1b2_active_acts_cannot_be_non_active(
 def test_renderer_shows_both_g1b2_acts_as_active(
     report: dict[str, Any], act_id: str
 ) -> None:
-    active = runner.render_living_gauntlet_v01(report).split(
+    active = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report).split(
         "[EVIDENCE-ONLY REFERENCES]", 1
     )[0]
     assert f"act_id={act_id}" in active
@@ -2497,7 +2761,7 @@ def test_report_exposes_no_abi_or_causal_fixture_values(
     report: dict[str, Any], forbidden: str
 ) -> None:
     serialized = json.dumps(report, sort_keys=True, default=list)
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert forbidden not in serialized
     assert forbidden not in rendered
 
@@ -2505,7 +2769,7 @@ def test_report_exposes_no_abi_or_causal_fixture_values(
 def test_g1b2_report_geometry_and_prior_acts_are_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["final_status"] == runner.STATUS_PASS
+    assert report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert report["counters"]["real_world_effects_count"] == 0
     assert _active_result(report, "generic_integrity_replay")["act_id"] == (
         "generic_integrity_replay"
@@ -2533,8 +2797,8 @@ def test_current_manifest_does_not_describe_active_contract_as_unimplemented(
     )
     assert f"{contract} remains unimplemented" not in statements
     assert f"{contract} is unimplemented" not in statements
-    assert runner._active_contract_described_unimplemented(
-        runner._ACTIVE_ACT_IDS, manifest["limitations"]
+    assert _demo.run_living_gauntlet_v01._active_contract_described_unimplemented(
+        _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS, manifest["limitations"]
     ) is False
 
 
@@ -2561,7 +2825,7 @@ def test_stale_active_contract_limitation_fails_closed(
     )
     limitation["statement"] = stale_statement
     assert "completion_manifest_active_contract_described_unimplemented" in (
-        runner._validate_completion_manifest_v01(manifest)
+        _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     )
 
 
@@ -2571,7 +2835,7 @@ def test_supplier_adapter_seam_acknowledges_active_abi() -> None:
         for item in _json(SEAM_INDEX_PATH)["seams"]
         if item["seam_id"] == "supplier_water_filter_abi_adapter"
     )
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert seam["source_module"] == (
         "hedgehog.domains.supplier_water_filter.kernel_adapter_v01"
     )
@@ -2593,7 +2857,7 @@ def test_stale_supplier_adapter_seam_note_fails_closed() -> None:
         "no ABI is implemented."
     )
     assert "integration_seam_active_abi_described_absent" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -2613,7 +2877,7 @@ def test_release_coherence_hardening_preserves_g1b2_active_results(
 ) -> None:
     by_id = {item["act_id"]: item for item in report["active_act_results"]}
     for act_id in ("domain_neutral_kernel_abi", "causal_consumption"):
-        assert by_id[act_id]["state"] == runner.STATUS_PASS
+        assert by_id[act_id]["state"] == _demo.run_living_gauntlet_v01.STATUS_PASS
         assert by_id[act_id]["root_authority_preserved"] is True
         assert by_id[act_id]["real_world_effects_count"] == 0
 
@@ -2634,7 +2898,7 @@ def test_release_coherence_hardening_preserves_g1b2_active_results(
 def test_g1b2_fixture_external_and_effect_counts_remain_zero(
     metrics_name: str, counter: str
 ) -> None:
-    assert getattr(runner, metrics_name)()[counter] == 0
+    assert getattr(_demo.run_living_gauntlet_v01, metrics_name)()[counter] == 0
 
 
 # G1-C1 Transition Registry and deterministic Root Decision Kernel regressions.
@@ -2648,7 +2912,7 @@ def test_g1c1_active_act_identity_and_counter(act_id, symbol, counter, report):
     row = next(item for item in report["active_act_results"] if item["act_id"] == act_id)
     assert row["source_module"] == "demo.run_living_gauntlet_v01"
     assert row["source_symbol"] == symbol
-    assert row["state"] == runner.STATUS_PASS
+    assert row["state"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert row["executed"] is True
     assert report["counters"][counter] == 1
 
@@ -2678,7 +2942,7 @@ def test_g1c1_claim_changed_to_conformance_fails(claim_id):
     manifest = _json(COMPLETION_MANIFEST_PATH)
     claim = next(item for item in manifest["public_claims"] if item["claim_id"] == claim_id)
     claim["claim_class"] = "EXECUTED_CONFORMANCE"
-    assert f"public_claim_classification_mismatch:{claim_id}" in runner._validate_completion_manifest_v01(manifest)
+    assert f"public_claim_classification_mismatch:{claim_id}" in _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
 
 
 def test_g1c1_planned_claim_preserves_only_current_unfinished_act():
@@ -2709,7 +2973,7 @@ def test_g1c1_stale_manifest_absence_wording_fails(act_id, phrase, reason):
     manifest = _json(COMPLETION_MANIFEST_PATH)
     assert act_id in {item["act_id"] for item in manifest["active_runtime_acts"]}
     manifest["limitations"].append({"limitation_id": f"stale:{act_id}", "statement": phrase})
-    assert reason in runner._validate_completion_manifest_v01(manifest)
+    assert reason in _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
 
 
 @pytest.mark.parametrize("seam_id,module,symbol,seam_class,authority", (
@@ -2718,7 +2982,7 @@ def test_g1c1_stale_manifest_absence_wording_fails(act_id, phrase, reason):
 ))
 def test_g1c1_seam_exact_active_contract(seam_id, module, symbol, seam_class, authority):
     seam = next(item for item in _json(SEAM_INDEX_PATH)["seams"] if item["seam_id"] == seam_id)
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert seam["source_module"] == module
     assert seam["source_symbol"] == symbol
     assert seam["seam_class"] == seam_class
@@ -2727,29 +2991,29 @@ def test_g1c1_seam_exact_active_contract(seam_id, module, symbol, seam_class, au
 
 
 @pytest.mark.parametrize("seam_id,status", (
-    ("transition_registry", runner.STATUS_REFERENCE_ONLY),
-    ("transition_registry", runner.STATUS_PLANNED_NOT_ACTIVE),
-    ("root_decision_kernel", runner.STATUS_REFERENCE_ONLY),
-    ("root_decision_kernel", runner.STATUS_PLANNED_NOT_ACTIVE),
+    ("transition_registry", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+    ("transition_registry", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
+    ("root_decision_kernel", _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY),
+    ("root_decision_kernel", _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
 ))
 def test_g1c1_active_seam_status_mutation_fails(seam_id, status):
     index = _json(SEAM_INDEX_PATH)
     next(item for item in index["seams"] if item["seam_id"] == seam_id)["status"] = status
-    assert f"current_seam_status_mismatch:{seam_id}" in runner._validate_integration_seam_index_v01(index)
+    assert f"current_seam_status_mismatch:{seam_id}" in _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
 
 
 @pytest.mark.parametrize("seam_id", ("transition_registry", "root_decision_kernel"))
 def test_g1c1_active_seam_effect_access_mutation_fails(seam_id):
     index = _json(SEAM_INDEX_PATH)
     next(item for item in index["seams"] if item["seam_id"] == seam_id)["effect_access"] = "HANDLE"
-    assert f"seam_effect_access_forbidden:{seam_id}" in runner._validate_integration_seam_index_v01(index)
+    assert f"seam_effect_access_forbidden:{seam_id}" in _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
 
 
 def test_root_decision_seam_authority_status_mutation_fails():
     index = _json(SEAM_INDEX_PATH)
     seam = next(item for item in index["seams"] if item["seam_id"] == "root_decision_kernel")
     seam["authority_status"] = "NON_ROOT_ADVISORY"
-    assert "current_seam_contract_mismatch:root_decision_kernel" in runner._validate_integration_seam_index_v01(index)
+    assert "current_seam_contract_mismatch:root_decision_kernel" in _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
 
 
 @pytest.mark.parametrize("seam_id,note,reason", (
@@ -2761,17 +3025,17 @@ def test_root_decision_seam_authority_status_mutation_fails():
 def test_g1c1_active_seam_stale_note_fails(seam_id, note, reason):
     index = _json(SEAM_INDEX_PATH)
     next(item for item in index["seams"] if item["seam_id"] == seam_id)["notes"] = note
-    assert reason in runner._validate_integration_seam_index_v01(index)
+    assert reason in _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
 
 
 def test_g1c1_seams_and_effect_firewall_boundary_remain_exact():
     seams = _json(SEAM_INDEX_PATH)["seams"]
     by_id = {item["seam_id"]: item for item in seams}
-    assert by_id["transition_registry"]["status"] == runner.STATUS_ACTIVE
-    assert by_id["root_decision_kernel"]["status"] == runner.STATUS_ACTIVE
+    assert by_id["transition_registry"]["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
+    assert by_id["root_decision_kernel"]["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert by_id["transition_registry"]["effect_access"] == "NONE"
     assert by_id["root_decision_kernel"]["effect_access"] == "NONE"
-    active = [item for item in seams if item["status"] == runner.STATUS_ACTIVE]
+    active = [item for item in seams if item["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE]
     assert sum(item["effect_access"] != "NONE" for item in active) == 1
     firewall = by_id["effect_firewall"]
     assert firewall["effect_access"] == "BOUNDED_EFFECT_HANDLE_OWNER"
@@ -2785,7 +3049,7 @@ def test_g1c1_seams_and_effect_firewall_boundary_remain_exact():
     ("registry_mutation_rejected_count", 1),
 ))
 def test_transition_registry_fixture_metrics(key, expected):
-    assert runner._collect_transition_registry_fixture_metrics_v01()[key] == expected
+    assert _demo.run_living_gauntlet_v01._collect_transition_registry_fixture_metrics_v01()[key] == expected
 
 
 @pytest.mark.parametrize("key,expected", (
@@ -2796,7 +3060,7 @@ def test_transition_registry_fixture_metrics(key, expected):
     ("effect_requested_count", 0),
 ))
 def test_root_decision_fixture_metrics(key, expected):
-    assert runner._collect_root_decision_fixture_metrics_v01()[key] == expected
+    assert _demo.run_living_gauntlet_v01._collect_root_decision_fixture_metrics_v01()[key] == expected
 
 
 @pytest.mark.parametrize("needle", (
@@ -2805,7 +3069,7 @@ def test_root_decision_fixture_metrics(key, expected):
 ))
 def test_g1c1_report_and_render_hide_sensitive_fixture_details(needle, report):
     serialized = json.dumps(report, sort_keys=True)
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert needle not in serialized
     assert needle not in rendered
 
@@ -2817,11 +3081,12 @@ def test_g1c1_report_and_render_hide_sensitive_fixture_details(needle, report):
 def test_g1c1_failure_counter_tampering_cannot_restore_pass(act_id, reason, report):
     mutated = deepcopy(report)
     row = next(item for item in mutated["active_act_results"] if item["act_id"] == act_id)
-    row.update(state=runner.STATUS_FAIL_CLOSED, runtime_status=runner.STATUS_FAIL_CLOSED, root_authority_preserved=False, no_real_connector_or_action=False, real_world_effects_count=-1, errors=(reason,))
-    mutated["counters"] = runner._derive_report_counters_v01(mutated["active_act_results"], mutated["evidence_only_entries"], mutated["planned_entries"])
+    row.update(state=_demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED, runtime_status=_demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED, root_authority_preserved=False, no_real_connector_or_action=False, real_world_effects_count=-1, errors=(reason,))
+    mutated["counters"] = _demo.run_living_gauntlet_v01._derive_report_counters_v01(mutated["active_act_results"], mutated["evidence_only_entries"], mutated["planned_entries"])
     mutated["counters"]["active_act_pass_count"] = 9
-    mutated["final_status"] = runner.STATUS_PASS
-    valid, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    mutated["final_status"] = _demo.run_living_gauntlet_v01.STATUS_PASS
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    valid = not errors
     assert valid is False
     assert f"report_active_act_state_not_pass:{act_id}" in errors
 
@@ -2830,15 +3095,15 @@ def test_g1c1_failure_counter_tampering_cannot_restore_pass(act_id, reason, repo
     ("collect_transition_registry_gauntlet_act_v01", "transition_registry", "transition_registry_collector_failed"),
     ("collect_root_decision_kernel_gauntlet_act_v01", "root_decision_kernel", "root_decision_kernel_collector_failed"),
 ))
-def test_g1c1_collector_exception_fails_complete_report_closed(collector, act_id, reason, monkeypatch):
+def test_g1c1_collector_exception_fails_complete_report_closed(collector, act_id, reason, _patches):
     def explode():
         raise RuntimeError("CALLER_SECRET")
 
-    monkeypatch.setattr(runner, collector, explode)
-    failed = runner.collect_living_gauntlet_v01()
+    _patches(_demo.run_living_gauntlet_v01, collector, explode)
+    failed = _collect_living_internal_for_test_v01()
     row = next(item for item in failed["active_act_results"] if item["act_id"] == act_id)
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert row["state"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    assert row["state"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert row["real_world_effects_count"] == -1
     assert row["errors"] == (reason,)
     assert "CALLER_SECRET" not in json.dumps(failed)
@@ -2849,7 +3114,7 @@ def test_g1c1_collector_exception_fails_complete_report_closed(collector, act_id
 
 @pytest.fixture(scope="module")
 def effect_metrics() -> dict[str, Any]:
-    return runner._collect_effect_firewall_fixture_metrics_v01()
+    return _demo.run_living_gauntlet_v01._collect_effect_firewall_fixture_metrics_v01()
 
 
 def test_g1c2_effect_act_is_active_and_passes(report: dict[str, Any]) -> None:
@@ -2865,15 +3130,15 @@ def test_g1c2_effect_act_is_active_and_passes(report: dict[str, Any]) -> None:
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": "collect_effect_firewall_gauntlet_act_v01",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
 
 
 def test_g1c2_geometry_is_exact(report: dict[str, Any]) -> None:
-    assert report["final_status"] == runner.STATUS_PASS
+    assert report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert report["validation_errors"] == ()
     assert report["counters"]["active_act_fail_closed_count"] == 0
     assert report["counters"]["effect_firewall_execution_count"] == 1
@@ -2881,7 +3146,7 @@ def test_g1c2_geometry_is_exact(report: dict[str, Any]) -> None:
 
 
 def test_g1c2_effect_source_identity_is_exact() -> None:
-    assert runner._ACTIVE_ACT_SOURCES["effect_firewall"] == (
+    assert _demo.run_living_gauntlet_v01._ACTIVE_ACT_SOURCES["effect_firewall"] == (
         "demo.run_living_gauntlet_v01",
         "collect_effect_firewall_gauntlet_act_v01",
     )
@@ -2905,7 +3170,7 @@ def test_g1c2_effect_claim_has_exact_references() -> None:
 
 @pytest.mark.parametrize(
     "claim_class",
-    ("EXECUTED_CONFORMANCE", runner.STATUS_EVIDENCE_ONLY, runner.STATUS_PLANNED_NOT_ACTIVE),
+    ("EXECUTED_CONFORMANCE", _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY, _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE),
 )
 def test_g1c2_effect_claim_reclassification_fails_closed(claim_class: str) -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
@@ -2916,13 +3181,13 @@ def test_g1c2_effect_claim_reclassification_fails_closed(claim_class: str) -> No
     )
     claim["claim_class"] = claim_class
     assert "public_claim_classification_mismatch:claim_effect_firewall_runtime_execution" in (
-        runner._validate_completion_manifest_v01(manifest)
+        _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     )
 
 
 def test_g1c2_effect_act_is_removed_from_all_nonactive_groups() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
-    report = runner.collect_living_gauntlet_v01()
+    report = _collect_living_internal_for_test_v01()
     assert "effect_firewall" not in {
         item["act_id"] for item in manifest["planned_gate1_acts"]
     }
@@ -3014,7 +3279,7 @@ def test_g1c2_stale_manifest_absence_wording_fails_closed(phrase: str) -> None:
         {"limitation_id": "limitation:stale:effect", "statement": phrase}
     )
     assert "completion_manifest_active_effect_firewall_described_unimplemented" in (
-        runner._validate_completion_manifest_v01(manifest)
+        _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     )
 
 
@@ -3032,13 +3297,13 @@ def test_g1c2_honest_no_real_effect_wording_remains_valid(statement: str) -> Non
     manifest["limitations"].append(
         {"limitation_id": "limitation:honest:effect", "statement": statement}
     )
-    assert runner._validate_completion_manifest_v01(manifest) == ()
+    assert _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest) == ()
 
 
 @pytest.mark.parametrize(
     ("field", "expected"),
     (
-        ("status", runner.STATUS_ACTIVE),
+        ("status", _demo.run_living_gauntlet_v01.STATUS_ACTIVE),
         ("source_module", "hedgehog.kernel.effect_firewall_v01"),
         ("source_symbol", "execute_mock_effect_v01"),
         ("seam_class", "KERNEL_EFFECT_BOUNDARY"),
@@ -3063,8 +3328,8 @@ def test_g1c2_effect_seam_is_importable() -> None:
         for item in _json(SEAM_INDEX_PATH)["seams"]
         if item["seam_id"] == "effect_firewall"
     )
-    module = importlib.import_module(seam["source_module"])
-    assert getattr(module, seam["source_symbol"]) is runner.execute_mock_effect_v01
+    module = _CURRENT_SEAM_MODULES[seam["source_module"]]
+    assert getattr(module, seam["source_symbol"]) is _demo.run_living_gauntlet_v01.execute_mock_effect_v01
 
 
 def test_g1c2_exclusive_effect_owner_remains_exact() -> None:
@@ -3072,7 +3337,7 @@ def test_g1c2_exclusive_effect_owner_remains_exact() -> None:
     owners = [
         item
         for item in seams
-        if item["status"] == runner.STATUS_ACTIVE
+        if item["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
         and item["effect_access"] != "NONE"
     ]
     assert [(item["seam_id"], item["effect_access"]) for item in owners] == [
@@ -3099,19 +3364,19 @@ def test_g1c2_nonfirewall_seam_cannot_gain_effect_access(seam_id: str) -> None:
     index = _json(SEAM_INDEX_PATH)
     seam = next(item for item in index["seams"] if item["seam_id"] == seam_id)
     seam["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
-    errors = runner._validate_integration_seam_index_v01(index)
+    errors = _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     assert "integration_seam_non_firewall_effect_access_forbidden" in errors
     assert "integration_seam_effect_owner_count_invalid" in errors
 
 
 @pytest.mark.parametrize(
-    "status", (runner.STATUS_REFERENCE_ONLY, runner.STATUS_PLANNED_NOT_ACTIVE)
+    "status", (_demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY, _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE)
 )
 def test_g1c2_firewall_seam_cannot_become_inactive(status: str) -> None:
     index = _json(SEAM_INDEX_PATH)
     seam = next(item for item in index["seams"] if item["seam_id"] == "effect_firewall")
     seam["status"] = status
-    errors = runner._validate_integration_seam_index_v01(index)
+    errors = _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     assert "current_seam_status_mismatch:effect_firewall" in errors
     assert "integration_seam_effect_owner_identity_invalid" in errors
 
@@ -3130,7 +3395,7 @@ def test_g1c2_firewall_seam_contract_mutation_fails(mutation: dict[str, str]) ->
     index = _json(SEAM_INDEX_PATH)
     seam = next(item for item in index["seams"] if item["seam_id"] == "effect_firewall")
     seam.update(mutation)
-    assert runner._validate_integration_seam_index_v01(index)
+    assert _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
 
 
 @pytest.mark.parametrize(
@@ -3147,7 +3412,7 @@ def test_g1c2_firewall_seam_stale_note_fails(note: str) -> None:
     seam = next(item for item in index["seams"] if item["seam_id"] == "effect_firewall")
     seam["notes"] = note
     assert "integration_seam_active_effect_firewall_described_absent" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -3200,29 +3465,29 @@ def test_g1c2_report_and_render_hide_effect_fixture_details(
     report: dict[str, Any], needle: str
 ) -> None:
     serialized = json.dumps(report, sort_keys=True)
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert needle not in serialized
     assert needle not in rendered
 
 
 def test_g1c2_renderer_shows_effect_act(report: dict[str, Any]) -> None:
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert "act_id=effect_firewall | state=PASS" in rendered
 
 
 def test_g1c2_effect_collector_exception_fails_complete_report_closed(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def explode() -> None:
         raise RuntimeError("CALLER_SECRET_EFFECT")
 
-    monkeypatch.setattr(runner, "collect_effect_firewall_gauntlet_act_v01", explode)
-    failed = runner.collect_living_gauntlet_v01()
+    _patches(_demo.run_living_gauntlet_v01, "collect_effect_firewall_gauntlet_act_v01", explode)
+    failed = _collect_living_internal_for_test_v01()
     row = next(
         item for item in failed["active_act_results"] if item["act_id"] == "effect_firewall"
     )
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
-    assert row["state"] == runner.STATUS_FAIL_CLOSED
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    assert row["state"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert row["real_world_effects_count"] == -1
     assert row["errors"] == ("effect_firewall_collector_failed",)
     assert "CALLER_SECRET_EFFECT" not in json.dumps(failed)
@@ -3238,14 +3503,14 @@ def test_g1c2_counter_tampering_cannot_hide_effect_failure(
         if item["act_id"] == "effect_firewall"
     )
     row.update(
-        state=runner.STATUS_FAIL_CLOSED,
-        runtime_status=runner.STATUS_FAIL_CLOSED,
+        state=_demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
+        runtime_status=_demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
         root_authority_preserved=False,
         no_real_connector_or_action=False,
         real_world_effects_count=-1,
         errors=("effect_firewall_collector_failed",),
     )
-    mutated["counters"] = runner._derive_report_counters_v01(
+    mutated["counters"] = _demo.run_living_gauntlet_v01._derive_report_counters_v01(
         mutated["active_act_results"],
         mutated["evidence_only_entries"],
         mutated["planned_entries"],
@@ -3254,8 +3519,9 @@ def test_g1c2_counter_tampering_cannot_hide_effect_failure(
         mutated["active_act_results"]
     )
     mutated["counters"]["effect_firewall_execution_count"] = 1
-    mutated["final_status"] = runner.STATUS_PASS
-    valid, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    mutated["final_status"] = _demo.run_living_gauntlet_v01.STATUS_PASS
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    valid = not errors
     assert valid is False
     assert "report_active_act_state_not_pass:effect_firewall" in errors
     assert "report_real_world_effects_nonzero:effect_firewall" in errors
@@ -3269,22 +3535,23 @@ def test_g1c2_source_identity_tampering_fails(report: dict[str, Any]) -> None:
         if item["act_id"] == "effect_firewall"
     )
     row["source_symbol"] = "forged_collector"
-    valid, errors = runner.validate_living_gauntlet_report_v01(mutated)
+    errors = _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(mutated)
+    valid = not errors
     assert valid is False
     assert "report_active_source_identity_mismatch:effect_firewall" in errors
 
 
 def test_g1c2_two_reports_and_renders_are_identical() -> None:
-    first = runner.collect_living_gauntlet_v01()
-    second = runner.collect_living_gauntlet_v01()
+    first = _collect_living_internal_for_test_v01()
+    second = _collect_living_internal_for_test_v01()
     assert first == second
-    assert runner.render_living_gauntlet_v01(first) == runner.render_living_gauntlet_v01(second)
+    assert _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(first) == _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(second)
 
 
 def test_g1d1_runner_version_and_geometry_are_exact(
     report: dict[str, Any],
 ) -> None:
-    assert report["final_status"] == runner.STATUS_PASS
+    assert report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert report["counters"]["generic_integrity_replay_execution_count"] == 1
 
 
@@ -3419,14 +3686,14 @@ def test_g1d1_stale_manifest_absence_wording_fails(phrase: str) -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
     manifest["non_claims"].append(phrase)
     assert "completion_manifest_active_airline_adapter_described_unimplemented" in (
-        runner._validate_completion_manifest_v01(manifest)
+        _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
     )
 
 
 @pytest.mark.parametrize(
     "field,expected",
     (
-        ("status", runner.STATUS_ACTIVE),
+        ("status", _demo.run_living_gauntlet_v01.STATUS_ACTIVE),
         ("authority_status", "NON_ROOT_FROZEN_DOMAIN_ADAPTER"),
         ("current_mode", "PURE_IN_MEMORY_FROZEN_AIRLINE_PROJECTION"),
         ("effect_access", "NONE"),
@@ -3450,7 +3717,7 @@ def test_g1d1_airline_adapter_seam_remains_active_without_effect_access() -> Non
     seam = next(
         item for item in seams if item["seam_id"] == "generic_integrity_replay_adapter"
     )
-    assert seam["status"] == runner.STATUS_ACTIVE
+    assert seam["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert seam["effect_access"] == "NONE"
     assert seam["source_module"] == "hedgehog.domains.airline.kernel_adapter_v01"
 
@@ -3464,14 +3731,14 @@ def test_g1d1_airline_reference_seams_remain_reference_only() -> None:
         "airline_crypto_artifact_seal_reference",
         "airline_sealed_trace_replay_reference",
     ):
-        assert seams[seam_id]["status"] == runner.STATUS_REFERENCE_ONLY
+        assert seams[seam_id]["status"] == _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY
 
 
 def test_g1d1_effect_firewall_remains_only_effect_owner() -> None:
     owners = [
         item
         for item in _json(SEAM_INDEX_PATH)["seams"]
-        if item["status"] == runner.STATUS_ACTIVE and item["effect_access"] != "NONE"
+        if item["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE and item["effect_access"] != "NONE"
     ]
     assert [(item["seam_id"], item["effect_access"]) for item in owners] == [
         ("effect_firewall", "BOUNDED_EFFECT_HANDLE_OWNER")
@@ -3484,7 +3751,7 @@ def test_g1d1_adapter_cannot_gain_effect_access() -> None:
         item for item in index["seams"] if item["seam_id"] == "generic_integrity_replay_adapter"
     )
     seam["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
-    errors = runner._validate_integration_seam_index_v01(index)
+    errors = _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     assert "integration_seam_domain_adapter_effect_access_forbidden" in errors
 
 
@@ -3495,7 +3762,7 @@ def test_g1d1_adapter_cannot_claim_root_authority() -> None:
     )
     seam["authority_status"] = "ROOT_DECISION_AUTHORITY"
     assert "current_seam_contract_mismatch:generic_integrity_replay_adapter" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -3506,7 +3773,7 @@ def test_g1d1_adapter_source_mutation_has_stable_reason() -> None:
     )
     seam["source_module"] = "wrong.module"
     assert "integration_seam_airline_adapter_source_mismatch" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
@@ -3517,24 +3784,24 @@ def test_g1d1_stale_adapter_seam_note_fails() -> None:
     )
     seam["notes"] = "Airline adapter is unimplemented."
     assert "integration_seam_active_airline_adapter_described_absent" in (
-        runner._validate_integration_seam_index_v01(index)
+        _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     )
 
 
 def test_g1d1_adapter_fixture_failure_fails_generic_act_closed(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ) -> None:
     def fail_fixture() -> None:
         raise RuntimeError("test-only adapter failure")
 
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_validate_frozen_airline_kernel_adapter_fixture_v01",
         fail_fixture,
     )
-    result = runner.collect_generic_integrity_replay_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
-    assert result.runtime_status == runner.STATUS_FAIL_CLOSED
+    result = _demo.run_living_gauntlet_v01.collect_generic_integrity_replay_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    assert result.runtime_status == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.real_world_effects_count == -1
     assert result.errors == ("generic_integrity_replay_failed",)
 
@@ -3554,7 +3821,7 @@ def test_g1d1_report_and_render_hide_adapter_details(
     needle: str,
     report: dict[str, Any],
 ) -> None:
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert needle not in repr(report)
     assert needle not in rendered
 
@@ -3563,7 +3830,7 @@ def test_g1d1_zero_external_and_effect_counters_remain_exact(
     report: dict[str, Any],
 ) -> None:
     counters = report["counters"]
-    assert frozenset(counters) == runner._COUNTER_FIELD_NAMES
+    assert frozenset(counters) == _demo.run_living_gauntlet_v01._COUNTER_FIELD_NAMES
     assert "provider_call_count" not in counters
     assert "network_call_count" not in counters
     assert "gemini_called_count" not in counters
@@ -3574,8 +3841,8 @@ def test_g1d1_zero_external_and_effect_counters_remain_exact(
         for item in report["active_act_results"]
         if item["act_id"] == "generic_integrity_replay"
     )
-    assert result["state"] == runner.STATUS_PASS
-    assert result["runtime_status"] == runner.STATUS_PASS
+    assert result["state"] == _demo.run_living_gauntlet_v01.STATUS_PASS
+    assert result["runtime_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert result["executed"] is True
     assert result["root_authority_preserved"] is True
     assert result["no_real_connector_or_action"] is True
@@ -3584,7 +3851,7 @@ def test_g1d1_zero_external_and_effect_counters_remain_exact(
 
 
 def test_g1d2_runner_version_and_geometry_are_exact(report: dict[str, Any]) -> None:
-    assert report["final_status"] == runner.STATUS_PASS
+    assert report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert report["validation_errors"] == ()
     assert report["counters"]["generic_multiroot_execution_count"] == 1
     assert report["counters"]["supplier_water_filter_portability_execution_count"] == 1
@@ -3630,7 +3897,7 @@ def test_g1d2_active_records_are_exact(act_id, claim_id, focused_test, source_sy
         "focused_test": focused_test,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": source_symbol,
-        "status": runner.STATUS_ACTIVE,
+        "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
     }
 
 
@@ -3707,7 +3974,7 @@ def test_g1d2_limitations_are_honest(limitation_id, phrases):
 def test_g1d2_stale_unimplemented_wording_fails(phrase, reason):
     manifest = _json(COMPLETION_MANIFEST_PATH)
     manifest["non_claims"].append(phrase)
-    assert reason in runner._validate_completion_manifest_v01(manifest)
+    assert reason in _demo.run_living_gauntlet_v01._validate_completion_manifest_v01(manifest)
 
 
 @pytest.mark.parametrize(
@@ -3723,7 +3990,7 @@ def test_g1d2_stale_unimplemented_wording_fails(phrase, reason):
                 "seam_class": "DOMAIN_ADAPTER",
                 "source_module": "hedgehog.domains.supplier_water_filter.kernel_adapter_v01",
                 "source_symbol": "build_supplier_water_filter_kernel_adapter_result_v01",
-                "status": runner.STATUS_ACTIVE,
+                "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
             },
         ),
         (
@@ -3736,7 +4003,7 @@ def test_g1d2_stale_unimplemented_wording_fails(phrase, reason):
                 "seam_class": "KERNEL_ROOT_BOUNDARY",
                 "source_module": "hedgehog.kernel.multiroot_v01",
                 "source_symbol": "validate_multiroot_v01",
-                "status": runner.STATUS_ACTIVE,
+                "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
             },
         ),
     ),
@@ -3753,16 +4020,16 @@ def test_g1d2_seam_geometry_and_effect_owner_are_exact() -> None:
     seams = _json(SEAM_INDEX_PATH)["seams"]
     assert next(
         item for item in seams if item["seam_id"] == "multiroot_envelope"
-    )["status"] == runner.STATUS_ACTIVE
+    )["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     assert next(
         item
         for item in seams
         if item["seam_id"] == "supplier_water_filter_abi_adapter"
-    )["status"] == runner.STATUS_ACTIVE
+    )["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
     owners = [
         (item["seam_id"], item["effect_access"])
         for item in seams
-        if item["status"] == runner.STATUS_ACTIVE and item["effect_access"] != "NONE"
+        if item["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE and item["effect_access"] != "NONE"
     ]
     assert owners == [("effect_firewall", "BOUNDED_EFFECT_HANDLE_OWNER")]
 
@@ -3783,14 +4050,14 @@ def test_g1d2_supplier_adapter_cannot_gain_effect_access() -> None:
         item for item in index["seams"] if item["seam_id"] == "supplier_water_filter_abi_adapter"
     )
     seam["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
-    errors = runner._validate_integration_seam_index_v01(index)
+    errors = _demo.run_living_gauntlet_v01._validate_integration_seam_index_v01(index)
     assert "integration_seam_domain_adapter_effect_access_forbidden" in errors
 
 
 def test_g1d2_airline_reference_remains_evidence_only() -> None:
     manifest = _json(COMPLETION_MANIFEST_PATH)
     assert manifest["evidence_only_references"][0]["act_id"] == "airline_all_real_frozen_reference"
-    assert manifest["evidence_only_references"][0]["status"] == runner.STATUS_EVIDENCE_ONLY
+    assert manifest["evidence_only_references"][0]["status"] == _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY
 
 
 @pytest.mark.parametrize(
@@ -3809,15 +4076,15 @@ def test_g1d2_active_result_is_safe_pass(report, act_id, expected_symbol):
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_living_gauntlet_v01",
         "source_symbol": expected_symbol,
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
 
 
-def test_g1d2_supplier_collector_is_called_exactly_once(monkeypatch):
-    original = runner.collect_full_wow_v1_2_product_trace
+def test_g1d2_supplier_collector_is_called_exactly_once(_patches):
+    original = _demo.run_living_gauntlet_v01.collect_full_wow_v1_2_product_trace
     calls = 0
 
     def counted():
@@ -3825,67 +4092,67 @@ def test_g1d2_supplier_collector_is_called_exactly_once(monkeypatch):
         calls += 1
         return original()
 
-    monkeypatch.setattr(runner, "collect_full_wow_v1_2_product_trace", counted)
-    result = runner.collect_supplier_water_filter_portability_gauntlet_act_v01()
+    _patches(_demo.run_living_gauntlet_v01, "collect_full_wow_v1_2_product_trace", counted)
+    result = _demo.run_living_gauntlet_v01.collect_supplier_water_filter_portability_gauntlet_act_v01()
     assert calls == 1
-    assert result.state == runner.STATUS_PASS
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_PASS
 
 
-def test_g1d2_source_collector_failure_fails_supplier_act_closed(monkeypatch):
+def test_g1d2_source_collector_failure_fails_supplier_act_closed(_patches):
     def fail():
         raise RuntimeError("test-only")
 
-    monkeypatch.setattr(runner, "collect_full_wow_v1_2_product_trace", fail)
-    result = runner.collect_supplier_water_filter_portability_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    _patches(_demo.run_living_gauntlet_v01, "collect_full_wow_v1_2_product_trace", fail)
+    result = _demo.run_living_gauntlet_v01.collect_supplier_water_filter_portability_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.real_world_effects_count == -1
     assert result.errors == ("supplier_water_filter_runtime_failed",)
 
 
-def test_g1d2_adapter_failure_fails_supplier_act_closed(monkeypatch):
+def test_g1d2_adapter_failure_fails_supplier_act_closed(_patches):
     def fail(*, source_report):
         raise ValueError("test-only")
 
-    monkeypatch.setattr(
-        runner.supplier_water_filter_adapter,
+    _patches(
+        _demo.run_living_gauntlet_v01.supplier_water_filter_adapter,
         "build_supplier_water_filter_kernel_adapter_result_v01",
         fail,
     )
-    result = runner.collect_supplier_water_filter_portability_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    result = _demo.run_living_gauntlet_v01.collect_supplier_water_filter_portability_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.real_world_effects_count == -1
 
 
-def test_g1d2_forged_supplier_multiroot_pass_fails_closed(monkeypatch):
-    source = runner.collect_full_wow_v1_2_product_trace()
+def test_g1d2_forged_supplier_multiroot_pass_fails_closed(_patches):
+    source = _demo.run_living_gauntlet_v01.collect_full_wow_v1_2_product_trace()
     built = (
-        runner.supplier_water_filter_adapter.
+        _demo.run_living_gauntlet_v01.supplier_water_filter_adapter.
         build_supplier_water_filter_kernel_adapter_result_v01(
             source_report=source
         )
     )
     forged_outcome = replace(
         built.multiroot_outcome,
-        outcome_status=runner.multiroot.STATUS_PASS,
+        outcome_status=_demo.run_living_gauntlet_v01.multiroot.STATUS_PASS,
         mixed_outcomes_visible=False,
         accepted_root_ids=(
-            runner.supplier_water_filter_adapter.OWNER_ROOT_ID,
+            _demo.run_living_gauntlet_v01.supplier_water_filter_adapter.OWNER_ROOT_ID,
         ),
         non_accepted_root_ids=(),
     )
     forged = replace(built, multiroot_outcome=forged_outcome)
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_full_wow_v1_2_product_trace",
         lambda: source,
     )
-    monkeypatch.setattr(
-        runner.supplier_water_filter_adapter,
+    _patches(
+        _demo.run_living_gauntlet_v01.supplier_water_filter_adapter,
         "build_supplier_water_filter_kernel_adapter_result_v01",
         lambda *, source_report: forged,
     )
-    result = runner.collect_supplier_water_filter_portability_gauntlet_act_v01()
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    result = _demo.run_living_gauntlet_v01.collect_supplier_water_filter_portability_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert result.real_world_effects_count == -1
 
 
@@ -3901,12 +4168,12 @@ def test_g1d2_forged_supplier_multiroot_pass_fails_closed(monkeypatch):
 def test_g1d2_generic_multiroot_fixture_statuses_are_visible(
     root_ids, classes, expected
 ):
-    outcome = runner._neutral_multiroot_outcome_v01(
+    outcome = _demo.run_living_gauntlet_v01._neutral_multiroot_outcome_v01(
         transaction_id=f"transaction:g1d2:{expected.lower()}:{len(root_ids)}",
         root_ids=root_ids,
         outcome_classes=classes,
     )
-    validation = runner.multiroot.validate_multiroot_v01(outcome)
+    validation = _demo.run_living_gauntlet_v01.multiroot.validate_multiroot_v01(outcome)
     assert outcome.outcome_status == expected
     assert validation.final_status == expected
     assert validation.authority_transfer_count == 0
@@ -3916,13 +4183,13 @@ def test_g1d2_generic_multiroot_fixture_statuses_are_visible(
 
 @pytest.mark.parametrize("attack", ("unknown", "duplicate", "reserved"))
 def test_g1d2_invalid_root_geometry_fails_closed(attack):
-    base = runner._neutral_multiroot_outcome_v01(
+    base = _demo.run_living_gauntlet_v01._neutral_multiroot_outcome_v01(
         transaction_id="transaction:g1d2:attacks",
         root_ids=("root:a", "root:b", "root:c"),
         outcome_classes=("ACCEPTED",) * 3,
     )
     if attack == "unknown":
-        decision = runner._neutral_root_decision_v01(
+        decision = _demo.run_living_gauntlet_v01._neutral_root_decision_v01(
             transaction_id=base.transaction_id,
             root_id="root:unknown",
             outcome_class="ACCEPTED",
@@ -3932,13 +4199,13 @@ def test_g1d2_invalid_root_geometry_fails_closed(attack):
         attacked = replace(base, expected_root_ids=("root:a", "root:a", "root:c"))
     else:
         attacked = replace(base, expected_root_ids=("root:superroot", "root:b", "root:c"))
-    assert runner.multiroot.validate_multiroot_v01(attacked).final_status == "FAIL_CLOSED"
+    assert _demo.run_living_gauntlet_v01.multiroot.validate_multiroot_v01(attacked).final_status == "FAIL_CLOSED"
 
 
 def test_g1d2_generic_fixture_matrix_passes_with_visible_mixed_and_incomplete():
-    result = runner.collect_generic_multiroot_gauntlet_act_v01()
-    assert result.state == runner.STATUS_PASS
-    assert result.runtime_status == runner.STATUS_PASS
+    result = _demo.run_living_gauntlet_v01.collect_generic_multiroot_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_PASS
+    assert result.runtime_status == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert result.root_authority_preserved
     assert result.real_world_effects_count == 0
 
@@ -3957,13 +4224,13 @@ def test_g1d2_generic_fixture_matrix_passes_with_visible_mixed_and_incomplete():
     ),
 )
 def test_g1d2_report_and_renderer_hide_supplier_adapter_details(report, needle):
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     assert needle not in repr(report)
     assert needle not in rendered
 
 
 def test_g1d2_report_counters_are_derived_and_zero_effect(report):
-    assert frozenset(report["counters"]) == runner._COUNTER_FIELD_NAMES
+    assert frozenset(report["counters"]) == _demo.run_living_gauntlet_v01._COUNTER_FIELD_NAMES
     assert report["counters"]["generic_multiroot_execution_count"] == 1
     assert report["counters"]["supplier_water_filter_portability_execution_count"] == 1
     assert report["counters"]["real_world_effects_count"] == 0
@@ -3973,10 +4240,10 @@ def test_g1d2_report_counters_are_derived_and_zero_effect(report):
 
 
 def test_g1d2_two_reports_and_renders_are_deterministic() -> None:
-    first = runner.collect_living_gauntlet_v01()
-    second = runner.collect_living_gauntlet_v01()
+    first = _collect_living_internal_for_test_v01()
+    second = _collect_living_internal_for_test_v01()
     assert first == second
-    assert runner.render_living_gauntlet_v01(first) == runner.render_living_gauntlet_v01(second)
+    assert _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(first) == _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(second)
 
 
 @pytest.fixture(scope="module")
@@ -3985,29 +4252,47 @@ def g1e_base_rows(report):
 
 
 @pytest.fixture(scope="module")
-def g1e_conformance_report(g1e_base_rows, report):
-    current = conformance_runner.collect_kernel_conformance_v01(
+def g1e_conformance_report(
+    g1e_base_rows,
+    report,
+    _shared_d5_report,
+    _shared_e5_report_for_internal_builder,
+):
+    e5_report, e5_sha256, e5_bytes = (
+        _demo.run_kernel_conformance_v01._validated_e5_receipt_v01(
+            _shared_e5_report_for_internal_builder
+        )
+    )
+    current = (
+        _demo.run_kernel_conformance_v01.
+        _collect_kernel_conformance_with_validated_fractal_runtime_v01(
         active_act_results=(
             *g1e_base_rows,
             dict(report["active_act_results"][12]),
             dict(report["active_act_results"][13]),
             dict(report["active_act_results"][14]),
             dict(report["active_act_results"][15]),
+            dict(report["active_act_results"][16]),
         ),
         implementation_commit="abcdef0",
+        fractal_runtime_report=_shared_d5_report,
+        continuous_delta_runtime_report=e5_report,
+        continuous_delta_runtime_report_sha256=e5_sha256,
+        continuous_delta_runtime_report_bytes=e5_bytes,
+        )
     )
     return current
 
 
 def test_g1e_runner_version_and_geometry_are_exact(report):
-    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
-    assert runner._G2C_RUNNER_VERSION_V13 == "v1.3"
-    assert runner.RUNNER_VERSION == "v1.5"
-    assert report["runner_version"] == "v1.5"
-    assert report["final_status"] == runner.STATUS_PASS
+    assert _demo.run_living_gauntlet_v01._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert _demo.run_living_gauntlet_v01._G2C_RUNNER_VERSION_V13 == "v1.3"
+    assert _demo.run_living_gauntlet_v01.RUNNER_VERSION == "v1.6"
+    assert report["runner_version"] == "v1.6"
+    assert report["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert report["validation_errors"] == ()
-    assert report["counters"]["active_act_count"] == 16
-    assert report["counters"]["active_act_pass_count"] == 16
+    assert report["counters"]["active_act_count"] == 17
+    assert report["counters"]["active_act_pass_count"] == 17
     assert report["counters"]["evidence_only_entry_count"] == 2
     assert report["counters"]["planned_act_count"] == 0
 
@@ -4015,8 +4300,8 @@ def test_g1e_runner_version_and_geometry_are_exact(report):
 def test_g1e_exact_twelfth_act_is_closure(report):
     row = report["active_act_results"][11]
     assert row["act_id"] == "kernel_conformance_closure"
-    assert row["state"] == runner.STATUS_PASS
-    assert row["runtime_status"] == runner.STATUS_PASS
+    assert row["state"] == _demo.run_living_gauntlet_v01.STATUS_PASS
+    assert row["runtime_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert row["executed"] is True
     assert row["root_authority_preserved"] is True
     assert row["no_real_connector_or_action"] is True
@@ -4042,43 +4327,64 @@ def test_g1e_exact_active_order(report):
         "drs_semantic_address_and_reuse_certificate",
         "execution_mode_router",
         "fractal_runtime",
+        "continuous_delta_runtime",
     )
 
 
 def test_g1e_base_rows_are_exact_and_exclude_closure(g1e_base_rows):
     assert type(g1e_base_rows) is tuple
     assert len(g1e_base_rows) == 11
-    assert tuple(item["act_id"] for item in g1e_base_rows) == runner._ACTIVE_ACT_IDS[:11]
+    assert tuple(item["act_id"] for item in g1e_base_rows) == _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS[:11]
     assert "kernel_conformance_closure" not in {
         item["act_id"] for item in g1e_base_rows
     }
 
 
 def test_g1e_collect_living_passes_same_base_tuple_to_closure(
-    report, monkeypatch: pytest.MonkeyPatch
+    report, _patches
 ):
     base = tuple(dict(item) for item in report["active_act_results"][:11])
     captured = []
 
-    def closure(received, fractal_runtime_report):
+    def closure(
+        received,
+        fractal_runtime_report,
+        continuous_delta_runtime_report,
+        continuous_delta_runtime_report_sha256,
+        continuous_delta_runtime_report_bytes,
+    ):
         captured.append(received)
         assert fractal_runtime_report is not None
-        return runner.LivingGauntletActResultV01(**report["active_act_results"][11])
+        assert continuous_delta_runtime_report.report_id == (
+            _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER.report_id
+        )
+        assert continuous_delta_runtime_report.sealed_evidence_sha256 == (
+            _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER.sealed_evidence_sha256
+        )
+        validated, expected_sha256, expected_bytes = (
+            _demo.run_living_gauntlet_v01._validated_e5_receipt_v01(
+                continuous_delta_runtime_report
+            )
+        )
+        assert validated == continuous_delta_runtime_report
+        assert continuous_delta_runtime_report_sha256 == expected_sha256
+        assert continuous_delta_runtime_report_bytes == expected_bytes
+        return _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(**report["active_act_results"][11])
 
-    monkeypatch.setattr(runner, "collect_living_gauntlet_base_act_results_v01", lambda: base)
-    monkeypatch.setattr(
-        runner,
+    _patches(_demo.run_living_gauntlet_v01, "collect_living_gauntlet_base_act_results_v01", lambda: base)
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_action_packet_lifecycle_gauntlet_act_v01",
-        lambda: runner.LivingGauntletActResultV01(
+        lambda: _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
             **report["active_act_results"][12]
         ),
     )
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_kernel_conformance_closure_from_validated_fractal_runtime_v01",
         closure,
     )
-    rebuilt = runner.collect_living_gauntlet_v01()
+    rebuilt = _collect_living_internal_for_test_v01()
     assert captured == [
         (
             *base,
@@ -4086,31 +4392,49 @@ def test_g1e_collect_living_passes_same_base_tuple_to_closure(
             dict(report["active_act_results"][13]),
             dict(report["active_act_results"][14]),
             dict(report["active_act_results"][15]),
+            dict(report["active_act_results"][16]),
         ),
     ]
     assert captured[0][:11] == base
-    assert rebuilt["final_status"] == runner.STATUS_PASS
+    assert rebuilt["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
 
 
 def test_g1e_closure_does_not_recollect_supplier(
-    g1e_base_rows, report, monkeypatch: pytest.MonkeyPatch
+    g1e_base_rows,
+    report,
+    _shared_d5_report,
+    _shared_e5_report_for_internal_builder,
+    _patches,
 ):
-    monkeypatch.setattr(
-        runner,
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "collect_supplier_water_filter_portability_gauntlet_act_v01",
         lambda: pytest.fail("closure recollected Supplier"),
     )
-    monkeypatch.setattr(runner, "resolve_current_implementation_commit_v01", lambda: "abcdef0")
-    row = runner.collect_kernel_conformance_closure_gauntlet_act_v01(
+    _patches(_demo.run_living_gauntlet_v01, "resolve_current_implementation_commit_v01", lambda: "abcdef0")
+    e5_report, e5_sha256, e5_bytes = (
+        _demo.run_living_gauntlet_v01._validated_e5_receipt_v01(
+            _shared_e5_report_for_internal_builder
+        )
+    )
+    row = (
+        _demo.run_living_gauntlet_v01.
+        _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
         (
             *g1e_base_rows,
             dict(report["active_act_results"][12]),
             dict(report["active_act_results"][13]),
             dict(report["active_act_results"][14]),
             dict(report["active_act_results"][15]),
+            dict(report["active_act_results"][16]),
+        ),
+        _shared_d5_report,
+        e5_report,
+        e5_sha256,
+        e5_bytes,
         )
     )
-    assert row.state == runner.STATUS_PASS
+    assert row.state == _demo.run_living_gauntlet_v01.STATUS_PASS
 
 
 def test_g1e_supplier_portability_executes_once_in_report(report):
@@ -4133,9 +4457,9 @@ def test_g1e_conformance_runtime_report_passes(g1e_conformance_report):
 
 
 def test_g1e_conformance_geometry_is_exact(g1e_conformance_report):
-    assert len(g1e_conformance_report.category_results) == 14
+    assert len(g1e_conformance_report.category_results) == 15
     assert len(g1e_conformance_report.domain_results) == 2
-    assert len(g1e_conformance_report.negative_test_results) == 50
+    assert len(g1e_conformance_report.negative_test_results) == 60
     assert all(item.status == conformance.STATUS_PASS for item in g1e_conformance_report.category_results)
     assert all(item.status == conformance.STATUS_PASS for item in g1e_conformance_report.domain_results)
     assert all(item.status == conformance.STATUS_PASS for item in g1e_conformance_report.negative_test_results)
@@ -4188,11 +4512,11 @@ def test_g1e_release_seam_state_is_exact():
     seams = index["seams"]
     assert index["index_status"] == "ACTIVE_GATE1_G1E"
     assert len(seams) == 24
-    assert sum(item["status"] == runner.STATUS_ACTIVE for item in seams) == 20
-    assert sum(item["status"] == runner.STATUS_REFERENCE_ONLY for item in seams) == 3
-    assert sum(item["status"] == runner.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 0
+    assert sum(item["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE for item in seams) == 20
+    assert sum(item["status"] == _demo.run_living_gauntlet_v01.STATUS_REFERENCE_ONLY for item in seams) == 3
+    assert sum(item["status"] == _demo.run_living_gauntlet_v01.STATUS_PLANNED_NOT_ACTIVE for item in seams) == 0
     assert sum(
-        item["status"] == runner.STATUS_HISTORICAL_EVIDENCE_ONLY
+        item["status"] == _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY
         for item in seams
     ) == 1
 
@@ -4213,7 +4537,7 @@ def test_g1e_conformance_seam_is_active_and_non_authority():
         "seam_id": "kernel_conformance_report",
         "source_module": "demo.run_kernel_conformance_v01",
         "source_symbol": "collect_kernel_conformance_v01",
-        "status": runner.STATUS_ACTIVE,
+        "status": _demo.run_living_gauntlet_v01.STATUS_ACTIVE,
     }
     for phrase in (
         (
@@ -4233,7 +4557,7 @@ def test_g1e_effect_firewall_remains_sole_effect_owner():
     owners = [
         item["seam_id"]
         for item in _json(SEAM_INDEX_PATH)["seams"]
-        if item["status"] == runner.STATUS_ACTIVE
+        if item["status"] == _demo.run_living_gauntlet_v01.STATUS_ACTIVE
         and item["effect_access"] != "NONE"
     ]
     assert owners == ["effect_firewall"]
@@ -4331,7 +4655,7 @@ def test_g1e_reference_entries_preserve_current_and_historical_distinction(repor
                 "docs/audit_reports/auditor_airline_all_real_evidence_showcase_v01.log",
             ],
             "executed": False,
-            "state": runner.STATUS_EVIDENCE_ONLY,
+            "state": _demo.run_living_gauntlet_v01.STATUS_EVIDENCE_ONLY,
         },
         {
             "act_id": "all_layers_invariant_super_smoke",
@@ -4340,24 +4664,50 @@ def test_g1e_reference_entries_preserve_current_and_historical_distinction(repor
                 "tests/test_all_layers_applied_super_smoke_runner.py",
             ],
             "executed": False,
-            "state": runner.STATUS_HISTORICAL_EVIDENCE_ONLY,
+            "state": _demo.run_living_gauntlet_v01.STATUS_HISTORICAL_EVIDENCE_ONLY,
         },
     ]
 
 
-def _g1e_failed_closure(report_value, base_rows, monkeypatch):
-    monkeypatch.setattr(runner, "resolve_current_implementation_commit_v01", lambda: "abcdef0")
-    monkeypatch.setattr(
-        runner,
+def _g1e_failed_closure(
+    report_value,
+    base_rows,
+    fractal_runtime_report,
+    continuous_delta_runtime_report,
+    _patches,
+):
+    _patches(_demo.run_living_gauntlet_v01, "resolve_current_implementation_commit_v01", lambda: "abcdef0")
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_kernel_conformance_with_validated_fractal_runtime_v01",
         lambda **_: report_value,
     )
-    return runner.collect_kernel_conformance_closure_gauntlet_act_v01(base_rows)
+    e5_report, e5_sha256, e5_bytes = (
+        _demo.run_living_gauntlet_v01._validated_e5_receipt_v01(
+            continuous_delta_runtime_report
+        )
+    )
+    return (
+        _demo.run_living_gauntlet_v01.
+        _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
+            base_rows,
+            fractal_runtime_report,
+            e5_report,
+            e5_sha256,
+            e5_bytes,
+        )
+    )
 
 
 @pytest.mark.parametrize("failure_kind", ("category", "domain", "negative"))
 def test_g1e_nested_conformance_failure_closes_act(
-    g1e_conformance_report, g1e_base_rows, report, monkeypatch, failure_kind
+    g1e_conformance_report,
+    g1e_base_rows,
+    report,
+    _shared_d5_report,
+    _shared_e5_report_for_internal_builder,
+    _patches,
+    failure_kind,
 ):
     if failure_kind == "category":
         value = replace(
@@ -4387,34 +4737,37 @@ def test_g1e_nested_conformance_failure_closes_act(
             dict(report["active_act_results"][13]),
             dict(report["active_act_results"][14]),
             dict(report["active_act_results"][15]),
+            dict(report["active_act_results"][16]),
         ),
-        monkeypatch,
+        _shared_d5_report,
+        _shared_e5_report_for_internal_builder,
+        _patches,
     )
-    assert row.state == runner.STATUS_FAIL_CLOSED
+    assert row.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert row.errors == ("kernel_conformance_closure_failed",)
     assert row.real_world_effects_count == -1
 
 
 def test_g1e_closure_failure_makes_living_fail_closed(
-    report, monkeypatch: pytest.MonkeyPatch
+    report, _patches
 ):
     base = tuple(dict(item) for item in report["active_act_results"][:11])
-    monkeypatch.setattr(runner, "collect_living_gauntlet_base_act_results_v01", lambda: base)
-    monkeypatch.setattr(
-        runner,
+    _patches(_demo.run_living_gauntlet_v01, "collect_living_gauntlet_base_act_results_v01", lambda: base)
+    _patches(
+        _demo.run_living_gauntlet_v01,
         "_collect_kernel_conformance_closure_from_validated_fractal_runtime_v01",
-        lambda *_: runner._failed_act_result(
+        lambda *_: _demo.run_living_gauntlet_v01._failed_act_result(
             act_id="kernel_conformance_closure",
             reason="kernel_conformance_closure_failed",
         ),
     )
-    failed = runner.collect_living_gauntlet_v01()
-    assert failed["final_status"] == runner.STATUS_FAIL_CLOSED
+    failed = _collect_living_internal_for_test_v01()
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "kernel_conformance_closure_failed" in failed["validation_errors"]
 
 
 def test_g1e_public_counters_prove_zero_external_effects(report):
-    assert frozenset(report["counters"]) == runner._COUNTER_FIELD_NAMES
+    assert frozenset(report["counters"]) == _demo.run_living_gauntlet_v01._COUNTER_FIELD_NAMES
     assert report["counters"]["real_world_effects_count"] == 0
     assert "provider_call_count" not in report["counters"]
     assert "network_call_count" not in report["counters"]
@@ -4439,26 +4792,26 @@ def test_g1e_public_counters_prove_zero_external_effects(report):
     ),
 )
 def test_g1e_renderer_exposes_no_conformance_internals(report, needle):
-    assert needle.lower() not in runner.render_living_gauntlet_v01(report).lower()
+    assert needle.lower() not in _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report).lower()
 
 
 def test_g1e_two_reports_and_renders_are_deterministic():
-    first = runner.collect_living_gauntlet_v01()
-    second = runner.collect_living_gauntlet_v01()
+    first = _collect_living_internal_for_test_v01()
+    second = _collect_living_internal_for_test_v01()
     assert first == second
-    assert runner.render_living_gauntlet_v01(first) == runner.render_living_gauntlet_v01(second)
+    assert _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(first) == _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(second)
 
 
 def test_g2a6_action_packet_lifecycle_act_executes_real_runtime_and_zero_effect(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
     collected = []
     validations = []
     original_collect = (
-        runner._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01
+        _demo.run_living_gauntlet_v01._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01
     )
     original_validate = (
-        runner._action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01
+        _demo.run_living_gauntlet_v01._action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01
     )
 
     def collect_wrapper():
@@ -4471,17 +4824,17 @@ def test_g2a6_action_packet_lifecycle_act_executes_real_runtime_and_zero_effect(
         validations.append((report, result))
         return result
 
-    monkeypatch.setattr(
-        runner._action_packet_lifecycle,
+    _patches(
+        _demo.run_living_gauntlet_v01._action_packet_lifecycle,
         "collect_action_commit_packet_lifecycle_g2_a_v01",
         collect_wrapper,
     )
-    monkeypatch.setattr(
-        runner._action_packet_lifecycle,
+    _patches(
+        _demo.run_living_gauntlet_v01._action_packet_lifecycle,
         "validate_action_commit_packet_lifecycle_g2_a_report_v01",
         validate_wrapper,
     )
-    result = runner.collect_action_packet_lifecycle_gauntlet_act_v01()
+    result = _demo.run_living_gauntlet_v01.collect_action_packet_lifecycle_gauntlet_act_v01()
 
     assert len(collected) == 1
     assert validations == [(collected[0], (True, ()))]
@@ -4525,17 +4878,17 @@ def test_g2a6_action_packet_lifecycle_act_executes_real_runtime_and_zero_effect(
         report.receipt_creations,
         report.real_world_effects_count,
     ) == (0, 0, 0, 0, 0, 0)
-    assert result == runner.LivingGauntletActResultV01(
+    assert result == _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
         act_id="action_packet_lifecycle",
         errors=(),
         executed=True,
         no_real_connector_or_action=True,
         real_world_effects_count=0,
         root_authority_preserved=True,
-        runtime_status=runner.STATUS_PASS,
+        runtime_status=_demo.run_living_gauntlet_v01.STATUS_PASS,
         source_module="demo.run_living_gauntlet_v01",
         source_symbol="collect_action_packet_lifecycle_gauntlet_act_v01",
-        state=runner.STATUS_PASS,
+        state=_demo.run_living_gauntlet_v01.STATUS_PASS,
     )
 
 
@@ -4544,26 +4897,26 @@ def test_g2a6_current_profile_preserves_gate1_acts_and_appends_lifecycle_act(
 ):
     manifest_bytes = COMPLETION_MANIFEST_PATH.read_bytes()
     seam_bytes = SEAM_INDEX_PATH.read_bytes()
-    base = runner.collect_living_gauntlet_base_act_results_v01()
+    base = _demo.run_living_gauntlet_v01.collect_living_gauntlet_base_act_results_v01()
     active = report["active_act_results"]
 
-    assert runner._G2C_RUNNER_VERSION_V13 == "v1.3"
-    assert runner.RUNNER_VERSION == "v1.5"
-    assert runner._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
-    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert _demo.run_living_gauntlet_v01._G2C_RUNNER_VERSION_V13 == "v1.3"
+    assert _demo.run_living_gauntlet_v01.RUNNER_VERSION == "v1.6"
+    assert _demo.run_living_gauntlet_v01._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
+    assert _demo.run_living_gauntlet_v01._G2A_RUNNER_VERSION_V11 == "v1.1"
     assert tuple(item["act_id"] for item in base) == (
-        runner._GATE1_CURRENT_ACTIVE_ACT_IDS_V15[:11]
+        _demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_IDS_V15[:11]
     )
     assert tuple(item["act_id"] for item in active[:12]) == (
-        runner._GATE1_CURRENT_ACTIVE_ACT_IDS_V15
+        _demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_IDS_V15
     )
     assert active[11]["act_id"] == "kernel_conformance_closure"
     assert active[12]["act_id"] == "action_packet_lifecycle"
     assert tuple(
         (item["source_module"], item["source_symbol"]) for item in active[:12]
     ) == tuple(
-        runner._GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15[act_id]
-        for act_id in runner._GATE1_CURRENT_ACTIVE_ACT_IDS_V15
+        _demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15[act_id]
+        for act_id in _demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_IDS_V15
     )
     assert hashlib.sha256(manifest_bytes).hexdigest() == (
         "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9"
@@ -4573,12 +4926,12 @@ def test_g2a6_current_profile_preserves_gate1_acts_and_appends_lifecycle_act(
     )
     assert _json(COMPLETION_MANIFEST_PATH)["runner_version"] == "v1.5"
     assert tuple(item["act_id"] for item in active[:13]) == (
-        runner._G2A_ACTIVE_ACT_IDS_V11
+        _demo.run_living_gauntlet_v01._G2A_ACTIVE_ACT_IDS_V11
     )
-    assert report["counters"]["active_act_count"] == 16
-    assert report["counters"]["active_act_pass_count"] == 16
+    assert report["counters"]["active_act_count"] == 17
+    assert report["counters"]["active_act_pass_count"] == 17
     assert report["counters"]["active_act_fail_closed_count"] == 0
-    assert report["counters"]["active_collector_execution_count"] == 16
+    assert report["counters"]["active_collector_execution_count"] == 17
     assert report["counters"]["evidence_only_entry_count"] == 2
     assert report["counters"]["evidence_only_executed_count"] == 0
     assert report["counters"]["planned_act_count"] == 0
@@ -4597,15 +4950,16 @@ def test_g2a6_current_profile_preserves_gate1_acts_and_appends_lifecycle_act(
         "drs_semantic_address_reuse_certificate_act_pass",
         "execution_mode_router_act_pass",
         "fractal_runtime_act_pass",
+        "continuous_delta_runtime_act_pass",
     )
 
 
 def test_g2a6_living_gauntlet_lifecycle_failure_is_fail_closed_and_not_normalized(
     report,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
     baseline = (
-        runner._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
+        _demo.run_living_gauntlet_v01._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
     )
     old_rows = tuple(dict(item) for item in report["active_act_results"][:11])
     cases = (
@@ -4615,60 +4969,60 @@ def test_g2a6_living_gauntlet_lifecycle_failure_is_fail_closed_and_not_normalize
         ("nonzero", lambda: replace(baseline, provider_calls=1)),
     )
     for label, collector in cases:
-        with monkeypatch.context() as scoped:
-            scoped.setattr(
-                runner,
+        with _patch_scope() as scoped:
+            scoped(
+                _demo.run_living_gauntlet_v01,
                 "collect_living_gauntlet_base_act_results_v01",
                 lambda: old_rows,
             )
-            scoped.setattr(
-                runner._action_packet_lifecycle,
+            scoped(
+                _demo.run_living_gauntlet_v01._action_packet_lifecycle,
                 "collect_action_commit_packet_lifecycle_g2_a_v01",
                 collector,
             )
             if label == "validator":
-                scoped.setattr(
-                    runner._action_packet_lifecycle,
+                scoped(
+                    _demo.run_living_gauntlet_v01._action_packet_lifecycle,
                     "validate_action_commit_packet_lifecycle_g2_a_report_v01",
                     lambda _: (False, ("g2a5_report_fail_closed",)),
                 )
-            act = runner.collect_action_packet_lifecycle_gauntlet_act_v01()
-            full = runner.collect_living_gauntlet_v01()
+            act = _demo.run_living_gauntlet_v01.collect_action_packet_lifecycle_gauntlet_act_v01()
+            full = _collect_living_internal_for_test_v01()
 
-        assert act.state == runner.STATUS_FAIL_CLOSED
-        assert act.runtime_status == runner.STATUS_FAIL_CLOSED
+        assert act.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+        assert act.runtime_status == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
         assert act.errors == ("action_packet_lifecycle_gauntlet_act_failed",)
         assert act.root_authority_preserved is False
         assert act.no_real_connector_or_action is False
         assert act.real_world_effects_count == -1
-        assert full["final_status"] == runner.STATUS_FAIL_CLOSED
+        assert full["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
         assert full["counters"]["real_world_effects_count"] == -1
         assert tuple(full["active_act_results"][:11]) == old_rows
 
 
 def test_g2b6_drs_semantic_address_reuse_certificate_act_is_real_bounded_and_zero_effect(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
     collected = []
     validations = []
     original_collect = (
-        runner._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01
+        _demo.run_living_gauntlet_v01._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01
     )
     original_validate = (
-        runner._g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01
+        _demo.run_living_gauntlet_v01._g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01
     )
 
     def collect_wrapper():
-        monkeypatch.setattr(
-            runner._g2b,
+        _patches(
+            _demo.run_living_gauntlet_v01._g2b,
             "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
             original_validate,
         )
         try:
             report = original_collect()
         finally:
-            monkeypatch.setattr(
-                runner._g2b,
+            _patches(
+                _demo.run_living_gauntlet_v01._g2b,
                 "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
                 validate_wrapper,
             )
@@ -4680,18 +5034,18 @@ def test_g2b6_drs_semantic_address_reuse_certificate_act_is_real_bounded_and_zer
         validations.append((report, result))
         return result
 
-    monkeypatch.setattr(
-        runner._g2b,
+    _patches(
+        _demo.run_living_gauntlet_v01._g2b,
         "collect_drs_semantic_address_reuse_certificate_g2_b_v01",
         collect_wrapper,
     )
-    monkeypatch.setattr(
-        runner._g2b,
+    _patches(
+        _demo.run_living_gauntlet_v01._g2b,
         "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
         validate_wrapper,
     )
     result = (
-        runner.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+        _demo.run_living_gauntlet_v01.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
     )
 
     assert len(collected) == 1
@@ -4706,7 +5060,7 @@ def test_g2b6_drs_semantic_address_reuse_certificate_act_is_real_bounded_and_zer
     assert sum(
         len(item.negative_requests) for item in report.domain_results
     ) == 8
-    assert counters == dict(runner._G2B_EXPECTED_OPERATION_COUNTERS_V01)
+    assert counters == dict(_demo.run_living_gauntlet_v01._G2B_EXPECTED_OPERATION_COUNTERS_V01)
     assert all(value == 0 for _, value in report.closed_programme_counters)
     for domain in report.domain_results:
         answer = domain.answer_report
@@ -4737,20 +5091,20 @@ def test_g2b6_drs_semantic_address_reuse_certificate_act_is_real_bounded_and_zer
         assert certificate.creates_capability is False
         assert certificate.creates_effect_handle is False
         assert certificate.creates_effect is False
-    assert result == runner.LivingGauntletActResultV01(
+    assert result == _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
         act_id="drs_semantic_address_and_reuse_certificate",
         errors=(),
         executed=True,
         no_real_connector_or_action=True,
         real_world_effects_count=0,
         root_authority_preserved=True,
-        runtime_status=runner.STATUS_PASS,
+        runtime_status=_demo.run_living_gauntlet_v01.STATUS_PASS,
         source_module="demo.run_living_gauntlet_v01",
         source_symbol=(
             "collect_drs_semantic_address_and_reuse_certificate_"
             "gauntlet_act_v01"
         ),
-        state=runner.STATUS_PASS,
+        state=_demo.run_living_gauntlet_v01.STATUS_PASS,
     )
 
 
@@ -4761,20 +5115,20 @@ def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
     seam_bytes = SEAM_INDEX_PATH.read_bytes()
     active = report["active_act_results"]
 
-    assert runner._G2C_RUNNER_VERSION_V13 == "v1.3"
-    assert runner.RUNNER_VERSION == "v1.5"
-    assert runner._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
-    assert runner._G2A_RUNNER_VERSION_V11 == "v1.1"
-    assert runner._G2A_ACTIVE_ACT_IDS_V11 == (
-        *runner._GATE1_CURRENT_ACTIVE_ACT_IDS_V15,
+    assert _demo.run_living_gauntlet_v01._G2C_RUNNER_VERSION_V13 == "v1.3"
+    assert _demo.run_living_gauntlet_v01.RUNNER_VERSION == "v1.6"
+    assert _demo.run_living_gauntlet_v01._GATE1_RELEASE_RUNNER_VERSION_V10 == "v1.0"
+    assert _demo.run_living_gauntlet_v01._G2A_RUNNER_VERSION_V11 == "v1.1"
+    assert _demo.run_living_gauntlet_v01._G2A_ACTIVE_ACT_IDS_V11 == (
+        *_demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_IDS_V15,
         "action_packet_lifecycle",
     )
-    assert runner._G2B_RUNNER_VERSION_V12 == "v1.2"
-    assert runner._G2B_ACTIVE_ACT_IDS_V12 == (
-        *runner._G2A_ACTIVE_ACT_IDS_V11,
+    assert _demo.run_living_gauntlet_v01._G2B_RUNNER_VERSION_V12 == "v1.2"
+    assert _demo.run_living_gauntlet_v01._G2B_ACTIVE_ACT_IDS_V12 == (
+        *_demo.run_living_gauntlet_v01._G2A_ACTIVE_ACT_IDS_V11,
         "drs_semantic_address_and_reuse_certificate",
     )
-    assert tuple(item["act_id"] for item in active) == runner._ACTIVE_ACT_IDS
+    assert tuple(item["act_id"] for item in active) == _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS
     assert active[11]["act_id"] == "kernel_conformance_closure"
     assert active[12]["act_id"] == "action_packet_lifecycle"
     assert active[13]["act_id"] == (
@@ -4783,8 +5137,8 @@ def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
     assert tuple(
         (item["source_module"], item["source_symbol"]) for item in active[:12]
     ) == tuple(
-        runner._GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15[act_id]
-        for act_id in runner._GATE1_CURRENT_ACTIVE_ACT_IDS_V15
+        _demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_SOURCES_V15[act_id]
+        for act_id in _demo.run_living_gauntlet_v01._GATE1_CURRENT_ACTIVE_ACT_IDS_V15
     )
     assert (
         active[13]["source_module"],
@@ -4802,8 +5156,8 @@ def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
     assert hashlib.sha256(seam_bytes).hexdigest() == (
         "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03"
     )
-    assert report["counters"]["active_act_count"] == 16
-    assert report["counters"]["active_act_pass_count"] == 16
+    assert report["counters"]["active_act_count"] == 17
+    assert report["counters"]["active_act_pass_count"] == 17
     assert report["counters"][
         "drs_semantic_address_reuse_certificate_execution_count"
     ] == 1
@@ -4811,23 +5165,23 @@ def test_g2b6_living_gauntlet_v12_preserves_v11_and_appends_g2b_act(
 
 def test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect(
     report,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
     baseline = (
-        runner._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+        _demo.run_living_gauntlet_v01._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
     )
     counters = tuple(
         (name, 1 if name == "provider_calls" else value)
         for name, value in baseline.operation_counters
     )
-    nonzero = runner._g2b._reidentify_report_v01(
+    nonzero = _demo.run_living_gauntlet_v01._g2b._reidentify_report_v01(
         replace(baseline, operation_counters=counters)
     )
     base_rows = tuple(dict(item) for item in report["active_act_results"][:11])
-    closure = runner.LivingGauntletActResultV01(
+    closure = _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
         **report["active_act_results"][11]
     )
-    lifecycle = runner.LivingGauntletActResultV01(
+    lifecycle = _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
         **report["active_act_results"][12]
     )
     cases = (
@@ -4840,40 +5194,40 @@ def test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect(
         ("nonzero", lambda: nonzero, None),
     )
     for label, collector, validation_result in cases:
-        with monkeypatch.context() as scoped:
-            scoped.setattr(
-                runner._g2b,
+        with _patch_scope() as scoped:
+            scoped(
+                _demo.run_living_gauntlet_v01._g2b,
                 "collect_drs_semantic_address_reuse_certificate_g2_b_v01",
                 collector,
             )
             if validation_result is not None:
-                scoped.setattr(
-                    runner._g2b,
+                scoped(
+                    _demo.run_living_gauntlet_v01._g2b,
                     (
                         "validate_drs_semantic_address_reuse_certificate_"
                         "g2_b_report_v01"
                     ),
                     lambda _: validation_result,
                 )
-            scoped.setattr(
-                runner,
+            scoped(
+                _demo.run_living_gauntlet_v01,
                 "collect_living_gauntlet_base_act_results_v01",
                 lambda: base_rows,
             )
-            scoped.setattr(
-                runner,
+            scoped(
+                _demo.run_living_gauntlet_v01,
                 "collect_action_packet_lifecycle_gauntlet_act_v01",
                 lambda: lifecycle,
             )
-            scoped.setattr(
-                runner,
+            scoped(
+                _demo.run_living_gauntlet_v01,
                 "collect_kernel_conformance_closure_gauntlet_act_v01",
                 lambda _: closure,
             )
             act = (
-                runner.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+                _demo.run_living_gauntlet_v01.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
             )
-            full = runner.collect_living_gauntlet_v01()
+            full = _collect_living_internal_for_test_v01()
 
         assert act.act_id == "drs_semantic_address_and_reuse_certificate"
         assert act.errors == (
@@ -4883,85 +5237,85 @@ def test_g2b6_living_gauntlet_g2b_failure_is_fail_closed_and_unknown_effect(
         assert act.no_real_connector_or_action is False
         assert act.real_world_effects_count == -1
         assert act.root_authority_preserved is False
-        assert act.runtime_status == runner.STATUS_FAIL_CLOSED
-        assert act.state == runner.STATUS_FAIL_CLOSED
+        assert act.runtime_status == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+        assert act.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
         assert "controlled" not in repr(act)
-        assert full["final_status"] == runner.STATUS_FAIL_CLOSED, label
+        assert full["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED, label
         assert full["counters"]["real_world_effects_count"] == -1, label
 
 
 def test_c6_living_v13_appends_exact_execution_mode_router_act(report):
     active = report["active_act_results"]
-    assert runner._G2C_RUNNER_VERSION_V13 == "v1.3"
-    assert runner.RUNNER_VERSION == "v1.5"
-    assert runner._G2B_RUNNER_VERSION_V12 == "v1.2"
-    assert runner._G2C_ACTIVE_ACT_IDS_V13 == (
-        *runner._G2B_ACTIVE_ACT_IDS_V12,
+    assert _demo.run_living_gauntlet_v01._G2C_RUNNER_VERSION_V13 == "v1.3"
+    assert _demo.run_living_gauntlet_v01.RUNNER_VERSION == "v1.6"
+    assert _demo.run_living_gauntlet_v01._G2B_RUNNER_VERSION_V12 == "v1.2"
+    assert _demo.run_living_gauntlet_v01._G2C_ACTIVE_ACT_IDS_V13 == (
+        *_demo.run_living_gauntlet_v01._G2B_ACTIVE_ACT_IDS_V12,
         "execution_mode_router",
     )
-    assert tuple(item["act_id"] for item in active) == runner._ACTIVE_ACT_IDS
-    assert tuple(item["act_id"] for item in active[:-1]) == (
-        runner._G2C_ACTIVE_ACT_IDS_V13
+    assert tuple(item["act_id"] for item in active) == _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS
+    assert tuple(item["act_id"] for item in active[:-2]) == (
+        _demo.run_living_gauntlet_v01._G2C_ACTIVE_ACT_IDS_V13
     )
-    assert active[-2] == {
+    assert active[-3] == {
         "act_id": "execution_mode_router",
         "errors": (),
         "executed": True,
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_execution_mode_router_g2_c_v01",
         "source_symbol": "collect_execution_mode_router_g2_c_v01",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
-    assert report["counters"]["active_act_count"] == 16
-    assert report["counters"]["active_act_pass_count"] == 16
+    assert report["counters"]["active_act_count"] == 17
+    assert report["counters"]["active_act_pass_count"] == 17
     assert report["counters"]["active_act_fail_closed_count"] == 0
-    assert report["counters"]["active_collector_execution_count"] == 16
+    assert report["counters"]["active_collector_execution_count"] == 17
     assert report["counters"]["execution_mode_router_execution_count"] == 1
     assert report["counters"]["action_packet_lifecycle_execution_count"] == 1
     assert report["counters"][
         "drs_semantic_address_reuse_certificate_execution_count"
     ] == 1
     assert report["counters"]["real_world_effects_count"] == 0
-    assert report["invariant_results"][-2] == {
+    assert report["invariant_results"][-3] == {
         "invariant_id": "execution_mode_router_act_pass",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
 
 
 def test_c6_execution_mode_router_act_consumes_validated_c5_proof():
-    result = runner.collect_execution_mode_router_gauntlet_act_v01()
-    report = runner._g2c.collect_execution_mode_router_g2_c_v01()
-    assert runner._g2c.validate_execution_mode_router_g2_c_report_v01(report) == ()
-    assert runner._execution_mode_router_report_passes_living_act_v01(report) is True
+    result = _demo.run_living_gauntlet_v01.collect_execution_mode_router_gauntlet_act_v01()
+    report = _demo.run_living_gauntlet_v01._g2c.collect_execution_mode_router_g2_c_v01()
+    assert _demo.run_living_gauntlet_v01._g2c.validate_execution_mode_router_g2_c_report_v01(report) == ()
+    assert _demo.run_living_gauntlet_v01._execution_mode_router_report_passes_living_act_v01(report) is True
     assert report.report_version == "v0.1"
     assert report.profile_id == "execution_mode_router_g2c_two_domain_proof_v01"
-    assert report.domain_order == runner._G2C_EXPECTED_DOMAIN_ORDER_V13
-    assert report.case_order == runner._G2C_EXPECTED_CASE_ORDER_V13
+    assert report.domain_order == _demo.run_living_gauntlet_v01._G2C_EXPECTED_DOMAIN_ORDER_V13
+    assert report.case_order == _demo.run_living_gauntlet_v01._G2C_EXPECTED_CASE_ORDER_V13
     assert len(report.case_results) == 10
     assert {item.root_outcome for item in report.case_results} == {
         "ACCEPT", "NARROW", "REJECT", "BLOCKED", "NEEDS_USER"
     }
-    assert all(item.operation_steps == runner._g2c.OPERATION_STEPS for item in report.case_results)
+    assert all(item.operation_steps == _demo.run_living_gauntlet_v01._g2c.OPERATION_STEPS for item in report.case_results)
     assert all(len(item.root_support_ids) == len(set(item.root_support_ids)) == 6 for item in report.case_results)
     assert all(
         report.case_results[index].transaction_id
         == report.case_results[index].temporal_query_id
         for index in (1, 2, 3)
     )
-    assert result == runner.LivingGauntletActResultV01(
+    assert result == _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
         act_id="execution_mode_router",
         errors=(),
         executed=True,
         no_real_connector_or_action=True,
         real_world_effects_count=0,
         root_authority_preserved=True,
-        runtime_status=runner.STATUS_PASS,
+        runtime_status=_demo.run_living_gauntlet_v01.STATUS_PASS,
         source_module="demo.run_execution_mode_router_g2_c_v01",
         source_symbol="collect_execution_mode_router_g2_c_v01",
-        state=runner.STATUS_PASS,
+        state=_demo.run_living_gauntlet_v01.STATUS_PASS,
     )
 
 
@@ -5006,37 +5360,37 @@ def test_c6_execution_mode_router_act_consumes_validated_c5_proof():
 )
 def test_c6_invalid_c5_report_fails_living_act_closed(
     mutation,
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
-    baseline = runner._g2c.collect_execution_mode_router_g2_c_v01()
+    baseline = _demo.run_living_gauntlet_v01._g2c.collect_execution_mode_router_g2_c_v01()
     forged = mutation(baseline)
-    assert runner._g2c.validate_execution_mode_router_g2_c_report_v01(forged)
-    monkeypatch.setattr(
-        runner._g2c,
+    assert _demo.run_living_gauntlet_v01._g2c.validate_execution_mode_router_g2_c_report_v01(forged)
+    _patches(
+        _demo.run_living_gauntlet_v01._g2c,
         "collect_execution_mode_router_g2_c_v01",
         lambda: forged,
     )
-    result = runner.collect_execution_mode_router_gauntlet_act_v01()
+    result = _demo.run_living_gauntlet_v01.collect_execution_mode_router_gauntlet_act_v01()
     assert result.act_id == "execution_mode_router"
     assert result.errors == ("execution_mode_router_gauntlet_act_failed",)
     assert result.executed is True
     assert result.no_real_connector_or_action is False
     assert result.real_world_effects_count == -1
     assert result.root_authority_preserved is False
-    assert result.runtime_status == runner.STATUS_FAIL_CLOSED
-    assert result.state == runner.STATUS_FAIL_CLOSED
+    assert result.runtime_status == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     assert "forged" not in repr(result)
 
 
 def test_c6_living_report_and_render_are_repeated_and_zero_operation():
-    first = runner.collect_living_gauntlet_v01()
-    second = runner.collect_living_gauntlet_v01()
+    first = _collect_living_internal_for_test_v01()
+    second = _collect_living_internal_for_test_v01()
     assert first == second
-    assert runner.render_living_gauntlet_v01(first) == (
-        runner.render_living_gauntlet_v01(second)
+    assert _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(first) == (
+        _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(second)
     )
-    assert first["runner_version"] == "v1.5"
-    assert first["final_status"] == runner.STATUS_PASS
+    assert first["runner_version"] == "v1.6"
+    assert first["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert first["validation_errors"] == ()
     assert first["counters"]["real_world_effects_count"] == 0
     assert all(
@@ -5047,17 +5401,17 @@ def test_c6_living_report_and_render_are_repeated_and_zero_operation():
     )
 
 
-def test_current_living_v15_is_the_only_executable_profile(report):
-    assert runner.RUNNER_VERSION == "v1.5"
-    assert set(runner._LIVING_VERSION_GEOMETRY) == {"v1.5"}
+def test_current_living_v16_is_the_only_executable_profile(report):
+    assert _demo.run_living_gauntlet_v01.RUNNER_VERSION == "v1.6"
+    assert set(_demo.run_living_gauntlet_v01._LIVING_VERSION_GEOMETRY) == {"v1.6"}
     assert report["kernel_conformance_profile"] == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
     assert report["historical_kernel_conformance_profile"] == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        _demo.run_living_gauntlet_v01.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
     )
     assert tuple(item["act_id"] for item in report["active_act_results"]) == (
-        runner._ACTIVE_ACT_IDS
+        _demo.run_living_gauntlet_v01._ACTIVE_ACT_IDS
     )
 
 
@@ -5070,23 +5424,23 @@ def test_d6_fractal_runtime_act_16_and_counter_are_exact(report):
         "no_real_connector_or_action": True,
         "real_world_effects_count": 0,
         "root_authority_preserved": True,
-        "runtime_status": runner.STATUS_PASS,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
         "source_module": "demo.run_fractal_runtime_g2_d_v02",
         "source_symbol": "collect_fractal_runtime_g2_d_v02",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
     assert report["counters"]["fractal_runtime_execution_count"] == 1
-    assert report["counters"]["active_act_count"] == 16
-    assert report["counters"]["active_act_pass_count"] == 16
-    assert report["invariant_results"][-1] == {
+    assert report["counters"]["active_act_count"] == 17
+    assert report["counters"]["active_act_pass_count"] == 17
+    assert report["invariant_results"][-2] == {
         "invariant_id": "fractal_runtime_act_pass",
-        "state": runner.STATUS_PASS,
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
     }
 
 
 def test_d6_fractal_runtime_act_consumes_one_validated_d5_report(
     _shared_d5_report,
-    monkeypatch,
+    _patches,
 ):
     calls = {"collect": 0, "validate": 0}
 
@@ -5094,66 +5448,66 @@ def test_d6_fractal_runtime_act_consumes_one_validated_d5_report(
         calls["collect"] += 1
         return _shared_d5_report
 
-    original_validate = runner._g2d.validate_fractal_runtime_g2_d_report_v02
+    original_validate = _demo.run_living_gauntlet_v01._g2d.validate_fractal_runtime_g2_d_report_v02
 
     def validate(value):
         calls["validate"] += 1
         return original_validate(value)
 
-    monkeypatch.setattr(
-        runner._g2d,
+    _patches(
+        _demo.run_living_gauntlet_v01._g2d,
         "collect_fractal_runtime_g2_d_v02",
         collect,
     )
-    monkeypatch.setattr(
-        runner._g2d,
+    _patches(
+        _demo.run_living_gauntlet_v01._g2d,
         "validate_fractal_runtime_g2_d_report_v02",
         validate,
     )
-    result = runner.collect_fractal_runtime_gauntlet_act_v01()
-    assert result.state == runner.STATUS_PASS
+    result = _demo.run_living_gauntlet_v01.collect_fractal_runtime_gauntlet_act_v01()
+    assert result.state == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert calls == {"collect": 1, "validate": 1}
-    assert runner._fractal_runtime_report_passes_living_act_v01(
+    assert _demo.run_living_gauntlet_v01._fractal_runtime_report_passes_living_act_v01(
         _shared_d5_report
     ) is True
 
 
 def test_d6_forged_d5_report_fails_closed_without_leak(
     _shared_d5_report,
-    monkeypatch,
+    _patches,
 ):
     forged = replace(
         _shared_d5_report,
-        report_id=runner._g2d.REPORT_ID_PREFIX + "f" * 64,
+        report_id=_demo.run_living_gauntlet_v01._g2d.REPORT_ID_PREFIX + "f" * 64,
     )
-    monkeypatch.setattr(
-        runner._g2d,
+    _patches(
+        _demo.run_living_gauntlet_v01._g2d,
         "collect_fractal_runtime_g2_d_v02",
         lambda: forged,
     )
-    result = runner.collect_fractal_runtime_gauntlet_act_v01()
-    assert result == runner.LivingGauntletActResultV01(
+    result = _demo.run_living_gauntlet_v01.collect_fractal_runtime_gauntlet_act_v01()
+    assert result == _demo.run_living_gauntlet_v01.LivingGauntletActResultV01(
         act_id="fractal_runtime",
         errors=("fractal_runtime_gauntlet_act_failed",),
         executed=True,
         no_real_connector_or_action=False,
         real_world_effects_count=-1,
         root_authority_preserved=False,
-        runtime_status=runner.STATUS_FAIL_CLOSED,
+        runtime_status=_demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
         source_module="demo.run_fractal_runtime_g2_d_v02",
         source_symbol="collect_fractal_runtime_g2_d_v02",
-        state=runner.STATUS_FAIL_CLOSED,
+        state=_demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED,
     )
     assert forged.report_id not in repr(result)
 
 
 def test_living_render_separates_current_acts_from_historical_evidence(report):
-    rendered = runner.render_living_gauntlet_v01(report)
+    rendered = _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(report)
     current, evidence = rendered.split("[EVIDENCE-ONLY REFERENCES]", 1)
     assert "act_id=all_layers_invariant_super_smoke" not in current
     assert "act_id=all_layers_invariant_super_smoke" in evidence
     assert "state=HISTORICAL_EVIDENCE_ONLY" in evidence
-    assert current.count("act_id=") == 16
+    assert current.count("act_id=") == 17
 
 
 def test_d6_living_source_has_no_test_or_private_runtime_import():
@@ -5173,3 +5527,110 @@ def test_d6_living_source_has_no_test_or_private_runtime_import():
     assert not any(name == "tests" or name.startswith("tests.") for name in imported)
     assert "_d4_run_runtime_v02" not in source
     assert "collect_fractal_runtime_g2_d_v02" in source
+
+
+
+
+def test_e6_living_act_and_shared_receipt_bind_actual_e5_report(
+    report,
+    _shared_e5_report_for_internal_builder,
+):
+    e5_report = _shared_e5_report_for_internal_builder
+    canonical_bytes = (
+        _demo.run_living_gauntlet_v01._g2e.
+        render_continuous_delta_runtime_g2_e_v01(e5_report).encode("utf-8")
+    )
+    assert report["active_act_results"][-1] == {
+        "act_id": "continuous_delta_runtime",
+        "errors": (),
+        "executed": True,
+        "no_real_connector_or_action": True,
+        "real_world_effects_count": 0,
+        "root_authority_preserved": True,
+        "runtime_status": _demo.run_living_gauntlet_v01.STATUS_PASS,
+        "source_module": "demo.run_continuous_delta_runtime_g2_e_v01",
+        "source_symbol": "collect_continuous_delta_runtime_g2_e_v01",
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
+    }
+    assert report["invariant_results"][-1] == {
+        "invariant_id": "continuous_delta_runtime_act_pass",
+        "state": _demo.run_living_gauntlet_v01.STATUS_PASS,
+    }
+    assert report["continuous_delta_runtime_report_sha256"] == hashlib.sha256(
+        canonical_bytes
+    ).hexdigest()
+    assert report["continuous_delta_runtime_report_bytes"] == len(canonical_bytes)
+    assert report["continuous_delta_runtime_report_sha256"] == report[
+        "shared_conformance_e5_report_sha256"
+    ]
+    assert report["continuous_delta_runtime_report_bytes"] == report[
+        "shared_conformance_e5_report_bytes"
+    ]
+    assert report["shared_conformance_e5_collector_calls"] == 0
+    assert report["continuous_delta_runtime_second_execution_count"] == 0
+    assert report["continuous_delta_runtime_cache_reuse_count"] == 0
+    assert report["continuous_delta_runtime_test_fixture_substitution_count"] == 0
+    assert report["continuous_delta_runtime_private_g2d_calls"] == 0
+    assert report["continuous_delta_runtime_reconstructed_case_count"] == 0
+    assert report["current_regression_claim_mapping"]["real_world_effects_zero"] == list(
+        dict(
+            _demo.run_living_gauntlet_v01.CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
+        )["real_world_effects_zero"]
+    )
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    (
+        ("continuous_delta_runtime_execution_count", 2),
+        ("continuous_delta_runtime_public_validation_status", "FAIL_CLOSED"),
+        ("continuous_delta_runtime_report_sha256", "b" * 64),
+        ("continuous_delta_runtime_report_bytes", 2),
+        ("shared_conformance_e5_collector_calls", 1),
+        ("shared_conformance_e5_report_sha256", "b" * 64),
+        ("shared_conformance_e5_report_bytes", 2),
+        ("continuous_delta_runtime_second_execution_count", 1),
+        ("continuous_delta_runtime_cache_reuse_count", 1),
+        ("continuous_delta_runtime_test_fixture_substitution_count", 1),
+        ("continuous_delta_runtime_private_g2d_calls", 1),
+        ("continuous_delta_runtime_reconstructed_case_count", 1),
+    ),
+)
+def test_e6_living_validator_rejects_each_e5_receipt_lie(
+    report,
+    field,
+    value,
+):
+    forged = deepcopy(report)
+    forged[field] = value
+    assert "living_gauntlet_e5_receipt_invalid" in (
+        _demo.run_living_gauntlet_v01.validate_living_gauntlet_report_v01(
+            forged
+        )
+    )
+
+
+def test_e6_living_internal_builder_propagates_forged_e5_failure(
+    _shared_e5_report_for_internal_builder,
+):
+    e5_report = _shared_e5_report_for_internal_builder
+    forged = replace(
+        e5_report,
+        report_id=_demo.run_living_gauntlet_v01._g2e.REPORT_ID_PREFIX + "f" * 64,
+    )
+    failed = (
+        _demo.run_living_gauntlet_v01.
+        _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
+            forged
+        )
+    )
+    assert failed["final_status"] == _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    assert "continuous_delta_runtime_collection_failed" in failed[
+        "validation_errors"
+    ]
+    assert failed["active_act_results"][-1]["act_id"] == (
+        "continuous_delta_runtime"
+    )
+    assert failed["active_act_results"][-1]["state"] == (
+        _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
+    )

@@ -19,6 +19,7 @@ from demo import (
 )
 from demo import run_execution_mode_router_g2_c_v01 as _g2c
 from demo import run_fractal_runtime_g2_d_v02 as _g2d
+from demo import run_continuous_delta_runtime_g2_e_v01 as _g2e
 from demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01 import (
     collect_tri_party_airline_ticket_purchase_mock_e2e_v01,
 )
@@ -162,7 +163,7 @@ import hedgehog.kernel.transition_registry_v01 as transition_registry_module
 
 
 RUNNER_ID = "living_gauntlet_v01"
-RUNNER_VERSION = "v1.5"
+RUNNER_VERSION = "v1.6"
 _GATE1_RELEASE_RUNNER_VERSION_V10 = "v1.0"
 _G2A_RUNNER_VERSION_V11 = "v1.1"
 _G2B_RUNNER_VERSION_V12 = "v1.2"
@@ -172,8 +173,11 @@ _RELEASE_INDEX_VERSION = "v0.1"
 KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL = (
     "kernel_conformance_v0_5_historical"
 )
-KERNEL_CONFORMANCE_PROFILE_V06_CURRENT = "kernel_conformance_v0_6_current"
-DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL = (
+    "kernel_conformance_v0_6_historical"
+)
+KERNEL_CONFORMANCE_PROFILE_V07_CURRENT = "kernel_conformance_v0_7_current"
+DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
 HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V05 = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
@@ -338,9 +342,13 @@ _ACTIVE_ACT_SOURCES = {
         "demo.run_fractal_runtime_g2_d_v02",
         "collect_fractal_runtime_g2_d_v02",
     ),
+    "continuous_delta_runtime": (
+        "demo.run_continuous_delta_runtime_g2_e_v01",
+        "collect_continuous_delta_runtime_g2_e_v01",
+    ),
 }
 _ACTIVE_ACT_IDS = tuple(_ACTIVE_ACT_SOURCES)
-CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06 = (
+HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06 = (
     "airline_deterministic_transaction_runtime",
     "generic_integrity_replay",
     "root_signer_isolation_conformance",
@@ -356,6 +364,10 @@ CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06 = (
     "drs_semantic_address_and_reuse_certificate",
     "execution_mode_router",
     "fractal_runtime",
+)
+CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07 = (
+    *HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06,
+    "continuous_delta_runtime",
 )
 CURRENT_REGRESSION_CLAIM_TO_ACTS_V06 = (
     (
@@ -407,7 +419,83 @@ CURRENT_REGRESSION_CLAIM_TO_ACTS_V06 = (
             "action_packet_lifecycle",
         ),
     ),
-    ("real_world_effects_zero", CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06),
+    (
+        "real_world_effects_zero",
+        HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06,
+    ),
+)
+CURRENT_REGRESSION_CLAIM_TO_ACTS_V07 = (
+    (
+        "root_sole_local_final_commit_authority",
+        (
+            "root_decision_kernel",
+            "action_packet_lifecycle",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    ("no_superroot_exists", ("generic_multiroot",)),
+    (
+        "bsep_semantic_membrane",
+        (
+            "execution_mode_router",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "runtime_execution_topology_runtime_owned",
+        ("fractal_runtime", "continuous_delta_runtime"),
+    ),
+    (
+        "provider_model_advisory_only",
+        (
+            "semantic_work_contract",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "actor_output_cannot_create_final_output",
+        (
+            "semantic_work_contract",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "resultproposal_postvv_terminal_gt_before_root",
+        ("fractal_runtime", "continuous_delta_runtime"),
+    ),
+    (
+        "drs_retrieval_reuse_no_authority",
+        (
+            "drs_semantic_address_and_reuse_certificate",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "receipt_evidence_only",
+        (
+            "effect_firewall",
+            "action_packet_lifecycle",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "effect_capability_bounded_corridor_only",
+        ("effect_firewall", "continuous_delta_runtime"),
+    ),
+    (
+        "airline_supplier_same_authority_law",
+        (
+            "airline_deterministic_transaction_runtime",
+            "supplier_water_filter_portability",
+            "action_packet_lifecycle",
+            "continuous_delta_runtime",
+        ),
+    ),
+    ("real_world_effects_zero", CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07),
 )
 _EXECUTED_RUNTIME_ACT_IDS = (
     "airline_deterministic_transaction_runtime",
@@ -416,6 +504,7 @@ _EXECUTED_RUNTIME_ACT_IDS = (
     "root_decision_kernel",
     "effect_firewall",
     "supplier_water_filter_portability",
+    "continuous_delta_runtime",
 )
 _EXECUTED_CONFORMANCE_ACT_IDS = (
     "root_signer_isolation_conformance",
@@ -713,7 +802,11 @@ _GATE1_COUNTER_FIELD_NAMES_V10 = _G2A_COUNTER_FIELD_NAMES_V11 - {
     "action_packet_lifecycle_execution_count",
 }
 _COUNTER_FIELD_NAMES = frozenset(
-    (*_G2C_COUNTER_FIELD_NAMES_V13, "fractal_runtime_execution_count")
+    (
+        *_G2C_COUNTER_FIELD_NAMES_V13,
+        "fractal_runtime_execution_count",
+        "continuous_delta_runtime_execution_count",
+    )
 )
 _LIVING_VERSION_GEOMETRY = {
     RUNNER_VERSION: (
@@ -999,7 +1092,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     for key, expected in (
         ("document_id", "living_release_completion_manifest_v01"),
         ("version", _RELEASE_INDEX_VERSION),
-        ("runner_version", RUNNER_VERSION),
+        ("runner_version", "v1.5"),
         ("manifest_status", "ACTIVE_GATE1_G1E"),
     ):
         if manifest.get(key) != expected:
@@ -1250,12 +1343,12 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
             "historical_act_id": "all_layers_invariant_super_smoke",
         },
         "current_v0_6": {
-            "profile_id": KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+            "profile_id": "kernel_conformance_v0_6_current",
             "profile_version": "v0.6",
             "profile_status": "CURRENT_ACTIVE",
             "default_current": True,
             "active_gauntlet_refs": list(
-                CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
+                HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
             ),
             "historical_profile_ref": (
                 KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
@@ -1265,7 +1358,7 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     }
     if (
         manifest.get("current_kernel_conformance_profile")
-        != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        != "kernel_conformance_v0_6_current"
     ):
         errors.append("completion_manifest_current_profile_mismatch")
     if manifest.get("kernel_conformance_profiles") != expected_profiles:
@@ -1290,12 +1383,12 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
     if (
         index.get("current_kernel_conformance_profile")
-        != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        != "kernel_conformance_v0_6_current"
     ):
         errors.append("integration_seam_current_profile_mismatch")
     if (
         index.get("historical_kernel_conformance_profile")
-        != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        != "kernel_conformance_v0_5_historical"
     ):
         errors.append("integration_seam_historical_profile_mismatch")
     seams = index.get("seams")
@@ -4437,6 +4530,12 @@ def _derive_report_counters_v01(
             and row.get("executed") is True
             for row in active_rows
         ),
+        "continuous_delta_runtime_execution_count": sum(
+            isinstance(row, Mapping)
+            and row.get("act_id") == "continuous_delta_runtime"
+            and row.get("executed") is True
+            for row in active_rows
+        ),
     }
     return {
         key: value for key, value in counters.items() if key in counter_field_names
@@ -5161,6 +5260,142 @@ def collect_fractal_runtime_gauntlet_act_v01() -> LivingGauntletActResultV01:
         return _fractal_runtime_gauntlet_act_from_validated_report_v01(None)
 
 
+_G2E_ZERO_COUNTER_FIELDS_V16 = (
+    "provider_calls",
+    "model_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "final_outputs_created",
+    "drs_writes",
+    "authority_created_count",
+    "real_world_effects_count",
+)
+
+
+def _validated_e5_receipt_v01(
+    report: object,
+) -> tuple[_g2e.ContinuousDeltaRuntimeG2EReportV01, str, int]:
+    validated = _g2e.validate_continuous_delta_runtime_g2_e_report_v01(report)
+    canonical_bytes = _g2e.render_continuous_delta_runtime_g2_e_v01(
+        validated
+    ).encode("utf-8")
+    return validated, hashlib.sha256(canonical_bytes).hexdigest(), len(canonical_bytes)
+
+
+def _continuous_delta_runtime_report_passes_living_act_v01(
+    report: object,
+) -> bool:
+    try:
+        validated = _g2e.validate_continuous_delta_runtime_g2_e_report_v01(
+            report
+        )
+        return (
+            validated.report_version == _g2e.REPORT_VERSION
+            and validated.profile_id == _g2e.PROFILE_ID
+            and validated.domain_order
+            == (
+                "TRAVEL_POLICY_INFORMATION",
+                "WAREHOUSE_MAINTENANCE_INFORMATION",
+            )
+            and validated.case_order
+            == tuple(item.case_id for item in validated.case_results)
+            and len(validated.case_results) == 100
+            and validated.constructive_case_count == 10
+            and validated.negative_case_count == 90
+            and validated.total_case_count == 100
+            and validated.accepted_baseline_bundle_count == 2
+            and validated.explicit_public_g2d_baseline_call_count == 2
+            and validated.final_status == STATUS_PASS
+            and validated.reason_codes == ()
+            and type(validated.sealed_evidence_sha256) is str
+            and len(validated.sealed_evidence_sha256) == 64
+            and set(validated.sealed_evidence_sha256)
+            <= set("0123456789abcdef")
+            and all(
+                getattr(validated, field) == 0
+                for field in _G2E_ZERO_COUNTER_FIELDS_V16
+            )
+            and all(
+                item.expected_outcome == item.observed_outcome
+                and item.expected_reason_codes == item.observed_reason_codes
+                and item.final_status == STATUS_PASS
+                and item.reason_codes == ()
+                and type(item.evidence_material_json) is str
+                and bool(item.evidence_material_json)
+                and type(item.evidence_sha256) is str
+                and len(item.evidence_sha256) == 64
+                and set(item.evidence_sha256) <= set("0123456789abcdef")
+                and all(
+                    getattr(item, field) == 0
+                    for field in _G2E_ZERO_COUNTER_FIELDS_V16
+                )
+                and all(
+                    subcase.expected_reason_codes
+                    == subcase.observed_reason_codes
+                    and subcase.final_status == STATUS_PASS
+                    and type(subcase.evidence_sha256) is str
+                    and len(subcase.evidence_sha256) == 64
+                    and set(subcase.evidence_sha256)
+                    <= set("0123456789abcdef")
+                    for subcase in item.subcase_results
+                )
+                for item in validated.case_results
+            )
+        )
+    except Exception:
+        return False
+
+
+def _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+    report: object,
+) -> LivingGauntletActResultV01:
+    act_id = "continuous_delta_runtime"
+    source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
+    if _continuous_delta_runtime_report_passes_living_act_v01(report):
+        return LivingGauntletActResultV01(
+            act_id=act_id,
+            errors=(),
+            executed=True,
+            no_real_connector_or_action=True,
+            real_world_effects_count=0,
+            root_authority_preserved=True,
+            runtime_status=STATUS_PASS,
+            source_module=source_module,
+            source_symbol=source_symbol,
+            state=STATUS_PASS,
+        )
+    return LivingGauntletActResultV01(
+        act_id=act_id,
+        errors=("continuous_delta_runtime_gauntlet_act_failed",),
+        executed=True,
+        no_real_connector_or_action=False,
+        real_world_effects_count=-1,
+        root_authority_preserved=False,
+        runtime_status=STATUS_FAIL_CLOSED,
+        source_module=source_module,
+        source_symbol=source_symbol,
+        state=STATUS_FAIL_CLOSED,
+    )
+
+
+def collect_continuous_delta_runtime_gauntlet_act_v01(
+) -> LivingGauntletActResultV01:
+    try:
+        report = _g2e.collect_continuous_delta_runtime_g2_e_v01()
+        report, _sha256, _byte_count = _validated_e5_receipt_v01(report)
+        return _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+            report
+        )
+    except Exception:
+        return _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+            None
+        )
+
+
 def collect_living_gauntlet_base_act_results_v01(
 ) -> tuple[dict[str, object], ...]:
     collectors = (
@@ -5235,6 +5470,9 @@ def collect_living_gauntlet_base_act_results_v01(
 def _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
     active_act_results: tuple[Mapping[str, object], ...],
     fractal_runtime_report: _g2d.FractalRuntimeG2DReportV02,
+    continuous_delta_runtime_report: _g2e.ContinuousDeltaRuntimeG2EReportV01,
+    continuous_delta_runtime_report_sha256: str,
+    continuous_delta_runtime_report_bytes: int,
 ) -> LivingGauntletActResultV01:
     act_id = "kernel_conformance_closure"
     source_module, source_symbol = _ACTIVE_ACT_SOURCES[act_id]
@@ -5243,25 +5481,44 @@ def _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
             active_act_results=active_act_results,
             implementation_commit=resolve_current_implementation_commit_v01(),
             fractal_runtime_report=fractal_runtime_report,
+            continuous_delta_runtime_report=continuous_delta_runtime_report,
+            continuous_delta_runtime_report_sha256=(
+                continuous_delta_runtime_report_sha256
+            ),
+            continuous_delta_runtime_report_bytes=(
+                continuous_delta_runtime_report_bytes
+            ),
         )
         validation_errors = validate_kernel_conformance_runtime_v01(report)
         counters = report.counters
         passed = (
             not validation_errors
             and report.final_status == STATUS_PASS
-            and report.profile_id == KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
-            and report.conformance_version == "v0.6"
+            and report.profile_id == KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
+            and report.conformance_version == "v0.7"
             and report.historical_profile_ref
-            == KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            == KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
             and report.claim_to_current_act
-            == CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+            == CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
             and report.current_act_count
-            == len(CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06)
-            and len(report.category_results) == 14
+            == len(CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07)
+            and len(report.category_results) == 15
             and len(report.domain_results) == 2
-            and len(report.negative_test_results) == 50
+            and len(report.negative_test_results) == 60
             and report.active_gauntlet_refs
-            == CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
+            == CURRENT_KERNEL_CONFORMANCE_ACTIVE_REFS_V07
+            and report.continuous_delta_runtime_execution_count == 1
+            and report.continuous_delta_runtime_public_validation_status
+            == STATUS_PASS
+            and report.continuous_delta_runtime_report_sha256
+            == continuous_delta_runtime_report_sha256
+            and report.continuous_delta_runtime_report_bytes
+            == continuous_delta_runtime_report_bytes
+            and report.shared_conformance_e5_collector_calls == 0
+            and report.shared_conformance_e5_report_sha256
+            == continuous_delta_runtime_report_sha256
+            and report.shared_conformance_e5_report_bytes
+            == continuous_delta_runtime_report_bytes
             and all(item.status == STATUS_PASS for item in report.category_results)
             and all(item.status == STATUS_PASS for item in report.domain_results)
             and all(
@@ -5320,9 +5577,26 @@ def collect_kernel_conformance_closure_gauntlet_act_v01(
         )
         if reasons:
             raise ValueError
+        continuous_delta_runtime_report = (
+            _g2e.collect_continuous_delta_runtime_g2_e_v01()
+        )
+        continuous_delta_runtime_report, e5_sha256, e5_bytes = (
+            _validated_e5_receipt_v01(continuous_delta_runtime_report)
+        )
+        e5_act = _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+            continuous_delta_runtime_report
+        )
+        rows = active_act_results
+        if tuple(row.get("act_id") for row in rows) == (
+            HISTORICAL_KERNEL_CONFORMANCE_ACTIVE_REFS_V06
+        ):
+            rows = (*rows, asdict(e5_act))
         return _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
-            active_act_results,
+            rows,
             fractal_runtime_report,
+            continuous_delta_runtime_report,
+            e5_sha256,
+            e5_bytes,
         )
     except Exception:
         return _failed_act_result(
@@ -5332,7 +5606,39 @@ def collect_kernel_conformance_closure_gauntlet_act_v01(
 
 
 def collect_living_gauntlet_v01() -> dict[str, Any]:
+    try:
+        continuous_delta_runtime_report = (
+            _g2e.collect_continuous_delta_runtime_g2_e_v01()
+        )
+    except Exception:
+        continuous_delta_runtime_report = None
+    return _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
+        continuous_delta_runtime_report
+    )
+
+
+def _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
+    continuous_delta_runtime_report: object,
+) -> dict[str, Any]:
     errors: list[str] = []
+    e5_sha256 = ""
+    e5_bytes = 0
+    e5_collection_failed = False
+    try:
+        (
+            continuous_delta_runtime_report,
+            e5_sha256,
+            e5_bytes,
+        ) = _validated_e5_receipt_v01(continuous_delta_runtime_report)
+        e5 = _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+            continuous_delta_runtime_report
+        )
+    except Exception:
+        continuous_delta_runtime_report = None
+        e5_collection_failed = True
+        e5 = _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+            None
+        )
     manifest: dict[str, Any] = {}
     seam_index: dict[str, Any] = {}
     try:
@@ -5402,8 +5708,12 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                 asdict(g2b),
                 asdict(g2c),
                 asdict(g2d),
+                asdict(e5),
             )
-            if fractal_runtime_report is None:
+            if (
+                fractal_runtime_report is None
+                or continuous_delta_runtime_report is None
+            ):
                 closure = _failed_act_result(
                     act_id="kernel_conformance_closure",
                     reason="kernel_conformance_closure_failed",
@@ -5413,6 +5723,9 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
                     _collect_kernel_conformance_closure_from_validated_fractal_runtime_v01(
                         closure_inputs,
                         fractal_runtime_report,
+                        continuous_delta_runtime_report,
+                        e5_sha256,
+                        e5_bytes,
                     )
                 )
             active_result_rows.extend(dict(row) for row in base_results)
@@ -5421,7 +5734,10 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
             active_result_rows.append(asdict(g2b))
             active_result_rows.append(asdict(g2c))
             active_result_rows.append(asdict(g2d))
+            active_result_rows.append(asdict(e5))
 
+    if e5_collection_failed:
+        errors.append("continuous_delta_runtime_collection_failed")
     for result in active_result_rows:
         row_errors = result.get("errors")
         if type(row_errors) is tuple:
@@ -5503,28 +5819,35 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         _invariant_result(
             "action_packet_lifecycle_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-4].get("act_id")
+            and active_result_rows[-5].get("act_id")
             == "action_packet_lifecycle"
-            and active_result_rows[-4].get("state") == STATUS_PASS,
+            and active_result_rows[-5].get("state") == STATUS_PASS,
         ),
         _invariant_result(
             "drs_semantic_address_reuse_certificate_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-3].get("act_id")
+            and active_result_rows[-4].get("act_id")
             == "drs_semantic_address_and_reuse_certificate"
-            and active_result_rows[-3].get("state") == STATUS_PASS,
+            and active_result_rows[-4].get("state") == STATUS_PASS,
         ),
         _invariant_result(
             "execution_mode_router_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-2].get("act_id")
+            and active_result_rows[-3].get("act_id")
             == "execution_mode_router"
-            and active_result_rows[-2].get("state") == STATUS_PASS,
+            and active_result_rows[-3].get("state") == STATUS_PASS,
         ),
         _invariant_result(
             "fractal_runtime_act_pass",
             len(active_result_rows) == len(_ACTIVE_ACT_IDS)
-            and active_result_rows[-1].get("act_id") == "fractal_runtime"
+            and active_result_rows[-2].get("act_id") == "fractal_runtime"
+            and active_result_rows[-2].get("state") == STATUS_PASS,
+        ),
+        _invariant_result(
+            "continuous_delta_runtime_act_pass",
+            len(active_result_rows) == len(_ACTIVE_ACT_IDS)
+            and active_result_rows[-1].get("act_id")
+            == "continuous_delta_runtime"
             and active_result_rows[-1].get("state") == STATUS_PASS,
         ),
     ]
@@ -5540,14 +5863,30 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
     report: dict[str, Any] = {
         "runner_id": RUNNER_ID,
         "runner_version": RUNNER_VERSION,
-        "kernel_conformance_profile": KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+        "kernel_conformance_profile": KERNEL_CONFORMANCE_PROFILE_V07_CURRENT,
         "historical_kernel_conformance_profile": (
-            KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
         ),
         "current_regression_claim_mapping": {
             claim_id: list(act_ids)
-            for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+            for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
         },
+        "continuous_delta_runtime_execution_count": 1,
+        "continuous_delta_runtime_public_validation_status": (
+            STATUS_PASS
+            if continuous_delta_runtime_report is not None
+            else STATUS_FAIL_CLOSED
+        ),
+        "continuous_delta_runtime_report_sha256": e5_sha256,
+        "continuous_delta_runtime_report_bytes": e5_bytes,
+        "shared_conformance_e5_collector_calls": 0,
+        "shared_conformance_e5_report_sha256": e5_sha256,
+        "shared_conformance_e5_report_bytes": e5_bytes,
+        "continuous_delta_runtime_second_execution_count": 0,
+        "continuous_delta_runtime_cache_reuse_count": 0,
+        "continuous_delta_runtime_test_fixture_substitution_count": 0,
+        "continuous_delta_runtime_private_g2d_calls": 0,
+        "continuous_delta_runtime_reconstructed_case_count": 0,
         "active_act_results": active_result_rows,
         "evidence_only_entries": evidence_entries,
         "planned_entries": planned_entries,
@@ -5558,8 +5897,8 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
         "counters": counters,
         "final_status": final_status,
     }
-    valid, report_errors = validate_living_gauntlet_report_v01(report)
-    if not valid:
+    report_errors = validate_living_gauntlet_report_v01(report)
+    if report_errors:
         report["validation_errors"] = tuple(
             dict.fromkeys((*report["validation_errors"], *report_errors))
         )
@@ -5569,16 +5908,28 @@ def collect_living_gauntlet_v01() -> dict[str, Any]:
 
 def validate_living_gauntlet_report_v01(
     report: Any,
-) -> tuple[bool, tuple[str, ...]]:
+) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(report, Mapping):
-        return False, ("living_gauntlet_report_not_mapping",)
+        return ("living_gauntlet_report_not_mapping",)
     required_fields = {
         "runner_id",
         "runner_version",
         "kernel_conformance_profile",
         "historical_kernel_conformance_profile",
         "current_regression_claim_mapping",
+        "continuous_delta_runtime_execution_count",
+        "continuous_delta_runtime_public_validation_status",
+        "continuous_delta_runtime_report_sha256",
+        "continuous_delta_runtime_report_bytes",
+        "shared_conformance_e5_collector_calls",
+        "shared_conformance_e5_report_sha256",
+        "shared_conformance_e5_report_bytes",
+        "continuous_delta_runtime_second_execution_count",
+        "continuous_delta_runtime_cache_reuse_count",
+        "continuous_delta_runtime_test_fixture_substitution_count",
+        "continuous_delta_runtime_private_g2d_calls",
+        "continuous_delta_runtime_reconstructed_case_count",
         "active_act_results",
         "evidence_only_entries",
         "planned_entries",
@@ -5595,20 +5946,45 @@ def validate_living_gauntlet_report_v01(
         errors.append("living_gauntlet_runner_id_mismatch")
     if (
         report.get("kernel_conformance_profile")
-        != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        != KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     ):
         errors.append("living_gauntlet_current_profile_mismatch")
     if (
         report.get("historical_kernel_conformance_profile")
-        != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        != KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
     ):
         errors.append("living_gauntlet_historical_profile_mismatch")
     expected_claim_mapping = {
         claim_id: list(act_ids)
-        for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+        for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
     }
     if report.get("current_regression_claim_mapping") != expected_claim_mapping:
         errors.append("living_gauntlet_claim_mapping_mismatch")
+    e5_sha256 = report.get("continuous_delta_runtime_report_sha256")
+    shared_e5_sha256 = report.get("shared_conformance_e5_report_sha256")
+    e5_bytes = report.get("continuous_delta_runtime_report_bytes")
+    shared_e5_bytes = report.get("shared_conformance_e5_report_bytes")
+    if (
+        report.get("continuous_delta_runtime_execution_count") != 1
+        or report.get("continuous_delta_runtime_public_validation_status")
+        != STATUS_PASS
+        or not isinstance(e5_sha256, str)
+        or len(e5_sha256) != 64
+        or not set(e5_sha256) <= set("0123456789abcdef")
+        or shared_e5_sha256 != e5_sha256
+        or not isinstance(e5_bytes, int)
+        or isinstance(e5_bytes, bool)
+        or e5_bytes <= 0
+        or shared_e5_bytes != e5_bytes
+        or report.get("shared_conformance_e5_collector_calls") != 0
+        or report.get("continuous_delta_runtime_second_execution_count") != 0
+        or report.get("continuous_delta_runtime_cache_reuse_count") != 0
+        or report.get("continuous_delta_runtime_test_fixture_substitution_count")
+        != 0
+        or report.get("continuous_delta_runtime_private_g2d_calls") != 0
+        or report.get("continuous_delta_runtime_reconstructed_case_count") != 0
+    ):
+        errors.append("living_gauntlet_e5_receipt_invalid")
     version_geometry = _LIVING_VERSION_GEOMETRY.get(
         report.get("runner_version")
     )
@@ -5758,8 +6134,7 @@ def validate_living_gauntlet_report_v01(
         errors.append("report_failed_checks_not_fail_closed")
     if not errors and final_status != STATUS_PASS:
         errors.append("report_clean_checks_not_pass")
-    unique_errors = tuple(dict.fromkeys(errors))
-    return not unique_errors, unique_errors
+    return tuple(dict.fromkeys(errors))
 
 
 def render_living_gauntlet_v01(report: Mapping[str, Any]) -> str:
@@ -5768,6 +6143,12 @@ def render_living_gauntlet_v01(report: Mapping[str, Any]) -> str:
         f"kernel_conformance_profile={report['kernel_conformance_profile']}",
         "historical_kernel_conformance_profile="
         f"{report['historical_kernel_conformance_profile']}",
+        "continuous_delta_runtime_report_sha256="
+        f"{report['continuous_delta_runtime_report_sha256']}",
+        "continuous_delta_runtime_report_bytes="
+        f"{report['continuous_delta_runtime_report_bytes']}",
+        "shared_conformance_e5_collector_calls="
+        f"{report['shared_conformance_e5_collector_calls']}",
         "",
         "[ACTIVE EXECUTED ACTS]",
     ]

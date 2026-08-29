@@ -1,22 +1,372 @@
 from __future__ import annotations
 
 import ast
+from contextlib import contextmanager
 from dataclasses import FrozenInstanceError, fields, is_dataclass, replace
 import hashlib
 import inspect
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
+from unittest import mock as _mock
 
+import demo as _demo
 import hedgehog.kernel as kernel
-from demo import run_kernel_conformance_v01 as runner
-from demo import run_living_gauntlet_v01 as living
+from demo.run_kernel_conformance_v01 import (
+    collect_kernel_conformance_v01,
+    validate_kernel_conformance_runtime_v01,
+)
 from hedgehog.kernel import conformance_v01 as conformance
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 COMPLETION_MANIFEST_PATH = REPOSITORY_ROOT / "release/completion_manifest.json"
+
+POST_E6_EXPECTED_CATEGORY_CHECK_IDS = (
+    (
+        "DomainPackConformance",
+        (
+            "airline_domain_pass",
+            "supplier_domain_pass",
+            "shared_integrity_contract",
+            "shared_replay_contract",
+            "zero_kernel_law_changes",
+        ),
+    ),
+    (
+        "RootAdapterConformance",
+        (
+            "both_domains_preserve_root",
+            "root_decision_act_pass",
+            "domain_authority_creation_zero",
+            "no_superroot",
+        ),
+    ),
+    (
+        "CorridorAdapterConformance",
+        (
+            "airline_corridor_pass",
+            "supplier_mock_corridor_contained",
+            "corridor_law_unchanged",
+            "no_real_connector_or_action",
+        ),
+    ),
+    (
+        "SemanticProviderConformance",
+        (
+            "trust_model_pass",
+            "semantic_work_pass",
+            "providers_advisory_only",
+            "external_calls_zero",
+        ),
+    ),
+    (
+        "ReplayCompatibility",
+        (
+            "airline_replay_pass",
+            "supplier_replay_pass",
+            "replay_rerun_counts_zero",
+            "replay_creates_no_authority_or_effect",
+        ),
+    ),
+    (
+        "CryptoCompatibility",
+        (
+            "both_anchored_checks_pass",
+            "both_unanchored_checks_explicit",
+            "no_false_unanchored_pass",
+            "no_production_signer_identity",
+            "airline_signature_false",
+            "root_attestation_deferred",
+        ),
+    ),
+    (
+        "SignerIsolationConformance",
+        (
+            "own_root_signatures_verify",
+            "cross_root_misuse_blocked",
+            "no_pki_claim",
+            "no_key_persistence",
+        ),
+    ),
+    (
+        "TransitionRegistryConformance",
+        (
+            "registry_act_pass",
+            "unknown_transition_blocked",
+            "registry_immutable",
+            "no_rule_injection",
+        ),
+    ),
+    (
+        "EffectFirewallConformance",
+        (
+            "firewall_act_pass",
+            "widened_scope_blocked",
+            "firewall_sole_effect_owner",
+            "domain_adapters_no_effect_access",
+            "real_effects_zero",
+        ),
+    ),
+    (
+        "MultiRootConformance",
+        (
+            "three_root_pass",
+            "four_root_pass",
+            "mixed_visible",
+            "incomplete_visible",
+            "duplicate_root_blocked",
+            "reserved_root_blocked",
+            "authority_transfer_zero",
+            "permission_transfer_zero",
+            "no_superroot",
+        ),
+    ),
+    (
+        "ActionPacketLifecycleConformance",
+        (
+            "canonical_identity",
+            "canonical_time",
+            "legal_transitions",
+            "unknown_transition_block",
+            "root_only_authority_changes",
+            "registry_non_authority",
+            "corridor_freshness_enforcement",
+            "receipt_non_authority",
+            "replay_non_execution",
+            "cross_domain_invariance",
+        ),
+    ),
+    (
+        "DRSSemanticAddressReuseCertificateConformance",
+        (
+            "canonical_identity",
+            "time",
+            "pointer_policy",
+            "eligibility",
+            "ranking",
+            "descent",
+            "root_shortcut",
+            "certificate_non_authority",
+            "action_boundary",
+            "cross_domain_invariance",
+        ),
+    ),
+    (
+        "ExecutionModeRouterConformance",
+        (
+            "two_domain_ten_case_report",
+            "all_five_root_outcomes",
+            "seventeen_step_order",
+            "source_binding_and_derived_query",
+            "one_abi_profile_and_stage_bundles",
+            "one_transition_profile_and_root_lineage",
+            "route_eligibility_and_direct_bypass",
+            "package_facade_and_import_boundary",
+            "negative_matrix_and_domain_invariance",
+            "zero_operations",
+        ),
+    ),
+    (
+        "FractalRuntimeConformance",
+        (
+            "policy_identity_and_staged_surface",
+            "executable_templates_and_child_activation",
+            "queue_input_outcome_and_result_order",
+            "paired_budget_events_and_backpressure",
+            "resultproposal_unique_gt_kt_validation",
+            "pre_root_four_artifact_abi_partitions",
+            "transition_profile_and_root_only_report",
+            "causal_pointer_reason_and_root_outcome",
+            "two_domain_seventy_two_case_boundary",
+            "zero_authority_and_operations",
+        ),
+    ),
+    (
+        "ContinuousDeltaRuntimeConformance",
+        (
+            "delta_source_identity_and_changed_field_binding",
+            "dependency_fingerprint_profile_and_role_separation",
+            "dependency_graph_bounds_order_and_acyclicity",
+            "affected_set_complete_and_minimal",
+            "invalidation_without_deletion",
+            "preservation_and_new_identity_recomputation",
+            "g2a_g2b_g2c_g2d_source_binding",
+            "repeated_delta_idempotency_and_no_spin",
+            "two_domain_selective_recomputation",
+            "zero_authority_and_operations",
+        ),
+    ),
+)
+
+POST_E6_EXPECTED_PROBES = (
+    "manifest_hash_mismatch",
+    "replay_hash_mismatch",
+    "cross_root_signer_misuse",
+    "unknown_transition",
+    "root_hard_failure_not_overridden",
+    "effect_firewall_scope_widening",
+    "multiroot_duplicate_root",
+    "multiroot_reserved_root",
+    "airline_adapter_effect_access_forbidden",
+    "supplier_adapter_effect_counter_rejected",
+    "action_packet_identity_forgery",
+    "action_packet_time_forgery",
+    "action_packet_illegal_transition",
+    "action_packet_unknown_transition",
+    "action_packet_root_authority_forgery",
+    "action_packet_registry_authority_forgery",
+    "action_packet_corridor_freshness_forgery",
+    "action_packet_receipt_authority_forgery",
+    "action_packet_replay_execution_forgery",
+    "action_packet_cross_domain_substitution",
+    "drs_address_identity_forgery",
+    "drs_time_query_forgery",
+    "drs_pointer_policy_forgery",
+    "drs_eligibility_order_forgery",
+    "drs_ranking_ineligible_selection_forgery",
+    "drs_memory_descent_budget_forgery",
+    "drs_root_shortcut_authority_forgery",
+    "reuse_certificate_cross_binding_forgery",
+    "drs_action_reuse_forgery",
+    "drs_cross_domain_substitution",
+    "execution_mode_report_identity_forgery",
+    "execution_mode_case_order_forgery",
+    "execution_mode_selected_row_forgery",
+    "execution_mode_root_outcome_forgery",
+    "execution_mode_transition_lineage_forgery",
+    "execution_mode_route_eligibility_forgery",
+    "execution_mode_conflict_state_forgery",
+    "execution_mode_cross_domain_substitution",
+    "execution_mode_operation_order_forgery",
+    "execution_mode_zero_operation_forgery",
+    "fractal_runtime_report_identity_forgery",
+    "fractal_runtime_route_eligibility_substitution",
+    "fractal_runtime_direct_root_decision_bypass",
+    "fractal_runtime_mode_profile_forgery",
+    "fractal_runtime_scope_budget_widening",
+    "fractal_runtime_queue_transition_forgery",
+    "fractal_runtime_recursive_capability_forgery",
+    "fractal_runtime_no_progress_forgery",
+    "fractal_runtime_child_authority_forgery",
+    "fractal_runtime_zero_operation_forgery",
+    "continuous_delta_report_identity_forgery",
+    "continuous_delta_source_substitution",
+    "continuous_delta_dependency_fingerprint_forgery",
+    "continuous_delta_graph_edge_forgery",
+    "continuous_delta_affected_set_omission",
+    "continuous_delta_unrelated_artifact_injection",
+    "continuous_delta_invalidation_deletion_forgery",
+    "continuous_delta_preserved_artifact_mutation",
+    "continuous_delta_root_authority_forgery",
+    "continuous_delta_zero_operation_forgery",
+)
+
+
+@contextmanager
+def _patch_scope():
+    patchers = []
+
+    def replace_attribute(target, name, value):
+        patcher = _mock.patch.object(target, name, value)
+        patcher.start()
+        patchers.append(patcher)
+
+    try:
+        yield replace_attribute
+    finally:
+        for patcher in reversed(patchers):
+            patcher.stop()
+
+
+@pytest.fixture
+def _patches():
+    with _patch_scope() as replace_attribute:
+        yield replace_attribute
+
+
+def test_kernel_conformance_v07_continuous_delta_runtime_acceptance_v01():
+    report = collect_kernel_conformance_v01()
+    validation = validate_kernel_conformance_runtime_v01(report)
+    assert validation == ()
+    assert report.continuous_delta_runtime_execution_count == 1
+    assert report.continuous_delta_runtime_public_validation_status == "PASS"
+    assert report.shared_conformance_e5_collector_calls == 0
+    assert report.continuous_delta_runtime_second_execution_count == 0
+    assert report.continuous_delta_runtime_cache_reuse_count == 0
+    assert report.continuous_delta_runtime_test_fixture_substitution_count == 0
+    assert report.continuous_delta_runtime_private_g2d_calls == 0
+    assert report.continuous_delta_runtime_reconstructed_case_count == 0
+    assert (
+        report.continuous_delta_runtime_report_sha256
+        == report.shared_conformance_e5_report_sha256
+    )
+    assert len(report.continuous_delta_runtime_report_sha256) == 64
+    assert len(report.shared_conformance_e5_report_sha256) == 64
+    assert set(report.continuous_delta_runtime_report_sha256) <= set(
+        "0123456789abcdef"
+    )
+    assert set(report.shared_conformance_e5_report_sha256) <= set(
+        "0123456789abcdef"
+    )
+    assert (
+        report.continuous_delta_runtime_report_bytes
+        == report.shared_conformance_e5_report_bytes
+    )
+    assert report.continuous_delta_runtime_report_bytes > 0
+    assert report.shared_conformance_e5_report_bytes > 0
+    assert report.conformance_version == "v0.7"
+    assert report.profile_id == "kernel_conformance_v0_7_current"
+    assert report.historical_profile_ref == "kernel_conformance_v0_6_historical"
+    assert tuple(item.category_id for item in report.category_results) == (
+        "DomainPackConformance",
+        "RootAdapterConformance",
+        "CorridorAdapterConformance",
+        "SemanticProviderConformance",
+        "ReplayCompatibility",
+        "CryptoCompatibility",
+        "SignerIsolationConformance",
+        "TransitionRegistryConformance",
+        "EffectFirewallConformance",
+        "MultiRootConformance",
+        "ActionPacketLifecycleConformance",
+        "DRSSemanticAddressReuseCertificateConformance",
+        "ExecutionModeRouterConformance",
+        "FractalRuntimeConformance",
+        "ContinuousDeltaRuntimeConformance",
+    )
+    assert tuple(
+        (item.category_id, item.required_check_ids)
+        for item in report.category_results
+    ) == POST_E6_EXPECTED_CATEGORY_CHECK_IDS
+    assert (
+        tuple(item.probe_id for item in report.negative_test_results)
+        == POST_E6_EXPECTED_PROBES
+    )
+    assert report.active_gauntlet_refs == (
+        "airline_deterministic_transaction_runtime",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
+        "fractal_runtime",
+        "continuous_delta_runtime",
+    )
+    assert tuple(item.domain_id for item in report.domain_results) == (
+        "airline",
+        "supplier_water_filter",
+    )
 
 
 GATE1_EXPECTED_CATEGORIES = (
@@ -43,7 +393,11 @@ G2C_EXPECTED_CATEGORIES = (
     *G2B_EXPECTED_CATEGORIES,
     "ExecutionModeRouterConformance",
 )
-EXPECTED_CATEGORIES = (*G2C_EXPECTED_CATEGORIES, "FractalRuntimeConformance")
+EXPECTED_CATEGORIES = (
+    *G2C_EXPECTED_CATEGORIES,
+    "FractalRuntimeConformance",
+    "ContinuousDeltaRuntimeConformance",
+)
 EXPECTED_DOMAINS = ("airline", "supplier_water_filter")
 GATE1_EXPECTED_PROBES = (
     "manifest_hash_mismatch",
@@ -107,11 +461,7 @@ G2D_EXPECTED_PROBES = (
     "fractal_runtime_child_authority_forgery",
     "fractal_runtime_zero_operation_forgery",
 )
-EXPECTED_PROBES = (
-    *G2B_EXPECTED_PROBES,
-    *G2C_EXPECTED_PROBES,
-    *G2D_EXPECTED_PROBES,
-)
+EXPECTED_PROBES = POST_E6_EXPECTED_PROBES
 HISTORICAL_V05_GATE1_ACTIVE_REFS = (
     "airline_deterministic_transaction_runtime",
     "all_layers_invariant_super_smoke",
@@ -158,39 +508,58 @@ EXPECTED_ACTIVE_REFS = (
     "drs_semantic_address_and_reuse_certificate",
     "execution_mode_router",
     "fractal_runtime",
+    "continuous_delta_runtime",
 )
 EXPECTED_CLAIM_TO_CURRENT_ACT = (
     (
         "root_sole_local_final_commit_authority",
-        ("root_decision_kernel", "action_packet_lifecycle", "fractal_runtime"),
+        (
+            "root_decision_kernel",
+            "action_packet_lifecycle",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
     ),
     ("no_superroot_exists", ("generic_multiroot",)),
     (
         "bsep_semantic_membrane",
-        ("execution_mode_router", "fractal_runtime"),
+        ("execution_mode_router", "fractal_runtime", "continuous_delta_runtime"),
     ),
-    ("runtime_execution_topology_runtime_owned", ("fractal_runtime",)),
+    (
+        "runtime_execution_topology_runtime_owned",
+        ("fractal_runtime", "continuous_delta_runtime"),
+    ),
     (
         "provider_model_advisory_only",
-        ("semantic_work_contract", "fractal_runtime"),
+        ("semantic_work_contract", "fractal_runtime", "continuous_delta_runtime"),
     ),
     (
         "actor_output_cannot_create_final_output",
-        ("semantic_work_contract", "fractal_runtime"),
+        ("semantic_work_contract", "fractal_runtime", "continuous_delta_runtime"),
     ),
-    ("resultproposal_postvv_terminal_gt_before_root", ("fractal_runtime",)),
+    (
+        "resultproposal_postvv_terminal_gt_before_root",
+        ("fractal_runtime", "continuous_delta_runtime"),
+    ),
     (
         "drs_retrieval_reuse_no_authority",
-        ("drs_semantic_address_and_reuse_certificate",),
+        ("drs_semantic_address_and_reuse_certificate", "continuous_delta_runtime"),
     ),
-    ("receipt_evidence_only", ("effect_firewall", "action_packet_lifecycle")),
-    ("effect_capability_bounded_corridor_only", ("effect_firewall",)),
+    (
+        "receipt_evidence_only",
+        ("effect_firewall", "action_packet_lifecycle", "continuous_delta_runtime"),
+    ),
+    (
+        "effect_capability_bounded_corridor_only",
+        ("effect_firewall", "continuous_delta_runtime"),
+    ),
     (
         "airline_supplier_same_authority_law",
         (
             "airline_deterministic_transaction_runtime",
             "supplier_water_filter_portability",
             "action_packet_lifecycle",
+            "continuous_delta_runtime",
         ),
     ),
     ("real_world_effects_zero", EXPECTED_ACTIVE_REFS),
@@ -262,6 +631,18 @@ DATACLASS_FIELDS = {
         "domain_results",
         "negative_test_results",
         "active_gauntlet_refs",
+        "continuous_delta_runtime_execution_count",
+        "continuous_delta_runtime_public_validation_status",
+        "continuous_delta_runtime_report_sha256",
+        "continuous_delta_runtime_report_bytes",
+        "shared_conformance_e5_collector_calls",
+        "shared_conformance_e5_report_sha256",
+        "shared_conformance_e5_report_bytes",
+        "continuous_delta_runtime_second_execution_count",
+        "continuous_delta_runtime_cache_reuse_count",
+        "continuous_delta_runtime_test_fixture_substitution_count",
+        "continuous_delta_runtime_private_g2d_calls",
+        "continuous_delta_runtime_reconstructed_case_count",
         "evidence_refs",
         "limitations",
         "counters",
@@ -332,7 +713,11 @@ _PUBLIC_FUNCTION_SIGNATURES = {
         "'tuple[ConformanceCategoryResultV01, ...]', domain_results: "
         "'tuple[DomainConformanceResultV01, ...]', negative_test_results: "
         "'tuple[NegativeConformanceResultV01, ...]', active_gauntlet_refs: "
-        "'tuple[str, ...]', evidence_refs: 'tuple[str, ...]', limitations: "
+        "'tuple[str, ...]', continuous_delta_runtime_report_sha256: 'str', "
+        "continuous_delta_runtime_report_bytes: 'int', "
+        "shared_conformance_e5_report_sha256: 'str', "
+        "shared_conformance_e5_report_bytes: 'int', evidence_refs: "
+        "'tuple[str, ...]', limitations: "
         "'tuple[str, ...]') -> 'KernelConformanceReportV01'"
     ),
     "validate_kernel_conformance_report_v01": (
@@ -414,6 +799,17 @@ def _category(category_id: str, passed: bool = True):
             ),
         )
         limitation_refs = ("limitation_g2d6_validated_d5_report_only",)
+    elif category_id == "ContinuousDeltaRuntimeConformance":
+        evidence_refs = (
+            "runtime:kernel_conformance:ContinuousDeltaRuntimeConformance",
+            *(
+                f"{conformance._G2E_CHECK_EVIDENCE_PREFIX_V07}{check_id}:{{}}"
+                for check_id in conformance._G2E_EXPECTED_CHECK_IDS_V07
+            ),
+        )
+        limitation_refs = (
+            "limitation_g2e6_validated_public_e5_report_only",
+        )
     else:
         evidence_refs = (f"evidence:{category_id}",)
         limitation_refs = (f"limitation:{category_id}",)
@@ -460,6 +856,13 @@ def _negative(probe_id: str, *, blocked: bool = True, observed: bool = True):
         blocked=blocked,
         evidence_refs=(
             (
+                "demo/run_continuous_delta_runtime_g2_e_v01.py",
+                "report:g2e5_report_v01:" + "a" * 64,
+                "seal:" + "b" * 64,
+            )
+            if probe_id in conformance._G2E_NEGATIVE_PROBE_IDS_V07
+            else
+            (
                 "demo/run_fractal_runtime_g2_d_v02.py",
                 "baseline_report:frg2dproof_v02:" + "a" * 64,
                 "forged_report:frg2dproof_v02:" + "b" * 64,
@@ -504,6 +907,10 @@ def _report(*, commit: str = "abcdef0", categories=None, domains=None, negatives
             else negatives
         ),
         active_gauntlet_refs=EXPECTED_ACTIVE_REFS,
+        continuous_delta_runtime_report_sha256="a" * 64,
+        continuous_delta_runtime_report_bytes=1,
+        shared_conformance_e5_report_sha256="a" * 64,
+        shared_conformance_e5_report_bytes=1,
         evidence_refs=("evidence:kernel:conformance",),
         limitations=("limitation:kernel:conformance",),
     )
@@ -517,6 +924,25 @@ def _historical_profile_fields(active_refs):
         ),
         "claim_to_current_act": (),
         "current_act_count": len(active_refs),
+    }
+
+
+def _historical_e5_fields():
+    return {
+        "continuous_delta_runtime_execution_count": 0,
+        "continuous_delta_runtime_public_validation_status": (
+            "HISTORICAL_NOT_EXECUTED"
+        ),
+        "continuous_delta_runtime_report_sha256": "",
+        "continuous_delta_runtime_report_bytes": 0,
+        "shared_conformance_e5_collector_calls": 0,
+        "shared_conformance_e5_report_sha256": "",
+        "shared_conformance_e5_report_bytes": 0,
+        "continuous_delta_runtime_second_execution_count": 0,
+        "continuous_delta_runtime_cache_reuse_count": 0,
+        "continuous_delta_runtime_test_fixture_substitution_count": 0,
+        "continuous_delta_runtime_private_g2d_calls": 0,
+        "continuous_delta_runtime_reconstructed_case_count": 0,
     }
 
 
@@ -564,6 +990,7 @@ def _historical_v01_report():
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
         **_historical_profile_fields(HISTORICAL_V05_GATE1_ACTIVE_REFS),
+        **_historical_e5_fields(),
         conformance_version="v0.1",
         implementation_commit="abcdef0",
         category_results=categories,
@@ -594,21 +1021,69 @@ def _contains_type(value, target_type) -> bool:
     return False
 
 
+_SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER = None
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _shared_e5_report_for_internal_builder():
+    global _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER
+    report = (
+        _demo.run_kernel_conformance_v01._g2e.
+        collect_continuous_delta_runtime_g2_e_v01()
+    )
+    _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER = (
+        _demo.run_kernel_conformance_v01._validated_e5_receipt_v01(report)
+    )
+    try:
+        yield _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER[0]
+    finally:
+        _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER = None
+
+
+def _collect_conformance_internal_for_test_v01(*, implementation_commit=None):
+    assert _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER is not None
+    report, report_sha256, report_bytes = (
+        _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER
+    )
+    return (
+        _demo.run_kernel_conformance_v01.
+        _collect_standalone_kernel_conformance_with_validated_e5_v01(
+            continuous_delta_runtime_report=report,
+            continuous_delta_runtime_report_sha256=report_sha256,
+            continuous_delta_runtime_report_bytes=report_bytes,
+            implementation_commit=implementation_commit,
+        )
+    )
+
+
+def _collect_living_internal_for_kernel_test_v01():
+    assert _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER is not None
+    report, _report_sha256, _report_bytes = (
+        _SHARED_E5_MATERIAL_FOR_INTERNAL_BUILDER
+    )
+    return (
+        _demo.run_living_gauntlet_v01.
+        _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
+            report
+        )
+    )
+
+
 @pytest.fixture(scope="module", autouse=True)
 def _shared_d5_report():
-    original = runner._g2d.collect_fractal_runtime_g2_d_v02
+    original = _demo.run_kernel_conformance_v01._g2d.collect_fractal_runtime_g2_d_v02
     report = original()
-    assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(report) == ()
-    runner._g2d.collect_fractal_runtime_g2_d_v02 = lambda: report
+    assert _demo.run_kernel_conformance_v01._g2d.validate_fractal_runtime_g2_d_report_v02(report) == ()
+    _demo.run_kernel_conformance_v01._g2d.collect_fractal_runtime_g2_d_v02 = lambda: report
     try:
         yield report
     finally:
-        runner._g2d.collect_fractal_runtime_g2_d_v02 = original
+        _demo.run_kernel_conformance_v01._g2d.collect_fractal_runtime_g2_d_v02 = original
 
 
 @pytest.fixture(scope="module")
 def standalone_report(_shared_d5_report):
-    return runner.collect_standalone_kernel_conformance_v01(
+    return _collect_conformance_internal_for_test_v01(
         implementation_commit="abcdef0"
     )
 
@@ -624,7 +1099,7 @@ def test_public_dataclass_field_order_is_exact(name, expected):
 def test_public_dataclasses_are_frozen_and_slotted(name):
     cls = getattr(conformance, name)
     assert cls.__dataclass_params__.frozen is True
-    assert "__slots__" in vars(cls)
+    assert hasattr(cls, "__slots__")
 
 
 @pytest.mark.parametrize("name", (*DATACLASS_FIELDS, *PACKAGE_PUBLIC_FUNCTIONS))
@@ -635,7 +1110,7 @@ def test_package_exposes_conformance_surface(name):
 def test_public_function_surface_is_exact():
     actual = tuple(
         name
-        for name, value in vars(conformance).items()
+        for name, value in conformance.__dict__.items()
         if not name.startswith("_") and inspect.isfunction(value)
     )
     assert actual == PUBLIC_FUNCTIONS
@@ -646,7 +1121,7 @@ def test_package_all_is_byte_compatible_in_content_and_order():
 
 
 def test_future_annotations_binding_is_absent():
-    assert "annotations" not in vars(conformance)
+    assert not hasattr(conformance, "annotations")
 
 
 @pytest.mark.parametrize(
@@ -654,7 +1129,7 @@ def test_future_annotations_binding_is_absent():
     (
         ("MODULE_ID", "kernel_conformance_v01"),
         ("SLICE_ID", "domain_neutral_reference_kernel_gate1_g1e"),
-        ("CONFORMANCE_VERSION", "v0.6"),
+        ("CONFORMANCE_VERSION", "v0.7"),
         ("STATUS_PASS", "PASS"),
         ("STATUS_FAIL_CLOSED", "FAIL_CLOSED"),
         ("CONFORMANCE_STATUSES", ("PASS", "FAIL_CLOSED")),
@@ -669,20 +1144,23 @@ def test_constants_are_exact(name, expected):
         assert type(getattr(conformance, name)) is tuple
 
 
-def test_v05_historical_and_v06_current_profiles_are_exact_and_distinct():
-    historical = conformance.kernel_conformance_profile_metadata_v01(
+def test_v05_v06_historical_and_v07_current_profiles_are_exact_and_distinct():
+    historical_v05 = conformance.kernel_conformance_profile_metadata_v01(
         conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
     )
+    historical_v06 = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
+    )
     current = conformance.kernel_conformance_profile_metadata_v01(
-        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        conformance.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
     assert conformance.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
-        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        conformance.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
-    assert runner.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    assert _demo.run_kernel_conformance_v01.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
+        _demo.run_kernel_conformance_v01.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
-    assert historical == {
+    assert historical_v05 == {
         "profile_id": "kernel_conformance_v0_5_historical",
         "profile_version": "v0.5",
         "profile_status": "HISTORICAL_EVIDENCE_ONLY",
@@ -690,40 +1168,57 @@ def test_v05_historical_and_v06_current_profiles_are_exact_and_distinct():
         "active_gauntlet_refs": list(HISTORICAL_V05_ACTIVE_REFS),
         "historical_act_id": "all_layers_invariant_super_smoke",
     }
-    assert current == {
-        "profile_id": "kernel_conformance_v0_6_current",
+    assert historical_v06 == {
+        "profile_id": "kernel_conformance_v0_6_historical",
         "profile_version": "v0.6",
+        "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+        "default_current": False,
+        "active_gauntlet_refs": list(EXPECTED_ACTIVE_REFS[:-1]),
+        "historical_profile_ref": "kernel_conformance_v0_5_historical",
+        "historical_act_id_rebound": False,
+        "claim_to_current_act": {
+            claim_id: list(act_ids)
+            for claim_id, act_ids in conformance.CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+        },
+        "current_act_count": 15,
+    }
+    assert current == {
+        "profile_id": "kernel_conformance_v0_7_current",
+        "profile_version": "v0.7",
         "profile_status": "CURRENT_ACTIVE",
         "default_current": True,
         "active_gauntlet_refs": list(EXPECTED_ACTIVE_REFS),
-        "historical_profile_ref": "kernel_conformance_v0_5_historical",
+        "historical_profile_ref": "kernel_conformance_v0_6_historical",
         "historical_act_id_rebound": False,
         "claim_to_current_act": {
             claim_id: list(act_ids)
             for claim_id, act_ids in EXPECTED_CLAIM_TO_CURRENT_ACT
         },
-        "current_act_count": 15,
+        "current_act_count": 16,
     }
-    assert tuple(historical["active_gauntlet_refs"]) == (
+    assert tuple(historical_v05["active_gauntlet_refs"]) == (
         conformance._V05_HISTORICAL_ACTIVE_GAUNTLET_REFS
     )
+    assert tuple(historical_v06["active_gauntlet_refs"]) == (
+        conformance._V06_HISTORICAL_ACTIVE_GAUNTLET_REFS
+    )
     assert tuple(current["active_gauntlet_refs"]) == (
-        conformance._V06_CURRENT_ACTIVE_GAUNTLET_REFS
+        conformance._V07_CURRENT_ACTIVE_GAUNTLET_REFS
     )
     assert "all_layers_invariant_super_smoke" not in EXPECTED_ACTIVE_REFS
-    assert "all_layers_invariant_super_smoke" not in runner._ACT_SOURCES
+    assert "all_layers_invariant_super_smoke" not in _demo.run_kernel_conformance_v01._ACT_SOURCES
 
 
 def test_profile_metadata_is_non_executing_independent_data_and_unknown_fails():
-    historical = runner.kernel_conformance_profile_metadata_v01(
-        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    historical = _demo.run_kernel_conformance_v01.kernel_conformance_profile_metadata_v01(
+        _demo.run_kernel_conformance_v01.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
     )
     historical["active_gauntlet_refs"].append("forged")
-    assert runner.kernel_conformance_profile_metadata_v01(
-        runner.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    assert _demo.run_kernel_conformance_v01.kernel_conformance_profile_metadata_v01(
+        _demo.run_kernel_conformance_v01.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
     )["active_gauntlet_refs"] == list(HISTORICAL_V05_ACTIVE_REFS)
     with pytest.raises(ValueError, match="^kernel_conformance_profile_unknown$"):
-        runner.kernel_conformance_profile_metadata_v01("unknown_profile")
+        _demo.run_kernel_conformance_v01.kernel_conformance_profile_metadata_v01("unknown_profile")
 
 
 def test_current_report_rejects_historical_default_claim_loss_and_old_act_rebind():
@@ -918,22 +1413,22 @@ def test_report_pass_geometry_and_counters_are_derived():
     report = _report()
     assert report.final_status == "PASS"
     assert conformance.validate_kernel_conformance_report_v01(report) == ()
-    assert report.profile_id == conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
-    assert report.conformance_version == "v0.6"
+    assert report.profile_id == conformance.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
+    assert report.conformance_version == "v0.7"
     assert report.historical_profile_ref == (
-        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
     )
     assert report.claim_to_current_act == EXPECTED_CLAIM_TO_CURRENT_ACT
-    assert report.current_act_count == len(EXPECTED_ACTIVE_REFS) == 15
+    assert report.current_act_count == len(EXPECTED_ACTIVE_REFS) == 16
     assert (
         len(report.category_results),
         len(report.domain_results),
         len(report.negative_test_results),
-    ) == (14, 2, 50)
-    assert report.counters.category_pass_count == 14
+    ) == (15, 2, 60)
+    assert report.counters.category_pass_count == 15
     assert report.counters.domain_pass_count == 2
-    assert report.counters.negative_pass_count == 50
-    assert report.counters.active_gauntlet_ref_count == 15
+    assert report.counters.negative_pass_count == 60
+    assert report.counters.active_gauntlet_ref_count == 16
 
 
 def test_final_report_rejects_arbitrary_synthetic_check_geometry_after_rehash():
@@ -1200,7 +1695,7 @@ def test_supplier_multiroot_mixed_remains_visible(standalone_report):
 
 
 def test_standalone_report_runtime_validation_passes(standalone_report):
-    assert runner.validate_kernel_conformance_runtime_v01(standalone_report) == ()
+    assert _demo.run_kernel_conformance_v01.validate_kernel_conformance_runtime_v01(standalone_report) == ()
     assert standalone_report.final_status == "PASS"
 
 
@@ -1210,12 +1705,12 @@ def test_canonical_report_validates_and_projects(standalone_report):
         standalone_report
     )
     assert projection["final_status"] == conformance.STATUS_PASS
-    assert len(projection["category_results"]) == 14
+    assert len(projection["category_results"]) == 15
     assert len(projection["domain_results"]) == 2
-    assert len(projection["negative_test_results"]) == 50
+    assert len(projection["negative_test_results"]) == 60
 
 
-@pytest.mark.parametrize("index", range(14))
+@pytest.mark.parametrize("index", range(15))
 def test_canonical_category_check_geometry_is_exact(standalone_report, index):
     category_id, required = conformance._EXPECTED_CATEGORY_CHECK_IDS[index]
     result = standalone_report.category_results[index]
@@ -1237,7 +1732,7 @@ def test_canonical_domain_binding_geometry_is_exact(standalone_report, index):
     ) == expected
 
 
-@pytest.mark.parametrize("index", range(50))
+@pytest.mark.parametrize("index", range(60))
 def test_canonical_negative_geometry_is_exact(standalone_report, index):
     probe_id, target, expected_reasons = conformance._EXPECTED_NEGATIVE_GEOMETRY[
         index
@@ -1350,7 +1845,7 @@ def test_kernel_contract_imports_only_approved_kernel_helpers():
 
 
 def test_runner_living_import_is_function_local():
-    tree = ast.parse(inspect.getsource(runner))
+    tree = ast.parse(inspect.getsource(_demo.run_kernel_conformance_v01))
     module_imports = [
         node
         for node in tree.body
@@ -1383,7 +1878,8 @@ def test_runner_living_import_is_function_local():
         node
         for node in tree.body
         if isinstance(node, ast.FunctionDef)
-        and node.name == "collect_standalone_kernel_conformance_v01"
+        and node.name
+        == "_collect_standalone_kernel_conformance_with_validated_e5_v01"
     )
     assert any(
         isinstance(node, ast.ImportFrom)
@@ -1404,7 +1900,7 @@ def test_runner_living_import_is_function_local():
     ),
 )
 def test_runner_static_boundary(forbidden):
-    source = inspect.getsource(runner).lower()
+    source = inspect.getsource(_demo.run_kernel_conformance_v01).lower()
     if forbidden == "production certification.":
         assert "not production certification" in source
     else:
@@ -1412,7 +1908,7 @@ def test_runner_static_boundary(forbidden):
 
 
 def test_runner_imports_no_network_client_modules():
-    tree = ast.parse(inspect.getsource(runner))
+    tree = ast.parse(inspect.getsource(_demo.run_kernel_conformance_v01))
     imported = {
         node.module
         for node in ast.walk(tree)
@@ -1428,16 +1924,16 @@ def test_runner_imports_no_network_client_modules():
 
 
 def test_runner_does_not_call_supplier_source_collector():
-    source = inspect.getsource(runner.collect_kernel_conformance_v01)
+    source = inspect.getsource(_demo.run_kernel_conformance_v01.collect_kernel_conformance_v01)
     assert "collect_full_wow_v1_2_product_trace" not in source
     assert "collect_supplier_water_filter_portability_gauntlet_act_v01" not in source
 
 
 def test_render_contains_only_summary_geometry(standalone_report):
-    rendered = runner.render_kernel_conformance_v01(standalone_report)
-    assert "kernel_conformance_v01 v0.6" in rendered
-    assert "profile_id=kernel_conformance_v0_6_current" in rendered
-    assert "current_act_count=15" in rendered
+    rendered = _demo.run_kernel_conformance_v01.render_kernel_conformance_v01(standalone_report)
+    assert "kernel_conformance_v01 v0.7" in rendered
+    assert "profile_id=kernel_conformance_v0_7_current" in rendered
+    assert "current_act_count=16" in rendered
     assert "final_status=PASS" in rendered
     for forbidden in ("manifest_hash=", "adapter_id=", "artifact_id=", "invoice", "shipment_sh"):
         assert forbidden not in rendered.lower()
@@ -1585,7 +2081,7 @@ def test_g2a6_action_packet_lifecycle_category_matches_exact_checks(
             )
         )
         assert conformance.validate_kernel_conformance_report_v01(forged_report)
-    source = inspect.getsource(runner._build_category_results)
+    source = inspect.getsource(_demo.run_kernel_conformance_v01._build_category_results)
     assert "action_packet_lifecycle" in source
     for probe_id in conformance._G2A_NEGATIVE_PROBE_IDS_V02[10:]:
         assert probe_id in source
@@ -1595,14 +2091,14 @@ def test_g2a6_action_packet_lifecycle_category_matches_exact_checks(
 
 
 def test_g2a6_action_packet_lifecycle_negative_probe_matrix_is_exact(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
     collection_count = 0
     original_collect = (
-        runner._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01
+        _demo.run_kernel_conformance_v01._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01
     )
     original_validate = (
-        runner._action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01
+        _demo.run_kernel_conformance_v01._action_packet_lifecycle.validate_action_commit_packet_lifecycle_g2_a_report_v01
     )
     validations = []
 
@@ -1616,20 +2112,20 @@ def test_g2a6_action_packet_lifecycle_negative_probe_matrix_is_exact(
         validations.append(result)
         return result
 
-    monkeypatch.setattr(
-        runner._action_packet_lifecycle,
+    _patches(
+        _demo.run_kernel_conformance_v01._action_packet_lifecycle,
         "collect_action_commit_packet_lifecycle_g2_a_v01",
         collect_once,
     )
-    monkeypatch.setattr(
-        runner._action_packet_lifecycle,
+    _patches(
+        _demo.run_kernel_conformance_v01._action_packet_lifecycle,
         "validate_action_commit_packet_lifecycle_g2_a_report_v01",
         validate_wrapper,
     )
     baseline = (
-        runner._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
+        _demo.run_kernel_conformance_v01._action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
     )
-    observations = runner._collect_action_packet_negative_observations_v01(
+    observations = _demo.run_kernel_conformance_v01._collect_action_packet_negative_observations_v01(
         baseline
     )
     assert collection_count == 1
@@ -1694,14 +2190,14 @@ def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect(
             (REPOSITORY_ROOT / "release/integration_seam_index.json").read_bytes()
         ).hexdigest(),
     )
-    first_conformance = runner.collect_standalone_kernel_conformance_v01(
+    first_conformance = _collect_conformance_internal_for_test_v01(
         implementation_commit="abcdef0"
     )
-    second_conformance = runner.collect_standalone_kernel_conformance_v01(
+    second_conformance = _collect_conformance_internal_for_test_v01(
         implementation_commit="abcdef0"
     )
-    first_living = living.collect_living_gauntlet_v01()
-    second_living = living.collect_living_gauntlet_v01()
+    first_living = _collect_living_internal_for_kernel_test_v01()
+    second_living = _collect_living_internal_for_kernel_test_v01()
     assert (
         conformance.kernel_conformance_report_to_plain_dict_v01(first_conformance)
         == conformance.kernel_conformance_report_to_plain_dict_v01(
@@ -1714,9 +2210,9 @@ def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect(
         first_conformance.counters.category_pass_count,
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
-    ) == (14, 2, 50)
-    assert first_living["final_status"] == living.STATUS_PASS
-    assert first_living["counters"]["active_act_pass_count"] == 16
+    ) == (15, 2, 60)
+    assert first_living["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
+    assert first_living["counters"]["active_act_pass_count"] == 17
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -1732,7 +2228,7 @@ def test_g2a6_conformance_and_living_gauntlet_are_deterministic_and_zero_effect(
             (REPOSITORY_ROOT / "release/integration_seam_index.json").read_bytes()
         ).hexdigest(),
     )
-    source = inspect.getsource(runner) + inspect.getsource(living)
+    source = inspect.getsource(_demo.run_kernel_conformance_v01) + inspect.getsource(_demo.run_living_gauntlet_v01)
     for forbidden in (
         "run_airline_all_real",
         "run_supplier_programme",
@@ -1780,6 +2276,7 @@ def _historical_v02_report(current):
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
         **_historical_profile_fields(active_refs),
+        **_historical_e5_fields(),
         conformance_version="v0.2",
         implementation_commit=current.implementation_commit,
         category_results=categories,
@@ -1808,6 +2305,7 @@ def _historical_v03_report(current):
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
         **_historical_profile_fields(active_refs),
+        **_historical_e5_fields(),
         conformance_version="v0.3",
         implementation_commit=current.implementation_commit,
         category_results=categories,
@@ -1836,6 +2334,7 @@ def _historical_v04_report(current):
     provisional = conformance.KernelConformanceReportV01(
         report_id="0" * 64,
         **_historical_profile_fields(active_refs),
+        **_historical_e5_fields(),
         conformance_version="v0.4",
         implementation_commit=current.implementation_commit,
         category_results=categories,
@@ -1971,30 +2470,30 @@ def test_g2b6_drs_semantic_address_reuse_certificate_category_is_exact(
 
 
 def test_g2b6_drs_negative_probe_matrix_is_exact(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
 ):
     collection_count = 0
     validations = []
     original_collect = (
-        runner._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01
+        _demo.run_kernel_conformance_v01._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01
     )
     original_validate = (
-        runner._g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01
+        _demo.run_kernel_conformance_v01._g2b.validate_drs_semantic_address_reuse_certificate_g2_b_report_v01
     )
 
     def collect_once():
         nonlocal collection_count
         collection_count += 1
-        monkeypatch.setattr(
-            runner._g2b,
+        _patches(
+            _demo.run_kernel_conformance_v01._g2b,
             "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
             original_validate,
         )
         try:
             return original_collect()
         finally:
-            monkeypatch.setattr(
-                runner._g2b,
+            _patches(
+                _demo.run_kernel_conformance_v01._g2b,
                 "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
                 validate_wrapper,
             )
@@ -2004,21 +2503,21 @@ def test_g2b6_drs_negative_probe_matrix_is_exact(
         validations.append((report, result))
         return result
 
-    monkeypatch.setattr(
-        runner._g2b,
+    _patches(
+        _demo.run_kernel_conformance_v01._g2b,
         "collect_drs_semantic_address_reuse_certificate_g2_b_v01",
         collect_once,
     )
-    monkeypatch.setattr(
-        runner._g2b,
+    _patches(
+        _demo.run_kernel_conformance_v01._g2b,
         "validate_drs_semantic_address_reuse_certificate_g2_b_report_v01",
         validate_wrapper,
     )
     baseline = (
-        runner._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
+        _demo.run_kernel_conformance_v01._g2b.collect_drs_semantic_address_reuse_certificate_g2_b_v01()
     )
-    mutations = runner._g2b_negative_mutations_v01(baseline)
-    observations = runner._collect_g2b_negative_observations_v01(
+    mutations = _demo.run_kernel_conformance_v01._g2b_negative_mutations_v01(baseline)
+    observations = _demo.run_kernel_conformance_v01._collect_g2b_negative_observations_v01(
         baseline
     )
 
@@ -2040,7 +2539,7 @@ def test_g2b6_drs_negative_probe_matrix_is_exact(
         assert len(forged.domain_results) == 2, probe_id
         assert forged.report_id != baseline.report_id, probe_id
         assert (
-            runner._g2b._reidentify_report_v01(forged) == forged
+            _demo.run_kernel_conformance_v01._g2b._reidentify_report_v01(forged) == forged
         ), probe_id
         (
             observed_probe_id,
@@ -2060,21 +2559,21 @@ def test_g2b6_drs_negative_probe_matrix_is_exact(
         assert evidence == (
             "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py"
         )
-    results = runner._build_g2b_negative_results_v01(observations)
+    results = _demo.run_kernel_conformance_v01._build_g2b_negative_results_v01(observations)
     assert len({item.result_id for item in results}) == 10
     assert all(item.status == conformance.STATUS_PASS for item in results)
     assert all(item.real_world_effects_count == 0 for item in results)
 
 
 def test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect():
-    first_conformance = runner.collect_standalone_kernel_conformance_v01(
+    first_conformance = _collect_conformance_internal_for_test_v01(
         implementation_commit="abcdef0"
     )
-    second_conformance = runner.collect_standalone_kernel_conformance_v01(
+    second_conformance = _collect_conformance_internal_for_test_v01(
         implementation_commit="abcdef0"
     )
-    first_living = living.collect_living_gauntlet_v01()
-    second_living = living.collect_living_gauntlet_v01()
+    first_living = _collect_living_internal_for_kernel_test_v01()
+    second_living = _collect_living_internal_for_kernel_test_v01()
     assert first_conformance == second_conformance
     assert (
         conformance.kernel_conformance_report_to_plain_dict_v01(
@@ -2085,17 +2584,17 @@ def test_g2b6_conformance_and_gauntlet_are_deterministic_and_zero_effect():
         )
     )
     assert first_living == second_living
-    assert living.render_living_gauntlet_v01(first_living) == (
-        living.render_living_gauntlet_v01(second_living)
+    assert _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(first_living) == (
+        _demo.run_living_gauntlet_v01.render_living_gauntlet_v01(second_living)
     )
     assert first_conformance.final_status == conformance.STATUS_PASS
-    assert first_living["final_status"] == living.STATUS_PASS
+    assert first_living["final_status"] == _demo.run_living_gauntlet_v01.STATUS_PASS
     assert (
         first_conformance.counters.category_pass_count,
         first_conformance.counters.domain_pass_count,
         first_conformance.counters.negative_pass_count,
         first_conformance.counters.active_gauntlet_ref_count,
-    ) == (14, 2, 50, 15)
+    ) == (15, 2, 60, 16)
     assert (
         first_conformance.counters.provider_call_count,
         first_conformance.counters.network_call_count,
@@ -2131,11 +2630,11 @@ def _c6_active_rows():
             "real_world_effects_count": 0,
             "root_authority_preserved": True,
             "runtime_status": conformance.STATUS_PASS,
-            "source_module": runner._ACT_SOURCES[act_id][0],
-            "source_symbol": runner._ACT_SOURCES[act_id][1],
+            "source_module": _demo.run_kernel_conformance_v01._ACT_SOURCES[act_id][0],
+            "source_symbol": _demo.run_kernel_conformance_v01._ACT_SOURCES[act_id][1],
             "state": conformance.STATUS_PASS,
         }
-        for act_id in runner._BASE_ACT_IDS
+        for act_id in _demo.run_kernel_conformance_v01._BASE_ACT_IDS
     )
 
 
@@ -2144,11 +2643,11 @@ def test_c6_conformance_v04_preserves_v03_and_appends_exact_geometry(
 ):
     historical_v03 = _historical_v03_report(standalone_report)
     historical_v04 = _historical_v04_report(standalone_report)
-    assert conformance.CONFORMANCE_VERSION == "v0.6"
+    assert conformance.CONFORMANCE_VERSION == "v0.7"
     assert conformance._G2B_CONFORMANCE_VERSION_V03 == "v0.3"
     assert conformance._G2C_CONFORMANCE_VERSION_V04 == "v0.4"
-    assert runner._G2C_RUNNER_VERSION_V03 == "v0.3"
-    assert runner.RUNNER_VERSION == "v0.6"
+    assert _demo.run_kernel_conformance_v01._G2C_RUNNER_VERSION_V03 == "v0.3"
+    assert _demo.run_kernel_conformance_v01.RUNNER_VERSION == "v0.7"
     _assert_historical_report_geometry(historical_v03)
     _assert_historical_report_geometry(historical_v04)
     assert historical_v04.conformance_version == "v0.4"
@@ -2200,8 +2699,8 @@ def test_c6_execution_mode_router_category_and_c5_profile_are_exact(
     assert category.status == conformance.STATUS_PASS
     assert category.real_world_effects_count == 0
     assert category.result_id == conformance._category_id(category)
-    report = runner._g2c.collect_execution_mode_router_g2_c_v01()
-    assert runner._g2c.validate_execution_mode_router_g2_c_report_v01(report) == ()
+    report = _demo.run_kernel_conformance_v01._g2c.collect_execution_mode_router_g2_c_v01()
+    assert _demo.run_kernel_conformance_v01._g2c.validate_execution_mode_router_g2_c_report_v01(report) == ()
     assert report.domain_order == (
         "TRAVEL_POLICY_INFORMATION",
         "WAREHOUSE_MAINTENANCE_INFORMATION",
@@ -2210,19 +2709,19 @@ def test_c6_execution_mode_router_category_and_c5_profile_are_exact(
     assert {item.root_outcome for item in report.case_results} == {
         "ACCEPT", "NARROW", "REJECT", "BLOCKED", "NEEDS_USER"
     }
-    assert all(item.operation_steps == runner._g2c.OPERATION_STEPS for item in report.case_results)
+    assert all(item.operation_steps == _demo.run_kernel_conformance_v01._g2c.OPERATION_STEPS for item in report.case_results)
     assert all(
         report.case_results[index].transaction_id
         == report.case_results[index].temporal_query_id
         for index in (1, 2, 3)
     )
-    assert runner._g2c_package_facade_passes_v01() is True
+    assert _demo.run_kernel_conformance_v01._g2c_package_facade_passes_v01() is True
 
 
 def test_c6_exact_ten_negative_observations_and_reason_tuples():
-    report = runner._g2c.collect_execution_mode_router_g2_c_v01()
-    mutations = runner._g2c_negative_mutations_v01(report)
-    observations = runner._collect_g2c_negative_observations_v01(report)
+    report = _demo.run_kernel_conformance_v01._g2c.collect_execution_mode_router_g2_c_v01()
+    mutations = _demo.run_kernel_conformance_v01._g2c_negative_mutations_v01(report)
+    observations = _demo.run_kernel_conformance_v01._collect_g2c_negative_observations_v01(report)
     assert tuple(item[0] for item in mutations) == G2C_EXPECTED_PROBES
     assert tuple(item[0] for item in observations) == G2C_EXPECTED_PROBES
     assert len(mutations) == len(observations) == 10
@@ -2240,7 +2739,7 @@ def test_c6_exact_ten_negative_observations_and_reason_tuples():
         assert expected == observed == expected_reasons
         assert blocked is True
         assert evidence == "demo/run_execution_mode_router_g2_c_v01.py"
-    results = runner._build_g2c_negative_results_v01(observations)
+    results = _demo.run_kernel_conformance_v01._build_g2c_negative_results_v01(observations)
     assert len({item.result_id for item in results}) == 10
     assert all(item.status == conformance.STATUS_PASS for item in results)
     assert all(item.real_world_effects_count == 0 for item in results)
@@ -2248,29 +2747,29 @@ def test_c6_exact_ten_negative_observations_and_reason_tuples():
 
 def test_c6_active_act_validation_rejects_missing_invalid_and_substituted_source():
     rows = _c6_active_rows()
-    assert runner._validate_active_act_results(rows) == rows
+    assert _demo.run_kernel_conformance_v01._validate_active_act_results(rows) == rows
     with pytest.raises(ValueError, match="^active_gauntlet_results_invalid$"):
-        runner._validate_active_act_results(rows[:-1])
+        _demo.run_kernel_conformance_v01._validate_active_act_results(rows[:-1])
     failed = dict(rows[-1], state=conformance.STATUS_FAIL_CLOSED)
     with pytest.raises(ValueError, match="^active_gauntlet_results_invalid$"):
-        runner._validate_active_act_results((*rows[:-1], failed))
+        _demo.run_kernel_conformance_v01._validate_active_act_results((*rows[:-1], failed))
     substituted = dict(rows[-1], source_symbol="collect_foreign_g2c")
     with pytest.raises(ValueError, match="^active_gauntlet_results_invalid$"):
-        runner._validate_active_act_results((*rows[:-1], substituted))
+        _demo.run_kernel_conformance_v01._validate_active_act_results((*rows[:-1], substituted))
 
 
 def test_c6_conformance_report_and_render_are_repeated_and_zero_operation(
     standalone_report,
 ):
-    second = runner.collect_standalone_kernel_conformance_v01(
+    second = _collect_conformance_internal_for_test_v01(
         implementation_commit="abcdef0"
     )
     assert standalone_report == second
     assert conformance.kernel_conformance_report_to_plain_dict_v01(
         standalone_report
     ) == conformance.kernel_conformance_report_to_plain_dict_v01(second)
-    assert runner.render_kernel_conformance_v01(standalone_report) == (
-        runner.render_kernel_conformance_v01(second)
+    assert _demo.run_kernel_conformance_v01.render_kernel_conformance_v01(standalone_report) == (
+        _demo.run_kernel_conformance_v01.render_kernel_conformance_v01(second)
     )
     counters = standalone_report.counters
     assert (
@@ -2301,23 +2800,23 @@ G2D_EXPECTED_CHECKS = (
 )
 
 
-def test_d6_conformance_v06_succeeds_historical_v05_with_current_geometry(
+def test_d6_conformance_v07_succeeds_historical_v06_with_current_geometry(
     standalone_report,
 ):
     historical_v04 = _historical_v04_report(standalone_report)
-    assert conformance.CONFORMANCE_VERSION == "v0.6"
+    assert conformance.CONFORMANCE_VERSION == "v0.7"
     assert conformance._G2D_CONFORMANCE_VERSION_V05 == "v0.5"
     assert conformance._G2C_CONFORMANCE_VERSION_V04 == "v0.4"
-    assert runner.RUNNER_VERSION == "v0.6"
-    assert runner._G2C_RUNNER_VERSION_V03 == "v0.3"
+    assert _demo.run_kernel_conformance_v01.RUNNER_VERSION == "v0.7"
+    assert _demo.run_kernel_conformance_v01._G2C_RUNNER_VERSION_V03 == "v0.3"
     _assert_historical_report_geometry(historical_v04)
     assert conformance.validate_kernel_conformance_report_v01(standalone_report) == ()
-    assert standalone_report.conformance_version == "v0.6"
+    assert standalone_report.conformance_version == "v0.7"
     assert standalone_report.profile_id == (
-        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        conformance.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
     assert standalone_report.historical_profile_ref == (
-        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
     )
     assert standalone_report.category_results[:13] == historical_v04.category_results
     assert standalone_report.negative_test_results[:40] == (
@@ -2329,21 +2828,23 @@ def test_d6_conformance_v06_succeeds_historical_v05_with_current_geometry(
     assert tuple(item.category_id for item in standalone_report.category_results) == (
         *G2C_EXPECTED_CATEGORIES,
         "FractalRuntimeConformance",
+        "ContinuousDeltaRuntimeConformance",
     )
     assert tuple(item.probe_id for item in standalone_report.negative_test_results) == (
         *G2B_EXPECTED_PROBES,
         *G2C_EXPECTED_PROBES,
         *G2D_EXPECTED_PROBES,
+        *conformance._G2E_NEGATIVE_PROBE_IDS_V07,
     )
     assert standalone_report.active_gauntlet_refs == EXPECTED_ACTIVE_REFS
     assert "all_layers_invariant_super_smoke" not in (
         standalone_report.active_gauntlet_refs
     )
     assert standalone_report.claim_to_current_act == EXPECTED_CLAIM_TO_CURRENT_ACT
-    assert runner._V05_HISTORICAL_BASE_ACT_IDS == HISTORICAL_V05_ACTIVE_REFS
-    assert runner._BASE_ACT_IDS == EXPECTED_ACTIVE_REFS
-    assert runner.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
-        runner.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    assert _demo.run_kernel_conformance_v01._V05_HISTORICAL_BASE_ACT_IDS == HISTORICAL_V05_ACTIVE_REFS
+    assert _demo.run_kernel_conformance_v01._BASE_ACT_IDS == EXPECTED_ACTIVE_REFS
+    assert _demo.run_kernel_conformance_v01.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
+        _demo.run_kernel_conformance_v01.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
     assert (
         standalone_report.counters.category_result_count,
@@ -2353,7 +2854,7 @@ def test_d6_conformance_v06_succeeds_historical_v05_with_current_geometry(
         standalone_report.counters.negative_result_count,
         standalone_report.counters.negative_pass_count,
         standalone_report.counters.active_gauntlet_ref_count,
-    ) == (14, 14, 2, 2, 50, 50, 15)
+    ) == (15, 15, 2, 2, 60, 60, 16)
 
 
 def test_d6_historical_v01_through_v04_remain_exact_and_mixed_geometry_fails(
@@ -2391,13 +2892,13 @@ def test_d6_fractal_runtime_category_binds_exact_sealed_case_evidence(
     assert category.limitation_refs == (
         "limitation_g2d6_validated_d5_report_only",
     )
-    assert category.evidence_refs == runner._g2d_check_evidence_refs_v04(
+    assert category.evidence_refs == _demo.run_kernel_conformance_v01._g2d_check_evidence_refs_v04(
         _shared_d5_report
     )
-    geometry = runner._g2d_baseline_geometry_v04(_shared_d5_report)
+    geometry = _demo.run_kernel_conformance_v01._g2d_baseline_geometry_v04(_shared_d5_report)
     assert geometry == {check_id: True for check_id in G2D_EXPECTED_CHECKS}
     for (check_id, case_numbers), evidence_ref in zip(
-        runner._G2D_CHECK_CASE_NUMBERS_V04,
+        _demo.run_kernel_conformance_v01._G2D_CHECK_CASE_NUMBERS_V04,
         category.evidence_refs[1:],
         strict=True,
     ):
@@ -2422,8 +2923,8 @@ def test_d6_fractal_runtime_category_binds_exact_sealed_case_evidence(
 def test_d6_exact_ten_d5_mutations_are_resealed_and_publicly_rejected(
     _shared_d5_report,
 ):
-    mutations = runner._g2d_negative_mutations_v04(_shared_d5_report)
-    observations = runner._collect_g2d_negative_observations_v01(
+    mutations = _demo.run_kernel_conformance_v01._g2d_negative_mutations_v04(_shared_d5_report)
+    observations = _demo.run_kernel_conformance_v01._collect_g2d_negative_observations_v01(
         _shared_d5_report
     )
     assert tuple(item[0] for item in mutations) == G2D_EXPECTED_PROBES
@@ -2447,19 +2948,19 @@ def test_d6_exact_ten_d5_mutations_are_resealed_and_publicly_rejected(
         )
     )
     assert route_proof["details_sha256"] == hashlib.sha256(
-        runner.canonical_json_bytes_v01(route_details)
+        _demo.run_kernel_conformance_v01.canonical_json_bytes_v01(route_details)
     ).hexdigest()
-    route_evidence_bytes = runner.canonical_json_bytes_v01(route_material)
+    route_evidence_bytes = _demo.run_kernel_conformance_v01.canonical_json_bytes_v01(route_material)
     assert route_case.evidence_sha256 == hashlib.sha256(
         route_evidence_bytes
     ).hexdigest()
-    assert route_forged.report_id == runner._g2d_report_identity_v04(
+    assert route_forged.report_id == _demo.run_kernel_conformance_v01._g2d_report_identity_v04(
         route_forged
     )
-    assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(
+    assert _demo.run_kernel_conformance_v01._g2d.validate_fractal_runtime_g2_d_report_v02(
         route_forged
     ) == ("g2d5_report_invalid",)
-    mutation_source = inspect.getsource(runner._g2d_negative_mutations_v04)
+    mutation_source = inspect.getsource(_demo.run_kernel_conformance_v01._g2d_negative_mutations_v04)
     assert "route_attempted" not in mutation_source
     assert ":route_substitution" not in mutation_source
     for index, ((probe_id, forged), observation) in enumerate(
@@ -2473,25 +2974,37 @@ def test_d6_exact_ten_d5_mutations_are_resealed_and_publicly_rejected(
         assert evidence[0] == "demo/run_fractal_runtime_g2_d_v02.py"
         assert evidence[1] == f"baseline_report:{_shared_d5_report.report_id}"
         assert evidence[-1] == f"forged_report:{forged.report_id}"
-        assert runner._g2d.validate_fractal_runtime_g2_d_report_v02(forged) == (
+        assert _demo.run_kernel_conformance_v01._g2d.validate_fractal_runtime_g2_d_report_v02(forged) == (
             "g2d5_report_invalid",
         )
         if index not in (0,):
-            assert forged.report_id == runner._g2d_report_identity_v04(forged)
-    results = runner._build_g2d_negative_results_v01(observations)
+            assert forged.report_id == _demo.run_kernel_conformance_v01._g2d_report_identity_v04(forged)
+    results = _demo.run_kernel_conformance_v01._build_g2d_negative_results_v01(observations)
     assert len(results) == len({item.result_id for item in results}) == 10
     assert all(item.status == conformance.STATUS_PASS for item in results)
     assert all(item.real_world_effects_count == 0 for item in results)
 
 
 def test_d6_public_collection_collects_and_validates_d5_baseline_once(
-    monkeypatch: pytest.MonkeyPatch,
+    _patches,
     _shared_d5_report,
 ):
     collection_count = 0
     validations = []
-    original_collect = runner._g2d.collect_fractal_runtime_g2_d_v02
-    original_validate = runner._g2d.validate_fractal_runtime_g2_d_report_v02
+    e5_collection_count = 0
+    collected_e5_report_ids = []
+    e5_validation_attempt_ids = []
+    e5_validations = []
+    original_collect = _demo.run_kernel_conformance_v01._g2d.collect_fractal_runtime_g2_d_v02
+    original_validate = _demo.run_kernel_conformance_v01._g2d.validate_fractal_runtime_g2_d_report_v02
+    original_e5_collect = (
+        _demo.run_kernel_conformance_v01._g2e.
+        collect_continuous_delta_runtime_g2_e_v01
+    )
+    original_e5_validate = (
+        _demo.run_kernel_conformance_v01._g2e.
+        validate_continuous_delta_runtime_g2_e_report_v01
+    )
 
     def collect_once():
         nonlocal collection_count
@@ -2503,22 +3016,86 @@ def test_d6_public_collection_collects_and_validates_d5_baseline_once(
         validations.append((report, result))
         return result
 
-    monkeypatch.setattr(
-        runner._g2d,
+    def collect_e5_once():
+        nonlocal e5_collection_count
+        e5_collection_count += 1
+        result = original_e5_collect()
+        collected_e5_report_ids.append(result.report_id)
+        return result
+
+    def validate_e5_and_record(report):
+        e5_validation_attempt_ids.append(report.report_id)
+        result = original_e5_validate(report)
+        e5_validations.append(
+            (
+                report.report_id,
+                result.report_id,
+                _demo.run_kernel_conformance_v01._g2e.
+                render_continuous_delta_runtime_g2_e_v01(result),
+            )
+        )
+        return result
+
+    e5_provider = _demo.run_kernel_conformance_v01._g2e
+    e5_proxy = SimpleNamespace(
+        ContinuousDeltaRuntimeG2ECaseResultV01=(
+            e5_provider.ContinuousDeltaRuntimeG2ECaseResultV01
+        ),
+        ContinuousDeltaRuntimeG2EReportV01=(
+            e5_provider.ContinuousDeltaRuntimeG2EReportV01
+        ),
+        ContinuousDeltaRuntimeG2ESubcaseResultV01=(
+            e5_provider.ContinuousDeltaRuntimeG2ESubcaseResultV01
+        ),
+        REPORT_ID_PREFIX=e5_provider.REPORT_ID_PREFIX,
+        collect_continuous_delta_runtime_g2_e_v01=collect_e5_once,
+        render_continuous_delta_runtime_g2_e_v01=(
+            e5_provider.render_continuous_delta_runtime_g2_e_v01
+        ),
+        validate_continuous_delta_runtime_g2_e_report_v01=(
+            validate_e5_and_record
+        ),
+    )
+
+    _patches(
+        _demo.run_kernel_conformance_v01._g2d,
         "collect_fractal_runtime_g2_d_v02",
         collect_once,
     )
-    monkeypatch.setattr(
-        runner._g2d,
+    _patches(
+        _demo.run_kernel_conformance_v01._g2d,
         "validate_fractal_runtime_g2_d_report_v02",
         validate_and_record,
     )
-    report = runner.collect_kernel_conformance_v01(
+    _patches(_demo.run_kernel_conformance_v01, "_g2e", e5_proxy)
+    report = _demo.run_kernel_conformance_v01.collect_kernel_conformance_v01(
         active_act_results=_c6_active_rows(),
         implementation_commit="abcdef0",
     )
     assert report.final_status == conformance.STATUS_PASS
     assert collection_count == 1
+    assert e5_collection_count == 1
+    assert len(collected_e5_report_ids) == 1
+    assert len(e5_validation_attempt_ids) == 6
+    assert len(e5_validations) == 5
+    assert all(
+        input_report_id == report_id == collected_e5_report_ids[0]
+        for input_report_id, report_id, _ in e5_validations
+    )
+    canonical_renders = tuple(
+        rendered
+        for input_report_id, report_id, rendered in e5_validations
+        if input_report_id == report_id == collected_e5_report_ids[0]
+    )
+    assert len(canonical_renders) == 5
+    assert len(set(canonical_renders)) == 1
+    assert report.shared_conformance_e5_collector_calls == 0
+    assert report.continuous_delta_runtime_report_sha256 == (
+        report.shared_conformance_e5_report_sha256
+    )
+    assert report.continuous_delta_runtime_report_bytes == (
+        report.shared_conformance_e5_report_bytes
+    )
     assert sum(item is _shared_d5_report for item, _ in validations) == 1
     assert next(result for item, result in validations if item is _shared_d5_report) == ()
     assert len(validations) == 11
@@ -2530,7 +3107,7 @@ def test_d6_public_collection_collects_and_validates_d5_baseline_once(
 
 
 def test_d6_runner_imports_d5_normally_without_reconstruction_or_private_runtime():
-    source = inspect.getsource(runner)
+    source = inspect.getsource(_demo.run_kernel_conformance_v01)
     tree = ast.parse(source)
     imported_modules = {
         node.module
@@ -2552,3 +3129,192 @@ def test_d6_runner_imports_d5_normally_without_reconstruction_or_private_runtime
         "FractalRuntimeG2DCaseResultV02(",
     ):
         assert forbidden not in source
+
+
+def test_e6_category_probe_and_domain_mapping_bind_actual_e5_evidence(
+    standalone_report,
+    _shared_e5_report_for_internal_builder,
+):
+    e5_report = _shared_e5_report_for_internal_builder
+    cases = {item.case_id: item for item in e5_report.case_results}
+    category = standalone_report.category_results[14]
+    assert category.category_id == "ContinuousDeltaRuntimeConformance"
+    assert category.required_check_ids == conformance._G2E_EXPECTED_CHECK_IDS_V07
+    assert category.passed_check_ids == conformance._G2E_EXPECTED_CHECK_IDS_V07
+    assert category.failed_check_ids == ()
+    assert category.status == conformance.STATUS_PASS
+    assert category.evidence_refs[0] == (
+        "runtime:kernel_conformance:ContinuousDeltaRuntimeConformance"
+    )
+    for check_id, support_case_ids, evidence_ref in zip(
+        conformance._G2E_EXPECTED_CHECK_IDS_V07,
+        _demo.run_kernel_conformance_v01._G2E_CHECK_SUPPORT_CASE_IDS_V07,
+        category.evidence_refs[1:],
+        strict=True,
+    ):
+        assert evidence_ref.startswith(
+            f"{conformance._G2E_CHECK_EVIDENCE_PREFIX_V07}{check_id}:"
+            f"report:{e5_report.report_id}:"
+            f"seal:{e5_report.sealed_evidence_sha256}:support:"
+        )
+        assert all(
+            f"case:{case_id}:sha256:{cases[case_id].evidence_sha256}"
+            in evidence_ref
+            for case_id in support_case_ids
+        )
+    probes = standalone_report.negative_test_results[50:]
+    assert tuple(item.probe_id for item in probes) == (
+        conformance._G2E_NEGATIVE_PROBE_IDS_V07
+    )
+    assert tuple(item.expected_reason_codes for item in probes) == (
+        conformance._G2E_EXPECTED_NEGATIVE_REASONS_V07
+    )
+    assert tuple(item.observed_reason_codes for item in probes) == (
+        conformance._G2E_EXPECTED_NEGATIVE_REASONS_V07
+    )
+    assert all(item.status == conformance.STATUS_PASS for item in probes)
+    assert all(item.blocked is True for item in probes)
+    assert all(
+        item.evidence_refs[:3]
+        == (
+            "demo/run_continuous_delta_runtime_g2_e_v01.py",
+            f"report:{e5_report.report_id}",
+            f"seal:{e5_report.sealed_evidence_sha256}",
+        )
+        for item in probes
+    )
+    parent_case_id = (
+        "g2e_case:negative:injected_unrelated_affected_artifact:v01"
+    )
+    parent_case = cases[parent_case_id]
+    expected_subcase_ids = (
+        f"{parent_case_id}:subcase:unrelated_injection",
+        f"{parent_case_id}:subcase:pointer_suppression",
+    )
+    expected_subcase_reasons = (
+        ("g2e_affected_unrelated_injected",),
+        ("g2e_affected_reachable_omitted",),
+    )
+    expected_parent_reasons = (
+        "g2e_affected_unrelated_injected",
+        "g2e_affected_reachable_omitted",
+    )
+    assert tuple(
+        item.subcase_id for item in parent_case.subcase_results
+    ) == expected_subcase_ids
+    assert tuple(
+        item.expected_reason_codes for item in parent_case.subcase_results
+    ) == expected_subcase_reasons
+    assert tuple(
+        item.observed_reason_codes for item in parent_case.subcase_results
+    ) == expected_subcase_reasons
+    assert parent_case.expected_reason_codes == expected_parent_reasons
+    assert parent_case.observed_reason_codes == expected_parent_reasons
+    assert all(
+        item.final_status == conformance.STATUS_PASS
+        for item in parent_case.subcase_results
+    )
+    assert _demo.run_kernel_conformance_v01._g2e_case_passes_consumer_evidence_v01(
+        parent_case
+    ) is True
+    parent_material = json.loads(parent_case.evidence_material_json)
+    assert tuple(parent_material["subcase_ids"]) == expected_subcase_ids
+    assert tuple(parent_material["subcase_evidence_sha256"]) == tuple(
+        item.evidence_sha256 for item in parent_case.subcase_results
+    )
+    assert tuple(parent_material["expected_reason_codes"]) == (
+        expected_parent_reasons
+    )
+    assert tuple(parent_material["observed_reason_codes"]) == (
+        expected_parent_reasons
+    )
+    sixth_probe = probes[5]
+    assert _demo.run_kernel_conformance_v01._G2E_PROBE_CASE_IDS_V07[5] == (
+        parent_case_id
+    )
+    assert sixth_probe.expected_reason_codes == expected_parent_reasons
+    assert sixth_probe.observed_reason_codes == expected_parent_reasons
+    assert sixth_probe.blocked is True
+    assert sixth_probe.status == conformance.STATUS_PASS
+    assert sixth_probe.evidence_refs == (
+        "demo/run_continuous_delta_runtime_g2_e_v01.py",
+        f"report:{e5_report.report_id}",
+        f"seal:{e5_report.sealed_evidence_sha256}",
+        f"case:{parent_case_id}:sha256:{parent_case.evidence_sha256}",
+    )
+    assert _demo.run_kernel_conformance_v01._G2E_TO_CONFORMANCE_DOMAIN_IDS_V07 == (
+        ("TRAVEL_POLICY_INFORMATION", "airline"),
+        ("WAREHOUSE_MAINTENANCE_INFORMATION", "supplier_water_filter"),
+    )
+    assert e5_report.domain_order == tuple(
+        source_domain
+        for source_domain, _ in (
+            _demo.run_kernel_conformance_v01._G2E_TO_CONFORMANCE_DOMAIN_IDS_V07
+        )
+    )
+    assert tuple(item.domain_id for item in standalone_report.domain_results) == tuple(
+        target_domain
+        for _, target_domain in (
+            _demo.run_kernel_conformance_v01._G2E_TO_CONFORMANCE_DOMAIN_IDS_V07
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    (
+        ("continuous_delta_runtime_execution_count", 2),
+        ("continuous_delta_runtime_public_validation_status", "FAIL_CLOSED"),
+        ("continuous_delta_runtime_report_sha256", "b" * 64),
+        ("continuous_delta_runtime_report_bytes", 2),
+        ("shared_conformance_e5_collector_calls", 1),
+        ("shared_conformance_e5_report_sha256", "b" * 64),
+        ("shared_conformance_e5_report_bytes", 2),
+        ("continuous_delta_runtime_second_execution_count", 1),
+        ("continuous_delta_runtime_cache_reuse_count", 1),
+        ("continuous_delta_runtime_test_fixture_substitution_count", 1),
+        ("continuous_delta_runtime_private_g2d_calls", 1),
+        ("continuous_delta_runtime_reconstructed_case_count", 1),
+    ),
+)
+def test_e6_public_validators_reject_each_e5_receipt_lie(
+    standalone_report,
+    field,
+    value,
+):
+    forged = conformance._replace_report_id(
+        replace(standalone_report, **{field: value})
+    )
+    assert "kernel_conformance_e5_receipt_invalid" in (
+        conformance.validate_kernel_conformance_report_v01(forged)
+    )
+    assert "kernel_conformance_e5_receipt_invalid" in (
+        _demo.run_kernel_conformance_v01.
+        validate_kernel_conformance_runtime_v01(forged)
+    )
+
+
+def test_e6_internal_builder_rejects_forged_e5_report_without_recollection(
+    _shared_e5_report_for_internal_builder,
+):
+    e5_report = _shared_e5_report_for_internal_builder
+    forged = replace(
+        e5_report,
+        report_id=_demo.run_kernel_conformance_v01._g2e.REPORT_ID_PREFIX + "f" * 64,
+    )
+    canonical_bytes = (
+        _demo.run_kernel_conformance_v01._g2e.
+        render_continuous_delta_runtime_g2_e_v01(e5_report).encode("utf-8")
+    )
+    with pytest.raises(ValueError, match="^g2e5_report_identity_invalid$"):
+        (
+            _demo.run_kernel_conformance_v01.
+            _collect_standalone_kernel_conformance_with_validated_e5_v01(
+                continuous_delta_runtime_report=forged,
+                continuous_delta_runtime_report_sha256=hashlib.sha256(
+                    canonical_bytes
+                ).hexdigest(),
+                continuous_delta_runtime_report_bytes=len(canonical_bytes),
+                implementation_commit="abcdef0",
+            )
+        )

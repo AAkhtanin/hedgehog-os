@@ -23,6 +23,7 @@ from demo import (
 )
 import demo.run_execution_mode_router_g2_c_v01 as _g2c
 import demo.run_fractal_runtime_g2_d_v02 as _g2d
+import demo.run_continuous_delta_runtime_g2_e_v01 as _g2e
 import hedgehog.kernel as _kernel_package
 from hedgehog.kernel import execution_mode_router_v01 as _execution_mode_router
 from hedgehog.kernel import transition_registry_v01 as _transition_registry
@@ -97,14 +98,17 @@ from hedgehog.kernel.trust_model_v01 import (
 
 RUNNER_ID = "kernel_conformance_v01"
 _G2C_RUNNER_VERSION_V03 = "v0.3"
-RUNNER_VERSION = "v0.6"
+RUNNER_VERSION = "v0.7"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
 
 KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL = (
     "kernel_conformance_v0_5_historical"
 )
-KERNEL_CONFORMANCE_PROFILE_V06_CURRENT = "kernel_conformance_v0_6_current"
-DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL = (
+    "kernel_conformance_v0_6_historical"
+)
+KERNEL_CONFORMANCE_PROFILE_V07_CURRENT = "kernel_conformance_v0_7_current"
+DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
 
 _COMMIT_PATTERN = re.compile(r"^[0-9a-f]{7,40}$")
 _G2C_TRANSITION_FUNCTION_NAMES_V03 = (
@@ -133,7 +137,7 @@ _V05_HISTORICAL_BASE_ACT_IDS = (
     "execution_mode_router",
     "fractal_runtime",
 )
-_BASE_ACT_IDS = (
+_V06_HISTORICAL_BASE_ACT_IDS = (
     "airline_deterministic_transaction_runtime",
     "generic_integrity_replay",
     "root_signer_isolation_conformance",
@@ -150,6 +154,7 @@ _BASE_ACT_IDS = (
     "execution_mode_router",
     "fractal_runtime",
 )
+_BASE_ACT_IDS = (*_V06_HISTORICAL_BASE_ACT_IDS, "continuous_delta_runtime")
 _ACT_FIELDS = frozenset(
     {
         "act_id",
@@ -228,6 +233,10 @@ _ACT_SOURCES = {
         "demo.run_fractal_runtime_g2_d_v02",
         "collect_fractal_runtime_g2_d_v02",
     ),
+    "continuous_delta_runtime": (
+        "demo.run_continuous_delta_runtime_g2_e_v01",
+        "collect_continuous_delta_runtime_g2_e_v01",
+    ),
 }
 _EVIDENCE_REFS = (
     "hedgehog/kernel/integrity_replay_v01.py",
@@ -245,6 +254,7 @@ _EVIDENCE_REFS = (
     "demo/run_drs_semantic_address_reuse_certificate_g2_b_v01.py",
     "demo/run_execution_mode_router_g2_c_v01.py",
     "demo/run_fractal_runtime_g2_d_v02.py",
+    "demo/run_continuous_delta_runtime_g2_e_v01.py",
 )
 _LIMITATIONS = (
     "deterministic_current_repository_conformance_only",
@@ -256,6 +266,7 @@ _LIMITATIONS = (
     "limitation_g2b6_deterministic_local_drs_semantic_reuse_only",
     "limitation_g2c6_deterministic_two_domain_execution_mode_router_only",
     "limitation_g2d6_validated_d5_report_only",
+    "limitation_g2e6_validated_public_e5_report_only",
 )
 
 
@@ -283,12 +294,37 @@ def kernel_conformance_profile_metadata_v01(
     return conformance.kernel_conformance_profile_metadata_v01(profile_id)
 
 
+def _validated_e5_receipt_v01(
+    report: object,
+) -> tuple[_g2e.ContinuousDeltaRuntimeG2EReportV01, str, int]:
+    validated = _g2e.validate_continuous_delta_runtime_g2_e_report_v01(report)
+    canonical_bytes = _g2e.render_continuous_delta_runtime_g2_e_v01(
+        validated
+    ).encode("utf-8")
+    return validated, hashlib.sha256(canonical_bytes).hexdigest(), len(canonical_bytes)
+
+
 def collect_kernel_conformance_v01(
     *,
-    active_act_results: tuple[Mapping[str, object], ...],
-    implementation_commit: str,
+    active_act_results: tuple[Mapping[str, object], ...] | None = None,
+    implementation_commit: str | None = None,
 ) -> conformance.KernelConformanceReportV01:
     try:
+        continuous_delta_runtime_report = (
+            _g2e.collect_continuous_delta_runtime_g2_e_v01()
+        )
+        continuous_delta_runtime_report, e5_sha256, e5_bytes = (
+            _validated_e5_receipt_v01(continuous_delta_runtime_report)
+        )
+        if active_act_results is None:
+            return _collect_standalone_kernel_conformance_with_validated_e5_v01(
+                continuous_delta_runtime_report=continuous_delta_runtime_report,
+                continuous_delta_runtime_report_sha256=e5_sha256,
+                continuous_delta_runtime_report_bytes=e5_bytes,
+                implementation_commit=implementation_commit,
+            )
+        if implementation_commit is None:
+            raise ValueError("implementation_commit_invalid")
         fractal_runtime_report = _g2d.collect_fractal_runtime_g2_d_v02()
         reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
             fractal_runtime_report
@@ -299,6 +335,9 @@ def collect_kernel_conformance_v01(
             active_act_results=active_act_results,
             implementation_commit=implementation_commit,
             fractal_runtime_report=fractal_runtime_report,
+            continuous_delta_runtime_report=continuous_delta_runtime_report,
+            continuous_delta_runtime_report_sha256=e5_sha256,
+            continuous_delta_runtime_report_bytes=e5_bytes,
         )
     except ValueError as exc:
         reason = (
@@ -323,11 +362,24 @@ def _collect_kernel_conformance_with_validated_fractal_runtime_v01(
     active_act_results: tuple[Mapping[str, object], ...],
     implementation_commit: str,
     fractal_runtime_report: _g2d.FractalRuntimeG2DReportV02,
+    continuous_delta_runtime_report: _g2e.ContinuousDeltaRuntimeG2EReportV01,
+    continuous_delta_runtime_report_sha256: str,
+    continuous_delta_runtime_report_bytes: int,
 ) -> conformance.KernelConformanceReportV01:
     try:
         rows = _validate_active_act_results(active_act_results)
         if _COMMIT_PATTERN.fullmatch(implementation_commit) is None:
             raise ValueError("implementation_commit_invalid")
+        (
+            continuous_delta_runtime_report,
+            shared_e5_sha256,
+            shared_e5_bytes,
+        ) = _validated_e5_receipt_v01(continuous_delta_runtime_report)
+        if (
+            continuous_delta_runtime_report_sha256 != shared_e5_sha256
+            or continuous_delta_runtime_report_bytes != shared_e5_bytes
+        ):
+            raise ValueError("kernel_conformance_runtime_invalid")
         by_id = {row["act_id"]: row for row in rows}
         action_packet_report = (
             _action_packet_lifecycle.collect_action_commit_packet_lifecycle_g2_a_v01()
@@ -348,12 +400,16 @@ def _collect_kernel_conformance_with_validated_fractal_runtime_v01(
         g2d_observations = _collect_g2d_negative_observations_v01(
             fractal_runtime_report
         )
+        g2e_observations = _collect_g2e_negative_observations_v01(
+            continuous_delta_runtime_report
+        )
         negatives = _collect_negative_results(
             by_id,
             action_packet_report,
             g2b_observations,
             g2c_observations,
             g2d_observations,
+            g2e_observations,
         )
         domains = _build_domain_results(by_id, negatives)
         categories = _build_category_results(
@@ -364,6 +420,7 @@ def _collect_kernel_conformance_with_validated_fractal_runtime_v01(
             g2b_baseline,
             g2c_baseline,
             fractal_runtime_report,
+            continuous_delta_runtime_report,
         )
         report = conformance.build_kernel_conformance_report_v01(
             implementation_commit=implementation_commit,
@@ -371,6 +428,14 @@ def _collect_kernel_conformance_with_validated_fractal_runtime_v01(
             domain_results=domains,
             negative_test_results=negatives,
             active_gauntlet_refs=_BASE_ACT_IDS,
+            continuous_delta_runtime_report_sha256=(
+                continuous_delta_runtime_report_sha256
+            ),
+            continuous_delta_runtime_report_bytes=(
+                continuous_delta_runtime_report_bytes
+            ),
+            shared_conformance_e5_report_sha256=shared_e5_sha256,
+            shared_conformance_e5_report_bytes=shared_e5_bytes,
             evidence_refs=_EVIDENCE_REFS,
             limitations=_LIMITATIONS,
         )
@@ -400,46 +465,84 @@ def collect_standalone_kernel_conformance_v01(
     implementation_commit: str | None = None,
 ) -> conformance.KernelConformanceReportV01:
     try:
-        from demo import run_living_gauntlet_v01 as living
-
-        base_results = living.collect_living_gauntlet_base_act_results_v01()
-        lifecycle_result = living.collect_action_packet_lifecycle_gauntlet_act_v01()
-        g2b_result = (
-            living.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+        continuous_delta_runtime_report = (
+            _g2e.collect_continuous_delta_runtime_g2_e_v01()
         )
-        g2c_result = living.collect_execution_mode_router_gauntlet_act_v01()
-        fractal_runtime_report = _g2d.collect_fractal_runtime_g2_d_v02()
-        reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
-            fractal_runtime_report
+        continuous_delta_runtime_report, e5_sha256, e5_bytes = (
+            _validated_e5_receipt_v01(continuous_delta_runtime_report)
         )
-        if reasons:
-            raise ValueError("kernel_conformance_runtime_invalid")
-        g2d_result = (
-            living._fractal_runtime_gauntlet_act_from_validated_report_v01(
-                fractal_runtime_report
-            )
-        )
-        active_results = (
-            *base_results,
-            _asdict(lifecycle_result),
-            _asdict(g2b_result),
-            _asdict(g2c_result),
-            _asdict(g2d_result),
-        )
-        commit = (
-            resolve_current_implementation_commit_v01()
-            if implementation_commit is None
-            else implementation_commit
-        )
-        return _collect_kernel_conformance_with_validated_fractal_runtime_v01(
-            active_act_results=active_results,
-            implementation_commit=commit,
-            fractal_runtime_report=fractal_runtime_report,
+        return _collect_standalone_kernel_conformance_with_validated_e5_v01(
+            continuous_delta_runtime_report=continuous_delta_runtime_report,
+            continuous_delta_runtime_report_sha256=e5_sha256,
+            continuous_delta_runtime_report_bytes=e5_bytes,
+            implementation_commit=implementation_commit,
         )
     except ValueError:
         raise
     except Exception:
         raise ValueError("kernel_conformance_standalone_failed") from None
+
+
+def _collect_standalone_kernel_conformance_with_validated_e5_v01(
+    *,
+    continuous_delta_runtime_report: _g2e.ContinuousDeltaRuntimeG2EReportV01,
+    continuous_delta_runtime_report_sha256: str,
+    continuous_delta_runtime_report_bytes: int,
+    implementation_commit: str | None = None,
+) -> conformance.KernelConformanceReportV01:
+    from demo import run_living_gauntlet_v01 as living
+
+    (
+        continuous_delta_runtime_report,
+        shared_e5_sha256,
+        shared_e5_bytes,
+    ) = _validated_e5_receipt_v01(continuous_delta_runtime_report)
+    if (
+        continuous_delta_runtime_report_sha256 != shared_e5_sha256
+        or continuous_delta_runtime_report_bytes != shared_e5_bytes
+    ):
+        raise ValueError("kernel_conformance_runtime_invalid")
+    base_results = living.collect_living_gauntlet_base_act_results_v01()
+    lifecycle_result = living.collect_action_packet_lifecycle_gauntlet_act_v01()
+    g2b_result = (
+        living.collect_drs_semantic_address_and_reuse_certificate_gauntlet_act_v01()
+    )
+    g2c_result = living.collect_execution_mode_router_gauntlet_act_v01()
+    fractal_runtime_report = _g2d.collect_fractal_runtime_g2_d_v02()
+    reasons = _g2d.validate_fractal_runtime_g2_d_report_v02(
+        fractal_runtime_report
+    )
+    if reasons:
+        raise ValueError("kernel_conformance_runtime_invalid")
+    g2d_result = living._fractal_runtime_gauntlet_act_from_validated_report_v01(
+        fractal_runtime_report
+    )
+    g2e_result = (
+        living._continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
+            continuous_delta_runtime_report
+        )
+    )
+    active_results = (
+        *base_results,
+        _asdict(lifecycle_result),
+        _asdict(g2b_result),
+        _asdict(g2c_result),
+        _asdict(g2d_result),
+        _asdict(g2e_result),
+    )
+    commit = (
+        resolve_current_implementation_commit_v01()
+        if implementation_commit is None
+        else implementation_commit
+    )
+    return _collect_kernel_conformance_with_validated_fractal_runtime_v01(
+        active_act_results=active_results,
+        implementation_commit=commit,
+        fractal_runtime_report=fractal_runtime_report,
+        continuous_delta_runtime_report=continuous_delta_runtime_report,
+        continuous_delta_runtime_report_sha256=shared_e5_sha256,
+        continuous_delta_runtime_report_bytes=shared_e5_bytes,
+    )
 
 
 def validate_kernel_conformance_runtime_v01(
@@ -458,12 +561,12 @@ def validate_kernel_conformance_runtime_v01(
         if report.active_gauntlet_refs != _BASE_ACT_IDS:
             errors.append("kernel_conformance_active_refs_invalid")
         if (
-            report.profile_id != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
-            or report.conformance_version != "v0.6"
+            report.profile_id != KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
+            or report.conformance_version != "v0.7"
             or report.historical_profile_ref
-            != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+            != KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
             or report.claim_to_current_act
-            != conformance.CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+            != conformance.CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
             or report.current_act_count != len(_BASE_ACT_IDS)
         ):
             errors.append("kernel_conformance_profile_invalid")
@@ -471,9 +574,9 @@ def validate_kernel_conformance_runtime_v01(
             errors.append("kernel_conformance_not_pass")
         counters = report.counters
         if (
-            counters.category_pass_count != 14
+            counters.category_pass_count != 15
             or counters.domain_pass_count != 2
-            or counters.negative_pass_count != 50
+            or counters.negative_pass_count != 60
             or counters.active_gauntlet_ref_count != len(_BASE_ACT_IDS)
             or any(
                 value != 0
@@ -488,6 +591,27 @@ def validate_kernel_conformance_runtime_v01(
             )
         ):
             errors.append("kernel_conformance_counter_boundary_invalid")
+        if (
+            report.continuous_delta_runtime_execution_count != 1
+            or report.continuous_delta_runtime_public_validation_status
+            != conformance.STATUS_PASS
+            or not _valid_e5_sha256_v01(
+                report.continuous_delta_runtime_report_sha256
+            )
+            or report.continuous_delta_runtime_report_sha256
+            != report.shared_conformance_e5_report_sha256
+            or report.continuous_delta_runtime_report_bytes <= 0
+            or report.continuous_delta_runtime_report_bytes
+            != report.shared_conformance_e5_report_bytes
+            or report.shared_conformance_e5_collector_calls != 0
+            or report.continuous_delta_runtime_second_execution_count != 0
+            or report.continuous_delta_runtime_cache_reuse_count != 0
+            or report.continuous_delta_runtime_test_fixture_substitution_count
+            != 0
+            or report.continuous_delta_runtime_private_g2d_calls != 0
+            or report.continuous_delta_runtime_reconstructed_case_count != 0
+        ):
+            errors.append("kernel_conformance_e5_receipt_invalid")
         supplier = report.domain_results[1]
         if "supplier_multiroot_mixed_visible" not in supplier.passed_check_ids:
             errors.append("kernel_conformance_supplier_mixed_missing")
@@ -538,6 +662,16 @@ def render_kernel_conformance_v01(
             f"created_authority={counters.created_authority_count}",
             f"created_permission={counters.created_permission_count}",
             f"real_world_effects={counters.real_world_effects_count}",
+            "continuous_delta_runtime_execution_count="
+            f"{report.continuous_delta_runtime_execution_count}",
+            "continuous_delta_runtime_public_validation_status="
+            f"{report.continuous_delta_runtime_public_validation_status}",
+            "continuous_delta_runtime_report_sha256="
+            f"{report.continuous_delta_runtime_report_sha256}",
+            "continuous_delta_runtime_report_bytes="
+            f"{report.continuous_delta_runtime_report_bytes}",
+            "shared_conformance_e5_collector_calls="
+            f"{report.shared_conformance_e5_collector_calls}",
             f"final_status={report.final_status}",
         )
     )
@@ -551,7 +685,7 @@ def main() -> int:
         return 0
     except Exception:
         print(
-            "kernel_conformance: kernel_conformance_v01 v0.6\n"
+            f"kernel_conformance: {RUNNER_ID} {RUNNER_VERSION}\n"
             "final_status=FAIL_CLOSED\n",
             end="",
         )
@@ -1315,6 +1449,331 @@ def _g2d_baseline_geometry_v04(report: object) -> dict[str, bool]:
         return {key: False for key in checks}
 
 
+_G2E_ZERO_COUNTER_FIELDS_V07 = (
+    "provider_calls",
+    "model_calls",
+    "network_calls",
+    "connector_calls",
+    "external_drs_calls",
+    "action_commit_packets_created",
+    "permissions_created",
+    "receipts_created",
+    "final_outputs_created",
+    "drs_writes",
+    "authority_created_count",
+    "real_world_effects_count",
+)
+_G2E_TO_CONFORMANCE_DOMAIN_IDS_V07 = (
+    ("TRAVEL_POLICY_INFORMATION", "airline"),
+    ("WAREHOUSE_MAINTENANCE_INFORMATION", "supplier_water_filter"),
+)
+_G2E_ZERO_CASE_IDS_V07 = tuple(
+    "g2e_case:negative:" + suffix + ":v01"
+    for suffix in (
+        "nonzero_provider_calls",
+        "nonzero_model_calls",
+        "nonzero_network_calls",
+        "nonzero_connector_calls",
+        "nonzero_external_drs_calls",
+        "nonzero_drs_writes",
+        "nonzero_action_packets",
+        "nonzero_permissions",
+        "nonzero_receipts",
+        "nonzero_final_outputs",
+        "nonzero_authority",
+        "nonzero_real_world_effects",
+    )
+)
+_G2E_PROBE_CASE_IDS_V07 = (
+    None,
+    "g2e_case:negative:cross_domain_substitution:v01",
+    "g2e_case:negative:dependency_fingerprint_forgery:v01",
+    "g2e_case:negative:missing_dependency_edge:v01",
+    "g2e_case:negative:omitted_direct_dependent:v01",
+    "g2e_case:negative:injected_unrelated_affected_artifact:v01",
+    "g2e_case:negative:deletion_disguised_as_invalidation:v01",
+    "g2e_case:negative:preserved_payload_mutation:v01",
+    "g2e_case:negative:root_acceptance_outcome_forgery:v01",
+    None,
+)
+_G2E_CHECK_SUPPORT_CASE_IDS_V07 = (
+    (
+        "g2e_case:travel:hold_expiry:v01",
+        "g2e_case:warehouse:water_filter_stock:v01",
+        "g2e_case:negative:unvalidated_delta_source:v01",
+        "g2e_case:negative:missing_changed_binding_carrier:v01",
+        "g2e_case:negative:source_binding_set_mismatch:v01",
+    ),
+    (
+        "g2e_case:negative:dependency_fingerprint_forgery:v01",
+        "g2e_case:negative:dependency_digest_role_collision:v01",
+        "g2e_case:negative:source_history_substitution:v01",
+    ),
+    (
+        "g2e_case:negative:missing_dependency_edge:v01",
+        "g2e_case:negative:dependency_cycle:v01",
+        "g2e_case:negative:graph_edge_reordering:v01",
+        "g2e_case:negative:graph_node_bound_overflow:v01",
+        "g2e_case:negative:graph_edge_bound_overflow:v01",
+        "g2e_case:negative:graph_hop_bound_overflow:v01",
+    ),
+    (
+        "g2e_case:negative:omitted_direct_dependent:v01",
+        "g2e_case:negative:omitted_transitive_dependent:v01",
+        "g2e_case:negative:injected_unrelated_affected_artifact:v01",
+        "g2e_case:negative:affected_set_reordering:v01",
+        "g2e_case:negative:affected_closure_proof_forgery:v01",
+    ),
+    (
+        "g2e_case:negative:deletion_disguised_as_invalidation:v01",
+        "g2e_case:negative:invalidation_predecessor_mismatch:v01",
+        "g2e_case:negative:invalidation_supersession_mismatch:v01",
+    ),
+    (
+        "g2e_case:travel:repeat_idempotent:v01",
+        "g2e_case:warehouse:repeat_idempotent:v01",
+        "g2e_case:negative:preserved_payload_mutation:v01",
+        "g2e_case:negative:preserved_identity_mutation:v01",
+        "g2e_case:negative:in_place_recomputation:v01",
+    ),
+    (
+        "g2e_case:negative:packet_kept_executable_after_invalidation:v01",
+        "g2e_case:negative:stale_reuse_certificate_retained_current:v01",
+        "g2e_case:negative:route_reused_after_bound_source_change:v01",
+        "g2e_case:negative:result_report_binding_mismatch:v01",
+        "g2e_case:negative:post_vv_gt_binding_mismatch:v01",
+    ),
+    (
+        "g2e_case:travel:repeat_idempotent:v01",
+        "g2e_case:warehouse:repeat_idempotent:v01",
+        "g2e_case:negative:repeated_delta_spin:v01",
+        "g2e_case:negative:hidden_mutable_global_state:v01",
+        "g2e_case:negative:unsupported_sequential_delta:v01",
+    ),
+    (
+        "g2e_case:travel:policy_change:v01",
+        "g2e_case:travel:unrelated_preference:v01",
+        "g2e_case:warehouse:policy_change:v01",
+        "g2e_case:warehouse:safe_sibling:v01",
+        "g2e_case:negative:cross_domain_substitution:v01",
+    ),
+    _G2E_ZERO_CASE_IDS_V07,
+)
+
+
+def _valid_e5_sha256_v01(value: object) -> bool:
+    return (
+        type(value) is str
+        and len(value) == 64
+        and set(value) <= set("0123456789abcdef")
+    )
+
+
+def _g2e_case_passes_consumer_evidence_v01(case: object) -> bool:
+    try:
+        return (
+            type(case) is _g2e.ContinuousDeltaRuntimeG2ECaseResultV01
+            and case.expected_outcome == case.observed_outcome
+            and case.expected_reason_codes == case.observed_reason_codes
+            and case.final_status == conformance.STATUS_PASS
+            and case.reason_codes == ()
+            and type(case.evidence_material_json) is str
+            and bool(case.evidence_material_json)
+            and _valid_e5_sha256_v01(case.evidence_sha256)
+            and type(case.evidence_refs) is tuple
+            and bool(case.evidence_refs)
+            and all(
+                getattr(case, field) == 0
+                for field in _G2E_ZERO_COUNTER_FIELDS_V07
+            )
+            and all(
+                type(subcase)
+                is _g2e.ContinuousDeltaRuntimeG2ESubcaseResultV01
+                and subcase.expected_reason_codes
+                == subcase.observed_reason_codes
+                and subcase.final_status == conformance.STATUS_PASS
+                and type(subcase.evidence_material_json) is str
+                and bool(subcase.evidence_material_json)
+                and _valid_e5_sha256_v01(subcase.evidence_sha256)
+                and type(subcase.evidence_refs) is tuple
+                and bool(subcase.evidence_refs)
+                for subcase in case.subcase_results
+            )
+        )
+    except Exception:
+        return False
+
+
+def _g2e_case_evidence_ref_v01(case: object) -> str:
+    if not _g2e_case_passes_consumer_evidence_v01(case):
+        raise ValueError("kernel_conformance_runtime_invalid")
+    return f"case:{case.case_id}:sha256:{case.evidence_sha256}"
+
+
+def _g2e_baseline_geometry_v07(report: object) -> dict[str, bool]:
+    checks = dict.fromkeys(conformance._G2E_EXPECTED_CHECK_IDS_V07, False)
+    try:
+        validated = _g2e.validate_continuous_delta_runtime_g2_e_report_v01(
+            report
+        )
+        cases = {item.case_id: item for item in validated.case_results}
+        all_cases_bound = (
+            tuple(cases) == validated.case_order
+            and all(
+                _g2e_case_passes_consumer_evidence_v01(item)
+                for item in validated.case_results
+            )
+        )
+        support_passes = tuple(
+            all(
+                case_id in cases
+                and _g2e_case_passes_consumer_evidence_v01(cases[case_id])
+                for case_id in case_ids
+            )
+            for case_ids in _G2E_CHECK_SUPPORT_CASE_IDS_V07
+        )
+        zero_boundary = (
+            all(
+                getattr(validated, field) == 0
+                for field in _G2E_ZERO_COUNTER_FIELDS_V07
+            )
+            and all(
+                getattr(item, field) == 0
+                for item in validated.case_results
+                for field in _G2E_ZERO_COUNTER_FIELDS_V07
+            )
+        )
+        two_domain_boundary = (
+            validated.domain_order
+            == tuple(
+                source_domain
+                for source_domain, _ in _G2E_TO_CONFORMANCE_DOMAIN_IDS_V07
+            )
+            and conformance.DOMAIN_IDS
+            == tuple(
+                target_domain
+                for _, target_domain in _G2E_TO_CONFORMANCE_DOMAIN_IDS_V07
+            )
+            and tuple(item.domain_id for item in validated.case_results[:5])
+            == ("TRAVEL_POLICY_INFORMATION",) * 5
+            and tuple(item.domain_id for item in validated.case_results[5:10])
+            == ("WAREHOUSE_MAINTENANCE_INFORMATION",) * 5
+        )
+        for check_id, passed in zip(
+            conformance._G2E_EXPECTED_CHECK_IDS_V07,
+            support_passes,
+            strict=True,
+        ):
+            checks[check_id] = (
+                all_cases_bound
+                and passed
+                and _valid_e5_sha256_v01(validated.sealed_evidence_sha256)
+            )
+        checks["two_domain_selective_recomputation"] = (
+            checks["two_domain_selective_recomputation"]
+            and two_domain_boundary
+        )
+        checks["zero_authority_and_operations"] = (
+            checks["zero_authority_and_operations"] and zero_boundary
+        )
+        return checks
+    except Exception:
+        return checks
+
+
+def _g2e_check_evidence_refs_v07(report: object) -> tuple[str, ...]:
+    validated = _g2e.validate_continuous_delta_runtime_g2_e_report_v01(report)
+    cases = {item.case_id: item for item in validated.case_results}
+    result = ["runtime:kernel_conformance:ContinuousDeltaRuntimeConformance"]
+    for check_id, case_ids in zip(
+        conformance._G2E_EXPECTED_CHECK_IDS_V07,
+        _G2E_CHECK_SUPPORT_CASE_IDS_V07,
+        strict=True,
+    ):
+        support = ",".join(
+            _g2e_case_evidence_ref_v01(cases[case_id]) for case_id in case_ids
+        )
+        result.append(
+            f"{conformance._G2E_CHECK_EVIDENCE_PREFIX_V07}{check_id}:"
+            f"report:{validated.report_id}:seal:{validated.sealed_evidence_sha256}:"
+            f"support:{support}"
+        )
+    return tuple(result)
+
+
+def _collect_g2e_negative_observations_v01(
+    report: object,
+) -> tuple[tuple[object, ...], ...]:
+    validated = _g2e.validate_continuous_delta_runtime_g2_e_report_v01(report)
+    cases = {item.case_id: item for item in validated.case_results}
+    target = conformance._G2E_REPORT_VALIDATOR_TARGET_V07
+    evidence_base = (
+        "demo/run_continuous_delta_runtime_g2_e_v01.py",
+        f"report:{validated.report_id}",
+        f"seal:{validated.sealed_evidence_sha256}",
+    )
+    observations: list[tuple[object, ...]] = []
+    for index, (probe_id, expected) in enumerate(
+        zip(
+            conformance._G2E_NEGATIVE_PROBE_IDS_V07,
+            conformance._G2E_EXPECTED_NEGATIVE_REASONS_V07,
+            strict=True,
+        )
+    ):
+        if index == 0:
+            forged = replace(
+                validated,
+                report_id=_g2e.REPORT_ID_PREFIX + "f" * 64,
+            )
+            try:
+                _g2e.validate_continuous_delta_runtime_g2_e_report_v01(forged)
+                observed: tuple[str, ...] = ()
+            except ValueError as exc:
+                observed = (
+                    str(exc),
+                ) if len(exc.args) == 1 and type(exc.args[0]) is str else ()
+            evidence_refs = (*evidence_base, f"forged_report:{forged.report_id}")
+            blocked = observed == expected
+        elif index == 9:
+            zero_cases = tuple(cases[case_id] for case_id in _G2E_ZERO_CASE_IDS_V07)
+            observed = tuple(
+                dict.fromkeys(
+                    reason
+                    for case in zero_cases
+                    for reason in case.observed_reason_codes
+                )
+            )
+            evidence_refs = (
+                *evidence_base,
+                *(_g2e_case_evidence_ref_v01(case) for case in zero_cases),
+            )
+            blocked = (
+                observed == expected
+                and all(
+                    _g2e_case_passes_consumer_evidence_v01(case)
+                    for case in zero_cases
+                )
+                and all(
+                    getattr(validated, field) == 0
+                    for field in _G2E_ZERO_COUNTER_FIELDS_V07
+                )
+            )
+        else:
+            case_id = _G2E_PROBE_CASE_IDS_V07[index]
+            case = cases[case_id]
+            observed = case.observed_reason_codes
+            evidence_refs = (*evidence_base, _g2e_case_evidence_ref_v01(case))
+            blocked = (
+                observed == expected
+                and case.expected_reason_codes == expected
+                and _g2e_case_passes_consumer_evidence_v01(case)
+            )
+        observations.append(
+            (probe_id, target, expected, observed, blocked, evidence_refs)
+        )
+    return tuple(observations)
+
+
 def _build_category_results(
     by_id: Mapping[str, Mapping[str, object]],
     domains: tuple[conformance.DomainConformanceResultV01, ...],
@@ -1323,6 +1782,7 @@ def _build_category_results(
     g2b_baseline: object,
     g2c_baseline: object,
     g2d_baseline: object,
+    g2e_baseline: object,
 ) -> tuple[conformance.ConformanceCategoryResultV01, ...]:
     negative_by_id = {item.probe_id: item for item in negatives}
     domain_by_id = {item.domain_id: item for item in domains}
@@ -1333,6 +1793,8 @@ def _build_category_results(
     g2c_act_pass = safe["execution_mode_router"]
     g2d_geometry = _g2d_baseline_geometry_v04(g2d_baseline)
     g2d_act_pass = safe["fractal_runtime"]
+    g2e_geometry = _g2e_baseline_geometry_v07(g2e_baseline)
+    g2e_act_pass = safe["continuous_delta_runtime"]
     rows = (
         (
             "DomainPackConformance",
@@ -1652,6 +2114,26 @@ def _build_category_results(
             ),
             ("limitation_g2d6_validated_d5_report_only",),
         ),
+        (
+            "ContinuousDeltaRuntimeConformance",
+            tuple(
+                (
+                    check_id,
+                    g2e_act_pass
+                    and passed
+                    and (
+                        check_id != "zero_authority_and_operations"
+                        or all(
+                            negative_by_id[probe_id].status
+                            == conformance.STATUS_PASS
+                            for probe_id in conformance._G2E_NEGATIVE_PROBE_IDS_V07
+                        )
+                    ),
+                )
+                for check_id, passed in g2e_geometry.items()
+            ),
+            ("limitation_g2e6_validated_public_e5_report_only",),
+        ),
     )
     return tuple(
         conformance.build_conformance_category_result_v01(
@@ -1660,6 +2142,8 @@ def _build_category_results(
             evidence_refs=(
                 _g2d_check_evidence_refs_v04(g2d_baseline)
                 if category_id == "FractalRuntimeConformance"
+                else _g2e_check_evidence_refs_v07(g2e_baseline)
+                if category_id == "ContinuousDeltaRuntimeConformance"
                 else _category_evidence(category_id)
             ),
             limitation_refs=limitations,
@@ -1678,6 +2162,7 @@ def _collect_negative_results(
     g2b_observations: tuple[tuple[object, ...], ...],
     g2c_observations: tuple[tuple[object, ...], ...],
     g2d_observations: tuple[tuple[object, ...], ...],
+    g2e_observations: tuple[tuple[object, ...], ...],
 ) -> tuple[conformance.NegativeConformanceResultV01, ...]:
     observations = (
         _probe_manifest_hash_mismatch(),
@@ -1694,6 +2179,7 @@ def _collect_negative_results(
         *g2b_observations,
         *g2c_observations,
         *g2d_observations,
+        *g2e_observations,
     )
     return tuple(
         conformance.build_negative_conformance_result_v01(

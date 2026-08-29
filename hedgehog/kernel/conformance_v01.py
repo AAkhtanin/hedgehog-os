@@ -21,18 +21,22 @@ del annotations
 
 MODULE_ID = "kernel_conformance_v01"
 SLICE_ID = "domain_neutral_reference_kernel_gate1_g1e"
-CONFORMANCE_VERSION = "v0.6"
+CONFORMANCE_VERSION = "v0.7"
 _GATE1_CONFORMANCE_VERSION_V01 = "v0.1"
 _G2A_CONFORMANCE_VERSION_V02 = "v0.2"
 _G2B_CONFORMANCE_VERSION_V03 = "v0.3"
 _G2C_CONFORMANCE_VERSION_V04 = "v0.4"
 _G2D_CONFORMANCE_VERSION_V05 = "v0.5"
+_SANITIZED_CONFORMANCE_VERSION_V06 = "v0.6"
 
 KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL = (
     "kernel_conformance_v0_5_historical"
 )
-KERNEL_CONFORMANCE_PROFILE_V06_CURRENT = "kernel_conformance_v0_6_current"
-DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL = (
+    "kernel_conformance_v0_6_historical"
+)
+KERNEL_CONFORMANCE_PROFILE_V07_CURRENT = "kernel_conformance_v0_7_current"
+DEFAULT_KERNEL_CONFORMANCE_PROFILE = KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
 
 STATUS_PASS = "PASS"
 STATUS_FAIL_CLOSED = "FAIL_CLOSED"
@@ -62,7 +66,8 @@ _G2C_CATEGORY_IDS_V04 = (
     *_G2B_CATEGORY_IDS_V03,
     "ExecutionModeRouterConformance",
 )
-CATEGORY_IDS = (*_G2C_CATEGORY_IDS_V04, "FractalRuntimeConformance")
+_V06_CATEGORY_IDS = (*_G2C_CATEGORY_IDS_V04, "FractalRuntimeConformance")
+CATEGORY_IDS = (*_V06_CATEGORY_IDS, "ContinuousDeltaRuntimeConformance")
 DOMAIN_IDS = ("airline", "supplier_water_filter")
 _GATE1_NEGATIVE_PROBE_IDS_V01 = (
     "manifest_hash_mismatch",
@@ -133,10 +138,23 @@ _G2D_NEGATIVE_PROBE_IDS_V05 = (
     "fractal_runtime_child_authority_forgery",
     "fractal_runtime_zero_operation_forgery",
 )
-NEGATIVE_PROBE_IDS = (
+_V06_NEGATIVE_PROBE_IDS = (
     *_G2C_NEGATIVE_PROBE_IDS_CUMULATIVE_V04,
     *_G2D_NEGATIVE_PROBE_IDS_V05,
 )
+_G2E_NEGATIVE_PROBE_IDS_V07 = (
+    "continuous_delta_report_identity_forgery",
+    "continuous_delta_source_substitution",
+    "continuous_delta_dependency_fingerprint_forgery",
+    "continuous_delta_graph_edge_forgery",
+    "continuous_delta_affected_set_omission",
+    "continuous_delta_unrelated_artifact_injection",
+    "continuous_delta_invalidation_deletion_forgery",
+    "continuous_delta_preserved_artifact_mutation",
+    "continuous_delta_root_authority_forgery",
+    "continuous_delta_zero_operation_forgery",
+)
+NEGATIVE_PROBE_IDS = (*_V06_NEGATIVE_PROBE_IDS, *_G2E_NEGATIVE_PROBE_IDS_V07)
 
 _GATE1_ACTIVE_GAUNTLET_REFS_V01 = (
     "airline_deterministic_transaction_runtime",
@@ -168,7 +186,7 @@ _V05_HISTORICAL_ACTIVE_GAUNTLET_REFS = (
     *_G2C_ACTIVE_GAUNTLET_REFS_V04,
     "fractal_runtime",
 )
-_V06_CURRENT_ACTIVE_GAUNTLET_REFS = (
+_V06_HISTORICAL_ACTIVE_GAUNTLET_REFS = (
     "airline_deterministic_transaction_runtime",
     "generic_integrity_replay",
     "root_signer_isolation_conformance",
@@ -185,7 +203,11 @@ _V06_CURRENT_ACTIVE_GAUNTLET_REFS = (
     "execution_mode_router",
     "fractal_runtime",
 )
-_ACTIVE_GAUNTLET_REFS = _V06_CURRENT_ACTIVE_GAUNTLET_REFS
+_V07_CURRENT_ACTIVE_GAUNTLET_REFS = (
+    *_V06_HISTORICAL_ACTIVE_GAUNTLET_REFS,
+    "continuous_delta_runtime",
+)
+_ACTIVE_GAUNTLET_REFS = _V07_CURRENT_ACTIVE_GAUNTLET_REFS
 
 CURRENT_REGRESSION_CLAIM_TO_ACTS_V06 = (
     (
@@ -237,7 +259,80 @@ CURRENT_REGRESSION_CLAIM_TO_ACTS_V06 = (
             "action_packet_lifecycle",
         ),
     ),
-    ("real_world_effects_zero", _V06_CURRENT_ACTIVE_GAUNTLET_REFS),
+    ("real_world_effects_zero", _V06_HISTORICAL_ACTIVE_GAUNTLET_REFS),
+)
+CURRENT_REGRESSION_CLAIM_TO_ACTS_V07 = (
+    (
+        "root_sole_local_final_commit_authority",
+        (
+            "root_decision_kernel",
+            "action_packet_lifecycle",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    ("no_superroot_exists", ("generic_multiroot",)),
+    (
+        "bsep_semantic_membrane",
+        (
+            "execution_mode_router",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "runtime_execution_topology_runtime_owned",
+        ("fractal_runtime", "continuous_delta_runtime"),
+    ),
+    (
+        "provider_model_advisory_only",
+        (
+            "semantic_work_contract",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "actor_output_cannot_create_final_output",
+        (
+            "semantic_work_contract",
+            "fractal_runtime",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "resultproposal_postvv_terminal_gt_before_root",
+        ("fractal_runtime", "continuous_delta_runtime"),
+    ),
+    (
+        "drs_retrieval_reuse_no_authority",
+        (
+            "drs_semantic_address_and_reuse_certificate",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "receipt_evidence_only",
+        (
+            "effect_firewall",
+            "action_packet_lifecycle",
+            "continuous_delta_runtime",
+        ),
+    ),
+    (
+        "effect_capability_bounded_corridor_only",
+        ("effect_firewall", "continuous_delta_runtime"),
+    ),
+    (
+        "airline_supplier_same_authority_law",
+        (
+            "airline_deterministic_transaction_runtime",
+            "supplier_water_filter_portability",
+            "action_packet_lifecycle",
+            "continuous_delta_runtime",
+        ),
+    ),
+    ("real_world_effects_zero", _V07_CURRENT_ACTIVE_GAUNTLET_REFS),
 )
 _GATE1_EXPECTED_CATEGORY_CHECK_IDS_V01 = (
     (
@@ -405,9 +500,26 @@ _G2D_EXPECTED_CHECK_IDS_V05 = (
     "zero_authority_and_operations",
 )
 _G2D_CHECK_EVIDENCE_PREFIX_V05 = "g2d5_check_evidence:"
-_EXPECTED_CATEGORY_CHECK_IDS = (
+_V06_EXPECTED_CATEGORY_CHECK_IDS = (
     *_G2C_EXPECTED_CATEGORY_CHECK_IDS_V04,
     ("FractalRuntimeConformance", _G2D_EXPECTED_CHECK_IDS_V05),
+)
+_G2E_EXPECTED_CHECK_IDS_V07 = (
+    "delta_source_identity_and_changed_field_binding",
+    "dependency_fingerprint_profile_and_role_separation",
+    "dependency_graph_bounds_order_and_acyclicity",
+    "affected_set_complete_and_minimal",
+    "invalidation_without_deletion",
+    "preservation_and_new_identity_recomputation",
+    "g2a_g2b_g2c_g2d_source_binding",
+    "repeated_delta_idempotency_and_no_spin",
+    "two_domain_selective_recomputation",
+    "zero_authority_and_operations",
+)
+_G2E_CHECK_EVIDENCE_PREFIX_V07 = "g2e6_check_evidence:"
+_EXPECTED_CATEGORY_CHECK_IDS = (
+    *_V06_EXPECTED_CATEGORY_CHECK_IDS,
+    ("ContinuousDeltaRuntimeConformance", _G2E_EXPECTED_CHECK_IDS_V07),
 )
 _EXPECTED_DOMAIN_GEOMETRY = (
     (
@@ -590,13 +702,46 @@ _G2D_REPORT_VALIDATOR_TARGET_V02 = (
 _G2D_EXPECTED_NEGATIVE_REASONS_V05 = (
     *(("g2d5_report_invalid",),) * 10,
 )
-_EXPECTED_NEGATIVE_GEOMETRY = (
+_V06_EXPECTED_NEGATIVE_GEOMETRY = (
     *_G2C_EXPECTED_NEGATIVE_GEOMETRY_V04,
     *(
         (probe_id, _G2D_REPORT_VALIDATOR_TARGET_V02, expected_reasons)
         for probe_id, expected_reasons in zip(
             _G2D_NEGATIVE_PROBE_IDS_V05,
             _G2D_EXPECTED_NEGATIVE_REASONS_V05,
+            strict=True,
+        )
+    ),
+)
+_G2E_REPORT_VALIDATOR_TARGET_V07 = (
+    "demo.run_continuous_delta_runtime_g2_e_v01."
+    "validate_continuous_delta_runtime_g2_e_report_v01"
+)
+_G2E_EXPECTED_NEGATIVE_REASONS_V07 = (
+    ("g2e5_report_identity_invalid",),
+    ("g2e_delta_source_unvalidated",),
+    ("g2e_dependency_fingerprint_forgery",),
+    ("g2e_dependency_graph_missing_edge",),
+    ("g2e_affected_reachable_omitted",),
+    (
+        "g2e_affected_unrelated_injected",
+        "g2e_affected_reachable_omitted",
+    ),
+    ("g2e_invalidation_deletion_forbidden",),
+    ("g2e_preserved_artifact_changed",),
+    ("g2e_authority_boundary_violated",),
+    (
+        "g2e_zero_operation_boundary_violated",
+        "g2e_authority_boundary_violated",
+    ),
+)
+_EXPECTED_NEGATIVE_GEOMETRY = (
+    *_V06_EXPECTED_NEGATIVE_GEOMETRY,
+    *(
+        (probe_id, _G2E_REPORT_VALIDATOR_TARGET_V07, expected_reasons)
+        for probe_id, expected_reasons in zip(
+            _G2E_NEGATIVE_PROBE_IDS_V07,
+            _G2E_EXPECTED_NEGATIVE_REASONS_V07,
             strict=True,
         )
     ),
@@ -683,6 +828,18 @@ class KernelConformanceReportV01:
     domain_results: tuple[DomainConformanceResultV01, ...]
     negative_test_results: tuple[NegativeConformanceResultV01, ...]
     active_gauntlet_refs: tuple[str, ...]
+    continuous_delta_runtime_execution_count: int
+    continuous_delta_runtime_public_validation_status: str
+    continuous_delta_runtime_report_sha256: str
+    continuous_delta_runtime_report_bytes: int
+    shared_conformance_e5_collector_calls: int
+    shared_conformance_e5_report_sha256: str
+    shared_conformance_e5_report_bytes: int
+    continuous_delta_runtime_second_execution_count: int
+    continuous_delta_runtime_cache_reuse_count: int
+    continuous_delta_runtime_test_fixture_substitution_count: int
+    continuous_delta_runtime_private_g2d_calls: int
+    continuous_delta_runtime_reconstructed_case_count: int
     evidence_refs: tuple[str, ...]
     limitations: tuple[str, ...]
     counters: ConformanceCountersV01
@@ -705,20 +862,37 @@ def kernel_conformance_profile_metadata_v01(
             ),
             "historical_act_id": "all_layers_invariant_super_smoke",
         }
-    if profile_id == KERNEL_CONFORMANCE_PROFILE_V06_CURRENT:
+    if profile_id == KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL:
         return {
-            "profile_id": KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
-            "profile_version": CONFORMANCE_VERSION,
-            "profile_status": "CURRENT_ACTIVE",
-            "default_current": True,
-            "active_gauntlet_refs": list(_V06_CURRENT_ACTIVE_GAUNTLET_REFS),
+            "profile_id": KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL,
+            "profile_version": _SANITIZED_CONFORMANCE_VERSION_V06,
+            "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+            "default_current": False,
+            "active_gauntlet_refs": list(
+                _V06_HISTORICAL_ACTIVE_GAUNTLET_REFS
+            ),
             "historical_profile_ref": KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
             "historical_act_id_rebound": False,
             "claim_to_current_act": {
                 claim_id: list(act_ids)
                 for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
             },
-            "current_act_count": len(_V06_CURRENT_ACTIVE_GAUNTLET_REFS),
+            "current_act_count": len(_V06_HISTORICAL_ACTIVE_GAUNTLET_REFS),
+        }
+    if profile_id == KERNEL_CONFORMANCE_PROFILE_V07_CURRENT:
+        return {
+            "profile_id": KERNEL_CONFORMANCE_PROFILE_V07_CURRENT,
+            "profile_version": CONFORMANCE_VERSION,
+            "profile_status": "CURRENT_ACTIVE",
+            "default_current": True,
+            "active_gauntlet_refs": list(_V07_CURRENT_ACTIVE_GAUNTLET_REFS),
+            "historical_profile_ref": KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL,
+            "historical_act_id_rebound": False,
+            "claim_to_current_act": {
+                claim_id: list(act_ids)
+                for claim_id, act_ids in CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
+            },
+            "current_act_count": len(_V07_CURRENT_ACTIVE_GAUNTLET_REFS),
         }
     raise ValueError("kernel_conformance_profile_unknown")
 
@@ -906,6 +1080,10 @@ def build_kernel_conformance_report_v01(
     domain_results: tuple[DomainConformanceResultV01, ...],
     negative_test_results: tuple[NegativeConformanceResultV01, ...],
     active_gauntlet_refs: tuple[str, ...],
+    continuous_delta_runtime_report_sha256: str,
+    continuous_delta_runtime_report_bytes: int,
+    shared_conformance_e5_report_sha256: str,
+    shared_conformance_e5_report_bytes: int,
     evidence_refs: tuple[str, ...],
     limitations: tuple[str, ...],
 ) -> KernelConformanceReportV01:
@@ -925,6 +1103,19 @@ def build_kernel_conformance_report_v01(
             raise ValueError
         _require_text_tuple(evidence_refs, allow_empty=False)
         _require_text_tuple(limitations, allow_empty=False)
+        if (
+            not _valid_sha256(continuous_delta_runtime_report_sha256)
+            or not _valid_sha256(shared_conformance_e5_report_sha256)
+            or continuous_delta_runtime_report_sha256
+            != shared_conformance_e5_report_sha256
+            or type(continuous_delta_runtime_report_bytes) is not int
+            or continuous_delta_runtime_report_bytes <= 0
+            or type(shared_conformance_e5_report_bytes) is not int
+            or shared_conformance_e5_report_bytes <= 0
+            or continuous_delta_runtime_report_bytes
+            != shared_conformance_e5_report_bytes
+        ):
+            raise ValueError
         counters = _derive_counters(
             category_results,
             domain_results,
@@ -940,16 +1131,34 @@ def build_kernel_conformance_report_v01(
         )
         provisional = KernelConformanceReportV01(
             report_id="0" * 64,
-            profile_id=KERNEL_CONFORMANCE_PROFILE_V06_CURRENT,
+            profile_id=KERNEL_CONFORMANCE_PROFILE_V07_CURRENT,
             conformance_version=CONFORMANCE_VERSION,
-            historical_profile_ref=KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL,
-            claim_to_current_act=CURRENT_REGRESSION_CLAIM_TO_ACTS_V06,
+            historical_profile_ref=KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL,
+            claim_to_current_act=CURRENT_REGRESSION_CLAIM_TO_ACTS_V07,
             current_act_count=len(active_gauntlet_refs),
             implementation_commit=implementation_commit,
             category_results=category_results,
             domain_results=domain_results,
             negative_test_results=negative_test_results,
             active_gauntlet_refs=active_gauntlet_refs,
+            continuous_delta_runtime_execution_count=1,
+            continuous_delta_runtime_public_validation_status=STATUS_PASS,
+            continuous_delta_runtime_report_sha256=(
+                continuous_delta_runtime_report_sha256
+            ),
+            continuous_delta_runtime_report_bytes=(
+                continuous_delta_runtime_report_bytes
+            ),
+            shared_conformance_e5_collector_calls=0,
+            shared_conformance_e5_report_sha256=(
+                shared_conformance_e5_report_sha256
+            ),
+            shared_conformance_e5_report_bytes=shared_conformance_e5_report_bytes,
+            continuous_delta_runtime_second_execution_count=0,
+            continuous_delta_runtime_cache_reuse_count=0,
+            continuous_delta_runtime_test_fixture_substitution_count=0,
+            continuous_delta_runtime_private_g2d_calls=0,
+            continuous_delta_runtime_reconstructed_case_count=0,
             evidence_refs=evidence_refs,
             limitations=limitations,
             counters=counters,
@@ -1167,23 +1376,14 @@ def _report_errors(report: object) -> tuple[str, ...]:
     errors: list[str] = []
     if (
         not _valid_text(report.report_id)
-        or report.profile_id != KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
-        or type(report.conformance_version) is not str
-        or report.conformance_version
-        not in (
-            _GATE1_CONFORMANCE_VERSION_V01,
-            _G2A_CONFORMANCE_VERSION_V02,
-            _G2B_CONFORMANCE_VERSION_V03,
-            _G2C_CONFORMANCE_VERSION_V04,
-            _G2D_CONFORMANCE_VERSION_V05,
-            CONFORMANCE_VERSION,
-        )
+        or report.profile_id != KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
+        or report.conformance_version != CONFORMANCE_VERSION
         or report.historical_profile_ref
-        != KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+        != KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
         or report.claim_to_current_act
-        != CURRENT_REGRESSION_CLAIM_TO_ACTS_V06
+        != CURRENT_REGRESSION_CLAIM_TO_ACTS_V07
         or report.current_act_count != len(report.active_gauntlet_refs)
-        or report.current_act_count != len(_V06_CURRENT_ACTIVE_GAUNTLET_REFS)
+        or report.current_act_count != len(_V07_CURRENT_ACTIVE_GAUNTLET_REFS)
         or not _valid_commit(report.implementation_commit)
         or type(report.final_status) is not str
         or report.final_status not in CONFORMANCE_STATUSES
@@ -1203,6 +1403,27 @@ def _report_errors(report: object) -> tuple[str, ...]:
         report.limitations, allow_empty=False
     ):
         errors.append("kernel_conformance_report_invalid")
+    if (
+        report.continuous_delta_runtime_execution_count != 1
+        or report.continuous_delta_runtime_public_validation_status != STATUS_PASS
+        or not _valid_sha256(report.continuous_delta_runtime_report_sha256)
+        or not _valid_sha256(report.shared_conformance_e5_report_sha256)
+        or report.continuous_delta_runtime_report_sha256
+        != report.shared_conformance_e5_report_sha256
+        or type(report.continuous_delta_runtime_report_bytes) is not int
+        or report.continuous_delta_runtime_report_bytes <= 0
+        or type(report.shared_conformance_e5_report_bytes) is not int
+        or report.shared_conformance_e5_report_bytes <= 0
+        or report.continuous_delta_runtime_report_bytes
+        != report.shared_conformance_e5_report_bytes
+        or report.shared_conformance_e5_collector_calls != 0
+        or report.continuous_delta_runtime_second_execution_count != 0
+        or report.continuous_delta_runtime_cache_reuse_count != 0
+        or report.continuous_delta_runtime_test_fixture_substitution_count != 0
+        or report.continuous_delta_runtime_private_g2d_calls != 0
+        or report.continuous_delta_runtime_reconstructed_case_count != 0
+    ):
+        errors.append("kernel_conformance_e5_receipt_invalid")
     if type(report.category_results) is tuple:
         for item in report.category_results:
             errors.extend(validate_conformance_category_result_v01(item))
@@ -1274,11 +1495,17 @@ def _require_report_geometry(
         expected_category_geometry = _G2C_EXPECTED_CATEGORY_CHECK_IDS_V04
         expected_negative_geometry = _G2C_EXPECTED_NEGATIVE_GEOMETRY_V04
     elif conformance_version == _G2D_CONFORMANCE_VERSION_V05:
-        category_ids = CATEGORY_IDS
-        negative_probe_ids = NEGATIVE_PROBE_IDS
+        category_ids = _V06_CATEGORY_IDS
+        negative_probe_ids = _V06_NEGATIVE_PROBE_IDS
         expected_active_refs = _V05_HISTORICAL_ACTIVE_GAUNTLET_REFS
-        expected_category_geometry = _EXPECTED_CATEGORY_CHECK_IDS
-        expected_negative_geometry = _EXPECTED_NEGATIVE_GEOMETRY
+        expected_category_geometry = _V06_EXPECTED_CATEGORY_CHECK_IDS
+        expected_negative_geometry = _V06_EXPECTED_NEGATIVE_GEOMETRY
+    elif conformance_version == _SANITIZED_CONFORMANCE_VERSION_V06:
+        category_ids = _V06_CATEGORY_IDS
+        negative_probe_ids = _V06_NEGATIVE_PROBE_IDS
+        expected_active_refs = _V06_HISTORICAL_ACTIVE_GAUNTLET_REFS
+        expected_category_geometry = _V06_EXPECTED_CATEGORY_CHECK_IDS
+        expected_negative_geometry = _V06_EXPECTED_NEGATIVE_GEOMETRY
     elif conformance_version == CONFORMANCE_VERSION:
         category_ids = CATEGORY_IDS
         negative_probe_ids = NEGATIVE_PROBE_IDS
@@ -1364,6 +1591,24 @@ def _require_report_geometry(
             != ("limitation_g2d6_validated_d5_report_only",)
         ):
             raise ValueError
+        if category_id == "ContinuousDeltaRuntimeConformance" and (
+            len(item.evidence_refs) != 11
+            or item.evidence_refs[0]
+            != "runtime:kernel_conformance:ContinuousDeltaRuntimeConformance"
+            or any(
+                not evidence_ref.startswith(
+                    f"{_G2E_CHECK_EVIDENCE_PREFIX_V07}{check_id}:"
+                )
+                for check_id, evidence_ref in zip(
+                    _G2E_EXPECTED_CHECK_IDS_V07,
+                    item.evidence_refs[1:],
+                    strict=True,
+                )
+            )
+            or item.limitation_refs
+            != ("limitation_g2e6_validated_public_e5_report_only",)
+        ):
+            raise ValueError
     for item, expected in zip(domains, _EXPECTED_DOMAIN_GEOMETRY):
         (
             domain_id,
@@ -1412,6 +1657,14 @@ def _require_report_geometry(
             != "demo/run_fractal_runtime_g2_d_v02.py"
             or not item.evidence_refs[1].startswith("baseline_report:")
             or not item.evidence_refs[-1].startswith("forged_report:")
+        ):
+            raise ValueError
+        if probe_id in _G2E_NEGATIVE_PROBE_IDS_V07 and (
+            len(item.evidence_refs) < 3
+            or item.evidence_refs[0]
+            != "demo/run_continuous_delta_runtime_g2_e_v01.py"
+            or not item.evidence_refs[1].startswith("report:")
+            or not item.evidence_refs[2].startswith("seal:")
         ):
             raise ValueError
     if len({item.result_id for item in categories}) != len(categories):
@@ -1569,6 +1822,42 @@ def _replace_report_id(report: KernelConformanceReportV01) -> KernelConformanceR
         domain_results=report.domain_results,
         negative_test_results=report.negative_test_results,
         active_gauntlet_refs=report.active_gauntlet_refs,
+        continuous_delta_runtime_execution_count=(
+            report.continuous_delta_runtime_execution_count
+        ),
+        continuous_delta_runtime_public_validation_status=(
+            report.continuous_delta_runtime_public_validation_status
+        ),
+        continuous_delta_runtime_report_sha256=(
+            report.continuous_delta_runtime_report_sha256
+        ),
+        continuous_delta_runtime_report_bytes=(
+            report.continuous_delta_runtime_report_bytes
+        ),
+        shared_conformance_e5_collector_calls=(
+            report.shared_conformance_e5_collector_calls
+        ),
+        shared_conformance_e5_report_sha256=(
+            report.shared_conformance_e5_report_sha256
+        ),
+        shared_conformance_e5_report_bytes=(
+            report.shared_conformance_e5_report_bytes
+        ),
+        continuous_delta_runtime_second_execution_count=(
+            report.continuous_delta_runtime_second_execution_count
+        ),
+        continuous_delta_runtime_cache_reuse_count=(
+            report.continuous_delta_runtime_cache_reuse_count
+        ),
+        continuous_delta_runtime_test_fixture_substitution_count=(
+            report.continuous_delta_runtime_test_fixture_substitution_count
+        ),
+        continuous_delta_runtime_private_g2d_calls=(
+            report.continuous_delta_runtime_private_g2d_calls
+        ),
+        continuous_delta_runtime_reconstructed_case_count=(
+            report.continuous_delta_runtime_reconstructed_case_count
+        ),
         evidence_refs=report.evidence_refs,
         limitations=report.limitations,
         counters=report.counters,
@@ -1691,6 +1980,42 @@ def _report_plain(report: KernelConformanceReportV01) -> dict[str, object]:
             _negative_plain(item) for item in report.negative_test_results
         ],
         "active_gauntlet_refs": list(report.active_gauntlet_refs),
+        "continuous_delta_runtime_execution_count": (
+            report.continuous_delta_runtime_execution_count
+        ),
+        "continuous_delta_runtime_public_validation_status": (
+            report.continuous_delta_runtime_public_validation_status
+        ),
+        "continuous_delta_runtime_report_sha256": (
+            report.continuous_delta_runtime_report_sha256
+        ),
+        "continuous_delta_runtime_report_bytes": (
+            report.continuous_delta_runtime_report_bytes
+        ),
+        "shared_conformance_e5_collector_calls": (
+            report.shared_conformance_e5_collector_calls
+        ),
+        "shared_conformance_e5_report_sha256": (
+            report.shared_conformance_e5_report_sha256
+        ),
+        "shared_conformance_e5_report_bytes": (
+            report.shared_conformance_e5_report_bytes
+        ),
+        "continuous_delta_runtime_second_execution_count": (
+            report.continuous_delta_runtime_second_execution_count
+        ),
+        "continuous_delta_runtime_cache_reuse_count": (
+            report.continuous_delta_runtime_cache_reuse_count
+        ),
+        "continuous_delta_runtime_test_fixture_substitution_count": (
+            report.continuous_delta_runtime_test_fixture_substitution_count
+        ),
+        "continuous_delta_runtime_private_g2d_calls": (
+            report.continuous_delta_runtime_private_g2d_calls
+        ),
+        "continuous_delta_runtime_reconstructed_case_count": (
+            report.continuous_delta_runtime_reconstructed_case_count
+        ),
         "evidence_refs": list(report.evidence_refs),
         "limitations": list(report.limitations),
         "counters": _counters_plain(report.counters),
@@ -1709,6 +2034,14 @@ def _valid_count(value: object) -> bool:
 def _valid_text(value: object) -> bool:
     return type(value) is str and bool(value) and not any(
         0xD800 <= ord(character) <= 0xDFFF for character in value
+    )
+
+
+def _valid_sha256(value: object) -> bool:
+    return (
+        type(value) is str
+        and len(value) == 64
+        and set(value) <= set("0123456789abcdef")
     )
 
 

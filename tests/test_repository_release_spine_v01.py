@@ -1209,6 +1209,28 @@ V06_CURRENT_SUCCEEDED_SHA256 = {
     **KERNEL_CONFORMANCE_V06_CURRENT_SHA256,
     **RELEASE_SPINE_V06_CURRENT_SHA256,
 }
+G2E6_CLASS_A_COMMIT = "7f3c7138b553096252fefee7930f89100d835fcd"
+KERNEL_CONFORMANCE_V07_CURRENT_SHA256 = {
+    "hedgehog/kernel/conformance_v01.py": (
+        "3b04b62e960d5cab058a4d04bc5cbc92e20de39fdc297059298032cc176a4a62"
+    ),
+    "demo/run_living_gauntlet_v01.py": (
+        "99ea9b788a6d02b71afcc8e9e1b19fce834c50673c13a21f19a080658f37a9f7"
+    ),
+    "tests/test_living_gauntlet_v01_runner.py": (
+        "78228e0efbe02b5eb9d8bf841f9fb43c8b42ebdf55c1576cf45107bafa78a7b6"
+    ),
+    "demo/run_kernel_conformance_v01.py": (
+        "9314eb3ba16ee333fa9066719023de4d2957679610a3748e26a0c6b25789411d"
+    ),
+    "tests/test_kernel_conformance_v01_runner.py": (
+        "d24bbac266b020b5c9d66f9376eead51cdf836fcb537fea393251a44d99a0ed0"
+    ),
+}
+V07_CURRENT_SUCCEEDED_SHA256 = {
+    **KERNEL_CONFORMANCE_V07_CURRENT_SHA256,
+    **RELEASE_SPINE_V06_CURRENT_SHA256,
+}
 G2D_STILL_FROZEN_IMPLEMENTATION_SHA256 = {
     path: sha256
     for path, sha256 in G2D_FROZEN_IMPLEMENTATION_SHA256.items()
@@ -1274,6 +1296,18 @@ KERNEL_CONFORMANCE_V06_REQUIRED_CLAIM_MAPPING = {
     "real_world_effects_zero": list(
         KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS
     ),
+}
+KERNEL_CONFORMANCE_V07_CURRENT_ACTIVE_REFS = (
+    *KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS,
+    "continuous_delta_runtime",
+)
+KERNEL_CONFORMANCE_V07_REQUIRED_CLAIM_MAPPING = {
+    claim_id: (
+        list(act_ids)
+        if claim_id == "no_superroot_exists"
+        else [*act_ids, "continuous_delta_runtime"]
+    )
+    for claim_id, act_ids in KERNEL_CONFORMANCE_V06_REQUIRED_CLAIM_MAPPING.items()
 }
 
 IN_PROGRESS_BOUNDARY = {
@@ -1590,7 +1624,7 @@ def _current_v06_hash_profile_errors_v01(
     byte_loader=None,
 ) -> tuple[str, ...]:
     loader = (
-        (lambda path: (REPOSITORY_ROOT / path).read_bytes())
+        (lambda path: _git_show(G2E6_CLASS_A_COMMIT, path))
         if byte_loader is None
         else byte_loader
     )
@@ -1598,6 +1632,23 @@ def _current_v06_hash_profile_errors_v01(
         profile,
         byte_loader=loader,
         expected_paths=frozenset(V06_CURRENT_SUCCEEDED_SHA256),
+    )
+
+
+def _current_v07_hash_profile_errors_v01(
+    profile: dict[str, str] = V07_CURRENT_SUCCEEDED_SHA256,
+    *,
+    byte_loader=None,
+) -> tuple[str, ...]:
+    loader = (
+        (lambda path: (REPOSITORY_ROOT / path).read_bytes())
+        if byte_loader is None
+        else byte_loader
+    )
+    return _hash_profile_errors_v01(
+        profile,
+        byte_loader=loader,
+        expected_paths=frozenset(V07_CURRENT_SUCCEEDED_SHA256),
     )
 
 
@@ -2610,6 +2661,7 @@ def test_frozen_gate1_release_evidence_hashes_are_exact() -> None:
         )
         assert _sha256_bytes(historical) == evidence["sha256"]
     assert _current_v06_hash_profile_errors_v01() == ()
+    assert _current_v07_hash_profile_errors_v01() == ()
 
 
 def test_v05_historical_hash_profile_rejects_changed_constant() -> None:
@@ -2621,15 +2673,15 @@ def test_v05_historical_hash_profile_rejects_changed_constant() -> None:
     )
 
 
-def test_v06_current_hash_profile_rejects_changed_worktree_bytes() -> None:
-    path = next(iter(V06_CURRENT_SUCCEEDED_SHA256))
+def test_v07_current_hash_profile_rejects_changed_worktree_bytes() -> None:
+    path = next(iter(V07_CURRENT_SUCCEEDED_SHA256))
 
     def changed_loader(candidate: str) -> bytes:
         raw = (REPOSITORY_ROOT / candidate).read_bytes()
         return raw + b"\x00" if candidate == path else raw
 
     assert f"hash_profile_mismatch:{path}" in (
-        _current_v06_hash_profile_errors_v01(
+        _current_v07_hash_profile_errors_v01(
             byte_loader=changed_loader
         )
     )
@@ -2657,27 +2709,50 @@ def test_release_profile_succession_is_exact() -> None:
 
     from hedgehog.kernel import conformance_v01 as conformance
 
-    historical = conformance.kernel_conformance_profile_metadata_v01(
+    historical_v05 = conformance.kernel_conformance_profile_metadata_v01(
         conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
     )
-    current = conformance.kernel_conformance_profile_metadata_v01(
-        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+    historical_v06 = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
+    )
+    current_v07 = conformance.kernel_conformance_profile_metadata_v01(
+        conformance.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
     assert conformance.DEFAULT_KERNEL_CONFORMANCE_PROFILE == (
-        conformance.KERNEL_CONFORMANCE_PROFILE_V06_CURRENT
+        conformance.KERNEL_CONFORMANCE_PROFILE_V07_CURRENT
     )
-    assert tuple(historical["active_gauntlet_refs"]) == (
+    assert tuple(historical_v05["active_gauntlet_refs"]) == (
         KERNEL_CONFORMANCE_V05_HISTORICAL_ACTIVE_REFS
     )
-    assert tuple(current["active_gauntlet_refs"]) == (
+    assert tuple(historical_v06["active_gauntlet_refs"]) == (
         KERNEL_CONFORMANCE_V06_CURRENT_ACTIVE_REFS
     )
-    assert current["current_act_count"] == 15
-    assert current["claim_to_current_act"] == (
+    assert historical_v06["profile_status"] == "HISTORICAL_EVIDENCE_ONLY"
+    assert historical_v06["default_current"] is False
+    assert historical_v06["historical_profile_ref"] == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V05_HISTORICAL
+    )
+    assert historical_v06["current_act_count"] == 15
+    assert historical_v06["claim_to_current_act"] == (
         KERNEL_CONFORMANCE_V06_REQUIRED_CLAIM_MAPPING
     )
+    assert tuple(current_v07["active_gauntlet_refs"]) == (
+        KERNEL_CONFORMANCE_V07_CURRENT_ACTIVE_REFS
+    )
+    assert current_v07["profile_status"] == "CURRENT_ACTIVE"
+    assert current_v07["default_current"] is True
+    assert current_v07["historical_profile_ref"] == (
+        conformance.KERNEL_CONFORMANCE_PROFILE_V06_HISTORICAL
+    )
+    assert current_v07["current_act_count"] == 16
+    assert current_v07["claim_to_current_act"] == (
+        KERNEL_CONFORMANCE_V07_REQUIRED_CLAIM_MAPPING
+    )
     assert "all_layers_invariant_super_smoke" not in (
-        current["active_gauntlet_refs"]
+        historical_v06["active_gauntlet_refs"]
+    )
+    assert "all_layers_invariant_super_smoke" not in (
+        current_v07["active_gauntlet_refs"]
     )
 
     living_tree = ast.parse(
@@ -4382,7 +4457,7 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
         G2D_V039_INDEPENDENT_REAUDIT_PATH: G2D_V039_INDEPENDENT_REAUDIT_SHA256,
         G2D_V039_CHECKPOINT_PATH: G2D_V039_CHECKPOINT_SHA256,
         **G2D_STILL_FROZEN_IMPLEMENTATION_SHA256,
-        **V06_CURRENT_SUCCEEDED_SHA256,
+        **V07_CURRENT_SUCCEEDED_SHA256,
         **G2E_CONTRACT_UPDATED_SHA256,
         **G2D_FACADE_MAINTENANCE_SHA256,
     }
@@ -4725,6 +4800,7 @@ def test_g2d_binding_and_implementation_bytes_remain_frozen() -> None:
         )
         assert _sha256_bytes(historical) == evidence["sha256"]
     assert _current_v06_hash_profile_errors_v01() == ()
+    assert _current_v07_hash_profile_errors_v01() == ()
     assert (
         REPOSITORY_ROOT / "specs/human_passport_v0_25.md"
     ).read_bytes() == _git_show(

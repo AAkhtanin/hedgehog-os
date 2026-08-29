@@ -182,7 +182,17 @@ def isolated_control_plane(tmp_path: Path) -> Path:
         check=True,
         capture_output=True,
     )
+    for relative_path in CLASS_B_PATHS:
+        (tmp_path / relative_path).parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ("git", "checkout-index", "--force", "--", *CLASS_B_PATHS),
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
     for relative_path in CONTROL_PATHS:
+        if relative_path in CLASS_B_PATHS:
+            continue
         source = REPOSITORY_ROOT / relative_path
         destination = tmp_path / relative_path
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -3287,7 +3297,22 @@ HISTORICAL_PRIMARY_BINDINGS = {
 
 
 def _historical_surface_source(label: str, phase: str) -> str:
-    source = HISTORICAL_SURFACE_PATHS[label].read_text(encoding="utf-8")
+    path = HISTORICAL_SURFACE_PATHS[label]
+    if phase == "PRE_E6_RECONCILED":
+        relative_path = path.relative_to(REPOSITORY_ROOT).as_posix()
+        completed = subprocess.run(
+            (
+                "git",
+                "show",
+                f"{E5_IMPLEMENTATION_BASIS_COMMIT}:{relative_path}",
+            ),
+            cwd=REPOSITORY_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return completed.stdout
+    source = path.read_text(encoding="utf-8")
     if phase == "POST_E6_SUCCESSOR":
         source += '\n_SYNTHETIC_GUARD_PHASE_V03 = "POST_E6_SUCCESSOR"\n'
     return source

@@ -2,15 +2,17 @@
 
 ## 1. Status and scope
 
-This document is the current normative architecture law for the successor
-worktree based on `931645dc724c54d635f32dabfca4b62fbc9a39a2`. It governs
-onboarding, implementation interpretation, and authority boundaries. Exact
-runtime types and behavior remain defined by accepted current contracts and
-their tests, provided they conform to this lock.
+This document is the current normative architecture law. Its architecture-law
+basis remains `931645dc724c54d635f32dabfca4b62fbc9a39a2`; its current G2-E
+lifecycle view is synchronized to committed implementation/control-plane basis
+`6079ddcfe59f582936e7b13af2753a6533117970`. It governs onboarding,
+implementation interpretation, and authority boundaries. Exact runtime types
+and behavior remain defined by accepted current contracts and their tests,
+provided they conform to this lock.
 
-This S1 lock changes documentation and onboarding authority only. It does not
-change runtime behavior, schemas, Gate acceptance, or the E5 implementation
-boundary.
+The G2-E Class-D synchronization changes lifecycle, evidence navigation, and
+control-plane enforcement only. It does not change runtime behavior, schemas,
+Root authority, the E5/E6 implementation bytes, or Gate-2 acceptance law.
 
 ## 2. Current document-authority hierarchy
 
@@ -119,29 +121,43 @@ replay result, or cross-Root message may bypass this boundary.
 - Outcome writeback is local, Root-controlled, and non-authorizing for future
   decisions.
 
-## 8. Current Gate-2 / G2-E continuation boundary
+## 8. Current Gate-2 / G2-E closure boundary
 
-Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`. G2-E3 is
-`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`. G2-E4 selective
-runtime and anti-gaming acceptance are `PASS`. G2-E5 is
-`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS` at implementation commit
-`f582701208b603463a03d404aa841c302a8221d6` on these exact frozen bytes:
+Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`. The exact current
+G2-E lifecycle is:
 
-- `hedgehog/kernel/continuous_delta_runtime_v01.py`, SHA-256
-  `97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a`;
-- `demo/run_continuous_delta_runtime_g2_e_v01.py`, SHA-256
-  `5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c`;
-- `tests/test_continuous_delta_runtime_g2_e_v01.py`, SHA-256
-  `8d26d45a71334172b73fa30125b0e3ddfff74aeb66431af56594d75f9a7f4d8b`.
+- G2-E3: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`;
+- G2-E4: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`;
+- G2-E5: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS` at implementation commit
+  `f582701208b603463a03d404aa841c302a8221d6`;
+- G2-E6: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS` through Class-A commit
+  `7f3c7138b553096252fefee7930f89100d835fcd`, Class-B commit
+  `4c133da11b8bcbd642e1aaa3413ce0a9c357731d`, and control-plane repair
+  commit `6079ddcfe59f582936e7b13af2753a6533117970`;
+- G2-E: `CLOSED_PASS` under
+  `docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md`.
 
-G2-E6 is not implemented. The stale post-sanitation profile literals in the
-original G2-E planning contract are superseded only within their named E6
-integration scope by
-`docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md`.
-That Class-A annex establishes an exact future Living `v1.6` / Conformance
-`v0.7` append-only target but does not authorize the Class-B implementation.
-G2-E and Gate 2 remain `NOT_CLOSED`; G2-F remains
-`NOT_STARTED_NOT_AUTHORIZED`.
+The runtime phase remains `POST_E6_SUCCESSOR`: Living v1.6 has 17 acts and
+appends `continuous_delta_runtime`; Kernel Conformance core and runner v0.7
+have 15 categories, 60 negative probes, 16 active references, and two domains.
+Profile succession is v0.5 historical to v0.6 historical to v0.7 current.
+Historical `all_layers_invariant_super_smoke` remains evidence-only and is not
+current or executable authority.
+
+Each independent top-level Living or Conformance report owns one fresh public
+E5 collection. Living passes that same publicly validated canonical report to
+the shared Conformance builder, which collects E5 zero times. A second delta
+runtime, process cache, fixture substitution, private G2-D call, or reconstructed
+E5 case is forbidden. These execution receipts create no authority and no
+real-world effect.
+
+The sanitized Class-A reconciliation annex remains exact evidence of its
+bounded historical hop; its statement that Class A itself did not implement
+E6 remains true about that hop. It does not override the current checkpoint.
+
+G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED` and its implementation authorization
+is false. Gate 2 remains `NOT_CLOSED`. Public release, RC2, production
+readiness, and production security certification remain `NOT_CLAIMED`.
 
 ## 9. Historical-document law
 
@@ -157,11 +173,13 @@ contracts, or current scoped Gate status.
 ## 10. Onboarding law
 
 Onboarding starts with this lock, the authority index, `AGENTS.md`, and the
-successor context manifest. For G2-E6 profile or path interpretation, also
-load the scoped sanitized-basis reconciliation annex named in Section 8. Use
-`release/successor_context_manifest_v01.json` as an allowlist; do not bulk-load
-repository history, audit archives, retired donor families, or excluded
-governance files.
+successor context manifest. For the current G2-E lifecycle, load the G2-E
+checkpoint named in Section 8. Load the scoped sanitized-basis reconciliation
+annex only when its Class-A/E6 geometry or historical phase law is relevant.
+Use `release/successor_context_manifest_v01.json` as an allowlist; do not
+bulk-load repository history, audit archives, retired donor families, or
+excluded governance files. The G2-E audit remains explicit-request evidence
+and is not automatic onboarding material.
 
 Expand context only when the current task requires a named contract, test, or
 evidence source. Validate the control plane with

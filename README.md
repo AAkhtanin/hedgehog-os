@@ -87,10 +87,14 @@ connector, and performs no real-world effect.
   Root-reviewed route eligibility; the router creates no topology or effect.
 - G2-D is `CLOSED_PASS`: runtime-owned topology, bounded execution, child
   return, Post V&V/GT integration, queueing, budget, and backpressure law.
-- G2-E3 is accepted on corrected G2-D bytes. G2-E4 selective recomputation and
-  anti-gaming acceptance are `PASS`.
-- G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`. Gate 2 remains
-  `NOT_CLOSED`.
+- G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
+  G2-E4, G2-E5, and G2-E6 are
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`.
+- G2-E is `CLOSED_PASS`. Living remains v1.6 with 17 acts and Kernel
+  Conformance remains v0.7 with 15 categories, 60 negative probes, 16 active
+  references, and two domains.
+- G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED` and is not authorized for
+  implementation. Gate 2 remains `NOT_CLOSED`.
 
 Current lifecycle metadata lives in the
 [status overlay](release/current_status_overlay_v01.json). It is status
@@ -118,6 +122,9 @@ The full owner-supplied Gate roadmap is not tracked. The accepted
 [G2-E preflight](docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md) is
 the repository-local Gate sequence and continuation source, supplemented by
 the [current G2-E addendum](docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md).
+The current lifecycle boundary is the
+[G2-E closure checkpoint](docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md).
+Its independent audit remains evidence-only and is opened by explicit request.
 
 ## Run the current Living Gauntlet and Kernel Conformance
 
@@ -157,9 +164,10 @@ payments or bookings, physical-world effects, or Gate-2 closure. A receipt is
 evidence, a seal is integrity evidence, replay is reconstruction, and an audit
 hash proves continuity—not truth or authority.
 
-The frozen E5 candidate is not in this successor worktree. Its three target
-paths remain deferred to a separately authorized byte-exact transplant; this
-S1 documentation change neither implements nor authorizes E5.
+G2-E closure is an internal Gate-2 slice result. It does not close Gate 2,
+start or authorize G2-F, create authority or a real-world effect, or claim
+production readiness, production security certification, public release, or
+RC2.
 
 ## Where integrators extend the Kernel
 
@@ -171,6 +179,7 @@ Root or importing excluded donor ownership:
 - domain-neutral artifacts and causal use: [`hedgehog/kernel/abi_v01.py`](hedgehog/kernel/abi_v01.py)
 - route proposal and Root eligibility: [`hedgehog/kernel/execution_mode_router_v01.py`](hedgehog/kernel/execution_mode_router_v01.py)
 - local runtime topology: [`hedgehog/kernel/fractal_runtime_v02.py`](hedgehog/kernel/fractal_runtime_v02.py)
+- bounded continuous-delta recomputation: [`hedgehog/kernel/continuous_delta_runtime_v01.py`](hedgehog/kernel/continuous_delta_runtime_v01.py)
 - Root decision and MultiRoot outcomes: [`root_decision_v01.py`](hedgehog/kernel/root_decision_v01.py) and [`multiroot_v01.py`](hedgehog/kernel/multiroot_v01.py)
 - action/effect boundary: [`action_commit_packet_v02.py`](hedgehog/action_commit_packet_v02.py) and [`effect_firewall_v01.py`](hedgehog/kernel/effect_firewall_v01.py)
 - memory/time/reuse: [`drs_semantic_address_v01.py`](hedgehog/drs_semantic_address_v01.py), [`drs_memory_resolution_v01.py`](hedgehog/drs_memory_resolution_v01.py), and [`reuse_certificate_v01.py`](hedgehog/reuse_certificate_v01.py)

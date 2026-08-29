@@ -18,6 +18,8 @@ import pytest
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 GUARD_PATH = REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"
 E5_IMPLEMENTATION_BASIS_COMMIT = "f582701208b603463a03d404aa841c302a8221d6"
+G2E_CLASS_A_COMMIT = "7f3c7138b553096252fefee7930f89100d835fcd"
+G2E_CLOSURE_BASIS_COMMIT = "6079ddcfe59f582936e7b13af2753a6533117970"
 CLASS_A_PATHS = (
     (
         "docs/continuous_delta_runtime_v0_1_"
@@ -36,6 +38,22 @@ CLASS_B_PATHS = (
     "hedgehog/kernel/conformance_v01.py",
     "demo/run_kernel_conformance_v01.py",
     "tests/test_kernel_conformance_v01_runner.py",
+)
+CLASS_D_PATHS = (
+    "docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log",
+    "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md",
+    "AGENTS.md",
+    "README.md",
+    "release/current_status_overlay_v01.json",
+    "release/claim_to_evidence_index.md",
+    "release/current_limitations.md",
+    "release/current_release_notes.md",
+    "specs/current_architecture_lock_v01.md",
+    "specs/document_authority_index_v01.json",
+    "release/successor_context_manifest_v01.json",
+    "tools/check_active_architecture_authority_v01.py",
+    "tests/test_active_architecture_authority_v01.py",
+    "tests/test_repository_release_spine_v01.py",
 )
 COMMITTED_E5_PATHS = (
     "hedgehog/kernel/continuous_delta_runtime_v01.py",
@@ -190,13 +208,26 @@ def isolated_control_plane(tmp_path: Path) -> Path:
         check=True,
         capture_output=True,
     )
+    current_control_paths = {
+        "tools/check_active_architecture_authority_v01.py",
+        "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+    }
     for relative_path in CONTROL_PATHS:
         if relative_path in CLASS_B_PATHS:
             continue
-        source = REPOSITORY_ROOT / relative_path
         destination = tmp_path / relative_path
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, destination)
+        if relative_path in current_control_paths:
+            shutil.copyfile(REPOSITORY_ROOT / relative_path, destination)
+        else:
+            completed = subprocess.run(
+                ("git", "show", f"{G2E_CLASS_A_COMMIT}:{relative_path}"),
+                cwd=REPOSITORY_ROOT,
+                check=True,
+                capture_output=True,
+            )
+            destination.write_bytes(completed.stdout)
     assert _short_status_paths(tmp_path) == set(CLASS_A_PATHS)
     return tmp_path
 
@@ -286,7 +317,18 @@ def test_clean_worktree_control_plane_passes() -> None:
     )
 
     assert completed.returncode == 0, completed.stdout
-    assert completed.stdout == "ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\n"
+    dirty_paths = _short_status_paths(REPOSITORY_ROOT)
+    if dirty_paths:
+        assert dirty_paths == set(CLASS_D_PATHS)
+        lifecycle_mode = "G2E_CLOSED_PASS_CANDIDATE"
+    else:
+        lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
+    assert completed.stdout == (
+        "ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\n"
+        "CURRENT_PHASE=POST_E6_SUCCESSOR\n"
+        "LIFECYCLE_PHASE=G2E_CLOSED_PASS\n"
+        f"LIFECYCLE_MODE={lifecycle_mode}\n"
+    )
     assert completed.stderr == ""
 
 
@@ -2001,6 +2043,97 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint() -> None:
     assert not (
         namespace["CLASS_A_RECONCILIATION_PATHS"]
         & namespace["CLASS_B_E6_IMPLEMENTATION_PATHS"]
+    )
+    assert namespace["G2E_CLASS_D_CLOSURE_PATHS"] == frozenset(CLASS_D_PATHS)
+    assert len(namespace["G2E_CLASS_D_CLOSURE_PATHS"]) == 14
+    assert not (
+        namespace["G2E_CLASS_D_CLOSURE_PATHS"]
+        & namespace["CLASS_B_E6_IMPLEMENTATION_PATHS"]
+    )
+
+    class_a_and_b = {
+        **{
+            path: "A" if path.endswith("reconciliation_addendum_v01.md") else "M"
+            for path in CLASS_A_PATHS
+        },
+        **{path: "M" for path in CLASS_B_PATHS},
+    }
+    class_d_committed = {
+        path: (
+            "A"
+            if path.startswith("docs/audit_reports/")
+            or path.endswith("g2_e_checkpoint_v01.md")
+            else "M"
+        )
+        for path in CLASS_D_PATHS
+    }
+    class_d_worktree = tuple(
+        (
+            "??" if status == "A" else " M",
+            path,
+            None,
+        )
+        for path, status in sorted(class_d_committed.items())
+    )
+    mode, failures = namespace["_classify_g2e_closure_path_ledger_v01"](
+        closure_requested=True,
+        head=G2E_CLOSURE_BASIS_COMMIT,
+        parent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        branch="main",
+        origin_main=G2E_CLOSURE_BASIS_COMMIT,
+        subject="Repair G2-E6 post-successor control-plane tests",
+        committed_entries=_ledger_entries(class_a_and_b),
+        worktree_entries=class_d_worktree,
+        closure_commit_entries=(),
+    )
+    assert mode == "G2E_CLOSED_PASS_CANDIDATE"
+    assert failures == ()
+
+    committed_head = "c" * 40
+    mode, failures = namespace["_classify_g2e_closure_path_ledger_v01"](
+        closure_requested=True,
+        head=committed_head,
+        parent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=committed_head,
+        subject="Close G2-E continuous delta runtime lifecycle",
+        committed_entries=_ledger_entries({**class_a_and_b, **class_d_committed}),
+        worktree_entries=(),
+        closure_commit_entries=_ledger_entries(class_d_committed),
+    )
+    assert mode == "G2E_CLOSED_PASS_COMMITTED"
+    assert failures == ()
+
+    _mode, missing_failures = namespace[
+        "_classify_g2e_closure_path_ledger_v01"
+    ](
+        closure_requested=True,
+        head=G2E_CLOSURE_BASIS_COMMIT,
+        parent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        branch="main",
+        origin_main=G2E_CLOSURE_BASIS_COMMIT,
+        subject="Repair G2-E6 post-successor control-plane tests",
+        committed_entries=_ledger_entries(class_a_and_b),
+        worktree_entries=class_d_worktree[1:],
+        closure_commit_entries=(),
+    )
+    assert any("candidate.worktree.missing" in item for item in missing_failures)
+
+    _mode, extra_failures = namespace[
+        "_classify_g2e_closure_path_ledger_v01"
+    ](
+        closure_requested=True,
+        head=G2E_CLOSURE_BASIS_COMMIT,
+        parent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        branch="main",
+        origin_main=G2E_CLOSURE_BASIS_COMMIT,
+        subject="Repair G2-E6 post-successor control-plane tests",
+        committed_entries=_ledger_entries(class_a_and_b),
+        worktree_entries=(*class_d_worktree, (" M", "unexpected.txt", None)),
+        closure_commit_entries=(),
+    )
+    assert "g2e.closure.candidate.worktree.unexpected:unexpected.txt" in (
+        extra_failures
     )
 
 

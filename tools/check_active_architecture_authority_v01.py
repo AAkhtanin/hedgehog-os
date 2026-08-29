@@ -16,9 +16,18 @@ from typing import Iterable, Sequence
 
 BASE_HEAD = "931645dc724c54d635f32dabfca4b62fbc9a39a2"
 E5_IMPLEMENTATION_BASIS_COMMIT = "f582701208b603463a03d404aa841c302a8221d6"
+G2E_CLASS_A_COMMIT = "7f3c7138b553096252fefee7930f89100d835fcd"
+G2E_CLASS_B_COMMIT = "4c133da11b8bcbd642e1aaa3413ce0a9c357731d"
+G2E_CLOSURE_BASIS_COMMIT = "6079ddcfe59f582936e7b13af2753a6533117970"
 LOCK_PATH = "specs/current_architecture_lock_v01.md"
 INDEX_PATH = "specs/document_authority_index_v01.json"
 MANIFEST_PATH = "release/successor_context_manifest_v01.json"
+G2E_AUDIT_PATH = (
+    "docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log"
+)
+G2E_CHECKPOINT_PATH = (
+    "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md"
+)
 E6_RECONCILIATION_ANNEX_PATH = (
     "docs/continuous_delta_runtime_v0_1_"
     "g2_e6_sanitized_basis_reconciliation_addendum_v01.md"
@@ -53,6 +62,31 @@ CLASS_B_E6_IMPLEMENTATION_PATHS = frozenset(
         KERNEL_CONFORMANCE_TEST_PATH,
     }
 )
+CLASS_D_LIFECYCLE_PATHS = frozenset(
+    {
+        G2E_AUDIT_PATH,
+        G2E_CHECKPOINT_PATH,
+        "AGENTS.md",
+        "README.md",
+        "release/current_status_overlay_v01.json",
+        "release/claim_to_evidence_index.md",
+        "release/current_limitations.md",
+        "release/current_release_notes.md",
+    }
+)
+CLASS_D_CONTROL_PLANE_PATHS = frozenset(
+    {
+        LOCK_PATH,
+        INDEX_PATH,
+        MANIFEST_PATH,
+        "tools/check_active_architecture_authority_v01.py",
+        "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+    }
+)
+G2E_CLASS_D_CLOSURE_PATHS = (
+    CLASS_D_LIFECYCLE_PATHS | CLASS_D_CONTROL_PLANE_PATHS
+)
 
 CLASS_A_COMMITTED_NAME_STATUS = {
     path: "A" if path == E6_RECONCILIATION_ANNEX_PATH else "M"
@@ -60,6 +94,10 @@ CLASS_A_COMMITTED_NAME_STATUS = {
 }
 CLASS_B_COMMITTED_NAME_STATUS = {
     path: "M" for path in CLASS_B_E6_IMPLEMENTATION_PATHS
+}
+CLASS_D_COMMITTED_NAME_STATUS = {
+    path: "A" if path in {G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH} else "M"
+    for path in G2E_CLASS_D_CLOSURE_PATHS
 }
 POST_E6_LIVING_ACCEPTANCE_TEST = (
     "test_living_gauntlet_v16_continuous_delta_runtime_acceptance_v01"
@@ -81,7 +119,7 @@ AUTHORITY_INDEX_KEYS = (
     "source_of_truth_order",
     "notes",
 )
-MANIFEST_KEYS = (
+PRE_CLOSURE_MANIFEST_KEYS = (
     "schema_version",
     "base_head",
     "manifest_status",
@@ -98,6 +136,11 @@ MANIFEST_KEYS = (
     "authority_documents",
     "historical_access_method",
     "validation_command",
+)
+MANIFEST_KEYS = (
+    *PRE_CLOSURE_MANIFEST_KEYS[:13],
+    "committed_e6_basis",
+    *PRE_CLOSURE_MANIFEST_KEYS[13:],
 )
 CURRENT_DOCUMENT_ENTRY_KEYS = (
     "path",
@@ -126,6 +169,44 @@ COMMITTED_E5_BASIS_KEYS = (
     "e6_implementation_status",
     "g2e_status",
     "gate2_status",
+)
+COMMITTED_E6_BASIS_KEYS = (
+    "class_a_commit",
+    "class_a_subject",
+    "class_b_commit",
+    "class_b_subject",
+    "control_plane_repair_commit",
+    "control_plane_repair_subject",
+    "status",
+    "runtime_phase",
+    "lifecycle_phase",
+    "class_b_paths",
+    "control_plane_test_paths",
+    "v10_evidence",
+    "audit_path",
+    "audit_sha256",
+    "checkpoint_path",
+    "checkpoint_sha256",
+    "g2e_status",
+    "g2f_status",
+    "g2f_implementation_authorized",
+    "gate2_status",
+    "public_release_status",
+    "rc2_status",
+    "production_readiness_status",
+    "production_security_certification_status",
+    "real_world_effects_count",
+)
+V10_EVIDENCE_KEYS = (
+    "archive_sha256",
+    "archive_bytes",
+    "regular_members",
+    "manifest_data_rows",
+    "kernel_runtime_tests",
+    "living_runtime_tests",
+    "release_spine_tests",
+    "authority_tests",
+    "runtime_evidence_reuse_dependency_proof",
 )
 
 REQUIRED_HISTORICAL_PATHS = (
@@ -313,6 +394,137 @@ PRE_E6_CLASS_B_IDENTITIES = {
         96905,
         2554,
     ),
+}
+POST_E6_CLASS_B_IDENTITIES = {
+    LIVING_GAUNTLET_PATH: (
+        "99ea9b788a6d02b71afcc8e9e1b19fce834c50673c13a21f19a080658f37a9f7",
+        241073,
+        6204,
+    ),
+    LIVING_GAUNTLET_TEST_PATH: (
+        "78228e0efbe02b5eb9d8bf841f9fb43c8b42ebdf55c1576cf45107bafa78a7b6",
+        217249,
+        5636,
+    ),
+    CONFORMANCE_SOURCE_PATH: (
+        "3b04b62e960d5cab058a4d04bc5cbc92e20de39fdc297059298032cc176a4a62",
+        76011,
+        2082,
+    ),
+    KERNEL_CONFORMANCE_RUNNER_PATH: (
+        "9314eb3ba16ee333fa9066719023de4d2957679610a3748e26a0c6b25789411d",
+        134798,
+        3479,
+    ),
+    KERNEL_CONFORMANCE_TEST_PATH: (
+        "d24bbac266b020b5c9d66f9376eead51cdf836fcb537fea393251a44d99a0ed0",
+        126972,
+        3320,
+    ),
+}
+POST_E6_CONTROL_TEST_IDENTITIES = {
+    "tests/test_active_architecture_authority_v01.py": (
+        "6c979026cd5b8728612fc6eff3e1d6b80de56f48f627429346026ca6ac0cd175",
+        197672,
+        5707,
+    ),
+    "tests/test_repository_release_spine_v01.py": (
+        "fc40a0b9e9e3168c003b62a4b79409e146d44f7a4644e608084495930afcdd9c",
+        241233,
+        5668,
+    ),
+}
+POST_E6_CONTROL_PLANE_BASIS_IDENTITIES = {
+    LOCK_PATH: (
+        "f2299fe6330d91f6e328df3b323b299d0b58c0cddfb2721495444358d5e5ebb0",
+        7725,
+        169,
+    ),
+    INDEX_PATH: (
+        "718b1bfb03f5ccef78db5ca4ffebc9a58024352db80f8bf1b11a5925a8200eec",
+        15964,
+        365,
+    ),
+    MANIFEST_PATH: (
+        "e06dc5821efcda885c465349231d58270094d35342a2552b585bda754b685a76",
+        14893,
+        327,
+    ),
+    "tools/check_active_architecture_authority_v01.py": (
+        "ed287de34baf17243283c237c943e956403bb88e7244029a5856c7e3f87abe0f",
+        325713,
+        8708,
+    ),
+    **POST_E6_CONTROL_TEST_IDENTITIES,
+}
+G2E_AUDIT_SHA256 = (
+    "623fc966b2087c9bc77064ad9bc2b304b2dc7e735a5d220e83c9f224e991e5eb"
+)
+G2E_CHECKPOINT_SHA256 = (
+    "494cf40ad6d080d2dd0b7508eadc13ae4e6ada32ad1f905025fb9cee78bdb33d"
+)
+G2E_CLOSURE_EVIDENCE_IDENTITIES = {
+    G2E_AUDIT_PATH: (G2E_AUDIT_SHA256, 8664, 197),
+    G2E_CHECKPOINT_PATH: (G2E_CHECKPOINT_SHA256, 5461, 126),
+}
+G2E_CLOSURE_EXPECTED_STATUS_FIELDS = {
+    "g2e3_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D",
+    "g2e4_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e5_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e6_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e_status": "CLOSED_PASS",
+    "g2e_runtime_phase": "POST_E6_SUCCESSOR",
+    "g2e_lifecycle_phase": "G2E_CLOSED_PASS",
+    "g2e5_implementation_commit": E5_IMPLEMENTATION_BASIS_COMMIT,
+    "g2e6_class_a_commit": G2E_CLASS_A_COMMIT,
+    "g2e6_class_b_commit": G2E_CLASS_B_COMMIT,
+    "g2e6_control_plane_repair_commit": G2E_CLOSURE_BASIS_COMMIT,
+    "g2e6_v10_archive_sha256": (
+        "33942d30f59d9f63dafa0c0f633b2f7e53c2b9f8e7f634b1dc798942e97e8573"
+    ),
+    "g2e6_v10_archive_bytes": 253612,
+    "g2e6_v10_archive_members": 57,
+    "g2e6_v10_manifest_rows": 56,
+    "g2e6_kernel_runtime_tests_passed": 400,
+    "g2e6_living_runtime_tests_passed": 595,
+    "g2e6_release_spine_tests_passed": 32,
+    "g2e6_authority_tests_passed": 941,
+    "g2e6_runtime_evidence_reuse_dependency_proof": "PASS",
+    "g2e_audit_path": G2E_AUDIT_PATH,
+    "g2e_audit_sha256": G2E_AUDIT_SHA256,
+    "g2e_checkpoint_path": G2E_CHECKPOINT_PATH,
+    "g2e_checkpoint_sha256": G2E_CHECKPOINT_SHA256,
+    "g2e_living_version": "v1.6",
+    "g2e_living_act_count": 17,
+    "g2e_conformance_version": "v0.7",
+    "g2e_conformance_category_count": 15,
+    "g2e_conformance_negative_probe_count": 60,
+    "g2e_conformance_active_ref_count": 16,
+    "g2e_conformance_domain_count": 2,
+    "g2e_profile_succession": (
+        "V05_HISTORICAL_TO_V06_HISTORICAL_TO_V07_CURRENT"
+    ),
+    "g2e_frozen_completion_manifest_sha256": (
+        "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9"
+    ),
+    "g2e_frozen_integration_seam_index_sha256": (
+        "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03"
+    ),
+    "g2e_frozen_release_evidence_classification": (
+        "FROZEN_PREDECESSOR_EVIDENCE_NOT_CURRENT_E6_EXECUTION"
+    ),
+    "g2f_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+    "g2f_implementation_authorized": False,
+    "gate2_status": "NOT_CLOSED",
+    "public_release_status": "NOT_CLAIMED",
+    "rc2_status": "NOT_CLAIMED",
+    "production_readiness_status": "NOT_CLAIMED",
+    "production_security_certification_status": "NOT_CLAIMED",
+    "public_release_claimed": False,
+    "rc2_claimed": False,
+    "production_readiness_claimed": False,
+    "production_security_certification_claimed": False,
+    "real_world_effects_count": 0,
 }
 FROZEN_PREDECESSOR_EVIDENCE_IDENTITIES = {
     COMPLETION_MANIFEST_PATH: (
@@ -1126,7 +1338,7 @@ KNOWN_AUTHORITY_SCOPES = frozenset(
 )
 BOUNDED_AUTHORITATIVE_SCOPES = frozenset({OPERATIONAL_SCOPE, NAMED_GATE_SCOPE})
 
-REQUIRED_AGENTS_ONBOARDING_WARNINGS = (
+PRE_CLOSURE_AGENTS_ONBOARDING_WARNINGS = (
     ("manifest_status", "`SUCCESSOR_ONBOARDING_READY`"),
     ("onboarding_ready", "its `onboarding_ready` value is `true`"),
     (
@@ -1154,6 +1366,33 @@ REQUIRED_AGENTS_ONBOARDING_WARNINGS = (
         "no compatibility, migration, alias, or revival path exists.",
     ),
 )
+REQUIRED_AGENTS_ONBOARDING_WARNINGS = (
+    ("manifest_status", "`SUCCESSOR_ONBOARDING_READY`"),
+    ("onboarding_ready", "its `onboarding_ready` value is `true`"),
+    (
+        "s1_s2_s3_closed",
+        "S1 document-authority succession, S2 vocabulary repair, and S3 "
+        "active-schema and retired-subsystem isolation are closed.",
+    ),
+    (
+        "architecture_clean",
+        "The bounded successor context is architecture-clean and ready for guarded "
+        "use.",
+    ),
+    (
+        "checkpoint_onboarded",
+        "The exact committed G2-E successor and its current checkpoint are permanent "
+        "bounded onboarding inputs.",
+    ),
+    (
+        "audit_explicit_only",
+        "The independent G2-E audit remains explicit-request evidence",
+    ),
+    (
+        "no_retired_revival",
+        "no compatibility, migration, alias, or revival path exists.",
+    ),
+)
 REQUIRED_GATE_SCOPE_NOTE = (
     "Named Gate authority cannot redefine global topology, Root sovereignty, "
     "BSEP, runtime ownership, or another Gate's contract."
@@ -1169,7 +1408,7 @@ FUTURE_REFERENCE_ROLE = (
     "implementation, completion claim, or architecture authority."
 )
 
-REQUIRED_CURRENT_CLASSIFICATIONS = {
+PRE_CLOSURE_REQUIRED_CURRENT_CLASSIFICATIONS = {
     "current_normative_documents": {
         LOCK_PATH: (
             "current_normative_architecture_lock",
@@ -1359,6 +1598,26 @@ REQUIRED_CURRENT_CLASSIFICATIONS = {
         ),
     },
 }
+REQUIRED_CURRENT_CLASSIFICATIONS = {
+    category: dict(entries)
+    for category, entries in PRE_CLOSURE_REQUIRED_CURRENT_CLASSIFICATIONS.items()
+}
+REQUIRED_CURRENT_CLASSIFICATIONS["current_technical_annexes"][
+    G2E_CHECKPOINT_PATH
+] = (
+    "accepted_g2e_continuous_delta_runtime_closure_checkpoint",
+    True,
+    True,
+    NAMED_GATE_SCOPE,
+    False,
+)
+REQUIRED_CURRENT_CLASSIFICATIONS["audit_only_sources"][G2E_AUDIT_PATH] = (
+    "accepted_g2e_closure_audit_evidence",
+    False,
+    False,
+    AUDIT_EVIDENCE_SCOPE,
+    False,
+)
 
 _RETIRED_PLAN_STEM = "plan" + "_" + "graph"
 _RETIRED_PACKET_STEM = "attractor" + "_" + "packet"
@@ -1643,6 +1902,41 @@ def _validate_exact_identities(
         if identity is None:
             failures.append(f"{code}.missing:{relative_path}")
         elif identity != expected_identity:
+            failures.append(f"{code}.identity:{relative_path}")
+
+
+def _validate_git_blob_identities_v01(
+    repo_root: Path,
+    commit: str,
+    expected: dict[str, tuple[str, int, int]],
+    code: str,
+    failures: list[str],
+) -> None:
+    for relative_path, expected_identity in expected.items():
+        try:
+            completed = subprocess.run(
+                ("git", "show", f"{commit}:{relative_path}"),
+                cwd=repo_root,
+                check=False,
+                capture_output=True,
+            )
+        except OSError as exc:
+            failures.append(
+                f"{code}.read:{relative_path}:{type(exc).__name__}"
+            )
+            continue
+        if completed.returncode != 0:
+            failures.append(
+                f"{code}.missing:{relative_path}:exit_{completed.returncode}"
+            )
+            continue
+        data = completed.stdout
+        observed = (
+            hashlib.sha256(data).hexdigest(),
+            len(data),
+            data.count(b"\n"),
+        )
+        if observed != expected_identity:
             failures.append(f"{code}.identity:{relative_path}")
 
 
@@ -2041,6 +2335,8 @@ def _validate_historical_entries(
 def _validate_authority_index(
     value: dict[str, object] | None,
     failures: list[str],
+    *,
+    closure_active: bool = False,
 ) -> tuple[dict[str, object], ...]:
     if value is None:
         return ()
@@ -2048,7 +2344,10 @@ def _validate_authority_index(
         failures.append("authority_index.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
         failures.append("authority_index.schema_version")
-    if value.get("generated_for_head") != BASE_HEAD:
+    expected_generated_head = (
+        G2E_CLOSURE_BASIS_COMMIT if closure_active else BASE_HEAD
+    )
+    if value.get("generated_for_head") != expected_generated_head:
         failures.append("authority_index.generated_for_head")
 
     category_entries: dict[str, tuple[dict[str, object], ...]] = {}
@@ -2096,7 +2395,12 @@ def _validate_authority_index(
     if not source_order or source_order[0] != LOCK_PATH:
         failures.append("authority_index.source_of_truth_order.first")
 
-    for category, required_entries in REQUIRED_CURRENT_CLASSIFICATIONS.items():
+    classifications = (
+        REQUIRED_CURRENT_CLASSIFICATIONS
+        if closure_active
+        else PRE_CLOSURE_REQUIRED_CURRENT_CLASSIFICATIONS
+    )
+    for category, required_entries in classifications.items():
         entries_by_path = {
             entry.get("path"): entry
             for entry in category_entries.get(category, ())
@@ -2166,7 +2470,9 @@ def _validate_authority_index(
                     character in path for character in "*?["
                 )
                 expected_audit_scope = (
-                    AUDIT_EVIDENCE_SCOPE if is_wildcard else STATUS_EVIDENCE_SCOPE
+                    AUDIT_EVIDENCE_SCOPE
+                    if is_wildcard or path == G2E_AUDIT_PATH
+                    else STATUS_EVIDENCE_SCOPE
                 )
                 if authority_scope != expected_audit_scope:
                     failures.append(f"authority_index.audit.scope:{path}")
@@ -2257,14 +2563,18 @@ def _validate_manifest(
     value: dict[str, object] | None,
     failures: list[str],
     historical_paths: Iterable[str],
+    *,
+    closure_active: bool = False,
 ) -> tuple[tuple[str, ...], frozenset[str]]:
     if value is None:
         return (), frozenset()
-    if tuple(value) != MANIFEST_KEYS:
+    expected_keys = MANIFEST_KEYS if closure_active else PRE_CLOSURE_MANIFEST_KEYS
+    if tuple(value) != expected_keys:
         failures.append("successor_manifest.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
         failures.append("successor_manifest.schema_version")
-    if value.get("base_head") != BASE_HEAD:
+    expected_base_head = G2E_CLOSURE_BASIS_COMMIT if closure_active else BASE_HEAD
+    if value.get("base_head") != expected_base_head:
         failures.append("successor_manifest.base_head")
     if value.get("manifest_status") != REQUIRED_MANIFEST_STATUS:
         failures.append("successor_manifest.manifest_status")
@@ -2287,12 +2597,23 @@ def _validate_manifest(
             failures.append(f"successor_manifest.{key}")
     purpose = value.get("purpose")
     if isinstance(purpose, str):
-        for required_phrase in (
-            "S3 active-schema and retired-subsystem isolation",
-            "guarded reintegration",
-            "exact committed E5 implementation basis",
-            "does not authorize Class-B E6 implementation",
-        ):
+        required_phrases = (
+            (
+                "S3 active-schema and retired-subsystem isolation",
+                "guarded reintegration",
+                "exact committed E5 implementation basis",
+                "exact committed G2-E6 successor basis",
+                "does not authorize G2-F implementation",
+            )
+            if closure_active
+            else (
+                "S3 active-schema and retired-subsystem isolation",
+                "guarded reintegration",
+                "exact committed E5 implementation basis",
+                "does not authorize Class-B E6 implementation",
+            )
+        )
+        for required_phrase in required_phrases:
             if required_phrase not in purpose:
                 failures.append(
                     "successor_manifest.purpose.ready_scope:"
@@ -2321,9 +2642,13 @@ def _validate_manifest(
         failures,
     )
 
+    checkpoint_requirement = {G2E_CHECKPOINT_PATH} if closure_active else set()
     required_sets = (
-        ("always_include", REQUIRED_ALWAYS_INCLUDE),
-        ("include_current_gate_sources", REQUIRED_GATE_SOURCES),
+        ("always_include", REQUIRED_ALWAYS_INCLUDE | checkpoint_requirement),
+        (
+            "include_current_gate_sources",
+            REQUIRED_GATE_SOURCES | checkpoint_requirement,
+        ),
         ("include_current_gate_tests", REQUIRED_GATE_TESTS),
         ("include_current_release_sources", REQUIRED_RELEASE_SOURCES),
     )
@@ -2342,6 +2667,8 @@ def _validate_manifest(
         "AGENTS.md",
         "README.md",
     }
+    if closure_active:
+        required_authority_documents.add(G2E_CHECKPOINT_PATH)
     for path in sorted(required_authority_documents - set(authority_documents)):
         failures.append(f"successor_manifest.authority_documents.missing:{path}")
 
@@ -2397,6 +2724,113 @@ def _validate_manifest(
             failures.append("successor_manifest.committed_e5_basis.paths.duplicate")
     if set(committed_paths) != set(REQUIRED_E5_PATHS):
         failures.append("successor_manifest.committed_e5_basis.paths.exact")
+
+    if closure_active:
+        committed_e6 = value.get("committed_e6_basis")
+        if not isinstance(committed_e6, dict):
+            failures.append("successor_manifest.committed_e6_basis.type")
+            committed_e6 = {}
+        elif tuple(committed_e6) != COMMITTED_E6_BASIS_KEYS:
+            failures.append("successor_manifest.committed_e6_basis.shape")
+        expected_e6_values = {
+            "class_a_commit": G2E_CLASS_A_COMMIT,
+            "class_a_subject": "Reconcile G2-E6 Class-A control plane",
+            "class_b_commit": G2E_CLASS_B_COMMIT,
+            "class_b_subject": (
+                "Integrate G2-E6 Living Gauntlet and Kernel Conformance"
+            ),
+            "control_plane_repair_commit": G2E_CLOSURE_BASIS_COMMIT,
+            "control_plane_repair_subject": (
+                "Repair G2-E6 post-successor control-plane tests"
+            ),
+            "status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+            "runtime_phase": "POST_E6_SUCCESSOR",
+            "lifecycle_phase": "G2E_CLOSED_PASS",
+            "audit_path": G2E_AUDIT_PATH,
+            "audit_sha256": G2E_AUDIT_SHA256,
+            "checkpoint_path": G2E_CHECKPOINT_PATH,
+            "checkpoint_sha256": G2E_CHECKPOINT_SHA256,
+            "g2e_status": "CLOSED_PASS",
+            "g2f_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+            "g2f_implementation_authorized": False,
+            "gate2_status": "NOT_CLOSED",
+            "public_release_status": "NOT_CLAIMED",
+            "rc2_status": "NOT_CLAIMED",
+            "production_readiness_status": "NOT_CLAIMED",
+            "production_security_certification_status": "NOT_CLAIMED",
+            "real_world_effects_count": 0,
+        }
+        for key, expected in expected_e6_values.items():
+            if committed_e6.get(key) != expected:
+                failures.append(f"successor_manifest.committed_e6_basis.{key}")
+
+        for key, identities in (
+            ("class_b_paths", POST_E6_CLASS_B_IDENTITIES),
+            ("control_plane_test_paths", POST_E6_CONTROL_TEST_IDENTITIES),
+        ):
+            entries = committed_e6.get(key)
+            observed_paths: list[str] = []
+            if not isinstance(entries, list):
+                failures.append(
+                    f"successor_manifest.committed_e6_basis.{key}.type"
+                )
+                continue
+            for index, entry in enumerate(entries):
+                code = f"successor_manifest.committed_e6_basis.{key}[{index}]"
+                if not isinstance(entry, dict):
+                    failures.append(f"{code}.type")
+                    continue
+                if tuple(entry) != COMMITTED_E5_ENTRY_KEYS:
+                    failures.append(f"{code}.shape")
+                    continue
+                path = entry.get("path")
+                if not isinstance(path, str) or path not in identities:
+                    failures.append(f"{code}.path")
+                    continue
+                observed_paths.append(path)
+                expected_sha, expected_bytes, expected_lf = identities[path]
+                if entry.get("sha256") != expected_sha:
+                    failures.append(f"{code}.sha256")
+                if entry.get("bytes") != expected_bytes:
+                    failures.append(f"{code}.bytes")
+                if entry.get("lf") != expected_lf:
+                    failures.append(f"{code}.lf")
+            if len(observed_paths) != len(set(observed_paths)):
+                failures.append(
+                    f"successor_manifest.committed_e6_basis.{key}.duplicate"
+                )
+            if set(observed_paths) != set(identities):
+                failures.append(
+                    f"successor_manifest.committed_e6_basis.{key}.exact"
+                )
+
+        v10_evidence = committed_e6.get("v10_evidence")
+        expected_v10 = {
+            "archive_sha256": (
+                "33942d30f59d9f63dafa0c0f633b2f7e53c2b9f8e7f634b1dc798942e97e8573"
+            ),
+            "archive_bytes": 253612,
+            "regular_members": 57,
+            "manifest_data_rows": 56,
+            "kernel_runtime_tests": 400,
+            "living_runtime_tests": 595,
+            "release_spine_tests": 32,
+            "authority_tests": 941,
+            "runtime_evidence_reuse_dependency_proof": "PASS",
+        }
+        if not isinstance(v10_evidence, dict):
+            failures.append(
+                "successor_manifest.committed_e6_basis.v10_evidence.type"
+            )
+        else:
+            if tuple(v10_evidence) != V10_EVIDENCE_KEYS:
+                failures.append(
+                    "successor_manifest.committed_e6_basis.v10_evidence.shape"
+                )
+            if v10_evidence != expected_v10:
+                failures.append(
+                    "successor_manifest.committed_e6_basis.v10_evidence.exact"
+                )
 
     onboarding_paths: set[str] = set()
     for key in (
@@ -7725,7 +8159,12 @@ def _reads_historical_pass_material(tree: ast.Module | None) -> bool:
     return False
 
 
-def _validate_conformance_profiles(repo_root: Path, failures: list[str]) -> None:
+def _validate_conformance_profiles(
+    repo_root: Path,
+    failures: list[str],
+    *,
+    closure_active: bool = False,
+) -> None:
     (
         phase_state,
         phase_core_tree,
@@ -7737,7 +8176,10 @@ def _validate_conformance_profiles(repo_root: Path, failures: list[str]) -> None
     ) = _derive_e6_phase_state_v01(repo_root, failures)
     phase, phase_failures = _classify_e6_phase_v01(phase_state)
     failures.extend(phase_failures)
-    _validate_phase_path_ledger_v02(repo_root, phase, failures)
+    if not closure_active:
+        _validate_phase_path_ledger_v02(repo_root, phase, failures)
+    elif phase != "POST_E6_SUCCESSOR":
+        failures.append("g2e.closure.runtime_phase_not_post_e6_successor")
     pre_e6_versions = (
         phase_state.get("living_version"),
         phase_state.get("core_version"),
@@ -7751,6 +8193,12 @@ def _validate_conformance_profiles(repo_root: Path, failures: list[str]) -> None
             failures,
         )
     elif phase == "POST_E6_SUCCESSOR":
+        _validate_exact_identities(
+            repo_root,
+            POST_E6_CLASS_B_IDENTITIES,
+            "e6.phase.post.class_b",
+            failures,
+        )
         report_fields = set(
             _class_fields(phase_core_tree, "KernelConformanceReportV01")
         )
@@ -8173,7 +8621,12 @@ def _validate_committed_e5_content(
                 )
 
 
-def _validate_current_documents(repo_root: Path, failures: list[str]) -> None:
+def _validate_current_documents(
+    repo_root: Path,
+    failures: list[str],
+    *,
+    closure_active: bool = False,
+) -> None:
     folded_forbidden = tuple(term.casefold() for term in FORBIDDEN_DIRECT_TERMS)
     for relative_path in SCANNED_CURRENT_DOCUMENTS:
         path = repo_root / relative_path
@@ -8198,7 +8651,12 @@ def _validate_current_documents(repo_root: Path, failures: list[str]) -> None:
             else:
                 section = text.split(section_heading, 1)[1].split("\n## ", 1)[0]
                 normalized_section = " ".join(section.split())
-            for warning_id, required_text in REQUIRED_AGENTS_ONBOARDING_WARNINGS:
+            required_warnings = (
+                REQUIRED_AGENTS_ONBOARDING_WARNINGS
+                if closure_active
+                else PRE_CLOSURE_AGENTS_ONBOARDING_WARNINGS
+            )
+            for warning_id, required_text in required_warnings:
                 if required_text not in normalized_section:
                     failures.append(
                         "current_document.missing_onboarding_warning:"
@@ -8257,15 +8715,221 @@ def _validate_e5_basis_ancestry_v02(
         )
 
 
-def _validate_e6_class_a_control_plane(
+def _validate_g2e_closure_surfaces_v01(
     repo_root: Path,
     authority_index: dict[str, object] | None,
     successor_manifest: dict[str, object] | None,
     failures: list[str],
 ) -> None:
+    overlay = _load_json(
+        repo_root / "release/current_status_overlay_v01.json",
+        "g2e.closure.overlay",
+        failures,
+    )
+    if overlay is not None:
+        role = overlay.get("overlay_role")
+        if not isinstance(role, dict):
+            failures.append("g2e.closure.overlay.role_type")
+        else:
+            for key in (
+                "is_authority",
+                "is_completion_certificate",
+                "is_gate2_closure_manifest",
+                "is_public_release_declaration",
+                "is_root_decision",
+                "replaces_historical_evidence",
+            ):
+                if role.get(key) is not False:
+                    failures.append(f"g2e.closure.overlay.role:{key}")
+            if role.get("metadata_only") is not True:
+                failures.append("g2e.closure.overlay.role:metadata_only")
+        boundary = overlay.get("current_engineering_boundary")
+        if not isinstance(boundary, dict):
+            failures.append("g2e.closure.overlay.boundary_type")
+        else:
+            for key, expected in G2E_CLOSURE_EXPECTED_STATUS_FIELDS.items():
+                if boundary.get(key) != expected:
+                    failures.append(f"g2e.closure.overlay.status:{key}")
+
+    expected_checkpoint_entry = {
+        "path": G2E_CHECKPOINT_PATH,
+        "status": "accepted_g2e_continuous_delta_runtime_closure_checkpoint",
+        "current_authority": True,
+        "authority_scope": NAMED_GATE_SCOPE,
+        "may_override_architecture_lock": False,
+        "onboarding_allowed": True,
+        "role": (
+            "current G2-E CLOSED_PASS lifecycle checkpoint; bounded to G2-E "
+            "and subordinate to the Current Architecture Lock"
+        ),
+    }
+    expected_audit_entry = {
+        "path": G2E_AUDIT_PATH,
+        "status": "accepted_g2e_closure_audit_evidence",
+        "current_authority": False,
+        "authority_scope": AUDIT_EVIDENCE_SCOPE,
+        "may_override_architecture_lock": False,
+        "onboarding_allowed": False,
+        "role": (
+            "independent G2-E closure evidence; non-authoritative and excluded "
+            "from automatic onboarding"
+        ),
+    }
+    if authority_index is not None:
+        technical = authority_index.get("current_technical_annexes")
+        checkpoint_entries = (
+            [
+                entry
+                for entry in technical
+                if isinstance(entry, dict)
+                and entry.get("path") == G2E_CHECKPOINT_PATH
+            ]
+            if isinstance(technical, list)
+            else []
+        )
+        if checkpoint_entries != [expected_checkpoint_entry]:
+            failures.append("g2e.closure.authority_index.checkpoint_exact")
+        audit_sources = authority_index.get("audit_only_sources")
+        audit_entries = (
+            [
+                entry
+                for entry in audit_sources
+                if isinstance(entry, dict)
+                and entry.get("path") == G2E_AUDIT_PATH
+            ]
+            if isinstance(audit_sources, list)
+            else []
+        )
+        if audit_entries != [expected_audit_entry]:
+            failures.append("g2e.closure.authority_index.audit_exact")
+
+    if successor_manifest is not None:
+        for key in (
+            "always_include",
+            "include_current_gate_sources",
+            "authority_documents",
+        ):
+            paths = successor_manifest.get(key)
+            if not isinstance(paths, list) or paths.count(G2E_CHECKPOINT_PATH) != 1:
+                failures.append(f"g2e.closure.manifest.checkpoint:{key}")
+            if isinstance(paths, list) and G2E_AUDIT_PATH in paths:
+                failures.append(f"g2e.closure.manifest.audit_onboarded:{key}")
+        globs = successor_manifest.get("exclude_globs")
+        if not isinstance(globs, list) or "docs/audit_reports/**" not in globs:
+            failures.append("g2e.closure.manifest.audit_exclusion")
+
+    required_text = {
+        G2E_AUDIT_PATH: (
+            "AUDIT_VERDICT=PASS",
+            "G2E6_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+            "G2E_STATUS=CLOSED_PASS",
+            "G2F_STATUS=NEXT_NOT_STARTED_NOT_AUTHORIZED",
+            "G2F_IMPLEMENTATION_AUTHORIZED=false",
+            "GATE2_STATUS=NOT_CLOSED",
+            "PUBLIC_RELEASE_STATUS=NOT_CLAIMED",
+            "RC2_STATUS=NOT_CLAIMED",
+            "PRODUCTION_READINESS_STATUS=NOT_CLAIMED",
+            "PRODUCTION_SECURITY_CERTIFICATION_STATUS=NOT_CLAIMED",
+            "REAL_WORLD_EFFECTS_COUNT=0",
+        ),
+        G2E_CHECKPOINT_PATH: (
+            "CHECKPOINT_STATUS=CLOSED_PASS",
+            "RUNTIME_PHASE=POST_E6_SUCCESSOR",
+            "LIFECYCLE_PHASE=G2E_CLOSED_PASS",
+            f"AUDIT_SHA256={G2E_AUDIT_SHA256}",
+            "G2E6_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+            "G2E_STATUS=CLOSED_PASS",
+            "G2F_STATUS=NEXT_NOT_STARTED_NOT_AUTHORIZED",
+            "G2F_IMPLEMENTATION_AUTHORIZED=false",
+            "GATE2_STATUS=NOT_CLOSED",
+            "REAL_WORLD_EFFECTS_COUNT=0",
+        ),
+        LOCK_PATH: (
+            "## 8. Current Gate-2 / G2-E closure boundary",
+            "G2-E: `CLOSED_PASS`",
+            "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
+            "Gate 2 remains `NOT_CLOSED`",
+        ),
+        "AGENTS.md": (
+            "G2-E is `CLOSED_PASS`",
+            "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
+            "Gate 2 is `NOT_CLOSED`",
+        ),
+        "README.md": (
+            "G2-E is `CLOSED_PASS`",
+            "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
+            "Gate 2 remains `NOT_CLOSED`",
+        ),
+        "release/current_limitations.md": (
+            "G2-E is `CLOSED_PASS`",
+            "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
+            "Gate 2 remains `NOT_CLOSED`",
+        ),
+        "release/current_release_notes.md": (
+            "G2-E is `CLOSED_PASS`",
+            "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
+            "Gate 2 remains `NOT_CLOSED`",
+        ),
+    }
+    for relative_path, markers in required_text.items():
+        try:
+            text = (repo_root / relative_path).read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            failures.append(
+                f"g2e.closure.document.read:{relative_path}:{type(exc).__name__}"
+            )
+            continue
+        for marker in markers:
+            if marker not in text:
+                failures.append(
+                    f"g2e.closure.document.marker:{relative_path}:{marker}"
+                )
+
+    claim_path = repo_root / "release/claim_to_evidence_index.md"
+    try:
+        claim_text = claim_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        failures.append(f"g2e.closure.claim_index.read:{type(exc).__name__}")
+    else:
+        claim_id = "claim_g2e_continuous_delta_runtime_closed_pass"
+        rows = [line for line in claim_text.splitlines() if f"| {claim_id} |" in line]
+        if len(rows) != 1:
+            failures.append("g2e.closure.claim_index.row_count")
+        else:
+            row = rows[0]
+            for value in (
+                G2E_AUDIT_PATH,
+                G2E_AUDIT_SHA256,
+                G2E_CHECKPOINT_PATH,
+                G2E_CHECKPOINT_SHA256,
+                "CLOSED_PASS",
+                "Gate 2",
+                "G2-F",
+            ):
+                if value not in row:
+                    failures.append(
+                        f"g2e.closure.claim_index.binding:{value}"
+                    )
+
+
+def _validate_e6_class_a_control_plane(
+    repo_root: Path,
+    authority_index: dict[str, object] | None,
+    successor_manifest: dict[str, object] | None,
+    failures: list[str],
+    *,
+    closure_active: bool = False,
+) -> None:
+    control_identities = (
+        {E6_RECONCILIATION_ANNEX_PATH: CLASS_A_CONTROL_SURFACE_IDENTITIES[
+            E6_RECONCILIATION_ANNEX_PATH
+        ]}
+        if closure_active
+        else CLASS_A_CONTROL_SURFACE_IDENTITIES
+    )
     _validate_exact_identities(
         repo_root,
-        CLASS_A_CONTROL_SURFACE_IDENTITIES,
+        control_identities,
         "e6.class_a.control_surface",
         failures,
     )
@@ -8281,12 +8945,36 @@ def _validate_e6_class_a_control_plane(
         "e6.frozen_predecessor_evidence",
         failures,
     )
+    if closure_active:
+        _validate_exact_identities(
+            repo_root,
+            POST_E6_CLASS_B_IDENTITIES,
+            "g2e.closure.class_b",
+            failures,
+        )
+        _validate_exact_identities(
+            repo_root,
+            G2E_CLOSURE_EVIDENCE_IDENTITIES,
+            "g2e.closure.evidence",
+            failures,
+        )
+        _validate_git_blob_identities_v01(
+            repo_root,
+            G2E_CLOSURE_BASIS_COMMIT,
+            POST_E6_CONTROL_PLANE_BASIS_IDENTITIES,
+            "g2e.closure.control_plane_basis",
+            failures,
+        )
     if CLASS_A_RECONCILIATION_PATHS & CLASS_B_E6_IMPLEMENTATION_PATHS:
         failures.append("e6.path_classes.class_a_class_b_overlap")
     if len(CLASS_A_RECONCILIATION_PATHS) != 7:
         failures.append("e6.path_classes.class_a_count")
     if len(CLASS_B_E6_IMPLEMENTATION_PATHS) != 5:
         failures.append("e6.path_classes.class_b_count")
+    if len(G2E_CLASS_D_CLOSURE_PATHS) != 14:
+        failures.append("g2e.closure.path_count")
+    if G2E_CLASS_D_CLOSURE_PATHS & CLASS_B_E6_IMPLEMENTATION_PATHS:
+        failures.append("g2e.closure.class_b_overlap")
 
     annex = _load_reconciliation_contract(repo_root, failures)
     _validate_reconciliation_contract(annex, failures)
@@ -8349,6 +9037,14 @@ def _validate_e6_class_a_control_plane(
 
     _validate_e5_basis_ancestry_v02(repo_root, failures)
 
+    if closure_active:
+        _validate_g2e_closure_surfaces_v01(
+            repo_root,
+            authority_index,
+            successor_manifest,
+            failures,
+        )
+
 
 def _validate_s2_vocabulary(repo_root: Path, failures: list[str]) -> None:
     try:
@@ -8380,10 +9076,16 @@ def _validate_s2_vocabulary(repo_root: Path, failures: list[str]) -> None:
             failures.append(f"s2.supplier_event.current_missing:{relative_path}")
 
 
-def _validate_deliverable_paths(repo_root: Path, failures: list[str]) -> None:
-    for relative_path in sorted(
-        CLASS_A_RECONCILIATION_PATHS | CLASS_B_E6_IMPLEMENTATION_PATHS
-    ):
+def _validate_deliverable_paths(
+    repo_root: Path,
+    failures: list[str],
+    *,
+    closure_active: bool = False,
+) -> None:
+    required = CLASS_A_RECONCILIATION_PATHS | CLASS_B_E6_IMPLEMENTATION_PATHS
+    if closure_active:
+        required |= G2E_CLASS_D_CLOSURE_PATHS
+    for relative_path in sorted(required):
         if not (repo_root / relative_path).is_file():
             failures.append(f"deliverable.missing:{relative_path}")
 
@@ -8523,6 +9225,291 @@ def _entry_map_v02(
     return result
 
 
+def _git_single_line_v01(
+    repo_root: Path,
+    arguments: Sequence[str],
+    code: str,
+    failures: list[str],
+) -> str | None:
+    try:
+        completed = subprocess.run(
+            ("git", *arguments),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as exc:
+        failures.append(f"{code}:{type(exc).__name__}")
+        return None
+    if completed.returncode != 0:
+        failures.append(f"{code}:exit_{completed.returncode}")
+        return None
+    value = completed.stdout.strip()
+    if not value:
+        failures.append(f"{code}:empty")
+        return None
+    return value
+
+
+def _git_name_status_entries_v01(
+    repo_root: Path,
+    revision_range: str,
+    failures: list[str],
+) -> tuple[tuple[str, str, str | None], ...]:
+    try:
+        completed = subprocess.run(
+            (
+                "git",
+                "diff",
+                "--name-status",
+                "-z",
+                "--find-renames",
+                "--find-copies",
+                revision_range,
+            ),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        failures.append(f"g2e.closure.commit_ledger:{type(exc).__name__}")
+        return ()
+    if completed.returncode != 0:
+        failures.append(
+            f"g2e.closure.commit_ledger:exit_{completed.returncode}"
+        )
+        return ()
+    fields = [field for field in completed.stdout.split(b"\0") if field]
+    entries: list[tuple[str, str, str | None]] = []
+    index = 0
+    while index < len(fields):
+        status = fields[index].decode("ascii", errors="replace")
+        index += 1
+        if index >= len(fields):
+            failures.append("g2e.closure.commit_ledger:malformed_record")
+            break
+        path = fields[index].decode("utf-8", errors="surrogateescape")
+        index += 1
+        source: str | None = None
+        if status.startswith(("R", "C")):
+            if index >= len(fields):
+                failures.append(
+                    "g2e.closure.commit_ledger:missing_rename_target"
+                )
+                break
+            source, path = path, fields[index].decode(
+                "utf-8", errors="surrogateescape"
+            )
+            index += 1
+        entries.append((status, path, source))
+    return tuple(entries)
+
+
+def _compare_exact_ledger_v01(
+    observed: dict[str, str],
+    expected: dict[str, str],
+    *,
+    label: str,
+    failures: list[str],
+) -> None:
+    for path in sorted(set(observed) - set(expected)):
+        failures.append(f"{label}.unexpected:{path}")
+    for path in sorted(set(expected) - set(observed)):
+        failures.append(f"{label}.missing:{path}")
+    for path in sorted(set(observed) & set(expected)):
+        if observed[path] != expected[path]:
+            failures.append(
+                f"{label}.status:{path}:{observed[path]}!={expected[path]}"
+            )
+
+
+def _classify_g2e_closure_path_ledger_v01(
+    *,
+    closure_requested: bool,
+    head: str,
+    parent: str | None,
+    branch: str | None,
+    origin_main: str | None,
+    subject: str | None,
+    committed_entries: Sequence[tuple[str, str, str | None]],
+    worktree_entries: Sequence[tuple[str, str, str | None]],
+    closure_commit_entries: Sequence[tuple[str, str, str | None]],
+) -> tuple[str | None, tuple[str, ...]]:
+    if not closure_requested:
+        return None, ()
+
+    failures: list[str] = []
+    committed = _entry_map_v02(
+        committed_entries,
+        label="g2e.closure.committed",
+        failures=failures,
+    )
+    worktree = _entry_map_v02(
+        worktree_entries,
+        label="g2e.closure.worktree",
+        failures=failures,
+    )
+    closure_commit = _entry_map_v02(
+        closure_commit_entries,
+        label="g2e.closure.commit",
+        failures=failures,
+    )
+    class_a_and_b = {
+        **dict(CLASS_A_COMMITTED_NAME_STATUS),
+        **dict(CLASS_B_COMMITTED_NAME_STATUS),
+    }
+    class_a_b_and_d = {
+        **class_a_and_b,
+        **dict(CLASS_D_COMMITTED_NAME_STATUS),
+    }
+    candidate_worktree = {
+        path: (
+            "??" if path in {G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH} else " M"
+        )
+        for path in G2E_CLASS_D_CLOSURE_PATHS
+    }
+
+    if head == G2E_CLOSURE_BASIS_COMMIT:
+        mode = "G2E_CLOSED_PASS_CANDIDATE"
+        _compare_exact_ledger_v01(
+            committed,
+            class_a_and_b,
+            label="g2e.closure.candidate.committed",
+            failures=failures,
+        )
+        _compare_exact_ledger_v01(
+            worktree,
+            candidate_worktree,
+            label="g2e.closure.candidate.worktree",
+            failures=failures,
+        )
+        if closure_commit:
+            failures.append("g2e.closure.candidate.unexpected_commit_ledger")
+        if origin_main != G2E_CLOSURE_BASIS_COMMIT:
+            failures.append("g2e.closure.candidate.origin_main")
+    elif parent == G2E_CLOSURE_BASIS_COMMIT:
+        mode = "G2E_CLOSED_PASS_COMMITTED"
+        _compare_exact_ledger_v01(
+            committed,
+            class_a_b_and_d,
+            label="g2e.closure.committed.cumulative",
+            failures=failures,
+        )
+        _compare_exact_ledger_v01(
+            worktree,
+            {},
+            label="g2e.closure.committed.worktree",
+            failures=failures,
+        )
+        _compare_exact_ledger_v01(
+            closure_commit,
+            dict(CLASS_D_COMMITTED_NAME_STATUS),
+            label="g2e.closure.committed.commit",
+            failures=failures,
+        )
+        if origin_main != head:
+            failures.append("g2e.closure.committed.origin_main")
+        if subject != "Close G2-E continuous delta runtime lifecycle":
+            failures.append("g2e.closure.committed.subject")
+    else:
+        mode = "G2E_CLOSED_PASS_INVALID"
+        failures.append("g2e.closure.basis_not_exact")
+
+    if branch != "main":
+        failures.append("g2e.closure.branch")
+    return mode, tuple(sorted(set(failures)))
+
+
+def _validate_g2e_closure_topology_v01(
+    repo_root: Path,
+    failures: list[str],
+) -> str | None:
+    head = _git_head_v02(repo_root, failures)
+    if head is None:
+        return None
+    worktree_entries = _git_status_entries_v02(repo_root, failures)
+    worktree_paths = {path for _status, path, _source in worktree_entries}
+    parent_probe: list[str] = []
+    parent = _git_single_line_v01(
+        repo_root,
+        ("rev-parse", "--verify", "HEAD^"),
+        "g2e.closure.parent",
+        parent_probe,
+    )
+    closure_requested = (
+        head == G2E_CLOSURE_BASIS_COMMIT
+        and bool(worktree_paths & G2E_CLASS_D_CLOSURE_PATHS)
+    ) or parent == G2E_CLOSURE_BASIS_COMMIT or any(
+        (repo_root / path).exists()
+        for path in (G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH)
+    )
+    if not closure_requested:
+        return None
+    failures.extend(parent_probe)
+    branch = _git_single_line_v01(
+        repo_root,
+        ("branch", "--show-current"),
+        "g2e.closure.branch",
+        failures,
+    )
+    origin_main = _git_single_line_v01(
+        repo_root,
+        ("rev-parse", "--verify", "refs/remotes/origin/main"),
+        "g2e.closure.origin_main",
+        failures,
+    )
+    subject = _git_single_line_v01(
+        repo_root,
+        ("show", "-s", "--format=%s", "HEAD"),
+        "g2e.closure.subject",
+        failures,
+    )
+    committed_entries = _git_committed_entries_v02(repo_root, failures)
+    closure_commit_entries = (
+        _git_name_status_entries_v01(
+            repo_root,
+            f"{G2E_CLOSURE_BASIS_COMMIT}..HEAD",
+            failures,
+        )
+        if parent == G2E_CLOSURE_BASIS_COMMIT
+        else ()
+    )
+    mode, topology_failures = _classify_g2e_closure_path_ledger_v01(
+        closure_requested=True,
+        head=head,
+        parent=parent,
+        branch=branch,
+        origin_main=origin_main,
+        subject=subject,
+        committed_entries=committed_entries,
+        worktree_entries=worktree_entries,
+        closure_commit_entries=closure_commit_entries,
+    )
+    failures.extend(topology_failures)
+    for marker in (
+        "MERGE_HEAD",
+        "CHERRY_PICK_HEAD",
+        "REVERT_HEAD",
+        "BISECT_LOG",
+        "rebase-merge",
+        "rebase-apply",
+    ):
+        git_path = _git_single_line_v01(
+            repo_root,
+            ("rev-parse", "--git-path", marker),
+            f"g2e.closure.git_operation_path:{marker}",
+            failures,
+        )
+        if git_path is not None:
+            operation_path = Path(git_path)
+            if not operation_path.is_absolute():
+                operation_path = repo_root / operation_path
+            if operation_path.exists():
+                failures.append(f"g2e.closure.git_operation_active:{marker}")
+    return mode
+
+
 def _classify_phase_path_ledger_v02(
     *,
     head: str,
@@ -8621,7 +9608,11 @@ def _validate_changed_paths(
 ) -> None:
     """Compatibility helper; production acceptance uses the phase ledger."""
 
-    allowed = CLASS_A_RECONCILIATION_PATHS | CLASS_B_E6_IMPLEMENTATION_PATHS
+    allowed = (
+        CLASS_A_RECONCILIATION_PATHS
+        | CLASS_B_E6_IMPLEMENTATION_PATHS
+        | G2E_CLASS_D_CLOSURE_PATHS
+    )
     for path in sorted(set(changed_paths)):
         if not _valid_relative_path(path) or path not in allowed:
             failures.append(f"worktree.unexpected_changed_path:{path}")
@@ -8634,6 +9625,8 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    closure_mode = _validate_g2e_closure_topology_v01(root, failures)
+    closure_active = closure_mode is not None
     authority_index = _load_json(root / INDEX_PATH, "authority_index", failures)
     successor_manifest = _load_json(
         root / MANIFEST_PATH, "successor_manifest", failures
@@ -8652,30 +9645,50 @@ def collect_failures(
     seam_index = _load_json(
         root / SEAM_INDEX_PATH, "s3.release.seam_index", failures
     )
-    historical_entries = _validate_authority_index(authority_index, failures)
+    historical_entries = _validate_authority_index(
+        authority_index,
+        failures,
+        closure_active=closure_active,
+    )
     historical_paths = {
         entry.get("path")
         for entry in historical_entries
         if isinstance(entry.get("path"), str)
     }
     onboarding_paths, _manifest_allowed_changed_paths = _validate_manifest(
-        successor_manifest, failures, historical_paths
+        successor_manifest,
+        failures,
+        historical_paths,
+        closure_active=closure_active,
     )
     _validate_e6_class_a_control_plane(
         root,
         authority_index,
         successor_manifest,
         failures,
+        closure_active=closure_active,
     )
     _validate_s3_inventory(root, retired_inventory, failures)
     _validate_current_schema_surface(root, current_schema_surface, failures)
     _validate_release_succession(completion_manifest, seam_index, failures)
-    _validate_conformance_profiles(root, failures)
+    _validate_conformance_profiles(
+        root,
+        failures,
+        closure_active=closure_active,
+    )
     _validate_current_import_graph(root, onboarding_paths, failures)
     _validate_committed_e5_content(root, failures)
-    _validate_current_documents(root, failures)
+    _validate_current_documents(
+        root,
+        failures,
+        closure_active=closure_active,
+    )
     _validate_s2_vocabulary(root, failures)
-    _validate_deliverable_paths(root, failures)
+    _validate_deliverable_paths(
+        root,
+        failures,
+        closure_active=closure_active,
+    )
     return tuple(sorted(set(failures)))
 
 
@@ -8697,6 +9710,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        closure_failures: list[str] = []
+        closure_mode = _validate_g2e_closure_topology_v01(
+            args.root.resolve(), closure_failures
+        )
+        if closure_mode in {
+            "G2E_CLOSED_PASS_CANDIDATE",
+            "G2E_CLOSED_PASS_COMMITTED",
+        }:
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print(f"LIFECYCLE_MODE={closure_mode}")
         return 0
     print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 FAIL")
     for failure in failures:

@@ -517,9 +517,9 @@ G2D_V0310_SUCCESSOR_EXPECTED_FIELDS = {'g2d_status': 'CLOSED_PASS',
  'g2e4_acceptance_correction_commit': '21176be090cab9aa9b8ea9cce2ae052bed8039da',
  'g2e4_acceptance_correction_patch_sha256': 'ea1b030bb40e52aeb30ea5d49599ba2e3a59f50398ef8d74234ab77e30842157',
  'g2e4_acceptance_owner_evidence_sha256': '92390ad076307a73473f1bb22b65748bbc2e25bcdccd6fe0250312d26b124b31',
- 'g2e5_status': 'NOT_STARTED_NOT_AUTHORIZED',
- 'g2e6_status': 'NOT_STARTED_NOT_AUTHORIZED',
- 'g2f_status': 'NOT_STARTED_NOT_AUTHORIZED',
+ 'g2e5_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS',
+ 'g2e6_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS',
+ 'g2f_status': 'NEXT_NOT_STARTED_NOT_AUTHORIZED',
  'public_release_claimed': False,
  'rc2_claimed': False,
  'production_readiness_claimed': False,
@@ -602,6 +602,27 @@ G2E_ACCEPTED_ADDENDUM_PATH = (
 )
 G2E_ACCEPTED_ADDENDUM_SHA256 = (
     "2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8"
+)
+G2E_CLASS_A_COMMIT = "7f3c7138b553096252fefee7930f89100d835fcd"
+G2E_CLASS_B_COMMIT = "4c133da11b8bcbd642e1aaa3413ce0a9c357731d"
+G2E_CONTROL_PLANE_REPAIR_COMMIT = (
+    "6079ddcfe59f582936e7b13af2753a6533117970"
+)
+G2E_CLOSURE_CLAIM_ID = "claim_g2e_continuous_delta_runtime_closed_pass"
+G2E_CLOSURE_AUDIT_PATH = (
+    "docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log"
+)
+G2E_CLOSURE_AUDIT_SHA256 = (
+    "623fc966b2087c9bc77064ad9bc2b304b2dc7e735a5d220e83c9f224e991e5eb"
+)
+G2E_CLOSURE_CHECKPOINT_PATH = (
+    "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md"
+)
+G2E_CLOSURE_CHECKPOINT_SHA256 = (
+    "494cf40ad6d080d2dd0b7508eadc13ae4e6ada32ad1f905025fb9cee78bdb33d"
+)
+G2E_V10_ARCHIVE_SHA256 = (
+    "33942d30f59d9f63dafa0c0f633b2f7e53c2b9f8e7f634b1dc798942e97e8573"
 )
 G2E_V012_ADDENDUM_SHA256 = (
     "1041dbf3da320557d5eca948a13d0c4737e4e9b9ffac64c9453c97503527ca4c"
@@ -926,6 +947,82 @@ G2E_CURRENT_BOUNDARY_FIELDS = {'g2e3_status': 'IMPLEMENTED_COMMITTED_ACCEPTANCE_
  'g2e4_acceptance_correction_patch_sha256': 'ea1b030bb40e52aeb30ea5d49599ba2e3a59f50398ef8d74234ab77e30842157',
  'g2e4_acceptance_owner_evidence_sha256': '92390ad076307a73473f1bb22b65748bbc2e25bcdccd6fe0250312d26b124b31'}
 
+G2E_PRE_CLOSURE_BOUNDARY_FIELDS = dict(G2E_CURRENT_BOUNDARY_FIELDS)
+G2E_CLOSURE_BOUNDARY_FIELDS = {
+    "g2e1_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e2_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e5_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e6_status": "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+    "g2e_status": "CLOSED_PASS",
+    "g2e_runtime_phase": "POST_E6_SUCCESSOR",
+    "g2e_lifecycle_phase": "G2E_CLOSED_PASS",
+    "g2e5_implementation_commit": (
+        "f582701208b603463a03d404aa841c302a8221d6"
+    ),
+    "g2e6_class_a_commit": "7f3c7138b553096252fefee7930f89100d835fcd",
+    "g2e6_class_b_commit": "4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+    "g2e6_control_plane_repair_commit": (
+        "6079ddcfe59f582936e7b13af2753a6533117970"
+    ),
+    "g2e6_v10_archive_sha256": (
+        "33942d30f59d9f63dafa0c0f633b2f7e53c2b9f8e7f634b1dc798942e97e8573"
+    ),
+    "g2e6_v10_archive_bytes": 253612,
+    "g2e6_v10_archive_members": 57,
+    "g2e6_v10_manifest_rows": 56,
+    "g2e6_kernel_runtime_tests_passed": 400,
+    "g2e6_living_runtime_tests_passed": 595,
+    "g2e6_release_spine_tests_passed": 32,
+    "g2e6_authority_tests_passed": 941,
+    "g2e6_runtime_evidence_reuse_dependency_proof": "PASS",
+    "g2e_audit_path": (
+        "docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log"
+    ),
+    "g2e_audit_sha256": (
+        "623fc966b2087c9bc77064ad9bc2b304b2dc7e735a5d220e83c9f224e991e5eb"
+    ),
+    "g2e_checkpoint_path": (
+        "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md"
+    ),
+    "g2e_checkpoint_sha256": (
+        "494cf40ad6d080d2dd0b7508eadc13ae4e6ada32ad1f905025fb9cee78bdb33d"
+    ),
+    "g2e_living_version": "v1.6",
+    "g2e_living_act_count": 17,
+    "g2e_conformance_version": "v0.7",
+    "g2e_conformance_category_count": 15,
+    "g2e_conformance_negative_probe_count": 60,
+    "g2e_conformance_active_ref_count": 16,
+    "g2e_conformance_domain_count": 2,
+    "g2e_profile_succession": (
+        "V05_HISTORICAL_TO_V06_HISTORICAL_TO_V07_CURRENT"
+    ),
+    "g2f_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+    "g2e_frozen_completion_manifest_sha256": (
+        "4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9"
+    ),
+    "g2e_frozen_integration_seam_index_sha256": (
+        "4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03"
+    ),
+    "g2e_frozen_release_evidence_classification": (
+        "FROZEN_PREDECESSOR_EVIDENCE_NOT_CURRENT_E6_EXECUTION"
+    ),
+    "g2f_implementation_authorized": False,
+    "public_release_status": "NOT_CLAIMED",
+    "rc2_status": "NOT_CLAIMED",
+    "production_readiness_status": "NOT_CLAIMED",
+    "production_security_certification_status": "NOT_CLAIMED",
+    "real_world_effects_count": 0,
+}
+G2E_CURRENT_BOUNDARY_FIELDS = {
+    **G2E_CURRENT_BOUNDARY_FIELDS,
+    **G2E_CLOSURE_BOUNDARY_FIELDS,
+}
+
+MACHINE_MANIFEST_BOUNDARY_FIELDS = {
+    **G2D_CURRENT_BOUNDARY_FIELDS,
+    **G2E_PRE_CLOSURE_BOUNDARY_FIELDS,
+}
 CURRENT_BOUNDARY_FIELDS = {
     **G2D_CURRENT_BOUNDARY_FIELDS,
     **G2E_CURRENT_BOUNDARY_FIELDS,
@@ -2350,9 +2447,13 @@ def _assert_absent(text: str, forbidden: tuple[str, ...]) -> None:
         assert value not in text, value
 
 
-def _assert_closed_boundary(boundary: dict[str, object]) -> None:
+def _assert_closed_boundary(
+    boundary: dict[str, object],
+    *,
+    expected_fields: dict[str, object] = CURRENT_BOUNDARY_FIELDS,
+) -> None:
     assert set(boundary) == set(IN_PROGRESS_BOUNDARY) | set(
-        CURRENT_BOUNDARY_FIELDS
+        expected_fields
     )
     assert re.fullmatch(r"[0-9a-f]{40}", boundary["implementation_basis_commit"])
     assert re.fullmatch(r"[0-9a-f]{40}", boundary["audit_commit"])
@@ -2366,7 +2467,7 @@ def _assert_closed_boundary(boundary: dict[str, object]) -> None:
     assert boundary["r_h1_checkpoint_path"] == R_H1_CHECKPOINT_PATH
     assert boundary["g2c_status"] == "CLOSED_PASS"
     assert boundary["g2c_implementation_authorized"] is True
-    for key, value in CURRENT_BOUNDARY_FIELDS.items():
+    for key, value in expected_fields.items():
         assert boundary[key] == value
 
     basis_commit = boundary["implementation_basis_commit"]
@@ -2379,7 +2480,7 @@ def _assert_closed_boundary(boundary: dict[str, object]) -> None:
     ]
     assert basis_boundary == IN_PROGRESS_BOUNDARY
     r_h1_closure_boundary = copy.deepcopy(boundary)
-    for key in CURRENT_BOUNDARY_FIELDS:
+    for key in expected_fields:
         r_h1_closure_boundary.pop(key)
     r_h1_closure_boundary["g2c_status"] = "NEXT_NOT_STARTED"
     r_h1_closure_boundary["g2c_implementation_authorized"] = False
@@ -2425,7 +2526,8 @@ def test_manifest_baseline_is_preserved_by_one_add_only_boundary() -> None:
     assert current_checkpoint["metadata_sync_only"] is True
     assert current_checkpoint["manifest_does_not_override_human_passport"] is True
     _assert_closed_boundary(
-        current_checkpoint["current_engineering_boundary_v01"]
+        current_checkpoint["current_engineering_boundary_v01"],
+        expected_fields=MACHINE_MANIFEST_BOUNDARY_FIELDS,
     )
 
 
@@ -2491,7 +2593,9 @@ def test_readme_current_engineering_view_and_license_are_bounded() -> None:
         "Root is the sole local final and commit authority",
         "Gate 1 is `CLOSED_PASS`",
         "G2-D is `CLOSED_PASS`",
-        "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
+        "G2-E is `CLOSED_PASS`",
+        "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
+        "[G2-E closure checkpoint](docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md)",
         "[Document Authority Index](specs/document_authority_index_v01.json)",
         "[Successor Context Manifest](release/successor_context_manifest_v01.json)",
         "[LICENSE](LICENSE)",
@@ -2519,7 +2623,7 @@ def test_agents_current_operational_surface_is_exactly_bounded() -> None:
         "## Source-of-truth order",
         "## Canonical runtime",
         "## Current authority law",
-        "## Current Gate status and E5 handoff",
+        "## Current Gate status and G2-F handoff",
         "## Worktree discipline",
         "## Test and commit discipline",
         "## Bounded context and onboarding",
@@ -2533,11 +2637,12 @@ def test_agents_current_operational_surface_is_exactly_bounded() -> None:
         "RuntimeExecutionTopology is materialized and owned locally by runtime",
         "Root is the sole local final and commit authority",
         "Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`",
-        "G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`",
+        "G2-E is `CLOSED_PASS`",
+        "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`",
         "SUCCESSOR_ONBOARDING_READY",
         "S1 document-authority succession, S2 vocabulary repair, and S3 active-schema and retired-subsystem isolation are closed",
-        "Permanent assistant onboarding occurs only after the sanitation changes are reintegrated",
-        "the E5 transplant remains prohibited until a separate authorization",
+        "The exact committed G2-E successor and its current checkpoint are permanent bounded onboarding inputs",
+        "The independent G2-E audit remains explicit-request evidence",
     ):
         assert required in normalized, required
     source_order = text.split("## Source-of-truth order", 1)[1].split(
@@ -2934,6 +3039,7 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             G2D_V039_CLOSURE_CLAIM_ID,
             G2D_V0310_CONTRACT_CLAIM_ID,
             *G2D_V0310_SUCCESSOR_CLAIM_IDS,
+            G2E_CLOSURE_CLAIM_ID,
         )
         closure_row = next(
             line
@@ -3524,13 +3630,17 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
         "CLOSED_PASS",
         "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D",
         "IMPLEMENTED_COMMITTED_PASS",
-        "G2-E4 anti-gaming acceptance is `PASS`",
         "NOT_STARTED_NOT_AUTHORIZED",
         "NOT_CLOSED",
         G2D_V0310_IMPLEMENTATION_COMMIT,
         "real-world effects remain zero",
     ):
         assert required in active_text
+    assert (
+        "G2-E4, G2-E5, and G2-E6 are "
+        "`IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`."
+        in " ".join(active_text.split())
+    )
     for forbidden in (
         "CORRECTION_CONTRACT_ACCEPTED_IMPLEMENTATION_PENDING",
         "ACCEPTED_IMPLEMENTATION_PENDING",
@@ -4130,11 +4240,17 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
         "current_engineering_boundary_v01"
     ]
     current_overlay_boundary = current_overlay["current_engineering_boundary"]
-    assert current_manifest_boundary == current_overlay_boundary == _current_boundary()
+    expected_overlay_boundary = dict(current_manifest_boundary)
+    expected_overlay_boundary.update(G2E_CLOSURE_BOUNDARY_FIELDS)
+    assert current_overlay_boundary == _current_boundary()
+    assert current_overlay_boundary == expected_overlay_boundary
     for key, value in G2D_CURRENT_BOUNDARY_FIELDS.items():
         assert current_manifest_boundary[key] == value
-    for key, value in G2E_CURRENT_BOUNDARY_FIELDS.items():
+        assert current_overlay_boundary[key] == value
+    for key, value in G2E_PRE_CLOSURE_BOUNDARY_FIELDS.items():
         assert current_manifest_boundary[key] == value
+    for key, value in G2E_CURRENT_BOUNDARY_FIELDS.items():
+        assert current_overlay_boundary[key] == value
     assert current_manifest_boundary["gate2_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['gate2_status']
     assert current_manifest_boundary["g2d_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2d_status']
     assert current_manifest_boundary["g2d_contract_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2d_contract_status']
@@ -5524,6 +5640,87 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         "g2e_status": "NOT_CLOSED",
         "gate2_status": "NOT_CLOSED",
     }
+    assert authority_index["generated_for_head"] == G2E_CONTROL_PLANE_REPAIR_COMMIT
+    checkpoint_entries = [
+        entry
+        for entry in authority_index["current_technical_annexes"]
+        if entry["path"] == G2E_CLOSURE_CHECKPOINT_PATH
+    ]
+    assert checkpoint_entries == [
+        {
+            "path": G2E_CLOSURE_CHECKPOINT_PATH,
+            "status": "accepted_g2e_continuous_delta_runtime_closure_checkpoint",
+            "current_authority": True,
+            "authority_scope": "named_gate_contract_only",
+            "may_override_architecture_lock": False,
+            "onboarding_allowed": True,
+            "role": (
+                "current G2-E CLOSED_PASS lifecycle checkpoint; bounded to G2-E "
+                "and subordinate to the Current Architecture Lock"
+            ),
+        }
+    ]
+    audit_entries = [
+        entry
+        for entry in authority_index["audit_only_sources"]
+        if entry["path"] == G2E_CLOSURE_AUDIT_PATH
+    ]
+    assert audit_entries == [
+        {
+            "path": G2E_CLOSURE_AUDIT_PATH,
+            "status": "accepted_g2e_closure_audit_evidence",
+            "current_authority": False,
+            "authority_scope": "audit_evidence_only",
+            "may_override_architecture_lock": False,
+            "onboarding_allowed": False,
+            "role": (
+                "independent G2-E closure evidence; non-authoritative and "
+                "excluded from automatic onboarding"
+            ),
+        }
+    ]
+
+    assert manifest["base_head"] == G2E_CONTROL_PLANE_REPAIR_COMMIT
+    for key in (
+        "always_include",
+        "include_current_gate_sources",
+        "authority_documents",
+    ):
+        assert manifest[key].count(G2E_CLOSURE_CHECKPOINT_PATH) == 1
+        assert G2E_CLOSURE_AUDIT_PATH not in manifest[key]
+    assert "docs/audit_reports/**" in manifest["exclude_globs"]
+    committed_e6 = manifest["committed_e6_basis"]
+    assert committed_e6["class_a_commit"] == G2E_CLASS_A_COMMIT
+    assert committed_e6["class_b_commit"] == G2E_CLASS_B_COMMIT
+    assert committed_e6["control_plane_repair_commit"] == (
+        G2E_CONTROL_PLANE_REPAIR_COMMIT
+    )
+    assert committed_e6["status"] == "IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS"
+    assert committed_e6["runtime_phase"] == "POST_E6_SUCCESSOR"
+    assert committed_e6["lifecycle_phase"] == "G2E_CLOSED_PASS"
+    assert {
+        entry["path"]: entry["sha256"]
+        for entry in committed_e6["class_b_paths"]
+    } == KERNEL_CONFORMANCE_V07_CURRENT_SHA256
+    assert committed_e6["v10_evidence"] == {
+        "archive_sha256": G2E_V10_ARCHIVE_SHA256,
+        "archive_bytes": 253612,
+        "regular_members": 57,
+        "manifest_data_rows": 56,
+        "kernel_runtime_tests": 400,
+        "living_runtime_tests": 595,
+        "release_spine_tests": 32,
+        "authority_tests": 941,
+        "runtime_evidence_reuse_dependency_proof": "PASS",
+    }
+    assert committed_e6["audit_path"] == G2E_CLOSURE_AUDIT_PATH
+    assert committed_e6["audit_sha256"] == G2E_CLOSURE_AUDIT_SHA256
+    assert committed_e6["checkpoint_path"] == G2E_CLOSURE_CHECKPOINT_PATH
+    assert committed_e6["checkpoint_sha256"] == G2E_CLOSURE_CHECKPOINT_SHA256
+    assert committed_e6["g2e_status"] == "CLOSED_PASS"
+    assert committed_e6["g2f_status"] == "NEXT_NOT_STARTED_NOT_AUTHORIZED"
+    assert committed_e6["g2f_implementation_authorized"] is False
+    assert committed_e6["gate2_status"] == "NOT_CLOSED"
 
 
 def test_g2e6_class_a_geometry_paths_and_call_ownership_are_exact() -> None:
@@ -5664,5 +5861,51 @@ def test_g2e6_class_a_frozen_predecessor_evidence_and_nonclaims_are_exact() -> N
     lock = (
         REPOSITORY_ROOT / "specs/current_architecture_lock_v01.md"
     ).read_text(encoding="utf-8")
-    assert "G2-E6 is not implemented" in lock
-    assert "G2-E and Gate 2 remain `NOT_CLOSED`" in lock
+    assert "## 8. Current Gate-2 / G2-E closure boundary" in lock
+    assert "G2-E6: `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`" in lock
+    assert "G2-E: `CLOSED_PASS`" in lock
+    assert "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`" in lock
+    assert "Gate 2 remains `NOT_CLOSED`" in lock
+
+    audit = (REPOSITORY_ROOT / G2E_CLOSURE_AUDIT_PATH).read_bytes()
+    checkpoint = (REPOSITORY_ROOT / G2E_CLOSURE_CHECKPOINT_PATH).read_bytes()
+    assert _sha256_bytes(audit) == G2E_CLOSURE_AUDIT_SHA256
+    assert _sha256_bytes(checkpoint) == G2E_CLOSURE_CHECKPOINT_SHA256
+    audit_text = audit.decode("utf-8")
+    checkpoint_text = checkpoint.decode("utf-8")
+    for marker in (
+        "AUDIT_VERDICT=PASS",
+        "G2E6_STATUS=IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS",
+        "G2E_STATUS=CLOSED_PASS",
+        "G2F_STATUS=NEXT_NOT_STARTED_NOT_AUTHORIZED",
+        "G2F_IMPLEMENTATION_AUTHORIZED=false",
+        "GATE2_STATUS=NOT_CLOSED",
+        "PUBLIC_RELEASE_STATUS=NOT_CLAIMED",
+        "RC2_STATUS=NOT_CLAIMED",
+        "PRODUCTION_READINESS_STATUS=NOT_CLAIMED",
+        "PRODUCTION_SECURITY_CERTIFICATION_STATUS=NOT_CLAIMED",
+        "REAL_WORLD_EFFECTS_COUNT=0",
+    ):
+        assert marker in audit_text
+    for marker in (
+        "CHECKPOINT_STATUS=CLOSED_PASS",
+        "RUNTIME_PHASE=POST_E6_SUCCESSOR",
+        "LIFECYCLE_PHASE=G2E_CLOSED_PASS",
+        f"AUDIT_SHA256={G2E_CLOSURE_AUDIT_SHA256}",
+        "G2E_STATUS=CLOSED_PASS",
+        "G2F_STATUS=NEXT_NOT_STARTED_NOT_AUTHORIZED",
+        "GATE2_STATUS=NOT_CLOSED",
+    ):
+        assert marker in checkpoint_text
+    assert "OWNER_COMMIT_PENDING" not in checkpoint_text
+    claim_rows = [
+        line
+        for line in CLAIM_INDEX_PATH.read_text(encoding="utf-8").splitlines()
+        if "| claim_g2e_continuous_delta_runtime_closed_pass |" in line
+    ]
+    assert len(claim_rows) == 1
+    assert G2E_CLOSURE_AUDIT_PATH in claim_rows[0]
+    assert G2E_CLOSURE_AUDIT_SHA256 in claim_rows[0]
+    assert G2E_CLOSURE_CHECKPOINT_PATH in claim_rows[0]
+    assert G2E_CLOSURE_CHECKPOINT_SHA256 in claim_rows[0]
+    assert "Gate 2" in claim_rows[0]

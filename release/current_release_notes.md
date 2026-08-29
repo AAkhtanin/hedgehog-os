@@ -1,13 +1,24 @@
 # Current Engineering Notes
 
-## Current v0.3.10 successor summary
+## Current G2-E closure summary
 
-- Active status: `CLOSED_PASS`.
+- The committed implementation/control-plane basis is
+  `6079ddcfe59f582936e7b13af2753a6533117970`.
 - G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
-- G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
-- G2-E4 anti-gaming acceptance is `PASS`.
-- Implementation commit is `41db6c6bfbf787c04d288c5ddb40e285118d06c1`.
-- Gate 2 remains `NOT_CLOSED`; real-world effects remain zero.
+- G2-E4, G2-E5, and G2-E6 are
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`.
+- G2-E is `CLOSED_PASS` under
+  `docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md` and independent
+  evidence-only audit
+  `docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log`.
+- Living is v1.6 with 17 acts. Kernel Conformance core and runner are v0.7
+  with 15 categories, 60 negative probes, 16 active references, and two
+  domains.
+- G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`; implementation authorization is
+  false.
+- Gate 2 remains `NOT_CLOSED`; public release, RC2, production readiness, and
+  production security certification remain `NOT_CLAIMED`; real-world effects
+  remain zero.
 
 ## Historical C/M boundary — superseded as current state
 

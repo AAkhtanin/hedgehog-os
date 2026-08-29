@@ -1,13 +1,25 @@
 # Current Limitations
 
-## Current v0.3.10 successor summary
+## Current G2-E closure boundary
 
 - Active G2-D v0.3.10 is `CLOSED_PASS`.
 - G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
-- G2-E4 strict subtree is `IMPLEMENTED_COMMITTED_PASS`.
-- G2-E4 anti-gaming acceptance is `PASS`.
-- Implementation commit is `41db6c6bfbf787c04d288c5ddb40e285118d06c1`.
+- G2-E4, G2-E5, and G2-E6 are
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`.
+- G2-E is `CLOSED_PASS` at
+  `docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md`, supported by
+  evidence-only audit
+  `docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log`.
+- G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`; G2-F implementation is not
+  authorized.
 - Gate 2 remains `NOT_CLOSED`; real-world effects remain zero.
+- Public release, RC2, production readiness, and production security
+  certification remain `NOT_CLAIMED`.
+- The completion manifest and integration seam index remain frozen predecessor
+  evidence. They are not current E6 execution evidence.
+- The accepted long Kernel/Living evidence is reused only for the exact
+  unchanged five Class-B identities; those suites are not replayed by the
+  lifecycle closure hop.
 
 ## Historical C/M boundary — superseded as current state
 

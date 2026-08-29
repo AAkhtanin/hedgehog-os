@@ -66,29 +66,31 @@ policy, validation, and Root gates. They do not change the authority topology.
 - Memory may inform a new decision but cannot preserve authority, permission,
   finality, or proof of action.
 
-## Current Gate status and E5 handoff
+## Current Gate status and G2-F handoff
 
-At base HEAD `931645dc724c54d635f32dabfca4b62fbc9a39a2`:
+At committed implementation/control-plane basis HEAD
+`6079ddcfe59f582936e7b13af2753a6533117970`:
 
 - Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`.
 - G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
-- G2-E4 selective runtime and anti-gaming acceptance are `PASS`.
-- G2-E5, G2-E6, and G2-F are `NOT_STARTED_NOT_AUTHORIZED`.
+- G2-E4, G2-E5, and G2-E6 are
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`.
+- G2-E is `CLOSED_PASS` under the current
+  [G2-E checkpoint](docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md).
+- G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`; G2-F implementation authorization
+  is `false`.
 - Gate 2 is `NOT_CLOSED`.
 - Public release, RC2, production readiness, and production security
-  certification are not claimed.
+  certification are `NOT_CLAIMED`; real-world effects remain zero.
 
-The frozen E5 candidate exists only in the owner's original dirty worktree. It
-is absent here. These targets remain deferred until a separately authorized
-byte-exact transplant:
-
-- `hedgehog/kernel/continuous_delta_runtime_v01.py`;
-- `tests/test_continuous_delta_runtime_g2_e_v01.py`;
-- `demo/run_continuous_delta_runtime_g2_e_v01.py`.
-
-Do not copy, recreate, normalize, or partially implement that candidate. The
-committed runtime and test targets currently present are accepted pre-E5
-baseline bytes; the demo target is absent.
+The exact committed chain is E5 `f582701208b603463a03d404aa841c302a8221d6`,
+Class-A reconciliation `7f3c7138b553096252fefee7930f89100d835fcd`,
+Class-B integration `4c133da11b8bcbd642e1aaa3413ce0a9c357731d`,
+and post-successor control-plane repair
+`6079ddcfe59f582936e7b13af2753a6533117970`. The Living v1.6 and Kernel
+Conformance v0.7 runtime bytes are accepted and frozen. The next bounded
+handoff is G2-F preparation only; do not begin G2-F implementation without a
+separate explicit owner authorization.
 
 ## Worktree discipline
 
@@ -124,15 +126,15 @@ The [Successor Context Manifest](release/successor_context_manifest_v01.json)
 is `SUCCESSOR_ONBOARDING_READY`; its `onboarding_ready` value is `true` and its
 blocking-repair list is empty. S1 document-authority succession, S2 vocabulary
 repair, and S3 active-schema and retired-subsystem isolation are closed. The
-bounded successor context is architecture-clean and ready for guarded
-reintegration.
+bounded successor context is architecture-clean and ready for guarded use.
 
-Permanent assistant onboarding occurs only after the sanitation changes are
-reintegrated into the primary worktree and the three deferred E5 paths are
-verified against the owner's exact frozen hashes. The primary dirty E5
-worktree remains untouched, and the E5 transplant remains prohibited until a
-separate authorization. Retired schemas and subsystem files are historical
-byte evidence only: no compatibility, migration, alias, or revival path exists.
+The exact committed G2-E successor and its current checkpoint are permanent
+bounded onboarding inputs. The independent G2-E audit remains explicit-request
+evidence and `docs/audit_reports/**` remains excluded from automatic onboarding.
+Retired schemas and subsystem files are historical byte evidence only: no
+compatibility, migration, alias, or revival path exists. G2-E closure does not
+authorize G2-F, Gate-2 closure, public release, RC2, production readiness, or
+production security certification.
 
 Within that scope, the manifest is an allowlist, not a suggestion to load the
 whole repository. Expand context only for a named current contract, focused
@@ -151,6 +153,8 @@ python3 tools/check_active_architecture_authority_v01.py
 - Authority classification: [Document Authority Index](specs/document_authority_index_v01.json)
 - Repository Gate continuation roadmap: [accepted G2-E preflight](docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md)
 - Current G2-E contract: [post-acceptance addendum](docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md)
+- Current G2-E closure: [G2-E checkpoint](docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md)
+- Independent G2-E closure evidence (explicit request only): `docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log`
 - Current lifecycle metadata: [status overlay](release/current_status_overlay_v01.json)
 - Claim navigation: [claim-to-evidence index](release/claim_to_evidence_index.md)
 - Release spine: [engineering notes](release/current_release_notes.md),

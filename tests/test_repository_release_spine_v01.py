@@ -608,6 +608,12 @@ G2E_CLASS_B_COMMIT = "4c133da11b8bcbd642e1aaa3413ce0a9c357731d"
 G2E_CONTROL_PLANE_REPAIR_COMMIT = (
     "6079ddcfe59f582936e7b13af2753a6533117970"
 )
+G2E_CLOSURE_COMMIT = "282e319241946b34987b2533d95ed514c3d884c1"
+G2F_PREFLIGHT_PATH = "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md"
+G2F_IMPLEMENTATION_PATHS = (
+    "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py",
+    "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py",
+)
 G2E_CLOSURE_CLAIM_ID = "claim_g2e_continuous_delta_runtime_closed_pass"
 G2E_CLOSURE_AUDIT_PATH = (
     "docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log"
@@ -5640,7 +5646,7 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         "g2e_status": "NOT_CLOSED",
         "gate2_status": "NOT_CLOSED",
     }
-    assert authority_index["generated_for_head"] == G2E_CONTROL_PLANE_REPAIR_COMMIT
+    assert authority_index["generated_for_head"] == G2E_CLOSURE_COMMIT
     checkpoint_entries = [
         entry
         for entry in authority_index["current_technical_annexes"]
@@ -5680,7 +5686,7 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         }
     ]
 
-    assert manifest["base_head"] == G2E_CONTROL_PLANE_REPAIR_COMMIT
+    assert manifest["base_head"] == G2E_CLOSURE_COMMIT
     for key in (
         "always_include",
         "include_current_gate_sources",
@@ -5721,6 +5727,156 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
     assert committed_e6["g2f_status"] == "NEXT_NOT_STARTED_NOT_AUTHORIZED"
     assert committed_e6["g2f_implementation_authorized"] is False
     assert committed_e6["gate2_status"] == "NOT_CLOSED"
+
+    g2f_entries = [
+        entry
+        for entry in authority_index["current_technical_annexes"]
+        if entry["path"] == G2F_PREFLIGHT_PATH
+    ]
+    assert g2f_entries == [
+        {
+            "path": G2F_PREFLIGHT_PATH,
+            "status": "accepted_g2f_class_a_preflight_candidate",
+            "current_authority": True,
+            "authority_scope": "named_gate_contract_only",
+            "may_override_architecture_lock": False,
+            "onboarding_allowed": True,
+            "role": (
+                "current scoped G2-F constructibility and future two-path "
+                "orchestration/acceptance contract; implementation effective "
+                "only after exact owner Class-A commit and subordinate to the "
+                "Current Architecture Lock"
+            ),
+        }
+    ]
+    for key in (
+        "always_include",
+        "include_current_gate_sources",
+        "authority_documents",
+    ):
+        assert manifest[key].count(G2F_PREFLIGHT_PATH) == 1
+
+    preflight = (REPOSITORY_ROOT / G2F_PREFLIGHT_PATH).read_text(
+        encoding="utf-8"
+    )
+    ledger_rows = [
+        line
+        for line in preflight.splitlines()
+        if len(line) > 4 and line[:3].isdigit() and line[3] == "|"
+    ]
+    assert len(ledger_rows) == 174
+    assert [row[:4] for row in ledger_rows] == [
+        f"{index:03d}|" for index in range(1, 175)
+    ]
+    assert "THREAD_STATUS=DESIGN_DERIVED_CONSTRUCTIBLE" in preflight
+    assert "TRANSACTION_ID=transaction:g2f:gate2:v01" in preflight
+    assert "ROOT_SET=(root:g2f:client,root:g2f:supplier)" in preflight
+    assert "PACKET_OWNER_ROOT=root:g2f:supplier" in preflight
+    assert "DELTA_AFFECTED_ROOT_SET=(root:g2f:supplier)" in preflight
+    assert "build_transaction_outcome_envelope_v01" in preflight
+    assert "validate_multiroot_v01" in preflight
+    assert "run_fractal_runtime_v02" in preflight
+    assert "run_continuous_delta_runtime_v01" in preflight
+    assert "MISSING_RUNTIME_SEAM=false" in preflight
+    assert "OPEN_QUESTIONS=NONE" in preflight
+    assert "freshly run the exact committed" in preflight
+    assert "24-node focused suite" in preflight
+    assert "direct canonical report receipt" in preflight
+    for marker in (
+        "DISTINCT_FRESH_ROOT_REVIEW_CHAINS=5",
+        "INITIAL_TRANSACTION_ROOT_SET_BINDING=EXACT_DETERMINISTIC_SCENARIO_VALUES",
+        "NONEXISTENT_CURRENT_G2F_VALIDATOR_REFERENCES=0",
+        "STALE_PACKET_AUTHORIZATION_CONTRIBUTION_REUSE=false",
+        "STALE_PACKET_AUTHORIZATION_DECISION_REUSE=false",
+        "STALE_INVALIDATION_ROOT_DECISION_REUSE=false",
+        "UNBOUND_LITERAL_INVALIDATION_EVIDENCE=false",
+        "STALE_REVOCATION_ROOT_INPUT_REUSE=false",
+        "STALE_REVOCATION_ROOT_RESULT_REUSE=false",
+        "STALE_SUCCESSOR_ROOT_PROJECTION_REUSE=false",
+        "STALE_SUPERSESSION_ROOT_PROJECTION_REUSE=false",
+        "STALE_ORIGINAL_PACKET_TRANSITION_EVENT_REUSE=false",
+        "STALE_REVOCATION_TRANSITION_EVENT_REUSE=false",
+        "STALE_SUCCESSOR_ACTIVATION_EVENT_REUSE=false",
+        "STALE_SUCCESSOR_DISPOSITION_EVENT_REUSE=false",
+        "STALE_PREDECESSOR_SUPERSESSION_EVENT_REUSE=false",
+        "REVOCATION_BOUND_TO_G2E_INVALIDATION=true",
+        "FUTURE_G2F_REPORT_VALIDATOR_REQUIRED",
+    ):
+        assert marker in preflight
+    assert "G2F_cross_stage_validator" not in preflight
+    for artifact in (
+        "packet_authorization_actor_contribution",
+        "packet_authorization_root_decision_input",
+        "packet_authorization_root_decision_result",
+        "invalidation_acceptance_actor_contribution",
+        "invalidation_acceptance_root_decision_input",
+        "invalidation_acceptance_root_decision_result",
+        "revocation_review_root_decision_input",
+        "revocation_review_root_decision_result",
+        "revocation_review_root_candidate_projection",
+        "successor_authorization_root_decision_input",
+        "successor_authorization_root_decision_result",
+        "successor_authorization_root_candidate_projection",
+        "supersession_review_root_decision_input",
+        "supersession_review_root_decision_result",
+        "supersession_review_root_candidate_projection",
+        "original_activation_transition_event",
+        "original_queue_transition_event",
+        "original_pending_transition_event",
+        "fresh_revocation_transition_event",
+        "successor_activation_transition_event",
+        "successor_activation_disposition_event",
+        "predecessor_supersession_transition_event",
+    ):
+        assert sum(f"|{artifact}|" in row for row in ledger_rows) == 1
+
+    class_a_paths = {
+        G2F_PREFLIGHT_PATH,
+        "specs/current_architecture_lock_v01.md",
+        "specs/document_authority_index_v01.json",
+        "release/successor_context_manifest_v01.json",
+        "tools/check_active_architecture_authority_v01.py",
+        "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+    }
+    succession = manifest["g2f_class_a_succession"]
+    assert succession["basis_head"] == G2E_CLOSURE_COMMIT
+    assert {entry["path"] for entry in succession["class_a_paths"]} == (
+        class_a_paths
+    )
+    assert {
+        entry["path"] for entry in succession["future_implementation_paths"]
+    } == set(G2F_IMPLEMENTATION_PATHS)
+    assert len(succession["future_closure_paths"]) == 14
+    overlapping = [
+        entry
+        for entry in succession["future_closure_paths"]
+        if entry["path"] in class_a_paths - {G2F_PREFLIGHT_PATH}
+    ]
+    assert len(overlapping) == 6
+    assert all(
+        entry.get("predecessor")
+        == "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+        and "predecessor_sha256" not in entry
+        for entry in overlapping
+    )
+    assert succession["owner_commit_boundaries"] == [
+        "CLASS_A_EXACT_SEVEN_PATHS",
+        "IMPLEMENTATION_EXACT_TWO_PATHS",
+        "CLOSURE_EXACT_FOURTEEN_PATHS",
+    ]
+    assert succession["runtime_implementation_performed"] is False
+    assert succession["repository_g2f_lifecycle_status"] == (
+        "NEXT_NOT_STARTED_NOT_AUTHORIZED"
+    )
+    assert succession["gate2_status"] == "NOT_CLOSED"
+    assert succession["public_release_status"] == "NOT_CLAIMED"
+    assert succession["rc2_status"] == "NOT_CLAIMED"
+    assert succession["production_readiness_status"] == "NOT_CLAIMED"
+    assert succession["production_security_certification_status"] == (
+        "NOT_CLAIMED"
+    )
+    assert succession["real_world_effects_count"] == 0
 
 
 def test_g2e6_class_a_geometry_paths_and_call_ownership_are_exact() -> None:

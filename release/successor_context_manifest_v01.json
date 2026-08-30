@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "base_head": "6079ddcfe59f582936e7b13af2753a6533117970",
+  "base_head": "282e319241946b34987b2533d95ed514c3d884c1",
   "manifest_status": "SUCCESSOR_ONBOARDING_READY",
   "onboarding_ready": true,
   "blocking_repairs": [],
-  "purpose": "Architecture-clean bounded successor context after S1 document-authority succession, S2 vocabulary repair, S3 active-schema and retired-subsystem isolation, guarded reintegration, the exact committed E5 implementation basis, and the exact committed G2-E6 successor basis. The current G2-E closure checkpoint is onboarded for bounded G2-F preparation. This manifest does not authorize G2-F implementation, close Gate 2, or claim public release, RC2, production readiness, production security certification, runtime authority, or architecture authority.",
+  "purpose": "Architecture-clean bounded successor context after S1 document-authority succession, S2 vocabulary repair, S3 active-schema and retired-subsystem isolation, guarded reintegration, the exact committed E5 implementation basis, and the exact committed G2-E6 successor basis. The current G2-E closure checkpoint and corrected G2-F Class-A preflight candidate are onboarded for bounded owner review. This manifest does not authorize G2-F implementation, close Gate 2, or claim public release, RC2, production readiness, production security certification, runtime authority, or architecture authority.",
   "always_include": [
     "AGENTS.md",
     "README.md",
@@ -25,6 +25,7 @@
     "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md",
+    "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
     "hedgehog/__init__.py",
     "hedgehog/context_packets.py",
     "hedgehog/drs.py",
@@ -104,6 +105,7 @@
     "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md",
+    "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
     "hedgehog/__init__.py",
     "hedgehog/context_packets.py",
     "hedgehog/drs.py",
@@ -397,12 +399,153 @@
     "production_security_certification_status": "NOT_CLAIMED",
     "real_world_effects_count": 0
   },
+  "g2f_class_a_succession": {
+    "basis_head": "282e319241946b34987b2533d95ed514c3d884c1",
+    "preflight_path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+    "preflight_status": "ACCEPTED_CLASS_A_CANDIDATE",
+    "classification": "ORCHESTRATION_AND_ACCEPTANCE_ONLY",
+    "class_a_paths": [
+      {
+        "path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+        "action": "ADD"
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "action": "MODIFY"
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "action": "MODIFY"
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "action": "MODIFY"
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "action": "MODIFY"
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "action": "MODIFY"
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "action": "MODIFY"
+      }
+    ],
+    "future_implementation_paths": [
+      {
+        "path": "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py",
+        "action": "ADD"
+      },
+      {
+        "path": "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py",
+        "action": "ADD"
+      }
+    ],
+    "implementation_authorization": "EFFECTIVE_ONLY_AFTER_EXACT_OWNER_CLASS_A_COMMIT",
+    "future_closure_paths": [
+      {
+        "path": "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+        "action": "ADD",
+        "predecessor": "ABSENT"
+      },
+      {
+        "path": "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+        "action": "ADD",
+        "predecessor": "ABSENT"
+      },
+      {
+        "path": "AGENTS.md",
+        "action": "MODIFY",
+        "predecessor_sha256": "7d2bc7d21a5a899a1f58abf364a7d1ae6cc015ffec425b7b46674d85d58a083e"
+      },
+      {
+        "path": "README.md",
+        "action": "MODIFY",
+        "predecessor_sha256": "05f22aa7624e20d01e080bd6efd5bab6a637283c7d715a11f9f414c27972efa5"
+      },
+      {
+        "path": "release/current_status_overlay_v01.json",
+        "action": "MODIFY",
+        "predecessor_sha256": "05ad2f3a36632d2332fe9d6d5a08b5da3341afb6568088d1f51724b8d566f6f1"
+      },
+      {
+        "path": "release/claim_to_evidence_index.md",
+        "action": "MODIFY",
+        "predecessor_sha256": "85dd82c735f2183e1587a8a93e0b53a1bc30e910c39fc96268c462ddad09c6f6"
+      },
+      {
+        "path": "release/current_limitations.md",
+        "action": "MODIFY",
+        "predecessor_sha256": "7f8b8e65a29430425148aa16bc7764fe2accc3752aa98ac0140d9606acdb8885"
+      },
+      {
+        "path": "release/current_release_notes.md",
+        "action": "MODIFY",
+        "predecessor_sha256": "0af690fce0bd46137114f6b8d8ceeb8c489edc212124b343164b054396ed4347"
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "action": "MODIFY",
+        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "action": "MODIFY",
+        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "action": "MODIFY",
+        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "action": "MODIFY",
+        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "action": "MODIFY",
+        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "action": "MODIFY",
+        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      }
+    ],
+    "frozen_path_classes": [
+      "ALL_CURRENT_G2A_THROUGH_G2E_RUNTIME_RUNNER_TEST_AUDIT_CHECKPOINT_BYTES",
+      "ALL_E5_AND_E6_BYTES",
+      "ALL_SCHEMAS_AND_LIVING_CONFORMANCE_BYTES",
+      "COMPLETION_MANIFEST_AND_INTEGRATION_SEAM_INDEX",
+      "PROVIDER_MODEL_NETWORK_CONNECTOR_ADAPTER_PATHS",
+      "EVERY_UNLISTED_PATH"
+    ],
+    "owner_commit_boundaries": [
+      "CLASS_A_EXACT_SEVEN_PATHS",
+      "IMPLEMENTATION_EXACT_TWO_PATHS",
+      "CLOSURE_EXACT_FOURTEEN_PATHS"
+    ],
+    "runtime_implementation_performed": false,
+    "repository_g2f_lifecycle_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+    "gate2_status": "NOT_CLOSED",
+    "public_release_status": "NOT_CLAIMED",
+    "rc2_status": "NOT_CLAIMED",
+    "production_readiness_status": "NOT_CLAIMED",
+    "production_security_certification_status": "NOT_CLAIMED",
+    "real_world_effects_count": 0
+  },
   "authority_documents": [
     "specs/current_architecture_lock_v01.md",
     "specs/document_authority_index_v01.json",
     "release/successor_context_manifest_v01.json",
     "docs/continuous_delta_runtime_v0_1_g2_e6_sanitized_basis_reconciliation_addendum_v01.md",
     "docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md",
+    "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
     "AGENTS.md",
     "README.md"
   ],

@@ -20,6 +20,7 @@ GUARD_PATH = REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py
 E5_IMPLEMENTATION_BASIS_COMMIT = "f582701208b603463a03d404aa841c302a8221d6"
 G2E_CLASS_A_COMMIT = "7f3c7138b553096252fefee7930f89100d835fcd"
 G2E_CLOSURE_BASIS_COMMIT = "6079ddcfe59f582936e7b13af2753a6533117970"
+G2E_CLOSURE_COMMIT = "282e319241946b34987b2533d95ed514c3d884c1"
 CLASS_A_PATHS = (
     (
         "docs/continuous_delta_runtime_v0_1_"
@@ -54,6 +55,19 @@ CLASS_D_PATHS = (
     "tools/check_active_architecture_authority_v01.py",
     "tests/test_active_architecture_authority_v01.py",
     "tests/test_repository_release_spine_v01.py",
+)
+G2F_CLASS_A_PATHS = (
+    "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+    "specs/current_architecture_lock_v01.md",
+    "specs/document_authority_index_v01.json",
+    "release/successor_context_manifest_v01.json",
+    "tools/check_active_architecture_authority_v01.py",
+    "tests/test_active_architecture_authority_v01.py",
+    "tests/test_repository_release_spine_v01.py",
+)
+G2F_IMPLEMENTATION_PATHS = (
+    "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py",
+    "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py",
 )
 COMMITTED_E5_PATHS = (
     "hedgehog/kernel/continuous_delta_runtime_v01.py",
@@ -318,7 +332,11 @@ def test_clean_worktree_control_plane_passes() -> None:
 
     assert completed.returncode == 0, completed.stdout
     dirty_paths = _short_status_paths(REPOSITORY_ROOT)
-    if dirty_paths:
+    g2f_output = ""
+    if dirty_paths == set(G2F_CLASS_A_PATHS):
+        lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
+        g2f_output = "G2F_PHASE=G2F_CLASS_A_CANDIDATE\n"
+    elif dirty_paths:
         assert dirty_paths == set(CLASS_D_PATHS)
         lifecycle_mode = "G2E_CLOSED_PASS_CANDIDATE"
     else:
@@ -328,6 +346,7 @@ def test_clean_worktree_control_plane_passes() -> None:
         "CURRENT_PHASE=POST_E6_SUCCESSOR\n"
         "LIFECYCLE_PHASE=G2E_CLOSED_PASS\n"
         f"LIFECYCLE_MODE={lifecycle_mode}\n"
+        f"{g2f_output}"
     )
     assert completed.stderr == ""
 
@@ -2015,7 +2034,9 @@ def test_focused_test_phase_cannot_lag_source_phase() -> None:
     assert "e6.phase.post.focused_test_phase" in failures
 
 
-def test_class_a_and_class_b_path_sets_are_exact_and_disjoint() -> None:
+def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
+    tmp_path: Path,
+) -> None:
     namespace = _phase_contract_namespace()
     assert namespace["CLASS_A_RECONCILIATION_PATHS"] == frozenset(
         {
@@ -2135,6 +2156,623 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint() -> None:
     assert "g2e.closure.candidate.worktree.unexpected:unexpected.txt" in (
         extra_failures
     )
+
+    assert namespace["G2F_CLASS_A_PATHS"] == frozenset(G2F_CLASS_A_PATHS)
+    assert namespace["G2F_IMPLEMENTATION_PATHS"] == frozenset(
+        G2F_IMPLEMENTATION_PATHS
+    )
+    assert len(namespace["G2F_CLASS_A_PATHS"]) == 7
+    assert len(namespace["G2F_IMPLEMENTATION_PATHS"]) == 2
+    assert len(namespace["G2F_CLOSURE_PATHS"]) == 14
+    assert len(namespace["G2F_CLOSURE_OVERLAP_PATHS"]) == 6
+    assert not (
+        namespace["G2F_IMPLEMENTATION_PATHS"]
+        & namespace["G2F_CLASS_A_PATHS"]
+    )
+
+    class_a_candidate = tuple(
+        (
+            "??" if path.endswith("g2_f_preflight_v01.md") else " M",
+            path,
+            None,
+        )
+        for path in sorted(G2F_CLASS_A_PATHS)
+    )
+    g2f_classifier = namespace["_classify_g2f_path_ledger_v01"]
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=G2E_CLOSURE_COMMIT,
+        parent=G2E_CLOSURE_BASIS_COMMIT,
+        grandparent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        branch="main",
+        origin_main=G2E_CLOSURE_COMMIT,
+        worktree_entries=class_a_candidate,
+        head_commit_entries=(),
+        parent_commit_entries=(),
+    )
+    assert mode == "G2F_CLASS_A_CANDIDATE"
+    assert failures == ()
+
+    _mode, missing_failures = g2f_classifier(
+        requested=True,
+        head=G2E_CLOSURE_COMMIT,
+        parent=G2E_CLOSURE_BASIS_COMMIT,
+        grandparent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        branch="main",
+        origin_main=G2E_CLOSURE_COMMIT,
+        worktree_entries=class_a_candidate[1:],
+        head_commit_entries=(),
+        parent_commit_entries=(),
+    )
+    assert any("class_a_candidate.worktree.missing" in item for item in missing_failures)
+
+    _mode, extra_failures = g2f_classifier(
+        requested=True,
+        head=G2E_CLOSURE_COMMIT,
+        parent=G2E_CLOSURE_BASIS_COMMIT,
+        grandparent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        branch="main",
+        origin_main=G2E_CLOSURE_COMMIT,
+        worktree_entries=(*class_a_candidate, ("??", "unexpected.txt", None)),
+        head_commit_entries=(),
+        parent_commit_entries=(),
+    )
+    assert "g2f.class_a_candidate.worktree.unexpected:unexpected.txt" in extra_failures
+
+    class_a_commit = "a" * 40
+    class_a_committed = {
+        path: "A" if path.endswith("g2_f_preflight_v01.md") else "M"
+        for path in G2F_CLASS_A_PATHS
+    }
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert mode == "G2F_CLASS_A_COMMITTED"
+    assert failures == ()
+
+    implementation_candidate = tuple(
+        ("??", path, None) for path in sorted(G2F_IMPLEMENTATION_PATHS)
+    )
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        worktree_entries=implementation_candidate,
+        head_commit_entries=_ledger_entries(class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert mode == "G2F_IMPLEMENTATION_CANDIDATE"
+    assert failures == ()
+
+    _mode, missing_failures = g2f_classifier(
+        requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        worktree_entries=implementation_candidate[1:],
+        head_commit_entries=_ledger_entries(class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert any("implementation_candidate.worktree.missing" in item for item in missing_failures)
+
+    _mode, extra_failures = g2f_classifier(
+        requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        worktree_entries=(*implementation_candidate, ("??", "extra.py", None)),
+        head_commit_entries=_ledger_entries(class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert "g2f.implementation_candidate.worktree.unexpected:extra.py" in extra_failures
+
+    implementation_commit = "b" * 40
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=implementation_commit,
+        parent=class_a_commit,
+        grandparent=G2E_CLOSURE_COMMIT,
+        branch="main",
+        origin_main=implementation_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(
+            {path: "A" for path in G2F_IMPLEMENTATION_PATHS}
+        ),
+        parent_commit_entries=_ledger_entries(class_a_committed),
+    )
+    assert mode == "G2F_IMPLEMENTATION_COMMITTED"
+    assert failures == ()
+
+    third_descendant = "c" * 40
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=third_descendant,
+        parent=implementation_commit,
+        grandparent=class_a_commit,
+        branch="main",
+        origin_main=third_descendant,
+        worktree_entries=(),
+        head_commit_entries=(),
+        parent_commit_entries=_ledger_entries(
+            {path: "A" for path in G2F_IMPLEMENTATION_PATHS}
+        ),
+    )
+    assert mode == "G2F_INVALID"
+    assert "g2f.third_descendant_or_basis_not_exact" in failures
+
+    _mode, merge_failures = g2f_classifier(
+        requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(class_a_committed),
+        parent_commit_entries=(),
+        parent_count=2,
+    )
+    assert "g2f.merge_or_parent_count:2" in merge_failures
+
+    closure_classifier = namespace["_classify_g2e_closure_path_ledger_v01"]
+    _mode, unapproved_ignore_failures = closure_classifier(
+        closure_requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        subject="Prepare G2-F Class A",
+        committed_entries=_ledger_entries(
+            {**class_a_and_b, **class_d_committed, **class_a_committed}
+        ),
+        worktree_entries=(),
+        closure_commit_entries=_ledger_entries(class_d_committed),
+        g2e_closure_ancestor=True,
+        g2f_topology_passed=False,
+    )
+    assert any(
+        "g2e.closure.committed.cumulative.unexpected" in item
+        for item in unapproved_ignore_failures
+    )
+    _mode, approved_ignore_failures = closure_classifier(
+        closure_requested=True,
+        head=class_a_commit,
+        parent=G2E_CLOSURE_COMMIT,
+        branch="main",
+        origin_main=class_a_commit,
+        subject="Prepare G2-F Class A",
+        committed_entries=_ledger_entries(
+            {**class_a_and_b, **class_d_committed, **class_a_committed}
+        ),
+        worktree_entries=(),
+        closure_commit_entries=_ledger_entries(class_d_committed),
+        g2e_closure_ancestor=True,
+        g2f_topology_passed=True,
+    )
+    assert approved_ignore_failures == ()
+
+    missing_preflight_root = tmp_path / "removed_preflight"
+    missing_preflight_root.mkdir()
+    missing_preflight_failures: list[str] = []
+    namespace["_validate_g2f_class_a_contract_v01"](
+        missing_preflight_root,
+        {},
+        {},
+        missing_preflight_failures,
+        g2f_active=True,
+    )
+    assert any(
+        item.startswith("g2f.class_a.preflight.read:")
+        for item in missing_preflight_failures
+    )
+
+    preflight = (REPOSITORY_ROOT / G2F_CLASS_A_PATHS[0]).read_text(
+        encoding="utf-8"
+    )
+    construction_rows = [
+        line
+        for line in preflight.splitlines()
+        if len(line) > 4 and line[:3].isdigit() and line[3] == "|"
+    ]
+    assert len(construction_rows) == 174
+    assert [row[:4] for row in construction_rows] == [
+        f"{index:03d}|" for index in range(1, 175)
+    ]
+    assert "TRANSACTION_ID=transaction:g2f:gate2:v01" in preflight
+    assert "ROOT_SET=(root:g2f:client,root:g2f:supplier)" in preflight
+    assert "PACKET_OWNER_ROOT=root:g2f:supplier" in preflight
+    assert "DELTA_AFFECTED_ROOT_SET=(root:g2f:supplier)" in preflight
+    assert "THREAD_STATUS=DESIGN_DERIVED_CONSTRUCTIBLE" in preflight
+    assert "MISSING_RUNTIME_SEAM=false" in preflight
+    assert "OPEN_QUESTIONS=NONE" in preflight
+    assert "24-node focused suite" in preflight
+    assert "direct canonical report receipt" in preflight
+    for marker in (
+        "DISTINCT_FRESH_ROOT_REVIEW_CHAINS=5",
+        "INITIAL_TRANSACTION_ROOT_SET_BINDING=EXACT_DETERMINISTIC_SCENARIO_VALUES",
+        "NONEXISTENT_CURRENT_G2F_VALIDATOR_REFERENCES=0",
+        "STALE_PACKET_AUTHORIZATION_CONTRIBUTION_REUSE=false",
+        "STALE_PACKET_AUTHORIZATION_DECISION_REUSE=false",
+        "STALE_INVALIDATION_ROOT_DECISION_REUSE=false",
+        "UNBOUND_LITERAL_INVALIDATION_EVIDENCE=false",
+        "STALE_REVOCATION_ROOT_INPUT_REUSE=false",
+        "STALE_REVOCATION_ROOT_RESULT_REUSE=false",
+        "STALE_SUCCESSOR_ROOT_PROJECTION_REUSE=false",
+        "STALE_SUPERSESSION_ROOT_PROJECTION_REUSE=false",
+        "STALE_ORIGINAL_PACKET_TRANSITION_EVENT_REUSE=false",
+        "STALE_REVOCATION_TRANSITION_EVENT_REUSE=false",
+        "STALE_SUCCESSOR_ACTIVATION_EVENT_REUSE=false",
+        "STALE_SUCCESSOR_DISPOSITION_EVENT_REUSE=false",
+        "STALE_PREDECESSOR_SUPERSESSION_EVENT_REUSE=false",
+        "REVOCATION_BOUND_TO_G2E_INVALIDATION=true",
+        "FUTURE_G2F_REPORT_VALIDATOR_REQUIRED",
+    ):
+        assert marker in preflight
+    assert "G2F_cross_stage_validator" not in preflight
+    for artifact in (
+        "packet_authorization_actor_contribution",
+        "packet_authorization_root_decision_input",
+        "packet_authorization_root_decision_result",
+        "invalidation_acceptance_actor_contribution",
+        "invalidation_acceptance_root_decision_input",
+        "invalidation_acceptance_root_decision_result",
+        "revocation_review_root_decision_input",
+        "revocation_review_root_decision_result",
+        "revocation_review_root_candidate_projection",
+        "successor_authorization_root_decision_input",
+        "successor_authorization_root_decision_result",
+        "successor_authorization_root_candidate_projection",
+        "supersession_review_root_decision_input",
+        "supersession_review_root_decision_result",
+        "supersession_review_root_candidate_projection",
+        "original_activation_transition_event",
+        "original_queue_transition_event",
+        "original_pending_transition_event",
+        "fresh_revocation_transition_event",
+        "successor_activation_transition_event",
+        "successor_activation_disposition_event",
+        "predecessor_supersession_transition_event",
+    ):
+        assert sum(f"|{artifact}|" in row for row in construction_rows) == 1
+    closure_section = preflight.split("### Audit and closure", 1)[1]
+    for stale_hash in (
+        "649a32ffbf623436fe0ad38d16173b7dcf6c3851f8b3aa07c89438d926f7069a",
+        "f9a8dae2bce0da087ea37232e55ca55eaea07bbf55b5ea8412b8d308006600ba",
+        "baf0da8f89a1908862532810cdf346359212bdac9b1cb7d73bb64fabc4015a93",
+        "77114107f4fed8b262a4a9db79a0e53e9d9d236a2212d89d7204305ebbf61056",
+        "0fe4ab13426d6775645c5557bd5ba41fb17681a36beeb80d69cdf84ff972fce3",
+        "a27e490cdbdc30ddb1dd4e87b63d932b012ef40100993859fcf4e30bd140ba3a",
+    ):
+        assert stale_hash not in closure_section
+    assert closure_section.count(
+        "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+    ) == 6
+
+    authority_index = json.loads(
+        (REPOSITORY_ROOT / "specs/document_authority_index_v01.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    preflight_entries = [
+        entry
+        for entry in authority_index["current_technical_annexes"]
+        if entry["path"] == G2F_CLASS_A_PATHS[0]
+    ]
+    assert len(preflight_entries) == 1
+    assert preflight_entries[0]["authority_scope"] == "named_gate_contract_only"
+    assert preflight_entries[0]["may_override_architecture_lock"] is False
+
+    manifest = json.loads(
+        (REPOSITORY_ROOT / "release/successor_context_manifest_v01.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    succession = manifest["g2f_class_a_succession"]
+    assert succession["basis_head"] == G2E_CLOSURE_COMMIT
+    assert {entry["path"] for entry in succession["class_a_paths"]} == set(
+        G2F_CLASS_A_PATHS
+    )
+    assert {
+        entry["path"] for entry in succession["future_implementation_paths"]
+    } == set(G2F_IMPLEMENTATION_PATHS)
+    assert len(succession["future_closure_paths"]) == 14
+    assert succession["runtime_implementation_performed"] is False
+    assert succession["repository_g2f_lifecycle_status"] == (
+        "NEXT_NOT_STARTED_NOT_AUTHORIZED"
+    )
+    assert succession["gate2_status"] == "NOT_CLOSED"
+
+    runner_lines = [
+        "from __future__ import annotations",
+        "import json",
+        "import hedgehog.reuse_certificate_v01 as reuse",
+        "import hedgehog.drs_memory_resolution_v01 as drs",
+        "import hedgehog.kernel.execution_mode_router_v01 as router",
+        "import hedgehog.kernel.multiroot_v01 as multiroot",
+        "import hedgehog.kernel.fractal_runtime_v02 as fractal",
+        "import hedgehog.kernel.semantic_work_v01 as semantic",
+        "import hedgehog.kernel.root_decision_v01 as root_decision",
+        "import hedgehog.action_commit_packet_v02 as packet",
+        "import hedgehog.kernel.continuous_delta_runtime_v01 as delta",
+        "",
+        "def collect_consolidated_gate2_gauntlet_g2_f_v01():",
+        "    shortcut = reuse.validate_existing_root_shortcut_decision_v01(object(), object(), object(), object())",
+        "    action_rejection = drs.evaluate_drs_candidate_v01(object(), object(), object())",
+        "    client_route = router.route_execution_mode_v01(object(), object())",
+        "    supplier_route = router.route_execution_mode_v01(object(), object())",
+        "    client_review = router.review_execution_mode_proposal_v01(object(), object(), object(), object(), object(), object())",
+        "    supplier_review = router.review_execution_mode_proposal_v01(object(), object(), object(), object(), object(), object())",
+        "    outcome = multiroot.build_transaction_outcome_envelope_v01(transaction_id='transaction:g2f:gate2:v01', expected_root_ids=('root:g2f:client', 'root:g2f:supplier'), root_decisions=(client_review, supplier_review), cross_root_evidence_refs=())",
+        "    outcome_errors = multiroot.validate_transaction_outcome_envelope_v01(outcome)",
+        "    outcome_validation = multiroot.validate_multiroot_v01(outcome)",
+        "    client_runtime = fractal.run_fractal_runtime_v02(source_context=client_route)",
+        "    supplier_runtime = fractal.run_fractal_runtime_v02(source_context=supplier_route)",
+    ]
+    for index in range(5):
+        runner_lines.append(
+            f"    request_{index} = semantic.build_semantic_work_request_v01(request_id='request:{index}', transaction_id='transaction:g2f:gate2:v01', target_root_id='root:g2f:supplier', runtime_topology_ref='candidate:{index}', bounded_context_refs=(), permitted_actor_ids=(), permitted_contribution_modes=(), requested_subjects=(), required_evidence_classes=(), forbidden_claims=())"
+        )
+    for index in range(5):
+        runner_lines.append(
+            f"    decision_input_{index} = root_decision.build_root_decision_input_v01(transaction_id='transaction:g2f:gate2:v01', target_root_id='root:g2f:supplier', root_review_packet=request_{index}, post_vv_bundle=object(), gt_advisory=object(), policy_state=object(), permission_state=object(), temporal_state=object(), conflict_state=object(), prior_root_state=object())"
+        )
+        runner_lines.append(
+            f"    decision_{index} = root_decision.decide_root_v01(kernel=object(), decision_input=decision_input_{index})"
+        )
+    for index in range(4):
+        runner_lines.append(
+            f"    projection_{index} = packet.build_root_decision_candidate_projection_v01(candidate_kind='PACKET_AUTHORIZATION', projected_candidate_id='candidate:{index}', root_decision_kernel=object(), root_decision_input=decision_input_{index}, root_decision_result=decision_{index})"
+        )
+    runner_lines.extend(
+        [
+            "    packet_0 = packet.build_supplier_root_bound_action_commit_packet_v02_projection_v01(canonical_projection=object(), root_decision_projection=projection_0)",
+            "    packet_1 = packet.build_supplier_root_bound_action_commit_packet_v02_projection_v01(canonical_projection=object(), root_decision_projection=projection_2)",
+            "    registry_0 = packet.record_action_packet_genesis_v01(object(), root_bound_genesis=packet_0, action_packet_transition_registry_profile=object())",
+            "    registry_1 = packet.record_action_packet_genesis_v01(registry_0, root_bound_genesis=packet_1, action_packet_transition_registry_profile=object())",
+        ]
+    )
+    for index in range(8):
+        runner_lines.append(
+            f"    event_{index} = packet.build_action_packet_transition_event_v01(action_packet_transition_registry_profile=object(), transition_rule_id='event:{index}', packet_id='packet:{index}', idempotency_key='key', previous_transition_event_id=None, owning_local_root_id='root:g2f:supplier', root_decision_ref='decision', transition_evidence_bindings=(), dependency_set_candidate_fingerprint='fingerprint', temporal_authority_fingerprint='temporal', evaluation_time={index}, evaluation_time_source='deterministic', evaluation_context_id='g2f', execution_attempt_identity=None, receipt_ref=None)"
+        )
+    runner_lines.extend(
+        [
+            "    registry_2 = packet.activate_action_packet_lifecycle_v01(registry_1, packet_id='packet:0', transition_event=event_0, disposition_event=object(), action_packet_transition_registry_profile=object())",
+            "    registry_3 = packet.append_action_packet_lifecycle_transition_v01(registry_2, packet_id='packet:0', transition_event=event_1, action_packet_transition_registry_profile=object())",
+            "    registry_4 = packet.append_action_packet_lifecycle_transition_v01(registry_3, packet_id='packet:0', transition_event=event_2, action_packet_transition_registry_profile=object())",
+            "    registry_5 = packet.append_action_packet_lifecycle_transition_v01(registry_4, packet_id='packet:1', transition_event=event_6, action_packet_transition_registry_profile=object())",
+            "    registry_6 = packet.append_action_packet_lifecycle_transition_v01(registry_5, packet_id='packet:1', transition_event=event_7, action_packet_transition_registry_profile=object())",
+            "    pending = packet.inspect_action_packet_present_eligibility_v01(registry_4, packet_id='packet:0', corridor=object(), corridor_step=object(), current_dependency_observations=(), logical_time_bridge=object(), evaluation_time=1, evaluation_time_source='deterministic', evaluation_context_id='g2f')",
+            "    changed = delta.run_continuous_delta_runtime_v01(source_context=object(), source_bindings=(), changed_field_bindings=(), changed_artifact_bindings=(), delta=object(), dependency_edges=(), dependency_graph=object())",
+            "    preliminary = packet.build_action_invalidation_evidence_v01(source_invalidation_event_ref='preliminary', packet_id='packet:0', dependency_id='dependency', invalidation_class='DEPENDENCY_CHANGED', evidence_ref='evidence', evidence_sha256='0' * 64, observed_status='CHANGED', time_envelope_id='time', freshness_policy_id='fresh', owning_local_root_id='root:g2f:supplier', accepted_by_local_root_id='root:g2f:supplier', authority_effect='DETERMINISTIC_BLOCK', evaluation_time=1, evaluation_time_source='deterministic', evaluation_context_id='g2f')",
+            "    revocation_evidence = packet.build_action_invalidation_evidence_v01(source_invalidation_event_ref='g2e', packet_id='packet:0', dependency_id='dependency', invalidation_class='ROOT_REVOCATION', evidence_ref='binding', evidence_sha256='1' * 64, observed_status='ACCEPTED', time_envelope_id='time', freshness_policy_id='fresh', owning_local_root_id='root:g2f:supplier', accepted_by_local_root_id='root:g2f:supplier', acceptance_root_decision_id='2' * 64, acceptance_root_decision_hash='3' * 64, authority_effect='ROOT_REVOCATION', root_decision_ref='2' * 64, evaluation_time=2, evaluation_time_source='deterministic', evaluation_context_id='g2f')",
+            "    supersession_evidence = packet.build_action_invalidation_evidence_v01(source_invalidation_event_ref='g2e', packet_id='packet:0', dependency_id='dependency', invalidation_class='ROOT_SUPERSESSION', evidence_ref='binding', evidence_sha256='4' * 64, observed_status='ACCEPTED', time_envelope_id='time', freshness_policy_id='fresh', owning_local_root_id='root:g2f:supplier', accepted_by_local_root_id='root:g2f:supplier', acceptance_root_decision_id='5' * 64, acceptance_root_decision_hash='6' * 64, authority_effect='ROOT_SUPERSESSION', root_decision_ref='5' * 64, evaluation_time=3, evaluation_time_source='deterministic', evaluation_context_id='g2f')",
+            "    revoked = packet.record_action_packet_revocation_v01(registry_4, packet_id='packet:0', revocation_candidate=object(), revocation_root_projection=projection_1, accepted_revocation_binding=object(), invalidation_evidence=revocation_evidence, transition_event=event_3, action_packet_transition_registry_profile=object())",
+            "    revoked_present = packet.inspect_action_packet_present_eligibility_v01(revoked, packet_id='packet:0', corridor=object(), corridor_step=object(), current_dependency_observations=(), logical_time_bridge=object(), evaluation_time=2, evaluation_time_source='deterministic', evaluation_context_id='g2f')",
+            "    superseded = packet.record_action_packet_supersession_v01(registry_6, predecessor_packet_id='packet:0', successor_packet_id='packet:1', supersession_candidate=object(), supersession_root_projection=projection_3, accepted_supersession_binding=object(), invalidation_evidence=supersession_evidence, successor_activation_event=event_4, disposition_event=object(), action_packet_transition_registry_profile=object(), predecessor_supersession_event=event_5)",
+            "    replay = packet.replay_action_packet_lifecycle_history_v01(superseded, packet_id='packet:0')",
+            "    rejected_present = packet.inspect_action_packet_present_eligibility_v01(superseded, packet_id='packet:0', corridor=object(), corridor_step=object(), current_dependency_observations=(), logical_time_bridge=object(), evaluation_time=3, evaluation_time_source='deterministic', evaluation_context_id='g2f')",
+            "    report = {'transaction_id': 'transaction:g2f:gate2:v01', 'root_decisions': (client_review, supplier_review), 'shortcut': shortcut, 'action_rejection': action_rejection, 'outcome_errors': outcome_errors, 'outcome_validation': outcome_validation, 'runtime': (client_runtime, supplier_runtime), 'pending': pending, 'delta': changed, 'preliminary_invalidation': preliminary, 'revoked_present': revoked_present, 'replay': replay, 'rejected_present': rejected_present}",
+            "    if not validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):",
+            "        raise ValueError('g2f_report_invalid')",
+            "    return report",
+            "",
+            "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):",
+            "    return isinstance(report, dict) and report.get('transaction_id') == 'transaction:g2f:gate2:v01' and len(report.get('root_decisions', ())) == 2",
+            "",
+            "def consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01(report):",
+            "    return {'transaction_id': report['transaction_id'], 'root_count': len(report['root_decisions'])}",
+            "",
+            "def render_consolidated_gate2_gauntlet_g2_f_v01(report):",
+            "    return json.dumps(consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01(report), sort_keys=True, separators=(',', ':')) + '\\n'",
+            "",
+            "def main():",
+            "    report = collect_consolidated_gate2_gauntlet_g2_f_v01()",
+            "    if not validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):",
+            "        return 1",
+            "    print(render_consolidated_gate2_gauntlet_g2_f_v01(report), end='')",
+            "    return 0",
+            "",
+        ]
+    )
+    positive_runner = "\n".join(runner_lines)
+    test_lines = [
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner",
+        "",
+    ]
+    for index, test_id in enumerate(namespace["G2F_FOCUSED_TEST_IDS"]):
+        test_lines.extend(
+            [
+                f"def test_{test_id}():",
+                "    report = runner.collect_consolidated_gate2_gauntlet_g2_f_v01()",
+                (
+                    "    assert runner.validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)"
+                    if index == 0
+                    else "    assert report['transaction_id'] == 'transaction:g2f:gate2:v01'"
+                ),
+                "",
+            ]
+        )
+    positive_tests = "\n".join(test_lines)
+
+    future_root = tmp_path / "future_contract"
+    runner_path = future_root / G2F_IMPLEMENTATION_PATHS[0]
+    test_path = future_root / G2F_IMPLEMENTATION_PATHS[1]
+    runner_path.parent.mkdir(parents=True)
+    test_path.parent.mkdir(parents=True)
+    future_validator = namespace[
+        "_validate_g2f_future_implementation_contract_v01"
+    ]
+
+    def validate_sources(runner_source: str, test_source: str) -> tuple[str, ...]:
+        runner_path.write_text(runner_source, encoding="utf-8")
+        test_path.write_text(test_source, encoding="utf-8")
+        observed: list[str] = []
+        future_validator(future_root, observed)
+        return tuple(observed)
+
+    assert validate_sources(positive_runner, positive_tests) == ()
+
+    unused_fixture_tests = positive_tests.replace(
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner\n\n",
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner\n"
+        "import pytest\n\n"
+        "@pytest.fixture\n"
+        "def unrelated_fixture():\n"
+        "    return 'unused ordinary fixture'\n\n",
+        1,
+    )
+    assert validate_sources(positive_runner, unused_fixture_tests) == ()
+
+    first_test_id = namespace["G2F_FOCUSED_TEST_IDS"][0]
+    first_positive_test = (
+        f"def test_{first_test_id}():\n"
+        "    report = runner.collect_consolidated_gate2_gauntlet_g2_f_v01()\n"
+        "    assert runner.validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)\n"
+    )
+    fixture_substitution_test = (
+        f"def test_{first_test_id}(report_fixture):\n"
+        "    report = report_fixture\n"
+        "    assert runner.validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)\n"
+    )
+    fixture_substitution_tests = positive_tests.replace(
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner\n\n",
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner\n"
+        "import pytest\n\n"
+        "@pytest.fixture\n"
+        "def report_fixture():\n"
+        "    return {\n"
+        "        'transaction_id': 'transaction:g2f:gate2:v01',\n"
+        "        'root_decisions': (object(), object()),\n"
+        "    }\n\n"
+        "def decoy_actual_dataflow():\n"
+        "    report = runner.collect_consolidated_gate2_gauntlet_g2_f_v01()\n"
+        "    return runner.validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)\n\n",
+        1,
+    ).replace(
+        first_positive_test,
+        fixture_substitution_test,
+        1,
+    )
+    fixture_failures = validate_sources(
+        positive_runner,
+        fixture_substitution_tests,
+    )
+    assert (
+        "g2f.implementation.tests.fixture_substitution:report_fixture"
+        in fixture_failures
+    )
+    assert "g2f.implementation.tests.actual_public_dataflow" in fixture_failures
+
+    duplicate_failures = validate_sources(
+        positive_runner + "\ndef main():\n    return 0\n",
+        positive_tests,
+    )
+    assert any("public_surface.duplicate:main" in item for item in duplicate_failures)
+
+    private_runner = positive_runner.replace(
+        "def collect_consolidated_gate2_gauntlet_g2_f_v01():\n",
+        "def _private_source():\n    return object()\n\n"
+        "def collect_consolidated_gate2_gauntlet_g2_f_v01():\n"
+        "    _private_source()\n",
+        1,
+    )
+    private_failures = validate_sources(private_runner, positive_tests)
+    assert any("extra_helper:_private_source" in item for item in private_failures)
+    assert any("private_attribute_call:_private_source" in item for item in private_failures)
+
+    cache_runner = positive_runner.replace(
+        "import json\n",
+        "import json\nfrom functools import lru_cache as memoize\n",
+        1,
+    ).replace(
+        "def collect_consolidated_gate2_gauntlet_g2_f_v01():\n",
+        "@memoize(maxsize=1)\ndef collect_consolidated_gate2_gauntlet_g2_f_v01():\n",
+        1,
+    )
+    cache_failures = validate_sources(cache_runner, positive_tests)
+    assert any("process_cache_decorator:memoize" in item for item in cache_failures)
+
+    validator_start = (
+        "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):\n"
+        "    return isinstance(report, dict) and report.get('transaction_id') == "
+        "'transaction:g2f:gate2:v01' and len(report.get('root_decisions', ())) == 2\n"
+    )
+    fabricated_runner = positive_runner.replace(
+        "import hedgehog.drs_memory_resolution_v01 as drs\n",
+        "import hedgehog.drs_memory_resolution_v01 as drs\n"
+        "import demo.run_living_gauntlet_v01 as living_aggregate\n",
+        1,
+    ).replace(
+        "    shortcut = reuse.validate_existing_root_shortcut_decision_v01",
+        "    aggregate = living_aggregate.collect_living_gauntlet_v01()\n"
+        "    shortcut = reuse.validate_existing_root_shortcut_decision_v01",
+        1,
+    ).replace(
+        validator_start,
+        "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):\n"
+        "    return True\n",
+        1,
+    )
+    fabricated_failures = validate_sources(fabricated_runner, positive_tests)
+    assert any("aggregate_or_future_call" in item for item in fabricated_failures)
+    assert any(
+        "constant_validator_without_report" in item
+        for item in fabricated_failures
+    )
+
+    tautology_tests = positive_tests.replace(
+        "    assert runner.validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)\n",
+        "    assert True\n"
+        "    assert runner.validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)\n",
+        1,
+    )
+    tautology_failures = validate_sources(positive_runner, tautology_tests)
+    assert "g2f.implementation.tests.tautological_assertion" in tautology_failures
+
+    mock_tests = positive_tests.replace(
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner\n",
+        "from demo import run_consolidated_gate2_gauntlet_g2_f_v01 as runner\n"
+        "from unittest.mock import patch as substitute\n",
+        1,
+    ).replace(
+        "    report = runner.collect_consolidated_gate2_gauntlet_g2_f_v01()\n",
+        "    with substitute('demo.run_consolidated_gate2_gauntlet_g2_f_v01.collect_consolidated_gate2_gauntlet_g2_f_v01'):\n"
+        "        report = runner.collect_consolidated_gate2_gauntlet_g2_f_v01()\n",
+        1,
+    )
+    mock_failures = validate_sources(positive_runner, mock_tests)
+    assert "g2f.implementation.tests.substitution_or_skip" in mock_failures
+
+    extra_tests = positive_tests + (
+        "\nclass TestExtraSurface:\n"
+        "    def test_extra_surface(self):\n"
+        "        report = runner.collect_consolidated_gate2_gauntlet_g2_f_v01()\n"
+        "        assert report['transaction_id'] == 'transaction:g2f:gate2:v01'\n"
+    )
+    extra_failures = validate_sources(positive_runner, extra_tests)
+    assert any("tests.test_class:TestExtraSurface" in item for item in extra_failures)
+
+    overclaim_failures = validate_sources(
+        positive_runner + "\nGATE2_STATUS=CLOSED_PASS\n",
+        positive_tests,
+    )
+    assert any("status_overclaim" in item for item in overclaim_failures)
 
 
 def test_reconciliation_annex_absence_fails_closed(

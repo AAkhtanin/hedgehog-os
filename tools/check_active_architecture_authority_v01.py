@@ -19,6 +19,7 @@ E5_IMPLEMENTATION_BASIS_COMMIT = "f582701208b603463a03d404aa841c302a8221d6"
 G2E_CLASS_A_COMMIT = "7f3c7138b553096252fefee7930f89100d835fcd"
 G2E_CLASS_B_COMMIT = "4c133da11b8bcbd642e1aaa3413ce0a9c357731d"
 G2E_CLOSURE_BASIS_COMMIT = "6079ddcfe59f582936e7b13af2753a6533117970"
+G2E_CLOSURE_COMMIT = "282e319241946b34987b2533d95ed514c3d884c1"
 LOCK_PATH = "specs/current_architecture_lock_v01.md"
 INDEX_PATH = "specs/document_authority_index_v01.json"
 MANIFEST_PATH = "release/successor_context_manifest_v01.json"
@@ -41,6 +42,12 @@ KERNEL_CONFORMANCE_RUNNER_PATH = "demo/run_kernel_conformance_v01.py"
 LIVING_GAUNTLET_PATH = "demo/run_living_gauntlet_v01.py"
 LIVING_GAUNTLET_TEST_PATH = "tests/test_living_gauntlet_v01_runner.py"
 KERNEL_CONFORMANCE_TEST_PATH = "tests/test_kernel_conformance_v01_runner.py"
+G2F_PREFLIGHT_PATH = "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md"
+G2F_RUNNER_PATH = "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py"
+G2F_TEST_PATH = "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py"
+G2F_PREFLIGHT_SHA256_V02 = (
+    "d438d7c07ac00ea8c5f3c258b895abd1839d8384e1752ec4357134e8a1594f20"
+)
 
 CLASS_A_RECONCILIATION_PATHS = frozenset(
     {
@@ -87,6 +94,41 @@ CLASS_D_CONTROL_PLANE_PATHS = frozenset(
 G2E_CLASS_D_CLOSURE_PATHS = (
     CLASS_D_LIFECYCLE_PATHS | CLASS_D_CONTROL_PLANE_PATHS
 )
+G2F_CLASS_A_PATHS = frozenset(
+    {
+        G2F_PREFLIGHT_PATH,
+        LOCK_PATH,
+        INDEX_PATH,
+        MANIFEST_PATH,
+        "tools/check_active_architecture_authority_v01.py",
+        "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+    }
+)
+G2F_IMPLEMENTATION_PATHS = frozenset({G2F_RUNNER_PATH, G2F_TEST_PATH})
+G2F_CLOSURE_OVERLAP_PATHS = frozenset(
+    {
+        LOCK_PATH,
+        INDEX_PATH,
+        MANIFEST_PATH,
+        "tools/check_active_architecture_authority_v01.py",
+        "tests/test_active_architecture_authority_v01.py",
+        "tests/test_repository_release_spine_v01.py",
+    }
+)
+G2F_CLOSURE_PATHS = frozenset(
+    {
+        "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+        "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+        "AGENTS.md",
+        "README.md",
+        "release/current_status_overlay_v01.json",
+        "release/claim_to_evidence_index.md",
+        "release/current_limitations.md",
+        "release/current_release_notes.md",
+        *G2F_CLOSURE_OVERLAP_PATHS,
+    }
+)
 
 CLASS_A_COMMITTED_NAME_STATUS = {
     path: "A" if path == E6_RECONCILIATION_ANNEX_PATH else "M"
@@ -99,12 +141,127 @@ CLASS_D_COMMITTED_NAME_STATUS = {
     path: "A" if path in {G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH} else "M"
     for path in G2E_CLASS_D_CLOSURE_PATHS
 }
+G2F_CLASS_A_COMMITTED_NAME_STATUS = {
+    path: "A" if path == G2F_PREFLIGHT_PATH else "M"
+    for path in G2F_CLASS_A_PATHS
+}
+G2F_IMPLEMENTATION_COMMITTED_NAME_STATUS = {
+    path: "A" for path in G2F_IMPLEMENTATION_PATHS
+}
 POST_E6_LIVING_ACCEPTANCE_TEST = (
     "test_living_gauntlet_v16_continuous_delta_runtime_acceptance_v01"
 )
 POST_E6_CONFORMANCE_ACCEPTANCE_TEST = (
     "test_kernel_conformance_v07_continuous_delta_runtime_acceptance_v01"
 )
+G2F_FOCUSED_TEST_IDS = (
+    "g2f_positive_01_report_geometry_and_current_basis",
+    "g2f_positive_02_causal_order_and_identity_lineage",
+    "g2f_positive_03_informational_fast_path_heavy_skip",
+    "g2f_positive_04_high_risk_multiroot_full_fractal_execution",
+    "g2f_positive_05_packet_delta_revocation_supersession_chain",
+    "g2f_positive_06_canonical_plain_projection_and_render",
+    "g2f_positive_07_independent_fresh_collections_no_cache",
+    "g2f_positive_08_public_validator_accepts_actual_report",
+    "g2f_dod_01_safe_informational_reuse",
+    "g2f_dod_02_action_reuse_blocked",
+    "g2f_dod_03_high_risk_multiroot_deep",
+    "g2f_dod_04_revoke_before_fulfillment",
+    "g2f_dod_05_superseded_replay_blocked",
+    "g2f_dod_06_selective_recompute",
+    "g2f_dod_07_components_non_authority",
+    "g2f_hostile_08_drs_not_authority",
+    "g2f_hostile_09_router_not_authority",
+    "g2f_hostile_10_registry_not_authority",
+    "g2f_hostile_11_child_not_root",
+    "g2f_hostile_12_delta_not_authority",
+    "g2f_hostile_13_no_permission_revival",
+    "g2f_hostile_14_no_stale_packet_replay",
+    "g2f_hostile_15_no_aggregate_pass",
+    "g2f_hostile_16_zero_operations",
+)
+G2F_REQUIRED_PUBLIC_CALLS_V02 = {
+    "validate_existing_root_shortcut_decision_v01": (
+        "hedgehog.reuse_certificate_v01",
+        1,
+    ),
+    "evaluate_drs_candidate_v01": ("hedgehog.drs_memory_resolution_v01", 1),
+    "route_execution_mode_v01": (
+        "hedgehog.kernel.execution_mode_router_v01",
+        2,
+    ),
+    "review_execution_mode_proposal_v01": (
+        "hedgehog.kernel.execution_mode_router_v01",
+        2,
+    ),
+    "build_transaction_outcome_envelope_v01": (
+        "hedgehog.kernel.multiroot_v01",
+        1,
+    ),
+    "validate_transaction_outcome_envelope_v01": (
+        "hedgehog.kernel.multiroot_v01",
+        1,
+    ),
+    "validate_multiroot_v01": ("hedgehog.kernel.multiroot_v01", 1),
+    "run_fractal_runtime_v02": ("hedgehog.kernel.fractal_runtime_v02", 2),
+    "build_semantic_work_request_v01": (
+        "hedgehog.kernel.semantic_work_v01",
+        5,
+    ),
+    "build_root_decision_input_v01": (
+        "hedgehog.kernel.root_decision_v01",
+        5,
+    ),
+    "decide_root_v01": ("hedgehog.kernel.root_decision_v01", 5),
+    "build_root_decision_candidate_projection_v01": (
+        "hedgehog.action_commit_packet_v02",
+        4,
+    ),
+    "record_action_packet_genesis_v01": (
+        "hedgehog.action_commit_packet_v02",
+        2,
+    ),
+    "build_action_packet_transition_event_v01": (
+        "hedgehog.action_commit_packet_v02",
+        8,
+    ),
+    "activate_action_packet_lifecycle_v01": (
+        "hedgehog.action_commit_packet_v02",
+        1,
+    ),
+    "append_action_packet_lifecycle_transition_v01": (
+        "hedgehog.action_commit_packet_v02",
+        4,
+    ),
+    "inspect_action_packet_present_eligibility_v01": (
+        "hedgehog.action_commit_packet_v02",
+        3,
+    ),
+    "run_continuous_delta_runtime_v01": (
+        "hedgehog.kernel.continuous_delta_runtime_v01",
+        1,
+    ),
+    "build_action_invalidation_evidence_v01": (
+        "hedgehog.action_commit_packet_v02",
+        3,
+    ),
+    "record_action_packet_revocation_v01": (
+        "hedgehog.action_commit_packet_v02",
+        1,
+    ),
+    "build_supplier_root_bound_action_commit_packet_v02_projection_v01": (
+        "hedgehog.action_commit_packet_v02",
+        2,
+    ),
+    "record_action_packet_supersession_v01": (
+        "hedgehog.action_commit_packet_v02",
+        1,
+    ),
+    "replay_action_packet_lifecycle_history_v01": (
+        "hedgehog.action_commit_packet_v02",
+        1,
+    ),
+}
 
 AUTHORITY_INDEX_KEYS = (
     "schema_version",
@@ -137,9 +294,15 @@ PRE_CLOSURE_MANIFEST_KEYS = (
     "historical_access_method",
     "validation_command",
 )
+G2E_CLOSURE_MANIFEST_KEYS = (
+    *PRE_CLOSURE_MANIFEST_KEYS[:13],
+    "committed_e6_basis",
+    *PRE_CLOSURE_MANIFEST_KEYS[13:],
+)
 MANIFEST_KEYS = (
     *PRE_CLOSURE_MANIFEST_KEYS[:13],
     "committed_e6_basis",
+    "g2f_class_a_succession",
     *PRE_CLOSURE_MANIFEST_KEYS[13:],
 )
 CURRENT_DOCUMENT_ENTRY_KEYS = (
@@ -1611,6 +1774,15 @@ REQUIRED_CURRENT_CLASSIFICATIONS["current_technical_annexes"][
     NAMED_GATE_SCOPE,
     False,
 )
+REQUIRED_CURRENT_CLASSIFICATIONS["current_technical_annexes"][
+    G2F_PREFLIGHT_PATH
+] = (
+    "accepted_g2f_class_a_preflight_candidate",
+    True,
+    True,
+    NAMED_GATE_SCOPE,
+    False,
+)
 REQUIRED_CURRENT_CLASSIFICATIONS["audit_only_sources"][G2E_AUDIT_PATH] = (
     "accepted_g2e_closure_audit_evidence",
     False,
@@ -2337,6 +2509,7 @@ def _validate_authority_index(
     failures: list[str],
     *,
     closure_active: bool = False,
+    g2f_active: bool = False,
 ) -> tuple[dict[str, object], ...]:
     if value is None:
         return ()
@@ -2345,7 +2518,11 @@ def _validate_authority_index(
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
         failures.append("authority_index.schema_version")
     expected_generated_head = (
-        G2E_CLOSURE_BASIS_COMMIT if closure_active else BASE_HEAD
+        G2E_CLOSURE_COMMIT
+        if g2f_active
+        else G2E_CLOSURE_BASIS_COMMIT
+        if closure_active
+        else BASE_HEAD
     )
     if value.get("generated_for_head") != expected_generated_head:
         failures.append("authority_index.generated_for_head")
@@ -2397,6 +2574,15 @@ def _validate_authority_index(
 
     classifications = (
         REQUIRED_CURRENT_CLASSIFICATIONS
+        if g2f_active
+        else {
+            category: {
+                path: expected
+                for path, expected in entries.items()
+                if path != G2F_PREFLIGHT_PATH
+            }
+            for category, entries in REQUIRED_CURRENT_CLASSIFICATIONS.items()
+        }
         if closure_active
         else PRE_CLOSURE_REQUIRED_CURRENT_CLASSIFICATIONS
     )
@@ -2565,15 +2751,28 @@ def _validate_manifest(
     historical_paths: Iterable[str],
     *,
     closure_active: bool = False,
+    g2f_active: bool = False,
 ) -> tuple[tuple[str, ...], frozenset[str]]:
     if value is None:
         return (), frozenset()
-    expected_keys = MANIFEST_KEYS if closure_active else PRE_CLOSURE_MANIFEST_KEYS
+    expected_keys = (
+        MANIFEST_KEYS
+        if g2f_active
+        else G2E_CLOSURE_MANIFEST_KEYS
+        if closure_active
+        else PRE_CLOSURE_MANIFEST_KEYS
+    )
     if tuple(value) != expected_keys:
         failures.append("successor_manifest.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
         failures.append("successor_manifest.schema_version")
-    expected_base_head = G2E_CLOSURE_BASIS_COMMIT if closure_active else BASE_HEAD
+    expected_base_head = (
+        G2E_CLOSURE_COMMIT
+        if g2f_active
+        else G2E_CLOSURE_BASIS_COMMIT
+        if closure_active
+        else BASE_HEAD
+    )
     if value.get("base_head") != expected_base_head:
         failures.append("successor_manifest.base_head")
     if value.get("manifest_status") != REQUIRED_MANIFEST_STATUS:
@@ -2619,6 +2818,16 @@ def _validate_manifest(
                     "successor_manifest.purpose.ready_scope:"
                     f"{required_phrase.replace(' ', '_')}"
                 )
+        if g2f_active:
+            for required_phrase in (
+                "corrected G2-F Class-A preflight candidate",
+                "does not authorize G2-F implementation",
+            ):
+                if required_phrase not in purpose:
+                    failures.append(
+                        "successor_manifest.purpose.g2f_scope:"
+                        f"{required_phrase.replace(' ', '_')}"
+                    )
     if value.get("validation_command") != (
         "python3 tools/check_active_architecture_authority_v01.py"
     ):
@@ -2643,11 +2852,15 @@ def _validate_manifest(
     )
 
     checkpoint_requirement = {G2E_CHECKPOINT_PATH} if closure_active else set()
+    g2f_requirement = {G2F_PREFLIGHT_PATH} if g2f_active else set()
     required_sets = (
-        ("always_include", REQUIRED_ALWAYS_INCLUDE | checkpoint_requirement),
+        (
+            "always_include",
+            REQUIRED_ALWAYS_INCLUDE | checkpoint_requirement | g2f_requirement,
+        ),
         (
             "include_current_gate_sources",
-            REQUIRED_GATE_SOURCES | checkpoint_requirement,
+            REQUIRED_GATE_SOURCES | checkpoint_requirement | g2f_requirement,
         ),
         ("include_current_gate_tests", REQUIRED_GATE_TESTS),
         ("include_current_release_sources", REQUIRED_RELEASE_SOURCES),
@@ -2669,6 +2882,8 @@ def _validate_manifest(
     }
     if closure_active:
         required_authority_documents.add(G2E_CHECKPOINT_PATH)
+    if g2f_active:
+        required_authority_documents.add(G2F_PREFLIGHT_PATH)
     for path in sorted(required_authority_documents - set(authority_documents)):
         failures.append(f"successor_manifest.authority_documents.missing:{path}")
 
@@ -2831,6 +3046,130 @@ def _validate_manifest(
                 failures.append(
                     "successor_manifest.committed_e6_basis.v10_evidence.exact"
                 )
+
+    if g2f_active:
+        succession = value.get("g2f_class_a_succession")
+        if not isinstance(succession, dict):
+            failures.append("successor_manifest.g2f_class_a_succession.type")
+            succession = {}
+        expected_scalars = {
+            "basis_head": G2E_CLOSURE_COMMIT,
+            "preflight_path": G2F_PREFLIGHT_PATH,
+            "preflight_status": "ACCEPTED_CLASS_A_CANDIDATE",
+            "classification": "ORCHESTRATION_AND_ACCEPTANCE_ONLY",
+            "implementation_authorization": (
+                "EFFECTIVE_ONLY_AFTER_EXACT_OWNER_CLASS_A_COMMIT"
+            ),
+            "runtime_implementation_performed": False,
+            "repository_g2f_lifecycle_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+            "gate2_status": "NOT_CLOSED",
+            "public_release_status": "NOT_CLAIMED",
+            "rc2_status": "NOT_CLAIMED",
+            "production_readiness_status": "NOT_CLAIMED",
+            "production_security_certification_status": "NOT_CLAIMED",
+            "real_world_effects_count": 0,
+        }
+        for key, expected in expected_scalars.items():
+            if succession.get(key) != expected:
+                failures.append(f"successor_manifest.g2f.{key}")
+
+        def validate_path_actions(
+            key: str,
+            expected: dict[str, str],
+        ) -> tuple[dict[str, object], ...]:
+            records = succession.get(key)
+            if not isinstance(records, list):
+                failures.append(f"successor_manifest.g2f.{key}.type")
+                return ()
+            observed: dict[str, str] = {}
+            valid_records: list[dict[str, object]] = []
+            for index, record in enumerate(records):
+                code = f"successor_manifest.g2f.{key}[{index}]"
+                if not isinstance(record, dict):
+                    failures.append(f"{code}.type")
+                    continue
+                path = record.get("path")
+                action = record.get("action")
+                if not _valid_relative_path(path):
+                    failures.append(f"{code}.path")
+                    continue
+                if path in observed:
+                    failures.append(f"successor_manifest.g2f.{key}.duplicate:{path}")
+                    continue
+                observed[path] = action if isinstance(action, str) else ""
+                valid_records.append(record)
+            if observed != expected:
+                failures.append(f"successor_manifest.g2f.{key}.exact")
+            return tuple(valid_records)
+
+        validate_path_actions(
+            "class_a_paths",
+            {
+                path: "ADD" if status == "A" else "MODIFY"
+                for path, status in G2F_CLASS_A_COMMITTED_NAME_STATUS.items()
+            },
+        )
+        validate_path_actions(
+            "future_implementation_paths",
+            {path: "ADD" for path in G2F_IMPLEMENTATION_PATHS},
+        )
+        closure_actions = {
+            path: (
+                "ADD"
+                if path
+                in {
+                    "docs/audit_reports/"
+                    "auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+                    "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+                }
+                else "MODIFY"
+            )
+            for path in G2F_CLOSURE_PATHS
+        }
+        closure_records = validate_path_actions(
+            "future_closure_paths", closure_actions
+        )
+        stable_predecessors = {
+            "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log": (
+                "ABSENT"
+            ),
+            "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md": "ABSENT",
+            "AGENTS.md": "7d2bc7d21a5a899a1f58abf364a7d1ae6cc015ffec425b7b46674d85d58a083e",
+            "README.md": "05f22aa7624e20d01e080bd6efd5bab6a637283c7d715a11f9f414c27972efa5",
+            "release/current_status_overlay_v01.json": (
+                "05ad2f3a36632d2332fe9d6d5a08b5da3341afb6568088d1f51724b8d566f6f1"
+            ),
+            "release/claim_to_evidence_index.md": (
+                "85dd82c735f2183e1587a8a93e0b53a1bc30e910c39fc96268c462ddad09c6f6"
+            ),
+            "release/current_limitations.md": (
+                "7f8b8e65a29430425148aa16bc7764fe2accc3752aa98ac0140d9606acdb8885"
+            ),
+            "release/current_release_notes.md": (
+                "0af690fce0bd46137114f6b8d8ceeb8c489edc212124b343164b054396ed4347"
+            ),
+        }
+        for record in closure_records:
+            path = record.get("path")
+            if path in G2F_CLOSURE_OVERLAP_PATHS:
+                if record.get("predecessor") != (
+                    "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+                ) or "predecessor_sha256" in record:
+                    failures.append(f"successor_manifest.g2f.closure_deferred:{path}")
+            elif stable_predecessors.get(path) == "ABSENT":
+                if record.get("predecessor") != "ABSENT":
+                    failures.append(f"successor_manifest.g2f.closure_absent:{path}")
+            elif record.get("predecessor_sha256") != stable_predecessors.get(path):
+                failures.append(f"successor_manifest.g2f.closure_sha256:{path}")
+        if succession.get("owner_commit_boundaries") != [
+            "CLASS_A_EXACT_SEVEN_PATHS",
+            "IMPLEMENTATION_EXACT_TWO_PATHS",
+            "CLOSURE_EXACT_FOURTEEN_PATHS",
+        ]:
+            failures.append("successor_manifest.g2f.owner_commit_boundaries")
+        frozen_classes = succession.get("frozen_path_classes")
+        if not isinstance(frozen_classes, list) or len(frozen_classes) != 6:
+            failures.append("successor_manifest.g2f.frozen_path_classes")
 
     onboarding_paths: set[str] = set()
     for key in (
@@ -8912,6 +9251,687 @@ def _validate_g2e_closure_surfaces_v01(
                     )
 
 
+def _g2f_import_bindings_v02(
+    tree: ast.Module,
+) -> tuple[dict[str, str], set[str], set[str]]:
+    bindings: dict[str, str] = {}
+    private_or_star: set[str] = set()
+    mock_patch_aliases: set[str] = set()
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                local = alias.asname or alias.name.split(".", 1)[0]
+                bindings[local] = alias.name
+                if any(part.startswith("_") for part in alias.name.split(".")):
+                    private_or_star.add(alias.name)
+                if alias.name in {"unittest.mock", "mock"}:
+                    mock_patch_aliases.add(f"{local}.patch")
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            for alias in node.names:
+                local = alias.asname or alias.name
+                if alias.name == "*" or alias.name.startswith("_"):
+                    private_or_star.add(f"{module}.{alias.name}")
+                    continue
+                bindings[local] = f"{module}.{alias.name}" if module else alias.name
+                if module in {"unittest.mock", "mock"} and alias.name == "patch":
+                    mock_patch_aliases.add(local)
+                if module == "unittest" and alias.name == "mock":
+                    mock_patch_aliases.add(f"{local}.patch")
+    return bindings, private_or_star, mock_patch_aliases
+
+
+def _g2f_resolved_call_v02(node: ast.Call, bindings: dict[str, str]) -> str:
+    dotted = _dotted_ast_name(node.func) or ""
+    if not dotted:
+        return ""
+    first, separator, remainder = dotted.partition(".")
+    bound = bindings.get(first)
+    if bound is None:
+        return dotted
+    return bound + (separator + remainder if separator else "")
+
+
+def _g2f_constant_expression_v02(node: ast.AST) -> bool:
+    if isinstance(node, ast.Constant):
+        return True
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return all(_g2f_constant_expression_v02(item) for item in node.elts)
+    if isinstance(node, ast.Dict):
+        return all(
+            key is None or _g2f_constant_expression_v02(key)
+            for key in node.keys
+        ) and all(_g2f_constant_expression_v02(value) for value in node.values)
+    if isinstance(node, ast.UnaryOp):
+        return _g2f_constant_expression_v02(node.operand)
+    if isinstance(node, ast.BoolOp):
+        return all(_g2f_constant_expression_v02(value) for value in node.values)
+    if isinstance(node, ast.Compare):
+        return _g2f_constant_expression_v02(node.left) and all(
+            _g2f_constant_expression_v02(value) for value in node.comparators
+        )
+    return False
+
+
+def _g2f_direct_tautology_v02(node: ast.Assert) -> bool:
+    test = node.test
+    if isinstance(test, ast.Constant):
+        return bool(test.value)
+    if isinstance(test, ast.Compare) and len(test.ops) == len(test.comparators) == 1:
+        right = test.comparators[0]
+        if ast.dump(test.left, include_attributes=False) == ast.dump(
+            right, include_attributes=False
+        ):
+            return isinstance(test.ops[0], (ast.Eq, ast.Is, ast.IsNot))
+        return _g2f_constant_expression_v02(test.left) and (
+            _g2f_constant_expression_v02(right)
+        )
+    return _g2f_constant_expression_v02(test)
+
+
+def _g2f_status_overclaims_v02(source: str) -> tuple[str, ...]:
+    failures: list[str] = []
+    exact_statuses = {
+        "G2F_RUNTIME_IMPLEMENTATION_PERFORMED": "false",
+        "GATE2_STATUS": "NOT_CLOSED",
+    }
+    for key, expected in exact_statuses.items():
+        observed = re.findall(
+            rf"(?m)^\s*{re.escape(key)}\s*=\s*([^\s#]+)", source
+        )
+        if any(value != expected for value in observed):
+            failures.append(f"{key}:{','.join(observed)}")
+    forbidden_patterns = (
+        r"(?im)^\s*G2F_(?:STATUS|ACCEPTANCE_PASS|AUDIT_PASS)\s*=\s*(?:CLOSED_PASS|PASS|true)\s*$",
+        r"(?im)^\s*GATE2_STATUS\s*=\s*(?:CLOSED|CLOSED_PASS|PASS)\s*$",
+        r"(?im)^\s*RC2(?:_STATUS|_INTERNAL_REFERENCE_CLAIM_ALLOWED)?\s*=\s*(?:CLAIMED|ALLOWED|true|PASS)\s*$",
+        r"(?im)^\s*PUBLIC_RELEASE(?:_STATUS)?\s*=\s*(?:CLAIMED|true|PASS)\s*$",
+        r"(?im)^\s*PRODUCTION_(?:READINESS|SECURITY_CERTIFICATION)(?:_STATUS)?\s*=\s*(?:CLAIMED|true|PASS)\s*$",
+        r"(?im)^\s*REAL_WORLD_EFFECTS(?:_COUNT)?\s*=\s*[1-9][0-9]*\s*$",
+    )
+    for index, pattern in enumerate(forbidden_patterns, 1):
+        if re.search(pattern, source):
+            failures.append(f"forbidden_status_pattern_{index}")
+    return tuple(failures)
+
+
+def _validate_g2f_future_implementation_contract_v01(
+    repo_root: Path,
+    failures: list[str],
+) -> None:
+    runner_path = repo_root / G2F_RUNNER_PATH
+    test_path = repo_root / G2F_TEST_PATH
+    if not runner_path.exists() and not test_path.exists():
+        return
+    if not runner_path.is_file():
+        failures.append(f"g2f.implementation.missing:{G2F_RUNNER_PATH}")
+        return
+    if not test_path.is_file():
+        failures.append(f"g2f.implementation.missing:{G2F_TEST_PATH}")
+        return
+    trees: dict[str, ast.Module] = {}
+    sources: dict[str, str] = {}
+    for label, path in (("runner", runner_path), ("tests", test_path)):
+        try:
+            source = path.read_text(encoding="utf-8")
+            sources[label] = source
+            trees[label] = ast.parse(source, filename=str(path))
+        except (OSError, UnicodeError, SyntaxError) as exc:
+            failures.append(
+                f"g2f.implementation.{label}.parse:{type(exc).__name__}"
+            )
+    if set(trees) != {"runner", "tests"}:
+        return
+    runner_tree = trees["runner"]
+    test_tree = trees["tests"]
+    public_surface = {
+        "collect_consolidated_gate2_gauntlet_g2_f_v01": 0,
+        "validate_consolidated_gate2_gauntlet_g2_f_report_v01": 1,
+        "consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01": 1,
+        "render_consolidated_gate2_gauntlet_g2_f_v01": 1,
+        "main": 0,
+    }
+    function_nodes = [
+        node
+        for node in runner_tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    ]
+    functions: dict[str, ast.FunctionDef | ast.AsyncFunctionDef] = {}
+    for node in function_nodes:
+        if node.name in functions:
+            failures.append(
+                f"g2f.implementation.public_surface.duplicate:{node.name}"
+            )
+        else:
+            functions[node.name] = node
+    for extra_name in sorted(set(functions) - set(public_surface)):
+        failures.append(
+            f"g2f.implementation.runner.extra_helper:{extra_name}"
+        )
+    for name, positional_count in public_surface.items():
+        function = functions.get(name)
+        if function is None:
+            failures.append(f"g2f.implementation.public_surface.missing:{name}")
+            continue
+        if not isinstance(function, ast.FunctionDef):
+            failures.append(f"g2f.implementation.public_surface.async:{name}")
+        arguments = function.args
+        if (
+            len(arguments.posonlyargs) + len(arguments.args) != positional_count
+            or arguments.kwonlyargs
+            or arguments.vararg is not None
+            or arguments.kwarg is not None
+            or arguments.defaults
+            or arguments.kw_defaults
+        ):
+            failures.append(f"g2f.implementation.public_surface.signature:{name}")
+    runner_bindings, private_or_star, _runner_patch_aliases = (
+        _g2f_import_bindings_v02(runner_tree)
+    )
+    for imported in sorted(private_or_star):
+        failures.append(
+            f"g2f.implementation.runner.private_or_star_import:{imported}"
+        )
+    dynamic_calls = {
+        "__import__", "getattr", "exec", "eval", "importlib.import_module"
+    }
+    aggregate_or_future_calls = (
+        "collect_living_gauntlet",
+        "collect_kernel_conformance",
+        "collect_continuous_delta_runtime_g2_e",
+        "gate6",
+        "gate_6",
+        "pack_s",
+        "packs",
+    )
+    for node in ast.walk(runner_tree):
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            for alias in node.names:
+                imported = (
+                    f"{node.module}.{alias.name}"
+                    if isinstance(node, ast.ImportFrom) and node.module
+                    else alias.name
+                )
+                if imported == "tests" or imported.startswith("tests."):
+                    failures.append("g2f.implementation.runner.test_import")
+                if alias.name.startswith("_"):
+                    failures.append(
+                        f"g2f.implementation.runner.private_import:{alias.name}"
+                    )
+                if any(
+                    marker in imported.casefold()
+                    for marker in (
+                        "requests",
+                        "urllib",
+                        "http.client",
+                        "socket",
+                        "provider",
+                        "connector",
+                        "adapter",
+                    )
+                ):
+                    failures.append(
+                        f"g2f.implementation.runner.forbidden_import:{imported}"
+                    )
+        if isinstance(node, ast.Call):
+            resolved = _g2f_resolved_call_v02(node, runner_bindings)
+            called = resolved.casefold()
+            dotted = (_dotted_ast_name(node.func) or "").casefold()
+            if dotted in dynamic_calls or called in dynamic_calls:
+                failures.append(
+                    f"g2f.implementation.runner.dynamic_access:{called or dotted}"
+                )
+            if any(part.startswith("_") for part in resolved.split(".")):
+                failures.append(
+                    f"g2f.implementation.runner.private_attribute_call:{resolved}"
+                )
+            if any(marker in called for marker in aggregate_or_future_calls):
+                failures.append(
+                    f"g2f.implementation.runner.aggregate_or_future_call:{resolved}"
+                )
+            if any(
+                marker in called
+                for marker in (
+                    "invoke_provider",
+                    "call_provider",
+                    "invoke_model",
+                    "call_model",
+                    "network_call",
+                    "connector_call",
+                    "adapter_call",
+                    "execute_effect",
+                    "apply_effect",
+                )
+            ):
+                failures.append(
+                    f"g2f.implementation.runner.forbidden_call:{called}"
+                )
+    for status_failure in _g2f_status_overclaims_v02(sources["runner"]):
+        failures.append(
+            f"g2f.implementation.runner.status_overclaim:{status_failure}"
+        )
+    collector = functions.get("collect_consolidated_gate2_gauntlet_g2_f_v01")
+    if collector is not None:
+        for node in ast.walk(collector):
+            if isinstance(node, ast.Constant) and node.value == "PASS":
+                failures.append("g2f.implementation.runner.copied_pass")
+                break
+        collector_calls: dict[str, int] = {
+            name: 0 for name in G2F_REQUIRED_PUBLIC_CALLS_V02
+        }
+        for node in ast.walk(collector):
+            if not isinstance(node, ast.Call):
+                continue
+            resolved = _g2f_resolved_call_v02(node, runner_bindings)
+            for name, (module, _minimum) in G2F_REQUIRED_PUBLIC_CALLS_V02.items():
+                if resolved == f"{module}.{name}":
+                    collector_calls[name] += 1
+        for name, (module, minimum) in G2F_REQUIRED_PUBLIC_CALLS_V02.items():
+            observed = collector_calls[name]
+            if observed < minimum:
+                failures.append(
+                    "g2f.implementation.runner.required_public_call:"
+                    f"{module}.{name}:{observed}<{minimum}"
+                )
+        own_validator_calls = sum(
+            1
+            for node in ast.walk(collector)
+            if isinstance(node, ast.Call)
+            and (_dotted_ast_name(node.func) or "")
+            == "validate_consolidated_gate2_gauntlet_g2_f_report_v01"
+        )
+        if own_validator_calls != 1:
+            failures.append(
+                "g2f.implementation.runner.required_public_call:"
+                "validate_consolidated_gate2_gauntlet_g2_f_report_v01:"
+                f"{own_validator_calls}!=1"
+            )
+
+    validator = functions.get(
+        "validate_consolidated_gate2_gauntlet_g2_f_report_v01"
+    )
+    if validator is not None:
+        argument_name = validator.args.args[0].arg if validator.args.args else ""
+        report_used = any(
+            isinstance(node, ast.Name)
+            and isinstance(node.ctx, ast.Load)
+            and node.id == argument_name
+            for node in ast.walk(validator)
+        )
+        constant_returns = [
+            node
+            for node in ast.walk(validator)
+            if isinstance(node, ast.Return)
+            and node.value is not None
+            and _g2f_constant_expression_v02(node.value)
+        ]
+        if not report_used and constant_returns:
+            failures.append(
+                "g2f.implementation.runner.constant_validator_without_report"
+            )
+
+    cache_decorator_aliases = {"cache", "lru_cache"}
+    for local, imported in runner_bindings.items():
+        if imported in {"functools.cache", "functools.lru_cache"}:
+            cache_decorator_aliases.add(local)
+        if imported == "functools":
+            cache_decorator_aliases.update(
+                {f"{local}.cache", f"{local}.lru_cache"}
+            )
+    for function in function_nodes:
+        for decorator in function.decorator_list:
+            target = decorator.func if isinstance(decorator, ast.Call) else decorator
+            dotted = _dotted_ast_name(target) or ""
+            if dotted in cache_decorator_aliases:
+                failures.append(
+                    f"g2f.implementation.runner.process_cache_decorator:{dotted}"
+                )
+    for statement in runner_tree.body:
+        if not isinstance(statement, (ast.Assign, ast.AnnAssign)):
+            continue
+        targets = statement.targets if isinstance(statement, ast.Assign) else [statement.target]
+        value = statement.value
+        for target in targets:
+            if not isinstance(target, ast.Name):
+                continue
+            target_name = target.id.casefold()
+            collected_at_module_scope = (
+                isinstance(value, ast.Call)
+                and (_dotted_ast_name(value.func) or "").endswith(
+                    "collect_consolidated_gate2_gauntlet_g2_f_v01"
+                )
+            )
+            if collected_at_module_scope or any(
+                marker in target_name
+                for marker in ("cache", "cached_report", "report_singleton")
+            ):
+                failures.append(
+                    f"g2f.implementation.runner.process_cache:{target.id}"
+                )
+
+    observed_tests = tuple(
+        node.name
+        for node in test_tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and node.name.startswith("test_")
+    )
+    expected_tests = tuple(f"test_{test_id}" for test_id in G2F_FOCUSED_TEST_IDS)
+    if observed_tests != expected_tests:
+        failures.append("g2f.implementation.tests.exact_24_ordered_nodes")
+    for node in test_tree.body:
+        if (
+            isinstance(node, ast.AsyncFunctionDef)
+            and node.name.startswith("test_")
+        ):
+            failures.append(
+                f"g2f.implementation.tests.async_test:{node.name}"
+            )
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_"):
+            if any(isinstance(child, (ast.Yield, ast.YieldFrom)) for child in ast.walk(node)):
+                failures.append(
+                    f"g2f.implementation.tests.generator_test:{node.name}"
+                )
+            for decorator in node.decorator_list:
+                target = decorator.func if isinstance(decorator, ast.Call) else decorator
+                dotted = (_dotted_ast_name(target) or "").casefold()
+                if dotted.endswith("parametrize"):
+                    failures.append(
+                        f"g2f.implementation.tests.parametrize:{node.name}"
+                    )
+        if isinstance(node, ast.ClassDef) and any(
+            isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and child.name.startswith("test_")
+            for child in node.body
+        ):
+            failures.append(
+                f"g2f.implementation.tests.test_class:{node.name}"
+            )
+    test_bindings, _test_private_or_star, mock_patch_aliases = (
+        _g2f_import_bindings_v02(test_tree)
+    )
+    forbidden_test_markers = set()
+    for node in ast.walk(test_tree):
+        if isinstance(node, ast.Call):
+            called = (_dotted_ast_name(node.func) or "").casefold()
+            resolved = _g2f_resolved_call_v02(node, test_bindings).casefold()
+            if any(
+                marker in called
+                for marker in (
+                    "monkeypatch",
+                    "unittest.mock",
+                    "pytest.skip",
+                    "pytest.xfail",
+                    "pytest.importorskip",
+                )
+            ):
+                forbidden_test_markers.add(called)
+            if called in {value.casefold() for value in mock_patch_aliases} or (
+                resolved.endswith("unittest.mock.patch")
+                or resolved.endswith("unittest.mock.patch.object")
+                or called.endswith("monkeypatch.setattr")
+            ):
+                forbidden_test_markers.add(called or resolved)
+        if isinstance(node, ast.Attribute):
+            dotted = (_dotted_ast_name(node) or "").casefold()
+            if dotted.endswith((".skip", ".skipif", ".xfail")):
+                forbidden_test_markers.add(dotted)
+    if forbidden_test_markers:
+        failures.append("g2f.implementation.tests.substitution_or_skip")
+    if any(
+        isinstance(node, ast.Assert) and _g2f_direct_tautology_v02(node)
+        for node in ast.walk(test_tree)
+    ):
+        failures.append("g2f.implementation.tests.tautological_assertion")
+    for status_failure in _g2f_status_overclaims_v02(sources["tests"]):
+        failures.append(
+            f"g2f.implementation.tests.status_overclaim:{status_failure}"
+        )
+    collector_name = "collect_consolidated_gate2_gauntlet_g2_f_v01"
+    validator_name = "validate_consolidated_gate2_gauntlet_g2_f_report_v01"
+    accepted_test_nodes = tuple(
+        node
+        for node in test_tree.body
+        if isinstance(node, ast.FunctionDef) and node.name in expected_tests
+    )
+    fixture_names: set[str] = set()
+    for function in (
+        node
+        for node in test_tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    ):
+        for decorator in function.decorator_list:
+            target = decorator.func if isinstance(decorator, ast.Call) else decorator
+            dotted = _dotted_ast_name(target) or ""
+            first, separator, remainder = dotted.partition(".")
+            bound = test_bindings.get(first)
+            resolved = bound + (separator + remainder if separator else "") if bound else dotted
+            if resolved == "pytest.fixture":
+                fixture_names.add(function.name)
+
+    fixture_substitutions: set[str] = set()
+    fixture_sensitive_calls = {
+        collector_name,
+        validator_name,
+        *G2F_REQUIRED_PUBLIC_CALLS_V02,
+    }
+    for function in accepted_test_nodes:
+        parameters = (
+            *function.args.posonlyargs,
+            *function.args.args,
+            *function.args.kwonlyargs,
+        )
+        fixture_sources = {
+            parameter.arg: parameter.arg
+            for parameter in parameters
+            if parameter.arg in fixture_names
+        }
+        changed = True
+        while changed:
+            changed = False
+            for node in ast.walk(function):
+                target: ast.Name | None = None
+                value: ast.AST | None = None
+                if (
+                    isinstance(node, ast.Assign)
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                ):
+                    target = node.targets[0]
+                    value = node.value
+                elif isinstance(node, ast.AnnAssign) and isinstance(
+                    node.target, ast.Name
+                ):
+                    target = node.target
+                    value = node.value
+                if (
+                    target is not None
+                    and isinstance(value, ast.Name)
+                    and value.id in fixture_sources
+                    and target.id not in fixture_sources
+                ):
+                    fixture_sources[target.id] = fixture_sources[value.id]
+                    changed = True
+        for node in ast.walk(function):
+            if not isinstance(node, ast.Call):
+                continue
+            if isinstance(node.func, ast.Name) and node.func.id in fixture_sources:
+                fixture_substitutions.add(fixture_sources[node.func.id])
+            resolved = _g2f_resolved_call_v02(node, test_bindings)
+            called_name = resolved.rsplit(".", 1)[-1]
+            if called_name not in fixture_sensitive_calls:
+                continue
+            supplied_values = (*node.args, *(item.value for item in node.keywords))
+            for value in supplied_values:
+                if isinstance(value, ast.Name) and value.id in fixture_sources:
+                    fixture_substitutions.add(fixture_sources[value.id])
+    for fixture_name in sorted(fixture_substitutions):
+        failures.append(
+            f"g2f.implementation.tests.fixture_substitution:{fixture_name}"
+        )
+
+    actual_dataflow = False
+    for function in accepted_test_nodes:
+        report_names: set[str] = set()
+        for node in ast.walk(function):
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and isinstance(node.value, ast.Call)
+                and (_dotted_ast_name(node.value.func) or "").endswith(collector_name)
+                and not node.value.args
+                and not node.value.keywords
+            ):
+                report_names.add(node.targets[0].id)
+        if report_names and any(
+            isinstance(node, ast.Call)
+            and (_dotted_ast_name(node.func) or "").endswith(validator_name)
+            and len(node.args) == 1
+            and isinstance(node.args[0], ast.Name)
+            and node.args[0].id in report_names
+            for node in ast.walk(function)
+        ):
+            actual_dataflow = True
+            break
+    if not actual_dataflow:
+        failures.append("g2f.implementation.tests.actual_public_dataflow")
+
+
+def _validate_g2f_class_a_contract_v01(
+    repo_root: Path,
+    authority_index: dict[str, object] | None,
+    successor_manifest: dict[str, object] | None,
+    failures: list[str],
+    *,
+    g2f_active: bool,
+) -> None:
+    if not g2f_active:
+        return
+    try:
+        source = (repo_root / G2F_PREFLIGHT_PATH).read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        failures.append(f"g2f.class_a.preflight.read:{type(exc).__name__}")
+        return
+    required_markers = (
+        "G2F_PREFLIGHT_STATUS=ACCEPTED_CLASS_A_CANDIDATE",
+        "G2F_CLASSIFICATION=ORCHESTRATION_AND_ACCEPTANCE_ONLY",
+        "G2F_RUNTIME_IMPLEMENTATION_PERFORMED=false",
+        "GATE2_STATUS=NOT_CLOSED",
+        "OWNER_ONLY_COMMIT_PUSH=true",
+        "THREAD_STATUS=DESIGN_DERIVED_CONSTRUCTIBLE",
+        "PUBLIC_CONSTRUCTION_LEDGER_ROWS=174",
+        "CONSTRUCTION_LEDGER_CONSECUTIVE=true",
+        "DISTINCT_FRESH_ROOT_REVIEW_CHAINS=5",
+        "INITIAL_TRANSACTION_ROOT_SET_BINDING=EXACT_DETERMINISTIC_SCENARIO_VALUES",
+        "NONEXISTENT_CURRENT_G2F_VALIDATOR_REFERENCES=0",
+        "STALE_PACKET_AUTHORIZATION_CONTRIBUTION_REUSE=false",
+        "STALE_PACKET_AUTHORIZATION_DECISION_REUSE=false",
+        "STALE_INVALIDATION_ROOT_DECISION_REUSE=false",
+        "UNBOUND_LITERAL_INVALIDATION_EVIDENCE=false",
+        "STALE_REVOCATION_ROOT_INPUT_REUSE=false",
+        "STALE_REVOCATION_ROOT_RESULT_REUSE=false",
+        "STALE_SUCCESSOR_ROOT_PROJECTION_REUSE=false",
+        "STALE_SUPERSESSION_ROOT_PROJECTION_REUSE=false",
+        "STALE_ORIGINAL_PACKET_TRANSITION_EVENT_REUSE=false",
+        "STALE_REVOCATION_TRANSITION_EVENT_REUSE=false",
+        "STALE_SUCCESSOR_ACTIVATION_EVENT_REUSE=false",
+        "STALE_SUCCESSOR_DISPOSITION_EVENT_REUSE=false",
+        "STALE_PREDECESSOR_SUPERSESSION_EVENT_REUSE=false",
+        "REVOCATION_BOUND_TO_G2E_INVALIDATION=true",
+        "PRIVATE_HELPERS_REQUIRED=0",
+        "TEST_IMPORTS_REQUIRED=0",
+        "MISSING_RUNTIME_SEAM=false",
+        "ARCHITECTURE_CONFLICT=false",
+        "OWNER_REVIEW_CORRECTIONS_BEGIN",
+        "CORRECTION_1_CONSTRUCTIBILITY_AND_MULTIROOT=",
+        "CORRECTION_2_HOP_RELATIVE_CLOSURE_PREDECESSORS=",
+        "CORRECTION_3_FRESH_CLOSURE_RUNTIME_AND_IDENTITY_WORDING=REQUIRED",
+        "TRANSACTION_ID=transaction:g2f:gate2:v01",
+        "ROOT_SET=(root:g2f:client,root:g2f:supplier)",
+        "PACKET_OWNER_ROOT=root:g2f:supplier",
+        "DELTA_AFFECTED_ROOT_SET=(root:g2f:supplier)",
+        "SUPERROOT_CREATED=false",
+        "AGGREGATE_AUTHORITY_CREATED=false",
+        "OPEN_QUESTIONS=NONE",
+    )
+    for marker in required_markers:
+        if marker not in source:
+            failures.append(f"g2f.class_a.preflight.marker:{marker}")
+    identity = _file_identity(repo_root / G2F_PREFLIGHT_PATH)
+    if identity is None or identity[0] != G2F_PREFLIGHT_SHA256_V02:
+        failures.append("g2f.class_a.preflight.identity")
+    rows = [
+        line for line in source.splitlines() if re.match(r"^[0-9]{3}\|", line)
+    ]
+    expected_prefixes = [f"{index:03d}|" for index in range(1, 175)]
+    if len(rows) != 174 or [line[:4] for line in rows] != expected_prefixes:
+        failures.append("g2f.class_a.preflight.construction_ledger.exact_174")
+    for line in rows:
+        fields = line.split("|")
+        if len(fields) != 5 or not fields[3] or not fields[4]:
+            failures.append("g2f.class_a.preflight.construction_ledger.shape")
+            break
+        symbol = fields[3].rsplit(":", 1)[-1]
+        if symbol.startswith("_"):
+            failures.append(
+                f"g2f.class_a.preflight.private_producer:{symbol}"
+            )
+    for symbol in (
+        "build_transaction_outcome_envelope_v01",
+        "validate_multiroot_v01",
+        "transaction_outcome_envelope_to_plain_dict_v01",
+        "run_fractal_runtime_v02",
+        "inspect_action_packet_present_eligibility_v01",
+        "run_continuous_delta_runtime_v01",
+        "record_action_packet_revocation_v01",
+        "record_action_packet_supersession_v01",
+        "replay_action_packet_lifecycle_history_v01",
+        "packet_authorization_actor_contribution",
+        "invalidation_acceptance_root_decision_result",
+        "revocation_review_root_candidate_projection",
+        "successor_authorization_root_candidate_projection",
+        "supersession_review_root_candidate_projection",
+        "original_activation_transition_event",
+        "original_queue_transition_event",
+        "original_pending_transition_event",
+        "fresh_revocation_transition_event",
+        "successor_activation_transition_event",
+        "successor_activation_disposition_event",
+        "predecessor_supersession_transition_event",
+        "FUTURE_G2F_REPORT_VALIDATOR_REQUIRED",
+    ):
+        if symbol not in source:
+            failures.append(f"g2f.class_a.preflight.public_symbol:{symbol}")
+    if "G2F_cross_stage_validator" in source:
+        failures.append("g2f.class_a.preflight.nonexistent_current_validator")
+    for status_failure in _g2f_status_overclaims_v02(source):
+        failures.append(
+            f"g2f.class_a.preflight.status_overclaim:{status_failure}"
+        )
+    deferred = (
+        "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+    )
+    for path in G2F_CLOSURE_OVERLAP_PATHS:
+        if f"MODIFY {path}|{deferred}" not in source:
+            failures.append(f"g2f.class_a.preflight.deferred_predecessor:{path}")
+    for test_id in G2F_FOCUSED_TEST_IDS:
+        if source.splitlines().count(test_id) != 1:
+            failures.append(f"g2f.class_a.preflight.focused_test:{test_id}")
+    for phrase in (
+        "freshly run the exact committed",
+        "24-node focused suite",
+        "direct canonical report receipt",
+        "TRACKED_REPOSITORY_BYTES_UNCHANGED",
+        "IGNORED_NON_VENV_STATE_UNCHANGED",
+        "GIT_INDEX_SEMANTIC_CONTENT_AND_FLAGS_UNCHANGED",
+    ):
+        if phrase not in source:
+            failures.append(f"g2f.class_a.preflight.correction:{phrase}")
+    if authority_index is None or successor_manifest is None:
+        failures.append("g2f.class_a.control_plane_json_missing")
+    _validate_g2f_future_implementation_contract_v01(repo_root, failures)
+
+
 def _validate_e6_class_a_control_plane(
     repo_root: Path,
     authority_index: dict[str, object] | None,
@@ -9081,10 +10101,13 @@ def _validate_deliverable_paths(
     failures: list[str],
     *,
     closure_active: bool = False,
+    g2f_active: bool = False,
 ) -> None:
     required = CLASS_A_RECONCILIATION_PATHS | CLASS_B_E6_IMPLEMENTATION_PATHS
     if closure_active:
         required |= G2E_CLASS_D_CLOSURE_PATHS
+    if g2f_active:
+        required |= {G2F_PREFLIGHT_PATH}
     for relative_path in sorted(required):
         if not (repo_root / relative_path).is_file():
             failures.append(f"deliverable.missing:{relative_path}")
@@ -9324,6 +10347,103 @@ def _compare_exact_ledger_v01(
             )
 
 
+def _classify_g2f_path_ledger_v01(
+    *,
+    requested: bool,
+    head: str,
+    parent: str | None,
+    grandparent: str | None,
+    branch: str | None,
+    origin_main: str | None,
+    worktree_entries: Sequence[tuple[str, str, str | None]],
+    head_commit_entries: Sequence[tuple[str, str, str | None]],
+    parent_commit_entries: Sequence[tuple[str, str, str | None]],
+    parent_count: int = 1,
+) -> tuple[str | None, tuple[str, ...]]:
+    if not requested:
+        return None, ()
+    failures: list[str] = []
+    worktree = _entry_map_v02(
+        worktree_entries, label="g2f.worktree", failures=failures
+    )
+    head_commit = _entry_map_v02(
+        head_commit_entries, label="g2f.head_commit", failures=failures
+    )
+    parent_commit = _entry_map_v02(
+        parent_commit_entries, label="g2f.parent_commit", failures=failures
+    )
+    class_a_candidate = {
+        path: "??" if path == G2F_PREFLIGHT_PATH else " M"
+        for path in G2F_CLASS_A_PATHS
+    }
+    implementation_candidate = {path: "??" for path in G2F_IMPLEMENTATION_PATHS}
+    if parent_count != 1:
+        failures.append(f"g2f.merge_or_parent_count:{parent_count}")
+    if head == G2E_CLOSURE_COMMIT:
+        mode = "G2F_CLASS_A_CANDIDATE"
+        _compare_exact_ledger_v01(
+            worktree,
+            class_a_candidate,
+            label="g2f.class_a_candidate.worktree",
+            failures=failures,
+        )
+        if head_commit:
+            failures.append("g2f.class_a_candidate.unexpected_commit_ledger")
+        if parent_commit:
+            failures.append("g2f.class_a_candidate.unexpected_parent_commit_ledger")
+        if origin_main != G2E_CLOSURE_COMMIT:
+            failures.append("g2f.class_a_candidate.origin_main")
+    elif parent == G2E_CLOSURE_COMMIT:
+        _compare_exact_ledger_v01(
+            head_commit,
+            dict(G2F_CLASS_A_COMMITTED_NAME_STATUS),
+            label="g2f.class_a_committed.commit",
+            failures=failures,
+        )
+        if parent_commit:
+            failures.append("g2f.class_a_committed.unexpected_parent_commit_ledger")
+        if not worktree:
+            mode = "G2F_CLASS_A_COMMITTED"
+        else:
+            mode = "G2F_IMPLEMENTATION_CANDIDATE"
+            _compare_exact_ledger_v01(
+                worktree,
+                implementation_candidate,
+                label="g2f.implementation_candidate.worktree",
+                failures=failures,
+            )
+        if origin_main != head:
+            failures.append("g2f.class_a_successor.origin_main")
+    elif grandparent == G2E_CLOSURE_COMMIT:
+        mode = "G2F_IMPLEMENTATION_COMMITTED"
+        _compare_exact_ledger_v01(
+            parent_commit,
+            dict(G2F_CLASS_A_COMMITTED_NAME_STATUS),
+            label="g2f.implementation_committed.class_a_commit",
+            failures=failures,
+        )
+        _compare_exact_ledger_v01(
+            head_commit,
+            dict(G2F_IMPLEMENTATION_COMMITTED_NAME_STATUS),
+            label="g2f.implementation_committed.commit",
+            failures=failures,
+        )
+        _compare_exact_ledger_v01(
+            worktree,
+            {},
+            label="g2f.implementation_committed.worktree",
+            failures=failures,
+        )
+        if origin_main != head:
+            failures.append("g2f.implementation_committed.origin_main")
+    else:
+        mode = "G2F_INVALID"
+        failures.append("g2f.third_descendant_or_basis_not_exact")
+    if branch != "main":
+        failures.append("g2f.branch")
+    return mode, tuple(sorted(set(failures)))
+
+
 def _classify_g2e_closure_path_ledger_v01(
     *,
     closure_requested: bool,
@@ -9335,6 +10455,8 @@ def _classify_g2e_closure_path_ledger_v01(
     committed_entries: Sequence[tuple[str, str, str | None]],
     worktree_entries: Sequence[tuple[str, str, str | None]],
     closure_commit_entries: Sequence[tuple[str, str, str | None]],
+    g2e_closure_ancestor: bool = False,
+    g2f_topology_passed: bool = False,
 ) -> tuple[str | None, tuple[str, ...]]:
     if not closure_requested:
         return None, ()
@@ -9388,8 +10510,20 @@ def _classify_g2e_closure_path_ledger_v01(
             failures.append("g2e.closure.candidate.unexpected_commit_ledger")
         if origin_main != G2E_CLOSURE_BASIS_COMMIT:
             failures.append("g2e.closure.candidate.origin_main")
-    elif parent == G2E_CLOSURE_BASIS_COMMIT:
+    elif parent == G2E_CLOSURE_BASIS_COMMIT or g2e_closure_ancestor:
         mode = "G2E_CLOSED_PASS_COMMITTED"
+        if g2f_topology_passed:
+            committed = {
+                path: status
+                for path, status in committed.items()
+                if path
+                not in ({G2F_PREFLIGHT_PATH} | G2F_IMPLEMENTATION_PATHS)
+            }
+            worktree = {
+                path: status
+                for path, status in worktree.items()
+                if path not in G2F_CLASS_A_PATHS | G2F_IMPLEMENTATION_PATHS
+            }
         _compare_exact_ledger_v01(
             committed,
             class_a_b_and_d,
@@ -9410,7 +10544,9 @@ def _classify_g2e_closure_path_ledger_v01(
         )
         if origin_main != head:
             failures.append("g2e.closure.committed.origin_main")
-        if subject != "Close G2-E continuous delta runtime lifecycle":
+        if not g2e_closure_ancestor and subject != (
+            "Close G2-E continuous delta runtime lifecycle"
+        ):
             failures.append("g2e.closure.committed.subject")
     else:
         mode = "G2E_CLOSED_PASS_INVALID"
@@ -9424,6 +10560,8 @@ def _classify_g2e_closure_path_ledger_v01(
 def _validate_g2e_closure_topology_v01(
     repo_root: Path,
     failures: list[str],
+    *,
+    g2f_topology_passed: bool = False,
 ) -> str | None:
     head = _git_head_v02(repo_root, failures)
     if head is None:
@@ -9437,10 +10575,26 @@ def _validate_g2e_closure_topology_v01(
         "g2e.closure.parent",
         parent_probe,
     )
+    try:
+        ancestor_probe = subprocess.run(
+            ("git", "merge-base", "--is-ancestor", G2E_CLOSURE_COMMIT, "HEAD"),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        failures.append(f"g2e.closure.ancestor:{type(exc).__name__}")
+        g2e_closure_ancestor = False
+    else:
+        g2e_closure_ancestor = ancestor_probe.returncode == 0
+        if ancestor_probe.returncode not in {0, 1}:
+            failures.append(
+                f"g2e.closure.ancestor:exit_{ancestor_probe.returncode}"
+            )
     closure_requested = (
         head == G2E_CLOSURE_BASIS_COMMIT
         and bool(worktree_paths & G2E_CLASS_D_CLOSURE_PATHS)
-    ) or parent == G2E_CLOSURE_BASIS_COMMIT or any(
+    ) or parent == G2E_CLOSURE_BASIS_COMMIT or g2e_closure_ancestor or any(
         (repo_root / path).exists()
         for path in (G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH)
     )
@@ -9469,10 +10623,14 @@ def _validate_g2e_closure_topology_v01(
     closure_commit_entries = (
         _git_name_status_entries_v01(
             repo_root,
-            f"{G2E_CLOSURE_BASIS_COMMIT}..HEAD",
+            (
+                f"{G2E_CLOSURE_BASIS_COMMIT}..{G2E_CLOSURE_COMMIT}"
+                if g2e_closure_ancestor
+                else f"{G2E_CLOSURE_BASIS_COMMIT}..HEAD"
+            ),
             failures,
         )
-        if parent == G2E_CLOSURE_BASIS_COMMIT
+        if parent == G2E_CLOSURE_BASIS_COMMIT or g2e_closure_ancestor
         else ()
     )
     mode, topology_failures = _classify_g2e_closure_path_ledger_v01(
@@ -9485,6 +10643,8 @@ def _validate_g2e_closure_topology_v01(
         committed_entries=committed_entries,
         worktree_entries=worktree_entries,
         closure_commit_entries=closure_commit_entries,
+        g2e_closure_ancestor=g2e_closure_ancestor,
+        g2f_topology_passed=g2f_topology_passed,
     )
     failures.extend(topology_failures)
     for marker in (
@@ -9507,6 +10667,110 @@ def _validate_g2e_closure_topology_v01(
                 operation_path = repo_root / operation_path
             if operation_path.exists():
                 failures.append(f"g2e.closure.git_operation_active:{marker}")
+    return mode
+
+
+def _validate_g2f_topology_v01(
+    repo_root: Path,
+    failures: list[str],
+) -> str | None:
+    head = _git_head_v02(repo_root, failures)
+    if head is None:
+        return None
+    worktree_entries = _git_status_entries_v02(repo_root, failures)
+    worktree_paths = {path for _status, path, _source in worktree_entries}
+    parent_failures: list[str] = []
+    parent = _git_single_line_v01(
+        repo_root,
+        ("rev-parse", "--verify", "HEAD^"),
+        "g2f.parent",
+        parent_failures,
+    )
+    grandparent = _git_single_line_v01(
+        repo_root,
+        ("rev-parse", "--verify", "HEAD^^"),
+        "g2f.grandparent",
+        parent_failures,
+    )
+    parent_line = _git_single_line_v01(
+        repo_root,
+        ("rev-list", "--parents", "-n", "1", "HEAD"),
+        "g2f.parent_count",
+        parent_failures,
+    )
+    parent_count = (
+        len(parent_line.split()) - 1 if parent_line is not None else 0
+    )
+    try:
+        ancestor_probe = subprocess.run(
+            ("git", "merge-base", "--is-ancestor", G2E_CLOSURE_COMMIT, "HEAD"),
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+    except OSError as exc:
+        parent_failures.append(f"g2f.ancestor:{type(exc).__name__}")
+        g2f_descendant = False
+    else:
+        if ancestor_probe.returncode not in {0, 1}:
+            parent_failures.append(
+                f"g2f.ancestor:exit_{ancestor_probe.returncode}"
+            )
+        g2f_descendant = (
+            head != G2E_CLOSURE_COMMIT and ancestor_probe.returncode == 0
+        )
+    requested = (
+        (head == G2E_CLOSURE_COMMIT and bool(worktree_paths & G2F_CLASS_A_PATHS))
+        or (repo_root / G2F_PREFLIGHT_PATH).exists()
+        or bool(worktree_paths & G2F_IMPLEMENTATION_PATHS)
+        or parent == G2E_CLOSURE_COMMIT
+        or grandparent == G2E_CLOSURE_COMMIT
+        or g2f_descendant
+    )
+    if not requested:
+        return None
+    failures.extend(parent_failures)
+    branch = _git_single_line_v01(
+        repo_root,
+        ("branch", "--show-current"),
+        "g2f.branch",
+        failures,
+    )
+    origin_main = _git_single_line_v01(
+        repo_root,
+        ("rev-parse", "--verify", "refs/remotes/origin/main"),
+        "g2f.origin_main",
+        failures,
+    )
+    head_commit_entries = (
+        _git_name_status_entries_v01(repo_root, f"{parent}..HEAD", failures)
+        if parent is not None and head != G2E_CLOSURE_COMMIT
+        else ()
+    )
+    parent_commit_entries = (
+        _git_name_status_entries_v01(
+            repo_root, f"{grandparent}..{parent}", failures
+        )
+        if (
+            grandparent is not None
+            and parent is not None
+            and grandparent == G2E_CLOSURE_COMMIT
+        )
+        else ()
+    )
+    mode, topology_failures = _classify_g2f_path_ledger_v01(
+        requested=True,
+        head=head,
+        parent=parent,
+        grandparent=grandparent,
+        branch=branch,
+        origin_main=origin_main,
+        worktree_entries=worktree_entries,
+        head_commit_entries=head_commit_entries,
+        parent_commit_entries=parent_commit_entries,
+        parent_count=parent_count,
+    )
+    failures.extend(topology_failures)
     return mode
 
 
@@ -9612,6 +10876,8 @@ def _validate_changed_paths(
         CLASS_A_RECONCILIATION_PATHS
         | CLASS_B_E6_IMPLEMENTATION_PATHS
         | G2E_CLASS_D_CLOSURE_PATHS
+        | G2F_CLASS_A_PATHS
+        | G2F_IMPLEMENTATION_PATHS
     )
     for path in sorted(set(changed_paths)):
         if not _valid_relative_path(path) or path not in allowed:
@@ -9625,7 +10891,16 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
-    closure_mode = _validate_g2e_closure_topology_v01(root, failures)
+    g2f_topology_failures: list[str] = []
+    g2f_mode = _validate_g2f_topology_v01(root, g2f_topology_failures)
+    g2f_active = g2f_mode is not None
+    g2f_topology_passed = g2f_active and not g2f_topology_failures
+    failures.extend(g2f_topology_failures)
+    closure_mode = _validate_g2e_closure_topology_v01(
+        root,
+        failures,
+        g2f_topology_passed=g2f_topology_passed,
+    )
     closure_active = closure_mode is not None
     authority_index = _load_json(root / INDEX_PATH, "authority_index", failures)
     successor_manifest = _load_json(
@@ -9649,6 +10924,7 @@ def collect_failures(
         authority_index,
         failures,
         closure_active=closure_active,
+        g2f_active=g2f_active,
     )
     historical_paths = {
         entry.get("path")
@@ -9660,6 +10936,7 @@ def collect_failures(
         failures,
         historical_paths,
         closure_active=closure_active,
+        g2f_active=g2f_active,
     )
     _validate_e6_class_a_control_plane(
         root,
@@ -9667,6 +10944,13 @@ def collect_failures(
         successor_manifest,
         failures,
         closure_active=closure_active,
+    )
+    _validate_g2f_class_a_contract_v01(
+        root,
+        authority_index,
+        successor_manifest,
+        failures,
+        g2f_active=g2f_active,
     )
     _validate_s3_inventory(root, retired_inventory, failures)
     _validate_current_schema_surface(root, current_schema_surface, failures)
@@ -9688,6 +10972,7 @@ def collect_failures(
         root,
         failures,
         closure_active=closure_active,
+        g2f_active=g2f_active,
     )
     return tuple(sorted(set(failures)))
 
@@ -9721,6 +11006,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
             print("CURRENT_PHASE=POST_E6_SUCCESSOR")
             print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
             print(f"LIFECYCLE_MODE={closure_mode}")
+        g2f_failures: list[str] = []
+        g2f_mode = _validate_g2f_topology_v01(
+            args.root.resolve(), g2f_failures
+        )
+        if g2f_mode is not None:
+            print(f"G2F_PHASE={g2f_mode}")
         return 0
     print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 FAIL")
     for failure in failures:

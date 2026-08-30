@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_for_head": "6079ddcfe59f582936e7b13af2753a6533117970",
+  "generated_for_head": "282e319241946b34987b2533d95ed514c3d884c1",
   "current_normative_documents": [
     {
       "path": "specs/current_architecture_lock_v01.md",
@@ -149,6 +149,15 @@
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
       "role": "current G2-E CLOSED_PASS lifecycle checkpoint; bounded to G2-E and subordinate to the Current Architecture Lock"
+    },
+    {
+      "path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+      "status": "accepted_g2f_class_a_preflight_candidate",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "current scoped G2-F constructibility and future two-path orchestration/acceptance contract; implementation effective only after exact owner Class-A commit and subordinate to the Current Architecture Lock"
     },
     {
       "path": "release/current_status_overlay_v01.json",
@@ -378,6 +387,7 @@
     "Historical and audit evidence is discoverable by explicit file request or the recorded Git object reference, never through automatic onboarding.",
     "G2-E is CLOSED_PASS on exact committed evidence; this does not close Gate 2, start or authorize G2-F, or claim public release, RC2, production readiness, or production security certification.",
     "The successor context onboards the current G2-E checkpoint while keeping the independent audit and all audit globs outside automatic onboarding.",
+    "The G2-F Class-A preflight is a current named-gate candidate contract; it authorizes no runtime implementation before owner review and commit of its exact seven-path boundary.",
     "Named Gate authority cannot redefine global topology, Root sovereignty, BSEP, runtime ownership, or another Gate's contract."
   ]
 }

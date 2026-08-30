@@ -159,6 +159,41 @@ G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED` and its implementation authorization
 is false. Gate 2 remains `NOT_CLOSED`. Public release, RC2, production
 readiness, and production security certification remain `NOT_CLAIMED`.
 
+### G2-F Class-A preflight boundary
+
+`docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md` is the current scoped
+G2-F Class-A candidate contract, subordinate to this lock. It classifies G2-F
+as `ORCHESTRATION_AND_ACCEPTANCE_ONLY` after a source-derived public
+constructibility proof. The future programme preserves the seven existing
+Gate-2 completion statements, one exact MultiRoot transaction with independent
+Root decisions, eight positive/report cases, sixteen bounded DoD/hostile cases,
+and 24 focused tests total. It creates no new kernel primitive, schema, Living
+act, Conformance category, Root, authority, provider/model/network/connector/
+adapter operation, or real-world effect.
+
+The Class-A candidate boundary is exactly these seven paths:
+
+1. `docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md`;
+2. `specs/current_architecture_lock_v01.md`;
+3. `specs/document_authority_index_v01.json`;
+4. `release/successor_context_manifest_v01.json`;
+5. `tools/check_active_architecture_authority_v01.py`;
+6. `tests/test_active_architecture_authority_v01.py`;
+7. `tests/test_repository_release_spine_v01.py`.
+
+Only after owner review and commit of those exact Class-A bytes may a separate
+owner authorization make the exact two-path implementation boundary effective:
+`demo/run_consolidated_gate2_gauntlet_g2_f_v01.py` and
+`tests/test_consolidated_gate2_gauntlet_g2_f_v01.py`. This Class-A hop does not
+authorize or perform that implementation. The owner alone may stage, commit,
+or push either boundary.
+
+The runtime phase remains `POST_E6_SUCCESSOR`; G2-F remains
+`NEXT_NOT_STARTED_NOT_AUTHORIZED`, its implementation authorization remains
+false, and Gate 2 remains `NOT_CLOSED`. RC2, public release, production
+readiness, production security certification, and real-world integration remain
+unclaimed.
+
 ## 9. Historical-document law
 
 Documents classified as historical or reference-only in the authority index

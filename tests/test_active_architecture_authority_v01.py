@@ -335,7 +335,10 @@ def test_clean_worktree_control_plane_passes() -> None:
     g2f_output = ""
     if dirty_paths == set(G2F_CLASS_A_PATHS):
         lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
-        g2f_output = "G2F_PHASE=G2F_CLASS_A_CANDIDATE\n"
+        g2f_output = (
+            "G2F_PHASE="
+            "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE\n"
+        )
     elif dirty_paths:
         assert dirty_paths == set(CLASS_D_PATHS)
         lifecycle_mode = "G2E_CLOSED_PASS_CANDIDATE"
@@ -2170,130 +2173,237 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         & namespace["G2F_CLASS_A_PATHS"]
     )
 
-    class_a_candidate = tuple(
-        (
-            "??" if path.endswith("g2_f_preflight_v01.md") else " M",
-            path,
-            None,
-        )
-        for path in sorted(G2F_CLASS_A_PATHS)
+    original_class_a_commit = namespace["G2F_ORIGINAL_CLASS_A_COMMIT"]
+    original_class_a_parent = namespace["G2F_ORIGINAL_CLASS_A_PARENT"]
+    original_class_a_committed = {
+        path: "A" if path.endswith("g2_f_preflight_v01.md") else "M"
+        for path in G2F_CLASS_A_PATHS
+    }
+    repair_candidate = tuple(
+        (" M", path, None) for path in sorted(G2F_CLASS_A_PATHS)
     )
+    repair_committed = {path: "M" for path in G2F_CLASS_A_PATHS}
     g2f_classifier = namespace["_classify_g2f_path_ledger_v01"]
+
     mode, failures = g2f_classifier(
         requested=True,
-        head=G2E_CLOSURE_COMMIT,
-        parent=G2E_CLOSURE_BASIS_COMMIT,
-        grandparent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        head=original_class_a_commit,
+        parent=original_class_a_parent,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
         branch="main",
-        origin_main=G2E_CLOSURE_COMMIT,
-        worktree_entries=class_a_candidate,
-        head_commit_entries=(),
+        origin_main=original_class_a_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(original_class_a_committed),
         parent_commit_entries=(),
     )
-    assert mode == "G2F_CLASS_A_CANDIDATE"
+    assert mode == "G2F_ORIGINAL_CLASS_A_COMMITTED_SUPERSEDED"
+    assert failures == ()
+
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=original_class_a_commit,
+        parent=original_class_a_parent,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=original_class_a_commit,
+        worktree_entries=repair_candidate,
+        head_commit_entries=_ledger_entries(original_class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert mode == "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
     assert failures == ()
 
     _mode, missing_failures = g2f_classifier(
         requested=True,
-        head=G2E_CLOSURE_COMMIT,
-        parent=G2E_CLOSURE_BASIS_COMMIT,
-        grandparent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
+        head=original_class_a_commit,
+        parent=original_class_a_parent,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
         branch="main",
-        origin_main=G2E_CLOSURE_COMMIT,
-        worktree_entries=class_a_candidate[1:],
-        head_commit_entries=(),
+        origin_main=original_class_a_commit,
+        worktree_entries=repair_candidate[1:],
+        head_commit_entries=_ledger_entries(original_class_a_committed),
         parent_commit_entries=(),
     )
-    assert any("class_a_candidate.worktree.missing" in item for item in missing_failures)
+    assert any(
+        "class_a_181_reconciliation_candidate.worktree.missing" in item
+        for item in missing_failures
+    )
 
     _mode, extra_failures = g2f_classifier(
         requested=True,
-        head=G2E_CLOSURE_COMMIT,
-        parent=G2E_CLOSURE_BASIS_COMMIT,
-        grandparent="4c133da11b8bcbd642e1aaa3413ce0a9c357731d",
-        branch="main",
-        origin_main=G2E_CLOSURE_COMMIT,
-        worktree_entries=(*class_a_candidate, ("??", "unexpected.txt", None)),
-        head_commit_entries=(),
-        parent_commit_entries=(),
-    )
-    assert "g2f.class_a_candidate.worktree.unexpected:unexpected.txt" in extra_failures
-
-    class_a_commit = "a" * 40
-    class_a_committed = {
-        path: "A" if path.endswith("g2_f_preflight_v01.md") else "M"
-        for path in G2F_CLASS_A_PATHS
-    }
-    mode, failures = g2f_classifier(
-        requested=True,
-        head=class_a_commit,
-        parent=G2E_CLOSURE_COMMIT,
+        head=original_class_a_commit,
+        parent=original_class_a_parent,
         grandparent=G2E_CLOSURE_BASIS_COMMIT,
         branch="main",
-        origin_main=class_a_commit,
-        worktree_entries=(),
-        head_commit_entries=_ledger_entries(class_a_committed),
+        origin_main=original_class_a_commit,
+        worktree_entries=(*repair_candidate, ("??", "unexpected.txt", None)),
+        head_commit_entries=_ledger_entries(original_class_a_committed),
         parent_commit_entries=(),
     )
-    assert mode == "G2F_CLASS_A_COMMITTED"
+    assert (
+        "g2f.class_a_181_reconciliation_candidate.worktree.unexpected:unexpected.txt"
+        in extra_failures
+    )
+
+    staged_repair = list(repair_candidate)
+    staged_repair[0] = ("M ", staged_repair[0][1], None)
+    _mode, staged_failures = g2f_classifier(
+        requested=True,
+        head=original_class_a_commit,
+        parent=original_class_a_parent,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=original_class_a_commit,
+        worktree_entries=tuple(staged_repair),
+        head_commit_entries=_ledger_entries(original_class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert any(
+        "class_a_181_reconciliation_candidate.worktree.status" in item
+        for item in staged_failures
+    )
+
+    _mode, premature_implementation_failures = g2f_classifier(
+        requested=True,
+        head=original_class_a_commit,
+        parent=original_class_a_parent,
+        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        branch="main",
+        origin_main=original_class_a_commit,
+        worktree_entries=(
+            *repair_candidate,
+            *(("??", path, None) for path in G2F_IMPLEMENTATION_PATHS),
+        ),
+        head_commit_entries=_ledger_entries(original_class_a_committed),
+        parent_commit_entries=(),
+    )
+    assert any(
+        "class_a_181_reconciliation_candidate.worktree.unexpected" in item
+        for item in premature_implementation_failures
+    )
+
+    repair_commit = "a" * 40
+    mode, failures = g2f_classifier(
+        requested=True,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
+        branch="main",
+        origin_main=repair_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(repair_committed),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
+    )
+    assert mode == "G2F_CLASS_A_181_ROW_RECONCILIATION_COMMITTED"
     assert failures == ()
+
+    _mode, repair_commit_missing = g2f_classifier(
+        requested=True,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
+        branch="main",
+        origin_main=repair_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(dict(list(repair_committed.items())[1:])),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
+    )
+    assert any(
+        "class_a_181_reconciliation_committed.commit.missing" in item
+        for item in repair_commit_missing
+    )
+
+    _mode, repair_commit_extra = g2f_classifier(
+        requested=True,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
+        branch="main",
+        origin_main=repair_commit,
+        worktree_entries=(),
+        head_commit_entries=(*_ledger_entries(repair_committed), ("M", "extra.txt", None)),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
+    )
+    assert (
+        "g2f.class_a_181_reconciliation_committed.commit.unexpected:extra.txt"
+        in repair_commit_extra
+    )
 
     implementation_candidate = tuple(
         ("??", path, None) for path in sorted(G2F_IMPLEMENTATION_PATHS)
     )
     mode, failures = g2f_classifier(
         requested=True,
-        head=class_a_commit,
-        parent=G2E_CLOSURE_COMMIT,
-        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
         branch="main",
-        origin_main=class_a_commit,
+        origin_main=repair_commit,
         worktree_entries=implementation_candidate,
-        head_commit_entries=_ledger_entries(class_a_committed),
-        parent_commit_entries=(),
+        head_commit_entries=_ledger_entries(repair_committed),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
     )
     assert mode == "G2F_IMPLEMENTATION_CANDIDATE"
     assert failures == ()
 
     _mode, missing_failures = g2f_classifier(
         requested=True,
-        head=class_a_commit,
-        parent=G2E_CLOSURE_COMMIT,
-        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
         branch="main",
-        origin_main=class_a_commit,
+        origin_main=repair_commit,
         worktree_entries=implementation_candidate[1:],
-        head_commit_entries=_ledger_entries(class_a_committed),
-        parent_commit_entries=(),
+        head_commit_entries=_ledger_entries(repair_committed),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
     )
     assert any("implementation_candidate.worktree.missing" in item for item in missing_failures)
 
     _mode, extra_failures = g2f_classifier(
         requested=True,
-        head=class_a_commit,
-        parent=G2E_CLOSURE_COMMIT,
-        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
         branch="main",
-        origin_main=class_a_commit,
+        origin_main=repair_commit,
         worktree_entries=(*implementation_candidate, ("??", "extra.py", None)),
-        head_commit_entries=_ledger_entries(class_a_committed),
-        parent_commit_entries=(),
+        head_commit_entries=_ledger_entries(repair_committed),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
     )
     assert "g2f.implementation_candidate.worktree.unexpected:extra.py" in extra_failures
+
+    direct_implementation_commit = "d" * 40
+    _mode, direct_implementation_failures = g2f_classifier(
+        requested=True,
+        head=direct_implementation_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
+        branch="main",
+        origin_main=direct_implementation_commit,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(
+            {path: "A" for path in G2F_IMPLEMENTATION_PATHS}
+        ),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
+    )
+    assert any(
+        "class_a_181_reconciliation_committed.commit" in item
+        for item in direct_implementation_failures
+    )
 
     implementation_commit = "b" * 40
     mode, failures = g2f_classifier(
         requested=True,
         head=implementation_commit,
-        parent=class_a_commit,
-        grandparent=G2E_CLOSURE_COMMIT,
+        parent=repair_commit,
+        grandparent=original_class_a_commit,
         branch="main",
         origin_main=implementation_commit,
         worktree_entries=(),
         head_commit_entries=_ledger_entries(
             {path: "A" for path in G2F_IMPLEMENTATION_PATHS}
         ),
-        parent_commit_entries=_ledger_entries(class_a_committed),
+        parent_commit_entries=_ledger_entries(repair_committed),
     )
     assert mode == "G2F_IMPLEMENTATION_COMMITTED"
     assert failures == ()
@@ -2303,7 +2413,7 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         requested=True,
         head=third_descendant,
         parent=implementation_commit,
-        grandparent=class_a_commit,
+        grandparent=repair_commit,
         branch="main",
         origin_main=third_descendant,
         worktree_entries=(),
@@ -2313,32 +2423,51 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         ),
     )
     assert mode == "G2F_INVALID"
-    assert "g2f.third_descendant_or_basis_not_exact" in failures
+    assert "g2f.unrecognized_descendant_or_basis_not_exact" in failures
 
     _mode, merge_failures = g2f_classifier(
         requested=True,
-        head=class_a_commit,
-        parent=G2E_CLOSURE_COMMIT,
-        grandparent=G2E_CLOSURE_BASIS_COMMIT,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
         branch="main",
-        origin_main=class_a_commit,
+        origin_main=repair_commit,
         worktree_entries=(),
-        head_commit_entries=_ledger_entries(class_a_committed),
-        parent_commit_entries=(),
+        head_commit_entries=_ledger_entries(repair_committed),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
         parent_count=2,
     )
     assert "g2f.merge_or_parent_count:2" in merge_failures
 
+    _mode, wrong_origin_failures = g2f_classifier(
+        requested=True,
+        head=repair_commit,
+        parent=original_class_a_commit,
+        grandparent=original_class_a_parent,
+        branch="main",
+        origin_main="f" * 40,
+        worktree_entries=(),
+        head_commit_entries=_ledger_entries(repair_committed),
+        parent_commit_entries=_ledger_entries(original_class_a_committed),
+    )
+    assert "g2f.class_a_181_reconciliation_successor.origin_main" in (
+        wrong_origin_failures
+    )
+
     closure_classifier = namespace["_classify_g2e_closure_path_ledger_v01"]
     _mode, unapproved_ignore_failures = closure_classifier(
         closure_requested=True,
-        head=class_a_commit,
+        head=original_class_a_commit,
         parent=G2E_CLOSURE_COMMIT,
         branch="main",
-        origin_main=class_a_commit,
+        origin_main=original_class_a_commit,
         subject="Prepare G2-F Class A",
         committed_entries=_ledger_entries(
-            {**class_a_and_b, **class_d_committed, **class_a_committed}
+            {
+                **class_a_and_b,
+                **class_d_committed,
+                **original_class_a_committed,
+            }
         ),
         worktree_entries=(),
         closure_commit_entries=_ledger_entries(class_d_committed),
@@ -2351,13 +2480,17 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
     )
     _mode, approved_ignore_failures = closure_classifier(
         closure_requested=True,
-        head=class_a_commit,
+        head=original_class_a_commit,
         parent=G2E_CLOSURE_COMMIT,
         branch="main",
-        origin_main=class_a_commit,
+        origin_main=original_class_a_commit,
         subject="Prepare G2-F Class A",
         committed_entries=_ledger_entries(
-            {**class_a_and_b, **class_d_committed, **class_a_committed}
+            {
+                **class_a_and_b,
+                **class_d_committed,
+                **original_class_a_committed,
+            }
         ),
         worktree_entries=(),
         closure_commit_entries=_ledger_entries(class_d_committed),
@@ -2389,22 +2522,181 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         for line in preflight.splitlines()
         if len(line) > 4 and line[:3].isdigit() and line[3] == "|"
     ]
-    assert len(construction_rows) == 174
+    assert len(construction_rows) == 181
     assert [row[:4] for row in construction_rows] == [
-        f"{index:03d}|" for index in range(1, 175)
+        f"{index:03d}|" for index in range(1, 182)
     ]
-    assert "TRANSACTION_ID=transaction:g2f:gate2:v01" in preflight
+
+    def ledger_failures(source: str) -> tuple[str, ...]:
+        observed: list[str] = []
+        namespace["_validate_g2f_class_a_ledger_v13"](source, observed)
+        return tuple(observed)
+
+    row_lines = {int(row[:3]): row for row in construction_rows}
+    deleted_row_failures = ledger_failures(
+        preflight.replace(row_lines[27] + "\n", "", 1)
+    )
+    assert "g2f.class_a.preflight.construction_ledger.count:180" in (
+        deleted_row_failures
+    )
+
+    added_row_failures = ledger_failures(
+        preflight.replace(
+            row_lines[181] + "\n",
+            row_lines[181] + "\n" + row_lines[181].replace("181|", "182|", 1) + "\n",
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.construction_ledger.count:182" in (
+        added_row_failures
+    )
+
+    reordered_row_failures = ledger_failures(
+        preflight.replace(
+            row_lines[27] + "\n" + row_lines[28] + "\n",
+            row_lines[28] + "\n" + row_lines[27] + "\n",
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.construction_ledger.order" in (
+        reordered_row_failures
+    )
+
+    producer_substitution_failures = ledger_failures(
+        preflight.replace(
+            row_lines[70],
+            row_lines[70].replace(
+                ":ActionCommitPacketV02|",
+                ":build_supplier_a_mock_action_commit_packet_fixture_v02|",
+                1,
+            ),
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.row_070.exact" in (
+        producer_substitution_failures
+    )
+
+    expected_row_083 = (
+        "083|ROOT|packet_authorization_root_candidate_projection|"
+        "hedgehog/action_commit_packet_v02.py:"
+        "build_root_decision_candidate_projection_v01|"
+        "validate_root_decision_candidate_projection_v01+"
+        "validate_supplier_root_context_coherence_v01"
+    )
+    assert row_lines[83] == expected_row_083
+    row_083_missing_context_failures = ledger_failures(
+        preflight.replace(
+            row_lines[83],
+            row_lines[83].replace(
+                "+validate_supplier_root_context_coherence_v01",
+                "",
+                1,
+            ),
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.row_083.exact" in (
+        row_083_missing_context_failures
+    )
+    row_083_extra_validator_failures = ledger_failures(
+        preflight.replace(
+            row_lines[83],
+            row_lines[83] + "+validate_root_decision_result_v01",
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.row_083.exact" in (
+        row_083_extra_validator_failures
+    )
+
+    row_099_fixture_failures = ledger_failures(
+        preflight.replace(
+            row_lines[99],
+            row_lines[99].replace(
+                ":CorridorStepV01|",
+                ":build_supplier_a_corridor_step_fixture_v01|",
+                1,
+            ),
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.row_099.exact" in row_099_fixture_failures
+
+    row_099_context_failures = ledger_failures(
+        preflight.replace(
+            row_lines[99],
+            row_lines[99].replace(
+                "validate_action_packet_present_eligibility_inspection_v01(enclosing_validator_at_row103)",
+                "NONE",
+                1,
+            ),
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.row_099.exact" in row_099_context_failures
+
+    validator_weakening_failures = ledger_failures(
+        preflight.replace(
+            row_lines[138],
+            row_lines[138].replace(
+                "+validate_revocation_root_context_coherence_v01",
+                "",
+                1,
+            ),
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.row_138.exact" in (
+        validator_weakening_failures
+    )
+    preflight_lines = set(preflight.splitlines())
+    for marker in (
+        "SHARED_REQUEST_ID=transaction:g2f:gate2:v01",
+        "PARENT_MULTIROOT_CORRELATION_ID=transaction:g2f:gate2:v01",
+        "CLIENT_LOCAL_TRANSACTION_ID=CLIENT_DRS_QUERY_ID",
+        "SUPPLIER_LOCAL_TRANSACTION_ID=SUPPLIER_DRS_QUERY_ID",
+        "ROOT_LOCAL_TRANSACTION_CARDINALITY=2",
+        "PARENT_CORRELATION_CARDINALITY=1",
+        "REQUEST_TO_PARENT_CORRELATION=SAME_TOKEN_DISTINCT_FIELD_ROLES",
+        "PARENT_TOKEN_USED_AS_G2C_TRANSACTION=false",
+    ):
+        assert marker in preflight_lines
     assert "ROOT_SET=(root:g2f:client,root:g2f:supplier)" in preflight
     assert "PACKET_OWNER_ROOT=root:g2f:supplier" in preflight
     assert "DELTA_AFFECTED_ROOT_SET=(root:g2f:supplier)" in preflight
-    assert "THREAD_STATUS=DESIGN_DERIVED_CONSTRUCTIBLE" in preflight
+    assert (
+        "THREAD_STATUS=V13R1_FULL_VALIDATOR_CLOSURE_REPAIRED_CANDIDATE"
+        in preflight
+    )
+    assert "Row 083 binds rows 075, 081 and 082" in preflight
+    assert (
+        "supplier Root-context\nvalidation through "
+        "`validate_supplier_root_context_coherence_v01`"
+        in preflight
+    )
     assert "MISSING_RUNTIME_SEAM=false" in preflight
     assert "OPEN_QUESTIONS=NONE" in preflight
     assert "24-node focused suite" in preflight
     assert "direct canonical report receipt" in preflight
     for marker in (
-        "DISTINCT_FRESH_ROOT_REVIEW_CHAINS=5",
-        "INITIAL_TRANSACTION_ROOT_SET_BINDING=EXACT_DETERMINISTIC_SCENARIO_VALUES",
+        "PUBLIC_CONSTRUCTION_LEDGER_ROWS=181",
+        "CONSTRUCTION_LEDGER_CONSECUTIVE=true",
+        "CURRENT_CLASS_A_POSTIMAGES_RECONCILED=true",
+        "DIRECT_DECIDE_ROOT_RECEIPT_COUNT=8",
+        "DIRECT_DECIDE_ROOT_LOGICAL_ROW_COUNT=7",
+        "PRODUCER_BASIS_SHA256=f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d",
+        "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF_STATUS=DIRECT_AUTHORITY_FOR_V13_RECONCILIATION",
+        "V13_INPUT_ARCHIVE_SHA256=854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7",
+        "V13_OWNER_READINESS_STATUS=SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE",
+        "V13R1_VALIDATOR_CLOSURE_STATUS=FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE",
+        "ROOT_LOCAL_RUNTIME_INVOCATIONS_EXPLICIT=2",
+        "ROOT_LOCAL_G2B_FAMILY_COUNT=2",
+        "ROOT_LOCAL_G2C_LANE_COUNT=2",
+        "DISTINCT_ROOT_LOCAL_QUERY_TRANSACTIONS=2",
+        "SHARED_REQUEST_COUNT=1",
+        "PARENT_MULTIROOT_CORRELATION_COUNT=1",
+        "PACKET_AUTHORIZATION_CHAIN_EXACT=true",
         "NONEXISTENT_CURRENT_G2F_VALIDATOR_REFERENCES=0",
         "STALE_PACKET_AUTHORIZATION_CONTRIBUTION_REUSE=false",
         "STALE_PACKET_AUTHORIZATION_DECISION_REUSE=false",
@@ -2423,6 +2715,35 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         "FUTURE_G2F_REPORT_VALIDATOR_REQUIRED",
     ):
         assert marker in preflight
+    expected_first_24 = (
+        "semantic_address",
+        "drs_time_envelope",
+        "drs_authority_envelope",
+        "meaning_record",
+        "informational_temporal_query",
+        "informational_candidate_evaluation",
+        "legacy_local_drs_projection",
+        "memory_descent_budget",
+        "retrieval_plan",
+        "resolution_candidate",
+        "ranked_candidates",
+        "root_kernel_for_informational_reuse",
+        "semantic_work_request_for_reuse",
+        "reuse_evidence_binding",
+        "normalized_reuse_claim",
+        "reuse_actor_contribution",
+        "component_trust_profiles",
+        "reuse_root_review_packet",
+        "reuse_root_decision_input",
+        "reuse_root_decision",
+        "root_shortcut_projection",
+        "reuse_certificate",
+        "resolution_report",
+        "existing_shortcut_use_validation",
+    )
+    assert tuple(row.split("|")[2] for row in construction_rows[:24]) == (
+        expected_first_24
+    )
     assert "G2F_cross_stage_validator" not in preflight
     for artifact in (
         "packet_authorization_actor_contribution",
@@ -2460,7 +2781,7 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
     ):
         assert stale_hash not in closure_section
     assert closure_section.count(
-        "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+        "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
     ) == 6
 
     authority_index = json.loads(
@@ -2474,6 +2795,9 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         if entry["path"] == G2F_CLASS_A_PATHS[0]
     ]
     assert len(preflight_entries) == 1
+    assert preflight_entries[0]["status"] == (
+        "accepted_g2f_v13r1_full_validator_closure_candidate"
+    )
     assert preflight_entries[0]["authority_scope"] == "named_gate_contract_only"
     assert preflight_entries[0]["may_override_architecture_lock"] is False
 
@@ -2483,19 +2807,179 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         )
     )
     succession = manifest["g2f_class_a_succession"]
-    assert succession["basis_head"] == G2E_CLOSURE_COMMIT
-    assert {entry["path"] for entry in succession["class_a_paths"]} == set(
+    assert succession["basis_head"] == original_class_a_commit
+    assert succession["original_class_a_basis_head"] == original_class_a_parent
+    assert succession["original_class_a_commit"] == original_class_a_commit
+    assert succession["reconciliation_basis_head"] == original_class_a_commit
+    assert {entry["path"] for entry in succession["original_class_a_paths"]} == set(
         G2F_CLASS_A_PATHS
     )
+    assert {
+        entry["path"]: entry["action"]
+        for entry in succession["original_class_a_paths"]
+    } == {
+        path: "ADD" if path == G2F_CLASS_A_PATHS[0] else "MODIFY"
+        for path in G2F_CLASS_A_PATHS
+    }
+    assert succession["reconciliation_path_count"] == 7
+    assert {
+        entry["path"]: entry["action"]
+        for entry in succession["reconciliation_paths"]
+    } == {path: "MODIFY" for path in G2F_CLASS_A_PATHS}
     assert {
         entry["path"] for entry in succession["future_implementation_paths"]
     } == set(G2F_IMPLEMENTATION_PATHS)
     assert len(succession["future_closure_paths"]) == 14
+    assert succession["implementation_authorization"] == (
+        "NOT_AUTHORIZED_PENDING_OWNER_RECONCILIATION_COMMIT_AND_SEPARATE_REAUTHORIZATION"
+    )
+    assert succession["owner_commit_boundaries"] == [
+        "ORIGINAL_CLASS_A_COMMIT_PROVENANCE",
+        "CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS",
+        "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+        "FUTURE_CLOSURE_EXACT_FOURTEEN_PATHS",
+    ]
     assert succession["runtime_implementation_performed"] is False
     assert succession["repository_g2f_lifecycle_status"] == (
-        "NEXT_NOT_STARTED_NOT_AUTHORIZED"
+        "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
     )
+    assert succession["g2f_status"] == "NOT_CLOSED"
     assert succession["gate2_status"] == "NOT_CLOSED"
+    assert succession["preflight_status"] == (
+        "CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
+    )
+    assert succession["class_a_status"] == (
+        "V13R1_CANDIDATE_PENDING_OWNER_REVIEW"
+    )
+    assert succession["classification"] == "ORCHESTRATION_AND_ACCEPTANCE_ONLY"
+    assert succession["public_construction_ledger_rows"] == 181
+    assert succession["construction_ledger_consecutive"] is True
+    assert succession["current_class_a_postimages_reconciled"] is True
+    assert succession["v12r3_reconciliation_readiness_status"] == (
+        "SUPERSEDED_BY_V12R4"
+    )
+    assert succession["v12r5_reconciliation_readiness_status"] == "SUPERSEDED"
+    assert succession["v12r5_reconciliation_readiness_scope"] == (
+        "ONLY_TERMINAL_READINESS"
+    )
+    assert succession["v12r5_full_byte_corridor_statement_coverage_status"] == (
+        "NOT_PROVEN"
+    )
+    assert succession["v12r6_full_corridor_external_proof_status"] == (
+        "DIRECT_AUTHORITY_FOR_V13_RECONCILIATION"
+    )
+    assert succession["v12r6_full_corridor_external_proof_scope"] == (
+        "NO_IMPLEMENTATION_OR_RECONCILIATION_AUTHORITY"
+    )
+    assert succession["v12r6_total_executed_negative_regression_count"] == 315
+    assert succession["v13_input_archive_sha256"] == (
+        "854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7"
+    )
+    assert succession["v13_owner_readiness_status"] == (
+        "SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE"
+    )
+    assert succession["v13r1_validator_closure_status"] == (
+        "FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE"
+    )
+
+    preflight_hostile_root = tmp_path / "preflight_contract_hostiles"
+    (preflight_hostile_root / "docs").mkdir(parents=True)
+
+    def preflight_contract_failures(source: str) -> tuple[str, ...]:
+        (preflight_hostile_root / G2F_CLASS_A_PATHS[0]).write_text(
+            source,
+            encoding="utf-8",
+        )
+        observed: list[str] = []
+        namespace["_validate_g2f_class_a_contract_v01"](
+            preflight_hostile_root,
+            authority_index,
+            manifest,
+            observed,
+            g2f_active=True,
+        )
+        return tuple(observed)
+
+    row_129_binding_failures = preflight_contract_failures(
+        preflight.replace("ROW129_ROOT_DECISION_REF=None", "ROW129_ROOT_DECISION_REF=forged", 1)
+    )
+    assert (
+        "g2f.class_a.preflight.marker:ROW129_ROOT_DECISION_REF=None"
+        in row_129_binding_failures
+    )
+
+    row_173_source_failures = preflight_contract_failures(
+        preflight.replace(
+            "ROW173_AUTHORIZED_CANONICAL_SOURCE=ROW154",
+            "ROW173_AUTHORIZED_CANONICAL_SOURCE=ROW145",
+            1,
+        )
+    )
+    assert (
+        "g2f.class_a.preflight.marker:ROW173_AUTHORIZED_CANONICAL_SOURCE=ROW154"
+        in row_173_source_failures
+    )
+
+    branch_parent_failures = preflight_contract_failures(
+        preflight.replace(
+            "LIFECYCLE_BRANCH_MODEL=TWO_INDEPENDENT_PROOF_BRANCHES_FROM_ROW098_PENDING_BASELINE",
+            "LIFECYCLE_BRANCH_MODEL=REVOCATION_FEEDS_SUPERSESSION",
+            1,
+        )
+    )
+    assert any(
+        item.startswith("g2f.class_a.preflight.marker:LIFECYCLE_BRANCH_MODEL=")
+        for item in branch_parent_failures
+    )
+
+    stale_basis_failures = preflight_contract_failures(
+        preflight.replace(
+            "f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d",
+            "3550b55766bc57975bf0f5c4c865d8be6c6c90e8461b8208f9b2f0753e57eebd",
+        )
+    )
+    assert any(
+        item.startswith("g2f.class_a.preflight.forbidden_active:3550b557")
+        for item in stale_basis_failures
+    )
+
+    v12r3_readiness_failures = preflight_contract_failures(
+        preflight.replace(
+            "V12R3_RECONCILIATION_READINESS_STATUS=SUPERSEDED_BY_V12R4",
+            "V12R3_RECONCILIATION_READINESS_STATUS=DIRECT_AUTHORITY",
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.status:V12R3_RECONCILIATION_READINESS_STATUS" in (
+        v12r3_readiness_failures
+    )
+
+    v12r5_readiness_failures = preflight_contract_failures(
+        preflight.replace(
+            "V12R5_RECONCILIATION_READINESS_STATUS=SUPERSEDED",
+            "V12R5_RECONCILIATION_READINESS_STATUS=DIRECT_AUTHORITY",
+            1,
+        )
+    )
+    assert "g2f.class_a.preflight.status:V12R5_RECONCILIATION_READINESS_STATUS" in (
+        v12r5_readiness_failures
+    )
+
+    v12r6_identity_failures = preflight_contract_failures(
+        preflight.replace(
+            "78fd785e707fc6d198878a566b49ba6dad0e47d2e0efd0bc8c812b78d33334d4",
+            "0" * 64,
+        )
+    )
+    assert any(
+        item.startswith("g2f.class_a.preflight.marker:V12R6_EVIDENCE_ARCHIVE_SHA256=")
+        for item in v12r6_identity_failures
+    )
+
+    status_overclaim_failures = preflight_contract_failures(
+        preflight.replace("G2F_STATUS=NOT_CLOSED", "G2F_STATUS=CLOSED_PASS", 1)
+    )
+    assert "g2f.class_a.preflight.status:G2F_STATUS" in status_overclaim_failures
 
     runner_lines = [
         "from __future__ import annotations",
@@ -2523,13 +3007,25 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
         "    client_runtime = fractal.run_fractal_runtime_v02(source_context=client_route)",
         "    supplier_runtime = fractal.run_fractal_runtime_v02(source_context=supplier_route)",
     ]
-    for index in range(5):
+    for index in range(7):
         runner_lines.append(
             f"    request_{index} = semantic.build_semantic_work_request_v01(request_id='request:{index}', transaction_id='transaction:g2f:gate2:v01', target_root_id='root:g2f:supplier', runtime_topology_ref='candidate:{index}', bounded_context_refs=(), permitted_actor_ids=(), permitted_contribution_modes=(), requested_subjects=(), required_evidence_classes=(), forbidden_claims=())"
         )
-    for index in range(5):
         runner_lines.append(
-            f"    decision_input_{index} = root_decision.build_root_decision_input_v01(transaction_id='transaction:g2f:gate2:v01', target_root_id='root:g2f:supplier', root_review_packet=request_{index}, post_vv_bundle=object(), gt_advisory=object(), policy_state=object(), permission_state=object(), temporal_state=object(), conflict_state=object(), prior_root_state=object())"
+            f"    evidence_{index} = semantic.build_evidence_binding_v01(binding_id='binding:{index}', semantic_work_request=request_{index}, evidence_items=())"
+        )
+        runner_lines.append(
+            f"    claim_{index} = semantic.build_normalized_claim_v01(claim_id='claim:{index}', semantic_work_request=request_{index}, evidence_binding=evidence_{index}, candidate_id='candidate:{index}')"
+        )
+        runner_lines.append(
+            f"    contribution_{index} = semantic.build_actor_contribution_v01(contribution_id='contribution:{index}', actor_id='actor:g2f', semantic_work_request=request_{index}, normalized_claim=claim_{index}, evidence_binding=evidence_{index})"
+        )
+        runner_lines.append(
+            f"    review_packet_{index} = semantic.build_root_review_packet_from_contributions_v01(packet_id='review:{index}', semantic_work_request=request_{index}, contributions=(contribution_{index},))"
+        )
+    for index in range(7):
+        runner_lines.append(
+            f"    decision_input_{index} = root_decision.build_root_decision_input_v01(transaction_id='transaction:g2f:gate2:v01', target_root_id='root:g2f:supplier', root_review_packet=review_packet_{index}, post_vv_bundle=object(), gt_advisory=object(), policy_state=object(), permission_state=object(), temporal_state=object(), conflict_state=object(), prior_root_state=object())"
         )
         runner_lines.append(
             f"    decision_{index} = root_decision.decide_root_v01(kernel=object(), decision_input=decision_input_{index})"
@@ -2685,6 +3181,65 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
     )
     assert any("public_surface.duplicate:main" in item for item in duplicate_failures)
 
+    validator_start = (
+        "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):\n"
+        "    return isinstance(report, dict) and report.get('transaction_id') == "
+        "'transaction:g2f:gate2:v01' and len(report.get('root_decisions', ())) == 2\n"
+    )
+    direct_recursion_runner = positive_runner.replace(
+        validator_start,
+        "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):\n"
+        "    return validate_consolidated_gate2_gauntlet_g2_f_report_v01(report)\n",
+        1,
+    )
+    direct_recursion_failures = validate_sources(
+        direct_recursion_runner,
+        positive_tests,
+    )
+    assert (
+        "g2f.implementation.call_graph.self_recursion:"
+        "validate_consolidated_gate2_gauntlet_g2_f_report_v01"
+        in direct_recursion_failures
+    )
+
+    mutual_recursion_runner = positive_runner.replace(
+        "def consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01(report):\n"
+        "    return {'transaction_id': report['transaction_id'], 'root_count': len(report['root_decisions'])}\n",
+        "def consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01(report):\n"
+        "    return render_consolidated_gate2_gauntlet_g2_f_v01(report)\n",
+        1,
+    ).replace(
+        "def render_consolidated_gate2_gauntlet_g2_f_v01(report):\n"
+        "    return json.dumps(consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01(report), sort_keys=True, separators=(',', ':')) + '\\n'\n",
+        "def render_consolidated_gate2_gauntlet_g2_f_v01(report):\n"
+        "    return consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01(report)\n",
+        1,
+    )
+    mutual_recursion_failures = validate_sources(
+        mutual_recursion_runner,
+        positive_tests,
+    )
+    assert any(
+        item.startswith("g2f.implementation.call_graph.nontrivial_scc:")
+        for item in mutual_recursion_failures
+    )
+
+    validator_collector_runner = positive_runner.replace(
+        validator_start,
+        "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):\n"
+        "    return bool(collect_consolidated_gate2_gauntlet_g2_f_v01())\n",
+        1,
+    )
+    validator_collector_failures = validate_sources(
+        validator_collector_runner,
+        positive_tests,
+    )
+    assert (
+        "g2f.implementation.call_graph.collector_reachable:"
+        "validate_consolidated_gate2_gauntlet_g2_f_report_v01"
+        in validator_collector_failures
+    )
+
     private_runner = positive_runner.replace(
         "def collect_consolidated_gate2_gauntlet_g2_f_v01():\n",
         "def _private_source():\n    return object()\n\n"
@@ -2708,11 +3263,6 @@ def test_class_a_and_class_b_path_sets_are_exact_and_disjoint(
     cache_failures = validate_sources(cache_runner, positive_tests)
     assert any("process_cache_decorator:memoize" in item for item in cache_failures)
 
-    validator_start = (
-        "def validate_consolidated_gate2_gauntlet_g2_f_report_v01(report):\n"
-        "    return isinstance(report, dict) and report.get('transaction_id') == "
-        "'transaction:g2f:gate2:v01' and len(report.get('root_decisions', ())) == 2\n"
-    )
     fabricated_runner = positive_runner.replace(
         "import hedgehog.drs_memory_resolution_v01 as drs\n",
         "import hedgehog.drs_memory_resolution_v01 as drs\n"

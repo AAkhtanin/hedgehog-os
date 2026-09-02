@@ -400,14 +400,132 @@
     "real_world_effects_count": 0
   },
   "g2f_class_a_succession": {
-    "basis_head": "282e319241946b34987b2533d95ed514c3d884c1",
+    "basis_head": "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce",
+    "original_class_a_basis_head": "282e319241946b34987b2533d95ed514c3d884c1",
+    "original_class_a_commit": "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce",
+    "reconciliation_basis_head": "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce",
     "preflight_path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
-    "preflight_status": "ACCEPTED_CLASS_A_CANDIDATE",
+    "preflight_status": "CLASS_A_181_ROW_RECONCILIATION_CANDIDATE",
+    "class_a_status": "V13R1_CANDIDATE_PENDING_OWNER_REVIEW",
     "classification": "ORCHESTRATION_AND_ACCEPTANCE_ONLY",
-    "class_a_paths": [
+    "source_basis_head": "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce",
+    "public_construction_ledger_rows": 181,
+    "construction_ledger_consecutive": true,
+    "current_class_a_postimages_reconciled": true,
+    "v12r2_runtime_semantic_and_parent_map_status": "ACCEPTED",
+    "v12r2_evidence_archive_sha256": "c600d68e0cf4fce20a00a0783e470d3169d6f35566609b94a3e13745b5409fec",
+    "v12r3_executed_producer_basis_status": "ACCEPTED_THROUGH_V12R6",
+    "v12r3_reconciliation_readiness_status": "SUPERSEDED_BY_V12R4",
+    "v12r3_all_anti_fitting_hostiles_status": "SUPERSEDED_BY_V12R4",
+    "v12r4_proof_status": "ACCEPTED_AS_REGRESSION_PROVENANCE_SUPERSEDED_BY_V12R5",
+    "v12r4_evidence_archive_sha256": "3ef8186d734436d5332d1ba43f27652c91fdc5cb1d58a7fd6089ba081df3cec3",
+    "v12r4_executed_producer_basis_sha256": "f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d",
+    "v12r5_reconciliation_readiness_status": "SUPERSEDED",
+    "v12r5_reconciliation_readiness_scope": "ONLY_TERMINAL_READINESS",
+    "v12r5_reconciliation_readiness_superseded_by": "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF",
+    "v12r5_evidence_archive_sha256": "ac705170be8fc731767f27637a6cb8595eec531ef24ac4acae8e3484e7a8d006",
+    "v12r5_executed_producer_basis_status": "ACCEPTED",
+    "v12r5_executed_producer_basis_scope": "IMMUTABLE_REGRESSION_EVIDENCE",
+    "v12r5_row099_source_receipt_binding_status": "ACCEPTED",
+    "v12r5_row099_source_receipt_binding_scope": "IMMUTABLE_REGRESSION_EVIDENCE",
+    "v12r5_clean_runtime_and_semantic_projection_status": "ACCEPTED",
+    "v12r5_clean_runtime_and_semantic_projection_scope": "IMMUTABLE_REGRESSION_EVIDENCE",
+    "v12r5_clean_causal_and_local_use_projection_status": "ACCEPTED",
+    "v12r5_clean_causal_and_local_use_projection_scope": "REGRESSION_TARGET",
+    "v12r5_executed_32_negative_regression_results_status": "ACCEPTED",
+    "v12r5_executed_32_negative_regression_results_scope": "HISTORICAL_TESTED_SCOPE",
+    "v12r5_full_byte_corridor_statement_coverage_status": "NOT_PROVEN",
+    "v12r5_full_byte_corridor_statement_coverage_scope": "PROOF_ANALYZER_DEFECT_ONLY",
+    "g2f_v12r6_result": "PASS_READY_FOR_V13_EXACT_SEVEN_PATH_CLASS_A_181_ROW_RECONCILIATION",
+    "v12r6_scope": "EXTERNAL_PROOF_ONLY",
+    "v12r6_full_corridor_external_proof_status": "DIRECT_AUTHORITY_FOR_V13_RECONCILIATION",
+    "v12r6_full_corridor_external_proof_scope": "NO_IMPLEMENTATION_OR_RECONCILIATION_AUTHORITY",
+    "v12r6_evidence_archive_sha256": "78fd785e707fc6d198878a566b49ba6dad0e47d2e0efd0bc8c812b78d33334d4",
+    "v12r6_executed_producer_basis_sha256": "f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d",
+    "v12r6_full_corridor_statement_coverage_status": "PASS_EXACT",
+    "v12r6_total_executed_negative_regression_count": 315,
+    "v13_input_archive_sha256": "854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7",
+    "v13_owner_readiness_status": "SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE",
+    "v13r1_validator_closure_status": "FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE",
+    "original_class_a_paths": [
       {
         "path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
         "action": "ADD"
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "action": "MODIFY"
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "action": "MODIFY"
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "action": "MODIFY"
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "action": "MODIFY"
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "action": "MODIFY"
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "action": "MODIFY"
+      }
+    ],
+    "original_class_a_postimages": [
+      {
+        "path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+        "sha256": "d438d7c07ac00ea8c5f3c258b895abd1839d8384e1752ec4357134e8a1594f20",
+        "bytes": 45931,
+        "lf": 537
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "sha256": "7b6cd950e1f434d62d3f0763df92debf93e88670bdc17b12d34b66bb0a45fabe",
+        "bytes": 10646,
+        "lf": 222
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "sha256": "f4a8229ef0186323de7e21dec7d52d95654ba111f137565596824b3ccc174072",
+        "bytes": 17541,
+        "lf": 393
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "sha256": "6b9c21737c3aca42b2b71bd48bdc991414af0e05ee958a4c0d645120223620fe",
+        "bytes": 23603,
+        "lf": 554
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "sha256": "4cf3194a1609bd29bb92a73ad161c4a9b16b3e376c64eaa71040fa105f609765",
+        "bytes": 412276,
+        "lf": 11023
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "sha256": "1f00397f3d39b9702f313abc407a800615f13a262bc4f92b52fc0a85ea08576a",
+        "bytes": 236174,
+        "lf": 6478
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "sha256": "1a89a4a13469bbb0c87fed8f04ec8ad12cba1fc2c837c26d5eab2787cebeba24",
+        "bytes": 258023,
+        "lf": 6067
+      }
+    ],
+    "reconciliation_path_count": 7,
+    "reconciliation_paths": [
+      {
+        "path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+        "action": "MODIFY"
       },
       {
         "path": "specs/current_architecture_lock_v01.md",
@@ -444,7 +562,7 @@
         "action": "ADD"
       }
     ],
-    "implementation_authorization": "EFFECTIVE_ONLY_AFTER_EXACT_OWNER_CLASS_A_COMMIT",
+    "implementation_authorization": "NOT_AUTHORIZED_PENDING_OWNER_RECONCILIATION_COMMIT_AND_SEPARATE_REAUTHORIZATION",
     "future_closure_paths": [
       {
         "path": "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
@@ -489,32 +607,32 @@
       {
         "path": "specs/current_architecture_lock_v01.md",
         "action": "MODIFY",
-        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      "predecessor": "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
       },
       {
         "path": "specs/document_authority_index_v01.json",
         "action": "MODIFY",
-        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      "predecessor": "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
       },
       {
         "path": "release/successor_context_manifest_v01.json",
         "action": "MODIFY",
-        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      "predecessor": "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
       },
       {
         "path": "tools/check_active_architecture_authority_v01.py",
         "action": "MODIFY",
-        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      "predecessor": "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
       },
       {
         "path": "tests/test_active_architecture_authority_v01.py",
         "action": "MODIFY",
-        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      "predecessor": "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
       },
       {
         "path": "tests/test_repository_release_spine_v01.py",
         "action": "MODIFY",
-        "predecessor": "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+      "predecessor": "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
       }
     ],
     "frozen_path_classes": [
@@ -526,12 +644,14 @@
       "EVERY_UNLISTED_PATH"
     ],
     "owner_commit_boundaries": [
-      "CLASS_A_EXACT_SEVEN_PATHS",
-      "IMPLEMENTATION_EXACT_TWO_PATHS",
-      "CLOSURE_EXACT_FOURTEEN_PATHS"
+      "ORIGINAL_CLASS_A_COMMIT_PROVENANCE",
+      "CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS",
+      "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+      "FUTURE_CLOSURE_EXACT_FOURTEEN_PATHS"
     ],
     "runtime_implementation_performed": false,
-    "repository_g2f_lifecycle_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+    "repository_g2f_lifecycle_status": "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE",
+    "g2f_status": "NOT_CLOSED",
     "gate2_status": "NOT_CLOSED",
     "public_release_status": "NOT_CLAIMED",
     "rc2_status": "NOT_CLAIMED",

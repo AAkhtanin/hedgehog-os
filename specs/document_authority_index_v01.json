@@ -152,12 +152,12 @@
     },
     {
       "path": "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
-      "status": "accepted_g2f_class_a_preflight_candidate",
+      "status": "accepted_g2f_v13r1_full_validator_closure_candidate",
       "current_authority": true,
       "authority_scope": "named_gate_contract_only",
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
-      "role": "current scoped G2-F constructibility and future two-path orchestration/acceptance contract; implementation effective only after exact owner Class-A commit and subordinate to the Current Architecture Lock"
+      "role": "current scoped G2-F V13R1 181-row Class-A reconciliation candidate at source basis c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce; V12R2 runtime semantics and parent map accepted, f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d executed producer basis accepted, V12R6 full-corridor external proof 78fd785e707fc6d198878a566b49ba6dad0e47d2e0efd0bc8c812b78d33334d4 remains direct proof authority, and V13R1 closes the exact row-083 structural plus supplier-root-context validator contract; implementation unauthorized and unperformed, pending owner review and exact seven-path commit, subordinate to the Current Architecture Lock"
     },
     {
       "path": "release/current_status_overlay_v01.json",
@@ -387,7 +387,7 @@
     "Historical and audit evidence is discoverable by explicit file request or the recorded Git object reference, never through automatic onboarding.",
     "G2-E is CLOSED_PASS on exact committed evidence; this does not close Gate 2, start or authorize G2-F, or claim public release, RC2, production readiness, or production security certification.",
     "The successor context onboards the current G2-E checkpoint while keeping the independent audit and all audit globs outside automatic onboarding.",
-    "The G2-F Class-A preflight is a current named-gate candidate contract; it authorizes no runtime implementation before owner review and commit of its exact seven-path boundary.",
+    "The G2-F Class-A preflight status is CLASS_A_181_ROW_RECONCILIATION_CANDIDATE and its class status is V13R1_CANDIDATE_PENDING_OWNER_REVIEW; row 083 requires both validate_root_decision_candidate_projection_v01 and validate_supplier_root_context_coherence_v01, and the candidate authorizes no runtime implementation before owner review and commit of its exact seven-path boundary plus a later separate authorization.",
     "Named Gate authority cannot redefine global topology, Root sovereignty, BSEP, runtime ownership, or another Gate's contract."
   ]
 }

@@ -45,9 +45,74 @@ KERNEL_CONFORMANCE_TEST_PATH = "tests/test_kernel_conformance_v01_runner.py"
 G2F_PREFLIGHT_PATH = "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md"
 G2F_RUNNER_PATH = "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py"
 G2F_TEST_PATH = "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py"
-G2F_PREFLIGHT_SHA256_V02 = (
-    "d438d7c07ac00ea8c5f3c258b895abd1839d8384e1752ec4357134e8a1594f20"
+G2F_PREFLIGHT_SHA256_V13 = (
+    "679a9f1a1ac9b7908c4cde7aaa825f02bf07f27d02c5fa582168e26ac46fd9c1"
 )
+G2F_PUBLIC_CONSTRUCTION_LEDGER_SHA256_V13 = (
+    "4e59552077f03b1f2f3fdafc901737ad2db9185ad2bf2c304afd87e19b70fe97"
+)
+G2F_EXECUTED_PRODUCER_BASIS_SHA256_V13 = (
+    "f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d"
+)
+G2F_V12R2_ARCHIVE_SHA256 = (
+    "c600d68e0cf4fce20a00a0783e470d3169d6f35566609b94a3e13745b5409fec"
+)
+G2F_V12R4_ARCHIVE_SHA256 = (
+    "3ef8186d734436d5332d1ba43f27652c91fdc5cb1d58a7fd6089ba081df3cec3"
+)
+G2F_V12R5_ARCHIVE_SHA256 = (
+    "ac705170be8fc731767f27637a6cb8595eec531ef24ac4acae8e3484e7a8d006"
+)
+G2F_V12R6_ARCHIVE_SHA256 = (
+    "78fd785e707fc6d198878a566b49ba6dad0e47d2e0efd0bc8c812b78d33334d4"
+)
+G2F_V13_ARCHIVE_SHA256 = (
+    "854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7"
+)
+G2F_V13_STATUS_CONTRACT = {
+    "G2F_PREFLIGHT_STATUS": "CLASS_A_181_ROW_RECONCILIATION_CANDIDATE",
+    "G2F_CLASS_A_STATUS": "V13R1_CANDIDATE_PENDING_OWNER_REVIEW",
+    "G2F_CLASSIFICATION": "ORCHESTRATION_AND_ACCEPTANCE_ONLY",
+    "G2F_RUNTIME_IMPLEMENTATION_PERFORMED": "false",
+    "G2F_IMPLEMENTATION_AUTHORIZED": "false",
+    "G2F_STATUS": "NOT_CLOSED",
+    "GATE2_STATUS": "NOT_CLOSED",
+    "OWNER_ONLY_COMMIT_PUSH": "true",
+    "SOURCE_BASIS_HEAD": "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce",
+    "PUBLIC_CONSTRUCTION_LEDGER_ROWS": "181",
+    "CONSTRUCTION_LEDGER_CONSECUTIVE": "true",
+    "CURRENT_CLASS_A_POSTIMAGES_RECONCILED": "true",
+    "V12R2_RUNTIME_SEMANTIC_AND_PARENT_MAP_STATUS": "ACCEPTED",
+    "V12R3_EXECUTED_PRODUCER_BASIS_STATUS": "ACCEPTED_THROUGH_V12R6",
+    "V12R3_RECONCILIATION_READINESS_STATUS": "SUPERSEDED_BY_V12R4",
+    "V12R3_ALL_ANTI_FITTING_HOSTILES_STATUS": "SUPERSEDED_BY_V12R4",
+    "V12R4_PROOF_STATUS": "ACCEPTED_AS_REGRESSION_PROVENANCE_SUPERSEDED_BY_V12R5",
+    "V12R5_RECONCILIATION_READINESS_STATUS": "SUPERSEDED",
+    "V12R5_RECONCILIATION_READINESS_SCOPE": "ONLY_TERMINAL_READINESS",
+    "V12R5_RECONCILIATION_READINESS_SUPERSEDED_BY": "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF",
+    "V12R5_EXECUTED_PRODUCER_BASIS_STATUS": "ACCEPTED",
+    "V12R5_EXECUTED_PRODUCER_BASIS_SCOPE": "IMMUTABLE_REGRESSION_EVIDENCE",
+    "V12R5_ROW099_SOURCE_RECEIPT_BINDING_STATUS": "ACCEPTED",
+    "V12R5_ROW099_SOURCE_RECEIPT_BINDING_SCOPE": "IMMUTABLE_REGRESSION_EVIDENCE",
+    "V12R5_CLEAN_RUNTIME_AND_SEMANTIC_PROJECTION_STATUS": "ACCEPTED",
+    "V12R5_CLEAN_RUNTIME_AND_SEMANTIC_PROJECTION_SCOPE": "IMMUTABLE_REGRESSION_EVIDENCE",
+    "V12R5_CLEAN_CAUSAL_AND_LOCAL_USE_PROJECTION_STATUS": "ACCEPTED",
+    "V12R5_CLEAN_CAUSAL_AND_LOCAL_USE_PROJECTION_SCOPE": "REGRESSION_TARGET",
+    "V12R5_EXECUTED_32_NEGATIVE_REGRESSION_RESULTS_STATUS": "ACCEPTED",
+    "V12R5_EXECUTED_32_NEGATIVE_REGRESSION_RESULTS_SCOPE": "HISTORICAL_TESTED_SCOPE",
+    "V12R5_FULL_BYTE_CORRIDOR_STATEMENT_COVERAGE_STATUS": "NOT_PROVEN",
+    "V12R5_FULL_BYTE_CORRIDOR_STATEMENT_COVERAGE_SCOPE": "PROOF_ANALYZER_DEFECT_ONLY",
+    "G2F_V12R6_RESULT": "PASS_READY_FOR_V13_EXACT_SEVEN_PATH_CLASS_A_181_ROW_RECONCILIATION",
+    "V12R6_SCOPE": "EXTERNAL_PROOF_ONLY",
+    "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF_STATUS": "DIRECT_AUTHORITY_FOR_V13_RECONCILIATION",
+    "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF_SCOPE": "NO_IMPLEMENTATION_OR_RECONCILIATION_AUTHORITY",
+    "V12R6_FULL_CORRIDOR_STATEMENT_COVERAGE_STATUS": "PASS_EXACT",
+    "V13_INPUT_ARCHIVE_SHA256": G2F_V13_ARCHIVE_SHA256,
+    "V13_OWNER_READINESS_STATUS": "SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE",
+    "V13R1_VALIDATOR_CLOSURE_STATUS": "FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE",
+}
+G2F_ORIGINAL_CLASS_A_PARENT = G2E_CLOSURE_COMMIT
+G2F_ORIGINAL_CLASS_A_COMMIT = "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce"
 
 CLASS_A_RECONCILIATION_PATHS = frozenset(
     {
@@ -141,12 +206,52 @@ CLASS_D_COMMITTED_NAME_STATUS = {
     path: "A" if path in {G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH} else "M"
     for path in G2E_CLASS_D_CLOSURE_PATHS
 }
-G2F_CLASS_A_COMMITTED_NAME_STATUS = {
+G2F_ORIGINAL_CLASS_A_COMMITTED_NAME_STATUS = {
     path: "A" if path == G2F_PREFLIGHT_PATH else "M"
     for path in G2F_CLASS_A_PATHS
 }
+G2F_CLASS_A_RECONCILIATION_COMMITTED_NAME_STATUS = {
+    path: "M" for path in G2F_CLASS_A_PATHS
+}
 G2F_IMPLEMENTATION_COMMITTED_NAME_STATUS = {
     path: "A" for path in G2F_IMPLEMENTATION_PATHS
+}
+G2F_ORIGINAL_CLASS_A_POSTIMAGE_IDENTITIES = {
+    G2F_PREFLIGHT_PATH: (
+        "d438d7c07ac00ea8c5f3c258b895abd1839d8384e1752ec4357134e8a1594f20",
+        45931,
+        537,
+    ),
+    LOCK_PATH: (
+        "7b6cd950e1f434d62d3f0763df92debf93e88670bdc17b12d34b66bb0a45fabe",
+        10646,
+        222,
+    ),
+    INDEX_PATH: (
+        "f4a8229ef0186323de7e21dec7d52d95654ba111f137565596824b3ccc174072",
+        17541,
+        393,
+    ),
+    MANIFEST_PATH: (
+        "6b9c21737c3aca42b2b71bd48bdc991414af0e05ee958a4c0d645120223620fe",
+        23603,
+        554,
+    ),
+    "tools/check_active_architecture_authority_v01.py": (
+        "4cf3194a1609bd29bb92a73ad161c4a9b16b3e376c64eaa71040fa105f609765",
+        412276,
+        11023,
+    ),
+    "tests/test_active_architecture_authority_v01.py": (
+        "1f00397f3d39b9702f313abc407a800615f13a262bc4f92b52fc0a85ea08576a",
+        236174,
+        6478,
+    ),
+    "tests/test_repository_release_spine_v01.py": (
+        "1a89a4a13469bbb0c87fed8f04ec8ad12cba1fc2c837c26d5eab2787cebeba24",
+        258023,
+        6067,
+    ),
 }
 POST_E6_LIVING_ACCEPTANCE_TEST = (
     "test_living_gauntlet_v16_continuous_delta_runtime_acceptance_v01"
@@ -206,13 +311,29 @@ G2F_REQUIRED_PUBLIC_CALLS_V02 = {
     "run_fractal_runtime_v02": ("hedgehog.kernel.fractal_runtime_v02", 2),
     "build_semantic_work_request_v01": (
         "hedgehog.kernel.semantic_work_v01",
-        5,
+        7,
+    ),
+    "build_evidence_binding_v01": (
+        "hedgehog.kernel.semantic_work_v01",
+        7,
+    ),
+    "build_normalized_claim_v01": (
+        "hedgehog.kernel.semantic_work_v01",
+        7,
+    ),
+    "build_actor_contribution_v01": (
+        "hedgehog.kernel.semantic_work_v01",
+        7,
+    ),
+    "build_root_review_packet_from_contributions_v01": (
+        "hedgehog.kernel.semantic_work_v01",
+        7,
     ),
     "build_root_decision_input_v01": (
         "hedgehog.kernel.root_decision_v01",
-        5,
+        7,
     ),
-    "decide_root_v01": ("hedgehog.kernel.root_decision_v01", 5),
+    "decide_root_v01": ("hedgehog.kernel.root_decision_v01", 7),
     "build_root_decision_candidate_projection_v01": (
         "hedgehog.action_commit_packet_v02",
         4,
@@ -1777,7 +1898,7 @@ REQUIRED_CURRENT_CLASSIFICATIONS["current_technical_annexes"][
 REQUIRED_CURRENT_CLASSIFICATIONS["current_technical_annexes"][
     G2F_PREFLIGHT_PATH
 ] = (
-    "accepted_g2f_class_a_preflight_candidate",
+    "accepted_g2f_v13r1_full_validator_closure_candidate",
     True,
     True,
     NAMED_GATE_SCOPE,
@@ -3053,15 +3174,93 @@ def _validate_manifest(
             failures.append("successor_manifest.g2f_class_a_succession.type")
             succession = {}
         expected_scalars = {
-            "basis_head": G2E_CLOSURE_COMMIT,
+            "basis_head": G2F_ORIGINAL_CLASS_A_COMMIT,
+            "original_class_a_basis_head": G2F_ORIGINAL_CLASS_A_PARENT,
+            "original_class_a_commit": G2F_ORIGINAL_CLASS_A_COMMIT,
+            "reconciliation_basis_head": G2F_ORIGINAL_CLASS_A_COMMIT,
             "preflight_path": G2F_PREFLIGHT_PATH,
-            "preflight_status": "ACCEPTED_CLASS_A_CANDIDATE",
+            "preflight_status": "CLASS_A_181_ROW_RECONCILIATION_CANDIDATE",
+            "class_a_status": "V13R1_CANDIDATE_PENDING_OWNER_REVIEW",
             "classification": "ORCHESTRATION_AND_ACCEPTANCE_ONLY",
-            "implementation_authorization": (
-                "EFFECTIVE_ONLY_AFTER_EXACT_OWNER_CLASS_A_COMMIT"
+            "source_basis_head": G2F_ORIGINAL_CLASS_A_COMMIT,
+            "public_construction_ledger_rows": 181,
+            "construction_ledger_consecutive": True,
+            "current_class_a_postimages_reconciled": True,
+            "v12r2_runtime_semantic_and_parent_map_status": "ACCEPTED",
+            "v12r2_evidence_archive_sha256": G2F_V12R2_ARCHIVE_SHA256,
+            "v12r3_executed_producer_basis_status": "ACCEPTED_THROUGH_V12R6",
+            "v12r3_reconciliation_readiness_status": "SUPERSEDED_BY_V12R4",
+            "v12r3_all_anti_fitting_hostiles_status": "SUPERSEDED_BY_V12R4",
+            "v12r4_proof_status": (
+                "ACCEPTED_AS_REGRESSION_PROVENANCE_SUPERSEDED_BY_V12R5"
             ),
+            "v12r4_evidence_archive_sha256": G2F_V12R4_ARCHIVE_SHA256,
+            "v12r4_executed_producer_basis_sha256": (
+                G2F_EXECUTED_PRODUCER_BASIS_SHA256_V13
+            ),
+            "v12r5_reconciliation_readiness_status": "SUPERSEDED",
+            "v12r5_reconciliation_readiness_scope": "ONLY_TERMINAL_READINESS",
+            "v12r5_reconciliation_readiness_superseded_by": (
+                "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF"
+            ),
+            "v12r5_evidence_archive_sha256": G2F_V12R5_ARCHIVE_SHA256,
+            "v12r5_executed_producer_basis_status": "ACCEPTED",
+            "v12r5_executed_producer_basis_scope": (
+                "IMMUTABLE_REGRESSION_EVIDENCE"
+            ),
+            "v12r5_row099_source_receipt_binding_status": "ACCEPTED",
+            "v12r5_row099_source_receipt_binding_scope": (
+                "IMMUTABLE_REGRESSION_EVIDENCE"
+            ),
+            "v12r5_clean_runtime_and_semantic_projection_status": "ACCEPTED",
+            "v12r5_clean_runtime_and_semantic_projection_scope": (
+                "IMMUTABLE_REGRESSION_EVIDENCE"
+            ),
+            "v12r5_clean_causal_and_local_use_projection_status": "ACCEPTED",
+            "v12r5_clean_causal_and_local_use_projection_scope": (
+                "REGRESSION_TARGET"
+            ),
+            "v12r5_executed_32_negative_regression_results_status": "ACCEPTED",
+            "v12r5_executed_32_negative_regression_results_scope": (
+                "HISTORICAL_TESTED_SCOPE"
+            ),
+            "v12r5_full_byte_corridor_statement_coverage_status": "NOT_PROVEN",
+            "v12r5_full_byte_corridor_statement_coverage_scope": (
+                "PROOF_ANALYZER_DEFECT_ONLY"
+            ),
+            "g2f_v12r6_result": (
+                "PASS_READY_FOR_V13_EXACT_SEVEN_PATH_CLASS_A_181_ROW_RECONCILIATION"
+            ),
+            "v12r6_scope": "EXTERNAL_PROOF_ONLY",
+            "v12r6_full_corridor_external_proof_status": (
+                "DIRECT_AUTHORITY_FOR_V13_RECONCILIATION"
+            ),
+            "v12r6_full_corridor_external_proof_scope": (
+                "NO_IMPLEMENTATION_OR_RECONCILIATION_AUTHORITY"
+            ),
+            "v12r6_evidence_archive_sha256": G2F_V12R6_ARCHIVE_SHA256,
+            "v12r6_executed_producer_basis_sha256": (
+                G2F_EXECUTED_PRODUCER_BASIS_SHA256_V13
+            ),
+            "v12r6_full_corridor_statement_coverage_status": "PASS_EXACT",
+            "v12r6_total_executed_negative_regression_count": 315,
+            "v13_input_archive_sha256": G2F_V13_ARCHIVE_SHA256,
+            "v13_owner_readiness_status": (
+                "SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE"
+            ),
+            "v13r1_validator_closure_status": (
+                "FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE"
+            ),
+            "implementation_authorization": (
+                "NOT_AUTHORIZED_PENDING_OWNER_RECONCILIATION_COMMIT_"
+                "AND_SEPARATE_REAUTHORIZATION"
+            ),
+            "reconciliation_path_count": 7,
             "runtime_implementation_performed": False,
-            "repository_g2f_lifecycle_status": "NEXT_NOT_STARTED_NOT_AUTHORIZED",
+            "repository_g2f_lifecycle_status": (
+                "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
+            ),
+            "g2f_status": "NOT_CLOSED",
             "gate2_status": "NOT_CLOSED",
             "public_release_status": "NOT_CLAIMED",
             "rc2_status": "NOT_CLAIMED",
@@ -3103,12 +3302,37 @@ def _validate_manifest(
             return tuple(valid_records)
 
         validate_path_actions(
-            "class_a_paths",
+            "original_class_a_paths",
             {
                 path: "ADD" if status == "A" else "MODIFY"
-                for path, status in G2F_CLASS_A_COMMITTED_NAME_STATUS.items()
+                for path, status in G2F_ORIGINAL_CLASS_A_COMMITTED_NAME_STATUS.items()
             },
         )
+        validate_path_actions(
+            "reconciliation_paths",
+            {path: "MODIFY" for path in G2F_CLASS_A_PATHS},
+        )
+        original_postimages = succession.get("original_class_a_postimages")
+        observed_original_postimages: dict[str, tuple[object, object, object]] = {}
+        if not isinstance(original_postimages, list):
+            failures.append("successor_manifest.g2f.original_postimages.type")
+        else:
+            for index, record in enumerate(original_postimages):
+                code = f"successor_manifest.g2f.original_postimages[{index}]"
+                if not isinstance(record, dict):
+                    failures.append(f"{code}.type")
+                    continue
+                path = record.get("path")
+                if not _valid_relative_path(path) or path in observed_original_postimages:
+                    failures.append(f"{code}.path")
+                    continue
+                observed_original_postimages[path] = (
+                    record.get("sha256"),
+                    record.get("bytes"),
+                    record.get("lf"),
+                )
+        if observed_original_postimages != G2F_ORIGINAL_CLASS_A_POSTIMAGE_IDENTITIES:
+            failures.append("successor_manifest.g2f.original_postimages.exact")
         validate_path_actions(
             "future_implementation_paths",
             {path: "ADD" for path in G2F_IMPLEMENTATION_PATHS},
@@ -3153,7 +3377,8 @@ def _validate_manifest(
             path = record.get("path")
             if path in G2F_CLOSURE_OVERLAP_PATHS:
                 if record.get("predecessor") != (
-                    "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+                    "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_"
+                    "TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
                 ) or "predecessor_sha256" in record:
                     failures.append(f"successor_manifest.g2f.closure_deferred:{path}")
             elif stable_predecessors.get(path) == "ABSENT":
@@ -3162,9 +3387,10 @@ def _validate_manifest(
             elif record.get("predecessor_sha256") != stable_predecessors.get(path):
                 failures.append(f"successor_manifest.g2f.closure_sha256:{path}")
         if succession.get("owner_commit_boundaries") != [
-            "CLASS_A_EXACT_SEVEN_PATHS",
-            "IMPLEMENTATION_EXACT_TWO_PATHS",
-            "CLOSURE_EXACT_FOURTEEN_PATHS",
+            "ORIGINAL_CLASS_A_COMMIT_PROVENANCE",
+            "CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS",
+            "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+            "FUTURE_CLOSURE_EXACT_FOURTEEN_PATHS",
         ]:
             failures.append("successor_manifest.g2f.owner_commit_boundaries")
         frozen_classes = succession.get("frozen_path_classes")
@@ -9329,6 +9555,78 @@ def _g2f_direct_tautology_v02(node: ast.Assert) -> bool:
     return _g2f_constant_expression_v02(test)
 
 
+def _g2f_public_call_graph_failures_v03(
+    functions: dict[str, ast.FunctionDef | ast.AsyncFunctionDef],
+) -> tuple[str, ...]:
+    public_names = frozenset(
+        {
+            "collect_consolidated_gate2_gauntlet_g2_f_v01",
+            "validate_consolidated_gate2_gauntlet_g2_f_report_v01",
+            "consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01",
+            "render_consolidated_gate2_gauntlet_g2_f_v01",
+            "main",
+        }
+    )
+    edges: dict[str, dict[str, int]] = {
+        name: {target: 0 for target in public_names}
+        for name in public_names
+    }
+    for name in public_names:
+        function = functions.get(name)
+        if function is None:
+            continue
+        for node in ast.walk(function):
+            if not isinstance(node, ast.Call):
+                continue
+            called = (_dotted_ast_name(node.func) or "").rsplit(".", 1)[-1]
+            if called in public_names:
+                edges[name][called] += 1
+
+    failures: list[str] = []
+    collector = "collect_consolidated_gate2_gauntlet_g2_f_v01"
+    validator = "validate_consolidated_gate2_gauntlet_g2_f_report_v01"
+    projector = "consolidated_gate2_gauntlet_g2_f_report_to_plain_data_v01"
+    renderer = "render_consolidated_gate2_gauntlet_g2_f_v01"
+    if edges[collector][validator] != 1:
+        failures.append(
+            "g2f.implementation.call_graph.collector_validator_exact_once:"
+            f"{edges[collector][validator]}"
+        )
+
+    def reaches(source: str, target: str) -> bool:
+        pending = [name for name, count in edges[source].items() if count]
+        seen: set[str] = set()
+        while pending:
+            current = pending.pop()
+            if current == target:
+                return True
+            if current in seen:
+                continue
+            seen.add(current)
+            pending.extend(
+                name for name, count in edges[current].items() if count
+            )
+        return False
+
+    for source in (validator, projector, renderer):
+        if reaches(source, collector):
+            failures.append(
+                f"g2f.implementation.call_graph.collector_reachable:{source}"
+            )
+    for name in sorted(public_names):
+        if edges[name][name]:
+            failures.append(f"g2f.implementation.call_graph.self_recursion:{name}")
+    for left in sorted(public_names):
+        for right in sorted(public_names):
+            if left >= right:
+                continue
+            if reaches(left, right) and reaches(right, left):
+                failures.append(
+                    f"g2f.implementation.call_graph.nontrivial_scc:{left}:{right}"
+                )
+    return tuple(sorted(set(failures)))
+
+
 def _g2f_status_overclaims_v02(source: str) -> tuple[str, ...]:
     failures: list[str] = []
     exact_statuses = {
@@ -9425,6 +9723,7 @@ def _validate_g2f_future_implementation_contract_v01(
             or arguments.kw_defaults
         ):
             failures.append(f"g2f.implementation.public_surface.signature:{name}")
+    failures.extend(_g2f_public_call_graph_failures_v03(functions))
     runner_bindings, private_or_star, _runner_patch_aliases = (
         _g2f_import_bindings_v02(runner_tree)
     )
@@ -9797,6 +10096,232 @@ def _validate_g2f_future_implementation_contract_v01(
         failures.append("g2f.implementation.tests.actual_public_dataflow")
 
 
+def _g2f_class_a_ledger_rows_v13(source: str) -> tuple[str, ...]:
+    return tuple(
+        line
+        for line in source.splitlines()
+        if re.fullmatch(r"[0-9]{3}\|[^\n]+", line)
+    )
+
+
+def _validate_g2f_class_a_ledger_v13(
+    source: str,
+    failures: list[str],
+) -> tuple[str, ...]:
+    rows = _g2f_class_a_ledger_rows_v13(source)
+    expected_prefixes = tuple(f"{index:03d}|" for index in range(1, 182))
+    if len(rows) != 181:
+        failures.append(f"g2f.class_a.preflight.construction_ledger.count:{len(rows)}")
+    if tuple(line[:4] for line in rows) != expected_prefixes:
+        failures.append("g2f.class_a.preflight.construction_ledger.order")
+    if len(rows) != 181 or tuple(line[:4] for line in rows) != expected_prefixes:
+        return rows
+
+    parsed: dict[int, tuple[str, str, str, str]] = {}
+    for line in rows:
+        fields = line.split("|")
+        if len(fields) != 5 or any(not field for field in fields):
+            failures.append("g2f.class_a.preflight.construction_ledger.shape")
+            continue
+        row = int(fields[0])
+        parsed[row] = (fields[1], fields[2], fields[3], fields[4])
+        module_symbol = fields[3]
+        if ":" not in module_symbol:
+            failures.append(f"g2f.class_a.preflight.producer_shape:{row:03d}")
+            continue
+        module_path, symbol = module_symbol.rsplit(":", 1)
+        if (
+            not module_path.startswith("hedgehog/")
+            or not module_path.endswith(".py")
+            or symbol.startswith("_")
+        ):
+            failures.append(f"g2f.class_a.preflight.public_producer:{row:03d}")
+
+    ledger_body = ("\n".join(rows) + "\n").encode("utf-8")
+    if hashlib.sha256(ledger_body).hexdigest() != (
+        G2F_PUBLIC_CONSTRUCTION_LEDGER_SHA256_V13
+    ):
+        failures.append("g2f.class_a.preflight.construction_ledger.identity")
+
+    producer_basis_parts: list[str] = []
+    for row in range(1, 182):
+        record = parsed.get(row)
+        if record is None:
+            continue
+        module_path, symbol = record[2].rsplit(":", 1)
+        producer_basis_parts.append(f"{row:03d}\t{module_path}\t{symbol}\n")
+    producer_basis = "".join(producer_basis_parts).encode("ascii")
+    if len(producer_basis_parts) != 181:
+        failures.append("g2f.class_a.preflight.producer_basis.rows")
+    if len(producer_basis) != 14264:
+        failures.append(
+            f"g2f.class_a.preflight.producer_basis.bytes:{len(producer_basis)}"
+        )
+    if producer_basis.count(b"\n") != 181:
+        failures.append("g2f.class_a.preflight.producer_basis.lf")
+    if hashlib.sha256(producer_basis).hexdigest() != (
+        G2F_EXECUTED_PRODUCER_BASIS_SHA256_V13
+    ):
+        failures.append("g2f.class_a.preflight.producer_basis.sha256")
+
+    exact_rows = {
+        27: (
+            "ROOT",
+            "client_memory_descent_semantic_work_request",
+            "hedgehog/kernel/semantic_work_v01.py:build_semantic_work_request_v01",
+            "validate_semantic_work_request_v01",
+        ),
+        28: (
+            "ROOT",
+            "client_memory_descent_evidence_binding",
+            "hedgehog/kernel/semantic_work_v01.py:build_evidence_binding_v01",
+            "validate_actor_contribution_v01(enclosing_public_consumer)",
+        ),
+        29: (
+            "ROOT",
+            "client_memory_descent_normalized_plan_approval_claim",
+            "hedgehog/kernel/semantic_work_v01.py:build_normalized_claim_v01",
+            "validate_actor_contribution_v01(enclosing_public_consumer)",
+        ),
+        30: (
+            "ROOT",
+            "client_memory_descent_actor_contribution",
+            "hedgehog/kernel/semantic_work_v01.py:build_actor_contribution_v01",
+            "validate_actor_contribution_v01",
+        ),
+        31: (
+            "ROOT",
+            "client_memory_descent_root_review_packet",
+            "hedgehog/kernel/semantic_work_v01.py:build_root_review_packet_from_contributions_v01",
+            "validate_root_review_packet_v01",
+        ),
+        32: (
+            "ROOT",
+            "client_memory_descent_root_decision_input",
+            "hedgehog/kernel/root_decision_v01.py:build_root_decision_input_v01",
+            "validate_root_decision_input_v01",
+        ),
+        33: (
+            "ROOT",
+            "client_memory_descent_root_decision_result",
+            "hedgehog/kernel/root_decision_v01.py:decide_root_v01",
+            "validate_root_decision_result_v01",
+        ),
+        70: (
+            "G2-A",
+            "public_typed_action_source",
+            "hedgehog/action_commit_packet_v02.py:ActionCommitPacketV02",
+            "validate_action_commit_packet_v02",
+        ),
+        83: (
+            "ROOT",
+            "packet_authorization_root_candidate_projection",
+            "hedgehog/action_commit_packet_v02.py:build_root_decision_candidate_projection_v01",
+            "validate_root_decision_candidate_projection_v01+validate_supplier_root_context_coherence_v01",
+        ),
+        99: (
+            "G2-A",
+            "original_packet_corridor_step",
+            "hedgehog/action_commit_packet_v02.py:CorridorStepV01",
+            "validate_action_packet_present_eligibility_inspection_v01(enclosing_validator_at_row103)",
+        ),
+        129: (
+            "G2-A",
+            "root_accepted_g2e_invalidation_observation",
+            "hedgehog/action_commit_packet_v02.py:build_action_invalidation_evidence_v01",
+            "validate_action_invalidation_evidence_v01",
+        ),
+        138: (
+            "ROOT",
+            "revocation_review_root_candidate_projection",
+            "hedgehog/action_commit_packet_v02.py:build_root_decision_candidate_projection_v01",
+            "validate_root_decision_candidate_projection_v01+validate_revocation_root_context_coherence_v01",
+        ),
+        143: (
+            "G2-A",
+            "revoked_packet_registry",
+            "hedgehog/action_commit_packet_v02.py:record_action_packet_revocation_v01",
+            "validate_action_commit_packet_registry_v02+validate_action_packet_transition_history_v01",
+        ),
+        153: (
+            "ROOT",
+            "successor_authorization_root_candidate_projection",
+            "hedgehog/action_commit_packet_v02.py:build_root_decision_candidate_projection_v01",
+            "validate_root_decision_candidate_projection_v01+validate_supplier_root_context_coherence_v01",
+        ),
+        164: (
+            "ROOT",
+            "supersession_review_root_candidate_projection",
+            "hedgehog/action_commit_packet_v02.py:build_root_decision_candidate_projection_v01",
+            "validate_root_decision_candidate_projection_v01+validate_supersession_root_context_coherence_v01",
+        ),
+        165: (
+            "G2-A",
+            "accepted_supersession_binding",
+            "hedgehog/action_commit_packet_v02.py:build_accepted_supersession_binding_v01",
+            "validate_accepted_supersession_binding_v01+validate_action_packet_renewal_relationship_v01",
+        ),
+        171: (
+            "G2-A",
+            "successor_activation_disposition_event",
+            "hedgehog/action_commit_packet_v02.py:build_idempotency_disposition_event_v01",
+            "validate_idempotency_disposition_event_v01+validate_idempotency_disposition_history_v01",
+        ),
+        175: (
+            "G2-A",
+            "successor_queued_registry",
+            "hedgehog/action_commit_packet_v02.py:append_action_packet_lifecycle_transition_v01",
+            "validate_action_commit_packet_registry_v02",
+        ),
+        179: (
+            "G2-A",
+            "successor_pending_registry",
+            "hedgehog/action_commit_packet_v02.py:append_action_packet_lifecycle_transition_v01",
+            "validate_action_commit_packet_registry_v02",
+        ),
+    }
+    for row, expected in exact_rows.items():
+        if parsed.get(row) != expected:
+            failures.append(f"g2f.class_a.preflight.row_{row:03d}.exact")
+
+    root_rows = tuple(
+        row
+        for row, record in sorted(parsed.items())
+        if record[2].endswith(":decide_root_v01")
+    )
+    if root_rows != (20, 33, 82, 128, 137, 152, 163):
+        failures.append("g2f.class_a.preflight.direct_root_logical_rows")
+
+    required_artifacts = (
+        "packet_authorization_actor_contribution",
+        "packet_authorization_root_decision_input",
+        "packet_authorization_root_decision_result",
+        "invalidation_acceptance_actor_contribution",
+        "invalidation_acceptance_root_decision_input",
+        "invalidation_acceptance_root_decision_result",
+        "revocation_review_root_decision_input",
+        "revocation_review_root_decision_result",
+        "revocation_review_root_candidate_projection",
+        "successor_authorization_root_decision_input",
+        "successor_authorization_root_decision_result",
+        "successor_authorization_root_candidate_projection",
+        "supersession_review_root_decision_input",
+        "supersession_review_root_decision_result",
+        "supersession_review_root_candidate_projection",
+        "original_activation_transition_event",
+        "original_queue_transition_event",
+        "original_pending_transition_event",
+        "fresh_revocation_transition_event",
+        "successor_activation_transition_event",
+        "successor_activation_disposition_event",
+        "predecessor_supersession_transition_event",
+    )
+    for artifact in required_artifacts:
+        if sum(record[1] == artifact for record in parsed.values()) != 1:
+            failures.append(f"g2f.class_a.preflight.artifact_cardinality:{artifact}")
+    return rows
+
+
 def _validate_g2f_class_a_contract_v01(
     repo_root: Path,
     authority_index: dict[str, object] | None,
@@ -9812,108 +10337,125 @@ def _validate_g2f_class_a_contract_v01(
     except (OSError, UnicodeError) as exc:
         failures.append(f"g2f.class_a.preflight.read:{type(exc).__name__}")
         return
-    required_markers = (
-        "G2F_PREFLIGHT_STATUS=ACCEPTED_CLASS_A_CANDIDATE",
-        "G2F_CLASSIFICATION=ORCHESTRATION_AND_ACCEPTANCE_ONLY",
-        "G2F_RUNTIME_IMPLEMENTATION_PERFORMED=false",
-        "GATE2_STATUS=NOT_CLOSED",
-        "OWNER_ONLY_COMMIT_PUSH=true",
-        "THREAD_STATUS=DESIGN_DERIVED_CONSTRUCTIBLE",
-        "PUBLIC_CONSTRUCTION_LEDGER_ROWS=174",
-        "CONSTRUCTION_LEDGER_CONSECUTIVE=true",
-        "DISTINCT_FRESH_ROOT_REVIEW_CHAINS=5",
-        "INITIAL_TRANSACTION_ROOT_SET_BINDING=EXACT_DETERMINISTIC_SCENARIO_VALUES",
-        "NONEXISTENT_CURRENT_G2F_VALIDATOR_REFERENCES=0",
-        "STALE_PACKET_AUTHORIZATION_CONTRIBUTION_REUSE=false",
-        "STALE_PACKET_AUTHORIZATION_DECISION_REUSE=false",
-        "STALE_INVALIDATION_ROOT_DECISION_REUSE=false",
-        "UNBOUND_LITERAL_INVALIDATION_EVIDENCE=false",
-        "STALE_REVOCATION_ROOT_INPUT_REUSE=false",
-        "STALE_REVOCATION_ROOT_RESULT_REUSE=false",
-        "STALE_SUCCESSOR_ROOT_PROJECTION_REUSE=false",
-        "STALE_SUPERSESSION_ROOT_PROJECTION_REUSE=false",
-        "STALE_ORIGINAL_PACKET_TRANSITION_EVENT_REUSE=false",
-        "STALE_REVOCATION_TRANSITION_EVENT_REUSE=false",
-        "STALE_SUCCESSOR_ACTIVATION_EVENT_REUSE=false",
-        "STALE_SUCCESSOR_DISPOSITION_EVENT_REUSE=false",
-        "STALE_PREDECESSOR_SUPERSESSION_EVENT_REUSE=false",
-        "REVOCATION_BOUND_TO_G2E_INVALIDATION=true",
-        "PRIVATE_HELPERS_REQUIRED=0",
-        "TEST_IMPORTS_REQUIRED=0",
-        "MISSING_RUNTIME_SEAM=false",
-        "ARCHITECTURE_CONFLICT=false",
-        "OWNER_REVIEW_CORRECTIONS_BEGIN",
-        "CORRECTION_1_CONSTRUCTIBILITY_AND_MULTIROOT=",
-        "CORRECTION_2_HOP_RELATIVE_CLOSURE_PREDECESSORS=",
-        "CORRECTION_3_FRESH_CLOSURE_RUNTIME_AND_IDENTITY_WORDING=REQUIRED",
-        "TRANSACTION_ID=transaction:g2f:gate2:v01",
+
+    for key, expected in G2F_V13_STATUS_CONTRACT.items():
+        observed = re.findall(
+            rf"(?m)^\s*{re.escape(key)}\s*=\s*([^\s#]+)", source
+        )
+        if not observed or any(value != expected for value in observed):
+            failures.append(f"g2f.class_a.preflight.status:{key}")
+
+    exact_markers = (
+        "PRODUCER_BASIS_ROWS=181",
+        "PRODUCER_BASIS_BYTES=14264",
+        "PRODUCER_BASIS_LF=181",
+        f"PRODUCER_BASIS_SHA256={G2F_EXECUTED_PRODUCER_BASIS_SHA256_V13}",
+        "PRIMARY_ROW_RECEIPT_COUNT=235",
+        "DIRECT_DECIDE_ROOT_RECEIPT_COUNT=8",
+        "DIRECT_DECIDE_ROOT_LOGICAL_ROW_COUNT=7",
+        "CAUSAL_ROW_COUNT=60",
+        "CAUSAL_EDGE_COUNT=274",
+        "NEW_TO_NEW_CAUSAL_EDGE_COUNT=155",
+        "MISSING_CAUSAL_EDGE_COUNT=0",
+        "UNEXPECTED_CAUSAL_EDGE_COUNT=0",
+        f"V12R2_EVIDENCE_ARCHIVE_SHA256={G2F_V12R2_ARCHIVE_SHA256}",
+        f"V12R4_EVIDENCE_ARCHIVE_SHA256={G2F_V12R4_ARCHIVE_SHA256}",
+        f"V12R5_EVIDENCE_ARCHIVE_SHA256={G2F_V12R5_ARCHIVE_SHA256}",
+        f"V12R6_EVIDENCE_ARCHIVE_SHA256={G2F_V12R6_ARCHIVE_SHA256}",
+        f"V13_INPUT_ARCHIVE_SHA256={G2F_V13_ARCHIVE_SHA256}",
+        "V13_OWNER_READINESS_STATUS=SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE",
+        "V13R1_VALIDATOR_CLOSURE_STATUS=FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE",
+        "V12R6_TOTAL_EXECUTED_NEGATIVE_REGRESSION_COUNT=315",
+        "SHARED_REQUEST_ID=transaction:g2f:gate2:v01",
+        "PARENT_MULTIROOT_CORRELATION_ID=transaction:g2f:gate2:v01",
+        "CLIENT_LOCAL_TRANSACTION_ID=CLIENT_DRS_QUERY_ID",
+        "SUPPLIER_LOCAL_TRANSACTION_ID=SUPPLIER_DRS_QUERY_ID",
+        "ROOT_LOCAL_TRANSACTION_CARDINALITY=2",
+        "PARENT_CORRELATION_CARDINALITY=1",
+        "REQUEST_TO_PARENT_CORRELATION=SAME_TOKEN_DISTINCT_FIELD_ROLES",
+        "PARENT_TOKEN_USED_AS_G2C_TRANSACTION=false",
         "ROOT_SET=(root:g2f:client,root:g2f:supplier)",
         "PACKET_OWNER_ROOT=root:g2f:supplier",
         "DELTA_AFFECTED_ROOT_SET=(root:g2f:supplier)",
         "SUPERROOT_CREATED=false",
         "AGGREGATE_AUTHORITY_CREATED=false",
+        "ROW129_ACCEPTANCE_ROOT_DECISION_ID=None",
+        "ROW129_ACCEPTANCE_ROOT_DECISION_HASH=None",
+        "ROW129_ROOT_DECISION_REF=None",
+        "ROW173_AUTHORIZED_CANONICAL_SOURCE=ROW154",
+        "LIFECYCLE_BRANCH_MODEL=TWO_INDEPENDENT_PROOF_BRANCHES_FROM_ROW098_PENDING_BASELINE",
         "OPEN_QUESTIONS=NONE",
     )
-    for marker in required_markers:
+    for marker in exact_markers:
         if marker not in source:
             failures.append(f"g2f.class_a.preflight.marker:{marker}")
+
     identity = _file_identity(repo_root / G2F_PREFLIGHT_PATH)
-    if identity is None or identity[0] != G2F_PREFLIGHT_SHA256_V02:
+    if identity is None or identity[0] != G2F_PREFLIGHT_SHA256_V13:
         failures.append("g2f.class_a.preflight.identity")
-    rows = [
-        line for line in source.splitlines() if re.match(r"^[0-9]{3}\|", line)
-    ]
-    expected_prefixes = [f"{index:03d}|" for index in range(1, 175)]
-    if len(rows) != 174 or [line[:4] for line in rows] != expected_prefixes:
-        failures.append("g2f.class_a.preflight.construction_ledger.exact_174")
-    for line in rows:
-        fields = line.split("|")
-        if len(fields) != 5 or not fields[3] or not fields[4]:
-            failures.append("g2f.class_a.preflight.construction_ledger.shape")
-            break
-        symbol = fields[3].rsplit(":", 1)[-1]
-        if symbol.startswith("_"):
-            failures.append(
-                f"g2f.class_a.preflight.private_producer:{symbol}"
-            )
-    for symbol in (
-        "build_transaction_outcome_envelope_v01",
-        "validate_multiroot_v01",
-        "transaction_outcome_envelope_to_plain_dict_v01",
-        "run_fractal_runtime_v02",
-        "inspect_action_packet_present_eligibility_v01",
-        "run_continuous_delta_runtime_v01",
-        "record_action_packet_revocation_v01",
-        "record_action_packet_supersession_v01",
-        "replay_action_packet_lifecycle_history_v01",
-        "packet_authorization_actor_contribution",
-        "invalidation_acceptance_root_decision_result",
-        "revocation_review_root_candidate_projection",
-        "successor_authorization_root_candidate_projection",
-        "supersession_review_root_candidate_projection",
-        "original_activation_transition_event",
-        "original_queue_transition_event",
-        "original_pending_transition_event",
-        "fresh_revocation_transition_event",
-        "successor_activation_transition_event",
-        "successor_activation_disposition_event",
-        "predecessor_supersession_transition_event",
-        "FUTURE_G2F_REPORT_VALIDATOR_REQUIRED",
-    ):
-        if symbol not in source:
-            failures.append(f"g2f.class_a.preflight.public_symbol:{symbol}")
+    _validate_g2f_class_a_ledger_v13(source, failures)
+
+    required_relations = (
+        "075->{076,077}",
+        "078<-{075,077}",
+        "079<-{076,077,078}",
+        "080<-{076,079}",
+        "081<-{075,080}",
+        "082<-{081}",
+        "083<-{075,081,082}",
+        "Row 083 binds rows 075, 081 and 082",
+        "supplier Root-context\nvalidation through "
+        "`validate_supplier_root_context_coherence_v01`",
+        "084<-{075,083}",
+        "ROW_122 <- {ROW_005,ROW_120}",
+        "ROW_123 <- {ROW_120}",
+        "ROW_124 <- {ROW_075,ROW_120,ROW_123}",
+        "ROW_125 <- {ROW_007,ROW_017,ROW_122,ROW_123,ROW_124}",
+        "ROW_126 <- {ROW_017,ROW_122,ROW_125}",
+        "ROW_127 <- {ROW_005,ROW_012,ROW_075,ROW_120,ROW_126}",
+        "ROW_128 <- {ROW_012,ROW_120,ROW_127}",
+        "ROW_129 <- {ROW_084,ROW_104,ROW_120,ROW_124,ROW_127,ROW_128}",
+        "causal inputs compatible with {85,154,168,171}",
+        "row-143 revoked registry is not a supersession-branch input",
+    )
+    for relation in required_relations:
+        if relation not in source:
+            failures.append(f"g2f.class_a.preflight.semantic_relation:{relation}")
+
+    forbidden_active = (
+        "LEDGER_ROW_PRODUCER_SYMBOL_MULTISET_PRESERVED=true",
+        "ROWS_025_THROUGH_174_NUMBERING_UNCHANGED=true",
+        "REPAIRED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE",
+        "build_supplier_a_mock_action_commit_packet_fixture_v02|validate_action_commit_packet_v02",
+        "build_supplier_a_corridor_step_fixture_v01|",
+        "3550b55766bc57975bf0f5c4c865d8be6c6c90e8461b8208f9b2f0753e57eebd",
+    )
+    for marker in forbidden_active:
+        if marker in source:
+            failures.append(f"g2f.class_a.preflight.forbidden_active:{marker}")
     if "G2F_cross_stage_validator" in source:
         failures.append("g2f.class_a.preflight.nonexistent_current_validator")
     for status_failure in _g2f_status_overclaims_v02(source):
         failures.append(
             f"g2f.class_a.preflight.status_overclaim:{status_failure}"
         )
+
     deferred = (
-        "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+        "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
     )
     for path in G2F_CLOSURE_OVERLAP_PATHS:
         if f"MODIFY {path}|{deferred}" not in source:
             failures.append(f"g2f.class_a.preflight.deferred_predecessor:{path}")
+    if source.count(deferred) != 6:
+        failures.append("g2f.class_a.preflight.deferred_predecessor.count")
+    for boundary in (
+        "ORIGINAL_CLASS_A_COMMIT_PROVENANCE",
+        "CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS",
+        "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+        "FUTURE_CLOSURE_EXACT_FOURTEEN_PATHS",
+    ):
+        if boundary not in source:
+            failures.append(f"g2f.class_a.preflight.commit_boundary:{boundary}")
     for test_id in G2F_FOCUSED_TEST_IDS:
         if source.splitlines().count(test_id) != 1:
             failures.append(f"g2f.class_a.preflight.focused_test:{test_id}")
@@ -9927,8 +10469,33 @@ def _validate_g2f_class_a_contract_v01(
     ):
         if phrase not in source:
             failures.append(f"g2f.class_a.preflight.correction:{phrase}")
+
     if authority_index is None or successor_manifest is None:
         failures.append("g2f.class_a.control_plane_json_missing")
+    elif isinstance(authority_index.get("current_technical_annexes"), list):
+        entries = [
+            entry
+            for entry in authority_index["current_technical_annexes"]
+            if isinstance(entry, dict) and entry.get("path") == G2F_PREFLIGHT_PATH
+        ]
+        if len(entries) != 1:
+            failures.append("g2f.class_a.authority_index.entry_count")
+        else:
+            entry = entries[0]
+            if entry.get("status") != (
+                "accepted_g2f_v13r1_full_validator_closure_candidate"
+            ):
+                failures.append("g2f.class_a.authority_index.status")
+            role = entry.get("role")
+            for marker in (
+                G2F_ORIGINAL_CLASS_A_COMMIT,
+                G2F_EXECUTED_PRODUCER_BASIS_SHA256_V13,
+                G2F_V12R6_ARCHIVE_SHA256,
+                "row-083 structural plus supplier-root-context validator contract",
+                "implementation unauthorized and unperformed",
+            ):
+                if not isinstance(role, str) or marker not in role:
+                    failures.append(f"g2f.class_a.authority_index.role:{marker}")
     _validate_g2f_future_implementation_contract_v01(repo_root, failures)
 
 
@@ -10359,6 +10926,7 @@ def _classify_g2f_path_ledger_v01(
     head_commit_entries: Sequence[tuple[str, str, str | None]],
     parent_commit_entries: Sequence[tuple[str, str, str | None]],
     parent_count: int = 1,
+    parent_parent_count: int = 1,
 ) -> tuple[str | None, tuple[str, ...]]:
     if not requested:
         return None, ()
@@ -10372,39 +10940,50 @@ def _classify_g2f_path_ledger_v01(
     parent_commit = _entry_map_v02(
         parent_commit_entries, label="g2f.parent_commit", failures=failures
     )
-    class_a_candidate = {
-        path: "??" if path == G2F_PREFLIGHT_PATH else " M"
-        for path in G2F_CLASS_A_PATHS
-    }
+    repair_candidate = {path: " M" for path in G2F_CLASS_A_PATHS}
     implementation_candidate = {path: "??" for path in G2F_IMPLEMENTATION_PATHS}
     if parent_count != 1:
         failures.append(f"g2f.merge_or_parent_count:{parent_count}")
-    if head == G2E_CLOSURE_COMMIT:
-        mode = "G2F_CLASS_A_CANDIDATE"
-        _compare_exact_ledger_v01(
-            worktree,
-            class_a_candidate,
-            label="g2f.class_a_candidate.worktree",
-            failures=failures,
-        )
-        if head_commit:
-            failures.append("g2f.class_a_candidate.unexpected_commit_ledger")
-        if parent_commit:
-            failures.append("g2f.class_a_candidate.unexpected_parent_commit_ledger")
-        if origin_main != G2E_CLOSURE_COMMIT:
-            failures.append("g2f.class_a_candidate.origin_main")
-    elif parent == G2E_CLOSURE_COMMIT:
+    if head == G2F_ORIGINAL_CLASS_A_COMMIT:
+        if parent != G2F_ORIGINAL_CLASS_A_PARENT:
+            failures.append("g2f.original_class_a.parent")
         _compare_exact_ledger_v01(
             head_commit,
-            dict(G2F_CLASS_A_COMMITTED_NAME_STATUS),
-            label="g2f.class_a_committed.commit",
+            dict(G2F_ORIGINAL_CLASS_A_COMMITTED_NAME_STATUS),
+            label="g2f.original_class_a.commit",
             failures=failures,
         )
         if parent_commit:
-            failures.append("g2f.class_a_committed.unexpected_parent_commit_ledger")
+            failures.append("g2f.original_class_a.unexpected_parent_commit_ledger")
         if not worktree:
-            mode = "G2F_CLASS_A_COMMITTED"
+            mode = "G2F_ORIGINAL_CLASS_A_COMMITTED_SUPERSEDED"
         else:
+            mode = "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
+            _compare_exact_ledger_v01(
+                worktree,
+                repair_candidate,
+                label="g2f.class_a_181_reconciliation_candidate.worktree",
+                failures=failures,
+            )
+        if origin_main != G2F_ORIGINAL_CLASS_A_COMMIT:
+            failures.append("g2f.original_or_repair_candidate.origin_main")
+    elif parent == G2F_ORIGINAL_CLASS_A_COMMIT:
+        mode = "G2F_CLASS_A_181_ROW_RECONCILIATION_COMMITTED"
+        _compare_exact_ledger_v01(
+            head_commit,
+            dict(G2F_CLASS_A_RECONCILIATION_COMMITTED_NAME_STATUS),
+            label="g2f.class_a_181_reconciliation_committed.commit",
+            failures=failures,
+        )
+        _compare_exact_ledger_v01(
+            parent_commit,
+            dict(G2F_ORIGINAL_CLASS_A_COMMITTED_NAME_STATUS),
+            label="g2f.class_a_181_reconciliation_committed.original_commit",
+            failures=failures,
+        )
+        if grandparent != G2F_ORIGINAL_CLASS_A_PARENT:
+            failures.append("g2f.class_a_181_reconciliation_committed.grandparent")
+        if worktree:
             mode = "G2F_IMPLEMENTATION_CANDIDATE"
             _compare_exact_ledger_v01(
                 worktree,
@@ -10413,13 +10992,17 @@ def _classify_g2f_path_ledger_v01(
                 failures=failures,
             )
         if origin_main != head:
-            failures.append("g2f.class_a_successor.origin_main")
-    elif grandparent == G2E_CLOSURE_COMMIT:
+            failures.append("g2f.class_a_181_reconciliation_successor.origin_main")
+    elif grandparent == G2F_ORIGINAL_CLASS_A_COMMIT:
         mode = "G2F_IMPLEMENTATION_COMMITTED"
+        if parent_parent_count != 1:
+            failures.append(
+                f"g2f.parent_merge_or_parent_count:{parent_parent_count}"
+            )
         _compare_exact_ledger_v01(
             parent_commit,
-            dict(G2F_CLASS_A_COMMITTED_NAME_STATUS),
-            label="g2f.implementation_committed.class_a_commit",
+            dict(G2F_CLASS_A_RECONCILIATION_COMMITTED_NAME_STATUS),
+            label="g2f.implementation_committed.repair_commit",
             failures=failures,
         )
         _compare_exact_ledger_v01(
@@ -10438,7 +11021,7 @@ def _classify_g2f_path_ledger_v01(
             failures.append("g2f.implementation_committed.origin_main")
     else:
         mode = "G2F_INVALID"
-        failures.append("g2f.third_descendant_or_basis_not_exact")
+        failures.append("g2f.unrecognized_descendant_or_basis_not_exact")
     if branch != "main":
         failures.append("g2f.branch")
     return mode, tuple(sorted(set(failures)))
@@ -10701,6 +11284,19 @@ def _validate_g2f_topology_v01(
     parent_count = (
         len(parent_line.split()) - 1 if parent_line is not None else 0
     )
+    parent_parent_count = 1
+    if grandparent == G2F_ORIGINAL_CLASS_A_COMMIT and parent is not None:
+        parent_parent_line = _git_single_line_v01(
+            repo_root,
+            ("rev-list", "--parents", "-n", "1", parent),
+            "g2f.parent_parent_count",
+            parent_failures,
+        )
+        parent_parent_count = (
+            len(parent_parent_line.split()) - 1
+            if parent_parent_line is not None
+            else 0
+        )
     try:
         ancestor_probe = subprocess.run(
             ("git", "merge-base", "--is-ancestor", G2E_CLOSURE_COMMIT, "HEAD"),
@@ -10730,6 +11326,45 @@ def _validate_g2f_topology_v01(
     if not requested:
         return None
     failures.extend(parent_failures)
+    original_parent = _git_single_line_v01(
+        repo_root,
+        ("rev-parse", "--verify", f"{G2F_ORIGINAL_CLASS_A_COMMIT}^"),
+        "g2f.original_class_a.parent",
+        failures,
+    )
+    if original_parent != G2F_ORIGINAL_CLASS_A_PARENT:
+        failures.append("g2f.original_class_a.parent_exact")
+    original_parent_line = _git_single_line_v01(
+        repo_root,
+        ("rev-list", "--parents", "-n", "1", G2F_ORIGINAL_CLASS_A_COMMIT),
+        "g2f.original_class_a.parent_count",
+        failures,
+    )
+    if original_parent_line is None or len(original_parent_line.split()) != 2:
+        failures.append("g2f.original_class_a.parent_count_exact")
+    original_commit_entries = _git_name_status_entries_v01(
+        repo_root,
+        f"{G2F_ORIGINAL_CLASS_A_PARENT}..{G2F_ORIGINAL_CLASS_A_COMMIT}",
+        failures,
+    )
+    original_commit_ledger = _entry_map_v02(
+        original_commit_entries,
+        label="g2f.original_class_a.committed",
+        failures=failures,
+    )
+    _compare_exact_ledger_v01(
+        original_commit_ledger,
+        dict(G2F_ORIGINAL_CLASS_A_COMMITTED_NAME_STATUS),
+        label="g2f.original_class_a.committed",
+        failures=failures,
+    )
+    _validate_git_blob_identities_v01(
+        repo_root,
+        G2F_ORIGINAL_CLASS_A_COMMIT,
+        G2F_ORIGINAL_CLASS_A_POSTIMAGE_IDENTITIES,
+        "g2f.original_class_a.blobs",
+        failures,
+    )
     branch = _git_single_line_v01(
         repo_root,
         ("branch", "--show-current"),
@@ -10754,7 +11389,8 @@ def _validate_g2f_topology_v01(
         if (
             grandparent is not None
             and parent is not None
-            and grandparent == G2E_CLOSURE_COMMIT
+            and grandparent
+            in {G2E_CLOSURE_COMMIT, G2F_ORIGINAL_CLASS_A_COMMIT}
         )
         else ()
     )
@@ -10769,6 +11405,7 @@ def _validate_g2f_topology_v01(
         head_commit_entries=head_commit_entries,
         parent_commit_entries=parent_commit_entries,
         parent_count=parent_count,
+        parent_parent_count=parent_parent_count,
     )
     failures.extend(topology_failures)
     return mode

@@ -155,23 +155,103 @@ The sanitized Class-A reconciliation annex remains exact evidence of its
 bounded historical hop; its statement that Class A itself did not implement
 E6 remains true about that hop. It does not override the current checkpoint.
 
-G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED` and its implementation authorization
-is false. Gate 2 remains `NOT_CLOSED`. Public release, RC2, production
-readiness, and production security certification remain `NOT_CLAIMED`.
+At the exact committed G2-E closure checkpoint, before the original G2-F
+Class-A commit, G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`. That historical
+checkpoint marker remains true for its basis and does not override the current
+repair succession below.
+
+G2-F is `NOT_CLOSED`. Its original Class-A commit is retained as provenance.
+The V12R2 runtime projection and V12R6 full-corridor proof now support an exact
+181-row Class-A reconciliation candidate. V13R1 closes the row-083 validator
+omission by binding both structural projection validation and supplier
+Root-context coherence without changing any other accepted runtime or causal
+geometry. Implementation remains unauthorized and unperformed. Gate 2 remains
+`NOT_CLOSED`. Public release,
+RC2, production readiness, and production security certification remain
+`NOT_CLAIMED`.
 
 ### G2-F Class-A preflight boundary
 
-`docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md` is the current scoped
-G2-F Class-A candidate contract, subordinate to this lock. It classifies G2-F
-as `ORCHESTRATION_AND_ACCEPTANCE_ONLY` after a source-derived public
-constructibility proof. The future programme preserves the seven existing
-Gate-2 completion statements, one exact MultiRoot transaction with independent
-Root decisions, eight positive/report cases, sixteen bounded DoD/hostile cases,
-and 24 focused tests total. It creates no new kernel primitive, schema, Living
-act, Conformance category, Root, authority, provider/model/network/connector/
-adapter operation, or real-world effect.
+`docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md` is the active scoped
+G2-F Class-A 181-row reconciliation candidate, subordinate to this lock and
+pending owner review and commit. It classifies G2-F as
+`ORCHESTRATION_AND_ACCEPTANCE_ONLY`. The accepted geometry is 181 consecutive
+logical public rows, 235 primary runtime receipts, the exact f78aedd4 executed
+producer basis, 274 strictly backward causal-parent edges, 155 new-to-new
+edges, and 165 same-row local validation uses. It has eight direct
+`decide_root_v01` receipts across seven logical rows. The corrected public
+geometry retains one shared request/parent-correlation token, two distinct
+query-derived Root-local transactions, and one parent MultiRoot envelope
+containing exact opaque references to both independently sovereign G2-C
+decisions. The parent token is never a G2-C/G2-D/G2-A/G2-E local transaction.
+This preserves the seven existing Gate-2 completion statements, eight
+positive/report cases, sixteen bounded DoD/hostile cases, and 24 focused tests
+total. It creates no new kernel primitive, schema, Living act, Conformance
+category, Root, authority, provider/model/network/connector/adapter operation,
+or real-world effect.
 
-The Class-A candidate boundary is exactly these seven paths:
+Within the packet-authorization chain, row 083 binds rows 075, 081 and 082.
+Its exact contract is
+`validate_root_decision_candidate_projection_v01+validate_supplier_root_context_coherence_v01`:
+the first validator proves structural projection validity and the second binds
+the projection to the authorized supplier packet and Root context at row 075.
+
+```text
+G2F_PREFLIGHT_STATUS=CLASS_A_181_ROW_RECONCILIATION_CANDIDATE
+G2F_CLASS_A_STATUS=V13R1_CANDIDATE_PENDING_OWNER_REVIEW
+G2F_CLASSIFICATION=ORCHESTRATION_AND_ACCEPTANCE_ONLY
+G2F_RUNTIME_IMPLEMENTATION_PERFORMED=false
+G2F_IMPLEMENTATION_AUTHORIZED=false
+G2F_STATUS=NOT_CLOSED
+GATE2_STATUS=NOT_CLOSED
+OWNER_ONLY_COMMIT_PUSH=true
+SOURCE_BASIS_HEAD=c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce
+PUBLIC_CONSTRUCTION_LEDGER_ROWS=181
+CONSTRUCTION_LEDGER_CONSECUTIVE=true
+CURRENT_CLASS_A_POSTIMAGES_RECONCILED=true
+V12R2_RUNTIME_SEMANTIC_AND_PARENT_MAP_STATUS=ACCEPTED
+V12R2_EVIDENCE_ARCHIVE_SHA256=c600d68e0cf4fce20a00a0783e470d3169d6f35566609b94a3e13745b5409fec
+V12R3_EXECUTED_PRODUCER_BASIS_STATUS=ACCEPTED_THROUGH_V12R6
+V12R3_RECONCILIATION_READINESS_STATUS=SUPERSEDED_BY_V12R4
+V12R3_ALL_ANTI_FITTING_HOSTILES_STATUS=SUPERSEDED_BY_V12R4
+V12R4_PROOF_STATUS=ACCEPTED_AS_REGRESSION_PROVENANCE_SUPERSEDED_BY_V12R5
+V12R4_EVIDENCE_ARCHIVE_SHA256=3ef8186d734436d5332d1ba43f27652c91fdc5cb1d58a7fd6089ba081df3cec3
+V12R4_EXECUTED_PRODUCER_BASIS_SHA256=f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d
+V12R5_RECONCILIATION_READINESS_STATUS=SUPERSEDED
+V12R5_RECONCILIATION_READINESS_SCOPE=ONLY_TERMINAL_READINESS
+V12R5_RECONCILIATION_READINESS_SUPERSEDED_BY=V12R6_FULL_CORRIDOR_EXTERNAL_PROOF
+V12R5_EVIDENCE_ARCHIVE_SHA256=ac705170be8fc731767f27637a6cb8595eec531ef24ac4acae8e3484e7a8d006
+V12R5_EXECUTED_PRODUCER_BASIS_STATUS=ACCEPTED
+V12R5_EXECUTED_PRODUCER_BASIS_SCOPE=IMMUTABLE_REGRESSION_EVIDENCE
+V12R5_ROW099_SOURCE_RECEIPT_BINDING_STATUS=ACCEPTED
+V12R5_ROW099_SOURCE_RECEIPT_BINDING_SCOPE=IMMUTABLE_REGRESSION_EVIDENCE
+V12R5_CLEAN_RUNTIME_AND_SEMANTIC_PROJECTION_STATUS=ACCEPTED
+V12R5_CLEAN_RUNTIME_AND_SEMANTIC_PROJECTION_SCOPE=IMMUTABLE_REGRESSION_EVIDENCE
+V12R5_CLEAN_CAUSAL_AND_LOCAL_USE_PROJECTION_STATUS=ACCEPTED
+V12R5_CLEAN_CAUSAL_AND_LOCAL_USE_PROJECTION_SCOPE=REGRESSION_TARGET
+V12R5_EXECUTED_32_NEGATIVE_REGRESSION_RESULTS_STATUS=ACCEPTED
+V12R5_EXECUTED_32_NEGATIVE_REGRESSION_RESULTS_SCOPE=HISTORICAL_TESTED_SCOPE
+V12R5_FULL_BYTE_CORRIDOR_STATEMENT_COVERAGE_STATUS=NOT_PROVEN
+V12R5_FULL_BYTE_CORRIDOR_STATEMENT_COVERAGE_SCOPE=PROOF_ANALYZER_DEFECT_ONLY
+G2F_V12R6_RESULT=PASS_READY_FOR_V13_EXACT_SEVEN_PATH_CLASS_A_181_ROW_RECONCILIATION
+V12R6_SCOPE=EXTERNAL_PROOF_ONLY
+V12R6_FULL_CORRIDOR_EXTERNAL_PROOF_STATUS=DIRECT_AUTHORITY_FOR_V13_RECONCILIATION
+V12R6_FULL_CORRIDOR_EXTERNAL_PROOF_SCOPE=NO_IMPLEMENTATION_OR_RECONCILIATION_AUTHORITY
+V12R6_EVIDENCE_ARCHIVE_SHA256=78fd785e707fc6d198878a566b49ba6dad0e47d2e0efd0bc8c812b78d33334d4
+V12R6_EXECUTED_PRODUCER_BASIS_SHA256=f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d
+V12R6_FULL_CORRIDOR_STATEMENT_COVERAGE_STATUS=PASS_EXACT
+V12R6_TOTAL_EXECUTED_NEGATIVE_REGRESSION_COUNT=315
+V13_INPUT_ARCHIVE_SHA256=854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7
+V13_OWNER_READINESS_STATUS=SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE
+V13R1_VALIDATOR_CLOSURE_STATUS=FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE
+```
+
+The original Class-A commit
+`c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce` has parent
+`282e319241946b34987b2533d95ed514c3d884c1` and remains immutable provenance.
+The current reconciliation boundary is exactly these same seven tracked
+MODIFY paths and is named
+`CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS`:
 
 1. `docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md`;
 2. `specs/current_architecture_lock_v01.md`;
@@ -181,18 +261,26 @@ The Class-A candidate boundary is exactly these seven paths:
 6. `tests/test_active_architecture_authority_v01.py`;
 7. `tests/test_repository_release_spine_v01.py`.
 
-Only after owner review and commit of those exact Class-A bytes may a separate
-owner authorization make the exact two-path implementation boundary effective:
+The previous implementation authorization naming the original Class-A commit
+is stale and ineffective. Only after owner review and commit of these exact
+seven reconciled bytes may a new, separate owner authorization naming that new
+committed HEAD make the exact two-path implementation boundary effective:
 `demo/run_consolidated_gate2_gauntlet_g2_f_v01.py` and
-`tests/test_consolidated_gate2_gauntlet_g2_f_v01.py`. This Class-A hop does not
+`tests/test_consolidated_gate2_gauntlet_g2_f_v01.py`. This repair hop does not
 authorize or perform that implementation. The owner alone may stage, commit,
-or push either boundary.
+or push either boundary. Future closure predecessors for the six overlapping
+control paths remain
+`RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE`.
 
-The runtime phase remains `POST_E6_SUCCESSOR`; G2-F remains
-`NEXT_NOT_STARTED_NOT_AUTHORIZED`, its implementation authorization remains
-false, and Gate 2 remains `NOT_CLOSED`. RC2, public release, production
-readiness, production security certification, and real-world integration remain
-unclaimed.
+The runtime phase remains `POST_E6_SUCCESSOR`; the repository G2-F lifecycle is
+`G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE`, implementation authorization
+is false, G2-F remains `NOT_CLOSED`, and Gate 2 remains `NOT_CLOSED`. The three
+ordered boundaries remain `ORIGINAL_CLASS_A_COMMIT_PROVENANCE`,
+`CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS`,
+`FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS`, and
+`FUTURE_CLOSURE_EXACT_FOURTEEN_PATHS`. RC2, public release, production
+readiness, production security certification, and real-world integration
+remain unclaimed.
 
 ## 9. Historical-document law
 

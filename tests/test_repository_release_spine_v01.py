@@ -5736,15 +5736,25 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
     assert g2f_entries == [
         {
             "path": G2F_PREFLIGHT_PATH,
-            "status": "accepted_g2f_class_a_preflight_candidate",
+            "status": "accepted_g2f_v13r1_full_validator_closure_candidate",
             "current_authority": True,
             "authority_scope": "named_gate_contract_only",
             "may_override_architecture_lock": False,
             "onboarding_allowed": True,
             "role": (
-                "current scoped G2-F constructibility and future two-path "
-                "orchestration/acceptance contract; implementation effective "
-                "only after exact owner Class-A commit and subordinate to the "
+                "current scoped G2-F V13R1 181-row Class-A reconciliation "
+                "candidate "
+                "at source basis c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce; "
+                "V12R2 runtime semantics and parent map accepted, "
+                "f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d "
+                "executed producer basis accepted, V12R6 full-corridor "
+                "external proof "
+                "78fd785e707fc6d198878a566b49ba6dad0e47d2e0efd0bc8c812b78d33334d4 "
+                "remains direct proof authority, and V13R1 closes the exact "
+                "row-083 structural plus supplier-root-context validator "
+                "contract; "
+                "implementation unauthorized and unperformed, pending owner "
+                "review and exact seven-path commit, subordinate to the "
                 "Current Architecture Lock"
             ),
         }
@@ -5764,12 +5774,34 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         for line in preflight.splitlines()
         if len(line) > 4 and line[:3].isdigit() and line[3] == "|"
     ]
-    assert len(ledger_rows) == 174
+    assert len(ledger_rows) == 181
     assert [row[:4] for row in ledger_rows] == [
-        f"{index:03d}|" for index in range(1, 175)
+        f"{index:03d}|" for index in range(1, 182)
     ]
-    assert "THREAD_STATUS=DESIGN_DERIVED_CONSTRUCTIBLE" in preflight
-    assert "TRANSACTION_ID=transaction:g2f:gate2:v01" in preflight
+    assert ledger_rows[82] == (
+        "083|ROOT|packet_authorization_root_candidate_projection|"
+        "hedgehog/action_commit_packet_v02.py:"
+        "build_root_decision_candidate_projection_v01|"
+        "validate_root_decision_candidate_projection_v01+"
+        "validate_supplier_root_context_coherence_v01"
+    )
+    assert (
+        "THREAD_STATUS=V13R1_FULL_VALIDATOR_CLOSURE_REPAIRED_CANDIDATE"
+        in preflight
+    )
+    assert "Row 083 binds rows 075, 081 and 082" in preflight
+    preflight_lines = set(preflight.splitlines())
+    for marker in (
+        "SHARED_REQUEST_ID=transaction:g2f:gate2:v01",
+        "PARENT_MULTIROOT_CORRELATION_ID=transaction:g2f:gate2:v01",
+        "CLIENT_LOCAL_TRANSACTION_ID=CLIENT_DRS_QUERY_ID",
+        "SUPPLIER_LOCAL_TRANSACTION_ID=SUPPLIER_DRS_QUERY_ID",
+        "ROOT_LOCAL_TRANSACTION_CARDINALITY=2",
+        "PARENT_CORRELATION_CARDINALITY=1",
+        "REQUEST_TO_PARENT_CORRELATION=SAME_TOKEN_DISTINCT_FIELD_ROLES",
+        "PARENT_TOKEN_USED_AS_G2C_TRANSACTION=false",
+    ):
+        assert marker in preflight_lines
     assert "ROOT_SET=(root:g2f:client,root:g2f:supplier)" in preflight
     assert "PACKET_OWNER_ROOT=root:g2f:supplier" in preflight
     assert "DELTA_AFFECTED_ROOT_SET=(root:g2f:supplier)" in preflight
@@ -5783,8 +5815,23 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
     assert "24-node focused suite" in preflight
     assert "direct canonical report receipt" in preflight
     for marker in (
-        "DISTINCT_FRESH_ROOT_REVIEW_CHAINS=5",
-        "INITIAL_TRANSACTION_ROOT_SET_BINDING=EXACT_DETERMINISTIC_SCENARIO_VALUES",
+        "PUBLIC_CONSTRUCTION_LEDGER_ROWS=181",
+        "CONSTRUCTION_LEDGER_CONSECUTIVE=true",
+        "CURRENT_CLASS_A_POSTIMAGES_RECONCILED=true",
+        "DIRECT_DECIDE_ROOT_RECEIPT_COUNT=8",
+        "DIRECT_DECIDE_ROOT_LOGICAL_ROW_COUNT=7",
+        "PRODUCER_BASIS_SHA256=f78aedd408138603d78f249178e171c48b0338e7aa331293f0832cbb27815b0d",
+        "V12R6_FULL_CORRIDOR_EXTERNAL_PROOF_STATUS=DIRECT_AUTHORITY_FOR_V13_RECONCILIATION",
+        "V13_INPUT_ARCHIVE_SHA256=854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7",
+        "V13_OWNER_READINESS_STATUS=SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE",
+        "V13R1_VALIDATOR_CLOSURE_STATUS=FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE",
+        "ROOT_LOCAL_RUNTIME_INVOCATIONS_EXPLICIT=2",
+        "ROOT_LOCAL_G2B_FAMILY_COUNT=2",
+        "ROOT_LOCAL_G2C_LANE_COUNT=2",
+        "DISTINCT_ROOT_LOCAL_QUERY_TRANSACTIONS=2",
+        "SHARED_REQUEST_COUNT=1",
+        "PARENT_MULTIROOT_CORRELATION_COUNT=1",
+        "PACKET_AUTHORIZATION_CHAIN_EXACT=true",
         "NONEXISTENT_CURRENT_G2F_VALIDATOR_REFERENCES=0",
         "STALE_PACKET_AUTHORIZATION_CONTRIBUTION_REUSE=false",
         "STALE_PACKET_AUTHORIZATION_DECISION_REUSE=false",
@@ -5803,6 +5850,32 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         "FUTURE_G2F_REPORT_VALIDATOR_REQUIRED",
     ):
         assert marker in preflight
+    assert tuple(row.split("|")[2] for row in ledger_rows[:24]) == (
+        "semantic_address",
+        "drs_time_envelope",
+        "drs_authority_envelope",
+        "meaning_record",
+        "informational_temporal_query",
+        "informational_candidate_evaluation",
+        "legacy_local_drs_projection",
+        "memory_descent_budget",
+        "retrieval_plan",
+        "resolution_candidate",
+        "ranked_candidates",
+        "root_kernel_for_informational_reuse",
+        "semantic_work_request_for_reuse",
+        "reuse_evidence_binding",
+        "normalized_reuse_claim",
+        "reuse_actor_contribution",
+        "component_trust_profiles",
+        "reuse_root_review_packet",
+        "reuse_root_decision_input",
+        "reuse_root_decision",
+        "root_shortcut_projection",
+        "reuse_certificate",
+        "resolution_report",
+        "existing_shortcut_use_validation",
+    )
     assert "G2F_cross_stage_validator" not in preflight
     for artifact in (
         "packet_authorization_actor_contribution",
@@ -5840,10 +5913,26 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         "tests/test_repository_release_spine_v01.py",
     }
     succession = manifest["g2f_class_a_succession"]
-    assert succession["basis_head"] == G2E_CLOSURE_COMMIT
-    assert {entry["path"] for entry in succession["class_a_paths"]} == (
+    original_class_a_commit = "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce"
+    assert succession["basis_head"] == original_class_a_commit
+    assert succession["original_class_a_basis_head"] == G2E_CLOSURE_COMMIT
+    assert succession["original_class_a_commit"] == original_class_a_commit
+    assert succession["reconciliation_basis_head"] == original_class_a_commit
+    assert {entry["path"] for entry in succession["original_class_a_paths"]} == (
         class_a_paths
     )
+    assert {
+        entry["path"]: entry["action"]
+        for entry in succession["original_class_a_paths"]
+    } == {
+        path: "ADD" if path == G2F_PREFLIGHT_PATH else "MODIFY"
+        for path in class_a_paths
+    }
+    assert succession["reconciliation_path_count"] == 7
+    assert {
+        entry["path"]: entry["action"]
+        for entry in succession["reconciliation_paths"]
+    } == {path: "MODIFY" for path in class_a_paths}
     assert {
         entry["path"] for entry in succession["future_implementation_paths"]
     } == set(G2F_IMPLEMENTATION_PATHS)
@@ -5856,20 +5945,70 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
     assert len(overlapping) == 6
     assert all(
         entry.get("predecessor")
-        == "CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
+        == "RECONCILED_CLASS_A_COMMITTED_POSTIMAGE_TO_BE_BOUND_EXACTLY_BEFORE_CLOSURE"
         and "predecessor_sha256" not in entry
         for entry in overlapping
     )
     assert succession["owner_commit_boundaries"] == [
-        "CLASS_A_EXACT_SEVEN_PATHS",
-        "IMPLEMENTATION_EXACT_TWO_PATHS",
-        "CLOSURE_EXACT_FOURTEEN_PATHS",
+        "ORIGINAL_CLASS_A_COMMIT_PROVENANCE",
+        "CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS",
+        "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+        "FUTURE_CLOSURE_EXACT_FOURTEEN_PATHS",
     ]
+    assert succession["implementation_authorization"] == (
+        "NOT_AUTHORIZED_PENDING_OWNER_RECONCILIATION_COMMIT_AND_SEPARATE_REAUTHORIZATION"
+    )
     assert succession["runtime_implementation_performed"] is False
     assert succession["repository_g2f_lifecycle_status"] == (
-        "NEXT_NOT_STARTED_NOT_AUTHORIZED"
+        "G2F_CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
     )
+    assert succession["g2f_status"] == "NOT_CLOSED"
     assert succession["gate2_status"] == "NOT_CLOSED"
+    assert succession["preflight_status"] == (
+        "CLASS_A_181_ROW_RECONCILIATION_CANDIDATE"
+    )
+    assert succession["class_a_status"] == (
+        "V13R1_CANDIDATE_PENDING_OWNER_REVIEW"
+    )
+    assert succession["classification"] == "ORCHESTRATION_AND_ACCEPTANCE_ONLY"
+    assert succession["public_construction_ledger_rows"] == 181
+    assert succession["construction_ledger_consecutive"] is True
+    assert succession["current_class_a_postimages_reconciled"] is True
+    assert succession["v12r2_runtime_semantic_and_parent_map_status"] == (
+        "ACCEPTED"
+    )
+    assert succession["v12r3_reconciliation_readiness_status"] == (
+        "SUPERSEDED_BY_V12R4"
+    )
+    assert succession["v12r4_proof_status"] == (
+        "ACCEPTED_AS_REGRESSION_PROVENANCE_SUPERSEDED_BY_V12R5"
+    )
+    assert succession["v12r5_reconciliation_readiness_status"] == "SUPERSEDED"
+    assert succession["v12r5_reconciliation_readiness_scope"] == (
+        "ONLY_TERMINAL_READINESS"
+    )
+    assert succession["v12r5_executed_32_negative_regression_results_scope"] == (
+        "HISTORICAL_TESTED_SCOPE"
+    )
+    assert succession["v12r5_full_byte_corridor_statement_coverage_status"] == (
+        "NOT_PROVEN"
+    )
+    assert succession["v12r6_full_corridor_external_proof_status"] == (
+        "DIRECT_AUTHORITY_FOR_V13_RECONCILIATION"
+    )
+    assert succession["v12r6_full_corridor_external_proof_scope"] == (
+        "NO_IMPLEMENTATION_OR_RECONCILIATION_AUTHORITY"
+    )
+    assert succession["v12r6_total_executed_negative_regression_count"] == 315
+    assert succession["v13_input_archive_sha256"] == (
+        "854583db82779dea15aec2abff29944cc46e015a71234fcf61185f0fc2c1e6e7"
+    )
+    assert succession["v13_owner_readiness_status"] == (
+        "SUPERSEDED_BY_V13R1_VALIDATOR_CLOSURE"
+    )
+    assert succession["v13r1_validator_closure_status"] == (
+        "FULL_181_ROW_EXPECTED_SIDE_RECONSTRUCTED_CANDIDATE"
+    )
     assert succession["public_release_status"] == "NOT_CLAIMED"
     assert succession["rc2_status"] == "NOT_CLAIMED"
     assert succession["production_readiness_status"] == "NOT_CLAIMED"

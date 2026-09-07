@@ -1,0 +1,327 @@
+WHOLE GATE2 / G2-F INDEPENDENT COMMITTED-EVIDENCE AUDIT V01
+
+AUDIT_ROLE=CODEX_INDEPENDENT_SOURCE_AND_RECORDED_EXECUTION_REVIEW
+AUDIT_SCOPE=COMMITTED_I_CONSOLIDATED_GATE2_A_THROUGH_F
+AUDIT_BASIS_HEAD=90cb073695bf8c5f5a2673c7aba84b6615719b37
+AUDIT_BASIS_PARENT=5d6fd6d98f3412a1d999bfe84101cabe39301573
+AUDIT_BASIS_GRANDPARENT=779641d1a2e1c256c8232655d02124b66e3657b3
+AUDIT_BASIS_TREE=ab6da2a3ceabcd3ff3ddd56aa808bc0d71621103
+AUDIT_SELF_IDENTITY=NOT_SELF_RECORDED
+F_RUNTIME_REEXECUTED_BY_THIS_REVIEW=false
+OWNER_CLOSURE_PERFORMED_BY_THIS_REVIEW=false
+
+1. METHOD AND AUTHORITY LIMIT
+
+Author: Codex coding assistant, performing a fresh source and evidence review
+for owner Andrey. This is not a separately accredited human auditor or an
+operating-system activity monitor. The reviewer did not write or rerun the
+accepted F runtime during this audit. It independently checked the actual
+committed source/tree, accepted public contracts, focused test bodies and
+reviewed helper, and reconciled recorded owner command executions and streams.
+The owner's supplied acceptance of V04 R1-R4 is review provenance, not a claim
+that those cases were newly executed here. Their committed test bodies and
+fresh committed focused execution provide the traceable acceptance basis.
+
+The live main and origin/main both resolve to I; I has sole parent M and M
+sole parent B. I adds exactly the two F paths, preserves all 907 M entries,
+and has 909 tracked entries. The read-only review compares each worktree
+content hash and Git mode to I, not just porcelain status. The owner archive's
+final recorded state and its actual command streams bind the same source set.
+
+Archive (external forensic evidence, not a committed runtime dependency):
+HEDGEHOG_G2F_IMPLEMENTATION_OWNER_EXECUTION_V01_RETURN_20260907T161508Z.tar.gz
+SHA256=4f7d687c12ee156d4df508dc8dc9962cc8e476974d80419b1051d2db4b9b5319
+BYTES=4150723
+REGULAR_MEMBERS=411
+MANIFEST_DATA_ROWS=410
+The normalized one-stream gzip/USTAR envelope, safe unique paths, metadata,
+closed manifest and every member identity were checked before payload use.
+All 195 sequential command receipts in evidence/logs/command_receipts.jsonl
+match their 390 raw stdout/stderr files; all recorded return codes are zero.
+The decisive receipts and verbatim summaries are retained below, with paths
+inside that archive. The commit/push are recorded OWNER actions, not actions
+performed by this reviewer. No external archive is imported by the guard.
+
+2. SOURCE-BASED SEMANTIC FINDINGS
+
+The collector is actual public orchestration, not a new kernel primitive.
+Its five top-level public functions collect, validate the supplied report,
+project plain data, render canonical JSON, and provide the CLI. The report
+retains typed values, callable objects, validation events and input bindings.
+The immutable execution contract identifies required public producers, lanes
+and validation modes; it does not store produced values or the causal map.
+Validation iterates the exact 181 row keys and 235 primary receipts, checks
+lane/ordinal/type/ref/callable and standalone/enclosing evidence, then derives
+forward parents and reverse consumers from retained/supplied bindings. The
+f78a producer-basis and 27bf causal-map digests follow those comparisons.
+This is bounded in-process evidence, not cryptographic proof that an arbitrary
+caller could never fabricate a Python object graph.
+
+The first informational path has no memory-descent result and accepts the
+existing Root shortcut certificate. The action-shaped query is explicitly
+refused by DRS with drs_action_intent_shortcut_forbidden. High-risk routes
+select full_fractal independently under the two row005 query-derived local
+transactions; the shared request token is only their parent correlation.
+Row063 wrappers bind each route decision, source decision artifact and selected
+subject. The parent MultiRoot envelope does not create cross-Root authority.
+
+Eight direct Root decisions occupy rows020(two),033,082,128,137,152,163.
+The supplied-report validator checks the request, contribution, normalized
+claim, evidence, review packet, Post-V&V candidate, GT selection, decision
+input/result and transaction for each chain. Row083 retains structural and
+supplier Root-context validation. Row099's construction validator is its
+enclosing row103 inspection, not a fabricated standalone validator.
+
+The delta changes one authoritative fact payload hash. Changed source IDs are
+not counted as affected IDs. The target and sibling IDs are derived from the
+scenario's canonical identity preimage before lookup; their scope, node,
+assignment, queue and artifact relationships are checked independently.
+The report retains baseline/observed/recomputed sibling identities and bytes.
+The actual complete/minimal plan and fresh Root result govern invalidation.
+
+Rows124/127/128 bind the accepted runtime-report artifact outside row129.
+Row129 deliberately has three absent Root acceptance sentinels. Row130 refers
+to that observation ID. Revocation and supersession start independently from
+immutable row098, never from the revoked row143 registry. Row173's authorized
+source is row154, not its earlier unapproved row145 projection, even when
+their temporal fingerprints happen to be equal. Historical replay at row180
+is retained; row181 present eligibility remains non-executable.
+
+3. V04 COHERENT NEGATIVE-CONTROL REVIEW
+
+R1: hostile_13 constructs a fresh equivalent wrapper and rebuilt parent,
+aggregate validation and projection; its equal control validates and renders
+identically. Distinct wrong decision (row033) and wrong source artifact cases
+avoid duplicate-decision masking. The report checks the independent route
+binding. A foreign transaction is rejected at the actual parent builder with
+multiroot_transaction_mismatch; no impossible valid parent is demanded.
+
+R2: the reconstruction helper rebinds affected container aliases and executes
+all affected public validators. A changed revocation candidate produces the
+actual revocation_root_candidate_mismatch, proving Root/candidate coherence,
+not observation-equality branch coverage. A separate publicly valid changed
+observation with a new evaluation time/identity preserves its source artifact
+but breaks row130's reference. Its equivalent-observation control detects
+incidental alias failures. These are distinct coverage claims.
+
+R3: hostile_14 changes the retained/supplied row173 locator from154 to145 and
+rebuilds both forward and reverse evidence. The committed expected map digest
+does not change. Rejection concerns the derived unauthorized source map, not
+stale self-reported graph metadata. Its fresh equivalent binding control is
+positive. A separately revived eligibility carrier obtains an authentic
+negative public inspection result; this is not an invented adapter exception.
+
+R4: typed DRS, router, child, registry and MultiRoot negatives use actual public
+validators. Router/child/MultiRoot identities are rebuilt when applicable.
+DRS non-authority is checked before its conditional ID rule. Delta's builder
+rejects forbidden nonzero counts with g2e_zero_operation_boundary_violated.
+These establish bounded typed laws; summary count poisons separately establish
+report consistency. No authority field absent from a public type is invented.
+
+These source findings are STATIC inspection corroborated by the recorded full
+committed focused run. This audit does not claim newly observed trace lines.
+The existing V04 external trace is accepted historical review input, not a new
+trace generated by this proposal. Effective metadata-corruption cases remain
+useful but are not mislabeled independent semantic-relationship coverage.
+
+4. EVIDENCE REUSE AND WHOLE-GATE2 CONCLUSION
+
+A-E checkpoints/audits are reused accepted evidence for unchanged public
+mechanisms. Current D is v0.3.10 corrected implementation
+41db6c6bfbf787c04d288c5ddb40e285118d06c1, audited at5001db9; not an older
+v0.3.7/8/9 closure. E3 was revalidated on corrected D; E4 acceptance correction
+21176be090cab9aa9b8ea9cce2ae052bed8039da, E5 f5827012, E6 Class-B4c133da1
+and control-plane6079ddcf are retained by the current E checkpoint.
+Living1.6/17acts and Conformance0.7/15categories/60probes/16references/two
+domains remain unchanged. Historical 400/595 results are reused, not newly
+executed or added to F's test total. The fourteen proposed closure paths do
+not alter a runtime dependency, schema, F test or accepted A-E implementation.
+
+The verified committed 24-node run and direct two-collection receipt satisfy
+the preflight's fresh COMMITTED execution obligation. Repeating them solely
+under an audit label would not add independent evidence. This audit supports
+the bounded substantive A-F closure proposal, subject to review of its exact
+fourteen bytes and a separately authorized owner closure. Synthetic fixture
+closure states and their new authority/release tests are recorded externally,
+not represented as actual owner closure or inserted back into this frozen audit.
+
+Root alone decides. BSEP is the semantic membrane; Architect proposes and
+runtime owns topology. No SuperRoot, permission transfer, provider integration,
+real action, production readiness/security certification or public release is
+established. Typed zero counts are not independent OS monitoring. The complete
+render is not in the owner archive: its hash/size were computed by the executed
+reviewed helper, not regenerated by this reviewer. Freshness covers the
+declared containers with typed-carrier samples, not an unstated exhaustive
+identity theorem. Future owner closure hash and this log's hash are not
+self-embedded. Audit evidence cannot authorize an owner Git mutation.
+
+AUDIT_VERDICT=SUPPORTS_EXACT_WHOLE_GATE2_CLOSURE_PROPOSAL
+RUNTIME_REPAIR_REQUIRED_BY_THIS_AUDIT=false
+PUBLIC_RELEASE_STATUS=NOT_CLAIMED
+PRODUCTION_READINESS_STATUS=NOT_CLAIMED
+PRODUCTION_SECURITY_CERTIFICATION_STATUS=NOT_CLAIMED
+REAL_WORLD_EFFECTS_SCOPE=TYPED_REPORT_DERIVED_ZERO_NOT_OS_MONITORING
+
+5. PORTABLE RECORDED EXECUTION RECEIPTS AND DIRECT JSON
+
+RECORDED_OWNER_COMMAND={"argv":["git","commit","-m","Implement G2-F consolidated Gate-2 orchestration and focused acceptance"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":0.038509,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"commit_exact_two","return_code":0,"sequence":83,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0083_commit_exact_two.stderr.log","stdout":{"bytes":264,"lf":4,"sha256":"bd0c922639e6ddc637c00d7ecbd693662a056fd9a38242fdbf669bed4df64c5f"},"stdout_path":"logs/0083_commit_exact_two.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+[main 90cb073] Implement G2-F consolidated Gate-2 orchestration and focused acceptance
+ 2 files changed, 3431 insertions(+)
+ create mode 100644 demo/run_consolidated_gate2_gauntlet_g2_f_v01.py
+ create mode 100644 tests/test_consolidated_gate2_gauntlet_g2_f_v01.py
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","tools/check_active_architecture_authority_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":11.081561,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_guard","return_code":0,"sequence":104,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0104_postcommit_guard.stderr.log","stdout":{"bytes":183,"lf":5,"sha256":"c9e32c4a6605b7a346277a8c13fe2d3ecc4f508d197f1528f43a54c1b7511f4b"},"stdout_path":"logs/0104_postcommit_guard.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS
+CURRENT_PHASE=POST_E6_SUCCESSOR
+LIFECYCLE_PHASE=G2E_CLOSED_PASS
+LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED
+G2F_PHASE=G2F_IMPLEMENTATION_COMMITTED
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","-O","tools/check_active_architecture_authority_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":10.853474,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_guard_optimized","return_code":0,"sequence":105,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0105_postcommit_guard_optimized.stderr.log","stdout":{"bytes":183,"lf":5,"sha256":"c9e32c4a6605b7a346277a8c13fe2d3ecc4f508d197f1528f43a54c1b7511f4b"},"stdout_path":"logs/0105_postcommit_guard_optimized.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS
+CURRENT_PHASE=POST_E6_SUCCESSOR
+LIFECYCLE_PHASE=G2E_CLOSED_PASS
+LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED
+G2F_PHASE=G2F_IMPLEMENTATION_COMMITTED
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","-m","pytest","-p","no:cacheprovider","--collect-only","-q","tests/test_consolidated_gate2_gauntlet_g2_f_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":1.165612,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_focused_collection","return_code":0,"sequence":106,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0106_postcommit_focused_collection.stderr.log","stdout":{"bytes":2386,"lf":26,"sha256":"73b54278e71a1561b5238fe4a4638fac7aa0406d46e35242b7a2c29735eb58c9"},"stdout_path":"logs/0106_postcommit_focused_collection.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_01_report_geometry_and_current_basis
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_02_causal_order_and_identity_lineage
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_03_informational_fast_path_heavy_skip
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_04_high_risk_multiroot_full_fractal_execution
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_05_packet_delta_revocation_supersession_chain
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_06_canonical_plain_projection_and_render
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_07_independent_fresh_collections_no_cache
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_08_public_validator_accepts_actual_report
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_01_safe_informational_reuse
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_02_action_reuse_blocked
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_03_high_risk_multiroot_deep
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_04_revoke_before_fulfillment
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_05_superseded_replay_blocked
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_06_selective_recompute
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_07_components_non_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_08_drs_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_09_router_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_10_registry_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_11_child_not_root
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_12_delta_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_13_no_permission_revival
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_14_no_stale_packet_replay
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_15_no_aggregate_pass
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_16_zero_operations
+
+24 tests collected in 0.58s
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","-m","pytest","-p","no:cacheprovider","-q","tests/test_consolidated_gate2_gauntlet_g2_f_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":1206.094445,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_focused_tests","return_code":0,"sequence":107,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0107_postcommit_focused_tests.stderr.log","stdout":{"bytes":1584,"lf":12,"sha256":"63ad85395293d82c9c4b08eeff1a34857fe754903e947eeddf2bb7121ab3303a"},"stdout_path":"logs/0107_postcommit_focused_tests.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+=============================== warnings summary ===============================
+  /Users/admin/Projects/hedgehog-os/hedgehog/post_vv.py:84: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+  /Users/admin/Projects/hedgehog-os/hedgehog/post_vv.py:101: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+24 passed, 2 warnings in 1205.51s (0:20:05)
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/direct_public_receipt.py","--output","/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/direct_public_receipt.json"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":1129.881298,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_direct_public_receipt","return_code":0,"sequence":108,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0108_postcommit_direct_public_receipt.stderr.log","stdout":{"bytes":2219,"lf":1,"sha256":"e80e8adae3b5ed8cd3cd2d24114dd41cea71c7f3b107e846341e71cee51192de"},"stdout_path":"logs/0108_postcommit_direct_public_receipt.stdout.log"}
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","-m","pytest","-p","no:cacheprovider","-q","tests/test_active_architecture_authority_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":428.445258,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_authority_tests","return_code":0,"sequence":109,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0109_postcommit_authority_tests.stderr.log","stdout":{"bytes":1152,"lf":15,"sha256":"33f1b7f9320cff6250066561bfa0ad6675fd4c71836cefef331afd7c783a8d30"},"stdout_path":"logs/0109_postcommit_authority_tests.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+943 passed in 427.78s (0:07:07)
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","-m","pytest","-p","no:cacheprovider","-q","tests/test_repository_release_spine_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":3.528123,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"postcommit_release_tests","return_code":0,"sequence":110,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0110_postcommit_release_tests.stderr.log","stdout":{"bytes":99,"lf":2,"sha256":"a49019b3fc6ce86cefffad11e64002402fb049db4e483923e73d0d376cfb69d0"},"stdout_path":"logs/0110_postcommit_release_tests.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+................................                                         [100%]
+32 passed in 2.92s
+VERBATIM_DECISIVE_STDOUT_END
+
+RECORDED_OWNER_COMMAND={"argv":["git","push","origin","main"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":1.976038,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"push_origin_main","return_code":0,"sequence":130,"stderr":{"bytes":82,"lf":2,"sha256":"a6ae5048fb8e9a03e65e8c4cf0a38a4e573146d4efb290faff3b275331680188"},"stderr_path":"logs/0130_push_origin_main.stderr.log","stdout":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stdout_path":"logs/0130_push_origin_main.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+VERBATIM_DECISIVE_STDOUT_END
+VERBATIM_STDERR_BEGIN
+To https://github.com/AAkhtanin/hedgehog-os.git
+   5d6fd6d..90cb073  main -> main
+VERBATIM_STDERR_END
+
+RECORDED_OWNER_COMMAND={"argv":["/Users/admin/Projects/hedgehog-os/.venv/bin/python","tools/check_active_architecture_authority_v01.py"],"cwd":"/Users/admin/Projects/hedgehog-os","elapsed_seconds":11.027711,"environment":{"COVERAGE_FILE":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/coverage","PYTEST_DISABLE_PLUGIN_AUTOLOAD":"1","PYTHONDONTWRITEBYTECODE":"1","PYTHONHASHSEED":"0","PYTHONPYCACHEPREFIX":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/pycache","TMPDIR":"/private/tmp/HEDGEHOG_G2F_IMPLEMENTATION_OWNER.96bexcp4/tmp"},"launch_or_interruption":null,"phase":"final_guard","return_code":0,"sequence":150,"stderr":{"bytes":0,"lf":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr_path":"logs/0150_final_guard.stderr.log","stdout":{"bytes":183,"lf":5,"sha256":"c9e32c4a6605b7a346277a8c13fe2d3ecc4f508d197f1528f43a54c1b7511f4b"},"stdout_path":"logs/0150_final_guard.stdout.log"}
+VERBATIM_DECISIVE_STDOUT_BEGIN
+ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS
+CURRENT_PHASE=POST_E6_SUCCESSOR
+LIFECYCLE_PHASE=G2E_CLOSED_PASS
+LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED
+G2F_PHASE=G2F_IMPLEMENTATION_COMMITTED
+VERBATIM_DECISIVE_STDOUT_END
+
+ACTUAL_DIRECT_JSON_BEGIN
+{"auxiliary_receipts_validated":2,"canonical_json":true,"causal_edge_count":274,"causal_row_count":60,"collect_a_seconds":568.677537,"collect_b_seconds":553.935635,"component_receipt_validation":"PASS","component_receipts_validated":94,"direct_public_report_result":"PASS","distinct_report_graphs":true,"equal_plain_projections":true,"execution_bound_receipts_validated":235,"identical_renders":true,"lifecycle_branch_independence":"PASS","multiroot_wrapper_binding":"PASS","new_to_new_causal_edge_count":155,"operation_effect_authority_counts_zero":true,"public_construction_rows_validated":181,"render_bytes":209138,"render_sha256":"e1841f01bb17c943f39fbe1e594e3ecdb6cc5a076e0e4c102bd236b97efc87e1","root_decision_receipt_count":8,"root_local_transaction_binding":"PASS","row_124_to_130_cross_stage_binding":"PASS","row_129_absence_sentinels":"PASS","row_173_authorized_source":154,"scope":{"execution_bindings":"235 output identities/types/refs, callable-derived basis, all supplied/retained and reverse bindings independently checked; designated callable/validation and component relationships also enforced by the supplied-report public validator","freshness":"report/rows containers, all 181 lane dictionaries, all primary/component/auxiliary/event dictionaries; typed carrier identity sampled at rows005-client/069-supplier/179-supplier; shared immutable constants are allowed","law_evidence":"actual supplied report values and public validation; no extra scenario regenerated by validator","nonmutation":"repr content digest plus alias snapshot of reachable dictionary/list/tuple containers, with typed carriers retained by identity","zero_counts":"typed-report-derived values checked by the public validator, not an operating-system activity monitor"},"seven_laws_validated":7,"source_identities":{"demo/run_consolidated_gate2_gauntlet_g2_f_v01.py":"579ee6918220b20998ce68569787119176634e2a072dac11a770aa432cc5dd8d","tests/test_consolidated_gate2_gauntlet_g2_f_v01.py":"6ed3b73c41fb14fd41e45ba8086043db3268bbe780e1c2e9030dd5b9802151c6"},"supplied_reports_unmodified":true,"terminal_lf_count":1,"total_elapsed_seconds":1129.06224,"unaffected_sibling_bytes_preserved":true,"validator_a":true,"validator_b":true}
+ACTUAL_DIRECT_JSON_END
+
+6. EXACT ORDERED FOCUSED NODE IDS
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_01_report_geometry_and_current_basis
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_02_causal_order_and_identity_lineage
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_03_informational_fast_path_heavy_skip
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_04_high_risk_multiroot_full_fractal_execution
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_05_packet_delta_revocation_supersession_chain
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_06_canonical_plain_projection_and_render
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_07_independent_fresh_collections_no_cache
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_positive_08_public_validator_accepts_actual_report
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_01_safe_informational_reuse
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_02_action_reuse_blocked
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_03_high_risk_multiroot_deep
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_04_revoke_before_fulfillment
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_05_superseded_replay_blocked
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_06_selective_recompute
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_dod_07_components_non_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_08_drs_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_09_router_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_10_registry_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_11_child_not_root
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_12_delta_not_authority
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_13_no_permission_revival
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_14_no_stale_packet_replay
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_15_no_aggregate_pass
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::test_g2f_hostile_16_zero_operations
+
+7. SOURCE AND ACCEPTED A-E EVIDENCE IDENTITIES
+path	sha256	bytes	lf	filesystem_mode	git_mode
+AGENTS.md	7d2bc7d21a5a899a1f58abf364a7d1ae6cc015ffec425b7b46674d85d58a083e	8312	168	0644	100644
+README.md	05f22aa7624e20d01e080bd6efd5bab6a637283c7d715a11f9f414c27972efa5	9720	193	0644	100644
+demo/run_consolidated_gate2_gauntlet_g2_f_v01.py	579ee6918220b20998ce68569787119176634e2a072dac11a770aa432cc5dd8d	399910	2506	0644	100644
+docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md	61feef4640856f2474848d316e8f2159ed8522fffddc8c512f07c308b6ff9234	8544	240	0644	100644
+docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log	ca3b63d74744b53f02e0b638fc26e6bb476a350682ad3035c4f81307c5deb777	44928	414	0644	100644
+docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log	623fc966b2087c9bc77064ad9bc2b304b2dc7e735a5d220e83c9f224e991e5eb	8664	197	0644	100644
+docs/audit_reports/auditor_drs_semantic_address_space_reuse_certificate_g2_b_v01.log	78d2debc7d9969caca6b896b00273d879eb72a933b84b29eb43d27456effa17b	65730	390	0644	100644
+docs/audit_reports/auditor_execution_mode_router_g2_c_v01.log	3f6aab5c26b486a463174a6d57a22097b8eee2dcd314433b27462117b21d73d5	27663	596	0644	100644
+docs/audit_reports/auditor_fractal_runtime_g2_d_v0310_profile_d_t12_revise_projection_correction_v01.log	b1ff61f42158d914b9afcf48e0d3ef5f9f980288d134130031e79c631f5101b6	2502	49	0644	100644
+docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md	c3b54068b43ef75cce1fc903fea654b07c6fe6e55567f721140136531b673844	57167	723	0644	100644
+docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md	494cf40ad6d080d2dd0b7508eadc13ae4e6ada32ad1f905025fb9cee78bdb33d	5461	126	0644	100644
+docs/drs_semantic_address_space_reuse_certificate_g2_b_checkpoint_v01.md	c8f94825080864bf14afe8219a3c0bab4ff5613dcb7bddc471b141f3ffbac553	6036	163	0644	100644
+docs/execution_mode_router_g2_c_checkpoint_v01.md	28ba0de21cf6458a408911b0342d57db72ad6f6cf6e8e5aec8b87fb616802f0b	6263	171	0644	100644
+docs/fractal_runtime_v0_2_g2_d_profile_d_t12_revise_projection_correction_checkpoint_v01.md	226a96cb345a94e2f631fc7b914aafb5bbb7e3aaede924f10d3045d7491f72c0	5198	101	0644	100644
+hedgehog/action_commit_packet_v02.py	b68b1dfd759bde818e5f9562d41d1072a1462e1e6c5eec24639257e7e24931e3	755879	19667	0644	100644
+hedgehog/drs_memory_resolution_v01.py	698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8	157202	3962	0644	100644
+hedgehog/kernel/continuous_delta_runtime_v01.py	97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a	519719	12927	0644	100644
+hedgehog/kernel/execution_mode_router_v01.py	29e6500ca2b6966d0b5068f9fa1cdc1ef937cb4e5c284ea3acc78b0e9103ca22	293335	7593	0644	100644
+hedgehog/kernel/fractal_runtime_v02.py	917caabd0c3e2033cfc57be71771abf9a87558e945b3d4f6713c48cd8796aa01	802334	18306	0644	100644
+hedgehog/kernel/multiroot_v01.py	e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff	52804	1402	0644	100644
+hedgehog/kernel/root_decision_v01.py	cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c	43352	1116	0644	100644
+hedgehog/kernel/semantic_work_v01.py	34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1	58880	1570	0644	100644
+hedgehog/reuse_certificate_v01.py	55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c	50900	1382	0644	100644
+release/claim_to_evidence_index.md	85dd82c735f2183e1587a8a93e0b53a1bc30e910c39fc96268c462ddad09c6f6	22615	48	0644	100644
+release/current_limitations.md	7f8b8e65a29430425148aa16bc7764fe2accc3752aa98ac0140d9606acdb8885	7299	74	0644	100644
+release/current_release_notes.md	0af690fce0bd46137114f6b8d8ceeb8c489edc212124b343164b054396ed4347	8027	148	0644	100644
+release/current_status_overlay_v01.json	05ad2f3a36632d2332fe9d6d5a08b5da3341afb6568088d1f51724b8d566f6f1	18268	289	0644	100644
+release/successor_context_manifest_v01.json	a5d359e80710164faac287766cd32e81fd42530fdbb377ebdf6d7d15ed26000c	32077	732	0644	100644
+specs/current_architecture_lock_v01.md	d68a871b128c24045b5d03693811b79d9480580ebb9636da7ee8a63697e9740d	17299	329	0644	100644
+specs/document_authority_index_v01.json	6eac647bb56ea76a5299b03fcc79f7be73e15d8115ad8dcb1e048299a4b32987	20768	451	0644	100644
+tests/test_active_architecture_authority_v01.py	80c97603dac7e6138d0fd99301ac92edaf2d2188de3261ee3e7d3190fe462057	263439	7131	0644	100644
+tests/test_consolidated_gate2_gauntlet_g2_f_v01.py	6ed3b73c41fb14fd41e45ba8086043db3268bbe780e1c2e9030dd5b9802151c6	47633	925	0644	100644
+tests/test_repository_release_spine_v01.py	78fe1624e03e3d31328f81a70c0984a22a221438445d6051fcbb67e94f77f90c	265914	6223	0644	100644
+tools/check_active_architecture_authority_v01.py	32b0c6ff703c4bcdd8868bf21568e49d657ed1c5bf14510bb91f632e54def204	448715	11791	0644	100644

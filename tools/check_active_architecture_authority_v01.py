@@ -195,6 +195,149 @@ G2F_CLOSURE_PATHS = frozenset(
     }
 )
 
+G2F_CLOSURE_BASIS_V01 = "90cb073695bf8c5f5a2673c7aba84b6615719b37"
+G2F_CLOSURE_MAINTENANCE_V01 = "5d6fd6d98f3412a1d999bfe84101cabe39301573"
+G2F_CLOSURE_TREE_V01 = "ab6da2a3ceabcd3ff3ddd56aa808bc0d71621103"
+G2F_CHECKPOINT_PATH = "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md"
+G2F_AUDIT_PATH = "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log"
+G2F_CLOSURE_ADDS_V01 = frozenset({G2F_AUDIT_PATH, G2F_CHECKPOINT_PATH})
+G2F_CLOSURE_COMMITTED_V01 = tuple((p, "A" if p in G2F_CLOSURE_ADDS_V01 else "M") for p in sorted(G2F_CLOSURE_PATHS))
+G2F_CLOSURE_WORKTREE_V01 = tuple((p, "??" if p in G2F_CLOSURE_ADDS_V01 else " M") for p in sorted(G2F_CLOSURE_PATHS))
+G2F_CLOSURE_DOCUMENT_IDENTITIES_V01 = {
+    G2F_AUDIT_PATH: ("0f99d042f88da3e3b663305728c067894bf8012f1eed2046a83695f56b909067", 34545, 327),
+    G2F_CHECKPOINT_PATH: ("87eb4c5c6bd68244a9de713502e556c149baab9a4a8dfbcaa4a839a884ee314c", 23648, 246),
+}
+G2F_CLOSURE_CURRENT_FIELDS_V01 = {"g2f_status": "CLOSED_PASS", "gate2_status": "CLOSED_PASS"}
+G2F_CLOSURE_PREDECESSORS_V01 = {
+    "AGENTS.md": ("7d2bc7d21a5a899a1f58abf364a7d1ae6cc015ffec425b7b46674d85d58a083e", 8312, 168),
+    "README.md": ("05f22aa7624e20d01e080bd6efd5bab6a637283c7d715a11f9f414c27972efa5", 9720, 193),
+    "release/current_status_overlay_v01.json": ("05ad2f3a36632d2332fe9d6d5a08b5da3341afb6568088d1f51724b8d566f6f1", 18268, 289),
+    "release/claim_to_evidence_index.md": ("85dd82c735f2183e1587a8a93e0b53a1bc30e910c39fc96268c462ddad09c6f6", 22615, 48),
+    "release/current_limitations.md": ("7f8b8e65a29430425148aa16bc7764fe2accc3752aa98ac0140d9606acdb8885", 7299, 74),
+    "release/current_release_notes.md": ("0af690fce0bd46137114f6b8d8ceeb8c489edc212124b343164b054396ed4347", 8027, 148),
+    "specs/current_architecture_lock_v01.md": ("d68a871b128c24045b5d03693811b79d9480580ebb9636da7ee8a63697e9740d", 17299, 329),
+    "specs/document_authority_index_v01.json": ("6eac647bb56ea76a5299b03fcc79f7be73e15d8115ad8dcb1e048299a4b32987", 20768, 451),
+    "release/successor_context_manifest_v01.json": ("a5d359e80710164faac287766cd32e81fd42530fdbb377ebdf6d7d15ed26000c", 32077, 732),
+    "tools/check_active_architecture_authority_v01.py": ("32b0c6ff703c4bcdd8868bf21568e49d657ed1c5bf14510bb91f632e54def204", 448715, 11791),
+    "tests/test_active_architecture_authority_v01.py": ("80c97603dac7e6138d0fd99301ac92edaf2d2188de3261ee3e7d3190fe462057", 263439, 7131),
+    "tests/test_repository_release_spine_v01.py": ("78fe1624e03e3d31328f81a70c0984a22a221438445d6051fcbb67e94f77f90c", 265914, 6223),
+}
+
+
+
+def _g2f_closure_contract_v01() -> dict[str, object]:
+    return {
+        "implementation_basis": G2F_CLOSURE_BASIS_V01,
+        "implementation_tree": G2F_CLOSURE_TREE_V01,
+        "maintenance_basis": G2F_CLOSURE_MAINTENANCE_V01,
+        "class_a_basis": "779641d1a2e1c256c8232655d02124b66e3657b3",
+        "scope": "WHOLE_GATE2_A_THROUGH_F_EXACT_FOURTEEN_PATH_SUCCESSOR",
+        "effective_closure": "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR",
+        "closure_commit_identity": "NOT_SELF_RECORDED",
+        "candidate_phase": "G2F_CLOSURE_CANDIDATE",
+        "committed_phase": "G2F_CLOSED_PASS_COMMITTED",
+        "prepush_origin": "EXACT_IMPLEMENTATION_PARENT_ONLY",
+        "paths": [{"path": p, "action": status} for p, status in G2F_CLOSURE_COMMITTED_V01],
+        "predecessors": [{"path": p, "sha256": value[0], "bytes": value[1], "lf": value[2], "git_mode": "100644"} for p, value in sorted(G2F_CLOSURE_PREDECESSORS_V01.items())],
+        "absent_predecessors": sorted(G2F_CLOSURE_ADDS_V01),
+        "documents": [{"path": p, "sha256": ident[0], "bytes": ident[1], "lf": ident[2]} for p, ident in G2F_CLOSURE_DOCUMENT_IDENTITIES_V01.items()],
+        "recorded_i_authority_count": 943,
+        "recorded_i_release_count": 32,
+        "current_authority_count": 945,
+        "current_release_count": 33,
+        "focused_count": 24,
+        "g2f_status": "CLOSED_PASS",
+        "gate2_status": "CLOSED_PASS",
+        "internal_rc2": "ONLY_AFTER_ACCEPTED_OWNER_CLOSURE",
+        "public_release": "NOT_CLAIMED",
+        "production_readiness": "NOT_CLAIMED",
+        "production_security_certification": "NOT_CLAIMED",
+        "real_world_effects_count": 0,
+    }
+
+
+def _validate_g2f_closure_basis_v01(repo_root: Path, mode: str, failures: list[str]) -> None:
+    """Verify the fixed predecessor and every frozen source independently of status."""
+    for revision, expected in (
+        (f"{G2F_CLOSURE_BASIS_V01}^", G2F_CLOSURE_MAINTENANCE_V01),
+        (f"{G2F_CLOSURE_MAINTENANCE_V01}^", "779641d1a2e1c256c8232655d02124b66e3657b3"),
+        (f"{G2F_CLOSURE_BASIS_V01}^{{tree}}", G2F_CLOSURE_TREE_V01),
+    ):
+        actual = _git_single_line_v01(repo_root, ("rev-parse", revision), "g2f.closure.predecessor", failures)
+        if actual != expected:
+            failures.append(f"g2f.closure.predecessor:{revision}")
+    tree = subprocess.run(("git", "ls-tree", "-rz", G2F_CLOSURE_BASIS_V01), cwd=repo_root, capture_output=True, check=False)
+    if tree.returncode != 0:
+        failures.append("g2f.closure.predecessor_tree")
+        return
+    entries = tree.stdout.split(b"\0")[:-1]
+    _validate_git_blob_identities_v01(repo_root, G2F_CLOSURE_BASIS_V01, G2F_CLOSURE_PREDECESSORS_V01, "g2f.closure.predecessor_blobs", failures)
+    _validate_git_blob_identities_v01(repo_root, G2F_CLOSURE_MAINTENANCE_V01, {p: G2F_CLOSURE_PREDECESSORS_V01[p] for p in G2F_CLOSURE_OVERLAP_PATHS}, "g2f.closure.maintenance_overlap_blobs", failures)
+    if len(entries) != 909:
+        failures.append("g2f.closure.predecessor_count")
+    for entry in entries:
+        metadata, raw_path = entry.split(b"\t", 1)
+        git_mode, kind, oid = metadata.decode("ascii").split()
+        path = raw_path.decode("utf-8")
+        if path in G2F_CLOSURE_ADDS_V01:
+            failures.append(f"g2f.closure.add_predecessor_present:{path}")
+        if path in G2F_CLOSURE_PATHS:
+            continue
+        file = repo_root / path
+        if file.is_symlink() or not file.is_file():
+            failures.append(f"g2f.closure.frozen_type:{path}")
+            continue
+        body = file.read_bytes()
+        actual = hashlib.sha1(b"blob " + str(len(body)).encode("ascii") + b"\0" + body).hexdigest()
+        if kind != "blob" or actual != oid or bool(file.stat().st_mode & 0o111) != (git_mode == "100755"):
+            failures.append(f"g2f.closure.frozen_source:{path}")
+    for path in G2F_CLOSURE_PATHS:
+        file = repo_root / path
+        if file.is_symlink() or not file.is_file() or file.stat().st_mode & 0o777 != 0o644:
+            failures.append(f"g2f.closure.type_mode:{path}")
+    flags = subprocess.run(("git", "ls-files", "-v", "-z"), cwd=repo_root, capture_output=True, check=False)
+    if flags.returncode or any(not item.startswith(b"H ") for item in flags.stdout.split(b"\0") if item):
+        failures.append("g2f.closure.index_flags")
+    if mode == "G2F_CLOSED_PASS_COMMITTED":
+        committed = subprocess.run(("git", "ls-tree", "-r", "HEAD", "--", *sorted(G2F_CLOSURE_PATHS)), cwd=repo_root, capture_output=True, text=True, check=False)
+        if committed.returncode or len(committed.stdout.splitlines()) != 14 or any(not line.startswith("100644 blob ") for line in committed.stdout.splitlines()):
+            failures.append("g2f.closure.committed_modes")
+
+
+def _validate_g2f_closure_surfaces_v01(repo_root: Path, index: dict[str, object] | None, manifest: dict[str, object] | None, failures: list[str]) -> None:
+    expected = _g2f_closure_contract_v01()
+    for label, document in (("authority_index", index), ("successor_manifest", manifest)):
+        if not isinstance(document, dict) or json.dumps(document.get("g2f_closure_transition"), ensure_ascii=True, separators=(",", ":")) != json.dumps(expected, ensure_ascii=True, separators=(",", ":")):
+            failures.append(f"g2f.closure.metadata:{label}")
+    for path, expected_identity in G2F_CLOSURE_DOCUMENT_IDENTITIES_V01.items():
+        if _file_identity(repo_root / path) != expected_identity:
+            failures.append(f"g2f.closure.document_identity:{path}")
+    if isinstance(manifest, dict):
+        for key in ("always_include", "include_current_gate_sources", "authority_documents"):
+            values = manifest.get(key)
+            if not isinstance(values, list) or values.count(G2F_CHECKPOINT_PATH) != 1 or G2F_AUDIT_PATH in values:
+                failures.append(f"g2f.closure.onboarding:{key}")
+        if G2F_AUDIT_PATH not in manifest.get("exclude_paths", ()) or "docs/audit_reports/**" not in manifest.get("exclude_globs", ()):
+            failures.append("g2f.closure.audit_exclusion")
+    overlay = _load_json(repo_root / "release/current_status_overlay_v01.json", "g2f.closure.overlay", failures)
+    if not isinstance(overlay, dict) or json.dumps(overlay.get("g2f_closure_transition"), ensure_ascii=True, separators=(",", ":")) != json.dumps(expected, ensure_ascii=True, separators=(",", ":")):
+        failures.append("g2f.closure.overlay_contract")
+    for path in ("AGENTS.md", "README.md", LOCK_PATH, "release/current_limitations.md", "release/current_release_notes.md"):
+        try:
+            source = (repo_root / path).read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            failures.append(f"g2f.closure.current_read:{path}")
+            continue
+        for marker in ("Whole Gate 2", G2F_CLOSURE_BASIS_V01, "G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED", "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR"):
+            if marker not in source:
+                failures.append(f"g2f.closure.current_marker:{path}:{marker}")
+        for pattern in (r"(?im)^\s*(?:PUBLIC_RELEASE|PRODUCTION_READINESS|PRODUCTION_SECURITY_CERTIFICATION)(?:_STATUS)?\s*=\s*(?:PASS|CLAIMED|true)\s*$", r"(?im)^\s*REAL_WORLD_EFFECTS(?:_COUNT)?\s*=\s*[1-9][0-9]*\s*$"):
+            if re.search(pattern, source):
+                failures.append(f"g2f.closure.overclaim:{path}")
+    claims = (repo_root / "release/claim_to_evidence_index.md").read_text(encoding="utf-8")
+    if claims.count("claim_gate2_g2f_whole_closure_v01") != 1 or G2F_CHECKPOINT_PATH not in claims or G2F_AUDIT_PATH not in claims:
+        failures.append("g2f.closure.claim_evidence")
+
 CLASS_A_COMMITTED_NAME_STATUS = {
     path: "A" if path == E6_RECONCILIATION_ANNEX_PATH else "M"
     for path in CLASS_A_RECONCILIATION_PATHS
@@ -2639,6 +2782,9 @@ def _validate_authority_index(
         if g2f_active and "g2f_landing_transition" in value
         else AUTHORITY_INDEX_KEYS
     )
+    f_closure = g2f_active and "g2f_closure_transition" in value
+    if f_closure:
+        expected_index_keys = ("g2f_closure_transition", *expected_index_keys)
     if tuple(value) != expected_index_keys:
         failures.append("authority_index.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
@@ -2712,6 +2858,14 @@ def _validate_authority_index(
         if closure_active
         else PRE_CLOSURE_REQUIRED_CURRENT_CLASSIFICATIONS
     )
+    if f_closure:
+        classifications = {key: dict(entries) for key, entries in classifications.items()}
+        classifications["current_technical_annexes"][G2F_CHECKPOINT_PATH] = (
+            "accepted_whole_gate2_g2f_closure_checkpoint", True, True, NAMED_GATE_SCOPE, False,
+        )
+        classifications["audit_only_sources"][G2F_AUDIT_PATH] = (
+            "independent_committed_g2f_closure_audit_evidence", False, False, AUDIT_EVIDENCE_SCOPE, False,
+        )
     for category, required_entries in classifications.items():
         entries_by_path = {
             entry.get("path"): entry
@@ -2783,7 +2937,7 @@ def _validate_authority_index(
                 )
                 expected_audit_scope = (
                     AUDIT_EVIDENCE_SCOPE
-                    if is_wildcard or path == G2E_AUDIT_PATH
+                    if is_wildcard or path in {G2E_AUDIT_PATH, G2F_AUDIT_PATH}
                     else STATUS_EVIDENCE_SCOPE
                 )
                 if authority_scope != expected_audit_scope:
@@ -2890,6 +3044,8 @@ def _validate_manifest(
     )
     if g2f_active and "g2f_landing_transition" in value:
         expected_keys = ("g2f_landing_transition", *expected_keys)
+    if g2f_active and "g2f_closure_transition" in value:
+        expected_keys = ("g2f_closure_transition", *expected_keys)
     if tuple(value) != expected_keys:
         failures.append("successor_manifest.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
@@ -9293,6 +9449,7 @@ def _validate_g2e_closure_surfaces_v01(
     successor_manifest: dict[str, object] | None,
     failures: list[str],
 ) -> None:
+    f_closure = isinstance(successor_manifest, dict) and "g2f_closure_transition" in successor_manifest
     overlay = _load_json(
         repo_root / "release/current_status_overlay_v01.json",
         "g2e.closure.overlay",
@@ -9319,7 +9476,8 @@ def _validate_g2e_closure_surfaces_v01(
         if not isinstance(boundary, dict):
             failures.append("g2e.closure.overlay.boundary_type")
         else:
-            for key, expected in G2E_CLOSURE_EXPECTED_STATUS_FIELDS.items():
+            expected_fields = {**G2E_CLOSURE_EXPECTED_STATUS_FIELDS, **(G2F_CLOSURE_CURRENT_FIELDS_V01 if f_closure else {})}
+            for key, expected in expected_fields.items():
                 if boundary.get(key) != expected:
                     failures.append(f"g2e.closure.overlay.status:{key}")
 
@@ -9444,6 +9602,12 @@ def _validate_g2e_closure_surfaces_v01(
         ),
     }
     for relative_path, markers in required_text.items():
+        if f_closure and relative_path not in {G2E_AUDIT_PATH, G2E_CHECKPOINT_PATH}:
+            markers = tuple(
+                "Whole Gate 2" if marker == "G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`"
+                else "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR" if marker in {"Gate 2 is `NOT_CLOSED`", "Gate 2 remains `NOT_CLOSED`"}
+                else marker for marker in markers
+            )
         try:
             text = (repo_root / relative_path).read_text(encoding="utf-8")
         except (OSError, UnicodeError) as exc:
@@ -10991,7 +11155,25 @@ def _classify_g2f_path_ledger_v01(
     if parent_count != 1:
         failures.append(f"g2f.merge_or_parent_count:{parent_count}")
     maintenance = {path: "M" for path in G2F_LANDING_MAINTENANCE_PATHS_V01}
-    if head == G2F_LANDING_BASIS_V01 and set(worktree) & set(maintenance):
+    if head == G2F_CLOSURE_BASIS_V01 and worktree:
+        mode = "G2F_CLOSURE_CANDIDATE"
+        _compare_exact_ledger_v01(worktree, dict(G2F_CLOSURE_WORKTREE_V01), label="g2f.closure.candidate.worktree", failures=failures)
+        _compare_exact_ledger_v01(head_commit, dict(G2F_IMPLEMENTATION_COMMITTED_NAME_STATUS), label="g2f.closure.candidate.implementation", failures=failures)
+        _compare_exact_ledger_v01(parent_commit, maintenance, label="g2f.closure.candidate.maintenance", failures=failures)
+        if parent != G2F_CLOSURE_MAINTENANCE_V01 or grandparent != G2F_LANDING_BASIS_V01 or parent_parent_count != 1:
+            failures.append("g2f.closure.candidate.ancestry")
+        if origin_main != head:
+            failures.append("g2f.closure.candidate.origin_main")
+    elif parent == G2F_CLOSURE_BASIS_V01:
+        mode = "G2F_CLOSED_PASS_COMMITTED"
+        _compare_exact_ledger_v01(worktree, {}, label="g2f.closure.committed.worktree", failures=failures)
+        _compare_exact_ledger_v01(head_commit, dict(G2F_CLOSURE_COMMITTED_V01), label="g2f.closure.committed.ledger", failures=failures)
+        _compare_exact_ledger_v01(parent_commit, dict(G2F_IMPLEMENTATION_COMMITTED_NAME_STATUS), label="g2f.closure.committed.implementation", failures=failures)
+        if grandparent != G2F_CLOSURE_MAINTENANCE_V01 or parent_parent_count != 1:
+            failures.append("g2f.closure.committed.ancestry")
+        if origin_main not in {head, parent}:
+            failures.append("g2f.closure.committed.origin_main")
+    elif head == G2F_LANDING_BASIS_V01 and set(worktree) & set(maintenance):
         mode = "G2F_LANDING_MAINTENANCE_CANDIDATE"
         if parent != G2F_ORIGINAL_CLASS_A_COMMIT or grandparent != G2F_ORIGINAL_CLASS_A_PARENT:
             failures.append("g2f.landing.basis_ancestry")
@@ -11114,6 +11296,7 @@ def _classify_g2e_closure_path_ledger_v01(
     g2e_closure_ancestor: bool = False,
     g2f_topology_passed: bool = False,
     g2f_pre_push_parent: str | None = None,
+    g2f_closure_topology_passed: bool = False,
 ) -> tuple[str | None, tuple[str, ...]]:
     if not closure_requested:
         return None, ()
@@ -11174,12 +11357,12 @@ def _classify_g2e_closure_path_ledger_v01(
                 path: status
                 for path, status in committed.items()
                 if path
-                not in ({G2F_PREFLIGHT_PATH} | G2F_IMPLEMENTATION_PATHS)
+                not in ({G2F_PREFLIGHT_PATH} | G2F_IMPLEMENTATION_PATHS | (G2F_CLOSURE_ADDS_V01 if g2f_closure_topology_passed else frozenset()))
             }
             worktree = {
                 path: status
                 for path, status in worktree.items()
-                if path not in G2F_CLASS_A_PATHS | G2F_IMPLEMENTATION_PATHS
+                if path not in G2F_CLASS_A_PATHS | G2F_IMPLEMENTATION_PATHS | (G2F_CLOSURE_PATHS if g2f_closure_topology_passed else frozenset())
             }
         _compare_exact_ledger_v01(
             committed,
@@ -11297,11 +11480,13 @@ def _validate_g2e_closure_topology_v01(
     # Derive the exception from a second successful exact F topology check,
     # never from a caller-supplied ancestor or an origin ref alone.
     pre_push_parent = None
-    if g2f_topology_passed and origin_main != head:
+    f_closure_passed = False
+    if g2f_topology_passed:
         f_failures: list[str] = []
         f_mode = _validate_g2f_topology_v01(repo_root, f_failures)
+        f_closure_passed = not f_failures and f_mode in {"G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}
         if not f_failures and f_mode in {
-            "G2F_LANDING_MAINTENANCE_COMMITTED", "G2F_IMPLEMENTATION_COMMITTED"
+            "G2F_LANDING_MAINTENANCE_COMMITTED", "G2F_IMPLEMENTATION_COMMITTED", "G2F_CLOSED_PASS_COMMITTED"
         } and origin_main == parent:
             pre_push_parent = parent
     mode, topology_failures = _classify_g2e_closure_path_ledger_v01(
@@ -11317,6 +11502,7 @@ def _validate_g2e_closure_topology_v01(
         g2e_closure_ancestor=g2e_closure_ancestor,
         g2f_topology_passed=g2f_topology_passed,
         g2f_pre_push_parent=pre_push_parent,
+        g2f_closure_topology_passed=f_closure_passed,
     )
     failures.extend(topology_failures)
     for marker in (
@@ -11376,7 +11562,7 @@ def _validate_g2f_topology_v01(
         len(parent_line.split()) - 1 if parent_line is not None else 0
     )
     parent_parent_count = 1
-    if grandparent in {G2F_ORIGINAL_CLASS_A_COMMIT, G2F_LANDING_BASIS_V01} and parent is not None:
+    if grandparent in {G2F_ORIGINAL_CLASS_A_COMMIT, G2F_LANDING_BASIS_V01, G2F_CLOSURE_MAINTENANCE_V01} and parent is not None:
         parent_parent_line = _git_single_line_v01(
             repo_root,
             ("rev-list", "--parents", "-n", "1", parent),
@@ -11481,7 +11667,7 @@ def _validate_g2f_topology_v01(
             grandparent is not None
             and parent is not None
             and grandparent
-            in {G2E_CLOSURE_COMMIT, G2F_ORIGINAL_CLASS_A_COMMIT, G2F_LANDING_BASIS_V01}
+            in {G2E_CLOSURE_COMMIT, G2F_ORIGINAL_CLASS_A_COMMIT, G2F_LANDING_BASIS_V01, G2F_CLOSURE_MAINTENANCE_V01}
         )
         else ()
     )
@@ -11500,7 +11686,7 @@ def _validate_g2f_topology_v01(
     )
     failures.extend(topology_failures)
     if (
-        mode in {"G2F_LANDING_MAINTENANCE_CANDIDATE", "G2F_LANDING_MAINTENANCE_COMMITTED"}
+        mode in {"G2F_LANDING_MAINTENANCE_CANDIDATE", "G2F_LANDING_MAINTENANCE_COMMITTED", "G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}
         or grandparent == G2F_LANDING_BASIS_V01
         or parent == G2F_LANDING_BASIS_V01
         or (head == G2F_LANDING_BASIS_V01 and bool(worktree_paths & G2F_IMPLEMENTATION_PATHS))
@@ -11513,7 +11699,7 @@ def _validate_g2f_topology_v01(
             body = file.read_bytes()
             if (hashlib.sha256(body).hexdigest(), len(body), body.count(b"\n")) != expected:
                 failures.append(f"g2f.landing.v04.identity:{path}")
-        if mode == "G2F_IMPLEMENTATION_COMMITTED":
+        if mode in {"G2F_IMPLEMENTATION_COMMITTED", "G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}:
             _validate_git_blob_identities_v01(repo_root, "HEAD", G2F_LANDING_V04_IDENTITIES_V01, "g2f.landing.v04.committed", failures)
             implementation_tree = subprocess.run(("git", "ls-tree", "-r", "HEAD", "--", *sorted(G2F_IMPLEMENTATION_PATHS)), cwd=repo_root, capture_output=True, text=True, check=False)
             if implementation_tree.returncode or len(implementation_tree.stdout.splitlines()) != 2 or any(not line.startswith("100644 blob ") for line in implementation_tree.stdout.splitlines()):
@@ -11527,6 +11713,8 @@ def _validate_g2f_topology_v01(
             tree = subprocess.run(("git", "ls-tree", "-r", revision, "--", *sorted(G2F_LANDING_MAINTENANCE_PATHS_V01)), cwd=repo_root, capture_output=True, text=True, check=False)
             if tree.returncode or len(tree.stdout.splitlines()) != 7 or any(not line.startswith("100644 blob ") for line in tree.stdout.splitlines()):
                 failures.append(f"g2f.landing.control.committed_mode:{revision}")
+    if mode in {"G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}:
+        _validate_g2f_closure_basis_v01(repo_root, mode, failures)
     return mode
 
 
@@ -11662,6 +11850,12 @@ def collect_failures(
     successor_manifest = _load_json(
         root / MANIFEST_PATH, "successor_manifest", failures
     )
+    f_closure_required = g2f_mode in {"G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}
+    f_closure_present = any(isinstance(value, dict) and "g2f_closure_transition" in value for value in (authority_index, successor_manifest))
+    if f_closure_required or f_closure_present:
+        if not f_closure_required:
+            failures.append("g2f.closure.metadata_outside_exact_topology")
+        _validate_g2f_closure_surfaces_v01(root, authority_index, successor_manifest, failures)
     landing_present = isinstance(successor_manifest, dict) and "g2f_landing_transition" in successor_manifest
     landing_required = g2f_mode in {
         "G2F_LANDING_MAINTENANCE_CANDIDATE", "G2F_LANDING_MAINTENANCE_COMMITTED"

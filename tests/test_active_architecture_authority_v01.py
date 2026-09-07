@@ -319,6 +319,13 @@ def _run_guard(
 
 
 G2F_PREFLIGHT_PATH = "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md"
+G2F_CLOSURE_BASIS = "90cb073695bf8c5f5a2673c7aba84b6615719b37"
+G2F_CLOSURE_MAINTENANCE = "5d6fd6d98f3412a1d999bfe84101cabe39301573"
+G2F_CLOSURE_ADDS = (
+    "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+    "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+)
+G2F_CLOSURE_PATHS = tuple(sorted((*G2F_CLOSURE_ADDS, *(p for p in CLASS_D_PATHS if p not in CLASS_D_PATHS[:2]))))
 
 
 def _expected_g2f_landing_stdout_v01(root: Path) -> str:
@@ -338,7 +345,18 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     candidate = {path: "??" for path in G2F_IMPLEMENTATION_PATHS}
     ledger = dict(line.split("\t")[::-1] for line in git("diff", "--no-renames", "--name-status", "HEAD^", "HEAD").splitlines())
     prepush = False
-    if head == basis and status == {**{p: " M" for p in controls}, **candidate}:
+    closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
+    if head == G2F_CLOSURE_BASIS and status:
+        assert parent == G2F_CLOSURE_MAINTENANCE and grandparent == basis
+        assert status == {p: "??" if p in G2F_CLOSURE_ADDS else " M" for p in G2F_CLOSURE_PATHS}
+        assert ledger == {p: "A" for p in G2F_IMPLEMENTATION_PATHS}
+        phase = "G2F_CLOSURE_CANDIDATE"
+    elif parent == G2F_CLOSURE_BASIS:
+        assert grandparent == G2F_CLOSURE_MAINTENANCE and not status
+        assert ledger == closure_ledger
+        phase = "G2F_CLOSED_PASS_COMMITTED"
+        prepush = True
+    elif head == basis and status == {**{p: " M" for p in controls}, **candidate}:
         assert ledger == controls
         phase = "G2F_LANDING_MAINTENANCE_CANDIDATE"
     elif parent == basis and ledger == controls:
@@ -379,7 +397,7 @@ def test_clean_worktree_control_plane_passes() -> None:
     assert completed.returncode == 0, completed.stdout
     dirty_paths = _short_status_paths(REPOSITORY_ROOT)
     g2f_output = ""
-    if dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
+    if dirty_paths == set(G2F_CLOSURE_PATHS) or dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
         not dirty_paths and (REPOSITORY_ROOT / G2F_PREFLIGHT_PATH).exists()
     ):
         lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
@@ -7129,3 +7147,79 @@ def test_present_basis_with_missing_head_and_git_error_fail(tmp_path: Path) -> N
     assert _basis_failures(not_repository) == (
         "e6.committed_e5.git_object:exit_128",
     )
+
+
+def test_g2f_closure_exact_single_successor_and_neighbors() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g2f_path_ledger_v01"]
+    entries = lambda mapping: tuple((status, path, None) for path, status in sorted(mapping.items()))
+    closure = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
+    candidate = {p: "??" if p in G2F_CLOSURE_ADDS else " M" for p in G2F_CLOSURE_PATHS}
+    implementation = {p: "A" for p in G2F_IMPLEMENTATION_PATHS}
+    maintenance = {p: "M" for p in G2F_CLASS_A_PATHS}
+    p1 = dict(requested=True, head=G2F_CLOSURE_BASIS, parent=G2F_CLOSURE_MAINTENANCE,
+              grandparent="779641d1a2e1c256c8232655d02124b66e3657b3", branch="main",
+              origin_main=G2F_CLOSURE_BASIS, worktree_entries=entries(candidate),
+              head_commit_entries=entries(implementation), parent_commit_entries=entries(maintenance))
+    assert classify(**p1) == ("G2F_CLOSURE_CANDIDATE", ())
+    # Abstract identifier only; real synthetic commits are exercised externally.
+    p2 = {**p1, "head": "abstract-closure-child", "parent": G2F_CLOSURE_BASIS,
+          "grandparent": G2F_CLOSURE_MAINTENANCE, "worktree_entries": (),
+          "head_commit_entries": entries(closure), "parent_commit_entries": entries(implementation)}
+    assert classify(**p2) == ("G2F_CLOSED_PASS_COMMITTED", ())
+    assert classify(**{**p2, "origin_main": p2["head"]}) == ("G2F_CLOSED_PASS_COMMITTED", ())
+    for path in G2F_CLOSURE_PATHS:
+        assert classify(**{**p1, "worktree_entries": entries({p:s for p,s in candidate.items() if p != path})})[1]
+        wrong = dict(closure); wrong[path] = "M" if closure[path] == "A" else "A"
+        assert classify(**{**p2, "head_commit_entries": entries(wrong)})[1]
+    for base, changes in (
+        (p1, {"origin_main": G2F_CLOSURE_MAINTENANCE}),
+        (p1, {"worktree_entries": entries({**candidate, "extra.txt": "??"})}),
+        (p1, {"worktree_entries": entries({**candidate, "AGENTS.md": "M "})}),
+        (p1, {"branch": "foreign"}),
+        (p2, {"origin_main": "foreign-origin"}),
+        (p2, {"parent_count": 2}),
+        (p2, {"parent_parent_count": 2}),
+        (p2, {"parent": "extra-generation", "grandparent": G2F_CLOSURE_BASIS}),
+        (p2, {"head_commit_entries": (*entries(closure), ("R100", "renamed.md", "AGENTS.md"))}),
+    ):
+        assert classify(**{**base, **changes})[1], changes
+    assert set(namespace["G2F_CLOSURE_PREDECESSORS_V01"]) == set(G2F_CLOSURE_PATHS) - set(G2F_CLOSURE_ADDS)
+    assert namespace["G2F_CLOSURE_ADDS_V01"] == frozenset(G2F_CLOSURE_ADDS)
+
+
+def test_g2f_closure_document_identity_and_claim_boundaries(tmp_path: Path) -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    validate = namespace["_validate_g2f_closure_surfaces_v01"]
+    index = json.loads((REPOSITORY_ROOT / "specs/document_authority_index_v01.json").read_text())
+    manifest = json.loads((REPOSITORY_ROOT / "release/successor_context_manifest_v01.json").read_text())
+    for path in G2F_CLOSURE_PATHS:
+        target = tmp_path / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPOSITORY_ROOT / path, target)
+    failures = []
+    validate(tmp_path, index, manifest, failures)
+    assert failures == []
+    for path in G2F_CLOSURE_ADDS:
+        target = tmp_path / path
+        original = target.read_bytes()
+        target.write_bytes(original + b"tampered audit boundary\n")
+        failures = []
+        validate(tmp_path, index, manifest, failures)
+        assert f"g2f.closure.document_identity:{path}" in failures
+        target.write_bytes(original)
+    changed = deepcopy(manifest)
+    changed["g2f_closure_transition"]["real_world_effects_count"] = 1
+    failures = []
+    validate(tmp_path, index, changed, failures)
+    assert "g2f.closure.metadata:successor_manifest" in failures
+    changed = deepcopy(manifest)
+    changed["always_include"].append(G2F_CLOSURE_ADDS[0])
+    failures = []
+    validate(tmp_path, index, changed, failures)
+    assert "g2f.closure.onboarding:always_include" in failures
+    target = tmp_path / "README.md"
+    target.write_text(target.read_text() + "\nPRODUCTION_READINESS_STATUS=CLAIMED\n")
+    failures = []
+    validate(tmp_path, index, manifest, failures)
+    assert "g2f.closure.overclaim:README.md" in failures

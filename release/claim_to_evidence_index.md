@@ -4,10 +4,17 @@ This lightweight current index links accepted closure claims to committed
 evidence. It does not create authority, replace an audit or checkpoint, close
 Gate 2, or declare a public release.
 
+Current whole-Gate2 status is the intended exact fourteen-path closure below.
+Effective closure requires the separately authorized exact owner commit;
+the guard distinguishes candidate from committed state. Earlier slice rows'
+Gate2/F-next non-claims are historical to their own checkpoint bases, not
+current F implementation status. No old checkpoint or audit is rewritten.
+
 ## Accepted Claims
 
 | Claim identifier | Exact claim wording | Current status | Focused tests | Runtime or demo | Independent audit | Checkpoint | Limitation or non-claim |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| claim_gate2_g2f_whole_closure_v01 | Whole Gate 2 A-F satisfies the seven consolidated operational laws on committed I=90cb073695bf8c5f5a2673c7aba84b6615719b37. | Intended CLOSED_PASS; ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR; G2F_CLOSURE_CANDIDATE is not effective closure. | `tests/test_consolidated_gate2_gauntlet_g2_f_v01.py`, exact24 committed owner execution, not rerun by proposal. | `demo/run_consolidated_gate2_gauntlet_g2_f_v01.py`, frozen V04. | `docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log`; SHA256=0f99d042f88da3e3b663305728c067894bf8012f1eed2046a83695f56b909067 | `docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md`; SHA256=87eb4c5c6bd68244a9de713502e556c149baab9a4a8dfbcaa4a839a884ee314c | No public release, production readiness/security certification, live integrations or effects. Typed zero counts are not OS monitoring. |
 | claim_gate1_domain_neutral_reference_kernel_closed_pass | The Hedgehog OS Domain-Neutral Reference Kernel Gate 1 is CLOSED_PASS. | CLOSED_PASS | `tests/test_kernel_conformance_v01_runner.py` | `demo/run_kernel_conformance_v01.py` | `docs/audit_reports/auditor_domain_neutral_reference_kernel_gate1_v01.log` | `docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md` | Gate 1 closure is proof-of-architecture evidence, not Gate-2 closure, public release, RC2, or production readiness. |
 | claim_two_domain_all_real_sealed_evidence_program_closed_pass | The Two-Domain All-Real Sealed Evidence Program is CLOSED_PASS. | CLOSED_PASS | `tests/test_two_domain_airline_all_real_program_v01_runner.py`; `tests/test_two_domain_supplier_water_filter_program_v01_runner.py` | Not applicable; the accepted programme evidence is sealed and is not rerun here. | `docs/audit_reports/auditor_two_domain_all_real_sealed_evidence_program_v01.log` | `docs/two_domain_all_real_sealed_evidence_program_v01_checkpoint.md` | Programme closure does not close Gate 2 or authorize a new real-provider, connector, or effect run. |
 | claim_g2a_actionpacket_lifecycle_kill_switch_closed_pass | Gate 2 slice G2-A ActionPacket lifecycle and kill-switch is CLOSED_PASS. | CLOSED_PASS | `tests/test_action_commit_packet_lifecycle_g2_a_v01.py` | `demo/run_action_commit_packet_lifecycle_g2_a_v01.py` | `docs/audit_reports/auditor_action_commit_packet_lifecycle_kill_switch_g2_a_v01.log` | `docs/actionpacket_lifecycle_kill_switch_g2_a_checkpoint_v01.md` | This is an internal Gate-2 slice closure; Gate 2 remains NOT_CLOSED and no public-release or production claim follows. |

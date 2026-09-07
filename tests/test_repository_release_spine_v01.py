@@ -1032,7 +1032,10 @@ MACHINE_MANIFEST_BOUNDARY_FIELDS = {
 CURRENT_BOUNDARY_FIELDS = {
     **G2D_CURRENT_BOUNDARY_FIELDS,
     **G2E_CURRENT_BOUNDARY_FIELDS,
+    "g2f_status": "CLOSED_PASS",
+    "gate2_status": "CLOSED_PASS",
 }
+G2F_CURRENT_CLOSURE_FIELDS = {"g2f_status": "CLOSED_PASS", "gate2_status": "CLOSED_PASS"}
 
 G2D_RECLOSURE_G2E_FIELDS = {
     "g2e3_status": "REVALIDATION_PENDING_ON_CORRECTED_G2D",
@@ -2683,6 +2686,7 @@ def test_agents_current_operational_surface_is_exactly_bounded() -> None:
 def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     overlay = _read_json(OVERLAY_PATH)
     assert tuple(overlay) == (
+        "g2f_closure_transition",
         "profile_version",
         "overlay_id",
         "overlay_role",
@@ -2748,7 +2752,7 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     assert boundary["g2e3_post_v0310_implementation_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2e3_post_v0310_implementation_status']
     assert boundary["g2e4_strict_subtree_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2e4_strict_subtree_status']
     assert boundary["g2e4_anti_gaming_acceptance"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2e4_anti_gaming_acceptance']
-    assert boundary["gate2_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['gate2_status']
+    assert boundary["gate2_status"] == G2F_CURRENT_CLOSURE_FIELDS['gate2_status']
     assert overlay["frozen_evidence"] == FROZEN_EVIDENCE
     assert overlay["does_not_override"] == [
         "owner_instruction",
@@ -2763,6 +2767,9 @@ def test_current_status_overlay_is_exact_and_non_authoritative() -> None:
     )
     reverted = copy.deepcopy(overlay)
     reverted["current_engineering_boundary"] = baseline["current_engineering_boundary"]
+    closure = reverted.pop("g2f_closure_transition")
+    assert closure["implementation_basis"] == "90cb073695bf8c5f5a2673c7aba84b6615719b37"
+    assert closure == _read_json(REPOSITORY_ROOT / "release/successor_context_manifest_v01.json")["g2f_closure_transition"]
     assert reverted == baseline
 
 def test_frozen_gate1_release_evidence_hashes_are_exact() -> None:
@@ -3030,7 +3037,7 @@ def test_release_spine_roles_claims_and_commands_are_bounded() -> None:
             in claim_text
         )
     else:
-        assert observed_claim_ids == CLAIM_IDS + (
+        assert observed_claim_ids == ("claim_gate2_g2f_whole_closure_v01",) + CLAIM_IDS + (
             R_H1_CLOSURE_CLAIM_ID,
             G2C_CLOSURE_CLAIM_ID,
             G2D_CLOSURE_CLAIM_ID,
@@ -3672,7 +3679,7 @@ def test_current_surfaces_preserve_status_and_licensing_nonclaims() -> None:
         "legal review is complete",
     ):
         assert affirmative_claim not in lowered
-    for key, value in G2E_CURRENT_BOUNDARY_FIELDS.items():
+    for key, value in {**G2E_CURRENT_BOUNDARY_FIELDS, **G2F_CURRENT_CLOSURE_FIELDS}.items():
         assert _current_boundary()[key] == value
 
 def test_g2c_checkpoint_metadata_scope_and_nonclaims_are_exact() -> None:
@@ -4248,6 +4255,7 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
     current_overlay_boundary = current_overlay["current_engineering_boundary"]
     expected_overlay_boundary = dict(current_manifest_boundary)
     expected_overlay_boundary.update(G2E_CLOSURE_BOUNDARY_FIELDS)
+    expected_overlay_boundary.update(G2F_CURRENT_CLOSURE_FIELDS)
     assert current_overlay_boundary == _current_boundary()
     assert current_overlay_boundary == expected_overlay_boundary
     for key, value in G2D_CURRENT_BOUNDARY_FIELDS.items():
@@ -4256,7 +4264,7 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
     for key, value in G2E_PRE_CLOSURE_BOUNDARY_FIELDS.items():
         assert current_manifest_boundary[key] == value
     for key, value in G2E_CURRENT_BOUNDARY_FIELDS.items():
-        assert current_overlay_boundary[key] == value
+        assert current_overlay_boundary[key] == G2F_CURRENT_CLOSURE_FIELDS.get(key, value)
     assert current_manifest_boundary["gate2_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['gate2_status']
     assert current_manifest_boundary["g2d_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2d_status']
     assert current_manifest_boundary["g2d_contract_status"] == G2D_V0310_SUCCESSOR_EXPECTED_FIELDS['g2d_contract_status']
@@ -4309,6 +4317,9 @@ def test_g2d_current_manifest_and_overlay_transition_are_exact() -> None:
     reverted_current_overlay["current_engineering_boundary"] = basis_overlay[
         "current_engineering_boundary"
     ]
+    closure = reverted_current_overlay.pop("g2f_closure_transition")
+    assert closure["implementation_basis"] == "90cb073695bf8c5f5a2673c7aba84b6615719b37"
+    assert closure == _read_json(REPOSITORY_ROOT / "release/successor_context_manifest_v01.json")["g2f_closure_transition"]
     assert reverted_current_overlay == basis_overlay
 
     v039_audit_manifest = json.loads(
@@ -6221,3 +6232,58 @@ def test_g2e6_class_a_frozen_predecessor_evidence_and_nonclaims_are_exact() -> N
     assert G2E_CLOSURE_CHECKPOINT_PATH in claim_rows[0]
     assert G2E_CLOSURE_CHECKPOINT_SHA256 in claim_rows[0]
     assert "Gate 2" in claim_rows[0]
+
+
+def test_whole_gate2_checkpoint_audit_and_current_successor_are_bounded() -> None:
+    checkpoint_path = "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md"
+    audit_path = "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log"
+    index = _read_json(REPOSITORY_ROOT / "specs/document_authority_index_v01.json")
+    successor = _read_json(REPOSITORY_ROOT / "release/successor_context_manifest_v01.json")
+    overlay = _read_json(OVERLAY_PATH)
+    contract = successor["g2f_closure_transition"]
+    assert index["g2f_closure_transition"] == overlay["g2f_closure_transition"] == contract
+    assert contract["implementation_basis"] == "90cb073695bf8c5f5a2673c7aba84b6615719b37"
+    assert contract["maintenance_basis"] == "5d6fd6d98f3412a1d999bfe84101cabe39301573"
+    assert contract["closure_commit_identity"] == "NOT_SELF_RECORDED"
+    assert contract["effective_closure"] == "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR"
+    assert contract["current_authority_count"] == 945
+    assert contract["current_release_count"] == 33
+    assert contract["recorded_i_authority_count"] == 943
+    assert contract["recorded_i_release_count"] == 32
+    assert contract["focused_count"] == 24
+    assert contract["public_release"] == contract["production_readiness"] == contract["production_security_certification"] == "NOT_CLAIMED"
+    assert contract["real_world_effects_count"] == 0
+    assert {row["path"] for row in contract["paths"] if row["action"] == "A"} == {audit_path, checkpoint_path}
+    assert len(contract["paths"]) == 14 and len(contract["predecessors"]) == 12
+    for path, sha in (
+        (audit_path, "0f99d042f88da3e3b663305728c067894bf8012f1eed2046a83695f56b909067"),
+        (checkpoint_path, "87eb4c5c6bd68244a9de713502e556c149baab9a4a8dfbcaa4a839a884ee314c"),
+    ):
+        assert hashlib.sha256((REPOSITORY_ROOT / path).read_bytes()).hexdigest() == sha
+    checkpoint = (REPOSITORY_ROOT / checkpoint_path).read_text()
+    audit = (REPOSITORY_ROOT / audit_path).read_text()
+    for heading in ("## Layers A Through F", "## The Actual Eleven-Stage Thread", "## Seven Operational Laws and Test Traceability", "## Immutable I Evidence Register"):
+        assert checkpoint.count(heading) == 1
+    for layer in "ABCDEF":
+        assert f"| {layer} |" in checkpoint
+    for number in range(1, 8):
+        assert f"| {number}. " in checkpoint
+    tree = ast.parse((REPOSITORY_ROOT / "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py").read_text())
+    nodes = ["tests/test_consolidated_gate2_gauntlet_g2_f_v01.py::" + node.name for node in tree.body if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")]
+    assert len(nodes) == 24
+    assert all(node in checkpoint and node in audit for node in nodes)
+    for key in ("always_include", "include_current_gate_sources", "authority_documents"):
+        assert successor[key].count(checkpoint_path) == 1
+        assert audit_path not in successor[key]
+    assert audit_path in successor["exclude_paths"]
+    assert "docs/audit_reports/**" in successor["exclude_globs"]
+    assert "AUDIT_VERDICT=SUPPORTS_EXACT_WHOLE_GATE2_CLOSURE_PROPOSAL" in audit
+    assert "not operating-system monitoring" in checkpoint
+    assert successor["committed_e6_basis"]["gate2_status"] == "NOT_CLOSED"
+    for source in (README_PATH, AGENTS_PATH, LIMITATIONS_PATH, NOTES_PATH, REPOSITORY_ROOT / "specs/current_architecture_lock_v01.md"):
+        text = source.read_text()
+        current = text.split("## Whole Gate 2: Current Closure Transition", 1)[1].split("\n## ", 1)[0]
+        assert "G2F_STATUS=CLOSED_PASS" in current and "GATE2_STATUS=CLOSED_PASS" in current
+        assert "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR" in current
+        assert "G2F_CLOSURE_CANDIDATE" in current and "G2F_CLOSED_PASS_COMMITTED" in current
+        assert "are explicitly historical" in current

@@ -1,4 +1,190 @@
 {
+  "g2f_closure_transition": {
+    "implementation_basis": "90cb073695bf8c5f5a2673c7aba84b6615719b37",
+    "implementation_tree": "ab6da2a3ceabcd3ff3ddd56aa808bc0d71621103",
+    "maintenance_basis": "5d6fd6d98f3412a1d999bfe84101cabe39301573",
+    "class_a_basis": "779641d1a2e1c256c8232655d02124b66e3657b3",
+    "scope": "WHOLE_GATE2_A_THROUGH_F_EXACT_FOURTEEN_PATH_SUCCESSOR",
+    "effective_closure": "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR",
+    "closure_commit_identity": "NOT_SELF_RECORDED",
+    "candidate_phase": "G2F_CLOSURE_CANDIDATE",
+    "committed_phase": "G2F_CLOSED_PASS_COMMITTED",
+    "prepush_origin": "EXACT_IMPLEMENTATION_PARENT_ONLY",
+    "paths": [
+      {
+        "path": "AGENTS.md",
+        "action": "M"
+      },
+      {
+        "path": "README.md",
+        "action": "M"
+      },
+      {
+        "path": "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+        "action": "A"
+      },
+      {
+        "path": "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+        "action": "A"
+      },
+      {
+        "path": "release/claim_to_evidence_index.md",
+        "action": "M"
+      },
+      {
+        "path": "release/current_limitations.md",
+        "action": "M"
+      },
+      {
+        "path": "release/current_release_notes.md",
+        "action": "M"
+      },
+      {
+        "path": "release/current_status_overlay_v01.json",
+        "action": "M"
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "action": "M"
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "action": "M"
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "action": "M"
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "action": "M"
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "action": "M"
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "action": "M"
+      }
+    ],
+    "predecessors": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "7d2bc7d21a5a899a1f58abf364a7d1ae6cc015ffec425b7b46674d85d58a083e",
+        "bytes": 8312,
+        "lf": 168,
+        "git_mode": "100644"
+      },
+      {
+        "path": "README.md",
+        "sha256": "05f22aa7624e20d01e080bd6efd5bab6a637283c7d715a11f9f414c27972efa5",
+        "bytes": 9720,
+        "lf": 193,
+        "git_mode": "100644"
+      },
+      {
+        "path": "release/claim_to_evidence_index.md",
+        "sha256": "85dd82c735f2183e1587a8a93e0b53a1bc30e910c39fc96268c462ddad09c6f6",
+        "bytes": 22615,
+        "lf": 48,
+        "git_mode": "100644"
+      },
+      {
+        "path": "release/current_limitations.md",
+        "sha256": "7f8b8e65a29430425148aa16bc7764fe2accc3752aa98ac0140d9606acdb8885",
+        "bytes": 7299,
+        "lf": 74,
+        "git_mode": "100644"
+      },
+      {
+        "path": "release/current_release_notes.md",
+        "sha256": "0af690fce0bd46137114f6b8d8ceeb8c489edc212124b343164b054396ed4347",
+        "bytes": 8027,
+        "lf": 148,
+        "git_mode": "100644"
+      },
+      {
+        "path": "release/current_status_overlay_v01.json",
+        "sha256": "05ad2f3a36632d2332fe9d6d5a08b5da3341afb6568088d1f51724b8d566f6f1",
+        "bytes": 18268,
+        "lf": 289,
+        "git_mode": "100644"
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "sha256": "a5d359e80710164faac287766cd32e81fd42530fdbb377ebdf6d7d15ed26000c",
+        "bytes": 32077,
+        "lf": 732,
+        "git_mode": "100644"
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "sha256": "d68a871b128c24045b5d03693811b79d9480580ebb9636da7ee8a63697e9740d",
+        "bytes": 17299,
+        "lf": 329,
+        "git_mode": "100644"
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "sha256": "6eac647bb56ea76a5299b03fcc79f7be73e15d8115ad8dcb1e048299a4b32987",
+        "bytes": 20768,
+        "lf": 451,
+        "git_mode": "100644"
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "sha256": "80c97603dac7e6138d0fd99301ac92edaf2d2188de3261ee3e7d3190fe462057",
+        "bytes": 263439,
+        "lf": 7131,
+        "git_mode": "100644"
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "sha256": "78fe1624e03e3d31328f81a70c0984a22a221438445d6051fcbb67e94f77f90c",
+        "bytes": 265914,
+        "lf": 6223,
+        "git_mode": "100644"
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "sha256": "32b0c6ff703c4bcdd8868bf21568e49d657ed1c5bf14510bb91f632e54def204",
+        "bytes": 448715,
+        "lf": 11791,
+        "git_mode": "100644"
+      }
+    ],
+    "absent_predecessors": [
+      "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+      "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md"
+    ],
+    "documents": [
+      {
+        "path": "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+        "sha256": "0f99d042f88da3e3b663305728c067894bf8012f1eed2046a83695f56b909067",
+        "bytes": 34545,
+        "lf": 327
+      },
+      {
+        "path": "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+        "sha256": "87eb4c5c6bd68244a9de713502e556c149baab9a4a8dfbcaa4a839a884ee314c",
+        "bytes": 23648,
+        "lf": 246
+      }
+    ],
+    "recorded_i_authority_count": 943,
+    "recorded_i_release_count": 32,
+    "current_authority_count": 945,
+    "current_release_count": 33,
+    "focused_count": 24,
+    "g2f_status": "CLOSED_PASS",
+    "gate2_status": "CLOSED_PASS",
+    "internal_rc2": "ONLY_AFTER_ACCEPTED_OWNER_CLOSURE",
+    "public_release": "NOT_CLAIMED",
+    "production_readiness": "NOT_CLAIMED",
+    "production_security_certification": "NOT_CLAIMED",
+    "real_world_effects_count": 0
+  },
   "g2f_landing_transition": {
     "basis_head": "779641d1a2e1c256c8232655d02124b66e3657b3",
     "scope": "PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED",
@@ -252,6 +438,15 @@
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
       "role": "engineering status notes; not a public release declaration"
+    },
+    {
+      "path": "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+      "status": "accepted_whole_gate2_g2f_closure_checkpoint",
+      "current_authority": true,
+      "authority_scope": "named_gate_contract_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": true,
+      "role": "Whole Gate 2 A-F checkpoint; intended closure effective only at the exact owner-committed fourteen-path successor, subordinate to the architecture lock"
     }
   ],
   "future_reference_documents": [
@@ -411,6 +606,15 @@
       "may_override_architecture_lock": false,
       "onboarding_allowed": true,
       "role": "R-H1 implementation-basis navigation, not current Gate-2 seam authority"
+    },
+    {
+      "path": "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+      "status": "independent_committed_g2f_closure_audit_evidence",
+      "current_authority": false,
+      "authority_scope": "audit_evidence_only",
+      "may_override_architecture_lock": false,
+      "onboarding_allowed": false,
+      "role": "Independent source and recorded committed-I execution review; evidence only, no runtime or closure authority"
     }
   ],
   "excluded_from_successor_onboarding": [
@@ -427,7 +631,8 @@
     "docs/audit_reports/**",
     "docs/evidence/**",
     "docs/showcase/**",
-    "specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md"
+    "specs/future/quantum/hedgehog_quantum_mathematical_extension_roadmap_v2_0.md",
+    "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log"
   ],
   "source_of_truth_order": [
     "specs/current_architecture_lock_v01.md",
@@ -446,6 +651,7 @@
     "G2-E is CLOSED_PASS on exact committed evidence; this does not close Gate 2, start or authorize G2-F, or claim public release, RC2, production readiness, or production security certification.",
     "The successor context onboards the current G2-E checkpoint while keeping the independent audit and all audit globs outside automatic onboarding.",
     "The G2-F Class-A preflight status is CLASS_A_181_ROW_RECONCILIATION_CANDIDATE and its class status is V13R1_CANDIDATE_PENDING_OWNER_REVIEW; row 083 requires both validate_root_decision_candidate_projection_v01 and validate_supplier_root_context_coherence_v01, and the candidate authorizes no runtime implementation before owner review and commit of its exact seven-path boundary plus a later separate authorization.",
-    "Named Gate authority cannot redefine global topology, Root sovereignty, BSEP, runtime ownership, or another Gate's contract."
+    "Named Gate authority cannot redefine global topology, Root sovereignty, BSEP, runtime ownership, or another Gate's contract.",
+    "Current whole-Gate2 closure metadata supersedes historical Class-A and landing status snapshots only; runtime contracts and committed_e6_basis provenance remain unchanged."
   ]
 }

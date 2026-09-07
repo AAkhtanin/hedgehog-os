@@ -1,5 +1,35 @@
 # Hedgehog OS
 
+## Whole Gate 2: Current Closure Transition
+
+The current implementation is `90cb073695bf8c5f5a2673c7aba84b6615719b37`,
+sole child of maintenance `5d6fd6d98f3412a1d999bfe84101cabe39301573`.
+The [Whole Gate 2 checkpoint](docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md)
+explains layers A-F, the eleven-stage thread, seven operational laws, exact
+24-node evidence and limitations. It is the current reader and successor route.
+Safe informational reuse saves work; action-like/high-risk requests require
+independent Root review and bounded deeper work. Changed dependencies revoke
+current eligibility and cause complete/minimal selective recomputation, while
+unaffected bytes and old replay history remain intact. F invokes no real adapter.
+
+`G2F_STATUS=CLOSED_PASS` and `GATE2_STATUS=CLOSED_PASS` are intended accepted
+closure records, effective `ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR`.
+The guard independently derives `G2F_CLOSURE_CANDIDATE` on the exact dirty
+proposal, or `G2F_CLOSED_PASS_COMMITTED` only on its exact one-parent owner
+closure child. Proposal preparation alone does not close either gate. Audit
+files are evidence-only and excluded from automatic onboarding. Root remains
+the sole local final and commit authority; no SuperRoot or permission transfer.
+
+The bounded internal name "Hedgehog OS Operational Reference Kernel RC2" is
+available only after actual accepted owner closure. Public release, production
+readiness/security certification, real integrations/effects and future Gates
+remain NOT_CLAIMED. Typed zero-operation counters are not OS monitoring.
+Earlier G2-E and Class-A/landing status passages below are explicitly historical
+snapshots, superseded as current status by this section; their runtime and
+architecture laws remain binding. The immutable G2F preflight's sections 6-9
+still define the scenario, 24 tests and acceptance/closure boundaries. No
+source repair, Gate3/4 decision, new demo or future implementation is authorized.
+
 ## What Hedgehog OS is
 
 Hedgehog OS is a Root-controlled reference runtime for composing deterministic

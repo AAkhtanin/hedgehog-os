@@ -318,6 +318,52 @@ def _run_guard(
     )
 
 
+G2F_PREFLIGHT_PATH = "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md"
+
+
+def _expected_g2f_landing_stdout_v01(root: Path) -> str:
+    """Independent expectation from Git facts, never from guard output/mode."""
+    def git(*args: str) -> str:
+        return subprocess.check_output(("git", *args), cwd=root, text=True).strip()
+
+    basis = "779641d1a2e1c256c8232655d02124b66e3657b3"
+    original = "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce"
+    head, parent, grandparent = (git("rev-parse", r) for r in ("HEAD", "HEAD^", "HEAD^^"))
+    origin = git("rev-parse", "refs/remotes/origin/main")
+    assert git("branch", "--show-current") == "main"
+    assert len(git("rev-list", "--parents", "-n", "1", "HEAD").split()) == 2
+    raw = subprocess.check_output(("git", "status", "--porcelain=v1", "-z", "--untracked-files=all"), cwd=root)
+    status = dict((item[3:].decode(), item[:2].decode()) for item in raw.split(b"\0") if item)
+    controls = {path: "M" for path in G2F_CLASS_A_PATHS}
+    candidate = {path: "??" for path in G2F_IMPLEMENTATION_PATHS}
+    ledger = dict(line.split("\t")[::-1] for line in git("diff", "--no-renames", "--name-status", "HEAD^", "HEAD").splitlines())
+    prepush = False
+    if head == basis and status == {**{p: " M" for p in controls}, **candidate}:
+        assert ledger == controls
+        phase = "G2F_LANDING_MAINTENANCE_CANDIDATE"
+    elif parent == basis and ledger == controls:
+        assert status == candidate
+        phase = "G2F_LANDING_MAINTENANCE_COMMITTED"
+        prepush = True
+    elif status == candidate:
+        assert parent == original and ledger == controls
+        phase = "G2F_IMPLEMENTATION_CANDIDATE"
+    elif not status and ledger == {p: "A" for p in G2F_IMPLEMENTATION_PATHS}:
+        previous = dict(line.split("\t")[::-1] for line in git("diff", "--no-renames", "--name-status", "HEAD^^", "HEAD^").splitlines())
+        assert previous == controls
+        assert grandparent in {basis, original}
+        phase = "G2F_IMPLEMENTATION_COMMITTED"
+        prepush = grandparent == basis
+    elif not status and parent == original:
+        assert ledger == controls
+        phase = "G2F_CLASS_A_181_ROW_RECONCILIATION_COMMITTED"
+    else:
+        assert not status and head == original
+        phase = "G2F_ORIGINAL_CLASS_A_COMMITTED_SUPERSEDED"
+    assert origin == head or (prepush and origin == parent)
+    return f"G2F_PHASE={phase}\n"
+
+
 def test_clean_worktree_control_plane_passes() -> None:
     environment = dict(os.environ)
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -333,7 +379,12 @@ def test_clean_worktree_control_plane_passes() -> None:
     assert completed.returncode == 0, completed.stdout
     dirty_paths = _short_status_paths(REPOSITORY_ROOT)
     g2f_output = ""
-    if dirty_paths == set(G2F_CLASS_A_PATHS):
+    if dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
+        not dirty_paths and (REPOSITORY_ROOT / G2F_PREFLIGHT_PATH).exists()
+    ):
+        lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
+        g2f_output = _expected_g2f_landing_stdout_v01(REPOSITORY_ROOT)
+    elif dirty_paths == set(G2F_CLASS_A_PATHS):
         lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
         g2f_output = (
             "G2F_PHASE="
@@ -352,6 +403,58 @@ def test_clean_worktree_control_plane_passes() -> None:
         f"{g2f_output}"
     )
     assert completed.stderr == ""
+
+
+def test_g2f_landing_exact_transition_ledger_contract() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g2f_path_ledger_v01"]
+    basis = "779641d1a2e1c256c8232655d02124b66e3657b3"
+    original = "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce"
+    # Abstract ledger inputs only: these are not claimed owner commit IDs.
+    maintenance, implementation = "a" * 40, "b" * 40
+    controls = tuple(("M", p, None) for p in sorted(G2F_CLASS_A_PATHS))
+    files = tuple(("??", p, None) for p in sorted(G2F_IMPLEMENTATION_PATHS))
+    adds = tuple(("A", p, None) for p in sorted(G2F_IMPLEMENTATION_PATHS))
+    original_ledger = tuple(("A" if p == G2F_PREFLIGHT_PATH else "M", p, None) for p in sorted(G2F_CLASS_A_PATHS))
+    for head, parent, grandparent, origin, worktree, commit, previous, expected in (
+        (basis, original, G2E_CLOSURE_COMMIT, basis, files, controls, original_ledger, "G2F_IMPLEMENTATION_CANDIDATE"),
+        (basis, original, G2E_CLOSURE_COMMIT, basis, tuple((" M", p, None) for p in sorted(G2F_CLASS_A_PATHS)) + files, controls, original_ledger, "G2F_LANDING_MAINTENANCE_CANDIDATE"),
+        (maintenance, basis, original, basis, files, controls, controls, "G2F_LANDING_MAINTENANCE_COMMITTED"),
+        (maintenance, basis, original, maintenance, files, controls, controls, "G2F_LANDING_MAINTENANCE_COMMITTED"),
+        (implementation, maintenance, basis, maintenance, (), adds, controls, "G2F_IMPLEMENTATION_COMMITTED"),
+        (implementation, maintenance, basis, implementation, (), adds, controls, "G2F_IMPLEMENTATION_COMMITTED"),
+    ):
+        mode, failures = classify(requested=True, head=head, parent=parent, grandparent=grandparent, branch="main", origin_main=origin, worktree_entries=worktree, head_commit_entries=commit, parent_commit_entries=previous)
+        assert mode == expected
+        assert failures == ()
+
+
+def test_g2f_landing_transition_neighbors_fail_closed() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g2f_path_ledger_v01"]
+    controls = tuple(("M", p, None) for p in sorted(G2F_CLASS_A_PATHS))
+    adds = tuple(("A", p, None) for p in sorted(G2F_IMPLEMENTATION_PATHS))
+    clean = dict(requested=True, head="b" * 40, parent="a" * 40, grandparent="779641d1a2e1c256c8232655d02124b66e3657b3", branch="main", origin_main="a" * 40, worktree_entries=(), head_commit_entries=adds, parent_commit_entries=controls)
+    mutations = (
+        {"branch": "foreign"}, {"origin_main": "f" * 40},
+        {"origin_main": clean["grandparent"]}, {"parent_count": 2},
+        {"parent_parent_count": 2}, {"grandparent": "e" * 40},
+        {"head_commit_entries": adds[:-1]},
+        {"head_commit_entries": adds + (("M", "AGENTS.md", None),)},
+        {"head_commit_entries": (("M", adds[0][1], None), adds[1])},
+        {"head_commit_entries": (("R100", adds[0][1], "old.py"), adds[1])},
+        {"parent_commit_entries": controls[:-1]},
+        {"worktree_entries": (("??", "extra.txt", None),)},
+        {"worktree_entries": (("M ", "AGENTS.md", None),)},
+    )
+    assert classify(**clean)[1] == ()
+    for mutation in mutations:
+        assert classify(**{**clean, **mutation})[1], mutation
+    # Preserve the older recognized pushed topology, but do not grant it the
+    # new sequence's pre-push allowance without a maintenance predecessor.
+    legacy = {**clean, "parent": clean["grandparent"], "grandparent": "c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce", "origin_main": clean["head"]}
+    assert classify(**legacy)[1] == ()
+    assert "g2f.implementation_committed.origin_main" in classify(**{**legacy, "origin_main": legacy["parent"]})[1]
 
 
 def test_forbidden_direct_term_in_temporary_agents_copy_fails(

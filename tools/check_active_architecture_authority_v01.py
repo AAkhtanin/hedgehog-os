@@ -2634,7 +2634,12 @@ def _validate_authority_index(
 ) -> tuple[dict[str, object], ...]:
     if value is None:
         return ()
-    if tuple(value) != AUTHORITY_INDEX_KEYS:
+    expected_index_keys = (
+        ("g2f_landing_transition", *AUTHORITY_INDEX_KEYS)
+        if g2f_active and "g2f_landing_transition" in value
+        else AUTHORITY_INDEX_KEYS
+    )
+    if tuple(value) != expected_index_keys:
         failures.append("authority_index.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
         failures.append("authority_index.schema_version")
@@ -2883,6 +2888,8 @@ def _validate_manifest(
         if closure_active
         else PRE_CLOSURE_MANIFEST_KEYS
     )
+    if g2f_active and "g2f_landing_transition" in value:
+        expected_keys = ("g2f_landing_transition", *expected_keys)
     if tuple(value) != expected_keys:
         failures.append("successor_manifest.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
@@ -10391,7 +10398,12 @@ def _validate_g2f_class_a_contract_v01(
             failures.append(f"g2f.class_a.preflight.marker:{marker}")
 
     identity = _file_identity(repo_root / G2F_PREFLIGHT_PATH)
-    if identity is None or identity[0] != G2F_PREFLIGHT_SHA256_V13:
+    expected_preflight = (
+        "c3b54068b43ef75cce1fc903fea654b07c6fe6e55567f721140136531b673844"
+        if isinstance(successor_manifest, dict) and "g2f_landing_transition" in successor_manifest
+        else G2F_PREFLIGHT_SHA256_V13
+    )
+    if identity is None or identity[0] != expected_preflight:
         failures.append("g2f.class_a.preflight.identity")
     _validate_g2f_class_a_ledger_v13(source, failures)
 
@@ -10914,6 +10926,40 @@ def _compare_exact_ledger_v01(
             )
 
 
+G2F_LANDING_BASIS_V01 = "779641d1a2e1c256c8232655d02124b66e3657b3"
+G2F_LANDING_MAINTENANCE_PATHS_V01 = G2F_CLASS_A_PATHS
+G2F_LANDING_V04_IDENTITIES_V01 = {
+    "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py": (
+        "579ee6918220b20998ce68569787119176634e2a072dac11a770aa432cc5dd8d", 399910, 2506
+    ),
+    "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py": (
+        "6ed3b73c41fb14fd41e45ba8086043db3268bbe780e1c2e9030dd5b9802151c6", 47633, 925
+    ),
+}
+
+
+def _g2f_landing_contract_v01() -> dict[str, object]:
+    return {
+        "basis_head": G2F_LANDING_BASIS_V01,
+        "scope": "PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED",
+        "historical_fields": "V13R1_CLASS_A_SNAPSHOT_NOT_CURRENT_LANDING_AUTHORITY",
+        "maintenance_boundary": "G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS",
+        "maintenance_paths": sorted(G2F_LANDING_MAINTENANCE_PATHS_V01),
+        "implementation_boundary": "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+        "implementation_paths": sorted(G2F_IMPLEMENTATION_PATHS),
+        "maintenance_generations": 1,
+        "origin_rule": "EXACT_HEAD_OR_EXACT_VALIDATED_IMMEDIATE_PARENT_ONLY",
+        "preserved_v04": {p: {"sha256": v[0], "bytes": v[1], "lf": v[2], "mode": "0644"} for p, v in G2F_LANDING_V04_IDENTITIES_V01.items()},
+        "closure_paths_unchanged": sorted(G2F_CLOSURE_PATHS),
+        "closure_predecessor_rule": "BIND_SIX_OVERLAP_BLOBS_FROM_ACTUAL_MAINTENANCE_PARENT_OF_IMPLEMENTATION_BEFORE_SEPARATE_CLOSURE",
+        "authority_node_count": 943,
+        "release_node_count": 32,
+        "focused_node_count": 24,
+        "g2f_status": "NOT_CLOSED",
+        "gate2_status": "NOT_CLOSED",
+    }
+
+
 def _classify_g2f_path_ledger_v01(
     *,
     requested: bool,
@@ -10944,7 +10990,34 @@ def _classify_g2f_path_ledger_v01(
     implementation_candidate = {path: "??" for path in G2F_IMPLEMENTATION_PATHS}
     if parent_count != 1:
         failures.append(f"g2f.merge_or_parent_count:{parent_count}")
-    if head == G2F_ORIGINAL_CLASS_A_COMMIT:
+    maintenance = {path: "M" for path in G2F_LANDING_MAINTENANCE_PATHS_V01}
+    if head == G2F_LANDING_BASIS_V01 and set(worktree) & set(maintenance):
+        mode = "G2F_LANDING_MAINTENANCE_CANDIDATE"
+        if parent != G2F_ORIGINAL_CLASS_A_COMMIT or grandparent != G2F_ORIGINAL_CLASS_A_PARENT:
+            failures.append("g2f.landing.basis_ancestry")
+        _compare_exact_ledger_v01(head_commit, dict(G2F_CLASS_A_RECONCILIATION_COMMITTED_NAME_STATUS), label="g2f.landing.basis_commit", failures=failures)
+        _compare_exact_ledger_v01(parent_commit, dict(G2F_ORIGINAL_CLASS_A_COMMITTED_NAME_STATUS), label="g2f.landing.original_commit", failures=failures)
+        _compare_exact_ledger_v01(worktree, {**{p: " M" for p in maintenance}, **implementation_candidate}, label="g2f.landing.candidate.worktree", failures=failures)
+        if origin_main != head:
+            failures.append("g2f.landing.candidate.origin_main")
+    elif parent == G2F_LANDING_BASIS_V01 and head_commit == maintenance:
+        mode = "G2F_LANDING_MAINTENANCE_COMMITTED"
+        if grandparent != G2F_ORIGINAL_CLASS_A_COMMIT or parent_parent_count != 1:
+            failures.append("g2f.landing.maintenance.ancestry")
+        _compare_exact_ledger_v01(parent_commit, dict(G2F_CLASS_A_RECONCILIATION_COMMITTED_NAME_STATUS), label="g2f.landing.maintenance.basis_commit", failures=failures)
+        _compare_exact_ledger_v01(worktree, implementation_candidate, label="g2f.landing.maintenance.worktree", failures=failures)
+        if origin_main not in {head, parent}:
+            failures.append("g2f.landing.maintenance.origin_main")
+    elif grandparent == G2F_LANDING_BASIS_V01:
+        mode = "G2F_IMPLEMENTATION_COMMITTED"
+        if parent_parent_count != 1:
+            failures.append("g2f.landing.implementation.parent_merge")
+        _compare_exact_ledger_v01(parent_commit, maintenance, label="g2f.landing.implementation.maintenance_commit", failures=failures)
+        _compare_exact_ledger_v01(head_commit, dict(G2F_IMPLEMENTATION_COMMITTED_NAME_STATUS), label="g2f.landing.implementation.commit", failures=failures)
+        _compare_exact_ledger_v01(worktree, {}, label="g2f.landing.implementation.worktree", failures=failures)
+        if origin_main not in {head, parent}:
+            failures.append("g2f.landing.implementation.origin_main")
+    elif head == G2F_ORIGINAL_CLASS_A_COMMIT:
         if parent != G2F_ORIGINAL_CLASS_A_PARENT:
             failures.append("g2f.original_class_a.parent")
         _compare_exact_ledger_v01(
@@ -11040,6 +11113,7 @@ def _classify_g2e_closure_path_ledger_v01(
     closure_commit_entries: Sequence[tuple[str, str, str | None]],
     g2e_closure_ancestor: bool = False,
     g2f_topology_passed: bool = False,
+    g2f_pre_push_parent: str | None = None,
 ) -> tuple[str | None, tuple[str, ...]]:
     if not closure_requested:
         return None, ()
@@ -11125,7 +11199,11 @@ def _classify_g2e_closure_path_ledger_v01(
             label="g2e.closure.committed.commit",
             failures=failures,
         )
-        if origin_main != head:
+        if origin_main != head and not (
+            g2f_topology_passed
+            and g2f_pre_push_parent is not None
+            and origin_main == parent == g2f_pre_push_parent
+        ):
             failures.append("g2e.closure.committed.origin_main")
         if not g2e_closure_ancestor and subject != (
             "Close G2-E continuous delta runtime lifecycle"
@@ -11216,6 +11294,16 @@ def _validate_g2e_closure_topology_v01(
         if parent == G2E_CLOSURE_BASIS_COMMIT or g2e_closure_ancestor
         else ()
     )
+    # Derive the exception from a second successful exact F topology check,
+    # never from a caller-supplied ancestor or an origin ref alone.
+    pre_push_parent = None
+    if g2f_topology_passed and origin_main != head:
+        f_failures: list[str] = []
+        f_mode = _validate_g2f_topology_v01(repo_root, f_failures)
+        if not f_failures and f_mode in {
+            "G2F_LANDING_MAINTENANCE_COMMITTED", "G2F_IMPLEMENTATION_COMMITTED"
+        } and origin_main == parent:
+            pre_push_parent = parent
     mode, topology_failures = _classify_g2e_closure_path_ledger_v01(
         closure_requested=True,
         head=head,
@@ -11228,15 +11316,18 @@ def _validate_g2e_closure_topology_v01(
         closure_commit_entries=closure_commit_entries,
         g2e_closure_ancestor=g2e_closure_ancestor,
         g2f_topology_passed=g2f_topology_passed,
+        g2f_pre_push_parent=pre_push_parent,
     )
     failures.extend(topology_failures)
     for marker in (
         "MERGE_HEAD",
+        "REBASE_HEAD",
         "CHERRY_PICK_HEAD",
         "REVERT_HEAD",
         "BISECT_LOG",
         "rebase-merge",
         "rebase-apply",
+        "sequencer",
     ):
         git_path = _git_single_line_v01(
             repo_root,
@@ -11285,7 +11376,7 @@ def _validate_g2f_topology_v01(
         len(parent_line.split()) - 1 if parent_line is not None else 0
     )
     parent_parent_count = 1
-    if grandparent == G2F_ORIGINAL_CLASS_A_COMMIT and parent is not None:
+    if grandparent in {G2F_ORIGINAL_CLASS_A_COMMIT, G2F_LANDING_BASIS_V01} and parent is not None:
         parent_parent_line = _git_single_line_v01(
             repo_root,
             ("rev-list", "--parents", "-n", "1", parent),
@@ -11390,7 +11481,7 @@ def _validate_g2f_topology_v01(
             grandparent is not None
             and parent is not None
             and grandparent
-            in {G2E_CLOSURE_COMMIT, G2F_ORIGINAL_CLASS_A_COMMIT}
+            in {G2E_CLOSURE_COMMIT, G2F_ORIGINAL_CLASS_A_COMMIT, G2F_LANDING_BASIS_V01}
         )
         else ()
     )
@@ -11408,6 +11499,34 @@ def _validate_g2f_topology_v01(
         parent_parent_count=parent_parent_count,
     )
     failures.extend(topology_failures)
+    if (
+        mode in {"G2F_LANDING_MAINTENANCE_CANDIDATE", "G2F_LANDING_MAINTENANCE_COMMITTED"}
+        or grandparent == G2F_LANDING_BASIS_V01
+        or parent == G2F_LANDING_BASIS_V01
+        or (head == G2F_LANDING_BASIS_V01 and bool(worktree_paths & G2F_IMPLEMENTATION_PATHS))
+    ):
+        for path, expected in G2F_LANDING_V04_IDENTITIES_V01.items():
+            file = repo_root / path
+            if file.is_symlink() or not file.is_file() or file.stat().st_mode & 0o777 != 0o644:
+                failures.append(f"g2f.landing.v04.type_mode:{path}")
+                continue
+            body = file.read_bytes()
+            if (hashlib.sha256(body).hexdigest(), len(body), body.count(b"\n")) != expected:
+                failures.append(f"g2f.landing.v04.identity:{path}")
+        if mode == "G2F_IMPLEMENTATION_COMMITTED":
+            _validate_git_blob_identities_v01(repo_root, "HEAD", G2F_LANDING_V04_IDENTITIES_V01, "g2f.landing.v04.committed", failures)
+            implementation_tree = subprocess.run(("git", "ls-tree", "-r", "HEAD", "--", *sorted(G2F_IMPLEMENTATION_PATHS)), cwd=repo_root, capture_output=True, text=True, check=False)
+            if implementation_tree.returncode or len(implementation_tree.stdout.splitlines()) != 2 or any(not line.startswith("100644 blob ") for line in implementation_tree.stdout.splitlines()):
+                failures.append("g2f.landing.v04.committed_mode")
+        # A mode-only or path-only proposal must not admit symlinks or mode drift.
+        for path in G2F_LANDING_MAINTENANCE_PATHS_V01:
+            file = repo_root / path
+            if file.is_symlink() or not file.is_file() or file.stat().st_mode & 0o777 != 0o644:
+                failures.append(f"g2f.landing.control.type_mode:{path}")
+        for revision in ("HEAD", "HEAD^"):
+            tree = subprocess.run(("git", "ls-tree", "-r", revision, "--", *sorted(G2F_LANDING_MAINTENANCE_PATHS_V01)), cwd=repo_root, capture_output=True, text=True, check=False)
+            if tree.returncode or len(tree.stdout.splitlines()) != 7 or any(not line.startswith("100644 blob ") for line in tree.stdout.splitlines()):
+                failures.append(f"g2f.landing.control.committed_mode:{revision}")
     return mode
 
 
@@ -11543,6 +11662,18 @@ def collect_failures(
     successor_manifest = _load_json(
         root / MANIFEST_PATH, "successor_manifest", failures
     )
+    landing_present = isinstance(successor_manifest, dict) and "g2f_landing_transition" in successor_manifest
+    landing_required = g2f_mode in {
+        "G2F_LANDING_MAINTENANCE_CANDIDATE", "G2F_LANDING_MAINTENANCE_COMMITTED"
+    } or (g2f_mode == "G2F_IMPLEMENTATION_COMMITTED" and _git_single_line_v01(root, ("rev-parse", "HEAD^^"), "g2f.landing.grandparent", failures) == G2F_LANDING_BASIS_V01)
+    if landing_present or landing_required:
+        expected_landing = _g2f_landing_contract_v01()
+        for label, document in (("manifest", successor_manifest), ("authority_index", authority_index)):
+            if not isinstance(document, dict) or document.get("g2f_landing_transition") != expected_landing:
+                failures.append(f"g2f.landing.{label}.contract")
+        lock = (root / LOCK_PATH).read_text(encoding="utf-8")
+        if "G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS" not in lock or "PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED" not in lock:
+            failures.append("g2f.landing.architecture_lock.contract")
     retired_inventory = _load_json(
         root / RETIRED_INVENTORY_PATH, "s3.retired_inventory", failures
     )

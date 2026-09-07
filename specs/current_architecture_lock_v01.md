@@ -172,6 +172,25 @@ RC2, production readiness, and production security certification remain
 
 ### G2-F Class-A preflight boundary
 
+The V13R1 candidate-status text in this subsection records the historical
+Class-A snapshot, now committed at
+`779641d1a2e1c256c8232655d02124b66e3657b3`. The accepted runtime contract
+remains unchanged. Current proposed landing succession is
+`G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS`, followed by the existing
+exact two-ADD implementation boundary and later the unchanged fourteen-path
+closure boundary. Its scope is `PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED`.
+Only one maintenance commit directly on 779641d is recognized. Future hashes
+come from actual single-parent ancestry and exact commit path/status ledgers,
+not invented identifiers. The two pinned reviewed V04 files stay untracked
+through maintenance. A committed implementation is clean. A pre-push origin
+may be only the exact validated commit's immediate parent; otherwise it must
+equal HEAD. Foreign/stale/divergent refs, extra generations and merges fail.
+The successor manifest and authority index bind this same proposed transition.
+Six overlapping closure predecessors will be the actual maintenance blobs
+preserved by implementation, bound before separate owner closure authorization.
+Root-only authority, all semantic laws, NOT_CLOSED status and zero effects
+remain unchanged. No owner landing or new runtime authorization is granted here.
+
 `docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md` is the active scoped
 G2-F Class-A 181-row reconciliation candidate, subordinate to this lock and
 pending owner review and commit. It classifies G2-F as

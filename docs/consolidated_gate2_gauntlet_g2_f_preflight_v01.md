@@ -531,6 +531,42 @@ real-world-effect counters are exactly zero.
 
 ## 7. Exact mutation and commit boundaries
 
+### Landing transition from committed 779641d
+
+The Class-A reconciliation below was committed as
+`779641d1a2e1c256c8232655d02124b66e3657b3`, with parent
+`c3f2cd379bcebc71e46e83f44aee0b68d76ae5ce`. Its V13R1 candidate-status and
+authorization fields elsewhere in this document are historical Class-A
+snapshot fields, not current landing authorization. The 181-row runtime
+contract, exact 24 focused nodes and all semantic laws remain binding.
+
+`G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS` is one proposed maintenance
+boundary, on that exact 779641d basis, modifying the same seven Class-A paths
+listed below. `PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED`: this proposal does
+not authorize applying, staging, committing or pushing either boundary.
+The reviewed V04 runner and focused test remain the exact two untracked files
+during preparation and maintenance, including after the maintenance commit.
+Their pinned identities are in the successor manifest's landing transition.
+
+The only proposed successor is the existing exact two-ADD implementation
+commit, whose sole parent must be that one actual maintenance commit. No extra
+maintenance generation, merge or arbitrary descendant is admitted. On main,
+origin/main must equal HEAD, or only before push equal the exact immediate
+parent of a fully validated maintenance or implementation commit. Staging is
+empty at validation boundaries. A maintenance candidate has exactly seven
+unstaged modifications plus the two pinned untracked files; committed
+maintenance retains only those two untracked files; committed implementation
+is clean. Missing, extra, renamed, copied, staged or altered candidate paths
+are rejected. No remote ref is changed to satisfy validation.
+
+The fourteen closure paths below are unchanged and not implemented here. Their
+six deferred overlapping predecessors must be bound from the actual maintenance
+blobs retained unchanged by the implementation commit, after those hashes exist
+and before a separate owner closure instruction. No future commit or self-hash
+is invented. Historical original/reconciliation states remain provenance;
+the maintenance boundary is inserted before implementation, not a new runtime
+or closure boundary.
+
 ```text
 ORIGINAL_CLASS_A_COMMIT_PROVENANCE
 CLASS_A_181_ROW_RECONCILIATION_EXACT_SEVEN_MODIFY_PATHS
@@ -660,7 +696,8 @@ that consolidated operational thread.
 Independent audit/closure must rerun the exact committed 24-node focused suite
 and a direct canonical collector/validator/render receipt against the committed
 runner and test bytes. It also runs the active guard, release-spine 32, and
-authority 941 and verifies the exact closure ledger. Kernel 400 and Living 595
+the full authority suite (943 nodes under this landing proposal, preserving
+all prior 941 nodes) and verifies the exact closure ledger. Kernel 400 and Living 595
 are optional reused evidence only while their accepted bytes and dependencies
 remain exact.
 

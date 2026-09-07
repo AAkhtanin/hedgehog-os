@@ -1,4 +1,62 @@
 {
+  "g2f_landing_transition": {
+    "basis_head": "779641d1a2e1c256c8232655d02124b66e3657b3",
+    "scope": "PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED",
+    "historical_fields": "V13R1_CLASS_A_SNAPSHOT_NOT_CURRENT_LANDING_AUTHORITY",
+    "maintenance_boundary": "G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS",
+    "maintenance_paths": [
+      "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
+      "release/successor_context_manifest_v01.json",
+      "specs/current_architecture_lock_v01.md",
+      "specs/document_authority_index_v01.json",
+      "tests/test_active_architecture_authority_v01.py",
+      "tests/test_repository_release_spine_v01.py",
+      "tools/check_active_architecture_authority_v01.py"
+    ],
+    "implementation_boundary": "FUTURE_IMPLEMENTATION_EXACT_TWO_ADD_PATHS",
+    "implementation_paths": [
+      "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py",
+      "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py"
+    ],
+    "maintenance_generations": 1,
+    "origin_rule": "EXACT_HEAD_OR_EXACT_VALIDATED_IMMEDIATE_PARENT_ONLY",
+    "preserved_v04": {
+      "demo/run_consolidated_gate2_gauntlet_g2_f_v01.py": {
+        "sha256": "579ee6918220b20998ce68569787119176634e2a072dac11a770aa432cc5dd8d",
+        "bytes": 399910,
+        "lf": 2506,
+        "mode": "0644"
+      },
+      "tests/test_consolidated_gate2_gauntlet_g2_f_v01.py": {
+        "sha256": "6ed3b73c41fb14fd41e45ba8086043db3268bbe780e1c2e9030dd5b9802151c6",
+        "bytes": 47633,
+        "lf": 925,
+        "mode": "0644"
+      }
+    },
+    "closure_paths_unchanged": [
+      "AGENTS.md",
+      "README.md",
+      "docs/audit_reports/auditor_consolidated_gate2_gauntlet_g2_f_v01.log",
+      "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
+      "release/claim_to_evidence_index.md",
+      "release/current_limitations.md",
+      "release/current_release_notes.md",
+      "release/current_status_overlay_v01.json",
+      "release/successor_context_manifest_v01.json",
+      "specs/current_architecture_lock_v01.md",
+      "specs/document_authority_index_v01.json",
+      "tests/test_active_architecture_authority_v01.py",
+      "tests/test_repository_release_spine_v01.py",
+      "tools/check_active_architecture_authority_v01.py"
+    ],
+    "closure_predecessor_rule": "BIND_SIX_OVERLAP_BLOBS_FROM_ACTUAL_MAINTENANCE_PARENT_OF_IMPLEMENTATION_BEFORE_SEPARATE_CLOSURE",
+    "authority_node_count": 943,
+    "release_node_count": 32,
+    "focused_node_count": 24,
+    "g2f_status": "NOT_CLOSED",
+    "gate2_status": "NOT_CLOSED"
+  },
   "schema_version": "1.0.0",
   "generated_for_head": "282e319241946b34987b2533d95ed514c3d884c1",
   "current_normative_documents": [

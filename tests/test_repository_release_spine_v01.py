@@ -6016,6 +6016,23 @@ def test_g2e6_class_a_annex_and_committed_e5_onboarding_are_exact() -> None:
         "NOT_CLAIMED"
     )
     assert succession["real_world_effects_count"] == 0
+    # The V13R1 fields above remain exact historical snapshot assertions.
+    # Current landing is one explicitly bounded successor, not a rewritten past.
+    transition = manifest["g2f_landing_transition"]
+    assert authority_index["g2f_landing_transition"] == transition
+    assert transition["basis_head"] == "779641d1a2e1c256c8232655d02124b66e3657b3"
+    assert transition["scope"] == "PROPOSED_TRANSITION_NOT_OWNER_AUTHORIZED"
+    assert transition["historical_fields"] == "V13R1_CLASS_A_SNAPSHOT_NOT_CURRENT_LANDING_AUTHORITY"
+    assert transition["maintenance_boundary"] == "G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS"
+    assert transition["maintenance_paths"] == sorted(class_a_paths)
+    assert transition["maintenance_generations"] == 1
+    assert transition["implementation_paths"] == sorted(G2F_IMPLEMENTATION_PATHS)
+    assert transition["origin_rule"] == "EXACT_HEAD_OR_EXACT_VALIDATED_IMMEDIATE_PARENT_ONLY"
+    assert transition["closure_paths_unchanged"] == sorted(entry["path"] for entry in succession["future_closure_paths"])
+    assert transition["closure_predecessor_rule"] == "BIND_SIX_OVERLAP_BLOBS_FROM_ACTUAL_MAINTENANCE_PARENT_OF_IMPLEMENTATION_BEFORE_SEPARATE_CLOSURE"
+    assert (transition["authority_node_count"], transition["release_node_count"], transition["focused_node_count"]) == (943, 32, 24)
+    assert transition["g2f_status"] == transition["gate2_status"] == "NOT_CLOSED"
+    assert "G2F_LANDING_MAINTENANCE_EXACT_SEVEN_MODIFY_PATHS" in preflight
 
 
 def test_g2e6_class_a_geometry_paths_and_call_ownership_are_exact() -> None:

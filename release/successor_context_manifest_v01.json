@@ -1,4 +1,67 @@
 {
+  "u1_contract_transition": {
+    "basis_commit": "19de35c3b77725c4763b33cbac5c42118fd3c382",
+    "basis_tree": "165ff53990fc9451b634a526c4e7387f7767e923",
+    "basis_parent": "90cb073695bf8c5f5a2673c7aba84b6615719b37",
+    "scope": "EXACT_NINE_PATH_CONTRACT_ONLY_SUCCESSOR",
+    "contract_path": "docs/common_action_and_dynamic_composition_contract_v01.md",
+    "contract_sha256": "189177f12f6cebd945c98c00c7507d017ee3ad87b6b5c16c095d18eeb6b7875e",
+    "contract_bytes": 77111,
+    "contract_lf": 1013,
+    "paths": [
+      {
+        "path": "AGENTS.md",
+        "action": "M"
+      },
+      {
+        "path": "README.md",
+        "action": "M"
+      },
+      {
+        "path": "docs/common_action_and_dynamic_composition_contract_v01.md",
+        "action": "A"
+      },
+      {
+        "path": "release/successor_context_manifest_v01.json",
+        "action": "M"
+      },
+      {
+        "path": "specs/current_architecture_lock_v01.md",
+        "action": "M"
+      },
+      {
+        "path": "specs/document_authority_index_v01.json",
+        "action": "M"
+      },
+      {
+        "path": "tests/test_active_architecture_authority_v01.py",
+        "action": "M"
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "action": "M"
+      },
+      {
+        "path": "tools/check_active_architecture_authority_v01.py",
+        "action": "M"
+      }
+    ],
+    "candidate_unstaged_phase": "U1_CONTRACT_CANDIDATE_UNSTAGED",
+    "candidate_staged_phase": "U1_CONTRACT_CANDIDATE_STAGED",
+    "committed_phase": "U1_CONTRACT_COMMITTED",
+    "prepush_origin": "EXACT_C_PARENT_ONLY",
+    "contract_commit_identity": "NOT_SELF_RECORDED",
+    "runtime_implementation": "NOT_IMPLEMENTED",
+    "implementation_authorized": false,
+    "u1_u2_u3_acceptance": "NOT_CLAIMED",
+    "active_schema_registration": false,
+    "active_seam_registration": false,
+    "u0_role": "CONTROL",
+    "u0_consumer": "SCRATCH_PROTOTYPE",
+    "u0_archive_sha256": "72ead838b3a2c3bea97886ae62cc496582be747909a2f424968c8e1133c14e3d",
+    "gate2_history": "ACCEPTED_C_UNCHANGED",
+    "owner_review_and_source_edit_authorization": "SEPARATE_REQUIRED"
+  },
   "g2f_closure_transition": {
     "implementation_basis": "90cb073695bf8c5f5a2673c7aba84b6615719b37",
     "implementation_tree": "ab6da2a3ceabcd3ff3ddd56aa808bc0d71621103",
@@ -333,7 +396,8 @@
     "release/integration_seam_index.json",
     "release/integration_seam_index.md",
     "release/retired_architecture_inventory_v01.json",
-    "release/current_schema_surface_v01.json"
+    "release/current_schema_surface_v01.json",
+    "docs/common_action_and_dynamic_composition_contract_v01.md"
   ],
   "include_current_gate_sources": [
     "docs/domain_neutral_reference_kernel_gate1_checkpoint_v01.md",
@@ -409,7 +473,8 @@
     "demo/run_fractal_runtime_g2_d_v02.py",
     "demo/run_continuous_delta_runtime_g2_e_v01.py",
     "demo/run_kernel_conformance_v01.py",
-    "demo/run_living_gauntlet_v01.py"
+    "demo/run_living_gauntlet_v01.py",
+    "docs/common_action_and_dynamic_composition_contract_v01.md"
   ],
   "include_current_gate_tests": [
     "tests/test_action_commit_packet_lifecycle_g2_a_v01.py",
@@ -915,7 +980,8 @@
     "docs/consolidated_gate2_gauntlet_g2_f_preflight_v01.md",
     "docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md",
     "AGENTS.md",
-    "README.md"
+    "README.md",
+    "docs/common_action_and_dynamic_composition_contract_v01.md"
   ],
   "historical_access_method": "Explicit Git/file request only. Resolve indexed evidence with 931645dc724c54d635f32dabfca4b62fbc9a39a2:<path>; never add it to automatic onboarding.",
   "validation_command": "python3 tools/check_active_architecture_authority_v01.py"

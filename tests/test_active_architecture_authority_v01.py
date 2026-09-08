@@ -328,6 +328,11 @@ G2F_CLOSURE_ADDS = (
 G2F_CLOSURE_PATHS = tuple(sorted((*G2F_CLOSURE_ADDS, *(p for p in CLASS_D_PATHS if p not in CLASS_D_PATHS[:2]))))
 
 
+U1_CONTRACT_BASIS = "19de35c3b77725c4763b33cbac5c42118fd3c382"
+U1_CONTRACT_DOC = "docs/common_action_and_dynamic_composition_contract_v01.md"
+U1_CONTRACT_PATHS = tuple(sorted((U1_CONTRACT_DOC, "AGENTS.md", "README.md", "specs/current_architecture_lock_v01.md", "specs/document_authority_index_v01.json", "release/successor_context_manifest_v01.json", "tools/check_active_architecture_authority_v01.py", "tests/test_active_architecture_authority_v01.py", "tests/test_repository_release_spine_v01.py")))
+
+
 def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     """Independent expectation from Git facts, never from guard output/mode."""
     def git(*args: str) -> str:
@@ -346,6 +351,19 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     ledger = dict(line.split("\t")[::-1] for line in git("diff", "--no-renames", "--name-status", "HEAD^", "HEAD").splitlines())
     prepush = False
     closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
+    if (root / U1_CONTRACT_DOC).exists():
+        exact_delta = {p: "A" if p == U1_CONTRACT_DOC else "M" for p in U1_CONTRACT_PATHS}
+        if head == U1_CONTRACT_BASIS:
+            assert parent == G2F_CLOSURE_BASIS and origin == head
+            unstaged = {p: "??" if p == U1_CONTRACT_DOC else " M" for p in U1_CONTRACT_PATHS}
+            staged = {p: "A " if p == U1_CONTRACT_DOC else "M " for p in U1_CONTRACT_PATHS}
+            assert status in (unstaged, staged)
+            u1_phase = "U1_CONTRACT_CANDIDATE_UNSTAGED" if status == unstaged else "U1_CONTRACT_CANDIDATE_STAGED"
+        else:
+            assert parent == U1_CONTRACT_BASIS and not status
+            assert ledger == exact_delta and origin in (parent, head)
+            u1_phase = "U1_CONTRACT_COMMITTED"
+        return "G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\n" + f"UNIVERSALITY_PHASE={u1_phase}\n"
     if head == G2F_CLOSURE_BASIS and status:
         assert parent == G2F_CLOSURE_MAINTENANCE and grandparent == basis
         assert status == {p: "??" if p in G2F_CLOSURE_ADDS else " M" for p in G2F_CLOSURE_PATHS}
@@ -397,7 +415,7 @@ def test_clean_worktree_control_plane_passes() -> None:
     assert completed.returncode == 0, completed.stdout
     dirty_paths = _short_status_paths(REPOSITORY_ROOT)
     g2f_output = ""
-    if dirty_paths == set(G2F_CLOSURE_PATHS) or dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
+    if dirty_paths == set(U1_CONTRACT_PATHS) or dirty_paths == set(G2F_CLOSURE_PATHS) or dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
         not dirty_paths and (REPOSITORY_ROOT / G2F_PREFLIGHT_PATH).exists()
     ):
         lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
@@ -7223,3 +7241,108 @@ def test_g2f_closure_document_identity_and_claim_boundaries(tmp_path: Path) -> N
     failures = []
     validate(tmp_path, index, manifest, failures)
     assert "g2f.closure.overclaim:README.md" in failures
+
+
+def test_u1_contract_exact_ledger_states_and_neighbors() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_u1_contract_ledger_v01"]
+    unstaged = {p: "??" if p == U1_CONTRACT_DOC else " M" for p in U1_CONTRACT_PATHS}
+    staged = {p: "A " if p == U1_CONTRACT_DOC else "M " for p in U1_CONTRACT_PATHS}
+    delta = {p: "A" if p == U1_CONTRACT_DOC else "M" for p in U1_CONTRACT_PATHS}
+    child = "abstract-contract-child"
+    candidate = dict(head=U1_CONTRACT_BASIS, parents=(G2F_CLOSURE_BASIS,), branch="main", origin=U1_CONTRACT_BASIS, worktree=unstaged, committed={})
+    committed = dict(head=child, parents=(U1_CONTRACT_BASIS,), branch="main", origin=U1_CONTRACT_BASIS, worktree={}, committed=delta)
+    for inputs, expected in (
+        (candidate, "U1_CONTRACT_CANDIDATE_UNSTAGED"),
+        ({**candidate, "worktree": staged}, "U1_CONTRACT_CANDIDATE_STAGED"),
+        (committed, "U1_CONTRACT_COMMITTED"),
+        ({**committed, "origin": child}, "U1_CONTRACT_COMMITTED"),
+    ):
+        assert classify(**inputs) == (expected, ())
+    for baseline, mutation, reason in (
+        (candidate, {"origin": "foreign"}, "u1.candidate.origin"),
+        (candidate, {"branch": "foreign"}, "u1.branch"),
+        (candidate, {"parents": ("foreign",)}, "u1.basis.parent"),
+        (candidate, {"worktree": dict(list(unstaged.items())[1:])}, "u1.candidate.exact_entire_ledger"),
+        (candidate, {"worktree": {**unstaged, "extra.md": "??"}}, "u1.candidate.exact_entire_ledger"),
+        (candidate, {"worktree": {**unstaged, "AGENTS.md": "M "}}, "u1.candidate.exact_entire_ledger"),
+        (candidate, {"worktree": {**staged, "AGENTS.md": "MM"}}, "u1.candidate.exact_entire_ledger"),
+        (committed, {"parents": (U1_CONTRACT_BASIS, "foreign")}, "u1.exact_single_parent_successor"),
+        (committed, {"parents": (child,)}, "u1.exact_single_parent_successor"),
+        (committed, {"origin": "foreign"}, "u1.committed.origin"),
+        (committed, {"committed": {**delta, "README.md": "A"}}, "u1.committed.exact_delta"),
+        (committed, {"worktree": {"AGENTS.md": " M"}}, "u1.committed.clean"),
+    ):
+        assert reason in classify(**{**baseline, **mutation})[1], mutation
+
+
+def test_u1_contract_current_metadata_and_frozen_c_provenance() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    index = json.loads((REPOSITORY_ROOT / "specs/document_authority_index_v01.json").read_text())
+    manifest = json.loads((REPOSITORY_ROOT / "release/successor_context_manifest_v01.json").read_text())
+    failures: list[str] = []
+    namespace["_validate_u1_contract_surfaces_v01"](REPOSITORY_ROOT, index, manifest, failures)
+    assert failures == []
+    contract = manifest["u1_contract_transition"]
+    assert contract["runtime_implementation"] == "NOT_IMPLEMENTED"
+    assert contract["implementation_authorized"] is False
+    assert contract["u1_u2_u3_acceptance"] == "NOT_CLAIMED"
+    assert contract["u0_role"] == "CONTROL" and contract["u0_consumer"] == "SCRATCH_PROTOTYPE"
+    for path in ("release/current_schema_surface_v01.json", "release/integration_seam_index.json", "release/integration_seam_index.md", *G2F_IMPLEMENTATION_PATHS):
+        original = subprocess.check_output(("git", "show", f"{U1_CONTRACT_BASIS}:{path}"), cwd=REPOSITORY_ROOT)
+        assert (REPOSITORY_ROOT / path).read_bytes() == original
+    for field, value in (("runtime_implementation", "COMPLETE"), ("implementation_authorized", True), ("active_schema_registration", True), ("committed_phase", "U2_ACCEPTED")):
+        changed = deepcopy(manifest)
+        changed["u1_contract_transition"][field] = value
+        failures = []
+        namespace["_validate_u1_contract_surfaces_v01"](REPOSITORY_ROOT, index, changed, failures)
+        assert "u1.metadata.exact_contract_only:release/successor_context_manifest_v01.json" in failures
+
+
+def test_u1_contract_real_index_and_source_boundary(tmp_path: Path) -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    def git(*args: str) -> bytes:
+        return subprocess.check_output(("git", *args), cwd=tmp_path, stderr=subprocess.PIPE)
+    git("init", "-q", "-b", "main")
+    object_store = Path(subprocess.check_output(("git", "rev-parse", "--path-format=absolute", "--git-path", "objects"), cwd=REPOSITORY_ROOT, text=True).strip())
+    # SYNTHETIC_TEST_ONLY: independent objects, no owner index/refs or runtime.
+    shutil.copytree(object_store, tmp_path / ".git/objects", dirs_exist_ok=True, copy_function=shutil.copyfile)
+    assert not (tmp_path / ".git/objects/info/alternates").exists()
+    git("update-ref", "refs/heads/main", U1_CONTRACT_BASIS)
+    git("update-ref", "refs/remotes/origin/main", U1_CONTRACT_BASIS)
+    git("read-tree", U1_CONTRACT_BASIS)
+    git("checkout-index", "--all")
+    for path in U1_CONTRACT_PATHS:
+        destination = tmp_path / path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes((REPOSITORY_ROOT / path).read_bytes())
+    def check() -> tuple[str | None, list[str]]:
+        failures: list[str] = []
+        phase = namespace["_validate_u1_contract_topology_v01"](tmp_path, failures)
+        return phase, failures
+    assert check() == ("U1_CONTRACT_CANDIDATE_UNSTAGED", [])
+    document = tmp_path / U1_CONTRACT_DOC
+    original = document.read_bytes()
+    document.write_bytes(original + b"\nChanged contract\n")
+    assert "u1.contract.identity" in check()[1]
+    document.write_bytes(original)
+    frozen = tmp_path / "release/current_schema_surface_v01.json"
+    original_frozen = frozen.read_bytes()
+    frozen.write_bytes(original_frozen + b"\n")
+    assert "u1.frozen_source:release/current_schema_surface_v01.json" in check()[1]
+    frozen.write_bytes(original_frozen)
+    git("add", "--", *U1_CONTRACT_PATHS)
+    assert check() == ("U1_CONTRACT_CANDIDATE_STAGED", [])
+    document.write_bytes(original + b"\n")
+    assert "u1.index.content_mode_or_worktree_disagreement" in check()[1]
+    document.write_bytes(original)
+    git("update-index", "--assume-unchanged", "--", "AGENTS.md")
+    assert "u1.index.flags" in check()[1]
+    git("update-index", "--no-assume-unchanged", "--", "AGENTS.md")
+    git("update-index", "--chmod=+x", "--", "AGENTS.md")
+    assert "u1.index.content_mode_or_worktree_disagreement" in check()[1]
+    git("update-index", "--chmod=-x", "--", "AGENTS.md")
+    (tmp_path / ".git/MERGE_HEAD").write_text(U1_CONTRACT_BASIS + "\n")
+    assert "u1.active_operation:MERGE_HEAD" in check()[1]
+    (tmp_path / ".git/MERGE_HEAD").unlink()
+    assert check() == ("U1_CONTRACT_CANDIDATE_STAGED", [])

@@ -225,6 +225,283 @@ G2F_CLOSURE_PREDECESSORS_V01 = {
 
 
 
+U1_CONTRACT_PATH_V01 = "docs/common_action_and_dynamic_composition_contract_v01.md"
+U1_BASIS_V01 = "19de35c3b77725c4763b33cbac5c42118fd3c382"
+U1_BASIS_TREE_V01 = "165ff53990fc9451b634a526c4e7387f7767e923"
+U1_PATHS_V01 = tuple(sorted((
+    U1_CONTRACT_PATH_V01, LOCK_PATH, INDEX_PATH, MANIFEST_PATH,
+    "AGENTS.md", "README.md", "tools/check_active_architecture_authority_v01.py",
+    "tests/test_active_architecture_authority_v01.py",
+    "tests/test_repository_release_spine_v01.py",
+)))
+U1_CONTRACT_IDENTITY_V01 = ('189177f12f6cebd945c98c00c7507d017ee3ad87b6b5c16c095d18eeb6b7875e', 77111, 1013)
+U1_INDEX_CLASSIFICATION_V01 = {
+    "path": U1_CONTRACT_PATH_V01,
+    "status": "common_action_composition_contract_only_runtime_unimplemented",
+    "current_authority": True,
+    "authority_scope": "named_gate_contract_only",
+    "may_override_architecture_lock": False,
+    "onboarding_allowed": True,
+    "role": "bounded common action/composition planning contract; no runtime, schema, seam or acceptance authority; separate owner source-edit authorization required",
+}
+
+
+def _u1_contract_metadata_v01() -> dict[str, object]:
+    return {
+        "basis_commit": U1_BASIS_V01,
+        "basis_tree": U1_BASIS_TREE_V01,
+        "basis_parent": G2F_CLOSURE_BASIS_V01,
+        "scope": "EXACT_NINE_PATH_CONTRACT_ONLY_SUCCESSOR",
+        "contract_path": U1_CONTRACT_PATH_V01,
+        "contract_sha256": U1_CONTRACT_IDENTITY_V01[0],
+        "contract_bytes": U1_CONTRACT_IDENTITY_V01[1],
+        "contract_lf": U1_CONTRACT_IDENTITY_V01[2],
+        "paths": [{"path": p, "action": "A" if p == U1_CONTRACT_PATH_V01 else "M"} for p in U1_PATHS_V01],
+        "candidate_unstaged_phase": "U1_CONTRACT_CANDIDATE_UNSTAGED",
+        "candidate_staged_phase": "U1_CONTRACT_CANDIDATE_STAGED",
+        "committed_phase": "U1_CONTRACT_COMMITTED",
+        "prepush_origin": "EXACT_C_PARENT_ONLY",
+        "contract_commit_identity": "NOT_SELF_RECORDED",
+        "runtime_implementation": "NOT_IMPLEMENTED",
+        "implementation_authorized": False,
+        "u1_u2_u3_acceptance": "NOT_CLAIMED",
+        "active_schema_registration": False,
+        "active_seam_registration": False,
+        "u0_role": "CONTROL",
+        "u0_consumer": "SCRATCH_PROTOTYPE",
+        "u0_archive_sha256": "72ead838b3a2c3bea97886ae62cc496582be747909a2f424968c8e1133c14e3d",
+        "gate2_history": "ACCEPTED_C_UNCHANGED",
+        "owner_review_and_source_edit_authorization": "SEPARATE_REQUIRED",
+    }
+
+
+def _u1_navigation_block_v01(path: str) -> str:
+    link = ("../" if path == LOCK_PATH else "") + U1_CONTRACT_PATH_V01
+    return (
+        "<!-- BEGIN U1 CONTRACT SUCCESSOR -->\n"
+        "## Common Action and Composition: Contract Only\n\n"
+        f"Accepted Gate2/RC2 basis is `{U1_BASIS_V01}`. Its evidence and runtime\n"
+        "remain unchanged. The following scoped successor is a contract proposal,\n"
+        "not implementation acceptance or permission to edit runtime.\n\n"
+        f"Read the [common action and composition contract]({link}) for exact native/legacy\n"
+        "carriers, actual invocation, current-state ordering, composition and\n"
+        "mandatory later continuation/admission/DRS work. U0 proves CONTROL into\n"
+        "a SCRATCH_PROTOTYPE only, not business computation or action authority.\n\n"
+        "U1_RUNTIME_IMPLEMENTATION=NOT_IMPLEMENTED\n"
+        "U1_U2_U3_ACCEPTANCE=NOT_CLAIMED\n"
+        "U1_IMPLEMENTATION_AUTHORIZED=false\n\n"
+        "The guard recognizes only the exact nine-path entirely unstaged or\n"
+        "entirely staged contract candidate and one clean immediate child of C.\n"
+        "Partial staging and unproved future implementation phases are rejected.\n"
+        "Owner review/contract acceptance and a later bounded source-edit prompt\n"
+        "remain separate. Historical Gate2 current-count fields keep their C\n"
+        "provenance; new governance node inventories belong to the proposal receipt.\n"
+        "No executable seam, active schema, new acceptance claim or future Gate is\n"
+        "created. Existing named-gate annex classification is reused only for this\n"
+        "bounded planning scope; U1 is not a new architectural Gate.\n"
+        "<!-- END U1 CONTRACT SUCCESSOR -->\n\n"
+    )
+
+
+def _u1_git_v01(root: Path, args: Sequence[str], failures: list[str]) -> bytes:
+    try:
+        result = subprocess.run(("git", *args), cwd=root, capture_output=True, check=False)
+    except OSError as exc:
+        failures.append(f"u1.git.launch:{type(exc).__name__}")
+        return b""
+    if result.returncode:
+        failures.append(f"u1.git.failed:{args[0]}:{result.returncode}")
+    return result.stdout
+
+
+def _u1_tree_v01(raw: bytes, failures: list[str]) -> dict[str, tuple[str, str]]:
+    entries: dict[str, tuple[str, str]] = {}
+    try:
+        for row in raw.split(b"\0"):
+            if not row:
+                continue
+            metadata, name = row.split(b"\t")
+            mode, kind, oid = metadata.decode("ascii").split()
+            path = name.decode("utf-8")
+            if kind != "blob" or path in entries or not _valid_relative_path(path):
+                raise ValueError("tree entry")
+            entries[path] = (mode, oid)
+    except (ValueError, UnicodeError):
+        failures.append("u1.tree.invalid")
+    return entries
+
+
+def _u1_requested_v01(root: Path) -> bool:
+    if (root / U1_CONTRACT_PATH_V01).exists():
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH):
+        try:
+            if '"u1_contract_transition"' in (root / path).read_text(encoding="utf-8"):
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _classify_u1_contract_ledger_v01(
+    *, head: str, parents: tuple[str, ...], branch: str, origin: str,
+    worktree: dict[str, str], committed: dict[str, str],
+) -> tuple[str, tuple[str, ...]]:
+    """Exact topology classifier; content/index checks are independently required."""
+    failures: list[str] = []
+    modified = set(U1_PATHS_V01) - {U1_CONTRACT_PATH_V01}
+    unstaged = {**{p: " M" for p in modified}, U1_CONTRACT_PATH_V01: "??"}
+    staged = {**{p: "M " for p in modified}, U1_CONTRACT_PATH_V01: "A "}
+    expected_delta = {p: "A" if p == U1_CONTRACT_PATH_V01 else "M" for p in U1_PATHS_V01}
+    phase = "U1_CONTRACT_INVALID"
+    if branch != "main":
+        failures.append("u1.branch")
+    if head == U1_BASIS_V01:
+        if parents != (G2F_CLOSURE_BASIS_V01,):
+            failures.append("u1.basis.parent")
+        if origin != U1_BASIS_V01:
+            failures.append("u1.candidate.origin")
+        if worktree == unstaged:
+            phase = "U1_CONTRACT_CANDIDATE_UNSTAGED"
+        elif worktree == staged:
+            phase = "U1_CONTRACT_CANDIDATE_STAGED"
+        else:
+            failures.append("u1.candidate.exact_entire_ledger")
+    elif parents == (U1_BASIS_V01,):
+        phase = "U1_CONTRACT_COMMITTED"
+        if committed != expected_delta:
+            failures.append("u1.committed.exact_delta")
+        if worktree:
+            failures.append("u1.committed.clean")
+        if origin not in (U1_BASIS_V01, head):
+            failures.append("u1.committed.origin")
+    else:
+        failures.append("u1.exact_single_parent_successor")
+    return phase, tuple(failures)
+
+
+def _validate_u1_contract_topology_v01(root: Path, failures: list[str]) -> str | None:
+    if not _u1_requested_v01(root):
+        return None
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    branch = git("branch", "--show-current").decode().strip()
+    origin = git("rev-parse", "refs/remotes/origin/main").decode().strip()
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="u1.worktree", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, f"{U1_BASIS_V01}..HEAD", failures), label="u1.delta", failures=failures)
+    phase, errors = _classify_u1_contract_ledger_v01(head=head, parents=parents, branch=branch, origin=origin, worktree=status, committed=delta)
+    failures.extend(errors)
+    if git("rev-parse", f"{U1_BASIS_V01}^{{tree}}").decode().strip() != U1_BASIS_TREE_V01:
+        failures.append("u1.basis.tree")
+    if git("rev-list", "--parents", "-n", "1", U1_BASIS_V01).decode().split() != [U1_BASIS_V01, G2F_CLOSURE_BASIS_V01]:
+        failures.append("u1.basis.ancestry")
+    historical_delta = _entry_map_v02(_git_name_status_entries_v01(root, f"{G2F_CLOSURE_BASIS_V01}..{U1_BASIS_V01}", failures), label="u1.c_history", failures=failures)
+    if historical_delta != dict(G2F_CLOSURE_COMMITTED_V01):
+        failures.append("u1.basis.closure_ledger")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", U1_BASIS_V01), failures)
+    if len(baseline) != 911 or U1_CONTRACT_PATH_V01 in baseline:
+        failures.append("u1.basis.entry_set")
+    expected_paths = set(baseline) | {U1_CONTRACT_PATH_V01}
+    actual: dict[str, tuple[str, str]] = {}
+    for path in sorted(expected_paths):
+        file = root / path
+        if file.is_symlink() or not file.is_file():
+            failures.append(f"u1.source.type:{path}")
+            continue
+        body = file.read_bytes()
+        file_mode = file.stat().st_mode & 0o777
+        oid = hashlib.sha1(b"blob " + str(len(body)).encode("ascii") + b"\0" + body).hexdigest()
+        actual[path] = ("100755" if file_mode & 0o111 else "100644", oid)
+        if path in U1_PATHS_V01:
+            if file_mode != 0o644 or not body.endswith(b"\n") or b"\r" in body:
+                failures.append(f"u1.source.mode_or_lf:{path}")
+            if path in baseline and actual[path] == baseline[path]:
+                failures.append(f"u1.source.required_modification:{path}")
+        elif actual[path] != baseline[path]:
+            failures.append(f"u1.frozen_source:{path}")
+    if _file_identity(root / U1_CONTRACT_PATH_V01) != U1_CONTRACT_IDENTITY_V01:
+        failures.append("u1.contract.identity")
+    entries: dict[str, tuple[str, str]] = {}
+    try:
+        for row in git("ls-files", "--stage", "-z").split(b"\0"):
+            if not row:
+                continue
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in entries:
+                failures.append("u1.index.stage_or_duplicate")
+            entries[path] = (mode, oid)
+    except (ValueError, UnicodeError):
+        failures.append("u1.index.shape")
+    expected_index = baseline if phase == "U1_CONTRACT_CANDIDATE_UNSTAGED" else actual
+    if entries != expected_index:
+        failures.append("u1.index.content_mode_or_worktree_disagreement")
+    flags = git("ls-files", "-v", "-z").split(b"\0")
+    if any(row and not row.startswith(b"H ") for row in flags):
+        failures.append("u1.index.flags")
+    if phase == "U1_CONTRACT_COMMITTED":
+        current_tree = _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures)
+        if current_tree != actual or len(current_tree) != 912:
+            failures.append("u1.committed.tree_or_source")
+    index_path = Path(git("rev-parse", "--git-path", "index").decode().strip())
+    if not index_path.is_absolute():
+        index_path = root / index_path
+    if index_path.is_symlink() or not index_path.is_file():
+        failures.append("u1.index.not_regular")
+    for marker in ("MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock"):
+        p = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not p.is_absolute():
+            p = root / p
+        if p.exists():
+            failures.append(f"u1.active_operation:{marker}")
+    return phase
+
+
+def _validate_u1_contract_surfaces_v01(root: Path, index: dict[str, object] | None, manifest: dict[str, object] | None, failures: list[str]) -> None:
+    """Only a bounded new contract layer may be added over exact C metadata."""
+    expected = _u1_contract_metadata_v01()
+    for path, document in ((INDEX_PATH, index), (MANIFEST_PATH, manifest)):
+        if not isinstance(document, dict):
+            failures.append(f"u1.metadata.type:{path}")
+            continue
+        if json.dumps(document.get("u1_contract_transition"), separators=(",", ":")) != json.dumps(expected, separators=(",", ":")):
+            failures.append(f"u1.metadata.exact_contract_only:{path}")
+        baseline_raw = _u1_git_v01(root, ("show", f"{U1_BASIS_V01}:{path}"), failures)
+        try:
+            baseline = json.loads(baseline_raw)
+            restored = dict(document)
+            restored.pop("u1_contract_transition", None)
+            if path == INDEX_PATH:
+                annexes = restored.get("current_technical_annexes", [])
+                if annexes.count(U1_INDEX_CLASSIFICATION_V01) != 1:
+                    failures.append("u1.authority.classification")
+                restored["current_technical_annexes"] = [entry for entry in annexes if entry.get("path") != U1_CONTRACT_PATH_V01]
+            else:
+                for key in ("always_include", "include_current_gate_sources", "authority_documents"):
+                    items = restored.get(key, [])
+                    if items.count(U1_CONTRACT_PATH_V01) != 1 or items[-1:] != [U1_CONTRACT_PATH_V01]:
+                        failures.append(f"u1.onboarding.exact:{key}")
+                    restored[key] = [p for p in items if p != U1_CONTRACT_PATH_V01]
+            if json.dumps(restored, separators=(",", ":")) != json.dumps(baseline, separators=(",", ":")):
+                failures.append(f"u1.historical_metadata.changed:{path}")
+        except (ValueError, TypeError, AttributeError):
+            failures.append(f"u1.metadata.shape:{path}")
+    for path in ("AGENTS.md", "README.md", LOCK_PATH):
+        try:
+            source = (root / path).read_text(encoding="utf-8")
+            block = _u1_navigation_block_v01(path)
+            baseline = _u1_git_v01(root, ("show", f"{U1_BASIS_V01}:{path}"), failures).decode("utf-8")
+            if source.count(block) != 1 or source.replace(block, "", 1) != baseline:
+                failures.append(f"u1.navigation.or_historical_drift:{path}")
+        except (OSError, UnicodeError):
+            failures.append(f"u1.navigation.read:{path}")
+
+
+
 def _g2f_closure_contract_v01() -> dict[str, object]:
     return {
         "implementation_basis": G2F_CLOSURE_BASIS_V01,
@@ -2774,6 +3051,7 @@ def _validate_authority_index(
     *,
     closure_active: bool = False,
     g2f_active: bool = False,
+    u1_active: bool = False,
 ) -> tuple[dict[str, object], ...]:
     if value is None:
         return ()
@@ -2785,6 +3063,8 @@ def _validate_authority_index(
     f_closure = g2f_active and "g2f_closure_transition" in value
     if f_closure:
         expected_index_keys = ("g2f_closure_transition", *expected_index_keys)
+    if u1_active:
+        expected_index_keys = ("u1_contract_transition", *expected_index_keys)
     if tuple(value) != expected_index_keys:
         failures.append("authority_index.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
@@ -2865,6 +3145,11 @@ def _validate_authority_index(
         )
         classifications["audit_only_sources"][G2F_AUDIT_PATH] = (
             "independent_committed_g2f_closure_audit_evidence", False, False, AUDIT_EVIDENCE_SCOPE, False,
+        )
+    if u1_active:
+        classifications = {key: dict(entries) for key, entries in classifications.items()}
+        classifications["current_technical_annexes"][U1_CONTRACT_PATH_V01] = (
+            "common_action_composition_contract_only_runtime_unimplemented", True, True, NAMED_GATE_SCOPE, False,
         )
     for category, required_entries in classifications.items():
         entries_by_path = {
@@ -3032,6 +3317,7 @@ def _validate_manifest(
     *,
     closure_active: bool = False,
     g2f_active: bool = False,
+    u1_active: bool = False,
 ) -> tuple[tuple[str, ...], frozenset[str]]:
     if value is None:
         return (), frozenset()
@@ -3046,6 +3332,8 @@ def _validate_manifest(
         expected_keys = ("g2f_landing_transition", *expected_keys)
     if g2f_active and "g2f_closure_transition" in value:
         expected_keys = ("g2f_closure_transition", *expected_keys)
+    if u1_active:
+        expected_keys = ("u1_contract_transition", *expected_keys)
     if tuple(value) != expected_keys:
         failures.append("successor_manifest.top_level_shape")
     if not isinstance(value.get("schema_version"), str) or not value.get("schema_version"):
@@ -11297,6 +11585,7 @@ def _classify_g2e_closure_path_ledger_v01(
     g2f_topology_passed: bool = False,
     g2f_pre_push_parent: str | None = None,
     g2f_closure_topology_passed: bool = False,
+    u1_contract_topology_passed: bool = False,
 ) -> tuple[str | None, tuple[str, ...]]:
     if not closure_requested:
         return None, ()
@@ -11317,6 +11606,9 @@ def _classify_g2e_closure_path_ledger_v01(
         label="g2e.closure.commit",
         failures=failures,
     )
+    if u1_contract_topology_passed:
+        committed.pop(U1_CONTRACT_PATH_V01, None)
+        worktree = {p: status for p, status in worktree.items() if p not in U1_PATHS_V01}
     class_a_and_b = {
         **dict(CLASS_A_COMMITTED_NAME_STATUS),
         **dict(CLASS_B_COMMITTED_NAME_STATUS),
@@ -11481,7 +11773,11 @@ def _validate_g2e_closure_topology_v01(
     # never from a caller-supplied ancestor or an origin ref alone.
     pre_push_parent = None
     f_closure_passed = False
+    u1_passed = False
     if g2f_topology_passed:
+        u1_failures: list[str] = []
+        u1_phase = _validate_u1_contract_topology_v01(repo_root, u1_failures)
+        u1_passed = u1_phase is not None and not u1_failures
         f_failures: list[str] = []
         f_mode = _validate_g2f_topology_v01(repo_root, f_failures)
         f_closure_passed = not f_failures and f_mode in {"G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}
@@ -11503,6 +11799,7 @@ def _validate_g2e_closure_topology_v01(
         g2f_topology_passed=g2f_topology_passed,
         g2f_pre_push_parent=pre_push_parent,
         g2f_closure_topology_passed=f_closure_passed,
+        u1_contract_topology_passed=u1_passed,
     )
     failures.extend(topology_failures)
     for marker in (
@@ -11534,6 +11831,12 @@ def _validate_g2f_topology_v01(
     repo_root: Path,
     failures: list[str],
 ) -> str | None:
+    # A contract-only successor preserves the exact accepted C runtime and
+    # closure provenance. It never grants future implementation acceptance.
+    if _u1_requested_v01(repo_root):
+        _validate_u1_contract_topology_v01(repo_root, failures)
+        _validate_g2f_closure_basis_v01(repo_root, "G2F_CLOSED_PASS_COMMITTED", failures)
+        return "G2F_CLOSED_PASS_COMMITTED"
     head = _git_head_v02(repo_root, failures)
     if head is None:
         return None
@@ -11846,10 +12149,15 @@ def collect_failures(
         g2f_topology_passed=g2f_topology_passed,
     )
     closure_active = closure_mode is not None
+    u1_failures: list[str] = []
+    u1_mode = _validate_u1_contract_topology_v01(root, u1_failures)
+    failures.extend(u1_failures)
     authority_index = _load_json(root / INDEX_PATH, "authority_index", failures)
     successor_manifest = _load_json(
         root / MANIFEST_PATH, "successor_manifest", failures
     )
+    if u1_mode is not None:
+        _validate_u1_contract_surfaces_v01(root, authority_index, successor_manifest, failures)
     f_closure_required = g2f_mode in {"G2F_CLOSURE_CANDIDATE", "G2F_CLOSED_PASS_COMMITTED"}
     f_closure_present = any(isinstance(value, dict) and "g2f_closure_transition" in value for value in (authority_index, successor_manifest))
     if f_closure_required or f_closure_present:
@@ -11887,6 +12195,7 @@ def collect_failures(
         failures,
         closure_active=closure_active,
         g2f_active=g2f_active,
+        u1_active=u1_mode is not None,
     )
     historical_paths = {
         entry.get("path")
@@ -11899,6 +12208,7 @@ def collect_failures(
         historical_paths,
         closure_active=closure_active,
         g2f_active=g2f_active,
+        u1_active=u1_mode is not None,
     )
     _validate_e6_class_a_control_plane(
         root,
@@ -11974,6 +12284,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
         )
         if g2f_mode is not None:
             print(f"G2F_PHASE={g2f_mode}")
+        u1_failures: list[str] = []
+        u1_mode = _validate_u1_contract_topology_v01(args.root.resolve(), u1_failures)
+        if u1_mode is not None:
+            print(f"UNIVERSALITY_PHASE={u1_mode}")
         return 0
     print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 FAIL")
     for failure in failures:

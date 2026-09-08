@@ -1,5 +1,32 @@
 # Hedgehog OS Current Architecture Lock v0.1
 
+<!-- BEGIN U1 CONTRACT SUCCESSOR -->
+## Common Action and Composition: Contract Only
+
+Accepted Gate2/RC2 basis is `19de35c3b77725c4763b33cbac5c42118fd3c382`. Its evidence and runtime
+remain unchanged. The following scoped successor is a contract proposal,
+not implementation acceptance or permission to edit runtime.
+
+Read the [common action and composition contract](../docs/common_action_and_dynamic_composition_contract_v01.md) for exact native/legacy
+carriers, actual invocation, current-state ordering, composition and
+mandatory later continuation/admission/DRS work. U0 proves CONTROL into
+a SCRATCH_PROTOTYPE only, not business computation or action authority.
+
+U1_RUNTIME_IMPLEMENTATION=NOT_IMPLEMENTED
+U1_U2_U3_ACCEPTANCE=NOT_CLAIMED
+U1_IMPLEMENTATION_AUTHORIZED=false
+
+The guard recognizes only the exact nine-path entirely unstaged or
+entirely staged contract candidate and one clean immediate child of C.
+Partial staging and unproved future implementation phases are rejected.
+Owner review/contract acceptance and a later bounded source-edit prompt
+remain separate. Historical Gate2 current-count fields keep their C
+provenance; new governance node inventories belong to the proposal receipt.
+No executable seam, active schema, new acceptance claim or future Gate is
+created. Existing named-gate annex classification is reused only for this
+bounded planning scope; U1 is not a new architectural Gate.
+<!-- END U1 CONTRACT SUCCESSOR -->
+
 ## Whole Gate 2: Current Closure Transition
 
 The current implementation is `90cb073695bf8c5f5a2673c7aba84b6615719b37`,

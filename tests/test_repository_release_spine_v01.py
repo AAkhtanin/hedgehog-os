@@ -6287,3 +6287,35 @@ def test_whole_gate2_checkpoint_audit_and_current_successor_are_bounded() -> Non
         assert "ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR" in current
         assert "G2F_CLOSURE_CANDIDATE" in current and "G2F_CLOSED_PASS_COMMITTED" in current
         assert "are explicitly historical" in current
+
+
+def test_common_action_contract_is_not_runtime_acceptance_or_active_seam() -> None:
+    path = "docs/common_action_and_dynamic_composition_contract_v01.md"
+    basis = "19de35c3b77725c4763b33cbac5c42118fd3c382"
+    index = _read_json(REPOSITORY_ROOT / "specs/document_authority_index_v01.json")
+    manifest = _read_json(REPOSITORY_ROOT / "release/successor_context_manifest_v01.json")
+    contract = index["u1_contract_transition"]
+    assert contract == manifest["u1_contract_transition"]
+    assert contract["basis_commit"] == basis
+    assert contract["runtime_implementation"] == "NOT_IMPLEMENTED"
+    assert contract["u1_u2_u3_acceptance"] == "NOT_CLAIMED"
+    assert contract["implementation_authorized"] is False
+    assert contract["active_schema_registration"] is False
+    assert contract["active_seam_registration"] is False
+    assert contract["contract_commit_identity"] == "NOT_SELF_RECORDED"
+    source = (REPOSITORY_ROOT / path).read_bytes()
+    assert _sha256_bytes(source) == contract["contract_sha256"]
+    assert len(source) == contract["contract_bytes"] and source.count(b"\n") == contract["contract_lf"]
+    text = source.decode()
+    for number in range(1, 19):
+        assert text.count(f"| M{number:02d} |") == 1
+    for number in range(1, 11):
+        assert text.count(f"| R{number:02d} |") == 1
+    assert "D_ROLE=CONTROL; CONSUMER_KIND=SCRATCH_PROTOTYPE" in text
+    for current in (README_PATH, AGENTS_PATH, REPOSITORY_ROOT / "specs/current_architecture_lock_v01.md"):
+        assert path in current.read_text()
+        assert "U1_IMPLEMENTATION_AUTHORIZED=false" in current.read_text()
+    for frozen in ("release/current_schema_surface_v01.json", "release/integration_seam_index.json", "release/integration_seam_index.md", "release/current_status_overlay_v01.json", "release/claim_to_evidence_index.md", "release/current_limitations.md", "release/current_release_notes.md"):
+        assert (REPOSITORY_ROOT / frozen).read_bytes() == _git_show(basis, frozen)
+    for forbidden in ("hedgehog/work_execution_host_v01.py", "hedgehog/kernel/work_composition_v01.py", "schemas/work_composition_v01.schema.json", "hedgehog/capability_admission_v01.py"):
+        assert not (REPOSITORY_ROOT / forbidden).exists()

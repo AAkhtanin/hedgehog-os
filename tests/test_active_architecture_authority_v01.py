@@ -351,6 +351,20 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     ledger = dict(line.split("\t")[::-1] for line in git("diff", "--no-renames", "--name-status", "HEAD^", "HEAD").splitlines())
     prepush = False
     closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
+    if (root / "docs/common_action_and_dynamic_composition_checkpoint_v01.md").exists():
+        metadata = json.loads((root / "release/current_status_overlay_v01.json").read_text())["universality_admission_v01"]
+        actions = metadata["path_actions"]
+        h = "20d16af823ed4af94dc0a342c731aef81e8a23de"
+        if head == h:
+            assert parent == U1_CONTRACT_BASIS and origin == h
+            unstaged = {p: "??" if op == "A" else " M" for p,op in actions.items()}
+            staged = {p: op + " " for p,op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "U4_ADMISSION_CANDIDATE_UNSTAGED" if status == unstaged else "U4_ADMISSION_CANDIDATE_STAGED"
+        else:
+            assert parent == h and not status and ledger == actions and origin in (h,head)
+            phase = "U4_IMPLEMENTATION_ADMITTED_COMMITTED"
+        return "G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=" + phase + "\n"
     if (root / U1_CONTRACT_DOC).exists():
         exact_delta = {p: "A" if p == U1_CONTRACT_DOC else "M" for p in U1_CONTRACT_PATHS}
         if head == U1_CONTRACT_BASIS:
@@ -415,7 +429,7 @@ def test_clean_worktree_control_plane_passes() -> None:
     assert completed.returncode == 0, completed.stdout
     dirty_paths = _short_status_paths(REPOSITORY_ROOT)
     g2f_output = ""
-    if dirty_paths == set(U1_CONTRACT_PATHS) or dirty_paths == set(G2F_CLOSURE_PATHS) or dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
+    if (REPOSITORY_ROOT / "docs/common_action_and_dynamic_composition_checkpoint_v01.md").exists() or dirty_paths == set(U1_CONTRACT_PATHS) or dirty_paths == set(G2F_CLOSURE_PATHS) or dirty_paths & set(G2F_IMPLEMENTATION_PATHS) or (
         not dirty_paths and (REPOSITORY_ROOT / G2F_PREFLIGHT_PATH).exists()
     ):
         lifecycle_mode = "G2E_CLOSED_PASS_COMMITTED"
@@ -7276,12 +7290,13 @@ def test_u1_contract_exact_ledger_states_and_neighbors() -> None:
         assert reason in classify(**{**baseline, **mutation})[1], mutation
 
 
-def test_u1_contract_current_metadata_and_frozen_c_provenance() -> None:
+def test_u1_contract_current_metadata_and_frozen_c_provenance(tmp_path: Path) -> None:
+    historical_root = _u4_historical_contract_root(tmp_path)
     namespace = runpy.run_path(str(GUARD_PATH))
-    index = json.loads((REPOSITORY_ROOT / "specs/document_authority_index_v01.json").read_text())
-    manifest = json.loads((REPOSITORY_ROOT / "release/successor_context_manifest_v01.json").read_text())
+    index = json.loads((historical_root / "specs/document_authority_index_v01.json").read_text())
+    manifest = json.loads((historical_root / "release/successor_context_manifest_v01.json").read_text())
     failures: list[str] = []
-    namespace["_validate_u1_contract_surfaces_v01"](REPOSITORY_ROOT, index, manifest, failures)
+    namespace["_validate_u1_contract_surfaces_v01"](historical_root, index, manifest, failures)
     assert failures == []
     contract = manifest["u1_contract_transition"]
     assert contract["runtime_implementation"] == "NOT_IMPLEMENTED"
@@ -7290,12 +7305,12 @@ def test_u1_contract_current_metadata_and_frozen_c_provenance() -> None:
     assert contract["u0_role"] == "CONTROL" and contract["u0_consumer"] == "SCRATCH_PROTOTYPE"
     for path in ("release/current_schema_surface_v01.json", "release/integration_seam_index.json", "release/integration_seam_index.md", *G2F_IMPLEMENTATION_PATHS):
         original = subprocess.check_output(("git", "show", f"{U1_CONTRACT_BASIS}:{path}"), cwd=REPOSITORY_ROOT)
-        assert (REPOSITORY_ROOT / path).read_bytes() == original
+        assert (historical_root / path).read_bytes() == original
     for field, value in (("runtime_implementation", "COMPLETE"), ("implementation_authorized", True), ("active_schema_registration", True), ("committed_phase", "U2_ACCEPTED")):
         changed = deepcopy(manifest)
         changed["u1_contract_transition"][field] = value
         failures = []
-        namespace["_validate_u1_contract_surfaces_v01"](REPOSITORY_ROOT, index, changed, failures)
+        namespace["_validate_u1_contract_surfaces_v01"](historical_root, index, changed, failures)
         assert "u1.metadata.exact_contract_only:release/successor_context_manifest_v01.json" in failures
 
 
@@ -7315,7 +7330,7 @@ def test_u1_contract_real_index_and_source_boundary(tmp_path: Path) -> None:
     for path in U1_CONTRACT_PATHS:
         destination = tmp_path / path
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes((REPOSITORY_ROOT / path).read_bytes())
+        destination.write_bytes(subprocess.check_output(("git", "show", "20d16af823ed4af94dc0a342c731aef81e8a23de:" + path), cwd=REPOSITORY_ROOT))
     def check() -> tuple[str | None, list[str]]:
         failures: list[str] = []
         phase = namespace["_validate_u1_contract_topology_v01"](tmp_path, failures)
@@ -7346,3 +7361,100 @@ def test_u1_contract_real_index_and_source_boundary(tmp_path: Path) -> None:
     assert "u1.active_operation:MERGE_HEAD" in check()[1]
     (tmp_path / ".git/MERGE_HEAD").unlink()
     assert check() == ("U1_CONTRACT_CANDIDATE_STAGED", [])
+
+
+def _u4_historical_contract_root(tmp_path: Path) -> Path:
+    """Exact H materialization for unchanged historical contract obligations."""
+    import shutil
+    import subprocess
+    root = tmp_path / "historical_H"
+    root.mkdir()
+    subprocess.run(("git", "init", "-q", "-b", "main"), cwd=root, check=True)
+    objects = Path(subprocess.check_output(("git", "rev-parse", "--path-format=absolute", "--git-path", "objects"), cwd=REPOSITORY_ROOT, text=True).strip())
+    shutil.copytree(objects, root / ".git/objects", dirs_exist_ok=True, copy_function=shutil.copyfile)
+    assert not (root / ".git/objects/info/alternates").exists()
+    h = "20d16af823ed4af94dc0a342c731aef81e8a23de"
+    for args in (("update-ref", "refs/heads/main", h), ("update-ref", "refs/remotes/origin/main", h), ("read-tree", h), ("checkout-index", "--all")):
+        subprocess.run(("git", *args), cwd=root, check=True)
+    return root
+
+
+def test_u4_admission_exact_current_states_and_neighbors() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    actions = namespace["U4_PATH_ACTIONS_V01"]
+    h = "20d16af823ed4af94dc0a342c731aef81e8a23de"
+    classify = namespace["_classify_u4_ledger_v01"]
+    source = dict(head=h, parents=(U1_CONTRACT_BASIS,), origin=h, branch="main",
+                  status={p: "??" if op == "A" else " M" for p, op in actions.items()}, delta={})
+    staged = {**source, "status": {p: op + " " for p, op in actions.items()}}
+    committed = {**source, "head": "abstract-test-only-child", "parents": (h,), "status": {}, "delta": actions}
+    for state, phase in ((source, "U4_ADMISSION_CANDIDATE_UNSTAGED"), (staged, "U4_ADMISSION_CANDIDATE_STAGED"), (committed, "U4_IMPLEMENTATION_ADMITTED_COMMITTED"), ({**committed, "origin": committed["head"]}, "U4_IMPLEMENTATION_ADMITTED_COMMITTED")):
+        assert classify(**state) == (phase, ())
+    for state, change in ((source, {"branch": "foreign"}), (source, {"origin": "foreign"}), (source, {"parents": (h,)}), (source, {"status": dict(list(source["status"].items())[1:])}), (source, {"status": {**source["status"], "foreign.txt": "??"}}), (staged, {"status": {**staged["status"], "AGENTS.md": "MM"}}), (committed, {"parents": (h,h)}), (committed, {"origin": "foreign"}), (committed, {"delta": {**actions, "AGENTS.md": "A"}}), (committed, {"parents": (committed["head"],)})):
+        assert classify(**{**state, **change})[1]
+    failures = []
+    assert namespace["_validate_u4_admission_v01"](REPOSITORY_ROOT, failures) in {"U4_ADMISSION_CANDIDATE_UNSTAGED", "U4_ADMISSION_CANDIDATE_STAGED", "U4_IMPLEMENTATION_ADMITTED_COMMITTED"}
+    assert failures == []
+
+
+def test_u4_admission_source_identity_projection_is_exact() -> None:
+    namespace = runpy.run_path(str(GUARD_PATH))
+    pins = namespace["U4_SOURCE_IDENTITIES_V01"]
+    digest = namespace["_u4_source_digest_v01"]
+    assert len(pins) == 48
+    for path, expected in pins.items():
+        body = (REPOSITORY_ROOT / path).read_bytes()
+        assert digest(path, body) == expected
+        if path.endswith(".py"):
+            changed = body + b"\nU4_UNAUTHORIZED_EXTRA = 1\n"
+        else:
+            changed = body + b"\nUNAUTHORIZED_EXTRA\n"
+        assert digest(path, changed) != expected
+
+
+def test_u4_self_digest_uses_stable_original_utf8_bytes() -> None:
+    digest = runpy.run_path(str(GUARD_PATH))["_u4_source_digest_v01"]
+    path = "tools/check_active_architecture_authority_v01.py"
+    body = ('# stable byte oracle\nU4_SOURCE_IDENTITIES_V01 = {"label": "caf\u00e9", "' + path + '": "' + 'a' * 64 + '", "other.py": "' + 'b' * 64 + '"}\nVALUE = 7  # retained\n').encode("utf-8")
+    expected = "8331c4d822d97cdfde2bff511feb69bf69fd02ed1d56af3786d1bc30d78057a2"
+    assert digest(path, body) == expected
+    assert digest(path, bytes(bytearray(body))) == expected
+    assert digest(path, body.replace(b'a' * 64, b'c' * 64)) == expected
+    for changed in (
+        body.replace(b'b' * 64, b'd' * 64),
+        body.replace(b'VALUE = 7', b'VALUE = 8'),
+        body.replace(b'# retained', b'# retained differently'),
+        body.replace(b' = {', b'  = {'),
+        body + b'\n',
+    ):
+        assert digest(path, changed) != expected
+    assert digest("other.py", body) == hashlib.sha256(body).hexdigest()
+
+
+def test_u4_self_digest_rejects_ambiguous_or_malformed_literal() -> None:
+    digest = runpy.run_path(str(GUARD_PATH))["_u4_source_digest_v01"]
+    path = "tools/check_active_architecture_authority_v01.py"
+    entry = repr(path).encode() + b": '" + b'a' * 64 + b"'"
+    body = b'U4_SOURCE_IDENTITIES_V01 = {' + entry + b'}\n'
+    assert digest(path, body) == hashlib.sha256(b'U4_SOURCE_IDENTITIES_V01 = {' + repr(path).encode() + b': "SELF_DIGEST_EXCLUDED_V01"}\n').hexdigest()
+    malformed = (
+        b'OTHER = {}\n',
+        b'U4_SOURCE_IDENTITIES_V01 = {}\n',
+        body + body,
+        body.replace(entry, entry + b', ' + entry),
+        body.replace(b'a' * 64, b'a' * 63),
+        body.replace(b'a' * 64, b'A' * 64),
+        body.replace(b"'" + b'a' * 64 + b"'", b'None'),
+        body.replace(b"'" + b'a' * 64 + b"'", b"'" + b'a' * 32 + b"' '" + b'a' * 32 + b"'"),
+        body.replace(b"'" + b'a' * 64 + b"'", b"r'" + b'a' * 64 + b"'"),
+        body.replace(b"'" + b'a' * 64 + b"'", b"'''" + b'a' * 64 + b"'''"),
+        body.replace(b' = {', b': dict = {'),
+        body.replace(b' = {', b' = ALIAS = {'),
+        body.replace(b' = {', b' = {**OTHER, '),
+        body + b'U4_SOURCE_IDENTITIES_V01 += {}\n',
+        body + b'U4_SOURCE_IDENTITIES_V01, alias = ({}, {})\n',
+    )
+    for changed in malformed:
+        with pytest.raises(ValueError, match="self identity projection"):
+            digest(path, changed)
+    assert digest(path, body) == digest(path, bytes(bytearray(body)))

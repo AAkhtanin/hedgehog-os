@@ -11,6 +11,7 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
+import sys
 from typing import Iterable, Sequence
 
 
@@ -331,6 +332,201 @@ def _u1_tree_v01(raw: bytes, failures: list[str]) -> dict[str, tuple[str, str]]:
     return entries
 
 
+U4_H_V01 = "20d16af823ed4af94dc0a342c731aef81e8a23de"
+U4_H_TREE_V01 = "a8fc466e79c40b373fd0174d5f25693a4a41eee5"
+U4_CHECKPOINT_V01 = "docs/common_action_and_dynamic_composition_checkpoint_v01.md"
+U4_COMMIT_MESSAGE_V01 = "Admit bounded common action and retained-work implementation"
+U4_PATH_ACTIONS_V01 = {'AGENTS.md': 'M', 'README.md': 'M', 'demo/run_action_packet_portability_v01.py': 'A', 'demo/run_capability_cold_start_reuse_v01.py': 'A', 'demo/run_fractal_runtime_g2_d_v02.py': 'M', 'demo/run_kernel_conformance_v01.py': 'M', 'demo/run_living_gauntlet_v01.py': 'M', 'demo/work_composition_mock_capabilities_v01.py': 'A', 'docs/common_action_and_dynamic_composition_checkpoint_v01.md': 'A', 'docs/common_action_and_dynamic_composition_contract_v01.md': 'M', 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': 'M', 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': 'M', 'hedgehog/action_commit_packet_v02.py': 'M', 'hedgehog/capability_admission_v01.py': 'A', 'hedgehog/capability_memory_binding_v01.py': 'A', 'hedgehog/kernel/continuous_delta_runtime_v01.py': 'M', 'hedgehog/kernel/effect_firewall_v01.py': 'M', 'hedgehog/kernel/execution_mode_router_v01.py': 'M', 'hedgehog/kernel/fractal_runtime_v02.py': 'M', 'hedgehog/kernel/work_composition_v01.py': 'A', 'hedgehog/wasm_pure_worker_v01.py': 'A', 'hedgehog/work_execution_host_v01.py': 'A', 'pyproject.toml': 'M', 'release/claim_to_evidence_index.md': 'M', 'release/current_limitations.md': 'M', 'release/current_release_notes.md': 'M', 'release/current_schema_surface_v01.json': 'M', 'release/current_status_overlay_v01.json': 'M', 'release/integration_seam_index.md': 'M', 'release/successor_context_manifest_v01.json': 'M', 'schemas/capability_admission_v01.schema.json': 'A', 'schemas/continuous_delta_runtime_v01.schema.json': 'M', 'schemas/fractal_runtime_v02.schema.json': 'M', 'schemas/work_composition_v01.schema.json': 'A', 'specs/current_architecture_lock_v01.md': 'M', 'specs/document_authority_index_v01.json': 'M', 'tests/test_action_packet_portability_v01.py': 'A', 'tests/test_active_architecture_authority_v01.py': 'M', 'tests/test_capability_admission_v01.py': 'A', 'tests/test_continuous_delta_runtime_g2_e_v01.py': 'M', 'tests/test_effect_firewall_v01.py': 'M', 'tests/test_execution_mode_router_g2_c_v01.py': 'M', 'tests/test_fractal_runtime_g2_d_v02.py': 'M', 'tests/test_living_gauntlet_v01_runner.py': 'M', 'tests/test_repository_release_spine_v01.py': 'M', 'tests/test_work_composition_v01.py': 'A', 'tests/test_work_continuation_and_reuse_v01.py': 'A', 'tools/check_active_architecture_authority_v01.py': 'M'}
+U4_SOURCE_IDENTITIES_V01 = {'AGENTS.md': 'd6e26fcb9e91792ddf9b558e7cef946507f1e40f1c49877a002fa897391b1a60', 'README.md': '74a3445577f8727367c0a27f2a263816e04153e3a660f96298591c6e8acc6dcb', 'demo/run_action_packet_portability_v01.py': '82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb', 'demo/run_capability_cold_start_reuse_v01.py': '123714d89b7542abdba2c6d79e7a16ce98b5bd92810b032eccab3e82201f56ff', 'demo/run_fractal_runtime_g2_d_v02.py': '9d1b0045de22b4b9482876f5e8a11b12bdc2f35191fa97d51540beb22fbe9d2a', 'demo/run_kernel_conformance_v01.py': '4fe949a09653a72eef2b9a885254a29bd9be4cff018d155dacc816671d291f55', 'demo/run_living_gauntlet_v01.py': 'afe82e5f7b7f33535ada592d047fb353bdac58907d194530a54ac1271141e2f7', 'demo/work_composition_mock_capabilities_v01.py': 'f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731', 'docs/common_action_and_dynamic_composition_checkpoint_v01.md': 'fd708a885e0635e9f82bb8baad212f9cbd6db363888a8ae380893a718201e5e9', 'docs/common_action_and_dynamic_composition_contract_v01.md': '2776a5eaba4e87c71c2fc1e9af875c985147c8a4f47d24f91049cd8232b5befd', 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': '5dcc7a28485ebd1d09075520fb290b858949fea6d64a4b76a8f927317ea3c369', 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': '4515e5e3e333ce9c00bc3696ddd1a478550414e45d379c7eacf726729d4940b6', 'hedgehog/action_commit_packet_v02.py': 'b38c9e134a13caa5a0f65e0ede3faba6f3fa6dbff32761398927df8b5d903110', 'hedgehog/capability_admission_v01.py': '2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda', 'hedgehog/capability_memory_binding_v01.py': '6e4f2ca3be12a1e9a93d7b59318d9a6ba90ea6f43bbd9bccc81d8bdefe1b1b79', 'hedgehog/kernel/continuous_delta_runtime_v01.py': 'efb0ef689bde0efbbbbc5cddcc7e3d0237c5dacf05e7c1f6415e5d5d808bd282', 'hedgehog/kernel/effect_firewall_v01.py': '46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd', 'hedgehog/kernel/execution_mode_router_v01.py': '4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4', 'hedgehog/kernel/fractal_runtime_v02.py': 'e02ccdab45725de6f3091897b317eb93076717c7d3a107fafa99f657917ef8ca', 'hedgehog/kernel/work_composition_v01.py': 'f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061', 'hedgehog/wasm_pure_worker_v01.py': 'e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae', 'hedgehog/work_execution_host_v01.py': 'c54b0204c4f664dfd234db26f29cf7164baf803780b69af0a57fb9397ca9bd25', 'pyproject.toml': '34feed08e3befc6a4bc4dfa53d69cf827e676e28a321d4770d2a39bec4772f73', 'release/claim_to_evidence_index.md': 'c026f208ce5b8aaed1084108d0f4f800bbe026e1cfa0e8fc45828c2c8a1acbb6', 'release/current_limitations.md': '7df186b9a34adad8b618dd24a30f889297a641271881873003ee73f158b9c03b', 'release/current_release_notes.md': '6e7cfdb7718bb1951ac6be1dd9e85cb6534796038279dd9dfb1828239899a9c0', 'release/current_schema_surface_v01.json': '4e4f2420eb9f13102833bc97fd9a3ac301283b0e22716ba087027d86c89ed514', 'release/current_status_overlay_v01.json': 'f16ecb87d1876f98e93db1fd457304ccb60465d82fb1301d13bed5d3eec4f0a8', 'release/integration_seam_index.md': 'ca18cea71edaf8703d2cb19d205082cfe8167b97c2452896d6de7098393db3a3', 'release/successor_context_manifest_v01.json': '3ed101b71782b3cc0c403b3b21f322c8ddd3ebfa11298d9e7a580e037dfd8e3f', 'schemas/capability_admission_v01.schema.json': 'b09ac99cb2e62ffd95098401a5695a0f018d87d4f2e61f9de723f710ac7455e0', 'schemas/continuous_delta_runtime_v01.schema.json': '9cdeb3d987241383360413d6a4a02be4a3a1480e840aa334737dccd25fddb3b5', 'schemas/fractal_runtime_v02.schema.json': 'db4b5a232e945cea8a6167f36007963534b6852a5a9d53e81325912399d1fcf8', 'schemas/work_composition_v01.schema.json': 'ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0', 'specs/current_architecture_lock_v01.md': 'eaf664646edafa6c65160a749a4f6f98a0b0716d8627ba7fd3b7dee5f89ecf5c', 'specs/document_authority_index_v01.json': 'af7733569e94abcecaad6791e27d7e3ca17ca43a0ae45261e3b4d59206114d7f', 'tests/test_action_packet_portability_v01.py': 'af8dfe77d9750bad37d7e1e206195c5a9fc0913f1fef7e06d1ec70b8acc672c7', 'tests/test_active_architecture_authority_v01.py': '2b75e562a7e75d8e4c46f14b5efbe64dc20e20e9e62be760c4b1ef9cf6486f47', 'tests/test_capability_admission_v01.py': '914aa8d7913ed4e40405cd6a6339e85ada4a7f41840b0e4b1e6e8c311751dda2', 'tests/test_continuous_delta_runtime_g2_e_v01.py': '94dc6941ff6fc3f06dfb7f5f05ef1a55716ff359bd258439051f1226a911111f', 'tests/test_effect_firewall_v01.py': 'c4cc287217a5cd680b3ea1105e23c6c845e0d8732c53855b7a585aec1a1fe1eb', 'tests/test_execution_mode_router_g2_c_v01.py': 'e2fae99b3530be81fa8bf47027139bf3a23fda6b58a80b2bda9db21f5407b801', 'tests/test_fractal_runtime_g2_d_v02.py': 'c853bc340337ae6410dbd8c8591f49b85a2b7cbf345563d77415656ea2b7d6c1', 'tests/test_living_gauntlet_v01_runner.py': 'd6a20e07239f7d81880c6597d8c9556138b12effa71e8ebb187acbe1203fa67c', 'tests/test_repository_release_spine_v01.py': 'afca414f34337c393fb3764d6d9b51c1cb2d8e737d61aa6fc49c6e98f2f297a8', 'tests/test_work_composition_v01.py': '599561099290cf50951b4768a5dfd338fef76a924e6887ebce25ca0e984ba7bc', 'tests/test_work_continuation_and_reuse_v01.py': 'c283d1eb3920076311328a6922257a83672b0bef847e109bedfdcaa3b32d001f', 'tools/check_active_architecture_authority_v01.py': '987cc85284e9d0b0230c0c9f384616cedc31d2789e9d8d87d4e0aa2fdc849c0d'}
+
+
+def _u4_requested_v01(root: Path) -> bool:
+    if any((root / p).exists() for p, op in U4_PATH_ACTIONS_V01.items() if op == "A"):
+        return True
+    for p in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"universality_admission_v01"' in (root / p).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _u4_source_digest_v01(path: str, body: bytes) -> str:
+    """Only this guard's own digest literal is excluded; all other pins bind."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    tree = ast.parse(body.decode("utf-8"))
+    assignments = []
+    for node in tree.body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(part, ast.Name) and part.id == "U4_SOURCE_IDENTITIES_V01" for target in targets for part in ast.walk(target)):
+            assignments.append(node)
+    if len(assignments) != 1:
+        raise ValueError("self identity projection")
+    node = assignments[0]
+    if not isinstance(node, ast.Assign) or len(node.targets) != 1 or not isinstance(node.targets[0], ast.Name) or not isinstance(node.value, ast.Dict):
+        raise ValueError("self identity projection")
+    keys = node.value.keys
+    if any(not isinstance(key, ast.Constant) or not isinstance(key.value, str) for key in keys):
+        raise ValueError("self identity projection")
+    names = [key.value for key in keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("self identity projection")
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or not isinstance(value.value, str) or re.fullmatch(r"[0-9a-f]{64}", value.value) is None:
+        raise ValueError("self identity projection")
+    # AST columns are UTF-8 byte offsets; only the exact literal bytes are excluded.
+    lines = body.splitlines(keepends=True)
+    if value.end_lineno != value.lineno or value.end_col_offset is None:
+        raise ValueError("self identity projection")
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if re.fullmatch(br"(['\"])[0-9a-f]{64}\1", literal) is None or literal[1:-1].decode("ascii") != value.value:
+        raise ValueError("self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_V01"' + body[end:]).hexdigest()
+
+
+def _classify_u4_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                          branch: str, status: dict[str, str], delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    errors: list[str] = []
+    phase = "U4_INVALID"
+    if branch != "main":
+        errors.append("u4.branch")
+    if head == U4_H_V01:
+        if parents != (U1_BASIS_V01,) or origin != U4_H_V01:
+            errors.append("u4.candidate.basis_origin")
+        unstaged = {p: "??" if op == "A" else " M" for p, op in U4_PATH_ACTIONS_V01.items()}
+        staged = {p: op + " " for p, op in U4_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "U4_ADMISSION_CANDIDATE_UNSTAGED"
+        elif status == staged:
+            phase = "U4_ADMISSION_CANDIDATE_STAGED"
+        else:
+            errors.append("u4.candidate.exact_ledger")
+        if delta:
+            errors.append("u4.candidate.delta")
+    elif parents == (U4_H_V01,):
+        phase = "U4_IMPLEMENTATION_ADMITTED_COMMITTED"
+        if origin not in (U4_H_V01, head):
+            errors.append("u4.committed.origin")
+        if status or delta != U4_PATH_ACTIONS_V01:
+            errors.append("u4.committed.clean_exact_delta")
+    else:
+        errors.append("u4.exact_immediate_H_child")
+    return phase, tuple(errors)
+
+
+def _validate_u4_admission_v01(root: Path, failures: list[str]) -> str:
+    """Exact source admission successor, not a relaxation of C/H predicates."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="u4.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, U4_H_V01 + "..HEAD", failures), label="u4.delta", failures=failures)
+    phase, reasons = _classify_u4_ledger_v01(head=head, parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(), status=status, delta=delta)
+    failures.extend(reasons)
+    if git("rev-parse", U4_H_V01 + "^{tree}").decode().strip() != U4_H_TREE_V01:
+        failures.append("u4.H_tree")
+    if git("rev-list", "--parents", "-n", "1", U4_H_V01).decode().split() != [U4_H_V01, U1_BASIS_V01]:
+        failures.append("u4.H_parent")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", U4_H_V01), failures)
+    historical = _u1_tree_v01(git("ls-tree", "-rz", U1_BASIS_V01), failures)
+    h_delta = {p: "A" if p not in historical else "M" for p in baseline if baseline[p] != historical.get(p)}
+    if h_delta != {p: "A" if p == U1_CONTRACT_PATH_V01 else "M" for p in U1_PATHS_V01}:
+        failures.append("u4.H_contract_provenance")
+    if len(baseline) != 912 or len(U4_PATH_ACTIONS_V01) != 48 or set(U4_SOURCE_IDENTITIES_V01) != set(U4_PATH_ACTIONS_V01):
+        failures.append("u4.exact_source_universe")
+    expected_paths = set(baseline) | set(U4_PATH_ACTIONS_V01)
+    actual: dict[str, tuple[str, str]] = {}
+    for p in sorted(expected_paths):
+        file = root / p
+        if file.is_symlink() or not file.is_file():
+            failures.append("u4.file_type:" + p)
+            continue
+        b = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[p] = ("100755" if mode & 0o111 else "100644", hashlib.sha1(b"blob " + str(len(b)).encode() + b"\0" + b).hexdigest())
+        if p in U4_PATH_ACTIONS_V01:
+            if mode != 0o644 or not b.endswith(b"\n") or b"\r\n" in b:
+                failures.append("u4.mode_or_lf:" + p)
+            try:
+                if _u4_source_digest_v01(p, b) != U4_SOURCE_IDENTITIES_V01[p]:
+                    failures.append("u4.source_identity:" + p)
+            except (ValueError, SyntaxError, AttributeError):
+                failures.append("u4.identity_projection:" + p)
+            if (p in baseline) != (U4_PATH_ACTIONS_V01[p] == "M") or actual[p] == baseline.get(p):
+                failures.append("u4.path_action:" + p)
+        elif actual[p] != baseline[p]:
+            failures.append("u4.frozen_source:" + p)
+    entries: dict[str, tuple[str, str]] = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            p = name.decode()
+            if stage != "0" or p in entries:
+                failures.append("u4.index.stage_duplicate")
+            entries[p] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("u4.index.parse")
+    if entries != (baseline if phase == "U4_ADMISSION_CANDIDATE_UNSTAGED" else actual):
+        failures.append("u4.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("u4.index.flags")
+    debug = git("ls-files", "--debug").decode()
+    if any(int(f, 16) != 0 for f in re.findall(r"flags: ([a-fA-F0-9]+)", debug)):
+        failures.append("u4.index.hidden_flags")
+    if phase == "U4_IMPLEMENTATION_ADMITTED_COMMITTED":
+        if _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual or len(actual) != 927:
+            failures.append("u4.committed.tree")
+        if git("show", "-s", "--format=%B", "HEAD").decode().strip() != U4_COMMIT_MESSAGE_V01:
+            failures.append("u4.committed.message")
+    index_file = Path(git("rev-parse", "--git-path", "index").decode().strip())
+    if not index_file.is_absolute():
+        index_file = root / index_file
+    if index_file.is_symlink() or not index_file.is_file():
+        failures.append("u4.index.not_regular")
+    for marker in ("MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock", "packed-refs.lock"):
+        p = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not p.is_absolute():
+            p = root / p
+        if p.exists():
+            failures.append("u4.active_operation:" + marker)
+    # Existing frozen Gate-1 inventories retain their original validators.
+    completion = _load_json(root / COMPLETION_MANIFEST_PATH, "u4.base.completion", failures)
+    seams = _load_json(root / SEAM_INDEX_PATH, "u4.base.seams", failures)
+    _validate_release_succession(completion, seams, failures)
+    retired = _load_json(root / RETIRED_INVENTORY_PATH, "u4.retired", failures)
+    _validate_s3_inventory(root, retired, failures)
+    for p in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json", CURRENT_SCHEMA_SURFACE_PATH):
+        _load_json(root / p, "u4.json:" + p, failures)
+    # The reviewed Living source is imported only after its full source proof.
+    if not failures:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("u4_admission_living", root / "demo/run_living_gauntlet_v01.py")
+        if spec is None or spec.loader is None:
+            failures.append("u4.living.import_spec")
+        else:
+            living = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = living
+            try:
+                spec.loader.exec_module(living)
+                _, errors = living._current_registration_v01(root)
+                failures.extend("u4." + e for e in errors)
+            except (ImportError, ValueError, OSError) as exc:
+                failures.append("u4.living.import:" + type(exc).__name__)
+            finally:
+                sys.modules.pop(spec.name, None)
+    return phase
+
+
 def _u1_requested_v01(root: Path) -> bool:
     if (root / U1_CONTRACT_PATH_V01).exists():
         return True
@@ -381,6 +577,8 @@ def _classify_u1_contract_ledger_v01(
 
 
 def _validate_u1_contract_topology_v01(root: Path, failures: list[str]) -> str | None:
+    if _u4_requested_v01(root):
+        return _validate_u4_admission_v01(root, failures)
     if not _u1_requested_v01(root):
         return None
     def git(*args: str) -> bytes:
@@ -12138,6 +12336,9 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    if _u4_requested_v01(root):
+        _validate_u4_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
     g2f_topology_failures: list[str] = []
     g2f_mode = _validate_g2f_topology_v01(root, g2f_topology_failures)
     g2f_active = g2f_mode is not None
@@ -12267,6 +12468,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        if _u4_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_u4_admission_v01(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("u4.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print(f"UNIVERSALITY_PHASE={phase}")
+            return 0
         closure_failures: list[str] = []
         closure_mode = _validate_g2e_closure_topology_v01(
             args.root.resolve(), closure_failures

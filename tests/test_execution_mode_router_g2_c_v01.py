@@ -573,7 +573,7 @@ C1_SIGNATURES = {
 }
 
 C2_SIGNATURES = {
-    "build_execution_mode_source_context_v01": "(*, business_request_context_packet: 'dict[str, object]', bsep_packet: 'dict[str, object]', bsep_route_context_packet: 'dict[str, object]', bsep_orchestrator_proposal: 'dict[str, object]', bsep_structured_rationale: 'dict[str, object]', sealed_replay_evidence: 'SealedReplayEvidenceV01 | None', replay_source_manifest: 'SealedPackageManifestV01 | None', replay_source_domain_projection: 'DomainEvidenceProjectionV01 | None', replay_source_safe_file_contents: 'tuple[bytes, ...]', replay_anchor_publication: 'ExternalAnchorPublicationV01 | None', replay_anchored_verification: 'AnchoredPackageVerificationV01 | None', replay_supplied_anchor_publication_id: 'str | None', replay_reconstructed_manifest: 'SealedPackageManifestV01 | None', replay_reconstructed_domain_projection: 'DomainEvidenceProjectionV01 | None', replay_reconstructed_safe_file_contents: 'tuple[bytes, ...]', g2a_inspection: 'ActionPacketPresentEligibilityInspectionV01 | None', g2a_registry: 'ActionCommitPacketRegistryV02 | None', g2a_packet_id: 'str | None', g2a_corridor: 'ContractFulfillmentCorridorV01 | None', g2a_corridor_step: 'CorridorStepV01 | None', g2a_current_dependency_observations: 'tuple[ActionDependencyCurrentObservationV01, ...]', g2a_logical_time_bridge: 'LogicalTimeBridgeV01 | None', g2a_evaluation_time: 'int | None', g2a_evaluation_time_source: 'str | None', g2a_evaluation_context_id: 'str | None', g2a_transition_registry_profile: 'ActionPacketTransitionRegistryProfileV01 | None', g2b_resolution_report: 'DRSResolutionReportV01 | None', g2b_compatibility_projections: 'tuple[LegacyDRSProjectionV01, ...]', g2b_use_time: 'int | None', g2b_root_kernel: 'RootDecisionKernelV01 | None', g2b_root_decision_input: 'RootDecisionInputV01 | None', g2b_root_decision_result: 'RootDecisionResultV01 | None', g2b_writeback_evidence: 'None') -> 'ExecutionModeSourceContextV01'",
+    "build_execution_mode_source_context_v01": "(*, business_request_context_packet: 'dict[str, object]', bsep_packet: 'dict[str, object]', bsep_route_context_packet: 'dict[str, object]', bsep_orchestrator_proposal: 'dict[str, object]', bsep_structured_rationale: 'dict[str, object]', sealed_replay_evidence: 'SealedReplayEvidenceV01 | None', replay_source_manifest: 'SealedPackageManifestV01 | None', replay_source_domain_projection: 'DomainEvidenceProjectionV01 | None', replay_source_safe_file_contents: 'tuple[bytes, ...]', replay_anchor_publication: 'ExternalAnchorPublicationV01 | None', replay_anchored_verification: 'AnchoredPackageVerificationV01 | None', replay_supplied_anchor_publication_id: 'str | None', replay_reconstructed_manifest: 'SealedPackageManifestV01 | None', replay_reconstructed_domain_projection: 'DomainEvidenceProjectionV01 | None', replay_reconstructed_safe_file_contents: 'tuple[bytes, ...]', g2a_inspection: 'ActionPacketPresentEligibilityInspectionV01 | None', g2a_registry: 'ActionCommitPacketRegistryV02 | None', g2a_packet_id: 'str | None', g2a_corridor: 'ContractFulfillmentCorridorV01 | CommonContractFulfillmentCorridorV01 | None', g2a_corridor_step: 'CorridorStepV01 | CommonCorridorStepV01 | None', g2a_current_dependency_observations: 'tuple[ActionDependencyCurrentObservationV01, ...]', g2a_logical_time_bridge: 'LogicalTimeBridgeV01 | None', g2a_evaluation_time: 'int | None', g2a_evaluation_time_source: 'str | None', g2a_evaluation_context_id: 'str | None', g2a_transition_registry_profile: 'ActionPacketTransitionRegistryProfileV01 | None', g2b_resolution_report: 'DRSResolutionReportV01 | None', g2b_compatibility_projections: 'tuple[LegacyDRSProjectionV01, ...]', g2b_use_time: 'int | None', g2b_root_kernel: 'RootDecisionKernelV01 | None', g2b_root_decision_input: 'RootDecisionInputV01 | None', g2b_root_decision_result: 'RootDecisionResultV01 | None', g2b_writeback_evidence: 'None') -> 'ExecutionModeSourceContextV01'",
     "build_execution_mode_bsep_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeBSEPBindingV01'",
     "build_execution_mode_replay_not_applicable_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str') -> 'ExecutionModeReplayBindingV01'",
     "build_execution_mode_replay_binding_v01": "(*, request_id: 'str', transaction_id: 'str', owning_root_id: 'str', domain_id: 'str', source_context: 'ExecutionModeSourceContextV01') -> 'ExecutionModeReplayBindingV01'",
@@ -671,8 +671,8 @@ TYPE_HINT_TYPES = {
     "opt_g2a_inspection": action_packet.ActionPacketPresentEligibilityInspectionV01
     | None,
     "opt_g2a_registry": action_packet.ActionCommitPacketRegistryV02 | None,
-    "opt_corridor": action_packet.ContractFulfillmentCorridorV01 | None,
-    "opt_corridor_step": action_packet.CorridorStepV01 | None,
+    "opt_corridor": action_packet.ContractFulfillmentCorridorV01 | action_packet.CommonContractFulfillmentCorridorV01 | None,
+    "opt_corridor_step": action_packet.CorridorStepV01 | action_packet.CommonCorridorStepV01 | None,
     "observation_tuple": tuple[
         action_packet.ActionDependencyCurrentObservationV01, ...
     ],
@@ -6198,3 +6198,49 @@ def test_c5_runner_static_zero_operation_and_no_forbidden_imports():
     assert "hedgehog.mode_router" not in imported
     assert "demo.run_mode_selection_matrix" not in imported
     assert all(name in text for name in c5_runner.ZERO_OPERATION_NAMES)
+
+
+def test_common_native_corridor_exact_pair_and_live_inspection_binding():
+    from demo import run_action_packet_portability_v01 as native
+    prepared = native.prepare_native_playback_v01()
+    c = prepared.root_bound.canonical_projection
+    profile = transition_registry.build_action_packet_transition_registry_profile_v01()
+    inspection = action_packet.inspect_action_packet_present_eligibility_v01(prepared.registry,
+        packet_id=prepared.root_bound.packet_identity.packet_id, corridor=prepared.corridor,
+        corridor_step=prepared.corridor_step, current_dependency_observations=prepared.observations,
+        logical_time_bridge=prepared.bridge, evaluation_time=1014, evaluation_time_source='u1.controlled_utc',
+        evaluation_context_id='context:u1:dispatch', action_packet_transition_registry_profile=profile)
+    source = replace(_source_context(), g2a_inspection=inspection, g2a_registry=prepared.registry,
+        g2a_packet_id=prepared.root_bound.packet_identity.packet_id, g2a_corridor=prepared.corridor,
+        g2a_corridor_step=prepared.corridor_step, g2a_current_dependency_observations=prepared.observations,
+        g2a_logical_time_bridge=prepared.bridge, g2a_evaluation_time=1014, g2a_evaluation_time_source='u1.controlled_utc',
+        g2a_evaluation_context_id='context:u1:dispatch', g2a_transition_registry_profile=profile)
+    assert router.validate_execution_mode_source_context_v01(source).validation_status == 'PASS'
+    args = dict(request_id='request:native:c', transaction_id=c.transaction_id,
+        owning_root_id=c.owning_local_root_id, domain_id='NATIVE_COMMON', source_context=source)
+    bound = router.build_execution_mode_g2a_binding_v01(**args)
+    assert bound.present_executable and bound.packet_id == inspection.packet_id
+    for overrides in ({'owning_root_id': 'root:foreign'}, {'transaction_id': 'transaction:foreign'},
+        {'source_context': replace(source, g2a_evaluation_time=4601)}):
+        with pytest.raises(ValueError):
+            router.build_execution_mode_g2a_binding_v01(**{**args, **overrides})
+
+
+def test_common_corridor_mixed_pair_and_nominal_subclass_rejected():
+    from demo import run_action_packet_portability_v01 as native
+    p = native.prepare_native_playback_v01()
+    legacy = native.authorize_and_prepare_action_v01(native.build_legacy_payment_candidate_v01())
+    source = replace(_source_context(),
+        g2a_inspection=object.__new__(action_packet.ActionPacketPresentEligibilityInspectionV01),
+        g2a_registry=p.registry, g2a_packet_id=p.root_bound.packet_identity.packet_id,
+        g2a_corridor=p.corridor, g2a_corridor_step=p.corridor_step,
+        g2a_current_dependency_observations=p.observations, g2a_logical_time_bridge=p.bridge,
+        g2a_transition_registry_profile=transition_registry.build_action_packet_transition_registry_profile_v01())
+    assert router.validate_execution_mode_source_context_v01(source).validation_status == 'PASS'
+    class ForeignCorridor(action_packet.CommonContractFulfillmentCorridorV01):
+        pass
+    subclass = ForeignCorridor(**{f.name: getattr(p.corridor, f.name) for f in fields(p.corridor)})
+    for corridor, step in ((p.corridor, legacy.corridor_step), (legacy.corridor, p.corridor_step),
+        (subclass, p.corridor_step), (dict(), p.corridor_step)):
+        assert router.validate_execution_mode_source_context_v01(replace(source,
+            g2a_corridor=corridor, g2a_corridor_step=step)).validation_status == 'FAIL_CLOSED'

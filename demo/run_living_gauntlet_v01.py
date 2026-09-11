@@ -5605,6 +5605,189 @@ def collect_kernel_conformance_closure_gauntlet_act_v01(
         )
 
 
+_U4_REGISTRATION_KEY = "universality_current_registration_v01"
+_U4_H = "20d16af823ed4af94dc0a342c731aef81e8a23de"
+_U4_REGISTRATION_ROWS = ({'seam_id': 'native_action_packet',
+  'producer': 'hedgehog.action_commit_packet_v02:build_native_root_bound_action_commit_packet_v01',
+  'validator': 'hedgehog.action_commit_packet_v02:validate_native_root_bound_action_commit_packet_v01',
+  'consumer': 'hedgehog.kernel.effect_firewall_v01:bind_native_action_authorization_v01',
+  'source_sha256': 'b38c9e134a13caa5a0f65e0ede3faba6f3fa6dbff32761398927df8b5d903110',
+  'focused_evidence': 'tests/test_action_packet_portability_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'native_action_current_dispatch',
+  'producer': 'hedgehog.work_execution_host_v01:dispatch_current_action_v01',
+  'validator': 'hedgehog.kernel.effect_firewall_v01:validate_native_effect_receipt_v01',
+  'consumer': 'hedgehog.kernel.effect_firewall_v01:execute_bound_effect_v01',
+  'source_sha256': 'c54b0204c4f664dfd234db26f29cf7164baf803780b69af0a57fb9397ca9bd25',
+  'focused_evidence': 'tests/test_action_packet_portability_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'work_composition',
+  'producer': 'hedgehog.kernel.work_composition_v01:materialize_work_program_v01',
+  'validator': 'hedgehog.kernel.work_composition_v01:validate_work_program_candidate_v01',
+  'consumer': 'hedgehog.kernel.work_composition_v01:validate_work_program_result_v01',
+  'source_sha256': 'f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061',
+  'focused_evidence': 'tests/test_work_composition_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'same_task_continuation',
+  'producer': 'hedgehog.kernel.work_composition_v01:revise_work_program_v01',
+  'validator': 'hedgehog.kernel.work_composition_v01:validate_work_continuation_outcome_v01',
+  'consumer': 'hedgehog.kernel.work_composition_v01:validate_work_program_result_v01',
+  'source_sha256': 'f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061',
+  'focused_evidence': 'tests/test_work_continuation_and_reuse_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'pure_capability_admission',
+  'producer': 'hedgehog.capability_admission_v01:admit_pure_candidate_v01',
+  'validator': 'hedgehog.capability_admission_v01:validate_admitted_pure_package_v01',
+  'consumer': 'hedgehog.capability_admission_v01:validate_pure_guest_evidence_v01',
+  'source_sha256': '2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda',
+  'focused_evidence': 'tests/test_capability_admission_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'closed_pure_wasm_execution',
+  'producer': 'hedgehog.wasm_pure_worker_v01:run_pure_wasm_worker_v01',
+  'validator': 'hedgehog.wasm_pure_worker_v01:validate_closed_pure_wasm_v01',
+  'consumer': 'hedgehog.capability_admission_v01:admit_pure_candidate_v01',
+  'source_sha256': 'e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae',
+  'focused_evidence': 'tests/test_capability_admission_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'local_pure_capability_reuse',
+  'producer': 'hedgehog.capability_memory_binding_v01:retrieve_pure_memory_v01',
+  'validator': 'hedgehog.capability_memory_binding_v01:validate_pure_memory_retrieval_v01',
+  'consumer': 'hedgehog.capability_admission_v01:admit_pure_candidate_v01',
+  'source_sha256': '6e4f2ca3be12a1e9a93d7b59318d9a6ba90ea6f43bbd9bccc81d8bdefe1b1b79',
+  'focused_evidence': 'tests/test_work_continuation_and_reuse_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'retained_fractal_work',
+  'producer': 'hedgehog.kernel.fractal_runtime_v02:consume_fractal_retained_work_v01',
+  'validator': 'hedgehog.kernel.fractal_runtime_v02:validate_fractal_retained_work_consumption_v01',
+  'consumer': 'hedgehog.kernel.continuous_delta_runtime_v01:validate_retained_work_preservation_v01',
+  'source_sha256': 'e02ccdab45725de6f3091897b317eb93076717c7d3a107fafa99f657917ef8ca',
+  'focused_evidence': 'tests/test_continuous_delta_runtime_g2_e_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'},
+ {'seam_id': 'retained_selective_recomputation',
+  'producer': 'hedgehog.kernel.continuous_delta_runtime_v01:build_retained_selective_recomputation_plan_v01',
+  'validator': 'hedgehog.kernel.continuous_delta_runtime_v01:validate_retained_selective_recomputation_plan_v01',
+  'consumer': 'hedgehog.kernel.continuous_delta_runtime_v01:prove_retained_work_preservation_v01',
+  'source_sha256': 'efb0ef689bde0efbbbbc5cddcc7e3d0237c5dacf05e7c1f6415e5d5d808bd282',
+  'focused_evidence': 'tests/test_continuous_delta_runtime_g2_e_v01.py',
+  'status': 'CURRENT_BOUNDED_IMPLEMENTATION',
+  'authority': 'EVIDENCE_ONLY',
+  'effect_access': 'NONE'})
+_U4_FROZEN_SOURCES = {'demo/run_action_packet_portability_v01.py': '82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb',
+ 'demo/run_capability_cold_start_reuse_v01.py': '123714d89b7542abdba2c6d79e7a16ce98b5bd92810b032eccab3e82201f56ff',
+ 'demo/run_fractal_runtime_g2_d_v02.py': '9d1b0045de22b4b9482876f5e8a11b12bdc2f35191fa97d51540beb22fbe9d2a',
+ 'demo/run_kernel_conformance_v01.py': '4fe949a09653a72eef2b9a885254a29bd9be4cff018d155dacc816671d291f55',
+ 'demo/work_composition_mock_capabilities_v01.py': 'f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731',
+ 'docs/common_action_and_dynamic_composition_contract_v01.md': '2776a5eaba4e87c71c2fc1e9af875c985147c8a4f47d24f91049cd8232b5befd',
+ 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': '5dcc7a28485ebd1d09075520fb290b858949fea6d64a4b76a8f927317ea3c369',
+ 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': '4515e5e3e333ce9c00bc3696ddd1a478550414e45d379c7eacf726729d4940b6',
+ 'hedgehog/action_commit_packet_v02.py': 'b38c9e134a13caa5a0f65e0ede3faba6f3fa6dbff32761398927df8b5d903110',
+ 'hedgehog/capability_admission_v01.py': '2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda',
+ 'hedgehog/capability_memory_binding_v01.py': '6e4f2ca3be12a1e9a93d7b59318d9a6ba90ea6f43bbd9bccc81d8bdefe1b1b79',
+ 'hedgehog/kernel/continuous_delta_runtime_v01.py': 'efb0ef689bde0efbbbbc5cddcc7e3d0237c5dacf05e7c1f6415e5d5d808bd282',
+ 'hedgehog/kernel/effect_firewall_v01.py': '46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd',
+ 'hedgehog/kernel/execution_mode_router_v01.py': '4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4',
+ 'hedgehog/kernel/fractal_runtime_v02.py': 'e02ccdab45725de6f3091897b317eb93076717c7d3a107fafa99f657917ef8ca',
+ 'hedgehog/kernel/work_composition_v01.py': 'f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061',
+ 'hedgehog/wasm_pure_worker_v01.py': 'e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae',
+ 'hedgehog/work_execution_host_v01.py': 'c54b0204c4f664dfd234db26f29cf7164baf803780b69af0a57fb9397ca9bd25',
+ 'pyproject.toml': '34feed08e3befc6a4bc4dfa53d69cf827e676e28a321d4770d2a39bec4772f73',
+ 'schemas/capability_admission_v01.schema.json': 'b09ac99cb2e62ffd95098401a5695a0f018d87d4f2e61f9de723f710ac7455e0',
+ 'schemas/continuous_delta_runtime_v01.schema.json': '9cdeb3d987241383360413d6a4a02be4a3a1480e840aa334737dccd25fddb3b5',
+ 'schemas/fractal_runtime_v02.schema.json': 'db4b5a232e945cea8a6167f36007963534b6852a5a9d53e81325912399d1fcf8',
+ 'schemas/work_composition_v01.schema.json': 'ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0',
+ 'tests/test_action_packet_portability_v01.py': 'af8dfe77d9750bad37d7e1e206195c5a9fc0913f1fef7e06d1ec70b8acc672c7',
+ 'tests/test_capability_admission_v01.py': '914aa8d7913ed4e40405cd6a6339e85ada4a7f41840b0e4b1e6e8c311751dda2',
+ 'tests/test_continuous_delta_runtime_g2_e_v01.py': '94dc6941ff6fc3f06dfb7f5f05ef1a55716ff359bd258439051f1226a911111f',
+ 'tests/test_effect_firewall_v01.py': 'c4cc287217a5cd680b3ea1105e23c6c845e0d8732c53855b7a585aec1a1fe1eb',
+ 'tests/test_execution_mode_router_g2_c_v01.py': 'e2fae99b3530be81fa8bf47027139bf3a23fda6b58a80b2bda9db21f5407b801',
+ 'tests/test_fractal_runtime_g2_d_v02.py': 'c853bc340337ae6410dbd8c8591f49b85a2b7cbf345563d77415656ea2b7d6c1',
+ 'tests/test_work_composition_v01.py': '599561099290cf50951b4768a5dfd338fef76a924e6887ebce25ca0e984ba7bc',
+ 'tests/test_work_continuation_and_reuse_v01.py': 'c283d1eb3920076311328a6922257a83672b0bef847e109bedfdcaa3b32d001f'}
+_U4_BASE_IDENTITIES = {'release/completion_manifest.json': '4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9', 'release/integration_seam_index.json': '4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03'}
+
+
+def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[str, ...]]:
+    """Read current registration as evidence, never dispatch metadata symbols."""
+    import ast
+    import subprocess
+
+    errors: list[str] = []
+    try:
+        overlay = _load_strict_json_object(root / "release/current_status_overlay_v01.json")
+        block = overlay.get(_U4_REGISTRATION_KEY)
+        if block is None:
+            # A missing block is historical only with the entire exact H tree.
+            head = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=root).decode().strip()
+            if head != _U4_H:
+                return None, ("registration_missing_current",)
+            tree = subprocess.check_output(("git", "ls-tree", "-rz", _U4_H), cwd=root)
+            entries = tree.split(b"\0")[:-1]
+            if len(entries) != 912:
+                return None, ("registration_historical_tree",)
+            for item in entries:
+                metadata, name = item.split(b"\t")
+                mode, kind, oid = metadata.decode().split()
+                path = root / name.decode()
+                if path.is_symlink() or not path.is_file():
+                    return None, ("registration_historical_source",)
+                b = path.read_bytes()
+                actual = hashlib.sha1(b"blob " + str(len(b)).encode() + b"\0" + b).hexdigest()
+                if kind != "blob" or oid != actual or bool(path.stat().st_mode & 0o111) != (mode == "100755"):
+                    return None, ("registration_missing_current",)
+            if any((root / p).exists() for p in _U4_FROZEN_SOURCES if p not in {e.split(b"\t")[1].decode() for e in entries}):
+                return None, ("registration_missing_current",)
+            return None, ()
+        expected = {
+            "profile": "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
+            "basis": _U4_H,
+            "status": "IMPLEMENTED_REGISTRATION_CANDIDATE_OWNER_ACCEPTANCE_PENDING",
+            "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_HANDLE",
+            "base_identities": _U4_BASE_IDENTITIES,
+            "frozen_source_identities": _U4_FROZEN_SOURCES,
+            "rows": list(_U4_REGISTRATION_ROWS),
+            "schema_paths": ["schemas/work_composition_v01.schema.json", "schemas/capability_admission_v01.schema.json"],
+        }
+        if block != expected:
+            errors.append("registration_exact_block")
+        for path, digest in {**_U4_BASE_IDENTITIES, **_U4_FROZEN_SOURCES}.items():
+            file = root / path
+            if file.is_symlink() or not file.is_file() or hashlib.sha256(file.read_bytes()).hexdigest() != digest:
+                errors.append("registration_source:" + path)
+        schema = _load_strict_json_object(root / "release/current_schema_surface_v01.json")
+        base_schema = json.loads(subprocess.check_output(("git", "show", _U4_H + ":release/current_schema_surface_v01.json"), cwd=root))
+        if schema.get("current_schema_paths") != sorted(base_schema["current_schema_paths"] + expected["schema_paths"]):
+            errors.append("registration_schema_inventory")
+        for row in _U4_REGISTRATION_ROWS:
+            for key in ("producer", "validator", "consumer"):
+                module, symbol = row[key].split(":")
+                path = module.replace(".", "/") + ".py"
+                if path not in _U4_FROZEN_SOURCES:
+                    errors.append("registration_module:" + path)
+                    continue
+                tree = ast.parse((root / path).read_bytes())
+                if symbol not in {n.name for n in tree.body if isinstance(n, ast.FunctionDef)}:
+                    errors.append("registration_symbol:" + row[key])
+        return block, tuple(dict.fromkeys(errors))
+    except (OSError, ValueError, TypeError, KeyError, subprocess.SubprocessError) as exc:
+        return None, ("registration_load:" + type(exc).__name__,)
+
+
 def collect_living_gauntlet_v01() -> dict[str, Any]:
     try:
         continuous_delta_runtime_report = (
@@ -5639,6 +5822,8 @@ def _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
         e5 = _continuous_delta_runtime_gauntlet_act_from_validated_report_v01(
             None
         )
+    current_registration, registration_errors = _current_registration_v01(_REPOSITORY_ROOT)
+    errors.extend(registration_errors)
     manifest: dict[str, Any] = {}
     seam_index: dict[str, Any] = {}
     try:
@@ -5861,6 +6046,7 @@ def _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
     )
     final_status = STATUS_PASS if not errors else STATUS_FAIL_CLOSED
     report: dict[str, Any] = {
+        "current_registration": current_registration,
         "runner_id": RUNNER_ID,
         "runner_version": RUNNER_VERSION,
         "kernel_conformance_profile": KERNEL_CONFORMANCE_PROFILE_V07_CURRENT,
@@ -5912,7 +6098,12 @@ def validate_living_gauntlet_report_v01(
     errors: list[str] = []
     if not isinstance(report, Mapping):
         return ("living_gauntlet_report_not_mapping",)
+    current_registration, registration_errors = _current_registration_v01(_REPOSITORY_ROOT)
+    errors.extend(registration_errors)
+    if report.get("current_registration") != current_registration:
+        errors.append("report_current_registration_mismatch")
     required_fields = {
+        "current_registration",
         "runner_id",
         "runner_version",
         "kernel_conformance_profile",

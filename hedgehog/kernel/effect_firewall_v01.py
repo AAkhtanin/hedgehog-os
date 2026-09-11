@@ -14,6 +14,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass as _dataclass
 from dataclasses import field as _field
+from dataclasses import fields as _fields
+from dataclasses import replace as _replace
 
 from hedgehog.kernel.abi_v01 import (
     KernelArtifactV01,
@@ -144,6 +146,9 @@ class _InvocationState:
         "idempotency_key_by_request_id",
         "authorization_decision_id_by_capability_id",
         "consumed_capability_ids",
+        "started_capability_ids",
+        "native_evidence_by_capability_id",
+        "native_authorization",
         "terminal_receipt_ids",
         "terminal_receipt_id_by_capability_id",
         "mock_effect_execution_count",
@@ -157,6 +162,9 @@ class _InvocationState:
         self.idempotency_key_by_request_id: dict[str, str] = {}
         self.authorization_decision_id_by_capability_id: dict[str, str] = {}
         self.consumed_capability_ids: set[str] = set()
+        self.started_capability_ids: set[str] = set()
+        self.native_evidence_by_capability_id: dict[str, object] = {}
+        self.native_authorization = None
         self.terminal_receipt_ids: set[str] = set()
         self.terminal_receipt_id_by_capability_id: dict[str, str] = {}
         self.mock_effect_execution_count = 0
@@ -733,6 +741,74 @@ def validate_effect_firewall_decision_v01(
         return ("effect_firewall_decision_unexpected_exception",)
 
 
+def _begin_exclusive_effect_v01(*, firewall, request, decision, current_tick,
+    adapter_id, action_kind, child_scope_refs, child_expires_at_tick):
+    if (
+        _firewall_errors(firewall)
+        or _request_errors(request, check_id=True)
+        or validate_effect_firewall_decision_v01(
+            firewall=firewall,
+            request=request,
+            decision=decision,
+        )
+        or type(firewall) is not EffectFirewallV01
+        or type(request) is not EffectRequestV01
+        or type(decision) is not EffectFirewallDecisionV01
+        or decision.decision != EFFECT_DECISION_ALLOW_MOCK_EFFECT
+    ):
+        raise ValueError("effect_execution_invalid")
+    capability = firewall._state.issued_capabilities.get(
+        decision.capability_id or ""
+    )
+    if capability is None:
+        raise ValueError("effect_capability_missing")
+    if not _capability_valid(capability, firewall, request):
+        raise ValueError("effect_capability_forged")
+    if capability.capability_id in firewall._state.consumed_capability_ids:
+        raise ValueError("effect_capability_consumed")
+    if type(current_tick) is not int or current_tick < 0:
+        raise ValueError("effect_execution_invalid")
+    if current_tick < request.issued_at_tick:
+        raise ValueError("effect_request_not_yet_valid")
+    if current_tick >= request.expires_at_tick or current_tick >= capability.expires_at_tick:
+        raise ValueError("effect_request_expired")
+    if type(adapter_id) is not str or adapter_id != request.adapter_id or adapter_id != capability.adapter_id:
+        raise ValueError("effect_capability_adapter_mismatch")
+    if type(action_kind) is not str or action_kind != request.action_kind or action_kind != capability.action_kind:
+        raise ValueError("effect_capability_action_mismatch")
+    if not _valid_text_tuple(child_scope_refs, allow_empty=False):
+        raise ValueError("effect_scope_expansion_forbidden")
+    if not _is_subset(child_scope_refs, request.scope_refs) or not _is_subset(child_scope_refs, firewall.root_scope_refs):
+        raise ValueError("effect_scope_expansion_forbidden")
+    if (
+        type(child_expires_at_tick) is not int
+        or child_expires_at_tick <= current_tick
+        or child_expires_at_tick > request.expires_at_tick
+        or child_expires_at_tick > capability.expires_at_tick
+        or child_expires_at_tick > firewall.maximum_expires_at_tick
+    ):
+        raise ValueError("effect_ttl_expansion_forbidden")
+    if capability.capability_id in firewall._state.started_capability_ids:
+        raise ValueError("effect_capability_consumed")
+    return capability
+
+
+def _record_exclusive_consumption_v01(firewall, capability, receipt_artifact_id):
+    new_consumed = set(firewall._state.consumed_capability_ids)
+    new_consumed.add(capability.capability_id)
+    new_receipts = set(firewall._state.terminal_receipt_ids)
+    new_receipts.add(receipt_artifact_id)
+    new_receipt_bindings = dict(
+        firewall._state.terminal_receipt_id_by_capability_id
+    )
+    new_receipt_bindings[capability.capability_id] = receipt_artifact_id
+    new_execution_count = firewall._state.mock_effect_execution_count + 1
+    firewall._state.consumed_capability_ids = new_consumed
+    firewall._state.terminal_receipt_ids = new_receipts
+    firewall._state.terminal_receipt_id_by_capability_id = new_receipt_bindings
+    firewall._state.mock_effect_execution_count = new_execution_count
+
+
 def execute_mock_effect_v01(
     *,
     firewall: object,
@@ -747,51 +823,9 @@ def execute_mock_effect_v01(
     time_envelope: object,
 ) -> KernelArtifactV01:
     try:
-        if (
-            _firewall_errors(firewall)
-            or _request_errors(request, check_id=True)
-            or validate_effect_firewall_decision_v01(
-                firewall=firewall,
-                request=request,
-                decision=decision,
-            )
-            or type(firewall) is not EffectFirewallV01
-            or type(request) is not EffectRequestV01
-            or type(decision) is not EffectFirewallDecisionV01
-            or decision.decision != EFFECT_DECISION_ALLOW_MOCK_EFFECT
-        ):
-            raise ValueError("effect_execution_invalid")
-        capability = firewall._state.issued_capabilities.get(
-            decision.capability_id or ""
-        )
-        if capability is None:
-            raise ValueError("effect_capability_missing")
-        if not _capability_valid(capability, firewall, request):
-            raise ValueError("effect_capability_forged")
-        if capability.capability_id in firewall._state.consumed_capability_ids:
-            raise ValueError("effect_capability_consumed")
-        if type(current_tick) is not int or current_tick < 0:
-            raise ValueError("effect_execution_invalid")
-        if current_tick < request.issued_at_tick:
-            raise ValueError("effect_request_not_yet_valid")
-        if current_tick >= request.expires_at_tick or current_tick >= capability.expires_at_tick:
-            raise ValueError("effect_request_expired")
-        if type(adapter_id) is not str or adapter_id != request.adapter_id or adapter_id != capability.adapter_id:
-            raise ValueError("effect_capability_adapter_mismatch")
-        if type(action_kind) is not str or action_kind != request.action_kind or action_kind != capability.action_kind:
-            raise ValueError("effect_capability_action_mismatch")
-        if not _valid_text_tuple(child_scope_refs, allow_empty=False):
-            raise ValueError("effect_scope_expansion_forbidden")
-        if not _is_subset(child_scope_refs, request.scope_refs) or not _is_subset(child_scope_refs, firewall.root_scope_refs):
-            raise ValueError("effect_scope_expansion_forbidden")
-        if (
-            type(child_expires_at_tick) is not int
-            or child_expires_at_tick <= current_tick
-            or child_expires_at_tick > request.expires_at_tick
-            or child_expires_at_tick > capability.expires_at_tick
-            or child_expires_at_tick > firewall.maximum_expires_at_tick
-        ):
-            raise ValueError("effect_ttl_expansion_forbidden")
+        capability = _begin_exclusive_effect_v01(firewall=firewall, request=request, decision=decision,
+            current_tick=current_tick, adapter_id=adapter_id, action_kind=action_kind,
+            child_scope_refs=child_scope_refs, child_expires_at_tick=child_expires_at_tick)
         if not _valid_text(receipt_artifact_id):
             raise ValueError("effect_receipt_invalid")
         if receipt_artifact_id in firewall._state.terminal_receipt_ids:
@@ -845,19 +879,7 @@ def execute_mock_effect_v01(
             require_execution_state=False,
         ):
             raise ValueError("effect_receipt_invalid")
-        new_consumed = set(firewall._state.consumed_capability_ids)
-        new_consumed.add(capability.capability_id)
-        new_receipts = set(firewall._state.terminal_receipt_ids)
-        new_receipts.add(receipt_artifact_id)
-        new_receipt_bindings = dict(
-            firewall._state.terminal_receipt_id_by_capability_id
-        )
-        new_receipt_bindings[capability.capability_id] = receipt_artifact_id
-        new_execution_count = firewall._state.mock_effect_execution_count + 1
-        firewall._state.consumed_capability_ids = new_consumed
-        firewall._state.terminal_receipt_ids = new_receipts
-        firewall._state.terminal_receipt_id_by_capability_id = new_receipt_bindings
-        firewall._state.mock_effect_execution_count = new_execution_count
+        _record_exclusive_consumption_v01(firewall, capability, receipt_artifact_id)
         return receipt
     except ValueError as exc:
         reason = _allowed_reason(exc, _EXECUTION_REASONS)
@@ -917,10 +939,36 @@ def _effect_receipt_errors(
         or type(receipt) is not KernelArtifactV01
     ):
         return _dedupe(errors)
+    errors.extend(_retained_effect_receipt_contract_errors_v01(receipt=receipt, request=request, decision=decision,
+        root_scope_refs=firewall.root_scope_refs))
+    plain = _kernel_artifact_to_plain_dict_v01(receipt)
+    observed = firewall._state.native_evidence_by_capability_id.get(decision.capability_id)
+    if observed is not None:
+        if (tuple(sorted(plain['payload'])) != _NATIVE_RECEIPT_KEYS or
+            plain['payload']['execution_evidence'] != native_execution_evidence_to_plain_data_v01(observed)):
+            errors.append('effect_receipt_execution_evidence_mismatch')
+    elif tuple(sorted(plain['payload'])) == _NATIVE_RECEIPT_KEYS:
+        errors.append('effect_receipt_not_observed_native_execution')
+    if require_execution_state and (
+        decision.capability_id not in firewall._state.consumed_capability_ids
+        or plain["artifact_id"] not in firewall._state.terminal_receipt_ids
+        or firewall._state.terminal_receipt_id_by_capability_id.get(
+            decision.capability_id or ""
+        )
+        != plain["artifact_id"]
+    ):
+        errors.append("effect_receipt_execution_state_mismatch")
+    return _dedupe(errors)
+
+
+def _retained_effect_receipt_contract_errors_v01(*, receipt, request, decision, root_scope_refs):
+    errors: list[str] = []
     plain = _kernel_artifact_to_plain_dict_v01(receipt)
     payload = plain["payload"]
-    if type(payload) is not dict or tuple(sorted(payload)) != _RECEIPT_PAYLOAD_KEYS:
+    if type(payload) is not dict or tuple(sorted(payload)) not in (_RECEIPT_PAYLOAD_KEYS, _NATIVE_RECEIPT_KEYS):
         return ("effect_receipt_invalid",)
+    if tuple(sorted(payload)) == _NATIVE_RECEIPT_KEYS:
+        errors.extend(_native_effect_receipt_binding_errors_v01(receipt, request, decision))
     if (
         plain["artifact_id"] != payload["receipt_ref"]
         or plain["artifact_type"] != "EvidenceReceipt"
@@ -958,7 +1006,7 @@ def _effect_receipt_errors(
     if (
         not _valid_text_list(scope, allow_empty=False)
         or not _is_subset(tuple(scope), request.scope_refs)
-        or not _is_subset(tuple(scope), firewall.root_scope_refs)
+        or not _is_subset(tuple(scope), root_scope_refs)
     ):
         errors.append("effect_receipt_scope_expansion_forbidden")
     if payload["future_permission_created"] is not False:
@@ -974,15 +1022,6 @@ def _effect_receipt_errors(
         or payload["real_world_effects_count"] != 0
     ):
         errors.append("effect_receipt_real_effect_forbidden")
-    if require_execution_state and (
-        decision.capability_id not in firewall._state.consumed_capability_ids
-        or plain["artifact_id"] not in firewall._state.terminal_receipt_ids
-        or firewall._state.terminal_receipt_id_by_capability_id.get(
-            decision.capability_id or ""
-        )
-        != plain["artifact_id"]
-    ):
-        errors.append("effect_receipt_execution_state_mismatch")
     transition = _lookup_transition_v01(
         registry=_build_default_transition_registry_v01(),
         abi_major_version=1,
@@ -1450,11 +1489,18 @@ def _firewall_state_valid(firewall: EffectFirewallV01) -> bool:
             or type(state.idempotency_key_by_request_id) is not dict
             or type(state.authorization_decision_id_by_capability_id) is not dict
             or type(state.consumed_capability_ids) is not set
+            or type(state.started_capability_ids) is not set
+            or type(state.native_evidence_by_capability_id) is not dict
             or type(state.terminal_receipt_ids) is not set
             or type(state.terminal_receipt_id_by_capability_id) is not dict
             or type(state.mock_effect_execution_count) is not int
             or state.mock_effect_execution_count < 0
         ):
+            return False
+        if (not state.started_capability_ids <= set(state.issued_capabilities)
+            or not set(state.native_evidence_by_capability_id) <= state.started_capability_ids
+            or any(validate_native_execution_evidence_v01(evidence)
+                for evidence in state.native_evidence_by_capability_id.values())):
             return False
         if any(
             not _valid_sha256(value)
@@ -2033,3 +2079,770 @@ def _allowed_reason(error: ValueError, allowed: tuple[str, ...]) -> str | None:
 
 def _dedupe(values: object) -> tuple[str, ...]:
     return tuple(dict.fromkeys(values))
+
+
+# Native capability definitions are inert during module initialization. Nominal action value
+# access occurs only after both modules have completed initialization.
+@_dataclass(frozen=True)
+class CapabilityFieldV01:
+    name: str
+    value_type: str
+    required: bool
+    consequential: bool
+    minimum: int | str | None
+    maximum: int | str | None
+    allowed_values: tuple[str | int | bool, ...]
+
+
+@_dataclass(frozen=True)
+class CapabilityBusinessInputBindingV01:
+    input_name: str
+    source_kind: str
+    source_name: str
+    value_type: str
+
+
+@_dataclass(frozen=True)
+class CapabilityBusinessSemanticsV01:
+    operation_key: str
+    selected_action_class: str
+    logical_effect_class: str
+    logical_effect_namespace: str
+    business_object_class: str
+    business_object_namespace: str
+    input_bindings: tuple[CapabilityBusinessInputBindingV01, ...]
+
+
+@_dataclass(frozen=True)
+class CapabilityDefinitionV01:
+    definition_id: str
+    operation_id: str
+    version: str
+    effect_kind: str
+    business_semantics: CapabilityBusinessSemanticsV01 | None
+    input_fields: tuple[CapabilityFieldV01, ...]
+    output_fields: tuple[CapabilityFieldV01, ...]
+    resource_refs: tuple[str, ...]
+    input_validator_ref: str
+    output_validator_ref: str
+    executor_ref: str
+    code_sha256s: tuple[tuple[str, str], ...]
+    contract_sha256: str
+
+
+@_dataclass(frozen=True)
+class CapabilityCodeSnapshotV01:
+    public_symbol: str
+    source_utf8: str
+    source_sha256: str
+
+
+@_dataclass(frozen=True)
+class CapabilityAdmissionSnapshotV01:
+    admission_id: str
+    definition: CapabilityDefinitionV01
+    code_sources: tuple[CapabilityCodeSnapshotV01, ...]
+    input_contract_ref: str
+    output_contract_ref: str
+    implementation_ref: str
+    catalogue_revision: int
+    host_instance_ref: str
+
+
+@_dataclass(frozen=True)
+class AdmittedCapabilityV01:
+    definition: CapabilityDefinitionV01
+    input_validator: object
+    output_validator: object
+    executor: object
+    observed_code_identities: tuple[CapabilityCodeSnapshotV01, ...]
+    admission_id: str
+    catalogue_revision: int
+    host_instance_ref: str
+    _origin: object = _field(default=None, repr=False, compare=False)
+
+
+class _CapabilityAdmissionOriginV01:
+    """Per-admission provenance, populated only by trusted host setup."""
+    __slots__ = ('admitted', 'callables', 'codes', 'owner', 'start_observer')
+
+    def __init__(self, callables):
+        self.admitted = None
+        self.callables = callables
+        self.codes = tuple(c.__code__ for c in callables)
+        self.owner = None
+        self.start_observer = None
+
+
+@_dataclass(frozen=True)
+class CapabilityValidationEvidenceV01:
+    definition_id: str
+    validator_code_sha256: str
+    subject_sha256: str
+    invocation_id: str | None
+    valid: bool
+    reason_codes: tuple[str, ...]
+
+
+@_dataclass(frozen=True)
+class BoundCapabilityInvocationV01:
+    invocation_id: str
+    admission_id: str
+    definition_id: str
+    task_id: str
+    work_instance_id: str
+    owning_root_id: str
+    candidate_id: str | None
+    packet_id: str | None
+    execution_attempt_id: str
+    inputs: tuple[object, ...]
+    resource_refs: tuple[str, ...]
+    input_validation: CapabilityValidationEvidenceV01
+
+
+@_dataclass(frozen=True)
+class CapabilityExecutionResultV01:
+    result_id: str
+    invocation_id: str
+    execution_attempt_id: str
+    admission_id: str
+    consumed_input_sha256: str
+    actual_implementation_sha256: str
+    output: tuple[object, ...]
+    output_validation: CapabilityValidationEvidenceV01
+    outcome: str
+
+
+@_dataclass(frozen=True)
+class NativeExecutionEvidenceV01:
+    admission: CapabilityAdmissionSnapshotV01
+    invocation: BoundCapabilityInvocationV01
+    result: CapabilityExecutionResultV01
+
+
+_NATIVE_TYPES = (CapabilityFieldV01, CapabilityBusinessInputBindingV01,
+    CapabilityBusinessSemanticsV01, CapabilityDefinitionV01,
+    CapabilityCodeSnapshotV01, CapabilityAdmissionSnapshotV01,
+    CapabilityValidationEvidenceV01, BoundCapabilityInvocationV01,
+    CapabilityExecutionResultV01, NativeExecutionEvidenceV01)
+_NATIVE_CONTROL_NAMES = ('capability_definition_ref', 'capability_implementation_ref',
+    'capability_input_contract_ref', 'capability_output_contract_ref')
+_NATIVE_RECEIPT_PROFILE = 'common_action.execution_result.v01'
+_NATIVE_RECEIPT_KEYS = tuple(sorted((*_RECEIPT_PAYLOAD_KEYS, 'receipt_profile', 'execution_evidence')))
+
+
+def _native_require(condition: bool, reason: str) -> None:
+    if not condition:
+        raise ValueError(reason)
+
+
+def _native_value(value: object) -> object:
+    from hedgehog import action_commit_packet_v02 as action
+    if value is None:
+        return action.ABSENT_V01
+    if type(value) in (str, int, bool):
+        return value
+    if type(value) is action.ActionEffectParameterRecordV01:
+        _native_require(action.validate_action_effect_parameter_record_v01(value)[0], 'capability_record_invalid')
+        return action.action_effect_parameter_record_material_v01(value)
+    if type(value) in _NATIVE_TYPES:
+        return tuple((f.name, _native_value(getattr(value, f.name))) for f in _fields(value))
+    if type(value) is tuple:
+        return tuple(_native_value(v) for v in value)
+    raise ValueError('capability_material_type_invalid')
+
+
+def _native_material(value: object, excluded: tuple[str, ...] = ()) -> tuple:
+    return tuple((f.name, _native_value(getattr(value, f.name)))
+                 for f in _fields(value) if f.name not in excluded)
+
+
+def _native_identity(leaf: str, material: tuple, prefix: str | None = None) -> str:
+    from hedgehog import action_commit_packet_v02 as action
+    if prefix == '':
+        return action.domain_separated_sha256_hex_v01(domain='hedgehog.common_action.'+leaf+'.v01',
+            payload=action.canonical_material_bytes_v01(material))
+    return action.build_domain_separated_identity_v01(domain='hedgehog.common_action.'+leaf+'.v01',
+        prefix=leaf+':' if prefix is None else prefix, material=material)
+
+
+def capability_value_subject_sha256_v01(values: object) -> str:
+    from hedgehog import action_commit_packet_v02 as action
+    _native_require(type(values) is tuple, 'capability_values_type')
+    for value in values:
+        _native_require(type(value) is action.ActionEffectParameterRecordV01 and
+            action.validate_action_effect_parameter_record_v01(value)[0], 'capability_record_invalid')
+    return _native_identity('capability_value_subject', (('records', _native_value(values)),), '')
+
+
+def _capability_scalar_valid(kind: str, value: object) -> bool:
+    from hedgehog import action_commit_packet_v02 as action
+    if kind in ('TEXT', 'REFERENCE'):
+        return type(value) is str and action.validate_identity_text_v01(value)[0]
+    if kind == 'DECIMAL':
+        return type(value) is str and action.validate_canonical_decimal_v01(value)[0]
+    if kind == 'INTEGER':
+        return type(value) is int and action.validate_signed_int64_v01(value)[0]
+    return kind == 'BOOLEAN' and type(value) is bool
+
+
+def validate_capability_field_v01(value: object) -> tuple[str, ...]:
+    try:
+        _native_require(type(value) is CapabilityFieldV01 and _valid_text(value.name), 'capability_field_type')
+        _native_require(value.name not in _NATIVE_CONTROL_NAMES, 'capability_reserved_field')
+        _native_require(value.value_type in ('TEXT', 'REFERENCE', 'DECIMAL', 'INTEGER', 'BOOLEAN') and
+            type(value.required) is type(value.consequential) is bool, 'capability_field_declaration')
+        _native_require(type(value.allowed_values) is tuple and len({(type(v), v) for v in value.allowed_values})==len(value.allowed_values), 'capability_allowed_values')
+        _native_require(all(_capability_scalar_valid(value.value_type, v) for v in value.allowed_values), 'capability_allowed_value_type')
+        for bound in (value.minimum, value.maximum):
+            _native_require(bound is None or value.value_type in ('DECIMAL', 'INTEGER') and _capability_scalar_valid(value.value_type, bound), 'capability_field_range_type')
+        if value.minimum is not None and value.maximum is not None:
+            from decimal import Decimal
+            _native_require(Decimal(value.minimum)<=Decimal(value.maximum), 'capability_field_range')
+        return ()
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_field_invalid',)
+
+
+def build_capability_field_v01(*, name: str, value_type: str, required: bool,
+    consequential: bool, minimum: object = None, maximum: object = None,
+    allowed_values: tuple = ()) -> CapabilityFieldV01:
+    value=CapabilityFieldV01(name,value_type,required,consequential,minimum,maximum,allowed_values)
+    errors=validate_capability_field_v01(value)
+    if errors:raise ValueError(errors[0])
+    return value
+
+
+def _capability_fields_valid(values: object) -> bool:
+    return (type(values) is tuple and all(not validate_capability_field_v01(v) for v in values)
+        and tuple(v.name for v in values)==tuple(sorted({v.name for v in values})))
+
+
+def validate_capability_values_v01(fields: object, values: object) -> tuple[str, ...]:
+    from hedgehog import action_commit_packet_v02 as action
+    try:
+        _native_require(_capability_fields_valid(fields) and type(values) is tuple, 'capability_value_shape')
+        _native_require(all(type(v) is action.ActionEffectParameterRecordV01 and action.validate_action_effect_parameter_record_v01(v)[0] for v in values), 'capability_record_invalid')
+        names=tuple(v.parameter_name for v in values)
+        _native_require(names==tuple(sorted(set(names))) and set(names)<=set(f.name for f in fields), 'capability_value_names')
+        actual={v.parameter_name:v for v in values}
+        for f in fields:
+            _native_require(not f.required or f.name in actual,'capability_value_missing:'+f.name)
+            if f.name not in actual:continue
+            v=actual[f.name]
+            _native_require(v.value_type==f.value_type and _capability_scalar_valid(f.value_type,v.value),'capability_value_type:'+f.name)
+            _native_require(not f.allowed_values or (type(v.value),v.value) in {(type(x),x) for x in f.allowed_values},'capability_value_not_allowed:'+f.name)
+            from decimal import Decimal
+            _native_require(f.minimum is None or Decimal(v.value)>=Decimal(f.minimum),'capability_value_below_minimum:'+f.name)
+            _native_require(f.maximum is None or Decimal(v.value)<=Decimal(f.maximum),'capability_value_above_maximum:'+f.name)
+        return ()
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_values_invalid',)
+
+
+def build_capability_business_input_binding_v01(*, input_name: str, source_kind: str,
+    source_name: str, value_type: str) -> CapabilityBusinessInputBindingV01:
+    value=CapabilityBusinessInputBindingV01(input_name,source_kind,source_name,value_type)
+    _native_require(all(_valid_text(x) for x in (input_name,source_kind,source_name,value_type)), 'capability_business_binding_text')
+    _native_require(input_name not in _NATIVE_CONTROL_NAMES and source_name not in _NATIVE_CONTROL_NAMES, 'capability_reserved_field')
+    scalars={'AMOUNT':('amount_decimal','DECIMAL'),'CURRENCY':('currency_code','TEXT'),
+             'QUANTITY':('quantity_decimal','DECIMAL'),'BUSINESS_OBJECT_REF':('business_object_ref','REFERENCE')}
+    _native_require(source_kind in (*scalars,'RECORD','SUBJECT_RECORD','TARGET_RECORD'), 'capability_business_source_kind')
+    _native_require(source_kind not in scalars or (source_name,value_type)==scalars[source_kind], 'capability_business_scalar_selector')
+    _native_require(source_kind not in ('SUBJECT_RECORD','TARGET_RECORD') or value_type=='REFERENCE', 'capability_business_scope_type')
+    return value
+
+
+def build_capability_business_semantics_v01(*, operation_key: str, selected_action_class: str,
+    logical_effect_class: str, logical_effect_namespace: str, business_object_class: str,
+    business_object_namespace: str, input_bindings: tuple) -> CapabilityBusinessSemanticsV01:
+    _native_require(all(_valid_text(x) for x in (operation_key,selected_action_class,logical_effect_class,logical_effect_namespace,business_object_class,business_object_namespace)), 'capability_business_text')
+    _native_require(operation_key==logical_effect_namespace and selected_action_class.startswith(MOCK_ACTION_PREFIX), 'capability_business_operation')
+    _native_require(type(input_bindings) is tuple and all(type(v) is CapabilityBusinessInputBindingV01 for v in input_bindings), 'capability_business_bindings_type')
+    for value in input_bindings:
+        _native_require(build_capability_business_input_binding_v01(**{f.name:getattr(value,f.name) for f in _fields(value)})==value, 'capability_business_binding')
+    bindings=tuple(sorted(input_bindings,key=lambda v:v.input_name))
+    _native_require(len({v.input_name for v in bindings})==len(bindings), 'capability_business_binding_duplicate')
+    return CapabilityBusinessSemanticsV01(operation_key,selected_action_class,logical_effect_class,logical_effect_namespace,business_object_class,business_object_namespace,bindings)
+
+
+def _capability_contract_refs(definition: CapabilityDefinitionV01) -> tuple[str, str]:
+    codes=dict(definition.code_sha256s)
+    return (_native_identity('capability_input_contract',(('input_fields',_native_value(definition.input_fields)),
+        ('business_semantics',_native_value(definition.business_semantics)),('input_validator_ref',definition.input_validator_ref),
+        ('input_validator_code_sha256',codes[definition.input_validator_ref]))),
+        _native_identity('capability_output_contract',(('output_fields',_native_value(definition.output_fields)),
+        ('output_validator_ref',definition.output_validator_ref),('output_validator_code_sha256',codes[definition.output_validator_ref]))))
+
+
+def validate_capability_definition_v01(value: object) -> tuple[str, ...]:
+    try:
+        _native_require(type(value) is CapabilityDefinitionV01, 'capability_definition_type')
+        _native_require(all(_valid_text(getattr(value,n)) for n in ('definition_id','operation_id','version','input_validator_ref','output_validator_ref','executor_ref')), 'capability_definition_text')
+        _native_require(value.effect_kind in ('PURE','MOCK_CONSEQUENTIAL'), 'capability_effect_kind')
+        _native_require(_capability_fields_valid(value.input_fields) and _capability_fields_valid(value.output_fields), 'capability_definition_fields')
+        _native_require(_valid_text_tuple(value.resource_refs,allow_empty=True) and value.resource_refs==tuple(sorted(value.resource_refs)), 'capability_resources')
+        if value.effect_kind=='PURE':
+            _native_require(value.business_semantics is None and not any(f.consequential for f in value.input_fields), 'capability_pure_semantics')
+        else:
+            semantics=value.business_semantics
+            _native_require(type(semantics) is CapabilityBusinessSemanticsV01, 'capability_business_type')
+            _native_require(build_capability_business_semantics_v01(**{f.name:getattr(semantics,f.name) for f in _fields(semantics)})==semantics, 'capability_business_semantics')
+            _native_require(value.operation_id==semantics.operation_key and tuple(v.input_name for v in semantics.input_bindings)==tuple(f.name for f in value.input_fields)
+                and all(f.required and f.consequential and f.value_type==b.value_type for f,b in zip(value.input_fields,semantics.input_bindings)), 'capability_business_exhaustive_mapping')
+        _native_require(type(value.code_sha256s) is tuple and all(type(p) is tuple and len(p)==2 and _valid_text(p[0]) and _valid_sha256(p[1]) for p in value.code_sha256s), 'capability_code_hashes')
+        _native_require(tuple(p[0] for p in value.code_sha256s)==tuple(sorted({value.input_validator_ref,value.output_validator_ref,value.executor_ref})) and len(value.code_sha256s)==3,'capability_code_symbols')
+        i,o=_capability_contract_refs(value)
+        _native_require(value.contract_sha256==_native_identity('capability_contract',(('input_contract_ref',i),('output_contract_ref',o)),''), 'capability_contract_hash')
+        _native_require(value.definition_id==_native_identity('capability_definition',_native_material(value,('definition_id',))), 'capability_definition_identity')
+        return ()
+    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_definition_invalid',)
+
+
+def build_capability_definition_v01(*, operation_id: str, version: str, effect_kind: str,
+    business_semantics: object, input_fields: tuple, output_fields: tuple, resource_refs: tuple,
+    input_validator_ref: str, output_validator_ref: str, executor_ref: str,
+    code_sha256s: tuple) -> CapabilityDefinitionV01:
+    value=CapabilityDefinitionV01('',operation_id,version,effect_kind,business_semantics,
+        tuple(sorted(input_fields,key=lambda v:v.name)),tuple(sorted(output_fields,key=lambda v:v.name)),
+        tuple(sorted(resource_refs)),input_validator_ref,output_validator_ref,executor_ref,tuple(sorted(code_sha256s)),'')
+    i,o=_capability_contract_refs(value)
+    value=_replace(value,contract_sha256=_native_identity('capability_contract',(('input_contract_ref',i),('output_contract_ref',o)),''))
+    value=_replace(value,definition_id=_native_identity('capability_definition',_native_material(value,('definition_id',))))
+    errors=validate_capability_definition_v01(value)
+    if errors:raise ValueError(errors[0])
+    return value
+
+
+def _admission_snapshot(value: AdmittedCapabilityV01) -> CapabilityAdmissionSnapshotV01:
+    i,o=_capability_contract_refs(value.definition)
+    implementation=_native_identity('capability_implementation',(('code_sources',_native_value(value.observed_code_identities)),))
+    return CapabilityAdmissionSnapshotV01(value.admission_id,value.definition,value.observed_code_identities,i,o,implementation,value.catalogue_revision,value.host_instance_ref)
+
+
+def validate_capability_admission_snapshot_v01(value: object) -> tuple[str, ...]:
+    import hashlib
+    try:
+        _native_require(type(value) is CapabilityAdmissionSnapshotV01,'capability_snapshot_type')
+        errors=validate_capability_definition_v01(value.definition)
+        if errors:raise ValueError(errors[0])
+        _native_require(type(value.catalogue_revision) is int and value.catalogue_revision>=0 and _valid_text(value.host_instance_ref),'capability_snapshot_host_revision')
+        _native_require(type(value.code_sources) is tuple and all(type(v) is CapabilityCodeSnapshotV01 for v in value.code_sources),'capability_source_type')
+        _native_require(tuple((s.public_symbol,s.source_sha256) for s in value.code_sources)==value.definition.code_sha256s,'capability_snapshot_sources')
+        _native_require(all(type(s.source_utf8) is str and hashlib.sha256(s.source_utf8.encode()).hexdigest()==s.source_sha256 for s in value.code_sources),'capability_source_hash')
+        i,o=_capability_contract_refs(value.definition)
+        _native_require((value.input_contract_ref,value.output_contract_ref)==(i,o),'capability_snapshot_contracts')
+        _native_require(value.implementation_ref==_native_identity('capability_implementation',(('code_sources',_native_value(value.code_sources)),)),'capability_implementation_identity')
+        _native_require(value.admission_id==_native_identity('capability_admission',_native_material(value,('admission_id',))),'capability_admission_identity')
+        return ()
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_snapshot_invalid',)
+
+
+def _admit_observed_capability_v01(*, definition: CapabilityDefinitionV01, input_validator: object,
+    output_validator: object, executor: object, catalogue_revision: int, host_instance_ref: str,
+    sources: tuple) -> AdmittedCapabilityV01:
+    errors=validate_capability_definition_v01(definition)
+    if errors:raise ValueError(errors[0])
+    callables=(input_validator,output_validator,executor)
+    _native_require(tuple(s.public_symbol for s in sources)==(definition.input_validator_ref,definition.output_validator_ref,definition.executor_ref),'capability_callable_roles')
+    sources=tuple(sorted(sources,key=lambda v:v.public_symbol))
+    origin = _CapabilityAdmissionOriginV01(callables)
+    value=AdmittedCapabilityV01(definition,input_validator,output_validator,executor,sources,'',catalogue_revision,host_instance_ref,origin)
+    snapshot=_admission_snapshot(value)
+    value=_replace(value,admission_id=_native_identity('capability_admission',_native_material(snapshot,('admission_id',))))
+    errors=validate_capability_admission_snapshot_v01(_admission_snapshot(value))
+    if errors:raise ValueError(errors[0])
+    origin.admitted = value
+    return value
+
+
+def validate_admitted_capability_v01(value: object) -> tuple[str, ...]:
+    try:
+        _native_require(type(value) is AdmittedCapabilityV01,'capability_admitted_type')
+        origin=value._origin
+        _native_require(type(origin) is _CapabilityAdmissionOriginV01 and origin.admitted is value,'capability_not_trusted_admission')
+        callables=(value.input_validator,value.output_validator,value.executor)
+        _native_require(all(v is original for v,original in zip(callables,origin.callables)), 'capability_callable_changed')
+        _native_require(all(v.__code__ is code for v,code in zip(callables,origin.codes)),'capability_loaded_code_changed')
+        return validate_capability_admission_snapshot_v01(_admission_snapshot(value))
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_admitted_invalid',)
+
+
+def snapshot_admitted_capability_v01(admitted_capability: object) -> CapabilityAdmissionSnapshotV01:
+    errors=validate_admitted_capability_v01(admitted_capability)
+    if errors:raise ValueError(errors[0])
+    return _admission_snapshot(admitted_capability)
+
+
+def validate_capability_business_binding_v01(definition: object, inputs: object,
+    canonical_projection: object) -> tuple[str, ...]:
+    from hedgehog import action_commit_packet_v02 as action
+    try:
+        errors=validate_capability_definition_v01(definition)
+        if errors:raise ValueError(errors[0])
+        errors=validate_capability_values_v01(definition.input_fields,inputs)
+        if errors:raise ValueError(errors[0])
+        c=canonical_projection;s=definition.business_semantics
+        _native_require(type(c) is action.NativeActionCommitPacketV01 and type(s) is CapabilityBusinessSemanticsV01,'capability_business_context_type')
+        _native_require((c.selected_canonical_action,c.logical_intent.logical_effect_class,c.authority_policy.logical_effect_namespace,
+            c.business_object_identity.business_object_class,c.business_object_identity.business_object_namespace)==
+            (s.selected_action_class,s.logical_effect_class,s.logical_effect_namespace,s.business_object_class,s.business_object_namespace),'capability_business_operation_binding')
+        _native_require(definition.resource_refs==c.normalized_target_scope.included_target_refs,'capability_target_binding')
+        q=c.consequential_effect_parameters;records={v.parameter_name:v for v in q.parameter_records};actual={v.parameter_name:v for v in inputs}
+        _native_require(not set(records).intersection(_NATIVE_CONTROL_NAMES),'capability_reserved_business_record')
+        for binding in s.input_bindings:
+            if binding.source_kind in ('AMOUNT','CURRENCY','QUANTITY'):value=getattr(q,binding.source_name)
+            elif binding.source_kind=='BUSINESS_OBJECT_REF':value=c.business_object_identity.business_object_ref
+            else:
+                _native_require(binding.source_name in records,'capability_business_record_missing')
+                record=records[binding.source_name];_native_require(record.value_type==binding.value_type,'capability_business_record_type');value=record.value
+                if binding.source_kind=='SUBJECT_RECORD':_native_require(value in c.normalized_subject_scope.included_subject_refs and value not in c.normalized_subject_scope.excluded_subject_refs,'capability_subject_binding')
+                if binding.source_kind=='TARGET_RECORD':_native_require(value in c.normalized_target_scope.included_target_refs and value not in c.normalized_target_scope.excluded_target_refs,'capability_target_binding')
+            supplied=actual[binding.input_name]
+            _native_require(type(supplied.value) is type(value) and supplied.value==value and supplied.value_type==binding.value_type,'capability_business_input_binding:'+binding.input_name)
+        return ()
+    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_business_binding_invalid',)
+
+
+def build_capability_validation_evidence_v01(*, definition: CapabilityDefinitionV01,
+    values: tuple, invocation_id: str | None, valid: bool,
+    reason_codes: tuple[str, ...]) -> CapabilityValidationEvidenceV01:
+    role=definition.input_validator_ref if invocation_id is None else definition.output_validator_ref
+    _native_require(type(valid) is bool and _valid_text_tuple(reason_codes,allow_empty=True) and valid==(not reason_codes),'capability_validation_truth_shape')
+    return CapabilityValidationEvidenceV01(definition.definition_id,dict(definition.code_sha256s)[role],
+        capability_value_subject_sha256_v01(values),invocation_id,valid,reason_codes)
+
+
+def _capability_evidence_errors(evidence: object, definition: CapabilityDefinitionV01,
+    values: tuple, invocation_id: str | None) -> tuple[str, ...]:
+    _native_require(type(evidence) is CapabilityValidationEvidenceV01,'capability_validation_evidence_type')
+    expected=build_capability_validation_evidence_v01(definition=definition,values=values,invocation_id=invocation_id,
+        valid=evidence.valid,reason_codes=evidence.reason_codes)
+    _native_require(evidence==expected,'capability_validation_evidence_binding')
+    return evidence.reason_codes if not evidence.valid else ()
+
+
+def validate_bound_capability_invocation_v01(value: object, admission_snapshot: object,
+    canonical_projection: object = None) -> tuple[str, ...]:
+    try:
+        _native_require(type(value) is BoundCapabilityInvocationV01,'capability_invocation_type')
+        errors=validate_capability_admission_snapshot_v01(admission_snapshot)
+        if errors:raise ValueError(errors[0])
+        d=admission_snapshot.definition
+        _native_require((value.admission_id,value.definition_id,value.resource_refs)==(admission_snapshot.admission_id,d.definition_id,d.resource_refs),'capability_invocation_admission')
+        _native_require(all(_valid_text(getattr(value,n)) for n in ('invocation_id','task_id','work_instance_id','owning_root_id','execution_attempt_id')),'capability_invocation_text')
+        _native_require((value.candidate_id is None and value.packet_id is None) if d.effect_kind=='PURE' else (_valid_text(value.candidate_id) and _valid_text(value.packet_id)),'capability_invocation_effect_context')
+        errors=validate_capability_values_v01(d.input_fields,value.inputs)
+        if errors:raise ValueError(errors[0])
+        errors=_capability_evidence_errors(value.input_validation,d,value.inputs,None)
+        if errors:raise ValueError('capability_input_validation_failed:'+errors[0])
+        _native_require(value.invocation_id==_native_identity('capability_invocation',_native_material(value,('invocation_id',))),'capability_invocation_identity')
+        if canonical_projection is not None:
+            errors=validate_capability_business_binding_v01(d,value.inputs,canonical_projection)
+            if errors:raise ValueError(errors[0])
+            _native_require(value.candidate_id==canonical_projection.authorization_candidate.root_packet_authorization_candidate_id and
+                value.owning_root_id==canonical_projection.owning_local_root_id and admission_snapshot==canonical_projection.execution_source,'capability_invocation_candidate_binding')
+        return ()
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_invocation_invalid',)
+
+
+def build_bound_capability_invocation_v01(*, admitted_capability: object, task_id: str,
+    work_instance_id: str, owning_root_id: str, candidate_id: str | None, packet_id: str | None,
+    execution_attempt_id: str, inputs: tuple, resource_refs: tuple,
+    canonical_projection: object = None) -> BoundCapabilityInvocationV01:
+    snapshot=snapshot_admitted_capability_v01(admitted_capability);d=snapshot.definition
+    errors=validate_capability_values_v01(d.input_fields,inputs)
+    if errors:raise ValueError(errors[0])
+    if d.effect_kind=='MOCK_CONSEQUENTIAL':
+        errors=validate_capability_business_binding_v01(d,inputs,canonical_projection)
+        if errors:raise ValueError(errors[0])
+    evidence=admitted_capability.input_validator(d,inputs)
+    errors=_capability_evidence_errors(evidence,d,inputs,None)
+    if errors:raise ValueError('capability_input_validation_failed:'+errors[0])
+    value=BoundCapabilityInvocationV01('',snapshot.admission_id,d.definition_id,task_id,work_instance_id,owning_root_id,candidate_id,packet_id,execution_attempt_id,inputs,resource_refs,evidence)
+    value=_replace(value,invocation_id=_native_identity('capability_invocation',_native_material(value,('invocation_id',))))
+    errors=validate_bound_capability_invocation_v01(value,snapshot,canonical_projection)
+    if errors:raise ValueError(errors[0])
+    return value
+
+
+def validate_capability_execution_result_v01(value: object, invocation: object,
+    admission_snapshot: object) -> tuple[str, ...]:
+    try:
+        errors=validate_bound_capability_invocation_v01(invocation,admission_snapshot)
+        if errors:raise ValueError(errors[0])
+        _native_require(type(value) is CapabilityExecutionResultV01,'capability_result_type')
+        d=admission_snapshot.definition
+        _native_require((value.invocation_id,value.execution_attempt_id,value.admission_id)==(invocation.invocation_id,invocation.execution_attempt_id,invocation.admission_id),'capability_result_invocation_binding')
+        _native_require(value.consumed_input_sha256==capability_value_subject_sha256_v01(invocation.inputs) and
+            value.actual_implementation_sha256==dict(d.code_sha256s)[d.executor_ref],'capability_result_input_code_binding')
+        _native_require(value.outcome in ('SUCCEEDED','FAILED_NON_CONSUMING','UNCERTAIN_CLOSED'),'capability_result_outcome')
+        errors=validate_capability_values_v01(d.output_fields,value.output)
+        if errors:raise ValueError(errors[0])
+        errors=_capability_evidence_errors(value.output_validation,d,value.output,invocation.invocation_id)
+        _native_require(value.outcome!='SUCCEEDED' or not errors,'capability_output_validation_failed')
+        _native_require(value.result_id==_native_identity('capability_result',_native_material(value,('result_id',))),'capability_result_identity')
+        return ()
+    except (ValueError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'capability_result_invalid',)
+
+
+def build_capability_execution_result_v01(*, invocation, admission_snapshot, output, output_validation):
+    """Content-bound evidence; construction alone is not observed execution."""
+    definition = admission_snapshot.definition
+    result = CapabilityExecutionResultV01('', invocation.invocation_id, invocation.execution_attempt_id,
+        invocation.admission_id, capability_value_subject_sha256_v01(invocation.inputs),
+        dict(definition.code_sha256s)[definition.executor_ref], output, output_validation, 'SUCCEEDED')
+    result = _replace(result, result_id=_native_identity('capability_result', _native_material(result, ('result_id',))))
+    errors = validate_capability_execution_result_v01(result, invocation, admission_snapshot)
+    if errors:
+        raise ValueError(errors[0])
+    return result
+
+
+def native_execution_evidence_to_plain_data_v01(value: object) -> dict[str, object]:
+    errors=validate_native_execution_evidence_v01(value)
+    if errors:raise ValueError(errors[0])
+    return _native_plain(value)
+
+
+def _native_plain(value: object) -> object:
+    from hedgehog import action_commit_packet_v02 as action
+    if value is None or type(value) in (str,int,bool):return value
+    if type(value) in (*_NATIVE_TYPES,action.ActionEffectParameterRecordV01):
+        return {f.name:_native_plain(getattr(value,f.name)) for f in _fields(value)}
+    if type(value) is tuple:return [_native_plain(v) for v in value]
+    raise ValueError('native_plain_type')
+
+
+def _native_read(cls: type, plain: object) -> object:
+    from hedgehog import action_commit_packet_v02 as action
+    _native_require(type(plain) is dict and set(plain)=={f.name for f in _fields(cls)},'native_plain_exact_fields:'+cls.__name__)
+    nested={CapabilityBusinessSemanticsV01:{'input_bindings':(CapabilityBusinessInputBindingV01,)},
+        CapabilityDefinitionV01:{'business_semantics':CapabilityBusinessSemanticsV01,'input_fields':(CapabilityFieldV01,), 'output_fields':(CapabilityFieldV01,)},
+        CapabilityAdmissionSnapshotV01:{'definition':CapabilityDefinitionV01,'code_sources':(CapabilityCodeSnapshotV01,)},
+        BoundCapabilityInvocationV01:{'inputs':(action.ActionEffectParameterRecordV01,), 'input_validation':CapabilityValidationEvidenceV01},
+        CapabilityExecutionResultV01:{'output':(action.ActionEffectParameterRecordV01,), 'output_validation':CapabilityValidationEvidenceV01},
+        NativeExecutionEvidenceV01:{'admission':CapabilityAdmissionSnapshotV01,'invocation':BoundCapabilityInvocationV01,'result':CapabilityExecutionResultV01}}
+    tuple_names={'allowed_values','resource_refs','reason_codes','code_sha256s'}
+    values={}
+    for name,item in plain.items():
+        kind=nested.get(cls,{}).get(name)
+        if kind is not None:
+            if type(kind) is tuple:
+                _native_require(type(item) is list,'native_plain_tuple:'+name);item=tuple(_native_read(kind[0],v) for v in item)
+            elif item is not None:item=_native_read(kind,item)
+        elif name in tuple_names:
+            _native_require(type(item) is list,'native_plain_tuple:'+name)
+            if name=='code_sha256s':
+                _native_require(all(type(p) is list and len(p)==2 for p in item),'native_plain_code_pairs');item=tuple(tuple(p) for p in item)
+            else:item=tuple(item)
+        values[name]=item
+    return cls(**values)
+
+
+def native_execution_evidence_from_plain_data_v01(plain: object) -> NativeExecutionEvidenceV01:
+    value=_native_read(NativeExecutionEvidenceV01,plain)
+    errors=validate_native_execution_evidence_v01(value)
+    if errors:raise ValueError(errors[0])
+    return value
+
+
+def validate_native_execution_evidence_v01(value: object) -> tuple[str, ...]:
+    if type(value) is not NativeExecutionEvidenceV01:return ('native_execution_evidence_type',)
+    errors=validate_capability_execution_result_v01(value.result,value.invocation,value.admission)
+    if errors:return errors
+    if value.admission.definition.effect_kind!='MOCK_CONSEQUENTIAL' or value.result.outcome!='SUCCEEDED':return ('native_success_evidence_required',)
+    return ()
+
+
+def _native_receipt_material_value_v01(value):
+    from hedgehog import action_commit_packet_v02 as action
+    if value is None:
+        return action.ABSENT_V01
+    if type(value) in (str, int, bool):
+        return value
+    if type(value) is list:
+        return tuple(_native_receipt_material_value_v01(v) for v in value)
+    if type(value) is dict:
+        return tuple((k, _native_receipt_material_value_v01(value[k])) for k in sorted(value))
+    raise ValueError('native_receipt_material_type')
+
+
+def _native_receipt_identity_v01(plain):
+    payload = tuple((k, _native_receipt_material_value_v01(plain['payload'][k]))
+        for k in sorted(plain['payload']) if k != 'receipt_ref')
+    envelope = tuple((k, _native_receipt_material_value_v01(plain[k])) for k in (
+        'abi_version', 'artifact_type', 'schema_version', 'transaction_id', 'owner_root_id',
+        'source_component', 'authority_class', 'lifecycle_state', 'trace_refs', 'parent_refs', 'time_envelope'))
+    return _native_identity('native_effect_receipt', (('payload', payload), ('envelope', envelope)), 'effect_receipt_v01:')
+
+
+def _native_effect_receipt_binding_errors_v01(receipt, request, decision):
+    try:
+        plain = _kernel_artifact_to_plain_dict_v01(receipt)
+        payload = plain['payload']
+        _native_require(tuple(sorted(payload)) == _NATIVE_RECEIPT_KEYS and
+            payload['receipt_profile'] == _NATIVE_RECEIPT_PROFILE, 'native_receipt_profile')
+        evidence = native_execution_evidence_from_plain_data_v01(payload['execution_evidence'])
+        invocation = evidence.invocation
+        semantics = evidence.admission.definition.business_semantics
+        _native_require((invocation.owning_root_id, invocation.candidate_id,
+            semantics.selected_action_class) == (request.target_root_id, request.selected_candidate_id,
+            request.action_kind), 'native_receipt_invocation_root_candidate_action')
+        _native_require(set(invocation.resource_refs) <= set(payload['scope_refs']), 'native_receipt_resource_binding')
+        _native_require(plain['artifact_id'] == payload['receipt_ref'] == _native_receipt_identity_v01(plain),
+            'native_receipt_identity')
+        return ()
+    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+        return (str(exc) if type(exc) is ValueError else 'native_receipt_invalid',)
+
+
+def build_native_effect_receipt_v01(*, firewall, request, decision, time_envelope, execution_evidence):
+    _native_require(not _firewall_errors(firewall) and not validate_effect_firewall_decision_v01(
+        firewall=firewall, request=request, decision=decision), 'native_receipt_authorization')
+    capability = firewall._state.issued_capabilities.get(decision.capability_id)
+    _native_require(capability is not None and capability.capability_id in firewall._state.started_capability_ids
+        and firewall._state.native_evidence_by_capability_id.get(capability.capability_id) is execution_evidence,
+        'native_receipt_requires_observed_completion')
+    payload = dict(receipt_ref='effect_receipt_v01:pending', request_id=request.request_id,
+        firewall_decision_id=decision.decision_id, capability_id=capability.capability_id,
+        root_decision_id=request.root_decision_id, selected_candidate_id=request.selected_candidate_id,
+        permission_ref=request.permission_ref, adapter_id=request.adapter_id, action_kind=request.action_kind,
+        scope_refs=list(request.scope_refs), mock_execution_status=STATUS_PASS, receipt_evidence_only=True,
+        root_confirmation_required=True, root_confirmation_created=False, future_permission_created=False,
+        root_decision_created=False, final_output_created=False, effect_handle_exposed=False, real_world_effects_count=0,
+        receipt_profile=_NATIVE_RECEIPT_PROFILE,
+        execution_evidence=native_execution_evidence_to_plain_data_v01(execution_evidence))
+    kwargs = dict(abi_version='v1.0', artifact_id=payload['receipt_ref'], artifact_type='EvidenceReceipt',
+        schema_version='v1', transaction_id=request.transaction_id, owner_root_id=request.target_root_id,
+        source_component=RECEIPT_SOURCE_COMPONENT, authority_class='EVIDENCE_ONLY', lifecycle_state='RECEIPT_RECORDED',
+        payload=payload, trace_refs=(request.request_id, request.root_decision_id, decision.decision_id),
+        parent_refs=(request.root_decision_id,), time_envelope=time_envelope)
+    provisional = _build_kernel_artifact_v01(**kwargs)
+    identifier = _native_receipt_identity_v01(_kernel_artifact_to_plain_dict_v01(provisional))
+    payload['receipt_ref'] = identifier
+    kwargs['artifact_id'] = identifier
+    receipt = _build_kernel_artifact_v01(**kwargs)
+    errors = _effect_receipt_errors(firewall=firewall, request=request, decision=decision,
+        receipt=receipt, require_execution_state=False)
+    if errors:
+        raise ValueError(errors[0])
+    return receipt
+
+
+def validate_native_effect_receipt_v01(*, firewall, request, decision, receipt):
+    errors = _native_effect_receipt_binding_errors_v01(receipt, request, decision)
+    return errors or validate_effect_receipt_v01(firewall=firewall, request=request,
+        decision=decision, receipt=receipt)
+
+
+def validate_retained_native_effect_receipt_v01(*, receipt, request, decision):
+    """Structural historical proof only; cannot authorize a new execution."""
+    try:
+        if _validate_kernel_artifact_v01(receipt) or _request_errors(request, check_id=True) or _decision_structure_errors(decision):
+            return ('native_retained_envelope_or_context_invalid',)
+        errors = _native_effect_receipt_binding_errors_v01(receipt, request, decision)
+        return errors or _retained_effect_receipt_contract_errors_v01(receipt=receipt, request=request,
+            decision=decision, root_scope_refs=request.scope_refs)
+    except Exception:
+        return ('native_retained_receipt_invalid',)
+
+
+def bind_native_action_authorization_v01(*, firewall, registry, projection, corridor,
+    corridor_step, current_dependency_observations, logical_time_bridge):
+    """Retain a public, contextual proof in this already Root-issued boundary."""
+    from hedgehog import action_commit_packet_v02 as action
+    _native_require(not validate_effect_firewall_v01(firewall), 'native_firewall_invalid')
+    _native_require(firewall._state.native_authorization is None and
+        not firewall._state.started_capability_ids, 'native_authorization_already_bound')
+    valid, reasons = action.validate_action_packet_effect_firewall_projection_v01(
+        projection, registry, packet_id=projection.packet_id, corridor=corridor,
+        corridor_step=corridor_step, current_dependency_observations=current_dependency_observations,
+        logical_time_bridge=logical_time_bridge,
+        eligibility_evaluation_time=projection.eligibility_evaluation_time,
+        eligibility_evaluation_time_source=projection.eligibility_evaluation_time_source,
+        eligibility_evaluation_context_id=projection.eligibility_evaluation_context_id)
+    _native_require(valid, 'native_authorization_projection:' + repr(reasons))
+    entry = next(e for e in registry.action_packet_lifecycle_entries
+        if e.root_bound_genesis.packet_identity.packet_id == projection.packet_id)
+    bound = entry.root_bound_genesis
+    _native_require(type(bound) is action.NativeRootBoundActionCommitPacketV01,
+        'native_authorization_encoding')
+    _native_require((firewall.transaction_id, firewall.target_root_id, firewall.root_decision_id,
+        firewall.selected_candidate_id, firewall.permission_ref, firewall.invocation_id,
+        firewall.allowed_adapter_ids, firewall.allowed_action_kinds, firewall.root_scope_refs,
+        firewall.maximum_expires_at_tick) == (projection.transaction_id, projection.target_root_id,
+        projection.root_decision_id, projection.selected_candidate_id, projection.permission_ref,
+        projection.execution_attempt_id, projection.allowed_adapter_ids, projection.allowed_action_kinds,
+        projection.root_scope_refs, projection.maximum_expires_at_tick), 'native_authorization_root_context')
+    firewall._state.native_authorization = (bound, projection, corridor_step)
+
+
+def execute_bound_effect_v01(*, firewall, request, decision, current_tick, invocation,
+    admitted_capability, child_scope_refs, child_expires_at_tick, time_envelope):
+    snapshot = snapshot_admitted_capability_v01(admitted_capability)
+    _native_require(snapshot.definition.effect_kind == 'MOCK_CONSEQUENTIAL', 'capability_pure_as_effect')
+    _native_require(not validate_effect_firewall_v01(firewall), 'native_firewall_invalid')
+    binding = firewall._state.native_authorization
+    _native_require(type(binding) is tuple and len(binding) == 3, 'native_authorization_missing')
+    bound, projection, step = binding
+    errors = validate_bound_capability_invocation_v01(invocation, snapshot, bound.canonical_projection)
+    if errors:
+        raise ValueError(errors[0])
+    _native_require((invocation.packet_id, invocation.execution_attempt_id, child_scope_refs,
+        child_expires_at_tick, current_tick) == (bound.packet_identity.packet_id,
+        projection.execution_attempt_id, projection.scope_refs, projection.expires_at_tick,
+        projection.current_tick), 'native_authorization_attempt_corridor')
+    _native_require((request.adapter_id, request.action_kind, request.scope_refs, request.idempotency_key,
+        request.issued_at_tick, request.expires_at_tick) == (projection.adapter_id, projection.action_kind,
+        projection.scope_refs, projection.idempotency_key, projection.issued_at_tick,
+        projection.expires_at_tick), 'native_authorization_request')
+    actual = {v.parameter_name: v.value for v in invocation.inputs}
+    for role in snapshot.definition.business_semantics.input_bindings:
+        if role.source_kind == 'SUBJECT_RECORD':
+            _native_require(actual[role.input_name] in step.subject_scope.included_subject_refs and
+                actual[role.input_name] not in step.subject_scope.excluded_subject_refs,
+                'native_dispatch_narrowed_subject')
+        if role.source_kind == 'TARGET_RECORD':
+            _native_require(actual[role.input_name] in step.target_scope.included_target_refs and
+                actual[role.input_name] not in step.target_scope.excluded_target_refs,
+                'native_dispatch_narrowed_target')
+    origin = admitted_capability._origin
+    _native_require(origin.owner is None or origin.start_observer is not None,
+        'capability_host_dispatch_required')
+    _native_require(invocation.owning_root_id == request.target_root_id and invocation.candidate_id == request.selected_candidate_id
+        and snapshot.definition.business_semantics.selected_action_class == request.action_kind,
+        'native_dispatch_root_candidate_action')
+    _native_require(set(invocation.resource_refs) <= set(child_scope_refs), 'native_dispatch_resource_scope')
+    # Structural evidence is replayable, but live start requires the designated call.
+    input_validation = admitted_capability.input_validator(snapshot.definition, invocation.inputs)
+    errors = _capability_evidence_errors(input_validation, snapshot.definition, invocation.inputs, None)
+    if errors:
+        raise ValueError('capability_input_validation_failed:' + errors[0])
+    _native_require(input_validation == invocation.input_validation, 'capability_input_validation_observation_mismatch')
+    invocation = _replace(invocation, input_validation=input_validation)
+    capability = _begin_exclusive_effect_v01(firewall=firewall, request=request, decision=decision,
+        current_tick=current_tick, adapter_id=request.adapter_id, action_kind=request.action_kind,
+        child_scope_refs=child_scope_refs, child_expires_at_tick=child_expires_at_tick)
+    firewall._state.started_capability_ids.add(capability.capability_id)
+    if origin.start_observer is not None:
+        origin.start_observer(invocation)
+    try:
+        output = admitted_capability.executor(invocation)
+        output_validation = admitted_capability.output_validator(snapshot.definition, invocation, output)
+        result = build_capability_execution_result_v01(invocation=invocation, admission_snapshot=snapshot,
+            output=output, output_validation=output_validation)
+        evidence = NativeExecutionEvidenceV01(snapshot, invocation, result)
+        firewall._state.native_evidence_by_capability_id[capability.capability_id] = evidence
+        receipt = build_native_effect_receipt_v01(firewall=firewall, request=request, decision=decision,
+            time_envelope=time_envelope, execution_evidence=evidence)
+        _record_exclusive_consumption_v01(firewall, capability, receipt.artifact_id)
+        return receipt
+    except Exception as exc:
+        raise ValueError('effect_outcome_unresolved') from exc

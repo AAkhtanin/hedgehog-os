@@ -1841,8 +1841,16 @@
           "pattern": "^g2e_recomputed_artifact_binding_v01:[0-9a-f]{64}$"
         },
         "recomputation_plan_id": {
-          "type": "string",
-          "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_plan:[0-9a-f]{64}$"
+            }
+          ]
         },
         "prior_artifact_id": {
           "type": "string",
@@ -1939,8 +1947,16 @@
           "pattern": "^g2e_selective_recomputation_result_v01:[0-9a-f]{64}$"
         },
         "recomputation_plan_id": {
-          "type": "string",
-          "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_plan:[0-9a-f]{64}$"
+            }
+          ]
         },
         "baseline_runtime_report_id": {
           "type": "string",
@@ -1951,8 +1967,16 @@
           "minLength": 1
         },
         "preservation_proof_id": {
-          "type": "string",
-          "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+            }
+          ]
         },
         "ordered_recomputed_binding_ids": {
           "type": "array",
@@ -2144,7 +2168,37 @@
         "real_world_effects_count": {
           "const": 0
         }
-      }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "recomputation_plan_id": {
+                  "type": "string",
+                  "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+                },
+                "preservation_proof_id": {
+                  "type": "string",
+                  "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+                }
+              }
+            },
+            {
+              "properties": {
+                "recomputation_plan_id": {
+                  "type": "string",
+                  "pattern": "^frretained_plan:[0-9a-f]{64}$"
+                },
+                "preservation_proof_id": {
+                  "type": "string",
+                  "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     "ContinuousDeltaRuntimeTraceV01": {
       "type": "object",
@@ -2195,12 +2249,28 @@
           "pattern": "^g2e_invalidation_report_v01:[0-9a-f]{64}$"
         },
         "preservation_proof_id": {
-          "type": "string",
-          "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+            }
+          ]
         },
         "recomputation_plan_id": {
-          "type": "string",
-          "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_plan:[0-9a-f]{64}$"
+            }
+          ]
         },
         "recomputation_result_id": {
           "type": "string",
@@ -2272,7 +2342,37 @@
         "real_world_effects_count": {
           "const": 0
         }
-      }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "recomputation_plan_id": {
+                  "type": "string",
+                  "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+                },
+                "preservation_proof_id": {
+                  "type": "string",
+                  "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+                }
+              }
+            },
+            {
+              "properties": {
+                "recomputation_plan_id": {
+                  "type": "string",
+                  "pattern": "^frretained_plan:[0-9a-f]{64}$"
+                },
+                "preservation_proof_id": {
+                  "type": "string",
+                  "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     "ContinuousDeltaRuntimeReportV01": {
       "type": "object",
@@ -2361,12 +2461,28 @@
           "pattern": "^g2e_invalidation_report_v01:[0-9a-f]{64}$"
         },
         "preservation_proof_id": {
-          "type": "string",
-          "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+            }
+          ]
         },
         "recomputation_plan_id": {
-          "type": "string",
-          "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^frretained_plan:[0-9a-f]{64}$"
+            }
+          ]
         },
         "recomputation_result_id": {
           "type": "string",
@@ -2561,7 +2677,37 @@
         "real_world_effects_count": {
           "const": 0
         }
-      }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "recomputation_plan_id": {
+                  "type": "string",
+                  "pattern": "^g2e_selective_recomputation_plan_v01:[0-9a-f]{64}$"
+                },
+                "preservation_proof_id": {
+                  "type": "string",
+                  "pattern": "^g2e_preservation_proof_v01:[0-9a-f]{64}$"
+                }
+              }
+            },
+            {
+              "properties": {
+                "recomputation_plan_id": {
+                  "type": "string",
+                  "pattern": "^frretained_plan:[0-9a-f]{64}$"
+                },
+                "preservation_proof_id": {
+                  "type": "string",
+                  "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     "ContinuousDeltaValidationReportV01": {
       "type": "object",
@@ -2622,7 +2768,9 @@
             "runtime_report_against_sources",
             "continuous_delta_abi_profile",
             "continuous_delta_transition_profile",
-            "continuous_delta_stage_bundle"
+            "continuous_delta_stage_bundle",
+            "RetainedSelectiveRecomputationPlanV01",
+            "RetainedWorkPreservationProofV01"
           ]
         },
         "validated_object_id": {
@@ -2820,6 +2968,1002 @@
           }
         }
       ]
+    },
+    "RetainedSelectiveRecomputationPlanV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recomputation_plan_id",
+        "delta_id",
+        "affected_set_id",
+        "invalidation_report_id",
+        "source_route_eligibility_artifact_id",
+        "source_topology_id",
+        "accepted_mode",
+        "accepted_scope_ref",
+        "ordered_affected_cell_ids",
+        "ordered_affected_artifact_ids",
+        "ordered_work_node_ids",
+        "ordered_preserved_artifact_ids",
+        "max_work_items",
+        "max_queue_entries",
+        "max_wall_time_units",
+        "max_token_budget",
+        "max_provider_calls",
+        "transition_profile_id",
+        "root_review_required",
+        "plan_status",
+        "reason_codes",
+        "trace_refs",
+        "retained_profile"
+      ],
+      "properties": {
+        "recomputation_plan_id": {
+          "type": "string",
+          "pattern": "^frretained_plan:[0-9a-f]{64}$"
+        },
+        "delta_id": {
+          "type": "string",
+          "pattern": "^g2e_world_state_delta_v01:[0-9a-f]{64}$"
+        },
+        "affected_set_id": {
+          "type": "string",
+          "pattern": "^g2e_affected_set_result_v01:[0-9a-f]{64}$"
+        },
+        "invalidation_report_id": {
+          "type": "string",
+          "pattern": "^g2e_invalidation_report_v01:[0-9a-f]{64}$"
+        },
+        "source_route_eligibility_artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_topology_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accepted_mode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accepted_scope_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ordered_affected_cell_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "ordered_affected_artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "ordered_work_node_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "ordered_preserved_artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "max_work_items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_queue_entries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_wall_time_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_token_budget": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_provider_calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "transition_profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "root_review_required": {
+          "type": "boolean"
+        },
+        "plan_status": {
+          "enum": [
+            "PASS",
+            "FAIL_CLOSED"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "g2e_object_invalid",
+              "g2e_identity_invalid",
+              "g2e_identity_mismatch",
+              "g2e_version_unsupported",
+              "g2e_status_invalid",
+              "g2e_reason_codes_invalid",
+              "g2e_zero_operation_boundary_violated",
+              "g2e_authority_boundary_violated",
+              "g2e_delta_source_invalid",
+              "g2e_delta_source_unvalidated",
+              "g2e_delta_baseline_stale",
+              "g2e_delta_time_invalid",
+              "g2e_delta_future_observation",
+              "g2e_delta_duplicate_binding",
+              "g2e_delta_conflicting_duplicate",
+              "g2e_delta_field_path_invalid",
+              "g2e_delta_artifact_binding_invalid",
+              "g2e_delta_cross_transaction",
+              "g2e_delta_cross_domain",
+              "g2e_delta_cross_root",
+              "g2e_delta_policy_version_mismatch",
+              "g2e_delta_schema_version_mismatch",
+              "g2e_dependency_fingerprint_profile_invalid",
+              "g2e_dependency_fingerprint_preimage_invalid",
+              "g2e_dependency_fingerprint_role_collision",
+              "g2e_dependency_fingerprint_mismatch",
+              "g2e_dependency_fingerprint_forgery",
+              "g2e_dependency_source_history_mismatch",
+              "g2e_dependency_canonicalization_mismatch",
+              "g2e_dependency_edge_invalid",
+              "g2e_dependency_edge_direction_invalid",
+              "g2e_dependency_edge_duplicate",
+              "g2e_dependency_edge_self",
+              "g2e_dependency_edge_unknown_source",
+              "g2e_dependency_edge_unknown_dependent",
+              "g2e_dependency_edge_cross_transaction",
+              "g2e_dependency_edge_cross_domain",
+              "g2e_dependency_edge_cross_root",
+              "g2e_dependency_graph_cycle",
+              "g2e_dependency_graph_version_mismatch",
+              "g2e_dependency_graph_bounds_exceeded",
+              "g2e_dependency_graph_ordering_invalid",
+              "g2e_dependency_graph_missing_edge",
+              "g2e_affected_request_invalid",
+              "g2e_affected_changed_binding_unknown",
+              "g2e_affected_closure_incomplete",
+              "g2e_affected_reachable_omitted",
+              "g2e_affected_unrelated_injected",
+              "g2e_affected_ordering_invalid",
+              "g2e_affected_hop_bound_exceeded",
+              "g2e_affected_node_bound_exceeded",
+              "g2e_affected_proof_invalid",
+              "g2e_invalidation_record_invalid",
+              "g2e_invalidation_reason_invalid",
+              "g2e_invalidation_deletion_forbidden",
+              "g2e_invalidation_history_mutation",
+              "g2e_invalidation_predecessor_mismatch",
+              "g2e_invalidation_supersession_mismatch",
+              "g2e_invalidation_g2a_root_binding_required",
+              "g2e_invalidation_g2b_reuse_still_current",
+              "g2e_preservation_proof_invalid",
+              "g2e_preserved_artifact_changed",
+              "g2e_preserved_identity_changed",
+              "g2e_preservation_cache_mutation",
+              "g2e_recomputation_plan_invalid",
+              "g2e_route_revalidation_required",
+              "g2e_topology_binding_mismatch",
+              "g2e_recomputation_budget_exceeded",
+              "g2e_recomputation_in_place_forbidden",
+              "g2e_recomputation_result_invalid",
+              "g2e_recomputation_no_progress",
+              "g2e_repeated_delta_conflict",
+              "g2e_transition_delta_validated",
+              "g2e_transition_affected_set_derived",
+              "g2e_transition_invalidation_derived",
+              "g2e_transition_recomputation_plan_reviewed",
+              "g2e_transition_recomputation_plan_accepted",
+              "g2e_transition_recomputation_plan_rejected",
+              "g2e_transition_selective_recomputation_executed",
+              "g2e_transition_selective_recomputation_blocked",
+              "g2e_transition_delta_parent_returned",
+              "g2e_transition_delta_report_finalized",
+              "g2e_delta_binding_set_mismatch",
+              "g2e_delta_source_binding_set_mismatch",
+              "g2e_dependency_edge_set_mismatch",
+              "g2e_dependency_graph_basis_mismatch",
+              "g2e_dependency_replay_edge_mismatch",
+              "g2e_dependency_source_payload_unavailable"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "trace_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "retained_profile": {
+          "const": "fractal_retained_work_v01"
+        }
+      }
+    },
+    "RetainedWorkPreservationProofV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preservation_proof_id",
+        "profile",
+        "baseline_graph_id",
+        "affected_set_id",
+        "current_plan_id",
+        "historical_bundle_sha256_before",
+        "historical_bundle_sha256_after",
+        "ordered_preserved_artifact_ids",
+        "ordered_before_artifact_sha256",
+        "ordered_after_artifact_sha256",
+        "ordered_retained_evidence_ids",
+        "ordered_consumption_ids",
+        "ordered_current_bookkeeping_artifact_ids"
+      ],
+      "properties": {
+        "preservation_proof_id": {
+          "type": "string",
+          "pattern": "^frretained_preservation:[0-9a-f]{64}$"
+        },
+        "profile": {
+          "const": "historical_work_preservation_v01"
+        },
+        "baseline_graph_id": {
+          "type": "string"
+        },
+        "affected_set_id": {
+          "type": "string"
+        },
+        "current_plan_id": {
+          "type": "string",
+          "pattern": "^frretained_plan:[0-9a-f]{64}$"
+        },
+        "historical_bundle_sha256_before": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "historical_bundle_sha256_after": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ordered_preserved_artifact_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ordered_before_artifact_sha256": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "ordered_after_artifact_sha256": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "ordered_retained_evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ordered_consumption_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ordered_current_bookkeeping_artifact_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "ContinuousDeltaExecutionBundleV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_context",
+        "source_bindings",
+        "changed_field_bindings",
+        "changed_artifact_bindings",
+        "delta",
+        "dependency_edges",
+        "dependency_graph",
+        "affected_request",
+        "affected_result",
+        "invalidation_records",
+        "invalidation_report",
+        "delta_source_proposed_artifact",
+        "delta_source_artifact",
+        "dependency_graph_artifact",
+        "affected_set_artifact",
+        "invalidation_report_artifact",
+        "recomputation_plan",
+        "plan_proposed_artifact",
+        "plan_root_decision_input",
+        "plan_root_decision_result",
+        "plan_root_decision_artifact",
+        "plan_accepted_artifact",
+        "recomputed_g2d_execution_bundle",
+        "recomputed_bindings",
+        "preservation_proof",
+        "preservation_proof_artifact",
+        "recomputation_result",
+        "g2e_validation_reports",
+        "g2e_transition_decisions",
+        "g2e_causal_consumption_refs",
+        "final_root_decision_input",
+        "final_root_decision_result",
+        "final_root_decision_artifact",
+        "runtime_trace",
+        "runtime_report",
+        "runtime_report_artifact"
+      ],
+      "properties": {
+        "source_context": {
+          "$ref": "#/$defs/ContinuousDeltaSourceContextV01"
+        },
+        "source_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeltaSourceBindingV01"
+          }
+        },
+        "changed_field_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChangedFieldBindingV01"
+          }
+        },
+        "changed_artifact_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChangedArtifactBindingV01"
+          }
+        },
+        "delta": {
+          "$ref": "#/$defs/WorldStateDeltaV01"
+        },
+        "dependency_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeltaDependencyEdgeV01"
+          }
+        },
+        "dependency_graph": {
+          "$ref": "#/$defs/DependencyGraphIndexV01"
+        },
+        "affected_request": {
+          "$ref": "#/$defs/AffectedSetRequestV01"
+        },
+        "affected_result": {
+          "$ref": "#/$defs/AffectedSetResultV01"
+        },
+        "invalidation_records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactInvalidationRecordV01"
+          }
+        },
+        "invalidation_report": {
+          "$ref": "#/$defs/InvalidationReportV01"
+        },
+        "delta_source_proposed_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "delta_source_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "dependency_graph_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "affected_set_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "invalidation_report_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "recomputation_plan": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/SelectiveRecomputationPlanV01"
+            },
+            {
+              "$ref": "#/$defs/RetainedSelectiveRecomputationPlanV01"
+            }
+          ]
+        },
+        "plan_proposed_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "plan_root_decision_input": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/RootDecisionInputV01"
+        },
+        "plan_root_decision_result": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/RootDecisionResultV01"
+        },
+        "plan_root_decision_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "plan_accepted_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "recomputed_g2d_execution_bundle": {
+          "oneOf": [
+            {
+              "$ref": "fractal_runtime_v02.schema.json#/$defs/FractalRuntimeExecutionBundleV02"
+            },
+            {
+              "$ref": "fractal_runtime_v02.schema.json#/$defs/FractalRetainedWorkExecutionBundleV01"
+            }
+          ]
+        },
+        "recomputed_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecomputedArtifactBindingV01"
+          }
+        },
+        "preservation_proof": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/PreservationProofV01"
+            },
+            {
+              "$ref": "#/$defs/RetainedWorkPreservationProofV01"
+            }
+          ]
+        },
+        "preservation_proof_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "recomputation_result": {
+          "$ref": "#/$defs/SelectiveRecomputationResultV01"
+        },
+        "g2e_validation_reports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ContinuousDeltaValidationReportV01"
+          }
+        },
+        "g2e_transition_decisions": {
+          "type": "array",
+          "items": {
+            "$ref": "fractal_runtime_v02.schema.json#/$defs/TransitionDecisionV01"
+          }
+        },
+        "g2e_causal_consumption_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "fractal_runtime_v02.schema.json#/$defs/CausalConsumptionRefV01"
+          }
+        },
+        "final_root_decision_input": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/RootDecisionInputV01"
+        },
+        "final_root_decision_result": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/RootDecisionResultV01"
+        },
+        "final_root_decision_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "runtime_trace": {
+          "$ref": "#/$defs/ContinuousDeltaRuntimeTraceV01"
+        },
+        "runtime_report": {
+          "$ref": "#/$defs/ContinuousDeltaRuntimeReportV01"
+        },
+        "runtime_report_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "recomputation_plan": {
+              "$ref": "#/$defs/SelectiveRecomputationPlanV01"
+            },
+            "preservation_proof": {
+              "$ref": "#/$defs/PreservationProofV01"
+            },
+            "recomputed_g2d_execution_bundle": {
+              "$ref": "fractal_runtime_v02.schema.json#/$defs/FractalRuntimeExecutionBundleV02"
+            }
+          }
+        },
+        {
+          "properties": {
+            "recomputation_plan": {
+              "$ref": "#/$defs/RetainedSelectiveRecomputationPlanV01"
+            },
+            "preservation_proof": {
+              "$ref": "#/$defs/RetainedWorkPreservationProofV01"
+            },
+            "recomputed_g2d_execution_bundle": {
+              "$ref": "fractal_runtime_v02.schema.json#/$defs/FractalRetainedWorkExecutionBundleV01"
+            }
+          }
+        }
+      ]
+    },
+    "ContinuousDeltaSourceContextV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "integrity_manifest",
+        "integrity_replay",
+        "baseline_source_artifacts",
+        "observed_source_artifacts",
+        "g2a_registry",
+        "g2a_packet",
+        "g2a_dependency_candidate",
+        "g2a_current_observations",
+        "g2a_root_invalidation_material",
+        "g2b_resolution_report",
+        "g2b_reuse_certificate",
+        "g2b_writeback_evidence",
+        "g2c_source_context",
+        "baseline_g2c_route_eligibility_artifact",
+        "baseline_g2d_execution_bundle",
+        "root_kernel",
+        "post_vv_profile",
+        "gt_profile"
+      ],
+      "properties": {
+        "integrity_manifest": {
+          "$ref": "#/$defs/ArtifactManifestV01"
+        },
+        "integrity_replay": {
+          "$ref": "#/$defs/ReplayVerificationResultV01"
+        },
+        "baseline_source_artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "kernel_artifact_v01.schema.json"
+          }
+        },
+        "observed_source_artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "kernel_artifact_v01.schema.json"
+          }
+        },
+        "g2a_registry": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "g2a_packet": {
+          "oneOf": [
+            {
+              "$ref": "fractal_runtime_v02.schema.json#/$defs/SupplierRootBoundActionCommitPacketV02ProjectionV01"
+            },
+            {
+              "$ref": "fractal_runtime_v02.schema.json#/$defs/NativeRootBoundActionCommitPacketV01"
+            }
+          ]
+        },
+        "g2a_dependency_candidate": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "g2a_current_observations": {
+          "type": "array",
+          "items": {
+            "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+          }
+        },
+        "g2a_root_invalidation_material": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "g2b_resolution_report": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "g2b_reuse_certificate": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "g2b_writeback_evidence": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "g2c_source_context": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/ExecutionModeSourceContextV01"
+        },
+        "baseline_g2c_route_eligibility_artifact": {
+          "$ref": "kernel_artifact_v01.schema.json"
+        },
+        "baseline_g2d_execution_bundle": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/FractalRuntimeExecutionBundleV02"
+        },
+        "root_kernel": {
+          "$ref": "fractal_runtime_v02.schema.json#/$defs/RootDecisionKernelV01"
+        },
+        "post_vv_profile": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        },
+        "gt_profile": {
+          "description": "Existing object-typed public payload; designated contextual validation remains mandatory."
+        }
+      }
+    },
+    "ArtifactManifestV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_version",
+        "transaction_id",
+        "seal_profile",
+        "artifacts",
+        "dependency_edges",
+        "root_ownership_bindings",
+        "evidence_class_bindings",
+        "authority_class_bindings",
+        "artifact_count",
+        "dependency_edge_count",
+        "root_ownership_binding_count",
+        "evidence_class_binding_count",
+        "authority_class_binding_count",
+        "manifest_hash"
+      ],
+      "properties": {
+        "manifest_version": {
+          "type": "string"
+        },
+        "transaction_id": {
+          "type": "string"
+        },
+        "seal_profile": {
+          "$ref": "#/$defs/SealProfileV01"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "fractal_runtime_v02.schema.json#/$defs/CanonicalArtifactRefV01"
+          }
+        },
+        "dependency_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactDependencyEdgeV01"
+          }
+        },
+        "root_ownership_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RootOwnershipBindingV01"
+          }
+        },
+        "evidence_class_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceClassBindingV01"
+          }
+        },
+        "authority_class_bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuthorityClassBindingV01"
+          }
+        },
+        "artifact_count": {
+          "type": "integer"
+        },
+        "dependency_edge_count": {
+          "type": "integer"
+        },
+        "root_ownership_binding_count": {
+          "type": "integer"
+        },
+        "evidence_class_binding_count": {
+          "type": "integer"
+        },
+        "authority_class_binding_count": {
+          "type": "integer"
+        },
+        "manifest_hash": {
+          "type": "string"
+        }
+      }
+    },
+    "ReplayVerificationResultV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "replay_status",
+        "replay_errors",
+        "replay_id",
+        "manifest_hash",
+        "manifest_verification_status",
+        "artifact_count",
+        "dependency_edge_count",
+        "reconstructed_artifact_ids",
+        "reconstructed_artifact_types",
+        "reconstructed_owner_root_ids",
+        "reconstructed_dependency_counts",
+        "reconstructed_dependency_edges",
+        "integrity_verified",
+        "continuity_verified",
+        "root_ownership_verified",
+        "evidence_classes_verified",
+        "authority_classes_verified",
+        "provider_call_count",
+        "network_call_count",
+        "semantic_rerun_count",
+        "transaction_rerun_count",
+        "corridor_rerun_count",
+        "ledger_recollection_count",
+        "crypto_recollection_count",
+        "root_decision_created_count",
+        "authority_created_count",
+        "permission_created_count",
+        "action_created_count",
+        "action_commit_packet_created_count",
+        "receipt_created_count",
+        "final_output_created_count",
+        "real_world_effects_count"
+      ],
+      "properties": {
+        "replay_status": {
+          "type": "string"
+        },
+        "replay_errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "manifest_hash": {
+          "type": "string"
+        },
+        "manifest_verification_status": {
+          "type": "string"
+        },
+        "artifact_count": {
+          "type": "integer"
+        },
+        "dependency_edge_count": {
+          "type": "integer"
+        },
+        "reconstructed_artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reconstructed_artifact_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reconstructed_owner_root_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reconstructed_dependency_counts": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "reconstructed_dependency_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactDependencyEdgeV01"
+          }
+        },
+        "integrity_verified": {
+          "type": "boolean"
+        },
+        "continuity_verified": {
+          "type": "boolean"
+        },
+        "root_ownership_verified": {
+          "type": "boolean"
+        },
+        "evidence_classes_verified": {
+          "type": "boolean"
+        },
+        "authority_classes_verified": {
+          "type": "boolean"
+        },
+        "provider_call_count": {
+          "type": "integer"
+        },
+        "network_call_count": {
+          "type": "integer"
+        },
+        "semantic_rerun_count": {
+          "type": "integer"
+        },
+        "transaction_rerun_count": {
+          "type": "integer"
+        },
+        "corridor_rerun_count": {
+          "type": "integer"
+        },
+        "ledger_recollection_count": {
+          "type": "integer"
+        },
+        "crypto_recollection_count": {
+          "type": "integer"
+        },
+        "root_decision_created_count": {
+          "type": "integer"
+        },
+        "authority_created_count": {
+          "type": "integer"
+        },
+        "permission_created_count": {
+          "type": "integer"
+        },
+        "action_created_count": {
+          "type": "integer"
+        },
+        "action_commit_packet_created_count": {
+          "type": "integer"
+        },
+        "receipt_created_count": {
+          "type": "integer"
+        },
+        "final_output_created_count": {
+          "type": "integer"
+        },
+        "real_world_effects_count": {
+          "type": "integer"
+        }
+      }
+    },
+    "SealProfileV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "manifest_version",
+        "artifact_schema_version",
+        "canonicalization_profile_id",
+        "hash_algorithm",
+        "hash_encoding",
+        "payload_domain",
+        "manifest_domain",
+        "replay_domain",
+        "timeline_order_required"
+      ],
+      "properties": {
+        "profile_id": {
+          "type": "string"
+        },
+        "manifest_version": {
+          "type": "string"
+        },
+        "artifact_schema_version": {
+          "type": "string"
+        },
+        "canonicalization_profile_id": {
+          "type": "string"
+        },
+        "hash_algorithm": {
+          "type": "string"
+        },
+        "hash_encoding": {
+          "type": "string"
+        },
+        "payload_domain": {
+          "type": "string"
+        },
+        "manifest_domain": {
+          "type": "string"
+        },
+        "replay_domain": {
+          "type": "string"
+        },
+        "timeline_order_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ArtifactDependencyEdgeV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "depends_on_artifact_id"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "depends_on_artifact_id": {
+          "type": "string"
+        }
+      }
+    },
+    "RootOwnershipBindingV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "owner_root_id"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "owner_root_id": {
+          "type": "string"
+        }
+      }
+    },
+    "EvidenceClassBindingV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "evidence_class"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "evidence_class": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthorityClassBindingV01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "authority_class"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "authority_class": {
+          "type": "string"
+        }
+      }
     }
   }
 }

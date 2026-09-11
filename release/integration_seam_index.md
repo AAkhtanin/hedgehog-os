@@ -22,3 +22,19 @@ copy that frozen JSON inventory. G2-C remains `NEXT / NOT_STARTED`.
 | r_h1_claim_evidence_links | `release/claim_to_evidence_index.md` | `tests/`, `demo/`, `docs/audit_reports/`, and `docs/` | IMPLEMENTATION_IN_PROGRESS | At the R-H1B implementation basis, four pre-R-H1 closure claims were indexed. Any later accepted R-H1 closure claim belongs to the mutable claim-to-evidence index after audit PASS. |
 | r_h1_deterministic_operator_commands | `release/one_command_gauntlet.md` | `demo/run_kernel_conformance_v01.py` and `demo/run_living_gauntlet_v01.py` | IMPLEMENTATION_IN_PROGRESS | Deterministic local execution is not production, public-release, or external clean-clone proof. |
 | r_h1_notes_limitations | `release/current_release_notes.md` | `release/current_limitations.md` | IMPLEMENTATION_IN_PROGRESS | Current engineering notes are not a public release announcement and all non-claims remain binding. |
+
+## Effective Current Universality Registration
+
+The frozen integration_seam_index.json and completion_manifest.json remain the Gate1 base. The strict universality_current_registration_v01 block of current_status_overlay_v01.json adds exactly the nine rows below. Both public Living collection and supplied-report validation read it, verify fixed source hashes and public symbols, and reject malformed or absent current registration. No row is an execution act or a second effect owner.
+
+| Seam | Producer | Validator | Consumer |
+| --- | --- | --- | --- |
+| native_action_packet | `hedgehog.action_commit_packet_v02:build_native_root_bound_action_commit_packet_v01` | `hedgehog.action_commit_packet_v02:validate_native_root_bound_action_commit_packet_v01` | `hedgehog.kernel.effect_firewall_v01:bind_native_action_authorization_v01` |
+| native_action_current_dispatch | `hedgehog.work_execution_host_v01:dispatch_current_action_v01` | `hedgehog.kernel.effect_firewall_v01:validate_native_effect_receipt_v01` | `hedgehog.kernel.effect_firewall_v01:execute_bound_effect_v01` |
+| work_composition | `hedgehog.kernel.work_composition_v01:materialize_work_program_v01` | `hedgehog.kernel.work_composition_v01:validate_work_program_candidate_v01` | `hedgehog.kernel.work_composition_v01:validate_work_program_result_v01` |
+| same_task_continuation | `hedgehog.kernel.work_composition_v01:revise_work_program_v01` | `hedgehog.kernel.work_composition_v01:validate_work_continuation_outcome_v01` | `hedgehog.kernel.work_composition_v01:validate_work_program_result_v01` |
+| pure_capability_admission | `hedgehog.capability_admission_v01:admit_pure_candidate_v01` | `hedgehog.capability_admission_v01:validate_admitted_pure_package_v01` | `hedgehog.capability_admission_v01:validate_pure_guest_evidence_v01` |
+| closed_pure_wasm_execution | `hedgehog.wasm_pure_worker_v01:run_pure_wasm_worker_v01` | `hedgehog.wasm_pure_worker_v01:validate_closed_pure_wasm_v01` | `hedgehog.capability_admission_v01:admit_pure_candidate_v01` |
+| local_pure_capability_reuse | `hedgehog.capability_memory_binding_v01:retrieve_pure_memory_v01` | `hedgehog.capability_memory_binding_v01:validate_pure_memory_retrieval_v01` | `hedgehog.capability_admission_v01:admit_pure_candidate_v01` |
+| retained_fractal_work | `hedgehog.kernel.fractal_runtime_v02:consume_fractal_retained_work_v01` | `hedgehog.kernel.fractal_runtime_v02:validate_fractal_retained_work_consumption_v01` | `hedgehog.kernel.continuous_delta_runtime_v01:validate_retained_work_preservation_v01` |
+| retained_selective_recomputation | `hedgehog.kernel.continuous_delta_runtime_v01:build_retained_selective_recomputation_plan_v01` | `hedgehog.kernel.continuous_delta_runtime_v01:validate_retained_selective_recomputation_plan_v01` | `hedgehog.kernel.continuous_delta_runtime_v01:prove_retained_work_preservation_v01` |

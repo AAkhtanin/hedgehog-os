@@ -8,7 +8,7 @@ or a real-world effect.
 from __future__ import annotations
 
 from collections import deque
-from dataclasses import dataclass, fields, replace
+from dataclasses import dataclass, fields, replace, is_dataclass as _is_dataclass
 from datetime import datetime, timezone
 import hashlib
 import re
@@ -260,6 +260,8 @@ VALIDATION_TARGETS_V01 = (
     "continuous_delta_abi_profile",
     "continuous_delta_transition_profile",
     "continuous_delta_stage_bundle",
+    "RetainedSelectiveRecomputationPlanV01",
+    "RetainedWorkPreservationProofV01",
 )
 
 FAILURE_STAGES_V01 = (
@@ -578,6 +580,50 @@ class SelectiveRecomputationPlanV01:
 
 
 @dataclass(frozen=True)
+class RetainedSelectiveRecomputationPlanV01:
+    recomputation_plan_id: str
+    delta_id: str
+    affected_set_id: str
+    invalidation_report_id: str
+    source_route_eligibility_artifact_id: str
+    source_topology_id: str
+    accepted_mode: str
+    accepted_scope_ref: str
+    ordered_affected_cell_ids: tuple[str, ...]
+    ordered_affected_artifact_ids: tuple[str, ...]
+    ordered_work_node_ids: tuple[str, ...]
+    ordered_preserved_artifact_ids: tuple[str, ...]
+    max_work_items: int
+    max_queue_entries: int
+    max_wall_time_units: int
+    max_token_budget: int
+    max_provider_calls: int
+    transition_profile_id: str
+    root_review_required: bool
+    plan_status: str
+    reason_codes: tuple[str, ...]
+    trace_refs: tuple[str, ...]
+    retained_profile: str
+
+
+@dataclass(frozen=True)
+class RetainedWorkPreservationProofV01:
+    preservation_proof_id: str
+    profile: str
+    baseline_graph_id: str
+    affected_set_id: str
+    current_plan_id: str
+    historical_bundle_sha256_before: str
+    historical_bundle_sha256_after: str
+    ordered_preserved_artifact_ids: tuple[str, ...]
+    ordered_before_artifact_sha256: tuple[str, ...]
+    ordered_after_artifact_sha256: tuple[str, ...]
+    ordered_retained_evidence_ids: tuple[str, ...]
+    ordered_consumption_ids: tuple[str, ...]
+    ordered_current_bookkeeping_artifact_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class RecomputedArtifactBindingV01:
     recomputed_binding_id: str
     recomputation_plan_id: str
@@ -721,7 +767,7 @@ class ContinuousDeltaSourceContextV01:
     baseline_source_artifacts: tuple[KernelArtifactV01, ...]
     observed_source_artifacts: tuple[KernelArtifactV01, ...]
     g2a_registry: object
-    g2a_packet: object
+    g2a_packet: action_commit_packet.SupplierRootBoundActionCommitPacketV02ProjectionV01 | action_commit_packet.NativeRootBoundActionCommitPacketV01
     g2a_dependency_candidate: object
     g2a_current_observations: tuple[object, ...]
     g2a_root_invalidation_material: object
@@ -754,15 +800,15 @@ class ContinuousDeltaExecutionBundleV01:
     dependency_graph_artifact: KernelArtifactV01
     affected_set_artifact: KernelArtifactV01
     invalidation_report_artifact: KernelArtifactV01
-    recomputation_plan: SelectiveRecomputationPlanV01
+    recomputation_plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01
     plan_proposed_artifact: KernelArtifactV01
     plan_root_decision_input: RootDecisionInputV01
     plan_root_decision_result: RootDecisionResultV01
     plan_root_decision_artifact: KernelArtifactV01
     plan_accepted_artifact: KernelArtifactV01
-    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02
+    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02 | g2d_runtime.FractalRetainedWorkExecutionBundleV01
     recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]
-    preservation_proof: PreservationProofV01
+    preservation_proof: PreservationProofV01 | RetainedWorkPreservationProofV01
     preservation_proof_artifact: KernelArtifactV01
     recomputation_result: SelectiveRecomputationResultV01
     g2e_validation_reports: tuple[ContinuousDeltaValidationReportV01, ...]
@@ -800,6 +846,10 @@ CONTINUOUS_DELTA_TYPES_V01 = (
 )
 SERIALIZED_CONTINUOUS_DELTA_TYPES_V01 = CONTINUOUS_DELTA_TYPES_V01[:18]
 RUNTIME_ONLY_CONTINUOUS_DELTA_TYPES_V01 = CONTINUOUS_DELTA_TYPES_V01[18:]
+RETAINED_CONTINUOUS_DELTA_TYPES_V01 = (
+    RetainedSelectiveRecomputationPlanV01, RetainedWorkPreservationProofV01,
+)
+CONTINUOUS_DELTA_TYPES_V01 += RETAINED_CONTINUOUS_DELTA_TYPES_V01
 CONTINUOUS_DELTA_FIELD_NAMES_V01 = tuple(
     (value_type.__name__, tuple(field.name for field in fields(value_type)))
     for value_type in CONTINUOUS_DELTA_TYPES_V01
@@ -2506,6 +2556,14 @@ def _project_g2e_abi_payload_v01(
         raise ValueError("g2e_object_invalid") from exc
     if type(complete_payload) is not dict:
         raise ValueError("g2e_object_invalid")
+    if profile_name in {"plan_proposed", "plan_root_accepted"} and "retained_profile" in complete_payload:
+        if complete_payload["retained_profile"] != "fractal_retained_work_v01":
+            raise ValueError("g2e_object_invalid")
+        expected_field_order = (*expected_field_order, "retained_profile")
+    if profile_name == "preservation_proof_validated" and "profile" in complete_payload:
+        if complete_payload["profile"] != "historical_work_preservation_v01":
+            raise ValueError("g2e_object_invalid")
+        expected_field_order = tuple(f.name for f in fields(RetainedWorkPreservationProofV01))
     if tuple(complete_payload) != expected_field_order:
         raise ValueError("g2e_object_invalid")
     if any(field_name not in complete_payload for field_name in omitted_fields):
@@ -4135,9 +4193,8 @@ def _recomputed_artifact_binding_errors_v01(value: object) -> tuple[str, ...]:
     if type(value) is not RecomputedArtifactBindingV01:
         return ("g2e_recomputation_result_invalid",)
     errors: list[str] = []
-    if not _prefixed_identity_valid(
-        value.recomputation_plan_id, "g2e_selective_recomputation_plan_v01:"
-    ):
+    if not any(_prefixed_identity_valid(value.recomputation_plan_id, prefix)
+        for prefix in ("g2e_selective_recomputation_plan_v01:", "frretained_plan:")):
         errors.append("g2e_recomputation_plan_invalid")
     if any(
         not _text_valid(item)
@@ -4176,12 +4233,7 @@ def _selective_recomputation_result_errors_v01(value: object) -> tuple[str, ...]
         return ("g2e_recomputation_result_invalid",)
     errors: list[str] = []
     if (
-        not _prefixed_identity_valid(
-            value.recomputation_plan_id, "g2e_selective_recomputation_plan_v01:"
-        )
-        or not _prefixed_identity_valid(
-            value.preservation_proof_id, "g2e_preservation_proof_v01:"
-        )
+        not _plan_preservation_ids_valid_v01(value.recomputation_plan_id, value.preservation_proof_id)
         or any(
             not _text_valid(item)
             for item in (
@@ -4232,11 +4284,10 @@ def _continuous_delta_runtime_trace_errors_v01(value: object) -> tuple[str, ...]
         (value.graph_id, "g2e_dependency_graph_index_v01:"),
         (value.affected_set_id, "g2e_affected_set_result_v01:"),
         (value.invalidation_report_id, "g2e_invalidation_report_v01:"),
-        (value.preservation_proof_id, "g2e_preservation_proof_v01:"),
-        (value.recomputation_plan_id, "g2e_selective_recomputation_plan_v01:"),
         (value.recomputation_result_id, "g2e_selective_recomputation_result_v01:"),
     )
-    if any(not _prefixed_identity_valid(item, prefix) for item, prefix in identity_rows):
+    if (not _plan_preservation_ids_valid_v01(value.recomputation_plan_id, value.preservation_proof_id)
+        or any(not _prefixed_identity_valid(item, prefix) for item, prefix in identity_rows)):
         errors.append("g2e_recomputation_result_invalid")
     if any(
         not _text_valid(item)
@@ -4271,12 +4322,11 @@ def _continuous_delta_runtime_report_errors_v01(value: object) -> tuple[str, ...
         (value.graph_id, "g2e_dependency_graph_index_v01:"),
         (value.affected_set_id, "g2e_affected_set_result_v01:"),
         (value.invalidation_report_id, "g2e_invalidation_report_v01:"),
-        (value.preservation_proof_id, "g2e_preservation_proof_v01:"),
-        (value.recomputation_plan_id, "g2e_selective_recomputation_plan_v01:"),
         (value.recomputation_result_id, "g2e_selective_recomputation_result_v01:"),
         (value.trace_id, "g2e_continuous_delta_runtime_trace_v01:"),
     )
-    if any(not _prefixed_identity_valid(item, prefix) for item, prefix in identity_rows):
+    if (not _plan_preservation_ids_valid_v01(value.recomputation_plan_id, value.preservation_proof_id)
+        or any(not _prefixed_identity_valid(item, prefix) for item, prefix in identity_rows)):
         errors.append("g2e_recomputation_result_invalid")
     if any(
         not _text_valid(item)
@@ -4404,7 +4454,7 @@ def _source_context_reason_v01(value: object) -> str | None:
         ):
             return "g2e_delta_source_unvalidated"
         if not _bool_tuple_validation_pass_v01(
-            action_commit_packet.validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            action_commit_packet.validate_common_root_bound_action_commit_packet_v01(
                 value.g2a_packet
             )
         ):
@@ -4422,7 +4472,7 @@ def _source_context_reason_v01(value: object) -> str | None:
         ):
             return "g2e_delta_source_unvalidated"
         if (
-            value.g2a_packet.canonical_projection.dependency_candidate
+            action_commit_packet.common_action_view_v01(value.g2a_packet).canonical_projection.dependency_candidate
             != value.g2a_dependency_candidate
             or not value.g2a_current_observations
             or any(
@@ -4499,7 +4549,7 @@ def _source_context_reason_v01(value: object) -> str | None:
     bundle = value.baseline_g2d_execution_bundle
     router_input = bundle.source_context.router_input
     snapshot = router_input.local_routing_snapshot
-    packet_projection = value.g2a_packet.canonical_projection
+    packet_projection = action_commit_packet.common_action_view_v01(value.g2a_packet).canonical_projection
     report = value.g2b_resolution_report
     transaction_id = router_input.transaction_id
     if (
@@ -5170,7 +5220,7 @@ def _project_preservation_proof_artifact_v01(
     delta: WorldStateDeltaV01,
     recomputed_g2d_runtime_trace_id: str,
 ) -> KernelArtifactV01:
-    if _preservation_proof_errors_v01(proof):
+    if _preservation_profile_errors_v01(proof):
         raise ValueError("g2e_preservation_proof_invalid")
     for artifact in (
         root_accepted_plan_artifact,
@@ -5197,7 +5247,9 @@ def _project_preservation_proof_artifact_v01(
         owning_root_id=delta.owning_root_id,
         payload=_project_g2e_abi_payload_v01(
             profile_name="preservation_proof_validated",
-            complete_payload=preservation_proof_to_plain_data_v01(proof),
+            complete_payload=(retained_work_preservation_to_plain_data_v01(proof)
+                if type(proof) is RetainedWorkPreservationProofV01
+                else preservation_proof_to_plain_data_v01(proof)),
         ),
         trace_refs=(
             proof.affected_set_id,
@@ -5470,7 +5522,7 @@ def build_continuous_delta_source_context_v01(
     baseline_source_artifacts: tuple[KernelArtifactV01, ...],
     observed_source_artifacts: tuple[KernelArtifactV01, ...],
     g2a_registry,
-    g2a_packet,
+    g2a_packet: action_commit_packet.SupplierRootBoundActionCommitPacketV02ProjectionV01 | action_commit_packet.NativeRootBoundActionCommitPacketV01,
     g2a_dependency_candidate,
     g2a_current_observations,
     g2a_root_invalidation_material,
@@ -5754,6 +5806,251 @@ def prove_unaffected_artifact_preservation_v01(
             artifact.artifact_id for artifact in after
         ),
     )
+
+
+def _retained_plan_base_v01(value: RetainedSelectiveRecomputationPlanV01) -> SelectiveRecomputationPlanV01:
+    if type(value) is not RetainedSelectiveRecomputationPlanV01 or value.retained_profile != "fractal_retained_work_v01":
+        raise ValueError("g2e_recomputation_plan_invalid")
+    return build_selective_recomputation_plan_v01(**{f.name: getattr(value, f.name)
+        for f in fields(SelectiveRecomputationPlanV01) if f.name != "recomputation_plan_id"})
+
+
+def _retained_plan_plain_v01(value: RetainedSelectiveRecomputationPlanV01) -> dict[str, object]:
+    return {f.name: list(getattr(value, f.name)) if type(getattr(value, f.name)) is tuple
+        else getattr(value, f.name) for f in fields(RetainedSelectiveRecomputationPlanV01)}
+
+
+def _retained_plan_identity_v01(value: RetainedSelectiveRecomputationPlanV01) -> str:
+    plain = _retained_plan_plain_v01(value)
+    plain.pop("recomputation_plan_id")
+    return "frretained_plan:" + domain_separated_sha256_hex_v01(
+        domain="hedgehog.fractal_retained_work.v01.plan", payload=canonical_json_bytes_v01(plain))
+
+
+def _retained_plan_errors_v01(value: object) -> tuple[str, ...]:
+    try:
+        base = _retained_plan_base_v01(value)
+        if _selective_recomputation_plan_errors_v01(base) or value.recomputation_plan_id != _retained_plan_identity_v01(value):
+            raise ValueError("g2e_recomputation_plan_invalid")
+        return ()
+    except (ValueError, TypeError, AttributeError):
+        return ("g2e_recomputation_plan_invalid",)
+
+
+def build_retained_selective_recomputation_plan_v01(*, base_plan: SelectiveRecomputationPlanV01,
+    source_context: ContinuousDeltaSourceContextV01, affected_set: AffectedSetResultV01) -> RetainedSelectiveRecomputationPlanV01:
+    if validate_selective_recomputation_plan_v01(base_plan).status != "PASS" or (
+        validate_continuous_delta_source_context_v01(source_context).status != "PASS"
+        or _affected_set_result_errors(affected_set)
+        or base_plan.affected_set_id != affected_set.affected_set_id
+        or base_plan.source_topology_id != source_context.baseline_g2d_execution_bundle.topology.topology_id
+        or base_plan.source_route_eligibility_artifact_id != source_context.baseline_g2c_route_eligibility_artifact.artifact_id
+    ):
+        raise ValueError("g2e_recomputation_plan_invalid")
+    provisional = RetainedSelectiveRecomputationPlanV01(**{f.name: getattr(base_plan, f.name)
+        for f in fields(SelectiveRecomputationPlanV01)}, retained_profile="fractal_retained_work_v01")
+    return replace(provisional, recomputation_plan_id=_retained_plan_identity_v01(provisional))
+
+
+def validate_retained_selective_recomputation_plan_v01(value: object, *,
+    source_context: ContinuousDeltaSourceContextV01, affected_set: AffectedSetResultV01) -> ContinuousDeltaValidationReportV01:
+    errors = _retained_plan_errors_v01(value)
+    if not errors:
+        try:
+            expected = build_retained_selective_recomputation_plan_v01(base_plan=_retained_plan_base_v01(value),
+                source_context=source_context, affected_set=affected_set)
+            if value != expected:
+                errors = ("g2e_recomputation_plan_invalid",)
+        except (ValueError, TypeError, AttributeError):
+            errors = ("g2e_recomputation_plan_invalid",)
+    return _contextual_report_v01(validation_target="RetainedSelectiveRecomputationPlanV01",
+        validated_object_id=value.recomputation_plan_id if not errors else None,
+        failure_stage="recomputation_plan", reason_codes=errors)
+
+
+def retained_selective_recomputation_plan_to_plain_data_v01(value: RetainedSelectiveRecomputationPlanV01) -> dict[str, object]:
+    if _retained_plan_errors_v01(value):
+        raise ValueError("g2e_recomputation_plan_invalid")
+    return _retained_plan_plain_v01(value)
+
+
+def _plan_plain_profile_v04(value: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01) -> dict[str, object]:
+    if type(value) is RetainedSelectiveRecomputationPlanV01:
+        return retained_selective_recomputation_plan_to_plain_data_v01(value)
+    return selective_recomputation_plan_to_plain_data_v01(value)
+
+
+def _plan_profile_errors_v01(value: object) -> tuple[str, ...]:
+    if type(value) is RetainedSelectiveRecomputationPlanV01:
+        return _retained_plan_errors_v01(value)
+    return _selective_recomputation_plan_errors_v01(value)
+
+
+def _preservation_profile_errors_v01(value: object) -> tuple[str, ...]:
+    if type(value) is RetainedWorkPreservationProofV01:
+        return _retained_preservation_errors_v01(value)
+    return _preservation_proof_errors_v01(value)
+
+
+def _recomputed_profile_valid_v01(value: object, plan: object) -> bool:
+    if type(plan) is RetainedSelectiveRecomputationPlanV01:
+        return (type(value) is g2d_runtime.FractalRetainedWorkExecutionBundleV01
+            and g2d_runtime.validate_fractal_retained_work_execution_bundle_v01(value).status == "PASS"
+            and kernel_artifact_to_plain_dict_v01(value.plan_review.accepted_artifact)["payload"]
+                == {k: v for k, v in _retained_plan_plain_v01(plan).items() if k != "trace_refs"})
+    return (type(plan) is SelectiveRecomputationPlanV01
+        and type(value) is FractalRuntimeExecutionBundleV02
+        and validate_fractal_runtime_execution_bundle_v02(value).status == "PASS")
+
+
+def _plan_preservation_ids_valid_v01(plan_id: object, proof_id: object) -> bool:
+    return any(_prefixed_identity_valid(plan_id, plan_prefix)
+        and _prefixed_identity_valid(proof_id, proof_prefix)
+        for plan_prefix, proof_prefix in (
+            ("g2e_selective_recomputation_plan_v01:", "g2e_preservation_proof_v01:"),
+            ("frretained_plan:", "frretained_preservation:")))
+
+
+def _retained_preservation_plain_v01(value: RetainedWorkPreservationProofV01) -> dict[str, object]:
+    if type(value) is not RetainedWorkPreservationProofV01:
+        raise ValueError("g2e_preservation_proof_invalid")
+    return {f.name: _plain_value(getattr(value, f.name)) for f in fields(RetainedWorkPreservationProofV01)}
+
+
+def _retained_preservation_identity_v01(value: RetainedWorkPreservationProofV01) -> str:
+    plain = _retained_preservation_plain_v01(value)
+    plain.pop("preservation_proof_id")
+    return "frretained_preservation:" + domain_separated_sha256_hex_v01(
+        domain="hedgehog.fractal_retained_work.v01.preservation", payload=canonical_json_bytes_v01(plain))
+
+
+def _retained_preservation_errors_v01(value: object) -> tuple[str, ...]:
+    try:
+        plain = _retained_preservation_plain_v01(value)
+        if (value.profile != "historical_work_preservation_v01"
+            or value.preservation_proof_id != _retained_preservation_identity_v01(value)
+            or not _prefixed_identity_valid(value.current_plan_id, "frretained_plan:")
+            or not _sha256_valid(value.historical_bundle_sha256_before)
+            or value.historical_bundle_sha256_before != value.historical_bundle_sha256_after
+            or not _text_valid(value.baseline_graph_id) or not _text_valid(value.affected_set_id)
+            or any(type(getattr(value, name)) is not tuple or not _text_tuple_valid(getattr(value, name))
+                for name in ("ordered_preserved_artifact_ids", "ordered_retained_evidence_ids",
+                    "ordered_consumption_ids", "ordered_current_bookkeeping_artifact_ids"))
+            or not value.ordered_retained_evidence_ids or not value.ordered_consumption_ids
+            or len(value.ordered_preserved_artifact_ids) != len(value.ordered_before_artifact_sha256)
+            or type(value.ordered_before_artifact_sha256) is not tuple
+            or type(value.ordered_after_artifact_sha256) is not tuple
+            or value.ordered_before_artifact_sha256 != value.ordered_after_artifact_sha256
+            or any(not _sha256_valid(x) for x in value.ordered_before_artifact_sha256)):
+            raise ValueError("g2e_preservation_proof_invalid")
+        canonical_json_bytes_v01(plain)
+        return ()
+    except (TypeError, ValueError, AttributeError):
+        return ("g2e_preservation_proof_invalid",)
+
+
+def prove_retained_work_preservation_v01(*, source_context: ContinuousDeltaSourceContextV01,
+    affected_set: AffectedSetResultV01, plan: RetainedSelectiveRecomputationPlanV01,
+    recomputed_bundle: g2d_runtime.FractalRetainedWorkExecutionBundleV01,
+    recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]) -> RetainedWorkPreservationProofV01:
+    if (validate_retained_selective_recomputation_plan_v01(plan, source_context=source_context,
+            affected_set=affected_set).status != "PASS"
+        or g2d_runtime.validate_fractal_retained_work_execution_bundle_v01(recomputed_bundle).status != "PASS"
+        or recomputed_bundle.observed_work_context.baseline_execution_bundle != source_context.baseline_g2d_execution_bundle
+        or recomputed_bindings != _g2e4_recomputed_bindings_v01(plan=plan,
+            baseline=source_context.baseline_g2d_execution_bundle, recomputed=recomputed_bundle)):
+        raise ValueError("g2e_preservation_proof_invalid")
+    plan_payload = kernel_artifact_to_plain_dict_v01(recomputed_bundle.plan_review.accepted_artifact)["payload"]
+    if plan_payload != {k: v for k, v in _retained_plan_plain_v01(plan).items() if k != "trace_refs"}:
+        raise ValueError("g2e_preservation_proof_invalid")
+    baseline = source_context.baseline_g2d_execution_bundle
+    before = tuple(e.historical_bundle_sha256 for e in recomputed_bundle.retained_evidence)
+    after = hashlib.sha256(canonical_json_bytes_v01(
+        g2d_runtime.fractal_runtime_execution_bundle_to_plain_data_v02(baseline))).hexdigest()
+    if not before or any(digest != after for digest in before):
+        raise ValueError("g2e_preservation_proof_invalid")
+    baseline_by_id = {a.artifact_id: a for a in source_context.baseline_source_artifacts}
+    if len(baseline_by_id) != len(source_context.baseline_source_artifacts):
+        raise ValueError("g2e_preservation_proof_invalid")
+    observed = dict(zip((a.artifact_id for a in source_context.baseline_source_artifacts),
+        source_context.observed_source_artifacts, strict=True))
+    if plan.ordered_preserved_artifact_ids != affected_set.ordered_unaffected_ids:
+        raise ValueError("g2e_preservation_proof_invalid")
+    before_hashes = tuple(_artifact_sha256_v01(baseline_by_id[key]) for key in plan.ordered_preserved_artifact_ids)
+    after_hashes = tuple(_artifact_sha256_v01(observed[key]) for key in plan.ordered_preserved_artifact_ids)
+    if before_hashes != after_hashes:
+        raise ValueError("g2e_preservation_proof_invalid")
+    current = (*recomputed_bundle.queue_artifacts, *recomputed_bundle.retained_consumption_artifacts,
+        *recomputed_bundle.result_artifacts, recomputed_bundle.report_artifact)
+    provisional = RetainedWorkPreservationProofV01("", "historical_work_preservation_v01",
+        affected_set.graph_id, affected_set.affected_set_id, plan.recomputation_plan_id, before[0], after,
+        plan.ordered_preserved_artifact_ids, before_hashes, after_hashes,
+        tuple(e.evidence_id for e in recomputed_bundle.retained_evidence),
+        tuple(c.consumption_id for c in recomputed_bundle.retained_consumptions),
+        tuple(a.artifact_id for a in current))
+    result = replace(provisional, preservation_proof_id=_retained_preservation_identity_v01(provisional))
+    if _retained_preservation_errors_v01(result):
+        raise ValueError("g2e_preservation_proof_invalid")
+    return result
+
+
+def validate_retained_work_preservation_v01(value: object, *, source_context: ContinuousDeltaSourceContextV01,
+    affected_set: AffectedSetResultV01, plan: RetainedSelectiveRecomputationPlanV01,
+    recomputed_bundle: g2d_runtime.FractalRetainedWorkExecutionBundleV01,
+    recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]) -> ContinuousDeltaValidationReportV01:
+    errors = _retained_preservation_errors_v01(value)
+    if not errors:
+        try:
+            expected = prove_retained_work_preservation_v01(source_context=source_context, affected_set=affected_set,
+                plan=plan, recomputed_bundle=recomputed_bundle, recomputed_bindings=recomputed_bindings)
+            if value != expected:
+                errors = ("g2e_preservation_proof_invalid",)
+        except (ValueError, TypeError, AttributeError, KeyError):
+            errors = ("g2e_preservation_proof_invalid",)
+    return _contextual_report_v01(validation_target="RetainedWorkPreservationProofV01",
+        validated_object_id=value.preservation_proof_id if not errors else None,
+        failure_stage="preservation", reason_codes=errors)
+
+
+def retained_work_preservation_to_plain_data_v01(value: RetainedWorkPreservationProofV01) -> dict[str, object]:
+    if _retained_preservation_errors_v01(value):
+        raise ValueError("g2e_preservation_proof_invalid")
+    return _retained_preservation_plain_v01(value)
+
+
+def _retained_preservation_consumer_errors_v01(proof: object, *, source_context: ContinuousDeltaSourceContextV01,
+    plan: RetainedSelectiveRecomputationPlanV01, recomputed: g2d_runtime.FractalRetainedWorkExecutionBundleV01,
+    bindings: tuple[RecomputedArtifactBindingV01, ...], affected_artifact: KernelArtifactV01) -> tuple[str, ...]:
+    try:
+        if _retained_preservation_errors_v01(proof) or not _recomputed_profile_valid_v01(recomputed, plan):
+            raise ValueError("g2e_preservation_proof_invalid")
+        affected = kernel_artifact_to_plain_dict_v01(affected_artifact)["payload"]
+        baseline = source_context.baseline_g2d_execution_bundle
+        if (plan.ordered_preserved_artifact_ids != tuple(affected["ordered_unaffected_ids"])
+            or bindings != _g2e4_recomputed_bindings_v01(plan=plan, baseline=baseline, recomputed=recomputed)
+            or baseline != recomputed.observed_work_context.baseline_execution_bundle):
+            raise ValueError("g2e_preservation_proof_invalid")
+        actual_before = {a.artifact_id: a for a in source_context.baseline_source_artifacts}
+        actual_after = dict(zip((a.artifact_id for a in source_context.baseline_source_artifacts),
+            source_context.observed_source_artifacts, strict=True))
+        digest = hashlib.sha256(canonical_json_bytes_v01(
+            g2d_runtime.fractal_runtime_execution_bundle_to_plain_data_v02(baseline))).hexdigest()
+        expected = RetainedWorkPreservationProofV01("", "historical_work_preservation_v01",
+            affected["graph_id"], affected["affected_set_id"], plan.recomputation_plan_id,
+            recomputed.retained_evidence[0].historical_bundle_sha256, digest,
+            plan.ordered_preserved_artifact_ids,
+            tuple(_artifact_sha256_v01(actual_before[key]) for key in plan.ordered_preserved_artifact_ids),
+            tuple(_artifact_sha256_v01(actual_after[key]) for key in plan.ordered_preserved_artifact_ids),
+            tuple(x.evidence_id for x in recomputed.retained_evidence),
+            tuple(x.consumption_id for x in recomputed.retained_consumptions),
+            tuple(a.artifact_id for a in (*recomputed.queue_artifacts, *recomputed.retained_consumption_artifacts,
+                *recomputed.result_artifacts, recomputed.report_artifact)))
+        expected = replace(expected, preservation_proof_id=_retained_preservation_identity_v01(expected))
+        if proof != expected:
+            raise ValueError("g2e_preservation_proof_invalid")
+        return ()
+    except (TypeError, ValueError, AttributeError, KeyError, IndexError):
+        return ("g2e_preservation_proof_invalid",)
 
 
 def build_selective_recomputation_plan_v01(
@@ -6473,21 +6770,14 @@ def _continuous_delta_execution_bundle_errors_v01(
         or _affected_set_request_errors(value.affected_request)
         or _affected_set_result_errors(value.affected_result)
         or _invalidation_report_errors_v01(value.invalidation_report)
-        or _selective_recomputation_plan_errors_v01(value.recomputation_plan)
-        or _preservation_proof_errors_v01(value.preservation_proof)
+        or _plan_profile_errors_v01(value.recomputation_plan)
+        or _preservation_profile_errors_v01(value.preservation_proof)
         or _selective_recomputation_result_errors_v01(value.recomputation_result)
         or _continuous_delta_runtime_trace_errors_v01(value.runtime_trace)
         or _continuous_delta_runtime_report_errors_v01(value.runtime_report)
     ):
         errors.append("g2e_recomputation_result_invalid")
-    if (
-        type(value.recomputed_g2d_execution_bundle)
-        is not FractalRuntimeExecutionBundleV02
-        or validate_fractal_runtime_execution_bundle_v02(
-            value.recomputed_g2d_execution_bundle
-        ).status
-        != "PASS"
-    ):
+    if not _recomputed_profile_valid_v01(value.recomputed_g2d_execution_bundle, value.recomputation_plan):
         errors.append("g2e_recomputation_result_invalid")
     root_carrier_invalid = bool(
         root_runtime.validate_root_decision_input_v01(
@@ -6614,15 +6904,15 @@ def build_continuous_delta_execution_bundle_v01(
     dependency_graph_artifact: KernelArtifactV01,
     affected_set_artifact: KernelArtifactV01,
     invalidation_report_artifact: KernelArtifactV01,
-    recomputation_plan: SelectiveRecomputationPlanV01,
+    recomputation_plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01,
     plan_proposed_artifact: KernelArtifactV01,
     plan_root_decision_input: RootDecisionInputV01,
     plan_root_decision_result: RootDecisionResultV01,
     plan_root_decision_artifact: KernelArtifactV01,
     plan_accepted_artifact: KernelArtifactV01,
-    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02 | g2d_runtime.FractalRetainedWorkExecutionBundleV01,
     recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
-    preservation_proof: PreservationProofV01,
+    preservation_proof: PreservationProofV01 | RetainedWorkPreservationProofV01,
     preservation_proof_artifact: KernelArtifactV01,
     recomputation_result: SelectiveRecomputationResultV01,
     g2e_validation_reports: tuple[ContinuousDeltaValidationReportV01, ...],
@@ -7191,7 +7481,7 @@ def build_selective_recomputation_plan_from_affected_set_v01(
 
 
 def validate_selective_recomputation_plan_against_sources_v01(
-    value: SelectiveRecomputationPlanV01,
+    value: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01,
     *,
     delta: WorldStateDeltaV01,
     affected_set: AffectedSetResultV01,
@@ -7204,7 +7494,8 @@ def validate_selective_recomputation_plan_against_sources_v01(
     dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
     dependency_graph: DependencyGraphIndexV01,
 ) -> ContinuousDeltaValidationReportV01:
-    errors = list(_selective_recomputation_plan_errors_v01(value))
+    retained = type(value) is RetainedSelectiveRecomputationPlanV01
+    errors = list(_retained_plan_errors_v01(value) if retained else _selective_recomputation_plan_errors_v01(value))
     try:
         expected = _derive_selective_recomputation_plan_v01(
             delta=delta,
@@ -7218,7 +7509,10 @@ def validate_selective_recomputation_plan_against_sources_v01(
             dependency_edges=dependency_edges,
             dependency_graph=dependency_graph,
         )
-        if type(value) is not SelectiveRecomputationPlanV01 or value != expected:
+        if retained:
+            expected = build_retained_selective_recomputation_plan_v01(
+                base_plan=expected, source_context=source_context, affected_set=affected_set)
+        if type(value) is not type(expected) or value != expected:
             errors.append("g2e_recomputation_plan_invalid")
     except ValueError as exc:
         reason = str(exc)
@@ -10795,7 +11089,7 @@ def _g2e4_project_plan_proposed_artifact_v01(
         owning_root_id=delta.owning_root_id,
         payload=_project_g2e_abi_payload_v01(
             profile_name="plan_proposed",
-            complete_payload=selective_recomputation_plan_to_plain_data_v01(plan),
+            complete_payload=_plan_plain_profile_v04(plan),
         ),
         trace_refs=_ordered_unique_v01(
             (
@@ -10846,7 +11140,7 @@ def _g2e4_project_plan_accepted_artifact_v01(
         owning_root_id=delta.owning_root_id,
         payload=_project_g2e_abi_payload_v01(
             profile_name="plan_root_accepted",
-            complete_payload=selective_recomputation_plan_to_plain_data_v01(plan),
+            complete_payload=_plan_plain_profile_v04(plan),
         ),
         trace_refs=(
             proposed_artifact.artifact_id,
@@ -10875,7 +11169,7 @@ def _g2e4_project_blocked_plan_artifact_v01(
     delta: WorldStateDeltaV01,
     source_context: ContinuousDeltaSourceContextV01,
 ) -> KernelArtifactV01:
-    complete_payload = selective_recomputation_plan_to_plain_data_v01(plan)
+    complete_payload = _plan_plain_profile_v04(plan)
     if tuple(complete_payload.get("trace_refs", ())) != plan.trace_refs:
         raise ValueError("g2e_root_pair_invalid")
     payload = _project_g2e_abi_payload_v01(
@@ -11058,10 +11352,13 @@ def _g2e4_causal_ref_id_v01(value: CausalConsumptionRefV01) -> str:
 
 def _g2e4_recomputed_bindings_v01(
     *,
-    plan: SelectiveRecomputationPlanV01,
+    plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01,
     baseline: FractalRuntimeExecutionBundleV02,
-    recomputed: FractalRuntimeExecutionBundleV02,
+    recomputed: FractalRuntimeExecutionBundleV02 | g2d_runtime.FractalRetainedWorkExecutionBundleV01,
 ) -> tuple[RecomputedArtifactBindingV01, ...]:
+    retained = type(plan) is RetainedSelectiveRecomputationPlanV01
+    if retained != (type(recomputed) is g2d_runtime.FractalRetainedWorkExecutionBundleV01):
+        raise ValueError("g2e_recomputation_result_invalid")
     root_result = recomputed.cell_results[-1]
     conditional_failure = bool(
         recomputed.revise_observations and recomputed.partial_failures
@@ -11076,31 +11373,28 @@ def _g2e4_recomputed_bindings_v01(
         tuple[KernelArtifactV01, KernelArtifactV01, str, object]
     ] = []
     prior_queue_rows: dict[
-        tuple[str, str, str, int, int], KernelArtifactV01
+        tuple[str, str, str, int] | tuple[str, str, str, int, int], KernelArtifactV01
     ] = {}
     for entry, artifact in zip(
         baseline.queue_entries, baseline.queue_artifacts, strict=True
     ):
-        key = (
-            entry.cell_id,
-            entry.node_id,
-            entry.state,
-            entry.node_instance_sequence,
-            entry.snapshot_sequence,
-        )
+        # Retention changes live instantiation ordinals, not the source node/slot.
+        key = (entry.cell_id, entry.node_id, entry.state) + (
+            () if retained else (entry.node_instance_sequence,)
+        ) + (entry.snapshot_sequence,)
         if key in prior_queue_rows:
             raise ValueError("g2e_recomputation_result_invalid")
         prior_queue_rows[key] = artifact
+    seen_current_keys = set()
     for entry, artifact in zip(
         recomputed.queue_entries, recomputed.queue_artifacts, strict=True
     ):
-        key = (
-            entry.cell_id,
-            entry.node_id,
-            entry.state,
-            entry.node_instance_sequence,
-            entry.snapshot_sequence,
-        )
+        key = (entry.cell_id, entry.node_id, entry.state) + (
+            () if retained else (entry.node_instance_sequence,)
+        ) + (entry.snapshot_sequence,)
+        if key in seen_current_keys:
+            raise ValueError("g2e_recomputation_result_invalid")
+        seen_current_keys.add(key)
         prior = prior_queue_rows.get(key)
         if prior is None:
             if conditional_failure:
@@ -11246,6 +11540,7 @@ def _g2e4_conditional_unresolved_artifact_ids_v01(
 
 def _g2e4_preservation_family_v01(
     *,
+    plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01,
     affected_result: AffectedSetResultV01,
     invalidation_records: tuple[ArtifactInvalidationRecordV01, ...],
     source_context: ContinuousDeltaSourceContextV01,
@@ -11255,13 +11550,18 @@ def _g2e4_preservation_family_v01(
     invalidation_artifact: KernelArtifactV01,
     delta: WorldStateDeltaV01,
 ) -> tuple[PreservationProofV01, KernelArtifactV01]:
-    proof = prove_unaffected_artifact_preservation_v01(
-        affected_set=affected_result,
-        invalidation_records=invalidation_records,
-        source_context=source_context,
-        recomputed_g2d_execution_bundle=recomputed_bundle,
-        recomputed_bindings=recomputed_bindings,
-    )
+    if type(plan) is RetainedSelectiveRecomputationPlanV01:
+        proof = prove_retained_work_preservation_v01(source_context=source_context,
+            affected_set=affected_result, plan=plan, recomputed_bundle=recomputed_bundle,
+            recomputed_bindings=recomputed_bindings)
+    else:
+        proof = prove_unaffected_artifact_preservation_v01(
+            affected_set=affected_result,
+            invalidation_records=invalidation_records,
+            source_context=source_context,
+            recomputed_g2d_execution_bundle=recomputed_bundle,
+            recomputed_bindings=recomputed_bindings,
+        )
     artifact = _project_preservation_proof_artifact_v01(
         proof=proof,
         root_accepted_plan_artifact=accepted_plan_artifact,
@@ -11382,15 +11682,10 @@ def _g2e4_recomputation_result_errors_v01(
         and recomputed_g2d_execution_bundle.partial_failures
     )
     if (
-        _selective_recomputation_plan_errors_v01(plan)
+        _plan_profile_errors_v01(plan)
         or validate_continuous_delta_source_context_v01(source_context).status
         != "PASS"
-        or type(recomputed_g2d_execution_bundle)
-        is not FractalRuntimeExecutionBundleV02
-        or validate_fractal_runtime_execution_bundle_v02(
-            recomputed_g2d_execution_bundle
-        ).status
-        != "PASS"
+        or not _recomputed_profile_valid_v01(recomputed_g2d_execution_bundle, plan)
     ):
         errors.append("g2e_recomputation_result_invalid")
     artifacts = (
@@ -11468,7 +11763,7 @@ def _g2e4_recomputation_result_errors_v01(
     ):
         errors.append("g2e_recomputation_result_invalid")
     if (
-        _preservation_proof_errors_v01(preservation_proof)
+        _preservation_profile_errors_v01(preservation_proof)
         or preservation_proof_artifact.parent_refs
         != (
             plan_accepted_artifact.artifact_id,
@@ -11476,6 +11771,12 @@ def _g2e4_recomputation_result_errors_v01(
             recomputed_g2d_execution_bundle.report_artifact.artifact_id,
         )
     ):
+        errors.append("g2e_preservation_proof_invalid")
+    if type(plan) is RetainedSelectiveRecomputationPlanV01:
+        errors.extend(_retained_preservation_consumer_errors_v01(preservation_proof,
+            source_context=source_context, plan=plan, recomputed=recomputed_g2d_execution_bundle,
+            bindings=recomputed_bindings, affected_artifact=affected_set_artifact))
+    elif type(preservation_proof) is not PreservationProofV01:
         errors.append("g2e_preservation_proof_invalid")
     expected_transitions = _g2e4_transition_decisions_v01()
     registry = transition_runtime.build_continuous_delta_transition_registry_profile_v01()
@@ -11815,9 +12116,63 @@ def _g2e4_blocked_runtime_report_artifact_v01(
     return artifact
 
 
+def _retained_review_family_v01(*, source_context: ContinuousDeltaSourceContextV01,
+    e3_artifacts: dict[str, KernelArtifactV01], proposed: KernelArtifactV01,
+    decision: KernelArtifactV01, accepted: KernelArtifactV01, root_input: RootDecisionInputV01,
+    root_result: RootDecisionResultV01, t04: TransitionDecisionV01, t05: TransitionDecisionV01,
+    registry: TransitionRegistryV01) -> g2d_runtime.FractalRetainedPlanReviewV01:
+    available: dict[str, KernelArtifactV01] = {}
+    seen: set[int] = set()
+    def visit(value: object) -> None:
+        if id(value) in seen:
+            return
+        seen.add(id(value))
+        if type(value) is KernelArtifactV01:
+            if validate_kernel_artifact_v01(value):
+                raise ValueError("g2e_abi_binding_invalid")
+            prior = available.get(value.artifact_id)
+            if prior is not None and canonical_json_bytes_v01(_artifact_plain_v01(prior)) != canonical_json_bytes_v01(_artifact_plain_v01(value)):
+                raise ValueError("g2e_abi_binding_invalid")
+            available[value.artifact_id] = value
+        elif _is_dataclass(value):
+            for field in fields(value):
+                visit(getattr(value, field.name))
+        elif type(value) in (tuple, list):
+            for item in value:
+                visit(item)
+        elif type(value) is dict:
+            for item in value.values():
+                visit(item)
+    visit((source_context, e3_artifacts, proposed, decision, accepted))
+    seeds = {a.artifact_id for a in (proposed, decision, accepted)}
+    needed = set(seeds)
+    pending = list(seeds)
+    while pending:
+        artifact = available.get(pending.pop())
+        if artifact is None:
+            raise ValueError("g2e_abi_binding_invalid")
+        for parent in artifact.parent_refs:
+            if parent not in needed:
+                needed.add(parent)
+                pending.append(parent)
+    ordered = []
+    emitted: set[str] = set()
+    while len(emitted) < len(needed):
+        ready = sorted(key for key in needed - emitted if set(available[key].parent_refs) <= emitted)
+        if not ready:
+            raise ValueError("g2e_abi_binding_invalid")
+        ordered.extend(ready)
+        emitted.update(ready)
+    review = g2d_runtime.FractalRetainedPlanReviewV01(root_kernel=source_context.root_kernel,
+        root_input=root_input, root_result=root_result, proposed_artifact=proposed, decision_artifact=decision,
+        accepted_artifact=accepted, review_transition=t04, accept_transition=t05,
+        transition_registry=registry, ordered_plan_ancestor_artifacts=tuple(available[key] for key in ordered if key not in seeds))
+    return review
+
+
 def execute_selective_recomputation_v01(
     *,
-    plan: SelectiveRecomputationPlanV01,
+    plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01,
     source_context: ContinuousDeltaSourceContextV01,
     source_bindings: tuple[DeltaSourceBindingV01, ...],
     changed_field_bindings: tuple[ChangedFieldBindingV01, ...],
@@ -11888,7 +12243,10 @@ def execute_selective_recomputation_v01(
             dependency_edges=dependency_edges,
             dependency_graph=dependency_graph,
         )
-        plan_structural_report = validate_selective_recomputation_plan_v01(plan)
+        retained = type(plan) is RetainedSelectiveRecomputationPlanV01
+        plan_structural_report = (validate_retained_selective_recomputation_plan_v01(plan,
+            source_context=source_context, affected_set=affected_result) if retained
+            else validate_selective_recomputation_plan_v01(plan))
         pre_plan_reports = (
             source_context_report,
             invalidation_context_report,
@@ -11903,7 +12261,7 @@ def execute_selective_recomputation_v01(
             phase="PLAN",
             request_id=delta.request_id,
             candidate_id=plan.recomputation_plan_id,
-            candidate_plain=selective_recomputation_plan_to_plain_data_v01(plan),
+            candidate_plain=_plan_plain_profile_v04(plan),
             transaction_id=delta.transaction_id,
             target_root_id=delta.owning_root_id,
             topology_ref=plan.source_topology_id,
@@ -11992,7 +12350,22 @@ def execute_selective_recomputation_v01(
             baseline_source_artifacts=source_context.baseline_source_artifacts,
             ordered_affected_artifact_ids=affected_result.ordered_affected_ids,
         )
-        if scope_proof["classification"] == "STRICT_SUBSET":
+        if retained:
+            if scope_proof["classification"] != "STRICT_SUBSET":
+                raise ValueError("g2e_topology_binding_mismatch")
+            plan_review = _retained_review_family_v01(source_context=source_context, e3_artifacts=e3_artifacts,
+                proposed=plan_proposed_artifact, decision=plan_root_artifact, accepted=plan_accepted_artifact,
+                root_input=plan_root_input, root_result=plan_root_result, t04=t04, t05=t05, registry=registry)
+            observed_context = _g2e4_observed_work_context_v01(plan=plan, source_context=source_context,
+                source_bindings=source_bindings, changed_field_bindings=changed_field_bindings,
+                changed_artifact_bindings=changed_artifact_bindings, execution_scope="SELECTIVE")
+            retained_evidence = tuple(g2d_runtime.build_fractal_retained_work_evidence_v01(
+                historical_bundle=baseline, historical_cell_id=cell.cell_id) for cell in baseline.cell_inputs
+                if cell.parent_cell_id is not None and cell.cell_id not in plan.ordered_affected_cell_ids)
+            recomputed_bundle = g2d_runtime.build_fractal_retained_work_execution_bundle_v01(
+                source_context=baseline.source_context, observed_work_context=observed_context,
+                plan_review=plan_review, retained_evidence=retained_evidence)
+        elif scope_proof["classification"] == "STRICT_SUBSET":
             recomputed_bundle = _g2e4_execute_granular_g2d_v01(
                 plan=plan,
                 source_context=source_context,
@@ -12036,6 +12409,7 @@ def execute_selective_recomputation_v01(
             recomputed=recomputed_bundle,
         )
         preservation_proof, preservation_artifact = _g2e4_preservation_family_v01(
+            plan=plan,
             affected_result=affected_result,
             invalidation_records=invalidation_records,
             source_context=source_context,
@@ -12146,7 +12520,10 @@ def execute_selective_recomputation_v01(
             validate_recomputed_artifact_binding_v01(item)
             for item in recomputed_bindings
         )
-        preservation_report = validate_preservation_proof_v01(preservation_proof)
+        preservation_report = (validate_retained_work_preservation_v01(preservation_proof,
+            source_context=source_context, affected_set=affected_result, plan=plan,
+            recomputed_bundle=recomputed_bundle, recomputed_bindings=recomputed_bindings)
+            if retained else validate_preservation_proof_v01(preservation_proof))
         result_structural_report = validate_selective_recomputation_result_v01(
             recomputation_result
         )
@@ -12702,7 +13079,7 @@ def execute_selective_recomputation_v01(
 def validate_selective_recomputation_result_against_plan_v01(
     value: SelectiveRecomputationResultV01,
     *,
-    plan: SelectiveRecomputationPlanV01,
+    plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01,
     source_context: ContinuousDeltaSourceContextV01,
     delta_source_proposed_artifact: KernelArtifactV01,
     delta_source_artifact: KernelArtifactV01,
@@ -12714,9 +13091,9 @@ def validate_selective_recomputation_result_against_plan_v01(
     plan_root_decision_result: RootDecisionResultV01,
     plan_root_decision_artifact: KernelArtifactV01,
     plan_accepted_artifact: KernelArtifactV01,
-    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02,
+    recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02 | g2d_runtime.FractalRetainedWorkExecutionBundleV01,
     recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...],
-    preservation_proof: PreservationProofV01,
+    preservation_proof: PreservationProofV01 | RetainedWorkPreservationProofV01,
     preservation_proof_artifact: KernelArtifactV01,
     g2e_transition_decisions: tuple[TransitionDecisionV01, ...],
     g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...],
@@ -12753,11 +13130,15 @@ def run_continuous_delta_runtime_v01(
     delta: WorldStateDeltaV01,
     dependency_edges: tuple[DeltaDependencyEdgeV01, ...],
     dependency_graph: DependencyGraphIndexV01,
+    retained_profile: str | None = None,
 ) -> tuple[
     ContinuousDeltaExecutionBundleV01 | None,
     ContinuousDeltaValidationReportV01,
 ]:
     try:
+        if retained_profile is not None and (type(retained_profile) is not str
+            or retained_profile != "fractal_retained_work_v01"):
+            raise ValueError("g2e_recomputation_plan_invalid")
         affected_request = build_affected_set_request_v01(
             delta=delta,
             graph=dependency_graph,
@@ -12796,6 +13177,9 @@ def run_continuous_delta_runtime_v01(
             dependency_edges=dependency_edges,
             dependency_graph=dependency_graph,
         )
+        if retained_profile is not None:
+            plan = build_retained_selective_recomputation_plan_v01(base_plan=plan,
+                source_context=source_context, affected_set=affected_result)
         return execute_selective_recomputation_v01(
             plan=plan,
             source_context=source_context,
@@ -12924,4 +13308,12 @@ __all__ = (
     "execute_selective_recomputation_v01",
     "validate_selective_recomputation_result_against_plan_v01",
     "run_continuous_delta_runtime_v01",
+    "RetainedSelectiveRecomputationPlanV01",
+    "RetainedWorkPreservationProofV01",
+    "build_retained_selective_recomputation_plan_v01",
+    "validate_retained_selective_recomputation_plan_v01",
+    "retained_selective_recomputation_plan_to_plain_data_v01",
+    "prove_retained_work_preservation_v01",
+    "validate_retained_work_preservation_v01",
+    "retained_work_preservation_to_plain_data_v01",
 )

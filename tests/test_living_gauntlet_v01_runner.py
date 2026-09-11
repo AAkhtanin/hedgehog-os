@@ -5634,3 +5634,81 @@ def test_e6_living_internal_builder_propagates_forged_e5_failure(
     assert failed["active_act_results"][-1]["state"] == (
         _demo.run_living_gauntlet_v01.STATUS_FAIL_CLOSED
     )
+
+
+def test_u4_current_registration_and_supplied_report_are_independently_bound(report) -> None:
+    living = _demo.run_living_gauntlet_v01
+    block, errors = living._current_registration_v01(REPOSITORY_ROOT)
+    assert errors == () and len(block["rows"]) == 9
+    assert report["current_registration"] == block
+    assert validate_living_gauntlet_report_v01(report) == ()
+    for field, value in (("rows", []), ("authority", "ROOT"), ("status", "PASS")):
+        changed = deepcopy(report)
+        changed["current_registration"][field] = value
+        assert "report_current_registration_mismatch" in validate_living_gauntlet_report_v01(changed)
+    missing = deepcopy(report)
+    del missing["current_registration"]
+    assert "report_current_registration_mismatch" in validate_living_gauntlet_report_v01(missing)
+
+
+def test_u4_registration_inventory_has_no_second_effect_owner(report, tmp_path) -> None:
+    block = report["current_registration"]
+    assert len({r["seam_id"] for r in block["rows"]}) == 9
+    assert all(r["authority"] == "EVIDENCE_ONLY" and r["effect_access"] == "NONE" for r in block["rows"])
+    for row_index in range(9):
+        changed = deepcopy(report)
+        changed["current_registration"]["rows"][row_index]["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
+        assert "report_current_registration_mismatch" in validate_living_gauntlet_report_v01(changed)
+    assert len(report["active_act_results"]) == 17
+    import shutil
+    import subprocess
+    living = _demo.run_living_gauntlet_v01
+    root = tmp_path / "registration_sources"
+    root.mkdir()
+    subprocess.run(("git", "init", "-q", "-b", "main"), cwd=root, check=True)
+    objects = Path(subprocess.check_output(("git", "rev-parse", "--path-format=absolute", "--git-path", "objects"), cwd=REPOSITORY_ROOT, text=True).strip())
+    shutil.copytree(objects, root / ".git/objects", dirs_exist_ok=True, copy_function=shutil.copyfile)
+    assert not (root / ".git/objects/info/alternates").exists()
+    subprocess.run(("git", "update-ref", "refs/heads/main", living._U4_H), cwd=root, check=True)
+    paths = (*living._U4_FROZEN_SOURCES, *living._U4_BASE_IDENTITIES,
+             "release/current_schema_surface_v01.json", "release/current_status_overlay_v01.json")
+    for path in paths:
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPOSITORY_ROOT / path, target)
+    overlay_path = root / "release/current_status_overlay_v01.json"
+    overlay = json.loads(overlay_path.read_text())
+    # Equivalent fresh JSON, then one changed relationship per case.
+    overlay_path.write_text(json.dumps(overlay, sort_keys=True) + "\n")
+    assert living._current_registration_v01(root) == (block, ())
+    for mutation in ("missing", "extra", "duplicate", "module", "symbol", "role", "source", "pass"):
+        changed = deepcopy(overlay)
+        current = changed[living._U4_REGISTRATION_KEY]
+        if mutation == "missing":
+            current["rows"].pop()
+        elif mutation in ("extra", "duplicate"):
+            current["rows"].append(deepcopy(current["rows"][0]))
+        elif mutation in ("module", "symbol"):
+            current["rows"][0]["producer"] = "foreign.module:execute" if mutation == "module" else "hedgehog.action_commit_packet_v02:not_a_public_symbol"
+        elif mutation == "role":
+            current["rows"][0]["authority"] = "ROOT"
+        elif mutation == "source":
+            current["rows"][0]["source_sha256"] = "0" * 64
+        else:
+            current["status"] = "PASS"
+        overlay_path.write_text(json.dumps(changed) + "\n")
+        assert "registration_exact_block" in living._current_registration_v01(root)[1], mutation
+    overlay_path.write_text(json.dumps(overlay) + "\n")
+    schema_path = root / "release/current_schema_surface_v01.json"
+    schema = json.loads(schema_path.read_text())
+    schema["current_schema_paths"].append("schemas/retired/forbidden.schema.json")
+    schema_path.write_text(json.dumps(schema) + "\n")
+    assert "registration_schema_inventory" in living._current_registration_v01(root)[1]
+    shutil.copyfile(REPOSITORY_ROOT / "release/current_schema_surface_v01.json", schema_path)
+    producer = root / "hedgehog/work_execution_host_v01.py"
+    producer.write_bytes(producer.read_bytes() + b"\nUNAUTHORIZED = True\n")
+    assert "registration_source:hedgehog/work_execution_host_v01.py" in living._current_registration_v01(root)[1]
+    shutil.copyfile(REPOSITORY_ROOT / "hedgehog/work_execution_host_v01.py", producer)
+    del overlay[living._U4_REGISTRATION_KEY]
+    overlay_path.write_text(json.dumps(overlay) + "\n")
+    assert living._current_registration_v01(root)[1]

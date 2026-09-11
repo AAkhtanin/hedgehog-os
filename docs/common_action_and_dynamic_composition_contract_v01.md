@@ -1011,3 +1011,152 @@ validate_effect_receipt_v01 and action attempt/replay contexts must discriminate
 versions. Existing legacy required keys, issuer origin, capability ownership,
 one-receipt/no-duplicate checks and output projection stay exact. PURE does not
 obtain an EffectCapabilityV01. No hidden second Firewall/lifecycle is allowed.
+
+
+## Draft U1 Retained-Work Integration Boundary
+
+V04_IMPLEMENTATION_CONTRACT_ACCEPTANCE_PENDING. The exact retained-work profile proposed
+in the G2-D addendum separates historical validated output from new current
+consumption; the G2-E addendum defines its explicit preservation obligation.
+
+U1 SHALL keep D as CONTROL over the actual reviewed task/work/Root/definition,
+input/dependency/guard/resource/budget and business/BSEP/semantic source
+commitment. A generic prior D review SHALL NOT authorize changed work merely
+because an outer candidate or obligation is rebuilt. Reused completion SHALL
+still require its mandatory review and current host history.
+
+The first retained-work integration SHALL use a genuine source-bound legacy D
+CONTROL review; it SHALL NOT relax work review validation to accept a retained
+bundle by duck typing. Retained E output is evidence, not authority. Separate
+current consequential Root authorization, lifecycle, actual input validation,
+exclusive Firewall/corridor and present eligibility remain mandatory.
+
+M11 SHALL remain BLOCKED until actual native packet-dependency selective
+completion, complete/minimal affected work, preserved unaffected business
+bytes, current eligibility refusal and applied Root-bound invalidation have
+all been demonstrated. Ordinary-source last-child success is insufficient.
+The original E-pair test meaning SHALL be retained when its construction is
+adapted to the current exact-work review source. Historical E5 test-state
+migration and full E/F acceptance SHALL be completed on one final admitted
+source set. U2/U3 and final integration remain required before Testflix;
+neither this amendment nor a design witness awards their acceptance.
+
+V04 binding amendment: apply the explicit V04 review amendment in the D
+addendum. Retention preserves actual historical CONTROL outputs, not a
+counterfactual business-output equivalence. Current source grammar is nonempty;
+closed overlays, actual current-prefix admission and preserved outer ABI
+identities are mandatory. Candidate implementation and governance admission
+remain unaccepted until the required actual evidence is reviewed.
+
+
+## V05 Retained PLAN and Execution Amendment
+
+This amendment supersedes the exact-eight-field review record and any
+conflicting new-draft wording above. It does not change the preceding accepted
+legacy contracts. These are candidate obligations, not an admission or test
+result. The external V05 receipt identifies the source actually tested.
+
+### Actual Retained Work
+
+The supported behavior is the source-reviewed deterministic D CONTROL local
+observation. Its definition consists of the complete typed topology nodes,
+edges, assignments, policy, scope and input records. No invented executable,
+resource-manifest or business-output field is introduced. A historical
+`d3local:output:*` value may be a string in an original queue's
+`observed_output_refs`, not an independent artifact. It retains its original
+input and scheduling provenance; it is not claimed equal to a hypothetical
+new execution's identifier.
+
+Admission validates a nonempty ordinary causal inventory and complete internal
+historical leaf closure. An empty OBSERVED_WORK_INPUT subset proves nothing.
+External dependencies use a closed map of actual old/current source objects
+and validated observed source-pair bindings, including presence and changed
+empty values. A changed counterpart may not be omitted or replaced by old
+material on both sides. Typed node, edge, assignment and policy comparisons
+supplement artifact field bindings; artifact IDs alone do not prove them.
+Node identity is paired with cell identity. Current time applicability comes
+from the supplied routing snapshot, TTL, intervals and source envelopes.
+Internal historical input/budget/dependency identities remain historical;
+actual externally consumed semantic budget values are not exempt from checks.
+
+### Exact PLAN Review
+
+`FractalRetainedPlanReviewV01` has exactly these ten fields in order, and no ID:
+
+```text
+root_kernel: RootDecisionKernelV01
+root_input: RootDecisionInputV01
+root_result: RootDecisionResultV01
+proposed_artifact: KernelArtifactV01
+decision_artifact: KernelArtifactV01
+accepted_artifact: KernelArtifactV01
+review_transition: TransitionDecisionV01
+accept_transition: TransitionDecisionV01
+transition_registry: TransitionRegistryV01
+ordered_plan_ancestor_artifacts: tuple[KernelArtifactV01, ...]
+```
+
+The transitions are actual E `g2e_t04_plan_root_review` and
+`g2e_t05_plan_root_accept`, validated with their actual source/target objects.
+The internal Root transition is not t04. E constructs the family before D
+from current source/history and the actual E prelude. D does not import E or
+collect a future E outcome. No future admission, consumption or result belongs
+in the PLAN ancestry.
+
+The three PLAN artifacts seed transitive parent traversal. The ancestor tuple
+contains exactly the reachable family minus those seeds. Order the entire
+family by repeatedly emitting the complete lexicographically sorted ready
+batch, then filter the seeds. Unknown parents, cycles, self-edges, duplicate
+tuple IDs, conflicting bodies, unreachable additions and wrong order refuse.
+Overlapping builder inputs coalesce only after full public canonical-byte
+equality. The family enters ABI provenance, not current event inventories.
+
+Public validation binds the actual Root ACCEPT to one complete retained claim,
+candidate, request, transaction, Root, scope and topology. Proposed/accepted
+PLAN payloads equal the claim projection omitting only `trace_refs`. Proposed
+trace is ordered-unique claim trace followed by delta, affected-set,
+invalidation, baseline route and topology IDs. The five ordered proposed
+parents remain invalidation, affected set, graph, baseline route and historical
+D report. The Root decision artifact is reconstructed from the complete public
+Root result with only top-level transaction moved to the envelope; exact
+existing E domain, parents, traces and time apply. Accepted PLAN has the two
+actual PLAN/decision parents and five trace entries including actual t04/t05.
+Parent closure does not replace E's independent affectedness or D's retention
+semantics. Neither the family nor a valid hash creates action authority.
+
+### Public Entry and Consumer Closure
+
+`run_continuous_delta_runtime_v01` appends only the optional keyword
+`retained_profile: str | None = None`. Omission preserves legacy behavior.
+Only exact `fractal_retained_work_v01` requests the new representation; other
+types/values refuse. E derives and source-validates the base plan independently,
+then converts it before the actual Root review. Public execute dispatches by
+the exact nominal plan, with no second selector. Inapplicable retention refuses
+without fabricating a strict affected subset or silently changing profile.
+
+The exact-thirty-field prefix and exact-thirty-four-field retained bundle
+already contain the ten-field review. The legacy twenty-eight-field bundle
+remains a distinct nominal branch. Admission requires the actual current
+prefix and running-slot/live-budget membership. Early causal references name
+existing sources/history only. Final validation reconstructs the earlier
+prefix and later consumption-to-parent/report bindings, without recursive
+validation through a future bundle. E's bundle expands only its plan,
+recomputed-bundle and preservation-proof fields to exact nominal unions.
+
+There is one live global budget axis. A retained slot has actual PENDING,
+READY, RUNNING, VALIDATING and COMPLETED entries, one START_NODE wall unit and
+temporary parallel occupancy, then FINISH_NODE. No child allocation,
+finalization, CHILD_AGGREGATE, token/provider/revise charge or refund is added.
+Same-slot identical lookup returns the existing immutable consumption with no
+new event; conflicts refuse. Historical input/queue/budget/result IDs never
+masquerade as current execution. The new parent consumes the real retained
+result and real changed-child result in canonical slot order. Current report
+counts include only executed current cells. Existing outer D/E artifact ID
+domains, three-parent queue geometry and Root-required return law remain exact.
+
+RW01-RW08, both encodings and child positions, meaningful coherent negatives,
+actual M11 recomputation/Root-bound applied invalidation, Work17 and native32
+remain execution obligations. Collection, PLAN constructibility or a typed
+eligibility refusal alone cannot discharge them. Governance admission, U1
+integration, U2/U3 and complete final D/E/F acceptance remain pending until
+separately supported by actual evidence on the admitted final sources.

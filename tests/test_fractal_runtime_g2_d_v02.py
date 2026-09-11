@@ -58,6 +58,81 @@ ADDENDUM_PATH = (
 )
 fr = importlib.import_module("hedgehog.kernel.fractal_runtime_v02")
 
+_RETAINED_TYPES_V05 = (
+    "RetainedFieldBindingV01", "FractalRetainedWorkEvidenceV01",
+    "FractalRetainedPlanReviewV01", "FractalRetainedWorkAdmissionV01",
+    "FractalRetainedWorkConsumptionV01", "FractalRetainedWorkPrefixV01",
+    "FractalRetainedWorkExecutionBundleV01",
+)
+_RETAINED_FUNCTIONS_V05 = (
+    "fractal_runtime_execution_bundle_to_plain_data_v02",
+    "build_fractal_retained_work_evidence_v01",
+    "validate_fractal_retained_work_evidence_v01",
+    "fractal_retained_work_evidence_to_plain_data_v01",
+    "build_fractal_retained_work_admission_v01",
+    "validate_fractal_retained_work_admission_v01",
+    "consume_fractal_retained_work_v01",
+    "validate_fractal_retained_work_consumption_v01",
+    "project_fractal_retained_work_consumption_kernel_artifact_v01",
+    "fractal_retained_work_admission_to_plain_data_v01",
+    "fractal_retained_work_consumption_to_plain_data_v01",
+    "rebuild_fractal_retained_work_admission_identity_v01",
+    "rebuild_fractal_retained_work_consumption_identity_v01",
+    "rebuild_fractal_retained_work_evidence_identity_v01",
+    "build_fractal_retained_work_prefix_v01",
+    "validate_fractal_retained_work_prefix_v01",
+    "build_fractal_retained_work_execution_bundle_v01",
+    "validate_fractal_retained_work_execution_bundle_v01",
+    "fractal_retained_work_execution_bundle_to_plain_data_v01",
+)
+_RETAINED_PREFIX_ARGUMENT_FUNCTIONS_V05 = (
+    "build_fractal_runtime_trace_v02", "build_fractal_runtime_report_v02",
+    "evaluate_fractal_runtime_state_transition_v02", "aggregate_fractal_runtime_report_v02",
+    "validate_fractal_runtime_report_against_sources_v02", "validate_fractal_runtime_stage_bundle_v02",
+    "validate_fractal_runtime_abi_profile_v02", "build_fractal_runtime_causal_consumption_refs_v02",
+    "validate_fractal_runtime_causal_consumption_refs_v02",
+)
+
+
+def _legacy_arguments_v05(node):
+    import copy
+    args = copy.deepcopy(node.args)
+    if node.name in _RETAINED_PREFIX_ARGUMENT_FUNCTIONS_V05:
+        assert args.kwonlyargs[-1].arg == "retained_prefix"
+        assert ast.unparse(args.kwonlyargs[-1].annotation) == "FractalRetainedWorkPrefixV01 | None"
+        assert isinstance(args.kw_defaults[-1], ast.Constant) and args.kw_defaults[-1].value is None
+        args.kwonlyargs.pop(); args.kw_defaults.pop()
+    if node.name == "evaluate_fractal_runtime_state_transition_v02":
+        assert args.kwonlyargs[-1].arg == "retained_consumption"
+        assert ast.unparse(args.kwonlyargs[-1].annotation) == "FractalRetainedWorkConsumptionV01 | None"
+        assert isinstance(args.kw_defaults[-1], ast.Constant) and args.kw_defaults[-1].value is None
+        args.kwonlyargs.pop(); args.kw_defaults.pop()
+    return args
+
+
+def replace_ast_arguments_v05(node):
+    import copy
+    result = copy.deepcopy(node)
+    result.args = _legacy_arguments_v05(node)
+    return result
+
+
+def _assert_retained_schema_v05(schema):
+    definitions = schema["$defs"]
+    legacy = tuple(cls.__name__ for cls in fr.SERIALIZED_G2D_TYPES_V02)
+    assert tuple(definitions)[:18] == legacy and len(legacy) == 18
+    for name, count in (("FractalRetainedPlanReviewV01", 10),
+        ("FractalRetainedWorkPrefixV01", 30), ("FractalRetainedWorkExecutionBundleV01", 34),
+        ("FractalRuntimeExecutionBundleV02", 28)):
+        expected = tuple(f.name for f in fields(getattr(fr, name)))
+        assert len(expected) == count
+        assert tuple(definitions[name]["properties"]) == tuple(definitions[name]["required"]) == expected
+        assert definitions[name]["additionalProperties"] is False
+    assert definitions["FractalExecutionProfileBundleV01"] == {"oneOf": [
+        {"$ref":"#/$defs/FractalRuntimeExecutionBundleV02"},
+        {"$ref":"#/$defs/FractalRetainedWorkExecutionBundleV01"}]}
+    assert definitions["RuntimeTopologySeedV02"]["properties"]["profile_id"] == {"type": "string", "enum": ["fractal_runtime_g2d_profile_v02"]}
+
 
 def _plain(value: object, identity_name: str) -> dict[str, object]:
     result: dict[str, object] = {}
@@ -862,18 +937,20 @@ def test_d1_static_surface_schema_import() -> None:
     assert MODULE_PATH.is_file() and SCHEMA_PATH.is_file()
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
-    assert len(fr.G2D_TYPES_V02) == 21
+    assert len(fr.G2D_TYPES_V02) == 28
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
     assert fr.G2D_TYPES_V02[:20] == fr.SERIALIZED_G2D_TYPES_V02 + (
         fr.FractalRuntimeSourceContextV02,
         fr.FractalRuntimeExecutionBundleV02,
     )
-    assert fr.G2D_TYPES_V02[-1] is fr.RuntimeObservedWorkContextV02
+    assert fr.G2D_TYPES_V02[20] is fr.RuntimeObservedWorkContextV02
     assert all(item.__dataclass_params__.frozen for item in fr.G2D_TYPES_V02)
     public_functions = [
         name for name, value in vars(fr).items()
         if not name.startswith("_") and inspect.isfunction(value) and value.__module__ == fr.__name__
     ]
-    assert len(public_functions) == 116
+    assert len(public_functions) == 135
+    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
     expected_rows = re.findall(r"^\|\s*(\d+)\s*\|\s*D1\s*\|\s*`([^`]+)`\s*\|$", preflight, re.MULTILINE)
     assert len(expected_rows) == 74
@@ -882,17 +959,17 @@ def test_d1_static_surface_schema_import() -> None:
     for _number, signature in expected_rows:
         expected = ast.parse("def " + signature + ":\n pass").body[0]
         current = actual[signature.split("(", 1)[0]]
-        assert ast.dump(current.args, include_attributes=False) == ast.dump(expected.args, include_attributes=False)
+        assert ast.dump(_legacy_arguments_v05(current), include_attributes=False) == ast.dump(expected.args, include_attributes=False)
         assert ast.dump(current.returns, include_attributes=False) == ast.dump(expected.returns, include_attributes=False)
     future_names = re.findall(r"^\|\s*(?:9[1-9]|10\d|110)\s*\|\s*D4\s*\|\s*`([a-z0-9_]+)\(", preflight, re.MULTILINE)
     assert future_names and all(callable(getattr(fr, name, None)) for name in future_names)
     package = importlib.import_module("hedgehog.kernel")
-    assert all(hasattr(package, name) for name in public_functions)
+    assert all(hasattr(package, name) for name in public_functions[:116])
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
-    assert len(schema["$defs"]) == 18
-    assert "FractalRuntimeSourceContextV02" not in schema["$defs"]
-    assert "FractalRuntimeExecutionBundleV02" not in schema["$defs"]
+    _assert_retained_schema_v05(schema)
+    assert "FractalRuntimeSourceContextV02" in schema["$defs"]
+    assert "FractalRuntimeExecutionBundleV02" in schema["$defs"]
 
 
 def test_d1_canonical_types_fields_enums() -> None:
@@ -2170,7 +2247,7 @@ def test_private_g2d_finalize_pair_and_validation_hot_path_v02(
             row[1] for row in fr.IDENTITY_PROFILE_ROWS_V02 if row[0] is cls
         )
         assert rebuilder(value) == getattr(value, identity_field)
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
@@ -2374,7 +2451,7 @@ def test_private_g2d_source_topology_canonical_cache_v02(
     assert fr._TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_MAX_V02 == 16
     assert fr._TOPOLOGY_PARTS_SUCCESS_CACHE_MAX_V02 == 32
     assert fr._RETAINED_BASE_REPORTS_SUCCESS_CACHE_MAX_V02 == 32
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
@@ -2568,8 +2645,9 @@ def test_private_g2d_root_result_structural_evidence_partition_v02() -> None:
             evidence_refs=aggregated_evidence,
         )
 
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
-    assert len(fr.G2D_TYPES_V02) == 21
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
+    assert len(fr.G2D_TYPES_V02) == 28
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
@@ -2584,7 +2662,8 @@ def test_d1_schema_valid_and_negative_mutations() -> None:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
     fixtures = _fixture_family()
-    assert list(schema["$defs"]) == [item.__name__ for item in fr.SERIALIZED_G2D_TYPES_V02]
+    assert list(schema["$defs"])[:18] == [item.__name__ for item in fr.SERIALIZED_G2D_TYPES_V02]
+    _assert_retained_schema_v05(schema)
     for cls, value in fixtures.items():
         data = FUNCTION_FAMILIES[cls][1](value)
         validator = Draft202012Validator(schema["$defs"][cls.__name__])
@@ -2672,9 +2751,9 @@ def test_d1_import_and_zero_operation_boundary() -> None:
     source = MODULE_PATH.read_text(encoding="utf-8")
     for forbidden in ("FinalOutput(", "DRS write", "provider_call(", "network_call(", "connector_call("):
         assert forbidden not in source
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
     assert fr.D1_MODULE_PUBLIC_FUNCTION_COUNT == 74
-    assert fr.TOTAL_G2D_TYPE_COUNT == 21
+    assert fr.TOTAL_G2D_TYPE_COUNT == 28
     assert fr.SCHEMA_DEFINITION_COUNT == 18
 
 
@@ -4058,7 +4137,8 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 116
+    assert len(public_functions) == 135
+    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
     assert not callable(getattr(fr, "execute_fractal_runtime_v02", None))
     assert callable(getattr(fr, "build_fractal_runtime_execution_bundle_v02", None))
     module_source = MODULE_PATH.read_text(encoding="utf-8")
@@ -5973,6 +6053,13 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
             settled_suffix
             + ", observed_work_context: 'RuntimeObservedWorkContextV02 | None' = None) -> ",
         )
+    expected_signatures["evaluate_fractal_runtime_state_transition_v02"] = (
+        expected_signatures["evaluate_fractal_runtime_state_transition_v02"].replace(
+            ") -> ",
+            ", retained_consumption: 'FractalRetainedWorkConsumptionV01 | None' = None"
+            ", retained_prefix: 'FractalRetainedWorkPrefixV01 | None' = None) -> ",
+        )
+    )
     for name, signature in expected_signatures.items():
         assert str(inspect.signature(getattr(fr, name))) == signature
     public_functions = tuple(
@@ -5980,8 +6067,10 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 116
-    assert len(fr.G2D_TYPES_V02) == 21
+    assert len(public_functions) == 135
+    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
+    assert len(fr.G2D_TYPES_V02) == 28
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
@@ -6151,7 +6240,22 @@ def d3_profile_d_contextual_micro_bundle(
 
 
 def test_d3_post_acceptance_contract_addendum_v0310_accepted() -> None:
-    complete_raw = ADDENDUM_PATH.read_bytes()
+    amended_raw = ADDENDUM_PATH.read_bytes()
+    assert hashlib.sha256(amended_raw).hexdigest() == (
+        "4515e5e3e333ce9c00bc3696ddd1a478550414e45d379c7eacf726729d4940b6"
+    )
+    assert len(amended_raw) == 285183 and amended_raw.count(b"\n") == 5433
+    # V06 appends the actual-result/ordinal clarification without changing V05.
+    v05_raw = amended_raw[:284184]
+    assert hashlib.sha256(v05_raw).hexdigest() == (
+        "60bfb2d47adfd8300d92aca21a47ceb945a04213783a69b10419c47607aafeb7"
+    )
+    assert len(v05_raw) == 284184 and v05_raw.count(b"\n") == 5417
+    # The accepted v0.3.10 body stays byte-exact; the new profile is appended.
+    complete_raw = amended_raw[:237495]
+    assert amended_raw[237495:].startswith(
+        b"\n\n# Retained Work in a New D/E Scheduling History\n"
+    )
     assert hashlib.sha256(complete_raw).hexdigest() == (
         "1655fbed584e24c980dda723d9e7521b4540ec528128f436ec4f458f7f40563d"
     )
@@ -9667,7 +9771,8 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
     historical_names = tuple(row.split("(", 1)[0] for _number, row in rows)
     assert public_functions[:110] == historical_names
     assert public_functions[90:110] == _D4_PUBLIC_FUNCTION_NAMES_V02
-    assert public_functions[110:] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
+    assert public_functions[110:116] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
+    assert public_functions[116:] == _RETAINED_FUNCTIONS_V05
     module_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     actual = {
         node.name: node
@@ -9681,6 +9786,7 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
     for _number, signature in d4_rows:
         expected = ast.parse("def " + signature + ":\n pass").body[0]
         current = actual[signature.split("(", 1)[0]]
+        current = replace_ast_arguments_v05(current)
         if current.name in _E4C001_CORRECTED_SIGNATURE_NAMES_V02:
             assert current.args.kwonlyargs[-1].arg == "observed_work_context"
             assert ast.unparse(current.args.kwonlyargs[-1].annotation) == (
@@ -9723,16 +9829,18 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
         )
     package = importlib.import_module("hedgehog.kernel")
     g2d_names = tuple(item.__name__ for item in fr.G2D_TYPES_V02) + public_functions
-    assert len(g2d_names) == 137 and len(set(g2d_names)) == 137
+    assert len(g2d_names) == 163 and len(set(g2d_names)) == 163
     assert fr.__all__ == g2d_names
-    for name in g2d_names:
+    package_names = tuple(item.__name__ for item in fr.G2D_TYPES_V02[:21]) + public_functions[:116]
+    assert len(package_names) == 137 and len(set(package_names)) == 137
+    for name in package_names:
         assert getattr(package, name) is getattr(fr, name)
     for name in _D4_TRANSITION_FUNCTION_NAMES_V02:
         assert getattr(package, name) is getattr(transition_registry, name)
-    assert len(set((*g2d_names, *_D4_TRANSITION_FUNCTION_NAMES_V02))) == 143
+    assert len(set((*package_names, *_D4_TRANSITION_FUNCTION_NAMES_V02))) == 143
     assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
-    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 122
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 141
     assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 143
 
 
@@ -11149,7 +11257,8 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
     assert isinstance(context, fr.RuntimeObservedWorkContextV02)
     assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
     assert baseline.observed_work_context is None
-    assert len(fr.G2D_TYPES_V02) == 21
+    assert len(fr.G2D_TYPES_V02) == 28
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
     assert fr.RUNTIME_ONLY_G2D_TYPES_V02[-1] is fr.RuntimeObservedWorkContextV02
@@ -11164,10 +11273,11 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
         and inspect.isfunction(value)
         and value.__module__ == fr.__name__
     )
-    assert len(public_functions) == 116
-    assert public_functions[-6:] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
+    assert len(public_functions) == 135
+    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
+    assert public_functions[110:116] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
     for name in _E4C001_CORRECTED_SIGNATURE_NAMES_V02:
-        parameter = tuple(inspect.signature(getattr(fr, name)).parameters.values())[-1]
+        parameter = inspect.signature(getattr(fr, name)).parameters["observed_work_context"]
         assert parameter.name == "observed_work_context"
         assert parameter.kind is inspect.Parameter.KEYWORD_ONLY
         assert parameter.default is None
@@ -11179,8 +11289,8 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
     ):
         assert getattr(package, name) is getattr(fr, name)
     assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 116
-    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 122
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 141
     assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 143
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
@@ -11190,8 +11300,8 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
     assert len(fr.FAILURE_STAGES) == 30
     assert len(fr.CAUSAL_DECISION_EFFECTS) == 14
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-    assert len(schema["$defs"]) == 18
-    assert "RuntimeObservedWorkContextV02" not in schema["$defs"]
+    _assert_retained_schema_v05(schema)
+    assert "RuntimeObservedWorkContextV02" in schema["$defs"]
     assert SCHEMA_PATH.read_text(encoding="utf-8").count(
         '"OBSERVED_WORK_BINDINGS_AGAINST_SOURCES"'
     ) == 1

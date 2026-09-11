@@ -873,8 +873,8 @@ class ExecutionModeSourceContextV01:
     g2a_inspection: hedgehog.action_commit_packet_v02.ActionPacketPresentEligibilityInspectionV01 | None
     g2a_registry: hedgehog.action_commit_packet_v02.ActionCommitPacketRegistryV02 | None
     g2a_packet_id: str | None
-    g2a_corridor: hedgehog.action_commit_packet_v02.ContractFulfillmentCorridorV01 | None
-    g2a_corridor_step: hedgehog.action_commit_packet_v02.CorridorStepV01 | None
+    g2a_corridor: hedgehog.action_commit_packet_v02.ContractFulfillmentCorridorV01 | hedgehog.action_commit_packet_v02.CommonContractFulfillmentCorridorV01 | None
+    g2a_corridor_step: hedgehog.action_commit_packet_v02.CorridorStepV01 | hedgehog.action_commit_packet_v02.CommonCorridorStepV01 | None
     g2a_current_dependency_observations: tuple[
         hedgehog.action_commit_packet_v02.ActionDependencyCurrentObservationV01, ...
     ]
@@ -2658,9 +2658,10 @@ def _source_context_errors(value: object) -> tuple[str, ...]:
         is _action_packet.ActionPacketPresentEligibilityInspectionV01
         and type(value.g2a_registry) is _action_packet.ActionCommitPacketRegistryV02
         and _source_identity_valid(value.g2a_packet_id)
-        and type(value.g2a_corridor)
-        is _action_packet.ContractFulfillmentCorridorV01
-        and type(value.g2a_corridor_step) is _action_packet.CorridorStepV01
+        and (type(value.g2a_corridor), type(value.g2a_corridor_step)) in (
+            (_action_packet.ContractFulfillmentCorridorV01, _action_packet.CorridorStepV01),
+            (_action_packet.CommonContractFulfillmentCorridorV01, _action_packet.CommonCorridorStepV01),
+        )
         and type(value.g2a_current_dependency_observations) is tuple
         and all(
             type(item) is _action_packet.ActionDependencyCurrentObservationV01
@@ -2964,8 +2965,8 @@ def build_execution_mode_source_context_v01(
     g2a_inspection: ActionPacketPresentEligibilityInspectionV01 | None,
     g2a_registry: ActionCommitPacketRegistryV02 | None,
     g2a_packet_id: str | None,
-    g2a_corridor: ContractFulfillmentCorridorV01 | None,
-    g2a_corridor_step: CorridorStepV01 | None,
+    g2a_corridor: ContractFulfillmentCorridorV01 | CommonContractFulfillmentCorridorV01 | None,
+    g2a_corridor_step: CorridorStepV01 | CommonCorridorStepV01 | None,
     g2a_current_dependency_observations: tuple[
         ActionDependencyCurrentObservationV01, ...
     ],
@@ -3823,7 +3824,7 @@ def _validated_g2a_binding(
     )
     if len(entries) != 1:
         _raise_c2("g2c_g2a_present_inspection_invalid", "G2A")
-    canonical = entries[0].root_bound_genesis.canonical_projection
+    canonical = _action_packet.common_action_view_v01(entries[0].root_bound_genesis).canonical_projection
     if canonical.transaction_id != transaction_id:
         _raise_c2("g2c_transaction_binding_mismatch", "G2A")
     if canonical.owning_local_root_id != owning_root_id:

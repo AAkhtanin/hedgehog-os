@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capability_admission_v01.schema.json",
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "need": {
+      "type": "object", "additionalProperties": false,
+      "required": ["need_id", "permission", "revision_id", "topology_id", "observation_id", "input_value"],
+      "properties": {
+        "need_id": {"$ref": "#/$defs/text"}, "permission": {"$ref": "#/$defs/permission"},
+        "revision_id": {"$ref": "#/$defs/text"}, "topology_id": {"$ref": "#/$defs/text"},
+        "observation_id": {"$ref": "#/$defs/text"}, "input_value": {"type": "integer", "minimum": 0, "maximum": 255}
+      }
+    },
+    "resolution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["resolution_id", "need", "package_id", "definition_id", "admission_id", "membership_epoch"],
+      "properties": {
+        "resolution_id": {"$ref": "#/$defs/text"}, "need": {"$ref": "#/$defs/need"},
+        "package_id": {"$ref": "#/$defs/text"}, "definition_id": {"$ref": "#/$defs/text"},
+        "admission_id": {"$ref": "#/$defs/text"}, "membership_epoch": {"type": "integer", "minimum": 1}
+      }
+    },
+    "trigger": {
+      "type": "object", "additionalProperties": false,
+      "required": ["trigger_id", "need", "resolution"],
+      "properties": {"trigger_id": {"$ref": "#/$defs/text"}, "need": {"$ref": "#/$defs/need"},
+        "resolution": {"$ref": "#/$defs/resolution"}}
+    },
+    "permission": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task_id", "owning_root_id", "initial_revision_id", "source_ref", "work_id", "contract_version", "multiplier", "offset", "memory_scope", "profile_version", "max_generation_attempts", "max_admissions", "max_drs_bytes"],
+      "properties": {
+        "task_id": {"type": "string", "minLength": 1},
+        "owning_root_id": {"type": "string", "minLength": 1},
+        "initial_revision_id": {"type": "string", "minLength": 1},
+        "source_ref": {"type": "string", "minLength": 1},
+        "work_id": {"type": "string", "minLength": 1},
+        "contract_version": {"const": "affine-u8-v01"},
+        "multiplier": {"type": "integer", "minimum": 1, "maximum": 8},
+        "offset": {"type": "integer", "minimum": 0, "maximum": 255},
+        "memory_scope": {"type": "string", "minLength": 1},
+        "profile_version": {"const": "pure-i32-closed-v01"},
+        "max_generation_attempts": {"type": "integer", "minimum": 0, "maximum": 4},
+        "max_admissions": {"type": "integer", "minimum": 1, "maximum": 8},
+        "max_drs_bytes": {"type": "integer", "minimum": 0, "maximum": 262144}
+      }
+    }
+  },
+  "$ref": "#/$defs/permission"
+}

@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hedgehog:work-composition:v01",
+  "$ref": "#/$defs/program",
+  "$defs": {
+    "pure_missing_trigger": {
+      "type": "object", "additionalProperties": false,
+      "required": ["trigger_id", "need_id", "resolution_id", "task_id", "revision_id"],
+      "properties": {
+        "trigger_id": {"$ref": "#/$defs/text"}, "need_id": {"$ref": "#/$defs/text"},
+        "resolution_id": {"$ref": "#/$defs/text"}, "task_id": {"$ref": "#/$defs/text"},
+        "revision_id": {"$ref": "#/$defs/text"}
+      }
+    },
+    "task_policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task_id", "owning_root_id", "host_instance_ref", "initial_revision_id", "intent_ref", "source_ref", "definition_ids", "review_definition_ids", "resource_refs", "max_items", "max_compute_units", "max_children", "max_model_calls", "max_revisions"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/text"}, "owning_root_id": {"$ref": "#/$defs/text"},
+        "host_instance_ref": {"$ref": "#/$defs/text"}, "initial_revision_id": {"$ref": "#/$defs/text"},
+        "intent_ref": {"$ref": "#/$defs/text"}, "source_ref": {"$ref": "#/$defs/text"},
+        "definition_ids": {"$ref": "#/$defs/refs"}, "resource_refs": {"$ref": "#/$defs/refs"},
+        "review_definition_ids": {"$ref": "#/$defs/refs"},
+        "max_items": {"type": "integer", "minimum": 1, "maximum": 256},
+        "max_compute_units": {"type": "integer", "minimum": 1, "maximum": 4096},
+        "max_children": {"$ref": "#/$defs/units"}, "max_model_calls": {"const": 0},
+        "max_revisions": {"type": "integer", "minimum": 0, "maximum": 2}
+      }
+    },
+    "units": {"type": "integer", "minimum": 0, "maximum": 4096},
+    "task_usage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["compute_units", "children", "model_calls", "revisions", "reserved_children"],
+      "properties": {
+        "compute_units": {"$ref": "#/$defs/units"}, "children": {"$ref": "#/$defs/units"},
+        "model_calls": {"const": 0}, "revisions": {"type": "integer", "minimum": 0, "maximum": 2},
+        "reserved_children": {"$ref": "#/$defs/units"}
+      }
+    },
+    "task_snapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["policy", "current_revision_id", "accepted_revision_ids", "terminal_history_refs", "usage", "outcome", "reason", "host_revision"],
+      "properties": {
+        "policy": {"$ref": "#/$defs/task_policy"}, "current_revision_id": {"$ref": "#/$defs/text"},
+        "accepted_revision_ids": {"$ref": "#/$defs/refs"}, "terminal_history_refs": {"$ref": "#/$defs/refs"},
+        "usage": {"$ref": "#/$defs/task_usage"}, "outcome": {"enum": ["ACTIVE", "COMPLETED", "NEEDS_CAPABILITY", "EXHAUSTED"]},
+        "reason": {"type": ["string", "null"]}, "host_revision": {"type": "integer", "minimum": 0}
+      }
+    },
+    "historical_output": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task_id", "revision_id", "predecessor_work_id", "invocation_id", "result_id", "admission_id", "result_artifact_ref", "output_field", "expected_type", "value"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/text"}, "revision_id": {"$ref": "#/$defs/text"},
+        "predecessor_work_id": {"$ref": "#/$defs/text"}, "invocation_id": {"$ref": "#/$defs/text"},
+        "result_id": {"$ref": "#/$defs/text"}, "admission_id": {"$ref": "#/$defs/text"},
+        "result_artifact_ref": {"$ref": "#/$defs/text"}, "output_field": {"$ref": "#/$defs/text"},
+        "expected_type": {"enum": ["TEXT", "REFERENCE", "INTEGER", "BOOLEAN", "DECIMAL"]},
+        "value": {"$ref": "#/$defs/record"}
+      }
+    },
+    "revision_trigger": {
+      "type": "object", "additionalProperties": false, "required": ["trigger_id", "output"],
+      "properties": {"trigger_id": {"$ref": "#/$defs/text"}, "output": {"$ref": "#/$defs/historical_output"}}
+    },
+    "continuation_outcome": {
+      "type": "object", "additionalProperties": false,
+      "required": ["program", "results", "snapshot", "status", "reason"],
+      "properties": {
+        "program": {"$ref": "#/$defs/program"},
+        "results": {"type": "array", "items": {"$ref": "#/$defs/work_result"}},
+        "snapshot": {"$ref": "#/$defs/task_snapshot"},
+        "status": {"enum": ["ACTIVE", "COMPLETED", "NEEDS_CAPABILITY", "EXHAUSTED"]},
+        "reason": {"type": ["null", "string"]}
+      }
+    },
+    "pending_action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["revision_id", "work_id", "packet_id", "admission_id", "inputs"],
+      "properties": {
+        "revision_id": {"$ref": "#/$defs/text"}, "work_id": {"$ref": "#/$defs/text"},
+        "packet_id": {"$ref": "#/$defs/text"}, "admission_id": {"$ref": "#/$defs/text"},
+        "inputs": {"type": "array", "items": {"$ref": "#/$defs/record"}}
+      }
+    },
+    "proposal_payload": {
+      "type": "object", "additionalProperties": false, "required": ["work_program"],
+      "properties": {"work_program": {"$ref": "#/$defs/program"}}
+    },
+    "topology_payload": {
+      "type": "object", "additionalProperties": false, "required": ["work_program", "ordered_work_ids"],
+      "properties": {"work_program": {"$ref": "#/$defs/program"}, "ordered_work_ids": {"$ref": "#/$defs/refs"}}
+    },
+    "validation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["definition_id", "validator_code_sha256", "subject_sha256", "invocation_id", "valid", "reason_codes"],
+      "properties": {
+        "definition_id": {"$ref": "#/$defs/text"}, "validator_code_sha256": {"$ref": "#/$defs/sha"},
+        "subject_sha256": {"$ref": "#/$defs/sha"}, "invocation_id": {"type": ["string", "null"]},
+        "valid": {"type": "boolean"}, "reason_codes": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "invocation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["invocation_id", "admission_id", "definition_id", "task_id", "work_instance_id", "owning_root_id", "candidate_id", "packet_id", "execution_attempt_id", "inputs", "resource_refs", "input_validation"],
+      "properties": {
+        "invocation_id": {"$ref": "#/$defs/text"}, "admission_id": {"$ref": "#/$defs/text"},
+        "definition_id": {"$ref": "#/$defs/text"}, "task_id": {"$ref": "#/$defs/text"},
+        "work_instance_id": {"$ref": "#/$defs/text"}, "owning_root_id": {"$ref": "#/$defs/text"},
+        "candidate_id": {"type": ["string", "null"]}, "packet_id": {"type": ["string", "null"]},
+        "execution_attempt_id": {"$ref": "#/$defs/text"},
+        "inputs": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+        "resource_refs": {"$ref": "#/$defs/refs"}, "input_validation": {"$ref": "#/$defs/validation"}
+      }
+    },
+    "execution_result": {
+      "type": "object", "additionalProperties": false,
+      "required": ["result_id", "invocation_id", "execution_attempt_id", "admission_id", "consumed_input_sha256", "actual_implementation_sha256", "output", "output_validation", "outcome"],
+      "properties": {
+        "result_id": {"$ref": "#/$defs/text"}, "invocation_id": {"$ref": "#/$defs/text"},
+        "execution_attempt_id": {"$ref": "#/$defs/text"}, "admission_id": {"$ref": "#/$defs/text"},
+        "consumed_input_sha256": {"$ref": "#/$defs/sha"}, "actual_implementation_sha256": {"$ref": "#/$defs/sha"},
+        "output": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+        "output_validation": {"$ref": "#/$defs/validation"}, "outcome": {"enum": ["SUCCEEDED", "FAILED_NON_CONSUMING", "UNCERTAIN_CLOSED"]}
+      }
+    },
+    "consumption": {
+      "type": "object", "additionalProperties": false,
+      "required": ["producer_actor_id", "source_artifact_id", "output_field", "consumer_component", "downstream_artifact_id", "decision_effect", "disposition", "reason_code", "trace_refs"],
+      "properties": {
+        "producer_actor_id": {"$ref": "#/$defs/text"}, "source_artifact_id": {"$ref": "#/$defs/text"},
+        "output_field": {"$ref": "#/$defs/text"}, "consumer_component": {"$ref": "#/$defs/text"},
+        "downstream_artifact_id": {"$ref": "#/$defs/text"}, "decision_effect": {"$ref": "#/$defs/text"},
+        "disposition": {"const": "USED"}, "reason_code": {"$ref": "#/$defs/text"}, "trace_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "work_result": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task_id", "revision_id", "work_id", "status", "invocation", "result", "consumed_fields", "reasons"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/text"}, "revision_id": {"$ref": "#/$defs/text"}, "work_id": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["BLOCKED_REQUIRED_OUTPUT", "BLOCKED_INVALID_INPUT", "NEEDS_CAPABILITY", "SKIPPED_GUARD_FALSE", "READY", "COMPLETED", "FAILED_NON_CONSUMING", "UNCERTAIN_CLOSED"]},
+        "invocation": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/invocation"}]},
+        "result": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/execution_result"}]},
+        "consumed_fields": {"type": "array", "items": {"$ref": "#/$defs/consumption"}},
+        "reasons": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "result_payload": {
+      "type": "object", "additionalProperties": false, "required": ["topology_ref", "work_results"],
+      "properties": {"topology_ref": {"$ref": "#/$defs/text"},
+        "work_results": {"type": "array", "maxItems": 256, "items": {"$ref": "#/$defs/work_result"}}}
+    },
+    "review_payload": {
+      "type": "object", "additionalProperties": false,
+      "required": ["obligation_id", "task_id", "revision_id", "work_id", "owning_root_id", "business_request_ref", "bsep_ref", "semantic_proposal_ref", "router_input_ref", "route_eligibility_ref", "root_route_review_ref", "runtime_report_ref", "parent_return_refs"],
+      "properties": {
+        "obligation_id": {"$ref": "#/$defs/text"}, "task_id": {"$ref": "#/$defs/text"},
+        "revision_id": {"$ref": "#/$defs/text"}, "work_id": {"$ref": "#/$defs/text"},
+        "owning_root_id": {"$ref": "#/$defs/text"}, "business_request_ref": {"$ref": "#/$defs/text"},
+        "bsep_ref": {"$ref": "#/$defs/text"}, "semantic_proposal_ref": {"$ref": "#/$defs/text"},
+        "router_input_ref": {"$ref": "#/$defs/text"}, "route_eligibility_ref": {"$ref": "#/$defs/text"},
+        "root_route_review_ref": {"$ref": "#/$defs/text"}, "runtime_report_ref": {"$ref": "#/$defs/text"},
+        "parent_return_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "text": {"type": "string", "minLength": 1},
+    "refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "record": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parameter_name", "value_type", "value"],
+      "properties": {
+        "parameter_name": {"$ref": "#/$defs/text"},
+        "value_type": {"enum": ["TEXT", "REFERENCE", "INTEGER", "BOOLEAN", "DECIMAL"]},
+        "value": {"type": ["string", "integer", "boolean"]}
+      }
+    },
+    "literal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value"], "properties": {"value": {"$ref": "#/$defs/record"}}
+    },
+    "output": {
+      "type": "object", "additionalProperties": false,
+      "required": ["predecessor_work_id", "output_field", "expected_type"],
+      "properties": {
+        "predecessor_work_id": {"$ref": "#/$defs/text"},
+        "output_field": {"$ref": "#/$defs/text"},
+        "expected_type": {"enum": ["TEXT", "REFERENCE", "INTEGER", "BOOLEAN", "DECIMAL"]}
+      }
+    },
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_field", "source"],
+      "properties": {
+        "input_field": {"$ref": "#/$defs/text"},
+        "source": {"oneOf": [{"$ref": "#/$defs/literal"}, {"$ref": "#/$defs/output"}, {"$ref": "#/$defs/historical_output"}]}
+      }
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["max_items", "max_children", "max_model_calls", "max_compute_units", "max_revisions"],
+      "properties": {
+        "max_items": {"type": "integer", "minimum": 1, "maximum": 256},
+        "max_children": {"type": "integer", "minimum": 0, "maximum": 4096},
+        "max_model_calls": {"const": 0},
+        "max_compute_units": {"type": "integer", "minimum": 1, "maximum": 4096},
+        "max_revisions": {"type": "integer", "minimum": 0, "maximum": 4096}
+      }
+    },
+    "item": {
+      "type": "object", "additionalProperties": false,
+      "required": ["work_id", "definition_id", "owning_root_id", "inputs", "resource_refs", "depends_on", "guard", "review_obligation_id"],
+      "properties": {
+        "work_id": {"$ref": "#/$defs/text"}, "definition_id": {"$ref": "#/$defs/text"},
+        "owning_root_id": {"$ref": "#/$defs/text"},
+        "inputs": {"type": "array", "items": {"$ref": "#/$defs/input"}},
+        "resource_refs": {"$ref": "#/$defs/refs"}, "depends_on": {"$ref": "#/$defs/refs"},
+        "guard": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/output"}]},
+        "review_obligation_id": {"type": ["null", "string"]}
+      }
+    },
+    "program": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task_id", "revision_id", "previous_revision_id", "intent_ref", "bsep_ref", "semantic_proposal_ref", "catalogue_revision", "budget", "items", "trigger_evidence_refs"],
+      "properties": {
+        "task_id": {"$ref": "#/$defs/text"}, "revision_id": {"$ref": "#/$defs/text"},
+        "previous_revision_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/text"}]}, "intent_ref": {"$ref": "#/$defs/text"},
+        "bsep_ref": {"$ref": "#/$defs/text"}, "semantic_proposal_ref": {"$ref": "#/$defs/text"},
+        "catalogue_revision": {"type": "integer", "minimum": 0},
+        "budget": {"$ref": "#/$defs/budget"},
+        "items": {"type": "array", "minItems": 1, "maxItems": 256, "items": {"$ref": "#/$defs/item"}},
+        "trigger_evidence_refs": {"$ref": "#/$defs/refs"}
+      }
+    }
+  }
+}

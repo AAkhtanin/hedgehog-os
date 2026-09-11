@@ -1,5 +1,29 @@
 # Hedgehog OS
 
+## Bounded Common Action and Local Reuse: Current Admission Proposal
+
+The [implementation checkpoint](docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy
+payment lifecycle, actual typed work consumption, same-task continuation,
+retained results and finite pure-capability admission/local DRS reuse.
+The exact successor has one parent H=`20d16af823ed4af94dc0a342c731aef81e8a23de`
+and exactly 48 named paths (33 modifications, 15 additions). No future commit
+hash is self-recorded. Owner landing and independent final acceptance are PENDING.
+
+The common-action contract sections 1 and 14 and the old Contract Only block
+below describe H, not the current candidate's implementation status. This
+checkpoint, lock and overlay supersede only those historical status fields;
+all Root, currentness, lifecycle, typed admission and retained-work laws remain.
+Historical D/E accepted/pending statements retain their named source provenance.
+Gate2 C is not retroactively extended to arbitrary tasks. No new Gate is created.
+
+Living validates one effective inventory: frozen Gate1 base plus exactly nine
+bounded current seams. Registration is evidence, never Root permission or a
+second effect handle; Effect Firewall remains the exclusive bounded owner.
+Controlled proposals and mock receipts are not an arbitrary free-text planner
+or OS monitoring. Pure code is finite pure-i32-closed-v01/Wasmtime48/macOS arm64,
+256 u8 trials per admission, no WASI/world I/O; local DRS is not federation.
+Public release and production/security certification remain NOT_CLAIMED.
+
 <!-- BEGIN U1 CONTRACT SUCCESSOR -->
 ## Common Action and Composition: Contract Only
 

@@ -12,6 +12,7 @@ from decimal import Decimal, InvalidOperation
 import re
 from types import MappingProxyType
 import unicodedata
+from hedgehog.kernel import effect_firewall_v01 as _common_firewall
 
 from hedgehog.kernel.integrity_replay_v01 import (
     canonical_json_bytes_v01,
@@ -819,7 +820,7 @@ class _ActionPacketRegistryValidationPassV01:
             root_bound = entry.root_bound_genesis
             if (
                 type(root_bound)
-                is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+                not in (SupplierRootBoundActionCommitPacketV02ProjectionV01, NativeRootBoundActionCommitPacketV01)
             ):
                 continue
             root_bound_by_object_id[id(root_bound)] = root_bound
@@ -835,7 +836,7 @@ class _ActionPacketRegistryValidationPassV01:
             canonical = root_bound.canonical_projection
             if (
                 type(canonical)
-                is SupplierActionCommitPacketCanonicalProjectionV01
+                in (SupplierActionCommitPacketCanonicalProjectionV01, NativeActionCommitPacketV01)
                 and type(canonical.idempotency_identity)
                 is ActionIdempotencyIdentityV01
                 and type(
@@ -895,9 +896,9 @@ class _ActionPacketRegistryValidationPassV01:
             root_bound_by_object_id
         )
         self._root_bound_validation_cache: dict[
-            int,
+            tuple[type, int],
             tuple[
-                SupplierRootBoundActionCommitPacketV02ProjectionV01,
+                SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01,
                 tuple[bool, tuple[str, ...]],
             ],
         ] = {}
@@ -956,20 +957,19 @@ def _cached_root_bound_validation_v01(
         )
         is not root_bound_genesis
     ):
-        return validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+        return validate_common_root_bound_action_commit_packet_v01(
             root_bound_genesis
         )
-    cached = validation_pass._root_bound_validation_cache.get(
-        id(root_bound_genesis)
-    )
+    cache_key = (type(root_bound_genesis), id(root_bound_genesis))
+    cached = validation_pass._root_bound_validation_cache.get(cache_key)
     if cached is not None and cached[0] is root_bound_genesis:
         return cached[1]
     result = (
-        validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+        validate_common_root_bound_action_commit_packet_v01(
             root_bound_genesis
         )
     )
-    validation_pass._root_bound_validation_cache[id(root_bound_genesis)] = (
+    validation_pass._root_bound_validation_cache[cache_key] = (
         root_bound_genesis,
         result,
     )
@@ -1953,6 +1953,46 @@ class EffectFirewallVocabularyProjectionV01:
 
 
 @dataclass(frozen=True)
+class NativeExecutionBindingV01:
+    capability_definition_ref: str
+    capability_implementation_ref: str
+    capability_input_contract_ref: str
+    capability_output_contract_ref: str
+
+
+@dataclass(frozen=True)
+class NativeActionCommitPacketV01:
+    transaction_id: str
+    owning_local_root_id: str
+    canonical_permission_ref: str
+    selected_canonical_action: str
+    normalized_subject_scope: ActionSubjectScopeProfileV01
+    normalized_target_scope: ActionTargetScopeProfileV01
+    normalized_permission_scope: ActionPermissionScopeProfileV01
+    business_effect_parameters: ActionEffectParametersProfileV01
+    execution_binding: NativeExecutionBindingV01
+    execution_source: _common_firewall.CapabilityAdmissionSnapshotV01
+    normalized_effect_parameters: ActionEffectParametersProfileV01
+    adapter_binding: ActionAdapterBindingProfileV01
+    dependency_candidate: DependencySetCandidateV01
+    temporal_authority: ActionTemporalAuthorityProfileV01
+    authority_policy: ActionAuthorityPolicyProfileV01
+    business_object_identity: ActionBusinessObjectIdentityProfileV01
+    consequential_effect_parameters: ActionConsequentialEffectParametersProfileV01
+    logical_intent: RootOwnedLogicalEffectIntentV01
+    idempotency_identity: ActionIdempotencyIdentityV01
+    authorization_candidate: RootBoundPacketAuthorizationCandidateV01
+    evaluation_time: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    temporal_evaluation: TemporalEvaluationV01
+    normalized_effect_parameters_fingerprint: str
+    dependency_set_candidate_fingerprint: str
+    temporal_authority_fingerprint: str
+    authority_policy_fingerprint: str
+
+
+@dataclass(frozen=True)
 class SupplierActionCommitPacketCanonicalProjectionV01:
     transaction_id: str
     owning_local_root_id: str
@@ -2099,6 +2139,65 @@ class SupplierRootBoundActionCommitPacketV02ProjectionV01:
 
 
 @dataclass(frozen=True)
+class NativeRootBoundActionCommitPacketV01:
+    canonical_projection: NativeActionCommitPacketV01
+    root_decision_projection: RootDecisionCandidateProjectionV01
+    packet_identity: ActionCommitPacketIdentityResultV01
+    dependency_acceptance_binding: PacketDependencyAcceptanceBindingV01
+
+
+@dataclass(frozen=True)
+class CommonActionViewV01:
+    encoding: str
+    encoded_object: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01
+    canonical_projection: SupplierActionCommitPacketCanonicalProjectionV01 | NativeActionCommitPacketV01
+    root_decision_projection: RootDecisionCandidateProjectionV01
+    packet_identity: ActionCommitPacketIdentityResultV01
+    dependency_acceptance_binding: PacketDependencyAcceptanceBindingV01
+    business_effect_parameters: ActionEffectParametersProfileV01 | None
+    execution_binding: NativeExecutionBindingV01 | None
+    execution_source: _common_firewall.CapabilityAdmissionSnapshotV01 | None
+
+    @property
+    def canonical_permission_ref(self):
+        return self.canonical_projection.canonical_permission_ref
+
+    @property
+    def selected_canonical_action(self):
+        return self.canonical_projection.selected_canonical_action
+
+    @property
+    def temporal_evaluation(self):
+        return self.canonical_projection.temporal_evaluation
+
+
+@dataclass(frozen=True)
+class CommonCorridorStepV01:
+    step_id: str
+    transaction_id: str
+    owning_local_root_id: str
+    packet_id: str
+    authorization_candidate_id: str
+    action_class: str
+    adapter_binding: ActionAdapterBindingProfileV01
+    subject_scope: ActionSubjectScopeProfileV01
+    target_scope: ActionTargetScopeProfileV01
+    effect_parameters: ActionEffectParametersProfileV01
+    issued_at_utc: int
+    expires_at_utc: int
+
+
+@dataclass(frozen=True)
+class CommonContractFulfillmentCorridorV01:
+    corridor_id: str
+    transaction_id: str
+    owning_local_root_id: str
+    packet_id: str
+    corridor_class: str
+    steps: tuple[CommonCorridorStepV01, ...]
+
+
+@dataclass(frozen=True)
 class ActionPacketEffectFirewallProjectionV01:
     projection_profile_id: str
     packet_id: str
@@ -2206,8 +2305,8 @@ class _ActionPacketHistoricalEffectAuthorizationV01:
 class _ActionPacketFulfillmentAttemptContextV01:
     attempt_evidence: ActionPacketFulfillmentAttemptEvidenceV01
     projection: ActionPacketEffectFirewallProjectionV01 | None
-    corridor: ContractFulfillmentCorridorV01
-    corridor_step: CorridorStepV01
+    corridor: ContractFulfillmentCorridorV01 | CommonContractFulfillmentCorridorV01
+    corridor_step: CorridorStepV01 | CommonCorridorStepV01
     current_dependency_observations: tuple[
         ActionDependencyCurrentObservationV01,
         ...,
@@ -2220,7 +2319,7 @@ class _ActionPacketFulfillmentAttemptContextV01:
 
 @dataclass(frozen=True)
 class ActionPacketLifecycleEntryV01:
-    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01
     transition_registry_id: str
     transition_events: tuple[ActionPacketTransitionEventV01, ...]
 
@@ -6370,7 +6469,7 @@ def _validate_g2a1a_cross_profile_coherence_impl_v01(
 ) -> tuple[bool, tuple[str, ...]]:
     """Rebuild every G2-A1A identity and enforce cross-profile equality."""
 
-    if type(value) is not SupplierActionCommitPacketCanonicalProjectionV01:
+    if type(value) not in (SupplierActionCommitPacketCanonicalProjectionV01, NativeActionCommitPacketV01):
         return False, ("cross_profile_bundle_type_invalid",)
     reasons: list[str] = []
     try:
@@ -6579,6 +6678,14 @@ def _validate_g2a1a_cross_profile_coherence_impl_v01(
             effect_class=candidate.effect_class,
             consequential_parameters=value.consequential_effect_parameters,
         )
+        if type(value) is NativeActionCommitPacketV01:
+            if rebuilt_effect_profile != value.business_effect_parameters:
+                raise ValueError("native_business_effect_projection_mismatch")
+            rebuilt_effect_profile = recompose_native_action_effect_parameters_v01(
+                business_effect_parameters=rebuilt_effect_profile,
+                execution_binding=value.execution_binding,
+                admission_snapshot=value.execution_source,
+            )
         rebuilt_effect_fingerprint = (
             build_action_effect_parameters_fingerprint_v01(
                 rebuilt_effect_profile
@@ -6694,7 +6801,12 @@ def _validate_g2a1a_cross_profile_coherence_impl_v01(
         if any(item is None for item in supplied_packet_values):
             _reason_v01(reasons, "cross_profile_packet_identity_input_partial")
         else:
-            packet_valid, _ = validate_action_commit_packet_identity_v01(
+            identity_validator = (
+                validate_native_action_packet_identity_v01
+                if type(value) is NativeActionCommitPacketV01
+                else validate_action_commit_packet_identity_v01
+            )
+            packet_valid, _ = identity_validator(
                 packet_identity,
                 candidate=candidate,
                 source_root_decision_id=source_root_decision_id,
@@ -7444,14 +7556,14 @@ def _validate_revocation_candidate_against_packet_core_v01(
         packet_valid, packet_reasons = (
             packet_validation_result
             if packet_validation_result is not None
-            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            else validate_common_root_bound_action_commit_packet_v01(
                 packet
             )
         )
         if not packet_valid:
             return False, packet_reasons
         reasons: list[str] = []
-        canonical = packet.canonical_projection
+        canonical = _common_action_view_for_pass_v01(packet, None).canonical_projection
         source_decision_id = (
             packet.root_decision_projection.root_decision_result.decision_id
         )
@@ -7515,15 +7627,15 @@ def _validate_supersession_candidate_against_packets_core_v01(
             packet_valid, packet_reasons = (
                 validation_result
                 if validation_result is not None
-                else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+                else validate_common_root_bound_action_commit_packet_v01(
                     packet
                 )
             )
             if not packet_valid:
                 return False, packet_reasons
         reasons: list[str] = []
-        predecessor_canonical = predecessor.canonical_projection
-        successor_canonical = successor.canonical_projection
+        predecessor_canonical = _common_action_view_for_pass_v01(predecessor, None).canonical_projection
+        successor_canonical = _common_action_view_for_pass_v01(successor, None).canonical_projection
         predecessor_candidate = predecessor_canonical.authorization_candidate
         successor_candidate = successor_canonical.authorization_candidate
         predecessor_decision = (
@@ -8186,7 +8298,7 @@ def validate_accepted_revocation_binding_v01(
 def _build_expected_accepted_revocation_binding_v01(
     candidate: RevocationCandidateV01,
     root_projection: RootDecisionCandidateProjectionV01,
-    packet: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    packet: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01,
 ) -> AcceptedRevocationBindingV01:
     result = root_projection.root_decision_result
     provisional = AcceptedRevocationBindingV01(
@@ -8196,7 +8308,7 @@ def _build_expected_accepted_revocation_binding_v01(
             root_projection.source_root_decision_hash
         ),
         owning_local_root_id=(
-            packet.canonical_projection.owning_local_root_id
+            _common_action_view_for_pass_v01(packet, None).canonical_projection.owning_local_root_id
         ),
         packet_id=packet.packet_identity.packet_id,
         prior_authorization_decision_id=(
@@ -8387,7 +8499,7 @@ def validate_accepted_supersession_binding_v01(
 def _build_expected_accepted_supersession_binding_v01(
     candidate: SupersessionCandidateV01,
     root_projection: RootDecisionCandidateProjectionV01,
-    predecessor: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    predecessor: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01,
 ) -> AcceptedSupersessionBindingV01:
     result = root_projection.root_decision_result
     predecessor_result = (
@@ -8400,7 +8512,7 @@ def _build_expected_accepted_supersession_binding_v01(
             root_projection.source_root_decision_hash
         ),
         owning_local_root_id=(
-            predecessor.canonical_projection.owning_local_root_id
+            _common_action_view_for_pass_v01(predecessor, None).canonical_projection.owning_local_root_id
         ),
         predecessor_packet_id=predecessor.packet_identity.packet_id,
         prior_authorization_decision_id=predecessor_result.decision_id,
@@ -8529,14 +8641,14 @@ def _validate_mandatory_dependency_local_root_acceptance_core_v01(
         packet_valid, packet_reasons = (
             packet_validation_result
             if packet_validation_result is not None
-            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            else validate_common_root_bound_action_commit_packet_v01(
                 packet
             )
         )
         if not packet_valid:
             return False, packet_reasons
         reasons: list[str] = []
-        canonical = packet.canonical_projection
+        canonical = _common_action_view_for_pass_v01(packet, None).canonical_projection
         records = canonical.dependency_candidate.dependency_records
         mandatory = tuple(
             record
@@ -9268,7 +9380,7 @@ def _validate_action_packet_invalidation_context_core_v01(
                 or type(value.accepted_supersession_binding)
                 is not AcceptedSupersessionBindingV01
                 or type(supersession_successor)
-                is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+                not in (SupplierRootBoundActionCommitPacketV02ProjectionV01, NativeRootBoundActionCommitPacketV01)
                 or supersession_successor.packet_identity.packet_id
                 != value.supersession_successor_packet_id
             ):
@@ -9533,6 +9645,11 @@ def _validate_supplier_root_context_coherence_impl_v01(
             "supplier_root_context_root_projection_invalid",
             *root_reasons,
         )
+    return _validate_common_root_context_fields_v01(canonical_projection, root_projection)
+
+
+def _validate_common_root_context_fields_v01(canonical_projection, root_projection):
+    reasons: list[str] = []
     candidate = canonical_projection.authorization_candidate
     decision_input = root_projection.root_decision_input
     result = root_projection.root_decision_result
@@ -11229,7 +11346,7 @@ def _validate_action_packet_lifecycle_entry_core_v01(
                 value.root_bound_genesis,
             )
             if validation_pass is not None
-            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            else validate_common_root_bound_action_commit_packet_v01(
                 value.root_bound_genesis
             )
         )
@@ -11310,14 +11427,14 @@ def _validate_action_packet_transition_history_core_v01(
                 root_bound_genesis,
             )
             if validation_pass is not None
-            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            else validate_common_root_bound_action_commit_packet_v01(
                 root_bound_genesis
             )
         )
         genesis_valid, _ = genesis_result
         if not genesis_valid:
             return False, ("action_packet_transition_genesis_invalid",)
-        canonical = root_bound_genesis.canonical_projection
+        canonical = _common_action_view_for_pass_v01(root_bound_genesis, validation_pass).canonical_projection
         packet_id = root_bound_genesis.packet_identity.packet_id
         idempotency_key = canonical.idempotency_identity.idempotency_key
         owning_root = canonical.owning_local_root_id
@@ -11644,12 +11761,12 @@ def validate_action_packet_transition_history_v01(
 
 
 def _packet_local_disposition_history_v01(
-    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01,
     preceding_events: tuple[ActionPacketTransitionEventV01, ...],
     disposition_events: tuple[IdempotencyDispositionEventV01, ...],
 ) -> tuple[IdempotencyDispositionEventV01, ...]:
     key = (
-        root_bound_genesis.canonical_projection.idempotency_identity
+        _common_action_view_for_pass_v01(root_bound_genesis, None).canonical_projection.idempotency_identity
         .idempotency_key
     )
     packet_id = root_bound_genesis.packet_identity.packet_id
@@ -11692,12 +11809,12 @@ def _packet_local_disposition_history_v01(
 
 
 def _disposition_before_transition_events_v01(
-    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01,
     preceding_events: tuple[ActionPacketTransitionEventV01, ...],
     disposition_events: tuple[IdempotencyDispositionEventV01, ...],
 ) -> IdempotencyDispositionStateV01:
     key = (
-        root_bound_genesis.canonical_projection.idempotency_identity
+        _common_action_view_for_pass_v01(root_bound_genesis, None).canonical_projection.idempotency_identity
         .idempotency_key
     )
     return _derive_idempotency_disposition_unchecked_v01(
@@ -11725,7 +11842,7 @@ def _validate_contextual_invalidation_transition_v01(
             type(context) is not _ActionPacketInvalidationContextV01
             or type(event) is not ActionPacketTransitionEventV01
             or type(root_bound_genesis)
-            is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+            not in (SupplierRootBoundActionCommitPacketV02ProjectionV01, NativeRootBoundActionCommitPacketV01)
             or type(preceding_events) is not tuple
             or any(
                 type(item) is not ActionPacketTransitionEventV01
@@ -11759,7 +11876,7 @@ def _validate_contextual_invalidation_transition_v01(
                 "action_packet_invalidation_transition_context_invalid",
             )
         evidence = context.invalidation_evidence
-        canonical = root_bound_genesis.canonical_projection
+        canonical = _common_action_view_for_pass_v01(root_bound_genesis, validation_pass).canonical_projection
         packet_id = root_bound_genesis.packet_identity.packet_id
         reasons: list[str] = []
         if (
@@ -11872,7 +11989,7 @@ def _validate_contextual_invalidation_transition_v01(
             binding = context.accepted_supersession_binding
             if (
                 type(successor)
-                is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+                not in (SupplierRootBoundActionCommitPacketV02ProjectionV01, NativeRootBoundActionCommitPacketV01)
                 or type(binding) is not AcceptedSupersessionBindingV01
             ):
                 _reason_v01(
@@ -11981,7 +12098,7 @@ def _validate_contextual_invalidation_transition_v01(
             successor_packet_id = (
                 supersession_successor.packet_identity.packet_id
                 if type(supersession_successor)
-                is SupplierRootBoundActionCommitPacketV02ProjectionV01
+                in (SupplierRootBoundActionCommitPacketV02ProjectionV01, NativeRootBoundActionCommitPacketV01)
                 else None
             )
             consuming_dispositions = tuple(
@@ -12160,12 +12277,12 @@ def _action_packet_transition_temporal_reason_v01(
     try:
         if (
             type(root_bound_genesis)
-            is not SupplierRootBoundActionCommitPacketV02ProjectionV01
+            not in (SupplierRootBoundActionCommitPacketV02ProjectionV01, NativeRootBoundActionCommitPacketV01)
             or type(event) is not ActionPacketTransitionEventV01
         ):
             return "action_packet_transition_temporal_truth_invalid"
         evaluation = evaluate_temporal_authority_v01(
-            root_bound_genesis.canonical_projection.temporal_authority,
+            _common_action_view_for_pass_v01(root_bound_genesis, None).canonical_projection.temporal_authority,
             evaluation_time=event.evaluation_time,
         )
         rule_id = event.transition_rule_id
@@ -12816,15 +12933,17 @@ def _same_key_entries_are_bound_successors_v01(
     *,
     validation_pass: _ActionPacketRegistryValidationPassV01 | None = None,
 ) -> bool:
+    # Select the lineage before its existing admission loop. An invalid
+    # member must return False there, not discard accumulated alias reasons.
     owner_key = (
-        owner_entry.root_bound_genesis.canonical_projection
+        _common_action_view_validated_v01(owner_entry.root_bound_genesis).canonical_projection
         .idempotency_identity.idempotency_key
     )
     same_key_entries = tuple(
         entry
         for entry in entries.values()
         if (
-            entry.root_bound_genesis.canonical_projection
+            _common_action_view_validated_v01(entry.root_bound_genesis).canonical_projection
             .idempotency_identity.idempotency_key
             == owner_key
         )
@@ -12839,7 +12958,7 @@ def _same_key_entries_are_bound_successors_v01(
                 entry.root_bound_genesis,
             )
             if validation_pass is not None
-            else validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            else validate_common_root_bound_action_commit_packet_v01(
                 entry.root_bound_genesis
             )
         )
@@ -12864,10 +12983,10 @@ def _same_key_entries_are_bound_successors_v01(
     )
     if len(roots) != 1 or roots[0] is not owner_entry:
         return False
-    root_projection = owner_entry.root_bound_genesis.canonical_projection
+    root_projection = _common_action_view_for_pass_v01(owner_entry.root_bound_genesis, validation_pass).canonical_projection
     root_intent_id = root_projection.logical_intent.root_owned_intent_id
     for entry in same_key_entries:
-        projection = entry.root_bound_genesis.canonical_projection
+        projection = _common_action_view_for_pass_v01(entry.root_bound_genesis, validation_pass).canonical_projection
         if (
             projection.idempotency_identity.idempotency_key != owner_key
             or projection.logical_intent.root_owned_intent_id != root_intent_id
@@ -12891,7 +13010,7 @@ def _same_key_entries_are_bound_successors_v01(
         ):
             return False
         predecessor_projection = (
-            predecessor.root_bound_genesis.canonical_projection
+            _common_action_view_for_pass_v01(predecessor.root_bound_genesis, validation_pass).canonical_projection
         )
         if not (
             predecessor_projection.idempotency_identity.idempotency_key
@@ -12914,7 +13033,7 @@ def _same_key_entries_are_bound_successors_v01(
                 return False
             visited.add(current_id)
             current_authorization = (
-                current.root_bound_genesis.canonical_projection
+                _common_action_view_for_pass_v01(current.root_bound_genesis, validation_pass).canonical_projection
                 .authorization_candidate
             )
             current_predecessor_id = (
@@ -13666,7 +13785,9 @@ def _validate_registry_state_disposition_coherence_v01(
         "g2a_t23_failed_supersede",
     } and not (
         state.lifecycle_state == "SUPERSEDED"
-        and state.idempotency_disposition == "RESERVED"
+        # The transferred shared key may subsequently close under its successor.
+        # This historical packet never regains reservation ownership.
+        and state.idempotency_disposition in {"RESERVED", "CONSUMED", "UNCERTAIN_CLOSED"}
         and state.reservation_owner_packet_id != packet_id
         and len(outgoing_transfers) == 1
         and latest_rule
@@ -13841,7 +13962,7 @@ def record_action_packet_genesis_v01(
             action_packet_transition_registry_profile
         )
         genesis_valid, genesis_reasons = (
-            validate_supplier_root_bound_action_commit_packet_v02_projection_v01(
+            validate_common_root_bound_action_commit_packet_v01(
                 root_bound_genesis
             )
         )
@@ -13849,7 +13970,7 @@ def record_action_packet_genesis_v01(
             raise ValueError(genesis_reasons[0])
         packet_id = root_bound_genesis.packet_identity.packet_id
         idempotency_key = (
-            root_bound_genesis.canonical_projection.idempotency_identity
+            _common_action_view_for_pass_v01(root_bound_genesis, None).canonical_projection.idempotency_identity
             .idempotency_key
         )
         if any(
@@ -13861,17 +13982,17 @@ def record_action_packet_genesis_v01(
             entry
             for entry in registry.action_packet_lifecycle_entries
             if (
-                entry.root_bound_genesis.canonical_projection
+                _common_action_view_for_pass_v01(entry.root_bound_genesis, None).canonical_projection
                 .idempotency_identity.idempotency_key
                 == idempotency_key
             )
         )
         stable_intent_id = (
-            root_bound_genesis.canonical_projection.logical_intent
+            _common_action_view_for_pass_v01(root_bound_genesis, None).canonical_projection.logical_intent
             .root_owned_intent_id
         )
         if any(
-            entry.root_bound_genesis.canonical_projection.logical_intent
+            _common_action_view_for_pass_v01(entry.root_bound_genesis, None).canonical_projection.logical_intent
             .root_owned_intent_id
             != stable_intent_id
             for entry in existing_same_key
@@ -15065,7 +15186,7 @@ def _require_valid_action_packet_registry_v01(
 
 
 def _g2a4a_current_dependency_observation_ids_v01(
-    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01,
+    root_bound_genesis: SupplierRootBoundActionCommitPacketV02ProjectionV01 | NativeRootBoundActionCommitPacketV01,
     current_dependency_observations: object,
     *,
     eligibility_evaluation_time: object,
@@ -15090,7 +15211,7 @@ def _g2a4a_current_dependency_observation_ids_v01(
     )
     if not accepted:
         raise ValueError("current_dependency_acceptance_invalid")
-    canonical = root_bound_genesis.canonical_projection
+    canonical = _common_action_view_for_pass_v01(root_bound_genesis, validation_pass).canonical_projection
     candidate = canonical.dependency_candidate
     if not validate_dependency_set_candidate_v01(candidate)[0]:
         raise ValueError("current_dependency_candidate_invalid")
@@ -15175,7 +15296,7 @@ def _g2a4a_current_dependency_observation_ids_v01(
 
 
 def _g2a4a_root_scope_refs_v01(
-    canonical: SupplierActionCommitPacketCanonicalProjectionV01,
+    canonical: SupplierActionCommitPacketCanonicalProjectionV01 | NativeActionCommitPacketV01,
 ) -> tuple[str, ...]:
     subject = canonical.normalized_subject_scope
     target = canonical.normalized_target_scope
@@ -15204,60 +15325,79 @@ def _g2a4a_validate_corridor_containment_v01(
     corridor: object,
     corridor_step: object,
 ) -> tuple[str, ...]:
-    if type(corridor) is not ContractFulfillmentCorridorV01:
-        raise ValueError("action_packet_corridor_type_invalid")
-    if type(corridor_step) is not CorridorStepV01:
-        raise ValueError("action_packet_corridor_step_type_invalid")
-    if (
-        corridor.packet_id != packet_id
-        or corridor.corridor_kind != canonical.adapter_binding.corridor_class
-        or type(corridor.deterministic_only) is not bool
-        or corridor.deterministic_only is not True
-        or type(corridor.post_root_llm_reasoning_allowed) is not bool
-        or corridor.post_root_llm_reasoning_allowed is not False
-        or type(corridor.reasoning_restarted_after_root) is not bool
-        or corridor.reasoning_restarted_after_root is not False
-        or type(corridor.root_review_required_on_mismatch) is not bool
-        or corridor.root_review_required_on_mismatch is not True
-    ):
-        raise ValueError("action_packet_corridor_binding_invalid")
-    if (
-        type(corridor.allowed_steps) is not tuple
-        or not corridor.allowed_steps
-        or len(corridor.allowed_steps) != len(set(corridor.allowed_steps))
-        or any(
-            type(step_id) is not str
-            or not validate_identity_text_v01(step_id)[0]
-            for step_id in corridor.allowed_steps
+    if type(canonical) is NativeActionCommitPacketV01:
+        if not _common_corridor_pair_v01(corridor, corridor_step) or type(corridor) is not CommonContractFulfillmentCorridorV01:
+            raise ValueError("action_packet_corridor_type_invalid")
+        valid, reasons = validate_common_corridor_v01(corridor)
+        if not valid:
+            raise ValueError(reasons[0])
+        if (corridor.steps.count(corridor_step) != 1 or
+            (corridor.transaction_id, corridor.owning_local_root_id, corridor.packet_id, corridor.corridor_class) !=
+            (canonical.transaction_id, canonical.owning_local_root_id, packet_id, canonical.adapter_binding.corridor_class) or
+            corridor_step.authorization_candidate_id != canonical.authorization_candidate.root_packet_authorization_candidate_id or
+            corridor_step.action_class != canonical.selected_canonical_action or
+            corridor_step.adapter_binding != canonical.adapter_binding or
+            corridor_step.effect_parameters != canonical.normalized_effect_parameters):
+            raise ValueError("native_corridor_authorized_operation_mismatch")
+        if (not set(corridor_step.subject_scope.included_subject_refs) <= set(canonical.normalized_subject_scope.included_subject_refs) or
+            not set(corridor_step.target_scope.included_target_refs) <= set(canonical.normalized_target_scope.included_target_refs) or
+            not canonical.temporal_authority.issued_at_utc <= corridor_step.issued_at_utc < corridor_step.expires_at_utc <= canonical.temporal_authority.expires_at_utc):
+            raise ValueError("native_corridor_scope_time_expansion")
+    else:
+        if type(corridor) is not ContractFulfillmentCorridorV01:
+            raise ValueError("action_packet_corridor_type_invalid")
+        if type(corridor_step) is not CorridorStepV01:
+            raise ValueError("action_packet_corridor_step_type_invalid")
+        if (
+            corridor.packet_id != packet_id
+            or corridor.corridor_kind != canonical.adapter_binding.corridor_class
+            or type(corridor.deterministic_only) is not bool
+            or corridor.deterministic_only is not True
+            or type(corridor.post_root_llm_reasoning_allowed) is not bool
+            or corridor.post_root_llm_reasoning_allowed is not False
+            or type(corridor.reasoning_restarted_after_root) is not bool
+            or corridor.reasoning_restarted_after_root is not False
+            or type(corridor.root_review_required_on_mismatch) is not bool
+            or corridor.root_review_required_on_mismatch is not True
+        ):
+            raise ValueError("action_packet_corridor_binding_invalid")
+        if (
+            type(corridor.allowed_steps) is not tuple
+            or not corridor.allowed_steps
+            or len(corridor.allowed_steps) != len(set(corridor.allowed_steps))
+            or any(
+                type(step_id) is not str
+                or not validate_identity_text_v01(step_id)[0]
+                for step_id in corridor.allowed_steps
+            )
+            or corridor.allowed_steps.count(corridor_step.step_id) != 1
+        ):
+            raise ValueError("action_packet_corridor_step_not_authorized")
+        legacy_valid, _ = validate_corridor_no_post_root_reasoning_v01(
+            corridor
         )
-        or corridor.allowed_steps.count(corridor_step.step_id) != 1
-    ):
-        raise ValueError("action_packet_corridor_step_not_authorized")
-    legacy_valid, _ = validate_corridor_no_post_root_reasoning_v01(
-        corridor
-    )
-    legacy_validation_packet = _dataclass_replace(
-        canonical.source_packet,
-        packet_id=packet_id,
-    )
-    step_report = validate_corridor_step_against_packet_v01(
-        legacy_validation_packet,
-        corridor_step,
-    )
-    if not legacy_valid or step_report.validation_status != STATUS_PASS:
-        raise ValueError("action_packet_corridor_legacy_invalid")
-    raw_action = canonical.selected_legacy_action
-    raw_adapter = canonical.source_packet.adapter_binding.adapter_id
-    if (
-        corridor_step.parent_packet_id != packet_id
-        or corridor_step.allowed_actions.count(raw_action) != 1
-        or corridor_step.adapter_id != raw_adapter
-        or raw_action not in canonical.raw_allowed_actions
-        or raw_action in canonical.raw_forbidden_actions
-        or raw_adapter not in canonical.raw_allowed_adapters
-        or raw_adapter in canonical.raw_forbidden_adapters
-    ):
-        raise ValueError("action_packet_corridor_legacy_containment_invalid")
+        legacy_validation_packet = _dataclass_replace(
+            canonical.source_packet,
+            packet_id=packet_id,
+        )
+        step_report = validate_corridor_step_against_packet_v01(
+            legacy_validation_packet,
+            corridor_step,
+        )
+        if not legacy_valid or step_report.validation_status != STATUS_PASS:
+            raise ValueError("action_packet_corridor_legacy_invalid")
+        raw_action = canonical.selected_legacy_action
+        raw_adapter = canonical.source_packet.adapter_binding.adapter_id
+        if (
+            corridor_step.parent_packet_id != packet_id
+            or corridor_step.allowed_actions.count(raw_action) != 1
+            or corridor_step.adapter_id != raw_adapter
+            or raw_action not in canonical.raw_allowed_actions
+            or raw_action in canonical.raw_forbidden_actions
+            or raw_adapter not in canonical.raw_allowed_adapters
+            or raw_adapter in canonical.raw_forbidden_adapters
+        ):
+            raise ValueError("action_packet_corridor_legacy_containment_invalid")
     permission = canonical.normalized_permission_scope
     policy = canonical.authority_policy
     effect_class = canonical.authorization_candidate.effect_class
@@ -15286,8 +15426,14 @@ def _g2a4a_validate_corridor_containment_v01(
     return _g2a4a_root_scope_refs_v01(canonical)
 
 
+def _common_corridor_pair_v01(corridor, step):
+    return (type(corridor), type(step)) in (
+        (ContractFulfillmentCorridorV01, CorridorStepV01),
+        (CommonContractFulfillmentCorridorV01, CommonCorridorStepV01))
+
+
 def _g2a4a_logical_ticks_v01(
-    canonical: SupplierActionCommitPacketCanonicalProjectionV01,
+    canonical: SupplierActionCommitPacketCanonicalProjectionV01 | NativeActionCommitPacketV01,
     logical_time_bridge: object,
     eligibility_evaluation_time: object,
 ) -> tuple[int, int, int]:
@@ -15321,6 +15467,20 @@ def _g2a4a_logical_ticks_v01(
     if not issued_at_tick <= current_tick < expires_at_tick:
         raise ValueError("action_packet_effect_time_invalid")
     return issued_at_tick, expires_at_tick, current_tick
+
+
+def _common_corridor_scope_ticks_v01(canonical, step, bridge, scope, ticks):
+    if type(canonical) is not NativeActionCommitPacketV01:
+        return scope, ticks
+    narrowed = tuple(sorted(set(step.subject_scope.included_subject_refs + step.target_scope.included_target_refs)))
+    excluded = set(step.subject_scope.excluded_subject_refs + step.target_scope.excluded_target_refs)
+    if not narrowed or not set(narrowed) <= set(scope) or set(narrowed) & excluded:
+        raise ValueError("native_corridor_narrowed_scope_invalid")
+    issued = epoch_seconds_to_logical_tick_v01(bridge, step.issued_at_utc)
+    expires = epoch_seconds_to_logical_tick_v01(bridge, step.expires_at_utc)
+    if not ticks[0] <= issued <= ticks[2] < expires <= ticks[1]:
+        raise ValueError("native_corridor_narrowed_time_invalid")
+    return narrowed, (issued, expires, ticks[2])
 
 
 def _build_action_packet_effect_firewall_projection_core_v01(
@@ -15378,8 +15538,9 @@ def _build_action_packet_effect_firewall_projection_core_v01(
     )
     if not root_bound_valid:
         raise ValueError("action_packet_effect_genesis_invalid")
-    canonical = root_bound.canonical_projection
-    if not validate_supplier_action_commit_packet_canonical_projection_v01(
+    view = _common_action_view_for_pass_v01(root_bound, validation_pass)
+    canonical = view.canonical_projection
+    if not validate_common_action_commit_packet_v01(
         canonical
     )[0]:
         raise ValueError("action_packet_effect_projection_invalid")
@@ -15472,6 +15633,9 @@ def _build_action_packet_effect_firewall_projection_core_v01(
             eligibility_evaluation_time,
         )
     )
+    root_scope_refs, (issued_at_tick, expires_at_tick, current_tick) = _common_corridor_scope_ticks_v01(
+        canonical, corridor_step, logical_time_bridge, root_scope_refs,
+        (issued_at_tick, expires_at_tick, current_tick))
     root_result = root_projection.root_decision_result
     projection = ActionPacketEffectFirewallProjectionV01(
         projection_profile_id=(
@@ -15596,8 +15760,9 @@ def _build_action_packet_effect_projection_from_historical_view_v01(
         raise ValueError("action_packet_effect_genesis_invalid")
     if root_bound.packet_identity.packet_id != packet_id:
         raise ValueError("action_packet_effect_packet_mismatch")
-    canonical = root_bound.canonical_projection
-    if not validate_supplier_action_commit_packet_canonical_projection_v01(
+    view = _common_action_view_for_pass_v01(root_bound, validation_pass)
+    canonical = view.canonical_projection
+    if not validate_common_action_commit_packet_v01(
         canonical
     )[0]:
         raise ValueError("action_packet_effect_projection_invalid")
@@ -15689,6 +15854,9 @@ def _build_action_packet_effect_projection_from_historical_view_v01(
             eligibility_evaluation_time,
         )
     )
+    root_scope_refs, (issued_at_tick, expires_at_tick, current_tick) = _common_corridor_scope_ticks_v01(
+        canonical, corridor_step, logical_time_bridge, root_scope_refs,
+        (issued_at_tick, expires_at_tick, current_tick))
     root_result = root_projection.root_decision_result
     projection = ActionPacketEffectFirewallProjectionV01(
         projection_profile_id=(
@@ -16411,6 +16579,16 @@ def _action_packet_effect_receipt_sha256_v01(
     )
 
 
+def _action_packet_attempt_disposition_prefix_sha256_v01(registry, state):
+    # Historical attempt validation uses the prefix ending at this key's event.
+    positions = tuple(index for index, event in enumerate(registry.idempotency_disposition_events)
+        if event.idempotency_disposition_event_id == state.latest_disposition_event_id)
+    if len(positions) != 1:
+        raise ValueError('action_packet_attempt_disposition_prefix_invalid')
+    return _action_packet_disposition_history_sha256_v01(
+        registry.idempotency_disposition_events[:positions[0] + 1])
+
+
 def _action_packet_effect_receipt_ref_v01(
     *,
     packet_id: str,
@@ -16464,6 +16642,7 @@ def _expected_action_packet_effect_receipt_plain_v01(
     projection: ActionPacketEffectFirewallProjectionV01,
     request: _EffectRequestV01,
     decision: _EffectFirewallDecisionV01,
+    retained_receipt: object = None,
 ) -> dict[str, object]:
     receipt_ref = _action_packet_effect_receipt_ref_v01(
         packet_id=projection.packet_id,
@@ -16495,7 +16674,7 @@ def _expected_action_packet_effect_receipt_plain_v01(
         "effect_handle_exposed": False,
         "real_world_effects_count": 0,
     }
-    return {
+    plain = {
         "abi_version": "v1.0",
         "artifact_id": receipt_ref,
         "artifact_type": "EvidenceReceipt",
@@ -16517,6 +16696,24 @@ def _expected_action_packet_effect_receipt_plain_v01(
             projection,
         ),
     }
+    if type(entry.root_bound_genesis) is NativeRootBoundActionCommitPacketV01:
+        errors = _common_firewall.validate_retained_native_effect_receipt_v01(
+            receipt=retained_receipt, request=request, decision=decision)
+        if errors:
+            raise ValueError(errors[0])
+        retained = _kernel_artifact_to_plain_dict_v01(retained_receipt)
+        native = _common_firewall.native_execution_evidence_from_plain_data_v01(retained['payload']['execution_evidence'])
+        canonical = entry.root_bound_genesis.canonical_projection
+        errors = _common_firewall.validate_bound_capability_invocation_v01(native.invocation, native.admission, canonical)
+        if errors:
+            raise ValueError(errors[0])
+        if (native.invocation.packet_id, native.invocation.execution_attempt_id) != (projection.packet_id, projection.execution_attempt_id):
+            raise ValueError('native_receipt_packet_attempt_mismatch')
+        payload['receipt_ref'] = retained['artifact_id']
+        payload['receipt_profile'] = retained['payload']['receipt_profile']
+        payload['execution_evidence'] = retained['payload']['execution_evidence']
+        plain['artifact_id'] = retained['artifact_id']
+    return plain
 
 
 def _rebuild_exact_action_packet_effect_receipt_v01(
@@ -16524,12 +16721,14 @@ def _rebuild_exact_action_packet_effect_receipt_v01(
     projection: ActionPacketEffectFirewallProjectionV01,
     request: _EffectRequestV01,
     decision: _EffectFirewallDecisionV01,
+    retained_receipt: object = None,
 ) -> _KernelArtifactV01:
     plain = _expected_action_packet_effect_receipt_plain_v01(
         entry,
         projection,
         request,
         decision,
+        retained_receipt=retained_receipt,
     )
     return _build_kernel_artifact_v01(
         abi_version=plain["abi_version"],
@@ -16648,8 +16847,7 @@ def _g2a4b_attempt_input_v01(
     ):
         raise ValueError("action_packet_fulfillment_attempt_invalid")
     if (
-        type(corridor) is not ContractFulfillmentCorridorV01
-        or type(corridor_step) is not CorridorStepV01
+        not _common_corridor_pair_v01(corridor, corridor_step)
         or type(current_dependency_observations) is not tuple
         or any(
             not validate_action_dependency_current_observation_v01(item)[0]
@@ -16789,9 +16987,7 @@ def _g2a4b_attempt_evidence_v01(
             state.latest_disposition_event_id
         ),
         disposition_history_sha256_before=(
-            _action_packet_disposition_history_sha256_v01(
-                registry.idempotency_disposition_events
-            )
+            _action_packet_attempt_disposition_prefix_sha256_v01(registry, state)
         ),
         attempt_evaluation_time=pending.evaluation_time,
         attempt_evaluation_time_source=pending.evaluation_time_source,
@@ -17486,8 +17682,7 @@ def _validate_registry_fulfillment_attempt_histories_v01(
                 "action_packet_registry_fulfillment_disposition_history_invalid",
             )
         if not (
-            type(context.corridor) is ContractFulfillmentCorridorV01
-            and type(context.corridor_step) is CorridorStepV01
+            _common_corridor_pair_v01(context.corridor, context.corridor_step)
             and type(context.current_dependency_observations) is tuple
             and all(
                 validate_action_dependency_current_observation_v01(item)[0]
@@ -17645,6 +17840,7 @@ def _validate_registry_fulfillment_attempt_histories_v01(
                         projection,
                         request,
                         decision,
+                        retained_receipt=context.receipt,
                     )
                 )
                 receipt_valid = (
@@ -17957,9 +18153,7 @@ def _g2a4b_fallback_attempt_evidence_v01(
             state.latest_disposition_event_id
         ),
         disposition_history_sha256_before=(
-            _action_packet_disposition_history_sha256_v01(
-                registry.idempotency_disposition_events
-            )
+            _action_packet_attempt_disposition_prefix_sha256_v01(registry, state)
         ),
         attempt_evaluation_time=pending.evaluation_time,
         attempt_evaluation_time_source=pending.evaluation_time_source,
@@ -17983,12 +18177,15 @@ def _g2a4b_prove_consumed_receipt_truth_v01(
     execution_reason: str | None,
 ) -> tuple[bool, _KernelArtifactV01 | None]:
     try:
-        expected = _rebuild_exact_action_packet_effect_receipt_v01(
-            entry,
-            projection,
-            preparation.request,
-            preparation.decision,
-        )
+        if type(entry.root_bound_genesis) is NativeRootBoundActionCommitPacketV01:
+            expected_plain = _expected_action_packet_effect_receipt_plain_v01(entry, projection,
+                preparation.request, preparation.decision, retained_receipt=returned)
+            if _kernel_artifact_to_plain_dict_v01(returned) != expected_plain:
+                return False, None
+            expected = returned
+        else:
+            expected = _rebuild_exact_action_packet_effect_receipt_v01(
+                entry, projection, preparation.request, preparation.decision)
         if (
             execution_reason is not None
             or type(returned) is not _KernelArtifactV01
@@ -18289,6 +18486,8 @@ def execute_action_packet_mock_fulfillment_v01(
     eligibility_evaluation_time_source: object,
     eligibility_evaluation_context_id: object,
     action_packet_transition_registry_profile: object,
+    admitted_capability: object = None,
+    invocation: object = None,
 ) -> ActionCommitPacketRegistryV02:
     invoked = False
     try:
@@ -18381,6 +18580,17 @@ def execute_action_packet_mock_fulfillment_v01(
                 receipt=None,
             )
             return _g2a4b_append_context_only_v01(registry, context)
+        native = type(entry.root_bound_genesis) is NativeRootBoundActionCommitPacketV01
+        if native:
+            canonical = entry.root_bound_genesis.canonical_projection
+            snapshot = _common_firewall.snapshot_admitted_capability_v01(admitted_capability)
+            errors = _common_firewall.validate_bound_capability_invocation_v01(invocation, snapshot, canonical)
+            if errors:
+                raise ValueError(errors[0])
+            if (invocation.packet_id, invocation.execution_attempt_id) != (projection.packet_id, projection.execution_attempt_id):
+                raise ValueError('native_invocation_packet_attempt_mismatch')
+        elif invocation is not None or admitted_capability is not None:
+            raise ValueError('legacy_native_invocation_mix')
         preparation = _prepare_action_packet_effect_attempt_from_projection_v01(
             entry,
             projection,
@@ -18432,6 +18642,11 @@ def execute_action_packet_mock_fulfillment_v01(
         ):
             raise ValueError("action_packet_effect_authorization_invalid")
         firewall = preparation.firewall
+        if native:
+            _common_firewall.bind_native_action_authorization_v01(firewall=firewall,
+                registry=registry, projection=projection, corridor=corridor,
+                corridor_step=corridor_step, current_dependency_observations=observations,
+                logical_time_bridge=logical_time_bridge)
         (
             firewall_before_valid,
             firewall_before,
@@ -18439,7 +18654,7 @@ def execute_action_packet_mock_fulfillment_v01(
         ) = _action_packet_firewall_state_observation_v01(firewall)
         if not firewall_before_valid:
             raise ValueError("action_packet_effect_firewall_state_invalid")
-        receipt_ref = _action_packet_effect_receipt_ref_v01(
+        receipt_ref = None if native else _action_packet_effect_receipt_ref_v01(
             packet_id=projection.packet_id,
             execution_attempt_id=projection.execution_attempt_id,
             request_id=preparation.request.request_id,
@@ -18458,19 +18673,23 @@ def execute_action_packet_mock_fulfillment_v01(
         execution_reason: str | None = None
         try:
             invoked = True
-            returned = (_execute_mock_effect_v01)(
-                firewall=firewall,
-                request=preparation.request,
-                decision=decision,
-                current_tick=projection.current_tick,
-                adapter_id=projection.adapter_id,
-                action_kind=projection.action_kind,
-                child_scope_refs=projection.scope_refs,
-                child_expires_at_tick=projection.expires_at_tick,
-                receipt_artifact_id=receipt_ref,
-                time_envelope=receipt_time_envelope,
-            )
+            if native:
+                returned = _common_firewall.execute_bound_effect_v01(
+                    firewall=firewall, request=preparation.request, decision=decision,
+                    current_tick=projection.current_tick, invocation=invocation,
+                    admitted_capability=admitted_capability, child_scope_refs=projection.scope_refs,
+                    child_expires_at_tick=projection.expires_at_tick, time_envelope=receipt_time_envelope)
+            else:
+                returned = (_execute_mock_effect_v01)(
+                    firewall=firewall, request=preparation.request, decision=decision,
+                    current_tick=projection.current_tick, adapter_id=projection.adapter_id,
+                    action_kind=projection.action_kind, child_scope_refs=projection.scope_refs,
+                    child_expires_at_tick=projection.expires_at_tick, receipt_artifact_id=receipt_ref,
+                    time_envelope=receipt_time_envelope)
         except ValueError as exc:
+            if native and not firewall._state.started_capability_ids:
+                invoked = False
+                raise
             execution_reason = _stable_exception_reason_v01(
                 exc,
                 fallback="effect_execution_unexpected_exception",
@@ -18481,6 +18700,9 @@ def execute_action_packet_mock_fulfillment_v01(
             ):
                 execution_reason = "effect_execution_unexpected_exception"
         except Exception:
+            if native and not firewall._state.started_capability_ids:
+                invoked = False
+                raise
             execution_reason = "effect_execution_unexpected_exception"
         consumed_truth, proven_receipt = (
             _g2a4b_prove_consumed_receipt_truth_v01(
@@ -18672,6 +18894,7 @@ def observe_action_packet_effect_receipt_v01(
                 context.projection,
                 context.request,
                 context.decision,
+                retained_receipt=receipt,
             )
             receipt_valid = (
                 type(context.projection)
@@ -18784,7 +19007,7 @@ def _action_packet_replay_canonical_value_v01(value: object) -> object:
             for key in sorted(value)
         )
     if _is_dataclass(value) and not isinstance(value, type):
-        return tuple(
+        material = tuple(
             (
                 field.name,
                 _action_packet_replay_canonical_value_v01(
@@ -18793,6 +19016,9 @@ def _action_packet_replay_canonical_value_v01(value: object) -> object:
             )
             for field in _dataclass_fields(value)
         )
+        if type(value) in (NativeActionCommitPacketV01, NativeRootBoundActionCommitPacketV01):
+            return (("encoding_version", "native_v01"),) + material
+        return material
     raise ValueError("action_packet_replay_material_invalid")
 
 
@@ -19028,7 +19254,9 @@ def _action_packet_replay_core_v01(
     root_bound = entry.root_bound_genesis
     root_projection = root_bound.root_decision_projection
     canonical = root_bound.canonical_projection
-    rebuilt_packet = build_action_commit_packet_identity_v01(
+    identity_builder = (build_native_action_packet_identity_v01
+        if type(root_bound) is NativeRootBoundActionCommitPacketV01 else build_action_commit_packet_identity_v01)
+    rebuilt_packet = identity_builder(
         candidate=canonical.authorization_candidate,
         source_root_decision_id=(
             root_projection.root_decision_result.decision_id
@@ -19633,35 +19861,300 @@ def validate_action_packet_present_eligibility_inspection_v01(
         return False, ("action_packet_present_inspection_report_invalid",)
     try:
         expected = inspect_action_packet_present_eligibility_v01(
-            registry,
-            packet_id=packet_id,
-            corridor=corridor,
+            registry, packet_id=packet_id, corridor=corridor,
             corridor_step=corridor_step,
-            current_dependency_observations=(
-                current_dependency_observations
-            ),
-            logical_time_bridge=logical_time_bridge,
-            evaluation_time=evaluation_time,
+            current_dependency_observations=current_dependency_observations,
+            logical_time_bridge=logical_time_bridge, evaluation_time=evaluation_time,
             evaluation_time_source=evaluation_time_source,
             evaluation_context_id=evaluation_context_id,
-            action_packet_transition_registry_profile=(
-                action_packet_transition_registry_profile
-            ),
+            action_packet_transition_registry_profile=action_packet_transition_registry_profile,
         )
-        if (
-            _action_packet_replay_canonical_value_v01(report)
-            != _action_packet_replay_canonical_value_v01(expected)
-        ):
-            return False, (
-                "action_packet_present_inspection_report_mismatch",
-            )
+        if _action_packet_replay_canonical_value_v01(report) != _action_packet_replay_canonical_value_v01(expected):
+            return False, ("action_packet_present_inspection_report_mismatch",)
         return True, ()
     except ValueError as exc:
-        return False, (
-            _stable_exception_reason_v01(
-                exc,
-                fallback="action_packet_present_inspection_report_invalid",
-            ),
-        )
+        return False, (_stable_exception_reason_v01(exc, fallback="action_packet_present_inspection_report_invalid"),)
     except Exception:
         return False, ("action_packet_present_inspection_report_invalid",)
+
+
+_NATIVE_BINDING_FIELDS_V01 = (
+    'capability_definition_ref', 'capability_implementation_ref',
+    'capability_input_contract_ref', 'capability_output_contract_ref',
+)
+
+
+def _native_action_require_v01(condition: bool, reason: str) -> None:
+    if not condition:
+        raise ValueError(reason)
+
+
+def _native_binding_from_snapshot_v01(snapshot) -> NativeExecutionBindingV01:
+    errors=_common_firewall.validate_capability_admission_snapshot_v01(snapshot)
+    if errors:raise ValueError(errors[0])
+    return NativeExecutionBindingV01(snapshot.definition.definition_id,snapshot.implementation_ref,
+        snapshot.input_contract_ref,snapshot.output_contract_ref)
+
+
+def build_native_execution_binding_v01(*, admitted_capability) -> NativeExecutionBindingV01:
+    return _native_binding_from_snapshot_v01(_common_firewall.snapshot_admitted_capability_v01(admitted_capability))
+
+
+def validate_native_execution_binding_v01(value, admission_snapshot) -> tuple[bool, tuple[str, ...]]:
+    try:
+        _native_action_require_v01(type(value) is NativeExecutionBindingV01,'native_execution_binding_type')
+        _native_action_require_v01(value==_native_binding_from_snapshot_v01(admission_snapshot),'native_execution_binding_source')
+        return True, ()
+    except ValueError as exc:return False,(str(exc),)
+    except Exception:return False,('native_execution_binding_invalid',)
+
+
+def recompose_native_action_effect_parameters_v01(*, business_effect_parameters,
+    execution_binding, admission_snapshot) -> ActionEffectParametersProfileV01:
+    valid,reasons=validate_action_effect_parameters_profile_v01(business_effect_parameters)
+    if not valid:raise ValueError(reasons[0])
+    valid,reasons=validate_native_execution_binding_v01(execution_binding,admission_snapshot)
+    if not valid:raise ValueError(reasons[0])
+    _native_action_require_v01(not any(r.parameter_name in _NATIVE_BINDING_FIELDS_V01
+        for r in business_effect_parameters.parameter_records),'native_reserved_business_parameter')
+    records=tuple(build_action_effect_parameter_record_v01(parameter_name=name,value_type='REFERENCE',
+        value=getattr(execution_binding,name)) for name in _NATIVE_BINDING_FIELDS_V01)
+    return build_action_effect_parameters_profile_v01(effect_class=business_effect_parameters.effect_class,
+        parameter_records=business_effect_parameters.parameter_records+records)
+
+
+def validate_native_action_effect_parameters_v01(value,business_effect_parameters,
+    execution_binding,admission_snapshot) -> tuple[bool, tuple[str, ...]]:
+    try:
+        expected=recompose_native_action_effect_parameters_v01(business_effect_parameters=business_effect_parameters,
+            execution_binding=execution_binding,admission_snapshot=admission_snapshot)
+        _native_action_require_v01(type(value) is ActionEffectParametersProfileV01 and value==expected,'native_effect_recomposition')
+        return True, ()
+    except ValueError as exc:return False,(str(exc),)
+    except Exception:return False,('native_effect_parameters_invalid',)
+
+
+def build_native_action_commit_packet_v01(*, transaction_id, owning_local_root_id,
+    canonical_permission_ref, selected_canonical_action, normalized_subject_scope,
+    normalized_target_scope, normalized_permission_scope, adapter_binding,
+    dependency_candidate, temporal_authority, authority_policy, business_object_identity,
+    consequential_effect_parameters, evaluation_time, evaluation_time_source,
+    evaluation_context_id, admitted_capability, inputs,
+    predecessor_packet_id=None, supersession_reason_class=None) -> NativeActionCommitPacketV01:
+    source=_common_firewall.snapshot_admitted_capability_v01(admitted_capability)
+    _native_action_require_v01(source.definition.effect_kind=='MOCK_CONSEQUENTIAL','native_consequential_admission_required')
+    logical_class=source.definition.business_semantics.logical_effect_class
+    business=project_consequential_effect_parameters_v01(effect_class=logical_class,
+        consequential_parameters=consequential_effect_parameters)
+    binding=build_native_execution_binding_v01(admitted_capability=admitted_capability)
+    authorization=recompose_native_action_effect_parameters_v01(business_effect_parameters=business,
+        execution_binding=binding,admission_snapshot=source)
+    logical=build_root_owned_logical_effect_intent_v01(owning_effect_root_id=owning_local_root_id,transaction_id=transaction_id,
+        logical_effect_class=logical_class,normalized_subject_scope=normalized_subject_scope,normalized_target_scope=normalized_target_scope,
+        normalized_business_object_identity=business_object_identity,normalized_consequential_effect_parameters=consequential_effect_parameters,
+        logical_effect_namespace=authority_policy.logical_effect_namespace)
+    key=build_action_idempotency_identity_v01(owning_effect_root_id=owning_local_root_id,transaction_id=transaction_id,
+        root_owned_intent_id=logical.root_owned_intent_id,logical_effect_class=logical_class,
+        normalized_subject_scope=normalized_subject_scope,normalized_target_scope=normalized_target_scope,
+        normalized_business_object_identity=business_object_identity,normalized_consequential_effect_parameters=consequential_effect_parameters,
+        logical_effect_namespace=authority_policy.logical_effect_namespace)
+    ef=build_action_effect_parameters_fingerprint_v01(authorization)
+    df=build_dependency_set_candidate_fingerprint_v01(dependency_candidate)
+    tf=build_temporal_authority_fingerprint_v01(temporal_authority)
+    pf=build_action_authority_policy_fingerprint_v01(authority_policy)
+    candidate=build_root_bound_packet_authorization_candidate_v01(owning_local_root_id=owning_local_root_id,transaction_id=transaction_id,
+        root_owned_intent_id=logical.root_owned_intent_id,effect_class=logical_class,normalized_subject_scope=normalized_subject_scope,
+        normalized_target_scope=normalized_target_scope,normalized_permission_scope=normalized_permission_scope,
+        normalized_effect_parameters_fingerprint=ef,corridor_class=adapter_binding.corridor_class,adapter_binding=adapter_binding,
+        dependency_set_candidate_fingerprint=df,temporal_authority_fingerprint=tf,policy_version=authority_policy.policy_version,
+        authority_policy_fingerprint=pf,predecessor_packet_id=predecessor_packet_id,supersession_reason_class=supersession_reason_class)
+    value=NativeActionCommitPacketV01(transaction_id,owning_local_root_id,canonical_permission_ref,selected_canonical_action,
+        normalized_subject_scope,normalized_target_scope,normalized_permission_scope,business,binding,source,authorization,
+        adapter_binding,dependency_candidate,temporal_authority,authority_policy,business_object_identity,consequential_effect_parameters,
+        logical,key,candidate,evaluation_time,evaluation_time_source,evaluation_context_id,
+        evaluate_temporal_authority_v01(temporal_authority,evaluation_time=evaluation_time),ef,df,tf,pf)
+    valid,reasons=validate_native_action_commit_packet_v01(value)
+    if not valid:raise ValueError(reasons[0])
+    errors=_common_firewall.validate_capability_business_binding_v01(source.definition,inputs,value)
+    if errors:raise ValueError(errors[0])
+    return value
+
+
+def _native_business_inputs_v01(value) -> tuple[ActionEffectParameterRecordV01,...]:
+    q=value.consequential_effect_parameters
+    records={r.parameter_name:r for r in q.parameter_records}
+    inputs=[]
+    for binding in value.execution_source.definition.business_semantics.input_bindings:
+        if binding.source_kind in ('AMOUNT','CURRENCY','QUANTITY'):v=getattr(q,binding.source_name)
+        elif binding.source_kind=='BUSINESS_OBJECT_REF':v=value.business_object_identity.business_object_ref
+        else:v=records[binding.source_name].value
+        inputs.append(build_action_effect_parameter_record_v01(parameter_name=binding.input_name,value_type=binding.value_type,value=v))
+    return tuple(inputs)
+
+
+def validate_native_action_commit_packet_v01(value) -> tuple[bool, tuple[str, ...]]:
+    try:
+        _native_action_require_v01(type(value) is NativeActionCommitPacketV01,'native_action_type')
+        for name in ('transaction_id','owning_local_root_id','canonical_permission_ref','selected_canonical_action','evaluation_time_source','evaluation_context_id'):
+            _native_action_require_v01(validate_identity_text_v01(getattr(value,name))[0] and normalize_identity_text_v01(getattr(value,name))==getattr(value,name),'native_action_text:'+name)
+        _native_action_require_v01(validate_canonical_permission_ref_v01(value.canonical_permission_ref)[0],'native_permission_ref')
+        _native_action_require_v01(type(value.evaluation_time) is int and validate_signed_int64_v01(value.evaluation_time)[0],'native_evaluation_time')
+        errors=_common_firewall.validate_capability_admission_snapshot_v01(value.execution_source)
+        if errors:raise ValueError(errors[0])
+        _native_action_require_v01(value.execution_source.definition.effect_kind=='MOCK_CONSEQUENTIAL','native_consequential_admission_required')
+        valid,reasons=_validate_g2a1a_cross_profile_coherence_impl_v01(value,
+            selected_canonical_action=value.selected_canonical_action,selected_canonical_adapter=value.adapter_binding.adapter_id)
+        if not valid:return valid,reasons
+        _native_action_require_v01(type(value.temporal_evaluation) is TemporalEvaluationV01 and value.temporal_evaluation==evaluate_temporal_authority_v01(value.temporal_authority,evaluation_time=value.evaluation_time),'native_temporal_evaluation')
+        errors=_common_firewall.validate_capability_business_binding_v01(value.execution_source.definition,_native_business_inputs_v01(value),value)
+        if errors:raise ValueError(errors[0])
+        return True, ()
+    except ValueError as exc:return False,(str(exc),)
+    except Exception:return False,('native_action_invalid',)
+
+
+def validate_common_action_commit_packet_v01(value) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is NativeActionCommitPacketV01:return validate_native_action_commit_packet_v01(value)
+    if type(value) is SupplierActionCommitPacketCanonicalProjectionV01:return validate_supplier_action_commit_packet_canonical_projection_v01(value)
+    return False,('common_action_encoding_type',)
+
+
+def validate_common_root_context_coherence_v01(projection,canonical_projection) -> tuple[bool, tuple[str, ...]]:
+    if type(canonical_projection) is SupplierActionCommitPacketCanonicalProjectionV01:
+        return validate_supplier_root_context_coherence_v01(canonical_projection,projection)
+    try:
+        valid,reasons=validate_native_action_commit_packet_v01(canonical_projection)
+        if not valid:return valid,reasons
+        valid,reasons=validate_root_decision_candidate_projection_v01(projection)
+        if not valid:return valid,reasons
+        return _validate_common_root_context_fields_v01(canonical_projection,projection)
+    except Exception:return False,('common_root_context_invalid',)
+
+
+def build_native_action_packet_identity_v01(*, candidate, source_root_decision_id,
+    source_root_decision_hash) -> ActionCommitPacketIdentityResultV01:
+    material=(('encoding_version','native_v01'),)+action_commit_packet_identity_material_v01(candidate=candidate,
+        source_root_decision_id=source_root_decision_id,source_root_decision_hash=source_root_decision_hash)
+    return ActionCommitPacketIdentityResultV01(build_domain_separated_identity_v01(
+        domain='hedgehog.common_action.native_packet.v01',prefix=ACTION_COMMIT_PACKET_ID_PREFIX_V01,material=material),material)
+
+
+def validate_native_action_packet_identity_v01(value, *, candidate=None, source_root_decision_id=None,
+    source_root_decision_hash=None) -> tuple[bool, tuple[str, ...]]:
+    try:
+        expected=build_native_action_packet_identity_v01(candidate=candidate,source_root_decision_id=source_root_decision_id,
+            source_root_decision_hash=source_root_decision_hash)
+        _native_action_require_v01(type(value) is ActionCommitPacketIdentityResultV01 and value==expected,'native_packet_identity')
+        return True, ()
+    except ValueError as exc:return False,(str(exc),)
+    except Exception:return False,('native_packet_identity_invalid',)
+
+
+def build_native_root_bound_action_commit_packet_v01(*, canonical_projection,
+    root_decision_projection) -> NativeRootBoundActionCommitPacketV01:
+    valid,reasons=validate_common_root_context_coherence_v01(root_decision_projection,canonical_projection)
+    if not valid:raise ValueError(reasons[0])
+    _native_action_require_v01(type(canonical_projection) is NativeActionCommitPacketV01,'native_root_bound_encoding')
+    root=root_decision_projection
+    identity=build_native_action_packet_identity_v01(candidate=canonical_projection.authorization_candidate,
+        source_root_decision_id=root.root_decision_result.decision_id,source_root_decision_hash=root.source_root_decision_hash)
+    dependency=build_packet_dependency_acceptance_binding_v01(
+        dependency_set_candidate_fingerprint=canonical_projection.dependency_set_candidate_fingerprint,
+        root_packet_authorization_candidate_id=canonical_projection.authorization_candidate.root_packet_authorization_candidate_id,
+        source_root_decision_id=root.root_decision_result.decision_id,source_root_decision_hash=root.source_root_decision_hash,
+        owning_local_root_id=canonical_projection.owning_local_root_id,packet_id=identity.packet_id)
+    return NativeRootBoundActionCommitPacketV01(canonical_projection,root,identity,dependency)
+
+
+def validate_native_root_bound_action_commit_packet_v01(value) -> tuple[bool, tuple[str, ...]]:
+    try:
+        _native_action_require_v01(type(value) is NativeRootBoundActionCommitPacketV01,'native_root_bound_type')
+        expected=build_native_root_bound_action_commit_packet_v01(canonical_projection=value.canonical_projection,
+            root_decision_projection=value.root_decision_projection)
+        _native_action_require_v01(value==expected,'native_root_packet_dependency_binding')
+        return True, ()
+    except ValueError as exc:return False,(str(exc),)
+    except Exception:return False,('native_root_bound_invalid',)
+
+
+def validate_common_root_bound_action_commit_packet_v01(value) -> tuple[bool, tuple[str, ...]]:
+    if type(value) is NativeRootBoundActionCommitPacketV01:return validate_native_root_bound_action_commit_packet_v01(value)
+    if type(value) is SupplierRootBoundActionCommitPacketV02ProjectionV01:return validate_supplier_root_bound_action_commit_packet_v02_projection_v01(value)
+    return False,('common_root_bound_encoding_type',)
+
+
+def common_action_view_v01(value) -> CommonActionViewV01:
+    valid,reasons=validate_common_root_bound_action_commit_packet_v01(value)
+    if not valid:raise ValueError(reasons[0])
+    return _common_action_view_validated_v01(value)
+
+
+def _common_action_view_for_pass_v01(value, validation_pass):
+    # These internal callers retain their existing exact admission result.
+    # Reuse the pass when present; do not revalidate a value already admitted
+    # by a caller without a pass. Public common_action_view always validates.
+    if validation_pass is not None:
+        valid, reasons = _cached_root_bound_validation_v01(validation_pass, value)
+        if not valid:
+            raise ValueError(reasons[0])
+    return _common_action_view_validated_v01(value)
+
+
+def _common_action_view_validated_v01(value):
+    if type(value) not in (NativeRootBoundActionCommitPacketV01, SupplierRootBoundActionCommitPacketV02ProjectionV01):
+        raise ValueError('common_root_bound_encoding_type')
+    native=type(value) is NativeRootBoundActionCommitPacketV01;c=value.canonical_projection
+    return CommonActionViewV01('NATIVE_V01' if native else 'SUPPLIER_V02',value,c,value.root_decision_projection,
+        value.packet_identity,value.dependency_acceptance_binding,c.business_effect_parameters if native else None,
+        c.execution_binding if native else None,c.execution_source if native else None)
+
+
+def _common_corridor_step_material_v01(value) -> CanonicalMaterialV01:
+    return (('transaction_id',value.transaction_id),('owning_local_root_id',value.owning_local_root_id),
+        ('packet_id',value.packet_id),('authorization_candidate_id',value.authorization_candidate_id),('action_class',value.action_class),
+        ('adapter_binding',action_adapter_binding_material_v01(value.adapter_binding)),
+        ('subject_scope',action_subject_scope_material_v01(value.subject_scope)),('target_scope',action_target_scope_material_v01(value.target_scope)),
+        ('effect_parameters',action_effect_parameters_material_v01(value.effect_parameters)),('issued_at_utc',value.issued_at_utc),('expires_at_utc',value.expires_at_utc))
+
+
+def build_common_corridor_step_v01(*, transaction_id, owning_local_root_id, packet_id,
+    authorization_candidate_id, action_class, adapter_binding, subject_scope, target_scope,
+    effect_parameters, issued_at_utc, expires_at_utc) -> CommonCorridorStepV01:
+    for value in (transaction_id,owning_local_root_id,packet_id,authorization_candidate_id,action_class):
+        _native_action_require_v01(validate_identity_text_v01(value)[0] and value==normalize_identity_text_v01(value),'common_corridor_text')
+    for value,validator in ((adapter_binding,validate_action_adapter_binding_profile_v01),(subject_scope,validate_action_subject_scope_profile_v01),
+        (target_scope,validate_action_target_scope_profile_v01),(effect_parameters,validate_action_effect_parameters_profile_v01)):
+        valid,reasons=validator(value)
+        if not valid:raise ValueError(reasons[0])
+    _native_action_require_v01(type(issued_at_utc) is type(expires_at_utc) is int and validate_signed_int64_v01(issued_at_utc)[0] and
+        validate_signed_int64_v01(expires_at_utc)[0] and issued_at_utc<expires_at_utc,'common_corridor_time')
+    step=CommonCorridorStepV01('',transaction_id,owning_local_root_id,packet_id,authorization_candidate_id,action_class,
+        adapter_binding,subject_scope,target_scope,effect_parameters,issued_at_utc,expires_at_utc)
+    return _dataclass_replace(step,step_id=build_domain_separated_identity_v01(domain='hedgehog.common_action.corridor_step.v01',
+        prefix='corridor_step:',material=_common_corridor_step_material_v01(step)))
+
+
+def build_common_contract_fulfillment_corridor_v01(*, transaction_id, owning_local_root_id,
+    packet_id, corridor_class, steps) -> CommonContractFulfillmentCorridorV01:
+    _native_action_require_v01(type(steps) is tuple and steps and all(type(s) is CommonCorridorStepV01 for s in steps),'common_corridor_step_types')
+    for step in steps:
+        expected=build_common_corridor_step_v01(**{f.name:getattr(step,f.name) for f in _dataclass_fields(step) if f.name!='step_id'})
+        _native_action_require_v01(step==expected,'common_corridor_step_identity')
+        _native_action_require_v01((step.transaction_id,step.owning_local_root_id,step.packet_id,step.adapter_binding.corridor_class)==
+            (transaction_id,owning_local_root_id,packet_id,corridor_class),'common_corridor_step_context')
+    _native_action_require_v01(len({s.step_id for s in steps})==len(steps),'common_corridor_duplicate_step')
+    material=(('transaction_id',transaction_id),('owning_local_root_id',owning_local_root_id),('packet_id',packet_id),
+        ('corridor_class',corridor_class),('steps',tuple((('step_id',s.step_id),)+_common_corridor_step_material_v01(s) for s in steps)))
+    identifier=build_domain_separated_identity_v01(domain='hedgehog.common_action.corridor.v01',prefix='corridor:',material=material)
+    return CommonContractFulfillmentCorridorV01(identifier,transaction_id,owning_local_root_id,packet_id,corridor_class,steps)
+
+
+def validate_common_corridor_v01(value) -> tuple[bool, tuple[str, ...]]:
+    try:
+        _native_action_require_v01(type(value) is CommonContractFulfillmentCorridorV01,'common_corridor_type')
+        expected=build_common_contract_fulfillment_corridor_v01(transaction_id=value.transaction_id,owning_local_root_id=value.owning_local_root_id,
+            packet_id=value.packet_id,corridor_class=value.corridor_class,steps=value.steps)
+        _native_action_require_v01(value==expected,'common_corridor_identity')
+        return True, ()
+    except ValueError as exc:return False,(str(exc),)
+    except Exception:return False,('common_corridor_invalid',)

@@ -57,7 +57,180 @@ from hedgehog.kernel.integrity_replay_v01 import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+RETAINED_TYPE_NAMES_V05 = (
+    "RetainedSelectiveRecomputationPlanV01", "RetainedWorkPreservationProofV01",
+)
+RETAINED_PUBLIC_FUNCTION_NAMES_V05 = (
+    "build_retained_selective_recomputation_plan_v01",
+    "validate_retained_selective_recomputation_plan_v01",
+    "retained_selective_recomputation_plan_to_plain_data_v01",
+    "prove_retained_work_preservation_v01",
+    "validate_retained_work_preservation_v01",
+    "retained_work_preservation_to_plain_data_v01",
+)
+RETAINED_TEST_NAMES_V05 = (
+    "test_retained_actual_parent_namespace_and_budget_v05",
+    "test_retained_review_family_coherent_controls_v05",
+    "test_retained_once_key_and_actual_field_inventory_v05",
+    "test_retained_full_consumer_mutations_v05",
+    "test_retained_current_semantic_source_controls_v05",
+)
+
+
+def _assert_retained_public_surface_v05():
+    public = tuple(node.name for node in ast.parse(MODULE_PATH.read_text()).body
+        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"))
+    legacy = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS + E4_PUBLIC_FUNCTIONS
+    assert len(legacy) == 89 and len(set(legacy)) == 89
+    assert tuple(name for name in public if name not in RETAINED_PUBLIC_FUNCTION_NAMES_V05) == legacy
+    assert tuple(name for name in public if name in RETAINED_PUBLIC_FUNCTION_NAMES_V05) == RETAINED_PUBLIC_FUNCTION_NAMES_V05
+    assert len(public) == 95 and len(set(public)) == 95
+    assert g2e.__all__ == (*TYPE_NAMES, *legacy, *RETAINED_TYPE_NAMES_V05, *RETAINED_PUBLIC_FUNCTION_NAMES_V05)
+    assert tuple(cls.__name__ for cls in g2e.CONTINUOUS_DELTA_TYPES_V01) == TYPE_NAMES + RETAINED_TYPE_NAMES_V05
+    assert len(g2e.__all__) == 117 and len(set(g2e.__all__)) == 117
+    assert all(getattr(kernel, name) is getattr(g2e, name) for name in (*TYPE_NAMES, *legacy))
+    assert not any(name in kernel.__all__ for name in (*RETAINED_TYPE_NAMES_V05, *RETAINED_PUBLIC_FUNCTION_NAMES_V05))
+    signature = inspect.signature(g2e.run_continuous_delta_runtime_v01)
+    parameter = signature.parameters["retained_profile"]
+    assert tuple(signature.parameters)[-1] == "retained_profile"
+    assert parameter.kind is inspect.Parameter.KEYWORD_ONLY and parameter.default is None
+    assert get_type_hints(g2e.run_continuous_delta_runtime_v01)["retained_profile"] == str | None
+    return public
+
+
 MODULE_PATH = ROOT / "hedgehog/kernel/continuous_delta_runtime_v01.py"
+def _assert_e1_public_contract_u4_v02(public, exports, targets):
+    legacy = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS + E4_PUBLIC_FUNCTIONS
+    assert len(legacy) == 89
+    assert public == (QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS +
+        RETAINED_PUBLIC_FUNCTION_NAMES_V05 + E4_PUBLIC_FUNCTIONS)
+    assert exports == TYPE_NAMES + legacy + RETAINED_TYPE_NAMES_V05 + RETAINED_PUBLIC_FUNCTION_NAMES_V05
+    assert len(public) == 95 and len(exports) == 117
+    historical_context_targets = (
+        "delta_against_source_context", "dependency_fingerprint_against_sources",
+        "dependency_graph_against_context", "affected_set_completeness",
+        "invalidation_against_prior_slices", "preservation_against_artifacts",
+        "selective_plan_against_sources", "recomputation_result_against_plan",
+        "runtime_report_against_sources", "continuous_delta_abi_profile",
+        "continuous_delta_transition_profile", "continuous_delta_stage_bundle",
+    )
+    assert len(TYPE_NAMES + historical_context_targets) == 32
+    assert targets == TYPE_NAMES + historical_context_targets + RETAINED_TYPE_NAMES_V05
+    assert len(targets) == 34
+
+
+def _paired_identity_profiles_u4_v02():
+    plans = [{"type": "string", "pattern": "^" + prefix + ":[0-9a-f]{64}$"}
+        for prefix in ("g2e_selective_recomputation_plan_v01", "frretained_plan")]
+    proofs = [{"type": "string", "pattern": "^" + prefix + ":[0-9a-f]{64}$"}
+        for prefix in ("g2e_preservation_proof_v01", "frretained_preservation")]
+    return plans, proofs
+
+
+def _assert_paired_identity_schema_u4_v02(definitions):
+    plans, proofs = _paired_identity_profiles_u4_v02()
+    pairs = ("SelectiveRecomputationResultV01", "ContinuousDeltaRuntimeTraceV01",
+        "ContinuousDeltaRuntimeReportV01")
+    fields_expected = {("RecomputedArtifactBindingV01", "recomputation_plan_id"): plans}
+    for name in pairs:
+        fields_expected[name, "recomputation_plan_id"] = plans
+        fields_expected[name, "preservation_proof_id"] = proofs
+        assert definitions[name]["allOf"] == [{"oneOf": [
+            {"properties": {"recomputation_plan_id": plan, "preservation_proof_id": proof}}
+            for plan, proof in zip(plans, proofs, strict=True)]}]
+    assert len(fields_expected) == 7
+    for (name, field), alternatives in fields_expected.items():
+        assert definitions[name]["properties"][field] == {"oneOf": alternatives}
+    return fields_expected
+
+
+def _assert_diagnostic_projection_schema_u4_v02(definitions):
+    """Compare the limited diagnostic shape to the exact public nominal fields."""
+    projection_types = (
+        g2e.ContinuousDeltaExecutionBundleV01, g2e.ContinuousDeltaSourceContextV01,
+        g2e.ArtifactManifestV01, g2e.ReplayVerificationResultV01, kernel.SealProfileV01,
+        ArtifactDependencyEdgeV01, RootOwnershipBindingV01, EvidenceClassBindingV01,
+        AuthorityClassBindingV01,
+    )
+    names = tuple(t.__name__ for t in projection_types)
+    assert names == ("ContinuousDeltaExecutionBundleV01", "ContinuousDeltaSourceContextV01",
+        "ArtifactManifestV01", "ReplayVerificationResultV01", "SealProfileV01",
+        "ArtifactDependencyEdgeV01", "RootOwnershipBindingV01", "EvidenceClassBindingV01",
+        "AuthorityClassBindingV01")
+    assert tuple(definitions) == TYPE_NAMES[:18] + RETAINED_TYPE_NAMES_V05 + names
+    assert len(definitions) == 29
+    d_names = ("CanonicalArtifactRefV01", "RootDecisionInputV01", "RootDecisionResultV01",
+        "FractalRuntimeExecutionBundleV02", "FractalRetainedWorkExecutionBundleV01",
+        "TransitionDecisionV01", "CausalConsumptionRefV01", "ExecutionModeSourceContextV01",
+        "RootDecisionKernelV01", "SupplierRootBoundActionCommitPacketV02ProjectionV01",
+        "NativeRootBoundActionCommitPacketV01")
+
+    def expected_property(annotation):
+        if annotation in (str, int, bool):
+            return {"type": {str: "string", int: "integer", bool: "boolean"}[annotation]}
+        if annotation is object:
+            return {"description": "Existing object-typed public payload; designated contextual validation remains mandatory."}
+        if get_origin(annotation) is tuple:
+            item, repeated = get_args(annotation)
+            assert repeated is Ellipsis
+            return {"type": "array", "items": expected_property(item)}
+        if get_origin(annotation) is types.UnionType:
+            return {"oneOf": [expected_property(a) for a in get_args(annotation)]}
+        if annotation is g2e.KernelArtifactV01:
+            return {"$ref": "kernel_artifact_v01.schema.json"}
+        name = annotation.__name__
+        if name in TYPE_NAMES[:18] + RETAINED_TYPE_NAMES_V05 + names:
+            return {"$ref": "#/$defs/" + name}
+        assert name in d_names
+        return {"$ref": "fractal_runtime_v02.schema.json#/$defs/" + name}
+
+    for value_type, count in zip(projection_types, (36, 18, 14, 32, 10, 2, 2, 2, 2), strict=True):
+        definition = definitions[value_type.__name__]
+        expected_fields = tuple(f.name for f in fields(value_type))
+        assert len(expected_fields) == count
+        assert tuple(definition["properties"]) == tuple(definition["required"]) == expected_fields
+        assert definition["type"] == "object" and definition["additionalProperties"] is False
+        extra = {"oneOf"} if value_type is g2e.ContinuousDeltaExecutionBundleV01 else set()
+        assert set(definition) == {"type", "additionalProperties", "required", "properties"} | extra
+        assert definition["properties"] == {n: expected_property(a) for n, a in get_type_hints(value_type).items()}
+    bundle = definitions["ContinuousDeltaExecutionBundleV01"]
+    assert bundle["oneOf"] == [{"properties": {
+        "recomputation_plan": {"$ref": "#/$defs/" + plan},
+        "preservation_proof": {"$ref": "#/$defs/" + proof},
+        "recomputed_g2d_execution_bundle": {"$ref": "fractal_runtime_v02.schema.json#/$defs/" + d_bundle},
+    }} for plan, proof, d_bundle in (
+        ("SelectiveRecomputationPlanV01", "PreservationProofV01", "FractalRuntimeExecutionBundleV02"),
+        ("RetainedSelectiveRecomputationPlanV01", "RetainedWorkPreservationProofV01", "FractalRetainedWorkExecutionBundleV01"),
+    )]
+    assert len(g2e.CONTINUOUS_DELTA_IDENTITY_PROFILES_V01) == 18
+    assert not any(t in g2e.SERIALIZED_CONTINUOUS_DELTA_TYPES_V01 for t in projection_types[:2])
+
+
+def _assert_e5_current_source_surface_u4(root):
+    """Runtime-only pins; whole candidate/index governance is checked externally."""
+    runtime = root / "hedgehog/kernel/continuous_delta_runtime_v01.py"
+    functions = tuple(n for n in ast.parse(runtime.read_bytes()).body
+        if isinstance(n, ast.FunctionDef) and not n.name.startswith("_"))
+    expected = (QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS +
+        RETAINED_PUBLIC_FUNCTION_NAMES_V05 + E4_PUBLIC_FUNCTIONS)
+    assert tuple(n.name for n in functions) == expected, "e5_public_names"
+    signatures = [(n.name, ast.dump(n.args, include_attributes=False),
+        ast.dump(n.returns, include_attributes=False) if n.returns else None) for n in functions]
+    assert hashlib.sha256(json.dumps(signatures, separators=(",", ":")).encode()).hexdigest() == (
+        "19a09935d55a6176dd8ff71c9a07d9fc235bd756ce16a6d0006acce2da04b584"
+    ), "e5_public_signatures"
+    pins = {
+        "hedgehog/kernel/continuous_delta_runtime_v01.py": "efb0ef689bde0efbbbbc5cddcc7e3d0237c5dacf05e7c1f6415e5d5d808bd282",
+        "schemas/continuous_delta_runtime_v01.schema.json": "9cdeb3d987241383360413d6a4a02be4a3a1480e840aa334737dccd25fddb3b5",
+        "hedgehog/kernel/fractal_runtime_v02.py": "e02ccdab45725de6f3091897b317eb93076717c7d3a107fafa99f657917ef8ca",
+        "hedgehog/kernel/__init__.py": "99b2847d4dac09827b0a56cd820302052139654314ff02789363480cc98df4e0",
+        "docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md": "83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b",
+        "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md": "5dcc7a28485ebd1d09075520fb290b858949fea6d64a4b76a8f927317ea3c369",
+    }
+    for path, digest in pins.items():
+        assert hashlib.sha256((root / path).read_bytes()).hexdigest() == digest, "e5_source_pin:" + path
+
+
 SCHEMA_PATH = ROOT / "schemas/continuous_delta_runtime_v01.schema.json"
 PREFLIGHT_PATH = ROOT / "docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md"
 ADDENDUM_PATH = ROOT / (
@@ -3013,21 +3186,21 @@ def test_e1_exact_static_surface_and_zero_operation_boundary_v01() -> None:
         for alias in node.names
         if alias.name != "*"
     )
-    assert public_functions == (
-        QUARTET_FUNCTIONS
-        + E2_PUBLIC_FUNCTIONS
-        + E3_PUBLIC_FUNCTIONS
-        + E4_PUBLIC_FUNCTIONS
-    )
-    assert g2e.__all__ == (
-        TYPE_NAMES
-        + QUARTET_FUNCTIONS
-        + E2_PUBLIC_FUNCTIONS
-        + E3_PUBLIC_FUNCTIONS
-        + E4_PUBLIC_FUNCTIONS
-    )
+    assert public_functions == _assert_retained_public_surface_v05()
+    _assert_e1_public_contract_u4_v02(public_functions, g2e.__all__, g2e.VALIDATION_TARGETS_V01)
     assert len(g2e.PUBLIC_G2E_REASON_CODES_V01) == 88
-    assert len(g2e.VALIDATION_TARGETS_V01) == 32
+    assert kernel._CONTINUOUS_DELTA_FACADE_NAMES_V01 == (
+        TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS + E4_PUBLIC_FUNCTIONS)
+    transition_facade = (
+        "build_continuous_delta_transition_registry_profile_v01",
+        "validate_continuous_delta_transition_registry_profile_v01",
+        "continuous_delta_transition_registry_profile_to_plain_dict_v01",
+        "validate_continuous_delta_transition_decision_v01",
+        "continuous_delta_transition_decision_to_plain_dict_v01",
+        "rebuild_continuous_delta_transition_decision_identity_v01",
+    )
+    assert all(getattr(kernel, name) is getattr(transition, name) for name in transition_facade)
+    assert len(set(kernel._CONTINUOUS_DELTA_FACADE_NAMES_V01 + transition_facade)) == 115
     assert len(g2e.FAILURE_STAGES_V01) == 24
     assert g2e.VALIDATION_STATUSES_V01 == ("PASS", "FAIL_CLOSED")
     assert not imports.intersection(
@@ -3053,9 +3226,10 @@ def test_e1_exact_twenty_type_field_order_and_frozen_geometry_v01() -> None:
         (value_type.__name__, tuple(field.name for field in fields(value_type)))
         for value_type in g2e.CONTINUOUS_DELTA_TYPES_V01
     )
-    assert expected == actual
-    assert tuple(value_type.__name__ for value_type in g2e.CONTINUOUS_DELTA_TYPES_V01) == TYPE_NAMES
-    assert len(actual) == 20
+    assert expected == actual[:20]
+    assert tuple(value_type.__name__ for value_type in g2e.CONTINUOUS_DELTA_TYPES_V01) == TYPE_NAMES + RETAINED_TYPE_NAMES_V05
+    assert len(actual) == 22
+    assert tuple(name for name, _ in actual[20:]) == RETAINED_TYPE_NAMES_V05
     for value_type in g2e.CONTINUOUS_DELTA_TYPES_V01:
         assert is_dataclass(value_type)
         assert value_type.__dataclass_params__.frozen is True
@@ -3088,8 +3262,13 @@ def test_e1_exact_schema_definitions_and_python_parity_v01() -> None:
     assert schema["version"] == "v0.1"
     assert schema["$ref"] == "#/$defs/WorldStateDeltaV01"
     definitions = schema["$defs"]
-    assert tuple(definitions) == TYPE_NAMES[:18]
-    assert len(definitions) == 18
+    paired_fields = _assert_paired_identity_schema_u4_v02(definitions)
+    assert tuple(definitions)[:18] == TYPE_NAMES[:18]
+    assert all(name in definitions for name in RETAINED_TYPE_NAMES_V05)
+    for name in RETAINED_TYPE_NAMES_V05:
+        expected = tuple(field.name for field in fields(getattr(g2e, name)))
+        assert tuple(definitions[name]["properties"]) == tuple(definitions[name]["required"]) == expected
+        assert definitions[name]["additionalProperties"] is False
     for value_type in g2e.SERIALIZED_CONTINUOUS_DELTA_TYPES_V01:
         definition = definitions[value_type.__name__]
         expected_fields = tuple(field.name for field in fields(value_type))
@@ -3099,6 +3278,10 @@ def test_e1_exact_schema_definitions_and_python_parity_v01() -> None:
         annotations = get_type_hints(value_type)
         for field_name, annotation in annotations.items():
             property_schema = definition["properties"][field_name]
+            if (value_type.__name__, field_name) in paired_fields:
+                assert annotation is str
+                assert property_schema == {"oneOf": paired_fields[value_type.__name__, field_name]}
+                continue
             origin = get_origin(annotation)
             if origin is tuple:
                 assert property_schema.get("type") == "array" or type(
@@ -3130,7 +3313,7 @@ def test_e1_exact_schema_definitions_and_python_parity_v01() -> None:
             else:
                 assert "enum" in property_schema
                 assert all(type(item) is annotation for item in property_schema["enum"])
-    assert TYPE_NAMES[18] not in definitions and TYPE_NAMES[19] not in definitions
+    _assert_diagnostic_projection_schema_u4_v02(definitions)
 
     hash_pattern = "^[0-9a-f]{64}$"
     preservation = definitions["PreservationProofV01"]["properties"]
@@ -3495,8 +3678,7 @@ def test_e1_runtime_only_context_and_bundle_declarations_v01() -> None:
     assert tuple(field.name for field in fields(g2e.ContinuousDeltaSourceContextV01)) == _preflight_type_rows()[18][1]
     assert tuple(field.name for field in fields(g2e.ContinuousDeltaExecutionBundleV01)) == _preflight_type_rows()[19][1]
     schema_defs = _schema()["$defs"]
-    assert "ContinuousDeltaSourceContextV01" not in schema_defs
-    assert "ContinuousDeltaExecutionBundleV01" not in schema_defs
+    _assert_diagnostic_projection_schema_u4_v02(schema_defs)
     context_annotations = get_type_hints(g2e.ContinuousDeltaSourceContextV01)
     assert {
         field_name: context_annotations[field_name]
@@ -3521,6 +3703,18 @@ def test_e1_runtime_only_context_and_bundle_declarations_v01() -> None:
         "root_kernel": g2e.RootDecisionKernelV01,
     }
     bundle_annotations = get_type_hints(g2e.ContinuousDeltaExecutionBundleV01)
+    assert context_annotations["g2a_packet"] == (
+        action_commit_packet.SupplierRootBoundActionCommitPacketV02ProjectionV01 |
+        action_commit_packet.NativeRootBoundActionCommitPacketV01)
+    reason_node = next(n for n in ast.parse(MODULE_PATH.read_bytes()).body
+        if isinstance(n, ast.FunctionDef) and n.name == "_source_context_reason_v01")
+    absence_check = reason_node.body[2]
+    assert isinstance(absence_check, ast.If)
+    assert ast.dump(absence_check.test) == ast.dump(ast.parse(
+        "value.g2b_writeback_evidence is not None or value.post_vv_profile is not None or value.gt_profile is not None",
+        mode="eval").body)
+    assert isinstance(absence_check.body[0], ast.Return)
+    assert absence_check.body[0].value.value == "g2e_delta_source_unvalidated"
     artifact_fields = (
         "delta_source_proposed_artifact",
         "delta_source_artifact",
@@ -3544,8 +3738,10 @@ def test_e1_runtime_only_context_and_bundle_declarations_v01() -> None:
     assert bundle_annotations["final_root_decision_result"] is g2e.RootDecisionResultV01
     assert (
         bundle_annotations["recomputed_g2d_execution_bundle"]
-        is g2e.FractalRuntimeExecutionBundleV02
+        == g2e.FractalRuntimeExecutionBundleV02 | g2d.FractalRetainedWorkExecutionBundleV01
     )
+    assert bundle_annotations["recomputation_plan"] == g2e.SelectiveRecomputationPlanV01 | g2e.RetainedSelectiveRecomputationPlanV01
+    assert bundle_annotations["preservation_proof"] == g2e.PreservationProofV01 | g2e.RetainedWorkPreservationProofV01
     assert bundle_annotations["g2e_transition_decisions"] == tuple[
         g2e.TransitionDecisionV01, ...
     ]
@@ -3654,21 +3850,18 @@ def test_e1_abi_profile_declarations_and_future_slice_behavior_absent_v01() -> N
 
 def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
-    public_functions = tuple(
-        node.name
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
-    )
+    all_public_functions = _assert_retained_public_surface_v05()
+    public_functions = tuple(name for name in all_public_functions if name not in RETAINED_PUBLIC_FUNCTION_NAMES_V05)
     assert len(E2_QUARTET_FUNCTIONS) == 16
     assert len(E2_BEHAVIORAL_FUNCTIONS) == 5
     e2_prefix = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
     assert public_functions[:45] == e2_prefix
     assert len(public_functions) == 89
     assert g2e.__all__[:65] == TYPE_NAMES + e2_prefix
-    assert len(g2e.__all__) == 109
+    assert len(g2e.__all__) == 117
     assert public_functions[45:62] == E3_PUBLIC_FUNCTIONS
     assert public_functions[62:] == E4_PUBLIC_FUNCTIONS
-    assert g2e.__all__[82:] == E4_PUBLIC_FUNCTIONS
+    assert g2e.__all__[82:109] == E4_PUBLIC_FUNCTIONS
     assert g2e.CONTINUOUS_DELTA_GRAPH_VERSION_V01 == "v0.1"
     assert g2e.MAX_DEPENDENCY_GRAPH_NODES_V01 == 256
     assert g2e.MAX_DEPENDENCY_GRAPH_EDGES_V01 == 1024
@@ -3682,7 +3875,13 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
     assert "source_context" not in inspect.signature(
         g2e.validate_affected_set_against_graph_v01
     ).parameters
-    addendum_raw = ADDENDUM_PATH.read_bytes()
+    full_addendum_raw = ADDENDUM_PATH.read_bytes()
+    # The accepted historical document remains an exact prefix; new candidate
+    # draft amendments do not become part of that historical identity.
+    addendum_raw = full_addendum_raw[:81590]
+    candidate_suffix = full_addendum_raw[81590:]
+    assert b"V05 Retained PLAN and Execution Amendment" in candidate_suffix
+    assert b"ordered_plan_ancestor_artifacts" in candidate_suffix
     assert hashlib.sha256(addendum_raw).hexdigest() == ACCEPTED_ADDENDUM_SHA256
     assert len(addendum_raw) == 81590
     assert addendum_raw.count(b"\n") == 1814
@@ -3734,7 +3933,10 @@ def test_e2_exact_public_surface_and_slice_boundary_v01() -> None:
         for node in test_tree.body
         if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
     )
-    assert len(test_names) == 68
+    assert len(test_names) == 73 + len(RETAINED_TEST_NAMES_V05) + 1 == 79
+    assert all(name.startswith("test_e5_") for name in test_names[68:73])
+    assert test_names[73:78] == RETAINED_TEST_NAMES_V05
+    assert test_names[78:] == ("test_e5_current_source_surface_without_runtime_fixture_u4",)
     assert sum(name.startswith("test_e3_") for name in test_names) == 18
     assert sum(name.startswith("test_e4_") for name in test_names) == 18
 
@@ -4801,19 +5003,16 @@ def _e3_invalidation_kwargs(family: dict[str, object]) -> dict[str, object]:
 
 def test_e3_exact_public_surface_and_slice_boundary_v01() -> None:
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
-    public_functions = tuple(
-        node.name
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
-    )
+    all_public_functions = _assert_retained_public_surface_v05()
+    public_functions = tuple(name for name in all_public_functions if name not in RETAINED_PUBLIC_FUNCTION_NAMES_V05)
     assert public_functions[:45] == QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
     assert public_functions[45:62] == E3_PUBLIC_FUNCTIONS
     assert public_functions[62:] == E4_PUBLIC_FUNCTIONS
     assert len(public_functions) == 89
     assert g2e.__all__[:65] == TYPE_NAMES + QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS
     assert g2e.__all__[65:82] == E3_PUBLIC_FUNCTIONS
-    assert g2e.__all__[82:] == E4_PUBLIC_FUNCTIONS
-    assert len(g2e.__all__) == 109
+    assert g2e.__all__[82:109] == E4_PUBLIC_FUNCTIONS
+    assert len(g2e.__all__) == 117
     assert len(g2e.G2E_INVALIDATION_REASON_CLASSES_V01) == 10
     assert g2e.G2E_G2A_PACKET_RELATIONS_V01 == (
         "NOT_APPLICABLE",
@@ -5744,10 +5943,11 @@ def test_e3_no_e4_execution_root_facade_or_prior_slice_mutation_v01() -> None:
     )
     assert whole_run_callers == ("_g2e4_execute_whole_run_escalation_v01",)
     assert "_d4_run_runtime_v02" not in runtime_calls
-    assert len(test_run_calls) == 2
+    assert len(test_run_calls) == 3
     assert test_run_callers == (
         "e3_baseline_fixture",
         "e4_full_fractal_baseline_fixture",
+        "_retained_shared_baseline_v06",
     )
     assert hasattr(g2e, "execute_selective_recomputation_v01")
     assert hasattr(g2e, "run_continuous_delta_runtime_v01")
@@ -5980,21 +6180,18 @@ def test_e4_exact_public_surface_schema_and_facade_geometry_v01(
     e4_success_fixture: dict[str, object],
 ) -> None:
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
-    public_functions = tuple(
-        node.name
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
-    )
+    all_public_functions = _assert_retained_public_surface_v05()
+    public_functions = tuple(name for name in all_public_functions if name not in RETAINED_PUBLIC_FUNCTION_NAMES_V05)
     historical = QUARTET_FUNCTIONS + E2_PUBLIC_FUNCTIONS + E3_PUBLIC_FUNCTIONS
-    assert len(g2e.CONTINUOUS_DELTA_TYPES_V01) == 20
+    assert len(g2e.CONTINUOUS_DELTA_TYPES_V01) == 22
     assert len(g2e.SERIALIZED_CONTINUOUS_DELTA_TYPES_V01) == 18
     assert len(g2e.RUNTIME_ONLY_CONTINUOUS_DELTA_TYPES_V01) == 2
     assert public_functions[:62] == historical
     assert public_functions[62:] == E4_PUBLIC_FUNCTIONS
     assert len(public_functions) == 89
     assert g2e.__all__[:82] == TYPE_NAMES + historical
-    assert g2e.__all__[82:] == E4_PUBLIC_FUNCTIONS
-    assert len(g2e.__all__) == 109
+    assert g2e.__all__[82:109] == E4_PUBLIC_FUNCTIONS
+    assert len(g2e.__all__) == 117
     transition_names = (
         "build_continuous_delta_transition_registry_profile_v01",
         "validate_continuous_delta_transition_registry_profile_v01",
@@ -6011,7 +6208,8 @@ def test_e4_exact_public_surface_schema_and_facade_geometry_v01(
         assert getattr(kernel, name) is getattr(transition, name)
     assert len(kernel.__all__) == 19
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-    assert len(schema["$defs"]) == 18
+    assert tuple(schema["$defs"])[:18] == TYPE_NAMES[:18]
+    assert all(name in schema["$defs"] for name in RETAINED_TYPE_NAMES_V05)
     assert g2e.validate_continuous_delta_execution_bundle_v01(
         e4_success_fixture["bundle"]
     ).status == "PASS"
@@ -7840,8 +8038,9 @@ def test_e4_complete_execution_bundle_public_validation_v01(
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
         and not node.name.startswith("_")
     )
-    assert len(canonical_public_functions) == 89
-    assert len(g2e.__all__) == 109
+    assert canonical_public_functions == _assert_retained_public_surface_v05()
+    assert len(canonical_public_functions) == 95
+    assert len(g2e.__all__) == 117
     transition_names = (
         "build_continuous_delta_transition_registry_profile_v01",
         "validate_continuous_delta_transition_registry_profile_v01",
@@ -7850,8 +8049,10 @@ def test_e4_complete_execution_bundle_public_validation_v01(
         "continuous_delta_transition_decision_to_plain_dict_v01",
         "rebuild_continuous_delta_transition_decision_identity_v01",
     )
-    direct_names = TYPE_NAMES + canonical_public_functions + transition_names
+    legacy_functions = tuple(name for name in canonical_public_functions if name not in RETAINED_PUBLIC_FUNCTION_NAMES_V05)
+    direct_names = TYPE_NAMES + legacy_functions + transition_names
     assert len(direct_names) == 115
+    assert all(hasattr(kernel, name) for name in direct_names)
 
 
 def test_e4_conditional_whole_run_escalation_and_selective_rejection_v01(
@@ -8175,10 +8376,11 @@ def test_e4_no_private_g2d_lower_mutation_e5_or_e6_surface_v01() -> None:
     assert "living_gauntlet" not in source and "kernel_conformance" not in source
     assert source.count("g2d_runtime.run_fractal_runtime_v02") == 1
     assert len(g2e.PUBLIC_G2E_REASON_CODES_V01) == 88
-    assert len(g2e.VALIDATION_TARGETS_V01) == 32
+    assert len(g2e.VALIDATION_TARGETS_V01) == 34
+    assert g2e.VALIDATION_TARGETS_V01[-2:] == RETAINED_TYPE_NAMES_V05
     assert len(g2e.FAILURE_STAGES_V01) == 24
     assert hashlib.sha256(SCHEMA_PATH.read_bytes()).hexdigest() == (
-        "6d2d2c8756ebf261724742ad14294094ee9ce04a28c0498b264164ec585d11f2"
+        "9cdeb3d987241383360413d6a4a02be4a3a1480e840aa334737dccd25fddb3b5"
     )
 
 
@@ -13959,8 +14161,6 @@ def _e5_validate_c4_actual_runtime_oracle(
 def test_e5_public_runner_surface_import_boundary_and_protected_bytes_v01(
     e5_report_fixture: dict[str, object],
 ) -> None:
-    import subprocess
-
     runner = e5_report_fixture["runner"]
     assert isinstance(runner, types.ModuleType)
     expected_public_names = (
@@ -14150,14 +14350,8 @@ def test_e5_public_runner_surface_import_boundary_and_protected_bytes_v01(
             == "validate_continuous_delta_validation_report_v01"
         )
     ) == 3
-    runtime_tree = ast.parse(MODULE_PATH.read_text(encoding="ascii"))
-    runtime_public_functions = tuple(
-        node.name
-        for node in runtime_tree.body
-        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_")
-    )
-    assert len(runtime_public_functions) == 89
-    assert len(g2e.__all__) == 109
+    _assert_e5_current_source_surface_u4(ROOT)
+    runtime_public_functions = _assert_retained_public_surface_v05()
     assert len(tuple(name for name in dir(kernel) if name in (
         *(item.__name__ for item in g2e.CONTINUOUS_DELTA_TYPES_V01),
         *runtime_public_functions,
@@ -14168,46 +14362,6 @@ def test_e5_public_runner_surface_import_boundary_and_protected_bytes_v01(
         "continuous_delta_transition_decision_to_plain_dict_v01",
         "rebuild_continuous_delta_transition_decision_identity_v01",
     ))) == 115
-    protected = {
-        MODULE_PATH: "97184c1f47548f8bab96f9a01644a2fb96dd23029fe917c522c6635c96ad099a",
-        SCHEMA_PATH: "6d2d2c8756ebf261724742ad14294094ee9ce04a28c0498b264164ec585d11f2",
-        ROOT / "hedgehog/kernel/fractal_runtime_v02.py": "917caabd0c3e2033cfc57be71771abf9a87558e945b3d4f6713c48cd8796aa01",
-        ROOT / "hedgehog/kernel/__init__.py": "99b2847d4dac09827b0a56cd820302052139654314ff02789363480cc98df4e0",
-        PREFLIGHT_PATH: "83f36c9b2d47619a8c8ab997eba6b8ef16f2a3ab07cb3aecfc77ea82469f0d8b",
-        ADDENDUM_PATH: "2b982ecaed9dc5cea2373676d816840ca683c8190b69516c14688cbba9e452f8",
-        ROOT / "release/current_status_overlay_v01.json": "0ff6fe00b0cb7ce84550f0f76706c5cef40208810729ffc066f1a60e31378ad7",
-    }
-    for path, expected_sha256 in protected.items():
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == expected_sha256
-    head_test = subprocess.run(
-        ("git", "show", "HEAD:tests/test_continuous_delta_runtime_g2_e_v01.py"),
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-    ).stdout
-    assert hashlib.sha256(head_test).hexdigest() == (
-        "438fafc7647f0c2b453f763f9425e2565792eaa7321b9726969e6bbf39c386d3"
-    )
-    status = subprocess.run(
-        ("git", "status", "--short", "--untracked-files=all"),
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()
-    assert set(status) == {
-        " M hedgehog/kernel/continuous_delta_runtime_v01.py",
-        "?? demo/run_continuous_delta_runtime_g2_e_v01.py",
-        " M tests/test_continuous_delta_runtime_g2_e_v01.py",
-    }
-    staged = subprocess.run(
-        ("git", "diff", "--cached", "--name-only"),
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()
-    assert staged == []
     _e5_progress_marker("E5_TEST_COMPLETED=public_surface")
 
 
@@ -16180,3 +16334,628 @@ def test_e5_zero_operation_authority_effect_and_bounded_performance_v01(
         )
     )
     _e5_progress_marker("E5_TEST_COMPLETED=zero_effect_performance")
+
+
+_retained_baseline_key_v06 = "baseline"
+_retained_native_key_v06 = "native_child0"
+
+
+def _retained_session_state_v06(request):
+    # Pytest can import this test file under both its basename and package name.
+    # Config is the same actual session object for both module instances.
+    if not hasattr(request.config, "_radiolaria_retained_v06"):
+        request.config._radiolaria_retained_v06 = {}
+    state = request.config._radiolaria_retained_v06
+    assert type(state) is dict
+    return state
+
+
+def _retained_phase_v06(case, phase, event, started):
+    print("RETAINED_PHASE_V06=" + json.dumps(dict(case=case, phase=phase, event=event,
+        utc=datetime.now(timezone.utc).isoformat(), elapsed_seconds=time.monotonic()-started)), flush=True)
+
+
+def _retained_shared_baseline_v06(request):
+    state = _retained_session_state_v06(request)
+    if _retained_baseline_key_v06 not in state:
+        started = time.monotonic()
+        _retained_phase_v06("shared", "baseline", "START", started)
+        g2b = _e3_g2b_family()
+        family = _e3_g2d_source_family(g2b, selected_mode="full_fractal")
+        baseline, validation = g2d.run_fractal_runtime_v02(family["source"])
+        assert baseline is not None and validation.status == "PASS"
+        assert g2d.validate_fractal_runtime_execution_bundle_v02(baseline).status == "PASS"
+        state[_retained_baseline_key_v06] = (g2b, family, baseline)
+        _retained_phase_v06("shared", "baseline", "COMPLETE", started)
+    return state[_retained_baseline_key_v06]
+
+
+@pytest.fixture(scope="session")
+def retained_native_execution_v05(request):
+    # Both module instances share the one actual execution through this Config,
+    # never a restored report or a manufactured successful validation.
+    state = _retained_session_state_v06(request)
+    if _retained_native_key_v06 in state:
+        return state[_retained_native_key_v06]
+    from tests import test_work_composition_v01 as work_tests
+    g2b, family, baseline = _retained_shared_baseline_v06(request)
+    prepared, packet = work_tests.native_e_packet(str(g2b["transaction_id"]))
+    parent = next(c for c in baseline.cell_inputs if c.parent_cell_id is None)
+    child_id = g2d.derive_fractal_child_cell_id_v02(
+        topology_seed_id=baseline.topology_seed.topology_seed_id, parent_cell_id=parent.cell_id,
+        canonical_child_index=0, accepted_mode=baseline.source_binding.accepted_mode,
+        selected_local_mode_profile_id=baseline.source_binding.selected_local_mode_profile_id,
+        source_mode_profile_set_id=baseline.source_binding.source_mode_profile_set_id,
+        child_scope_ref=parent.scope_ref, runtime_policy_id=baseline.source_binding.runtime_policy_id,
+        required_capability_ids=baseline.source_binding.required_downstream_capability_ids,
+        forbidden_claims=baseline.source_context.runtime_policy.forbidden_claims, child_depth=parent.cell_depth + 1)
+    child = next(c for c in baseline.cell_inputs if c.cell_id == child_id)
+    seed = next(a for q, a in zip(baseline.queue_entries, baseline.queue_artifacts, strict=True)
+        if q.queue_entry_id == child.ordered_initial_queue_entry_ids[0])
+    fixture = dict(g2a=packet, g2b=g2b, source_family=family, source=family["source"], bundle=baseline,
+        selected_seed_projection=_e4_runtime_artifact_projection(seed))
+    inputs = _e4_input_family(fixture)
+    before = canonical_json_bytes_v01(g2d.fractal_runtime_execution_bundle_to_plain_data_v02(baseline))
+    executed = []
+    code = g2d._d4_execute_cell_v02.__code__
+    import sys
+    tool = next(i for i in range(6) if sys.monitoring.get_tool(i) is None)
+    def observe(actual_code, offset):
+        frame = sys._getframe(1)
+        assert actual_code is code and frame.f_code is code
+        executed.append(frame.f_locals["context"]["cell_input"].cell_id)
+    sys.monitoring.use_tool_id(tool, "retained_current_cell_observer_v05")
+    started = time.monotonic()
+    _retained_phase_v06("native_child0", "public_E", "START", started)
+    try:
+        sys.monitoring.register_callback(tool, sys.monitoring.events.PY_START, observe)
+        sys.monitoring.set_local_events(tool, code, sys.monitoring.events.PY_START)
+        result, validation = g2e.run_continuous_delta_runtime_v01(source_context=inputs["context"],
+            source_bindings=(inputs["source_binding"],), changed_field_bindings=(inputs["changed_field"],),
+            changed_artifact_bindings=(inputs["changed_artifact"],), delta=inputs["delta"],
+            dependency_edges=inputs["dependency_edges"], dependency_graph=inputs["graph"],
+            retained_profile="fractal_retained_work_v01")
+    finally:
+        sys.monitoring.set_local_events(tool, code, 0)
+        sys.monitoring.free_tool_id(tool)
+    assert result is not None and validation.status == "PASS", validation
+    _retained_phase_v06("native_child0", "public_E", "COMPLETE", started)
+    print("ACTUAL_RETAINED_NATIVE_V05=" + json.dumps(dict(
+        inputs=work_tests.actual_evidence_plain_v03(inputs),
+        result=work_tests.actual_evidence_plain_v03(result),
+        validation=work_tests.actual_evidence_plain_v03(validation), executed_cell_ids=executed), sort_keys=True), flush=True)
+    _retained_phase_v06("native_child0", "supplied_E", "START", started)
+    supplied_e = g2e.validate_continuous_delta_execution_bundle_v01(result)
+    assert supplied_e.status == "PASS"
+    _retained_phase_v06("native_child0", "supplied_E", "COMPLETE", started)
+    _retained_phase_v06("native_child0", "supplied_D", "START", started)
+    supplied_d = g2d.validate_fractal_retained_work_execution_bundle_v01(result.recomputed_g2d_execution_bundle)
+    assert supplied_d.status == "PASS"
+    _retained_phase_v06("native_child0", "supplied_D", "COMPLETE", started)
+    assert canonical_json_bytes_v01(g2d.fractal_runtime_execution_bundle_to_plain_data_v02(baseline)) == before
+    print("RETAINED_NATIVE_SUPPLIED_VALIDATION_V06=" + json.dumps(dict(
+        result_id=result.runtime_report.report_id,
+        supplied_e=work_tests.actual_evidence_plain_v03(supplied_e),
+        supplied_d=work_tests.actual_evidence_plain_v03(supplied_d), executed_cell_ids=executed), sort_keys=True), flush=True)
+    case = dict(inputs=inputs, result=result, baseline=baseline, executed=tuple(executed), child_id=child_id,
+        validation=validation, supplied_e=supplied_e, supplied_d=supplied_d)
+    state[_retained_native_key_v06] = case
+    return case
+
+
+def _retained_origin_v05(bundle):
+    """Reconstruct the actual saved RUNNING prefix, using public fields/checks."""
+    consumption = bundle.retained_consumptions[0]
+    qpos = next(i for i, q in enumerate(bundle.queue_entries)
+        if q.queue_entry_id == consumption.running_parent_slot.queue_entry_id)
+    bpos = next(i for i, b in enumerate(bundle.budgets)
+        if b.budget_id == consumption.current_global_budget_before.budget_id)
+    budgets = bundle.budgets[:bpos + 1]
+    budget_ids = {b.budget_id for b in budgets}
+    queues, artifacts = bundle.queue_entries[:qpos + 1], bundle.queue_artifacts[:qpos + 1]
+    inputs = tuple(c for c in bundle.cell_inputs if c.cell_budget_id in budget_ids and c.global_budget_id in budget_ids)
+    scopes = tuple(p for p in bundle.scope_projections if p.child_budget_id in budget_ids and p.global_budget_id in budget_ids)
+    input_ids = {c.cell_input_id for c in inputs}
+    scope_ids = {p.projection_id for p in scopes}
+    reports = (*bundle.validation_reports[:4], *(g2d.validate_fractal_cell_queue_entry_v02(q) for q in queues),
+        *(r for r in bundle.validation_reports if r.validation_target == "SCOPE_PROJECTION_AGAINST_SOURCES"
+            and r.validated_object_id in scope_ids),
+        *(r for r in bundle.validation_reports if r.validation_target == "CELL_INPUT_AGAINST_SOURCES"
+            and r.validated_object_id in input_ids))
+    indexes = tuple(i for i, r in enumerate(bundle.cell_results)
+        if r.final_cell_budget_id in budget_ids and r.global_budget_id in budget_ids)
+    values = {f.name: getattr(bundle, f.name) for f in fields(g2d.FractalRetainedWorkPrefixV01)
+        if f.name != "queue_transition_decisions"}
+    values.update(budgets=budgets, queue_entries=queues, queue_artifacts=artifacts,
+        scope_projections=scopes, cell_inputs=inputs, validation_reports=reports,
+        retained_admissions=(), retained_consumptions=(), retained_consumption_artifacts=(),
+        queue_transition_decisions=bundle.transition_decisions[1:qpos + 2])
+    for name in ("cell_results", "result_artifacts", "result_proposals", "post_vv_reports", "gt_advisory_reports"):
+        values[name] = tuple(getattr(bundle, name)[i] for i in indexes)
+    return g2d.build_fractal_retained_work_prefix_v01(**values)
+
+
+def _retained_admission_control_v05(prefix, review):
+    cloned = g2d.build_fractal_retained_work_prefix_v01(**{
+        f.name: (review if f.name == "plan_review" else getattr(prefix, f.name))
+        for f in fields(g2d.FractalRetainedWorkPrefixV01)})
+    parent = next(c for c in cloned.cell_inputs if c.parent_cell_id is None)
+    running = next(q for q in reversed(cloned.queue_entries) if q.state == "RUNNING" and q.planned_child_cell_id)
+    return g2d.build_fractal_retained_work_admission_v01(evidence=cloned.retained_evidence[0],
+        current_source_context=cloned.source_context, current_observed_work_context=cloned.observed_work_context,
+        plan_review=review, current_parent_input=parent, parent_slot_node_id=running.node_id, current_prefix=cloned)
+
+
+def test_retained_actual_parent_namespace_and_budget_v05(retained_native_execution_v05):
+    case = retained_native_execution_v05
+    e_bundle = case["result"]
+    bundle = e_bundle.recomputed_g2d_execution_bundle
+    assert type(bundle) is g2d.FractalRetainedWorkExecutionBundleV01
+    assert case["supplied_d"].status == "PASS"
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(bundle).status == "FAIL_CLOSED"
+    assert len(bundle.cell_inputs) == len(bundle.cell_results) == 2
+    assert len(bundle.retained_evidence) == len(bundle.retained_consumptions) == 1
+    consumption = bundle.retained_consumptions[0]
+    historical = consumption.consumed_result
+    parent = next(r for r in bundle.cell_results if r.parent_cell_id is None)
+    current = next(r for r in bundle.cell_results if r.parent_cell_id is not None)
+    assert set(case["executed"]) == {parent.cell_id, current.cell_id}
+    assert len(case["executed"]) == 2 and historical.cell_id not in case["executed"]
+    assert current.cell_id == case["child_id"] and historical not in bundle.cell_results
+    parent_input = next(c for c in bundle.cell_inputs if c.parent_cell_id is None)
+    by_cell = {current.cell_id: current.result_id, historical.cell_id: historical.result_id}
+    assert parent.ordered_child_result_ids == tuple(by_cell[key] for key in parent_input.ordered_planned_child_cell_ids)
+    assert e_bundle.affected_result == case["inputs"]["affected"]
+    assert e_bundle.recomputation_plan.ordered_affected_cell_ids == (current.cell_id,)
+    assert e_bundle.plan_root_decision_result.decision == e_bundle.final_root_decision_result.decision == "ACCEPT"
+    assert e_bundle.plan_root_decision_result.decision_id != e_bundle.final_root_decision_result.decision_id
+    slot = tuple(q for q in bundle.queue_entries if (q.cell_id, q.node_id) ==
+        (consumption.running_parent_slot.cell_id, consumption.running_parent_slot.node_id))
+    assert tuple(q.state for q in slot) == ("PENDING", "READY", "RUNNING", "VALIDATING", "COMPLETED")
+    budgets = {b.budget_id: b for b in bundle.budgets}
+    start = consumption.current_global_budget_before
+    prior = budgets[start.predecessor_budget_id]
+    finish = budgets[slot[3].global_budget_id]
+    assert start.budget_event_kind == "START_NODE" and finish.budget_event_kind == "FINISH_NODE"
+    assert start.consumed_wall_time_units == finish.consumed_wall_time_units == prior.consumed_wall_time_units + 1
+    assert start.current_parallelism == prior.current_parallelism + 1
+    assert finish.current_parallelism == prior.current_parallelism
+    assert (finish.consumed_cell_count, finish.consumed_token_budget, finish.consumed_provider_calls,
+        finish.consumed_revise_count) == (prior.consumed_cell_count, prior.consumed_token_budget,
+        prior.consumed_provider_calls, prior.consumed_revise_count)
+    assert not any(b.owning_cell_id == historical.cell_id for b in bundle.budgets)
+    assert not any(q.cell_id == historical.cell_id for q in bundle.queue_entries)
+    assert bundle.runtime_report.completed_cell_count == 2
+    assert bundle.retained_consumption_artifacts[0].artifact_id in bundle.runtime_trace.abi_artifact_refs
+    _retained_capacity_control_v05(bundle)
+
+
+def test_retained_review_family_coherent_controls_v05(retained_native_execution_v05):
+    bundle = retained_native_execution_v05["result"].recomputed_g2d_execution_bundle
+    origin = _retained_origin_v05(bundle)
+    review = bundle.plan_review
+    fresh = replace(review, root_kernel=replace(review.root_kernel))
+    accepted = _retained_admission_control_v05(origin, fresh)
+    assert fresh is not review and fresh.root_kernel is not review.root_kernel
+    assert accepted == bundle.retained_admissions[0]
+    ancestors = review.ordered_plan_ancestor_artifacts
+    seeds = (review.proposed_artifact, review.decision_artifact, review.accepted_artifact)
+    known = {a.artifact_id: a for a in (*ancestors, *seeds)}
+    assert len(known) == len(ancestors) + 3
+    pending, emitted, ordered = set(known), set(), []
+    while pending:
+        ready = sorted(key for key in pending if set(known[key].parent_refs) <= emitted)
+        assert ready
+        emitted.update(ready); pending.difference_update(ready); ordered.extend(ready)
+    assert tuple(key for key in ordered if key not in {a.artifact_id for a in seeds}) == tuple(a.artifact_id for a in ancestors)
+    direct = next(a for a in ancestors if a.artifact_id in review.proposed_artifact.parent_refs)
+    transitive = next(a for a in ancestors if a.artifact_id not in {p for s in seeds for p in s.parent_refs})
+    negatives = (
+        ("direct", replace(review, ordered_plan_ancestor_artifacts=tuple(a for a in ancestors if a is not direct))),
+        ("transitive", replace(review, ordered_plan_ancestor_artifacts=tuple(a for a in ancestors if a is not transitive))),
+        ("order", replace(review, ordered_plan_ancestor_artifacts=tuple(reversed(ancestors)))),
+        ("duplicate", replace(review, ordered_plan_ancestor_artifacts=(*ancestors, ancestors[0]))),
+        ("t04", replace(review, review_transition=review.accept_transition)),
+        ("t05", replace(review, accept_transition=review.review_transition)),
+        ("genuine_final_decision_not_plan", replace(review,
+            root_input=retained_native_execution_v05["result"].final_root_decision_input,
+            root_result=retained_native_execution_v05["result"].final_root_decision_result)),
+    )
+    for case_id, bad in negatives:
+        with pytest.raises(ValueError) as raised:
+            _retained_admission_control_v05(origin, bad)
+        print("RETAINED_PLAN_REJECTION=" + json.dumps(dict(case=case_id, reason=str(raised.value))), flush=True)
+    actual = retained_native_execution_v05["result"]
+    _retained_plan_projection_cases_v05(origin, actual.final_root_decision_result)
+    _retained_transition_projection_cases_v05(origin, next(t for t in actual.g2e_transition_decisions
+        if t.rule_id == "g2e_t03_invalidation_derive"))
+    unrelated = actual.final_root_decision_artifact
+    assert validate_kernel_artifact_v01(unrelated) == ()
+    assert unrelated.artifact_id not in known
+    with pytest.raises(ValueError, match="retained_plan_unreachable_ancestor"):
+        _retained_admission_control_v05(origin, replace(review,
+            ordered_plan_ancestor_artifacts=(*ancestors, unrelated)))
+    original = ancestors[0]
+    conflicting = replace(original, trace_refs=(*original.trace_refs, "trace:controlled:conflicting_body"))
+    assert validate_kernel_artifact_v01(conflicting) == ()
+    assert conflicting.artifact_id == original.artifact_id and conflicting != original
+    with pytest.raises(ValueError, match="retained_source_identity_conflict"):
+        _retained_admission_control_v05(origin, replace(review,
+            ordered_plan_ancestor_artifacts=(*ancestors, conflicting)))
+
+
+def test_retained_once_key_and_actual_field_inventory_v05(retained_native_execution_v05):
+    bundle = retained_native_execution_v05["result"].recomputed_g2d_execution_bundle
+    origin = _retained_origin_v05(bundle)
+    original = bundle.retained_consumptions[0]
+    fresh_admission = _retained_admission_control_v05(origin, replace(bundle.plan_review))
+    fresh = g2d.consume_fractal_retained_work_v01(admission=fresh_admission,
+        running_parent_slot=original.running_parent_slot, running_slot_artifact=original.running_slot_artifact,
+        current_prefix=origin)
+    assert fresh is not original and fresh == original
+    artifact = g2d.project_fractal_retained_work_consumption_kernel_artifact_v01(fresh,
+        source_context=origin.source_context, current_prefix=origin)
+    assert artifact == bundle.retained_consumption_artifacts[0]
+    occupied = replace(origin, retained_admissions=(fresh_admission,), retained_consumptions=(fresh,),
+        retained_consumption_artifacts=(artifact,))
+    repeated = g2d.consume_fractal_retained_work_v01(admission=fresh_admission,
+        running_parent_slot=fresh.running_parent_slot, running_slot_artifact=fresh.running_slot_artifact,
+        current_prefix=occupied)
+    assert repeated is fresh
+    assert occupied.budgets is origin.budgets and occupied.queue_entries is origin.queue_entries
+    bindings = fresh_admission.field_bindings
+    assert bindings and any(row.causal_refs for row in bindings)
+    assert {b.role for b in bindings} >= {"SEMANTIC_INPUT", "OUTPUT_VALUE", "DEFINITION", "POLICY", "ROOT_SCOPE", "TIME"}
+    assert any(b.full_artifact_pointer.startswith("/payload/observed_output_refs/") for b in bindings if b.role == "OUTPUT_VALUE")
+    for altered in (bindings[:-1], tuple(reversed(bindings)), (*bindings, bindings[0])):
+        bad = replace(fresh_admission, field_bindings=altered)
+        bad = replace(bad, admission_id=g2d.rebuild_fractal_retained_work_admission_identity_v01(bad))
+        assert g2d.validate_fractal_retained_work_admission_v01(bad, current_prefix=origin).status == "FAIL_CLOSED"
+    conflict = replace(fresh_admission, planned_child_cell_id=retained_native_execution_v05["child_id"])
+    conflict = replace(conflict, admission_id=g2d.rebuild_fractal_retained_work_admission_identity_v01(conflict))
+    with pytest.raises(ValueError):
+        g2d.consume_fractal_retained_work_v01(admission=conflict, running_parent_slot=fresh.running_parent_slot,
+            running_slot_artifact=fresh.running_slot_artifact, current_prefix=occupied)
+
+
+def test_retained_full_consumer_mutations_v05(retained_native_execution_v05):
+    actual = retained_native_execution_v05["result"]
+    bundle = actual.recomputed_g2d_execution_bundle
+    _retained_result_binding_controls_v06(bundle)
+    _retained_current_ordinal_control_v06(bundle)
+    equivalent = replace(bundle, budgets=tuple(list(bundle.budgets)), queue_entries=tuple(list(bundle.queue_entries)))
+    assert equivalent is not bundle and equivalent.budgets is not bundle.budgets
+    assert g2d.validate_fractal_retained_work_execution_bundle_v01(equivalent).status == "PASS"
+    for bad in (replace(bundle, retained_consumptions=()), replace(bundle, retained_consumption_artifacts=()),
+        replace(bundle, cell_results=(*bundle.cell_results, bundle.retained_consumptions[0].consumed_result)),
+        replace(bundle, validation_reports=bundle.validation_reports[:-1]),
+        replace(bundle, validation_reports=(*bundle.validation_reports, bundle.validation_reports[-1]))):
+        assert g2d.validate_fractal_retained_work_execution_bundle_v01(bad).status == "FAIL_CLOSED"
+    proof = actual.preservation_proof
+    proof_args = dict(source_context=actual.source_context, affected_set=actual.affected_result,
+        plan=actual.recomputation_plan, recomputed_bundle=bundle, recomputed_bindings=actual.recomputed_bindings)
+    fresh = g2e.prove_retained_work_preservation_v01(**proof_args)
+    assert fresh is not proof and fresh == proof
+    assert g2e.validate_retained_work_preservation_v01(fresh, **proof_args).status == "PASS"
+    for field in ("ordered_preserved_artifact_ids", "ordered_retained_evidence_ids",
+        "ordered_consumption_ids", "ordered_current_bookkeeping_artifact_ids"):
+        bad = replace(proof, **{field: ()})
+        # Recomputed identity is test representation integrity, not acceptance.
+        material = {f.name: _e3_public_plain(getattr(bad, f.name)) for f in fields(type(bad))
+            if f.name != "preservation_proof_id"}
+        from hedgehog.kernel.integrity_replay_v01 import domain_separated_sha256_hex_v01
+        bad = replace(bad, preservation_proof_id="frretained_preservation:" + domain_separated_sha256_hex_v01(
+            domain="hedgehog.fractal_retained_work.v01.preservation", payload=canonical_json_bytes_v01(material)))
+        assert g2e.validate_retained_work_preservation_v01(bad, **proof_args).status == "FAIL_CLOSED"
+
+
+def test_retained_current_semantic_source_controls_v05(retained_native_execution_v05):
+    actual_inputs = retained_native_execution_v05["inputs"]
+    for selector in (False, True, 0, 1, "", "fractal_retained_work_v02"):
+        result, refusal = g2e.run_continuous_delta_runtime_v01(source_context=actual_inputs["context"],
+            source_bindings=(actual_inputs["source_binding"],), changed_field_bindings=(actual_inputs["changed_field"],),
+            changed_artifact_bindings=(actual_inputs["changed_artifact"],), delta=actual_inputs["delta"],
+            dependency_edges=actual_inputs["dependency_edges"], dependency_graph=actual_inputs["graph"],
+            retained_profile=selector)
+        assert result is None and refusal.status == "FAIL_CLOSED"
+        assert refusal.reason_codes == ("g2e_recomputation_plan_invalid",)
+        print("RETAINED_SELECTOR_REFUSAL=" + json.dumps(dict(selector=selector,
+            reason=refusal.reason_codes)), flush=True)
+    bundle = retained_native_execution_v05["result"].recomputed_g2d_execution_bundle
+    origin = _retained_origin_v05(bundle)
+    _retained_definition_scope_controls_v05(origin)
+    source = origin.source_context
+    snapshot = source.router_input.local_routing_snapshot
+    arguments = {name:getattr(snapshot, name) for name in inspect.signature(
+        g2c.build_execution_mode_local_routing_snapshot_v01).parameters}
+    fresh = g2c.build_execution_mode_local_routing_snapshot_v01(**arguments)
+    assert fresh is not snapshot and fresh == snapshot
+    fresh_source = replace(source, router_input=replace(source.router_input, local_routing_snapshot=fresh))
+    assert g2d.validate_fractal_runtime_source_context_v02(fresh_source).status == "PASS"
+    fresh_prefix = replace(origin, source_context=fresh_source)
+    assert _retained_admission_control_v05(fresh_prefix, replace(origin.plan_review)) == bundle.retained_admissions[0]
+    expired_at = int(datetime.fromisoformat(snapshot.valid_to_utc.replace("Z", "+00:00")).timestamp()) + snapshot.ttl_seconds + 1
+    with pytest.raises(ValueError) as expired:
+        g2c.build_execution_mode_local_routing_snapshot_v01(**dict(arguments, evaluation_time_epoch_seconds=expired_at))
+    print("RETAINED_CURRENT_TIME_PUBLIC_REFUSAL=" + str(expired.value), flush=True)
+    policy = source.runtime_policy
+    policy_args = dict(required_downstream_capability_ids=origin.source_binding.required_downstream_capability_ids,
+        permitted_child_scope_refs=policy.permitted_child_scope_refs)
+    equivalent_policy = g2d.build_fractal_runtime_policy_v02(**policy_args)
+    assert equivalent_policy is not policy and equivalent_policy == policy
+    changed_policy = replace(policy, max_provider_calls=1)
+    changed_policy = replace(changed_policy,
+        policy_id=g2d.rebuild_fractal_runtime_policy_identity_v02(changed_policy))
+    policy_report = g2d.validate_fractal_runtime_policy_v02(changed_policy)
+    assert policy_report.status == "FAIL_CLOSED"
+    print("RETAINED_POLICY_PUBLIC_REFUSAL=" + json.dumps(policy_report.reason_codes), flush=True)
+    admission = bundle.retained_admissions[0]
+    for field, value in (("evaluation_time_epoch_seconds", admission.evaluation_time_epoch_seconds+1),
+        ("parent_slot_node_id", origin.topology_nodes[0].node_id),
+        ("current_parent_input", replace(admission.current_parent_input, owning_root_id="root:foreign"))):
+        altered = replace(admission, **{field:value})
+        altered = replace(altered, admission_id=g2d.rebuild_fractal_retained_work_admission_identity_v01(altered))
+        assert g2d.validate_fractal_retained_work_admission_v01(altered, current_prefix=origin).status == "FAIL_CLOSED"
+
+
+def _retained_plan_artifact_control_v05(artifact, **changes):
+    from hedgehog.kernel.integrity_replay_v01 import domain_separated_sha256_hex_v01
+    plain = kernel_artifact_to_plain_dict_v01(artifact)
+    plain.update(changes)
+    prefix = artifact.artifact_id.split(":", 1)[0] + ":"
+    domains = {
+        "g2eabi_plan_proposed_v01:": "HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_PROPOSED_ARTIFACT_V01",
+        "g2eabi_plan_accepted_v01:": "HEDGEHOG_G2E_SELECTIVE_RECOMPUTATION_PLAN_ACCEPTED_ARTIFACT_V01",
+        "g2e_root_plan_decision_v01:": "HEDGEHOG_G2E_PLAN_ROOT_DECISION_ARTIFACT_V01",
+    }
+    material = {k:v for k,v in plain.items() if k != "artifact_id"}
+    plain["artifact_id"] = prefix + domain_separated_sha256_hex_v01(
+        domain=domains[prefix], payload=canonical_json_bytes_v01(material))
+    plain["trace_refs"] = tuple(plain["trace_refs"])
+    plain["parent_refs"] = tuple(plain["parent_refs"])
+    return build_kernel_artifact_v01(**plain)
+
+
+def _retained_plan_projection_cases_v05(origin, final_root_result):
+    review = origin.plan_review
+    proposed = _retained_plan_artifact_control_v05(review.proposed_artifact)
+    decision = _retained_plan_artifact_control_v05(review.decision_artifact)
+    accepted = _retained_plan_artifact_control_v05(review.accepted_artifact)
+    equal = replace(review, proposed_artifact=proposed, decision_artifact=decision, accepted_artifact=accepted)
+    assert all(new is not old and new == old for new,old in zip(
+        (proposed,decision,accepted), (review.proposed_artifact,review.decision_artifact,review.accepted_artifact), strict=True))
+    assert _retained_admission_control_v05(origin, equal) == _retained_admission_control_v05(origin, review)
+    payload = kernel_artifact_to_plain_dict_v01(decision)["payload"]
+    payload["decision_id"] = final_root_result.decision_id
+    assert final_root_result.decision_id != review.root_result.decision_id
+    changed_decision = _retained_plan_artifact_control_v05(decision, payload=payload)
+    changed_accepted = _retained_plan_artifact_control_v05(accepted,
+        parent_refs=[proposed.artifact_id, changed_decision.artifact_id])
+    changed = replace(equal, decision_artifact=changed_decision, accepted_artifact=changed_accepted)
+    assert transition.validate_continuous_delta_transition_decision_v01(changed.review_transition,
+        registry=changed.transition_registry, source_artifact=changed.proposed_artifact,
+        target_artifact=changed.decision_artifact) == ()
+    assert transition.validate_continuous_delta_transition_decision_v01(changed.accept_transition,
+        registry=changed.transition_registry, source_artifact=changed.decision_artifact,
+        target_artifact=changed.accepted_artifact) == ()
+    with pytest.raises(ValueError, match="retained_plan_actual_root_projection") as rejected:
+        _retained_admission_control_v05(origin, changed)
+    print("RETAINED_COHERENT_ROOT_PROJECTION=" + str(rejected.value), flush=True)
+    payload = kernel_artifact_to_plain_dict_v01(proposed)["payload"]
+    payload["max_wall_time_units"] -= 1
+    changed_proposed = _retained_plan_artifact_control_v05(proposed, payload=payload)
+    parents = list(decision.parent_refs)
+    parents[0] = changed_proposed.artifact_id
+    changed_decision = _retained_plan_artifact_control_v05(decision, parent_refs=parents)
+    trace = list(accepted.trace_refs)
+    trace[0] = changed_proposed.artifact_id
+    changed_accepted = _retained_plan_artifact_control_v05(accepted, payload=payload,
+        parent_refs=[changed_proposed.artifact_id,changed_decision.artifact_id], trace_refs=trace)
+    changed = replace(equal, proposed_artifact=changed_proposed,
+        decision_artifact=changed_decision, accepted_artifact=changed_accepted)
+    for artifact in (changed_proposed, changed_decision, changed_accepted):
+        assert validate_kernel_artifact_v01(artifact) == ()
+    with pytest.raises(ValueError, match="retained_plan_envelope_binding") as rejected:
+        _retained_admission_control_v05(origin, changed)
+    print("RETAINED_COHERENT_PLAN_PAYLOAD=" + str(rejected.value), flush=True)
+
+
+def _retained_capacity_control_v05(bundle):
+    consumption = bundle.retained_consumptions[0]
+    start = consumption.current_global_budget_before
+    prior = next(b for b in bundle.budgets if b.budget_id == start.predecessor_budget_id)
+    decision = next(d for d in bundle.transition_decisions if d.decision_id == start.budget_event_ref)
+    arguments = dict(policy=bundle.source_context.runtime_policy, topology_seed=bundle.topology_seed,
+        allocation_parent_budget=None, predecessor_budget=prior, owning_cell_id=prior.owning_cell_id,
+        budget_scope=prior.budget_scope, budget_state="ACTIVE", budget_event_kind="START_NODE",
+        budget_context_input=consumption.admission.current_parent_input, canonical_child_index=None,
+        allocation_queue_entries=(), transition_decision=decision, paired_cell_budget=None, child_result=None)
+    fresh = g2d.build_fractal_runtime_budget_v02(**arguments)
+    assert fresh is not start and fresh == start
+    for values in (dict(consumed_wall_time_units=prior.max_wall_time_units, remaining_wall_time_units=0),
+        dict(current_parallelism=prior.max_parallelism, remaining_parallel_slots=0)):
+        # A coherent scalar counterfactual, not a claim that this budget was executed.
+        exhausted = replace(prior, **values)
+        exhausted = replace(exhausted, budget_id=g2d.rebuild_fractal_runtime_budget_identity_v02(exhausted))
+        assert g2d.validate_fractal_runtime_budget_v02(exhausted).status == "PASS"
+        with pytest.raises(ValueError, match="g2d_budget_overflow") as refused:
+            g2d.build_fractal_runtime_budget_v02(**dict(arguments, predecessor_budget=exhausted))
+        print("RETAINED_CAPACITY_PUBLIC_REFUSAL=" + str(refused.value), flush=True)
+
+
+def _retained_transition_projection_cases_v05(origin, wrong):
+    review = origin.plan_review
+    fresh_accepted = _retained_plan_artifact_control_v05(review.accepted_artifact)
+    equal = replace(review, accepted_artifact=fresh_accepted)
+    assert fresh_accepted is not review.accepted_artifact and fresh_accepted == review.accepted_artifact
+    assert _retained_admission_control_v05(origin, equal) == _retained_admission_control_v05(origin, review)
+    assert wrong.rule_id == "g2e_t03_invalidation_derive"
+    for field in ("review_transition", "accept_transition"):
+        changed = replace(equal, **{field:wrong})
+        trace = [changed.proposed_artifact.artifact_id, changed.root_input.decision_input_id,
+            changed.root_result.decision_id, changed.review_transition.decision_id, changed.accept_transition.decision_id]
+        accepted = _retained_plan_artifact_control_v05(changed.accepted_artifact, trace_refs=trace)
+        changed = replace(changed, accepted_artifact=accepted)
+        if field == "review_transition":
+            source, target = changed.proposed_artifact, changed.decision_artifact
+        else:
+            source, target = changed.decision_artifact, changed.accepted_artifact
+        actual_public = transition.validate_continuous_delta_transition_decision_v01(wrong,
+            registry=changed.transition_registry, source_artifact=source, target_artifact=target)
+        assert actual_public == ("g2e_object_invalid",)
+        with pytest.raises(ValueError, match="retained_plan_transition") as refused:
+            _retained_admission_control_v05(origin, changed)
+        print("RETAINED_COHERENT_TRANSITION_REFUSAL=" + json.dumps(dict(field=field,
+            public_result=actual_public, retained_reason=str(refused.value))), flush=True)
+
+
+def _retained_definition_scope_controls_v05(origin):
+    source = origin.source_context
+    node = next(n for n in origin.topology_nodes if n.node_kind == "FRACTAL_CELL")
+    fields = ("canonical_index", "node_kind", "depth", "scope_ref", "cell_binding_class",
+        "scope_binding_class", "budget_binding_class", "required_capability_ids", "input_ref_derivation_class")
+    values = {name:getattr(node,name) for name in fields}
+    fresh = g2d.build_runtime_topology_node_v02(origin.topology_seed, origin.source_binding,
+        source.runtime_policy, **values)
+    assert fresh is not node and fresh == node
+    for change in (dict(scope_ref="scope:foreign"), dict(node_kind="POST_VV"), dict(input_ref_derivation_class="SOURCE_CONTEXT")):
+        assert any(values[k] != v for k,v in change.items())
+        with pytest.raises(ValueError, match="g2d_mode_template_matrix_invalid") as refused:
+            g2d.build_runtime_topology_node_v02(origin.topology_seed, origin.source_binding,
+                source.runtime_policy, **dict(values, **change))
+        print("RETAINED_DEFINITION_PUBLIC_REFUSAL=" + json.dumps(dict(change=change, reason=str(refused.value))), flush=True)
+
+
+def _retained_complete_prefix_values_v06(bundle):
+    values = {f.name: getattr(bundle, f.name) for f in fields(g2d.FractalRetainedWorkPrefixV01)
+        if f.name != "queue_transition_decisions"}
+    values["queue_transition_decisions"] = bundle.transition_decisions[1:-1]
+    values["validation_reports"] = bundle.validation_reports[:4 + len(bundle.queue_entries)
+        + len(bundle.scope_projections) + len(bundle.cell_inputs)]
+    return values
+
+
+def _retained_result_binding_controls_v06(bundle):
+    values = _retained_complete_prefix_values_v06(bundle)
+    position = next(i for i, r in enumerate(bundle.cell_results) if r.parent_cell_id is None)
+    original = bundle.cell_results[position]
+    cell = next(c for c in bundle.cell_inputs if c.cell_id == original.cell_id)
+    budgets = {b.budget_id:b for b in bundle.budgets}
+    queues = {q.queue_entry_id:q for q in bundle.queue_entries}
+    results = {r.result_id:r for r in (*bundle.cell_results,
+        *(c.consumed_result for c in bundle.retained_consumptions))}
+    report = next(r for r in bundle.validation_reports if r.validation_report_id == original.pre_result_validation_report_id)
+    arguments = dict(topology=bundle.topology, cell_input=cell,
+        terminal_queue_entries=tuple(queues[k] for k in original.ordered_terminal_queue_entry_ids),
+        child_results=tuple(results[k] for k in original.ordered_child_result_ids),
+        accepted_output_refs=original.accepted_output_refs, evidence_refs=original.evidence_refs,
+        pre_result_validation_report=report, post_vv_report=bundle.post_vv_reports[position],
+        gt_advisory_report=bundle.gt_advisory_reports[position],
+        partial_failures=tuple(p for p in bundle.partial_failures if p.parent_cell_id == cell.cell_id),
+        allocated_cell_budget=budgets[original.allocated_cell_budget_id],
+        final_cell_budget=budgets[original.final_cell_budget_id], global_budget=budgets[original.global_budget_id])
+    fresh = g2d.build_fractal_cell_result_v02(**arguments)
+    assert fresh is not original and fresh == original
+    queue_artifacts = {q.queue_entry_id:a for q,a in zip(bundle.queue_entries,bundle.queue_artifacts,strict=True)}
+    child_artifacts = {r.result_id:a for r,a in zip(bundle.cell_results,bundle.result_artifacts,strict=True)}
+    child_artifacts.update((c.consumed_result.result_id,c.consumed_result_artifact) for c in bundle.retained_consumptions)
+    def representation(result):
+        assert g2d.validate_fractal_cell_result_v02(result).status == "PASS"
+        artifact = g2d.project_fractal_cell_result_kernel_artifact_v02(result,
+            topology_artifact=bundle.topology_artifact,
+            terminal_queue_artifacts=tuple(queue_artifacts[k] for k in result.ordered_terminal_queue_entry_ids),
+            child_result_artifacts=tuple(child_artifacts[k] for k in result.ordered_child_result_ids),
+            source_context=bundle.source_context)
+        return dict(values,
+            cell_results=tuple(result if i == position else r for i,r in enumerate(bundle.cell_results)),
+            result_artifacts=tuple(artifact if i == position else a for i,a in enumerate(bundle.result_artifacts)))
+    equal = g2d.build_fractal_retained_work_prefix_v01(**representation(fresh))
+    assert g2d.validate_fractal_retained_work_prefix_v01(equal).status == "PASS"
+    changes = (("post_vv_report_ref", bundle.post_vv_reports[1-position]["vv_report_id"]),
+        ("gt_advisory_ref", bundle.gt_advisory_reports[1-position]["gt_report_id"]),
+        ("accepted_output_refs", (*fresh.accepted_output_refs, "ref:controlled:unproduced_output")),
+        ("evidence_refs", (*fresh.evidence_refs, "ref:controlled:unconsumed_evidence")))
+    for field,value in changes:
+        assert getattr(fresh,field) != value
+        altered = (g2d.build_fractal_cell_result_v02(**dict(arguments, **{field:value}))
+            if field in ("accepted_output_refs", "evidence_refs") else replace(fresh, **{field:value}))
+        altered = replace(altered,result_id=g2d.rebuild_fractal_cell_result_identity_v02(altered))
+        supplied = representation(altered)
+        with pytest.raises(ValueError, match="^retained_actual_result_binding$") as rejected:
+            g2d.build_fractal_retained_work_prefix_v01(**supplied)
+        assert g2d.validate_fractal_retained_work_prefix_v01(g2d.FractalRetainedWorkPrefixV01(**supplied)).status == "FAIL_CLOSED"
+        print("RETAINED_RESULT_BINDING_CONTROL_V06=" + json.dumps(dict(field=field,
+            equivalent_control="ACCEPTED_FRESH_PUBLIC_RESULT", structural_result="PASS",
+            rebuilt_artifact=True, actual_reason=str(rejected.value), boundary="PUBLIC_PREFIX_ACTUAL_RESULT_RELATION")),flush=True)
+    assert bundle.cell_results[position] is original
+
+
+def _retained_current_ordinal_control_v06(bundle):
+    original = next(c for c in bundle.cell_inputs if c.parent_cell_id is None)
+    base = _retained_complete_prefix_values_v06(bundle)
+    budget_by_id = {b.budget_id:b for b in bundle.budgets}
+    end = next(i for i,b in enumerate(bundle.budgets) if b.budget_id == original.global_budget_id)
+    budgets = bundle.budgets[:end+1]
+    initial = tuple(q for q in bundle.queue_entries if q.queue_entry_id in original.ordered_initial_queue_entry_ids)
+    assert tuple(q.queue_entry_id for q in initial) == original.ordered_initial_queue_entry_ids
+    assert all(q.state == "PENDING" and q.predecessor_queue_entry_id is None for q in initial)
+    def representation(delta):
+        queues, artifacts = (), ()
+        reports = bundle.validation_reports[:4]
+        for index,prior in enumerate(initial):
+            q = replace(prior,node_instance_sequence=prior.node_instance_sequence + (delta if index == 0 else 0))
+            q = replace(q,queue_entry_id=g2d.rebuild_fractal_cell_queue_entry_identity_v02(q))
+            report = g2d.validate_fractal_cell_queue_entry_v02(q)
+            assert report.status == "PASS"
+            queues = (*queues,q)
+            a = g2d.project_fractal_cell_queue_entry_kernel_artifact_v02(q,
+                topology_artifact=bundle.topology_artifact,predecessor_artifact=None,
+                activation_parent_artifact=None,local_child_result_artifact=None,source_context=bundle.source_context,
+                settled_budget_log=budgets,settled_queue_entry_log=queues,settled_queue_artifact_log=artifacts,
+                settled_cell_inputs=(),settled_scope_projections=(),settled_revise_observations=(),
+                settled_backpressure_states=(),settled_validation_reports=reports,
+                observed_work_context=bundle.observed_work_context)
+            artifacts = (*artifacts,a)
+            reports = (*reports,report)
+        cell = g2d.build_fractal_cell_input_from_queue_v02(
+            source_context=bundle.source_context,topology=bundle.topology,topology_artifact=bundle.topology_artifact,
+            cell_id=original.cell_id,parent_cell_id=None,parent_input=None,parent_slot_artifact=None,scope_projection=None,
+            cell_budget=budget_by_id[original.cell_budget_id],global_budget=budget_by_id[original.global_budget_id],
+            initial_queue_entries=queues,initial_queue_artifacts=artifacts,
+            ordered_planned_child_cell_ids=original.ordered_planned_child_cell_ids,
+            settled_budget_log=budgets,settled_queue_entry_log=queues,settled_queue_artifact_log=artifacts,
+            settled_cell_inputs=(),settled_scope_projections=(),settled_revise_observations=(),
+            settled_backpressure_states=(),settled_validation_reports=reports,
+            observed_work_context=bundle.observed_work_context)
+        actual = g2d.validate_fractal_cell_input_against_sources_v02(cell,
+            source_context=bundle.source_context,topology=bundle.topology,topology_artifact=bundle.topology_artifact,
+            parent_input=None,parent_slot_artifact=None,scope_projection=None,
+            cell_budget=budget_by_id[original.cell_budget_id],global_budget=budget_by_id[original.global_budget_id],
+            queue_entries=queues,queue_artifacts=artifacts,settled_budget_log=budgets,
+            settled_queue_entry_log=queues,settled_queue_artifact_log=artifacts,settled_cell_inputs=(),
+            settled_scope_projections=(),settled_revise_observations=(),settled_backpressure_states=(),
+            settled_validation_reports=reports,observed_work_context=bundle.observed_work_context)
+        assert actual.status == "PASS", actual
+        values = dict(base,budgets=budgets,queue_entries=queues,queue_artifacts=artifacts,cell_inputs=(cell,),
+            scope_projections=(),revise_observations=(),partial_failures=(),backpressure_states=(),
+            validation_reports=(*reports,actual),result_proposals=(),post_vv_reports=(),gt_advisory_reports=(),
+            cell_results=(),result_artifacts=(),retained_admissions=(),retained_consumptions=(),
+            retained_consumption_artifacts=(),queue_transition_decisions=tuple(
+                next(t for t in bundle.transition_decisions if t.decision_id == q.transition_decision_id) for q in queues))
+        return values
+    equal_values = representation(0)
+    assert equal_values["cell_inputs"][0] is not original and equal_values["cell_inputs"][0] == original
+    equal = g2d.build_fractal_retained_work_prefix_v01(**equal_values)
+    assert g2d.validate_fractal_retained_work_prefix_v01(equal).status == "PASS"
+    changed = representation(len(bundle.topology.ordered_node_ids))
+    with pytest.raises(ValueError,match="^retained_current_canonical_ordinal$") as rejected:
+        g2d.build_fractal_retained_work_prefix_v01(**changed)
+    assert g2d.validate_fractal_retained_work_prefix_v01(g2d.FractalRetainedWorkPrefixV01(**changed)).status == "FAIL_CLOSED"
+    print("RETAINED_CURRENT_ORDINAL_CONTROL_V06=" + json.dumps(dict(equivalent="PASS",
+        input_validator="PASS", fresh_queue_artifacts=True, actual_reason=str(rejected.value),
+        scope="INITIAL_CURRENT_ROOT_PREFIX; no historical ordinal or later execution rewritten")),flush=True)
+
+
+def test_e5_current_source_surface_without_runtime_fixture_u4():
+    _assert_e5_current_source_surface_u4(ROOT)
+    _assert_retained_public_surface_v05()

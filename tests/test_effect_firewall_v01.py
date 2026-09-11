@@ -50,6 +50,97 @@ REQUEST_FIELDS = (
     "idempotency_key",
     "mock_only",
 )
+
+# Contract section 6 adds native values and the exclusive native start, without
+# changing the existing thirteen functions or the package export surface.
+NATIVE_PUBLIC_FUNCTIONS = (
+    'capability_value_subject_sha256_v01',
+    'validate_capability_field_v01', 'build_capability_field_v01',
+    'validate_capability_values_v01', 'build_capability_business_input_binding_v01',
+    'build_capability_business_semantics_v01', 'validate_capability_definition_v01',
+    'build_capability_definition_v01', 'validate_capability_admission_snapshot_v01',
+    'validate_admitted_capability_v01', 'snapshot_admitted_capability_v01',
+    'validate_capability_business_binding_v01', 'build_capability_validation_evidence_v01',
+    'validate_bound_capability_invocation_v01', 'build_bound_capability_invocation_v01',
+    'validate_capability_execution_result_v01', 'build_capability_execution_result_v01',
+    'native_execution_evidence_to_plain_data_v01', 'native_execution_evidence_from_plain_data_v01',
+    'validate_native_execution_evidence_v01', 'build_native_effect_receipt_v01',
+    'validate_native_effect_receipt_v01', 'validate_retained_native_effect_receipt_v01',
+    'bind_native_action_authorization_v01', 'execute_bound_effect_v01',
+)
+
+# Only nominal carriers, canonical material and pure contextual validation may
+# cross this deferred edge. No Root decision or lifecycle execution is admitted.
+NATIVE_DEFERRED_ACTION_ACCESS = {
+    '_native_value': ('ABSENT_V01', 'ActionEffectParameterRecordV01',
+        'action_effect_parameter_record_material_v01', 'validate_action_effect_parameter_record_v01'),
+    '_native_identity': ('build_domain_separated_identity_v01', 'canonical_material_bytes_v01',
+        'domain_separated_sha256_hex_v01'),
+    'capability_value_subject_sha256_v01': ('ActionEffectParameterRecordV01', 'validate_action_effect_parameter_record_v01'),
+    '_capability_scalar_valid': ('validate_canonical_decimal_v01', 'validate_identity_text_v01', 'validate_signed_int64_v01'),
+    'validate_capability_values_v01': ('ActionEffectParameterRecordV01', 'validate_action_effect_parameter_record_v01'),
+    'validate_capability_business_binding_v01': ('NativeActionCommitPacketV01',),
+    '_native_plain': ('ActionEffectParameterRecordV01',),
+    '_native_read': ('ActionEffectParameterRecordV01',),
+    '_native_receipt_material_value_v01': ('ABSENT_V01',),
+    'bind_native_action_authorization_v01': ('NativeRootBoundActionCommitPacketV01',
+        'validate_action_packet_effect_firewall_projection_v01'),
+}
+
+
+def _native_deferred_action_errors(source):
+    tree = ast.parse(source)
+    parents = {child: node for node in ast.walk(tree) for child in ast.iter_child_nodes(node)}
+    errors = []
+    for top in tree.body:
+        allowed = NATIVE_DEFERRED_ACTION_ACCESS.get(top.name, ()) if isinstance(top, ast.FunctionDef) else ()
+        body_nodes = set(n for stmt in top.body for n in ast.walk(stmt)) if isinstance(top, ast.FunctionDef) else set()
+        for node in ast.walk(top):
+            if isinstance(node, ast.ImportFrom) and any('action_commit_packet' in a.name for a in node.names):
+                if not (node in body_nodes and allowed and node.module == 'hedgehog' and
+                    [(a.name, a.asname) for a in node.names] == [('action_commit_packet_v02', 'action')]):
+                    errors.append('action_import_location')
+            if isinstance(node, ast.Import) and any('action_commit_packet' in a.name for a in node.names):
+                errors.append('action_import_form')
+            if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) and node.value.id == 'action':
+                if node not in body_nodes or node.attr not in allowed:
+                    errors.append('action_access_not_pure_allowlisted')
+            if isinstance(node, ast.Name) and node.id == 'action' and isinstance(node.ctx, ast.Load):
+                if not isinstance(parents.get(node), ast.Attribute) or parents[node].value is not node:
+                    errors.append('action_alias_or_dynamic_access')
+            if isinstance(node, ast.Call) and node not in body_nodes and isinstance(node.func, ast.Name) and (
+                node.func.id in NATIVE_DEFERRED_ACTION_ACCESS or node.func.id in NATIVE_PUBLIC_FUNCTIONS or
+                node.func.id == '_admit_observed_capability_v01'):
+                errors.append('native_initialization_call')
+    return tuple(errors)
+
+
+def test_native_deferred_access_policy_rejects_initialization_and_runtime_neighbors():
+    for source in (
+        'from hedgehog import action_commit_packet_v02 as action\n',
+        'def _native_value(value=action.NativeActionCommitPacketV01()):\n    return value\n',
+        '@action.validate_native_action_commit_packet_v01\ndef _native_value(value):\n    return value\n',
+        'class X:\n    value = action.NativeActionCommitPacketV01()\n',
+        'value = _native_value(None)\n',
+        'def _native_value(value):\n    from hedgehog import action_commit_packet_v02 as action\n    return action.execute_action_packet_mock_fulfillment_v01(value)\n',
+        'def _native_value(value):\n    from hedgehog import action_commit_packet_v02 as action\n    alias = action\n    return alias\n',
+        'class X:\n    value = _admit_observed_capability_v01()\n',
+    ):
+        assert _native_deferred_action_errors(source), source
+    assert _native_deferred_action_errors('def _native_value(value):\n    from hedgehog import action_commit_packet_v02 as action\n    return action.ABSENT_V01\n') == ()
+
+
+def test_native_boundary_real_fresh_import_orders():
+    import subprocess
+    import sys
+    for modules in (('hedgehog.action_commit_packet_v02', 'hedgehog.kernel.effect_firewall_v01'),
+                    ('hedgehog.kernel.effect_firewall_v01', 'hedgehog.action_commit_packet_v02')):
+        code = ('import ' + modules[0] + '\nimport ' + modules[1] +
+            '\nfrom hedgehog.kernel import effect_firewall_v01 as f\n'
+            'v=f.build_capability_field_v01(name="value",value_type="INTEGER",required=True,consequential=False)\n'
+            'if f.validate_capability_field_v01(v): raise RuntimeError("fresh_import_value_invalid")\n')
+        result = subprocess.run([sys.executable, '-B', '-c', code], capture_output=True, text=True, check=False)
+        assert (result.returncode, result.stdout, result.stderr) == (0, '', '')
 DECISION_FIELDS = (
     "decision_id",
     "firewall_id",
@@ -435,7 +526,7 @@ def test_exact_public_function_surface():
         for name, value in vars(subject).items()
         if inspect.isfunction(value) and not name.startswith("_")
     }
-    assert public_functions == set(PUBLIC_FUNCTIONS)
+    assert public_functions == set(PUBLIC_FUNCTIONS + NATIVE_PUBLIC_FUNCTIONS)
 
 
 @pytest.mark.parametrize(
@@ -1326,6 +1417,9 @@ def test_source_import_boundary_is_exact():
     ),
 )
 def test_static_forbidden_dependency_or_hook_absent(forbidden):
+    if forbidden in ('action_commit_packet_v02', 'action_commit_packet'):
+        assert _native_deferred_action_errors(Path(subject.__file__).read_text(encoding='utf-8')) == ()
+        return
     source = Path(subject.__file__).read_text(encoding="utf-8").lower()
     assert forbidden.lower() not in source
 

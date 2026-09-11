@@ -3,6 +3,7 @@
   "schema_surface_status": "CURRENT_SCHEMA_SURFACE_ISOLATED",
   "generated_from_head": "237501110159f1adb6d8a4c5e9482d618e5a8187",
   "current_schema_paths": [
+    "schemas/capability_admission_v01.schema.json",
     "schemas/common.schema.json",
     "schemas/continuous_delta_runtime_v01.schema.json",
     "schemas/drs_meaning_record_v01.schema.json",
@@ -16,7 +17,8 @@
     "schemas/reuse_certificate_v01.schema.json",
     "schemas/semantic_work_v01.schema.json",
     "schemas/time_envelope.schema.json",
-    "schemas/vv_report.schema.json"
+    "schemas/vv_report.schema.json",
+    "schemas/work_composition_v01.schema.json"
   ],
   "retired_schema_paths": [
     "schemas/attractor_packet.schema.json",
@@ -78,6 +80,20 @@
         "schemas/gt_report.schema.json"
       ],
       "role": "current_terminal_gt_contract_registry_reference"
+    },
+    {
+      "source_path": "hedgehog/capability_admission_v01.py",
+      "schema_paths": [
+        "schemas/capability_admission_v01.schema.json"
+      ],
+      "role": "bounded_native_capability_input_schema_loader"
+    },
+    {
+      "source_path": "tests/test_work_composition_v01.py",
+      "schema_paths": [
+        "schemas/work_composition_v01.schema.json"
+      ],
+      "role": "typed_work_test_conformance_not_production_deserializer"
     }
   ],
   "isolation_invariants": [

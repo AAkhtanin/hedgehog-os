@@ -1,0 +1,644 @@
+{
+  "ACTUAL_BANK_FULL_SCANS_AND_REUSE": {
+    "600": {
+      "full_material": 32,
+      "registry_core": 46,
+      "scope": 15342
+    },
+    "700": {
+      "full_material": 32,
+      "registry_core": 46,
+      "scope": 15342
+    }
+  },
+  "ALL_OWN_PROCESSES_FINAL": true,
+  "CAPTURED_REPLAY_PROVIDER_EFFECT_CALLS": {
+    "captured_AB": {
+      "result": "NOT_RUN"
+    },
+    "captured_AB_parity": null,
+    "captured_handler": {
+      "captured_reexecution": "FRESH_HOSTS_AND_MOCK_EXECUTION",
+      "clock": "LOCAL_CONTROLLED_TRUSTED_SOURCE_NOT_WALL_CLOCK_ATTESTATION",
+      "elapsed_seconds": 1124.9764023749158,
+      "manifest_hash": "96ff11e8a6bb67be0d3fdc495242ebbb51aa4d161987365f49538a8b838c040f",
+      "mock_executor_calls": 23,
+      "mock_payments": 2,
+      "mode": "CAPTURED_REEXECUTION",
+      "model_calls": 0,
+      "p04": "SEPARATE_CONTROLLED_BANK_E_EVIDENCE_NOT_REEXECUTED_BY_THIS_STORY",
+      "phases": [
+        {
+          "elapsed_seconds": 143.42174095846713,
+          "phase": "P01_HANDLE"
+        },
+        {
+          "elapsed_seconds": 8.637193874455988,
+          "phase": "P01_SEAL"
+        },
+        {
+          "elapsed_seconds": 2.7512572491541505,
+          "phase": "P02_INFORMATION"
+        },
+        {
+          "elapsed_seconds": 42.07198391575366,
+          "phase": "P03_STOP"
+        },
+        {
+          "elapsed_seconds": 51.38158599939197,
+          "phase": "P03_FRESH"
+        },
+        {
+          "elapsed_seconds": 73.46908674947917,
+          "phase": "P05_EXPIRED_STOP"
+        },
+        {
+          "elapsed_seconds": 36.92128587514162,
+          "phase": "P06_DEVICE_GRANT"
+        },
+        {
+          "elapsed_seconds": 288.52585762552917,
+          "phase": "P06_RENEW"
+        },
+        {
+          "elapsed_seconds": 161.13263541739434,
+          "phase": "RENEWED_STOP"
+        },
+        {
+          "elapsed_seconds": 183.06159500032663,
+          "phase": "RENEWED_FRESH"
+        },
+        {
+          "elapsed_seconds": 131.65449020825326,
+          "phase": "HISTORY_SEAL"
+        },
+        {
+          "elapsed_seconds": 1.2012038743123412,
+          "phase": "OFFLINE_REPLAY"
+        }
+      ],
+      "real_adapter_calls": 0,
+      "result": "PASS",
+      "roots": [
+        "bank",
+        "device",
+        "provider",
+        "user"
+      ],
+      "same_four_hosts": true,
+      "selected_plan": "plan:cd79",
+      "semantic_invocations": 8
+    },
+    "offline_replay": "ZERO_PROVIDER_AND_EFFECT_CALLS",
+    "parity": {
+      "all_other_history_fields": "EXACT_EQUAL",
+      "explicit_provenance_differences": [
+        {
+          "captured": "CAPTURED_REEXECUTION",
+          "live": "LIVE_CAPTURED",
+          "path": [
+            "events",
+            5,
+            "renewal",
+            "generation_mode"
+          ]
+        },
+        {
+          "captured": "CAPTURED_REEXECUTION",
+          "live": "LIVE_CAPTURED",
+          "path": [
+            "events",
+            5,
+            "renewal",
+            "semantics",
+            "mode"
+          ]
+        },
+        {
+          "captured": "CAPTURED_REEXECUTION",
+          "live": "LIVE_CAPTURED",
+          "path": [
+            "purchase",
+            "generation_mode"
+          ]
+        },
+        {
+          "captured": "CAPTURED_REEXECUTION",
+          "live": "LIVE_CAPTURED",
+          "path": [
+            "purchase",
+            "semantics",
+            "mode"
+          ]
+        }
+      ],
+      "mock_executor_calls": 23,
+      "mock_payments": 2,
+      "model_calls": 0,
+      "real_adapter_calls": 0,
+      "source": "FRESH_CAPTURED_HANDLER_WITH_NEW_GENUINE_HOSTS"
+    }
+  },
+  "COMMIT": false,
+  "CONTROLLED_FINAL_COVERAGE": {
+    "common_scope_nodes": [
+      "tests/test_continuous_delta_runtime_g2_e_v01.py::test_current_temporal_binding_actual_capture_input_source_only_v01",
+      "tests/test_fractal_runtime_g2_d_v02.py::test_D4_capture_scope_refusal_cleanup_and_independent_use_v09",
+      "tests/test_work_composition_v01.py::test_capture_material_local_scope_origin_mutation_and_lifetime_v06",
+      "tests/test_work_composition_v01.py::test_capture_receipt_material_reuse_and_mutation_v08"
+    ],
+    "impact": "Changed distinct-role input boundary freshly retested; legacy Bank/causal/lifecycle/current paths keep exact recorded pins.",
+    "nodeids": [
+      "tests/test_testflix_causal_runtime_v01.py::test_C01_changed_soft_preference_changes_real_issued_entitlement",
+      "tests/test_testflix_causal_runtime_v01.py::test_C02_coherent_opaque_renaming_and_reordering",
+      "tests/test_testflix_causal_runtime_v01.py::test_N03_explicit_purchase_consent_after_actual_work",
+      "tests/test_testflix_causal_runtime_v01.py::test_N05_fresh_equivalent_and_wrong_public_bsep_context",
+      "tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[amount_minor-600]",
+      "tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[merchant_id-merchant:other]",
+      "tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[order_id-order:other]",
+      "tests/test_testflix_causal_runtime_v01.py::test_N09_wrong_provider_candidate_public_root_binding[entitlement_issuance]",
+      "tests/test_testflix_causal_runtime_v01.py::test_N09_wrong_provider_candidate_public_root_binding[session_issuance]",
+      "tests/test_testflix_causal_runtime_v01.py::test_N10_device_root_missing_or_foreign",
+      "tests/test_testflix_causal_runtime_v01.py::test_N13_repeated_request_and_common_consumption",
+      "tests/test_testflix_causal_runtime_v01.py::test_N16_common_prestart_revoke_and_same_clock_positive",
+      "tests/test_testflix_causal_runtime_v01.py::test_N20_offline_replay_pin_tamper_cycle_and_zero_calls",
+      "tests/test_testflix_causal_runtime_v01.py::test_N20_supplied_report_missing_work_and_future_entitlement",
+      "tests/test_testflix_causal_runtime_v01.py::test_P01_actual_four_root_and_business_execution",
+      "tests/test_testflix_contracts_v01.py::test_C01_always_same_selector_fails_sensitivity_control",
+      "tests/test_testflix_contracts_v01.py::test_N06_actual_projection_privacy_and_device_policy",
+      "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N01-change0-unknown_plan]",
+      "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N02-change1-over_budget]",
+      "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_amount-change3-semantic_output_shape]",
+      "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_authority-change2-semantic_output_shape]",
+      "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_endpoint-change4-semantic_output_shape]",
+      "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N04-None-semantic_output_shape]",
+      "tests/test_testflix_contracts_v01.py::test_request_schema_does_not_admit_scenario_oracles",
+      "tests/test_testflix_evidence_v01.py::test_N14_current_native_quote_refusal_and_unchanged_positive",
+      "tests/test_testflix_evidence_v01.py::test_N15_actual_dependency_and_preserved_period_controls_v03",
+      "tests/test_testflix_evidence_v01.py::test_N17_N19_exact_expiry_fresh_consent_and_device_basis",
+      "tests/test_testflix_evidence_v01.py::test_N18_historical_receipt_is_not_consent_or_foreign_root_authority",
+      "tests/test_testflix_evidence_v01.py::test_N20_supplied_current_history_and_no_live_replay",
+      "tests/test_testflix_evidence_v01.py::test_P04_required_actual_public_E_recomputation",
+      "tests/test_testflix_evidence_v01.py::test_current_start_delayed_valid_positive_and_historical_replay",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[changed_dependency]",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[content]",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[device_expired]",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[missing_dependency]",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[quality]",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[session_expired]",
+      "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[unchanged]",
+      "tests/test_testflix_evidence_v01.py::test_post_renewal_equivalent_period_and_foreign_payment_rejected",
+      "tests/test_testflix_evidence_v01.py::test_post_renewal_live_lineage_refused_before_effect",
+      "tests/test_testflix_evidence_v01.py::test_post_renewal_repeated_requests_replay_and_information_limit",
+      "tests/test_testflix_evidence_v01.py::test_post_renewal_stop_and_fresh_session_same_period",
+      "tests/test_testflix_lifecycle_v01.py::test_N06_actual_consumed_semantic_and_root_inputs_do_not_export_canaries",
+      "tests/test_testflix_lifecycle_v01.py::test_N08_consumed_real_payment_period_cannot_issue_second_entitlement",
+      "tests/test_testflix_lifecycle_v01.py::test_N11_concurrent_refusal_then_same_history_success",
+      "tests/test_testflix_lifecycle_v01.py::test_N12_session_and_current_device_limits_with_equivalent_positive",
+      "tests/test_testflix_lifecycle_v01.py::test_N13_original_packet_and_request_after_fresh_session_no_effect",
+      "tests/test_testflix_lifecycle_v01.py::test_N16_persistent_handler_prestart_root_revoke_with_same_time_branch",
+      "tests/test_testflix_lifecycle_v01.py::test_N20_pinned_history_replay_no_live_calls_and_tamper_refusal",
+      "tests/test_testflix_lifecycle_v01.py::test_N20_supplied_history_actual_B_C_and_new_session_bindings",
+      "tests/test_testflix_lifecycle_v01.py::test_P02_actual_stored_B_C_reuse_and_fresh_temporal_query",
+      "tests/test_testflix_lifecycle_v01.py::test_P02_public_consumer_scope_policy_missing_and_expired_refusals",
+      "tests/test_testflix_lifecycle_v01.py::test_P03_same_hosts_explicit_close_and_fresh_authority_without_purchase",
+      "tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09",
+      "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[500-True]",
+      "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[600-True]",
+      "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[700-False]",
+      "tests/test_testflix_root_review_v09.py::test_writeback_projection_exact_bytes_and_container_isolation_v09",
+      "tests/test_testflix_semantic_roles_v01.py::test_distinct_duties_consume_upstream_and_preference_v01",
+      "tests/test_testflix_semantic_roles_v01.py::test_finite_intent_scope_does_not_override_model_refusal_v09",
+      "tests/test_testflix_semantic_roles_v01.py::test_live_prefix_does_not_relabel_controlled_or_complete_replay_v09",
+      "tests/test_testflix_semantic_roles_v01.py::test_quality_definition_shared_without_overriding_review_v09",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[authority]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_capture]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_input]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_upstream]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[disagreement]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[missing_evidence]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[missing_terms]",
+      "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[wrong_price]"
+    ],
+    "selections": [
+      "bank_story_06",
+      "remaining_controlled_01",
+      "semantic_scope_controls_05"
+    ],
+    "unique_domain_nodes": 70
+  },
+  "DEMO_VIEWER_AND_STORY": {
+    "QA": {
+      "argv": [
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "--headless=new",
+        "--disable-background-networking",
+        "--disable-component-update",
+        "--disable-sync",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--metrics-recording-only",
+        "--disable-extensions",
+        "--safebrowsing-disable-auto-update",
+        "--disable-features=MediaRouter,OptimizationHints",
+        "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost",
+        "--remote-debugging-address=127.0.0.1",
+        "--remote-debugging-port=0",
+        "--remote-allow-origins=http://localhost",
+        "--user-data-dir=/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/tmp/viewer-chrome-profile",
+        "about:blank"
+      ],
+      "browser_plugin": "NO_CONNECTED_BROWSER; discovery/troubleshooting already checked",
+      "chrome_rc": 0,
+      "networking": "PAGE_HTTP_HTTPS_WS_BLOCKED; isolated empty profile; remote transport localhost only",
+      "seconds": 7.169903332367539,
+      "source_sha256": "bc3a0e39e44587d1f37b8e2ccd87d8323cc418d8e008f1e8289bf2c3d9274462",
+      "viewports": [
+        {
+          "detail_expansion": "PASS",
+          "horizontal_overflow": false,
+          "metrics": {
+            "details": 23,
+            "externalResources": [],
+            "headings": [
+              "Testflix",
+              "Provenance",
+              "Request and semantic duties",
+              "Four independent Roots",
+              "Controlled continuation",
+              "Live and captured history",
+              "Validation and replay",
+              "Remaining obligations"
+            ],
+            "height": 6782,
+            "scrollWidth": 1440,
+            "title": "Testflix | Execution record",
+            "width": 1440
+          },
+          "viewport": "desktop"
+        },
+        {
+          "detail_expansion": "PASS",
+          "horizontal_overflow": false,
+          "metrics": {
+            "details": 23,
+            "externalResources": [],
+            "headings": [
+              "Testflix",
+              "Provenance",
+              "Request and semantic duties",
+              "Four independent Roots",
+              "Controlled continuation",
+              "Live and captured history",
+              "Validation and replay",
+              "Remaining obligations"
+            ],
+            "height": 8949,
+            "scrollWidth": 390,
+            "title": "Testflix | Execution record",
+            "width": 390
+          },
+          "viewport": "mobile"
+        }
+      ]
+    },
+    "html": "demo/story.html",
+    "json": "demo/story.json"
+  },
+  "D_E_VALIDATION_SCOPE_REPAIR": "PRIVATE_PURE_OPERATION_SCOPES; PREDICATES_AND_PUBLIC_SIGNATURES_PRESERVED",
+  "FIRST_ACTUAL_UNRESOLVED_BLOCKER": "LIVE_AB_POSITIVE_CONSUMPTION_NOT_COMPLETED: TWO_GOOGLE_504_THEN_HTTPX_READ_TIMEOUT",
+  "FULL_TESTFLIX_ACCEPTANCE": "NOT_SELF_AWARDED",
+  "LIVE_ACTUAL_CALLS_AND_ROLE_CONSUMPTION": {
+    "AB": {
+      "captured_refusal": "EXPECTED_REFUSAL_REPRODUCED",
+      "elapsed_seconds": 180.61569508351386,
+      "evidence": "captured_AB_refusal.json",
+      "model_calls": 1,
+      "positive_AB_consumption": "NOT_COMPLETED",
+      "reason": "The read operation timed out",
+      "result": "PROVIDER_504_THEN_READ_TIMEOUT"
+    },
+    "accepted_AB_roles": 5,
+    "accepted_purchase_and_renewal_roles": 8,
+    "actual_AB_review_refusal": 1,
+    "actual_missing_evidence_refusal": 1,
+    "attempts": 18,
+    "categories": {
+      "AB": 9,
+      "main": 9
+    },
+    "main": {
+      "captured_reexecution": null,
+      "clock": "LOCAL_CONTROLLED_TRUSTED_SOURCE_NOT_WALL_CLOCK_ATTESTATION",
+      "elapsed_seconds": 1174.8124952502549,
+      "manifest_hash": "8645b8e3e2e14544355e002b6fca802cfb684b4a93bcbde2cdb5441adcdcfcd2",
+      "mock_executor_calls": 23,
+      "mock_payments": 2,
+      "mode": "LIVE_CAPTURED",
+      "model_calls": 8,
+      "p04": "SEPARATE_CONTROLLED_BANK_E_EVIDENCE_NOT_REEXECUTED_BY_THIS_STORY",
+      "phases": [
+        {
+          "elapsed_seconds": 169.09600145742297,
+          "phase": "P01_HANDLE"
+        },
+        {
+          "elapsed_seconds": 8.743946875445545,
+          "phase": "P01_SEAL"
+        },
+        {
+          "elapsed_seconds": 2.7674994580447674,
+          "phase": "P02_INFORMATION"
+        },
+        {
+          "elapsed_seconds": 42.32610933389515,
+          "phase": "P03_STOP"
+        },
+        {
+          "elapsed_seconds": 51.53957387525588,
+          "phase": "P03_FRESH"
+        },
+        {
+          "elapsed_seconds": 73.56664895731956,
+          "phase": "P05_EXPIRED_STOP"
+        },
+        {
+          "elapsed_seconds": 37.13913070783019,
+          "phase": "P06_DEVICE_GRANT"
+        },
+        {
+          "elapsed_seconds": 308.6736019998789,
+          "phase": "P06_RENEW"
+        },
+        {
+          "elapsed_seconds": 161.58002362493426,
+          "phase": "RENEWED_STOP"
+        },
+        {
+          "elapsed_seconds": 185.03300749976188,
+          "phase": "RENEWED_FRESH"
+        },
+        {
+          "elapsed_seconds": 132.71199391689152,
+          "phase": "HISTORY_SEAL"
+        },
+        {
+          "elapsed_seconds": 1.1886543743312359,
+          "phase": "OFFLINE_REPLAY"
+        }
+      ],
+      "real_adapter_calls": 0,
+      "result": "PASS",
+      "roots": [
+        "bank",
+        "device",
+        "provider",
+        "user"
+      ],
+      "same_four_hosts": true,
+      "selected_plan": "plan:cd79",
+      "semantic_invocations": 8
+    },
+    "responses": 15,
+    "successful_AB_label": null,
+    "successful_AB_records": [],
+    "successful_AB_reused_records": [
+      14,
+      15
+    ],
+    "transport_failure_types": {
+      "google.genai.errors.ServerError": 2,
+      "httpx.ReadTimeout": 1
+    },
+    "transport_failures": 3
+  },
+  "N14_N15": "PASS",
+  "OWNER_APPLY_PREPARATION": "CUMULATIVE_L_PATCH_AND_V08_DELTA; READ_ONLY_APPLY_CHECK_PASS; NOT_APPLIED",
+  "OWNER_UNCHANGED": true,
+  "P01_P06_POST_RENEWAL": {
+    "four_hosts_preserved": true,
+    "main_payments": 2,
+    "result": "PASS"
+  },
+  "P04_E600_SECONDS_AND_RESULT": {
+    "E": "PASS",
+    "Root": "ACCEPT",
+    "isolated_mock_payment": 1,
+    "seconds": 318.91036683321
+  },
+  "P04_E700_SECONDS_AND_RESULT": {
+    "E": "PASS",
+    "Root": "BLOCKED_FAIL_CLOSED",
+    "new_main_payment": 0,
+    "seconds": 317.9907664163038
+  },
+  "PUSH": false,
+  "RESULT": "CONTROLLED_LIVE_MAIN_CAPTURED_COMPLETE_AB_PROVIDER_BLOCKED_FOR_REVIEW",
+  "SUPPLIED_D_E_AND_ACTUAL_CONSUMPTION": "PASS_ON_EACH_SAME_LIVE_BANK_RETURN",
+  "V08_HOST_REPAIR_PRESERVED": true,
+  "remaining": [
+    "Positive live A/B consumption not completed: two Google504 responses and then an httpx.ReadTimeout at180s after semantic contract clarification. Original disagreement and its captured refusal are preserved. No successful suffix response or effect is invented.",
+    "Independent cumulative common/domain review and admission coverage before owner landing.",
+    "Renewed-period new informational summary remains explicitly unsupported.",
+    "Whole live history remains slower than model latency: native historical validation cost is visible in phase timings.",
+    "Finite tested domains do not certify arbitrary future programs or production security."
+  ],
+  "timings": {
+    "AB": [],
+    "E600": 318.91036683321,
+    "E700": 317.9907664163038,
+    "LLM_responses": [
+      {
+        "attempt": 1,
+        "role": "intent_interpreter",
+        "seconds": 3.1421620408073068
+      },
+      {
+        "attempt": 2,
+        "role": "intent_interpreter",
+        "seconds": 3.683927374891937
+      },
+      {
+        "attempt": 3,
+        "role": "provider_terms_analyst",
+        "seconds": 8.536673083901405
+      },
+      {
+        "attempt": 4,
+        "role": "client_plan_selector",
+        "seconds": 7.177526082843542
+      },
+      {
+        "attempt": 5,
+        "role": "contract_reviewer",
+        "seconds": 4.588860999792814
+      },
+      {
+        "attempt": 6,
+        "role": "intent_interpreter",
+        "seconds": 2.1199978748336434
+      },
+      {
+        "attempt": 7,
+        "role": "provider_terms_analyst",
+        "seconds": 6.044629375450313
+      },
+      {
+        "attempt": 8,
+        "role": "client_plan_selector",
+        "seconds": 4.367176250554621
+      },
+      {
+        "attempt": 9,
+        "role": "contract_reviewer",
+        "seconds": 5.472796207293868
+      },
+      {
+        "attempt": 10,
+        "role": "intent_interpreter",
+        "seconds": 5.574007416144013
+      },
+      {
+        "attempt": 11,
+        "role": "provider_terms_analyst",
+        "seconds": 8.31859179213643
+      },
+      {
+        "attempt": 12,
+        "role": "client_plan_selector",
+        "seconds": 6.7649977914988995
+      },
+      {
+        "attempt": 13,
+        "role": "contract_reviewer",
+        "seconds": 11.942971042357385
+      },
+      {
+        "attempt": 14,
+        "role": "intent_interpreter",
+        "seconds": 2.412680458277464
+      },
+      {
+        "attempt": 15,
+        "role": "provider_terms_analyst",
+        "seconds": 11.396703000180423
+      }
+    ],
+    "bank_ten_test_process": 3626.8735970845446,
+    "canonical_D": [
+      16.791986958123744,
+      16.87628525029868
+    ],
+    "captured": [
+      {
+        "elapsed_seconds": 143.42174095846713,
+        "phase": "P01_HANDLE"
+      },
+      {
+        "elapsed_seconds": 8.637193874455988,
+        "phase": "P01_SEAL"
+      },
+      {
+        "elapsed_seconds": 2.7512572491541505,
+        "phase": "P02_INFORMATION"
+      },
+      {
+        "elapsed_seconds": 42.07198391575366,
+        "phase": "P03_STOP"
+      },
+      {
+        "elapsed_seconds": 51.38158599939197,
+        "phase": "P03_FRESH"
+      },
+      {
+        "elapsed_seconds": 73.46908674947917,
+        "phase": "P05_EXPIRED_STOP"
+      },
+      {
+        "elapsed_seconds": 36.92128587514162,
+        "phase": "P06_DEVICE_GRANT"
+      },
+      {
+        "elapsed_seconds": 288.52585762552917,
+        "phase": "P06_RENEW"
+      },
+      {
+        "elapsed_seconds": 161.13263541739434,
+        "phase": "RENEWED_STOP"
+      },
+      {
+        "elapsed_seconds": 183.06159500032663,
+        "phase": "RENEWED_FRESH"
+      },
+      {
+        "elapsed_seconds": 131.65449020825326,
+        "phase": "HISTORY_SEAL"
+      },
+      {
+        "elapsed_seconds": 1.2012038743123412,
+        "phase": "OFFLINE_REPLAY"
+      }
+    ],
+    "live": [
+      {
+        "elapsed_seconds": 169.09600145742297,
+        "phase": "P01_HANDLE"
+      },
+      {
+        "elapsed_seconds": 8.743946875445545,
+        "phase": "P01_SEAL"
+      },
+      {
+        "elapsed_seconds": 2.7674994580447674,
+        "phase": "P02_INFORMATION"
+      },
+      {
+        "elapsed_seconds": 42.32610933389515,
+        "phase": "P03_STOP"
+      },
+      {
+        "elapsed_seconds": 51.53957387525588,
+        "phase": "P03_FRESH"
+      },
+      {
+        "elapsed_seconds": 73.56664895731956,
+        "phase": "P05_EXPIRED_STOP"
+      },
+      {
+        "elapsed_seconds": 37.13913070783019,
+        "phase": "P06_DEVICE_GRANT"
+      },
+      {
+        "elapsed_seconds": 308.6736019998789,
+        "phase": "P06_RENEW"
+      },
+      {
+        "elapsed_seconds": 161.58002362493426,
+        "phase": "RENEWED_STOP"
+      },
+      {
+        "elapsed_seconds": 185.03300749976188,
+        "phase": "RENEWED_FRESH"
+      },
+      {
+        "elapsed_seconds": 132.71199391689152,
+        "phase": "HISTORY_SEAL"
+      },
+      {
+        "elapsed_seconds": 1.1886543743312359,
+        "phase": "OFFLINE_REPLAY"
+      }
+    ],
+    "remaining_57_test_process": 1568.5430773748085,
+    "supplied": {
+      "1": {
+        "D": 14.620312750339508,
+        "E": 17.004937417805195
+      },
+      "2": {
+        "D": 14.697246542200446,
+        "E": 17.107668583281338
+      }
+    }
+  }
+}

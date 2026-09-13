@@ -1,0 +1,12 @@
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[500-True]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[500-True]", "when": "call", "outcome": "passed", "duration": 0.08165787532925606}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[600-True]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[600-True]", "when": "call", "outcome": "passed", "duration": 0.08041541744023561}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[700-False]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[700-False]", "when": "call", "outcome": "passed", "duration": 0.08096095826476812}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_writeback_projection_exact_bytes_and_container_isolation_v09
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_writeback_projection_exact_bytes_and_container_isolation_v09", "when": "call", "outcome": "passed", "duration": 0.00030245818197727203}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09", "when": "call", "outcome": "passed", "duration": 5.435566457919776}
+                                                                    [100%]
+5 passed in 6.25s

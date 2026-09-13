@@ -1,0 +1,8 @@
+{
+  "stage": "live_AB_01",
+  "command_started": false,
+  "new_model_calls": 0,
+  "reason": "This launches a live provider/model request that may export task data to an unverified external destination; the user authorized live checks generally but did not specify the exact payload and destination required for sensitive egress.",
+  "instruction": "Do not bypass this rejection through a workaround or indirect execution. Continue with a safer alternative, or carry out checks to prove that the action is authorized or low risk before trying again. Complete unaffected work without asking for confirmation. Report anything that remains blocked, clarify why it was blocked by auto-review, inform the user of the risk and ask for approval.",
+  "response": "No alternate transport or execution was attempted. Verify installed SDK destination and exact outgoing data classification, then submit the same action to review with that evidence."
+}

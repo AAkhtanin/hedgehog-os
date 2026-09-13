@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/p04_v09_stage.py", line 23, in <module>
+    with MaterialMonitor(driver) as monitor, BankObservation(driver) as observer:
+                                             ~~~~~~~~~~~~~~~^^^^^^^^
+  File "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/observe_p04.py", line 145, in __enter__
+    sys.monitoring.set_local_events(self.tool,domain_lifecycle.dispatch_v01.__code__,
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        sys.monitoring.events.PY_START|sys.monitoring.events.PY_RETURN|sys.monitoring.events.PY_UNWIND)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid local event set 0x2005

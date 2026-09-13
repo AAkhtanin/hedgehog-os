@@ -1,0 +1,11 @@
+{
+  "stage": "live_AB_01",
+  "command_started": false,
+  "new_model_calls": 0,
+  "reason": "The command still sends live data and authenticated requests to Google Gemini; the detailed payload and destination assurances come from untrusted agent evidence rather than explicit user authorization for that exact sensitive egress.",
+  "evidence_presented": "AB_egress_preflight.json; installed SDK endpoint and outgoing test-data projection; user V09 broader live/A-B authorization",
+  "next_action": "Owner asked for explicit four-request approval for the exact Google endpoint/test catalog/QUALITY payload and existing Google authentication. No alternate transport, indirect execution or extra attempts are allowed without approval review.",
+  "main_live_result": "PASS: eight accepted role outputs, two mock payments, same four Hosts, full renewal/history/replay",
+  "captured_result": "PASS: exact other history fields, four explicit provenance-mode differences, zero model calls",
+  "AB_status": "NOT_RUN_PERMISSION_BLOCKED"
+}

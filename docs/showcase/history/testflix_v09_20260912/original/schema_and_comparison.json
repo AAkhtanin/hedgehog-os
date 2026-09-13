@@ -1,0 +1,34 @@
+{
+  "E700_bytes": 19664988,
+  "E700_recorded_return_bytes": "BYTE_IDENTICAL",
+  "E700_sha256": "9bb1508379324b80f3474c1c77b04eef697a2edc5aac5f0623822db8b2d3cd18",
+  "after": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_06/observation/E_01_return.json",
+  "before": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_03/observation/E_01_return.json",
+  "exact_value_differences": [],
+  "helper_sha256": "e525e3aca4a7f29f6119371838b25e766452f9730d9366767a98d30927397f03",
+  "helper_source": "/private/tmp/RADIOLARIA_TESTFLIX_T3_V04.hPce6y/input/local_schema_control.py",
+  "resolver": "EXPLICIT_LOCAL_RESOURCES_NO_NETWORK_FALLBACK",
+  "schema_controls": [
+    {
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_06/canonical_D_1.json",
+      "result": {
+        "positive": "PASS",
+        "remote_retrieval": "DISABLED_BY_EXPLICIT_REGISTRY",
+        "runtime_context_key": "REJECTED",
+        "unknown_temporal_key": "REJECTED"
+      },
+      "sha256": "bff30fbe0992d440b4c5633238144bfa8ec9631a5b5ff93cdfe5a381b3a466be"
+    },
+    {
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_06/canonical_D_2.json",
+      "result": {
+        "positive": "PASS",
+        "remote_retrieval": "DISABLED_BY_EXPLICIT_REGISTRY",
+        "runtime_context_key": "REJECTED",
+        "unknown_temporal_key": "REJECTED"
+      },
+      "sha256": "6479c2c9fd568896003bf9ea34d4edb7e88f208f6c4c6c7158a48e619b65ba5e"
+    }
+  ],
+  "scope": "SERIALIZED_EVIDENCE_ONLY_NOT_A_FRESH_HOST_OR_SUPPLIED_RUNTIME_VALIDATION"
+}

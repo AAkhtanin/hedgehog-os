@@ -1,0 +1,29 @@
+[
+  {
+    "argv": [
+      "git",
+      "--no-optional-locks",
+      "apply",
+      "--check",
+      "--whitespace=error-all",
+      "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/owner_apply/cumulative_L.patch"
+    ],
+    "cwd": "/Users/admin/Projects/hedgehog-os",
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "--no-optional-locks",
+      "apply",
+      "--stat",
+      "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/owner_apply/cumulative_L.patch"
+    ],
+    "cwd": "/Users/admin/Projects/hedgehog-os",
+    "rc": 0,
+    "stdout": " demo/run_fractal_runtime_g2_d_v02.py               |    2 \n demo/run_kernel_conformance_v01.py                 |    2 \n demo/run_testflix_v01.py                           |  138 +\n demo/testflix_fixtures_v01.json                    |   24 \n ..._action_and_dynamic_composition_contract_v01.md |   57 +\n ...1_g2_e_post_acceptance_contract_addendum_v01.md |   68 +\n ...2_g2_d_post_acceptance_contract_addendum_v01.md |  108 +\n docs/testflix_v01_preflight.md                     |  478 +++++\n hedgehog/domains/testflix/__init__.py              |    1 \n hedgehog/domains/testflix/contracts_v01.py         |  334 +++\n hedgehog/domains/testflix/demo_story_v01.py        |  110 +\n hedgehog/domains/testflix/evidence_v01.py          | 1448 ++++++++++++++\n hedgehog/domains/testflix/kernel_adapter_v01.py    |  645 ++++++\n hedgehog/domains/testflix/lifecycle_v01.py         |  281 +++\n .../domains/testflix/live_semantic_adapter_v01.py  |  132 +\n hedgehog/domains/testflix/mock_world_v01.py        |  177 ++\n hedgehog/domains/testflix/semantic_adapter_v01.py  |   86 +\n hedgehog/domains/testflix/semantic_roles_v01.py    |  180 ++\n hedgehog/domains/testflix/viewer_v01.py            |   69 +\n hedgehog/kernel/continuous_delta_runtime_v01.py    |  995 +++++-----\n hedgehog/kernel/fractal_runtime_v02.py             | 2055 ++++++++++++++------\n hedgehog/kernel/transition_registry_v01.py         |   65 +\n hedgehog/work_execution_host_v01.py                |  252 ++\n schemas/fractal_runtime_v02.schema.json            |   27 \n tests/test_action_packet_portability_v01.py        |  105 +\n tests/test_continuous_delta_runtime_g2_e_v01.py    |  532 +++++\n tests/test_fractal_runtime_g2_d_v02.py             |  394 ++++\n tests/test_testflix_causal_runtime_v01.py          |  267 +++\n tests/test_testflix_contracts_v01.py               |   74 +\n tests/test_testflix_evidence_v01.py                |  518 +++++\n tests/test_testflix_lifecycle_v01.py               |  285 +++\n tests/test_testflix_root_review_v09.py             |   75 +\n tests/test_testflix_semantic_roles_v01.py          |  107 +\n tests/test_transition_registry_v01.py              |   57 +\n tests/test_work_composition_v01.py                 |  218 ++\n 35 files changed, 9280 insertions(+), 1086 deletions(-)\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,2 @@
+usage: run_focused.py [-h] --evidence EVIDENCE
+run_focused.py: error: the following arguments are required: --evidence

@@ -1,0 +1,67 @@
+{
+  "demo/run_testflix_v01.py": {
+    "bytes": 6275,
+    "lf": 101,
+    "sha256": "9e1a51dc04737d2fbf37941006e2bbea95930b6533e11e217afb49e81e39bbc4"
+  },
+  "hedgehog/domains/testflix/evidence_v01.py": {
+    "bytes": 116715,
+    "lf": 1420,
+    "sha256": "7d6967878c288daa32565d300fe0a71ac66f033c44a47e00cdd10edfb35cef12"
+  },
+  "hedgehog/domains/testflix/kernel_adapter_v01.py": {
+    "bytes": 61196,
+    "lf": 645,
+    "sha256": "895a4c459c98b85309ce85360896d2e68a6e155ec8c6254f0ceba064e294c1a3"
+  },
+  "hedgehog/domains/testflix/lifecycle_v01.py": {
+    "bytes": 27204,
+    "lf": 281,
+    "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+  },
+  "hedgehog/kernel/continuous_delta_runtime_v01.py": {
+    "bytes": 552238,
+    "lf": 13446,
+    "sha256": "cd548fce5e618f8e553cafcd97d1a82d338450625f1531dc7132a575737bf00b"
+  },
+  "hedgehog/kernel/fractal_runtime_v02.py": {
+    "bytes": 943750,
+    "lf": 20439,
+    "sha256": "d2e24c22163092b0c2957a7232fa9b94e61ed29ddc7e9f1e57e466ba2892d043"
+  },
+  "hedgehog/work_execution_host_v01.py": {
+    "bytes": 52262,
+    "lf": 978,
+    "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+  },
+  "tests/test_continuous_delta_runtime_g2_e_v01.py": {
+    "bytes": 752380,
+    "lf": 17485,
+    "sha256": "3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d"
+  },
+  "tests/test_fractal_runtime_g2_d_v02.py": {
+    "bytes": 608700,
+    "lf": 13922,
+    "sha256": "9904e957722c2ee1a6aa237110d960f59c45e5170f764284a2e5e846476a62c8"
+  },
+  "tests/test_testflix_causal_runtime_v01.py": {
+    "bytes": 16215,
+    "lf": 267,
+    "sha256": "2966f0c9ca5882c5550cc746b89556c1171f17a599631d6df87c5a9f3e692c58"
+  },
+  "tests/test_testflix_evidence_v01.py": {
+    "bytes": 36280,
+    "lf": 493,
+    "sha256": "d0f8d669130f529b2f93a6c88fdbdee617f95be3427eb1fd6ce57778067d2823"
+  },
+  "tests/test_testflix_lifecycle_v01.py": {
+    "bytes": 19983,
+    "lf": 285,
+    "sha256": "8516d0ef6fc1f781f2338e274271c6fd9cfc12e76d755892b8152bd4713af286"
+  },
+  "tests/test_work_composition_v01.py": {
+    "bytes": 127448,
+    "lf": 1722,
+    "sha256": "62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c"
+  }
+}

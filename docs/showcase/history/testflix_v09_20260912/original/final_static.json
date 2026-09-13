@@ -1,0 +1,102 @@
+{
+  "CLI": [
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/demo/run_testflix_v01.py",
+        "--help"
+      ],
+      "rc": 0,
+      "stderr": "",
+      "stdout": "usage: run_testflix_v01.py [-h]\n                           {deterministic,history,renewal,replay,live,captured,render} ...\n\npositional arguments:\n  {deterministic,history,renewal,replay,live,captured,render}\n\noptions:\n  -h, --help            show this help message and exit\n"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/demo/run_testflix_v01.py",
+        "live",
+        "--help"
+      ],
+      "rc": 0,
+      "stderr": "",
+      "stdout": "usage: run_testflix_v01.py live [-h] --input INPUT --output OUTPUT [--renewal]\n                                --captures CAPTURES [--config CONFIG]\n                                [--category {main,AB}]\n\noptions:\n  -h, --help            show this help message and exit\n  --input INPUT\n  --output OUTPUT\n  --renewal\n  --captures CAPTURES\n  --config CONFIG\n  --category {main,AB}\n"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/demo/run_testflix_v01.py",
+        "captured",
+        "--help"
+      ],
+      "rc": 0,
+      "stderr": "",
+      "stdout": "usage: run_testflix_v01.py captured [-h] --input INPUT --output OUTPUT\n                                    [--renewal]\n                                    --semantic-records SEMANTIC_RECORDS\n\noptions:\n  -h, --help            show this help message and exit\n  --input INPUT\n  --output OUTPUT\n  --renewal\n  --semantic-records SEMANTIC_RECORDS\n"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/demo/run_testflix_v01.py",
+        "render",
+        "--input",
+        "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/demo/story.json",
+        "--output",
+        "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/demo/story_cli.html"
+      ],
+      "rc": 0,
+      "stderr": "",
+      "stdout": "{\"output\": \"/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/demo/story_cli.html\", \"provider_calls\": 0, \"real_adapter_calls\": 0}\n"
+    }
+  ],
+  "D_E_runtime_calls": 0,
+  "common_public_surface": {
+    "hedgehog/kernel/continuous_delta_runtime_v01.py": {
+      "public_functions": 95,
+      "same_names_and_signatures_as_V08": true
+    },
+    "hedgehog/kernel/fractal_runtime_v02.py": {
+      "public_functions": 137,
+      "same_names_and_signatures_as_V08": true
+    },
+    "hedgehog/work_execution_host_v01.py": {
+      "public_functions": 13,
+      "same_names_and_signatures_as_V08": true
+    }
+  },
+  "compiled": [
+    "demo/run_fractal_runtime_g2_d_v02.py",
+    "demo/run_kernel_conformance_v01.py",
+    "demo/run_testflix_v01.py",
+    "hedgehog/domains/testflix/__init__.py",
+    "hedgehog/domains/testflix/contracts_v01.py",
+    "hedgehog/domains/testflix/demo_story_v01.py",
+    "hedgehog/domains/testflix/evidence_v01.py",
+    "hedgehog/domains/testflix/kernel_adapter_v01.py",
+    "hedgehog/domains/testflix/lifecycle_v01.py",
+    "hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+    "hedgehog/domains/testflix/mock_world_v01.py",
+    "hedgehog/domains/testflix/semantic_adapter_v01.py",
+    "hedgehog/domains/testflix/semantic_roles_v01.py",
+    "hedgehog/domains/testflix/viewer_v01.py",
+    "hedgehog/kernel/continuous_delta_runtime_v01.py",
+    "hedgehog/kernel/fractal_runtime_v02.py",
+    "hedgehog/kernel/transition_registry_v01.py",
+    "hedgehog/work_execution_host_v01.py",
+    "tests/test_action_packet_portability_v01.py",
+    "tests/test_continuous_delta_runtime_g2_e_v01.py",
+    "tests/test_fractal_runtime_g2_d_v02.py",
+    "tests/test_testflix_causal_runtime_v01.py",
+    "tests/test_testflix_contracts_v01.py",
+    "tests/test_testflix_evidence_v01.py",
+    "tests/test_testflix_lifecycle_v01.py",
+    "tests/test_testflix_root_review_v09.py",
+    "tests/test_testflix_semantic_roles_v01.py",
+    "tests/test_transition_registry_v01.py",
+    "tests/test_work_composition_v01.py"
+  ],
+  "model_calls": 0,
+  "public_render_byte_parity": true
+}

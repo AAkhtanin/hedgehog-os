@@ -1,0 +1,1964 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Testflix | Execution record</title><style>*{box-sizing:border-box}body{margin:0;color:#20272d;background:#fff;font:14px/1.5 system-ui,sans-serif}header,main,footer{max-width:1180px;margin:auto;padding:24px}header{border-bottom:3px solid #227654}h1{font-size:30px;margin:0}h2{font-size:20px;margin:0 0 12px}h3{font-size:16px}section{padding:24px 0;border-bottom:1px solid #d6dce0}p{max-width:88ch}.table{overflow-x:auto}table{border-collapse:collapse;width:100%;table-layout:fixed}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #d6dce0;padding:10px;overflow-wrap:anywhere;white-space:pre-wrap}th{background:#edf2f4}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.5 ui-monospace,monospace}summary{cursor:pointer;color:#195c8d;padding:10px 0}footer{color:#535f66}.status{font-weight:600;color:#227654}.pending{color:#9a3a22}@media(max-width:600px){header,main,footer{padding:16px}h1{font-size:26px}th,td{padding:7px;font-size:12px}}</style><header><h1>Testflix</h1><p>Execution record | 2026-09-12T20:36:54.797531+00:00</p><p class="status">Controlled story complete. Live main and captured history complete; live A/B not completed. Independent review pending.</p></header><main><section><h2>Provenance</h2><p>Model transport, controlled catalog/time, mock business execution and offline replay are separate evidence lanes. No Root permission is inferred from a capture or a previous result.</p><div class="table"><table><thead><tr><th>Evidence</th><th>Actual result</th></tr></thead><tbody><tr><td>Controlled fixture</td><td>{
+  &quot;phases&quot;: 30,
+  &quot;result&quot;: &quot;PASS&quot;,
+  &quot;source&quot;: &quot;bank_story_06&quot;,
+  &quot;tests&quot;: 10
+}</td></tr><tr><td>Real model transport</td><td>{
+  &quot;attempts&quot;: 18,
+  &quot;saved_responses&quot;: 15
+}</td></tr><tr><td>Business effects</td><td>Mocks only; no physical device or real purchase adapter</td></tr><tr><td>Host clock</td><td>Local controlled trusted source, not external clock attestation</td></tr><tr><td>Main history payments</td><td>2</td></tr><tr><td>Common material checks</td><td>{
+  &quot;Bank_E&quot;: {
+    &quot;600&quot;: {
+      &quot;full_material&quot;: 32,
+      &quot;registry_core&quot;: 46,
+      &quot;scope&quot;: 15342
+    },
+    &quot;700&quot;: {
+      &quot;full_material&quot;: 32,
+      &quot;registry_core&quot;: 46,
+      &quot;scope&quot;: 15342
+    }
+  },
+  &quot;actual_scope_reuse_hits&quot;: 47843,
+  &quot;unsupported&quot;: 0
+}</td></tr></tbody></table></div></section><section><h2>Request and semantic duties</h2><div class="table"><table><thead><tr><th>Branch</th><th>Request</th><th>Consumed plan</th></tr></thead><tbody><tr><td>live_main_02</td><td>{
+  &quot;currency&quot;: &quot;EUR&quot;,
+  &quot;hard_ceiling_minor&quot;: 650,
+  &quot;preference&quot;: &quot;AD_FREE&quot;
+}</td><td>{
+  &quot;ads&quot;: false,
+  &quot;period_seconds&quot;: 2592000,
+  &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+  &quot;price_minor&quot;: 500,
+  &quot;resolution&quot;: 720
+}</td></tr><tr><td>captured_main_01</td><td>{
+  &quot;currency&quot;: &quot;EUR&quot;,
+  &quot;hard_ceiling_minor&quot;: 650,
+  &quot;preference&quot;: &quot;AD_FREE&quot;
+}</td><td>{
+  &quot;ads&quot;: false,
+  &quot;period_seconds&quot;: 2592000,
+  &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+  &quot;price_minor&quot;: 500,
+  &quot;resolution&quot;: 720
+}</td></tr><tr><td>live_AB_01</td><td>{
+  &quot;currency&quot;: &quot;EUR&quot;,
+  &quot;hard_ceiling_minor&quot;: 650,
+  &quot;preference&quot;: &quot;QUALITY&quot;
+}</td><td>{
+  &quot;issued_entitlement&quot;: false,
+  &quot;proposed_plan&quot;: &quot;plan:ab31&quot;
+}</td></tr></tbody></table></div><h3>live_main_02: purchase</h3><details><summary>intent_interpreter</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:040b8267cc52093fd22eb875371965fa923a29e4751049cbfb760c797ed70069&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:826e91ac63d8508d83caac6d9708f7d691d90a8eff8803fda517ae249924f1dd&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:73bff9ad64316315915de8d6381b3ffa50a11acf7a314ab706928049a29cdaf9&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:93529f99487e2ceb82e680f35f545c8b0f8227b7cf6cffd8e0dd6af648eb7015&quot;,
+    &quot;role&quot;: &quot;intent_interpreter&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 2,
+      &quot;elapsed_seconds&quot;: 3.683927374891937,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;preference\&quot;: \&quot;AD_FREE\&quot;,\n  \&quot;priorities\&quot;: [\n    \&quot;Ad-free viewing\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;summary\&quot;: \&quot;The user&#x27;s explicit preference is for an ad-free Testflix subscription, indicating a desire to avoid advertisements during content consumption.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:25:39.036025+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    }
+  },
+  &quot;output&quot;: {
+    &quot;missing_evidence&quot;: [],
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;priorities&quot;: [
+      &quot;Ad-free viewing&quot;
+    ],
+    &quot;summary&quot;: &quot;The user&#x27;s explicit preference is for an ad-free Testflix subscription, indicating a desire to avoid advertisements during content consumption.&quot;
+  }
+}</pre></details><details><summary>provider_terms_analyst</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:be77e03fd9f096502953be946baf112187112d21a970fcb651e8561959302e1e&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:3a8cbc8bb6e293fa6fdce989ed153e67d2fdf6ce8e053454c66b1db2f3d3734c&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:73bff9ad64316315915de8d6381b3ffa50a11acf7a314ab706928049a29cdaf9&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:cef11c7a85703e85536d781057404f20d20cbd5074d8a7a2a1f2467d0d8b596e&quot;,
+    &quot;role&quot;: &quot;provider_terms_analyst&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 3,
+      &quot;elapsed_seconds&quot;: 8.536673083901405,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;terms\&quot;: [\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:cd79\&quot;,\n      \&quot;price_minor\&quot;: 500,\n      \&quot;resolution\&quot;: 720,\n      \&quot;ads\&quot;: false,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: true\n    },\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:ab31\&quot;,\n      \&quot;price_minor\&quot;: 600,\n      \&quot;resolution\&quot;: 1080,\n      \&quot;ads\&quot;: true,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: true\n    },\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:ef62\&quot;,\n      \&quot;price_minor\&quot;: 900,\n      \&quot;resolution\&quot;: 2160,\n      \&quot;ads\&quot;: false,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: false\n    }\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;summary\&quot;: \&quot;The user explicitly prefers an AD_FREE subscription. Analyzing the catalog against this preference and a hard ceiling of 650 minor currency units, plan:cd79 (500 minor units, 720p, ad-free) is the only eligible option that satisfies the ad-free preference and budget. Plan:ef62 is ad-free but exceeds the budget. Plan:ab31 is within budget but includes ads.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:25:42.723463+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:040b8267cc52093fd22eb875371965fa923a29e4751049cbfb760c797ed70069&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;AD_FREE&quot;,
+          &quot;priorities&quot;: [
+            &quot;Ad-free viewing&quot;
+          ],
+          &quot;summary&quot;: &quot;The user&#x27;s explicit preference is for an ad-free Testflix subscription, indicating a desire to avoid advertisements during content consumption.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;missing_evidence&quot;: [],
+    &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE subscription. Analyzing the catalog against this preference and a hard ceiling of 650 minor currency units, plan:cd79 (500 minor units, 720p, ad-free) is the only eligible option that satisfies the ad-free preference and budget. Plan:ef62 is ad-free but exceeds the budget. Plan:ab31 is within budget but includes ads.&quot;,
+    &quot;terms&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;eligible&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;eligible&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;eligible&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ]
+  }
+}</pre></details><details><summary>client_plan_selector</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:3bd87719d418c44e98cec7ef74942de7a12e17616973a70ce1c4466c308d0bb3&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:dfc1187d508c2d0493b7cad3667e26289c0a9aafc64742968bf865744943afc9&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:73bff9ad64316315915de8d6381b3ffa50a11acf7a314ab706928049a29cdaf9&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:7580d4d7bd2633cb1bd6bd04d3e1871fc7413f1918ec9a61955af42018de2ad5&quot;,
+    &quot;role&quot;: &quot;client_plan_selector&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 4,
+      &quot;elapsed_seconds&quot;: 7.177526082843542,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;selected_plan_id\&quot;: \&quot;plan:cd79\&quot;,\n  \&quot;decision_factors\&quot;: [\n    \&quot;User explicitly prefers an AD_FREE plan.\&quot;,\n    \&quot;The budget hard ceiling is 650 minor currency units.\&quot;,\n    \&quot;Plan &#x27;plan:cd79&#x27; is ad-free and costs 500 minor units, which is within the budget.\&quot;,\n    \&quot;Plan &#x27;plan:ab31&#x27; includes ads, violating the AD_FREE preference.\&quot;,\n    \&quot;Plan &#x27;plan:ef62&#x27; is ad-free but costs 900 minor units, exceeding the budget.\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: []\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:25:51.263721+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:040b8267cc52093fd22eb875371965fa923a29e4751049cbfb760c797ed70069&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;AD_FREE&quot;,
+          &quot;priorities&quot;: [
+            &quot;Ad-free viewing&quot;
+          ],
+          &quot;summary&quot;: &quot;The user&#x27;s explicit preference is for an ad-free Testflix subscription, indicating a desire to avoid advertisements during content consumption.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:be77e03fd9f096502953be946baf112187112d21a970fcb651e8561959302e1e&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE subscription. Analyzing the catalog against this preference and a hard ceiling of 650 minor currency units, plan:cd79 (500 minor units, 720p, ad-free) is the only eligible option that satisfies the ad-free preference and budget. Plan:ef62 is ad-free but exceeds the budget. Plan:ab31 is within budget but includes ads.&quot;,
+          &quot;terms&quot;: [
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+              &quot;price_minor&quot;: 500,
+              &quot;resolution&quot;: 720
+            },
+            {
+              &quot;ads&quot;: true,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+              &quot;price_minor&quot;: 600,
+              &quot;resolution&quot;: 1080
+            },
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: false,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+              &quot;price_minor&quot;: 900,
+              &quot;resolution&quot;: 2160
+            }
+          ]
+        },
+        &quot;role&quot;: &quot;provider_terms_analyst&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;decision_factors&quot;: [
+      &quot;User explicitly prefers an AD_FREE plan.&quot;,
+      &quot;The budget hard ceiling is 650 minor currency units.&quot;,
+      &quot;Plan &#x27;plan:cd79&#x27; is ad-free and costs 500 minor units, which is within the budget.&quot;,
+      &quot;Plan &#x27;plan:ab31&#x27; includes ads, violating the AD_FREE preference.&quot;,
+      &quot;Plan &#x27;plan:ef62&#x27; is ad-free but costs 900 minor units, exceeding the budget.&quot;
+    ],
+    &quot;missing_evidence&quot;: [],
+    &quot;selected_plan_id&quot;: &quot;plan:cd79&quot;
+  }
+}</pre></details><details><summary>contract_reviewer</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:53f3bcf217e448eabfea42bdc16a08337e3548040a9faa0e5b4c97064895f25d&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:9006556691e139d30f61e029cec37c70c1cce6daa1b46ee9bfb9c57679a524d6&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:73bff9ad64316315915de8d6381b3ffa50a11acf7a314ab706928049a29cdaf9&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:fbf5d3b97bf78d0ee3642b0dd4d81efe33d000fbb728da95049b4fe44917b5e9&quot;,
+    &quot;role&quot;: &quot;contract_reviewer&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 5,
+      &quot;elapsed_seconds&quot;: 4.588860999792814,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;supports_selection\&quot;: true,\n  \&quot;blocking_conflicts\&quot;: [],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;reason\&quot;: \&quot;The selected plan &#x27;plan:cd79&#x27; is ad-free, aligning with the explicit &#x27;AD_FREE&#x27; preference. Its price of 500 minor currency units is within the hard ceiling of 650 minor currency units. All upstream components consistently support this selection.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:25:58.444429+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:040b8267cc52093fd22eb875371965fa923a29e4751049cbfb760c797ed70069&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;AD_FREE&quot;,
+          &quot;priorities&quot;: [
+            &quot;Ad-free viewing&quot;
+          ],
+          &quot;summary&quot;: &quot;The user&#x27;s explicit preference is for an ad-free Testflix subscription, indicating a desire to avoid advertisements during content consumption.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:be77e03fd9f096502953be946baf112187112d21a970fcb651e8561959302e1e&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE subscription. Analyzing the catalog against this preference and a hard ceiling of 650 minor currency units, plan:cd79 (500 minor units, 720p, ad-free) is the only eligible option that satisfies the ad-free preference and budget. Plan:ef62 is ad-free but exceeds the budget. Plan:ab31 is within budget but includes ads.&quot;,
+          &quot;terms&quot;: [
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+              &quot;price_minor&quot;: 500,
+              &quot;resolution&quot;: 720
+            },
+            {
+              &quot;ads&quot;: true,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+              &quot;price_minor&quot;: 600,
+              &quot;resolution&quot;: 1080
+            },
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: false,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+              &quot;price_minor&quot;: 900,
+              &quot;resolution&quot;: 2160
+            }
+          ]
+        },
+        &quot;role&quot;: &quot;provider_terms_analyst&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:3bd87719d418c44e98cec7ef74942de7a12e17616973a70ce1c4466c308d0bb3&quot;,
+        &quot;output&quot;: {
+          &quot;decision_factors&quot;: [
+            &quot;User explicitly prefers an AD_FREE plan.&quot;,
+            &quot;The budget hard ceiling is 650 minor currency units.&quot;,
+            &quot;Plan &#x27;plan:cd79&#x27; is ad-free and costs 500 minor units, which is within the budget.&quot;,
+            &quot;Plan &#x27;plan:ab31&#x27; includes ads, violating the AD_FREE preference.&quot;,
+            &quot;Plan &#x27;plan:ef62&#x27; is ad-free but costs 900 minor units, exceeding the budget.&quot;
+          ],
+          &quot;missing_evidence&quot;: [],
+          &quot;selected_plan_id&quot;: &quot;plan:cd79&quot;
+        },
+        &quot;role&quot;: &quot;client_plan_selector&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;blocking_conflicts&quot;: [],
+    &quot;missing_evidence&quot;: [],
+    &quot;reason&quot;: &quot;The selected plan &#x27;plan:cd79&#x27; is ad-free, aligning with the explicit &#x27;AD_FREE&#x27; preference. Its price of 500 minor currency units is within the hard ceiling of 650 minor currency units. All upstream components consistently support this selection.&quot;,
+    &quot;supports_selection&quot;: true
+  }
+}</pre></details><h3>live_main_02: renewal</h3><details><summary>intent_interpreter</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:3a0c5c51b9eac341befea998867bf4cfcc3465946cd44972a477a3fac94f5707&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:b53e4dde33603b4269f2fc29c288d10843ab53a0c1ffe4603955b94615348f1a&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:779e62bd0d942a9e8a416e8a221e84eaa9c45cf22b1fe401474236dcf9181e8d&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:be23bfdd75ff88caa0f4e722a658d659b18e0596817561979971756234ad2024&quot;,
+    &quot;role&quot;: &quot;intent_interpreter&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 6,
+      &quot;elapsed_seconds&quot;: 2.1199978748336434,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;preference\&quot;: \&quot;AD_FREE\&quot;,\n  \&quot;priorities\&quot;: [\n    \&quot;Ad-free viewing\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;summary\&quot;: \&quot;The user explicitly prefers an AD_FREE Testflix subscription. This indicates a priority for uninterrupted viewing without advertisements.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:32:04.258006+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 700,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f:demo-explicit-700&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    }
+  },
+  &quot;output&quot;: {
+    &quot;missing_evidence&quot;: [],
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;priorities&quot;: [
+      &quot;Ad-free viewing&quot;
+    ],
+    &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. This indicates a priority for uninterrupted viewing without advertisements.&quot;
+  }
+}</pre></details><details><summary>provider_terms_analyst</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:aba413036b713fc6a4c49c50523265039662f52482da1973d6d7679a3a90fa02&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:cd16d8d316d7e4e64965f7dd024fdd0bfc19929b64b69ed7a6427604ed3eb033&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:779e62bd0d942a9e8a416e8a221e84eaa9c45cf22b1fe401474236dcf9181e8d&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:ea7e1313b72ad790641ab2a306cfe437c262ee0f00cb91f59b7d16e56d411723&quot;,
+    &quot;role&quot;: &quot;provider_terms_analyst&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 7,
+      &quot;elapsed_seconds&quot;: 6.044629375450313,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;terms\&quot;: [\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:cd79\&quot;,\n      \&quot;price_minor\&quot;: 700,\n      \&quot;resolution\&quot;: 720,\n      \&quot;ads\&quot;: false,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: true\n    },\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:ab31\&quot;,\n      \&quot;price_minor\&quot;: 600,\n      \&quot;resolution\&quot;: 1080,\n      \&quot;ads\&quot;: true,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: true\n    },\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:ef62\&quot;,\n      \&quot;price_minor\&quot;: 900,\n      \&quot;resolution\&quot;: 2160,\n      \&quot;ads\&quot;: false,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: false\n    }\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;summary\&quot;: \&quot;The user explicitly prefers an AD_FREE Testflix subscription. Plan:cd79 is ad-free and within the 700 minor currency unit price ceiling. Plan:ab31 is within the price ceiling but includes ads. Plan:ef62 is ad-free but exceeds the price ceiling.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:32:06.380910+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 700,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 700,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f:demo-explicit-700&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:3a0c5c51b9eac341befea998867bf4cfcc3465946cd44972a477a3fac94f5707&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;AD_FREE&quot;,
+          &quot;priorities&quot;: [
+            &quot;Ad-free viewing&quot;
+          ],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. This indicates a priority for uninterrupted viewing without advertisements.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;missing_evidence&quot;: [],
+    &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. Plan:cd79 is ad-free and within the 700 minor currency unit price ceiling. Plan:ab31 is within the price ceiling but includes ads. Plan:ef62 is ad-free but exceeds the price ceiling.&quot;,
+    &quot;terms&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;eligible&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 700,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;eligible&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;eligible&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ]
+  }
+}</pre></details><details><summary>client_plan_selector</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:7e003d60788f463303607c7b84d0c122e413e568feeed5c99b4cc9cb31411e43&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:76f075fff942386f58056e38043ff9cfc5b47eb7ddd1c500542b248d3d0a6ee1&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:779e62bd0d942a9e8a416e8a221e84eaa9c45cf22b1fe401474236dcf9181e8d&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:d18955c85232c6c470975b9c466e0e9fd00596a53abd8c06da969902ae95d711&quot;,
+    &quot;role&quot;: &quot;client_plan_selector&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 8,
+      &quot;elapsed_seconds&quot;: 4.367176250554621,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;selected_plan_id\&quot;: \&quot;plan:cd79\&quot;,\n  \&quot;decision_factors\&quot;: [\n    \&quot;The user explicitly preferred an AD_FREE subscription.\&quot;,\n    \&quot;Plan:cd79 is ad-free and priced at 700 minor currency units, which is within the specified hard ceiling of 700.\&quot;,\n    \&quot;Plan:ab31 was affordable but included ads, which conflicts with the AD_FREE preference.\&quot;,\n    \&quot;Plan:ef62 was ad-free but exceeded the hard ceiling price.\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: []\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:32:12.429423+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 700,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 700,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f:demo-explicit-700&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:3a0c5c51b9eac341befea998867bf4cfcc3465946cd44972a477a3fac94f5707&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;AD_FREE&quot;,
+          &quot;priorities&quot;: [
+            &quot;Ad-free viewing&quot;
+          ],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. This indicates a priority for uninterrupted viewing without advertisements.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:aba413036b713fc6a4c49c50523265039662f52482da1973d6d7679a3a90fa02&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. Plan:cd79 is ad-free and within the 700 minor currency unit price ceiling. Plan:ab31 is within the price ceiling but includes ads. Plan:ef62 is ad-free but exceeds the price ceiling.&quot;,
+          &quot;terms&quot;: [
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+              &quot;price_minor&quot;: 700,
+              &quot;resolution&quot;: 720
+            },
+            {
+              &quot;ads&quot;: true,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+              &quot;price_minor&quot;: 600,
+              &quot;resolution&quot;: 1080
+            },
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: false,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+              &quot;price_minor&quot;: 900,
+              &quot;resolution&quot;: 2160
+            }
+          ]
+        },
+        &quot;role&quot;: &quot;provider_terms_analyst&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;decision_factors&quot;: [
+      &quot;The user explicitly preferred an AD_FREE subscription.&quot;,
+      &quot;Plan:cd79 is ad-free and priced at 700 minor currency units, which is within the specified hard ceiling of 700.&quot;,
+      &quot;Plan:ab31 was affordable but included ads, which conflicts with the AD_FREE preference.&quot;,
+      &quot;Plan:ef62 was ad-free but exceeded the hard ceiling price.&quot;
+    ],
+    &quot;missing_evidence&quot;: [],
+    &quot;selected_plan_id&quot;: &quot;plan:cd79&quot;
+  }
+}</pre></details><details><summary>contract_reviewer</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:7c433fcbd37d62d4dbe74da7d95a4cce363d79e3014b1290533b423d26d5dc18&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:3beaca0481b9c4349b0179add2a77b1422987f4b43de2e07ecd65b004cdd8eec&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:779e62bd0d942a9e8a416e8a221e84eaa9c45cf22b1fe401474236dcf9181e8d&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:91cb17878c41bd54e7ec800bbaacc92deeef2adac2f70691da867737548d2f22&quot;,
+    &quot;role&quot;: &quot;contract_reviewer&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 9,
+      &quot;elapsed_seconds&quot;: 5.472796207293868,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;supports_selection\&quot;: true,\n  \&quot;blocking_conflicts\&quot;: [],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;reason\&quot;: \&quot;The selected plan &#x27;plan:cd79&#x27; is ad-free, aligning with the &#x27;AD_FREE&#x27; preference, and its price of 700 minor currency units is within the specified hard ceiling of 700 minor currency units.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T19:32:16.800923+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 700,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 700,
+    &quot;preference&quot;: &quot;AD_FREE&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f:demo-explicit-700&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:3a0c5c51b9eac341befea998867bf4cfcc3465946cd44972a477a3fac94f5707&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;AD_FREE&quot;,
+          &quot;priorities&quot;: [
+            &quot;Ad-free viewing&quot;
+          ],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. This indicates a priority for uninterrupted viewing without advertisements.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:aba413036b713fc6a4c49c50523265039662f52482da1973d6d7679a3a90fa02&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;summary&quot;: &quot;The user explicitly prefers an AD_FREE Testflix subscription. Plan:cd79 is ad-free and within the 700 minor currency unit price ceiling. Plan:ab31 is within the price ceiling but includes ads. Plan:ef62 is ad-free but exceeds the price ceiling.&quot;,
+          &quot;terms&quot;: [
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+              &quot;price_minor&quot;: 700,
+              &quot;resolution&quot;: 720
+            },
+            {
+              &quot;ads&quot;: true,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+              &quot;price_minor&quot;: 600,
+              &quot;resolution&quot;: 1080
+            },
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: false,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+              &quot;price_minor&quot;: 900,
+              &quot;resolution&quot;: 2160
+            }
+          ]
+        },
+        &quot;role&quot;: &quot;provider_terms_analyst&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:7e003d60788f463303607c7b84d0c122e413e568feeed5c99b4cc9cb31411e43&quot;,
+        &quot;output&quot;: {
+          &quot;decision_factors&quot;: [
+            &quot;The user explicitly preferred an AD_FREE subscription.&quot;,
+            &quot;Plan:cd79 is ad-free and priced at 700 minor currency units, which is within the specified hard ceiling of 700.&quot;,
+            &quot;Plan:ab31 was affordable but included ads, which conflicts with the AD_FREE preference.&quot;,
+            &quot;Plan:ef62 was ad-free but exceeded the hard ceiling price.&quot;
+          ],
+          &quot;missing_evidence&quot;: [],
+          &quot;selected_plan_id&quot;: &quot;plan:cd79&quot;
+        },
+        &quot;role&quot;: &quot;client_plan_selector&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;blocking_conflicts&quot;: [],
+    &quot;missing_evidence&quot;: [],
+    &quot;reason&quot;: &quot;The selected plan &#x27;plan:cd79&#x27; is ad-free, aligning with the &#x27;AD_FREE&#x27; preference, and its price of 700 minor currency units is within the specified hard ceiling of 700 minor currency units.&quot;,
+    &quot;supports_selection&quot;: true
+  }
+}</pre></details><h3>Live A/B: actual role disagreement; no action</h3><details><summary>intent_interpreter</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:f69de96bf38fee2275b42aa2bd364e81b505bbe03409621b9c1b934004688c0b&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:8a128b12d0dc78d3bcbc9cd34d76f90f65cfcc51f5a746082d6aca80ce2518f2&quot;,
+    &quot;role&quot;: &quot;intent_interpreter&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 10,
+      &quot;elapsed_seconds&quot;: 5.574007416144013,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;preference\&quot;: \&quot;QUALITY\&quot;,\n  \&quot;priorities\&quot;: [\n    \&quot;High resolution streaming\&quot;,\n    \&quot;Ad-free experience\&quot;,\n    \&quot;Premium content access\&quot;,\n    \&quot;Multiple simultaneous streams\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;summary\&quot;: \&quot;The user explicitly prefers &#x27;QUALITY&#x27; for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T20:16:44.200197+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;QUALITY&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    }
+  },
+  &quot;output&quot;: {
+    &quot;missing_evidence&quot;: [],
+    &quot;preference&quot;: &quot;QUALITY&quot;,
+    &quot;priorities&quot;: [
+      &quot;High resolution streaming&quot;,
+      &quot;Ad-free experience&quot;,
+      &quot;Premium content access&quot;,
+      &quot;Multiple simultaneous streams&quot;
+    ],
+    &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27; for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household.&quot;
+  }
+}</pre></details><details><summary>provider_terms_analyst</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:60d8ef6679db46da91bf9586adccd438421e1fae81ce1cc44eb4743c23c4a9ef&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:11ad52d08e7cf9577f09b3d490d9b8f1efc0f8446afe10c4bec5276737fbe7b4&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:4d602120c90c78bca1273a84a0e5161739ecaa7735c855df3ebd78fad7213b36&quot;,
+    &quot;role&quot;: &quot;provider_terms_analyst&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 11,
+      &quot;elapsed_seconds&quot;: 8.31859179213643,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;terms\&quot;: [\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:cd79\&quot;,\n      \&quot;price_minor\&quot;: 500,\n      \&quot;resolution\&quot;: 720,\n      \&quot;ads\&quot;: false,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: true\n    },\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:ab31\&quot;,\n      \&quot;price_minor\&quot;: 600,\n      \&quot;resolution\&quot;: 1080,\n      \&quot;ads\&quot;: true,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: true\n    },\n    {\n      \&quot;plan_id\&quot;: \&quot;plan:ef62\&quot;,\n      \&quot;price_minor\&quot;: 900,\n      \&quot;resolution\&quot;: 2160,\n      \&quot;ads\&quot;: false,\n      \&quot;period_seconds\&quot;: 2592000,\n      \&quot;eligible\&quot;: false\n    }\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;summary\&quot;: \&quot;The user explicitly prefers &#x27;QUALITY&#x27;, prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan &#x27;plan:ef62&#x27; (2160p, ad-free) exceeds the price ceiling. Plan &#x27;plan:cd79&#x27; (720p, ad-free) is eligible. Plan &#x27;plan:ab31&#x27; (1080p, with ads) is eligible but less aligned with the ad-free preference.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T20:16:49.776721+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;QUALITY&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;QUALITY&quot;,
+          &quot;priorities&quot;: [
+            &quot;High resolution streaming&quot;,
+            &quot;Ad-free experience&quot;,
+            &quot;Premium content access&quot;,
+            &quot;Multiple simultaneous streams&quot;
+          ],
+          &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27; for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;missing_evidence&quot;: [],
+    &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27;, prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan &#x27;plan:ef62&#x27; (2160p, ad-free) exceeds the price ceiling. Plan &#x27;plan:cd79&#x27; (720p, ad-free) is eligible. Plan &#x27;plan:ab31&#x27; (1080p, with ads) is eligible but less aligned with the ad-free preference.&quot;,
+    &quot;terms&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;eligible&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;eligible&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;eligible&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ]
+  }
+}</pre></details><details><summary>client_plan_selector</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:907032b89d8d78cc785ec6f364f18d27c30a9a78aff0b1f7a41d8bf9b1c2e774&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:27a6192a18f51261af0ab84b2a562fe387016bce44247cd642819a5648190c58&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:8ca4f36ff06de37d5bf3835f1da8fac0b7a0820ef4e9ecbc932286ab2202d5c8&quot;,
+    &quot;role&quot;: &quot;client_plan_selector&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 12,
+      &quot;elapsed_seconds&quot;: 6.7649977914988995,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;selected_plan_id\&quot;: \&quot;plan:ab31\&quot;,\n  \&quot;decision_factors\&quot;: [\n    \&quot;The user&#x27;s explicit preference is &#x27;QUALITY&#x27;, which prioritizes resolution.\&quot;,\n    \&quot;The hard price ceiling is 650 minor currency units.\&quot;,\n    \&quot;Plan &#x27;plan:ab31&#x27; offers 1080p resolution, which is the highest resolution available among plans within the budget.\&quot;,\n    \&quot;Plan &#x27;plan:ab31&#x27; costs 600 minor currency units, which is within the specified budget.\&quot;,\n    \&quot;Plan &#x27;plan:cd79&#x27; is ad-free but offers a lower resolution (720p), making it less aligned with the primary &#x27;QUALITY&#x27; preference for resolution.\&quot;,\n    \&quot;Plan &#x27;plan:ef62&#x27; offers 2160p resolution but exceeds the price ceiling.\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: []\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T20:16:58.098355+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;QUALITY&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;QUALITY&quot;,
+          &quot;priorities&quot;: [
+            &quot;High resolution streaming&quot;,
+            &quot;Ad-free experience&quot;,
+            &quot;Premium content access&quot;,
+            &quot;Multiple simultaneous streams&quot;
+          ],
+          &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27; for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:60d8ef6679db46da91bf9586adccd438421e1fae81ce1cc44eb4743c23c4a9ef&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27;, prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan &#x27;plan:ef62&#x27; (2160p, ad-free) exceeds the price ceiling. Plan &#x27;plan:cd79&#x27; (720p, ad-free) is eligible. Plan &#x27;plan:ab31&#x27; (1080p, with ads) is eligible but less aligned with the ad-free preference.&quot;,
+          &quot;terms&quot;: [
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+              &quot;price_minor&quot;: 500,
+              &quot;resolution&quot;: 720
+            },
+            {
+              &quot;ads&quot;: true,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+              &quot;price_minor&quot;: 600,
+              &quot;resolution&quot;: 1080
+            },
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: false,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+              &quot;price_minor&quot;: 900,
+              &quot;resolution&quot;: 2160
+            }
+          ]
+        },
+        &quot;role&quot;: &quot;provider_terms_analyst&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;decision_factors&quot;: [
+      &quot;The user&#x27;s explicit preference is &#x27;QUALITY&#x27;, which prioritizes resolution.&quot;,
+      &quot;The hard price ceiling is 650 minor currency units.&quot;,
+      &quot;Plan &#x27;plan:ab31&#x27; offers 1080p resolution, which is the highest resolution available among plans within the budget.&quot;,
+      &quot;Plan &#x27;plan:ab31&#x27; costs 600 minor currency units, which is within the specified budget.&quot;,
+      &quot;Plan &#x27;plan:cd79&#x27; is ad-free but offers a lower resolution (720p), making it less aligned with the primary &#x27;QUALITY&#x27; preference for resolution.&quot;,
+      &quot;Plan &#x27;plan:ef62&#x27; offers 2160p resolution but exceeds the price ceiling.&quot;
+    ],
+    &quot;missing_evidence&quot;: [],
+    &quot;selected_plan_id&quot;: &quot;plan:ab31&quot;
+  }
+}</pre></details><details><summary>contract_reviewer</summary><pre>{
+  &quot;capture&quot;: {
+    &quot;capture_id&quot;: &quot;testflix:semantic_capture:ad238ab6ab6771105841a00681d217043a50a6ef7dfd5fe65068959e89b0ed46&quot;,
+    &quot;projection_ref&quot;: &quot;testflix:role_projection:b2cfd3d5bfcbbbc9f78bef90f37259032589658fcd47d68cfd5859e8b6e39c73&quot;,
+    &quot;request_ref&quot;: &quot;testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3&quot;,
+    &quot;response_ref&quot;: &quot;testflix:role_response:656933f5704bb39d1241d4151cbed4ebb9b343b2541a161f80d38a8da2959084&quot;,
+    &quot;role&quot;: &quot;contract_reviewer&quot;,
+    &quot;transport&quot;: {
+      &quot;attempt&quot;: 13,
+      &quot;elapsed_seconds&quot;: 11.942971042357385,
+      &quot;model&quot;: &quot;gemini-2.5-flash&quot;,
+      &quot;origin_mode&quot;: &quot;LIVE&quot;,
+      &quot;provider&quot;: &quot;gemini&quot;,
+      &quot;raw_response&quot;: &quot;{\n  \&quot;supports_selection\&quot;: false,\n  \&quot;blocking_conflicts\&quot;: [\n    \&quot;The selected plan &#x27;plan:ab31&#x27; includes ads, which directly conflicts with the &#x27;Ad-free experience&#x27; priority explicitly identified for the &#x27;QUALITY&#x27; preference by the intent interpreter. While the client plan selector prioritized resolution, the definition of &#x27;QUALITY&#x27; from the intent interpreter lists both &#x27;High resolution streaming&#x27; and &#x27;Ad-free experience&#x27; as priorities without indicating one is primary over the other. The selection therefore does not fully implement the stated preference.\&quot;\n  ],\n  \&quot;missing_evidence\&quot;: [],\n  \&quot;reason\&quot;: \&quot;The upstream selection of &#x27;plan:ab31&#x27; does not fully implement the &#x27;QUALITY&#x27; preference because it includes ads. The intent interpreter explicitly defines &#x27;QUALITY&#x27; as prioritizing both &#x27;High resolution streaming&#x27; and &#x27;Ad-free experience&#x27;. Although &#x27;plan:ab31&#x27; offers a higher resolution (1080p) than &#x27;plan:cd79&#x27; (720p) within the budget, it fails to meet the &#x27;Ad-free experience&#x27; priority. The client plan selector&#x27;s decision to prioritize resolution over an ad-free experience is not explicitly supported by the provided definition of &#x27;QUALITY&#x27;, which lists both as important aspects.\&quot;\n}&quot;,
+      &quot;started_utc&quot;: &quot;2026-09-12T20:17:04.865801+00:00&quot;
+    }
+  },
+  &quot;input_projection&quot;: {
+    &quot;catalog&quot;: [
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+        &quot;price_minor&quot;: 500,
+        &quot;resolution&quot;: 720
+      },
+      {
+        &quot;ads&quot;: true,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+        &quot;price_minor&quot;: 600,
+        &quot;resolution&quot;: 1080
+      },
+      {
+        &quot;ads&quot;: false,
+        &quot;period_seconds&quot;: 2592000,
+        &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+        &quot;price_minor&quot;: 900,
+        &quot;resolution&quot;: 2160
+      }
+    ],
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;hard_ceiling_minor&quot;: 650,
+    &quot;preference&quot;: &quot;QUALITY&quot;,
+    &quot;request_id&quot;: &quot;request:8c2f&quot;,
+    &quot;task_contract&quot;: {
+      &quot;intent_scope&quot;: &quot;Interpret the explicit preference enum; content genre and viewing habits are not required inputs.&quot;,
+      &quot;price_unit&quot;: &quot;minor currency units&quot;,
+      &quot;required_inputs&quot;: [
+        &quot;preference&quot;,
+        &quot;hard_ceiling_minor&quot;,
+        &quot;currency&quot;,
+        &quot;catalog&quot;,
+        &quot;upstream&quot;
+      ],
+      &quot;subject&quot;: &quot;Testflix subscription selection from a supplied finite catalog&quot;
+    },
+    &quot;upstream&quot;: [
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;preference&quot;: &quot;QUALITY&quot;,
+          &quot;priorities&quot;: [
+            &quot;High resolution streaming&quot;,
+            &quot;Ad-free experience&quot;,
+            &quot;Premium content access&quot;,
+            &quot;Multiple simultaneous streams&quot;
+          ],
+          &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27; for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household.&quot;
+        },
+        &quot;role&quot;: &quot;intent_interpreter&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:60d8ef6679db46da91bf9586adccd438421e1fae81ce1cc44eb4743c23c4a9ef&quot;,
+        &quot;output&quot;: {
+          &quot;missing_evidence&quot;: [],
+          &quot;summary&quot;: &quot;The user explicitly prefers &#x27;QUALITY&#x27;, prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan &#x27;plan:ef62&#x27; (2160p, ad-free) exceeds the price ceiling. Plan &#x27;plan:cd79&#x27; (720p, ad-free) is eligible. Plan &#x27;plan:ab31&#x27; (1080p, with ads) is eligible but less aligned with the ad-free preference.&quot;,
+          &quot;terms&quot;: [
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:cd79&quot;,
+              &quot;price_minor&quot;: 500,
+              &quot;resolution&quot;: 720
+            },
+            {
+              &quot;ads&quot;: true,
+              &quot;eligible&quot;: true,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ab31&quot;,
+              &quot;price_minor&quot;: 600,
+              &quot;resolution&quot;: 1080
+            },
+            {
+              &quot;ads&quot;: false,
+              &quot;eligible&quot;: false,
+              &quot;period_seconds&quot;: 2592000,
+              &quot;plan_id&quot;: &quot;plan:ef62&quot;,
+              &quot;price_minor&quot;: 900,
+              &quot;resolution&quot;: 2160
+            }
+          ]
+        },
+        &quot;role&quot;: &quot;provider_terms_analyst&quot;
+      },
+      {
+        &quot;capture_ref&quot;: &quot;testflix:semantic_capture:907032b89d8d78cc785ec6f364f18d27c30a9a78aff0b1f7a41d8bf9b1c2e774&quot;,
+        &quot;output&quot;: {
+          &quot;decision_factors&quot;: [
+            &quot;The user&#x27;s explicit preference is &#x27;QUALITY&#x27;, which prioritizes resolution.&quot;,
+            &quot;The hard price ceiling is 650 minor currency units.&quot;,
+            &quot;Plan &#x27;plan:ab31&#x27; offers 1080p resolution, which is the highest resolution available among plans within the budget.&quot;,
+            &quot;Plan &#x27;plan:ab31&#x27; costs 600 minor currency units, which is within the specified budget.&quot;,
+            &quot;Plan &#x27;plan:cd79&#x27; is ad-free but offers a lower resolution (720p), making it less aligned with the primary &#x27;QUALITY&#x27; preference for resolution.&quot;,
+            &quot;Plan &#x27;plan:ef62&#x27; offers 2160p resolution but exceeds the price ceiling.&quot;
+          ],
+          &quot;missing_evidence&quot;: [],
+          &quot;selected_plan_id&quot;: &quot;plan:ab31&quot;
+        },
+        &quot;role&quot;: &quot;client_plan_selector&quot;
+      }
+    ]
+  },
+  &quot;output&quot;: {
+    &quot;blocking_conflicts&quot;: [
+      &quot;The selected plan &#x27;plan:ab31&#x27; includes ads, which directly conflicts with the &#x27;Ad-free experience&#x27; priority explicitly identified for the &#x27;QUALITY&#x27; preference by the intent interpreter. While the client plan selector prioritized resolution, the definition of &#x27;QUALITY&#x27; from the intent interpreter lists both &#x27;High resolution streaming&#x27; and &#x27;Ad-free experience&#x27; as priorities without indicating one is primary over the other. The selection therefore does not fully implement the stated preference.&quot;
+    ],
+    &quot;missing_evidence&quot;: [],
+    &quot;reason&quot;: &quot;The upstream selection of &#x27;plan:ab31&#x27; does not fully implement the &#x27;QUALITY&#x27; preference because it includes ads. The intent interpreter explicitly defines &#x27;QUALITY&#x27; as prioritizing both &#x27;High resolution streaming&#x27; and &#x27;Ad-free experience&#x27;. Although &#x27;plan:ab31&#x27; offers a higher resolution (1080p) than &#x27;plan:cd79&#x27; (720p) within the budget, it fails to meet the &#x27;Ad-free experience&#x27; priority. The client plan selector&#x27;s decision to prioritize resolution over an ad-free experience is not explicitly supported by the provided definition of &#x27;QUALITY&#x27;, which lists both as important aspects.&quot;,
+    &quot;supports_selection&quot;: false
+  }
+}</pre></details></section><section><h2>Four independent Roots</h2><div class="table"><table><thead><tr><th>Root</th><th>Decision / operation</th><th>Evidence reference</th></tr></thead><tbody><tr><td>root:testflix:user</td><td>ACCEPT</td><td>f731eced1170aaeaf43512f9ad15b86fb874a522dfb7c3ab5a29d86d427c66ec</td></tr><tr><td>root:testflix:bank</td><td>ACCEPT</td><td>bb2b92b97d39723a7b4e78f64f2a6763b782b824bb90e2d01935c0b14cc4530c</td></tr><tr><td>root:testflix:provider</td><td>ACCEPT</td><td>c5a8128fa14e8c3ea5f015793ff36fea154c3d065038883e2aee1553253b2e19</td></tr><tr><td>root:testflix:device</td><td>ACCEPT</td><td>07b393f9076050895988e1ac2bd3632f3aa962c2c2d6e815ed32419a8a421cd6</td></tr></tbody></table></div></section><section><h2>Controlled continuation</h2><div class="table"><table><thead><tr><th>Stage</th><th>Actual result</th><th>Evidence</th></tr></thead><tbody><tr><td>Unchanged 500</td><td>1</td><td>Independent positive branch</td></tr><tr><td>P04: 700 with consent 650</td><td>{
+  &quot;E_seconds&quot;: 317.9907664163038,
+  &quot;decision&quot;: &quot;BLOCKED_FAIL_CLOSED&quot;,
+  &quot;old_packet&quot;: &quot;host_current_action_not_executable&quot;
+}</td><td>P04_main_700.json</td></tr><tr><td>P04: 600 with consent 650</td><td>{
+  &quot;E_seconds&quot;: 318.91036683321,
+  &quot;decision&quot;: &quot;ACCEPT&quot;,
+  &quot;payment&quot;: {
+    &quot;amount_minor&quot;: 600,
+    &quot;currency&quot;: &quot;EUR&quot;,
+    &quot;merchant_id&quot;: &quot;merchant:a674&quot;,
+    &quot;order_id&quot;: &quot;order:t3-renewal-pending&quot;,
+    &quot;payment_ref&quot;: &quot;testflix:payment:37482b993a008580d0b5a173b8c8d78259c60c4b9c41f574516fafd50a83b56e&quot;
+  }
+}</td><td>N14_600_review.json and N14_600_payment.json; independent branch</td></tr><tr><td>Exact expiry</td><td><details><summary>Evidence record | 2 entries</summary><pre>[
+  {
+    &quot;evaluation_time&quot;: 1896048000,
+    &quot;event&quot;: {
+      &quot;content_id&quot;: &quot;content:047b&quot;,
+      &quot;device_id&quot;: &quot;device:34a1&quot;,
+      &quot;entitlement_id&quot;: &quot;testflix:entitlement:6fce56a8634d617e310f3d5a2d71fd57f583829c08aad4f20eac42c4c7c7d8bd&quot;,
+      &quot;now&quot;: 1896047996,
+      &quot;quality&quot;: 720,
+      &quot;request_id&quot;: &quot;request:expiry:boundary&quot;,
+      &quot;ttl_seconds&quot;: 60,
+      &quot;user_id&quot;: &quot;subject:51d9&quot;
+    },
+    &quot;executor_delta&quot;: 0,
+    &quot;reason&quot;: &quot;current_entitlement&quot;
+  },
+  {
+    &quot;evaluation_time&quot;: 1896048001,
+    &quot;event&quot;: {
+      &quot;content_id&quot;: &quot;content:047b&quot;,
+      &quot;device_id&quot;: &quot;device:34a1&quot;,
+      &quot;entitlement_id&quot;: &quot;testflix:entitlement:6fce56a8634d617e310f3d5a2d71fd57f583829c08aad4f20eac42c4c7c7d8bd&quot;,
+      &quot;now&quot;: 1896047997,
+      &quot;quality&quot;: 720,
+      &quot;request_id&quot;: &quot;request:expiry:after&quot;,
+      &quot;ttl_seconds&quot;: 60,
+      &quot;user_id&quot;: &quot;subject:51d9&quot;
+    },
+    &quot;executor_delta&quot;: 0,
+    &quot;reason&quot;: &quot;current_entitlement&quot;
+  }
+]</pre></details></td><td>No new effect</td></tr><tr><td>New consent, renewal, stop and fresh session</td><td><details><summary>Evidence record | 11 fields</summary><pre>{
+  &quot;device_decision_id&quot;: &quot;396d54f18b7602d7adb49d640fea7a9fe85cb73d43ff8934eefc474e1dfbf224&quot;,
+  &quot;elapsed_seconds&quot;: 657.8076259996742,
+  &quot;entitlement_id&quot;: &quot;testflix:entitlement:3f17bf7fa7ee8ddc114ded3f29b817a41de485aceeb3074924d447883e4807fc&quot;,
+  &quot;fresh_executor_delta&quot;: 2,
+  &quot;hosts_preserved&quot;: true,
+  &quot;main_payment_count&quot;: 2,
+  &quot;main_payment_invocations&quot;: [
+    &quot;capability_invocation:28083468308e4d4d0f4e7dbc703885ecdda0971d672f64de8e2add231cd7c3df&quot;,
+    &quot;capability_invocation:09c9ec34205ed4caa257bf3f966d0b057a367212f431459d1353e9d835b1802c&quot;
+  ],
+  &quot;provider_decision_id&quot;: &quot;9a2aad0701ecacae689438fc07f1aa8e5479f36130f4f885fab10971525e6f7b&quot;,
+  &quot;provider_delta&quot;: 0,
+  &quot;session_id&quot;: &quot;testflix:session:07b1fdca1dd12d4d4ccbb79b201c1000980653e8eca40a212da7cce1a331686c&quot;,
+  &quot;stop_executor_delta&quot;: 2
+}</pre></details></td><td>Same four Hosts; two main payments</td></tr><tr><td>Sealed expanded history</td><td>898b1a9c62af087a3435e423dc01fbc08707e20ab50eb48eeb786d9703b72aba</td><td>post_renewal_expanded_history.json</td></tr></tbody></table></div></section><section><h2>Live and captured history</h2><div class="table"><table><thead><tr><th>Branch / stage</th><th>Result</th><th>Time / reference</th></tr></thead><tbody><tr><td>live_main_01</td><td><details><summary>Evidence record | 6 fields</summary><pre>{
+  &quot;actual_model_attempts&quot;: 1,
+  &quot;elapsed_seconds&quot;: 3.1488216249272227,
+  &quot;exception_type&quot;: &quot;builtins.ValueError&quot;,
+  &quot;message&quot;: &quot;role_required_evidence_missing&quot;,
+  &quot;no_retry&quot;: true,
+  &quot;traceback&quot;: [
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py&quot;,
+      &quot;function&quot;: &quot;&lt;module&gt;&quot;,
+      &quot;line&quot;: 48
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;run_story_v01&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;stage&quot;,
+      &quot;line&quot;: 32
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;&lt;lambda&gt;&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/evidence_v01.py&quot;,
+      &quot;function&quot;: &quot;handle_v01&quot;,
+      &quot;line&quot;: 224
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_semantics_v01&quot;,
+      &quot;line&quot;: 50
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_roles_v01&quot;,
+      &quot;line&quot;: 120
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;validate_output_v01&quot;,
+      &quot;line&quot;: 38
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/contracts_v01.py&quot;,
+      &quot;function&quot;: &quot;require_v01&quot;,
+      &quot;line&quot;: 17
+    }
+  ]
+}</pre></details></td><td>ACTUAL_FAILURE; no controlled fallback</td></tr><tr><td>live_main_02</td><td>{
+  &quot;mock_payments&quot;: 2,
+  &quot;mode&quot;: &quot;LIVE_CAPTURED&quot;,
+  &quot;model_calls&quot;: 8,
+  &quot;real_adapter_calls&quot;: 0
+}</td><td>{
+  &quot;elapsed_seconds&quot;: 1174.8124952502549,
+  &quot;manifest_hash&quot;: &quot;8645b8e3e2e14544355e002b6fca802cfb684b4a93bcbde2cdb5441adcdcfcd2&quot;
+}</td></tr><tr><td>live_main_02: P01_HANDLE</td><td>RETURN</td><td>169.09600145742297</td></tr><tr><td>live_main_02: P01_SEAL</td><td>RETURN</td><td>8.743946875445545</td></tr><tr><td>live_main_02: P02_INFORMATION</td><td>RETURN</td><td>2.7674994580447674</td></tr><tr><td>live_main_02: P03_STOP</td><td>RETURN</td><td>42.32610933389515</td></tr><tr><td>live_main_02: P03_FRESH</td><td>RETURN</td><td>51.53957387525588</td></tr><tr><td>live_main_02: P05_EXPIRED_STOP</td><td>RETURN</td><td>73.56664895731956</td></tr><tr><td>live_main_02: P06_DEVICE_GRANT</td><td>RETURN</td><td>37.13913070783019</td></tr><tr><td>live_main_02: P06_RENEW</td><td>RETURN</td><td>308.6736019998789</td></tr><tr><td>live_main_02: RENEWED_STOP</td><td>RETURN</td><td>161.58002362493426</td></tr><tr><td>live_main_02: RENEWED_FRESH</td><td>RETURN</td><td>185.03300749976188</td></tr><tr><td>live_main_02: HISTORY_SEAL</td><td>RETURN</td><td>132.71199391689152</td></tr><tr><td>live_main_02: OFFLINE_REPLAY</td><td>RETURN</td><td>1.1886543743312359</td></tr><tr><td>captured_main_01</td><td>{
+  &quot;mock_payments&quot;: 2,
+  &quot;mode&quot;: &quot;CAPTURED_REEXECUTION&quot;,
+  &quot;model_calls&quot;: 0,
+  &quot;real_adapter_calls&quot;: 0
+}</td><td>{
+  &quot;elapsed_seconds&quot;: 1124.9764023749158,
+  &quot;manifest_hash&quot;: &quot;96ff11e8a6bb67be0d3fdc495242ebbb51aa4d161987365f49538a8b838c040f&quot;
+}</td></tr><tr><td>captured_main_01: P01_HANDLE</td><td>RETURN</td><td>143.42174095846713</td></tr><tr><td>captured_main_01: P01_SEAL</td><td>RETURN</td><td>8.637193874455988</td></tr><tr><td>captured_main_01: P02_INFORMATION</td><td>RETURN</td><td>2.7512572491541505</td></tr><tr><td>captured_main_01: P03_STOP</td><td>RETURN</td><td>42.07198391575366</td></tr><tr><td>captured_main_01: P03_FRESH</td><td>RETURN</td><td>51.38158599939197</td></tr><tr><td>captured_main_01: P05_EXPIRED_STOP</td><td>RETURN</td><td>73.46908674947917</td></tr><tr><td>captured_main_01: P06_DEVICE_GRANT</td><td>RETURN</td><td>36.92128587514162</td></tr><tr><td>captured_main_01: P06_RENEW</td><td>RETURN</td><td>288.52585762552917</td></tr><tr><td>captured_main_01: RENEWED_STOP</td><td>RETURN</td><td>161.13263541739434</td></tr><tr><td>captured_main_01: RENEWED_FRESH</td><td>RETURN</td><td>183.06159500032663</td></tr><tr><td>captured_main_01: HISTORY_SEAL</td><td>RETURN</td><td>131.65449020825326</td></tr><tr><td>captured_main_01: OFFLINE_REPLAY</td><td>RETURN</td><td>1.2012038743123412</td></tr><tr><td>live_AB_01</td><td><details><summary>Evidence record | 6 fields</summary><pre>{
+  &quot;actual_model_attempts&quot;: 4,
+  &quot;elapsed_seconds&quot;: 32.61800487432629,
+  &quot;exception_type&quot;: &quot;builtins.ValueError&quot;,
+  &quot;message&quot;: &quot;semantic_review_disagreement&quot;,
+  &quot;no_retry&quot;: true,
+  &quot;traceback&quot;: [
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py&quot;,
+      &quot;function&quot;: &quot;&lt;module&gt;&quot;,
+      &quot;line&quot;: 48
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;run_story_v01&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;stage&quot;,
+      &quot;line&quot;: 32
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;&lt;lambda&gt;&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/evidence_v01.py&quot;,
+      &quot;function&quot;: &quot;handle_v01&quot;,
+      &quot;line&quot;: 224
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_semantics_v01&quot;,
+      &quot;line&quot;: 50
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_roles_v01&quot;,
+      &quot;line&quot;: 125
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;validate_output_v01&quot;,
+      &quot;line&quot;: 60
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/contracts_v01.py&quot;,
+      &quot;function&quot;: &quot;require_v01&quot;,
+      &quot;line&quot;: 17
+    }
+  ]
+}</pre></details></td><td>ACTUAL_FAILURE; no controlled fallback</td></tr><tr><td>live_AB_02</td><td><details><summary>Evidence record | 6 fields</summary><pre>{
+  &quot;actual_model_attempts&quot;: 3,
+  &quot;elapsed_seconds&quot;: 102.46951674949378,
+  &quot;exception_type&quot;: &quot;google.genai.errors.ServerError&quot;,
+  &quot;message&quot;: &quot;504 DEADLINE_EXCEEDED. {&#x27;error&#x27;: {&#x27;code&#x27;: 504, &#x27;message&#x27;: &#x27;The request timed out. Please try again.&#x27;, &#x27;status&#x27;: &#x27;DEADLINE_EXCEEDED&#x27;}}&quot;,
+  &quot;no_retry&quot;: true,
+  &quot;traceback&quot;: [
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py&quot;,
+      &quot;function&quot;: &quot;&lt;module&gt;&quot;,
+      &quot;line&quot;: 48
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;run_story_v01&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;stage&quot;,
+      &quot;line&quot;: 32
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;&lt;lambda&gt;&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/evidence_v01.py&quot;,
+      &quot;function&quot;: &quot;handle_v01&quot;,
+      &quot;line&quot;: 224
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_semantics_v01&quot;,
+      &quot;line&quot;: 50
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_roles_v01&quot;,
+      &quot;line&quot;: 130
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/live_semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;respond_v01&quot;,
+      &quot;line&quot;: 79
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/models.py&quot;,
+      &quot;function&quot;: &quot;generate_content&quot;,
+      &quot;line&quot;: 6495
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/models.py&quot;,
+      &quot;function&quot;: &quot;_generate_content&quot;,
+      &quot;line&quot;: 4931
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;request&quot;,
+      &quot;line&quot;: 1611
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;_request&quot;,
+      &quot;line&quot;: 1404
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;__call__&quot;,
+      &quot;line&quot;: 470
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;iter&quot;,
+      &quot;line&quot;: 371
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;exc_check&quot;,
+      &quot;line&quot;: 413
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;reraise&quot;,
+      &quot;line&quot;: 184
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py&quot;,
+      &quot;function&quot;: &quot;result&quot;,
+      &quot;line&quot;: 443
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py&quot;,
+      &quot;function&quot;: &quot;__get_result&quot;,
+      &quot;line&quot;: 395
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;__call__&quot;,
+      &quot;line&quot;: 473
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;_request_once&quot;,
+      &quot;line&quot;: 1381
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/errors.py&quot;,
+      &quot;function&quot;: &quot;raise_for_response&quot;,
+      &quot;line&quot;: 155
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/errors.py&quot;,
+      &quot;function&quot;: &quot;raise_error&quot;,
+      &quot;line&quot;: 186
+    }
+  ]
+}</pre></details></td><td>ACTUAL_FAILURE; no controlled fallback</td></tr><tr><td>live_AB_03</td><td><details><summary>Evidence record | 6 fields</summary><pre>{
+  &quot;actual_model_attempts&quot;: 0,
+  &quot;elapsed_seconds&quot;: 0.0027580419555306435,
+  &quot;exception_type&quot;: &quot;builtins.TypeError&quot;,
+  &quot;message&quot;: &quot;&#x27;ResumeProvider&#x27; object is not callable&quot;,
+  &quot;no_retry&quot;: true,
+  &quot;traceback&quot;: [
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py&quot;,
+      &quot;function&quot;: &quot;&lt;module&gt;&quot;,
+      &quot;line&quot;: 70
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;run_story_v01&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;stage&quot;,
+      &quot;line&quot;: 32
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;&lt;lambda&gt;&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/evidence_v01.py&quot;,
+      &quot;function&quot;: &quot;handle_v01&quot;,
+      &quot;line&quot;: 224
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_semantics_v01&quot;,
+      &quot;line&quot;: 56
+    }
+  ]
+}</pre></details></td><td>ACTUAL_FAILURE; no controlled fallback</td></tr><tr><td>live_AB_04</td><td><details><summary>Evidence record | 6 fields</summary><pre>{
+  &quot;actual_model_attempts&quot;: 1,
+  &quot;elapsed_seconds&quot;: 89.44998441636562,
+  &quot;exception_type&quot;: &quot;google.genai.errors.ServerError&quot;,
+  &quot;message&quot;: &quot;504 DEADLINE_EXCEEDED. {&#x27;error&#x27;: {&#x27;code&#x27;: 504, &#x27;message&#x27;: &#x27;The request timed out. Please try again.&#x27;, &#x27;status&#x27;: &#x27;DEADLINE_EXCEEDED&#x27;}}&quot;,
+  &quot;no_retry&quot;: true,
+  &quot;traceback&quot;: [
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py&quot;,
+      &quot;function&quot;: &quot;&lt;module&gt;&quot;,
+      &quot;line&quot;: 63
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;run_story_v01&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;stage&quot;,
+      &quot;line&quot;: 32
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;&lt;lambda&gt;&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/evidence_v01.py&quot;,
+      &quot;function&quot;: &quot;handle_v01&quot;,
+      &quot;line&quot;: 224
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_semantics_v01&quot;,
+      &quot;line&quot;: 50
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_roles_v01&quot;,
+      &quot;line&quot;: 130
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/live_semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;respond_v01&quot;,
+      &quot;line&quot;: 86
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/models.py&quot;,
+      &quot;function&quot;: &quot;generate_content&quot;,
+      &quot;line&quot;: 6495
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/models.py&quot;,
+      &quot;function&quot;: &quot;_generate_content&quot;,
+      &quot;line&quot;: 4931
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;request&quot;,
+      &quot;line&quot;: 1611
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;_request&quot;,
+      &quot;line&quot;: 1404
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;__call__&quot;,
+      &quot;line&quot;: 470
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;iter&quot;,
+      &quot;line&quot;: 371
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;exc_check&quot;,
+      &quot;line&quot;: 413
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;reraise&quot;,
+      &quot;line&quot;: 184
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py&quot;,
+      &quot;function&quot;: &quot;result&quot;,
+      &quot;line&quot;: 443
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py&quot;,
+      &quot;function&quot;: &quot;__get_result&quot;,
+      &quot;line&quot;: 395
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;__call__&quot;,
+      &quot;line&quot;: 473
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;_request_once&quot;,
+      &quot;line&quot;: 1381
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/errors.py&quot;,
+      &quot;function&quot;: &quot;raise_for_response&quot;,
+      &quot;line&quot;: 155
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/errors.py&quot;,
+      &quot;function&quot;: &quot;raise_error&quot;,
+      &quot;line&quot;: 186
+    }
+  ]
+}</pre></details></td><td>ACTUAL_FAILURE; no controlled fallback</td></tr><tr><td>live_AB_05</td><td><details><summary>Evidence record | 6 fields</summary><pre>{
+  &quot;actual_model_attempts&quot;: 1,
+  &quot;elapsed_seconds&quot;: 180.61569508351386,
+  &quot;exception_type&quot;: &quot;httpx.ReadTimeout&quot;,
+  &quot;message&quot;: &quot;The read operation timed out&quot;,
+  &quot;no_retry&quot;: true,
+  &quot;traceback&quot;: [
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py&quot;,
+      &quot;function&quot;: &quot;&lt;module&gt;&quot;,
+      &quot;line&quot;: 63
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;run_story_v01&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;stage&quot;,
+      &quot;line&quot;: 32
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/demo_story_v01.py&quot;,
+      &quot;function&quot;: &quot;&lt;lambda&gt;&quot;,
+      &quot;line&quot;: 40
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/evidence_v01.py&quot;,
+      &quot;function&quot;: &quot;handle_v01&quot;,
+      &quot;line&quot;: 224
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_semantics_v01&quot;,
+      &quot;line&quot;: 50
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/semantic_roles_v01.py&quot;,
+      &quot;function&quot;: &quot;collect_roles_v01&quot;,
+      &quot;line&quot;: 130
+    },
+    {
+      &quot;file&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/domains/testflix/live_semantic_adapter_v01.py&quot;,
+      &quot;function&quot;: &quot;respond_v01&quot;,
+      &quot;line&quot;: 86
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/models.py&quot;,
+      &quot;function&quot;: &quot;generate_content&quot;,
+      &quot;line&quot;: 6495
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/models.py&quot;,
+      &quot;function&quot;: &quot;_generate_content&quot;,
+      &quot;line&quot;: 4931
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;request&quot;,
+      &quot;line&quot;: 1611
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;_request&quot;,
+      &quot;line&quot;: 1404
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;__call__&quot;,
+      &quot;line&quot;: 470
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;iter&quot;,
+      &quot;line&quot;: 371
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;exc_check&quot;,
+      &quot;line&quot;: 413
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;reraise&quot;,
+      &quot;line&quot;: 184
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py&quot;,
+      &quot;function&quot;: &quot;result&quot;,
+      &quot;line&quot;: 443
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py&quot;,
+      &quot;function&quot;: &quot;__get_result&quot;,
+      &quot;line&quot;: 395
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/tenacity/__init__.py&quot;,
+      &quot;function&quot;: &quot;__call__&quot;,
+      &quot;line&quot;: 473
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/google/genai/_api_client.py&quot;,
+      &quot;function&quot;: &quot;_request_once&quot;,
+      &quot;line&quot;: 1380
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/httpx/_client.py&quot;,
+      &quot;function&quot;: &quot;send&quot;,
+      &quot;line&quot;: 914
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/httpx/_client.py&quot;,
+      &quot;function&quot;: &quot;_send_handling_auth&quot;,
+      &quot;line&quot;: 942
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/httpx/_client.py&quot;,
+      &quot;function&quot;: &quot;_send_handling_redirects&quot;,
+      &quot;line&quot;: 979
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/httpx/_client.py&quot;,
+      &quot;function&quot;: &quot;_send_single_request&quot;,
+      &quot;line&quot;: 1014
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/httpx/_transports/default.py&quot;,
+      &quot;function&quot;: &quot;handle_request&quot;,
+      &quot;line&quot;: 249
+    },
+    {
+      &quot;file&quot;: &quot;/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/contextlib.py&quot;,
+      &quot;function&quot;: &quot;__exit__&quot;,
+      &quot;line&quot;: 162
+    },
+    {
+      &quot;file&quot;: &quot;/Users/admin/Projects/hedgehog-os/.venv/lib/python3.14/site-packages/httpx/_transports/default.py&quot;,
+      &quot;function&quot;: &quot;map_httpcore_exceptions&quot;,
+      &quot;line&quot;: 118
+    }
+  ]
+}</pre></details></td><td>ACTUAL_FAILURE; no controlled fallback</td></tr></tbody></table></div></section><section><h2>Validation and replay</h2><div class="table"><table><thead><tr><th>Control</th><th>Result</th><th>Scope</th></tr></thead><tbody><tr><td>N15_dependency_omission.json</td><td>g2e_dependency_graph_missing_edge</td><td>ACTUAL_PUBLIC_MANIFEST_EDGE_RELATION</td></tr><tr><td>N15_preserved_period_change.json</td><td>g2e_delta_source_binding_set_mismatch</td><td>UNREPORTED_CHANGED_PRESERVED_SOURCE_WITH_FRESH_FINGERPRINT_AND_DELTA_IDENTITIES</td></tr><tr><td>N15_Bank_retained_temporal_binding.json</td><td><details><summary>Evidence record | 2 entries</summary><pre>[
+  {
+    &quot;field&quot;: &quot;evaluation_time_epoch_seconds&quot;,
+    &quot;result&quot;: {
+      &quot;action_commit_packet_created&quot;: false,
+      &quot;authority_created&quot;: false,
+      &quot;drs_write_created&quot;: false,
+      &quot;failure_stage&quot;: &quot;COMPLETE_PROFILE&quot;,
+      &quot;final_output_created&quot;: false,
+      &quot;permission_created&quot;: false,
+      &quot;real_world_effects_count&quot;: 0,
+      &quot;reason_codes&quot;: [
+        &quot;g2d_abi_bundle_invalid&quot;
+      ],
+      &quot;return_to_root_required&quot;: true,
+      &quot;root_review_required&quot;: true,
+      &quot;source_reason_codes&quot;: [],
+      &quot;status&quot;: &quot;FAIL_CLOSED&quot;,
+      &quot;validated_object_id&quot;: null,
+      &quot;validation_report_id&quot;: &quot;frvalidation_v02:9803ecb5fe3b1bd6d08f4eb41f3d855cdffa603048f8fc1858639b3c16701216&quot;,
+      &quot;validation_target&quot;: &quot;COMPLETE_PROFILE&quot;
+    },
+    &quot;value&quot;: 1895961636
+  },
+  {
+    &quot;field&quot;: &quot;host_revision&quot;,
+    &quot;result&quot;: {
+      &quot;action_commit_packet_created&quot;: false,
+      &quot;authority_created&quot;: false,
+      &quot;drs_write_created&quot;: false,
+      &quot;failure_stage&quot;: &quot;COMPLETE_PROFILE&quot;,
+      &quot;final_output_created&quot;: false,
+      &quot;permission_created&quot;: false,
+      &quot;real_world_effects_count&quot;: 0,
+      &quot;reason_codes&quot;: [
+        &quot;g2d_abi_bundle_invalid&quot;
+      ],
+      &quot;return_to_root_required&quot;: true,
+      &quot;root_review_required&quot;: true,
+      &quot;source_reason_codes&quot;: [],
+      &quot;status&quot;: &quot;FAIL_CLOSED&quot;,
+      &quot;validated_object_id&quot;: null,
+      &quot;validation_report_id&quot;: &quot;frvalidation_v02:9803ecb5fe3b1bd6d08f4eb41f3d855cdffa603048f8fc1858639b3c16701216&quot;,
+      &quot;validation_target&quot;: &quot;COMPLETE_PROFILE&quot;
+    },
+    &quot;value&quot;: 10
+  }
+]</pre></details></td><td>ACTUAL_BANK_RETAINED_SOURCE_PAIR; NO_CONTENT_ID_FIELD; HISTORICAL_NOT_CURRENT_PERMISSION</td></tr><tr><td>N15_consumed_binding_review_v09.json</td><td>reprice_decision_binding</td><td>Coherent control on the actual completed Bank fixture</td></tr><tr><td>E1 supplied D</td><td>PASS</td><td>{
+  &quot;seconds&quot;: 14.620312750339508,
+  &quot;validated_object_id&quot;: &quot;frreport_v02:4a355ce8a15cb420023972db7c3a8be85b5ad9cd03092b98260ba84f1ae572b0&quot;
+}</td></tr><tr><td>E1 supplied E</td><td>PASS</td><td>{
+  &quot;seconds&quot;: 17.004937417805195,
+  &quot;validated_object_id&quot;: &quot;g2e_continuous_delta_runtime_report_v01:0d418373aa6e3d43d5cfe8e196a5ffca6365df878b5a13f8e21dc9efd24be09b&quot;
+}</td></tr><tr><td>E2 supplied D</td><td>PASS</td><td>{
+  &quot;seconds&quot;: 14.697246542200446,
+  &quot;validated_object_id&quot;: &quot;frreport_v02:955f7443725ee505d33b3cae01f25b2d977d1285e3bc787a066805d7d0be4e7f&quot;
+}</td></tr><tr><td>E2 supplied E</td><td>PASS</td><td>{
+  &quot;seconds&quot;: 17.107668583281338,
+  &quot;validated_object_id&quot;: &quot;g2e_continuous_delta_runtime_report_v01:0f5811f8fe232a69410a5b2e58b669cd6341ac6b2c26aeec2e043632f6b4a8a8&quot;
+}</td></tr><tr><td>Closed local schema and recorded E700 equality</td><td>PASS</td><td><details><summary>Evidence record | 11 fields</summary><pre>{
+  &quot;E700_bytes&quot;: 19664988,
+  &quot;E700_recorded_return_bytes&quot;: &quot;BYTE_IDENTICAL&quot;,
+  &quot;E700_sha256&quot;: &quot;9bb1508379324b80f3474c1c77b04eef697a2edc5aac5f0623822db8b2d3cd18&quot;,
+  &quot;after&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_06/observation/E_01_return.json&quot;,
+  &quot;before&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_03/observation/E_01_return.json&quot;,
+  &quot;exact_value_differences&quot;: [],
+  &quot;helper_sha256&quot;: &quot;e525e3aca4a7f29f6119371838b25e766452f9730d9366767a98d30927397f03&quot;,
+  &quot;helper_source&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_V04.hPce6y/input/local_schema_control.py&quot;,
+  &quot;resolver&quot;: &quot;EXPLICIT_LOCAL_RESOURCES_NO_NETWORK_FALLBACK&quot;,
+  &quot;schema_controls&quot;: [
+    {
+      &quot;path&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_06/canonical_D_1.json&quot;,
+      &quot;result&quot;: {
+        &quot;positive&quot;: &quot;PASS&quot;,
+        &quot;remote_retrieval&quot;: &quot;DISABLED_BY_EXPLICIT_REGISTRY&quot;,
+        &quot;runtime_context_key&quot;: &quot;REJECTED&quot;,
+        &quot;unknown_temporal_key&quot;: &quot;REJECTED&quot;
+      },
+      &quot;sha256&quot;: &quot;bff30fbe0992d440b4c5633238144bfa8ec9631a5b5ff93cdfe5a381b3a466be&quot;
+    },
+    {
+      &quot;path&quot;: &quot;/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/bank_story_06/canonical_D_2.json&quot;,
+      &quot;result&quot;: {
+        &quot;positive&quot;: &quot;PASS&quot;,
+        &quot;remote_retrieval&quot;: &quot;DISABLED_BY_EXPLICIT_REGISTRY&quot;,
+        &quot;runtime_context_key&quot;: &quot;REJECTED&quot;,
+        &quot;unknown_temporal_key&quot;: &quot;REJECTED&quot;
+      },
+      &quot;sha256&quot;: &quot;6479c2c9fd568896003bf9ea34d4edb7e88f208f6c4c6c7158a48e619b65ba5e&quot;
+    }
+  ],
+  &quot;scope&quot;: &quot;SERIALIZED_EVIDENCE_ONLY_NOT_A_FRESH_HOST_OR_SUPPLIED_RUNTIME_VALIDATION&quot;
+}</pre></details></td></tr><tr><td>Fresh captured handler</td><td>PASS</td><td><details><summary>Evidence record | 7 fields</summary><pre>{
+  &quot;all_other_history_fields&quot;: &quot;EXACT_EQUAL&quot;,
+  &quot;explicit_provenance_differences&quot;: [
+    {
+      &quot;captured&quot;: &quot;CAPTURED_REEXECUTION&quot;,
+      &quot;live&quot;: &quot;LIVE_CAPTURED&quot;,
+      &quot;path&quot;: [
+        &quot;events&quot;,
+        5,
+        &quot;renewal&quot;,
+        &quot;generation_mode&quot;
+      ]
+    },
+    {
+      &quot;captured&quot;: &quot;CAPTURED_REEXECUTION&quot;,
+      &quot;live&quot;: &quot;LIVE_CAPTURED&quot;,
+      &quot;path&quot;: [
+        &quot;events&quot;,
+        5,
+        &quot;renewal&quot;,
+        &quot;semantics&quot;,
+        &quot;mode&quot;
+      ]
+    },
+    {
+      &quot;captured&quot;: &quot;CAPTURED_REEXECUTION&quot;,
+      &quot;live&quot;: &quot;LIVE_CAPTURED&quot;,
+      &quot;path&quot;: [
+        &quot;purchase&quot;,
+        &quot;generation_mode&quot;
+      ]
+    },
+    {
+      &quot;captured&quot;: &quot;CAPTURED_REEXECUTION&quot;,
+      &quot;live&quot;: &quot;LIVE_CAPTURED&quot;,
+      &quot;path&quot;: [
+        &quot;purchase&quot;,
+        &quot;semantics&quot;,
+        &quot;mode&quot;
+      ]
+    }
+  ],
+  &quot;mock_executor_calls&quot;: 23,
+  &quot;mock_payments&quot;: 2,
+  &quot;model_calls&quot;: 0,
+  &quot;real_adapter_calls&quot;: 0,
+  &quot;source&quot;: &quot;FRESH_CAPTURED_HANDLER_WITH_NEW_GENUINE_HOSTS&quot;
+}</pre></details></td></tr></tbody></table></div></section><section><h2>Remaining obligations</h2><p class="pending">Earlier actual role disagreement and Google 504 remain recorded; final branch results are separate. Independent review of the cumulative common/domain delta and final admission coverage before owner landing. The new renewed-period informational summary remains unsupported. Runtime is not instant; timings above include actual work. Finite examples do not certify arbitrary future domains or production security.</p></section></main><footer>Root remains the sole action authority. Captures and replay do not grant current permission. No owner apply, commit or push was performed.</footer></html>

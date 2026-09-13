@@ -1,0 +1,109 @@
+{
+  "E_seconds": [
+    317.9907664163038,
+    318.91036683321
+  ],
+  "command_directory": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789235388183342000_bank_story_06",
+  "receipt_sha256": "5b6cdc96214cc67ac8c81763f338aaa1b8070f414689a9fc0aa47ba6131ec287",
+  "result": "CONTROLLED_STORY_10_NODES_30_PHASES_AND_SUPPLIED_PASS",
+  "scope": "NOT_OWNER_ADMISSION_OR_LIVE_ACCEPTANCE",
+  "sources": {
+    "demo/run_testflix_v01.py": {
+      "bytes": 8612,
+      "sha256": "7ab7e5f873cce45f983e44be796944a9c8d07a1bf9dbf7efb8ddd63fd23fa969"
+    },
+    "hedgehog/domains/testflix/__init__.py": {
+      "bytes": 79,
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf"
+    },
+    "hedgehog/domains/testflix/contracts_v01.py": {
+      "bytes": 13757,
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    "hedgehog/domains/testflix/demo_story_v01.py": {
+      "bytes": 6774,
+      "sha256": "0b5865ae2a2a89b6f296503da98d16fb521a61c14eb6c2326fd6684b2a1ba748"
+    },
+    "hedgehog/domains/testflix/evidence_v01.py": {
+      "bytes": 118238,
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    "hedgehog/domains/testflix/kernel_adapter_v01.py": {
+      "bytes": 61200,
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    "hedgehog/domains/testflix/lifecycle_v01.py": {
+      "bytes": 27204,
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    "hedgehog/domains/testflix/live_semantic_adapter_v01.py": {
+      "bytes": 7294,
+      "sha256": "1e402e1fe7cdf5ad839b9fc176224bbf173d6eab21c039bcaf594323bc88f71f"
+    },
+    "hedgehog/domains/testflix/mock_world_v01.py": {
+      "bytes": 9890,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    "hedgehog/domains/testflix/semantic_adapter_v01.py": {
+      "bytes": 5287,
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    "hedgehog/domains/testflix/semantic_roles_v01.py": {
+      "bytes": 9691,
+      "sha256": "17bfb74fa89cb38175428ab15183eb1874d7d60f6dc21c6ddfa1a909b5baca45"
+    },
+    "hedgehog/domains/testflix/viewer_v01.py": {
+      "bytes": 3772,
+      "sha256": "6e098b75b5c952b5665d2b0ed4ba1f282b23fa0cc0bfc0628905e93ae4d909c2"
+    },
+    "hedgehog/kernel/continuous_delta_runtime_v01.py": {
+      "bytes": 554433,
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    "hedgehog/kernel/fractal_runtime_v02.py": {
+      "bytes": 947221,
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+    },
+    "hedgehog/work_execution_host_v01.py": {
+      "bytes": 52262,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    "tests/test_continuous_delta_runtime_g2_e_v01.py": {
+      "bytes": 752380,
+      "sha256": "3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d"
+    },
+    "tests/test_fractal_runtime_g2_d_v02.py": {
+      "bytes": 611489,
+      "sha256": "a456769d2b89c7aa7f14ef8332bab40ddfc007bbf3c2b201288539189889dfad"
+    },
+    "tests/test_testflix_causal_runtime_v01.py": {
+      "bytes": 16215,
+      "sha256": "2966f0c9ca5882c5550cc746b89556c1171f17a599631d6df87c5a9f3e692c58"
+    },
+    "tests/test_testflix_contracts_v01.py": {
+      "bytes": 3806,
+      "sha256": "4ba4c465277c268df5734bb222b930395e99563dbc507d8073d5a26a9f81d5bd"
+    },
+    "tests/test_testflix_evidence_v01.py": {
+      "bytes": 38475,
+      "sha256": "9633cf0548e0922115b13365033bdb60e7f82bd239560973a63563e1488ccd72"
+    },
+    "tests/test_testflix_lifecycle_v01.py": {
+      "bytes": 19983,
+      "sha256": "8516d0ef6fc1f781f2338e274271c6fd9cfc12e76d755892b8152bd4713af286"
+    },
+    "tests/test_testflix_root_review_v09.py": {
+      "bytes": 4961,
+      "sha256": "ff3641ac6356ad1dd6a42bd20880f4912869ddea786786176d66eb07f5420831"
+    },
+    "tests/test_testflix_semantic_roles_v01.py": {
+      "bytes": 3458,
+      "sha256": "35bb11f59253a1408ab244d055597eb920cca1322a02049bf77290fd4bf910d8"
+    },
+    "tests/test_work_composition_v01.py": {
+      "bytes": 127448,
+      "sha256": "62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c"
+    }
+  },
+  "stage": "bank_story_06"
+}

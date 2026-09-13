@@ -1,0 +1,7 @@
+DEMO_PHASE={"phase": "P01_HANDLE", "event": "START", "seconds": null, "elapsed_seconds": 0.0013889167457818985, "utc": "2026-09-12T20:28:52.679997+00:00"}
+P04_HEARTBEAT={"elapsed": 15.006481291726232, "active": []}
+P04_HEARTBEAT={"elapsed": 30.012760541401803, "active": []}
+P04_HEARTBEAT={"elapsed": 45.019421459175646, "active": []}
+P04_HEARTBEAT={"elapsed": 60.023388291709125, "active": []}
+P04_HEARTBEAT={"elapsed": 75.03191891685128, "active": []}
+{"result": "FAIL", "exception_type": "ServerError", "message": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'The request timed out. Please try again.', 'status': 'DEADLINE_EXCEEDED'}}"}

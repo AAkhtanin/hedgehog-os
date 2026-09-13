@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "drafts/checkpoint_live_v09.py"
+  ],
+  "files": 26,
+  "output": "/Users/admin/Downloads/RADIOLARIA_TESTFLIX_V09_LIVE_CAPTURE_CHECKPOINT_20260912T193825Z",
+  "rc": 0,
+  "reopen": "ALL_COPIED_BODIES_BYTE_EQUAL",
+  "seconds": 0.013232124969363213,
+  "state": "LIVE_PURCHASE_AND_RENEWAL_RESPONSES_COMPLETE; HISTORY_FINALIZERS_PENDING_SNAPSHOT"
+}

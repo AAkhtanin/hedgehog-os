@@ -1,0 +1,6 @@
+V09_PHASE={"phase": "SETUP", "group_started": 4863491.721523, "timeout_policy": "NONE_V09"}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09", "when": "call", "outcome": "passed", "duration": 6.654322000220418}
+                                                                        [100%]
+1 passed in 6.72s
+ACTUAL_NATIVE_RETURN_CAPTURE=PASS; NEGATIVE_HAS_NO_RETURN; NO_GLOBAL_EXCEPTION_MONITOR

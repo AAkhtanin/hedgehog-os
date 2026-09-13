@@ -1,0 +1,1 @@
+{"commands": 43, "all_receipts_final": true, "failed_commands": ["bank_story_01", "bank_story_02", "bank_story_03", "bank_story_04", "bank_story_05", "observer_probe_03", "live_main_01", "semantic_scope_controls_02", "live_AB_01", "live_AB_02", "live_AB_03", "live_AB_04", "live_AB_05"], "execution_seconds": 12868.191140784882}

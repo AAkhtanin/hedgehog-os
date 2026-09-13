@@ -1,0 +1,1333 @@
+V09_PHASE={"phase": "SETUP", "group_started": 4859219.900495291, "timeout_policy": "NONE_V09"}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_N14_current_native_quote_refusal_and_unchanged_positive
+P04_HEARTBEAT={"elapsed": 15.024996458552778, "active": [{"stage": "public_D", "number": 1, "seconds": 11.99921595863998}]}
+P04_HEARTBEAT={"elapsed": 30.381862540729344, "active": [{"stage": "public_D", "number": 1, "seconds": 27.356080583296716}]}
+P04_HEARTBEAT={"elapsed": 45.49962712544948, "active": [{"stage": "public_D", "number": 1, "seconds": 42.473844583146274}]}
+P04_HEARTBEAT={"elapsed": 60.697213125415146, "active": [{"stage": "public_D", "number": 1, "seconds": 57.67143062502146}]}
+P04_HEARTBEAT={"elapsed": 75.84942470770329, "active": [{"stage": "public_D", "number": 1, "seconds": 72.82364200055599}]}
+P04_HEARTBEAT={"elapsed": 91.18372275028378, "active": [{"stage": "public_D", "number": 1, "seconds": 88.15794000029564}]}
+P04_HEARTBEAT={"elapsed": 106.40416733268648, "active": [{"stage": "supplied_D", "number": 10, "seconds": 0.3714860836043954}]}
+P04_HEARTBEAT={"elapsed": 121.61999037489295, "active": []}
+P04_HEARTBEAT={"elapsed": 136.78564133308828, "active": []}
+P04_HEARTBEAT={"elapsed": 151.82903029117733, "active": [{"stage": "supplied_D", "number": 16, "seconds": 0.5164160830900073}]}
+P04_HEARTBEAT={"elapsed": 166.96443662513047, "active": []}
+P04_HEARTBEAT={"elapsed": 182.00917324982584, "active": []}
+P04_HEARTBEAT={"elapsed": 197.10957083292305, "active": []}
+P04_HEARTBEAT={"elapsed": 212.17262454144657, "active": []}
+P04_HEARTBEAT={"elapsed": 227.2024308750406, "active": []}
+P04_HEARTBEAT={"elapsed": 242.25788295827806, "active": []}
+P04_HEARTBEAT={"elapsed": 257.4037310415879, "active": []}
+P04_HEARTBEAT={"elapsed": 272.4852132080123, "active": [{"stage": "public_D", "number": 2, "seconds": 12.85034754127264}]}
+P04_HEARTBEAT={"elapsed": 287.7674564998597, "active": [{"stage": "public_D", "number": 2, "seconds": 28.132592749781907}]}
+P04_HEARTBEAT={"elapsed": 302.859431957826, "active": [{"stage": "public_D", "number": 2, "seconds": 43.224566916935146}]}
+P04_HEARTBEAT={"elapsed": 318.10315987467766, "active": [{"stage": "public_D", "number": 2, "seconds": 58.46829433366656}]}
+P04_HEARTBEAT={"elapsed": 333.25003954116255, "active": [{"stage": "public_D", "number": 2, "seconds": 73.61517516709864}]}
+P04_HEARTBEAT={"elapsed": 348.4811310414225, "active": [{"stage": "public_D", "number": 2, "seconds": 88.84626629203558}]}
+P04_HEARTBEAT={"elapsed": 363.6362574165687, "active": []}
+P04_HEARTBEAT={"elapsed": 378.728222833015, "active": []}
+V09_PHASE={"phase": "SCOPE_PREFLIGHT_700", "group_started": 4859603.92069675, "timeout_policy": "NONE_V09"}
+V09_PHASE={"phase": "E_PREPARATION_700", "group_started": 4859606.573329666, "timeout_policy": "NONE_V09"}
+P04_HEARTBEAT={"elapsed": 393.79143741633743, "active": []}
+V09_PHASE={"phase": "PUBLIC_E_700", "group_started": 4859616.48839425, "timeout_policy": "NONE_V09"}
+P04_HEARTBEAT={"elapsed": 408.8385507501662, "active": [{"stage": "public_E", "number": 1, "seconds": 12.250729124993086}]}
+P04_HEARTBEAT={"elapsed": 423.8507543327287, "active": [{"stage": "public_E", "number": 1, "seconds": 27.26293412502855}, {"stage": "execute_E", "number": 1, "seconds": 14.34839970804751}]}
+P04_HEARTBEAT={"elapsed": 438.91870562545955, "active": [{"stage": "public_E", "number": 1, "seconds": 42.3308850415051}, {"stage": "execute_E", "number": 1, "seconds": 29.41635024920106}, {"stage": "supplied_D", "number": 51, "seconds": 0.7647163337096572}]}
+P04_HEARTBEAT={"elapsed": 453.97139629069716, "active": [{"stage": "public_E", "number": 1, "seconds": 57.38357625063509}, {"stage": "execute_E", "number": 1, "seconds": 44.46904383227229}, {"stage": "retained_D", "number": 1, "seconds": 5.102907583117485}, {"stage": "supplied_D", "number": 62, "seconds": 0.276740500703454}]}
+P04_HEARTBEAT={"elapsed": 469.07395570818335, "active": [{"stage": "public_E", "number": 1, "seconds": 72.48613412491977}, {"stage": "execute_E", "number": 1, "seconds": 59.57159933261573}, {"stage": "retained_D", "number": 1, "seconds": 20.20546287484467}]}
+P04_HEARTBEAT={"elapsed": 484.1337777497247, "active": [{"stage": "public_E", "number": 1, "seconds": 87.54595666658133}, {"stage": "execute_E", "number": 1, "seconds": 74.63142212480307}, {"stage": "retained_D", "number": 1, "seconds": 35.265285667032}]}
+P04_HEARTBEAT={"elapsed": 499.27949891611934, "active": [{"stage": "public_E", "number": 1, "seconds": 102.69167750049382}, {"stage": "execute_E", "number": 1, "seconds": 89.77714312449098}, {"stage": "retained_D", "number": 1, "seconds": 50.41100650001317}]}
+P04_HEARTBEAT={"elapsed": 514.3834339585155, "active": [{"stage": "public_E", "number": 1, "seconds": 117.79561350028962}, {"stage": "execute_E", "number": 1, "seconds": 104.88107929099351}, {"stage": "retained_D", "number": 1, "seconds": 65.51494266651571}, {"stage": "supplied_D", "number": 68, "seconds": 0.40195745788514614}]}
+P04_HEARTBEAT={"elapsed": 529.6045509576797, "active": [{"stage": "public_E", "number": 1, "seconds": 133.01673091668636}, {"stage": "execute_E", "number": 1, "seconds": 120.10219800006598}, {"stage": "retained_D", "number": 1, "seconds": 80.73606133274734}, {"stage": "supplied_D", "number": 72, "seconds": 0.8274152502417564}]}
+P04_HEARTBEAT={"elapsed": 544.6704770829529, "active": [{"stage": "public_E", "number": 1, "seconds": 148.0826571667567}, {"stage": "execute_E", "number": 1, "seconds": 135.1681225830689}, {"stage": "retained_D", "number": 1, "seconds": 95.8019859995693}]}
+P04_HEARTBEAT={"elapsed": 559.8737730830908, "active": [{"stage": "public_E", "number": 1, "seconds": 163.28595170844346}, {"stage": "execute_E", "number": 1, "seconds": 150.3714168323204}, {"stage": "retained_D", "number": 1, "seconds": 111.00528020784259}]}
+P04_HEARTBEAT={"elapsed": 575.0729022081941, "active": [{"stage": "public_E", "number": 1, "seconds": 178.48508104123175}, {"stage": "execute_E", "number": 1, "seconds": 165.57054845802486}, {"stage": "retained_D", "number": 1, "seconds": 126.20441220793873}]}
+P04_HEARTBEAT={"elapsed": 590.6005216250196, "active": [{"stage": "public_E", "number": 1, "seconds": 194.01270145829767}, {"stage": "execute_E", "number": 1, "seconds": 181.09816683270037}, {"stage": "retained_D", "number": 1, "seconds": 141.73203025013208}, {"stage": "supplied_D", "number": 78, "seconds": 0.20498537551611662}]}
+P04_HEARTBEAT={"elapsed": 606.0259998748079, "active": [{"stage": "public_E", "number": 1, "seconds": 209.43818083312362}, {"stage": "execute_E", "number": 1, "seconds": 196.52364679053426}, {"stage": "retained_D", "number": 1, "seconds": 157.15751016698778}]}
+P04_HEARTBEAT={"elapsed": 621.0742501253262, "active": [{"stage": "public_E", "number": 1, "seconds": 224.48642891645432}, {"stage": "execute_E", "number": 1, "seconds": 211.57189399935305}]}
+P04_HEARTBEAT={"elapsed": 636.1757037080824, "active": [{"stage": "public_E", "number": 1, "seconds": 239.5878835003823}, {"stage": "execute_E", "number": 1, "seconds": 226.67334858234972}, {"stage": "supplied_D", "number": 89, "seconds": 0.9578122096136212}]}
+P04_HEARTBEAT={"elapsed": 651.1970635410398, "active": [{"stage": "public_E", "number": 1, "seconds": 254.60924404114485}, {"stage": "execute_E", "number": 1, "seconds": 241.6947095822543}]}
+P04_HEARTBEAT={"elapsed": 666.243562458083, "active": [{"stage": "public_E", "number": 1, "seconds": 269.6557421255857}, {"stage": "execute_E", "number": 1, "seconds": 256.74120791535825}]}
+P04_HEARTBEAT={"elapsed": 681.3106637084857, "active": [{"stage": "public_E", "number": 1, "seconds": 284.72284329123795}, {"stage": "execute_E", "number": 1, "seconds": 271.8083087494597}]}
+P04_HEARTBEAT={"elapsed": 696.386090375483, "active": [{"stage": "public_E", "number": 1, "seconds": 299.7982698334381}, {"stage": "execute_E", "number": 1, "seconds": 286.8837352078408}, {"stage": "supplied_E", "number": 1, "seconds": 12.192243582569063}]}
+V09_PHASE={"phase": "CONSUMERS_AND_HISTORY_1", "group_started": 4859921.20869875, "timeout_policy": "NONE_V09"}
+P04_HEARTBEAT={"elapsed": 711.4921288751066, "active": [{"stage": "supplied_E", "number": 2, "seconds": 10.183725208975375}]}
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_N14_current_native_quote_refusal_and_unchanged_positive", "when": "setup", "outcome": "failed", "duration": 717.8675219165161}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_P04_required_actual_public_E_recomputation
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_P04_required_actual_public_E_recomputation", "when": "setup", "outcome": "failed", "duration": 8.600018918514252e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_N17_N19_exact_expiry_fresh_consent_and_device_basis
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_N17_N19_exact_expiry_fresh_consent_and_device_basis", "when": "setup", "outcome": "failed", "duration": 7.812492549419403e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_N15_actual_dependency_and_preserved_period_controls_v03
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_N15_actual_dependency_and_preserved_period_controls_v03", "when": "setup", "outcome": "failed", "duration": 7.529184222221375e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_N20_supplied_current_history_and_no_live_replay
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_N20_supplied_current_history_and_no_live_replay", "when": "setup", "outcome": "failed", "duration": 6.120745092630386e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_N18_historical_receipt_is_not_consent_or_foreign_root_authority
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_N18_historical_receipt_is_not_consent_or_foreign_root_authority", "when": "setup", "outcome": "failed", "duration": 7.675029337406158e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_post_renewal_stop_and_fresh_session_same_period
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_post_renewal_stop_and_fresh_session_same_period", "when": "setup", "outcome": "failed", "duration": 7.670838385820389e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_post_renewal_equivalent_period_and_foreign_payment_rejected
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_post_renewal_equivalent_period_and_foreign_payment_rejected", "when": "setup", "outcome": "failed", "duration": 6.0750171542167664e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_post_renewal_live_lineage_refused_before_effect
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_post_renewal_live_lineage_refused_before_effect", "when": "setup", "outcome": "failed", "duration": 6.429105997085571e-05}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_post_renewal_repeated_requests_replay_and_information_limit
+EACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_post_renewal_repeated_requests_replay_and_information_limit", "when": "setup", "outcome": "failed", "duration": 6.354227662086487e-05}
+
+==================================== ERRORS ====================================
+_ ERROR at setup of test_N14_current_native_quote_refusal_and_unchanged_positive _
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+______ ERROR at setup of test_P04_required_actual_public_E_recomputation _______
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+__ ERROR at setup of test_N17_N19_exact_expiry_fresh_consent_and_device_basis __
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+_ ERROR at setup of test_N15_actual_dependency_and_preserved_period_controls_v03 _
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+____ ERROR at setup of test_N20_supplied_current_history_and_no_live_replay ____
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+_ ERROR at setup of test_N18_historical_receipt_is_not_consent_or_foreign_root_authority _
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+____ ERROR at setup of test_post_renewal_stop_and_fresh_session_same_period ____
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+_ ERROR at setup of test_post_renewal_equivalent_period_and_foreign_payment_rejected _
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+____ ERROR at setup of test_post_renewal_live_lineage_refused_before_effect ____
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+_ ERROR at setup of test_post_renewal_repeated_requests_replay_and_information_limit _
+
+request = RequestV01(request_id='request:8c2f', user_id='subject:51d9', merchant_id='merchant:a674', order_id='order:e583', devi...chase_consent=True, approved_prices_minor=(500, 600), approved_device_id='device:34a1', approved_order_id='order:e583')
+
+    @pytest.fixture(scope='module')
+    def continuing_renewal(request):
+        preflight = getattr(request.config, 'testflix_bank_preflight_v08', None)
+        request=c.request_from_plain_v01(json.loads((Path(__file__).resolve().parents[1]/'demo/testflix_fixtures_v01.json').read_text()))
+        handler=e.TestflixHandlerV01();purchase=handler.handle_v01(request)
+        original=e.seal_report_v01(purchase);original_hosts={k:id(v[0]) for k,v in handler.hosts.items()}
+        handler.advance_clock_v01(request.now+10)
+        info=handler.handle_event_v01(c.InformationRequestV01('request:t3-info',request.user_id,purchase['entitlement'].entitlement_id,handler.now))
+        handler.advance_clock_v01(request.now+20)
+        handler.handle_event_v01(c.StopPlaybackV01('request:t3-stop',request.user_id,purchase['session'].session_id,handler.now))
+        handler.advance_clock_v01(request.now+30)
+        fresh=handler.handle_event_v01(c.PlaybackRequestV01('request:t3-fresh',request.user_id,purchase['entitlement'].entitlement_id,
+            request.device_id,request.content_id,handler.now,3600,720))
+        handler.advance_clock_v01(purchase['entitlement'].candidate.valid_to-86400)
+        quote=c.ProviderQuoteV01(purchase['entitlement'].candidate.plan,request.merchant_id,request.currency,handler.now,handler.now+3600,None)
+        handler.observe_quote_v01(quote)
+        event=c.RenewalIntentV01('request:t3-renewal-pending',request.user_id,purchase['entitlement'].entitlement_id,quote.quote_id,
+            'order:t3-renewal-pending',handler.now,650,True)
+        pending=handler.prepare_renewal_v01(event)
+        unchanged=bank_branch(handler);within_consent=bank_branch(handler)
+        unchanged.advance_clock_v01(event.now+31)
+        before=executor_calls();positive=life.dispatch_v01(unchanged.pending_renewal['payment'],event.request_id)
+        assert len(executor_calls())==len(before)+1 and positive['output']['amount_minor']==500
+        persist('N14_unchanged_500.json',dict(scope='INDEPENDENT_BANK_BRANCH_NOT_MAIN_PAYMENT',
+            receipt=e.plain_value_v01(positive['receipt']),execution=e.plain_value_v01(positive['execution']),executor_delta=1))
+        handler.advance_clock_v01(event.now+30)
+        changed=c.ProviderQuoteV01(replace(quote.plan,price_minor=700),quote.merchant_id,quote.currency,handler.now,handler.now+3600,quote.quote_id)
+        handler.observe_quote_v01(changed);handler.advance_clock_v01(event.now+31)
+        before=executor_calls();clock=handler.hosts['bank'][1].snapshot;host=handler.hosts['bank'][0]
+        inspection=hosts.inspect_current_action_v01(host,packet_id=pending['payment']['bound'].packet_identity.packet_id,
+            expected_revision=host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,
+            evaluation_context_id=clock.evaluation_context_id)
+        assert not inspection.present_executable
+        with pytest.raises(ValueError,match='^host_current_action_not_executable$') as refused:
+            life.dispatch_v01(pending['payment'],event.request_id)
+        assert executor_calls()==before
+        native_refusal=dict(inspection=e.plain_value_v01(inspection),reason=str(refused.value),executor_delta=len(executor_calls())-len(before),
+            current_source=e.plain_value_v01(clock),packet=e.plain_value_v01(pending['payment']['bound']),
+            scope='CURRENT_NATIVE_DEPENDENCY_REFUSAL_ONLY_NOT_E_ACCEPTANCE')
+        persist('N14_current_quote_700.json',native_refusal)
+        started=time.monotonic()
+        if preflight is not None:preflight.check(handler)
+>       reprice=handler.reprice_pending_v01()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_testflix_evidence_v01.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hedgehog/domains/testflix/evidence_v01.py:449: in reprice_pending_v01
+    review = review_repriced_terms_v01(delta,pending,quote)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hedgehog/domains/testflix/evidence_v01.py:731: in review_repriced_terms_v01
+    return kernel.review_information_v01(transaction=bundle.delta.transaction_id,selected=c.identity_v01('repriced_terms',value),
+hedgehog/domains/testflix/kernel_adapter_v01.py:52: in review_information_v01
+    inputs = roots.build_root_decision_input_v01(transaction_id=transaction,target_root_id=source.target_root_id,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build_root_decision_input_v01(
+        *,
+        transaction_id: str,
+        target_root_id: str,
+        root_review_packet: _RootReviewPacketV01,
+        post_vv_bundle: object,
+        gt_advisory: object,
+        policy_state: object,
+        permission_state: object,
+        temporal_state: object,
+        conflict_state: object,
+        prior_root_state: object,
+    ) -> RootDecisionInputV01:
+        try:
+            frozen_states = tuple(
+                _freeze_json_object(value)
+                for value in (
+                    post_vv_bundle,
+                    gt_advisory,
+                    policy_state,
+                    permission_state,
+                    temporal_state,
+                    conflict_state,
+                    prior_root_state,
+                )
+            )
+            provisional = RootDecisionInputV01(
+                decision_input_id="0" * 64,
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+            errors = _input_errors(provisional, check_id=False)
+            if errors:
+                raise ValueError(errors[0])
+            material = _input_plain(provisional)
+            material.pop("decision_input_id")
+            return RootDecisionInputV01(
+                decision_input_id=_hash(_INPUT_DOMAIN, material),
+                transaction_id=transaction_id,
+                target_root_id=target_root_id,
+                root_review_packet=root_review_packet,
+                post_vv_bundle=frozen_states[0],
+                gt_advisory=frozen_states[1],
+                policy_state=frozen_states[2],
+                permission_state=frozen_states[3],
+                temporal_state=frozen_states[4],
+                conflict_state=frozen_states[5],
+                prior_root_state=frozen_states[6],
+            )
+        except ValueError as exc:
+            reason = _allowed_reason(exc, _INPUT_REASONS)
+>           raise ValueError(reason or "root_decision_input_invalid") from None
+E           ValueError: root_decision_post_vv_invalid
+
+hedgehog/kernel/root_decision_v01.py:250: ValueError
+=============================== warnings summary ===============================
+tests/test_testflix_evidence_v01.py::test_N14_current_native_quote_refusal_and_unchanged_positive
+  /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/post_vv.py:84: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_testflix_evidence_v01.py::test_N14_current_native_quote_refusal_and_unchanged_positive
+  /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/post_vv.py:101: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_testflix_evidence_v01.py::test_N14_current_native_quote_refusal_and_unchanged_positive
+ERROR tests/test_testflix_evidence_v01.py::test_P04_required_actual_public_E_recomputation
+ERROR tests/test_testflix_evidence_v01.py::test_N17_N19_exact_expiry_fresh_consent_and_device_basis
+ERROR tests/test_testflix_evidence_v01.py::test_N15_actual_dependency_and_preserved_period_controls_v03
+ERROR tests/test_testflix_evidence_v01.py::test_N20_supplied_current_history_and_no_live_replay
+ERROR tests/test_testflix_evidence_v01.py::test_N18_historical_receipt_is_not_consent_or_foreign_root_authority
+ERROR tests/test_testflix_evidence_v01.py::test_post_renewal_stop_and_fresh_session_same_period
+ERROR tests/test_testflix_evidence_v01.py::test_post_renewal_equivalent_period_and_foreign_payment_rejected
+ERROR tests/test_testflix_evidence_v01.py::test_post_renewal_live_lineage_refused_before_effect
+ERROR tests/test_testflix_evidence_v01.py::test_post_renewal_repeated_requests_replay_and_information_limit
+2 warnings, 10 errors in 718.68s (0:11:58)
+V09_PHASE={"phase": "EXPLICIT_SUPPLIED_D_E_1", "group_started": 4859938.702876583, "timeout_policy": "NONE_V09"}
+V09_PHASE={"phase": "CANONICAL_D_1", "group_started": 4859938.70387975, "timeout_policy": "NONE_V09"}
+P04_HEARTBEAT={"elapsed": 726.6105177914724, "active": []}
+V09_PHASE={"phase": "SUPPLIED_D_1", "group_started": 4859955.248364375, "timeout_policy": "NONE_V09"}
+P04_HEARTBEAT={"elapsed": 741.6673002913594, "active": [{"stage": "supplied_D", "number": 115, "seconds": 0.4717282075434923}]}
+V09_PHASE={"phase": "SUPPLIED_E_1", "group_started": 4859969.593536083, "timeout_policy": "NONE_V09"}
+P04_HEARTBEAT={"elapsed": 756.9702326664701, "active": [{"stage": "supplied_E", "number": 3, "seconds": 7.277421209029853}, {"stage": "supplied_D", "number": 118, "seconds": 0.3596650417894125}]}

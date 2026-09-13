@@ -1,0 +1,6 @@
+{
+  "scope": "Human report footer only; no production/test/runtime change",
+  "reason": "Owner already explicitly expanded request authorization; the remaining blocker is provider completion, not permission",
+  "runtime_receipts_unchanged": true,
+  "actual_final_report_matches_final_generator": true
+}

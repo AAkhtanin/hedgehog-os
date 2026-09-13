@@ -1,0 +1,14 @@
+DEMO_PHASE={"phase": "P01_HANDLE", "event": "START", "seconds": null, "elapsed_seconds": 0.0015746252611279488, "utc": "2026-09-12T20:32:44.951436+00:00"}
+P04_HEARTBEAT={"elapsed": 15.011466458439827, "active": []}
+P04_HEARTBEAT={"elapsed": 30.019736000336707, "active": []}
+P04_HEARTBEAT={"elapsed": 45.04164254106581, "active": []}
+P04_HEARTBEAT={"elapsed": 60.05249045789242, "active": []}
+P04_HEARTBEAT={"elapsed": 75.06248937547207, "active": []}
+P04_HEARTBEAT={"elapsed": 90.07339829113334, "active": []}
+P04_HEARTBEAT={"elapsed": 105.08295254129916, "active": []}
+P04_HEARTBEAT={"elapsed": 120.09527108352631, "active": []}
+P04_HEARTBEAT={"elapsed": 135.10130087472498, "active": []}
+P04_HEARTBEAT={"elapsed": 150.10760429129004, "active": []}
+P04_HEARTBEAT={"elapsed": 165.11371370777488, "active": []}
+P04_HEARTBEAT={"elapsed": 180.12104879133403, "active": []}
+{"result": "FAIL", "exception_type": "ReadTimeout", "message": "The read operation timed out"}

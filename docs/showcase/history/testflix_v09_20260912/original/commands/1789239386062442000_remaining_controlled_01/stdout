@@ -1,0 +1,126 @@
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N01-change0-unknown_plan]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N01-change0-unknown_plan]", "when": "call", "outcome": "passed", "duration": 0.0016874577850103378}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N02-change1-over_budget]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N02-change1-over_budget]", "when": "call", "outcome": "passed", "duration": 0.00037020910531282425}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_authority-change2-semantic_output_shape]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_authority-change2-semantic_output_shape]", "when": "call", "outcome": "passed", "duration": 0.00031558331102132797}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_amount-change3-semantic_output_shape]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_amount-change3-semantic_output_shape]", "when": "call", "outcome": "passed", "duration": 0.00027179159224033356}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_endpoint-change4-semantic_output_shape]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N03_endpoint-change4-semantic_output_shape]", "when": "call", "outcome": "passed", "duration": 0.00028179120272397995}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N04-None-semantic_output_shape]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_bounded_semantic_refusal_before_effect[N04-None-semantic_output_shape]", "when": "call", "outcome": "passed", "duration": 0.00027608219534158707}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_C01_always_same_selector_fails_sensitivity_control
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_C01_always_same_selector_fails_sensitivity_control", "when": "call", "outcome": "passed", "duration": 0.0006032912060618401}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_N06_actual_projection_privacy_and_device_policy
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_N06_actual_projection_privacy_and_device_policy", "when": "call", "outcome": "passed", "duration": 0.00018679164350032806}
+ACTUAL_NODE_START=tests/test_testflix_contracts_v01.py::test_request_schema_does_not_admit_scenario_oracles
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_contracts_v01.py::test_request_schema_does_not_admit_scenario_oracles", "when": "call", "outcome": "passed", "duration": 0.00012179091572761536}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_distinct_duties_consume_upstream_and_preference_v01
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_distinct_duties_consume_upstream_and_preference_v01", "when": "call", "outcome": "passed", "duration": 0.0014912085607647896}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[missing_terms]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[missing_terms]", "when": "call", "outcome": "passed", "duration": 0.0011249994859099388}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[wrong_price]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[wrong_price]", "when": "call", "outcome": "passed", "duration": 0.0011366251856088638}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[authority]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[authority]", "when": "call", "outcome": "passed", "duration": 0.0011713756248354912}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[disagreement]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[disagreement]", "when": "call", "outcome": "passed", "duration": 0.0011627906933426857}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[missing_evidence]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[missing_evidence]", "when": "call", "outcome": "passed", "duration": 0.001053166575729847}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_input]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_input]", "when": "call", "outcome": "passed", "duration": 0.0008908752351999283}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_capture]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_capture]", "when": "call", "outcome": "passed", "duration": 0.0009236251935362816}
+ACTUAL_NODE_START=tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_upstream]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_upstream]", "when": "call", "outcome": "passed", "duration": 0.000929834321141243}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[500-True]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[500-True]", "when": "call", "outcome": "passed", "duration": 0.08195733278989792}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[600-True]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[600-True]", "when": "call", "outcome": "passed", "duration": 0.08112187590450048}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[700-False]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_information_review_candidate_status_public_root_v09[700-False]", "when": "call", "outcome": "passed", "duration": 0.08191900048404932}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_writeback_projection_exact_bytes_and_container_isolation_v09
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_writeback_projection_exact_bytes_and_container_isolation_v09", "when": "call", "outcome": "passed", "duration": 0.00026024971157312393}
+ACTUAL_NODE_START=tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_root_review_v09.py::test_action_export_actual_native_receipt_without_runtime_handles_v09", "when": "call", "outcome": "passed", "duration": 6.689324583858252}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_P01_actual_four_root_and_business_execution
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_P01_actual_four_root_and_business_execution", "when": "call", "outcome": "passed", "duration": 5.909666292369366}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_C01_changed_soft_preference_changes_real_issued_entitlement
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_C01_changed_soft_preference_changes_real_issued_entitlement", "when": "call", "outcome": "passed", "duration": 144.89057795796543}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_C02_coherent_opaque_renaming_and_reordering
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_C02_coherent_opaque_renaming_and_reordering", "when": "call", "outcome": "passed", "duration": 145.11733137536794}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N03_explicit_purchase_consent_after_actual_work
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N03_explicit_purchase_consent_after_actual_work", "when": "call", "outcome": "passed", "duration": 10.324122708290815}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N05_fresh_equivalent_and_wrong_public_bsep_context
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N05_fresh_equivalent_and_wrong_public_bsep_context", "when": "call", "outcome": "passed", "duration": 0.025143582373857498}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[amount_minor-600]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[amount_minor-600]", "when": "call", "outcome": "passed", "duration": 6.230733917094767}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[merchant_id-merchant:other]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[merchant_id-merchant:other]", "when": "call", "outcome": "passed", "duration": 6.230841709300876}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[order_id-order:other]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N07_coherent_payment_receipt_wrong_provider_relationship[order_id-order:other]", "when": "call", "outcome": "passed", "duration": 6.242483125068247}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N09_wrong_provider_candidate_public_root_binding[entitlement_issuance]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N09_wrong_provider_candidate_public_root_binding[entitlement_issuance]", "when": "call", "outcome": "passed", "duration": 0.20561583247035742}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N09_wrong_provider_candidate_public_root_binding[session_issuance]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N09_wrong_provider_candidate_public_root_binding[session_issuance]", "when": "call", "outcome": "passed", "duration": 0.2176035838201642}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N10_device_root_missing_or_foreign
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N10_device_root_missing_or_foreign", "when": "call", "outcome": "passed", "duration": 4.567437999881804}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N13_repeated_request_and_common_consumption
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N13_repeated_request_and_common_consumption", "when": "call", "outcome": "passed", "duration": 6.4179356675595045}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N16_common_prestart_revoke_and_same_clock_positive
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N16_common_prestart_revoke_and_same_clock_positive", "when": "call", "outcome": "passed", "duration": 6.206953249871731}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N20_supplied_report_missing_work_and_future_entitlement
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N20_supplied_report_missing_work_and_future_entitlement", "when": "call", "outcome": "passed", "duration": 4.914513500407338}
+ACTUAL_NODE_START=tests/test_testflix_causal_runtime_v01.py::test_N20_offline_replay_pin_tamper_cycle_and_zero_calls
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_causal_runtime_v01.py::test_N20_offline_replay_pin_tamper_cycle_and_zero_calls", "when": "call", "outcome": "passed", "duration": 0.33794345799833536}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_P02_actual_stored_B_C_reuse_and_fresh_temporal_query
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_P02_actual_stored_B_C_reuse_and_fresh_temporal_query", "when": "call", "outcome": "passed", "duration": 2.3655082499608397}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_P02_public_consumer_scope_policy_missing_and_expired_refusals
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_P02_public_consumer_scope_policy_missing_and_expired_refusals", "when": "call", "outcome": "passed", "duration": 0.004570040851831436}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_P03_same_hosts_explicit_close_and_fresh_authority_without_purchase
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_P03_same_hosts_explicit_close_and_fresh_authority_without_purchase", "when": "call", "outcome": "passed", "duration": 9.191781282424927e-05}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N08_consumed_real_payment_period_cannot_issue_second_entitlement
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N08_consumed_real_payment_period_cannot_issue_second_entitlement", "when": "call", "outcome": "passed", "duration": 0.0001333337277173996}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N11_concurrent_refusal_then_same_history_success
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N11_concurrent_refusal_then_same_history_success", "when": "call", "outcome": "passed", "duration": 5.645863711833954e-05}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N12_session_and_current_device_limits_with_equivalent_positive
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N12_session_and_current_device_limits_with_equivalent_positive", "when": "call", "outcome": "passed", "duration": 0.00013483315706253052}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N06_actual_consumed_semantic_and_root_inputs_do_not_export_canaries
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N06_actual_consumed_semantic_and_root_inputs_do_not_export_canaries", "when": "call", "outcome": "passed", "duration": 0.0016441671177744865}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N13_original_packet_and_request_after_fresh_session_no_effect
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N13_original_packet_and_request_after_fresh_session_no_effect", "when": "call", "outcome": "passed", "duration": 7.615695666521788}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N20_supplied_history_actual_B_C_and_new_session_bindings
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N20_supplied_history_actual_B_C_and_new_session_bindings", "when": "call", "outcome": "passed", "duration": 65.1257593324408}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N20_pinned_history_replay_no_live_calls_and_tamper_refusal
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N20_pinned_history_replay_no_live_calls_and_tamper_refusal", "when": "call", "outcome": "passed", "duration": 0.5422079171985388}
+ACTUAL_NODE_START=tests/test_testflix_lifecycle_v01.py::test_N16_persistent_handler_prestart_root_revoke_with_same_time_branch
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_lifecycle_v01.py::test_N16_persistent_handler_prestart_root_revoke_with_same_time_branch", "when": "call", "outcome": "passed", "duration": 180.10856279265136}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_delayed_valid_positive_and_historical_replay
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_delayed_valid_positive_and_historical_replay", "when": "call", "outcome": "passed", "duration": 0.2551572918891907}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[unchanged]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[unchanged]", "when": "call", "outcome": "passed", "duration": 27.259022749960423}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[session_expired]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[session_expired]", "when": "call", "outcome": "passed", "duration": 12.901081167161465}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[quality]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[quality]", "when": "call", "outcome": "passed", "duration": 12.897818124853075}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[content]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[content]", "when": "call", "outcome": "passed", "duration": 12.811803249642253}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[device_expired]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[device_expired]", "when": "call", "outcome": "passed", "duration": 12.871964332647622}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[missing_dependency]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[missing_dependency]", "when": "call", "outcome": "passed", "duration": 12.858835333958268}
+ACTUAL_NODE_START=tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[changed_dependency]
+.ACTUAL_TEST_PHASE={"nodeid": "tests/test_testflix_evidence_v01.py::test_current_start_public_eligibility_before_executor[changed_dependency]", "when": "call", "outcome": "passed", "duration": 12.90416262485087}
+                [100%]
+=============================== warnings summary ===============================
+tests/test_testflix_causal_runtime_v01.py::test_P01_actual_four_root_and_business_execution
+  /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/post_vv.py:84: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_testflix_causal_runtime_v01.py::test_P01_actual_four_root_and_business_execution
+  /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate/hedgehog/post_vv.py:101: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+57 passed, 2 warnings in 1567.73s (0:26:07)

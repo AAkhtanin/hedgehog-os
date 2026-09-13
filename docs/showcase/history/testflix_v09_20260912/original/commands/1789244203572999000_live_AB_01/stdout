@@ -1,0 +1,4 @@
+DEMO_PHASE={"phase": "P01_HANDLE", "event": "START", "seconds": null, "elapsed_seconds": 0.0015135826542973518, "utc": "2026-09-12T20:16:44.197811+00:00"}
+P04_HEARTBEAT={"elapsed": 15.006396000273526, "active": []}
+P04_HEARTBEAT={"elapsed": 30.01339566707611, "active": []}
+{"result": "FAIL", "exception_type": "ValueError", "message": "semantic_review_disagreement"}

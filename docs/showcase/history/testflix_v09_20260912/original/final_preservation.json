@@ -1,0 +1,307 @@
+{
+  "V08_named_sources_unchanged": {
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_BANK_V08.WtvDKF/candidate": {
+      "demo/run_testflix_v01.py": {
+        "bytes": 6275,
+        "lf": 101,
+        "sha256": "9e1a51dc04737d2fbf37941006e2bbea95930b6533e11e217afb49e81e39bbc4"
+      },
+      "hedgehog/domains/testflix/evidence_v01.py": {
+        "bytes": 116715,
+        "lf": 1420,
+        "sha256": "7d6967878c288daa32565d300fe0a71ac66f033c44a47e00cdd10edfb35cef12"
+      },
+      "hedgehog/domains/testflix/kernel_adapter_v01.py": {
+        "bytes": 61196,
+        "lf": 645,
+        "sha256": "895a4c459c98b85309ce85360896d2e68a6e155ec8c6254f0ceba064e294c1a3"
+      },
+      "hedgehog/domains/testflix/lifecycle_v01.py": {
+        "bytes": 27204,
+        "lf": 281,
+        "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+      },
+      "hedgehog/kernel/continuous_delta_runtime_v01.py": {
+        "bytes": 552238,
+        "lf": 13446,
+        "sha256": "cd548fce5e618f8e553cafcd97d1a82d338450625f1531dc7132a575737bf00b"
+      },
+      "hedgehog/kernel/fractal_runtime_v02.py": {
+        "bytes": 943750,
+        "lf": 20439,
+        "sha256": "d2e24c22163092b0c2957a7232fa9b94e61ed29ddc7e9f1e57e466ba2892d043"
+      },
+      "hedgehog/work_execution_host_v01.py": {
+        "bytes": 52262,
+        "lf": 978,
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      },
+      "tests/test_continuous_delta_runtime_g2_e_v01.py": {
+        "bytes": 752380,
+        "lf": 17485,
+        "sha256": "3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d"
+      },
+      "tests/test_fractal_runtime_g2_d_v02.py": {
+        "bytes": 608700,
+        "lf": 13922,
+        "sha256": "9904e957722c2ee1a6aa237110d960f59c45e5170f764284a2e5e846476a62c8"
+      },
+      "tests/test_testflix_causal_runtime_v01.py": {
+        "bytes": 16215,
+        "lf": 267,
+        "sha256": "2966f0c9ca5882c5550cc746b89556c1171f17a599631d6df87c5a9f3e692c58"
+      },
+      "tests/test_testflix_evidence_v01.py": {
+        "bytes": 36280,
+        "lf": 493,
+        "sha256": "d0f8d669130f529b2f93a6c88fdbdee617f95be3427eb1fd6ce57778067d2823"
+      },
+      "tests/test_testflix_lifecycle_v01.py": {
+        "bytes": 19983,
+        "lf": 285,
+        "sha256": "8516d0ef6fc1f781f2338e274271c6fd9cfc12e76d755892b8152bd4713af286"
+      },
+      "tests/test_work_composition_v01.py": {
+        "bytes": 127448,
+        "lf": 1722,
+        "sha256": "62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c"
+      }
+    }
+  },
+  "all_previous_own_commands_final": [
+    {
+      "final": "2026-09-12T15:49:56.725711+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789228157214889000_scope_controls_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T15:51:02.249082+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789228261627695000_observer_probe_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T16:07:31.404504+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789228270283929000_bank_story_01",
+      "rc": -15
+    },
+    {
+      "final": "2026-09-12T16:11:01.010191+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789229418194384000_scope_controls_02",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T16:23:05.742423+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789229471564005000_bank_story_02",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T16:29:58.125024+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789230597361827000_semantic_controls_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T16:33:02.984903+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789230782413245000_observer_probe_02",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T16:46:44.933930+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789230837933706000_bank_story_03",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T16:50:32.476038+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789231831802690000_root_review_before_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T16:50:42.667907+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789231841589200000_root_review_after_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T17:05:11.408670+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789231869260174000_bank_story_04",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T17:09:59.832372+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789232998757358000_export_controls_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T17:34:17.159243+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789233128410698000_bank_story_05",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T17:40:12.221654+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789234805741532000_action_export_controls_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T17:42:09.122877+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789234928576198000_observer_probe_03",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T17:45:17.095887+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789235109728616000_dispatch_observer_probe_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T17:46:51.216518+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789235210620294000_observer_probe_04",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T18:50:15.136132+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789235388183342000_bank_story_06",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T18:51:35.674072+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789239095622978000_confirm_controlled_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T18:55:11.055122+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789239106073210000_schema_comparison_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T19:22:34.631012+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789239386062442000_remaining_controlled_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T19:23:11.556389+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789240987592507000_live_main_01",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T19:25:11.014606+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789241110869496000_semantic_scope_controls_02",
+      "rc": 2
+    },
+    {
+      "final": "2026-09-12T19:25:20.548147+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789241119763726000_semantic_scope_controls_03",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T19:45:13.952420+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789241138466432000_live_main_02",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T19:45:48.174798+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789242347497409000_captured_controls_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:04:42.482727+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789242356643263000_captured_main_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:07:39.522831+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789243658792169000_AB_egress_preflight_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:17:17.071223+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244203572999000_live_AB_01",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T20:20:48.386558+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244447711700000_captured_AB_refusal_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:22:45.237756+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244564341746000_semantic_scope_controls_04",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:24:46.698257+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244583446819000_live_AB_02",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T20:26:29.916286+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244789277795000_live_AB_03",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T20:28:31.532037+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244911437941000_resume_prefix_controls_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:30:22.395575+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789244932066329000_live_AB_04",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T20:32:01.146962+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245120246891000_semantic_scope_controls_05",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:32:01.854496+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245121258963000_captured_controls_02",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:35:45.794500+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245164327875000_live_AB_05",
+      "rc": 1
+    },
+    {
+      "final": "2026-09-12T20:36:54.242161+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245413608948000_transport_boundary_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:36:55.092714+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245414367124000_assemble_story_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:37:03.984128+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245423198459000_prepare_apply_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:37:13.548518+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245430393908000_final_static_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:37:47.582153+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245460291753000_viewer_QA_01",
+      "rc": 0
+    },
+    {
+      "final": "2026-09-12T20:38:08.010674+00:00",
+      "path": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/commands/1789245487824754000_coverage_01",
+      "rc": 0
+    }
+  ],
+  "commit": false,
+  "current_guard": "Recorder must finish and be checked before packaging",
+  "next_stage_barrier": "PRESERVED",
+  "original_named_sources_unchanged": {
+    "hedgehog/kernel/continuous_delta_runtime_v01.py": "4c62678f1a55d5269a05629f44f8f7339c5e576c9aa3086a094efb9e96712ac7",
+    "hedgehog/kernel/fractal_runtime_v02.py": "6b05246ba413f7242097bfc67815cdef4977e10887492438f05815b86dadf861",
+    "hedgehog/work_execution_host_v01.py": "f71b90e9fb4d55d42b136d5b3c9f6c38886979b49404d3bffcea6721aacc2bd4"
+  },
+  "original_scope": "Named source pins and barrier; no new full repository audit",
+  "owner_HEAD": "54e32dbcc0e4d68431ec2b9428eac965f88ee47c",
+  "owner_metadata": "BYTE_EQUAL_TO_ENTRY",
+  "owner_unchanged": true,
+  "push": false,
+  "staging_empty": true
+}

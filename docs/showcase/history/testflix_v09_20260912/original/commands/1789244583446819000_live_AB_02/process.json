@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py",
+    "live_AB_02",
+    "AB"
+  ],
+  "pid": 39797,
+  "ps": "39797 39790 Sat Sep 12 22:23:03 2026     /Users/admin/Projects/hedgehog-os/.venv/bin/python -B /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/live_stage_v09.py live_AB_02 AB\n",
+  "ps_rc": 0,
+  "ps_stderr": "",
+  "started_utc": "2026-09-12T20:23:03.451847+00:00",
+  "supervisor": 39790
+}

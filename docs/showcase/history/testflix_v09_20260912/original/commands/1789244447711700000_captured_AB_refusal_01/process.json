@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/captured_AB_refusal_v09.py"
+  ],
+  "pid": 39638,
+  "ps_unavailable": "[Errno 1] Operation not permitted: 'ps'",
+  "started_utc": "2026-09-12T20:20:47.720278+00:00",
+  "supervisor": 39631
+}

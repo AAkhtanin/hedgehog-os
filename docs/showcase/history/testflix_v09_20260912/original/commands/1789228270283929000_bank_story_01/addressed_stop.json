@@ -1,0 +1,63 @@
+{
+  "utc": "2026-09-12T16:07:31.363673+00:00",
+  "process": {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+      "-B",
+      "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/p04_v09_stage.py",
+      "bank_story_01"
+    ],
+    "pid": 25244,
+    "ps_unavailable": "[Errno 1] Operation not permitted: 'ps'",
+    "started_utc": "2026-09-12T15:51:10.289243+00:00",
+    "supervisor": 25237
+  },
+  "observed": "25244 25237 25244 Sat Sep 12 17:51:10 2026     /opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/p04_v09_stage.py bank_story_01\n",
+  "reason": "MEASURED_REPEATED_CAPTURE_VALIDATION_IN_PURE_D4_CELL_PATH; NOT_TIMEOUT_NOT_SEMANTIC_FAILURE",
+  "sample": {
+    "phase": "PUBLIC_E_700",
+    "calls": {
+      "registry_core": 830,
+      "source_read": 40,
+      "full_material": 576,
+      "edges": 573,
+      "scope": 13167
+    },
+    "inclusive_seconds": {
+      "registry_core": 518.1686700442806,
+      "source_read": 0.00010083802044391632,
+      "full_material": 379.1317724492401,
+      "edges": 0.7568426746875048,
+      "scope": 382.3620718475431
+    },
+    "phase_counts": {
+      "SETUP:registry_core": 241,
+      "SETUP:source_read": 37,
+      "SCOPE_PREFLIGHT_700:source_read": 1,
+      "SCOPE_PREFLIGHT_700:full_material": 4,
+      "SCOPE_PREFLIGHT_700:registry_core": 4,
+      "SCOPE_PREFLIGHT_700:edges": 2,
+      "SCOPE_PREFLIGHT_700:scope": 3,
+      "E_PREPARATION_700:source_read": 2,
+      "E_PREPARATION_700:registry_core": 7,
+      "E_PREPARATION_700:full_material": 4,
+      "E_PREPARATION_700:scope": 6,
+      "E_PREPARATION_700:edges": 3,
+      "PUBLIC_E_700:registry_core": 578,
+      "PUBLIC_E_700:scope": 13158,
+      "PUBLIC_E_700:edges": 568,
+      "PUBLIC_E_700:full_material": 568
+    },
+    "reuse_hits": 12595,
+    "full_or_reentry_calls": 572,
+    "unsupported": 0,
+    "unwinds": [],
+    "full_call_causes": {
+      "NEW_INDEPENDENT_SCOPE": 572
+    },
+    "active": [],
+    "note": "Local selected-code events only. Nested inclusive times are not independent CPU shares."
+  },
+  "signal": "SIGTERM_TO_OWN_NEW_SESSION_ONLY",
+  "finalizers": "WILL_BE_REPORTED_ACTUALLY"
+}

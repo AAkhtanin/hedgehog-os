@@ -1,0 +1,14 @@
+{
+  "observation_scope": "Local configuration presence and installed SDK only; no remote call",
+  "configured_source": "/Users/admin/Projects/hedgehog-os/config.py",
+  "transport": "gemini",
+  "model_field": "GEMINI_MODEL",
+  "model": "gemini-2.5-flash",
+  "credential_field": "GOOGLE_API_KEY",
+  "credential_present": true,
+  "credential_value_recorded": false,
+  "google_genai_installed": true,
+  "shell_provider_environment_configured": false,
+  "live_calls_so_far": 0,
+  "condition_for_live": "Controlled completion and final adapter validation first"
+}

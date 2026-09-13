@@ -1,0 +1,118 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/run_focused.py",
+    "--evidence",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/scope_controls_01",
+    "-q",
+    "-s",
+    "-p",
+    "no:cacheprovider",
+    "tests/test_work_composition_v01.py::test_capture_receipt_material_reuse_and_mutation_v08",
+    "tests/test_work_composition_v01.py::test_capture_material_local_scope_origin_mutation_and_lifetime_v06",
+    "tests/test_continuous_delta_runtime_g2_e_v01.py::test_current_temporal_binding_actual_capture_input_source_only_v01"
+  ],
+  "cwd": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate",
+  "environment": {
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONHASHSEED": "0",
+    "PYTHONPATH": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/candidate",
+    "TMPDIR": "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/tmp"
+  },
+  "helpers": {
+    "observe_p04.py": {
+      "bytes": 10342,
+      "sha256": "890de910031bef5ecc626ac171c2cf6a3f0578c4a269a04ad24718dc7931be5b"
+    },
+    "prepare_v09.py": {
+      "bytes": 5293,
+      "sha256": "369be035a1a71624c0ffcd88d89aa5f908d6aecde54b4c0df950d4e4abdfa7d1"
+    },
+    "record_v09.py": {
+      "bytes": 4146,
+      "sha256": "a7fec96fa55445d6a26a6d11d87440a093791fc5726670e969df30445c888caf"
+    },
+    "run_focused.py": {
+      "bytes": 3291,
+      "sha256": "ed1dcb40a1382d9409b73c5d8990fc552c51c1312e6fa2bac6bef912d7f51f3a"
+    },
+    "scope_patch_v09.py": {
+      "bytes": 2950,
+      "sha256": "da0b3b36bdb07b7e1c70eb71aada3844ffc728f0f7da0068a171f8d409dcd00a"
+    }
+  },
+  "sources": {
+    "demo/run_testflix_v01.py": {
+      "bytes": 6275,
+      "sha256": "9e1a51dc04737d2fbf37941006e2bbea95930b6533e11e217afb49e81e39bbc4"
+    },
+    "hedgehog/domains/testflix/__init__.py": {
+      "bytes": 79,
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf"
+    },
+    "hedgehog/domains/testflix/contracts_v01.py": {
+      "bytes": 13757,
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    "hedgehog/domains/testflix/evidence_v01.py": {
+      "bytes": 116715,
+      "sha256": "7d6967878c288daa32565d300fe0a71ac66f033c44a47e00cdd10edfb35cef12"
+    },
+    "hedgehog/domains/testflix/kernel_adapter_v01.py": {
+      "bytes": 61196,
+      "sha256": "895a4c459c98b85309ce85360896d2e68a6e155ec8c6254f0ceba064e294c1a3"
+    },
+    "hedgehog/domains/testflix/lifecycle_v01.py": {
+      "bytes": 27204,
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    "hedgehog/domains/testflix/mock_world_v01.py": {
+      "bytes": 9890,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    "hedgehog/domains/testflix/semantic_adapter_v01.py": {
+      "bytes": 3270,
+      "sha256": "7420ef8727be2a58a6d53b9d3375066b276ba3722028d37d93c0b2a76ac42384"
+    },
+    "hedgehog/kernel/continuous_delta_runtime_v01.py": {
+      "bytes": 554433,
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    "hedgehog/kernel/fractal_runtime_v02.py": {
+      "bytes": 946371,
+      "sha256": "99ad089d2b15c5ca2d015d65997e657f40bc44b9dbfad917686d0491e67efec2"
+    },
+    "hedgehog/work_execution_host_v01.py": {
+      "bytes": 52262,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    "tests/test_continuous_delta_runtime_g2_e_v01.py": {
+      "bytes": 752380,
+      "sha256": "3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d"
+    },
+    "tests/test_fractal_runtime_g2_d_v02.py": {
+      "bytes": 608700,
+      "sha256": "9904e957722c2ee1a6aa237110d960f59c45e5170f764284a2e5e846476a62c8"
+    },
+    "tests/test_testflix_causal_runtime_v01.py": {
+      "bytes": 16215,
+      "sha256": "2966f0c9ca5882c5550cc746b89556c1171f17a599631d6df87c5a9f3e692c58"
+    },
+    "tests/test_testflix_evidence_v01.py": {
+      "bytes": 36280,
+      "sha256": "d0f8d669130f529b2f93a6c88fdbdee617f95be3427eb1fd6ce57778067d2823"
+    },
+    "tests/test_testflix_lifecycle_v01.py": {
+      "bytes": 19983,
+      "sha256": "8516d0ef6fc1f781f2338e274271c6fd9cfc12e76d755892b8152bd4713af286"
+    },
+    "tests/test_work_composition_v01.py": {
+      "bytes": 127448,
+      "sha256": "62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c"
+    }
+  },
+  "timeout_policy": "NONE_V09_PROGRESS_OBSERVED",
+  "utc": "2026-09-12T15:49:17.218286+00:00"
+}

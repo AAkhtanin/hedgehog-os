@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/run_focused.py",
+    "--evidence",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/root_review_after_01/tests",
+    "-p",
+    "no:cacheprovider",
+    "-q",
+    "tests/test_testflix_root_review_v09.py",
+    "tests/test_testflix_contracts_v01.py",
+    "tests/test_testflix_semantic_roles_v01.py"
+  ],
+  "pid": 28400,
+  "ps_unavailable": "[Errno 1] Operation not permitted: 'ps'",
+  "started_utc": "2026-09-12T16:50:41.595076+00:00",
+  "supervisor": 28393
+}

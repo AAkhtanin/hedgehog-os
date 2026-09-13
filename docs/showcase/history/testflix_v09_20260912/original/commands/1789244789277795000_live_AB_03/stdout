@@ -1,0 +1,2 @@
+DEMO_PHASE={"phase": "P01_HANDLE", "event": "START", "seconds": null, "elapsed_seconds": 0.0016412073746323586, "utc": "2026-09-12T20:26:29.870982+00:00"}
+{"result": "FAIL", "exception_type": "TypeError", "message": "'ResumeProvider' object is not callable"}

@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/final_preservation_v09.py"
+  ],
+  "pid": 40820,
+  "ps": "40820 40813 Sat Sep 12 22:38:20 2026     /Users/admin/Projects/hedgehog-os/.venv/bin/python -B /private/tmp/RADIOLARIA_TESTFLIX_T3_COMPLETE_V09.KpxscY/final_preservation_v09.py\n",
+  "ps_rc": 0,
+  "ps_stderr": "",
+  "started_utc": "2026-09-12T20:38:20.897296+00:00",
+  "supervisor": 40813
+}

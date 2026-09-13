@@ -1,0 +1,134 @@
+{"elapsed": 2.838793999515474, "event": "START", "number": 1, "stage": "public_D"}
+{"event": "RETURN", "number": 1, "seconds": 0.8824219154193997, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 2, "seconds": 0.8892380828037858, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 1, "seconds": 93.4966616248712, "stage": "public_D", "status": null}
+{"event": "RETURN", "number": 3, "seconds": 0.8843262912705541, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 4, "seconds": 0.9056905405595899, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 5, "seconds": 0.8982109585776925, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 6, "seconds": 0.8819233747199178, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 7, "seconds": 0.9194034170359373, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 8, "seconds": 0.8777440004050732, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 9, "seconds": 0.8913078755140305, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 10, "seconds": 0.88332225009799, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 107.65712091699243, "event": "START", "number": 1, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 1, "seconds": 3.149603500030935, "stage": "native_dispatch"}
+{"elapsed": 113.85817641671747, "event": "START", "number": 2, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 2, "seconds": 3.2207718743011355, "stage": "native_dispatch"}
+{"elapsed": 124.57202629186213, "event": "START", "number": 3, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 3, "seconds": 6.718110334128141, "stage": "native_dispatch"}
+{"elapsed": 134.332659333013, "event": "START", "number": 4, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 4, "seconds": 3.1483336249366403, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 11, "seconds": 0.890832582488656, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 12, "seconds": 0.8789790002629161, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 13, "seconds": 0.8898430000990629, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 14, "seconds": 0.8796802507713437, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 15, "seconds": 0.8958052499219775, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 16, "seconds": 0.8988927081227303, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 17, "seconds": 0.8898783326148987, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 18, "seconds": 0.8870224170386791, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 19, "seconds": 0.8909913748502731, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 168.46479758247733, "event": "START", "number": 5, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 5, "seconds": 6.425313167273998, "stage": "native_dispatch"}
+{"elapsed": 186.69083704147488, "event": "START", "number": 6, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 6, "seconds": 10.024020708166063, "stage": "native_dispatch"}
+{"elapsed": 213.2083855830133, "event": "START", "number": 7, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 7, "seconds": 13.5224654590711, "stage": "native_dispatch"}
+{"elapsed": 238.2768277078867, "event": "START", "number": 8, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 8, "seconds": 9.812768165953457, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 20, "seconds": 0.8787497505545616, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 21, "seconds": 0.8952910834923387, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 22, "seconds": 0.9047263329848647, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 270.88974216673523, "event": "START", "number": 9, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 9, "seconds": 13.117865916341543, "stage": "native_dispatch"}
+{"elapsed": 304.67562087532133, "event": "START", "number": 10, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 10, "seconds": 16.868188999593258, "stage": "native_dispatch"}
+{"elapsed": 341.9871554579586, "event": "START", "number": 11, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 11, "seconds": 16.572987374849617, "stage": "native_dispatch"}
+{"elapsed": 361.5272928746417, "event": "START", "number": 2, "stage": "public_D"}
+{"event": "RETURN", "number": 23, "seconds": 0.8918950827792287, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 24, "seconds": 0.8945098742842674, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 2, "seconds": 93.9621894992888, "stage": "public_D", "status": null}
+{"event": "RETURN", "number": 25, "seconds": 0.9071551244705915, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 26, "seconds": 0.9036294165998697, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 27, "seconds": 0.8831376656889915, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 28, "seconds": 0.9027356253936887, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 29, "seconds": 0.8862885842099786, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 30, "seconds": 0.9086281247437, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 31, "seconds": 0.8858131254091859, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 32, "seconds": 0.8938410002738237, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 470.82810854166746, "event": "START", "number": 12, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 12, "seconds": 6.462817917577922, "stage": "native_dispatch"}
+{"elapsed": 502.2472052918747, "event": "START", "number": 13, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 13, "seconds": 20.21066691726446, "stage": "native_dispatch"}
+{"elapsed": 551.7783543327823, "event": "START", "number": 14, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 14, "seconds": 23.680483041331172, "stage": "native_dispatch"}
+{"elapsed": 600.076111166738, "event": "START", "number": 15, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 15, "seconds": 19.874248375184834, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 33, "seconds": 0.8956393748521805, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 34, "seconds": 0.881155707873404, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 35, "seconds": 0.8815293340012431, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 36, "seconds": 0.9079196248203516, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 37, "seconds": 0.8839320428669453, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 38, "seconds": 0.897430207580328, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 39, "seconds": 0.8956904169172049, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 40, "seconds": 0.8765829997137189, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 41, "seconds": 0.9056416666135192, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 42, "seconds": 0.8930365415289998, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 43, "seconds": 0.9079796252772212, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 44, "seconds": 0.887209540233016, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 45, "seconds": 0.881329583004117, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 46, "seconds": 0.8983929166570306, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 47, "seconds": 0.898109208792448, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 710.3281119167805, "event": "START", "number": 16, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 16, "seconds": 23.197285875678062, "stage": "native_dispatch"}
+{"elapsed": 767.2713764170185, "event": "START", "number": 17, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 17, "seconds": 27.142935583367944, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 48, "seconds": 0.9144530827179551, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 49, "seconds": 0.8874126253649592, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 50, "seconds": 0.8904404593631625, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 51, "seconds": 0.8788286671042442, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 52, "seconds": 0.8855947088450193, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 53, "seconds": 0.8971207924187183, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 54, "seconds": 0.889817625284195, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 55, "seconds": 0.8967304592952132, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 56, "seconds": 0.8963825004175305, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 873.6600107075647, "event": "START", "number": 18, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 18, "seconds": 30.531013749539852, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 57, "seconds": 0.9045286672189832, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 58, "seconds": 0.8939334582537413, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 59, "seconds": 0.9171050833538175, "stage": "supplied_D", "status": "PASS"}
+{"elapsed": 951.0474337078631, "event": "START", "number": 19, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 19, "seconds": 26.53255937527865, "stage": "native_dispatch"}
+{"event": "RETURN", "number": 60, "seconds": 0.8866672087460756, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 61, "seconds": 0.892552874982357, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 62, "seconds": 0.8954282496124506, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 63, "seconds": 0.8891389593482018, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 64, "seconds": 0.8952120412141085, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 65, "seconds": 0.8914143750444055, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 66, "seconds": 0.8960171667858958, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 67, "seconds": 0.8896262906491756, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 68, "seconds": 0.8937087496742606, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 69, "seconds": 0.8839232502505183, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 70, "seconds": 0.9051668755710125, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 71, "seconds": 0.8968740412965417, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 72, "seconds": 0.8833435839042068, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 73, "seconds": 0.8995786672458053, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 74, "seconds": 0.8836007080972195, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 75, "seconds": 0.9082039576023817, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 76, "seconds": 0.8803743747994304, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 77, "seconds": 0.8886854574084282, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 78, "seconds": 0.8909302083775401, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 79, "seconds": 0.8844380406662822, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 80, "seconds": 0.8798948330804706, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 81, "seconds": 0.8967119995504618, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 82, "seconds": 0.8834069175645709, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 83, "seconds": 0.8874700833112001, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 84, "seconds": 0.8891612086445093, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 85, "seconds": 0.8770171664655209, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 86, "seconds": 0.8992635002359748, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 87, "seconds": 0.8922407915815711, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 88, "seconds": 0.896866500377655, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 89, "seconds": 0.8845593323931098, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 90, "seconds": 0.8835037499666214, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 91, "seconds": 0.8912046672776341, "stage": "supplied_D", "status": "PASS"}
+{"event": "RETURN", "number": 92, "seconds": 0.9087156662717462, "stage": "supplied_D", "status": "PASS"}

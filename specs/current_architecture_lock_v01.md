@@ -1,5 +1,15 @@
 # Hedgehog OS Current Architecture Lock v0.1
 
+## Testflix Exact L Successor
+
+The V11 preparation extends only the exact source-admission branch from accepted
+L `54e32dbcc0e4d68431ec2b9428eac965f88ee47c`. The current exact path ledger is
+`testflix_admission_v11`; historical U4 predicates and pins remain separate.
+No new authority law, Gate, effect owner or permission transfer is introduced.
+See [the checkpoint](../docs/testflix_v01_preflight.md#v11-admission-preparation).
+The exact reviewer projection repair is verified. Owner execution preparation
+is ready for independent review; owner landing and final acceptance remain pending.
+
 ## Bounded Common Action and Local Reuse: Current Admission Proposal
 
 The [implementation checkpoint](../docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy

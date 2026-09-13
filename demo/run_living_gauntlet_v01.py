@@ -5721,6 +5721,27 @@ _U4_FROZEN_SOURCES = {'demo/run_action_packet_portability_v01.py': '82be33d8420e
  'tests/test_work_continuation_and_reuse_v01.py': 'c283d1eb3920076311328a6922257a83672b0bef847e109bedfdcaa3b32d001f'}
 _U4_BASE_IDENTITIES = {'release/completion_manifest.json': '4ae53a074dd49440c191928b10b390120cc97aa7c04f23c3ddc9771fd914d5b9', 'release/integration_seam_index.json': '4b0d65b84ca253b2a41b03777ae64a67f9ca048608b0d9648196129c1754fb03'}
 
+_TESTFLIX_REGISTRATION_KEY_V11 = "testflix_current_registration_v11"
+_TESTFLIX_L_V11 = "54e32dbcc0e4d68431ec2b9428eac965f88ee47c"
+_TESTFLIX_SOURCE_UPDATES_V11 = {'demo/run_fractal_runtime_g2_d_v02.py': '6399913a0aaca15dc11476045fb514e6059e7d43ed012e0da539b3546a2a80a6',
+ 'demo/run_kernel_conformance_v01.py': 'fc4f919db78519f1f69f87a897989b88b6e125e41e85d22b28b6ba41432d4578',
+ 'docs/common_action_and_dynamic_composition_contract_v01.md': '7f747d14065c11e6194fce94aabcd107693e7d27cd75c5558c37cef0a0a3092d',
+ 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': '160676d9db97a68e09393c79287d1c860cbf30cd3aacf05f7760ef67a81ee518',
+ 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': 'd5cd57769c417749927f163925bc214c9c61125ef98beb31f46c154616fbb5a2',
+ 'hedgehog/kernel/continuous_delta_runtime_v01.py': '879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0',
+ 'hedgehog/kernel/fractal_runtime_v02.py': 'ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba',
+ 'hedgehog/work_execution_host_v01.py': '56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b',
+ 'schemas/fractal_runtime_v02.schema.json': '95f81f4122e021d4cba1bd43e6ec8d337ccdb36af058e96ea1e7e3f2f6283df5',
+ 'tests/test_action_packet_portability_v01.py': 'c2179fc7c7fd9d293d3bdef20f8702ac07840024956abd0216d4fc38d2f37875',
+ 'tests/test_continuous_delta_runtime_g2_e_v01.py': '3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d',
+ 'tests/test_fractal_runtime_g2_d_v02.py': 'a456769d2b89c7aa7f14ef8332bab40ddfc007bbf3c2b201288539189889dfad',
+ 'tests/test_work_composition_v01.py': '62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c'}
+_TESTFLIX_FROZEN_SOURCES_V11 = {**_U4_FROZEN_SOURCES, **_TESTFLIX_SOURCE_UPDATES_V11}
+_TESTFLIX_REGISTRATION_ROWS_V11 = tuple(
+    {**row, "source_sha256": _TESTFLIX_FROZEN_SOURCES_V11[row["producer"].split(":")[0].replace(".", "/") + ".py"]}
+    for row in _U4_REGISTRATION_ROWS
+)
+
 
 def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[str, ...]]:
     """Read current registration as evidence, never dispatch metadata symbols."""
@@ -5730,7 +5751,10 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
     errors: list[str] = []
     try:
         overlay = _load_strict_json_object(root / "release/current_status_overlay_v01.json")
-        block = overlay.get(_U4_REGISTRATION_KEY)
+        testflix = _TESTFLIX_REGISTRATION_KEY_V11 in overlay
+        block = overlay.get(_TESTFLIX_REGISTRATION_KEY_V11 if testflix else _U4_REGISTRATION_KEY)
+        sources = _TESTFLIX_FROZEN_SOURCES_V11 if testflix else _U4_FROZEN_SOURCES
+        rows = _TESTFLIX_REGISTRATION_ROWS_V11 if testflix else _U4_REGISTRATION_ROWS
         if block is None:
             # A missing block is historical only with the entire exact H tree.
             head = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=root).decode().strip()
@@ -5754,18 +5778,18 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
                 return None, ("registration_missing_current",)
             return None, ()
         expected = {
-            "profile": "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
-            "basis": _U4_H,
+            "profile": "TESTFLIX_TEMPORAL_IMPLEMENTATION_ADMISSION_V11" if testflix else "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
+            "basis": _TESTFLIX_L_V11 if testflix else _U4_H,
             "status": "IMPLEMENTED_REGISTRATION_CANDIDATE_OWNER_ACCEPTANCE_PENDING",
             "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_HANDLE",
             "base_identities": _U4_BASE_IDENTITIES,
-            "frozen_source_identities": _U4_FROZEN_SOURCES,
-            "rows": list(_U4_REGISTRATION_ROWS),
+            "frozen_source_identities": sources,
+            "rows": list(rows),
             "schema_paths": ["schemas/work_composition_v01.schema.json", "schemas/capability_admission_v01.schema.json"],
         }
         if block != expected:
             errors.append("registration_exact_block")
-        for path, digest in {**_U4_BASE_IDENTITIES, **_U4_FROZEN_SOURCES}.items():
+        for path, digest in {**_U4_BASE_IDENTITIES, **sources}.items():
             file = root / path
             if file.is_symlink() or not file.is_file() or hashlib.sha256(file.read_bytes()).hexdigest() != digest:
                 errors.append("registration_source:" + path)
@@ -5773,11 +5797,11 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
         base_schema = json.loads(subprocess.check_output(("git", "show", _U4_H + ":release/current_schema_surface_v01.json"), cwd=root))
         if schema.get("current_schema_paths") != sorted(base_schema["current_schema_paths"] + expected["schema_paths"]):
             errors.append("registration_schema_inventory")
-        for row in _U4_REGISTRATION_ROWS:
+        for row in rows:
             for key in ("producer", "validator", "consumer"):
                 module, symbol = row[key].split(":")
                 path = module.replace(".", "/") + ".py"
-                if path not in _U4_FROZEN_SOURCES:
+                if path not in sources:
                     errors.append("registration_module:" + path)
                     continue
                 tree = ast.parse((root / path).read_bytes())

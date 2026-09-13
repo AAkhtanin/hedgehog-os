@@ -16,6 +16,111 @@ from demo import run_action_packet_portability_v01 as runner
 from demo import work_composition_mock_capabilities_v01 as mocks
 
 
+class CountingTemporalSourceV03:
+    def __init__(self, prepared):
+        self.source = mocks.TrustedMockWorkSourceV01(prepared.observations, prepared.bridge,
+            1014, 'u1.controlled_utc', 'context:u1:dispatch')
+        self.reads = 0
+
+    def read_current_v01(self):
+        self.reads += 1
+        return self.source.read_current_v01()
+
+
+def test_temporal_capture_atomic_retained_origin_and_current_revision_v03():
+    prepared = runner.prepare_native_playback_v01()
+    source = CountingTemporalSourceV03(prepared)
+    host = runner.host_for_prepared_action_v01(prepared, source)
+    query = dispatch_kwargs(prepared);query.pop('task_id')
+    calls = mocks.observed_mock_calls_v01()
+    before = source.reads
+    capture = hosts.capture_current_action_source_v01(host, **query)
+    assert source.reads == before + 1 and capture.host_revision == host.revision
+    assert capture.registry == prepared.registry and capture.observations == prepared.observations
+    equivalent = replace(capture)
+    assert equivalent is not capture and hosts.validate_retained_action_source_capture_v01(host, equivalent, require_current=True)
+    before = source.reads
+    assert hosts.validate_retained_action_source_capture_v01(host, equivalent)
+    assert source.reads == before and mocks.observed_mock_calls_v01() == calls
+    source.source.advance_v01(evaluation_time=1015, observations=prepared.observations)
+    later = hosts.capture_current_action_source_v01(host, **dict(query, evaluation_time=1015))
+    assert later.host_revision > capture.host_revision and later.source_revision > capture.source_revision
+    before = source.reads
+    assert hosts.validate_retained_action_source_capture_v01(host, equivalent)
+    with pytest.raises(ValueError, match='^host_capture_not_current$'):
+        hosts.validate_retained_action_source_capture_v01(host, equivalent, require_current=True)
+    assert hosts.validate_retained_action_source_capture_v01(host, replace(later), require_current=True)
+    assert source.reads == before and mocks.observed_mock_calls_v01() == calls
+    emit('H.CAPTURE.RETAINED', reads=source.reads, old_revision=capture.host_revision,
+        current_revision=later.host_revision, executor_delta=0, historical_live_reads=0)
+
+
+def test_temporal_capture_coherent_forgery_foreign_packet_and_rollback_v03():
+    prepared = runner.prepare_native_playback_v01()
+    source = CountingTemporalSourceV03(prepared)
+    host = runner.host_for_prepared_action_v01(prepared, source)
+    query = dispatch_kwargs(prepared);query.pop('task_id')
+    capture = hosts.capture_current_action_source_v01(host, **query)
+    calls = mocks.observed_mock_calls_v01()
+    for field, value, reason in (
+        ('evaluation_time', capture.evaluation_time + 1, 'host_capture_retained_material'),
+        ('source_revision', capture.source_revision + 1, 'host_capture_retained_material'),
+        ('host_revision', bool(capture.host_revision), 'host_capture_revision'),
+        ('owning_root_id', 'root:foreign', 'host_capture_root_transaction'),
+        ('packet_id', 'packet:foreign', 'host_capture_packet')):
+        with pytest.raises(ValueError, match='^'+reason+'$'):
+            hosts.validate_retained_action_source_capture_v01(host, replace(capture, **{field:value}))
+    neighbor = runner.prepare_native_playback_v01()
+    other = runner.host_for_prepared_action_v01(neighbor, CountingTemporalSourceV03(neighbor))
+    with pytest.raises(ValueError, match='^host_capture_origin$'):
+        hosts.validate_retained_action_source_capture_v01(other, replace(capture))
+    for changes, reason in (({'packet_id':'packet:foreign'},'host_capture_packet'),
+        ({'expected_revision':99},'host_stale_revision'),
+        ({'evaluation_context_id':'context:foreign'},'host_task_time_not_current')):
+        with pytest.raises(ValueError, match='^'+reason+'$'):
+            hosts.capture_current_action_source_v01(host, **dict(query, **changes))
+    source.source.advance_v01(evaluation_time=1013, observations=prepared.observations)
+    with pytest.raises(ValueError, match='^host_trusted_source_regression$'):
+        hosts.capture_current_action_source_v01(host, **dict(query, evaluation_time=1013))
+    assert mocks.observed_mock_calls_v01() == calls
+    assert hosts.validate_retained_action_source_capture_v01(host, replace(capture))
+    emit('H.CAPTURE.FORGED', executor_delta=0, coherent_value_rejected=True,
+        foreign_origin_rejected=True, rollback_rejected=True)
+
+
+def test_temporal_capture_changed_dependency_is_evidence_not_permission_v03():
+    import hashlib
+    p = runner.prepare_native_playback_v01()
+    source = CountingTemporalSourceV03(p)
+    host = runner.host_for_prepared_action_v01(p, source)
+    query = dispatch_kwargs(p);query.pop('task_id')
+    original = hosts.capture_current_action_source_v01(host, **query)
+    old = p.observations[0]
+    digest = hashlib.sha256(b'actual controlled later source').hexdigest()
+    ref = 'evidence:temporal:changed'
+    envelope = action.build_action_dependency_time_envelope_id_v01(dependency_id=old.dependency_id,
+        evidence_ref=ref, content_sha256=digest, freshness_policy_id=old.freshness_policy_id,
+        source_provenance_refs=old.source_provenance_refs, valid_from_utc=old.valid_from_utc,
+        valid_to_utc=old.valid_to_utc)
+    observed = action.build_action_dependency_current_observation_v01(dependency_id=old.dependency_id,
+        evidence_ref=ref, observed_content_sha256=digest, time_envelope_id=envelope,
+        freshness_policy_id=old.freshness_policy_id, source_provenance_refs=old.source_provenance_refs,
+        valid_from_utc=old.valid_from_utc,valid_to_utc=old.valid_to_utc,observed_at_utc=1015,
+        observation_context_id=old.observation_context_id)
+    source.source.advance_v01(evaluation_time=1015, observations=(observed,*p.observations[1:]))
+    calls = mocks.observed_mock_calls_v01()
+    current = hosts.capture_current_action_source_v01(host, **dict(query,evaluation_time=1015))
+    assert current.observations[0] == observed and current.root_bound_packet == original.root_bound_packet
+    assert hosts.validate_retained_action_source_capture_v01(host, replace(current), require_current=True)
+    inspection = hosts.inspect_current_action_v01(host, **dict(query,evaluation_time=1015,expected_revision=host.revision))
+    assert not inspection.present_executable and mocks.observed_mock_calls_v01() == calls
+    reads = source.reads
+    assert hosts.validate_retained_action_source_capture_v01(host, replace(original))
+    assert source.reads == reads
+    emit('H.CHANGED_SOURCE', executor_delta=0, old_packet_unchanged=True,
+        present_executable=inspection.present_executable, historical_live_reads=0)
+
+
 def emit(case, **observed):
     print('CASE_RESULT=' + json.dumps(dict(case_id=case, **observed), sort_keys=True))
 

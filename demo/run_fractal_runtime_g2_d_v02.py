@@ -10463,7 +10463,7 @@ def _matrix_proof_valid_v02(
             and details["terminal_report_status"] == "PASS"
             and details["root_owned_outcome"] is True
             and details["staged_public_function_counts"] == [74, 81, 90, 110]
-            and details["module_public_function_count"] == 135
+            and details["module_public_function_count"] == 137
         )
     if number == 68:
         rows = details["four_child_structural_rows"]

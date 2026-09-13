@@ -1,5 +1,13 @@
 # Claim-to-Evidence Index
 
+## Testflix Evidence Navigation
+
+[The V11 checkpoint](../docs/testflix_v01_preflight.md#v11-admission-preparation)
+separates recorded V09 P04/history, V10 live/captured A/B, and fresh admission
+controls. The external V11 package carries exact receipt member/source bindings.
+The exact reviewer projection postimages and fresh type-binding controls are
+source-bound in the return. Old claims retain their original committed provenance.
+
 This lightweight current index links accepted closure claims to committed
 evidence. It does not create authority, replace an audit or checkpoint, close
 Gate 2, or declare a public release.

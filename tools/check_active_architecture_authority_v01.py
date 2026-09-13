@@ -340,6 +340,295 @@ U4_PATH_ACTIONS_V01 = {'AGENTS.md': 'M', 'README.md': 'M', 'demo/run_action_pack
 U4_SOURCE_IDENTITIES_V01 = {'AGENTS.md': 'd6e26fcb9e91792ddf9b558e7cef946507f1e40f1c49877a002fa897391b1a60', 'README.md': '74a3445577f8727367c0a27f2a263816e04153e3a660f96298591c6e8acc6dcb', 'demo/run_action_packet_portability_v01.py': '82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb', 'demo/run_capability_cold_start_reuse_v01.py': '123714d89b7542abdba2c6d79e7a16ce98b5bd92810b032eccab3e82201f56ff', 'demo/run_fractal_runtime_g2_d_v02.py': '9d1b0045de22b4b9482876f5e8a11b12bdc2f35191fa97d51540beb22fbe9d2a', 'demo/run_kernel_conformance_v01.py': '4fe949a09653a72eef2b9a885254a29bd9be4cff018d155dacc816671d291f55', 'demo/run_living_gauntlet_v01.py': 'afe82e5f7b7f33535ada592d047fb353bdac58907d194530a54ac1271141e2f7', 'demo/work_composition_mock_capabilities_v01.py': 'f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731', 'docs/common_action_and_dynamic_composition_checkpoint_v01.md': 'fd708a885e0635e9f82bb8baad212f9cbd6db363888a8ae380893a718201e5e9', 'docs/common_action_and_dynamic_composition_contract_v01.md': '2776a5eaba4e87c71c2fc1e9af875c985147c8a4f47d24f91049cd8232b5befd', 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': '5dcc7a28485ebd1d09075520fb290b858949fea6d64a4b76a8f927317ea3c369', 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': '4515e5e3e333ce9c00bc3696ddd1a478550414e45d379c7eacf726729d4940b6', 'hedgehog/action_commit_packet_v02.py': 'b38c9e134a13caa5a0f65e0ede3faba6f3fa6dbff32761398927df8b5d903110', 'hedgehog/capability_admission_v01.py': '2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda', 'hedgehog/capability_memory_binding_v01.py': '6e4f2ca3be12a1e9a93d7b59318d9a6ba90ea6f43bbd9bccc81d8bdefe1b1b79', 'hedgehog/kernel/continuous_delta_runtime_v01.py': 'efb0ef689bde0efbbbbc5cddcc7e3d0237c5dacf05e7c1f6415e5d5d808bd282', 'hedgehog/kernel/effect_firewall_v01.py': '46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd', 'hedgehog/kernel/execution_mode_router_v01.py': '4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4', 'hedgehog/kernel/fractal_runtime_v02.py': 'e02ccdab45725de6f3091897b317eb93076717c7d3a107fafa99f657917ef8ca', 'hedgehog/kernel/work_composition_v01.py': 'f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061', 'hedgehog/wasm_pure_worker_v01.py': 'e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae', 'hedgehog/work_execution_host_v01.py': 'c54b0204c4f664dfd234db26f29cf7164baf803780b69af0a57fb9397ca9bd25', 'pyproject.toml': '34feed08e3befc6a4bc4dfa53d69cf827e676e28a321d4770d2a39bec4772f73', 'release/claim_to_evidence_index.md': 'c026f208ce5b8aaed1084108d0f4f800bbe026e1cfa0e8fc45828c2c8a1acbb6', 'release/current_limitations.md': '7df186b9a34adad8b618dd24a30f889297a641271881873003ee73f158b9c03b', 'release/current_release_notes.md': '6e7cfdb7718bb1951ac6be1dd9e85cb6534796038279dd9dfb1828239899a9c0', 'release/current_schema_surface_v01.json': '4e4f2420eb9f13102833bc97fd9a3ac301283b0e22716ba087027d86c89ed514', 'release/current_status_overlay_v01.json': 'f16ecb87d1876f98e93db1fd457304ccb60465d82fb1301d13bed5d3eec4f0a8', 'release/integration_seam_index.md': 'ca18cea71edaf8703d2cb19d205082cfe8167b97c2452896d6de7098393db3a3', 'release/successor_context_manifest_v01.json': '3ed101b71782b3cc0c403b3b21f322c8ddd3ebfa11298d9e7a580e037dfd8e3f', 'schemas/capability_admission_v01.schema.json': 'b09ac99cb2e62ffd95098401a5695a0f018d87d4f2e61f9de723f710ac7455e0', 'schemas/continuous_delta_runtime_v01.schema.json': '9cdeb3d987241383360413d6a4a02be4a3a1480e840aa334737dccd25fddb3b5', 'schemas/fractal_runtime_v02.schema.json': 'db4b5a232e945cea8a6167f36007963534b6852a5a9d53e81325912399d1fcf8', 'schemas/work_composition_v01.schema.json': 'ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0', 'specs/current_architecture_lock_v01.md': 'eaf664646edafa6c65160a749a4f6f98a0b0716d8627ba7fd3b7dee5f89ecf5c', 'specs/document_authority_index_v01.json': 'af7733569e94abcecaad6791e27d7e3ca17ca43a0ae45261e3b4d59206114d7f', 'tests/test_action_packet_portability_v01.py': 'af8dfe77d9750bad37d7e1e206195c5a9fc0913f1fef7e06d1ec70b8acc672c7', 'tests/test_active_architecture_authority_v01.py': '2b75e562a7e75d8e4c46f14b5efbe64dc20e20e9e62be760c4b1ef9cf6486f47', 'tests/test_capability_admission_v01.py': '914aa8d7913ed4e40405cd6a6339e85ada4a7f41840b0e4b1e6e8c311751dda2', 'tests/test_continuous_delta_runtime_g2_e_v01.py': '94dc6941ff6fc3f06dfb7f5f05ef1a55716ff359bd258439051f1226a911111f', 'tests/test_effect_firewall_v01.py': 'c4cc287217a5cd680b3ea1105e23c6c845e0d8732c53855b7a585aec1a1fe1eb', 'tests/test_execution_mode_router_g2_c_v01.py': 'e2fae99b3530be81fa8bf47027139bf3a23fda6b58a80b2bda9db21f5407b801', 'tests/test_fractal_runtime_g2_d_v02.py': 'c853bc340337ae6410dbd8c8591f49b85a2b7cbf345563d77415656ea2b7d6c1', 'tests/test_living_gauntlet_v01_runner.py': 'd6a20e07239f7d81880c6597d8c9556138b12effa71e8ebb187acbe1203fa67c', 'tests/test_repository_release_spine_v01.py': 'afca414f34337c393fb3764d6d9b51c1cb2d8e737d61aa6fc49c6e98f2f297a8', 'tests/test_work_composition_v01.py': '599561099290cf50951b4768a5dfd338fef76a924e6887ebce25ca0e984ba7bc', 'tests/test_work_continuation_and_reuse_v01.py': 'c283d1eb3920076311328a6922257a83672b0bef847e109bedfdcaa3b32d001f', 'tools/check_active_architecture_authority_v01.py': '987cc85284e9d0b0230c0c9f384616cedc31d2789e9d8d87d4e0aa2fdc849c0d'}
 
 
+TESTFLIX_L_V11 = "54e32dbcc0e4d68431ec2b9428eac965f88ee47c"
+TESTFLIX_L_TREE_V11 = "d9b0813698c904d74fd3d75489a358ec9986b033"
+TESTFLIX_COMMIT_MESSAGE_V11 = "Admit reviewed Testflix temporal runtime and captured demonstration"
+TESTFLIX_CHECKPOINT_V11 = "docs/testflix_v01_preflight.md"
+# Filled from the exact frozen proposal; the guard excludes only its own digest literal.
+TESTFLIX_PATH_ACTIONS_V11 = {'AGENTS.md': 'M',
+ 'README.md': 'M',
+ 'demo/run_fractal_runtime_g2_d_v02.py': 'M',
+ 'demo/run_kernel_conformance_v01.py': 'M',
+ 'demo/run_living_gauntlet_v01.py': 'M',
+ 'demo/run_testflix_v01.py': 'A',
+ 'demo/testflix_fixtures_v01.json': 'A',
+ 'docs/common_action_and_dynamic_composition_contract_v01.md': 'M',
+ 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': 'M',
+ 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': 'M',
+ 'docs/testflix_v01_preflight.md': 'A',
+ 'hedgehog/domains/testflix/__init__.py': 'A',
+ 'hedgehog/domains/testflix/contracts_v01.py': 'A',
+ 'hedgehog/domains/testflix/demo_story_v01.py': 'A',
+ 'hedgehog/domains/testflix/evidence_v01.py': 'A',
+ 'hedgehog/domains/testflix/kernel_adapter_v01.py': 'A',
+ 'hedgehog/domains/testflix/lifecycle_v01.py': 'A',
+ 'hedgehog/domains/testflix/live_semantic_adapter_v01.py': 'A',
+ 'hedgehog/domains/testflix/mock_world_v01.py': 'A',
+ 'hedgehog/domains/testflix/semantic_adapter_v01.py': 'A',
+ 'hedgehog/domains/testflix/semantic_roles_v01.py': 'A',
+ 'hedgehog/domains/testflix/viewer_v01.py': 'A',
+ 'hedgehog/kernel/__init__.py': 'M',
+ 'hedgehog/kernel/continuous_delta_runtime_v01.py': 'M',
+ 'hedgehog/kernel/fractal_runtime_v02.py': 'M',
+ 'hedgehog/kernel/transition_registry_v01.py': 'M',
+ 'hedgehog/work_execution_host_v01.py': 'M',
+ 'release/claim_to_evidence_index.md': 'M',
+ 'release/current_limitations.md': 'M',
+ 'release/current_release_notes.md': 'M',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/integration_seam_index.md': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'schemas/fractal_runtime_v02.schema.json': 'M',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_action_packet_portability_v01.py': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_continuous_delta_runtime_g2_e_v01.py': 'M',
+ 'tests/test_fractal_runtime_g2_d_v02.py': 'M',
+ 'tests/test_living_gauntlet_v01_runner.py': 'M',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tests/test_testflix_causal_runtime_v01.py': 'A',
+ 'tests/test_testflix_contracts_v01.py': 'A',
+ 'tests/test_testflix_evidence_v01.py': 'A',
+ 'tests/test_testflix_lifecycle_v01.py': 'A',
+ 'tests/test_testflix_root_review_v09.py': 'A',
+ 'tests/test_testflix_semantic_roles_v01.py': 'A',
+ 'tests/test_transition_registry_v01.py': 'M',
+ 'tests/test_work_composition_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+TESTFLIX_SOURCE_IDENTITIES_V11 = {'AGENTS.md': '128c12af719e0dfb0f49ffc5b2d13bbfed395b3180bfad15d4f358704d893ba6',
+ 'README.md': 'ee7a57337aa3dd82c938ba48c4a717aa39276001608dbdd7c82e8309cd7e9d74',
+ 'demo/run_fractal_runtime_g2_d_v02.py': '6399913a0aaca15dc11476045fb514e6059e7d43ed012e0da539b3546a2a80a6',
+ 'demo/run_kernel_conformance_v01.py': 'fc4f919db78519f1f69f87a897989b88b6e125e41e85d22b28b6ba41432d4578',
+ 'demo/run_living_gauntlet_v01.py': '6348afa6247e247382894ebd745e9965b90463c5b90f874686a2aa8c0a95d56a',
+ 'demo/run_testflix_v01.py': '7ab7e5f873cce45f983e44be796944a9c8d07a1bf9dbf7efb8ddd63fd23fa969',
+ 'demo/testflix_fixtures_v01.json': 'ce96b3d3d51b5b41ebd82dc7850a70e5b7d00fbb9e9587a63e549b0b9971c673',
+ 'docs/common_action_and_dynamic_composition_contract_v01.md': '7f747d14065c11e6194fce94aabcd107693e7d27cd75c5558c37cef0a0a3092d',
+ 'docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md': '160676d9db97a68e09393c79287d1c860cbf30cd3aacf05f7760ef67a81ee518',
+ 'docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md': 'd5cd57769c417749927f163925bc214c9c61125ef98beb31f46c154616fbb5a2',
+ 'docs/testflix_v01_preflight.md': '8fc9ad2d0503f34d1ed44e899ec1c0679c9834b54d721d9a4cf973d875d55a7b',
+ 'hedgehog/domains/testflix/__init__.py': '65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf',
+ 'hedgehog/domains/testflix/contracts_v01.py': 'cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b',
+ 'hedgehog/domains/testflix/demo_story_v01.py': '11f816792bf2ce22e02b1ec2c6f60e751aa02189b92428dc1a0bddcf910766ec',
+ 'hedgehog/domains/testflix/evidence_v01.py': '3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae',
+ 'hedgehog/domains/testflix/kernel_adapter_v01.py': '1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae',
+ 'hedgehog/domains/testflix/lifecycle_v01.py': '9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b',
+ 'hedgehog/domains/testflix/live_semantic_adapter_v01.py': '6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec',
+ 'hedgehog/domains/testflix/mock_world_v01.py': '929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32',
+ 'hedgehog/domains/testflix/semantic_adapter_v01.py': 'a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5',
+ 'hedgehog/domains/testflix/semantic_roles_v01.py': '7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736',
+ 'hedgehog/domains/testflix/viewer_v01.py': 'd1c3dbc93dd5936eb609721396f43e325ff839bb221fa1899d00e1b13989ace3',
+ 'hedgehog/kernel/__init__.py': 'b26dad7e3a5d47b2d717f002a0982bd0bb0fcde95110627846d81d747a0e4be1',
+ 'hedgehog/kernel/continuous_delta_runtime_v01.py': '879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0',
+ 'hedgehog/kernel/fractal_runtime_v02.py': 'ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba',
+ 'hedgehog/kernel/transition_registry_v01.py': 'b0da20344e66b3771cbda9ffd5a2456df9b15187110b07554731d12773dab2b4',
+ 'hedgehog/work_execution_host_v01.py': '56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b',
+ 'release/claim_to_evidence_index.md': '278904c6b70d1845cb6a4155c14f8eb43d95f2c16734cd847bfb93be54be1a17',
+ 'release/current_limitations.md': 'f4f419cce637e8a1ff84cb0fcfc576380867ffd11dbb6e55e9e16376e49f299b',
+ 'release/current_release_notes.md': 'e2f53e895b47fe8d86ca19f922db4e65cf210013a260b2dcf4b8293ca5f94263',
+ 'release/current_status_overlay_v01.json': '0981399565ebdddaf5ff28ab41fdda0b5ac89b6f9dcf452656aeb7b026ebb3a5',
+ 'release/integration_seam_index.md': '55ed5b7cd187229e249eb22068b10d07da911a153425687d5b069be3c3597697',
+ 'release/successor_context_manifest_v01.json': 'eb902aa4443545ed0f31dc27656a9dc869cfe41e8129d84698407d92062c0e13',
+ 'schemas/fractal_runtime_v02.schema.json': '95f81f4122e021d4cba1bd43e6ec8d337ccdb36af058e96ea1e7e3f2f6283df5',
+ 'specs/current_architecture_lock_v01.md': '3b0fc90ba5c887146b1b2ee287468172d970993eacb4e881f2658931e72ecd14',
+ 'specs/document_authority_index_v01.json': '7170e24ab2061f11208eede50fe49b90ed31b46a27bb70ce7e15daca06db0c00',
+ 'tests/test_action_packet_portability_v01.py': 'c2179fc7c7fd9d293d3bdef20f8702ac07840024956abd0216d4fc38d2f37875',
+ 'tests/test_active_architecture_authority_v01.py': '454d0b78a85151174e9c53d509273edc4b53ecd19f311ba368317cc41ee0570b',
+ 'tests/test_continuous_delta_runtime_g2_e_v01.py': '3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d',
+ 'tests/test_fractal_runtime_g2_d_v02.py': 'a456769d2b89c7aa7f14ef8332bab40ddfc007bbf3c2b201288539189889dfad',
+ 'tests/test_living_gauntlet_v01_runner.py': '8227812d48cf3c6a8c5257d53b3114b9ce781673c339c32aa79ce25e23bee43c',
+ 'tests/test_repository_release_spine_v01.py': 'bb4fb554810b0955efeb2167899173b00665720db623f2640c20919e1515e9ac',
+ 'tests/test_testflix_causal_runtime_v01.py': '2966f0c9ca5882c5550cc746b89556c1171f17a599631d6df87c5a9f3e692c58',
+ 'tests/test_testflix_contracts_v01.py': '4ba4c465277c268df5734bb222b930395e99563dbc507d8073d5a26a9f81d5bd',
+ 'tests/test_testflix_evidence_v01.py': '9633cf0548e0922115b13365033bdb60e7f82bd239560973a63563e1488ccd72',
+ 'tests/test_testflix_lifecycle_v01.py': '8516d0ef6fc1f781f2338e274271c6fd9cfc12e76d755892b8152bd4713af286',
+ 'tests/test_testflix_root_review_v09.py': 'ff3641ac6356ad1dd6a42bd20880f4912869ddea786786176d66eb07f5420831',
+ 'tests/test_testflix_semantic_roles_v01.py': '1b23132270c7f8475fdb4717e87ab88ebbca10c5085121f263481854f3194993',
+ 'tests/test_transition_registry_v01.py': 'a657c39fef31a3ad7168f907c6b92dde6b04c58ca04a91e2de54f50641d98b80',
+ 'tests/test_work_composition_v01.py': '62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c',
+ 'tools/check_active_architecture_authority_v01.py': 'ae21bc7d4bb7072ea0b27064652d3d1b5bd9648ef9b5feb875e4a3acce5a6168'}
+
+
+def _testflix_requested_v11(root: Path) -> bool:
+    if (root / TESTFLIX_CHECKPOINT_V11).exists():
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"testflix_admission_v11"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _testflix_source_digest_v11(path: str, body: bytes) -> str:
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(n, ast.Name) and n.id == "TESTFLIX_SOURCE_IDENTITIES_V11" for target in targets for n in ast.walk(target)):
+            nodes.append(node)
+    if len(nodes) != 1 or not isinstance(nodes[0], ast.Assign) or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name) or not isinstance(nodes[0].value, ast.Dict):
+        raise ValueError("self identity projection")
+    node = nodes[0]
+    if any(not isinstance(k, ast.Constant) or type(k.value) is not str for k in node.value.keys):
+        raise ValueError("self identity projection")
+    names = [k.value for k in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("self identity projection")
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or type(value.value) is not str or re.fullmatch(r"[0-9a-f]{64}", value.value) is None or value.end_lineno != value.lineno or value.end_col_offset is None:
+        raise ValueError("self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if re.fullmatch(br"(['\"])[0-9a-f]{64}\1", literal) is None or literal[1:-1].decode("ascii") != value.value:
+        raise ValueError("self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_V11"' + body[end:]).hexdigest()
+
+
+def _classify_testflix_ledger_v11(*, head: str, parents: tuple[str, ...], origin: str,
+                                branch: str, status: dict[str, str], delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    errors: list[str] = []
+    phase = "TESTFLIX_INVALID"
+    if branch != "main":
+        errors.append("testflix.branch")
+    if head == TESTFLIX_L_V11:
+        if parents != (U4_H_V01,) or origin != TESTFLIX_L_V11:
+            errors.append("testflix.candidate.basis_origin")
+        unstaged = {p: "??" if op == "A" else " M" for p, op in TESTFLIX_PATH_ACTIONS_V11.items()}
+        staged = {p: op + " " for p, op in TESTFLIX_PATH_ACTIONS_V11.items()}
+        if status == unstaged:
+            phase = "TESTFLIX_ADMISSION_CANDIDATE_UNSTAGED"
+        elif status == staged:
+            phase = "TESTFLIX_ADMISSION_CANDIDATE_STAGED"
+        else:
+            errors.append("testflix.candidate.exact_ledger")
+        if delta:
+            errors.append("testflix.candidate.delta")
+    elif parents == (TESTFLIX_L_V11,):
+        phase = "TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED"
+        if origin not in (TESTFLIX_L_V11, head):
+            errors.append("testflix.committed.origin")
+        if status or delta != TESTFLIX_PATH_ACTIONS_V11:
+            errors.append("testflix.committed.clean_exact_delta")
+    else:
+        errors.append("testflix.exact_immediate_L_child")
+    return phase, tuple(errors)
+
+
+def _validate_testflix_admission_v11(root: Path, failures: list[str]) -> str:
+    """One exact L successor; historical U4 predicates and pins remain separate."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="testflix.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, TESTFLIX_L_V11 + "..HEAD", failures), label="testflix.delta", failures=failures)
+    phase, reasons = _classify_testflix_ledger_v11(head=head, parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(), status=status, delta=delta)
+    failures.extend(reasons)
+    if git("rev-parse", TESTFLIX_L_V11 + "^{tree}").decode().strip() != TESTFLIX_L_TREE_V11:
+        failures.append("testflix.L_tree")
+    if git("rev-list", "--parents", "-n", "1", TESTFLIX_L_V11).decode().split() != [TESTFLIX_L_V11, U4_H_V01]:
+        failures.append("testflix.L_parent")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", TESTFLIX_L_V11), failures)
+    historical = _u1_tree_v01(git("ls-tree", "-rz", U4_H_V01), failures)
+    l_delta = {p: "A" if p not in historical else "M" for p in baseline if baseline[p] != historical.get(p)}
+    if l_delta != U4_PATH_ACTIONS_V01 or not set(historical).issubset(baseline):
+        failures.append("testflix.L_U4_provenance")
+    if len(baseline) != 927 or len(TESTFLIX_PATH_ACTIONS_V11) != 51 or set(TESTFLIX_SOURCE_IDENTITIES_V11) != set(TESTFLIX_PATH_ACTIONS_V11):
+        failures.append("testflix.exact_source_universe")
+    expected_paths = set(baseline) | set(TESTFLIX_PATH_ACTIONS_V11)
+    actual: dict[str, tuple[str, str]] = {}
+    for path in sorted(expected_paths):
+        file = root / path
+        if file.is_symlink() or not file.is_file():
+            failures.append("testflix.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = ("100755" if mode & 0o111 else "100644", hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest())
+        if path in TESTFLIX_PATH_ACTIONS_V11:
+            if mode != 0o644 or not body.endswith(b"\n") or b"\r\n" in body:
+                failures.append("testflix.mode_or_lf:" + path)
+            try:
+                if _testflix_source_digest_v11(path, body) != TESTFLIX_SOURCE_IDENTITIES_V11[path]:
+                    failures.append("testflix.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("testflix.identity_projection:" + path)
+            if (path in baseline) != (TESTFLIX_PATH_ACTIONS_V11[path] == "M") or actual[path] == baseline.get(path):
+                failures.append("testflix.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("testflix.frozen_source:" + path)
+    entries: dict[str, tuple[str, str]] = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in entries:
+                failures.append("testflix.index.stage_duplicate")
+            entries[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("testflix.index.parse")
+    if entries != (baseline if phase == "TESTFLIX_ADMISSION_CANDIDATE_UNSTAGED" else actual):
+        failures.append("testflix.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("testflix.index.flags")
+    if any(int(f, 16) != 0 for f in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("testflix.index.hidden_flags")
+    if phase == "TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED":
+        if _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual or len(actual) != 947:
+            failures.append("testflix.committed.tree")
+        if git("show", "-s", "--format=%B", "HEAD").decode().strip() != TESTFLIX_COMMIT_MESSAGE_V11:
+            failures.append("testflix.committed.message")
+    for marker in ("index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock", "packed-refs.lock"):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if (marker == "index" and (path.is_symlink() or not path.is_file())) or (marker != "index" and path.exists()):
+            failures.append("testflix.git_operation:" + marker)
+    completion = _load_json(root / COMPLETION_MANIFEST_PATH, "testflix.base.completion", failures)
+    seams = _load_json(root / SEAM_INDEX_PATH, "testflix.base.seams", failures)
+    _validate_release_succession(completion, seams, failures)
+    retired = _load_json(root / RETIRED_INVENTORY_PATH, "testflix.retired", failures)
+    _validate_s3_inventory(root, retired, failures)
+    current = []
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "testflix.json:" + path, failures)
+        old = json.loads(git("show", TESTFLIX_L_V11 + ":" + path))
+        if value.get("universality_admission_v01") != old.get("universality_admission_v01"):
+            failures.append("testflix.historical_U4_metadata:" + path)
+        current.append(value.get("testflix_admission_v11"))
+    if not current[0] or not all(v == current[0] for v in current):
+        failures.append("testflix.admission_metadata")
+    elif current[0].get("basis") != TESTFLIX_L_V11 or current[0].get("path_actions") != TESTFLIX_PATH_ACTIONS_V11 or current[0].get("commit_message") != TESTFLIX_COMMIT_MESSAGE_V11:
+        failures.append("testflix.admission_basis_actions")
+    if not failures:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("testflix_admission_living_v11", root / "demo/run_living_gauntlet_v01.py")
+        if spec is None or spec.loader is None:
+            failures.append("testflix.living.import_spec")
+        else:
+            living = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = living
+            try:
+                spec.loader.exec_module(living)
+                _, errors = living._current_registration_v01(root)
+                failures.extend("testflix." + error for error in errors)
+            except (ImportError, ValueError, OSError) as exc:
+                failures.append("testflix.living.import:" + type(exc).__name__)
+            finally:
+                sys.modules.pop(spec.name, None)
+    return phase
+
+
 def _u4_requested_v01(root: Path) -> bool:
     if any((root / p).exists() for p, op in U4_PATH_ACTIONS_V01.items() if op == "A"):
         return True
@@ -12336,6 +12625,9 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    if _testflix_requested_v11(root):
+        _validate_testflix_admission_v11(root, failures)
+        return tuple(sorted(set(failures)))
     if _u4_requested_v01(root):
         _validate_u4_admission_v01(root, failures)
         return tuple(sorted(set(failures)))
@@ -12468,6 +12760,18 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        if _testflix_requested_v11(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_testflix_admission_v11(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("testflix.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print(f"TESTFLIX_PHASE={phase}")
+            return 0
         if _u4_requested_v01(args.root.resolve()):
             current_errors: list[str] = []
             phase = _validate_u4_admission_v01(args.root.resolve(), current_errors)

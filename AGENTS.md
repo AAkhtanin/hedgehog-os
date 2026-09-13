@@ -1,5 +1,16 @@
 # Hedgehog OS — Current Assistant Operations
 
+## Testflix V11 Admission Preparation
+
+The exact next proposal is based on accepted L
+`54e32dbcc0e4d68431ec2b9428eac965f88ee47c`. Its scope and evidence are in
+[the Testflix checkpoint](docs/testflix_v01_preflight.md#v11-admission-preparation).
+The original reviewer projection repair is verified and applied in this proposal.
+The prepared owner script is for independent review and later manual invocation;
+preparation does not authorize automatic owner mutation or award acceptance.
+The 48-path H-to-U4 text below remains historical provenance, not the next
+proposal's path inventory. Root, currentness and exclusive Firewall laws remain.
+
 ## Bounded Common Action and Local Reuse: Current Admission Proposal
 
 The [implementation checkpoint](docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy

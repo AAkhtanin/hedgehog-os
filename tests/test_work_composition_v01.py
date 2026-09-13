@@ -586,6 +586,224 @@ def native_e_packet(transaction_id):
         observations=prepared.observations, invalidation=invalidation)
 
 
+def test_capture_material_local_scope_origin_mutation_and_lifetime_v06():
+    import sys
+    from types import MappingProxyType
+
+    prepared, _ = native_e_packet('transaction:composition:capture-scope:v06')
+    trusted = e_donor.TemporalCountingSourceV03(mocks.TrustedMockWorkSourceV01(
+        prepared.observations, prepared.bridge, e_donor._E3_TIME + 35,
+        'g2e_e3_trusted_ceiling', 'evaluation_context:g2e:e3:g2a'))
+    host = runner.host_for_prepared_action_v01(prepared, trusted)
+    capture = hosts.capture_current_action_source_v01(host,
+        packet_id=prepared.root_bound.packet_identity.packet_id, expected_revision=host.revision,
+        evaluation_time=e_donor._E3_TIME + 35, evaluation_time_source='g2e_e3_trusted_ceiling',
+        evaluation_context_id='evaluation_context:g2e:e3:g2a')
+    foreign_prepared, _ = native_e_packet('transaction:composition:capture-scope:foreign:v06')
+    foreign = runner.host_for_prepared_action_v01(foreign_prepared, trusted)
+    reads, calls = trusted.reads, mocks.observed_mock_calls_v01()
+    counts, outcomes = [], {}
+    code = hosts._capture_sources_valid_v01.__code__
+    tool = next(i for i in range(6) if sys.monitoring.get_tool(i) is None)
+    sys.monitoring.use_tool_id(tool, 'capture_material_full_calls_v06')
+    sys.monitoring.register_callback(tool, sys.monitoring.events.PY_START,
+        lambda c, offset: counts.append(c.co_name))
+    sys.monitoring.set_local_events(tool, code, sys.monitoring.events.PY_START)
+    def check(name, value=capture, *, owner=host, current=True, refusal=False):
+        if refusal:
+            with pytest.raises(ValueError) as rejected:
+                hosts.validate_retained_action_source_capture_v01(owner, value, require_current=current)
+            outcomes[name] = str(rejected.value)
+        else:
+            assert hosts.validate_retained_action_source_capture_v01(owner, value, require_current=current)
+            outcomes[name] = 'PASS'
+    try:
+        with hosts._capture_validation_scope_v06():
+            scope = hosts._CAPTURE_VALIDATION_SCOPE_V06.get()
+            check('actual'); check('actual_repeat')
+            assert len(counts) == 1 and len(scope.entries) == 1
+            assert scope.entries[0][2].supported
+            check('equivalent', replace(capture))
+            assert len(counts) == 2
+            check('wrong_origin', replace(capture, _origin=object()), refusal=True)
+            check('foreign_host', owner=foreign, refusal=True)
+            check('wrong_ordinal', replace(capture, capture_ordinal=1), refusal=True)
+            for name, changed in (('packet_id', 'packet:foreign'), ('owning_root_id', 'root:foreign'),
+                ('source_revision', capture.source_revision + 1),
+                ('evaluation_time', capture.evaluation_time + 1)):
+                check('wrong_' + name, replace(capture, **{name: changed}), refusal=True)
+            check('positive_after_refusals')
+            before = len(counts)
+            # Busy is the internal reentry boundary: it must do the real check.
+            scope.busy = True
+            try:
+                check('busy_fallback')
+            finally:
+                scope.busy = False
+            assert len(counts) == before + 1
+
+            identity = capture.root_bound_packet.packet_identity
+            material = list(identity.material)
+            index = next(i for i, item in enumerate(material) if type(item[1]) is MappingProxyType)
+            backing = dict(material[index][1])
+            material[index] = (material[index][0], MappingProxyType(backing))
+            mutable_copy = replace(capture, root_bound_packet=replace(capture.root_bound_packet,
+                packet_identity=replace(identity, material=tuple(material))))
+            assert mutable_copy == capture
+            check('independent_mutable_positive', mutable_copy)
+            check('independent_mutable_repeat', mutable_copy)
+            before = len(counts)
+            original_items = dict(backing)
+            backing['scope_mutation_v06'] = True
+            check('changed_nested_material', mutable_copy, refusal=True)
+            assert len(counts) == before + 1
+            backing.clear(); backing.update(original_items)
+            check('restored_equivalent', mutable_copy)
+
+            unsupported = replace(capture)
+            object.__setattr__(unsupported, '_unrecognized_material', object())
+            before = len(counts)
+            check('unknown_form_fallback_1', unsupported)
+            check('unknown_form_fallback_2', unsupported)
+            assert len(counts) == before + 2
+            assert not hosts._CaptureMaterialEdgesV06(unsupported).supported
+            with pytest.raises(RuntimeError, match='scope-exception'):
+                with hosts._capture_validation_scope_v06():
+                    check('nested_scope_positive')
+                    raise RuntimeError('scope-exception')
+            assert not scope.entries
+            before = len(counts)
+            check('after_exception')
+            assert len(counts) == before + 1
+        assert hosts._CAPTURE_VALIDATION_SCOPE_V06.get() is None
+        before = len(counts)
+        check('independent_call_1'); check('independent_call_2')
+        assert len(counts) == before + 2
+        assert trusted.reads == reads and mocks.observed_mock_calls_v01() == calls
+        with hosts._capture_validation_scope_v06():
+            check('before_advance')
+            trusted.advance_v01(evaluation_time=e_donor._E3_TIME + 36, observations=capture.observations)
+            fresh = hosts.capture_current_action_source_v01(host, packet_id=capture.packet_id,
+                expected_revision=host.revision, evaluation_time=e_donor._E3_TIME + 36,
+                evaluation_time_source=capture.evaluation_time_source,
+                evaluation_context_id=capture.evaluation_context_id)
+            assert trusted.reads > reads
+            reads = trusted.reads
+            check('old_historical', current=False)
+            check('old_current_refusal', refusal=True)
+            check('fresh_current', fresh)
+            assert trusted.reads == reads and mocks.observed_mock_calls_v01() == calls
+    finally:
+        sys.monitoring.set_local_events(tool, code, 0)
+        sys.monitoring.free_tool_id(tool)
+    assert hosts._CAPTURE_VALIDATION_SCOPE_V06.get() is None
+    print('CAPTURE_SCOPE_V06=' + json.dumps(dict(outcomes=outcomes,
+        full_material_calls=len(counts), no_validation_live_reads=True, mock_effect_delta=0,
+        supported_real_capture=True, independent_calls_validate=True)), flush=True)
+
+
+def test_capture_receipt_material_reuse_and_mutation_v08():
+    prepared, _ = native_e_packet('transaction:composition:receipt-scope:v08')
+    trusted = e_donor.TemporalCountingSourceV03(mocks.TrustedMockWorkSourceV01(
+        prepared.observations, prepared.bridge, e_donor._E3_TIME,
+        'u1.controlled_utc', 'context:u1:dispatch'))
+    host = runner.host_for_prepared_action_v01(prepared, trusted)
+    packet = prepared.root_bound.packet_identity.packet_id
+    clock = dict(evaluation_time=e_donor._E3_TIME,
+        evaluation_time_source='u1.controlled_utc', evaluation_context_id='context:u1:dispatch')
+    hosts.dispatch_current_action_v01(host, packet_id=packet, task_id='task:receipt-scope:v08',
+        expected_revision=host.revision, **clock)
+    trusted.advance_v01(evaluation_time=e_donor._E3_TIME + 35, observations=prepared.observations)
+    clock = dict(clock, evaluation_time=e_donor._E3_TIME + 35)
+    capture = hosts.capture_current_action_source_v01(host, packet_id=packet,
+        expected_revision=host.revision, **clock)
+    contexts = capture.registry.action_packet_fulfillment_attempt_contexts
+    assert len(contexts) == 1 and contexts[0].receipt is not None
+    receipt = contexts[0].receipt
+    assert type(receipt) is abi.KernelArtifactV01
+    assert type(receipt.payload) is type(receipt.time_envelope) is abi._FrozenJSONObject
+    receipt_copy = replace(receipt, payload=replace(receipt.payload), time_envelope=replace(receipt.time_envelope))
+    context_copy = replace(contexts[0], receipt=receipt_copy,
+        request=replace(contexts[0].request), decision=replace(contexts[0].decision))
+    equivalent = replace(capture, registry=replace(capture.registry,
+        action_packet_fulfillment_attempt_contexts=(context_copy,)))
+    assert equivalent == capture and equivalent is not capture
+    reads, calls = trusted.reads, mocks.observed_mock_calls_v01()
+    counts, outcomes = [], {}
+    code = hosts._capture_sources_valid_v01.__code__
+    tool = next(i for i in range(6) if sys.monitoring.get_tool(i) is None)
+    sys.monitoring.use_tool_id(tool, 'capture_receipt_material_v08')
+    sys.monitoring.register_callback(tool, sys.monitoring.events.PY_START,
+        lambda c, offset: counts.append(c.co_name))
+    sys.monitoring.set_local_events(tool, code, sys.monitoring.events.PY_START)
+    def check(name, value=equivalent, *, refusal=False, current=True):
+        if refusal:
+            with pytest.raises(ValueError) as error:
+                hosts.validate_retained_action_source_capture_v01(host, value, require_current=current)
+            outcomes[name] = str(error.value)
+        else:
+            assert hosts.validate_retained_action_source_capture_v01(host, value, require_current=current)
+            outcomes[name] = 'PASS'
+    try:
+        with hosts._capture_validation_scope_v06():
+            scope = hosts._CAPTURE_VALIDATION_SCOPE_V06.get()
+            check('historical_receipt'); check('same_receipt_repeat')
+            assert len(counts) == 1 and len(scope.entries) == 1
+            material = scope.entries[0][2]
+            assert material.supported and material.unchanged()
+            assert any(type(row[0]) is abi.KernelArtifactV01 for row in material.rows)
+            assert any(type(row[0]) is abi._FrozenJSONObject for row in material.rows)
+            for name, target, attribute, changed in (
+                ('payload_items', receipt_copy.payload, 'items', receipt_copy.payload.items + (('unknown_receipt_field', True),)),
+                ('time_items', receipt_copy.time_envelope, 'items', receipt_copy.time_envelope.items + (('unknown_time_field', True),)),
+                ('receipt_identity', receipt_copy, 'artifact_id', receipt_copy.artifact_id + ':substituted'),
+                ('request_slot', context_copy.request, 'request_id', context_copy.request.request_id + ':substituted'),
+                ('decision_slot', context_copy.decision, 'request_id', context_copy.decision.request_id + ':substituted'),
+                ('receipt_reference', context_copy, 'receipt', replace(receipt_copy, trace_refs=('trace:foreign',)))):
+                old = getattr(target, attribute); before = len(counts)
+                try:
+                    object.__setattr__(target, attribute, changed)
+                    check(name, refusal=True)
+                    assert len(counts) == before + 1
+                finally:
+                    object.__setattr__(target, attribute, old)
+                check('restored_' + name)
+            check('wrong_actual_origin', replace(equivalent, _origin=object()), refusal=True)
+            check('wrong_ordinal', replace(equivalent, capture_ordinal=99), refusal=True)
+            check('original_positive', capture)
+            class UnknownReceipt(abi.KernelArtifactV01):
+                pass
+            unknown = UnknownReceipt(**receipt.__dict__)
+            assert not hosts._CaptureMaterialEdgesV06(replace(capture, registry=replace(capture.registry,
+                action_packet_fulfillment_attempt_contexts=(replace(contexts[0], receipt=unknown),)))).supported
+            with pytest.raises(RuntimeError, match='receipt_scope_exception'):
+                with hosts._capture_validation_scope_v06():
+                    check('before_exception')
+                    raise RuntimeError('receipt_scope_exception')
+            assert not scope.entries
+            before = len(counts); check('after_exception')
+            assert len(counts) == before + 1
+        assert hosts._CAPTURE_VALIDATION_SCOPE_V06.get() is None
+        before = len(counts); check('independent_public_call')
+        assert len(counts) == before + 1
+        assert trusted.reads == reads and mocks.observed_mock_calls_v01() == calls
+        assert abi.kernel_artifact_to_plain_dict_v01(receipt_copy) == abi.kernel_artifact_to_plain_dict_v01(receipt)
+        trusted.advance_v01(evaluation_time=e_donor._E3_TIME + 36, observations=capture.observations)
+        fresh = hosts.capture_current_action_source_v01(host, packet_id=packet,
+            expected_revision=host.revision, **dict(clock, evaluation_time=e_donor._E3_TIME + 36))
+        reads = trusted.reads
+        check('old_historical_after_advance', capture, current=False)
+        check('old_current_after_advance', capture, refusal=True)
+        check('fresh_current', fresh)
+        assert trusted.reads == reads and mocks.observed_mock_calls_v01() == calls
+    finally:
+        sys.monitoring.set_local_events(tool, code, 0)
+        sys.monitoring.free_tool_id(tool)
+    print('CAPTURE_RECEIPT_V08=' + json.dumps(dict(outcomes=outcomes, full_material_calls=len(counts),
+        receipt_id=receipt.artifact_id, lifecycle_entries=len(capture.registry.action_packet_lifecycle_entries),
+        fulfillment_contexts=len(contexts), validation_reads=0, validation_effects=0)), flush=True)
+
+
 def test_native_e_source_and_real_selective_recomputation(actual_deep_source, retained_native_execution_v05, exact_review_cases):
     g2b, family, baseline = actual_deep_source
     prepared, native = native_e_packet(str(g2b['transaction_id']))

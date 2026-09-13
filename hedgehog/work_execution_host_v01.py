@@ -4,7 +4,7 @@ Trusted setup installs immutable packet inputs and a catalogue. Public dispatch
 accepts IDs and a revision, never a caller-selected historical registry.
 """
 from threading import RLock
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, replace, field
 import hashlib
 import inspect
 from pathlib import Path
@@ -13,6 +13,10 @@ import types
 from hedgehog import action_commit_packet_v02 as action
 from hedgehog.kernel import effect_firewall_v01 as firewall
 from hedgehog.kernel import transition_registry_v01 as transitions
+from contextlib import contextmanager as _contextmanager
+from contextvars import ContextVar as _ContextVar
+from dataclasses import fields as _fields, is_dataclass as _is_dataclass
+from threading import get_ident as _get_ident
 
 
 @dataclass(frozen=True)
@@ -23,6 +27,24 @@ class TrustedWorkSourceSnapshotV01:
     evaluation_time_source: str
     evaluation_context_id: str
     source_revision: int
+
+
+@dataclass(frozen=True)
+class ActionSourceCaptureV01:
+    owning_root_id: str
+    packet_id: str
+    transaction_id: str
+    registry: object
+    root_bound_packet: object
+    observations: tuple
+    logical_time_bridge: object
+    evaluation_time: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    source_revision: int
+    host_revision: int
+    capture_ordinal: int
+    _origin: object = field(repr=False, compare=False)
 
 
 @dataclass(frozen=True)
@@ -126,7 +148,7 @@ class RootWorkExecutionHostV01:
         '_bridge', '_revision', '_lock', '_active', '_events', '_source', '_source_snapshot', '_inflight', '_completed_work', '_work_attempts',
         '_task_policies', '_tasks', '_task_dispatch', '_catalogue_history', '_pure_permissions',
         '_pure_usage', '_pure_proposals', '_pure_attempts', '_pure_pending', '_pure_packages',
-        '_pure_resolutions', '_pure_guest_runs', '_pure_guest_evidence')
+        '_pure_resolutions', '_pure_guest_runs', '_pure_guest_evidence', '_source_captures', '_capture_origin')
 
     def __init__(self, *, owning_root_id, registry, catalogue, packet_bindings,
         current_dependency_observations, logical_time_bridge, trusted_source, task_policies=(), pure_need_permissions=()):
@@ -190,6 +212,8 @@ class RootWorkExecutionHostV01:
         self._pure_resolutions = ()
         self._pure_guest_runs = []
         self._pure_guest_evidence = []
+        self._source_captures = []
+        self._capture_origin = object()
         if type(task_policies) is not tuple:
             raise ValueError('host_task_policy_tuple')
         if task_policies:
@@ -515,6 +539,230 @@ def inspect_current_action_v01(host, *, packet_id, expected_revision, evaluation
                 action_packet_transition_registry_profile=transitions.build_action_packet_transition_registry_profile_v01())
         finally:
             host._active = False
+
+
+_CAPTURE_VALIDATION_SCOPE_V06 = _ContextVar('capture_validation_scope_v06', default=None)
+
+
+class _CaptureMaterialEdgesV06:
+    """Strong, exact edges, including mutable containers; never an authority token."""
+    def __init__(self, capture):
+        self.rows = []
+        seen, active = set(), set()
+        modules = (action, firewall, transitions,
+            sys.modules.get('hedgehog.kernel.root_decision_v01'),
+            sys.modules.get('hedgehog.kernel.semantic_work_v01'))
+        from hedgehog.kernel import abi_v01 as _capture_abi
+        allowed = {ActionSourceCaptureV01,
+            _capture_abi.KernelArtifactV01, _capture_abi._FrozenJSONObject}
+        for module in modules:
+            if module is not None:
+                allowed.update(v for v in vars(module).values() if type(v) is type
+                    and v.__module__ == module.__name__ and _is_dataclass(v)
+                    and v.__getattribute__ is object.__getattribute__)
+
+        def visit(value):
+            if value is None or type(value) in (str, int, bool, float, bytes):
+                return True
+            identity = id(value)
+            if identity in active:
+                return False
+            if identity in seen:
+                return True
+            active.add(identity)
+            cls = type(value)
+            if cls in (tuple, list):
+                edges = tuple(value)
+                self.rows.append((value, cls, None, edges))
+            elif cls in (dict, types.MappingProxyType):
+                keys, edges = tuple(value), tuple(value.values())
+                if any(type(k) is not str for k in keys):
+                    return False
+                self.rows.append((value, cls, keys, edges))
+            elif cls in allowed and getattr(cls.__dataclass_params__, 'frozen', False):
+                if cls in (firewall.EffectRequestV01, firewall.EffectFirewallDecisionV01):
+                    keys = tuple(f.name for f in _fields(value))
+                    if cls.__slots__ != keys or any(type(vars(cls).get(k)) is not types.MemberDescriptorType for k in keys):
+                        return False
+                    edges = tuple(object.__getattribute__(value, k) for k in keys)
+                else:
+                    attributes = object.__getattribute__(value, '__dict__')
+                    if type(attributes) is not dict or any(type(k) is not str for k in attributes):
+                        return False
+                    # Include extra/InitVar-backed attributes too, not just fields().
+                    keys, edges = tuple(attributes), tuple(attributes.values())
+                    if not all(f.name in attributes for f in _fields(value)):
+                        return False
+                self.rows.append((value, cls, keys, edges))
+                if value is capture:
+                    edges = tuple(v for k, v in zip(keys, edges) if k != '_origin')
+            else:
+                return False
+            if not all(visit(v) for v in edges):
+                return False
+            active.remove(identity)
+            seen.add(identity)
+            return True
+
+        try:
+            self.supported = visit(capture)
+        except (AttributeError, TypeError):
+            self.supported = False
+
+    def unchanged(self):
+        if not self.supported:
+            return False
+        for value, cls, keys, edges in self.rows:
+            if type(value) is not cls:
+                return False
+            if keys is None:
+                current = value
+            elif cls in (firewall.EffectRequestV01, firewall.EffectFirewallDecisionV01):
+                if cls.__slots__ != keys or any(type(vars(cls).get(k)) is not types.MemberDescriptorType for k in keys):
+                    return False
+                try:
+                    current = tuple(object.__getattribute__(value, k) for k in keys)
+                except AttributeError:
+                    return False
+            else:
+                current = value if cls in (dict, types.MappingProxyType) else object.__getattribute__(value, '__dict__')
+                if tuple(current) != keys:
+                    return False
+                current = tuple(current.values())
+            if len(current) != len(edges) or any(a is not b for a, b in zip(current, edges)):
+                return False
+        return True
+
+
+class _CaptureValidationScopeV06:
+    def __init__(self):
+        self.thread = _get_ident()
+        self.entries = []
+        self.busy = False
+
+    def validate(self, host, capture):
+        if self.busy or self.thread != _get_ident():
+            return _capture_sources_valid_v01(capture)
+        self.busy = True
+        try:
+            for retained_host, retained_capture, material in self.entries:
+                if retained_host is host and retained_capture is capture and material.unchanged():
+                    return
+            self.entries = [(h, c, m) for h, c, m in self.entries if c is not capture]
+            material = _CaptureMaterialEdgesV06(capture)
+            _capture_sources_valid_v01(capture)
+            if material.unchanged():
+                self.entries.append((host, capture, material))
+        except BaseException:
+            self.entries.clear()
+            raise
+        finally:
+            self.busy = False
+
+
+@_contextmanager
+def _capture_validation_scope_v06():
+    """Only synchronous pure callers; no scope spans a capability invocation."""
+    previous = _CAPTURE_VALIDATION_SCOPE_V06.get()
+    if previous is not None and previous.thread == _get_ident() and not previous.busy:
+        try:
+            yield
+        except BaseException:
+            previous.entries.clear()
+            raise
+        return
+    scope = _CaptureValidationScopeV06()
+    token = _CAPTURE_VALIDATION_SCOPE_V06.set(scope)
+    try:
+        yield
+    finally:
+        scope.entries.clear()
+        _CAPTURE_VALIDATION_SCOPE_V06.reset(token)
+
+
+def _capture_sources_valid_v01(capture):
+    if type(capture.host_revision) is not int or capture.host_revision < 0:
+        raise ValueError('host_capture_revision')
+    _validate_sources(TrustedWorkSourceSnapshotV01(capture.observations,
+        capture.logical_time_bridge, capture.evaluation_time, capture.evaluation_time_source,
+        capture.evaluation_context_id, capture.source_revision))
+    if not action.validate_action_commit_packet_registry_v02(capture.registry)[0]:
+        raise ValueError('host_capture_registry')
+    entries = tuple(e for e in capture.registry.action_packet_lifecycle_entries
+        if e.root_bound_genesis.packet_identity.packet_id == capture.packet_id)
+    if len(entries) != 1 or entries[0].root_bound_genesis != capture.root_bound_packet:
+        raise ValueError('host_capture_packet')
+    canonical = capture.root_bound_packet.canonical_projection
+    if (canonical.owning_local_root_id, canonical.transaction_id) != (
+        capture.owning_root_id, capture.transaction_id):
+        raise ValueError('host_capture_root_transaction')
+    records = {r.dependency_id: r for r in canonical.dependency_candidate.dependency_records}
+    observations = {v.dependency_id: v for v in capture.observations}
+    if len(observations) != len(capture.observations) or set(observations) != set(records):
+        raise ValueError('host_capture_dependency_inventory')
+    for key, observation in observations.items():
+        record = records[key]
+        if (observation.freshness_policy_id, observation.source_provenance_refs) != (
+            record.freshness_policy_id, record.source_provenance_refs):
+            raise ValueError('host_capture_dependency_source')
+        if observation.observed_at_utc > capture.evaluation_time:
+            raise ValueError('host_capture_future_observation')
+
+
+def capture_current_action_source_v01(host, *, packet_id, expected_revision,
+    evaluation_time, evaluation_time_source, evaluation_context_id):
+    """Refresh atomically and retain source evidence, never action permission."""
+    if type(host) is not RootWorkExecutionHostV01:
+        raise ValueError('host_type')
+    with host._lock:
+        host._enter(expected_revision)
+        try:
+            host._refresh_sources(evaluation_time, evaluation_time_source, evaluation_context_id)
+            if packet_id not in host._bindings:
+                raise ValueError('host_capture_packet')
+            entry = next(e for e in host._registry.action_packet_lifecycle_entries
+                if e.root_bound_genesis.packet_identity.packet_id == packet_id)
+            canonical = entry.root_bound_genesis.canonical_projection
+            source = host.current_sources
+            value = ActionSourceCaptureV01(host.owning_root_id, packet_id, canonical.transaction_id,
+                host.registry, entry.root_bound_genesis, host._packet_observations(canonical),
+                source.logical_time_bridge, source.evaluation_time, source.evaluation_time_source,
+                source.evaluation_context_id, source.source_revision, host.revision,
+                len(host._source_captures), host._capture_origin)
+            _capture_sources_valid_v01(value)
+            host._source_captures.append(value)
+            return value
+        finally:
+            host._active = False
+
+
+def validate_retained_action_source_capture_v01(host, capture, *, require_current=False):
+    """Verify retained origin without live I/O; current means this host revision."""
+    if type(host) is not RootWorkExecutionHostV01 or type(capture) is not ActionSourceCaptureV01:
+        raise ValueError('host_capture_type')
+    if type(require_current) is not bool:
+        raise ValueError('host_capture_current_mode')
+    with host._lock:
+        if capture._origin is not host._capture_origin or type(capture.capture_ordinal) is not int or not (
+            0 <= capture.capture_ordinal < len(host._source_captures)):
+            raise ValueError('host_capture_origin')
+        scope = _CAPTURE_VALIDATION_SCOPE_V06.get()
+        if scope is None:
+            _capture_sources_valid_v01(capture)
+        else:
+            scope.validate(host, capture)
+        if capture != host._source_captures[capture.capture_ordinal]:
+            raise ValueError('host_capture_retained_material')
+        if require_current:
+            source = host.current_sources
+            if capture.host_revision != host.revision or capture.registry != host.registry or (
+                capture.source_revision, capture.evaluation_time, capture.evaluation_time_source,
+                capture.evaluation_context_id, capture.logical_time_bridge, capture.observations) != (
+                source.source_revision, source.evaluation_time, source.evaluation_time_source,
+                source.evaluation_context_id, source.logical_time_bridge,
+                host._packet_observations(capture.root_bound_packet.canonical_projection)):
+                raise ValueError('host_capture_not_current')
+        return True
 
 
 def execute_admitted_pure_work_v01(host, *, admission_id, task_id, work_instance_id, inputs, expected_revision):

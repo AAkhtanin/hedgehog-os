@@ -351,6 +351,21 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     ledger = dict(line.split("\t")[::-1] for line in git("diff", "--no-renames", "--name-status", "HEAD^", "HEAD").splitlines())
     prepush = False
     closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
+    overlay = json.loads((root / "release/current_status_overlay_v01.json").read_text())
+    if "testflix_admission_v11" in overlay:
+        metadata = overlay["testflix_admission_v11"]
+        actions = metadata["path_actions"]
+        basis_l = "54e32dbcc0e4d68431ec2b9428eac965f88ee47c"
+        if head == basis_l:
+            assert parent == "20d16af823ed4af94dc0a342c731aef81e8a23de" and origin == basis_l
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "TESTFLIX_ADMISSION_CANDIDATE_UNSTAGED" if status == unstaged else "TESTFLIX_ADMISSION_CANDIDATE_STAGED"
+        else:
+            assert parent == basis_l and not status and ledger == actions and origin in (basis_l, head)
+            phase = "TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED"
+        return "G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\nTESTFLIX_PHASE=" + phase + "\n"
     if (root / "docs/common_action_and_dynamic_composition_checkpoint_v01.md").exists():
         metadata = json.loads((root / "release/current_status_overlay_v01.json").read_text())["universality_admission_v01"]
         actions = metadata["path_actions"]
@@ -7379,7 +7394,7 @@ def _u4_historical_contract_root(tmp_path: Path) -> Path:
     return root
 
 
-def test_u4_admission_exact_current_states_and_neighbors() -> None:
+def test_u4_admission_exact_current_states_and_neighbors(tmp_path) -> None:
     namespace = runpy.run_path(str(GUARD_PATH))
     actions = namespace["U4_PATH_ACTIONS_V01"]
     h = "20d16af823ed4af94dc0a342c731aef81e8a23de"
@@ -7393,7 +7408,8 @@ def test_u4_admission_exact_current_states_and_neighbors() -> None:
     for state, change in ((source, {"branch": "foreign"}), (source, {"origin": "foreign"}), (source, {"parents": (h,)}), (source, {"status": dict(list(source["status"].items())[1:])}), (source, {"status": {**source["status"], "foreign.txt": "??"}}), (staged, {"status": {**staged["status"], "AGENTS.md": "MM"}}), (committed, {"parents": (h,h)}), (committed, {"origin": "foreign"}), (committed, {"delta": {**actions, "AGENTS.md": "A"}}), (committed, {"parents": (committed["head"],)})):
         assert classify(**{**state, **change})[1]
     failures = []
-    assert namespace["_validate_u4_admission_v01"](REPOSITORY_ROOT, failures) in {"U4_ADMISSION_CANDIDATE_UNSTAGED", "U4_ADMISSION_CANDIDATE_STAGED", "U4_IMPLEMENTATION_ADMITTED_COMMITTED"}
+    root = _testflix_historical_L_root_v11(tmp_path) if namespace["_testflix_requested_v11"](REPOSITORY_ROOT) else REPOSITORY_ROOT
+    assert namespace["_validate_u4_admission_v01"](root, failures) in {"U4_ADMISSION_CANDIDATE_UNSTAGED", "U4_ADMISSION_CANDIDATE_STAGED", "U4_IMPLEMENTATION_ADMITTED_COMMITTED"}
     assert failures == []
 
 
@@ -7403,7 +7419,7 @@ def test_u4_admission_source_identity_projection_is_exact() -> None:
     digest = namespace["_u4_source_digest_v01"]
     assert len(pins) == 48
     for path, expected in pins.items():
-        body = (REPOSITORY_ROOT / path).read_bytes()
+        body = subprocess.check_output(("git", "show", "54e32dbcc0e4d68431ec2b9428eac965f88ee47c:" + path), cwd=REPOSITORY_ROOT) if namespace["_testflix_requested_v11"](REPOSITORY_ROOT) else (REPOSITORY_ROOT / path).read_bytes()
         assert digest(path, body) == expected
         if path.endswith(".py"):
             changed = body + b"\nU4_UNAUTHORIZED_EXTRA = 1\n"
@@ -7458,3 +7474,110 @@ def test_u4_self_digest_rejects_ambiguous_or_malformed_literal() -> None:
         with pytest.raises(ValueError, match="self identity projection"):
             digest(path, changed)
     assert digest(path, body) == digest(path, bytes(bytearray(body)))
+
+
+def _testflix_historical_L_root_v11(tmp_path):
+    root = _u4_historical_contract_root(tmp_path)
+    basis = "54e32dbcc0e4d68431ec2b9428eac965f88ee47c"
+    for args in (("update-ref", "refs/heads/main", basis), ("update-ref", "refs/remotes/origin/main", basis),
+                 ("read-tree", basis), ("checkout-index", "--all", "--force")):
+        subprocess.run(("git", *args), cwd=root, check=True)
+    return root
+
+
+def test_testflix_admission_states_and_exact_neighbors_v11():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    actions = namespace["TESTFLIX_PATH_ACTIONS_V11"]
+    classify = namespace["_classify_testflix_ledger_v11"]
+    basis = namespace["TESTFLIX_L_V11"]
+    before = dict(head=basis, parents=(namespace["U4_H_V01"],), origin=basis, branch="main",
+        status={p: "??" if op == "A" else " M" for p,op in actions.items()}, delta={})
+    staged = {**before, "status": {p:op + " " for p,op in actions.items()}}
+    committed = {**before, "head":"abstract-local-successor", "parents":(basis,), "status":{}, "delta":actions}
+    for state,phase in ((before,"TESTFLIX_ADMISSION_CANDIDATE_UNSTAGED"),
+        (staged,"TESTFLIX_ADMISSION_CANDIDATE_STAGED"), (committed,"TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED"),
+        ({**committed,"origin":committed["head"]},"TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")):
+        assert classify(**state)==(phase,())
+    for state,change in ((before,{"branch":"foreign"}), (before,{"origin":"foreign"}),
+        (before,{"parents":(basis,)}), (before,{"status":dict(list(before["status"].items())[1:])}),
+        (before,{"status":{**before["status"],"foreign.txt":"??"}}),
+        (staged,{"status":{**staged["status"],"AGENTS.md":"MM"}}),
+        (committed,{"parents":(basis,basis)}), (committed,{"origin":"foreign"}),
+        (committed,{"delta":{**actions,"AGENTS.md":"A"}}), (committed,{"parents":(committed["head"],)})):
+        assert classify(**{**state,**change})[1]
+
+
+def test_testflix_exact_sources_and_stable_projection_v11():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    digest = namespace["_testflix_source_digest_v11"]
+    pins = namespace["TESTFLIX_SOURCE_IDENTITIES_V11"]
+    assert len(pins)==51 and set(pins)==set(namespace["TESTFLIX_PATH_ACTIONS_V11"])
+    for path,expected in pins.items():
+        body=(REPOSITORY_ROOT/path).read_bytes()
+        assert digest(path,body)==expected
+        assert digest(path,body+b"\n# Unapproved extra bytes\n")!=expected
+    path="tools/check_active_architecture_authority_v01.py"
+    body=('TESTFLIX_SOURCE_IDENTITIES_V11 = {"label": "caf\u00e9", "'+path+'": "'+'a'*64+'", "other": "'+'b'*64+'"}\nVALUE=3\n').encode()
+    expected=hashlib.sha256(body.replace(('"'+'a'*64+'"').encode(),b'"SELF_DIGEST_EXCLUDED_V11"')).hexdigest()
+    assert digest(path,body)==expected==digest(path,bytes(bytearray(body)))
+    assert digest(path,body.replace(b'a'*64,b'c'*64))==expected
+    assert digest(path,body.replace(b'b'*64,b'd'*64))!=expected
+    for bad in (body+body, body.replace(b'a'*64,b'a'*63),body.replace(b'a'*64,b'A'*64),
+        body.replace(b' = {',b': dict = {'),body.replace(b' = {',b' = ALIAS = {'),
+        body+b'TESTFLIX_SOURCE_IDENTITIES_V11 += {}\n'):
+        with pytest.raises(ValueError,match='self identity projection'):
+            digest(path,bad)
+
+
+def test_testflix_current_public_guard_v11():
+    result=_run_guard(REPOSITORY_ROOT)
+    assert result.returncode==0,result.stdout+result.stderr
+    expected=_expected_g2f_landing_stdout_v01(REPOSITORY_ROOT)
+    assert result.stdout.endswith(expected)
+    assert result.stderr==''
+
+
+def test_testflix_living_registration_source_and_schema_v11(tmp_path):
+    import importlib.util
+    source=REPOSITORY_ROOT/'demo/run_living_gauntlet_v01.py'
+    spec=importlib.util.spec_from_file_location('testflix_living_registration_probe_v11',source)
+    living=importlib.util.module_from_spec(spec)
+    sys.modules[spec.name]=living
+    try:
+        spec.loader.exec_module(living)
+        block,errors=living._current_registration_v01(REPOSITORY_ROOT)
+        assert errors==() and len(block['rows'])==9
+        assert block['basis']==living._TESTFLIX_L_V11
+        assert all(row['authority']=='EVIDENCE_ONLY' and row['effect_access']=='NONE' for row in block['rows'])
+        root=_testflix_historical_L_root_v11(tmp_path)
+        paths=(*living._TESTFLIX_FROZEN_SOURCES_V11,*living._U4_BASE_IDENTITIES,
+            'release/current_schema_surface_v01.json','release/current_status_overlay_v01.json')
+        for path in paths:
+            target=root/path;target.parent.mkdir(parents=True,exist_ok=True)
+            target.write_bytes((REPOSITORY_ROOT/path).read_bytes())
+        overlay_path=root/'release/current_status_overlay_v01.json'
+        original=json.loads(overlay_path.read_text())
+        assert living._current_registration_v01(root)==(block,())
+        for mutation in ('missing','extra','duplicate','module','symbol','authority','source','pass'):
+            changed=deepcopy(original);record=changed[living._TESTFLIX_REGISTRATION_KEY_V11]
+            if mutation=='missing':record['rows'].pop()
+            elif mutation in ('extra','duplicate'):record['rows'].append(deepcopy(record['rows'][0]))
+            elif mutation=='module':record['rows'][0]['producer']='foreign.module:execute'
+            elif mutation=='symbol':record['rows'][0]['producer']='hedgehog.action_commit_packet_v02:foreign'
+            elif mutation=='authority':record['rows'][0]['authority']='ROOT'
+            elif mutation=='source':record['rows'][0]['source_sha256']='0'*64
+            else:record['status']='PASS'
+            overlay_path.write_text(json.dumps(changed)+'\n')
+            assert 'registration_exact_block' in living._current_registration_v01(root)[1],mutation
+        overlay_path.write_text(json.dumps(original)+'\n')
+        schema_path=root/'release/current_schema_surface_v01.json'
+        schema=json.loads(schema_path.read_text());schema['current_schema_paths'].append('schemas/retired/foreign.json')
+        schema_path.write_text(json.dumps(schema)+'\n')
+        assert 'registration_schema_inventory' in living._current_registration_v01(root)[1]
+        schema_path.write_bytes((REPOSITORY_ROOT/'release/current_schema_surface_v01.json').read_bytes())
+        host=root/'hedgehog/work_execution_host_v01.py';body=host.read_bytes();host.write_bytes(body+b'\nUNAPPROVED=True\n')
+        assert 'registration_source:hedgehog/work_execution_host_v01.py' in living._current_registration_v01(root)[1]
+        host.write_bytes(body)
+        assert living._current_registration_v01(root)==(block,())
+    finally:
+        sys.modules.pop(spec.name,None)

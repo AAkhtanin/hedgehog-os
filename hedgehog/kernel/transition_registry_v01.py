@@ -10,6 +10,7 @@ execute an effect. Unknown transitions fail closed.
 from __future__ import annotations
 
 from dataclasses import dataclass as _dataclass
+from datetime import datetime as _datetime, timezone as _timezone
 import re as _re
 import unicodedata as _unicodedata
 
@@ -2923,12 +2924,70 @@ def _fractal_runtime_source_parent_envelope_valid_v02(
     return False
 
 
+@_dataclass(frozen=True)
+class FractalRuntimeTemporalContextV02:
+    """Structural time projection; its origin is checked by the owning runtime."""
+
+    historical_route_artifact: KernelArtifactV01
+    historical_evaluation_time: int
+    current_evaluation_time: int
+    packet_id: str
+    source_revision: int
+    host_revision: int
+    capture_ordinal: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    logical_time_bridge_id: str
+    observation_ids: tuple[str, ...]
+
+
+def _fractal_runtime_temporal_pair_valid_v02(rule, source, target, context):
+    source_time = _kernel_artifact_to_plain_dict_v01(source)["time_envelope"]
+    target_time = _kernel_artifact_to_plain_dict_v01(target)["time_envelope"]
+    if context is None:
+        return _canonical_bytes(source_time) == _canonical_bytes(target_time)
+    if type(context) is not FractalRuntimeTemporalContextV02:
+        return False
+    route = context.historical_route_artifact
+    if (type(route) is not KernelArtifactV01 or _validate_kernel_artifact_v01(route)
+        or not _fractal_runtime_artifact_context_valid_v02(route, expected_lifecycle="ROOT_ACCEPTED")
+        or route.artifact_type != "ExecutionModeRouteEligibility"
+        or (route.owner_root_id, route.transaction_id) != (source.owner_root_id, source.transaction_id)
+        or any(type(v) is not int or v < 0 for v in (context.historical_evaluation_time,
+            context.current_evaluation_time, context.source_revision, context.host_revision))
+        or type(context.capture_ordinal) is not int or context.capture_ordinal < 0
+        or context.historical_evaluation_time > context.current_evaluation_time
+        or any(type(v) is not str or not v for v in (context.packet_id, context.evaluation_time_source,
+            context.evaluation_context_id, context.logical_time_bridge_id))
+        or type(context.observation_ids) is not tuple or not context.observation_ids
+        or any(type(v) is not str or not v for v in context.observation_ids)
+        or len(set(context.observation_ids)) != len(context.observation_ids)):
+        return False
+    historical = _kernel_artifact_to_plain_dict_v01(route)["time_envelope"]
+    now = _datetime.fromtimestamp(context.current_evaluation_time, _timezone.utc)
+    parse = lambda value: _datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if not (parse(historical["valid_from"]) <= now < parse(historical["valid_to"])):
+        return False
+    if context.current_evaluation_time >= context.historical_evaluation_time + historical["ttl_seconds"]:
+        return False
+    if any(parse(historical[k]).timestamp() > context.current_evaluation_time
+        for k in ("pt_created_at", "kt_asof", "et_observed_at") if historical[k] is not None):
+        return False
+    current = dict(historical, pt_created_at=now.isoformat().replace("+00:00", "Z"),
+        et_observed_at=now.isoformat().replace("+00:00", "Z"))
+    # T01 always materializes the historical route's immutable topology.
+    if rule.rule_id == "g2d_t01_route_eligibility_to_topology":
+        return source == route and source_time == target_time == historical
+    return source_time in (historical, current) and target_time == current
+
+
 def _fractal_runtime_artifact_pair_valid_v02(
     *,
     rule: TransitionRuleV01,
     decision: TransitionDecisionV01,
     source_artifact: KernelArtifactV01,
     target_artifact: KernelArtifactV01,
+    temporal_context: FractalRuntimeTemporalContextV02 | None = None,
 ) -> bool:
     target_lifecycles = dict(_FRACTAL_RUNTIME_TARGET_LIFECYCLE_BY_RULE_V02)
     target_lifecycle = target_lifecycles.get(rule.rule_id)
@@ -2951,8 +3010,8 @@ def _fractal_runtime_artifact_pair_valid_v02(
         source_artifact.artifact_id == target_artifact.artifact_id
         or source_artifact.transaction_id != target_artifact.transaction_id
         or source_artifact.owner_root_id != target_artifact.owner_root_id
-        or _canonical_bytes(source_plain["time_envelope"])
-        != _canonical_bytes(target_plain["time_envelope"])
+        or not _fractal_runtime_temporal_pair_valid_v02(
+            rule, source_artifact, target_artifact, temporal_context)
         or len(target_artifact.parent_refs)
         != len(set(target_artifact.parent_refs))
         or target_artifact.artifact_id in target_artifact.parent_refs
@@ -3115,6 +3174,7 @@ def validate_fractal_runtime_transition_decision_v02(
     registry: TransitionRegistryV01,
     source_artifact: KernelArtifactV01,
     target_artifact: KernelArtifactV01,
+    temporal_context: FractalRuntimeTemporalContextV02 | None = None,
 ) -> tuple[str, ...]:
     try:
         if validate_fractal_runtime_transition_registry_profile_v02(registry):
@@ -3155,6 +3215,7 @@ def validate_fractal_runtime_transition_decision_v02(
                 decision=value,
                 source_artifact=source_artifact,
                 target_artifact=target_artifact,
+                temporal_context=temporal_context,
             )
         ):
             return ("g2d_transition_decision_substituted",)

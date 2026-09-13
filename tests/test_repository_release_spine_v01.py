@@ -1134,6 +1134,23 @@ def _g2d_v0310_bind_exact_e4_candidate_hashes_v01() -> str:
         "efb0ef689bde0efbbbbc5cddcc7e3d0237c5dacf05e7c1f6415e5d5d808bd282",
         "94dc6941ff6fc3f06dfb7f5f05ef1a55716ff359bd258439051f1226a911111f",
     )
+    reviewed_testflix = (
+        "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0",
+        "3bb3d6678ea5e016dc6fd2b2ef825148c5198db3e7dce3b114577cd12b2a3c4d",
+    )
+    if observed == reviewed_testflix:
+        metadata = json.loads((REPOSITORY_ROOT / "release/current_status_overlay_v01.json").read_text())["testflix_admission_v11"]
+        assert metadata["basis"] == "54e32dbcc0e4d68431ec2b9428eac965f88ee47c"
+        assert metadata["checkpoint"] == "docs/testflix_v01_preflight.md"
+        assert all(metadata["runtime_source_identities"][path] == digest for path, digest in zip(paths, observed))
+        assert hashlib.sha256((REPOSITORY_ROOT / metadata["checkpoint"]).read_bytes()).hexdigest() == metadata["checkpoint_sha256"]
+        import runpy
+        guard = runpy.run_path(str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"))
+        errors = []
+        phase = guard["_validate_testflix_admission_v11"](REPOSITORY_ROOT, errors)
+        assert not errors, errors
+        assert phase in {"TESTFLIX_ADMISSION_CANDIDATE_UNSTAGED", "TESTFLIX_ADMISSION_CANDIDATE_STAGED", "TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED"}
+        return "EXACT_TESTFLIX_L_SUCCESSOR_PAIR_HISTORICAL_U4_E_BRANCHES_SEPARATE"
     if observed == reviewed_u4:
         assert (REPOSITORY_ROOT / "docs/common_action_and_dynamic_composition_checkpoint_v01.md").is_file()
         return "EXACT_REVIEWED_U4_RUNTIME_HISTORICAL_E5_CHECKS_SEPARATE"
@@ -4711,3 +4728,23 @@ def u4_historical_release_module(tmp_path_factory):
     source = root / "tests/test_repository_release_spine_v01.py"
     assert _sha256_bytes(source.read_bytes()) == "42217ad18425513e130a18fc5e7d6f6f764ae2abe599ed2330990e487cb87f8e"
     return runpy.run_path(str(source))
+
+
+def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11():
+    import runpy
+    guard = runpy.run_path(str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"))
+    paths = ("specs/document_authority_index_v01.json", "release/successor_context_manifest_v01.json", "release/current_status_overlay_v01.json")
+    documents = [_read_json(REPOSITORY_ROOT/path) for path in paths]
+    current = documents[0]["testflix_admission_v11"]
+    assert all(document["testflix_admission_v11"] == current for document in documents)
+    assert current["basis"] == guard["TESTFLIX_L_V11"]
+    assert current["path_actions"] == guard["TESTFLIX_PATH_ACTIONS_V11"] and len(current["path_actions"]) == 51
+    assert current["successor_commit"] == "DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED"
+    assert current["independent_owner_acceptance"] == "PENDING_OWNER_EXECUTION"
+    for path, document in zip(paths, documents):
+        historical = json.loads(_git_show(guard["TESTFLIX_L_V11"], path))
+        assert document["universality_admission_v01"] == historical["universality_admission_v01"]
+    for path in ("release/completion_manifest.json", "release/integration_seam_index.json", "release/current_schema_surface_v01.json"):
+        assert (REPOSITORY_ROOT/path).read_bytes() == _git_show(guard["TESTFLIX_L_V11"], path)
+    assert G2E4_V0310_ACTIVE_BYTES_BINDING == "EXACT_TESTFLIX_L_SUCCESSOR_PAIR_HISTORICAL_U4_E_BRANCHES_SEPARATE"
+    assert "schemas/fractal_runtime_v02.schema.json" in _read_json(REPOSITORY_ROOT/"release/current_schema_surface_v01.json")["current_schema_paths"]

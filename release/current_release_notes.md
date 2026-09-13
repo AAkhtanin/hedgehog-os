@@ -1,5 +1,14 @@
 # Current Engineering Notes
 
+## Testflix V11 Preparation
+
+Recorded V09 controlled P04/renewal and V10 live QUALITY/captured A/B are
+source-bound evidence, not fresh V11 full-suite passes. V11 reconciles the exact
+L-successor guard, Living registration pins and release source-pair consumer.
+The recovered original review and exact three-file canonical-projection repair
+are verified. The prepared owner script remains subject to independent review.
+See [the checkpoint](../docs/testflix_v01_preflight.md#v11-admission-preparation).
+
 ## Bounded Common Action and Local Reuse: Current Admission Proposal
 
 The [implementation checkpoint](../docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy

@@ -9,9 +9,11 @@ DRS, permission, packet, receipt, FinalOutput, authority, or effect operation.
 from __future__ import annotations
 
 from collections.abc import Mapping as _Mapping
-from dataclasses import dataclass as _dataclass, fields as _fields, is_dataclass as _is_dataclass, replace as _replace
+from dataclasses import dataclass as _dataclass, fields as _fields, is_dataclass as _is_dataclass, replace as _replace, InitVar as _InitVar
 from functools import lru_cache as _lru_cache
+from datetime import datetime as _datetime, timezone as _timezone
 import hashlib
+from copy import deepcopy as _deepcopy
 from math import isfinite as _isfinite
 import re
 import types
@@ -89,17 +91,17 @@ MODULE_ID = "kernel_fractal_runtime_v02"
 SLICE_ID = "gate2_g2d3_fractal_runtime_queue_budget_scope_contracts"
 FRACTAL_RUNTIME_VERSION = "v0.2"
 
-TOTAL_G2D_TYPE_COUNT = 28
+TOTAL_G2D_TYPE_COUNT = 29
 SERIALIZED_IDENTITY_TYPE_COUNT = 18
 RUNTIME_ONLY_CONTEXT_TYPE_COUNT = 3
 SCHEMA_DEFINITION_COUNT = 18
-FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT = 135
+FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT = 137
 FRACTAL_RUNTIME_TRANSITION_PUBLIC_FUNCTION_COUNT = 6
-TOTAL_G2D_PUBLIC_FUNCTION_COUNT = 141
+TOTAL_G2D_PUBLIC_FUNCTION_COUNT = 143
 PUBLIC_G2D_REASON_COUNT = 220
 VALIDATION_TARGET_COUNT = 35
 FAILURE_STAGE_COUNT = 30
-DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT = 143
+DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT = 144
 D1_MODULE_PUBLIC_FUNCTION_COUNT = 74
 D2_MODULE_PUBLIC_FUNCTION_COUNT = 81
 D3_MODULE_PUBLIC_FUNCTION_COUNT = 90
@@ -909,6 +911,14 @@ class FractalRuntimeSourceContextV02:
     root_route_transition_decision: TransitionDecisionV01
     route_eligibility_artifact: KernelArtifactV01
     runtime_policy: FractalRuntimePolicyV02
+    current_temporal_binding: _InitVar[FractalCurrentTemporalBindingV01 | None] = None
+    current_temporal_verification: _InitVar[object] = None
+    current_observed_work_context: _InitVar[RuntimeObservedWorkContextV02 | None] = None
+
+    def __post_init__(self, current_temporal_binding, current_temporal_verification, current_observed_work_context):
+        object.__setattr__(self, "current_temporal_binding", current_temporal_binding)
+        object.__setattr__(self, "current_temporal_verification", current_temporal_verification)
+        object.__setattr__(self, "current_observed_work_context", current_observed_work_context)
 
 
 @_dataclass(frozen=True)
@@ -941,6 +951,10 @@ class FractalRuntimeExecutionBundleV02:
     transition_decisions: tuple[TransitionDecisionV01, ...]
     causal_consumption_refs: tuple[CausalConsumptionRefV01, ...]
     observed_work_context: RuntimeObservedWorkContextV02 | None = None
+
+    @property
+    def temporal_binding(self):
+        return self.source_context.current_temporal_binding
 
 
 @_dataclass(frozen=True)
@@ -1015,6 +1029,21 @@ class FractalRetainedPlanReviewV01:
 
 
 @_dataclass(frozen=True)
+class FractalCurrentTemporalBindingV01:
+    owning_root_id: str
+    transaction_id: str
+    packet_id: str
+    evaluation_time_epoch_seconds: int
+    evaluation_time_source: str
+    evaluation_context_id: str
+    source_revision: int
+    host_revision: int
+    capture_ordinal: int
+    observation_ids: tuple[str, ...]
+    logical_time_bridge_id: str
+
+
+@_dataclass(frozen=True)
 class FractalRetainedWorkAdmissionV01:
     admission_id: str
     evidence: FractalRetainedWorkEvidenceV01
@@ -1028,6 +1057,7 @@ class FractalRetainedWorkAdmissionV01:
     planned_child_cell_id: str
     field_bindings: tuple[RetainedFieldBindingV01, ...]
     evaluation_time_epoch_seconds: int
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None
 
 
 @_dataclass(frozen=True)
@@ -1073,6 +1103,18 @@ class FractalRetainedWorkPrefixV01:
     retained_consumptions: tuple[FractalRetainedWorkConsumptionV01, ...]
     retained_consumption_artifacts: tuple[KernelArtifactV01, ...]
     queue_transition_decisions: tuple[TransitionDecisionV01, ...]
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None
+    temporal_verification: _InitVar[object] = None
+
+    def __post_init__(self, temporal_verification):
+        object.__setattr__(self, 'temporal_verification', temporal_verification)
+        if (self.temporal_binding is not None or temporal_verification is not None) and (
+            self.source_context.current_temporal_binding is None and
+            self.source_context.current_temporal_verification is None):
+            object.__setattr__(self, 'source_context', _replace(self.source_context,
+                current_temporal_binding=self.temporal_binding,
+                current_temporal_verification=temporal_verification,
+                current_observed_work_context=self.observed_work_context))
 
 
 @_dataclass(frozen=True)
@@ -1111,6 +1153,18 @@ class FractalRetainedWorkExecutionBundleV01:
     retained_admissions: tuple[FractalRetainedWorkAdmissionV01, ...]
     retained_consumptions: tuple[FractalRetainedWorkConsumptionV01, ...]
     retained_consumption_artifacts: tuple[KernelArtifactV01, ...]
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None
+    temporal_verification: _InitVar[object] = None
+
+    def __post_init__(self, temporal_verification):
+        object.__setattr__(self, 'temporal_verification', temporal_verification)
+        if (self.temporal_binding is not None or temporal_verification is not None) and (
+            self.source_context.current_temporal_binding is None and
+            self.source_context.current_temporal_verification is None):
+            object.__setattr__(self, 'source_context', _replace(self.source_context,
+                current_temporal_binding=self.temporal_binding,
+                current_temporal_verification=temporal_verification,
+                current_observed_work_context=self.observed_work_context))
 
 
 SERIALIZED_G2D_TYPES_V02 = (
@@ -1142,6 +1196,7 @@ RETAINED_G2D_TYPES_V01 = (
     RetainedFieldBindingV01, FractalRetainedWorkEvidenceV01, FractalRetainedPlanReviewV01,
     FractalRetainedWorkAdmissionV01, FractalRetainedWorkConsumptionV01,
     FractalRetainedWorkPrefixV01, FractalRetainedWorkExecutionBundleV01,
+    FractalCurrentTemporalBindingV01,
 )
 G2D_TYPES_V02 = SERIALIZED_G2D_TYPES_V02 + RUNTIME_ONLY_G2D_TYPES_V02 + RETAINED_G2D_TYPES_V01
 
@@ -4711,6 +4766,32 @@ def build_fractal_runtime_trace_v02(
     root_result_artifact: KernelArtifactV01,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
 ) -> FractalRuntimeTraceV02:
+    return _build_fractal_runtime_trace_v02_within_complete_validation(topology, source_binding, topology_artifact=topology_artifact, queue_entries=queue_entries, queue_artifacts=queue_artifacts, state_transition_decisions=state_transition_decisions, cell_inputs=cell_inputs, cell_results=cell_results, result_artifacts=result_artifacts, runtime_abi_artifacts=runtime_abi_artifacts, scope_projections=scope_projections, revise_observations=revise_observations, partial_failures=partial_failures, backpressure_states=backpressure_states, budgets=budgets, topology_transition_decision=topology_transition_decision, parent_return_transition_decision=parent_return_transition_decision, root_result_artifact=root_result_artifact, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _build_fractal_runtime_trace_v02_within_complete_validation(
+    topology: RuntimeExecutionTopologyV02,
+    source_binding: RuntimeTopologySourceBindingV02,
+    *,
+    topology_artifact: KernelArtifactV01,
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    state_transition_decisions: tuple[TransitionDecisionV01, ...],
+    cell_inputs: tuple[FractalCellInputV02, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_abi_artifacts: tuple[KernelArtifactV01, ...],
+    scope_projections: tuple[ParentChildScopeProjectionV02, ...],
+    revise_observations: tuple[FractalReviseObservationV02, ...],
+    partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    budgets: tuple[FractalRuntimeBudgetV02, ...],
+    topology_transition_decision: TransitionDecisionV01,
+    parent_return_transition_decision: TransitionDecisionV01,
+    root_result_artifact: KernelArtifactV01,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
+) -> FractalRuntimeTraceV02:
     _require_valid(topology, RuntimeExecutionTopologyV02, "g2d_topology_identity_mismatch")
     _require_valid(source_binding, RuntimeTopologySourceBindingV02, "g2d_topology_source_binding_invalid")
     families = (
@@ -4743,7 +4824,7 @@ def build_fractal_runtime_trace_v02(
     retained_ids = ()
     if retained_prefix is not None:
         _retained_trace_inputs_v01(retained_prefix, topology, queue_entries, queue_artifacts,
-            cell_inputs, cell_results, result_artifacts, budgets, state_transition_decisions)
+            cell_inputs, cell_results, result_artifacts, budgets, state_transition_decisions, _complete_check=_complete_check)
         retained_ids = tuple(a.artifact_id for a in retained_prefix.retained_consumption_artifacts)
     if len(runtime_ids) != len(set(runtime_ids)) or set(runtime_ids) != set(queue_artifact_ids + result_artifact_ids + retained_ids):
         raise ValueError("g2d_trace_lineage_invalid")
@@ -4781,6 +4862,7 @@ def build_fractal_runtime_trace_v02(
     return _finish_identity(provisional)
 
 
+
 def validate_fractal_runtime_trace_v02(value: object) -> FractalRuntimeValidationReportV02:
     return _validate_serialized(value, FractalRuntimeTraceV02)
 
@@ -4806,6 +4888,24 @@ def build_fractal_runtime_report_v02(
     parent_return_transition_decision: TransitionDecisionV01,
     root_result_artifact: KernelArtifactV01,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+) -> FractalRuntimeReportV02:
+    return _build_fractal_runtime_report_v02_within_complete_validation(topology, topology_artifact, source_binding, ordered_cell_results=ordered_cell_results, queue_entries=queue_entries, backpressure_states=backpressure_states, runtime_trace=runtime_trace, final_budget=final_budget, parent_return_transition_decision=parent_return_transition_decision, root_result_artifact=root_result_artifact, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _build_fractal_runtime_report_v02_within_complete_validation(
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    source_binding: RuntimeTopologySourceBindingV02,
+    *,
+    ordered_cell_results: tuple[FractalCellResultV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    final_budget: FractalRuntimeBudgetV02,
+    parent_return_transition_decision: TransitionDecisionV01,
+    root_result_artifact: KernelArtifactV01,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
 ) -> FractalRuntimeReportV02:
     _require_valid(topology, RuntimeExecutionTopologyV02, "g2d_topology_identity_mismatch")
     _require_valid(source_binding, RuntimeTopologySourceBindingV02, "g2d_topology_source_binding_invalid")
@@ -4839,7 +4939,7 @@ def build_fractal_runtime_report_v02(
             and retained_prefix.topology == topology and retained_prefix.source_binding == source_binding
             and retained_prefix.cell_results == ordered_cell_results and retained_prefix.queue_entries == queue_entries
             and retained_prefix.budgets[-1] == final_budget, "retained_report_current_inventory")
-        _retained_validate_results_v01(retained_prefix, complete=True)
+        _retained_complete_results_v01(retained_prefix, _complete_check)
     provisional = FractalRuntimeReportV02(
         report_id="frreport_v02:" + _ZERO_SHA256,
         report_version="v0.2",
@@ -4885,6 +4985,7 @@ def build_fractal_runtime_report_v02(
         root_review_required=True,
     )
     return _finish_identity(provisional)
+
 
 
 def validate_fractal_runtime_report_v02(value: object) -> FractalRuntimeValidationReportV02:
@@ -5266,20 +5367,34 @@ def _validate_source_context_family_uncached_v02(
 def _validate_source_context_family_v02(
     value: object,
 ) -> tuple[str | None, tuple[str, ...]]:
-    key = _source_context_success_cache_key_v02(value)
-    if key is not None and key in _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02:
-        return _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02[key]
-    result = _validate_source_context_family_uncached_v02(value)
-    if result == (None, ()) and key is not None:
-        final_key = _source_context_success_cache_key_v02(value)
-        if final_key == key:
-            _store_bounded_success_v02(
-                _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02,
-                key,
-                result,
-                maximum=_SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_MAX_V02,
-            )
-    return result
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        if type(value) is FractalRuntimeSourceContextV02:
+            try:
+                _retained_temporal_time_v01(value, value.current_temporal_binding,
+                    value.current_temporal_verification)
+                observed = value.current_observed_work_context
+                if observed is not None and (value.current_temporal_binding is None or
+                    type(observed) is not RuntimeObservedWorkContextV02 or
+                    not _runtime_observed_work_context_self_valid_v02(observed) or
+                    observed.baseline_execution_bundle.source_context != value):
+                    return _source_context_failure_v02("g2d_source_context_invalid")
+            except (ValueError, TypeError, AttributeError):
+                return _source_context_failure_v02("g2d_source_context_invalid")
+        key = _source_context_success_cache_key_v02(value)
+        if key is not None and key in _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02:
+            return _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02[key]
+        result = _validate_source_context_family_uncached_v02(value)
+        if result == (None, ()) and key is not None:
+            final_key = _source_context_success_cache_key_v02(value)
+            if final_key == key:
+                _store_bounded_success_v02(
+                    _SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_V02,
+                    key,
+                    result,
+                    maximum=_SOURCE_CONTEXT_FAMILY_SUCCESS_CACHE_MAX_V02,
+                )
+        return result
 
 
 def build_fractal_runtime_source_context_v02(
@@ -5299,6 +5414,9 @@ def build_fractal_runtime_source_context_v02(
     root_route_transition_decision: TransitionDecisionV01,
     route_eligibility_artifact: KernelArtifactV01,
     runtime_policy: FractalRuntimePolicyV02,
+    current_temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    current_temporal_verification: object = None,
+    current_observed_work_context: RuntimeObservedWorkContextV02 | None = None,
 ) -> FractalRuntimeSourceContextV02:
     value = FractalRuntimeSourceContextV02(
         transition_registry=transition_registry,
@@ -5316,7 +5434,12 @@ def build_fractal_runtime_source_context_v02(
         root_route_transition_decision=root_route_transition_decision,
         route_eligibility_artifact=route_eligibility_artifact,
         runtime_policy=runtime_policy,
+        current_temporal_binding=current_temporal_binding,
+        current_temporal_verification=current_temporal_verification,
+        current_observed_work_context=current_observed_work_context,
     )
+    _retained_temporal_time_v01(value, current_temporal_binding,
+        current_temporal_verification, require_current=True)
     report = validate_fractal_runtime_source_context_v02(value)
     if report.status != "PASS":
         raise ValueError(report.reason_codes[0] if report.reason_codes else "g2d_source_context_invalid")
@@ -7929,7 +8052,7 @@ def _d3_build_queue_artifact_with_exact_omission_v02(
             profile_d_omission_index=profile_d_omission_index,
         ),
         parent_refs=parent_refs,
-        time_envelope=route_plain["time_envelope"],
+        time_envelope=_retained_current_envelope_v01(source_context, None, None),
     )
     material = _kernel_artifact_to_plain_dict_v01(provisional)
     material.pop("artifact_id")
@@ -9215,6 +9338,7 @@ def _d3_profile_d_omission_index_v02(
     settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...],
     observed_work_context: RuntimeObservedWorkContextV02 | None,
     settled_revise_observations: tuple[FractalReviseObservationV02, ...],
+    _validated_input_families: dict[str, dict[str, FractalCellInputV02]] | None = None,
 ) -> int | None:
     if (
         type(queue_entry) is not FractalCellQueueEntryV02
@@ -9259,7 +9383,12 @@ def _d3_profile_d_omission_index_v02(
     ):
         raise ValueError("g2d_queue_artifact_lineage_invalid")
     topology_artifact = _build_topology_artifact_v02(topology, source_context)
-    validated_inputs: dict[str, FractalCellInputV02] = {}
+    # Families are local to one legacy settled-prefix validation. Keeping a
+    # separate ancestry map per child preserves the exact origin input inventory.
+    validated_inputs: dict[str, FractalCellInputV02] = (
+        {} if _validated_input_families is None
+        else _validated_input_families.setdefault(queue_entry.cell_id, {})
+    )
     cell_input = _d3_source_bound_cell_input_from_prefix_v02(
         cell_id=queue_entry.cell_id,
         source_context=source_context,
@@ -9478,7 +9607,17 @@ def _d3_expected_queue_artifact_against_prefix_v02(
     settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...],
     observed_work_context: RuntimeObservedWorkContextV02 | None,
     settled_revise_observations: tuple[FractalReviseObservationV02, ...],
+    retained_artifact: KernelArtifactV01 | None = None,
+    _validated_input_families: dict[str, dict[str, FractalCellInputV02]] | None = None,
 ) -> KernelArtifactV01:
+    original_source = source_context
+    source_context = _queue_source_context_v03(entry, parent_refs, source_context,
+        observed_work_context, retained_artifact)
+    if (source_context is not original_source or observed_work_context is not None
+        or source_context.current_temporal_binding is not None
+        or source_context.current_temporal_verification is not None
+        or source_context.current_observed_work_context is not None):
+        _validated_input_families = None
     omission_index = _d3_profile_d_omission_index_v02(
         queue_entry=entry,
         source_context=source_context,
@@ -9490,6 +9629,7 @@ def _d3_expected_queue_artifact_against_prefix_v02(
         settled_scope_projections=settled_scope_projections,
         observed_work_context=observed_work_context,
         settled_revise_observations=settled_revise_observations,
+        _validated_input_families=_validated_input_families,
     )
     if omission_index is None:
         return _d3_build_queue_artifact_v02(
@@ -9574,6 +9714,37 @@ def _d3_validate_settled_runtime_prefix_v02(
     candidate_queue_entry: FractalCellQueueEntryV02 | None = None,
     frontier: str = "COMPLETED",
 ) -> dict[str, object]:
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        return _d3_validate_settled_runtime_prefix_body_v06(
+            topology=topology, policy=policy, source_context=source_context,
+            settled_budget_log=settled_budget_log, settled_queue_entry_log=settled_queue_entry_log,
+            settled_queue_artifact_log=settled_queue_artifact_log, settled_cell_inputs=settled_cell_inputs,
+            settled_scope_projections=settled_scope_projections,
+            settled_revise_observations=settled_revise_observations,
+            settled_backpressure_states=settled_backpressure_states,
+            settled_validation_reports=settled_validation_reports,
+            observed_work_context=observed_work_context, candidate_queue_entry=candidate_queue_entry,
+            frontier=frontier)
+
+
+def _d3_validate_settled_runtime_prefix_body_v06(
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    policy: FractalRuntimePolicyV02,
+    source_context: FractalRuntimeSourceContextV02,
+    settled_budget_log: tuple[FractalRuntimeBudgetV02, ...],
+    settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...],
+    settled_queue_artifact_log: tuple[KernelArtifactV01, ...],
+    settled_cell_inputs: tuple[FractalCellInputV02, ...],
+    settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...],
+    settled_revise_observations: tuple[FractalReviseObservationV02, ...],
+    settled_backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...],
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+    candidate_queue_entry: FractalCellQueueEntryV02 | None = None,
+    frontier: str = "COMPLETED",
+) -> dict[str, object]:
     _require_valid(topology, RuntimeExecutionTopologyV02, "g2d_topology_identity_mismatch")
     _require_valid(policy, FractalRuntimePolicyV02, "g2d_topology_policy_invalid")
     if (
@@ -9639,6 +9810,11 @@ def _d3_validate_settled_runtime_prefix_v02(
     artifact_by_id: dict[str, KernelArtifactV01] = {}
     queue_position_by_id: dict[str, int] = {}
     cell_order: list[str] = []
+    # This invocation owns its frontier, fixed source/input/scope tuples and
+    # budget map. The loop only appends unique queue/artifact IDs; input
+    # reconstruction reads fixed initial/activation records, never latest heads.
+    # Queue-specific origin/frontier/omission/canonical checks still run below.
+    validated_input_families: dict[str, dict[str, FractalCellInputV02]] = {}
     for index, entry in enumerate(settled_queue_entry_log):
         if (
             validate_fractal_cell_queue_entry_v02(entry).status != "PASS"
@@ -9758,6 +9934,8 @@ def _d3_validate_settled_runtime_prefix_v02(
                 settled_scope_projections=settled_scope_projections,
                 observed_work_context=observed_work_context,
                 settled_revise_observations=settled_revise_observations,
+                retained_artifact=artifact,
+                _validated_input_families=validated_input_families,
             )
             if (
                 artifact != expected_artifact
@@ -10716,7 +10894,8 @@ def _d3_expected_cell_input_v02(
         expected_artifact = _d3_build_queue_artifact_v02(
             entry,
             parent_refs=parent_refs,
-            source_context=source_context,
+            source_context=_queue_source_context_v03(entry, parent_refs, source_context,
+                observed_work_context, artifact),
         )
         if artifact != expected_artifact:
             raise ValueError("g2d_queue_artifact_lineage_invalid")
@@ -11888,6 +12067,7 @@ def project_fractal_cell_queue_entry_kernel_artifact_v02(
         registry=registry,
         source_artifact=source_artifact,
         target_artifact=result,
+        temporal_context=_transition_temporal_context_v04(source_context, result),
     ):
         raise ValueError("g2d_transition_decision_substituted")
     return result
@@ -12315,7 +12495,12 @@ def _d3_expected_child_result_artifact_v02(
     topology: RuntimeExecutionTopologyV02,
     current_entry: FractalCellQueueEntryV02,
     indexes: dict[str, object],
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> KernelArtifactV01:
+    selected_source = _historical_result_source_v03(source_context, result, "cell_results")
+    if selected_source is not source_context:
+        source_context, temporal_binding, temporal_verification = selected_source, None, None
     if (
         type(result) is not FractalCellResultV02
         or validate_fractal_cell_result_v02(result).status != "PASS"
@@ -12424,7 +12609,7 @@ def _d3_expected_child_result_artifact_v02(
             topology_artifact.artifact_id,
             *(item.artifact_id for item in terminal_artifacts),
         ),
-        time_envelope=route_plain["time_envelope"],
+        time_envelope=_retained_current_envelope_v01(source_context, temporal_binding, temporal_verification),
     )
     material = _kernel_artifact_to_plain_dict_v01(provisional)
     material.pop("artifact_id")
@@ -12452,6 +12637,8 @@ def _d3_child_result_artifact_pair_valid_v02(
     current_entry: FractalCellQueueEntryV02,
     indexes: dict[str, object],
     retained_consumption: FractalRetainedWorkConsumptionV01 | None = None,
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> bool:
     if retained_consumption is not None:
         return (type(retained_consumption) is FractalRetainedWorkConsumptionV01
@@ -12471,6 +12658,7 @@ def _d3_child_result_artifact_pair_valid_v02(
             topology=topology,
             current_entry=current_entry,
             indexes=indexes,
+            temporal_binding=temporal_binding, temporal_verification=temporal_verification,
         )
         return bool(
             type(artifact) is KernelArtifactV01
@@ -12696,7 +12884,107 @@ def evaluate_fractal_runtime_state_transition_v02(
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
     retained_consumption: FractalRetainedWorkConsumptionV01 | None = None,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> TransitionDecisionV01 | None:
+    return _evaluate_fractal_runtime_state_transition_from_prefix_v02(
+        source_context=source_context,
+        topology=topology,
+        source_artifact=source_artifact,
+        current_entry=current_entry,
+        node=node,
+        cell_input=cell_input,
+        cell_id=cell_id,
+        parent_cell_id=parent_cell_id,
+        planned_child_cell_id=planned_child_cell_id,
+        cell_depth=cell_depth,
+        scope_ref=scope_ref,
+        cell_budget_before=cell_budget_before,
+        global_budget_before=global_budget_before,
+        dependencies=dependencies,
+        queue_reason_codes=queue_reason_codes,
+        observed_output_refs=observed_output_refs,
+        observed_evidence_refs=observed_evidence_refs,
+        advisory_refs=advisory_refs,
+        local_child_result=local_child_result,
+        local_child_result_artifact=local_child_result_artifact,
+        validation_report=validation_report,
+        parent_return_pre_post_vv_terminal_queue_entries=parent_return_pre_post_vv_terminal_queue_entries,
+        parent_return_child_results=parent_return_child_results,
+        parent_return_partial_failures=parent_return_partial_failures,
+        parent_return_result_proposal=parent_return_result_proposal,
+        parent_return_post_vv_report=parent_return_post_vv_report,
+        parent_return_gt_advisory_report=parent_return_gt_advisory_report,
+        parent_return_validation_reports=parent_return_validation_reports,
+        revise_observation=revise_observation,
+        backpressure_state=backpressure_state,
+        transition_registry=transition_registry,
+        settled_budget_log=settled_budget_log,
+        settled_queue_entry_log=settled_queue_entry_log,
+        settled_queue_artifact_log=settled_queue_artifact_log,
+        settled_cell_inputs=settled_cell_inputs,
+        settled_scope_projections=settled_scope_projections,
+        settled_revise_observations=settled_revise_observations,
+        settled_backpressure_states=settled_backpressure_states,
+        settled_validation_reports=settled_validation_reports,
+        observed_work_context=observed_work_context,
+        retained_consumption=retained_consumption,
+        retained_prefix=retained_prefix,
+        temporal_binding=temporal_binding,
+        temporal_verification=temporal_verification,
+    )
+
+
+def _evaluate_fractal_runtime_state_transition_from_prefix_v02(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    source_artifact: KernelArtifactV01,
+    current_entry: FractalCellQueueEntryV02 | None,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02 | None,
+    cell_id: str,
+    parent_cell_id: str | None,
+    planned_child_cell_id: str | None,
+    cell_depth: int,
+    scope_ref: str,
+    cell_budget_before: FractalRuntimeBudgetV02,
+    global_budget_before: FractalRuntimeBudgetV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...],
+    queue_reason_codes: tuple[str, ...],
+    observed_output_refs: tuple[str, ...],
+    observed_evidence_refs: tuple[str, ...],
+    advisory_refs: tuple[str, ...],
+    local_child_result: FractalCellResultV02 | None,
+    local_child_result_artifact: KernelArtifactV01 | None,
+    validation_report: FractalRuntimeValidationReportV02 | None,
+    parent_return_pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    parent_return_child_results: tuple[FractalCellResultV02, ...],
+    parent_return_partial_failures: tuple[FractalPartialFailureRecordV02, ...],
+    parent_return_result_proposal: dict[str, object] | None,
+    parent_return_post_vv_report: dict[str, object] | None,
+    parent_return_gt_advisory_report: dict[str, object] | None,
+    parent_return_validation_reports: tuple[FractalRuntimeValidationReportV02, ...],
+    revise_observation: FractalReviseObservationV02 | None,
+    backpressure_state: FractalBackpressureStateV02 | None,
+    transition_registry: TransitionRegistryV01,
+    settled_budget_log: tuple[FractalRuntimeBudgetV02, ...],
+    settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...],
+    settled_queue_artifact_log: tuple[KernelArtifactV01, ...],
+    settled_cell_inputs: tuple[FractalCellInputV02, ...],
+    settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...],
+    settled_revise_observations: tuple[FractalReviseObservationV02, ...],
+    settled_backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...],
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+    retained_consumption: FractalRetainedWorkConsumptionV01 | None = None,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
+    _prefix_indexes: dict[str, object] | None = None,
+) -> TransitionDecisionV01 | None:
+    if temporal_binding is not None or temporal_verification is not None:
+        _retained_temporal_time_v01(source_context, temporal_binding, temporal_verification)
     retained_evidence_suffix: tuple[str, ...] = ()
     if retained_consumption is not None or retained_prefix is not None:
         _retained_require_v01(type(retained_consumption) is FractalRetainedWorkConsumptionV01
@@ -12735,27 +13023,32 @@ def evaluate_fractal_runtime_state_transition_v02(
         source_context,
         topology,
     )
-    indexes = _d3_validate_settled_runtime_prefix_v02(
-        topology=topology,
-        policy=source_context.runtime_policy,
-        source_context=source_context,
-        settled_budget_log=settled_budget_log,
-        settled_queue_entry_log=settled_queue_entry_log,
-        settled_queue_artifact_log=settled_queue_artifact_log,
-        settled_cell_inputs=settled_cell_inputs,
-        settled_scope_projections=settled_scope_projections,
-        settled_revise_observations=settled_revise_observations,
-        settled_backpressure_states=settled_backpressure_states,
-        settled_validation_reports=settled_validation_reports,
-        observed_work_context=observed_work_context,
-        frontier=(
-            "T03_DECISION"
-            if current_entry is not None
-            and current_entry.state == "PENDING"
-            and backpressure_state is not None
-            else "COMPLETED"
-        ),
+    # Only the adjacent D4 lookup may supply COMPLETED indexes. Other frontiers
+    # and every public call retain their independent full prefix validation.
+    frontier = (
+        "T03_DECISION"
+        if current_entry is not None
+        and current_entry.state == "PENDING"
+        and backpressure_state is not None
+        else "COMPLETED"
     )
+    indexes = _prefix_indexes
+    if indexes is None or frontier != "COMPLETED":
+        indexes = _d3_validate_settled_runtime_prefix_v02(
+            topology=topology,
+            policy=source_context.runtime_policy,
+            source_context=source_context,
+            settled_budget_log=settled_budget_log,
+            settled_queue_entry_log=settled_queue_entry_log,
+            settled_queue_artifact_log=settled_queue_artifact_log,
+            settled_cell_inputs=settled_cell_inputs,
+            settled_scope_projections=settled_scope_projections,
+            settled_revise_observations=settled_revise_observations,
+            settled_backpressure_states=settled_backpressure_states,
+            settled_validation_reports=settled_validation_reports,
+            observed_work_context=observed_work_context,
+            frontier=frontier,
+        )
     budget_by_id = indexes["budget_by_id"]
     latest_by_key = indexes["latest_by_key"]
     artifact_by_queue_id = indexes["artifact_by_queue_id"]
@@ -13016,6 +13309,7 @@ def evaluate_fractal_runtime_state_transition_v02(
                             current_entry=current_entry,
                             indexes=indexes,
                             retained_consumption=retained_consumption,
+                            temporal_binding=temporal_binding, temporal_verification=temporal_verification,
                         )
                         or outputs != (local_child_result_artifact.artifact_id,)
                         or evidence != local_child_result.evidence_refs + retained_evidence_suffix
@@ -13256,6 +13550,7 @@ def evaluate_fractal_runtime_state_transition_v02(
                                 current_entry=origin["running_entry"],
                                 indexes=indexes,
                                 retained_consumption=retained_consumption,
+                                temporal_binding=temporal_binding, temporal_verification=temporal_verification,
                             )
                             or outputs != (local_child_result_artifact.artifact_id,)
                             or evidence != local_child_result.evidence_refs + retained_evidence_suffix
@@ -14071,7 +14366,7 @@ def _d4_build_fractal_cell_result_proposal_v02(
         ],
         "cost": {"tokens": 0, "walltime_ms": 0, "toolcalls": 0},
         "risks": [],
-        "time_envelope": route_plain["time_envelope"],
+        "time_envelope": _retained_current_envelope_v01(source_context, None, None),
         "trace_refs": [
             {"trace_id": ref, "kind": "g2d_runtime"}
             for ref in trace_values
@@ -14136,6 +14431,7 @@ def validate_fractal_cell_result_proposal_v02(
     partial_failures: tuple[FractalPartialFailureRecordV02, ...],
 ) -> FractalRuntimeValidationReportV02:
     try:
+        source_context = _historical_result_source_v03(source_context, value, "result_proposals")
         if type(value) is not dict:
             raise ValueError("g2d_result_proposal_invalid")
         material = _d4_result_proposal_material_v02(
@@ -14179,9 +14475,10 @@ def validate_fractal_post_vv_report_v02(
     source_context: FractalRuntimeSourceContextV02,
 ) -> FractalRuntimeValidationReportV02:
     try:
+        source_context = _historical_result_source_v03(source_context, value, "post_vv_reports")
         if type(value) is not dict or type(result_proposal) is not dict:
             raise ValueError("g2d_post_vv_report_invalid")
-        source_time = source_context.router_input.local_routing_snapshot.kt_asof_utc
+        source_time = _current_result_time_v03(source_context)
         expected = _validate_result_proposals([result_proposal], checked_at=source_time)
         if (
             type(expected) is not list
@@ -14212,9 +14509,10 @@ def validate_fractal_gt_advisory_v02(
     source_context: FractalRuntimeSourceContextV02,
 ) -> FractalRuntimeValidationReportV02:
     try:
+        source_context = _historical_result_source_v03(source_context, value, "gt_advisory_reports")
         if type(value) is not dict or type(post_vv_report) is not dict:
             raise ValueError("g2d_gt_advisory_invalid")
-        source_time = source_context.router_input.local_routing_snapshot.kt_asof_utc
+        source_time = _current_result_time_v03(source_context)
         expected = _validate_gt([post_vv_report], created_at=source_time)
         if (
             not _d4_canonical_dict_equal_v02(value, expected)
@@ -14502,7 +14800,25 @@ def aggregate_fractal_runtime_report_v02(
     root_result_artifact: KernelArtifactV01,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
 ) -> FractalRuntimeReportV02:
-    return build_fractal_runtime_report_v02(
+    return _aggregate_fractal_runtime_report_v02_within_complete_validation(topology=topology, topology_artifact=topology_artifact, source_binding=source_binding, cell_results=cell_results, queue_entries=queue_entries, backpressure_states=backpressure_states, runtime_trace=runtime_trace, final_global_budget=final_global_budget, parent_return_transition_decision=parent_return_transition_decision, root_result_artifact=root_result_artifact, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _aggregate_fractal_runtime_report_v02_within_complete_validation(
+    *,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    source_binding: RuntimeTopologySourceBindingV02,
+    cell_results: tuple[FractalCellResultV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    final_global_budget: FractalRuntimeBudgetV02,
+    parent_return_transition_decision: TransitionDecisionV01,
+    root_result_artifact: KernelArtifactV01,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
+) -> FractalRuntimeReportV02:
+    return _build_fractal_runtime_report_v02_within_complete_validation(
         topology,
         topology_artifact,
         source_binding,
@@ -14514,7 +14830,8 @@ def aggregate_fractal_runtime_report_v02(
         parent_return_transition_decision=parent_return_transition_decision,
         root_result_artifact=root_result_artifact,
         retained_prefix=retained_prefix,
-    )
+     _complete_check=_complete_check)
+
 
 
 def run_fractal_runtime_v02(
@@ -14622,6 +14939,26 @@ def validate_fractal_runtime_report_against_sources_v02(
     root_result_artifact: KernelArtifactV01,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
 ) -> FractalRuntimeValidationReportV02:
+    return _validate_fractal_runtime_report_against_sources_v02_within_complete_validation(value, source_context=source_context, source_binding=source_binding, topology=topology, topology_artifact=topology_artifact, cell_results=cell_results, queue_entries=queue_entries, backpressure_states=backpressure_states, runtime_trace=runtime_trace, final_global_budget=final_global_budget, parent_return_transition_decision=parent_return_transition_decision, root_result_artifact=root_result_artifact, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _validate_fractal_runtime_report_against_sources_v02_within_complete_validation(
+    value: object,
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    source_binding: RuntimeTopologySourceBindingV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    cell_results: tuple[FractalCellResultV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    backpressure_states: tuple[FractalBackpressureStateV02, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    final_global_budget: FractalRuntimeBudgetV02,
+    parent_return_transition_decision: TransitionDecisionV01,
+    root_result_artifact: KernelArtifactV01,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
+) -> FractalRuntimeValidationReportV02:
     try:
         if (
             type(value) is not FractalRuntimeReportV02
@@ -14637,7 +14974,7 @@ def validate_fractal_runtime_report_against_sources_v02(
             or topology_artifact != _build_topology_artifact_v02(topology, source_context)
         ):
             raise ValueError("g2d_runtime_report_invalid")
-        expected = aggregate_fractal_runtime_report_v02(
+        expected = _aggregate_fractal_runtime_report_v02_within_complete_validation(
             topology=topology,
             topology_artifact=topology_artifact,
             source_binding=source_binding,
@@ -14649,7 +14986,7 @@ def validate_fractal_runtime_report_against_sources_v02(
             parent_return_transition_decision=parent_return_transition_decision,
             root_result_artifact=root_result_artifact,
             retained_prefix=retained_prefix,
-        )
+         _complete_check=_complete_check)
         if (
             value != expected
             or fractal_runtime_report_to_plain_data_v02(value)
@@ -14670,6 +15007,7 @@ def validate_fractal_runtime_report_against_sources_v02(
         )
 
 
+
 def project_fractal_cell_result_kernel_artifact_v02(
     result: FractalCellResultV02,
     *,
@@ -14677,7 +15015,12 @@ def project_fractal_cell_result_kernel_artifact_v02(
     terminal_queue_artifacts: tuple[KernelArtifactV01, ...],
     child_result_artifacts: tuple[KernelArtifactV01, ...],
     source_context: FractalRuntimeSourceContextV02,
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> KernelArtifactV01:
+    selected_source = _historical_result_source_v03(source_context, result, "cell_results")
+    if selected_source is not source_context:
+        source_context, temporal_binding, temporal_verification = selected_source, None, None
     if (
         type(result) is not FractalCellResultV02
         or validate_fractal_cell_result_v02(result).status != "PASS"
@@ -14738,7 +15081,7 @@ def project_fractal_cell_result_kernel_artifact_v02(
             *(item.artifact_id for item in terminal_queue_artifacts),
             *(item.artifact_id for item in child_result_artifacts),
         ),
-        time_envelope=route_plain["time_envelope"],
+        time_envelope=_retained_current_envelope_v01(source_context, temporal_binding, temporal_verification),
     )
     material = _kernel_artifact_to_plain_dict_v01(provisional)
     material.pop("artifact_id")
@@ -14800,6 +15143,8 @@ def project_fractal_runtime_report_kernel_artifact_v02(
     topology_artifact: KernelArtifactV01,
     result_artifacts: tuple[KernelArtifactV01, ...],
     source_context: FractalRuntimeSourceContextV02,
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> KernelArtifactV01:
     if (
         type(report) is not FractalRuntimeReportV02
@@ -14855,7 +15200,7 @@ def project_fractal_runtime_report_kernel_artifact_v02(
             topology_artifact.artifact_id,
             *(item.artifact_id for item in result_artifacts),
         ),
-        time_envelope=route_plain["time_envelope"],
+        time_envelope=_retained_current_envelope_v01(source_context, temporal_binding, temporal_verification),
     )
     material = _kernel_artifact_to_plain_dict_v01(provisional)
     material.pop("artifact_id")
@@ -15005,6 +15350,27 @@ def validate_fractal_runtime_stage_bundle_v02(
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
 ) -> FractalRuntimeValidationReportV02:
+    return _validate_fractal_runtime_stage_bundle_v02_within_complete_validation(stage=stage, artifacts=artifacts, source_context=source_context, topology=topology, topology_artifact=topology_artifact, runtime_trace=runtime_trace, queue_entries=queue_entries, queue_artifacts=queue_artifacts, cell_results=cell_results, result_artifacts=result_artifacts, runtime_report=runtime_report, report_artifact=report_artifact, observed_work_context=observed_work_context, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _validate_fractal_runtime_stage_bundle_v02_within_complete_validation(
+    *,
+    stage: str,
+    artifacts: tuple[KernelArtifactV01, ...],
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_trace: FractalRuntimeTraceV02,
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_report: FractalRuntimeReportV02 | None,
+    report_artifact: KernelArtifactV01 | None,
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
+) -> FractalRuntimeValidationReportV02:
     try:
         if stage not in {"STAGE_D_A", "STAGE_D_B", "STAGE_D_C"}:
             raise ValueError("g2d_abi_bundle_invalid")
@@ -15027,7 +15393,7 @@ def validate_fractal_runtime_stage_bundle_v02(
         if retained_prefix is not None:
             _retained_trace_inputs_v01(retained_prefix, topology, queue_entries, queue_artifacts,
                 retained_prefix.cell_inputs, cell_results, result_artifacts, retained_prefix.budgets,
-                retained_prefix.queue_transition_decisions)
+                retained_prefix.queue_transition_decisions, _complete_check=_complete_check)
             _retained_require_v01(retained_prefix.source_context == source_context
                 and retained_prefix.observed_work_context == observed_work_context, "retained_stage_source")
             artifact_by_id.update((a.artifact_id, a) for a in retained_prefix.retained_consumption_artifacts)
@@ -15121,6 +15487,7 @@ def validate_fractal_runtime_stage_bundle_v02(
                     terminal_queue_artifacts=terminal_artifacts,
                     child_result_artifacts=child_artifacts,
                     source_context=source_context,
+                    **_retained_temporal_kwargs_v01(retained_prefix),
                 )
                 if artifact_by_result_id.get(result.result_id) != expected_result_artifact:
                     raise ValueError("g2d_abi_projection_substituted")
@@ -15133,6 +15500,7 @@ def validate_fractal_runtime_stage_bundle_v02(
                 topology_artifact=topology_artifact,
                 result_artifacts=result_artifacts,
                 source_context=source_context,
+                **_retained_temporal_kwargs_v01(retained_prefix),
             )
             if report_artifact != expected_report_artifact:
                 raise ValueError("g2d_abi_projection_substituted")
@@ -15150,6 +15518,7 @@ def validate_fractal_runtime_stage_bundle_v02(
         )
 
 
+
 def validate_fractal_runtime_abi_profile_v02(
     value: tuple[KernelArtifactV01, ...],
     *,
@@ -15165,6 +15534,26 @@ def validate_fractal_runtime_abi_profile_v02(
     report_artifact: KernelArtifactV01,
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+) -> FractalRuntimeValidationReportV02:
+    return _validate_fractal_runtime_abi_profile_v02_within_complete_validation(value, source_context=source_context, topology=topology, topology_artifact=topology_artifact, runtime_trace=runtime_trace, queue_entries=queue_entries, queue_artifacts=queue_artifacts, cell_results=cell_results, result_artifacts=result_artifacts, runtime_report=runtime_report, report_artifact=report_artifact, observed_work_context=observed_work_context, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _validate_fractal_runtime_abi_profile_v02_within_complete_validation(
+    value: tuple[KernelArtifactV01, ...],
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_trace: FractalRuntimeTraceV02,
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
 ) -> FractalRuntimeValidationReportV02:
     try:
         artifact_by_id = {
@@ -15193,7 +15582,7 @@ def validate_fractal_runtime_abi_profile_v02(
                 artifact_by_id=artifact_by_id,
                 report_artifact=report_artifact if stage == "STAGE_D_C" else None,
             )
-            report = validate_fractal_runtime_stage_bundle_v02(
+            report = _validate_fractal_runtime_stage_bundle_v02_within_complete_validation(
                 stage=stage,
                 artifacts=stage_artifacts,
                 source_context=source_context,
@@ -15208,7 +15597,7 @@ def validate_fractal_runtime_abi_profile_v02(
                 report_artifact=report_artifact if stage == "STAGE_D_C" else None,
                 observed_work_context=observed_work_context,
                 retained_prefix=retained_prefix,
-            )
+             _complete_check=_complete_check)
             if report.status != "PASS":
                 raise ValueError("g2d_abi_profile_invalid")
         return _d4_contextual_report_v02(
@@ -15223,6 +15612,7 @@ def validate_fractal_runtime_abi_profile_v02(
             failure_stage="ABI",
             reason_code="g2d_abi_profile_invalid",
         )
+
 
 
 def evaluate_fractal_parent_return_transition_v02(
@@ -15308,6 +15698,26 @@ def build_fractal_runtime_causal_consumption_refs_v02(
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
 ) -> tuple[CausalConsumptionRefV01, ...]:
+    return _build_fractal_runtime_causal_consumption_refs_v02_within_complete_validation(source_context=source_context, topology=topology, topology_artifact=topology_artifact, runtime_assignments=runtime_assignments, queue_entries=queue_entries, queue_artifacts=queue_artifacts, cell_results=cell_results, result_artifacts=result_artifacts, runtime_trace=runtime_trace, runtime_report=runtime_report, report_artifact=report_artifact, observed_work_context=observed_work_context, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _build_fractal_runtime_causal_consumption_refs_v02_within_complete_validation(
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_assignments: tuple[RuntimeAssignmentV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
+) -> tuple[CausalConsumptionRefV01, ...]:
     if (
         validate_runtime_execution_topology_against_sources_v02(
             topology,
@@ -15350,7 +15760,7 @@ def build_fractal_runtime_causal_consumption_refs_v02(
     if retained_prefix is not None:
         _retained_trace_inputs_v01(retained_prefix, topology, queue_entries, queue_artifacts,
             retained_prefix.cell_inputs, cell_results, result_artifacts, retained_prefix.budgets,
-            retained_prefix.queue_transition_decisions)
+            retained_prefix.queue_transition_decisions, _complete_check=_complete_check)
         historical_results = tuple(c.consumed_result for c in retained_prefix.retained_consumptions)
         historical_artifacts = tuple(c.consumed_result_artifact for c in retained_prefix.retained_consumptions)
         result_artifact_by_result_id.update((r.result_id, a) for r, a in zip(historical_results, historical_artifacts, strict=True))
@@ -15668,6 +16078,7 @@ def build_fractal_runtime_causal_consumption_refs_v02(
     return result
 
 
+
 def validate_fractal_runtime_causal_consumption_refs_v02(
     value: tuple[CausalConsumptionRefV01, ...],
     *,
@@ -15686,8 +16097,30 @@ def validate_fractal_runtime_causal_consumption_refs_v02(
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
     retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
 ) -> FractalRuntimeValidationReportV02:
+    return _validate_fractal_runtime_causal_consumption_refs_v02_within_complete_validation(value, source_context=source_context, topology=topology, topology_artifact=topology_artifact, runtime_assignments=runtime_assignments, queue_entries=queue_entries, queue_artifacts=queue_artifacts, cell_results=cell_results, result_artifacts=result_artifacts, runtime_trace=runtime_trace, runtime_report=runtime_report, report_artifact=report_artifact, stage_d_c_artifacts=stage_d_c_artifacts, observed_work_context=observed_work_context, retained_prefix=retained_prefix, _complete_check=None)
+
+
+def _validate_fractal_runtime_causal_consumption_refs_v02_within_complete_validation(
+    value: tuple[CausalConsumptionRefV01, ...],
+    *,
+    source_context: FractalRuntimeSourceContextV02,
+    topology: RuntimeExecutionTopologyV02,
+    topology_artifact: KernelArtifactV01,
+    runtime_assignments: tuple[RuntimeAssignmentV02, ...],
+    queue_entries: tuple[FractalCellQueueEntryV02, ...],
+    queue_artifacts: tuple[KernelArtifactV01, ...],
+    cell_results: tuple[FractalCellResultV02, ...],
+    result_artifacts: tuple[KernelArtifactV01, ...],
+    runtime_trace: FractalRuntimeTraceV02,
+    runtime_report: FractalRuntimeReportV02,
+    report_artifact: KernelArtifactV01,
+    stage_d_c_artifacts: tuple[KernelArtifactV01, ...],
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+    retained_prefix: FractalRetainedWorkPrefixV01 | None = None,
+    _complete_check: object = None,
+) -> FractalRuntimeValidationReportV02:
     try:
-        expected = build_fractal_runtime_causal_consumption_refs_v02(
+        expected = _build_fractal_runtime_causal_consumption_refs_v02_within_complete_validation(
             source_context=source_context,
             topology=topology,
             topology_artifact=topology_artifact,
@@ -15701,7 +16134,7 @@ def validate_fractal_runtime_causal_consumption_refs_v02(
             report_artifact=report_artifact,
             observed_work_context=observed_work_context,
             retained_prefix=retained_prefix,
-        )
+         _complete_check=_complete_check)
         causal_artifacts = stage_d_c_artifacts
         if retained_prefix is not None:
             causal_artifacts = _retained_abi_family_v01(retained_prefix, stage_d_c_artifacts)
@@ -15744,6 +16177,7 @@ def validate_fractal_runtime_causal_consumption_refs_v02(
             failure_stage="CAUSAL_CONSUMPTION",
             reason_code="g2d_causal_consumption_invalid",
         )
+
 
 
 def _d4_plain_pointer_leaf_paths_v02(value: object, prefix: str = "") -> dict[str, object]:
@@ -16636,6 +17070,7 @@ def _d4_evaluate_queue_transition_v02(
     parent_return_post_vv_report: dict[str, object] | None = None,
     parent_return_gt_advisory_report: dict[str, object] | None = None,
     parent_return_validation_reports: tuple[FractalRuntimeValidationReportV02, ...] = (),
+    _prefix_indexes: dict[str, object] | None = None,
 ) -> TransitionDecisionV01:
     source_context = state["source_context"]
     topology = state["topology"]
@@ -16664,7 +17099,13 @@ def _d4_evaluate_queue_transition_v02(
         cell_id = topology.root_cell_id if cell_id is None else cell_id
         cell_depth = 0 if cell_depth is None else cell_depth
         scope_ref = topology.accepted_scope_ref if scope_ref is None else scope_ref
-    decision = evaluate_fractal_runtime_state_transition_v02(
+    evaluator = evaluate_fractal_runtime_state_transition_v02
+    prefix_kwargs: dict[str, object] = {}
+    if _prefix_indexes is not None:
+        evaluator = _evaluate_fractal_runtime_state_transition_from_prefix_v02
+        prefix_kwargs = {"_prefix_indexes": _prefix_indexes}
+    decision = evaluator(
+        **prefix_kwargs,
         source_context=source_context,
         topology=topology,
         source_artifact=source_artifact,
@@ -16697,6 +17138,7 @@ def _d4_evaluate_queue_transition_v02(
         backpressure_state=backpressure_state,
         transition_registry=registry,
         **_retained_transition_kwargs_v01(state, current_entry, local_child_result),
+        temporal_binding=state.get("temporal_binding"), temporal_verification=state.get("temporal_verification"),
         **_d4_prefix_kwargs_v02(state),
     )
     if type(decision) is not TransitionDecisionV01:
@@ -16801,6 +17243,17 @@ def _d4_append_queue_target_v02(
 
 
 def _d4_initialize_runtime_state_v02(
+    source_context: FractalRuntimeSourceContextV02,
+    *,
+    observed_work_context: RuntimeObservedWorkContextV02 | None = None,
+) -> dict[str, object]:
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        return _d4_initialize_runtime_state_body_v06(source_context,
+            observed_work_context=observed_work_context)
+
+
+def _d4_initialize_runtime_state_body_v06(
     source_context: FractalRuntimeSourceContextV02,
     *,
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
@@ -17021,6 +17474,8 @@ def _d4_ready_and_start_node_v02(
     cell_input: FractalCellInputV02,
     dependencies: tuple[FractalCellQueueEntryV02, ...],
 ) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    # The lookup and evaluation share one unchanged prefix; append below ends
+    # that lifetime. START obtains its own indexes after the READY append.
     indexes = _d4_indexes_v02(state)
     artifact_by_queue_id = indexes.get("artifact_by_queue_id")
     budget_by_id = indexes.get("budget_by_id")
@@ -17037,6 +17492,7 @@ def _d4_ready_and_start_node_v02(
         raise ValueError("g2d_budget_invalid")
     ready_decision = _d4_evaluate_queue_transition_v02(
         state,
+        _prefix_indexes=indexes,
         source_artifact=current_artifact,
         node=node,
         current_entry=current,
@@ -17071,6 +17527,7 @@ def _d4_ready_and_start_node_v02(
         raise ValueError("g2d_budget_invalid")
     start_decision = _d4_evaluate_queue_transition_v02(
         state,
+        _prefix_indexes=indexes,
         source_artifact=ready_artifact,
         node=node,
         current_entry=ready,
@@ -17136,6 +17593,22 @@ def _d4_complete_local_node_v02(
     cell_input: FractalCellInputV02,
     dependencies: tuple[FractalCellQueueEntryV02, ...],
 ) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
+    # Only pure local material and queue bookkeeping, never an executor call.
+    # Queue changes still receive independent full prefix validation.
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        return _d4_complete_local_node_body_v06(state, initial=initial, node=node,
+            cell_input=cell_input, dependencies=dependencies)
+
+
+def _d4_complete_local_node_body_v06(
+    state: dict[str, object],
+    *,
+    initial: FractalCellQueueEntryV02,
+    node: RuntimeTopologyNodeV02,
+    cell_input: FractalCellInputV02,
+    dependencies: tuple[FractalCellQueueEntryV02, ...],
+) -> tuple[FractalCellQueueEntryV02, KernelArtifactV01]:
     running, running_artifact = _d4_ready_and_start_node_v02(
         state,
         current=initial,
@@ -17169,8 +17642,11 @@ def _d4_complete_local_node_v02(
         dependencies=dependencies,
         indexes=indexes,
     )
+    # Local material construction is pure. No callback or state append occurs
+    # between this lookup and FINISH; the following budget append ends reuse.
     finish_decision = _d4_evaluate_queue_transition_v02(
         state,
+        _prefix_indexes=indexes,
         source_artifact=running_artifact,
         node=node,
         current_entry=running,
@@ -18047,7 +18523,7 @@ def _d4_finalize_cell_v02(
         child_results=child_results,
         partial_failures=partial_failures,
     )
-    source_time = source_context.router_input.local_routing_snapshot.kt_asof_utc
+    source_time = _current_result_time_v03(source_context)
     post_values = _validate_result_proposals([proposal], checked_at=source_time)
     if type(post_values) is not list or len(post_values) != 1 or type(post_values[0]) is not dict:
         raise ValueError("g2d_post_vv_report_invalid")
@@ -18180,6 +18656,7 @@ def _d4_finalize_cell_v02(
         terminal_queue_artifacts=terminal_artifacts,
         child_result_artifacts=child_artifacts,
         source_context=source_context,
+        temporal_binding=state.get("temporal_binding"), temporal_verification=state.get("temporal_verification"),
     )
     state["cell_results"] = (*state["cell_results"], result)
     state["result_artifacts"] = (*state["result_artifacts"], result_artifact)
@@ -18207,129 +18684,134 @@ def _d4_execute_cell_v02(
     state: dict[str, object],
     context: dict[str, object],
 ) -> dict[str, object]:
-    topology = state["topology"]
-    cell_input = context.get("cell_input")
-    nodes = context.get("nodes")
-    initial_queues = context.get("initial_queues")
-    if (
-        type(topology) is not RuntimeExecutionTopologyV02
-        or type(cell_input) is not FractalCellInputV02
-        or type(nodes) is not tuple
-        or type(initial_queues) is not tuple
-    ):
-        raise ValueError("g2d_cell_input_invalid")
-    post_position = next(
-        index for index, node in enumerate(nodes) if node.node_kind == "POST_VV"
-    )
-    initial_by_node = {item.node_id: item for item in initial_queues}
-    child_results: list[FractalCellResultV02] = []
-    partial_failures: list[FractalPartialFailureRecordV02] = []
-    for node in nodes[:post_position]:
-        initial = initial_by_node[node.node_id]
-        dependencies = _d4_dependencies_v02(state, initial)
-        if node.node_kind in _D3_LOCAL_NODE_KINDS_V02:
-            _d4_complete_local_node_v02(
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    # This producer constructs local proposals and queue/budget records only.
+    # It invokes no capability, provider, or source refresh; prefix validation
+    # still runs on every changed state. Only exact capture material is reused.
+    with _capture_validation_scope_v06():
+        topology = state["topology"]
+        cell_input = context.get("cell_input")
+        nodes = context.get("nodes")
+        initial_queues = context.get("initial_queues")
+        if (
+            type(topology) is not RuntimeExecutionTopologyV02
+            or type(cell_input) is not FractalCellInputV02
+            or type(nodes) is not tuple
+            or type(initial_queues) is not tuple
+        ):
+            raise ValueError("g2d_cell_input_invalid")
+        post_position = next(
+            index for index, node in enumerate(nodes) if node.node_kind == "POST_VV"
+        )
+        initial_by_node = {item.node_id: item for item in initial_queues}
+        child_results: list[FractalCellResultV02] = []
+        partial_failures: list[FractalPartialFailureRecordV02] = []
+        for node in nodes[:post_position]:
+            initial = initial_by_node[node.node_id]
+            dependencies = _d4_dependencies_v02(state, initial)
+            if node.node_kind in _D3_LOCAL_NODE_KINDS_V02:
+                _d4_complete_local_node_v02(
+                    state,
+                    initial=initial,
+                    node=node,
+                    cell_input=cell_input,
+                    dependencies=dependencies,
+                )
+                continue
+            if node.node_kind != "FRACTAL_CELL":
+                raise ValueError("g2d_topology_node_invalid")
+            if len(dependencies) != 1:
+                raise ValueError("g2d_queue_order_mismatch")
+            slot_running, slot_artifact = _d4_ready_and_start_node_v02(
                 state,
-                initial=initial,
+                current=initial,
                 node=node,
                 cell_input=cell_input,
                 dependencies=dependencies,
             )
-            continue
-        if node.node_kind != "FRACTAL_CELL":
-            raise ValueError("g2d_topology_node_invalid")
-        if len(dependencies) != 1:
+            retained = tuple(e for e in state.get("retained_evidence", ())
+                if e.historical_cell_id == slot_running.planned_child_cell_id)
+            if retained:
+                _retained_require_v01(len(retained) == 1 and cell_input.parent_cell_id is None,
+                    "retained_slot_coverage")
+                prefix = _retained_prefix_from_state_v01(state)
+                admission = build_fractal_retained_work_admission_v01(evidence=retained[0],
+                    current_source_context=state["source_context"], current_observed_work_context=state["observed_work_context"],
+                    plan_review=state["plan_review"], current_parent_input=cell_input,
+                    parent_slot_node_id=node.node_id, current_prefix=prefix)
+                state["retained_admissions"] = (*state["retained_admissions"], admission)
+                prefix = _retained_prefix_from_state_v01(state)
+                consumption = consume_fractal_retained_work_v01(admission=admission, running_parent_slot=slot_running,
+                    running_slot_artifact=slot_artifact, current_prefix=prefix)
+                artifact = project_fractal_retained_work_consumption_kernel_artifact_v01(consumption,
+                    source_context=state["source_context"], current_prefix=prefix)
+                state["retained_consumptions"] = (*state["retained_consumptions"], consumption)
+                state["retained_consumption_artifacts"] = (*state["retained_consumption_artifacts"], artifact)
+                state["runtime_artifacts"] = (*state["runtime_artifacts"], artifact)
+                _d4_finish_parent_slot_v02(state, running=slot_running, running_artifact=slot_artifact,
+                    node=node, parent_input=cell_input, dependencies=dependencies,
+                    child_result=consumption.consumed_result, child_result_artifact=consumption.consumed_result_artifact)
+                child_results.append(consumption.consumed_result)
+                continue
+            child_context = _d4_activate_child_v02(
+                state,
+                parent_input=cell_input,
+                slot_running=slot_running,
+                slot_artifact=slot_artifact,
+                dependency=dependencies[0],
+            )
+            child_completion = _d4_execute_cell_v02(state, child_context)
+            child_result = child_completion["result"]
+            child_result_artifact = child_completion["result_artifact"]
+            child_final = child_completion["final_cell_budget"]
+            child_global = child_completion["completion_global_budget"]
+            if (
+                type(child_result) is not FractalCellResultV02
+                or type(child_result_artifact) is not KernelArtifactV01
+                or type(child_final) is not FractalRuntimeBudgetV02
+                or type(child_global) is not FractalRuntimeBudgetV02
+            ):
+                raise ValueError("g2d_cell_result_invalid")
+            child_index = context["nodes"].index(node) - 1
+            aggregate = _d4_budget_successor_v02(
+                state,
+                child_global,
+                event="CHILD_AGGREGATE",
+                cell_input=cell_input,
+                canonical_child_index=child_index,
+                paired_cell_budget=child_final,
+                child_result=child_result,
+            )
+            state["budgets"] = (*state["budgets"], aggregate)
+            _d4_indexes_v02(state)
+            _d4_finish_parent_slot_v02(
+                state,
+                running=slot_running,
+                running_artifact=slot_artifact,
+                node=node,
+                parent_input=cell_input,
+                dependencies=dependencies,
+                child_result=child_result,
+                child_result_artifact=child_result_artifact,
+            )
+            child_results.append(child_result)
+        indexes = _d4_indexes_v02(state)
+        latest_by_key = indexes.get("latest_by_key")
+        if not isinstance(latest_by_key, dict):
             raise ValueError("g2d_queue_order_mismatch")
-        slot_running, slot_artifact = _d4_ready_and_start_node_v02(
-            state,
-            current=initial,
-            node=node,
-            cell_input=cell_input,
-            dependencies=dependencies,
+        prefix = tuple(
+            latest_by_key[(cell_input.cell_id, node.node_id)]
+            for node in nodes[:post_position]
         )
-        retained = tuple(e for e in state.get("retained_evidence", ())
-            if e.historical_cell_id == slot_running.planned_child_cell_id)
-        if retained:
-            _retained_require_v01(len(retained) == 1 and cell_input.parent_cell_id is None,
-                "retained_slot_coverage")
-            prefix = _retained_prefix_from_state_v01(state)
-            admission = build_fractal_retained_work_admission_v01(evidence=retained[0],
-                current_source_context=state["source_context"], current_observed_work_context=state["observed_work_context"],
-                plan_review=state["plan_review"], current_parent_input=cell_input,
-                parent_slot_node_id=node.node_id, current_prefix=prefix)
-            state["retained_admissions"] = (*state["retained_admissions"], admission)
-            prefix = _retained_prefix_from_state_v01(state)
-            consumption = consume_fractal_retained_work_v01(admission=admission, running_parent_slot=slot_running,
-                running_slot_artifact=slot_artifact, current_prefix=prefix)
-            artifact = project_fractal_retained_work_consumption_kernel_artifact_v01(consumption,
-                source_context=state["source_context"], current_prefix=prefix)
-            state["retained_consumptions"] = (*state["retained_consumptions"], consumption)
-            state["retained_consumption_artifacts"] = (*state["retained_consumption_artifacts"], artifact)
-            state["runtime_artifacts"] = (*state["runtime_artifacts"], artifact)
-            _d4_finish_parent_slot_v02(state, running=slot_running, running_artifact=slot_artifact,
-                node=node, parent_input=cell_input, dependencies=dependencies,
-                child_result=consumption.consumed_result, child_result_artifact=consumption.consumed_result_artifact)
-            child_results.append(consumption.consumed_result)
-            continue
-        child_context = _d4_activate_child_v02(
+        if any(item.state not in _D3_TERMINAL_STATES_V02 for item in prefix):
+            raise ValueError("g2d_cell_result_postorder_invalid")
+        return _d4_finalize_cell_v02(
             state,
-            parent_input=cell_input,
-            slot_running=slot_running,
-            slot_artifact=slot_artifact,
-            dependency=dependencies[0],
+            context=context,
+            pre_post_vv_terminal_queue_entries=prefix,
+            child_results=tuple(child_results),
+            partial_failures=tuple(partial_failures),
         )
-        child_completion = _d4_execute_cell_v02(state, child_context)
-        child_result = child_completion["result"]
-        child_result_artifact = child_completion["result_artifact"]
-        child_final = child_completion["final_cell_budget"]
-        child_global = child_completion["completion_global_budget"]
-        if (
-            type(child_result) is not FractalCellResultV02
-            or type(child_result_artifact) is not KernelArtifactV01
-            or type(child_final) is not FractalRuntimeBudgetV02
-            or type(child_global) is not FractalRuntimeBudgetV02
-        ):
-            raise ValueError("g2d_cell_result_invalid")
-        child_index = context["nodes"].index(node) - 1
-        aggregate = _d4_budget_successor_v02(
-            state,
-            child_global,
-            event="CHILD_AGGREGATE",
-            cell_input=cell_input,
-            canonical_child_index=child_index,
-            paired_cell_budget=child_final,
-            child_result=child_result,
-        )
-        state["budgets"] = (*state["budgets"], aggregate)
-        _d4_indexes_v02(state)
-        _d4_finish_parent_slot_v02(
-            state,
-            running=slot_running,
-            running_artifact=slot_artifact,
-            node=node,
-            parent_input=cell_input,
-            dependencies=dependencies,
-            child_result=child_result,
-            child_result_artifact=child_result_artifact,
-        )
-        child_results.append(child_result)
-    indexes = _d4_indexes_v02(state)
-    latest_by_key = indexes.get("latest_by_key")
-    if not isinstance(latest_by_key, dict):
-        raise ValueError("g2d_queue_order_mismatch")
-    prefix = tuple(
-        latest_by_key[(cell_input.cell_id, node.node_id)]
-        for node in nodes[:post_position]
-    )
-    if any(item.state not in _D3_TERMINAL_STATES_V02 for item in prefix):
-        raise ValueError("g2d_cell_result_postorder_invalid")
-    return _d4_finalize_cell_v02(
-        state,
-        context=context,
-        pre_post_vv_terminal_queue_entries=prefix,
-        child_results=tuple(child_results),
-        partial_failures=tuple(partial_failures),
-    )
 
 
 def _d4_run_runtime_v02(
@@ -18338,7 +18820,19 @@ def _d4_run_runtime_v02(
     observed_work_context: RuntimeObservedWorkContextV02 | None = None,
     plan_review: FractalRetainedPlanReviewV01 | None = None,
     retained_evidence: tuple[FractalRetainedWorkEvidenceV01, ...] = (),
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> FractalRuntimeExecutionBundleV02 | FractalRetainedWorkExecutionBundleV01:
+    _retained_temporal_time_v01(source_context, temporal_binding,
+        temporal_verification, require_current=True)
+    if temporal_binding is not None or temporal_verification is not None:
+        _retained_temporal_time_v01(source_context, temporal_binding,
+            temporal_verification, require_current=True)
+        source_context = _replace(source_context, current_temporal_binding=temporal_binding,
+            current_temporal_verification=temporal_verification,
+            current_observed_work_context=observed_work_context)
+    if source_context.current_observed_work_context != observed_work_context and source_context.current_temporal_binding is not None:
+        raise ValueError("retained_temporal_observed_context")
     if observed_work_context is not None and (
         not _runtime_observed_work_context_self_valid_v02(
             observed_work_context
@@ -18354,7 +18848,8 @@ def _d4_run_runtime_v02(
     if plan_review is not None:
         state.update(retained_profile="fractal_retained_work_v01", plan_review=plan_review,
             retained_evidence=retained_evidence, retained_admissions=(), retained_consumptions=(),
-            retained_consumption_artifacts=())
+            retained_consumption_artifacts=(), temporal_binding=temporal_binding,
+            temporal_verification=temporal_verification)
     topology = state["topology"]
     if type(topology) is not RuntimeExecutionTopologyV02:
         raise ValueError("g2d_topology_identity_mismatch")
@@ -18362,108 +18857,154 @@ def _d4_run_runtime_v02(
     if not isinstance(root_context, dict):
         raise ValueError("g2d_cell_input_invalid")
     root_completion = _d4_execute_cell_v02(state, root_context)
-    root_result = root_completion["result"]
-    root_result_artifact = root_completion["result_artifact"]
-    final_global_budget = root_completion["completion_global_budget"]
-    if (
-        type(root_result) is not FractalCellResultV02
-        or type(root_result_artifact) is not KernelArtifactV01
-        or type(final_global_budget) is not FractalRuntimeBudgetV02
-    ):
-        raise ValueError("g2d_root_result_required_for_parent_return")
-    parent_return_decision = evaluate_fractal_parent_return_transition_v02(
-        source_context=source_context,
-        root_result=root_result,
-        root_result_artifact=root_result_artifact,
-        ordered_cell_results=state["cell_results"],
-        transition_registry=state["transition_registry"],
-    )
-    retained_prefix = None if plan_review is None else _retained_prefix_from_state_v01(state)
-    runtime_trace = build_fractal_runtime_trace_v02(
-        topology,
-        state["source_binding"],
-        topology_artifact=state["topology_artifact"],
-        queue_entries=state["queue_entries"],
-        queue_artifacts=state["queue_artifacts"],
-        state_transition_decisions=state["queue_decisions"],
-        cell_inputs=state["cell_inputs"],
-        cell_results=state["cell_results"],
-        result_artifacts=state["result_artifacts"],
-        runtime_abi_artifacts=state["runtime_artifacts"],
-        scope_projections=state["scope_projections"],
-        revise_observations=state["revise_observations"],
-        partial_failures=state["partial_failures"],
-        backpressure_states=state["backpressure_states"],
-        budgets=state["budgets"],
-        topology_transition_decision=state["topology_transition"],
-        parent_return_transition_decision=parent_return_decision,
-        root_result_artifact=root_result_artifact,
-        retained_prefix=retained_prefix,
-    )
-    runtime_report = aggregate_fractal_runtime_report_v02(
-        topology=topology,
-        topology_artifact=state["topology_artifact"],
-        source_binding=state["source_binding"],
-        cell_results=state["cell_results"],
-        queue_entries=state["queue_entries"],
-        backpressure_states=state["backpressure_states"],
-        runtime_trace=runtime_trace,
-        final_global_budget=final_global_budget,
-        parent_return_transition_decision=parent_return_decision,
-        root_result_artifact=root_result_artifact,
-        retained_prefix=retained_prefix,
-    )
-    report_artifact = project_fractal_runtime_report_kernel_artifact_v02(
-        runtime_report,
-        topology_artifact=state["topology_artifact"],
-        result_artifacts=state["result_artifacts"],
-        source_context=source_context,
-    )
-    if _validate_fractal_runtime_transition_decision_v02(
-        parent_return_decision,
-        registry=state["transition_registry"],
-        source_artifact=root_result_artifact,
-        target_artifact=report_artifact,
-    ):
-        raise ValueError("g2d_transition_decision_substituted")
-    report_validation = validate_fractal_runtime_report_against_sources_v02(
-        runtime_report,
-        source_context=source_context,
-        source_binding=state["source_binding"],
-        topology=topology,
-        topology_artifact=state["topology_artifact"],
-        cell_results=state["cell_results"],
-        queue_entries=state["queue_entries"],
-        backpressure_states=state["backpressure_states"],
-        runtime_trace=runtime_trace,
-        final_global_budget=final_global_budget,
-        parent_return_transition_decision=parent_return_decision,
-        root_result_artifact=root_result_artifact,
-        retained_prefix=retained_prefix,
-    )
-    artifact_by_id = {
-        item.artifact_id: item
-        for item in (
-            state["topology_artifact"],
-            *state["queue_artifacts"],
-            *state["result_artifacts"],
-            *state.get("retained_consumption_artifacts", ()),
-            report_artifact,
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        root_result = root_completion["result"]
+        root_result_artifact = root_completion["result_artifact"]
+        final_global_budget = root_completion["completion_global_budget"]
+        if (
+            type(root_result) is not FractalCellResultV02
+            or type(root_result_artifact) is not KernelArtifactV01
+            or type(final_global_budget) is not FractalRuntimeBudgetV02
+        ):
+            raise ValueError("g2d_root_result_required_for_parent_return")
+        parent_return_decision = evaluate_fractal_parent_return_transition_v02(
+            source_context=source_context,
+            root_result=root_result,
+            root_result_artifact=root_result_artifact,
+            ordered_cell_results=state["cell_results"],
+            transition_registry=state["transition_registry"],
         )
-    }
-    stage_reports: list[FractalRuntimeValidationReportV02] = []
-    for stage in ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"):
-        artifacts = _d4_stage_artifacts_v02(
-            stage=stage,
+        retained_prefix = None if plan_review is None else _retained_prefix_from_state_v01(state)
+        # Cell execution is finished. Reuse only this exact final prefix during
+        # synchronous assembly; each consumer still checks its own inventory.
+        complete_options = {}
+        if retained_prefix is not None:
+            complete_check = _RetainedCompleteValidationV01(retained_prefix)
+            complete_check.reports = _retained_validate_results_v01(retained_prefix, complete=True)
+            complete_options = {"_complete_check": complete_check}
+        runtime_trace = (build_fractal_runtime_trace_v02 if retained_prefix is None else
+            _build_fractal_runtime_trace_v02_within_complete_validation)(
+            topology,
+            state["source_binding"],
+            topology_artifact=state["topology_artifact"],
+            queue_entries=state["queue_entries"],
+            queue_artifacts=state["queue_artifacts"],
+            state_transition_decisions=state["queue_decisions"],
+            cell_inputs=state["cell_inputs"],
+            cell_results=state["cell_results"],
+            result_artifacts=state["result_artifacts"],
+            runtime_abi_artifacts=state["runtime_artifacts"],
+            scope_projections=state["scope_projections"],
+            revise_observations=state["revise_observations"],
+            partial_failures=state["partial_failures"],
+            backpressure_states=state["backpressure_states"],
+            budgets=state["budgets"],
+            topology_transition_decision=state["topology_transition"],
+            parent_return_transition_decision=parent_return_decision,
+            root_result_artifact=root_result_artifact,
+            retained_prefix=retained_prefix,
+            **complete_options,
+        )
+        runtime_report = (aggregate_fractal_runtime_report_v02 if retained_prefix is None else
+            _aggregate_fractal_runtime_report_v02_within_complete_validation)(
+            topology=topology,
+            topology_artifact=state["topology_artifact"],
+            source_binding=state["source_binding"],
+            cell_results=state["cell_results"],
+            queue_entries=state["queue_entries"],
+            backpressure_states=state["backpressure_states"],
+            runtime_trace=runtime_trace,
+            final_global_budget=final_global_budget,
+            parent_return_transition_decision=parent_return_decision,
+            root_result_artifact=root_result_artifact,
+            retained_prefix=retained_prefix,
+            **complete_options,
+        )
+        report_artifact = project_fractal_runtime_report_kernel_artifact_v02(
+            runtime_report,
+            topology_artifact=state["topology_artifact"],
+            result_artifacts=state["result_artifacts"],
+            source_context=source_context,
+            temporal_binding=temporal_binding, temporal_verification=temporal_verification,
+        )
+        if _validate_fractal_runtime_transition_decision_v02(
+            parent_return_decision,
+            registry=state["transition_registry"],
+            source_artifact=root_result_artifact,
+            target_artifact=report_artifact,
+            temporal_context=_transition_temporal_context_v04(source_context, report_artifact),
+        ):
+            raise ValueError("g2d_transition_decision_substituted")
+        report_validation = (validate_fractal_runtime_report_against_sources_v02 if retained_prefix is None else
+            _validate_fractal_runtime_report_against_sources_v02_within_complete_validation)(
+            runtime_report,
+            source_context=source_context,
+            source_binding=state["source_binding"],
+            topology=topology,
+            topology_artifact=state["topology_artifact"],
+            cell_results=state["cell_results"],
+            queue_entries=state["queue_entries"],
+            backpressure_states=state["backpressure_states"],
+            runtime_trace=runtime_trace,
+            final_global_budget=final_global_budget,
+            parent_return_transition_decision=parent_return_decision,
+            root_result_artifact=root_result_artifact,
+            retained_prefix=retained_prefix,
+            **complete_options,
+        )
+        artifact_by_id = {
+            item.artifact_id: item
+            for item in (
+                state["topology_artifact"],
+                *state["queue_artifacts"],
+                *state["result_artifacts"],
+                *state.get("retained_consumption_artifacts", ()),
+                report_artifact,
+            )
+        }
+        stage_reports: list[FractalRuntimeValidationReportV02] = []
+        for stage in ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"):
+            artifacts = _d4_stage_artifacts_v02(
+                stage=stage,
+                source_context=source_context,
+                topology_artifact=state["topology_artifact"],
+                runtime_trace=runtime_trace,
+                artifact_by_id=artifact_by_id,
+                report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+            )
+            stage_report = (validate_fractal_runtime_stage_bundle_v02 if retained_prefix is None else
+                _validate_fractal_runtime_stage_bundle_v02_within_complete_validation)(
+                stage=stage,
+                artifacts=artifacts,
+                source_context=source_context,
+                topology=topology,
+                topology_artifact=state["topology_artifact"],
+                runtime_trace=runtime_trace,
+                queue_entries=state["queue_entries"],
+                queue_artifacts=state["queue_artifacts"],
+                cell_results=state["cell_results"],
+                result_artifacts=state["result_artifacts"],
+                runtime_report=runtime_report if stage == "STAGE_D_C" else None,
+                report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+                observed_work_context=observed_work_context,
+                retained_prefix=retained_prefix,
+                **complete_options,
+            )
+            if stage_report.status != "PASS":
+                raise ValueError(stage_report.reason_codes[0])
+            stage_reports.append(stage_report)
+        stage_d_c = _d4_stage_artifacts_v02(
+            stage="STAGE_D_C",
             source_context=source_context,
             topology_artifact=state["topology_artifact"],
             runtime_trace=runtime_trace,
             artifact_by_id=artifact_by_id,
-            report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+            report_artifact=report_artifact,
         )
-        stage_report = validate_fractal_runtime_stage_bundle_v02(
-            stage=stage,
-            artifacts=artifacts,
+        abi_report = (validate_fractal_runtime_abi_profile_v02 if retained_prefix is None else
+            _validate_fractal_runtime_abi_profile_v02_within_complete_validation)(
+            stage_d_c,
             source_context=source_context,
             topology=topology,
             topology_artifact=state["topology_artifact"],
@@ -18472,123 +19013,103 @@ def _d4_run_runtime_v02(
             queue_artifacts=state["queue_artifacts"],
             cell_results=state["cell_results"],
             result_artifacts=state["result_artifacts"],
-            runtime_report=runtime_report if stage == "STAGE_D_C" else None,
-            report_artifact=report_artifact if stage == "STAGE_D_C" else None,
+            runtime_report=runtime_report,
+            report_artifact=report_artifact,
             observed_work_context=observed_work_context,
             retained_prefix=retained_prefix,
+            **complete_options,
         )
-        if stage_report.status != "PASS":
-            raise ValueError(stage_report.reason_codes[0])
-        stage_reports.append(stage_report)
-    stage_d_c = _d4_stage_artifacts_v02(
-        stage="STAGE_D_C",
-        source_context=source_context,
-        topology_artifact=state["topology_artifact"],
-        runtime_trace=runtime_trace,
-        artifact_by_id=artifact_by_id,
-        report_artifact=report_artifact,
-    )
-    abi_report = validate_fractal_runtime_abi_profile_v02(
-        stage_d_c,
-        source_context=source_context,
-        topology=topology,
-        topology_artifact=state["topology_artifact"],
-        runtime_trace=runtime_trace,
-        queue_entries=state["queue_entries"],
-        queue_artifacts=state["queue_artifacts"],
-        cell_results=state["cell_results"],
-        result_artifacts=state["result_artifacts"],
-        runtime_report=runtime_report,
-        report_artifact=report_artifact,
-        observed_work_context=observed_work_context,
-        retained_prefix=retained_prefix,
-    )
-    if abi_report.status != "PASS":
-        raise ValueError(abi_report.reason_codes[0])
-    causal_refs = build_fractal_runtime_causal_consumption_refs_v02(
-        source_context=source_context,
-        topology=topology,
-        topology_artifact=state["topology_artifact"],
-        runtime_assignments=state["runtime_assignments"],
-        queue_entries=state["queue_entries"],
-        queue_artifacts=state["queue_artifacts"],
-        cell_results=state["cell_results"],
-        result_artifacts=state["result_artifacts"],
-        runtime_trace=runtime_trace,
-        runtime_report=runtime_report,
-        report_artifact=report_artifact,
-        observed_work_context=observed_work_context,
-        retained_prefix=retained_prefix,
-    )
-    causal_report = validate_fractal_runtime_causal_consumption_refs_v02(
-        causal_refs,
-        source_context=source_context,
-        topology=topology,
-        topology_artifact=state["topology_artifact"],
-        runtime_assignments=state["runtime_assignments"],
-        queue_entries=state["queue_entries"],
-        queue_artifacts=state["queue_artifacts"],
-        cell_results=state["cell_results"],
-        result_artifacts=state["result_artifacts"],
-        runtime_trace=runtime_trace,
-        runtime_report=runtime_report,
-        report_artifact=report_artifact,
-        stage_d_c_artifacts=stage_d_c,
-        observed_work_context=observed_work_context,
-        retained_prefix=retained_prefix,
-    )
-    if causal_report.status != "PASS":
-        raise ValueError(causal_report.reason_codes[0])
-    retained_reports = (
-        *state["prefix_reports"],
-        *state["pre_result_reports"],
-        *(validate_fractal_cell_result_v02(item) for item in state["cell_results"]),
-        report_validation,
-        *stage_reports,
-    )
-    if any(item.status != "PASS" for item in retained_reports):
-        raise ValueError("g2d_validation_status_stage_mismatch")
-    bundle_values = dict(
-        source_context=source_context,
-        source_binding=state["source_binding"],
-        topology_seed=state["topology_seed"],
-        budgets=state["budgets"],
-        topology_nodes=state["topology_nodes"],
-        topology_edges=state["topology_edges"],
-        runtime_assignments=state["runtime_assignments"],
-        topology=topology,
-        topology_artifact=state["topology_artifact"],
-        queue_entries=state["queue_entries"],
-        queue_artifacts=state["queue_artifacts"],
-        scope_projections=state["scope_projections"],
-        cell_inputs=state["cell_inputs"],
-        revise_observations=state["revise_observations"],
-        partial_failures=state["partial_failures"],
-        backpressure_states=state["backpressure_states"],
-        validation_reports=retained_reports,
-        result_proposals=state["result_proposals"],
-        post_vv_reports=state["post_vv_reports"],
-        gt_advisory_reports=state["gt_advisory_reports"],
-        cell_results=state["cell_results"],
-        result_artifacts=state["result_artifacts"],
-        runtime_trace=runtime_trace,
-        runtime_report=runtime_report,
-        report_artifact=report_artifact,
-        transition_decisions=(
-            state["topology_transition"],
-            *state["queue_decisions"],
-            parent_return_decision,
-        ),
-        causal_consumption_refs=causal_refs,
-        observed_work_context=observed_work_context,
-    )
-    if plan_review is not None:
-        return FractalRetainedWorkExecutionBundleV01(**bundle_values,
-            retained_profile=state["retained_profile"], plan_review=plan_review,
-            retained_evidence=state["retained_evidence"], retained_admissions=state["retained_admissions"],
-            retained_consumptions=state["retained_consumptions"],
-            retained_consumption_artifacts=state["retained_consumption_artifacts"])
-    return build_fractal_runtime_execution_bundle_v02(**bundle_values)
+        if abi_report.status != "PASS":
+            raise ValueError(abi_report.reason_codes[0])
+        causal_refs = (build_fractal_runtime_causal_consumption_refs_v02 if retained_prefix is None else
+            _build_fractal_runtime_causal_consumption_refs_v02_within_complete_validation)(
+            source_context=source_context,
+            topology=topology,
+            topology_artifact=state["topology_artifact"],
+            runtime_assignments=state["runtime_assignments"],
+            queue_entries=state["queue_entries"],
+            queue_artifacts=state["queue_artifacts"],
+            cell_results=state["cell_results"],
+            result_artifacts=state["result_artifacts"],
+            runtime_trace=runtime_trace,
+            runtime_report=runtime_report,
+            report_artifact=report_artifact,
+            observed_work_context=observed_work_context,
+            retained_prefix=retained_prefix,
+            **complete_options,
+        )
+        causal_report = (validate_fractal_runtime_causal_consumption_refs_v02 if retained_prefix is None else
+            _validate_fractal_runtime_causal_consumption_refs_v02_within_complete_validation)(
+            causal_refs,
+            source_context=source_context,
+            topology=topology,
+            topology_artifact=state["topology_artifact"],
+            runtime_assignments=state["runtime_assignments"],
+            queue_entries=state["queue_entries"],
+            queue_artifacts=state["queue_artifacts"],
+            cell_results=state["cell_results"],
+            result_artifacts=state["result_artifacts"],
+            runtime_trace=runtime_trace,
+            runtime_report=runtime_report,
+            report_artifact=report_artifact,
+            stage_d_c_artifacts=stage_d_c,
+            observed_work_context=observed_work_context,
+            retained_prefix=retained_prefix,
+            **complete_options,
+        )
+        if causal_report.status != "PASS":
+            raise ValueError(causal_report.reason_codes[0])
+        retained_reports = (
+            *state["prefix_reports"],
+            *state["pre_result_reports"],
+            *(validate_fractal_cell_result_v02(item) for item in state["cell_results"]),
+            report_validation,
+            *stage_reports,
+        )
+        if any(item.status != "PASS" for item in retained_reports):
+            raise ValueError("g2d_validation_status_stage_mismatch")
+        bundle_values = dict(
+            source_context=source_context,
+            source_binding=state["source_binding"],
+            topology_seed=state["topology_seed"],
+            budgets=state["budgets"],
+            topology_nodes=state["topology_nodes"],
+            topology_edges=state["topology_edges"],
+            runtime_assignments=state["runtime_assignments"],
+            topology=topology,
+            topology_artifact=state["topology_artifact"],
+            queue_entries=state["queue_entries"],
+            queue_artifacts=state["queue_artifacts"],
+            scope_projections=state["scope_projections"],
+            cell_inputs=state["cell_inputs"],
+            revise_observations=state["revise_observations"],
+            partial_failures=state["partial_failures"],
+            backpressure_states=state["backpressure_states"],
+            validation_reports=retained_reports,
+            result_proposals=state["result_proposals"],
+            post_vv_reports=state["post_vv_reports"],
+            gt_advisory_reports=state["gt_advisory_reports"],
+            cell_results=state["cell_results"],
+            result_artifacts=state["result_artifacts"],
+            runtime_trace=runtime_trace,
+            runtime_report=runtime_report,
+            report_artifact=report_artifact,
+            transition_decisions=(
+                state["topology_transition"],
+                *state["queue_decisions"],
+                parent_return_decision,
+            ),
+            causal_consumption_refs=causal_refs,
+            observed_work_context=observed_work_context,
+        )
+        if plan_review is not None:
+            return FractalRetainedWorkExecutionBundleV01(**bundle_values,
+                retained_profile=state["retained_profile"], plan_review=plan_review,
+                retained_evidence=state["retained_evidence"], retained_admissions=state["retained_admissions"],
+                retained_consumptions=state["retained_consumptions"],
+                retained_consumption_artifacts=state["retained_consumption_artifacts"],
+                temporal_binding=temporal_binding, temporal_verification=temporal_verification)
+        return build_fractal_runtime_execution_bundle_v02(**bundle_values)
 
 
 def _retained_require_v01(condition: bool, reason: str) -> None:
@@ -18596,20 +19117,168 @@ def _retained_require_v01(condition: bool, reason: str) -> None:
         raise ValueError(reason)
 
 
+
+
+def _retained_temporal_time_v01(source, binding, verification, *, require_current=False):
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        return _retained_temporal_time_body_v06(source, binding, verification,
+            require_current=require_current)
+
+
+def _retained_temporal_time_body_v06(source, binding, verification, *, require_current=False):
+    _retained_require_v01(type(source) is FractalRuntimeSourceContextV02, "retained_temporal_source_type")
+    historical = source.router_input.local_routing_snapshot.evaluation_time_epoch_seconds
+    source_binding = source.current_temporal_binding
+    source_verification = source.current_temporal_verification
+    if source_binding is not None or source_verification is not None:
+        if binding is not None or verification is not None:
+            _retained_require_v01(binding == source_binding and verification == source_verification,
+                "retained_temporal_source_pair")
+            # Value equality does not authenticate capture origin. Validate the
+            # actual input before substitution; the saved pair is checked below.
+            _retained_require_v01(type(verification) is tuple and len(verification) == 2,
+                "retained_temporal_context")
+            from hedgehog.work_execution_host_v01 import validate_retained_action_source_capture_v01
+            validate_retained_action_source_capture_v01(*verification, require_current=require_current)
+        binding, verification = source_binding, source_verification
+    if binding is None:
+        _retained_require_v01(verification is None, "retained_temporal_pair")
+        return historical
+    from hedgehog.work_execution_host_v01 import validate_retained_action_source_capture_v01
+    _retained_require_v01(type(binding) is FractalCurrentTemporalBindingV01
+        and not _annotation_errors(binding, FractalCurrentTemporalBindingV01)
+        and type(verification) is tuple and len(verification) == 2, "retained_temporal_context")
+    host, capture = verification
+    validate_retained_action_source_capture_v01(host, capture, require_current=require_current)
+    expected = FractalCurrentTemporalBindingV01(capture.owning_root_id, capture.transaction_id,
+        capture.packet_id, capture.evaluation_time, capture.evaluation_time_source,
+        capture.evaluation_context_id, capture.source_revision, capture.host_revision,
+        capture.capture_ordinal, tuple(v.observation_id for v in capture.observations),
+        capture.logical_time_bridge.bridge_id)
+    _retained_require_v01(binding == expected, "retained_temporal_material")
+    now = binding.evaluation_time_epoch_seconds
+    _retained_require_v01((binding.owning_root_id, binding.transaction_id) == (
+        source.router_input.owning_root_id, source.router_input.transaction_id), "retained_temporal_source")
+    _retained_require_v01(type(historical) is int and historical <= now, "retained_temporal_rollback")
+    envelope = _kernel_artifact_to_plain_dict_v01(source.route_eligibility_artifact)["time_envelope"]
+    point = _datetime.fromtimestamp(now, _timezone.utc)
+    _retained_require_v01(_datetime.fromisoformat(envelope["valid_from"].replace('Z','+00:00')) <= point
+        < _datetime.fromisoformat(envelope["valid_to"].replace('Z','+00:00'))
+        and now < historical + source.router_input.local_routing_snapshot.ttl_seconds,
+        "retained_temporal_definition_policy_expired")
+    _retained_require_v01(all(v.valid_from_utc <= now < v.valid_to_utc and v.observed_at_utc <= now
+        for v in capture.observations), "retained_temporal_current_dependency")
+    return now
+
+
+
+
+def _retained_temporal_kwargs_v01(prefix):
+    return {} if prefix is None else dict(temporal_binding=prefix.temporal_binding,
+        temporal_verification=prefix.temporal_verification)
+
+
+def _retained_current_envelope_v01(source, binding, verification):
+    envelope = _kernel_artifact_to_plain_dict_v01(source.route_eligibility_artifact)["time_envelope"]
+    now = _retained_temporal_time_v01(source, binding, verification)
+    if binding is None and source.current_temporal_binding is None:
+        return envelope
+    stamp = _datetime.fromtimestamp(now, _timezone.utc).isoformat().replace('+00:00','Z')
+    return dict(envelope, pt_created_at=stamp, et_observed_at=stamp)
+
+
+def _transition_temporal_context_v04(source, target):
+    from hedgehog.kernel.transition_registry_v01 import FractalRuntimeTemporalContextV02
+    now = _retained_temporal_time_v01(source, None, None)
+    binding = source.current_temporal_binding
+    if binding is None:
+        return None
+    historical = _kernel_artifact_to_plain_dict_v01(source.route_eligibility_artifact)["time_envelope"]
+    if _kernel_artifact_to_plain_dict_v01(target)["time_envelope"] == historical:
+        return None
+    return FractalRuntimeTemporalContextV02(source.route_eligibility_artifact,
+        source.router_input.local_routing_snapshot.evaluation_time_epoch_seconds, now,
+        binding.packet_id, binding.source_revision, binding.host_revision, binding.capture_ordinal,
+        binding.evaluation_time_source, binding.evaluation_context_id, binding.logical_time_bridge_id,
+        binding.observation_ids)
+
+
+def _current_result_time_v03(source):
+    if source.current_temporal_binding is None:
+        return source.router_input.local_routing_snapshot.kt_asof_utc
+    now = _retained_temporal_time_v01(source, source.current_temporal_binding,
+        source.current_temporal_verification)
+    return _datetime.fromtimestamp(now, _timezone.utc).isoformat()
+
+
+def _queue_source_context_v03(entry, parents, source, observed, retained_artifact=None):
+    if source.current_temporal_binding is None or observed is None or retained_artifact is None:
+        return source
+    _retained_require_v01(type(observed) is RuntimeObservedWorkContextV02 and
+        observed.baseline_execution_bundle.source_context == source, "retained_temporal_queue_source")
+    baseline = observed.baseline_execution_bundle
+    for old_entry, old_artifact in zip(baseline.queue_entries, baseline.queue_artifacts, strict=True):
+        if entry == old_entry and parents == old_artifact.parent_refs and retained_artifact == old_artifact:
+            return baseline.source_context
+    return source
+
+
+def _historical_result_source_v03(source, value, member):
+    _retained_require_v01(type(source) is FractalRuntimeSourceContextV02, "retained_temporal_source_type")
+    observed = source.current_observed_work_context
+    if observed is None:
+        return source
+    _retained_require_v01(validate_fractal_runtime_source_context_v02(source).status == "PASS",
+        "retained_temporal_source_invalid")
+    baseline = observed.baseline_execution_bundle
+    if any(value == old for old in getattr(baseline, member)):
+        return baseline.source_context
+    return source
+
+
 def _retained_plain_v01(value: object) -> object:
+    return _retained_plain_material_v01(value, {})
+
+
+def _retained_plain_material_v01(value: object, materials: dict) -> object:
+    # Cache only value projection of fixed-schema, primitive/tuple carriers.
+    # Runtime context, Host origin, dicts and all validation results are excluded.
+    if type(value) in SERIALIZED_G2D_TYPES_V02:
+        fields = tuple(getattr(value, f.name) for f in _fields(value))
+        pending = list(fields)
+        immutable = True
+        while pending:
+            item = pending.pop()
+            if type(item) is tuple:
+                pending.extend(item)
+            elif item is not None and type(item) not in {str, bool, int, float}:
+                immutable = False
+                break
+        if immutable:
+            prior = materials.get(id(value))
+            if prior is not None and prior[0] is value and all(
+                a is b for a, b in zip(fields, prior[1], strict=True)
+            ):
+                return _deepcopy(prior[2])
+            material = _observed_work_public_plain_v02(value)
+            materials[id(value)] = (value, fields, material)
+            return material
     if type(value) in {
         RetainedFieldBindingV01, FractalRetainedWorkEvidenceV01,
         FractalRetainedPlanReviewV01, FractalRetainedWorkAdmissionV01,
         FractalRetainedWorkConsumptionV01, FractalRetainedWorkPrefixV01,
         FractalRetainedWorkExecutionBundleV01, FractalRuntimeExecutionBundleV02,
         FractalRuntimeSourceContextV02, RuntimeObservedWorkContextV02,
+        FractalCurrentTemporalBindingV01,
     }:
-        return {f.name: _retained_plain_v01(getattr(value, f.name)) for f in _fields(value)}
+        return {f.name: _retained_plain_material_v01(getattr(value, f.name), materials) for f in _fields(value)
+            if f.name != "temporal_binding" or getattr(value, f.name) is not None}
     if type(value) in {tuple, list}:
-        return [_retained_plain_v01(item) for item in value]
+        return [_retained_plain_material_v01(item, materials) for item in value]
     if type(value) is dict:
         _retained_require_v01(all(type(k) is str for k in value), "retained_plain_key")
-        return {k: _retained_plain_v01(v) for k, v in value.items()}
+        return {k: _retained_plain_material_v01(v, materials) for k, v in value.items()}
     if type(value) in {TransitionRegistryV01, TransitionDecisionV01}:
         from hedgehog.kernel.transition_registry_v01 import (
             build_continuous_delta_transition_registry_profile_v01,
@@ -18997,6 +19666,7 @@ def _retained_prefix_base_v01(value: FractalRetainedWorkPrefixV01) -> dict[str, 
     _retained_require_v01(type(value) is FractalRetainedWorkPrefixV01
         and not _annotation_errors(value, FractalRetainedWorkPrefixV01)
         and value.retained_profile == "fractal_retained_work_v01", "retained_prefix_type")
+    _retained_temporal_time_v01(value.source_context, value.temporal_binding, value.temporal_verification)
     for name in ("budgets", "topology_nodes", "topology_edges", "runtime_assignments", "queue_entries",
         "queue_artifacts", "scope_projections", "cell_inputs", "revise_observations", "partial_failures",
         "backpressure_states", "validation_reports", "result_proposals", "post_vv_reports", "gt_advisory_reports",
@@ -19084,7 +19754,7 @@ def _retained_prefix_at_consumption_v01(value: FractalRetainedWorkPrefixV01,
 def _retained_validate_consumption_at_origin_v01(value: FractalRetainedWorkConsumptionV01,
     prefix: FractalRetainedWorkPrefixV01) -> None:
     origin = _retained_prefix_at_consumption_v01(prefix, value)
-    expected = consume_fractal_retained_work_v01(admission=value.admission,
+    expected = _retained_consume_material_v01(admission=value.admission,
         running_parent_slot=value.running_parent_slot, running_slot_artifact=value.running_slot_artifact,
         current_prefix=origin)
     _retained_require_v01(value == expected, "retained_consumption_origin_binding")
@@ -19105,10 +19775,10 @@ def _retained_transition_kwargs_v01(state: dict[str, object], current_entry: Fra
 
 
 def _retained_prefix_from_state_v01(state: dict[str, object]) -> FractalRetainedWorkPrefixV01:
-    values = {f.name: state[f.name] for f in _fields(FractalRetainedWorkPrefixV01)
+    values = {f.name: state.get(f.name) if f.name == "temporal_binding" else state[f.name] for f in _fields(FractalRetainedWorkPrefixV01)
         if f.name not in {"validation_reports", "queue_transition_decisions"}}
     return FractalRetainedWorkPrefixV01(**values, validation_reports=state["prefix_reports"],
-        queue_transition_decisions=state["queue_decisions"])
+        queue_transition_decisions=state["queue_decisions"], temporal_verification=state.get("temporal_verification"))
 
 
 def _retained_admission_material_v01(*, evidence: FractalRetainedWorkEvidenceV01,
@@ -19141,7 +19811,8 @@ def _retained_admission_material_v01(*, evidence: FractalRetainedWorkEvidenceV01
     provisional = FractalRetainedWorkAdmissionV01("", evidence, current_source_context,
         current_observed_work_context, plan_review.accepted_artifact, plan_review, current_parent_input,
         slot.node_id, slots.index(slot), running.planned_child_cell_id, bindings,
-        current_source_context.router_input.local_routing_snapshot.evaluation_time_epoch_seconds)
+        _retained_temporal_time_v01(current_source_context, current_prefix.temporal_binding,
+            current_prefix.temporal_verification), current_prefix.temporal_binding)
     return _replace(provisional, admission_id=_retained_identity_v01("admission", provisional))
 
 
@@ -19150,6 +19821,8 @@ def build_fractal_retained_work_admission_v01(*, evidence: FractalRetainedWorkEv
     current_observed_work_context: RuntimeObservedWorkContextV02, plan_review: FractalRetainedPlanReviewV01,
     current_parent_input: FractalCellInputV02, parent_slot_node_id: str,
     current_prefix: FractalRetainedWorkPrefixV01) -> FractalRetainedWorkAdmissionV01:
+    _retained_temporal_time_v01(current_source_context, current_prefix.temporal_binding,
+        current_prefix.temporal_verification, require_current=True)
     return _retained_admission_material_v01(evidence=evidence, current_source_context=current_source_context,
         current_observed_work_context=current_observed_work_context, plan_review=plan_review,
         current_parent_input=current_parent_input, parent_slot_node_id=parent_slot_node_id, current_prefix=current_prefix)
@@ -19177,6 +19850,15 @@ def _retained_slot_key_v01(admission: FractalRetainedWorkAdmissionV01) -> tuple[
 
 
 def consume_fractal_retained_work_v01(*, admission: FractalRetainedWorkAdmissionV01,
+    running_parent_slot: FractalCellQueueEntryV02, running_slot_artifact: KernelArtifactV01,
+    current_prefix: FractalRetainedWorkPrefixV01) -> FractalRetainedWorkConsumptionV01:
+    _retained_temporal_time_v01(current_prefix.source_context, current_prefix.temporal_binding,
+        current_prefix.temporal_verification, require_current=True)
+    return _retained_consume_material_v01(admission=admission, running_parent_slot=running_parent_slot,
+        running_slot_artifact=running_slot_artifact, current_prefix=current_prefix)
+
+
+def _retained_consume_material_v01(*, admission: FractalRetainedWorkAdmissionV01,
     running_parent_slot: FractalCellQueueEntryV02, running_slot_artifact: KernelArtifactV01,
     current_prefix: FractalRetainedWorkPrefixV01) -> FractalRetainedWorkConsumptionV01:
     _retained_require_v01(type(admission) is FractalRetainedWorkAdmissionV01, "retained_admission_type")
@@ -19209,7 +19891,7 @@ def validate_fractal_retained_work_consumption_v01(value: object, *,
     current_prefix: FractalRetainedWorkPrefixV01) -> FractalRuntimeValidationReportV02:
     try:
         _retained_require_v01(type(value) is FractalRetainedWorkConsumptionV01, "retained_consumption_type")
-        expected = consume_fractal_retained_work_v01(admission=value.admission,
+        expected = _retained_consume_material_v01(admission=value.admission,
             running_parent_slot=value.running_parent_slot, running_slot_artifact=value.running_slot_artifact,
             current_prefix=current_prefix)
         _retained_require_v01(value == expected and value.consumption_id == _retained_identity_v01("consumption", value),
@@ -19232,7 +19914,11 @@ def _retained_consumption_artifact_v01(value: FractalRetainedWorkConsumptionV01,
         parent_refs=(value.running_slot_artifact.artifact_id, value.consumed_result_artifact.artifact_id,
             admission.current_plan_artifact.artifact_id),
         trace_refs=(value.consumption_id, admission.admission_id, admission.evidence.historical_bundle.source_binding.source_binding_id),
-        time_envelope=_kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)["time_envelope"])
+        time_envelope=(dict(_kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)["time_envelope"],
+            pt_created_at=_datetime.fromtimestamp(admission.evaluation_time_epoch_seconds, _timezone.utc).isoformat().replace('+00:00','Z'),
+            et_observed_at=_datetime.fromtimestamp(admission.evaluation_time_epoch_seconds, _timezone.utc).isoformat().replace('+00:00','Z'))
+            if admission.temporal_binding is not None else
+            _kernel_artifact_to_plain_dict_v01(source_context.route_eligibility_artifact)["time_envelope"]))
     provisional = _build_kernel_artifact_v01(**material)
     plain = _kernel_artifact_to_plain_dict_v01(provisional)
     plain.pop("artifact_id")
@@ -19297,152 +19983,156 @@ def _retained_abi_family_v01(prefix: FractalRetainedWorkPrefixV01,
 
 
 def _retained_validate_results_v01(prefix: FractalRetainedWorkPrefixV01, *, complete: bool) -> tuple[FractalRuntimeValidationReportV02, ...]:
-    indexes = _retained_prefix_base_v01(prefix)
-    history = prefix.observed_work_context.baseline_execution_bundle
-    claim = _retained_plan_review_v01(prefix.plan_review, prefix.source_context, prefix.topology)
-    _retained_require_v01(prefix.plan_review.proposed_artifact.parent_refs[-1] == history.report_artifact.artifact_id,
-        "retained_plan_history_binding")
-    expected_cells = tuple(c.cell_id for c in history.cell_inputs if c.parent_cell_id is not None
-        and c.cell_id not in prefix.observed_work_context.ordered_affected_cell_ids)
-    _retained_require_v01(bool(expected_cells) and tuple(e.historical_cell_id for e in prefix.retained_evidence)
-        == expected_cells and all(e.historical_bundle == history for e in prefix.retained_evidence),
-        "retained_exact_evidence_cells")
-    _retained_require_v01(len(prefix.retained_consumptions) == len(prefix.retained_consumption_artifacts)
-        and len({_retained_slot_key_v01(c.admission) for c in prefix.retained_consumptions})
-        == len(prefix.retained_consumptions), "retained_consumption_uniqueness")
-    _retained_require_v01(len({a.admission_id for a in prefix.retained_admissions}) == len(prefix.retained_admissions),
-        "retained_admission_uniqueness")
-    for consumption, artifact in zip(prefix.retained_consumptions, prefix.retained_consumption_artifacts, strict=True):
-        _retained_require_v01(consumption.admission in prefix.retained_admissions
-            and consumption.admission.evidence in prefix.retained_evidence,
-            "retained_consumption_admission_binding")
-        _retained_validate_consumption_at_origin_v01(consumption, prefix)
-        _retained_require_v01(artifact == _retained_consumption_artifact_v01(consumption, prefix.source_context),
-            "retained_consumption_artifact_binding")
-        running = consumption.running_parent_slot
-        chain = tuple(q for q in prefix.queue_entries if (q.cell_id, q.node_id) == (running.cell_id, running.node_id))
-        origin = chain.index(running)
-        after = chain[origin + 1:]
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        indexes = _retained_prefix_base_v01(prefix)
+        history = prefix.observed_work_context.baseline_execution_bundle
+        claim = _retained_plan_review_v01(prefix.plan_review, prefix.source_context, prefix.topology)
+        _retained_require_v01(prefix.plan_review.proposed_artifact.parent_refs[-1] == history.report_artifact.artifact_id,
+            "retained_plan_history_binding")
+        expected_cells = tuple(c.cell_id for c in history.cell_inputs if c.parent_cell_id is not None
+            and c.cell_id not in prefix.observed_work_context.ordered_affected_cell_ids)
+        _retained_require_v01(bool(expected_cells) and tuple(e.historical_cell_id for e in prefix.retained_evidence)
+            == expected_cells and all(e.historical_bundle == history for e in prefix.retained_evidence),
+            "retained_exact_evidence_cells")
+        _retained_require_v01(len(prefix.retained_consumptions) == len(prefix.retained_consumption_artifacts)
+            and len({_retained_slot_key_v01(c.admission) for c in prefix.retained_consumptions})
+            == len(prefix.retained_consumptions), "retained_consumption_uniqueness")
+        _retained_require_v01(len({a.admission_id for a in prefix.retained_admissions}) == len(prefix.retained_admissions),
+            "retained_admission_uniqueness")
+        for consumption, artifact in zip(prefix.retained_consumptions, prefix.retained_consumption_artifacts, strict=True):
+            _retained_require_v01(consumption.admission in prefix.retained_admissions
+                and consumption.admission.evidence in prefix.retained_evidence,
+                "retained_consumption_admission_binding")
+            _retained_validate_consumption_at_origin_v01(consumption, prefix)
+            _retained_require_v01(artifact == _retained_consumption_artifact_v01(consumption, prefix.source_context),
+                "retained_consumption_artifact_binding")
+            running = consumption.running_parent_slot
+            chain = tuple(q for q in prefix.queue_entries if (q.cell_id, q.node_id) == (running.cell_id, running.node_id))
+            origin = chain.index(running)
+            after = chain[origin + 1:]
+            if complete:
+                _retained_require_v01(tuple(q.state for q in chain) == ("PENDING", "READY", "RUNNING", "VALIDATING", "COMPLETED"),
+                    "retained_slot_transition_chain")
+            _retained_require_v01(tuple(q.state for q in after) in ((), ("VALIDATING",), ("VALIDATING", "COMPLETED")),
+                "retained_slot_transition_suffix")
+            before = consumption.current_global_budget_before
+            predecessor = indexes["budget_by_id"].get(before.predecessor_budget_id)
+            _retained_require_v01(predecessor is not None and before.budget_event_kind == "START_NODE"
+                and before.consumed_wall_time_units == predecessor.consumed_wall_time_units + 1
+                and before.current_parallelism == predecessor.current_parallelism + 1,
+                "retained_slot_start_charge")
+            for q in after:
+                a = indexes["artifact_by_queue_id"][q.queue_entry_id]
+                _retained_require_v01(a.parent_refs == (prefix.topology_artifact.artifact_id,
+                    indexes["artifact_by_queue_id"][q.predecessor_queue_entry_id].artifact_id,
+                    consumption.consumed_result_artifact.artifact_id)
+                    and q.observed_output_refs == (consumption.consumed_result_artifact.artifact_id,)
+                    and q.observed_evidence_refs == (*consumption.consumed_result.evidence_refs,
+                        artifact.artifact_id), "retained_slot_actual_result")
+            if after:
+                finished = indexes["budget_by_id"][after[0].global_budget_id]
+                expected = build_fractal_runtime_budget_v02(policy=prefix.source_context.runtime_policy,
+                    topology_seed=prefix.topology_seed, predecessor_budget=before,
+                    allocation_parent_budget=None, canonical_child_index=None, allocation_queue_entries=(),
+                    paired_cell_budget=None, child_result=None,
+                    owning_cell_id=running.cell_id, budget_scope="ROOT_GLOBAL_AND_CELL", budget_state="ACTIVE",
+                    budget_event_kind="FINISH_NODE", budget_context_input=consumption.admission.current_parent_input,
+                    transition_decision=next(t for t in prefix.queue_transition_decisions
+                        if t.decision_id == after[0].transition_decision_id))
+                _retained_require_v01(finished == expected and finished.current_parallelism == predecessor.current_parallelism,
+                    "retained_slot_finish_charge")
+                bpos = prefix.budgets.index(before)
+                _retained_require_v01(prefix.budgets[bpos + 1] == finished
+                    and all(q.global_budget_id == finished.budget_id for q in after), "retained_slot_no_hidden_charge")
+        unconsumed = tuple(a for a in prefix.retained_admissions
+            if all(a != c.admission for c in prefix.retained_consumptions))
+        _retained_require_v01(not complete or not unconsumed, "retained_unconsumed_admission")
+        for admission in unconsumed:
+            _retained_require_v01(validate_fractal_retained_work_admission_v01(admission, current_prefix=prefix).status == "PASS",
+                "retained_pending_admission")
+        lengths = (len(prefix.cell_results), len(prefix.result_artifacts), len(prefix.result_proposals),
+            len(prefix.post_vv_reports), len(prefix.gt_advisory_reports))
+        _retained_require_v01(len(set(lengths)) == 1
+            and len({r.result_id for r in prefix.cell_results}) == lengths[0], "retained_result_family_shape")
+        results = {r.result_id: r for r in prefix.cell_results}
+        historical = {c.consumed_result.result_id: c.consumed_result for c in prefix.retained_consumptions}
+        _retained_require_v01(not set(results).intersection(historical), "retained_result_namespace")
+        pre_result_reports = []
+        validated_results_by_cell = {r.cell_id: r for r in historical.values()}
+        for result, artifact, proposal, post, gt in zip(prefix.cell_results, prefix.result_artifacts,
+                prefix.result_proposals, prefix.post_vv_reports, prefix.gt_advisory_reports, strict=True):
+            cell_input = indexes["input_by_cell"].get(result.cell_id)
+            _retained_require_v01(cell_input is not None and result.cell_id not in validated_results_by_cell,
+                "retained_current_result_input")
+            projected = _d3_projected_nodes_v02(prefix.topology, prefix.topology_nodes,
+                cell_depth=cell_input.cell_depth, parent_cell_id=cell_input.parent_cell_id)
+            terminal = tuple(indexes["latest_by_key"][(cell_input.cell_id, node.node_id)] for node in projected)
+            _retained_require_v01(all(c in validated_results_by_cell for c in cell_input.ordered_planned_child_cell_ids),
+                "retained_parent_slot_order")
+            children = tuple(validated_results_by_cell[c] for c in cell_input.ordered_planned_child_cell_ids)
+            failures = tuple(p for p in prefix.partial_failures if p.parent_cell_id == cell_input.cell_id)
+            allocations = tuple(b for b in prefix.budgets if b.owning_cell_id == cell_input.cell_id
+                and b.predecessor_budget_id is None and b.budget_event_kind == "INITIAL_ALLOCATION")
+            finals = tuple(b for b in prefix.budgets if b.owning_cell_id == cell_input.cell_id
+                and b.budget_state == "FINAL" and b.budget_event_kind == "FINALIZE")
+            _retained_require_v01(len(allocations) == len(finals) == 1, "retained_result_budget_ancestry")
+            allocated, final = allocations[0], finals[0]
+            # Settled budget validation proves each child FINALIZE's adjacent global
+            # pair. A cell input may instead point to its later CELL_CREATE event.
+            global_budget = final if cell_input.parent_cell_id is None else prefix.budgets[
+                indexes["budget_position_by_id"][final.budget_id] + 1]
+            report = validate_fractal_cell_result_against_input_v02(source_context=prefix.source_context,
+                topology=prefix.topology, cell_input=cell_input, terminal_queue_entries=terminal,
+                child_results=children, partial_failures=failures, result_proposal=proposal,
+                post_vv_report=post, gt_advisory_report=gt,
+                cell_budget=final, global_budget=global_budget)
+            _retained_require_v01(report.status == "PASS" and validate_fractal_cell_result_v02(result).status == "PASS",
+                "retained_actual_parent_result")
+            _retained_require_v01(result.pre_result_validation_report_id == report.validation_report_id,
+                "retained_result_validation_binding")
+            post_position = next(i for i, node in enumerate(projected) if node.node_kind == "POST_VV")
+            material = _d4_result_proposal_material_v02(source_context=prefix.source_context,
+                topology=prefix.topology, cell_input=cell_input,
+                pre_post_vv_terminal_queue_entries=terminal[:post_position],
+                child_results=children, partial_failures=failures)
+            expected_result = build_fractal_cell_result_v02(prefix.topology, cell_input, terminal, children,
+                accepted_output_refs=material["accepted_output_refs"], evidence_refs=material["evidence_refs"],
+                pre_result_validation_report=report, post_vv_report=post, gt_advisory_report=gt,
+                partial_failures=failures, allocated_cell_budget=allocated,
+                final_cell_budget=final, global_budget=global_budget)
+            _retained_require_v01(result == expected_result, "retained_actual_result_binding")
+            validated_results_by_cell[result.cell_id] = result
+            pre_result_reports.append(report)
+            known_artifacts = {r.result_id: a for r, a in zip(prefix.cell_results, prefix.result_artifacts, strict=True)}
+            known_artifacts.update((c.consumed_result.result_id, c.consumed_result_artifact) for c in prefix.retained_consumptions)
+            expected_artifact = project_fractal_cell_result_kernel_artifact_v02(result,
+                topology_artifact=prefix.topology_artifact,
+                terminal_queue_artifacts=tuple(indexes["artifact_by_queue_id"][q.queue_entry_id] for q in terminal),
+                child_result_artifacts=tuple(known_artifacts[c.result_id] for c in children), source_context=prefix.source_context,
+                **_retained_temporal_kwargs_v01(prefix))
+            _retained_require_v01(artifact == expected_artifact, "retained_actual_result_projection")
+        _retained_require_v01(tuple(t.decision_id for t in prefix.queue_transition_decisions)
+            == tuple(q.transition_decision_id for q in prefix.queue_entries), "retained_queue_transition_inventory")
         if complete:
-            _retained_require_v01(tuple(q.state for q in chain) == ("PENDING", "READY", "RUNNING", "VALIDATING", "COMPLETED"),
-                "retained_slot_transition_chain")
-        _retained_require_v01(tuple(q.state for q in after) in ((), ("VALIDATING",), ("VALIDATING", "COMPLETED")),
-            "retained_slot_transition_suffix")
-        before = consumption.current_global_budget_before
-        predecessor = indexes["budget_by_id"].get(before.predecessor_budget_id)
-        _retained_require_v01(predecessor is not None and before.budget_event_kind == "START_NODE"
-            and before.consumed_wall_time_units == predecessor.consumed_wall_time_units + 1
-            and before.current_parallelism == predecessor.current_parallelism + 1,
-            "retained_slot_start_charge")
-        for q in after:
-            a = indexes["artifact_by_queue_id"][q.queue_entry_id]
-            _retained_require_v01(a.parent_refs == (prefix.topology_artifact.artifact_id,
-                indexes["artifact_by_queue_id"][q.predecessor_queue_entry_id].artifact_id,
-                consumption.consumed_result_artifact.artifact_id)
-                and q.observed_output_refs == (consumption.consumed_result_artifact.artifact_id,)
-                and q.observed_evidence_refs == (*consumption.consumed_result.evidence_refs,
-                    artifact.artifact_id), "retained_slot_actual_result")
-        if after:
-            finished = indexes["budget_by_id"][after[0].global_budget_id]
-            expected = build_fractal_runtime_budget_v02(policy=prefix.source_context.runtime_policy,
-                topology_seed=prefix.topology_seed, predecessor_budget=before,
-                allocation_parent_budget=None, canonical_child_index=None, allocation_queue_entries=(),
-                paired_cell_budget=None, child_result=None,
-                owning_cell_id=running.cell_id, budget_scope="ROOT_GLOBAL_AND_CELL", budget_state="ACTIVE",
-                budget_event_kind="FINISH_NODE", budget_context_input=consumption.admission.current_parent_input,
-                transition_decision=next(t for t in prefix.queue_transition_decisions
-                    if t.decision_id == after[0].transition_decision_id))
-            _retained_require_v01(finished == expected and finished.current_parallelism == predecessor.current_parallelism,
-                "retained_slot_finish_charge")
-            bpos = prefix.budgets.index(before)
-            _retained_require_v01(prefix.budgets[bpos + 1] == finished
-                and all(q.global_budget_id == finished.budget_id for q in after), "retained_slot_no_hidden_charge")
-    unconsumed = tuple(a for a in prefix.retained_admissions
-        if all(a != c.admission for c in prefix.retained_consumptions))
-    _retained_require_v01(not complete or not unconsumed, "retained_unconsumed_admission")
-    for admission in unconsumed:
-        _retained_require_v01(validate_fractal_retained_work_admission_v01(admission, current_prefix=prefix).status == "PASS",
-            "retained_pending_admission")
-    lengths = (len(prefix.cell_results), len(prefix.result_artifacts), len(prefix.result_proposals),
-        len(prefix.post_vv_reports), len(prefix.gt_advisory_reports))
-    _retained_require_v01(len(set(lengths)) == 1
-        and len({r.result_id for r in prefix.cell_results}) == lengths[0], "retained_result_family_shape")
-    results = {r.result_id: r for r in prefix.cell_results}
-    historical = {c.consumed_result.result_id: c.consumed_result for c in prefix.retained_consumptions}
-    _retained_require_v01(not set(results).intersection(historical), "retained_result_namespace")
-    pre_result_reports = []
-    validated_results_by_cell = {r.cell_id: r for r in historical.values()}
-    for result, artifact, proposal, post, gt in zip(prefix.cell_results, prefix.result_artifacts,
-            prefix.result_proposals, prefix.post_vv_reports, prefix.gt_advisory_reports, strict=True):
-        cell_input = indexes["input_by_cell"].get(result.cell_id)
-        _retained_require_v01(cell_input is not None and result.cell_id not in validated_results_by_cell,
-            "retained_current_result_input")
-        projected = _d3_projected_nodes_v02(prefix.topology, prefix.topology_nodes,
-            cell_depth=cell_input.cell_depth, parent_cell_id=cell_input.parent_cell_id)
-        terminal = tuple(indexes["latest_by_key"][(cell_input.cell_id, node.node_id)] for node in projected)
-        _retained_require_v01(all(c in validated_results_by_cell for c in cell_input.ordered_planned_child_cell_ids),
-            "retained_parent_slot_order")
-        children = tuple(validated_results_by_cell[c] for c in cell_input.ordered_planned_child_cell_ids)
-        failures = tuple(p for p in prefix.partial_failures if p.parent_cell_id == cell_input.cell_id)
-        allocations = tuple(b for b in prefix.budgets if b.owning_cell_id == cell_input.cell_id
-            and b.predecessor_budget_id is None and b.budget_event_kind == "INITIAL_ALLOCATION")
-        finals = tuple(b for b in prefix.budgets if b.owning_cell_id == cell_input.cell_id
-            and b.budget_state == "FINAL" and b.budget_event_kind == "FINALIZE")
-        _retained_require_v01(len(allocations) == len(finals) == 1, "retained_result_budget_ancestry")
-        allocated, final = allocations[0], finals[0]
-        # Settled budget validation proves each child FINALIZE's adjacent global
-        # pair. A cell input may instead point to its later CELL_CREATE event.
-        global_budget = final if cell_input.parent_cell_id is None else prefix.budgets[
-            indexes["budget_position_by_id"][final.budget_id] + 1]
-        report = validate_fractal_cell_result_against_input_v02(source_context=prefix.source_context,
-            topology=prefix.topology, cell_input=cell_input, terminal_queue_entries=terminal,
-            child_results=children, partial_failures=failures, result_proposal=proposal,
-            post_vv_report=post, gt_advisory_report=gt,
-            cell_budget=final, global_budget=global_budget)
-        _retained_require_v01(report.status == "PASS" and validate_fractal_cell_result_v02(result).status == "PASS",
-            "retained_actual_parent_result")
-        _retained_require_v01(result.pre_result_validation_report_id == report.validation_report_id,
-            "retained_result_validation_binding")
-        post_position = next(i for i, node in enumerate(projected) if node.node_kind == "POST_VV")
-        material = _d4_result_proposal_material_v02(source_context=prefix.source_context,
-            topology=prefix.topology, cell_input=cell_input,
-            pre_post_vv_terminal_queue_entries=terminal[:post_position],
-            child_results=children, partial_failures=failures)
-        expected_result = build_fractal_cell_result_v02(prefix.topology, cell_input, terminal, children,
-            accepted_output_refs=material["accepted_output_refs"], evidence_refs=material["evidence_refs"],
-            pre_result_validation_report=report, post_vv_report=post, gt_advisory_report=gt,
-            partial_failures=failures, allocated_cell_budget=allocated,
-            final_cell_budget=final, global_budget=global_budget)
-        _retained_require_v01(result == expected_result, "retained_actual_result_binding")
-        validated_results_by_cell[result.cell_id] = result
-        pre_result_reports.append(report)
-        known_artifacts = {r.result_id: a for r, a in zip(prefix.cell_results, prefix.result_artifacts, strict=True)}
-        known_artifacts.update((c.consumed_result.result_id, c.consumed_result_artifact) for c in prefix.retained_consumptions)
-        expected_artifact = project_fractal_cell_result_kernel_artifact_v02(result,
-            topology_artifact=prefix.topology_artifact,
-            terminal_queue_artifacts=tuple(indexes["artifact_by_queue_id"][q.queue_entry_id] for q in terminal),
-            child_result_artifacts=tuple(known_artifacts[c.result_id] for c in children), source_context=prefix.source_context)
-        _retained_require_v01(artifact == expected_artifact, "retained_actual_result_projection")
-    _retained_require_v01(tuple(t.decision_id for t in prefix.queue_transition_decisions)
-        == tuple(q.transition_decision_id for q in prefix.queue_entries), "retained_queue_transition_inventory")
-    if complete:
-        _retained_require_v01(tuple(c.admission.planned_child_cell_id for c in prefix.retained_consumptions) == expected_cells
-            and {c.cell_id for c in prefix.cell_inputs} == {prefix.topology.root_cell_id, *claim["ordered_affected_cell_ids"]}
-            and {r.cell_id for r in prefix.cell_results} == {c.cell_id for c in prefix.cell_inputs}
-            and prefix.cell_results[-1].cell_id == prefix.topology.root_cell_id,
-            "retained_complete_slot_partition")
-    return tuple(pre_result_reports)
+            _retained_require_v01(tuple(c.admission.planned_child_cell_id for c in prefix.retained_consumptions) == expected_cells
+                and {c.cell_id for c in prefix.cell_inputs} == {prefix.topology.root_cell_id, *claim["ordered_affected_cell_ids"]}
+                and {r.cell_id for r in prefix.cell_results} == {c.cell_id for c in prefix.cell_inputs}
+                and prefix.cell_results[-1].cell_id == prefix.topology.root_cell_id,
+                "retained_complete_slot_partition")
+        return tuple(pre_result_reports)
 
 
 def _retained_trace_inputs_v01(prefix: FractalRetainedWorkPrefixV01, topology: RuntimeExecutionTopologyV02,
     queues: tuple, queue_artifacts: tuple, inputs: tuple, results: tuple, result_artifacts: tuple,
-    budgets: tuple, decisions: tuple) -> None:
+    budgets: tuple, decisions: tuple, *, _complete_check: object = None) -> None:
     _retained_require_v01(type(prefix) is FractalRetainedWorkPrefixV01 and prefix.topology == topology
         and prefix.queue_entries == queues and prefix.queue_artifacts == queue_artifacts
         and prefix.cell_inputs == inputs and prefix.cell_results == results
         and prefix.result_artifacts == result_artifacts and prefix.budgets == budgets
         and prefix.queue_transition_decisions == decisions, "retained_trace_current_inventory")
-    _retained_validate_results_v01(prefix, complete=True)
+    _retained_complete_results_v01(prefix, _complete_check)
+
 
 
 def build_fractal_retained_work_prefix_v01(*,
@@ -19461,13 +20151,16 @@ def build_fractal_retained_work_prefix_v01(*,
     plan_review: FractalRetainedPlanReviewV01, retained_evidence: tuple[FractalRetainedWorkEvidenceV01, ...],
     retained_admissions: tuple[FractalRetainedWorkAdmissionV01, ...], retained_consumptions: tuple[FractalRetainedWorkConsumptionV01, ...],
     retained_consumption_artifacts: tuple[KernelArtifactV01, ...], queue_transition_decisions: tuple[TransitionDecisionV01, ...],
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None,
 ) -> FractalRetainedWorkPrefixV01:
+    _retained_temporal_time_v01(source_context, temporal_binding, temporal_verification, require_current=True)
     value = FractalRetainedWorkPrefixV01(source_context, source_binding, topology_seed, budgets, topology_nodes,
         topology_edges, runtime_assignments, topology, topology_artifact, queue_entries, queue_artifacts,
         scope_projections, cell_inputs, revise_observations, partial_failures, backpressure_states, validation_reports,
         result_proposals, post_vv_reports, gt_advisory_reports, cell_results, result_artifacts, observed_work_context,
         retained_profile, plan_review, retained_evidence, retained_admissions, retained_consumptions,
-        retained_consumption_artifacts, queue_transition_decisions)
+        retained_consumption_artifacts, queue_transition_decisions, temporal_binding, temporal_verification)
     _retained_validate_results_v01(value, complete=False)
     return value
 
@@ -19484,7 +20177,10 @@ def validate_fractal_retained_work_prefix_v01(value: object) -> FractalRuntimeVa
 
 def build_fractal_retained_work_execution_bundle_v01(*, source_context: FractalRuntimeSourceContextV02,
     observed_work_context: RuntimeObservedWorkContextV02, plan_review: FractalRetainedPlanReviewV01,
-    retained_evidence: tuple[FractalRetainedWorkEvidenceV01, ...]) -> FractalRetainedWorkExecutionBundleV01:
+    retained_evidence: tuple[FractalRetainedWorkEvidenceV01, ...],
+    temporal_binding: FractalCurrentTemporalBindingV01 | None = None,
+    temporal_verification: object = None) -> FractalRetainedWorkExecutionBundleV01:
+    _retained_temporal_time_v01(source_context, temporal_binding, temporal_verification, require_current=True)
     _retained_require_v01(type(observed_work_context) is RuntimeObservedWorkContextV02
         and validate_runtime_observed_work_context_v02(observed_work_context).status == "PASS"
         and observed_work_context.execution_scope == "SELECTIVE"
@@ -19506,7 +20202,8 @@ def build_fractal_retained_work_execution_bundle_v01(*, source_context: FractalR
         and c.cell_id not in proof["ordered_affected_cell_ids"])
     _retained_require_v01(tuple(e.historical_cell_id for e in retained_evidence) == expected, "retained_exact_initial_cells")
     value = _d4_run_runtime_v02(source_context, observed_work_context=observed_work_context,
-        plan_review=plan_review, retained_evidence=retained_evidence)
+        plan_review=plan_review, retained_evidence=retained_evidence,
+        temporal_binding=temporal_binding, temporal_verification=temporal_verification)
     _retained_require_v01(validate_fractal_retained_work_execution_bundle_v01(value).status == "PASS",
         "retained_complete_bundle_invalid")
     return value
@@ -19519,79 +20216,182 @@ def _retained_bundle_prefix_v01(value: FractalRetainedWorkExecutionBundleV01) ->
         if f.name != "queue_transition_decisions"}
     values["validation_reports"] = value.validation_reports[:4 + len(value.queue_entries)
         + len(value.scope_projections) + len(value.cell_inputs)]
-    return FractalRetainedWorkPrefixV01(**values, queue_transition_decisions=value.transition_decisions[1:-1])
+    return FractalRetainedWorkPrefixV01(**values, queue_transition_decisions=value.transition_decisions[1:-1],
+        temporal_verification=value.temporal_verification)
+
+
+class _RetainedCompleteValidationV01:
+    """One synchronous validation's exact input, never a public trust token.
+
+    Keep referents alive and record container edges, including InitVar storage.
+    A changed edge disables reuse; origin is still checked by the Host boundary.
+    No derived material or authorization survives the enclosing call.
+    """
+
+    def __init__(self, prefix):
+        self.prefix = prefix
+        self.reports = None
+        self.rows = []
+        self.supported = True
+        self.unsupported_path = None
+        self.unsupported_type = None
+        verification = getattr(prefix, 'temporal_verification', None)
+        pending = [(prefix, 'prefix')]
+        seen = set()
+        while pending:
+            value, path = pending.pop()
+            if id(value) in seen:
+                continue
+            seen.add(id(value))
+            if value is None or type(value) in {bool, int, str, float, bytes}:
+                continue
+            if type(value) in {tuple, list}:
+                children = tuple(value)
+                self.rows.append((value, None, children))
+                descendants = tuple((child, f'{path}[{i}]') for i, child in enumerate(children))
+            elif type(value) is dict:
+                children = tuple(value.items())
+                self.rows.append((value, 'dict', children))
+                descendants = tuple((item, f'{path}.item[{i}][{j}]')
+                    for i, pair in enumerate(children) for j, item in enumerate(pair))
+            elif _is_dataclass(value) and not isinstance(value, type):
+                names = tuple(vars(value)) if hasattr(value, '__dict__') else tuple(f.name for f in _fields(value))
+                children = tuple(getattr(value, name) for name in names)
+                self.rows.append((value, names, children))
+                descendants = []
+                for name, child in zip(names, children, strict=True):
+                    if name in {'temporal_verification', 'current_temporal_verification'}:
+                        # Only the same origin pair can use the top-level historical
+                        # Host check. A distinct nested origin keeps full validation.
+                        if child is not None and not (type(child) is tuple and len(child) == 2
+                            and type(verification) is tuple and len(verification) == 2
+                            and all(a is b for a, b in zip(child, verification))):
+                            self.supported = False
+                            self.unsupported_path = f'{path}.{name}'
+                            self.unsupported_type = 'distinct_runtime_verification'
+                            break
+                    else:
+                        descendants.append((child, f'{path}.{name}'))
+                if not self.supported:
+                    break
+            else:
+                self.supported = False
+                self.unsupported_path = path
+                self.unsupported_type = type(value).__module__ + '.' + type(value).__qualname__
+                break
+            pending.extend(reversed(descendants))
+
+    def unchanged(self, prefix):
+        if not self.supported or prefix is not self.prefix or self.reports is None:
+            return False
+        for value, names, previous in self.rows:
+            if names is None:
+                current = tuple(value)
+            elif names == 'dict':
+                current = tuple(value.items())
+                if len(current) != len(previous) or any(
+                    k is not old_k or v is not old_v
+                    for (k, v), (old_k, old_v) in zip(current, previous)):
+                    return False
+                continue
+            else:
+                if hasattr(value, '__dict__') and tuple(vars(value)) != names:
+                    return False
+                current = tuple(getattr(value, name) for name in names)
+            if len(current) != len(previous) or any(a is not b for a, b in zip(current, previous)):
+                return False
+        return True
+
+
+def _retained_complete_results_v01(prefix, check):
+    if type(check) is _RetainedCompleteValidationV01 and check.unchanged(prefix):
+        _retained_temporal_time_v01(prefix.source_context, prefix.temporal_binding,
+            prefix.temporal_verification)
+        return check.reports
+    return _retained_validate_results_v01(prefix, complete=True)
 
 
 def _retained_bundle_validate_v01(value: FractalRetainedWorkExecutionBundleV01) -> None:
-    prefix = _retained_bundle_prefix_v01(value)
-    pre_result_reports = _retained_validate_results_v01(prefix, complete=True)
-    _retained_require_v01(all(validate_fractal_runtime_validation_report_v02(r) == () and r.status == "PASS"
-        for r in value.validation_reports), "retained_validation_reports")
-    kwargs = dict(source_context=value.source_context, topology=value.topology, topology_artifact=value.topology_artifact,
-        runtime_trace=value.runtime_trace, queue_entries=value.queue_entries, queue_artifacts=value.queue_artifacts,
-        cell_results=value.cell_results, result_artifacts=value.result_artifacts,
-        observed_work_context=value.observed_work_context, retained_prefix=prefix)
-    artifact_map = _retained_artifact_map_v01((value.topology_artifact, *value.queue_artifacts,
-        *value.result_artifacts, *value.retained_consumption_artifacts, value.report_artifact))
-    runtime_ids = value.runtime_trace.abi_artifact_refs[1:]
-    positions = {q.queue_entry_id: i for i, q in enumerate(value.queue_entries)}
-    consumed_after = {c.running_parent_slot.queue_entry_id: a for c, a in zip(
-        value.retained_consumptions, value.retained_consumption_artifacts, strict=True)}
-    completed_after = {}
-    for result, artifact in zip(value.cell_results, value.result_artifacts, strict=True):
-        position = max(positions[key] for key in result.ordered_terminal_queue_entry_ids)
-        _retained_require_v01(position not in completed_after, "retained_result_trace_collision")
-        completed_after[position] = artifact
-    ordered_artifacts = []
-    for i, (queue, artifact) in enumerate(zip(value.queue_entries, value.queue_artifacts, strict=True)):
-        ordered_artifacts.append(artifact)
-        if queue.queue_entry_id in consumed_after:
-            ordered_artifacts.append(consumed_after[queue.queue_entry_id])
-        if i in completed_after:
-            ordered_artifacts.append(completed_after[i])
-    _retained_require_v01(runtime_ids == tuple(a.artifact_id for a in ordered_artifacts),
-        "retained_trace_exact_chronology")
-    expected_trace = build_fractal_runtime_trace_v02(value.topology, value.source_binding,
-        topology_artifact=value.topology_artifact, queue_entries=value.queue_entries, queue_artifacts=value.queue_artifacts,
-        state_transition_decisions=prefix.queue_transition_decisions, cell_inputs=value.cell_inputs,
-        cell_results=value.cell_results, result_artifacts=value.result_artifacts,
-        runtime_abi_artifacts=tuple(artifact_map[key] for key in runtime_ids), scope_projections=value.scope_projections,
-        revise_observations=value.revise_observations, partial_failures=value.partial_failures,
-        backpressure_states=value.backpressure_states, budgets=value.budgets,
-        topology_transition_decision=value.transition_decisions[0], parent_return_transition_decision=value.transition_decisions[-1],
-        root_result_artifact=value.result_artifacts[-1], retained_prefix=prefix)
-    _retained_require_v01(value.runtime_trace == expected_trace, "retained_trace_binding")
-    report = validate_fractal_runtime_report_against_sources_v02(value.runtime_report,
-        source_context=value.source_context, source_binding=value.source_binding, topology=value.topology,
-        topology_artifact=value.topology_artifact, cell_results=value.cell_results, queue_entries=value.queue_entries,
-        backpressure_states=value.backpressure_states, runtime_trace=value.runtime_trace, final_global_budget=value.budgets[-1],
-        parent_return_transition_decision=value.transition_decisions[-1], root_result_artifact=value.result_artifacts[-1],
-        retained_prefix=prefix)
-    _retained_require_v01(report.status == "PASS", "retained_report_binding")
-    stage_reports = []
-    for stage in ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"):
-        artifacts = _d4_stage_artifacts_v02(stage=stage, source_context=value.source_context,
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        prefix = _retained_bundle_prefix_v01(value)
+        if value.temporal_binding is not None:
+            produced_envelope = _retained_current_envelope_v01(value.source_context,
+                value.temporal_binding, value.temporal_verification)
+            _retained_require_v01(all(_kernel_artifact_to_plain_dict_v01(a)["time_envelope"] == produced_envelope
+                for a in value.queue_artifacts), "retained_temporal_produced_queue")
+        complete_check = _RetainedCompleteValidationV01(prefix)
+        pre_result_reports = _retained_validate_results_v01(prefix, complete=True)
+        complete_check.reports = pre_result_reports
+        _retained_require_v01(all(validate_fractal_runtime_validation_report_v02(r) == () and r.status == "PASS"
+            for r in value.validation_reports), "retained_validation_reports")
+        kwargs = dict(source_context=value.source_context, topology=value.topology, topology_artifact=value.topology_artifact,
+            runtime_trace=value.runtime_trace, queue_entries=value.queue_entries, queue_artifacts=value.queue_artifacts,
+            cell_results=value.cell_results, result_artifacts=value.result_artifacts,
+            observed_work_context=value.observed_work_context, retained_prefix=prefix)
+        artifact_map = _retained_artifact_map_v01((value.topology_artifact, *value.queue_artifacts,
+            *value.result_artifacts, *value.retained_consumption_artifacts, value.report_artifact))
+        runtime_ids = value.runtime_trace.abi_artifact_refs[1:]
+        positions = {q.queue_entry_id: i for i, q in enumerate(value.queue_entries)}
+        consumed_after = {c.running_parent_slot.queue_entry_id: a for c, a in zip(
+            value.retained_consumptions, value.retained_consumption_artifacts, strict=True)}
+        completed_after = {}
+        for result, artifact in zip(value.cell_results, value.result_artifacts, strict=True):
+            position = max(positions[key] for key in result.ordered_terminal_queue_entry_ids)
+            _retained_require_v01(position not in completed_after, "retained_result_trace_collision")
+            completed_after[position] = artifact
+        ordered_artifacts = []
+        for i, (queue, artifact) in enumerate(zip(value.queue_entries, value.queue_artifacts, strict=True)):
+            ordered_artifacts.append(artifact)
+            if queue.queue_entry_id in consumed_after:
+                ordered_artifacts.append(consumed_after[queue.queue_entry_id])
+            if i in completed_after:
+                ordered_artifacts.append(completed_after[i])
+        _retained_require_v01(runtime_ids == tuple(a.artifact_id for a in ordered_artifacts),
+            "retained_trace_exact_chronology")
+        expected_trace = _build_fractal_runtime_trace_v02_within_complete_validation(value.topology, value.source_binding,
+            topology_artifact=value.topology_artifact, queue_entries=value.queue_entries, queue_artifacts=value.queue_artifacts,
+            state_transition_decisions=prefix.queue_transition_decisions, cell_inputs=value.cell_inputs,
+            cell_results=value.cell_results, result_artifacts=value.result_artifacts,
+            runtime_abi_artifacts=tuple(artifact_map[key] for key in runtime_ids), scope_projections=value.scope_projections,
+            revise_observations=value.revise_observations, partial_failures=value.partial_failures,
+            backpressure_states=value.backpressure_states, budgets=value.budgets,
+            topology_transition_decision=value.transition_decisions[0], parent_return_transition_decision=value.transition_decisions[-1],
+            root_result_artifact=value.result_artifacts[-1], retained_prefix=prefix, _complete_check=complete_check)
+        _retained_require_v01(value.runtime_trace == expected_trace, "retained_trace_binding")
+        report = _validate_fractal_runtime_report_against_sources_v02_within_complete_validation(value.runtime_report,
+            source_context=value.source_context, source_binding=value.source_binding, topology=value.topology,
+            topology_artifact=value.topology_artifact, cell_results=value.cell_results, queue_entries=value.queue_entries,
+            backpressure_states=value.backpressure_states, runtime_trace=value.runtime_trace, final_global_budget=value.budgets[-1],
+            parent_return_transition_decision=value.transition_decisions[-1], root_result_artifact=value.result_artifacts[-1],
+            retained_prefix=prefix, _complete_check=complete_check)
+        _retained_require_v01(report.status == "PASS", "retained_report_binding")
+        stage_reports = []
+        for stage in ("STAGE_D_A", "STAGE_D_B", "STAGE_D_C"):
+            artifacts = _d4_stage_artifacts_v02(stage=stage, source_context=value.source_context,
+                topology_artifact=value.topology_artifact, runtime_trace=value.runtime_trace,
+                artifact_by_id=artifact_map, report_artifact=value.report_artifact if stage == "STAGE_D_C" else None)
+            stage_reports.append(_validate_fractal_runtime_stage_bundle_v02_within_complete_validation(stage=stage, artifacts=artifacts,
+                **kwargs, runtime_report=value.runtime_report if stage == "STAGE_D_C" else None,
+                report_artifact=value.report_artifact if stage == "STAGE_D_C" else None, _complete_check=complete_check))
+        expected_reports = (*prefix.validation_reports, *pre_result_reports,
+            *(validate_fractal_cell_result_v02(r) for r in value.cell_results), report, *stage_reports)
+        _retained_require_v01(value.validation_reports == expected_reports
+            and all(r.status == "PASS" for r in stage_reports), "retained_exact_validation_inventory")
+        stage_c = _d4_stage_artifacts_v02(stage="STAGE_D_C", source_context=value.source_context,
             topology_artifact=value.topology_artifact, runtime_trace=value.runtime_trace,
-            artifact_by_id=artifact_map, report_artifact=value.report_artifact if stage == "STAGE_D_C" else None)
-        stage_reports.append(validate_fractal_runtime_stage_bundle_v02(stage=stage, artifacts=artifacts,
-            **kwargs, runtime_report=value.runtime_report if stage == "STAGE_D_C" else None,
-            report_artifact=value.report_artifact if stage == "STAGE_D_C" else None))
-    expected_reports = (*prefix.validation_reports, *pre_result_reports,
-        *(validate_fractal_cell_result_v02(r) for r in value.cell_results), report, *stage_reports)
-    _retained_require_v01(value.validation_reports == expected_reports
-        and all(r.status == "PASS" for r in stage_reports), "retained_exact_validation_inventory")
-    stage_c = _d4_stage_artifacts_v02(stage="STAGE_D_C", source_context=value.source_context,
-        topology_artifact=value.topology_artifact, runtime_trace=value.runtime_trace,
-        artifact_by_id=artifact_map, report_artifact=value.report_artifact)
-    _retained_require_v01(validate_fractal_runtime_abi_profile_v02(stage_c, **kwargs,
-        runtime_report=value.runtime_report, report_artifact=value.report_artifact).status == "PASS", "retained_abi_profile")
-    _retained_require_v01(validate_fractal_runtime_causal_consumption_refs_v02(value.causal_consumption_refs,
-        **kwargs, runtime_assignments=value.runtime_assignments, runtime_report=value.runtime_report,
-        report_artifact=value.report_artifact, stage_d_c_artifacts=stage_c).status == "PASS", "retained_causal_profile")
-    registry = _build_fractal_runtime_transition_registry_profile_v02()
-    _retained_require_v01(not _validate_fractal_runtime_transition_decision_v02(value.transition_decisions[-1],
-        registry=registry, source_artifact=value.result_artifacts[-1], target_artifact=value.report_artifact),
-        "retained_parent_return")
+            artifact_by_id=artifact_map, report_artifact=value.report_artifact)
+        _retained_require_v01(_validate_fractal_runtime_abi_profile_v02_within_complete_validation(stage_c, **kwargs,
+            runtime_report=value.runtime_report, report_artifact=value.report_artifact, _complete_check=complete_check).status == "PASS", "retained_abi_profile")
+        _retained_require_v01(_validate_fractal_runtime_causal_consumption_refs_v02_within_complete_validation(value.causal_consumption_refs,
+            **kwargs, runtime_assignments=value.runtime_assignments, runtime_report=value.runtime_report,
+            report_artifact=value.report_artifact, stage_d_c_artifacts=stage_c, _complete_check=complete_check).status == "PASS", "retained_causal_profile")
+        registry = _build_fractal_runtime_transition_registry_profile_v02()
+        _retained_require_v01(not _validate_fractal_runtime_transition_decision_v02(value.transition_decisions[-1],
+            registry=registry, source_artifact=value.result_artifacts[-1], target_artifact=value.report_artifact,
+            temporal_context=_transition_temporal_context_v04(value.source_context, value.report_artifact)),
+            "retained_parent_return")
+
 
 
 def validate_fractal_retained_work_execution_bundle_v01(value: object) -> FractalRuntimeValidationReportV02:
@@ -19607,6 +20407,39 @@ def validate_fractal_retained_work_execution_bundle_v01(value: object) -> Fracta
 def fractal_retained_work_execution_bundle_to_plain_data_v01(value: FractalRetainedWorkExecutionBundleV01) -> dict[str, object]:
     _retained_bundle_validate_v01(value)
     return _retained_plain_v01(value)
+
+
+
+def build_fractal_current_temporal_binding_v01(*, host: object, capture: object) -> FractalCurrentTemporalBindingV01:
+    from hedgehog.work_execution_host_v01 import validate_retained_action_source_capture_v01
+    validate_retained_action_source_capture_v01(host, capture, require_current=True)
+    return FractalCurrentTemporalBindingV01(capture.owning_root_id, capture.transaction_id,
+        capture.packet_id, capture.evaluation_time, capture.evaluation_time_source,
+        capture.evaluation_context_id, capture.source_revision, capture.host_revision,
+        capture.capture_ordinal, tuple(v.observation_id for v in capture.observations),
+        capture.logical_time_bridge.bridge_id)
+
+
+
+def validate_fractal_current_temporal_binding_v01(value: object, *, source_context: FractalRuntimeSourceContextV02,
+    temporal_verification: object, require_current: bool = False) -> FractalRuntimeValidationReportV02:
+    from hedgehog.work_execution_host_v01 import _capture_validation_scope_v06
+    with _capture_validation_scope_v06():
+        try:
+            _retained_require_v01(type(require_current) is bool, "retained_temporal_mode")
+            _retained_require_v01(type(value) is FractalCurrentTemporalBindingV01, "retained_temporal_type")
+            _retained_require_v01(validate_fractal_runtime_source_context_v02(source_context).status == "PASS",
+                "retained_temporal_source_invalid")
+            _retained_temporal_time_v01(source_context, value, temporal_verification, require_current=require_current)
+            identity = "frcurrent_temporal:" + _domain_separated_sha256_hex_v01(
+                domain="hedgehog.fractal_current_temporal_binding.v01",
+                payload=_canonical_json_bytes_v01(_retained_plain_v01(value)))
+            return _d4_contextual_report_v02(validation_target="COMPLETE_PROFILE", validated_object_id=identity,
+                failure_stage="COMPLETE_PROFILE")
+        except (ValueError, TypeError, AttributeError, KeyError, IndexError, StopIteration):
+            return _d4_contextual_report_v02(validation_target="COMPLETE_PROFILE", validated_object_id=None,
+                failure_stage="COMPLETE_PROFILE", reason_code="g2d_abi_bundle_invalid")
+
 
 
 __all__ = (

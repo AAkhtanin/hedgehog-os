@@ -425,6 +425,7 @@ from hedgehog.kernel.fractal_runtime_v02 import (  # noqa: E402,F401
     validate_runtime_observed_work_counterfactual_v02,
 )
 from hedgehog.kernel.transition_registry_v01 import (  # noqa: E402,F401
+    FractalRuntimeTemporalContextV02,
     build_fractal_runtime_transition_registry_profile_v02,
     validate_fractal_runtime_transition_registry_profile_v02,
     fractal_runtime_transition_registry_profile_to_plain_dict_v02,

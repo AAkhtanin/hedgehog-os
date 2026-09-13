@@ -1469,6 +1469,11 @@ evidence. G2-E3 does not create or authorize them.
 
 ## 15. PAC-11 Trusted Currentness Comparator
 
+The following same-time rule remains exact for the absent-capture legacy
+profile. The optional T3 V03 candidate successor at the end of this addendum
+separates historical and authenticated current time; it does not change B/C
+query identity or use-time rules.
+
 The primary trusted ceiling is:
 
 ```text
@@ -2030,3 +2035,66 @@ identities, two runtime-only carriers and separately registered retained types.
 Its ordinary scalar plain-data helper rejects the runtime-only aggregate; no
 deserializer was introduced. The historical exclusion above is preserved as
 provenance, not represented as having allowed this candidate projection role.
+
+### T3 V03 Host-Bound Temporal Successor (External Candidate)
+
+Historical A packet/transaction, B query and certificate, C source/review and D
+baseline stay immutable and mutually valid at their original time. No new B
+query is rebound to the old packet. `ContinuousDeltaSourceContextV01` and its
+public builder accept the paired runtime-only arguments `current_source_host`
+and `current_source_capture`. Neither argument is a dataclass serialization
+field: no Host, lock, callback, object address or recursive origin graph belongs
+in an E artifact or schema. The closed legacy E projection is unchanged.
+
+With both arguments absent, PAC-11's original ceiling and exact same-time
+agreement remain in force. With the pair present, public Host verification
+must bind the retained capture to this source's exact packet, registry,
+observations and invalidation evaluation triad. Historical B/C/D agreement is
+still checked independently. Historical time must not exceed the capture time;
+observed fact ET must not exceed that current ceiling. Actual capture origin,
+Root, transaction, source revision and interval checks cannot be replaced by
+caller-authored invalidation fields or an integer clock. Public construction
+and new execution require the current Host revision; supplied historical report
+validation uses retained origin without live source I/O.
+
+The retained D execution receives the serializable temporal projection and the
+paired runtime verification context. D independently validates both, retains the
+old source definition/TIME fields and original result bytes, and gives newly
+consumed work its current admission time. E validates the returned D binding
+against the same actual source capture. E results remain advisory; fresh Root
+review and ordinary current A/Firewall eligibility independently decide whether
+a new action may run. An invalidated old packet gains no permission from E.
+
+The non-domain-specific owning control is
+`test_later_native_temporal_retained_execution_v03` in the E test module.
+Future observation, missing/foreign/stale capture and retained semantic field
+controls remain required. Testflix applies this contract to a later quote; no
+price, payment, television or DeviceRoot exception is introduced into E.
+Recorded earlier same-time execution is not proof of this candidate extension.
+
+Both the retained entry and granular execution state forward the same checked
+temporal context to D. New result timestamps must describe new computation;
+retained historical results must not be rewritten. This wiring is an external
+implementation attempt, not completed later-time acceptance. Its actual D
+queue projection is rejected by the unchanged transition registry's exact
+source/target time-envelope equality. That protected transition contract must
+be reconciled explicitly before either later-time path can be accepted. No
+transition-registry change or successful end-to-end P04 is claimed here.
+
+### T3 V04 Transition Integration (External Candidate)
+
+The previous paragraph describes the V03 attempt. The V04 successor explicitly
+extends only D v0.2 transition temporal relationships as specified in the D
+addendum. Both E retained execution paths preserve historical T01 and supply
+validated current temporal context for newly produced work and parent return.
+E's public D source validation authenticates the retained Host/capture pair;
+the registry's finite structural projection does not authenticate the Host.
+New queues, proposals, Post-V&V, GT, results and reports describe current
+production. Retained original result bytes and historical A/B/C/D remain exact.
+No historical query is rebound, no old permission is renewed by computation,
+and ordinary native eligibility still refreshes authoritative current sources.
+The same-Host history control retains the original capture, advances its actual
+trusted source, obtains a new capture, and validates each coherent context
+separately. Historical verification performs no live reads and never means
+present permission. Final execution evidence is recorded externally; this
+contract does not self-award P04 or governance acceptance.

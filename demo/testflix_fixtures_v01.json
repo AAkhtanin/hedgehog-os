@@ -1,0 +1,24 @@
+{
+  "request_id": "request:8c2f",
+  "user_id": "subject:51d9",
+  "merchant_id": "merchant:a674",
+  "order_id": "order:e583",
+  "device_id": "device:34a1",
+  "content_id": "content:047b",
+  "currency": "EUR",
+  "now": 1893456000,
+  "hard_ceiling_minor": 650,
+  "preference": "AD_FREE",
+  "purchase_consent": true,
+  "approved_prices_minor": [500,600],
+  "approved_device_id": "device:34a1",
+  "approved_order_id": "order:e583",
+  "catalog": [
+    {"plan_id":"plan:cd79","price_minor":500,"resolution":720,"ads":false,"period_seconds":2592000},
+    {"plan_id":"plan:ab31","price_minor":600,"resolution":1080,"ads":true,"period_seconds":2592000},
+    {"plan_id":"plan:ef62","price_minor":900,"resolution":2160,"ads":false,"period_seconds":2592000}
+  ],
+  "registered_devices": ["device:34a1"],
+  "bank_private": "CANARY_BANK_PRIVATE_NO_ROLE_EXPORT",
+  "user_private": "CANARY_USER_PRIVATE_NO_BANK_OR_DEVICE_EXPORT"
+}

@@ -5683,7 +5683,8 @@ def test_u4_registration_inventory_has_no_second_effect_owner(report, tmp_path) 
     assert living._current_registration_v01(root) == (block, ())
     for mutation in ("missing", "extra", "duplicate", "module", "symbol", "role", "source", "pass"):
         changed = deepcopy(overlay)
-        current = changed[living._U4_REGISTRATION_KEY]
+        key = living._TESTFLIX_REGISTRATION_KEY_V11 if living._TESTFLIX_REGISTRATION_KEY_V11 in changed else living._U4_REGISTRATION_KEY
+        current = changed[key]
         if mutation == "missing":
             current["rows"].pop()
         elif mutation in ("extra", "duplicate"):
@@ -5709,6 +5710,7 @@ def test_u4_registration_inventory_has_no_second_effect_owner(report, tmp_path) 
     producer.write_bytes(producer.read_bytes() + b"\nUNAUTHORIZED = True\n")
     assert "registration_source:hedgehog/work_execution_host_v01.py" in living._current_registration_v01(root)[1]
     shutil.copyfile(REPOSITORY_ROOT / "hedgehog/work_execution_host_v01.py", producer)
-    del overlay[living._U4_REGISTRATION_KEY]
+    key = living._TESTFLIX_REGISTRATION_KEY_V11 if living._TESTFLIX_REGISTRATION_KEY_V11 in overlay else living._U4_REGISTRATION_KEY
+    del overlay[key]
     overlay_path.write_text(json.dumps(overlay) + "\n")
     assert living._current_registration_v01(root)[1]

@@ -85,6 +85,7 @@ _RETAINED_FUNCTIONS_V05 = (
     "validate_fractal_retained_work_execution_bundle_v01",
     "fractal_retained_work_execution_bundle_to_plain_data_v01",
 )
+_TEMPORAL_FUNCTIONS_V03 = ("build_fractal_current_temporal_binding_v01", "validate_fractal_current_temporal_binding_v01")
 _RETAINED_PREFIX_ARGUMENT_FUNCTIONS_V05 = (
     "build_fractal_runtime_trace_v02", "build_fractal_runtime_report_v02",
     "evaluate_fractal_runtime_state_transition_v02", "aggregate_fractal_runtime_report_v02",
@@ -97,6 +98,20 @@ _RETAINED_PREFIX_ARGUMENT_FUNCTIONS_V05 = (
 def _legacy_arguments_v05(node):
     import copy
     args = copy.deepcopy(node.args)
+    if node.name == "build_fractal_runtime_source_context_v02":
+        assert [a.arg for a in args.kwonlyargs[-3:]] == ["current_temporal_binding",
+            "current_temporal_verification", "current_observed_work_context"]
+        assert [ast.unparse(a.annotation) for a in args.kwonlyargs[-3:]] == [
+            "FractalCurrentTemporalBindingV01 | None", "object", "RuntimeObservedWorkContextV02 | None"]
+        assert all(isinstance(v, ast.Constant) and v.value is None for v in args.kw_defaults[-3:])
+        del args.kwonlyargs[-3:]; del args.kw_defaults[-3:]
+    if node.name in ("project_fractal_cell_result_kernel_artifact_v02", "project_fractal_runtime_report_kernel_artifact_v02",
+        "evaluate_fractal_runtime_state_transition_v02"):
+        assert [a.arg for a in args.kwonlyargs[-2:]] == ["temporal_binding", "temporal_verification"]
+        assert ast.unparse(args.kwonlyargs[-2].annotation) == "FractalCurrentTemporalBindingV01 | None"
+        assert ast.unparse(args.kwonlyargs[-1].annotation) == "object"
+        assert all(isinstance(v, ast.Constant) and v.value is None for v in args.kw_defaults[-2:])
+        del args.kwonlyargs[-2:]; del args.kw_defaults[-2:]
     if node.name in _RETAINED_PREFIX_ARGUMENT_FUNCTIONS_V05:
         assert args.kwonlyargs[-1].arg == "retained_prefix"
         assert ast.unparse(args.kwonlyargs[-1].annotation) == "FractalRetainedWorkPrefixV01 | None"
@@ -122,12 +137,18 @@ def _assert_retained_schema_v05(schema):
     legacy = tuple(cls.__name__ for cls in fr.SERIALIZED_G2D_TYPES_V02)
     assert tuple(definitions)[:18] == legacy and len(legacy) == 18
     for name, count in (("FractalRetainedPlanReviewV01", 10),
-        ("FractalRetainedWorkPrefixV01", 30), ("FractalRetainedWorkExecutionBundleV01", 34),
+        ("FractalRetainedWorkPrefixV01", 31), ("FractalRetainedWorkExecutionBundleV01", 35),
         ("FractalRuntimeExecutionBundleV02", 28)):
         expected = tuple(f.name for f in fields(getattr(fr, name)))
         assert len(expected) == count
-        assert tuple(definitions[name]["properties"]) == tuple(definitions[name]["required"]) == expected
+        assert tuple(definitions[name]["properties"]) == expected
+        assert tuple(definitions[name]["required"]) == tuple(n for n in expected if n != "temporal_binding")
         assert definitions[name]["additionalProperties"] is False
+        if "temporal_binding" in expected:
+            assert definitions[name]["properties"]["temporal_binding"] == {"$ref":"#/$defs/FractalCurrentTemporalBindingV01"}
+    temporal = definitions["FractalCurrentTemporalBindingV01"]
+    assert temporal["additionalProperties"] is False
+    assert tuple(temporal["properties"]) == tuple(temporal["required"]) == tuple(f.name for f in fields(fr.FractalCurrentTemporalBindingV01))
     assert definitions["FractalExecutionProfileBundleV01"] == {"oneOf": [
         {"$ref":"#/$defs/FractalRuntimeExecutionBundleV02"},
         {"$ref":"#/$defs/FractalRetainedWorkExecutionBundleV01"}]}
@@ -937,8 +958,8 @@ def test_d1_static_surface_schema_import() -> None:
     assert MODULE_PATH.is_file() and SCHEMA_PATH.is_file()
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
-    assert len(fr.G2D_TYPES_V02) == 28
-    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
+    assert len(fr.G2D_TYPES_V02) == 29
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == (*_RETAINED_TYPES_V05, "FractalCurrentTemporalBindingV01")
     assert fr.G2D_TYPES_V02[:20] == fr.SERIALIZED_G2D_TYPES_V02 + (
         fr.FractalRuntimeSourceContextV02,
         fr.FractalRuntimeExecutionBundleV02,
@@ -949,8 +970,8 @@ def test_d1_static_surface_schema_import() -> None:
         name for name, value in vars(fr).items()
         if not name.startswith("_") and inspect.isfunction(value) and value.__module__ == fr.__name__
     ]
-    assert len(public_functions) == 135
-    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
+    assert len(public_functions) == 137
+    assert tuple(public_functions[116:]) == (*_RETAINED_FUNCTIONS_V05, *_TEMPORAL_FUNCTIONS_V03)
     preflight = PREFLIGHT_PATH.read_text(encoding="utf-8")
     expected_rows = re.findall(r"^\|\s*(\d+)\s*\|\s*D1\s*\|\s*`([^`]+)`\s*\|$", preflight, re.MULTILINE)
     assert len(expected_rows) == 74
@@ -2247,7 +2268,7 @@ def test_private_g2d_finalize_pair_and_validation_hot_path_v02(
             row[1] for row in fr.IDENTITY_PROFILE_ROWS_V02 if row[0] is cls
         )
         assert rebuilder(value) == getattr(value, identity_field)
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 137
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
@@ -2451,7 +2472,7 @@ def test_private_g2d_source_topology_canonical_cache_v02(
     assert fr._TOPOLOGY_CONSTRUCTION_SUCCESS_CACHE_MAX_V02 == 16
     assert fr._TOPOLOGY_PARTS_SUCCESS_CACHE_MAX_V02 == 32
     assert fr._RETAINED_BASE_REPORTS_SUCCESS_CACHE_MAX_V02 == 32
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 137
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
@@ -2645,9 +2666,9 @@ def test_private_g2d_root_result_structural_evidence_partition_v02() -> None:
             evidence_refs=aggregated_evidence,
         )
 
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
-    assert len(fr.G2D_TYPES_V02) == 28
-    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 137
+    assert len(fr.G2D_TYPES_V02) == 29
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == (*_RETAINED_TYPES_V05, "FractalCurrentTemporalBindingV01")
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert len(fr.FAILURE_STAGES) == 30
@@ -2751,9 +2772,9 @@ def test_d1_import_and_zero_operation_boundary() -> None:
     source = MODULE_PATH.read_text(encoding="utf-8")
     for forbidden in ("FinalOutput(", "DRS write", "provider_call(", "network_call(", "connector_call("):
         assert forbidden not in source
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 137
     assert fr.D1_MODULE_PUBLIC_FUNCTION_COUNT == 74
-    assert fr.TOTAL_G2D_TYPE_COUNT == 28
+    assert fr.TOTAL_G2D_TYPE_COUNT == 29
     assert fr.SCHEMA_DEFINITION_COUNT == 18
 
 
@@ -4130,6 +4151,10 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
         "evaluate_route_eligibility_to_topology_transition_v02": "(*, source_context: 'FractalRuntimeSourceContextV02', topology: 'RuntimeExecutionTopologyV02', transition_registry: 'TransitionRegistryV01') -> 'TransitionDecisionV01'",
     }
     assert set(signatures) == set(expected)
+    signatures["build_fractal_runtime_source_context_v02"] = signatures["build_fractal_runtime_source_context_v02"].replace(
+        ") -> ", ", current_temporal_binding: 'FractalCurrentTemporalBindingV01 | None' = None"
+        ", current_temporal_verification: 'object' = None"
+        ", current_observed_work_context: 'RuntimeObservedWorkContextV02 | None' = None) -> ")
     for name, signature in signatures.items():
         assert str(inspect.signature(getattr(fr, name))) == signature
     public_functions = tuple(
@@ -4137,8 +4162,8 @@ def test_d2_surface_staging_and_import_boundaries() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 135
-    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
+    assert len(public_functions) == 137
+    assert tuple(public_functions[116:]) == (*_RETAINED_FUNCTIONS_V05, *_TEMPORAL_FUNCTIONS_V03)
     assert not callable(getattr(fr, "execute_fractal_runtime_v02", None))
     assert callable(getattr(fr, "build_fractal_runtime_execution_bundle_v02", None))
     module_source = MODULE_PATH.read_text(encoding="utf-8")
@@ -4195,6 +4220,90 @@ def _d3_budget_successor(
         paired_cell_budget=paired_cell_budget,
         child_result=None,
     )
+
+
+def test_d4_adjacent_prefix_indexes_public_and_state_controls_v04():
+    import sys
+    import json
+
+    source = _d2_g2c_family("full_fractal")["source"]
+    state = fr._d4_initialize_runtime_state_v02(source)
+    root = state["cell_contexts"][state["topology"].root_cell_id]
+    initial, node = root["initial_queues"][0], root["nodes"][0]
+    budget = next(item for item in state["budgets"] if item.budget_id == initial.cell_budget_id)
+    scans = []
+
+    def observe(code, offset):
+        frame = sys._getframe(1)
+        data = frame.f_locals
+        scans.append((data["frontier"], len(data["settled_queue_entry_log"]),
+                      len(data["settled_budget_log"]), frame.f_back.f_code.co_name))
+
+    def environment():
+        return dict(source=state["source_context"], topology=state["topology"],
+            registry=state["transition_registry"], budget_log=state["budgets"],
+            queue_log=state["queue_entries"], artifact_log=state["queue_artifacts"],
+            cell_inputs=state["cell_inputs"], scope_projections=state["scope_projections"],
+            revise_observations=state["revise_observations"],
+            backpressure_states=state["backpressure_states"],
+            validation_reports=state["prefix_reports"])
+
+    args = dict(source_artifact=root["initial_artifacts"][0], node=node,
+        current_entry=initial, cell_input=root["cell_input"],
+        cell_budget=budget, global_budget=budget)
+    tool = next(i for i in range(6) if sys.monitoring.get_tool(i) is None)
+    code = fr._d3_validate_settled_runtime_prefix_v02.__code__
+    sys.monitoring.use_tool_id(tool, "d4_adjacent_prefix_control_v04")
+    sys.monitoring.register_callback(tool, sys.monitoring.events.PY_START, observe)
+    sys.monitoring.set_local_events(tool, code, sys.monitoring.events.PY_START)
+    reasons = {}
+    try:
+        before = len(scans)
+        positive = _d3_eval(environment(), **args)
+        assert isinstance(positive, TransitionDecisionV01)
+        assert len(scans) == before + 1
+        before = len(scans)
+        assert _d3_eval(environment(), **dict(args, current_entry=replace(initial))) == positive
+        assert len(scans) == before + 1
+        with pytest.raises(ValueError) as error:
+            _d3_eval(environment(), **dict(args, current_entry=replace(initial, scope_ref="scope:foreign")))
+        reasons["current_scope"] = str(error.value)
+        assert _d3_eval(environment(), **dict(args, dependencies=(initial,))) is None
+        reasons["dependencies"] = "NO_TRANSITION_DECISION"
+        changed_source = _d2_g2c_family("memory_informed")["source"]
+        with pytest.raises(ValueError) as error:
+            _d3_eval(dict(environment(), source=changed_source), **args)
+        reasons["foreign_valid_source"] = str(error.value)
+        with pytest.raises(ValueError) as error:
+            fr._d4_indexes_v02(state, frontier="NOT_A_FRONTIER")
+        reasons["frontier"] = str(error.value)
+        assert _d3_eval(environment(), **args) == positive
+
+        before = len(scans)
+        dependencies = fr._d4_dependencies_v02(state, initial)
+        terminal, _ = fr._d4_complete_local_node_v02(state, initial=initial,
+            node=node, cell_input=root["cell_input"], dependencies=dependencies)
+        node_scans = scans[before:]
+        assert terminal.state == "COMPLETED"
+        # Only terminal evaluation needs another lookup; advance and projection
+        # retain their own scans of changing queue/budget prefixes.
+        assert sum(row[3] == "_evaluate_fractal_runtime_state_transition_from_prefix_v02"
+                   for row in node_scans) == 1
+        assert "QUEUE_ADVANCE" in {row[0] for row in node_scans}
+        assert len({row[1:3] for row in node_scans}) > 3
+        with pytest.raises(ValueError) as error:
+            _d3_eval(environment(), **args)
+        reasons["previous_current_on_advanced_prefix"] = str(error.value)
+        changed = environment()
+        changed["budget_log"] = state["budgets"][:-1]
+        with pytest.raises(ValueError) as error:
+            _d3_eval(changed, **args)
+        reasons["advanced_queue_missing_budget"] = str(error.value)
+        assert fr._d4_indexes_v02(state)["latest_by_key"][(terminal.cell_id, terminal.node_id)] == terminal
+        print("PREFIX_PUBLIC_CONTROLS=" + json.dumps(dict(reasons=reasons, node_scans=node_scans)))
+    finally:
+        sys.monitoring.set_local_events(tool, code, 0)
+        sys.monitoring.free_tool_id(tool)
 
 
 def _d3_prefix_kwargs(
@@ -6057,7 +6166,9 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
         expected_signatures["evaluate_fractal_runtime_state_transition_v02"].replace(
             ") -> ",
             ", retained_consumption: 'FractalRetainedWorkConsumptionV01 | None' = None"
-            ", retained_prefix: 'FractalRetainedWorkPrefixV01 | None' = None) -> ",
+            ", retained_prefix: 'FractalRetainedWorkPrefixV01 | None' = None"
+            ", temporal_binding: 'FractalCurrentTemporalBindingV01 | None' = None"
+            ", temporal_verification: 'object' = None) -> ",
         )
     )
     for name, signature in expected_signatures.items():
@@ -6067,10 +6178,10 @@ def test_d3_exact_public_surface_and_preserved_geometry() -> None:
         for name, value in vars(fr).items()
         if inspect.isfunction(value) and value.__module__ == fr.__name__ and not name.startswith("_")
     )
-    assert len(public_functions) == 135
-    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
-    assert len(fr.G2D_TYPES_V02) == 28
-    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
+    assert len(public_functions) == 137
+    assert tuple(public_functions[116:]) == (*_RETAINED_FUNCTIONS_V05, *_TEMPORAL_FUNCTIONS_V03)
+    assert len(fr.G2D_TYPES_V02) == 29
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == (*_RETAINED_TYPES_V05, "FractalCurrentTemporalBindingV01")
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
@@ -6952,6 +7063,100 @@ def test_d3_profile_d_contextual_child_t06_t08_micro(
     assert terminal.observed_evidence_refs == validating.observed_evidence_refs
     assert terminal.advisory_refs == validating.advisory_refs
     assert _d3_indexes(env) == final_indexes
+
+
+def test_cell_prefix_cost_context_bound_reuse_v03(
+    d3_profile_d_contextual_micro_bundle: dict[str, object],
+) -> None:
+    bundle = d3_profile_d_contextual_micro_bundle
+    env = bundle["env"]
+    child_input = bundle["child_input"]
+    root_input = env["cell_inputs"][0]
+    baseline = _d3_indexes(env)
+    artifacts_before = tuple(
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+        for item in env["artifact_log"]
+    )
+    equivalent = dict(env)
+    equivalent["source"] = replace(env["source"])
+    equivalent["cell_inputs"] = tuple(replace(item) for item in env["cell_inputs"])
+    assert equivalent["source"] is not env["source"]
+    assert equivalent["cell_inputs"][1] is not child_input
+    assert _d3_indexes(equivalent) == baseline
+
+    reasons: dict[str, str] = {}
+
+    def reject(label: str, callback: object) -> None:
+        assert callable(callback)
+        with pytest.raises(ValueError) as error:
+            callback()
+        reasons[label] = str(error.value)
+        assert reasons[label]
+
+    missing_child = dict(env, cell_inputs=(root_input,))
+    reject("missing_child_after_positive", lambda: _d3_indexes(missing_child))
+    changed_input = _seal(replace(
+        child_input,
+        evidence_refs=tuple(
+            item for item in child_input.evidence_refs
+            if item != bundle["activation_parent_id"]
+        ),
+    ))
+    assert changed_input.cell_input_id != child_input.cell_input_id
+    assert fr.validate_fractal_cell_input_v02(changed_input).status == "PASS"
+    changed_env = dict(env, cell_inputs=(root_input, changed_input))
+    reject("coherent_child_evidence_after_positive", lambda: _d3_indexes(changed_env))
+
+    policy = _seal(replace(
+        env["source"].runtime_policy,
+        permitted_child_scope_refs=(
+            *env["source"].runtime_policy.permitted_child_scope_refs,
+            "scope:cell-prefix-cost-foreign-v03",
+        ),
+    ))
+    assert fr.validate_fractal_runtime_policy_v02(policy).status == "PASS"
+    changed_source = dict(env, source=replace(env["source"], runtime_policy=policy))
+    reject("coherent_source_policy_binding", lambda: _d3_indexes(changed_source))
+
+    def omission(entry: fr.FractalCellQueueEntryV02, indexes: dict[str, object]) -> int | None:
+        return fr._d3_profile_d_omission_index_v02(
+            queue_entry=entry, source_context=env["source"], topology=env["topology"],
+            indexes=indexes, settled_budget_log=env["budget_log"],
+            settled_queue_entry_log=env["queue_log"], settled_cell_inputs=env["cell_inputs"],
+            settled_scope_projections=env["scope_projections"], observed_work_context=None,
+            settled_revise_observations=env["revise_observations"],
+        )
+
+    assert type(omission(bundle["validating"], baseline)) is int
+    for label, changed in (
+        ("coherent_wrong_parent", {"parent_cell_id": child_input.cell_id}),
+        ("coherent_predecessor", {"predecessor_queue_entry_id": bundle["ready"].queue_entry_id}),
+        ("coherent_snapshot", {"snapshot_sequence": bundle["validating"].snapshot_sequence + 1}),
+    ):
+        entry = _d3_reseal_profile_d_queue_entry_v036(bundle["validating"], **changed)
+        assert entry.queue_entry_id != bundle["validating"].queue_entry_id
+        assert fr.validate_fractal_cell_queue_entry_v02(entry).status == "PASS"
+        reject(label, lambda: omission(entry, baseline))
+    foreign_indexes = dict(baseline, artifact_by_id=dict(baseline["artifact_by_id"]))
+    foreign_indexes["artifact_by_id"][bundle["activation_parent_id"]] = bundle["initial_artifact"]
+    reject("foreign_parent_artifact", lambda: omission(bundle["validating"], foreign_indexes))
+    assert type(omission(bundle["validating"], baseline)) is int
+
+    # FINISH_NODE budgets are real, but their T06 queue record is not appended yet.
+    pending = dict(env, queue_log=env["queue_log"][:-2], artifact_log=env["artifact_log"][:-2])
+    pending["validation_reports"] = _d3_retained_reports(env, pending["queue_log"])
+    pending_indexes = _d3_indexes(pending, frontier="QUEUE_ADVANCE")
+    assert len(pending_indexes["queue_by_id"]) == len(baseline["queue_by_id"]) - 2
+    reject("same_prefix_wrong_frontier", lambda: _d3_indexes(pending, frontier="COMPLETED"))
+    assert reasons["same_prefix_wrong_frontier"] == "g2d_budget_event_context_invalid"
+    assert _d3_indexes(pending, frontier="QUEUE_ADVANCE") == pending_indexes
+    assert _d3_indexes(env) == baseline
+    assert artifacts_before == tuple(
+        canonical_json_bytes_v01(kernel_artifact_to_plain_dict_v01(item))
+        for item in env["artifact_log"]
+    )
+    assert "validated_input_families" not in baseline
+    print("CELL_PREFIX_CONTEXT_CONTROLS=" + json.dumps(reasons, sort_keys=True))
 
 
 def test_d3_profile_d_contextual_mutation_matrix_micro(
@@ -9772,7 +9977,7 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
     assert public_functions[:110] == historical_names
     assert public_functions[90:110] == _D4_PUBLIC_FUNCTION_NAMES_V02
     assert public_functions[110:116] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
-    assert public_functions[116:] == _RETAINED_FUNCTIONS_V05
+    assert public_functions[116:] == (*_RETAINED_FUNCTIONS_V05, *_TEMPORAL_FUNCTIONS_V03)
     module_tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     actual = {
         node.name: node
@@ -9829,7 +10034,7 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
         )
     package = importlib.import_module("hedgehog.kernel")
     g2d_names = tuple(item.__name__ for item in fr.G2D_TYPES_V02) + public_functions
-    assert len(g2d_names) == 163 and len(set(g2d_names)) == 163
+    assert len(g2d_names) == 166 and len(set(g2d_names)) == 166
     assert fr.__all__ == g2d_names
     package_names = tuple(item.__name__ for item in fr.G2D_TYPES_V02[:21]) + public_functions[:116]
     assert len(package_names) == 137 and len(set(package_names)) == 137
@@ -9839,9 +10044,11 @@ def test_d4_exact_public_surface_and_facade_v02() -> None:
         assert getattr(package, name) is getattr(transition_registry, name)
     assert len(set((*package_names, *_D4_TRANSITION_FUNCTION_NAMES_V02))) == 143
     assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
-    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 141
-    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 143
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 137
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 143
+    assert package.FractalRuntimeTemporalContextV02 is transition_registry.FractalRuntimeTemporalContextV02
+    assert len(set((*package_names, *_D4_TRANSITION_FUNCTION_NAMES_V02, 'FractalRuntimeTemporalContextV02'))) == 144
+    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 144
 
 
 def test_d4_revise_retry_and_no_progress_v02(
@@ -11257,8 +11464,8 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
     assert isinstance(context, fr.RuntimeObservedWorkContextV02)
     assert isinstance(baseline, fr.FractalRuntimeExecutionBundleV02)
     assert baseline.observed_work_context is None
-    assert len(fr.G2D_TYPES_V02) == 28
-    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == _RETAINED_TYPES_V05
+    assert len(fr.G2D_TYPES_V02) == 29
+    assert tuple(t.__name__ for t in fr.G2D_TYPES_V02[21:]) == (*_RETAINED_TYPES_V05, "FractalCurrentTemporalBindingV01")
     assert len(fr.SERIALIZED_G2D_TYPES_V02) == 18
     assert len(fr.RUNTIME_ONLY_G2D_TYPES_V02) == 3
     assert fr.RUNTIME_ONLY_G2D_TYPES_V02[-1] is fr.RuntimeObservedWorkContextV02
@@ -11273,8 +11480,8 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
         and inspect.isfunction(value)
         and value.__module__ == fr.__name__
     )
-    assert len(public_functions) == 135
-    assert tuple(public_functions[116:]) == _RETAINED_FUNCTIONS_V05
+    assert len(public_functions) == 137
+    assert tuple(public_functions[116:]) == (*_RETAINED_FUNCTIONS_V05, *_TEMPORAL_FUNCTIONS_V03)
     assert public_functions[110:116] == _E4C001_PUBLIC_FUNCTION_NAMES_V02
     for name in _E4C001_CORRECTED_SIGNATURE_NAMES_V02:
         parameter = inspect.signature(getattr(fr, name)).parameters["observed_work_context"]
@@ -11289,9 +11496,9 @@ def test_e4c001_v03_runtime_observed_work_context_surface_geometry_schema_and_fa
     ):
         assert getattr(package, name) is getattr(fr, name)
     assert package.__all__ == _HISTORICAL_KERNEL_DUNDER_ALL_V02
-    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 135
-    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 141
-    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 143
+    assert fr.FRACTAL_RUNTIME_MODULE_PUBLIC_FUNCTION_COUNT == 137
+    assert fr.TOTAL_G2D_PUBLIC_FUNCTION_COUNT == 143
+    assert fr.DIRECT_PACKAGE_G2D_ATTRIBUTE_COUNT == 144
     assert len(fr.PUBLIC_G2D_REASON_CODES) == 220
     assert len(fr.VALIDATION_TARGETS) == 35
     assert fr.VALIDATION_TARGETS[-1] == (
@@ -13636,3 +13843,126 @@ def test_d5_runner_main_and_json_projection_contract_v02(
         == ("g2d5_report_invalid",)
         for item in coherent
     )
+def test_validation_cost_projection_isolation_v01():
+    policy = fr.build_fractal_runtime_policy_v02(
+        required_downstream_capability_ids=("capability:source:semantic",),
+        permitted_child_scope_refs=(),
+    )
+    assert fr.validate_fractal_runtime_policy_v02(policy).status == "PASS"
+    equivalent = replace(policy)
+    assert equivalent is not policy and fr.validate_fractal_runtime_policy_v02(equivalent).status == "PASS"
+    material = {"items": [policy, policy, equivalent], "nested": {"value": [1]}}
+    first = fr._retained_plain_v01(material)
+    second = fr._retained_plain_v01(material)
+    assert first == second and first["items"][0] == first["items"][1]
+    first["items"][0]["forbidden_claims"].append("OUTPUT_ONLY_MUTATION")
+    assert first["items"][1] == second["items"][1]
+    assert fr._retained_plain_v01(material) == second
+    material["nested"]["value"].append(2)
+    assert fr._retained_plain_v01(material)["nested"]["value"] == [1, 2]
+    invalid = replace(policy, max_depth=-1)
+    assert fr.validate_fractal_runtime_policy_v02(invalid).status != "PASS"
+    assert fr.validate_fractal_runtime_policy_v02(policy).status == "PASS"
+
+
+def test_validation_cost_input_edge_guard_v01():
+    # This is an input-stability unit, not a fabricated retained-prefix PASS.
+    policy = fr.build_fractal_runtime_policy_v02(
+        required_downstream_capability_ids=("capability:source:semantic",),
+        permitted_child_scope_refs=(),
+    )
+    report = fr.validate_fractal_runtime_policy_v02(policy)
+    assert report.status == "PASS"
+    value = {"policy": policy, "proposal": {"fields": [1, 2]}}
+    guard = fr._RetainedCompleteValidationV01(value)
+    assert not guard.unchanged(value)
+    guard.reports = (report,)
+    assert guard.unchanged(value)
+    assert not guard.unchanged(dict(value))
+    value["proposal"]["fields"].append(3)
+    assert not guard.unchanged(value)
+    value["proposal"]["fields"].pop()
+    assert guard.unchanged(value)
+    value["policy"] = replace(policy)
+    assert not guard.unchanged(value)
+    assert fr.validate_fractal_runtime_policy_v02(value["policy"]).status == "PASS"
+
+
+def test_validation_cost_public_rejection_is_not_cached_v01():
+    for value in (None, {}, {"temporal_binding": {"evaluation_time": 123}}):
+        prefix = fr.validate_fractal_retained_work_prefix_v01(value)
+        complete = fr.validate_fractal_retained_work_execution_bundle_v01(value)
+        assert prefix.status != "PASS" and complete.status != "PASS"
+        assert fr.validate_fractal_retained_work_prefix_v01(value) == prefix
+        assert fr.validate_fractal_retained_work_execution_bundle_v01(value) == complete
+
+
+def test_producer_cost_nested_origin_guard_v02():
+    from dataclasses import dataclass
+
+    @dataclass(frozen=True)
+    class Edges:
+        temporal_verification: object
+        nested: object
+
+    # Only guard traversal is exercised here, never origin authentication.
+    pair = (object(), object())
+    nested = Edges(tuple(list(pair)), [1])
+    value = Edges(pair, nested)
+    guard = fr._RetainedCompleteValidationV01(value)
+    assert guard.supported
+    nested.nested.append(2)
+    assert not guard.unchanged(value)
+    foreign = Edges(pair, Edges((object(), object()), [1]))
+    unsupported = fr._RetainedCompleteValidationV01(foreign)
+    assert not unsupported.supported
+    assert unsupported.unsupported_path == 'prefix.nested.temporal_verification'
+    assert unsupported.unsupported_type == 'distinct_runtime_verification'
+    unknown = fr._RetainedCompleteValidationV01(Edges(pair, object()))
+    assert not unknown.supported and unknown.unsupported_path == 'prefix.nested'
+
+
+def test_D4_capture_scope_refusal_cleanup_and_independent_use_v09():
+    import sys
+    from tests import test_work_composition_v01 as donor
+    from hedgehog import work_execution_host_v01 as hosts
+
+    prepared, _ = donor.native_e_packet('transaction:D4:scope-cleanup:v09')
+    trusted = donor.e_donor.TemporalCountingSourceV03(donor.mocks.TrustedMockWorkSourceV01(
+        prepared.observations, prepared.bridge, donor.e_donor._E3_TIME + 35,
+        'g2e_e3_trusted_ceiling', 'evaluation_context:g2e:e3:g2a'))
+    host = donor.runner.host_for_prepared_action_v01(prepared, trusted)
+    capture = hosts.capture_current_action_source_v01(host,
+        packet_id=prepared.root_bound.packet_identity.packet_id, expected_revision=host.revision,
+        evaluation_time=donor.e_donor._E3_TIME + 35, evaluation_time_source='g2e_e3_trusted_ceiling',
+        evaluation_context_id='evaluation_context:g2e:e3:g2a')
+    reads, effects = trusted.reads, donor.mocks.observed_mock_calls_v01()
+    calls = []
+    code = hosts._capture_sources_valid_v01.__code__
+    tool = next(i for i in range(6) if sys.monitoring.get_tool(i) is None)
+    sys.monitoring.use_tool_id(tool, 'D4_scope_cleanup_v09')
+    sys.monitoring.register_callback(tool, sys.monitoring.events.PY_START,
+        lambda code, offset: calls.append(code.co_name))
+    sys.monitoring.set_local_events(tool, code, sys.monitoring.events.PY_START)
+    try:
+        with hosts._capture_validation_scope_v06():
+            scope = hosts._CAPTURE_VALIDATION_SCOPE_V06.get()
+            assert hosts.validate_retained_action_source_capture_v01(host, capture, require_current=True)
+            assert hosts.validate_retained_action_source_capture_v01(host, capture, require_current=True)
+            assert len(calls) == 1 and scope.entries
+            assert fr.validate_fractal_retained_work_execution_bundle_v01(None).status == 'FAIL_CLOSED'
+            assert not scope.entries
+            assert hosts.validate_retained_action_source_capture_v01(host, capture, require_current=True)
+            assert len(calls) == 2
+            with pytest.raises(ValueError, match='^g2d_cell_input_invalid$'):
+                fr._d4_execute_cell_v02({'topology': None}, {})
+            assert not scope.entries
+            assert hosts.validate_retained_action_source_capture_v01(host, capture, require_current=True)
+            assert len(calls) == 3
+        assert hosts._CAPTURE_VALIDATION_SCOPE_V06.get() is None
+        assert hosts.validate_retained_action_source_capture_v01(host, capture, require_current=True)
+        assert len(calls) == 4
+        assert trusted.reads == reads and donor.mocks.observed_mock_calls_v01() == effects
+    finally:
+        sys.monitoring.set_local_events(tool, code, 0)
+        sys.monitoring.free_tool_id(tool)

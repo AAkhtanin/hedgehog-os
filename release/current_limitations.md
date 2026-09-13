@@ -1,5 +1,15 @@
 # Current Limitations
 
+## Testflix V11 Boundaries
+
+Owner landing and independent final acceptance remain pending. The original
+three-file projection repair is verified; the prepared script is not an
+automatic owner apply or a self-awarded acceptance.
+Historical V09/V10 receipts are not fresh common-suite executions. Living's
+nine registrations are evidence only; the base completion and seam JSON files
+remain frozen. LLM outputs remain untrusted proposals; real external effects
+in Testflix are mocked. No production or security certification is claimed.
+
 ## Bounded Common Action and Local Reuse: Current Admission Proposal
 
 The [implementation checkpoint](../docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy

@@ -2839,6 +2839,7 @@ def _e3_manifest_source_family(
     bundle: g2d.FractalRuntimeExecutionBundleV02 | None = None,
     runtime_seed_projection: g2e.KernelArtifactV01 | None = None,
     runtime_seed_projections: tuple[g2e.KernelArtifactV01, ...] = (),
+    observed_time_utc: str | None = None,
 ) -> dict[str, object]:
     if runtime_seed_projection is not None and runtime_seed_projections:
         raise ValueError("runtime projection family is ambiguous")
@@ -2884,6 +2885,8 @@ def _e3_manifest_source_family(
         transaction_id=transaction_id,
         payload=observed_payload,
         parent_refs=(changed.artifact_id,),
+        **({"time_envelope": {**kernel_artifact_to_plain_dict_v01(changed)["time_envelope"],
+            "pt_created_at": observed_time_utc, "et_observed_at": observed_time_utc}} if observed_time_utc is not None else {}),
     )
     observed = (observed_changed, *baseline[1:])
     replay_edges = (
@@ -2947,6 +2950,9 @@ def _e3_delta_family(
     target_roles: tuple[str, ...] = ("ordinary",),
     runtime_seed_projection: g2e.KernelArtifactV01 | None = None,
     runtime_seed_projections: tuple[g2e.KernelArtifactV01, ...] = (),
+    observed_time_utc: str | None = None,
+    current_source_host=None,
+    current_source_capture=None,
 ) -> dict[str, object]:
     bundle = baseline_fixture["bundle"]
     g2a = baseline_fixture["g2a"]
@@ -2964,6 +2970,7 @@ def _e3_delta_family(
         bundle=bundle,
         runtime_seed_projection=runtime_seed_projection,
         runtime_seed_projections=runtime_seed_projections,
+        observed_time_utc=observed_time_utc,
     )
     baseline = source_rows["baseline"]
     observed = source_rows["observed"]
@@ -3064,7 +3071,7 @@ def _e3_delta_family(
         prior_value_sha256=hashlib.sha256(canonical_json_bytes_v01("OLD")).hexdigest(),
         observed_value_sha256=hashlib.sha256(canonical_json_bytes_v01("NEW")).hexdigest(),
         change_class="FIELD_VALUE_CHANGE",
-        observed_at_utc=_E3_UTC,
+        observed_at_utc=observed_time_utc or _E3_UTC,
         trace_refs=("trace:g2e:e3:changed-field",),
     )
     changed_artifact = g2e.build_changed_artifact_binding_v01(
@@ -3078,7 +3085,7 @@ def _e3_delta_family(
         baseline_dependency_fingerprint=before,
         observed_dependency_fingerprint=after,
         change_class="ARTIFACT_SUCCESSOR",
-        observed_at_utc=_E3_UTC,
+        observed_at_utc=observed_time_utc or _E3_UTC,
         trace_refs=("trace:g2e:e3:changed-artifact",),
     )
     delta = g2e.build_world_state_delta_v01(
@@ -3090,7 +3097,7 @@ def _e3_delta_family(
         baseline_report_id=bundle.runtime_report.report_id,
         baseline_graph_id=graph.graph_id,
         baseline_graph_version=graph.graph_version,
-        observed_at_utc=_E3_UTC,
+        observed_at_utc=observed_time_utc or _E3_UTC,
         valid_from_utc=_E3_VALID_FROM_UTC,
         valid_to_utc=_E3_VALID_TO_UTC,
         baseline_policy_version=policy,
@@ -3140,6 +3147,8 @@ def _e3_delta_family(
         root_kernel=source_family["root_kernel"],
         post_vv_profile=None,
         gt_profile=None,
+        current_source_host=current_source_host,
+        current_source_capture=current_source_capture,
     )
     return {
         "baseline": baseline,
@@ -16443,6 +16452,395 @@ def retained_native_execution_v05(request):
     return case
 
 
+@pytest.fixture(scope="session")
+def later_native_temporal_inputs_v04(request):
+    from tests import test_work_composition_v01 as w
+    g2b, family, baseline = _retained_shared_baseline_v06(request)
+    started = time.monotonic()
+    _retained_phase_v06("temporal", "inputs", "START", started)
+    prepared, packet = w.native_e_packet(str(g2b["transaction_id"]))
+    current_time = _E3_TIME + 35
+    source = TemporalCountingSourceV03(w.mocks.TrustedMockWorkSourceV01(prepared.observations, prepared.bridge,
+        current_time, 'g2e_e3_trusted_ceiling', 'evaluation_context:g2e:e3:g2a'))
+    host = w.runner.host_for_prepared_action_v01(prepared, source)
+    capture = w.hosts.capture_current_action_source_v01(host,
+        packet_id=prepared.root_bound.packet_identity.packet_id, expected_revision=host.revision,
+        evaluation_time=current_time, evaluation_time_source='g2e_e3_trusted_ceiling',
+        evaluation_context_id='evaluation_context:g2e:e3:g2a')
+    invalidation = packet['invalidation']
+    kwargs = {name:getattr(invalidation, name) for name in inspect.signature(
+        w.action.build_action_invalidation_evidence_v01).parameters}
+    packet = dict(packet, registry=capture.registry, observations=capture.observations,
+        invalidation=w.action.build_action_invalidation_evidence_v01(**dict(kwargs, evaluation_time=current_time)))
+    parent = next(c for c in baseline.cell_inputs if c.parent_cell_id is None)
+    selected_id = parent.ordered_planned_child_cell_ids[0]
+    selected = next(c for c in baseline.cell_inputs if c.cell_id == selected_id)
+    seed = next(a for q,a in zip(baseline.queue_entries, baseline.queue_artifacts, strict=True)
+        if q.queue_entry_id == selected.ordered_initial_queue_entry_ids[0])
+    fixture = dict(g2a=packet, g2b=g2b, source_family=family, bundle=baseline)
+    inputs = _e3_delta_family(fixture, runtime_seed_projection=_e4_runtime_artifact_projection(seed),
+        observed_time_utc=datetime.fromtimestamp(_E3_TIME+30, timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        current_source_host=host, current_source_capture=capture)
+    assert g2e.validate_continuous_delta_source_context_v01(inputs['context']).status == 'PASS'
+    assert inputs['context'].baseline_g2d_execution_bundle is baseline
+    assert capture.evaluation_time > baseline.source_context.router_input.local_routing_snapshot.evaluation_time_epoch_seconds
+    _retained_phase_v06("temporal", "inputs", "COMPLETE", started)
+    return dict(inputs=inputs, fixture=fixture, capture=capture, host=host, source=source,
+        baseline=baseline, current_time=current_time)
+
+
+@pytest.fixture(scope="session")
+def later_native_temporal_execution_v03(later_native_temporal_inputs_v04):
+    from tests import test_work_composition_v01 as w
+    case = later_native_temporal_inputs_v04
+    inputs = case['inputs']
+    started = time.monotonic()
+    calls = w.mocks.observed_mock_calls_v01()
+    _retained_phase_v06("temporal", "public_E", "START", started)
+    result, validation = g2e.run_continuous_delta_runtime_v01(source_context=inputs['context'],
+        source_bindings=(inputs['source_binding'],), changed_field_bindings=(inputs['changed_field'],),
+        changed_artifact_bindings=(inputs['changed_artifact'],), delta=inputs['delta'],
+        dependency_edges=inputs['dependency_edges'], dependency_graph=inputs['graph'],
+        retained_profile='fractal_retained_work_v01')
+    print('TEMPORAL_E_RESULT=' + json.dumps(w.actual_evidence_plain_v03(validation)), flush=True)
+    assert result is not None and validation.status == 'PASS', validation
+    assert w.mocks.observed_mock_calls_v01() == calls
+    _retained_phase_v06("temporal", "public_E", "COMPLETE", started)
+    print('ACTUAL_TEMPORAL_E_V03=' + json.dumps(w.actual_evidence_plain_v03(dict(
+        inputs=inputs, result=result, validation=validation)), sort_keys=True), flush=True)
+    return dict(case, result=result)
+
+
+@pytest.fixture(scope='session')
+def later_temporal_plain_v04(later_native_temporal_execution_v03):
+    case = later_native_temporal_execution_v03
+    bundle = case['result'].recomputed_g2d_execution_bundle
+    for artifact in bundle.queue_artifacts:
+        envelope = kernel_artifact_to_plain_dict_v01(artifact)['time_envelope']
+        assert datetime.fromisoformat(envelope['pt_created_at']).timestamp() == case['current_time']
+        assert datetime.fromisoformat(envelope['et_observed_at']).timestamp() == case['current_time']
+    started = time.monotonic()
+    _retained_phase_v06('temporal', 'canonical_D_projection', 'START', started)
+    projection = g2d.fractal_retained_work_execution_bundle_to_plain_data_v01(bundle)
+    _retained_phase_v06('temporal', 'canonical_D_projection', 'COMPLETE', started)
+    return projection
+
+
+def test_later_native_temporal_retained_execution_v03(later_native_temporal_execution_v03, later_temporal_plain_v04):
+    case = later_native_temporal_execution_v03
+    result = case['result']
+    bundle = result.recomputed_g2d_execution_bundle
+    assert bundle.temporal_binding.evaluation_time_epoch_seconds == case['current_time']
+    stamp = datetime.fromtimestamp(case['current_time'],timezone.utc).isoformat().replace('+00:00','Z')
+    for artifact in (result.plan_proposed_artifact,result.plan_root_decision_artifact,
+        result.final_root_decision_artifact,bundle.report_artifact,*bundle.result_artifacts,
+        *bundle.retained_consumption_artifacts,*bundle.queue_artifacts):
+        envelope = kernel_artifact_to_plain_dict_v01(artifact)['time_envelope']
+        assert envelope['pt_created_at']==envelope['et_observed_at']==stamp
+    assert all(a.evaluation_time_epoch_seconds == case['current_time'] for a in bundle.retained_admissions)
+    for proposal in bundle.result_proposals:
+        envelope = proposal['time_envelope']
+        assert datetime.fromisoformat(envelope['pt_created_at']).timestamp() == case['current_time']
+        assert datetime.fromisoformat(envelope['et_observed_at']).timestamp() == case['current_time']
+    assert all(datetime.fromisoformat(v['checked_at']).timestamp() == case['current_time'] for v in bundle.post_vv_reports)
+    assert all(datetime.fromisoformat(v['created_at']).timestamp() == case['current_time'] for v in bundle.gt_advisory_reports)
+    assert bundle.retained_consumptions
+    for consumption in bundle.retained_consumptions:
+        assert consumption.consumed_result == consumption.admission.evidence.historical_cell_result
+    projection = later_temporal_plain_v04
+    assert 'temporal_verification' not in projection
+    assert projection['temporal_binding']['evaluation_time_epoch_seconds'] == case['current_time']
+    started = time.monotonic()
+    _retained_phase_v06('temporal', 'supplied_E', 'START', started)
+    assert g2e.validate_continuous_delta_execution_bundle_v01(result).status == 'PASS'
+    _retained_phase_v06('temporal', 'supplied_E', 'COMPLETE', started)
+    started = time.monotonic()
+    _retained_phase_v06('temporal', 'supplied_D', 'START', started)
+    assert g2d.validate_fractal_retained_work_execution_bundle_v01(bundle).status == 'PASS'
+    _retained_phase_v06('temporal', 'supplied_D', 'COMPLETE', started)
+
+
+def test_producer_cost_real_temporal_parity_v02(later_native_temporal_execution_v03):
+    """One actual first-child result, then independent supplied-input controls."""
+    import os
+    from contextlib import contextmanager
+    from copy import deepcopy
+    from tests import test_work_composition_v01 as w
+    directory = Path(os.environ['PERF_DIAG_DIRECTORY'])
+    directory.mkdir(parents=True, exist_ok=True)
+
+    @contextmanager
+    def phase(name):
+        start = time.monotonic()
+        with (directory/'controls.jsonl').open('a') as f:
+            f.write(json.dumps(dict(phase=name,event='START',monotonic=start))+'\n')
+        print('PARITY_PHASE_START='+name,flush=True)
+        yield
+        with (directory/'controls.jsonl').open('a') as f:
+            f.write(json.dumps(dict(phase=name,event='PASS',seconds=time.monotonic()-start))+'\n')
+        print('PARITY_PHASE_PASS='+name,flush=True)
+
+    case = later_native_temporal_execution_v03
+    result = case['result']; bundle = result.recomputed_g2d_execution_bundle
+    with phase('actual_temporal_values_and_recorded_parity'):
+        material = w.actual_evidence_plain_v03(dict(inputs=case['inputs'],result=result))
+        (directory/'actual_material.json').write_bytes(canonical_json_bytes_v01(material))
+        recorded = json.loads(Path(os.environ['PERF_RECORDED_TEMPORAL']).read_text())
+        comparison = {name:material[name] == recorded[name] for name in ('inputs','result')}
+        (directory/'canonical_comparison.json').write_text(json.dumps(comparison,sort_keys=True)+'\n')
+        assert all(comparison.values()), comparison
+        stamp = datetime.fromtimestamp(case['current_time'],timezone.utc).isoformat().replace('+00:00','Z')
+        for artifact in (result.plan_proposed_artifact,result.plan_root_decision_artifact,
+            result.final_root_decision_artifact,bundle.report_artifact,*bundle.result_artifacts,
+            *bundle.retained_consumption_artifacts,*bundle.queue_artifacts):
+            env = kernel_artifact_to_plain_dict_v01(artifact)['time_envelope']
+            assert env['pt_created_at'] == env['et_observed_at'] == stamp
+        assert all(a.evaluation_time_epoch_seconds == case['current_time'] for a in bundle.retained_admissions)
+        assert all(p['time_envelope']['pt_created_at'] == p['time_envelope']['et_observed_at'] == stamp
+            for p in bundle.result_proposals)
+        assert all(datetime.fromisoformat(p['checked_at']).timestamp() == case['current_time'] for p in bundle.post_vv_reports)
+        assert all(datetime.fromisoformat(p['created_at']).timestamp() == case['current_time'] for p in bundle.gt_advisory_reports)
+        assert bundle.retained_consumptions and result.final_root_decision_result.decision == 'ACCEPT'
+        for c in bundle.retained_consumptions:
+            assert c.consumed_result == c.admission.evidence.historical_cell_result
+            assert c.consumed_result_artifact == c.admission.evidence.historical_result_artifact
+    with phase('canonical_D_projection'):
+        projection = g2d.fractal_retained_work_execution_bundle_to_plain_data_v01(bundle)
+        original_bytes = canonical_json_bytes_v01(projection)
+        (directory/'canonical_D.json').write_bytes(original_bytes)
+        assert 'temporal_verification' not in projection
+        assert projection['temporal_binding']['evaluation_time_epoch_seconds'] == case['current_time']
+    with phase('supplied_D'):
+        assert g2d.validate_fractal_retained_work_execution_bundle_v01(bundle).status == 'PASS'
+    with phase('supplied_E'):
+        assert g2e.validate_continuous_delta_execution_bundle_v01(result).status == 'PASS'
+    with phase('equivalent_and_nested_mutation'):
+        equivalent = replace(bundle,result_proposals=deepcopy(bundle.result_proposals),
+            temporal_verification=bundle.temporal_verification)
+        assert equivalent is not bundle and equivalent.result_proposals is not bundle.result_proposals
+        assert g2d.validate_fractal_retained_work_execution_bundle_v01(equivalent).status == 'PASS'
+        equivalent.result_proposals[0]['time_envelope']['pt_created_at'] = '1900-01-01T00:00:00Z'
+        assert g2d.validate_fractal_retained_work_execution_bundle_v01(equivalent).status == 'FAIL_CLOSED'
+        assert bundle.result_proposals[0]['time_envelope']['pt_created_at'] == stamp
+    with phase('different_prefix_and_modes'):
+        prefix = g2d._retained_bundle_prefix_v01(bundle)
+        check = g2d._RetainedCompleteValidationV01(prefix)
+        check.reports = g2d._retained_validate_results_v01(prefix,complete=True)
+        assert check.unchanged(prefix) == check.supported
+        assert not check.unchanged(replace(prefix,temporal_verification=prefix.temporal_verification))
+        origin = _retained_origin_v05(bundle)
+        assert not check.unchanged(origin)
+        assert g2d.validate_fractal_retained_work_prefix_v01(origin).status == 'PASS'
+        with pytest.raises(ValueError):
+            g2d._retained_complete_results_v01(origin,check)
+    with phase('actual_capture_controls'):
+        test_later_temporal_E_historical_identity_and_capture_controls_v03(case)
+        bad = replace(bundle,temporal_verification=(case['host'],replace(case['capture'],_origin=object())))
+        assert g2d.validate_fractal_retained_work_execution_bundle_v01(bad).status == 'FAIL_CLOSED'
+        altered = replace(bundle,temporal_binding=replace(bundle.temporal_binding,
+            evaluation_time_epoch_seconds=case['current_time']+1),temporal_verification=bundle.temporal_verification)
+        assert g2d.validate_fractal_retained_work_execution_bundle_v01(altered).status == 'FAIL_CLOSED'
+    with phase('same_host_advanced_historical_last'):
+        test_later_temporal_retained_history_after_host_advance_v03(case,projection)
+
+
+def test_later_temporal_granular_public_E_path_v03(later_native_temporal_inputs_v04):
+    from tests import test_work_composition_v01 as w
+    case = later_native_temporal_inputs_v04
+    baseline = case['baseline']
+    # Legacy granular preservation keeps an already settled sibling prefix.
+    selected = tuple(c for c in baseline.cell_inputs if c.parent_cell_id is not None)[-1]
+    seed = next(a for q,a in zip(baseline.queue_entries,baseline.queue_artifacts,strict=True)
+        if q.queue_entry_id == selected.ordered_initial_queue_entry_ids[0])
+    inputs = _e3_delta_family(case['fixture'], runtime_seed_projection=_e4_runtime_artifact_projection(seed),
+        observed_time_utc=datetime.fromtimestamp(_E3_TIME+30, timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        current_source_host=case['host'], current_source_capture=case['capture'])
+    assert g2e.validate_continuous_delta_source_context_v01(inputs['context']).status == 'PASS'
+    expected_binding = g2d.build_fractal_current_temporal_binding_v01(host=case['host'], capture=case['capture'])
+    before = w.mocks.observed_mock_calls_v01()
+    started = __import__('time').monotonic()
+    result, validation = g2e.run_continuous_delta_runtime_v01(source_context=inputs['context'],
+        source_bindings=(inputs['source_binding'],), changed_field_bindings=(inputs['changed_field'],),
+        changed_artifact_bindings=(inputs['changed_artifact'],), delta=inputs['delta'],
+        dependency_edges=inputs['dependency_edges'], dependency_graph=inputs['graph'])
+    print('ACTUAL_GRANULAR_TEMPORAL_RESULT='+json.dumps(w.actual_evidence_plain_v03(validation)),flush=True)
+    assert result is not None and validation.status == 'PASS', validation
+    bundle = result.recomputed_g2d_execution_bundle
+    assert type(bundle) is g2d.FractalRuntimeExecutionBundleV02
+    assert bundle.temporal_binding == expected_binding
+    assert g2d.validate_fractal_runtime_execution_bundle_v02(bundle).status == 'PASS'
+    assert g2e.validate_continuous_delta_execution_bundle_v01(result).status == 'PASS'
+    baseline = case['baseline'];current = case['current_time']
+    for proposal in bundle.result_proposals:
+        if proposal not in baseline.result_proposals:
+            assert datetime.fromisoformat(proposal['time_envelope']['pt_created_at']).timestamp() == current
+    for artifact in bundle.queue_artifacts:
+        if artifact not in baseline.queue_artifacts:
+            envelope = kernel_artifact_to_plain_dict_v01(artifact)['time_envelope']
+            assert datetime.fromisoformat(envelope['pt_created_at']).timestamp() == current
+            assert datetime.fromisoformat(envelope['et_observed_at']).timestamp() == current
+    assert w.mocks.observed_mock_calls_v01() == before
+    print('ACTUAL_GRANULAR_TEMPORAL_E='+json.dumps(w.actual_evidence_plain_v03(dict(result=result,
+        temporal_binding=bundle.temporal_binding,validation=validation,
+        elapsed_seconds=__import__('time').monotonic()-started)),sort_keys=True),flush=True)
+
+
+def test_later_temporal_direct_D_prefix_and_admission_controls_v03(later_native_temporal_execution_v03):
+    case = later_native_temporal_execution_v03
+    bundle = case['result'].recomputed_g2d_execution_bundle
+    origin = _retained_origin_v05(bundle)
+    admission = _retained_admission_control_v05(origin, replace(origin.plan_review))
+    assert admission == bundle.retained_admissions[0] and admission is not bundle.retained_admissions[0]
+    assert admission.evaluation_time_epoch_seconds == case['current_time']
+    assert g2d.validate_fractal_retained_work_admission_v01(admission, current_prefix=origin).status == 'PASS'
+    for field, value in (
+        ('evaluation_time_epoch_seconds', case['current_time'] - 1),
+        ('temporal_binding', replace(admission.temporal_binding, evaluation_time_epoch_seconds=case['current_time'] - 1)),
+        ('temporal_binding', replace(admission.temporal_binding, host_revision=admission.temporal_binding.host_revision + 1)),
+    ):
+        changed = replace(admission, **{field:value})
+        changed = replace(changed, admission_id=g2d.rebuild_fractal_retained_work_admission_identity_v01(changed))
+        report = g2d.validate_fractal_retained_work_admission_v01(changed, current_prefix=origin)
+        assert report.status == 'FAIL_CLOSED'
+        print('TEMPORAL_DIRECT_D_REJECTION=' + json.dumps(dict(field=field, reason=report.reason_codes)), flush=True)
+    for binding, context in (
+        (replace(bundle.temporal_binding, owning_root_id='root:foreign'), bundle.temporal_verification),
+        (replace(bundle.temporal_binding, packet_id='packet:foreign'), bundle.temporal_verification),
+        (bundle.temporal_binding, None),
+        (bundle.temporal_binding, (case['host'], replace(case['capture'], _origin=object()))),
+    ):
+        report = g2d.validate_fractal_current_temporal_binding_v01(binding,
+            source_context=bundle.source_context, temporal_verification=context, require_current=True)
+        assert report.status == 'FAIL_CLOSED'
+    _retained_definition_scope_controls_v05(origin)
+
+
+def test_later_temporal_E_historical_identity_and_capture_controls_v03(later_native_temporal_execution_v03):
+    case = later_native_temporal_execution_v03
+    source = case['inputs']['context']
+    equivalent = replace(source, current_source_host=case['host'], current_source_capture=replace(case['capture']))
+    assert equivalent is not source
+    assert g2e.validate_continuous_delta_source_context_v01(equivalent).status == 'PASS'
+    assert equivalent.g2b_resolution_report.query == source.g2b_resolution_report.query
+    for changes in (
+        dict(current_source_host=None, current_source_capture=None),
+        dict(current_source_host=None),
+        dict(current_source_capture=replace(case['capture'], _origin=object())),
+        dict(current_source_capture=replace(case['capture'], evaluation_time=case['current_time']+1)),
+    ):
+        changed = replace(equivalent, **changes)
+        report = g2e.validate_continuous_delta_source_context_v01(changed)
+        assert report.status == 'FAIL_CLOSED'
+        print('TEMPORAL_E_CAPTURE_REJECTION=' + json.dumps(dict(fields=tuple(changes), reason=report.reason_codes)), flush=True)
+
+
+def test_later_temporal_future_fact_public_refusal_v03(later_native_temporal_execution_v03):
+    case = later_native_temporal_execution_v03
+    source = case['inputs']['context'];old = source.observed_source_artifacts[0]
+    plain = kernel_artifact_to_plain_dict_v01(old)
+    arguments = dict(plain,trace_refs=tuple(plain['trace_refs']),parent_refs=tuple(plain['parent_refs']))
+    equivalent = build_kernel_artifact_v01(**arguments)
+    equal_context = replace(source,observed_source_artifacts=(equivalent,*source.observed_source_artifacts[1:]))
+    assert equivalent is not old and equivalent==old
+    assert g2e.validate_continuous_delta_source_context_v01(equal_context).status=='PASS'
+    stamp = datetime.fromtimestamp(case['current_time']+1,timezone.utc).isoformat().replace('+00:00','Z')
+    changed = dict(arguments,time_envelope=dict(arguments['time_envelope'],pt_created_at=stamp,et_observed_at=stamp))
+    changed['artifact_id']='artifact:temporal:future:'+hashlib.sha256(canonical_json_bytes_v01(changed)).hexdigest()
+    future = build_kernel_artifact_v01(**changed)
+    assert not validate_kernel_artifact_v01(future)
+    report = g2e.validate_continuous_delta_source_context_v01(replace(equal_context,
+        observed_source_artifacts=(future,*source.observed_source_artifacts[1:])))
+    assert report.reason_codes==('g2e_delta_future_observation',)
+    print('TEMPORAL_CURRENT_FUTURE_REFUSAL='+json.dumps(dict(current=case['current_time'],fact=stamp,
+        reason=report.reason_codes)),flush=True)
+
+
+def _temporal_schema_validator_v03():
+    import jsonschema
+    from referencing import Registry, Resource
+    from urllib.parse import urlparse
+    directory = Path(__file__).resolve().parents[1]/'schemas'
+    schema = json.loads((directory/'fractal_runtime_v02.schema.json').read_text())
+    def retrieve_local(uri):
+        name = Path(urlparse(uri).path).name
+        path = directory/name
+        if not name.endswith('.schema.json') or not path.is_file():
+            raise ValueError('LOCAL_SCHEMA_MISSING:'+uri)
+        return Resource.from_contents(json.loads(path.read_text()))
+    registry = Registry(retrieve=retrieve_local).with_resource(schema['$id'], Resource.from_contents(schema))
+    return jsonschema.Draft202012Validator(dict(schema, **{'$ref':'#/$defs/FractalRetainedWorkExecutionBundleV01'}),
+        registry=registry)
+
+
+def test_later_temporal_retained_schema_projection_v03(later_native_temporal_execution_v03, later_temporal_plain_v04):
+    case = later_native_temporal_execution_v03
+    bundle = case['result'].recomputed_g2d_execution_bundle
+    projection = later_temporal_plain_v04
+    validator = _temporal_schema_validator_v03()
+    validator.validate(projection)
+    altered = dict(projection, temporal_verification='host is never serialized')
+    assert list(validator.iter_errors(altered))
+    changed = dict(projection, temporal_binding=dict(projection['temporal_binding'], unknown=1))
+    assert list(validator.iter_errors(changed))
+    for consumption in bundle.retained_consumptions:
+        assert consumption.consumed_result == consumption.admission.evidence.historical_cell_result
+        assert consumption.consumed_result_artifact == consumption.admission.evidence.historical_result_artifact
+
+
+
+class TemporalCountingSourceV03:
+    def __init__(self, source):
+        self.source = source
+        self.reads = 0
+
+    def read_current_v01(self):
+        self.reads += 1
+        return self.source.read_current_v01()
+
+    def advance_v01(self, **kwargs):
+        return self.source.advance_v01(**kwargs)
+
+
+def test_later_temporal_retained_history_after_host_advance_v03(later_native_temporal_execution_v03, later_temporal_plain_v04):
+    from tests import test_work_composition_v01 as w
+    case = later_native_temporal_execution_v03
+    bundle = case['result'].recomputed_g2d_execution_bundle
+    source, host, capture = case['source'], case['host'], case['capture']
+    source_context = case['inputs']['context']
+    original_bytes = canonical_json_bytes_v01(later_temporal_plain_v04)
+    assert g2e.validate_continuous_delta_source_context_v01(source_context).status == 'PASS'
+    old_binding = g2d.build_fractal_current_temporal_binding_v01(host=host, capture=capture)
+    source.advance_v01(evaluation_time=case['current_time']+1, observations=capture.observations)
+    reads_before_capture = source.reads
+    next_capture = w.hosts.capture_current_action_source_v01(host, packet_id=capture.packet_id,
+        expected_revision=host.revision, evaluation_time=case['current_time']+1,
+        evaluation_time_source=capture.evaluation_time_source, evaluation_context_id=capture.evaluation_context_id)
+    assert next_capture.host_revision > capture.host_revision
+    assert source.reads > reads_before_capture
+    before = source.reads
+    calls = w.mocks.observed_mock_calls_v01()
+    assert w.hosts.validate_retained_action_source_capture_v01(host, replace(capture))
+    assert g2e.validate_continuous_delta_source_context_v01(source_context).status == 'PASS'
+    assert g2d.validate_fractal_current_temporal_binding_v01(old_binding,
+        source_context=bundle.source_context, temporal_verification=(host,replace(capture))).status == 'PASS'
+    assert g2d.validate_fractal_current_temporal_binding_v01(old_binding,
+        source_context=bundle.source_context, temporal_verification=(host,capture), require_current=True).status == 'FAIL_CLOSED'
+    with pytest.raises(ValueError, match='^host_capture_not_current$'):
+        g2d.build_fractal_current_temporal_binding_v01(host=host, capture=capture)
+    current = g2d.build_fractal_current_temporal_binding_v01(host=host, capture=next_capture)
+    current_source = g2d.build_fractal_runtime_source_context_v02(
+        **{f.name: getattr(bundle.source_context, f.name) for f in fields(bundle.source_context)},
+        current_temporal_binding=current, current_temporal_verification=(host, next_capture),
+        current_observed_work_context=bundle.observed_work_context)
+    assert g2d.validate_fractal_current_temporal_binding_v01(current, source_context=current_source,
+        temporal_verification=(host,next_capture), require_current=True).status == 'PASS'
+    assert canonical_json_bytes_v01(g2d.fractal_retained_work_execution_bundle_to_plain_data_v01(bundle)) == original_bytes
+    assert source.reads == before and w.mocks.observed_mock_calls_v01() == calls
+    print('TEMPORAL_HISTORICAL_CAPTURE=' + json.dumps(dict(old_revision=capture.host_revision,
+        current_revision=next_capture.host_revision, live_source_delta=source.reads-before,
+        calls_unchanged=w.mocks.observed_mock_calls_v01()==calls)), flush=True)
+
+
 def _retained_origin_v05(bundle):
     """Reconstruct the actual saved RUNNING prefix, using public fields/checks."""
     consumption = bundle.retained_consumptions[0]
@@ -16469,6 +16867,7 @@ def _retained_origin_v05(bundle):
     values.update(budgets=budgets, queue_entries=queues, queue_artifacts=artifacts,
         scope_projections=scopes, cell_inputs=inputs, validation_reports=reports,
         retained_admissions=(), retained_consumptions=(), retained_consumption_artifacts=(),
+        temporal_verification=bundle.temporal_verification,
         queue_transition_decisions=bundle.transition_decisions[1:qpos + 2])
     for name in ("cell_results", "result_artifacts", "result_proposals", "post_vv_reports", "gt_advisory_reports"):
         values[name] = tuple(getattr(bundle, name)[i] for i in indexes)
@@ -16478,7 +16877,7 @@ def _retained_origin_v05(bundle):
 def _retained_admission_control_v05(prefix, review):
     cloned = g2d.build_fractal_retained_work_prefix_v01(**{
         f.name: (review if f.name == "plan_review" else getattr(prefix, f.name))
-        for f in fields(g2d.FractalRetainedWorkPrefixV01)})
+        for f in fields(g2d.FractalRetainedWorkPrefixV01)}, temporal_verification=prefix.temporal_verification)
     parent = next(c for c in cloned.cell_inputs if c.parent_cell_id is None)
     running = next(q for q in reversed(cloned.queue_entries) if q.state == "RUNNING" and q.planned_child_cell_id)
     return g2d.build_fractal_retained_work_admission_v01(evidence=cloned.retained_evidence[0],
@@ -16959,3 +17358,128 @@ def _retained_current_ordinal_control_v06(bundle):
 def test_e5_current_source_surface_without_runtime_fixture_u4():
     _assert_e5_current_source_surface_u4(ROOT)
     _assert_retained_public_surface_v05()
+def test_validation_cost_builder_and_supplied_refusal_v01():
+    from dataclasses import fields
+    kwargs = {field.name: None for field in fields(g2e.ContinuousDeltaExecutionBundleV01)}
+    supplied = g2e.ContinuousDeltaExecutionBundleV01(**kwargs)
+    # The legacy contract raises for a typed carrier with an absent root context.
+    with pytest.raises(AttributeError) as supplied_failure:
+        g2e.validate_continuous_delta_execution_bundle_v01(supplied)
+    with pytest.raises(AttributeError) as failure:
+        g2e.build_continuous_delta_execution_bundle_v01(**kwargs)
+    assert str(failure.value) == str(supplied_failure.value)
+    with pytest.raises(AttributeError) as internal_failure:
+        g2e._assemble_continuous_delta_execution_bundle_v01(**kwargs)
+    assert str(internal_failure.value) == str(supplied_failure.value)
+    report = g2e.validate_continuous_delta_execution_bundle_v01(None)
+    assert report.status != "PASS" and report.reason_codes
+    assert g2e.validate_continuous_delta_execution_bundle_v01(None) == report
+
+
+def test_current_temporal_binding_actual_capture_input_source_only_v01():
+    """Real B/C source and native Host capture, without a D/E execution fixture."""
+    from dataclasses import asdict
+    from tests import test_work_composition_v01 as w
+
+    started = time.monotonic()
+    print('CAPTURE_INPUT_PHASE=source_only_START', flush=True)
+    b = _e3_g2b_family()
+    source = _e3_g2d_source_family(b, selected_mode='full_fractal')['source']
+    source_fields = {f.name: getattr(source, f.name) for f in fields(source)}
+    prepared, _ = w.native_e_packet(str(b['transaction_id']))
+    trusted = TemporalCountingSourceV03(w.mocks.TrustedMockWorkSourceV01(
+        prepared.observations, prepared.bridge, _E3_TIME + 35,
+        'g2e_e3_trusted_ceiling', 'evaluation_context:g2e:e3:g2a'))
+    host = w.runner.host_for_prepared_action_v01(prepared, trusted)
+    calls_before_capture = w.mocks.observed_mock_calls_v01()
+    capture = w.hosts.capture_current_action_source_v01(host,
+        packet_id=prepared.root_bound.packet_identity.packet_id, expected_revision=host.revision,
+        evaluation_time=_E3_TIME + 35, evaluation_time_source='g2e_e3_trusted_ceiling',
+        evaluation_context_id='evaluation_context:g2e:e3:g2a')
+    binding = g2d.build_fractal_current_temporal_binding_v01(host=host, capture=capture)
+    bound = g2d.build_fractal_runtime_source_context_v02(**source_fields,
+        current_temporal_binding=binding, current_temporal_verification=(host, capture))
+    original_binding = asdict(binding)
+    original_registry = host.registry
+    original_observations = capture.observations
+    reads = trusted.reads
+    results = {}
+
+    def check(name, value, pair, expected, *, context=bound, current=True):
+        report = g2d.validate_fractal_current_temporal_binding_v01(value,
+            source_context=context, temporal_verification=pair, require_current=current)
+        results[name] = asdict(report)
+        assert report.status == expected, (name, report)
+        assert trusted.reads == reads
+        assert w.mocks.observed_mock_calls_v01() == calls_before_capture
+        return report
+
+    genuine = check('genuine', binding, (host, capture), 'PASS')
+    equivalent = replace(capture)
+    assert equivalent is not capture and equivalent == capture
+    assert check('equivalent', replace(binding), (host, equivalent), 'PASS') == genuine
+    check('unbound_source_positive', binding, (host, capture), 'PASS', context=source)
+    forged = replace(capture, _origin=object())
+    assert forged == capture
+    with pytest.raises(ValueError, match='^host_capture_origin$'):
+        w.hosts.validate_retained_action_source_capture_v01(host, forged, require_current=True)
+    check('forged_origin', binding, (host, forged), 'FAIL_CLOSED')
+    check('forged_origin_historical', binding, (host, forged), 'FAIL_CLOSED', current=False)
+    forged_source = replace(bound, current_temporal_binding=binding,
+        current_temporal_verification=(host, forged))
+    check('forged_saved_origin', binding, (host, capture), 'FAIL_CLOSED', context=forged_source)
+    for field, changed in (
+        ('owning_root_id', 'root:capture-input:foreign'),
+        ('packet_id', 'packet:capture-input:foreign'),
+        ('evaluation_time_epoch_seconds', binding.evaluation_time_epoch_seconds + 1),
+        ('source_revision', binding.source_revision + 1),
+        ('host_revision', binding.host_revision + 1),
+    ):
+        check('wrong_' + field, replace(binding, **{field: changed}), (host, capture), 'FAIL_CLOSED')
+    for name, value, pair in (
+        ('absent_explicit_pair', None, None),
+        ('missing_verification', binding, None),
+        ('missing_binding', None, (host, capture)),
+        ('incomplete_verification', binding, (host,)),
+    ):
+        check(name, value, pair, 'FAIL_CLOSED')
+    assert check('positive_after_refusals', binding, (host, capture), 'PASS') == genuine
+    assert g2d._retained_temporal_time_v01(bound, None, None, require_current=True) == _E3_TIME + 35
+    assert g2d._retained_temporal_time_v01(source, None, None) == _E3_TIME
+    assert trusted.reads == reads
+    print('CAPTURE_INPUT_PHASE=before_advance_COMPLETE', flush=True)
+
+    trusted.advance_v01(evaluation_time=_E3_TIME + 36, observations=capture.observations)
+    reads_before_refresh = trusted.reads
+    fresh = w.hosts.capture_current_action_source_v01(host, packet_id=capture.packet_id,
+        expected_revision=host.revision, evaluation_time=_E3_TIME + 36,
+        evaluation_time_source=capture.evaluation_time_source, evaluation_context_id=capture.evaluation_context_id)
+    assert trusted.reads > reads_before_refresh
+    assert fresh.host_revision > capture.host_revision
+    assert fresh.source_revision > capture.source_revision
+    assert fresh.capture_ordinal == capture.capture_ordinal + 1
+    reads = trusted.reads
+    assert check('old_historical_after_advance', binding, (host, replace(capture)),
+        'PASS', current=False) == genuine
+    check('old_current_after_advance', binding, (host, capture), 'FAIL_CLOSED')
+    assert g2d._retained_temporal_time_v01(bound, None, None) == _E3_TIME + 35
+    with pytest.raises(ValueError, match='^host_capture_not_current$'):
+        g2d._retained_temporal_time_v01(bound, None, None, require_current=True)
+    fresh_binding = g2d.build_fractal_current_temporal_binding_v01(host=host, capture=fresh)
+    fresh_source = g2d.build_fractal_runtime_source_context_v02(**source_fields,
+        current_temporal_binding=fresh_binding, current_temporal_verification=(host, fresh))
+    check('fresh_current_after_advance', fresh_binding, (host, replace(fresh)), 'PASS', context=fresh_source)
+    check('fresh_pair_wrong_old_source', fresh_binding, (host, fresh), 'FAIL_CLOSED')
+    assert g2d._retained_temporal_time_v01(fresh_source, None, None, require_current=True) == _E3_TIME + 36
+    assert trusted.reads == reads
+    assert asdict(binding) == original_binding
+    assert capture.observations == original_observations == fresh.observations
+    assert capture.registry == fresh.registry == host.registry == original_registry
+    assert w.mocks.observed_mock_calls_v01() == calls_before_capture
+    print('CAPTURE_INPUT_RESULT=' + json.dumps(dict(reports=results, binding=original_binding,
+        old_host_revision=capture.host_revision, fresh_host_revision=fresh.host_revision,
+        old_source_revision=capture.source_revision, fresh_source_revision=fresh.source_revision,
+        refresh_reads=reads-reads_before_refresh, historical_live_read_delta=trusted.reads-reads,
+        mock_call_delta=len(w.mocks.observed_mock_calls_v01())-len(calls_before_capture),
+        internal_inheritance_preserved=True, legacy_time_preserved=True, full_runtime_executed=False,
+        elapsed_seconds=time.monotonic()-started), sort_keys=True), flush=True)

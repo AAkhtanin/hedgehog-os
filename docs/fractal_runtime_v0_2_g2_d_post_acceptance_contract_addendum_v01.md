@@ -5431,3 +5431,111 @@ node order: cell ordinal times topology node count plus projected node index.
 Every current state-chain entry preserves that value. Historical retained
 queues retain their original ordinals; they are not rebased into current work.
 These are candidate conformance bindings, not admission or new execution laws.
+
+### T3 V03 Retained Current-Time Binding (External Candidate)
+
+This successor separates immutable historical definition/time evidence from
+the time of new retained admission and consumption. It does not rewrite the
+historical B/C/D source or bypass `_retained_field_inventory_v01`.
+
+`FractalCurrentTemporalBindingV01` is a closed immutable value with Root,
+transaction, packet ID, evaluation epoch/source/context, source revision, Host
+revision, capture ordinal, exact observation IDs and logical bridge ID. Public
+`build_fractal_current_temporal_binding_v01(host=..., capture=...)` observes no
+live source: it verifies an actual current Host capture. Public
+`validate_fractal_current_temporal_binding_v01(value, source_context=...,
+temporal_verification=(host,capture), require_current=...)` validates the actual
+historical source and the projection against that retained origin. No bare
+integer or self-computed hash supplies authenticated current time.
+
+Retained Prefix and Bundle gain optional `temporal_binding` values and a
+runtime-only `temporal_verification` init argument. Admission retains the
+serializable binding. The verification argument is not a dataclass field and
+is excluded from canonical payloads, IDs and schema. The optional binding is
+omitted entirely when absent, preserving legacy serialized keys and identities.
+The exact closed D schema adds the value definition and optional fields to
+Prefix, Bundle and Admission; Consumption carries it through Admission.
+
+Direct D consumers check Root/transaction agreement, historical <= current,
+current route/definition validity and mandatory observation intervals. New
+admission/consumption requires current retained origin. Supplied historical
+validation reconstructs semantic material without a live source read. Original
+retained result bytes/timestamps remain original; new admission/consumption and
+new result/report projections carry current context. Source definition and
+policy fields remain exact, and no current permission is inferred from them.
+
+Two public functions are appended after all 135 previous D function names;
+none is removed or reordered. Optional temporal arguments on existing owning
+builders/projectors/transition consumers preserve their absent-binding branch.
+Public-surface tests and the two existing demo count predicates are synchronized
+without changing legacy scenario membership. Execution and admission status are
+reported externally against exact source hashes, not asserted by this text.
+
+`FractalRuntimeSourceContextV02` also accepts the runtime-only init arguments
+`current_temporal_binding`, `current_temporal_verification` and
+`current_observed_work_context`. They are excluded from dataclass fields and
+canonical source projections. They associate current work with the validated
+historical observed bundle without changing its definition or TIME values.
+New queue and proposal/Post-V&V/GT timestamps use that checked current context;
+exact retained historical result material retains its original timestamps.
+
+This external implementation is incomplete at the frozen transition boundary.
+`transition_registry_v01._fractal_runtime_artifact_pair_valid_v02` requires equal
+source/target `time_envelope` values for `g2d_t01_route_eligibility_to_topology`
+and `g2d_t02_topology_to_pending`. A historical source and a genuinely later
+target cannot satisfy that equality. The candidate does not backdate the new
+target, rewrite its historical parent, or bypass the transition validator.
+The later-time execution therefore remains fail-closed; this text is not an
+accepted replacement transition law. Exact coherent public positive/negative
+witnesses and the additional protected consumer are retained externally.
+
+### T3 V04 Explicit Temporal Transition Context (External Candidate)
+
+The preceding frozen-boundary paragraph records V03, not the new V04 rule.
+`validate_fractal_runtime_transition_decision_v02` gains one optional keyword,
+`temporal_context: FractalRuntimeTemporalContextV02 | None = None`. Absence
+preserves exact legacy envelope equality and all historical identities. The
+immutable runtime-only context contains the historical route artifact and
+evaluation, captured current evaluation, packet ID, source/Host revisions,
+capture ordinal, evaluation source/context, logical bridge and observation IDs.
+It is a finite structural projection, not Host authentication or permission.
+It is not added to artifacts, retained payloads or serialized schema fields.
+The existing V03 retained binding carries the portable evidence; runtime Host
+verification remains separate. No new serialized keys are introduced by V04.
+
+T01 remains historical route to historical topology. T02 connects that topology
+to a current initial queue. T03-T12 preserve every predecessor/result/queue
+geometry check and accept only a historical or exact current source envelope
+with an exact current target. T13-T17 do the same for root-result to report;
+a retained original result is never rewritten. For an explicit context, current
+PT and ET equal the captured evaluation in canonical UTC, while CT, historical
+KT, freshness, TTL and validity interval are copied unchanged. Current time
+must be within the historical validity interval and TTL and not before the
+historical evaluation or any historical timestamp. Arbitrary later PT/ET and
+foreign CT/KT or widened validity remain invalid. All other transition guards,
+identities, authority classes and parent relationships remain unchanged.
+
+D validates the supplied retained Host origin and exact source pair before
+deriving the structural context. Current execution/admission requires current
+revision; supplied historical validation uses retained origin without live
+reads. Equivalent values do not replace authenticated origin. Registry checks
+alone cannot prove it. Direct D and both E execution paths retain these checks.
+Historical artifact reprojection receives no gratuitous current context.
+
+The 135 legacy D functions remain in order, followed by the two V03 temporal
+functions. D has 29 named types and 137 functions (166 module exports). The
+historical 143 direct package D attributes remain; the one new registry context
+type is a direct attribute, making 144. Historical star exports stay unchanged.
+The 17-rule temporal pair matrix and actual later-time D/E tests provide the
+bounded validation; their actual outcomes and source hashes are external receipts.
+
+Fresh queue production is distinct from retained prefix verification. Equality
+of a new queue value with an old queue does not establish historical origin.
+A queue projector using a bound current source produces current PT/ET even when
+the queue payload and parent geometry equal the baseline. During supplied-prefix
+verification, an exact supplied baseline artifact can instead retain its original
+envelope. The retained execution path initializes a fresh queue log, so all its
+produced queue artifacts must carry the captured production envelope; the complete
+retained-bundle validator independently checks this. The granular E path may keep
+its genuine unchanged historical prefix while newly projected successors are
+current. Retained child results remain original evidence in both cases.

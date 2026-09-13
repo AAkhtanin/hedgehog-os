@@ -1,5 +1,15 @@
 # Hedgehog OS
 
+## Testflix V11 Preparation
+
+Testflix has recorded controlled and live/captured demonstrations with mocked
+external effects. The next exact L successor is described in
+[the checkpoint](docs/testflix_v01_preflight.md#v11-admission-preparation).
+Admission preparation is not owner acceptance or production certification.
+The original reviewer archive and exact projection repair are verified. The
+prepared owner script requires independent review and manual owner invocation.
+Historical U4 and Gate evidence below keeps its original basis.
+
 ## Bounded Common Action and Local Reuse: Current Admission Proposal
 
 The [implementation checkpoint](docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy

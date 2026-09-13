@@ -1,5 +1,16 @@
 # Current Integration Seam Index
 
+## Testflix Current Registration Proposal
+
+V11 keeps the same nine bounded current registrations and frozen Gate1 base.
+Thirteen of the 31 pinned source bodies change relative to historical U4;
+Host dispatch and retained D/E producer rows receive exact current pins.
+No additional effect handle or Root authority is registered. The machine-readable
+base seam inventory remains byte-identical to L. The new registration profile
+is `TESTFLIX_TEMPORAL_IMPLEMENTATION_ADMISSION_V11`, with owner acceptance
+pending. The verified reviewer projection repair is included in the exact
+51-path proposal; the prepared owner script still requires independent review.
+
 This human-readable overlay records the R-H1B implementation-basis maintenance
 and discovery seams. Every row was `IMPLEMENTATION_IN_PROGRESS` at that
 implementation basis. The row statuses are basis evidence and are not the

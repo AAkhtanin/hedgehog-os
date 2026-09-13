@@ -736,7 +736,7 @@ def test_static_forbidden_tokens_absent(token):
 def test_static_import_boundary():
     tree = ast.parse(MODULE_PATH.read_text(encoding="utf-8"))
     imports = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)}
-    assert imports <= {"__future__", "dataclasses", "hedgehog.kernel.abi_v01", "hedgehog.kernel.integrity_replay_v01"}
+    assert imports <= {"__future__", "dataclasses", "datetime", "hedgehog.kernel.abi_v01", "hedgehog.kernel.integrity_replay_v01"}
 
 
 def test_legacy_transition_registry_vector_is_byte_stable() -> None:
@@ -1316,7 +1316,7 @@ G2D2_TRANSITION_SIGNATURES = {
     "build_fractal_runtime_transition_registry_profile_v02": "() -> 'TransitionRegistryV01'",
     "validate_fractal_runtime_transition_registry_profile_v02": "(value: 'object') -> 'tuple[str, ...]'",
     "fractal_runtime_transition_registry_profile_to_plain_dict_v02": "(value: 'TransitionRegistryV01') -> 'dict[str, object]'",
-    "validate_fractal_runtime_transition_decision_v02": "(value: 'object', *, registry: 'TransitionRegistryV01', source_artifact: 'KernelArtifactV01', target_artifact: 'KernelArtifactV01') -> 'tuple[str, ...]'",
+    "validate_fractal_runtime_transition_decision_v02": "(value: 'object', *, registry: 'TransitionRegistryV01', source_artifact: 'KernelArtifactV01', target_artifact: 'KernelArtifactV01', temporal_context: 'FractalRuntimeTemporalContextV02 | None' = None) -> 'tuple[str, ...]'",
     "fractal_runtime_transition_decision_to_plain_dict_v02": "(value: 'TransitionDecisionV01') -> 'dict[str, object]'",
     "rebuild_fractal_runtime_transition_decision_identity_v02": "(value: 'TransitionDecisionV01') -> 'str'",
 }
@@ -2100,6 +2100,59 @@ def test_g2d2_transition_decision_identity_and_substitution(rule_index: int) -> 
         rules=registry.rules[:rule_index] + (mutated_rule,) + registry.rules[rule_index + 1:],
     )
     assert transition.validate_fractal_runtime_transition_registry_profile_v02(mutated_registry)
+
+
+@pytest.mark.parametrize("rule_index", range(17))
+def test_g2d2_bound_temporal_pair_matrix_v04(rule_index: int) -> None:
+    from datetime import datetime, timezone
+    from hedgehog.kernel.abi_v01 import validate_kernel_artifact_v01
+    registry = transition.build_fractal_runtime_transition_registry_profile_v02()
+    rule = registry.rules[rule_index]
+    source, target = _g2d2_artifact_pair(rule, rule_index)
+    route, _ = _g2d2_artifact_pair(registry.rules[0], 0,
+        transaction_id=source.transaction_id, owner_root_id=source.owner_root_id)
+    historical = kernel_artifact_to_plain_dict_v01(route)['time_envelope']
+    then = int(datetime.fromisoformat(historical['pt_created_at']).timestamp())
+    now = then + 35
+    context = transition.FractalRuntimeTemporalContextV02(route, then, now, 'packet:temporal:structural',
+        1, 2, 0, 'trusted:source', 'evaluation:context', 'logical:bridge', ('observation:1',))
+    assert kernel_package.FractalRuntimeTemporalContextV02 is transition.FractalRuntimeTemporalContextV02
+    decision = _g2d2_decision(rule, registry)
+    def check(s, t, c):
+        return transition.validate_fractal_runtime_transition_decision_v02(decision,
+            registry=registry, source_artifact=s, target_artifact=t, temporal_context=c)
+    assert check(source, target, None) == ()
+    stamp = datetime.fromtimestamp(now, timezone.utc).isoformat().replace('+00:00', 'Z')
+    current_time = dict(historical, pt_created_at=stamp, et_observed_at=stamp)
+    current_target = _g2d2_rebuild_artifact(target, time_envelope=current_time)
+    assert check(source, current_target, None)
+    if rule_index == 0:
+        assert check(source, target, replace(context, historical_route_artifact=source)) == ()
+        assert check(source, current_target, context)
+        return
+    assert not validate_kernel_artifact_v01(current_target)
+    assert check(source, current_target, replace(context)) == ()
+    current_source = _g2d2_rebuild_artifact(source, time_envelope=current_time)
+    paired_target = _g2d2_rebuild_artifact(current_target,
+        parent_refs=tuple(current_source.artifact_id if p == source.artifact_id else p for p in current_target.parent_refs))
+    assert check(current_source, paired_target, context) == ()
+    for changes in (
+        dict(pt_created_at=datetime.fromtimestamp(now+1, timezone.utc).isoformat().replace('+00:00', 'Z')),
+        dict(et_observed_at=datetime.fromtimestamp(now+1, timezone.utc).isoformat().replace('+00:00', 'Z')),
+        dict(ct_session_anchor='ct:foreign'), dict(kt_asof=stamp), dict(ttl_seconds=3601),
+        dict(valid_to='2026-08-04T02:00:00+00:00'),
+    ):
+        changed = _g2d2_rebuild_artifact(current_target, time_envelope=dict(current_time, **changes))
+        assert not validate_kernel_artifact_v01(changed)
+        assert check(source, changed, context)
+    foreign_route, _ = _g2d2_artifact_pair(registry.rules[0], 0,
+        transaction_id='transaction:foreign', owner_root_id=source.owner_root_id)
+    for changed in (replace(context, current_evaluation_time=then-1),
+        replace(context, current_evaluation_time=now+1), replace(context, current_evaluation_time=then+3600),
+        replace(context, source_revision=-1), replace(context, capture_ordinal=-1),
+        replace(context, historical_route_artifact=foreign_route), replace(context, observation_ids=()),
+        replace(context, packet_id=''), {'current_evaluation_time': now}):
+        assert check(source, current_target, changed)
 
 
 def test_g2d2_ctx_only_topology_partition_and_trace_binding() -> None:

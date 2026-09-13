@@ -1160,3 +1160,60 @@ remain execution obligations. Collection, PLAN constructibility or a typed
 eligibility refusal alone cannot discharge them. Governance admission, U1
 integration, U2/U3 and complete final D/E/F acceptance remain pending until
 separately supported by actual evidence on the admitted final sources.
+
+### Atomic Current Source Capture (T3 V03 External Candidate)
+
+This narrow successor is not governance admission. The public Host already
+exposes `current_sources`; this extension adds an atomic retained observation,
+not another clock, Root or action authority.
+
+`capture_current_action_source_v01(host, *, packet_id, expected_revision,
+evaluation_time, evaluation_time_source, evaluation_context_id)` acquires the
+existing Host lock, enforces reentry/revision checks and refreshes its installed
+trusted source. The supplied evaluation triad must equal that refreshed source.
+Rollback and conflicting source revisions remain invalid. Refresh can advance
+the Host revision. A successful capture appends immutable evidence to this
+Host's retained capture sequence; it does not append a business event or invoke
+a capability, provider, Firewall executor or Root decision.
+
+`ActionSourceCaptureV01` retains the actual registry, registered Root-bound
+packet, packet-local current observations, logical bridge, evaluation triad,
+source and Host revisions, and capture ordinal. The registry and observation
+values are publicly validated. Dependency membership, freshness policy and
+provenance remain packet-bound. Changed content/evidence references are allowed
+as observations of change, not as permission to execute the old packet.
+
+`validate_retained_action_source_capture_v01(host, capture, *,
+require_current=False)` checks this Host's origin token and retained ordinal,
+then compares the complete validated capture material. Equivalent immutable
+values with the genuine retained origin are supported. A copied digest cannot
+create that origin. There is no module-global origin map or external clock
+attestation. Verification performs no installed-source read. With
+`require_current=True`, the capture must also equal the Host's current refreshed
+registry/source/revision. After Host advancement the old capture remains
+historically verifiable, but cannot authorize new current computation.
+
+Actual action dispatch still performs its independent current source refresh,
+Root/packet eligibility and designated validation before STARTED. Capture never
+replaces that boundary. Portable projections omit the runtime origin handle and
+can support pinned historical replay only, not live origin or present permission.
+The owning controls are the `test_temporal_capture_*_v03` nodes in
+`tests/test_action_packet_portability_v01.py`; their execution results belong to
+the external source-bound receipt, not to this contract text.
+
+Successful Host capture is not evidence that the complete later-time E/D
+vertical path executes. The external candidate reaches a separate frozen D
+transition time-envelope constraint, documented in the D/E addenda. Capture
+does not authorize bypassing that transition or granting action permission.
+
+### T3 V04 Capture and Transition Evidence Boundary
+
+The V03 frozen transition limit above is historical to the V04 external
+candidate. Its explicit D v0.2 temporal successor is specified in the D/E
+addenda. The Host API and retained origin law are unchanged: registry structural
+time comparison consumes only a finite projection, while D/E independently
+validate actual Host provenance and current versus historical use. Captures
+remain evidence-only and last-refresh-relative. A new consequential action
+still requires ordinary current Root/packet/Host eligibility; neither an E
+result nor a later timestamp transfers permission. No external-clock attestation,
+OS monitor, network, provider or real-adapter operation is introduced.

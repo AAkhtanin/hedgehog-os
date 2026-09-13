@@ -1,0 +1,499 @@
+{
+  "title": "Testflix",
+  "subtitle": "From model reasoning to a governed subscription lifecycle.",
+  "version": "V11",
+  "accepted_on": "2026-09-13",
+  "accepted_commit": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+  "accepted_parent": "54e32dbcc0e4d68431ec2b9428eac965f88ee47c",
+  "accepted_tree": "8f795d00b04b2604bb9d5c0fd973adaa98eb70d0",
+  "historical_commit": "268f22a7940068fd58e00e6f96dc2d13a7d71890",
+  "acceptance_scope": "SCOPED_TESTFLIX_IMPLEMENTATION_ACCEPTED_AFTER_OWNER_EXECUTION",
+  "one_sentence": "Real Gemini outputs drive a subscription choice; four independent Roots govern mock payment, entitlement and playback while current facts, consent and history stay distinct.",
+  "currency": {
+    "code": "EUR",
+    "integer_unit": "minor currency units",
+    "display_conversion": "100 minor units = EUR 1.00"
+  },
+  "roles": [
+    {
+      "id": "intent_interpreter",
+      "title": "Interpret intent",
+      "responsibility": "Express the supplied preference and priorities; identify missing required evidence.",
+      "cannot": "Create payment authority."
+    },
+    {
+      "id": "provider_terms_analyst",
+      "title": "Read the terms",
+      "responsibility": "Project each supplied plan and determine eligibility against the explicit price ceiling.",
+      "cannot": "Change catalogue facts or the budget."
+    },
+    {
+      "id": "client_plan_selector",
+      "title": "Propose a plan",
+      "responsibility": "Consume intent and terms, select an eligible plan and explain its trade-offs.",
+      "cannot": "Execute its own proposal."
+    },
+    {
+      "id": "contract_reviewer",
+      "title": "Challenge the proposal",
+      "responsibility": "Check the selection against the same request and upstream evidence; disclose blocking conflicts.",
+      "cannot": "Override an independent Root decision."
+    }
+  ],
+  "roots": [
+    {
+      "id": "root:testflix:user",
+      "name": "UserRoot",
+      "decision": "Accept the purchase selection for the user."
+    },
+    {
+      "id": "root:testflix:bank",
+      "name": "BankRoot",
+      "decision": "Review the payment action against current terms and consent."
+    },
+    {
+      "id": "root:testflix:provider",
+      "name": "ProviderRoot",
+      "decision": "Authorize entitlement issuance using the payment receipt."
+    },
+    {
+      "id": "root:testflix:device",
+      "name": "DeviceRoot",
+      "decision": "Authorize playback within the current session and device grant."
+    }
+  ],
+  "catalog": [
+    {
+      "ads": false,
+      "period_seconds": 2592000,
+      "plan_id": "plan:cd79",
+      "price_minor": 500,
+      "resolution": 720
+    },
+    {
+      "ads": true,
+      "period_seconds": 2592000,
+      "plan_id": "plan:ab31",
+      "price_minor": 600,
+      "resolution": 1080
+    },
+    {
+      "ads": false,
+      "period_seconds": 2592000,
+      "plan_id": "plan:ef62",
+      "price_minor": 900,
+      "resolution": 2160
+    }
+  ],
+  "story": [
+    {
+      "id": "P01",
+      "title": "Choose and start",
+      "summary": "AD_FREE with a EUR 6.50 ceiling selects the EUR 5.00, 720p, ad-free plan. Four Root decisions precede mock payment, entitlement, session and playback.",
+      "execution": "V09_LIVE_MAIN",
+      "evidence_ids": [
+        "main_result",
+        "main_history"
+      ]
+    },
+    {
+      "id": "P02",
+      "title": "Ask without buying again",
+      "summary": "An informational request reuses admissible stored results. It adds no model call or business effect.",
+      "execution": "V09_LIVE_MAIN",
+      "evidence_ids": [
+        "main_result",
+        "main_history"
+      ]
+    },
+    {
+      "id": "P03",
+      "title": "Stop. Start a fresh session.",
+      "summary": "The same four Hosts retain their histories. A fresh session and device authority permit playback without another payment.",
+      "execution": "V09_LIVE_MAIN",
+      "evidence_ids": [
+        "main_result",
+        "main_history"
+      ]
+    },
+    {
+      "id": "P04",
+      "title": "The price changes",
+      "summary": "A pending EUR 5.00 packet cannot execute against changed terms. Public E recomputes the affected branch. EUR 7.00 exceeds EUR 6.50 consent; an independent EUR 6.00 control passes. The paid period remains preserved.",
+      "execution": "V09_SEPARATE_CONTROLLED_PUBLIC_E",
+      "evidence_ids": [
+        "p04_700_extract",
+        "n14_600_extract",
+        "n14_600_payment",
+        "supplied_1_d",
+        "supplied_1_e",
+        "supplied_2_d",
+        "supplied_2_e"
+      ]
+    },
+    {
+      "id": "P05",
+      "title": "Expiry means expiry",
+      "summary": "At and after the exact entitlement boundary, the old right cannot authorize a new start. Historical records remain replayable.",
+      "execution": "V09_LIVE_MAIN_AND_CONTROLLED_BOUNDARY",
+      "evidence_ids": [
+        "p05_boundary",
+        "p05_after",
+        "main_replay"
+      ]
+    },
+    {
+      "id": "P06",
+      "title": "Renew with new consent",
+      "summary": "An explicit EUR 7.00 consent permits a new payment and paid period. Stop and fresh-session actions still reuse the same four Hosts. Main history finishes with exactly two payments.",
+      "execution": "V09_LIVE_MAIN",
+      "evidence_ids": [
+        "main_result",
+        "post_renewal_result",
+        "main_history"
+      ]
+    }
+  ],
+  "ab": {
+    "changed_field": "preference",
+    "ceiling_minor": 650,
+    "ad_free_plan": {
+      "ads": false,
+      "period_seconds": 2592000,
+      "plan_id": "plan:cd79",
+      "price_minor": 500,
+      "resolution": 720
+    },
+    "quality_plan": {
+      "ads": true,
+      "period_seconds": 2592000,
+      "plan_id": "plan:ab31",
+      "price_minor": 600,
+      "resolution": 1080
+    },
+    "new_attempts": [
+      19,
+      20
+    ],
+    "reused_responses": [
+      14,
+      15
+    ],
+    "new_model_calls": 2,
+    "semantic_roles_consumed": 4,
+    "independent_mock_payment_count": 1,
+    "main_payment_count_unchanged": 2,
+    "playback_state": "PLAYING",
+    "actual_wall_seconds": 290.80605420842767,
+    "captured_wall_seconds": 276.2164326244965,
+    "actual_story_seconds": 290.06561625003815,
+    "captured_story_seconds": 275.56116266641766,
+    "parity": "EXACT_EQUAL_EXCEPT_TWO_EXPLICIT_MODE_FIELDS",
+    "evidence_ids": [
+      "ab_actual",
+      "ab_captured",
+      "ab_comparison",
+      "ab_consumption",
+      "ab_checkpoint"
+    ]
+  },
+  "counts": {
+    "roots": 4,
+    "main_mock_payments": 2,
+    "main_successful_model_calls": 8,
+    "cumulative_attempts": 20,
+    "cumulative_responses": 17,
+    "cumulative_transport_failures": 3,
+    "new_v10_model_calls": 2,
+    "captured_ab_model_calls": 0,
+    "real_business_adapter_calls": 0,
+    "owner_postcommit_tests": 49,
+    "owner_postcommit_phases": 147,
+    "v11_preparation_tests": 82,
+    "v11_preparation_phases": 246,
+    "v11_process_controls": 8
+  },
+  "timings": {
+    "ab_actual_wall_seconds": 290.80605420842767,
+    "ab_captured_wall_seconds": 276.2164326244965,
+    "main_first_purchase_handle_seconds": 169.09600145742297,
+    "main_full_story_seconds": 1174.7972076656297,
+    "main_full_story_scope": "V09 purchase, information, stop/fresh session, expiry, explicit renewal, renewed stop/fresh session, sealing and replay; P04 is separate controlled evidence.",
+    "p04_700_e_seconds": 317.9907664163038,
+    "p04_600_e_seconds": 318.91036683321,
+    "warning": "Recorded executions, not a general latency SLA. The roughly five-minute A/B figures are not the full purchase-to-renewal story."
+  },
+  "real_vs_controlled": {
+    "real": [
+      "Gemini 2.5 Flash response transport",
+      "Role-specific outputs and local input binding",
+      "Public kernel and Host execution",
+      "Independent Root reviews",
+      "Captured reexecution on fresh Hosts",
+      "Hash and source-bound evidence"
+    ],
+    "controlled": [
+      "Finite catalogue",
+      "Local test clock and time observations",
+      "Bank payment effects",
+      "Provider entitlement effects",
+      "Device playback effects"
+    ],
+    "not_claimed": [
+      "A purchase from Netflix or a real bank",
+      "External time attestation",
+      "Arbitrary-domain universality",
+      "Production or security certification",
+      "Automatic renewal without explicit consent"
+    ]
+  },
+  "quotes": [
+    {
+      "text": "The upstream selection of 'plan:ab31' does not fully implement the 'QUALITY' preference because it includes ads.",
+      "role": "contract_reviewer",
+      "attempt": 13,
+      "classification": "HISTORICAL_REFUSAL_BEFORE_QUALITY_CLARIFICATION",
+      "evidence_id": "capture_response_13"
+    },
+    {
+      "text": "The explicit preference 'QUALITY' prioritizes higher resolution.",
+      "role": "client_plan_selector",
+      "attempt": 19,
+      "classification": "ACTUAL_SUCCESSFUL_QUALITY_RESPONSE",
+      "evidence_id": "capture_response_19"
+    },
+    {
+      "text": "The upstream selection correctly interpreted the 'QUALITY' preference, prioritizing resolution descending, then ads false before true, then price ascending, and finally plan ID ascending.",
+      "role": "contract_reviewer",
+      "attempt": 20,
+      "classification": "ACTUAL_SUCCESSFUL_QUALITY_RESPONSE",
+      "evidence_id": "capture_response_20"
+    }
+  ],
+  "journal": [
+    {
+      "attempt": 1,
+      "category": "main",
+      "role": "intent_interpreter",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_01",
+      "transport_seconds": 3.1421620408073068,
+      "response_sha256": "9bdb27fd046638feda8d5ddbe1207e754121896f2f8878bc77a330e69062b693"
+    },
+    {
+      "attempt": 2,
+      "category": "main",
+      "role": "intent_interpreter",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_02",
+      "transport_seconds": 3.683927374891937,
+      "response_sha256": "b3f660796e83e4184c0491abfe60b864e0ac9e5222b6e73997be04e5903157f9"
+    },
+    {
+      "attempt": 3,
+      "category": "main",
+      "role": "provider_terms_analyst",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_03",
+      "transport_seconds": 8.536673083901405,
+      "response_sha256": "8c1bd03159d1727bf242d8dd70b57a88540887eaab4361f69c5ba465714a147b"
+    },
+    {
+      "attempt": 4,
+      "category": "main",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_04",
+      "transport_seconds": 7.177526082843542,
+      "response_sha256": "b7059a8129a29d5840db89780a9e0f0a378374c6b1c9d41a9a2c3011086e876f"
+    },
+    {
+      "attempt": 5,
+      "category": "main",
+      "role": "contract_reviewer",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_05",
+      "transport_seconds": 4.588860999792814,
+      "response_sha256": "540cfeaaf1635e4d321bcf13c776ca72f9ebd27f52943be1479de6c963ecfcd7"
+    },
+    {
+      "attempt": 6,
+      "category": "main",
+      "role": "intent_interpreter",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_06",
+      "transport_seconds": 2.1199978748336434,
+      "response_sha256": "ad295a00ce7936cf2942253cdb898723492f7bd6798948a8a3bff7dbd91f64bf"
+    },
+    {
+      "attempt": 7,
+      "category": "main",
+      "role": "provider_terms_analyst",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_07",
+      "transport_seconds": 6.044629375450313,
+      "response_sha256": "d9e3133008f20070396b4b0ef1ea8a470c3450fdaecfe67028f7ea8ee82bd84a"
+    },
+    {
+      "attempt": 8,
+      "category": "main",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_08",
+      "transport_seconds": 4.367176250554621,
+      "response_sha256": "c4f27416200b2411d1dbe7230d64f68e6892e53a421cbd29b4674c0ee84c77f2"
+    },
+    {
+      "attempt": 9,
+      "category": "main",
+      "role": "contract_reviewer",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_09",
+      "transport_seconds": 5.472796207293868,
+      "response_sha256": "af44ee465fa5f9f38c1e55456563da8a8dc4ca09092f5b6172008835b96c1707"
+    },
+    {
+      "attempt": 10,
+      "category": "AB",
+      "role": "intent_interpreter",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_10",
+      "transport_seconds": 5.574007416144013,
+      "response_sha256": "b013b03933b4d3244c75e435c96496f8512c5114c06dbfa8f6ed901e3bd7314c"
+    },
+    {
+      "attempt": 11,
+      "category": "AB",
+      "role": "provider_terms_analyst",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_11",
+      "transport_seconds": 8.31859179213643,
+      "response_sha256": "7851168bc86919b3f55e66a45f0f6a1b992506a126a724f1aca236e830fc73ee"
+    },
+    {
+      "attempt": 12,
+      "category": "AB",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_12",
+      "transport_seconds": 6.7649977914988995,
+      "response_sha256": "76a6b31cc92c867734815fccf731d619fadcb40ba115766d797222f04ab641d0"
+    },
+    {
+      "attempt": 13,
+      "category": "AB",
+      "role": "contract_reviewer",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_13",
+      "transport_seconds": 11.942971042357385,
+      "response_sha256": "76455d3e72a17d7c9f9646592e9d44566f21687ca5af02bdfa7f1a1f6b8b6be3"
+    },
+    {
+      "attempt": 14,
+      "category": "AB",
+      "role": "intent_interpreter",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_14",
+      "transport_seconds": 2.412680458277464,
+      "response_sha256": "df275e36a2106bbf3d13641fc253ef36affc511af959ab92d754e62e3dfcc5a0"
+    },
+    {
+      "attempt": 15,
+      "category": "AB",
+      "role": "provider_terms_analyst",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_15",
+      "transport_seconds": 11.396703000180423,
+      "response_sha256": "3d3e00378ebffa7d72acb5a382b865e24077da940973ce6626f7d39f2a949070"
+    },
+    {
+      "attempt": 16,
+      "category": "AB",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "TRANSPORT_FAILURE",
+      "evidence_id": "capture_failure_16",
+      "exception_type": "google.genai.errors.ServerError"
+    },
+    {
+      "attempt": 17,
+      "category": "AB",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "TRANSPORT_FAILURE",
+      "evidence_id": "capture_failure_17",
+      "exception_type": "google.genai.errors.ServerError"
+    },
+    {
+      "attempt": 18,
+      "category": "AB",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "TRANSPORT_FAILURE",
+      "evidence_id": "capture_failure_18",
+      "exception_type": "httpx.ReadTimeout"
+    },
+    {
+      "attempt": 19,
+      "category": "AB",
+      "role": "client_plan_selector",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_19",
+      "transport_seconds": 6.586504625156522,
+      "response_sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87"
+    },
+    {
+      "attempt": 20,
+      "category": "AB",
+      "role": "contract_reviewer",
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "outcome": "RESPONSE",
+      "evidence_id": "capture_response_20",
+      "transport_seconds": 7.93463437538594,
+      "response_sha256": "19e80f7c8a9e7d57b98535e6d60f66a00c999aeefcd6bdde258b311483b28b48"
+    }
+  ],
+  "limits": [
+    "The current showcase describes a finite, reviewed subscription domain.",
+    "A new informational summary in the renewed period remains unsupported and outside accepted scope.",
+    "Recorded V09/V10 executions retain their original provenance; V11 owner checks are separate.",
+    "Hash equality proves integrity relative to supplied originals; it is not independent proof that an external world event occurred.",
+    "Reasoning roles can refuse or disagree; review does not silently replace them with successful outputs."
+  ]
+}

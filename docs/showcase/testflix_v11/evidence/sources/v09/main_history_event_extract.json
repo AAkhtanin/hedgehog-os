@@ -1,0 +1,96 @@
+{
+  "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+  "source": {
+    "archive": "V09",
+    "member": "live_main_02/story/history.json",
+    "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+    "bytes": 33021454,
+    "representation": "ARCHIVE_MEMBER_REFERENCE"
+  },
+  "manifest_hash": "8645b8e3e2e14544355e002b6fca802cfb684b4a93bcbde2cdb5441adcdcfcd2",
+  "events": [
+    {
+      "source_pointer": "/payload/events/0",
+      "event_kind": "InformationRequestV01",
+      "provider_calls": [],
+      "recorded_call_count": 0,
+      "before_consumed_period_count": 1,
+      "after_consumed_period_count": 1,
+      "calls": []
+    },
+    {
+      "source_pointer": "/payload/events/1",
+      "event_kind": "StopPlaybackV01",
+      "provider_calls": [],
+      "recorded_call_count": 8,
+      "before_consumed_period_count": 1,
+      "after_consumed_period_count": 1
+    },
+    {
+      "source_pointer": "/payload/events/2",
+      "event_kind": "PlaybackRequestV01",
+      "provider_calls": [],
+      "recorded_call_count": 8,
+      "before_consumed_period_count": 1,
+      "after_consumed_period_count": 1
+    },
+    {
+      "source_pointer": "/payload/events/3",
+      "event_kind": "StopPlaybackV01",
+      "provider_calls": [],
+      "recorded_call_count": 8,
+      "before_consumed_period_count": 1,
+      "after_consumed_period_count": 1
+    },
+    {
+      "source_pointer": "/payload/events/4",
+      "event_kind": "DeviceGrantRequestV01",
+      "provider_calls": [],
+      "recorded_call_count": 4,
+      "before_consumed_period_count": 1,
+      "after_consumed_period_count": 1
+    },
+    {
+      "source_pointer": "/payload/events/5",
+      "event_kind": "RenewalIntentV01",
+      "provider_calls": [
+        [
+          "intent_interpreter",
+          "testflix:role_projection:b53e4dde33603b4269f2fc29c288d10843ab53a0c1ffe4603955b94615348f1a"
+        ],
+        [
+          "provider_terms_analyst",
+          "testflix:role_projection:cd16d8d316d7e4e64965f7dd024fdd0bfc19929b64b69ed7a6427604ed3eb033"
+        ],
+        [
+          "client_plan_selector",
+          "testflix:role_projection:76f075fff942386f58056e38043ff9cfc5b47eb7ddd1c500542b248d3d0a6ee1"
+        ],
+        [
+          "contract_reviewer",
+          "testflix:role_projection:3beaca0481b9c4349b0179add2a77b1422987f4b43de2e07ecd65b004cdd8eec"
+        ]
+      ],
+      "recorded_call_count": 22,
+      "before_consumed_period_count": 1,
+      "after_consumed_period_count": 2
+    },
+    {
+      "source_pointer": "/payload/events/6",
+      "event_kind": "StopPlaybackV01",
+      "provider_calls": [],
+      "recorded_call_count": 8,
+      "before_consumed_period_count": 2,
+      "after_consumed_period_count": 2
+    },
+    {
+      "source_pointer": "/payload/events/7",
+      "event_kind": "PlaybackRequestV01",
+      "provider_calls": [],
+      "recorded_call_count": 8,
+      "before_consumed_period_count": 2,
+      "after_consumed_period_count": 2
+    }
+  ],
+  "interpretation": "Information event adds no provider or capability calls. Existing period counts remain unchanged during stop and fresh-session events. Renewal adds a new consumed period. Counts are explicit derived summaries, not new runtime evidence."
+}

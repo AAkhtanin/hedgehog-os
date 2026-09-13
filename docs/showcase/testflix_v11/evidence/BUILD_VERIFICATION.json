@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "source_files_with_bound_sha256": 86,
+  "response_projection_bindings_recomputed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    19,
+    20
+  ],
+  "raw_response_json_valid": 17,
+  "review_type": "DOCUMENT_AND_EVIDENCE_BUILD_ONLY",
+  "runtime_calls": 0,
+  "model_calls": 0,
+  "new_business_effects": 0,
+  "claim_records": 26,
+  "slides_mapped": 18,
+  "exact_json_pointers_independently_resolved": 76
+}

@@ -1,0 +1,20 @@
+{
+  "report": {
+    "action_commit_packet_created": false,
+    "authority_created": false,
+    "drs_write_created": false,
+    "failure_stage": "NONE",
+    "final_output_created": false,
+    "permission_created": false,
+    "real_world_effects_count": 0,
+    "reason_codes": [],
+    "return_to_root_required": false,
+    "root_review_required": true,
+    "source_reason_codes": [],
+    "status": "PASS",
+    "validated_object_id": "frreport_v02:4a355ce8a15cb420023972db7c3a8be85b5ad9cd03092b98260ba84f1ae572b0",
+    "validation_report_id": "frvalidation_v02:422a68ae97fb27d2b7d25cfe85fdb7eb79ea0e346a5a4be100d20c4466256558",
+    "validation_target": "COMPLETE_PROFILE"
+  },
+  "seconds": 14.620312750339508
+}

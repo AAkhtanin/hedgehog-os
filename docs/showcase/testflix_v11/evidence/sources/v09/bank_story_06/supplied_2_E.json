@@ -1,0 +1,21 @@
+{
+  "report": {
+    "action_commit_packet_created": false,
+    "authority_created": false,
+    "drs_write_created": false,
+    "failure_stage": "bundle_final",
+    "final_output_created": false,
+    "permission_created": false,
+    "real_world_effects_count": 0,
+    "reason_codes": [],
+    "receipt_created": false,
+    "return_to_root_required": false,
+    "root_review_required": false,
+    "source_reason_codes": [],
+    "status": "PASS",
+    "validated_object_id": "g2e_continuous_delta_runtime_report_v01:0f5811f8fe232a69410a5b2e58b669cd6341ac6b2c26aeec2e043632f6b4a8a8",
+    "validation_report_id": "g2e_continuous_delta_validation_report_v01:25f0254b4d885451dc68359ef68df7539b9acb91598eabfc8b2fab432d1cf5c9",
+    "validation_target": "ContinuousDeltaExecutionBundleV01"
+  },
+  "seconds": 17.107668583281338
+}

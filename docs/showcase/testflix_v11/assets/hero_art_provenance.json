@@ -1,0 +1,14 @@
+{
+  "asset": "radiolaria_testflix_concept_hero.png",
+  "purpose": "Conceptual editorial artwork only; not a technical diagram, screenshot or execution evidence.",
+  "generation_tool": "Built-in image_gen",
+  "image_dimensions": [
+    1672,
+    941
+  ],
+  "sha256": "4ce8bc6f65c0f1ce5561644af63c81e485fffd57cba2c9a6b39ba9e84ef00edc",
+  "bytes": 1726262,
+  "palette": "white, pearl glass, graphite/titanium, restrained cobalt",
+  "composition": "Sculpture on right half; clear left half for editable title.",
+  "prompt": "Use case: stylized-concept. Asset type: premium technology presentation hero artwork, landscape 16:9 at 2048x1152 or higher. Create one immaculate Apple-inspired studio product sculpture image on a pure white to very pale cool-gray seamless background. Subject: a sophisticated radiolarian organic branching sculpture, precise symmetric biomorphic lattice with fine interconnected titanium/graphite ribs and smooth translucent pearl glass membranes; a few restrained deep cobalt accents occupy less than 10 percent of the sculpture. Beautiful structural depth, refined engineering, tactile optical glass and brushed graphite/titanium. Sculpture sits entirely on the RIGHT half, center at 76% width, floats just above white ground with a gentle soft natural contact shadow, no horizon seam. LEFT 55% remains absolutely empty and nearly pure white, usable for editable presentation headline and body text added separately. Camera: premium macro product rendering, slightly elevated frontal three-quarter view, crisp sculptural edges and refined materials, broad soft light, no lens flare. Restrained, elegant, credible, editorial, contemporary luxury design. This is conceptual brand artwork, not a technical diagram or evidence. No text, no lettering, no logos, no watermark, no interface, no screenshots, no code, no fake nodes or arrows, no dark backdrop, no neon, no black overall background, no excessive colors. Subject fully in frame, ample white breathing room at all edges."
+}

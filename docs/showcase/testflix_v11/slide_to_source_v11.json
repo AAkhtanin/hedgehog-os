@@ -1,0 +1,1045 @@
+{
+  "format": "testflix_slide_to_source_v11",
+  "slides": [
+    {
+      "slide": 1,
+      "title": "Testflix: a complete subscription lifecycle",
+      "claim_ids": [
+        "TF11-C01",
+        "TF11-C02"
+      ],
+      "appendix_sections": [
+        1,
+        2
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "owner_state",
+          "archive": "OWNER",
+          "member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/state.json"
+        },
+        {
+          "evidence_id": "independent_final_acceptance",
+          "showcase_path": "evidence/sources/review/V11_FINAL_ACCEPTANCE_20260913.md",
+          "sha256": "cf9d3d69550e2359733e93a709ab0353e5d0b93ff8cbc2c65954ee10e806eae8",
+          "bytes": 5031,
+          "representation": "BYTE_EXACT_INDEPENDENT_REVIEW_REPORT",
+          "original_filename": "RADIOLARIA_TESTFLIX_V11_FINAL_ACCEPTANCE_20260913.md",
+          "scope": "Prior independent owner execution and remote GitHub verification; not a fresh runtime execution during showcase production."
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        }
+      ]
+    },
+    {
+      "slide": 2,
+      "title": "An ordinary request.\nA demanding lifecycle.",
+      "claim_ids": [
+        "TF11-C02",
+        "TF11-C03",
+        "TF11-C14"
+      ],
+      "appendix_sections": [
+        2,
+        3,
+        5
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "main_history",
+          "archive": "V09",
+          "member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        }
+      ]
+    },
+    {
+      "slide": 3,
+      "title": "Four different semantic jobs",
+      "claim_ids": [
+        "TF11-C04"
+      ],
+      "appendix_sections": [
+        2
+      ],
+      "evidence": [
+        {
+          "evidence_id": "capture_response_14",
+          "archive": "V10",
+          "member": "live_captures/response_14.json",
+          "sha256": "df275e36a2106bbf3d13641fc253ef36affc511af959ab92d754e62e3dfcc5a0",
+          "bytes": 2114,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_14.json"
+        },
+        {
+          "evidence_id": "capture_response_15",
+          "archive": "V10",
+          "member": "live_captures/response_15.json",
+          "sha256": "3d3e00378ebffa7d72acb5a382b865e24077da940973ce6626f7d39f2a949070",
+          "bytes": 3583,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_15.json"
+        },
+        {
+          "evidence_id": "capture_response_19",
+          "archive": "V10",
+          "member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_19.json"
+        },
+        {
+          "evidence_id": "capture_response_20",
+          "archive": "V10",
+          "member": "live_captures/response_20.json",
+          "sha256": "19e80f7c8a9e7d57b98535e6d60f66a00c999aeefcd6bdde258b311483b28b48",
+          "bytes": 4736,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_20.json"
+        },
+        {
+          "evidence_id": "ab_checkpoint",
+          "archive": "V10",
+          "member": "actual_AB_01/semantic_checkpoint.json",
+          "sha256": "00a65605c0c28c33da7303b5af0c96627db734819ad5cfc9bd8da93280897017",
+          "bytes": 17460,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/semantic_checkpoint.json"
+        }
+      ]
+    },
+    {
+      "slide": 4,
+      "title": "Four Roots retain their own authority",
+      "claim_ids": [
+        "TF11-C02",
+        "TF11-C05"
+      ],
+      "appendix_sections": [
+        2
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_history",
+          "archive": "V09",
+          "member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        }
+      ]
+    },
+    {
+      "slide": 5,
+      "title": "The story continues after purchase",
+      "claim_ids": [
+        "TF11-C03",
+        "TF11-C08",
+        "TF11-C09",
+        "TF11-C12"
+      ],
+      "appendix_sections": [
+        3,
+        4
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "main_history",
+          "archive": "V09",
+          "member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "showcase_path": "evidence/sources/v09/p04_700_extract.json",
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "p04_700_full"
+        },
+        {
+          "evidence_id": "p05_boundary",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/P05_boundary.json",
+          "sha256": "97bbff7644015334075b789e3f56d5965dea0921c57e87d8bdcf40c517f0e4dc",
+          "bytes": 362,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_boundary.json"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json"
+        },
+        {
+          "evidence_id": "p05_after",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/P05_after.json",
+          "sha256": "cd2bfc4ab9bbdd814dfb0880418e96b8d3ceea3656fac71bc4217e880de23066",
+          "bytes": 359,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_after.json"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "showcase_path": "evidence/sources/v09/main_history_event_extract.json",
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "main_history"
+        }
+      ]
+    },
+    {
+      "slide": 6,
+      "title": "The first purchase",
+      "claim_ids": [
+        "TF11-C06",
+        "TF11-C07"
+      ],
+      "appendix_sections": [
+        3,
+        7
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "main_history",
+          "archive": "V09",
+          "member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        },
+        {
+          "evidence_id": "capture_response_19",
+          "archive": "V10",
+          "member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_19.json"
+        }
+      ]
+    },
+    {
+      "slide": 7,
+      "title": "Reuse information. Refresh authority.",
+      "claim_ids": [
+        "TF11-C02",
+        "TF11-C08"
+      ],
+      "appendix_sections": [
+        2,
+        3
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "main_history",
+          "archive": "V09",
+          "member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "showcase_path": "evidence/sources/v09/main_history_event_extract.json",
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "main_history"
+        }
+      ]
+    },
+    {
+      "slide": 8,
+      "title": "A price change reaches the bank",
+      "claim_ids": [
+        "TF11-C09",
+        "TF11-C10",
+        "TF11-C11"
+      ],
+      "appendix_sections": [
+        4,
+        7
+      ],
+      "evidence": [
+        {
+          "evidence_id": "p04_700_extract",
+          "showcase_path": "evidence/sources/v09/p04_700_extract.json",
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "p04_700_full"
+        },
+        {
+          "evidence_id": "n14_600_extract",
+          "showcase_path": "evidence/sources/v09/n14_600_extract.json",
+          "sha256": "883bdd7a428d2dd25e2a506d356f009441ffe0d74cc76756e3d4d047adad567c",
+          "bytes": 8694,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "n14_600_full"
+        },
+        {
+          "evidence_id": "n14_600_payment",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/N14_600_payment.json",
+          "sha256": "b8879a6e5577d0f2c9ef09b0e34f659a1061be19047302f56ca8974e801c1d18",
+          "bytes": 843066,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/N14_600_payment.json"
+        },
+        {
+          "evidence_id": "supplied_1_d",
+          "archive": "V09",
+          "member": "bank_story_06/supplied_1_D.json",
+          "sha256": "972a2bb8b9bc850cd3446e39d2c0f3eee30fbe70e6a87f4500c2027623736cdd",
+          "bytes": 708,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/supplied_1_D.json"
+        },
+        {
+          "evidence_id": "supplied_1_e",
+          "archive": "V09",
+          "member": "bank_story_06/supplied_1_E.json",
+          "sha256": "1594b17ec9c4574366c5ca7f0c2569f0cb09f5d836de2aa134d306de054ee513",
+          "bytes": 817,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/supplied_1_E.json"
+        },
+        {
+          "evidence_id": "p04_stage_log",
+          "archive": "V09",
+          "member": "bank_story_06/observation/stages.jsonl",
+          "showcase_path": "evidence/sources/v09/bank_story_06/observation/stages.jsonl",
+          "sha256": "438950631472265d7841c4b9e9fcd5df6d275cdabd4faa692eb04491789c54b1",
+          "bytes": 81954,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ]
+    },
+    {
+      "slide": 9,
+      "title": "Expiry is exact. Renewal is explicit.",
+      "claim_ids": [
+        "TF11-C12",
+        "TF11-C13"
+      ],
+      "appendix_sections": [
+        3,
+        6
+      ],
+      "evidence": [
+        {
+          "evidence_id": "p05_boundary",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/P05_boundary.json",
+          "sha256": "97bbff7644015334075b789e3f56d5965dea0921c57e87d8bdcf40c517f0e4dc",
+          "bytes": 362,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_boundary.json"
+        },
+        {
+          "evidence_id": "p05_after",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/P05_after.json",
+          "sha256": "cd2bfc4ab9bbdd814dfb0880418e96b8d3ceea3656fac71bc4217e880de23066",
+          "bytes": 359,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_after.json"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "archive": "V09",
+          "member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json"
+        },
+        {
+          "evidence_id": "main_replay",
+          "archive": "V09",
+          "member": "live_main_02/story/replay.json",
+          "sha256": "7a74203ce57f7eeb74adfe9e422c84b7811df04207a5c75bf25b4fa424ac968c",
+          "bytes": 202,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/replay.json"
+        }
+      ]
+    },
+    {
+      "slide": 10,
+      "title": "One changed preference.\nA different valid choice.",
+      "claim_ids": [
+        "TF11-C06",
+        "TF11-C14"
+      ],
+      "appendix_sections": [
+        3,
+        5
+      ],
+      "evidence": [
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "ab_captured",
+          "archive": "V10",
+          "member": "captured_AB_01/final.json",
+          "sha256": "3dfe0288ddbea63d75b1b06ad3c96586550d48e9685c729621d9754379addbec",
+          "bytes": 1002,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/captured_AB_01/final.json"
+        },
+        {
+          "evidence_id": "ab_comparison",
+          "archive": "V10",
+          "member": "captured_AB_01/comparison.json",
+          "sha256": "ad62f01c1caedaebe8eb739666f43d11cb8d09fcfc95c2dd203c76ec988aaa9a",
+          "bytes": 329,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/captured_AB_01/comparison.json"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        },
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "capture_response_19",
+          "archive": "V10",
+          "member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_19.json"
+        }
+      ]
+    },
+    {
+      "slide": 11,
+      "title": "The reviewer did disagree",
+      "claim_ids": [
+        "TF11-C15",
+        "TF11-C16"
+      ],
+      "appendix_sections": [
+        5
+      ],
+      "evidence": [
+        {
+          "evidence_id": "capture_response_13",
+          "archive": "V10",
+          "member": "live_captures/response_13.json",
+          "sha256": "76455d3e72a17d7c9f9646592e9d44566f21687ca5af02bdfa7f1a1f6b8b6be3",
+          "bytes": 5197,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_13.json"
+        },
+        {
+          "evidence_id": "capture_response_19",
+          "archive": "V10",
+          "member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_19.json"
+        },
+        {
+          "evidence_id": "capture_response_20",
+          "archive": "V10",
+          "member": "live_captures/response_20.json",
+          "sha256": "19e80f7c8a9e7d57b98535e6d60f66a00c999aeefcd6bdde258b311483b28b48",
+          "bytes": 4736,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_20.json"
+        },
+        {
+          "evidence_id": "v10_offline",
+          "archive": "V10",
+          "member": "offline_actual.json",
+          "sha256": "f1370459d08ea27f34da376263d66e94b411232a76707ec270585dcc8671771f",
+          "bytes": 32412,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/offline_actual.json"
+        }
+      ]
+    },
+    {
+      "slide": 12,
+      "title": "Continuation preserves the record",
+      "claim_ids": [
+        "TF11-C17",
+        "TF11-C18"
+      ],
+      "appendix_sections": [
+        5
+      ],
+      "evidence": [
+        {
+          "evidence_id": "capture_failure_16",
+          "archive": "V10",
+          "member": "live_captures/failure_16.json",
+          "sha256": "cce3c5d4c754e490d63492fc036f7d40d7d44734ff6f4418899144cfe1e9809a",
+          "bytes": 538,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/failure_16.json"
+        },
+        {
+          "evidence_id": "capture_failure_17",
+          "archive": "V10",
+          "member": "live_captures/failure_17.json",
+          "sha256": "e9555f1a53702a4bd9dab71c3888805cb9e7cc65106cba5c8351a2d824b6e4af",
+          "bytes": 536,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/failure_17.json"
+        },
+        {
+          "evidence_id": "capture_failure_18",
+          "archive": "V10",
+          "member": "live_captures/failure_18.json",
+          "sha256": "91fa938c8de9a3198242c6fa1db250f17125475f741f5f523e471df4c686c469",
+          "bytes": 525,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/failure_18.json"
+        },
+        {
+          "evidence_id": "ab_checkpoint",
+          "archive": "V10",
+          "member": "actual_AB_01/semantic_checkpoint.json",
+          "sha256": "00a65605c0c28c33da7303b5af0c96627db734819ad5cfc9bd8da93280897017",
+          "bytes": 17460,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/semantic_checkpoint.json"
+        },
+        {
+          "evidence_id": "v10_offline",
+          "archive": "V10",
+          "member": "offline_actual.json",
+          "sha256": "f1370459d08ea27f34da376263d66e94b411232a76707ec270585dcc8671771f",
+          "bytes": 32412,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/offline_actual.json"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "v10_final_report",
+          "archive": "V10",
+          "member": "FINAL_REPORT.md",
+          "showcase_path": "evidence/sources/v10/FINAL_REPORT.md",
+          "sha256": "536734c8cc647296e7f18467bcdfd2ff8a7786fb2ea5cd2981ecf906a7f287fd",
+          "bytes": 4295,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ]
+    },
+    {
+      "slide": 13,
+      "title": "Captured execution reaches the same result",
+      "claim_ids": [
+        "TF11-C19",
+        "TF11-C20"
+      ],
+      "appendix_sections": [
+        6,
+        7
+      ],
+      "evidence": [
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "ab_captured",
+          "archive": "V10",
+          "member": "captured_AB_01/final.json",
+          "sha256": "3dfe0288ddbea63d75b1b06ad3c96586550d48e9685c729621d9754379addbec",
+          "bytes": 1002,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/captured_AB_01/final.json"
+        },
+        {
+          "evidence_id": "ab_comparison",
+          "archive": "V10",
+          "member": "captured_AB_01/comparison.json",
+          "sha256": "ad62f01c1caedaebe8eb739666f43d11cb8d09fcfc95c2dd203c76ec988aaa9a",
+          "bytes": 329,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/captured_AB_01/comparison.json"
+        },
+        {
+          "evidence_id": "v10_coverage",
+          "archive": "V10",
+          "member": "coverage.json",
+          "sha256": "624e63dc485bf91e3753d313ae2ded60e5388d2386f1b8c02d7374037fbf1719",
+          "bytes": 66722,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        }
+      ]
+    },
+    {
+      "slide": 14,
+      "title": "Timing, with the scope kept intact",
+      "claim_ids": [
+        "TF11-C07",
+        "TF11-C11",
+        "TF11-C20",
+        "TF11-C21"
+      ],
+      "appendix_sections": [
+        7
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "ab_captured",
+          "archive": "V10",
+          "member": "captured_AB_01/final.json",
+          "sha256": "3dfe0288ddbea63d75b1b06ad3c96586550d48e9685c729621d9754379addbec",
+          "bytes": 1002,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/captured_AB_01/final.json"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "showcase_path": "evidence/sources/v09/p04_700_extract.json",
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "p04_700_full"
+        },
+        {
+          "evidence_id": "n14_600_extract",
+          "showcase_path": "evidence/sources/v09/n14_600_extract.json",
+          "sha256": "883bdd7a428d2dd25e2a506d356f009441ffe0d74cc76756e3d4d047adad567c",
+          "bytes": 8694,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "n14_600_full"
+        },
+        {
+          "evidence_id": "p04_stage_log",
+          "archive": "V09",
+          "member": "bank_story_06/observation/stages.jsonl",
+          "showcase_path": "evidence/sources/v09/bank_story_06/observation/stages.jsonl",
+          "sha256": "438950631472265d7841c4b9e9fcd5df6d275cdabd4faa692eb04491789c54b1",
+          "bytes": 81954,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v10_coverage",
+          "archive": "V10",
+          "member": "coverage.json",
+          "sha256": "624e63dc485bf91e3753d313ae2ded60e5388d2386f1b8c02d7374037fbf1719",
+          "bytes": 66722,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        }
+      ]
+    },
+    {
+      "slide": 15,
+      "title": "Common mechanisms. A specific domain.",
+      "claim_ids": [
+        "TF11-C05",
+        "TF11-C22"
+      ],
+      "appendix_sections": [
+        2,
+        8
+      ],
+      "evidence": [
+        {
+          "evidence_id": "ab_consumption",
+          "archive": "V10",
+          "member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/consumption.json"
+        },
+        {
+          "evidence_id": "main_history",
+          "archive": "V09",
+          "member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "owner_final_imports",
+          "archive": "OWNER",
+          "member": "postcommit_1789296216831611000/final_import_origins.json",
+          "sha256": "a5dc271e72dc527bd79b5d80759b4b1be4ac8102bdd4473f33e5c2bfdead75b3",
+          "bytes": 666,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/postcommit_1789296216831611000/final_import_origins.json"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "showcase_path": "evidence/sources/v09/p04_700_extract.json",
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON",
+          "source_evidence_id": "p04_700_full"
+        }
+      ]
+    },
+    {
+      "slide": 16,
+      "title": "Accepted code. Recorded evidence.",
+      "claim_ids": [
+        "TF11-C01",
+        "TF11-C23",
+        "TF11-C24"
+      ],
+      "appendix_sections": [
+        1,
+        7
+      ],
+      "evidence": [
+        {
+          "evidence_id": "owner_state",
+          "archive": "OWNER",
+          "member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/state.json"
+        },
+        {
+          "evidence_id": "owner_phases",
+          "archive": "OWNER",
+          "member": "postcommit_1789296216831611000/phases.jsonl",
+          "sha256": "0d2867cae648037e47a920bfbea0f2b41bc0285b9036df3710f8ea1092706a0a",
+          "bytes": 36523,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/postcommit_1789296216831611000/phases.jsonl"
+        },
+        {
+          "evidence_id": "owner_final_imports",
+          "archive": "OWNER",
+          "member": "postcommit_1789296216831611000/final_import_origins.json",
+          "sha256": "a5dc271e72dc527bd79b5d80759b4b1be4ac8102bdd4473f33e5c2bfdead75b3",
+          "bytes": 666,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/postcommit_1789296216831611000/final_import_origins.json"
+        },
+        {
+          "evidence_id": "independent_final_acceptance",
+          "showcase_path": "evidence/sources/review/V11_FINAL_ACCEPTANCE_20260913.md",
+          "sha256": "cf9d3d69550e2359733e93a709ab0353e5d0b93ff8cbc2c65954ee10e806eae8",
+          "bytes": 5031,
+          "representation": "BYTE_EXACT_INDEPENDENT_REVIEW_REPORT",
+          "original_filename": "RADIOLARIA_TESTFLIX_V11_FINAL_ACCEPTANCE_20260913.md",
+          "scope": "Prior independent owner execution and remote GitHub verification; not a fresh runtime execution during showcase production."
+        },
+        {
+          "evidence_id": "v11_result",
+          "archive": "V11",
+          "member": "RESULT.json",
+          "sha256": "9252c0a99ee16ef9b1d09e2d066a4479434c25196c7b91b7f713e742581c0365",
+          "bytes": 1553,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v11/RESULT.json"
+        }
+      ]
+    },
+    {
+      "slide": 17,
+      "title": "The scope is visible",
+      "claim_ids": [
+        "TF11-C25"
+      ],
+      "appendix_sections": [
+        8
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "owner_state",
+          "archive": "OWNER",
+          "member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/state.json"
+        },
+        {
+          "evidence_id": "capture_response_19",
+          "archive": "V10",
+          "member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/live_captures/response_19.json"
+        }
+      ]
+    },
+    {
+      "slide": 18,
+      "title": "An inspectable demonstration",
+      "claim_ids": [
+        "TF11-C01",
+        "TF11-C26"
+      ],
+      "appendix_sections": [
+        1,
+        8
+      ],
+      "evidence": [
+        {
+          "evidence_id": "main_result",
+          "archive": "V09",
+          "member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v09/live_main_02/story/result.json"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "archive": "V10",
+          "member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/v10/actual_AB_01/final.json"
+        },
+        {
+          "evidence_id": "owner_state",
+          "archive": "OWNER",
+          "member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "representation": "BYTE_EXACT_COPY",
+          "showcase_path": "evidence/sources/owner/state.json"
+        },
+        {
+          "evidence_id": "independent_final_acceptance",
+          "showcase_path": "evidence/sources/review/V11_FINAL_ACCEPTANCE_20260913.md",
+          "sha256": "cf9d3d69550e2359733e93a709ab0353e5d0b93ff8cbc2c65954ee10e806eae8",
+          "bytes": 5031,
+          "representation": "BYTE_EXACT_INDEPENDENT_REVIEW_REPORT",
+          "original_filename": "RADIOLARIA_TESTFLIX_V11_FINAL_ACCEPTANCE_20260913.md",
+          "scope": "Prior independent owner execution and remote GitHub verification; not a fresh runtime execution during showcase production."
+        }
+      ]
+    }
+  ],
+  "deck": "testflix_showcase_v11.pptx",
+  "appendix": "technical_appendix_v11.md",
+  "evidence_map": "evidence/evidence_map.json"
+}

@@ -1,0 +1,38 @@
+{
+  "changed_V10_paths": [
+    "docs/testflix_v01_preflight.md",
+    "hedgehog/domains/testflix/demo_story_v01.py",
+    "hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+    "hedgehog/domains/testflix/semantic_roles_v01.py",
+    "tests/test_testflix_semantic_roles_v01.py"
+  ],
+  "exact_current_and_predecessor_pins": "owner_apply/source_ledger.json",
+  "groups": [
+    {
+      "disposition": "RECORDED_V09_NOT_RERUN",
+      "impact": "Host/D/E/registry, Testflix kernel/evidence/lifecycle and the legacy controlled semantic adapter are byte-identical to V09. The new capture loader is not the controlled provider. No current common admission is inferred.",
+      "scope": "Controlled P04/E700/E600, N14/N15 and four-Root renewal history",
+      "source": "bank_story_06"
+    },
+    {
+      "disposition": "RECORDED_V09_NOT_RERUN",
+      "impact": "Legacy provider and runtime unchanged. The changed role/capture boundary is freshly exercised by 36 focused nodes. V09 node-phase union is retained separately, not relabeled as fresh.",
+      "scope": "Other controlled P01-P06/N01-N20 checks",
+      "source": "remaining_controlled_01"
+    },
+    {
+      "disposition": "RECORDED_V09_HOST_EXECUTION; FRESH_SOURCE_ONLY_CAPTURE_COMPATIBILITY",
+      "impact": "The main full handler is not rerun. Both actual recorded semantic groups pass the new public adapter with exact values and captures (main_records.json). New actual/captured A/B exercises current handler integration; it does not replace main renewal execution.",
+      "scope": "Main live/captured purchase plus renewal",
+      "source": "live_main_02 + captured_main_01"
+    },
+    {
+      "disposition": "RECORDED_WITH_UNCHANGED_COMMON_SOURCE",
+      "impact": "Common production/test/schema bodies keep V09 final pins. No speculative repair or broad gate rerun was performed. Prior source-impact qualifications remain applicable.",
+      "scope": "Common temporal origin/scope/performance controls",
+      "source": "recorded_v09/coverage.json"
+    }
+  ],
+  "old_phase_inventory": "recorded_v09/coverage.json",
+  "references": "borrowed_references.json"
+}

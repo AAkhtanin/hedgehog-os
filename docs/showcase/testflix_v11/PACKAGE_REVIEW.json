@@ -1,0 +1,89 @@
+{
+  "result": "READY_FOR_MANUAL_DOCUMENTATION_PUBLICATION",
+  "accepted_implementation_commit": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+  "publication_branch": "showcase/testflix-v11-2026-09-13",
+  "publication_directory": "docs/showcase/testflix_v11/",
+  "evidence_review": {
+    "result": "PASS",
+    "source_files_with_bound_sha256": 86,
+    "response_projection_bindings_recomputed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      19,
+      20
+    ],
+    "raw_response_json_valid": 17,
+    "review_type": "DOCUMENT_AND_EVIDENCE_BUILD_ONLY",
+    "runtime_calls": 0,
+    "model_calls": 0,
+    "new_business_effects": 0,
+    "claim_records": 26,
+    "slides_mapped": 18,
+    "exact_json_pointers_independently_resolved": 76
+  },
+  "presentation": {
+    "slides": 18,
+    "pptx_sha256": "643464e002e1be666bbe2b4a1acdf888ea099190020677f73a031623a842b134",
+    "editable_text_and_tables": true,
+    "structural_validation": "PASS",
+    "rendered_final_pptx_visual_review": "PASS",
+    "rendered_companion_pdf_visual_review": "PASS",
+    "hard_layout_findings": 0,
+    "powerpoint_or_keynote_native_execution": "NOT_PERFORMED",
+    "cover_overlap_warnings": 2,
+    "cover_warnings_visually_reviewed": "No visible clipping or collision in the rendered cover"
+  },
+  "pdf_documents": {
+    "main_deck_pages": 18,
+    "executive_summary_pages": 1,
+    "technical_appendix_pages": 10,
+    "all_29_pages_rendered_and_visually_reviewed": true,
+    "searchable_text": true,
+    "embedded_fonts": "Inter"
+  },
+  "html": {
+    "static_dom_validation": "PASS",
+    "local_link_targets": "PASS",
+    "timing_rows": 6,
+    "cells_per_timing_row": 3,
+    "four_role_prohibitions_explicit": true,
+    "external_scripts": 0,
+    "offline_fonts_and_artwork": true,
+    "desktop_mobile_browser_rendering": "NOT_PERFORMED",
+    "browser_limitation": "Chromium download timed out; no browser screenshot or measured viewport-overflow claim is made."
+  },
+  "xml": {
+    "bytes": 361351,
+    "embedded_records": 76,
+    "accepted_source_files": 3,
+    "decoded_body_hashes": "PASS",
+    "complete_original_archive_collection": false
+  },
+  "language": "English; Cyrillic scan passed",
+  "secret_pattern_scan": "No credential patterns found in publication files",
+  "publication_script_fixture": {
+    "scope": "Isolated local Git repositories; no owner execution",
+    "result": "PASS",
+    "initial_push_failure_commit_preserved": true,
+    "resume_does_not_duplicate_commit": true,
+    "owner_main_and_v09_history_preserved": true
+  },
+  "new_project_runtime_tests": 0,
+  "new_project_model_provider_calls": 0,
+  "new_business_effects": 0,
+  "owner_commit_or_push_performed_during_showcase_creation": false,
+  "generated_cover_art": "Conceptual editorial artwork, separate from Testflix captures and provider-call evidence."
+}

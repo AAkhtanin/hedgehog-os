@@ -1,0 +1,1617 @@
+{
+  "format": "testflix_claim_evidence_matrix_v11",
+  "accepted_commit": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+  "claims": [
+    {
+      "claim_id": "TF11-C01",
+      "slides": [
+        1,
+        16,
+        18
+      ],
+      "slide_owner": 1,
+      "appendix_section": 1,
+      "claim": "The reviewed implementation is committed on main at the accepted identity.",
+      "verification_status": "VERIFIED_OWNER_EXECUTION",
+      "observed_values": [
+        {
+          "evidence_id": "owner_state",
+          "source_path": "evidence/sources/owner/state.json",
+          "source_archive": "OWNER",
+          "archive_member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "field": "/actual_head",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "owner_state",
+          "source_path": "evidence/sources/owner/state.json",
+          "source_archive": "OWNER",
+          "archive_member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "field": "/phase",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "PUSHED",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "owner_state",
+          "source_path": "evidence/sources/owner/state.json",
+          "source_archive": "OWNER",
+          "archive_member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "field": "/first_blocker",
+          "selection_method": "JSON_POINTER",
+          "observed_value": null,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "independent_final_acceptance",
+          "source_path": "evidence/sources/review/V11_FINAL_ACCEPTANCE_20260913.md",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "cf9d3d69550e2359733e93a709ab0353e5d0b93ff8cbc2c65954ee10e806eae8",
+          "bytes": 5031,
+          "field": "Accepted identity table",
+          "selection_method": "MARKDOWN_SECTION",
+          "observed_value": "51 changed paths; 896 unchanged; 947 tracked",
+          "representation": "BYTE_EXACT_INDEPENDENT_REVIEW_REPORT"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C02",
+      "slides": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "slide_owner": 1,
+      "appendix_section": 2,
+      "claim": "The recorded stories use four independent Root identities and preserve the same four Hosts inside each branch.",
+      "verification_status": "VERIFIED_EXECUTION",
+      "observed_values": [
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/roots",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [
+            "bank",
+            "device",
+            "provider",
+            "user"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/same_four_hosts",
+          "selection_method": "JSON_POINTER",
+          "observed_value": true,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/roots/*/target_root_id",
+          "selection_method": "JSON_POINTER_WILDCARD",
+          "observed_value": [
+            "root:testflix:user",
+            "root:testflix:bank",
+            "root:testflix:provider",
+            "root:testflix:device"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C03",
+      "slides": [
+        2,
+        5
+      ],
+      "slide_owner": 2,
+      "appendix_section": 3,
+      "claim": "The demonstration covers six lifecycle scenarios P01 through P06, with separate controlled P04 public-E evidence.",
+      "verification_status": "MAPPED_EXECUTION_SCOPE",
+      "observed_values": [
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/phases/*/phase",
+          "selection_method": "JSON_POINTER_WILDCARD",
+          "observed_value": [
+            "P01_HANDLE",
+            "P01_SEAL",
+            "P02_INFORMATION",
+            "P03_STOP",
+            "P03_FRESH",
+            "P05_EXPIRED_STOP",
+            "P06_DEVICE_GRANT",
+            "P06_RENEW",
+            "RENEWED_STOP",
+            "RENEWED_FRESH",
+            "HISTORY_SEAL",
+            "OFFLINE_REPLAY"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/p04",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "SEPARATE_CONTROLLED_BANK_E_EVIDENCE_NOT_REEXECUTED_BY_THIS_STORY",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "The six scenarios are not one unbroken live-LLM P01-P06 invocation."
+      ]
+    },
+    {
+      "claim_id": "TF11-C04",
+      "slides": [
+        3
+      ],
+      "slide_owner": 3,
+      "appendix_section": 2,
+      "claim": "Four different semantic duties consume ordered upstream contributions.",
+      "verification_status": "VERIFIED_CAPTURE_CHAIN",
+      "observed_values": [
+        {
+          "evidence_id": "ab_checkpoint",
+          "source_path": "evidence/sources/v10/actual_AB_01/semantic_checkpoint.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/semantic_checkpoint.json",
+          "sha256": "00a65605c0c28c33da7303b5af0c96627db734819ad5cfc9bd8da93280897017",
+          "bytes": 17460,
+          "field": "/contributions/*/role",
+          "selection_method": "JSON_POINTER_WILDCARD",
+          "observed_value": [
+            "intent_interpreter",
+            "provider_terms_analyst",
+            "client_plan_selector",
+            "contract_reviewer"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_response_20",
+          "source_path": "evidence/sources/v10/live_captures/response_20.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_20.json",
+          "sha256": "19e80f7c8a9e7d57b98535e6d60f66a00c999aeefcd6bdde258b311483b28b48",
+          "bytes": 4736,
+          "field": "/metadata/model",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "gemini-2.5-flash",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Four duties use one configured model family; they are not four independent model families."
+      ]
+    },
+    {
+      "claim_id": "TF11-C05",
+      "slides": [
+        4,
+        15
+      ],
+      "slide_owner": 4,
+      "appendix_section": 2,
+      "claim": "Actual typed quote work and Root decisions consume the selected plan.",
+      "verification_status": "VERIFIED_EXECUTION",
+      "observed_values": [
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/quote_result/status",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "COMPLETED",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/quote_result/result/outcome",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "SUCCEEDED",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/roots/*/decision",
+          "selection_method": "JSON_POINTER_WILDCARD",
+          "observed_value": [
+            "ACCEPT",
+            "ACCEPT",
+            "ACCEPT",
+            "ACCEPT"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/playback/playback_state",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "PLAYING",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C06",
+      "slides": [
+        6,
+        10
+      ],
+      "slide_owner": 6,
+      "appendix_section": 3,
+      "claim": "AD_FREE selects plan:cd79 at EUR 5.00, 720p, without advertising under EUR 6.50 consent.",
+      "verification_status": "VERIFIED_RECORDED_MAIN_AND_AB_COMPARISON",
+      "observed_values": [
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/selected_plan",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "plan:cd79",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/recorded_AD_FREE_plan",
+          "selection_method": "JSON_POINTER",
+          "observed_value": {
+            "ads": false,
+            "period_seconds": 2592000,
+            "plan_id": "plan:cd79",
+            "price_minor": 500,
+            "resolution": 720
+          },
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_response_19",
+          "source_path": "evidence/sources/v10/live_captures/response_19.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "field": "/projection/hard_ceiling_minor",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 650,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Prices are integer EUR minor units; displayed EUR prices divide by100."
+      ]
+    },
+    {
+      "claim_id": "TF11-C07",
+      "slides": [
+        6,
+        14
+      ],
+      "slide_owner": 6,
+      "appendix_section": 7,
+      "claim": "Initial live purchase handler took169.10 seconds.",
+      "verification_status": "VERIFIED_RECORDED_DURATION",
+      "observed_values": [
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/phases/0/elapsed_seconds",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 169.09600145742297,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/phases/0/phase",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "P01_HANDLE",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "The P01 seal is a separate phase; this is not a whole-lifecycle duration."
+      ]
+    },
+    {
+      "claim_id": "TF11-C08",
+      "slides": [
+        5,
+        7
+      ],
+      "slide_owner": 5,
+      "appendix_section": 3,
+      "claim": "Information reuse and fresh sessions do not create an additional main-history payment.",
+      "verification_status": "VERIFIED_RECORDED_HISTORY",
+      "observed_values": [
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/mock_payments",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_history",
+          "source_path": null,
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/history.json",
+          "sha256": "430f6148da747950cf73dc9cbc13243944fb434f3f566a8df0a91db53ace29c8",
+          "bytes": 33021454,
+          "field": "/payload/events",
+          "selection_method": "HISTORY_EVENT_RELATIONS",
+          "observed_value": "Contains informational reuse, stop/fresh-session, expiry and renewal actions",
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "field": "/main_payment_count",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "field": "/provider_delta",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "field": "/hosts_preserved",
+          "selection_method": "JSON_POINTER",
+          "observed_value": true,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "source_path": "evidence/sources/v09/main_history_event_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "field": "/events/0/provider_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [],
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "source_path": "evidence/sources/v09/main_history_event_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "field": "/events/0/calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [],
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "source_path": "evidence/sources/v09/main_history_event_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "field": "/events/2/before_consumed_period_count",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 1,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "source_path": "evidence/sources/v09/main_history_event_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "field": "/events/2/after_consumed_period_count",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 1,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "source_path": "evidence/sources/v09/main_history_event_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "field": "/events/7/before_consumed_period_count",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "main_history_event_extract",
+          "source_path": "evidence/sources/v09/main_history_event_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "ec0774a4961cafaa63e7475504246ad30e527ca6cb8bdcb737e71dd9e874cb59",
+          "bytes": 3242,
+          "field": "/events/7/after_consumed_period_count",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        }
+      ],
+      "limitations": [
+        "The main total includes one purchase and one explicit renewal; independent control branches are excluded."
+      ]
+    },
+    {
+      "claim_id": "TF11-C09",
+      "slides": [
+        5,
+        8
+      ],
+      "slide_owner": 5,
+      "appendix_section": 4,
+      "claim": "A changed quote makes the pending old packet non-executable before a new effect.",
+      "verification_status": "VERIFIED_CONTROLLED_PUBLIC_E",
+      "observed_values": [
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/dispatch_reason",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "host_current_action_not_executable",
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/inspection/present_executable",
+          "selection_method": "JSON_POINTER",
+          "observed_value": false,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/inspection/adapter_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/source_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [],
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C10",
+      "slides": [
+        8
+      ],
+      "slide_owner": 8,
+      "appendix_section": 4,
+      "claim": "EUR 7.00 exceeds EUR 6.50 consent; independent EUR 6.00 recomputation can be reviewed and paid.",
+      "verification_status": "VERIFIED_CONTROLLED_PUBLIC_E",
+      "observed_values": [
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/observed_quote/plan/price_minor",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 700,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "n14_600_extract",
+          "source_path": "evidence/sources/v09/n14_600_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "883bdd7a428d2dd25e2a506d356f009441ffe0d74cc76756e3d4d047adad567c",
+          "bytes": 8694,
+          "field": "/observed_quote/plan/price_minor",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 600,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "n14_600_payment",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/N14_600_payment.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/N14_600_payment.json",
+          "sha256": "b8879a6e5577d0f2c9ef09b0e34f659a1061be19047302f56ca8974e801c1d18",
+          "bytes": 843066,
+          "field": "/payment/output/amount_minor",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 600,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "The EUR6.00 positive-control payment is not a third main payment."
+      ]
+    },
+    {
+      "claim_id": "TF11-C11",
+      "slides": [
+        8,
+        14
+      ],
+      "slide_owner": 8,
+      "appendix_section": 7,
+      "claim": "The recorded public E branches took317.99 and 318.91 seconds.",
+      "verification_status": "VERIFIED_RECORDED_STAGE_LOG",
+      "observed_values": [
+        {
+          "evidence_id": "p04_stage_log",
+          "source_path": "evidence/sources/v09/bank_story_06/observation/stages.jsonl",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/observation/stages.jsonl",
+          "sha256": "438950631472265d7841c4b9e9fcd5df6d275cdabd4faa692eb04491789c54b1",
+          "bytes": 81954,
+          "field": "stage=public_E,event=RETURN,number=1.seconds",
+          "selection_method": "JSONL_FILTER",
+          "observed_value": 317.9907689169049,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "p04_stage_log",
+          "source_path": "evidence/sources/v09/bank_story_06/observation/stages.jsonl",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/observation/stages.jsonl",
+          "sha256": "438950631472265d7841c4b9e9fcd5df6d275cdabd4faa692eb04491789c54b1",
+          "bytes": 81954,
+          "field": "stage=public_E,event=RETURN,number=2.seconds",
+          "selection_method": "JSONL_FILTER",
+          "observed_value": 318.91036874987185,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Rounded public wrapper timings; this is separate controlled E execution."
+      ]
+    },
+    {
+      "claim_id": "TF11-C12",
+      "slides": [
+        5,
+        9
+      ],
+      "slide_owner": 5,
+      "appendix_section": 3,
+      "claim": "Expiry refuses current execution; new explicit consent creates a new period and the main total remains two payments.",
+      "verification_status": "VERIFIED_RECORDED_BOUNDARIES",
+      "observed_values": [
+        {
+          "evidence_id": "p05_boundary",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_boundary.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/P05_boundary.json",
+          "sha256": "97bbff7644015334075b789e3f56d5965dea0921c57e87d8bdcf40c517f0e4dc",
+          "bytes": 362,
+          "field": "/executor_delta",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "p05_boundary",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_boundary.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/P05_boundary.json",
+          "sha256": "97bbff7644015334075b789e3f56d5965dea0921c57e87d8bdcf40c517f0e4dc",
+          "bytes": 362,
+          "field": "/reason",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "current_entitlement",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "p05_after",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/P05_after.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/P05_after.json",
+          "sha256": "cd2bfc4ab9bbdd814dfb0880418e96b8d3ceea3656fac71bc4217e880de23066",
+          "bytes": 359,
+          "field": "/executor_delta",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "field": "/main_payment_count",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "post_renewal_result",
+          "source_path": "evidence/sources/v09/bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "source_archive": "V09",
+          "archive_member": "bank_story_06/tests/actual_T3/post_renewal_result.json",
+          "sha256": "052ecdfd48e61b1e6902126c6010c005dea4c6b209f85cf15be5bb6430a2c8c6",
+          "bytes": 739,
+          "field": "/hosts_preserved",
+          "selection_method": "JSON_POINTER",
+          "observed_value": true,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C13",
+      "slides": [
+        9
+      ],
+      "slide_owner": 9,
+      "appendix_section": 6,
+      "claim": "Historical replay does not recreate current authority or issue another provider/capability call.",
+      "verification_status": "VERIFIED_OFFLINE_REPLAY",
+      "observed_values": [
+        {
+          "evidence_id": "main_replay",
+          "source_path": "evidence/sources/v09/live_main_02/story/replay.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/replay.json",
+          "sha256": "7a74203ce57f7eeb74adfe9e422c84b7811df04207a5c75bf25b4fa424ac968c",
+          "bytes": 202,
+          "field": "/current_permission",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "NOT_INFERRED_FROM_HISTORY",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_replay",
+          "source_path": "evidence/sources/v09/live_main_02/story/replay.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/replay.json",
+          "sha256": "7a74203ce57f7eeb74adfe9e422c84b7811df04207a5c75bf25b4fa424ac968c",
+          "bytes": 202,
+          "field": "/live_capability_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_replay",
+          "source_path": "evidence/sources/v09/live_main_02/story/replay.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/replay.json",
+          "sha256": "7a74203ce57f7eeb74adfe9e422c84b7811df04207a5c75bf25b4fa424ac968c",
+          "bytes": 202,
+          "field": "/provider_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_replay",
+          "source_path": "evidence/sources/v09/live_main_02/story/replay.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/replay.json",
+          "sha256": "7a74203ce57f7eeb74adfe9e422c84b7811df04207a5c75bf25b4fa424ac968c",
+          "bytes": 202,
+          "field": "/replay_status",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "PASS",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C14",
+      "slides": [
+        2,
+        10
+      ],
+      "slide_owner": 2,
+      "appendix_section": 5,
+      "claim": "Only preference changes in the A/B request; QUALITY selects the EUR 6.00,1080p plan and reaches PLAYING.",
+      "verification_status": "VERIFIED_ACTUAL_CONSUMPTION",
+      "observed_values": [
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/changed_request_field",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "preference",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/actual_QUALITY_plan",
+          "selection_method": "JSON_POINTER",
+          "observed_value": {
+            "ads": true,
+            "period_seconds": 2592000,
+            "plan_id": "plan:ab31",
+            "price_minor": 600,
+            "resolution": 1080
+          },
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/playback/playback_state",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "PLAYING",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/main_history_payment_count_unchanged",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/independent_AB_mock_payment",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 1,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C15",
+      "slides": [
+        11
+      ],
+      "slide_owner": 11,
+      "appendix_section": 5,
+      "claim": "The original reviewer disagreement is preserved against its historical input contract.",
+      "verification_status": "VERIFIED_HISTORICAL_REFUSAL",
+      "observed_values": [
+        {
+          "evidence_id": "capture_response_13",
+          "source_path": "evidence/sources/v10/live_captures/response_13.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_13.json",
+          "sha256": "76455d3e72a17d7c9f9646592e9d44566f21687ca5af02bdfa7f1a1f6b8b6be3",
+          "bytes": 5197,
+          "field": "/transport/raw_response \u2192 /supports_selection",
+          "selection_method": "PARSE_EMBEDDED_JSON",
+          "observed_value": false,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_response_13",
+          "source_path": "evidence/sources/v10/live_captures/response_13.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_13.json",
+          "sha256": "76455d3e72a17d7c9f9646592e9d44566f21687ca5af02bdfa7f1a1f6b8b6be3",
+          "bytes": 5197,
+          "field": "/transport/raw_response \u2192 /reason first sentence",
+          "selection_method": "PARSE_EMBEDDED_JSON_EXCERPT",
+          "observed_value": "The upstream selection of 'plan:ab31' does not fully implement the 'QUALITY' preference because it includes ads.",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v10_offline",
+          "source_path": "evidence/sources/v10/offline_actual.json",
+          "source_archive": "V10",
+          "archive_member": "offline_actual.json",
+          "sha256": "f1370459d08ea27f34da376263d66e94b411232a76707ec270585dcc8671771f",
+          "bytes": 32412,
+          "field": "/historical_refusal/reason",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "semantic_review_disagreement",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v10_offline",
+          "source_path": "evidence/sources/v10/offline_actual.json",
+          "source_archive": "V10",
+          "archive_member": "offline_actual.json",
+          "sha256": "f1370459d08ea27f34da376263d66e94b411232a76707ec270585dcc8671771f",
+          "bytes": 32412,
+          "field": "/historical_refusal/contract",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "EXACT_V09_BEFORE_QUALITY_CLARIFICATION",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C16",
+      "slides": [
+        11
+      ],
+      "slide_owner": 11,
+      "appendix_section": 5,
+      "claim": "Later QUALITY responses use a clarified common preference definition.",
+      "verification_status": "VERIFIED_CAPTURE_INPUT",
+      "observed_values": [
+        {
+          "evidence_id": "capture_response_19",
+          "source_path": "evidence/sources/v10/live_captures/response_19.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "field": "/projection/task_contract/preference_definition/priority_order",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [
+            "resolution descending",
+            "ads false before true",
+            "price_minor ascending",
+            "plan_id ascending"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_response_20",
+          "source_path": "evidence/sources/v10/live_captures/response_20.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_20.json",
+          "sha256": "19e80f7c8a9e7d57b98535e6d60f66a00c999aeefcd6bdde258b311483b28b48",
+          "bytes": 4736,
+          "field": "/transport/raw_response \u2192 /supports_selection",
+          "selection_method": "PARSE_EMBEDDED_JSON",
+          "observed_value": true,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "The old refusal is preserved, not relabelled as a response to the later contract."
+      ]
+    },
+    {
+      "claim_id": "TF11-C17",
+      "slides": [
+        12
+      ],
+      "slide_owner": 12,
+      "appendix_section": 5,
+      "claim": "The cumulative journal contains20 attempts, 17 responses and 3 transport failures.",
+      "verification_status": "RECOUNTED_ORIGINAL_FILES",
+      "observed_values": [
+        {
+          "evidence_id": "capture_failure_16",
+          "source_path": "evidence/sources/v10/live_captures/failure_16.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/failure_16.json",
+          "sha256": "cce3c5d4c754e490d63492fc036f7d40d7d44734ff6f4418899144cfe1e9809a",
+          "bytes": 538,
+          "field": "/metadata/attempt",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 16,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_failure_17",
+          "source_path": "evidence/sources/v10/live_captures/failure_17.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/failure_17.json",
+          "sha256": "e9555f1a53702a4bd9dab71c3888805cb9e7cc65106cba5c8351a2d824b6e4af",
+          "bytes": 536,
+          "field": "/metadata/attempt",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 17,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_failure_18",
+          "source_path": "evidence/sources/v10/live_captures/failure_18.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/failure_18.json",
+          "sha256": "91fa938c8de9a3198242c6fa1db250f17125475f741f5f523e471df4c686c469",
+          "bytes": 525,
+          "field": "/metadata/attempt",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 18,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "capture_failure_18",
+          "source_path": "evidence/sources/v10/live_captures/failure_18.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/failure_18.json",
+          "sha256": "91fa938c8de9a3198242c6fa1db250f17125475f741f5f523e471df4c686c469",
+          "bytes": 525,
+          "field": "/exception_type",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "httpx.ReadTimeout",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v10_offline",
+          "source_path": "evidence/sources/v10/offline_actual.json",
+          "source_archive": "V10",
+          "archive_member": "offline_actual.json",
+          "sha256": "f1370459d08ea27f34da376263d66e94b411232a76707ec270585dcc8671771f",
+          "bytes": 32412,
+          "field": "/reused_responses",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [
+            14,
+            15
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v10_final_report",
+          "source_path": "evidence/sources/v10/FINAL_REPORT.md",
+          "source_archive": "V10",
+          "archive_member": "FINAL_REPORT.md",
+          "sha256": "536734c8cc647296e7f18467bcdfd2ff8a7786fb2ea5cd2981ecf906a7f287fd",
+          "bytes": 4295,
+          "field": "Preserved Refusals and Evidence",
+          "selection_method": "MARKDOWN_SECTION",
+          "observed_value": "Attempts16/17 remain Google504; attempt18 remains ReadTimeout.",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Counts refer to all journal files, not one successful subscription purchase.",
+        "Google504 detail is reported in the original V10 report; the compact failure JSON records the provider exception type and attempt."
+      ]
+    },
+    {
+      "claim_id": "TF11-C18",
+      "slides": [
+        12
+      ],
+      "slide_owner": 12,
+      "appendix_section": 5,
+      "claim": "V10 retains responses 14 and 15 and makes only the two missing calls 19 and 20.",
+      "verification_status": "VERIFIED_CAPTURE_CHAIN",
+      "observed_values": [
+        {
+          "evidence_id": "ab_checkpoint",
+          "source_path": "evidence/sources/v10/actual_AB_01/semantic_checkpoint.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/semantic_checkpoint.json",
+          "sha256": "00a65605c0c28c33da7303b5af0c96627db734819ad5cfc9bd8da93280897017",
+          "bytes": 17460,
+          "field": "/contributions/*/capture/transport/attempt",
+          "selection_method": "JSON_POINTER_WILDCARD",
+          "observed_value": [
+            14,
+            15,
+            19,
+            20
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "source_path": "evidence/sources/v10/actual_AB_01/final.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "field": "/model_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "source_path": "evidence/sources/v10/actual_AB_01/final.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "field": "/semantic_invocations",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 4,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": []
+    },
+    {
+      "claim_id": "TF11-C19",
+      "slides": [
+        13
+      ],
+      "slide_owner": 13,
+      "appendix_section": 6,
+      "claim": "Fresh captured A/B uses zero LLM calls and matches every history field except two explicit mode fields.",
+      "verification_status": "VERIFIED_CAPTURED_REEXECUTION",
+      "observed_values": [
+        {
+          "evidence_id": "ab_captured",
+          "source_path": "evidence/sources/v10/captured_AB_01/final.json",
+          "source_archive": "V10",
+          "archive_member": "captured_AB_01/final.json",
+          "sha256": "3dfe0288ddbea63d75b1b06ad3c96586550d48e9685c729621d9754379addbec",
+          "bytes": 1002,
+          "field": "/model_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_comparison",
+          "source_path": "evidence/sources/v10/captured_AB_01/comparison.json",
+          "source_archive": "V10",
+          "archive_member": "captured_AB_01/comparison.json",
+          "sha256": "ad62f01c1caedaebe8eb739666f43d11cb8d09fcfc95c2dd203c76ec988aaa9a",
+          "bytes": 329,
+          "field": "/fresh_Hosts",
+          "selection_method": "JSON_POINTER",
+          "observed_value": true,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_comparison",
+          "source_path": "evidence/sources/v10/captured_AB_01/comparison.json",
+          "source_archive": "V10",
+          "archive_member": "captured_AB_01/comparison.json",
+          "sha256": "ad62f01c1caedaebe8eb739666f43d11cb8d09fcfc95c2dd203c76ec988aaa9a",
+          "bytes": 329,
+          "field": "/removed_other_fields",
+          "selection_method": "JSON_POINTER",
+          "observed_value": [],
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_comparison",
+          "source_path": "evidence/sources/v10/captured_AB_01/comparison.json",
+          "source_archive": "V10",
+          "archive_member": "captured_AB_01/comparison.json",
+          "sha256": "ad62f01c1caedaebe8eb739666f43d11cb8d09fcfc95c2dd203c76ec988aaa9a",
+          "bytes": 329,
+          "field": "/result",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "EXACT_EQUAL_EXCEPT_TWO_EXPLICIT_MODE_FIELDS",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_comparison",
+          "source_path": "evidence/sources/v10/captured_AB_01/comparison.json",
+          "source_archive": "V10",
+          "archive_member": "captured_AB_01/comparison.json",
+          "sha256": "ad62f01c1caedaebe8eb739666f43d11cb8d09fcfc95c2dd203c76ec988aaa9a",
+          "bytes": 329,
+          "field": "/differences/*/path",
+          "selection_method": "JSON_POINTER_WILDCARD",
+          "observed_value": [
+            [
+              "purchase",
+              "generation_mode"
+            ],
+            [
+              "purchase",
+              "semantics",
+              "mode"
+            ]
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Captured reexecution produces declared mock effects on fresh Hosts; it is distinct from offline replay."
+      ]
+    },
+    {
+      "claim_id": "TF11-C20",
+      "slides": [
+        13,
+        14
+      ],
+      "slide_owner": 13,
+      "appendix_section": 7,
+      "claim": "Actual and captured A/B command wall times are290.806 and 276.216 seconds.",
+      "verification_status": "VERIFIED_RECORDED_COMMANDS",
+      "observed_values": [
+        {
+          "evidence_id": "v10_coverage",
+          "source_path": null,
+          "source_archive": "V10",
+          "archive_member": "coverage.json",
+          "sha256": "624e63dc485bf91e3753d313ae2ded60e5388d2386f1b8c02d7374037fbf1719",
+          "bytes": 66722,
+          "field": "/commands[label=actual_AB_01]/elapsed_seconds",
+          "selection_method": "JSON_FILTER",
+          "observed_value": 290.80605420842767,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        },
+        {
+          "evidence_id": "v10_coverage",
+          "source_path": null,
+          "source_archive": "V10",
+          "archive_member": "coverage.json",
+          "sha256": "624e63dc485bf91e3753d313ae2ded60e5388d2386f1b8c02d7374037fbf1719",
+          "bytes": 66722,
+          "field": "/commands[label=captured_AB_01]/elapsed_seconds",
+          "selection_method": "JSON_FILTER",
+          "observed_value": 276.2164326244965,
+          "representation": "ARCHIVE_MEMBER_REFERENCE"
+        }
+      ],
+      "limitations": [
+        "Wall times include imports/finalizers. Actual story body290.065616s; captured275.561163s."
+      ]
+    },
+    {
+      "claim_id": "TF11-C21",
+      "slides": [
+        14
+      ],
+      "slide_owner": 14,
+      "appendix_section": 7,
+      "claim": "Complete V09 main story takes1174.80 seconds, approximately 19.6 minutes.",
+      "verification_status": "VERIFIED_RECORDED_DURATION",
+      "observed_values": [
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/elapsed_seconds",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 1174.7972076656297,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/model_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 8,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/mock_payments",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 2,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Includes purchase, information, sessions, expiry, renewal, later sessions, sealing and offline replay. P04 remains separate. Not a latencySLA."
+      ]
+    },
+    {
+      "claim_id": "TF11-C22",
+      "slides": [
+        15
+      ],
+      "slide_owner": 15,
+      "appendix_section": 8,
+      "claim": "Common typed-work, Host, Root, currentness and retained-work mechanisms are exercised by this specific subscription domain.",
+      "verification_status": "SCOPED_ARCHITECTURAL_INTERPRETATION",
+      "observed_values": [
+        {
+          "evidence_id": "ab_consumption",
+          "source_path": "evidence/sources/v10/actual_AB_01/consumption.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/consumption.json",
+          "sha256": "03ae6285ee735e6569d7f24cae406d8424807ea556e09c3ae38c08ac3f833291",
+          "bytes": 10399,
+          "field": "/quote_result/status",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "COMPLETED",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "owner_final_imports",
+          "source_path": "evidence/sources/owner/postcommit_1789296216831611000/final_import_origins.json",
+          "source_archive": "OWNER",
+          "archive_member": "postcommit_1789296216831611000/final_import_origins.json",
+          "sha256": "a5dc271e72dc527bd79b5d80759b4b1be4ac8102bdd4473f33e5c2bfdead75b3",
+          "bytes": 666,
+          "field": "import records",
+          "selection_method": "SOURCE_BINDING_RECORDS",
+          "observed_value": "Actual owner Host/D/E modules match reviewed final source hashes",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/affected_result/complete",
+          "selection_method": "JSON_POINTER",
+          "observed_value": true,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        },
+        {
+          "evidence_id": "p04_700_extract",
+          "source_path": "evidence/sources/v09/p04_700_extract.json",
+          "source_archive": null,
+          "archive_member": null,
+          "sha256": "4971d5bb4dbc89ba06e5af874be42e13741350c715f92d3fa97689fc2e0057c7",
+          "bytes": 8711,
+          "field": "/affected_result/minimal",
+          "selection_method": "JSON_POINTER",
+          "observed_value": true,
+          "representation": "DERIVED_SELECTED_FIELDS_FROM_ORIGINAL_JSON"
+        }
+      ],
+      "limitations": [
+        "Does not prove arbitrary-domain universality or guarantee every future demo requires no new engineering."
+      ]
+    },
+    {
+      "claim_id": "TF11-C23",
+      "slides": [
+        16
+      ],
+      "slide_owner": 16,
+      "appendix_section": 7,
+      "claim": "Actual owner postcommit selection has49 unique tests and 147 passing setup/call/teardown phases.",
+      "verification_status": "RECOUNTED_RAW_PHASE_LOG",
+      "observed_values": [
+        {
+          "evidence_id": "owner_phases",
+          "source_path": "evidence/sources/owner/postcommit_1789296216831611000/phases.jsonl",
+          "source_archive": "OWNER",
+          "archive_member": "postcommit_1789296216831611000/phases.jsonl",
+          "sha256": "0d2867cae648037e47a920bfbea0f2b41bc0285b9036df3710f8ea1092706a0a",
+          "bytes": 36523,
+          "field": "unique(nodeid)",
+          "selection_method": "JSONL_DISTINCT_COUNT",
+          "observed_value": 49,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "owner_phases",
+          "source_path": "evidence/sources/owner/postcommit_1789296216831611000/phases.jsonl",
+          "source_archive": "OWNER",
+          "archive_member": "postcommit_1789296216831611000/phases.jsonl",
+          "sha256": "0d2867cae648037e47a920bfbea0f2b41bc0285b9036df3710f8ea1092706a0a",
+          "bytes": 36523,
+          "field": "line_count",
+          "selection_method": "JSONL_COUNT",
+          "observed_value": 147,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "owner_phases",
+          "source_path": "evidence/sources/owner/postcommit_1789296216831611000/phases.jsonl",
+          "source_archive": "OWNER",
+          "archive_member": "postcommit_1789296216831611000/phases.jsonl",
+          "sha256": "0d2867cae648037e47a920bfbea0f2b41bc0285b9036df3710f8ea1092706a0a",
+          "bytes": 36523,
+          "field": "set(outcome)",
+          "selection_method": "JSONL_DISTINCT_VALUES",
+          "observed_value": [
+            "passed"
+          ],
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "These are selected postcommit checks; do not add preparation counts as unique tests."
+      ]
+    },
+    {
+      "claim_id": "TF11-C24",
+      "slides": [
+        16
+      ],
+      "slide_owner": 16,
+      "appendix_section": 7,
+      "claim": "V11 preparation records82 tests, 246 phases, 8 process controls and 51 source paths.",
+      "verification_status": "VERIFIED_PREPARATION_REPORT",
+      "observed_values": [
+        {
+          "evidence_id": "v11_result",
+          "source_path": "evidence/sources/v11/RESULT.json",
+          "source_archive": "V11",
+          "archive_member": "RESULT.json",
+          "sha256": "9252c0a99ee16ef9b1d09e2d066a4479434c25196c7b91b7f713e742581c0365",
+          "bytes": 1553,
+          "field": "/FRESH_TESTS",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 82,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v11_result",
+          "source_path": "evidence/sources/v11/RESULT.json",
+          "source_archive": "V11",
+          "archive_member": "RESULT.json",
+          "sha256": "9252c0a99ee16ef9b1d09e2d066a4479434c25196c7b91b7f713e742581c0365",
+          "bytes": 1553,
+          "field": "/FRESH_PASSED_PHASES",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 246,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v11_result",
+          "source_path": "evidence/sources/v11/RESULT.json",
+          "source_archive": "V11",
+          "archive_member": "RESULT.json",
+          "sha256": "9252c0a99ee16ef9b1d09e2d066a4479434c25196c7b91b7f713e742581c0365",
+          "bytes": 1553,
+          "field": "/PROCESS_RECOVERY_CONTROLS",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 8,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "v11_result",
+          "source_path": "evidence/sources/v11/RESULT.json",
+          "source_archive": "V11",
+          "archive_member": "RESULT.json",
+          "sha256": "9252c0a99ee16ef9b1d09e2d066a4479434c25196c7b91b7f713e742581c0365",
+          "bytes": 1553,
+          "field": "/CUMULATIVE_PATHS",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 51,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "Preparation and actual owner execution retain separate provenance."
+      ]
+    },
+    {
+      "claim_id": "TF11-C25",
+      "slides": [
+        17
+      ],
+      "slide_owner": 17,
+      "appendix_section": 8,
+      "claim": "Real Gemini responses and kernel/Host execution coexist with controlled catalogue, time and mock business effects.",
+      "verification_status": "VERIFIED_DECLARED_BOUNDARY",
+      "observed_values": [
+        {
+          "evidence_id": "capture_response_19",
+          "source_path": "evidence/sources/v10/live_captures/response_19.json",
+          "source_archive": "V10",
+          "archive_member": "live_captures/response_19.json",
+          "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+          "bytes": 4056,
+          "field": "/metadata/model",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "gemini-2.5-flash",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "source_path": "evidence/sources/v10/actual_AB_01/final.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "field": "/real_adapter_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "source_path": "evidence/sources/v10/actual_AB_01/final.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "field": "/clock",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "LOCAL_CONTROLLED_TRUSTED_SOURCE_NOT_WALL_CLOCK_ATTESTATION",
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "ab_actual",
+          "source_path": "evidence/sources/v10/actual_AB_01/final.json",
+          "source_archive": "V10",
+          "archive_member": "actual_AB_01/final.json",
+          "sha256": "41b065c42271dfffd87e441cb1b80646dd2b145968e1b5b3f7634f61628e2d0c",
+          "bytes": 966,
+          "field": "/mock_payments",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 1,
+          "representation": "BYTE_EXACT_COPY"
+        },
+        {
+          "evidence_id": "main_result",
+          "source_path": "evidence/sources/v09/live_main_02/story/result.json",
+          "source_archive": "V09",
+          "archive_member": "live_main_02/story/result.json",
+          "sha256": "ea39d9f06f4a366705001da48778a401d7c5431da23820778a5b62962e10d004",
+          "bytes": 1264,
+          "field": "/real_adapter_calls",
+          "selection_method": "JSON_POINTER",
+          "observed_value": 0,
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "No liveNetflix purchase, realbankpayment, externalclockattestation or productioncertification is claimed."
+      ]
+    },
+    {
+      "claim_id": "TF11-C26",
+      "slides": [
+        18
+      ],
+      "slide_owner": 18,
+      "appendix_section": 8,
+      "claim": "This package is a navigable presentation and evidence gateway.",
+      "verification_status": "PRESENTATION_SCOPE",
+      "observed_values": [
+        {
+          "evidence_id": "owner_state",
+          "source_path": "evidence/sources/owner/state.json",
+          "source_archive": "OWNER",
+          "archive_member": "state.json",
+          "sha256": "09295f2737653733595bf174b60c832c8fd8bcff63b89f652826c2656960c853",
+          "bytes": 555,
+          "field": "/actual_head",
+          "selection_method": "JSON_POINTER",
+          "observed_value": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+          "representation": "BYTE_EXACT_COPY"
+        }
+      ],
+      "limitations": [
+        "The compactreader does not replace the full multi-megabyte original histories; fullarchive/member/hash references remain available."
+      ]
+    }
+  ],
+  "verification_note": "Original files were read; numeric and identity claims are tied to named fields or explicit selections. Scoped interpretation and presentation-only claims are marked. No new runtime, model or business effect execution."
+}

@@ -1,0 +1,14 @@
+{
+  "hedgehog.kernel.fractal_runtime_v02": {
+    "path": "/Users/admin/Projects/hedgehog-os/hedgehog/kernel/fractal_runtime_v02.py",
+    "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+  },
+  "hedgehog.kernel.continuous_delta_runtime_v01": {
+    "path": "/Users/admin/Projects/hedgehog-os/hedgehog/kernel/continuous_delta_runtime_v01.py",
+    "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+  },
+  "hedgehog.work_execution_host_v01": {
+    "path": "/Users/admin/Projects/hedgehog-os/hedgehog/work_execution_host_v01.py",
+    "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+  }
+}

@@ -1,0 +1,1 @@
+{"differences":[{"captured":"CAPTURED_REEXECUTION","live":"LIVE_CAPTURED","path":["purchase","generation_mode"]},{"captured":"CAPTURED_REEXECUTION","live":"LIVE_CAPTURED","path":["purchase","semantics","mode"]}],"fresh_Hosts":true,"model_calls":0,"removed_other_fields":[],"result":"EXACT_EQUAL_EXCEPT_TWO_EXPLICIT_MODE_FIELDS"}

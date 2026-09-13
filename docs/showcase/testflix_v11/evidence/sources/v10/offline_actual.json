@@ -1,0 +1,625 @@
+{
+  "Host_execution": 0,
+  "actual_main_captured_identity_parity": "EXACT_EQUAL",
+  "business_effect_calls": 0,
+  "derived_records_not_previously_saved_capture_objects": [
+    {
+      "capture": {
+        "capture_id": "testflix:semantic_capture:70170748d5cfbbdf7fbdaee047b7dcda9b2f2f780bf7db9971618ab471a2c7bf",
+        "projection_ref": "testflix:role_projection:8534c865c7ec75daab0d4b062ae8ddd03c6cf859006e90dbf74d6de954571ac7",
+        "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+        "response_ref": "testflix:role_response:cf7abd7b24ce7648c69d10aec4daee39923adf05d6071aec964807fb11317e59",
+        "role": "intent_interpreter",
+        "transport": {
+          "attempt": 14,
+          "elapsed_seconds": 2.412680458277464,
+          "model": "gemini-2.5-flash",
+          "origin_mode": "LIVE",
+          "provider": "gemini",
+          "raw_response": "{\n  \"preference\": \"QUALITY\",\n  \"priorities\": [\n    \"resolution descending\",\n    \"ads false before true\",\n    \"price_minor ascending\",\n    \"plan_id ascending\"\n  ],\n  \"missing_evidence\": [],\n  \"summary\": \"The explicit preference is 'QUALITY'. Subscriptions will be prioritized by resolution (highest first), then by absence of ads, then by price (lowest first), and finally by plan ID for tie-breaking. Only subscriptions within the hard ceiling price of 650 minor currency units are considered eligible.\"\n}",
+          "started_utc": "2026-09-12T20:23:04.006592+00:00"
+        }
+      },
+      "output": {
+        "missing_evidence": [],
+        "preference": "QUALITY",
+        "priorities": [
+          "resolution descending",
+          "ads false before true",
+          "price_minor ascending",
+          "plan_id ascending"
+        ],
+        "summary": "The explicit preference is 'QUALITY'. Subscriptions will be prioritized by resolution (highest first), then by absence of ads, then by price (lowest first), and finally by plan ID for tie-breaking. Only subscriptions within the hard ceiling price of 650 minor currency units are considered eligible."
+      },
+      "projection": {
+        "currency": "EUR",
+        "hard_ceiling_minor": 650,
+        "preference": "QUALITY",
+        "request_id": "request:8c2f",
+        "task_contract": {
+          "intent_scope": "Interpret the explicit preference enum; content genre and viewing habits are not required inputs.",
+          "preference_definition": {
+            "eligible": "price_minor <= hard_ceiling_minor",
+            "enum": "QUALITY",
+            "priority_order": [
+              "resolution descending",
+              "ads false before true",
+              "price_minor ascending",
+              "plan_id ascending"
+            ],
+            "scope": "Use catalog fields only. Advertising is a tie-breaker, not a veto on higher resolution. Premium content and simultaneous streams are not supplied requirements."
+          },
+          "price_unit": "minor currency units",
+          "required_inputs": [
+            "preference",
+            "hard_ceiling_minor",
+            "currency"
+          ],
+          "subject": "Testflix subscription selection from a supplied finite catalog"
+        }
+      },
+      "role": "intent_interpreter"
+    },
+    {
+      "capture": {
+        "capture_id": "testflix:semantic_capture:d70758682b1c8044800c770981364a5480bcf65aae1b2111d29f63dc2f632aec",
+        "projection_ref": "testflix:role_projection:13bfebaf4b70031e9fa6ec1822c4a5443fc70c49fc09c598f00dd3cee7fd649f",
+        "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+        "response_ref": "testflix:role_response:7797c38d56cc21750c494209e94b15947eaf7eab90390054ed4c782a2cdf7763",
+        "role": "provider_terms_analyst",
+        "transport": {
+          "attempt": 15,
+          "elapsed_seconds": 11.396703000180423,
+          "model": "gemini-2.5-flash",
+          "origin_mode": "LIVE",
+          "provider": "gemini",
+          "raw_response": "{\n  \"terms\": [\n    {\n      \"ads\": false,\n      \"period_seconds\": 2592000,\n      \"plan_id\": \"plan:cd79\",\n      \"price_minor\": 500,\n      \"resolution\": 720,\n      \"eligible\": true\n    },\n    {\n      \"ads\": true,\n      \"period_seconds\": 2592000,\n      \"plan_id\": \"plan:ab31\",\n      \"price_minor\": 600,\n      \"resolution\": 1080,\n      \"eligible\": true\n    },\n    {\n      \"ads\": false,\n      \"period_seconds\": 2592000,\n      \"plan_id\": \"plan:ef62\",\n      \"price_minor\": 900,\n      \"resolution\": 2160,\n      \"eligible\": false\n    }\n  ],\n  \"missing_evidence\": [],\n  \"summary\": \"The explicit preference 'QUALITY' prioritizes resolution (highest first), then absence of ads, then price (lowest first), and finally plan ID. Only plans within the 650 minor currency unit hard ceiling are eligible. Among the eligible options, 'plan:ab31' offers the highest resolution (1080p) at 600 minor currency units, making it the best match.\"\n}",
+          "started_utc": "2026-09-12T20:23:06.422219+00:00"
+        }
+      },
+      "output": {
+        "missing_evidence": [],
+        "summary": "The explicit preference 'QUALITY' prioritizes resolution (highest first), then absence of ads, then price (lowest first), and finally plan ID. Only plans within the 650 minor currency unit hard ceiling are eligible. Among the eligible options, 'plan:ab31' offers the highest resolution (1080p) at 600 minor currency units, making it the best match.",
+        "terms": [
+          {
+            "ads": false,
+            "eligible": true,
+            "period_seconds": 2592000,
+            "plan_id": "plan:cd79",
+            "price_minor": 500,
+            "resolution": 720
+          },
+          {
+            "ads": true,
+            "eligible": true,
+            "period_seconds": 2592000,
+            "plan_id": "plan:ab31",
+            "price_minor": 600,
+            "resolution": 1080
+          },
+          {
+            "ads": false,
+            "eligible": false,
+            "period_seconds": 2592000,
+            "plan_id": "plan:ef62",
+            "price_minor": 900,
+            "resolution": 2160
+          }
+        ]
+      },
+      "projection": {
+        "catalog": [
+          {
+            "ads": false,
+            "period_seconds": 2592000,
+            "plan_id": "plan:cd79",
+            "price_minor": 500,
+            "resolution": 720
+          },
+          {
+            "ads": true,
+            "period_seconds": 2592000,
+            "plan_id": "plan:ab31",
+            "price_minor": 600,
+            "resolution": 1080
+          },
+          {
+            "ads": false,
+            "period_seconds": 2592000,
+            "plan_id": "plan:ef62",
+            "price_minor": 900,
+            "resolution": 2160
+          }
+        ],
+        "currency": "EUR",
+        "hard_ceiling_minor": 650,
+        "preference": "QUALITY",
+        "request_id": "request:8c2f",
+        "task_contract": {
+          "intent_scope": "Interpret the explicit preference enum; content genre and viewing habits are not required inputs.",
+          "preference_definition": {
+            "eligible": "price_minor <= hard_ceiling_minor",
+            "enum": "QUALITY",
+            "priority_order": [
+              "resolution descending",
+              "ads false before true",
+              "price_minor ascending",
+              "plan_id ascending"
+            ],
+            "scope": "Use catalog fields only. Advertising is a tie-breaker, not a veto on higher resolution. Premium content and simultaneous streams are not supplied requirements."
+          },
+          "price_unit": "minor currency units",
+          "required_inputs": [
+            "preference",
+            "hard_ceiling_minor",
+            "currency",
+            "catalog",
+            "upstream"
+          ],
+          "subject": "Testflix subscription selection from a supplied finite catalog"
+        },
+        "upstream": [
+          {
+            "capture_ref": "testflix:semantic_capture:70170748d5cfbbdf7fbdaee047b7dcda9b2f2f780bf7db9971618ab471a2c7bf",
+            "output": {
+              "missing_evidence": [],
+              "preference": "QUALITY",
+              "priorities": [
+                "resolution descending",
+                "ads false before true",
+                "price_minor ascending",
+                "plan_id ascending"
+              ],
+              "summary": "The explicit preference is 'QUALITY'. Subscriptions will be prioritized by resolution (highest first), then by absence of ads, then by price (lowest first), and finally by plan ID for tie-breaking. Only subscriptions within the hard ceiling price of 650 minor currency units are considered eligible."
+            },
+            "role": "intent_interpreter"
+          }
+        ]
+      },
+      "role": "provider_terms_analyst"
+    }
+  ],
+  "historical_refusal": {
+    "contract": "EXACT_V09_BEFORE_QUALITY_CLARIFICATION",
+    "reason": "semantic_review_disagreement",
+    "records": [
+      {
+        "capture": {
+          "capture_id": "testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50",
+          "projection_ref": "testflix:role_projection:f69de96bf38fee2275b42aa2bd364e81b505bbe03409621b9c1b934004688c0b",
+          "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+          "response_ref": "testflix:role_response:8a128b12d0dc78d3bcbc9cd34d76f90f65cfcc51f5a746082d6aca80ce2518f2",
+          "role": "intent_interpreter",
+          "transport": {
+            "attempt": 10,
+            "elapsed_seconds": 5.574007416144013,
+            "model": "gemini-2.5-flash",
+            "origin_mode": "LIVE",
+            "provider": "gemini",
+            "raw_response": "{\n  \"preference\": \"QUALITY\",\n  \"priorities\": [\n    \"High resolution streaming\",\n    \"Ad-free experience\",\n    \"Premium content access\",\n    \"Multiple simultaneous streams\"\n  ],\n  \"missing_evidence\": [],\n  \"summary\": \"The user explicitly prefers 'QUALITY' for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household.\"\n}",
+            "started_utc": "2026-09-12T20:16:44.200197+00:00"
+          }
+        },
+        "output": {
+          "missing_evidence": [],
+          "preference": "QUALITY",
+          "priorities": [
+            "High resolution streaming",
+            "Ad-free experience",
+            "Premium content access",
+            "Multiple simultaneous streams"
+          ],
+          "summary": "The user explicitly prefers 'QUALITY' for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household."
+        },
+        "projection": {
+          "currency": "EUR",
+          "hard_ceiling_minor": 650,
+          "preference": "QUALITY",
+          "request_id": "request:8c2f",
+          "task_contract": {
+            "intent_scope": "Interpret the explicit preference enum; content genre and viewing habits are not required inputs.",
+            "price_unit": "minor currency units",
+            "required_inputs": [
+              "preference",
+              "hard_ceiling_minor",
+              "currency"
+            ],
+            "subject": "Testflix subscription selection from a supplied finite catalog"
+          }
+        },
+        "role": "intent_interpreter"
+      },
+      {
+        "capture": {
+          "capture_id": "testflix:semantic_capture:60d8ef6679db46da91bf9586adccd438421e1fae81ce1cc44eb4743c23c4a9ef",
+          "projection_ref": "testflix:role_projection:11ad52d08e7cf9577f09b3d490d9b8f1efc0f8446afe10c4bec5276737fbe7b4",
+          "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+          "response_ref": "testflix:role_response:4d602120c90c78bca1273a84a0e5161739ecaa7735c855df3ebd78fad7213b36",
+          "role": "provider_terms_analyst",
+          "transport": {
+            "attempt": 11,
+            "elapsed_seconds": 8.31859179213643,
+            "model": "gemini-2.5-flash",
+            "origin_mode": "LIVE",
+            "provider": "gemini",
+            "raw_response": "{\n  \"terms\": [\n    {\n      \"plan_id\": \"plan:cd79\",\n      \"price_minor\": 500,\n      \"resolution\": 720,\n      \"ads\": false,\n      \"period_seconds\": 2592000,\n      \"eligible\": true\n    },\n    {\n      \"plan_id\": \"plan:ab31\",\n      \"price_minor\": 600,\n      \"resolution\": 1080,\n      \"ads\": true,\n      \"period_seconds\": 2592000,\n      \"eligible\": true\n    },\n    {\n      \"plan_id\": \"plan:ef62\",\n      \"price_minor\": 900,\n      \"resolution\": 2160,\n      \"ads\": false,\n      \"period_seconds\": 2592000,\n      \"eligible\": false\n    }\n  ],\n  \"missing_evidence\": [],\n  \"summary\": \"The user explicitly prefers 'QUALITY', prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan 'plan:ef62' (2160p, ad-free) exceeds the price ceiling. Plan 'plan:cd79' (720p, ad-free) is eligible. Plan 'plan:ab31' (1080p, with ads) is eligible but less aligned with the ad-free preference.\"\n}",
+            "started_utc": "2026-09-12T20:16:49.776721+00:00"
+          }
+        },
+        "output": {
+          "missing_evidence": [],
+          "summary": "The user explicitly prefers 'QUALITY', prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan 'plan:ef62' (2160p, ad-free) exceeds the price ceiling. Plan 'plan:cd79' (720p, ad-free) is eligible. Plan 'plan:ab31' (1080p, with ads) is eligible but less aligned with the ad-free preference.",
+          "terms": [
+            {
+              "ads": false,
+              "eligible": true,
+              "period_seconds": 2592000,
+              "plan_id": "plan:cd79",
+              "price_minor": 500,
+              "resolution": 720
+            },
+            {
+              "ads": true,
+              "eligible": true,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ab31",
+              "price_minor": 600,
+              "resolution": 1080
+            },
+            {
+              "ads": false,
+              "eligible": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ef62",
+              "price_minor": 900,
+              "resolution": 2160
+            }
+          ]
+        },
+        "projection": {
+          "catalog": [
+            {
+              "ads": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:cd79",
+              "price_minor": 500,
+              "resolution": 720
+            },
+            {
+              "ads": true,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ab31",
+              "price_minor": 600,
+              "resolution": 1080
+            },
+            {
+              "ads": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ef62",
+              "price_minor": 900,
+              "resolution": 2160
+            }
+          ],
+          "currency": "EUR",
+          "hard_ceiling_minor": 650,
+          "preference": "QUALITY",
+          "request_id": "request:8c2f",
+          "task_contract": {
+            "intent_scope": "Interpret the explicit preference enum; content genre and viewing habits are not required inputs.",
+            "price_unit": "minor currency units",
+            "required_inputs": [
+              "preference",
+              "hard_ceiling_minor",
+              "currency",
+              "catalog",
+              "upstream"
+            ],
+            "subject": "Testflix subscription selection from a supplied finite catalog"
+          },
+          "upstream": [
+            {
+              "capture_ref": "testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50",
+              "output": {
+                "missing_evidence": [],
+                "preference": "QUALITY",
+                "priorities": [
+                  "High resolution streaming",
+                  "Ad-free experience",
+                  "Premium content access",
+                  "Multiple simultaneous streams"
+                ],
+                "summary": "The user explicitly prefers 'QUALITY' for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household."
+              },
+              "role": "intent_interpreter"
+            }
+          ]
+        },
+        "role": "provider_terms_analyst"
+      },
+      {
+        "capture": {
+          "capture_id": "testflix:semantic_capture:907032b89d8d78cc785ec6f364f18d27c30a9a78aff0b1f7a41d8bf9b1c2e774",
+          "projection_ref": "testflix:role_projection:27a6192a18f51261af0ab84b2a562fe387016bce44247cd642819a5648190c58",
+          "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+          "response_ref": "testflix:role_response:8ca4f36ff06de37d5bf3835f1da8fac0b7a0820ef4e9ecbc932286ab2202d5c8",
+          "role": "client_plan_selector",
+          "transport": {
+            "attempt": 12,
+            "elapsed_seconds": 6.7649977914988995,
+            "model": "gemini-2.5-flash",
+            "origin_mode": "LIVE",
+            "provider": "gemini",
+            "raw_response": "{\n  \"selected_plan_id\": \"plan:ab31\",\n  \"decision_factors\": [\n    \"The user's explicit preference is 'QUALITY', which prioritizes resolution.\",\n    \"The hard price ceiling is 650 minor currency units.\",\n    \"Plan 'plan:ab31' offers 1080p resolution, which is the highest resolution available among plans within the budget.\",\n    \"Plan 'plan:ab31' costs 600 minor currency units, which is within the specified budget.\",\n    \"Plan 'plan:cd79' is ad-free but offers a lower resolution (720p), making it less aligned with the primary 'QUALITY' preference for resolution.\",\n    \"Plan 'plan:ef62' offers 2160p resolution but exceeds the price ceiling.\"\n  ],\n  \"missing_evidence\": []\n}",
+            "started_utc": "2026-09-12T20:16:58.098355+00:00"
+          }
+        },
+        "output": {
+          "decision_factors": [
+            "The user's explicit preference is 'QUALITY', which prioritizes resolution.",
+            "The hard price ceiling is 650 minor currency units.",
+            "Plan 'plan:ab31' offers 1080p resolution, which is the highest resolution available among plans within the budget.",
+            "Plan 'plan:ab31' costs 600 minor currency units, which is within the specified budget.",
+            "Plan 'plan:cd79' is ad-free but offers a lower resolution (720p), making it less aligned with the primary 'QUALITY' preference for resolution.",
+            "Plan 'plan:ef62' offers 2160p resolution but exceeds the price ceiling."
+          ],
+          "missing_evidence": [],
+          "selected_plan_id": "plan:ab31"
+        },
+        "projection": {
+          "catalog": [
+            {
+              "ads": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:cd79",
+              "price_minor": 500,
+              "resolution": 720
+            },
+            {
+              "ads": true,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ab31",
+              "price_minor": 600,
+              "resolution": 1080
+            },
+            {
+              "ads": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ef62",
+              "price_minor": 900,
+              "resolution": 2160
+            }
+          ],
+          "currency": "EUR",
+          "hard_ceiling_minor": 650,
+          "preference": "QUALITY",
+          "request_id": "request:8c2f",
+          "task_contract": {
+            "intent_scope": "Interpret the explicit preference enum; content genre and viewing habits are not required inputs.",
+            "price_unit": "minor currency units",
+            "required_inputs": [
+              "preference",
+              "hard_ceiling_minor",
+              "currency",
+              "catalog",
+              "upstream"
+            ],
+            "subject": "Testflix subscription selection from a supplied finite catalog"
+          },
+          "upstream": [
+            {
+              "capture_ref": "testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50",
+              "output": {
+                "missing_evidence": [],
+                "preference": "QUALITY",
+                "priorities": [
+                  "High resolution streaming",
+                  "Ad-free experience",
+                  "Premium content access",
+                  "Multiple simultaneous streams"
+                ],
+                "summary": "The user explicitly prefers 'QUALITY' for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household."
+              },
+              "role": "intent_interpreter"
+            },
+            {
+              "capture_ref": "testflix:semantic_capture:60d8ef6679db46da91bf9586adccd438421e1fae81ce1cc44eb4743c23c4a9ef",
+              "output": {
+                "missing_evidence": [],
+                "summary": "The user explicitly prefers 'QUALITY', prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan 'plan:ef62' (2160p, ad-free) exceeds the price ceiling. Plan 'plan:cd79' (720p, ad-free) is eligible. Plan 'plan:ab31' (1080p, with ads) is eligible but less aligned with the ad-free preference.",
+                "terms": [
+                  {
+                    "ads": false,
+                    "eligible": true,
+                    "period_seconds": 2592000,
+                    "plan_id": "plan:cd79",
+                    "price_minor": 500,
+                    "resolution": 720
+                  },
+                  {
+                    "ads": true,
+                    "eligible": true,
+                    "period_seconds": 2592000,
+                    "plan_id": "plan:ab31",
+                    "price_minor": 600,
+                    "resolution": 1080
+                  },
+                  {
+                    "ads": false,
+                    "eligible": false,
+                    "period_seconds": 2592000,
+                    "plan_id": "plan:ef62",
+                    "price_minor": 900,
+                    "resolution": 2160
+                  }
+                ]
+              },
+              "role": "provider_terms_analyst"
+            }
+          ]
+        },
+        "role": "client_plan_selector"
+      },
+      {
+        "capture": {
+          "capture_id": "testflix:semantic_capture:ad238ab6ab6771105841a00681d217043a50a6ef7dfd5fe65068959e89b0ed46",
+          "projection_ref": "testflix:role_projection:b2cfd3d5bfcbbbc9f78bef90f37259032589658fcd47d68cfd5859e8b6e39c73",
+          "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+          "response_ref": "testflix:role_response:656933f5704bb39d1241d4151cbed4ebb9b343b2541a161f80d38a8da2959084",
+          "role": "contract_reviewer",
+          "transport": {
+            "attempt": 13,
+            "elapsed_seconds": 11.942971042357385,
+            "model": "gemini-2.5-flash",
+            "origin_mode": "LIVE",
+            "provider": "gemini",
+            "raw_response": "{\n  \"supports_selection\": false,\n  \"blocking_conflicts\": [\n    \"The selected plan 'plan:ab31' includes ads, which directly conflicts with the 'Ad-free experience' priority explicitly identified for the 'QUALITY' preference by the intent interpreter. While the client plan selector prioritized resolution, the definition of 'QUALITY' from the intent interpreter lists both 'High resolution streaming' and 'Ad-free experience' as priorities without indicating one is primary over the other. The selection therefore does not fully implement the stated preference.\"\n  ],\n  \"missing_evidence\": [],\n  \"reason\": \"The upstream selection of 'plan:ab31' does not fully implement the 'QUALITY' preference because it includes ads. The intent interpreter explicitly defines 'QUALITY' as prioritizing both 'High resolution streaming' and 'Ad-free experience'. Although 'plan:ab31' offers a higher resolution (1080p) than 'plan:cd79' (720p) within the budget, it fails to meet the 'Ad-free experience' priority. The client plan selector's decision to prioritize resolution over an ad-free experience is not explicitly supported by the provided definition of 'QUALITY', which lists both as important aspects.\"\n}",
+            "started_utc": "2026-09-12T20:17:04.865801+00:00"
+          }
+        },
+        "output": {
+          "blocking_conflicts": [
+            "The selected plan 'plan:ab31' includes ads, which directly conflicts with the 'Ad-free experience' priority explicitly identified for the 'QUALITY' preference by the intent interpreter. While the client plan selector prioritized resolution, the definition of 'QUALITY' from the intent interpreter lists both 'High resolution streaming' and 'Ad-free experience' as priorities without indicating one is primary over the other. The selection therefore does not fully implement the stated preference."
+          ],
+          "missing_evidence": [],
+          "reason": "The upstream selection of 'plan:ab31' does not fully implement the 'QUALITY' preference because it includes ads. The intent interpreter explicitly defines 'QUALITY' as prioritizing both 'High resolution streaming' and 'Ad-free experience'. Although 'plan:ab31' offers a higher resolution (1080p) than 'plan:cd79' (720p) within the budget, it fails to meet the 'Ad-free experience' priority. The client plan selector's decision to prioritize resolution over an ad-free experience is not explicitly supported by the provided definition of 'QUALITY', which lists both as important aspects.",
+          "supports_selection": false
+        },
+        "projection": {
+          "catalog": [
+            {
+              "ads": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:cd79",
+              "price_minor": 500,
+              "resolution": 720
+            },
+            {
+              "ads": true,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ab31",
+              "price_minor": 600,
+              "resolution": 1080
+            },
+            {
+              "ads": false,
+              "period_seconds": 2592000,
+              "plan_id": "plan:ef62",
+              "price_minor": 900,
+              "resolution": 2160
+            }
+          ],
+          "currency": "EUR",
+          "hard_ceiling_minor": 650,
+          "preference": "QUALITY",
+          "request_id": "request:8c2f",
+          "task_contract": {
+            "intent_scope": "Interpret the explicit preference enum; content genre and viewing habits are not required inputs.",
+            "price_unit": "minor currency units",
+            "required_inputs": [
+              "preference",
+              "hard_ceiling_minor",
+              "currency",
+              "catalog",
+              "upstream"
+            ],
+            "subject": "Testflix subscription selection from a supplied finite catalog"
+          },
+          "upstream": [
+            {
+              "capture_ref": "testflix:semantic_capture:833bd65df7f3ff0723e03c0876aef254c92c52fcea7dc73931e2a8627c273b50",
+              "output": {
+                "missing_evidence": [],
+                "preference": "QUALITY",
+                "priorities": [
+                  "High resolution streaming",
+                  "Ad-free experience",
+                  "Premium content access",
+                  "Multiple simultaneous streams"
+                ],
+                "summary": "The user explicitly prefers 'QUALITY' for their Testflix subscription. This indicates a priority for a superior viewing experience, including high-resolution streaming, an ad-free environment, access to premium content, and the ability to stream on multiple devices simultaneously to maintain quality across their household."
+              },
+              "role": "intent_interpreter"
+            },
+            {
+              "capture_ref": "testflix:semantic_capture:60d8ef6679db46da91bf9586adccd438421e1fae81ce1cc44eb4743c23c4a9ef",
+              "output": {
+                "missing_evidence": [],
+                "summary": "The user explicitly prefers 'QUALITY', prioritizing high resolution and an ad-free experience. Plans are evaluated against a hard price ceiling of 650 minor currency units. Plan 'plan:ef62' (2160p, ad-free) exceeds the price ceiling. Plan 'plan:cd79' (720p, ad-free) is eligible. Plan 'plan:ab31' (1080p, with ads) is eligible but less aligned with the ad-free preference.",
+                "terms": [
+                  {
+                    "ads": false,
+                    "eligible": true,
+                    "period_seconds": 2592000,
+                    "plan_id": "plan:cd79",
+                    "price_minor": 500,
+                    "resolution": 720
+                  },
+                  {
+                    "ads": true,
+                    "eligible": true,
+                    "period_seconds": 2592000,
+                    "plan_id": "plan:ab31",
+                    "price_minor": 600,
+                    "resolution": 1080
+                  },
+                  {
+                    "ads": false,
+                    "eligible": false,
+                    "period_seconds": 2592000,
+                    "plan_id": "plan:ef62",
+                    "price_minor": 900,
+                    "resolution": 2160
+                  }
+                ]
+              },
+              "role": "provider_terms_analyst"
+            },
+            {
+              "capture_ref": "testflix:semantic_capture:907032b89d8d78cc785ec6f364f18d27c30a9a78aff0b1f7a41d8bf9b1c2e774",
+              "output": {
+                "decision_factors": [
+                  "The user's explicit preference is 'QUALITY', which prioritizes resolution.",
+                  "The hard price ceiling is 650 minor currency units.",
+                  "Plan 'plan:ab31' offers 1080p resolution, which is the highest resolution available among plans within the budget.",
+                  "Plan 'plan:ab31' costs 600 minor currency units, which is within the specified budget.",
+                  "Plan 'plan:cd79' is ad-free but offers a lower resolution (720p), making it less aligned with the primary 'QUALITY' preference for resolution.",
+                  "Plan 'plan:ef62' offers 2160p resolution but exceeds the price ceiling."
+                ],
+                "missing_evidence": [],
+                "selected_plan_id": "plan:ab31"
+              },
+              "role": "client_plan_selector"
+            }
+          ]
+        },
+        "role": "contract_reviewer"
+      }
+    ],
+    "source": "/Users/admin/Projects/hedgehog-os-testflix-v10-work/attempt_AB_01_sources/semantic_roles_v01.py",
+    "source_sha256": "48f48b3d0507954a681d2ad988ebb0b444b3b496ae9ab51919022601ca45eb4d"
+  },
+  "model_calls": 0,
+  "raw_metadata_refusals": [
+    {
+      "field": "request_ref",
+      "reason": "raw_attempt_metadata"
+    },
+    {
+      "field": "projection_ref",
+      "reason": "raw_attempt_metadata"
+    },
+    {
+      "field": "role",
+      "reason": "raw_attempt_metadata"
+    },
+    {
+      "field": "attempt",
+      "reason": "raw_attempt_metadata"
+    }
+  ],
+  "result": "PASS",
+  "reused_responses": [
+    14,
+    15
+  ]
+}

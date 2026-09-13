@@ -1,0 +1,117 @@
+{
+  "result": "PASS_GENUINE_RECORDS_ON_EXACT_REVIEWED_PROJECTION_REPAIR",
+  "records": 12,
+  "groups": [
+    {
+      "group": 0,
+      "canonical_sha256": "f8bca4bcfe248644742e09b9180a10dba9395f870b1c1bc2cf664ca87c9e5863",
+      "records": 4,
+      "actual_consumed_position": 4,
+      "request_ref": "testflix:semantic_request:73bff9ad64316315915de8d6381b3ffa50a11acf7a314ab706928049a29cdaf9",
+      "attempts": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "group": 1,
+      "canonical_sha256": "0153cdc767f52a7a8305371e04fd388ad5f68e4f32138d2daa184775e462aea1",
+      "records": 4,
+      "actual_consumed_position": 4,
+      "request_ref": "testflix:semantic_request:779e62bd0d942a9e8a416e8a221e84eaa9c45cf22b1fe401474236dcf9181e8d",
+      "attempts": [
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "group": 2,
+      "canonical_sha256": "3fdf2d59d80b536e7d5b5a35cac643efd2589d9c4f2ccf11e7fea0a8890e9636",
+      "records": 4,
+      "actual_consumed_position": 4,
+      "request_ref": "testflix:semantic_request:79963cbc2b49a70ed8e86102015a0f9abc0cd291900c8c3937ccf4c15e7604a3",
+      "attempts": [
+        14,
+        15,
+        19,
+        20
+      ]
+    }
+  ],
+  "input_pins": {
+    "main_records.json": {
+      "sha256": "028a93f08f7e07d49bc3093bbdaadd27bf6a3d315a296881623691657264ba49",
+      "bytes": 41741
+    },
+    "actual_AB_01/semantic_checkpoint.json": {
+      "sha256": "00a65605c0c28c33da7303b5af0c96627db734819ad5cfc9bd8da93280897017",
+      "bytes": 17460
+    },
+    "candidate/demo/testflix_fixtures_v01.json": {
+      "sha256": "ce96b3d3d51b5b41ebd82dc7850a70e5b7d00fbb9e9587a63e549b0b9971c673",
+      "bytes": 914
+    },
+    "live_captures/attempt_14.json": {
+      "sha256": "349b2fc45cea20e7831d7af7d318e79253611ddbe2768088984bb2b121e4027f",
+      "bytes": 385
+    },
+    "live_captures/response_14.json": {
+      "sha256": "df275e36a2106bbf3d13641fc253ef36affc511af959ab92d754e62e3dfcc5a0",
+      "bytes": 2114
+    },
+    "live_captures/attempt_15.json": {
+      "sha256": "7d91b3e6788b05622ce3fb088a70f47f50c27e0bcf56a03cf95293dbc1fc738c",
+      "bytes": 389
+    },
+    "live_captures/response_15.json": {
+      "sha256": "3d3e00378ebffa7d72acb5a382b865e24077da940973ce6626f7d39f2a949070",
+      "bytes": 3583
+    },
+    "live_captures/attempt_19.json": {
+      "sha256": "a98b083abac4bc9d4d2bbefa623add2cecff0eb843412265ad1873fa1ef45f2d",
+      "bytes": 387
+    },
+    "live_captures/response_19.json": {
+      "sha256": "b2802331d7323846ddcccd529ad63239ee03fb08029178181369a770a8be6a87",
+      "bytes": 4056
+    },
+    "live_captures/attempt_20.json": {
+      "sha256": "96a27217305cb350c38c2a794839918c7a41457a22a4a7b93db4b3a454775cd9",
+      "bytes": 384
+    },
+    "live_captures/response_20.json": {
+      "sha256": "19e80f7c8a9e7d57b98535e6d60f66a00c999aeefcd6bdde258b311483b28b48",
+      "bytes": 4736
+    }
+  },
+  "capture_repair_applied": true,
+  "model_calls": 0,
+  "Host_execution": 0,
+  "real_adapter_calls": 0,
+  "modules": {
+    "hedgehog.domains.testflix": {
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf",
+      "bytes": 79
+    },
+    "hedgehog.domains.testflix.contracts_v01": {
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b",
+      "bytes": 13757
+    },
+    "hedgehog.domains.testflix.semantic_roles_v01": {
+      "sha256": "7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736",
+      "bytes": 11152
+    },
+    "hedgehog.domains.testflix.semantic_adapter_v01": {
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5",
+      "bytes": 5287
+    },
+    "hedgehog.domains.testflix.live_semantic_adapter_v01": {
+      "sha256": "6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec",
+      "bytes": 10083
+    }
+  }
+}

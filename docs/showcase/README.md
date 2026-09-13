@@ -1,7 +1,7 @@
-# Презентации и истории Radiolaria / Hedgehog OS
+# Radiolaria / Hedgehog OS demonstrations
 
-- [Testflix — первая живая история, 12 сентября 2026](history/testflix_v09_20260912/README.md): оригинальная HTML-презентация, ответы моделей, разногласия, ошибки, код и полный архив. Исторический V09, положительный A/B ещё не завершён.
-- [Airline — All Real Full Stack](airline_all_real_full_stack_v01/README.md).
-- [Две предметные области — общая презентация](two_domain_master_v01/README.md).
+- [Testflix V09: English demonstration and historical evidence, September 12, 2026](history/testflix_v09_20260912/README.md): original HTML, screenshots, model responses, failures, source files, four translated historical documents and XML reader. Positive A/B remains incomplete.
+- [Airline: All Real Full Stack](airline_all_real_full_stack_v01/README.md).
+- [Two-domain demonstration](two_domain_master_v01/README.md).
 
-Этот каталог в исторической ветке служит навигацией. Исторические материалы не меняют текущие правила ядра и не присваивают Testflix финальную приёмку.
+This catalogue links historical demonstrations. It does not grant new runtime acceptance.

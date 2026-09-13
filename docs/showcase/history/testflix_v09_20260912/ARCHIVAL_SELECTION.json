@@ -1,16 +1,11 @@
 {
-  "format": "testflix-v09-historical-selection-v2",
+  "format": "testflix-v09-original-english-selection-v3",
   "source_archive_sha256": "f9c2d4519a404163fbfd3bdcef4632f9bba60025b3ad0e7ba982b85162937ec0",
   "source_base_commit": "54e32dbcc0e4d68431ec2b9428eac965f88ee47c",
-  "original_file_count": 427,
-  "original_total_bytes": 9344783,
-  "full_archive_included_separately": true,
+  "original_file_count": 423,
+  "original_total_bytes": 9327223,
+  "full_archive_included_separately": false,
   "files": [
-    {
-      "path": "original/AB_contract_repair.md",
-      "bytes": 3192,
-      "sha256": "c098b9bb13a16851ef41b962eac87cba1b5f25ae1565e924563afc7349dba924"
-    },
     {
       "path": "original/AB_egress_preflight.json",
       "bytes": 2658,
@@ -20,11 +15,6 @@
       "path": "original/CONTROLLED_STORY_COMPLETE.json",
       "bytes": 4344,
       "sha256": "86ff96caa23b95755d4eb0e80962c9f008cd41c1e51d7baddff353991074fe87"
-    },
-    {
-      "path": "original/FINAL_REPORT.md",
-      "bytes": 8496,
-      "sha256": "6c8960e7005ce3b3251baf56a3c99754be32447cb7b0299ca5b0d45e6c5eea4f"
     },
     {
       "path": "original/MANIFEST.tsv",
@@ -45,11 +35,6 @@
       "path": "original/RESUME_STATE.json",
       "bytes": 326,
       "sha256": "5453045e98459f4c0e4b452e79c8bfbcc92f705e922be7afb7783cac94eec460"
-    },
-    {
-      "path": "original/approval_AB_owner_confirmed.json",
-      "bytes": 765,
-      "sha256": "2f8fcc047388ea9ccd2095f767d9a597c5bf7f0ef1239101cbfc489ef9b8b22c"
     },
     {
       "path": "original/approval_AB_refusal.json",
@@ -1412,11 +1397,6 @@
       "sha256": "2a7187dc1cf85880e0992e84c862159eb1499889ee59c0e13e4b9984c96be640"
     },
     {
-      "path": "original/demo/HUMAN_STORY.md",
-      "bytes": 5107,
-      "sha256": "713831406fccfb58c4e90a0d444c2f3ec4ba20d8d3a291b7d68d5518cf1d9fd7"
-    },
-    {
       "path": "original/demo/story.html",
       "bytes": 111909,
       "sha256": "bc3a0e39e44587d1f37b8e2ccd87d8323cc418d8e008f1e8289bf2c3d9274462"
@@ -2141,5 +2121,7 @@
       "bytes": 2313,
       "sha256": "837cefabddf883099f1da25bc975bd601122a083f26e51bd1ce03d649e181cd1"
     }
-  ]
+  ],
+  "full_archive_url": "https://github.com/AAkhtanin/hedgehog-os/blob/8209207be6e24e2dd9d46c3feff3b720c8d4f254/docs/showcase/history/testflix_v09_20260912/evidence/RADIOLARIA_TESTFLIX_T3_REPAIR_AND_DEMONSTRATION_V09_RETURN_20260912T203950Z.tar.gz",
+  "full_archive_retention": "Exact archive retained in the preceding historical commit and local owner backup."
 }

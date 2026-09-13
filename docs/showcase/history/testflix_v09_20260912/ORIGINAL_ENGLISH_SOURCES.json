@@ -1,0 +1,53 @@
+{
+  "format": "original-english-evidence-with-four-translations-v4",
+  "source_archive_sha256": "f9c2d4519a404163fbfd3bdcef4632f9bba60025b3ad0e7ba982b85162937ec0",
+  "source_commit": "8209207be6e24e2dd9d46c3feff3b720c8d4f254",
+  "translations_included": true,
+  "original_files_retained": 423,
+  "original_bytes_preserved": true,
+  "source_files_with_cyrillic_omitted_from_current_tree": [
+    "FINAL_REPORT.md",
+    "demo/HUMAN_STORY.md",
+    "AB_contract_repair.md",
+    "approval_AB_owner_confirmed.json"
+  ],
+  "original_english_counterparts_of_omitted_files_found": false,
+  "original_archive_url": "https://github.com/AAkhtanin/hedgehog-os/blob/8209207be6e24e2dd9d46c3feff3b720c8d4f254/docs/showcase/history/testflix_v09_20260912/evidence/RADIOLARIA_TESTFLIX_T3_REPAIR_AND_DEMONSTRATION_V09_RETURN_20260912T203950Z.tar.gz",
+  "new_navigation_files": [
+    "README.md",
+    "../../README.md"
+  ],
+  "runtime_changes": false,
+  "new_execution_claimed": false,
+  "translation_count": 4,
+  "translations": [
+    {
+      "path": "FINAL_REPORT.md",
+      "source_sha256": "6c8960e7005ce3b3251baf56a3c99754be32447cb7b0299ca5b0d45e6c5eea4f",
+      "english_sha256": "064b5a77f6c2d17821b3d8a68f15ca2da563fbc86faab50292d2a28369b2d7d6",
+      "bytes": 6599,
+      "edition_path": "translations/FINAL_REPORT.md"
+    },
+    {
+      "path": "demo/HUMAN_STORY.md",
+      "source_sha256": "713831406fccfb58c4e90a0d444c2f3ec4ba20d8d3a291b7d68d5518cf1d9fd7",
+      "english_sha256": "5a32d5eab266b360dde5c00392dac4fc57866156a175e2a05d2b9ca18fc85b7d",
+      "bytes": 3683,
+      "edition_path": "translations/demo/HUMAN_STORY.md"
+    },
+    {
+      "path": "AB_contract_repair.md",
+      "source_sha256": "c098b9bb13a16851ef41b962eac87cba1b5f25ae1565e924563afc7349dba924",
+      "english_sha256": "5928343384a908232362766b87c4eee53cd0285b0359a7d1d0235035889e0371",
+      "bytes": 3352,
+      "edition_path": "translations/AB_contract_repair.md"
+    },
+    {
+      "path": "approval_AB_owner_confirmed.json",
+      "source_sha256": "2f8fcc047388ea9ccd2095f767d9a597c5bf7f0ef1239101cbfc489ef9b8b22c",
+      "english_sha256": "ad80516207cdb1536b982692c38f279cf4d99266fa1aebdf88c7ce8835c1a1e3",
+      "bytes": 1218,
+      "edition_path": "translations/approval_AB_owner_confirmed.json"
+    }
+  ]
+}

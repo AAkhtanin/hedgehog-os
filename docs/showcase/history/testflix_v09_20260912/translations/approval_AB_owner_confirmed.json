@@ -1,0 +1,26 @@
+{
+  "owner_message": "I explicitly authorize 4 A/B requests to the site you specified.",
+  "scope": "Four A/B requests to the previously disclosed Google endpoint, finite test catalog, QUALITY, 650 minor EUR and previous role outputs; no retries or real business effects",
+  "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+  "payload_verification": "AB_egress_preflight.json",
+  "previous_reviews": [
+    "approval_AB_refusal.json",
+    "approval_AB_second_refusal.json"
+  ],
+  "renewed_review": "APPROVED_COMMAND_STARTED_AFTER_EXPLICIT_OWNER_CONFIRMATION",
+  "command_directory": "commands/1789244203572999000_live_AB_01",
+  "no_bypass": true,
+  "authorization_is_not_runtime_result": true,
+  "translation_metadata": {
+    "edition": "ENGLISH_TRANSLATED_HISTORICAL_RECORD",
+    "translated_fields": [
+      "owner_message"
+    ],
+    "source_language": "Russian",
+    "owner_message_is_translation_not_verbatim": true,
+    "source_file": "approval_AB_owner_confirmed.json",
+    "source_sha256": "2f8fcc047388ea9ccd2095f767d9a597c5bf7f0ef1239101cbfc489ef9b8b22c",
+    "technical_fields_preserved": true,
+    "new_authorization_or_execution_claimed": false
+  }
+}

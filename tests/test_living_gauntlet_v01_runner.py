@@ -159,7 +159,13 @@ _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER = None
 
 
 @pytest.fixture(scope="module", autouse=True)
-def _shared_e5_report_for_internal_builder():
+def _shared_e5_report_for_internal_builder(request):
+    # The new registration-only selection has no report dependency. Every legacy
+    # selection retains the complete original shared report setup below.
+    selected = {item.name for item in request.session.items if item.module is request.module}
+    if selected == {"test_ews_registration_direct_no_report_v01"}:
+        yield None
+        return
     global _SHARED_E5_REPORT_FOR_INTERNAL_BUILDER
     report = (
         _demo.run_living_gauntlet_v01._g2e.
@@ -186,7 +192,11 @@ def _collect_living_internal_for_test_v01():
 
 
 @pytest.fixture(scope="module", autouse=True)
-def _shared_d5_report():
+def _shared_d5_report(request):
+    selected = {item.name for item in request.session.items if item.module is request.module}
+    if selected == {"test_ews_registration_direct_no_report_v01"}:
+        yield None
+        return
     original = _demo.run_living_gauntlet_v01._g2d.collect_fractal_runtime_g2_d_v02
     report = original()
     assert _demo.run_living_gauntlet_v01._g2d.validate_fractal_runtime_g2_d_report_v02(report) == ()
@@ -5683,7 +5693,7 @@ def test_u4_registration_inventory_has_no_second_effect_owner(report, tmp_path) 
     assert living._current_registration_v01(root) == (block, ())
     for mutation in ("missing", "extra", "duplicate", "module", "symbol", "role", "source", "pass"):
         changed = deepcopy(overlay)
-        key = living._TESTFLIX_REGISTRATION_KEY_V11 if living._TESTFLIX_REGISTRATION_KEY_V11 in changed else living._U4_REGISTRATION_KEY
+        key = living._EWS_REGISTRATION_KEY_V01 if living._EWS_REGISTRATION_KEY_V01 in changed else living._TESTFLIX_REGISTRATION_KEY_V11 if living._TESTFLIX_REGISTRATION_KEY_V11 in changed else living._U4_REGISTRATION_KEY
         current = changed[key]
         if mutation == "missing":
             current["rows"].pop()
@@ -5710,7 +5720,60 @@ def test_u4_registration_inventory_has_no_second_effect_owner(report, tmp_path) 
     producer.write_bytes(producer.read_bytes() + b"\nUNAUTHORIZED = True\n")
     assert "registration_source:hedgehog/work_execution_host_v01.py" in living._current_registration_v01(root)[1]
     shutil.copyfile(REPOSITORY_ROOT / "hedgehog/work_execution_host_v01.py", producer)
-    key = living._TESTFLIX_REGISTRATION_KEY_V11 if living._TESTFLIX_REGISTRATION_KEY_V11 in overlay else living._U4_REGISTRATION_KEY
+    key = living._EWS_REGISTRATION_KEY_V01 if living._EWS_REGISTRATION_KEY_V01 in overlay else living._TESTFLIX_REGISTRATION_KEY_V11 if living._TESTFLIX_REGISTRATION_KEY_V11 in overlay else living._U4_REGISTRATION_KEY
     del overlay[key]
     overlay_path.write_text(json.dumps(overlay) + "\n")
     assert living._current_registration_v01(root)[1]
+
+
+def test_ews_registration_direct_no_report_v01(tmp_path):
+    import hashlib
+    import shutil
+    import subprocess
+    living = _demo.run_living_gauntlet_v01
+    block, errors = living._current_registration_v01(REPOSITORY_ROOT)
+    assert errors == () and len(block["rows"]) == 9
+    assert block["basis"] == living._EWS_BASE_V01
+    assert [row["seam_id"] for row in block["rows"]] == [row["seam_id"] for row in living._U4_REGISTRATION_ROWS]
+    assert all(row["authority"] == "EVIDENCE_ONLY" and row["effect_access"] == "NONE" for row in block["rows"])
+    for path in ("hedgehog/action_commit_packet_v02.py", "pyproject.toml"):
+        assert block["frozen_source_identities"][path] == hashlib.sha256((REPOSITORY_ROOT/path).read_bytes()).hexdigest()
+        assert block["frozen_source_identities"][path] != living._TESTFLIX_FROZEN_SOURCES_V11[path]
+    root = tmp_path / "registration"
+    root.mkdir()
+    subprocess.run(("git", "init", "-q", "-b", "main"), cwd=root, check=True)
+    objects = Path(subprocess.check_output(("git", "rev-parse", "--path-format=absolute", "--git-path", "objects"), cwd=REPOSITORY_ROOT, text=True).strip())
+    shutil.copytree(objects, root/".git/objects", dirs_exist_ok=True, copy_function=shutil.copyfile)
+    paths = (*living._EWS_FROZEN_SOURCES_V01, *living._U4_BASE_IDENTITIES, "release/current_schema_surface_v01.json", "release/current_status_overlay_v01.json")
+    for path in paths:
+        target = root/path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPOSITORY_ROOT/path, target)
+    overlay_path = root/"release/current_status_overlay_v01.json"
+    original = json.loads(overlay_path.read_bytes())
+    overlay_path.write_text(json.dumps(original, sort_keys=True)+"\n")
+    assert living._current_registration_v01(root) == (block, ())
+    for mutation in ("effect", "row", "schema", "binding"):
+        changed = deepcopy(original)
+        current = changed[living._EWS_REGISTRATION_KEY_V01]
+        if mutation == "effect":current["rows"][0]["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
+        elif mutation == "row":current["rows"].pop()
+        elif mutation == "schema":current["schema_paths"].append("schemas/foreign.json")
+        else:current["frozen_source_identities"]["pyproject.toml"] = "0"*64
+        overlay_path.write_text(json.dumps(changed)+"\n")
+        assert "registration_exact_block" in living._current_registration_v01(root)[1], mutation
+    overlay_path.write_text(json.dumps(original)+"\n")
+    schema_path = root/"release/current_schema_surface_v01.json"
+    raw = schema_path.read_bytes()
+    changed = json.loads(raw)
+    changed["current_schema_paths"].append("schemas/foreign.json")
+    schema_path.write_text(json.dumps(changed)+"\n")
+    assert "registration_schema_inventory" in living._current_registration_v01(root)[1]
+    schema_path.write_bytes(raw)
+    for path in ("pyproject.toml", "hedgehog/action_commit_packet_v02.py"):
+        target = root/path
+        raw = target.read_bytes()
+        target.write_bytes(raw+b"\n# Unapproved bytes\n")
+        assert "registration_source:"+path in living._current_registration_v01(root)[1]
+        target.write_bytes(raw)
+    assert living._current_registration_v01(root) == (block, ())

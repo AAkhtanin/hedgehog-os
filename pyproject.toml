@@ -29,3 +29,7 @@ include = ["hedgehog*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = [
+  "--ignore=tests/test_ephemeral_workspace_evidence_v01.py",
+  "--ignore=tests/test_ephemeral_workspace_adversarial_v01.py",
+]

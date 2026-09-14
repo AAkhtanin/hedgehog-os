@@ -1,0 +1,9 @@
+{
+  "provenance": "LEAD_REVIEWED_PIN_FROM_THIS_PROMPT",
+  "instruction": "RADIOLARIA_EWS_MAIN_LANDING_COMMIT_PUSH_V01.txt",
+  "expected_publication_id": "693fc6b5c2e8499161b40dc7bb6c22a21ca040c38325f1e657f176e9ff7bf525",
+  "manifest_id": "bea10d86086988d1816736507ce176e564a276e8bb46e28d5e650d9325a1ae26",
+  "package_content_hash": "8f075beb30467c8e3df895ff14fb5489e8b473289a83d4ff85e252b5bf9f38e1",
+  "public_kernel_manifest_hash": "57dccef00254d324b5759991e5f0812f18bbb35a946b9cf9fc9a5ef62370fb24",
+  "authority": "EVIDENCE_ONLY_NOT_SIGNATURE_TIMESTAMP_OR_ROOT_ATTESTATION"
+}

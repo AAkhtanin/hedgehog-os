@@ -5743,6 +5743,19 @@ _TESTFLIX_REGISTRATION_ROWS_V11 = tuple(
 )
 
 
+_EWS_REGISTRATION_KEY_V01 = "ephemeral_workspace_current_registration_v01"
+_EWS_BASE_V01 = "e42d37fa98dfec7110b8cf75b1aceaa614f461be"
+_EWS_FROZEN_SOURCES_V01 = {
+    **_TESTFLIX_FROZEN_SOURCES_V11,
+    "hedgehog/action_commit_packet_v02.py": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+    "pyproject.toml": "b9d0ba6c3ef5aba0e75882a5c7501c4ac3631b9ccf8559f17ed73ce34a8efea0",
+}
+_EWS_REGISTRATION_ROWS_V01 = tuple(
+    {**row, "source_sha256": _EWS_FROZEN_SOURCES_V01[row["producer"].split(":")[0].replace(".", "/") + ".py"]}
+    for row in _U4_REGISTRATION_ROWS
+)
+
+
 def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[str, ...]]:
     """Read current registration as evidence, never dispatch metadata symbols."""
     import ast
@@ -5751,10 +5764,11 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
     errors: list[str] = []
     try:
         overlay = _load_strict_json_object(root / "release/current_status_overlay_v01.json")
+        ews = _EWS_REGISTRATION_KEY_V01 in overlay
         testflix = _TESTFLIX_REGISTRATION_KEY_V11 in overlay
-        block = overlay.get(_TESTFLIX_REGISTRATION_KEY_V11 if testflix else _U4_REGISTRATION_KEY)
-        sources = _TESTFLIX_FROZEN_SOURCES_V11 if testflix else _U4_FROZEN_SOURCES
-        rows = _TESTFLIX_REGISTRATION_ROWS_V11 if testflix else _U4_REGISTRATION_ROWS
+        block = overlay.get(_EWS_REGISTRATION_KEY_V01 if ews else _TESTFLIX_REGISTRATION_KEY_V11 if testflix else _U4_REGISTRATION_KEY)
+        sources = _EWS_FROZEN_SOURCES_V01 if ews else _TESTFLIX_FROZEN_SOURCES_V11 if testflix else _U4_FROZEN_SOURCES
+        rows = _EWS_REGISTRATION_ROWS_V01 if ews else _TESTFLIX_REGISTRATION_ROWS_V11 if testflix else _U4_REGISTRATION_ROWS
         if block is None:
             # A missing block is historical only with the entire exact H tree.
             head = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=root).decode().strip()
@@ -5778,9 +5792,9 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
                 return None, ("registration_missing_current",)
             return None, ()
         expected = {
-            "profile": "TESTFLIX_TEMPORAL_IMPLEMENTATION_ADMISSION_V11" if testflix else "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
-            "basis": _TESTFLIX_L_V11 if testflix else _U4_H,
-            "status": "IMPLEMENTED_REGISTRATION_CANDIDATE_OWNER_ACCEPTANCE_PENDING",
+            "profile": "EPHEMERAL_WORKSPACE_ADMISSION_V01" if ews else "TESTFLIX_TEMPORAL_IMPLEMENTATION_ADMISSION_V11" if testflix else "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
+            "basis": _EWS_BASE_V01 if ews else _TESTFLIX_L_V11 if testflix else _U4_H,
+            "status": "EXACT_SOURCE_ADMISSION_DERIVED_FROM_GIT" if ews else "IMPLEMENTED_REGISTRATION_CANDIDATE_OWNER_ACCEPTANCE_PENDING",
             "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_HANDLE",
             "base_identities": _U4_BASE_IDENTITIES,
             "frozen_source_identities": sources,

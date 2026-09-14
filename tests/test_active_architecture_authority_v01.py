@@ -352,6 +352,19 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     prepush = False
     closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
     overlay = json.loads((root / "release/current_status_overlay_v01.json").read_text())
+    if "ephemeral_workspace_admission_v01" in overlay:
+        actions = overlay["ephemeral_workspace_admission_v01"]["path_actions"]
+        base = "e42d37fa98dfec7110b8cf75b1aceaa614f461be"
+        if head == base:
+            assert parent == "54e32dbcc0e4d68431ec2b9428eac965f88ee47c" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "EWS_ADMISSION_CANDIDATE_UNSTAGED" if status == unstaged else "EWS_ADMISSION_CANDIDATE_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "EWS_IMPLEMENTATION_ADMITTED_COMMITTED"
+        return "G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\nTESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=" + phase + "\n"
     if "testflix_admission_v11" in overlay:
         metadata = overlay["testflix_admission_v11"]
         actions = metadata["path_actions"]
@@ -7513,7 +7526,7 @@ def test_testflix_exact_sources_and_stable_projection_v11():
     pins = namespace["TESTFLIX_SOURCE_IDENTITIES_V11"]
     assert len(pins)==51 and set(pins)==set(namespace["TESTFLIX_PATH_ACTIONS_V11"])
     for path,expected in pins.items():
-        body=(REPOSITORY_ROOT/path).read_bytes()
+        body=subprocess.check_output(("git", "show", namespace["EWS_BASE_V01"]+":"+path), cwd=REPOSITORY_ROOT) if namespace["_ews_requested_v01"](REPOSITORY_ROOT) else (REPOSITORY_ROOT/path).read_bytes()
         assert digest(path,body)==expected
         assert digest(path,body+b"\n# Unapproved extra bytes\n")!=expected
     path="tools/check_active_architecture_authority_v01.py"
@@ -7539,13 +7552,20 @@ def test_testflix_current_public_guard_v11():
 
 def test_testflix_living_registration_source_and_schema_v11(tmp_path):
     import importlib.util
-    source=REPOSITORY_ROOT/'demo/run_living_gauntlet_v01.py'
+    namespace = runpy.run_path(str(GUARD_PATH))
+    if namespace["_ews_requested_v01"](REPOSITORY_ROOT):
+        historical = tmp_path / "historical_source"
+        historical.mkdir()
+        source_root = _ews_isolated_base_v01(historical)
+    else:
+        source_root = REPOSITORY_ROOT
+    source=source_root/'demo/run_living_gauntlet_v01.py'
     spec=importlib.util.spec_from_file_location('testflix_living_registration_probe_v11',source)
     living=importlib.util.module_from_spec(spec)
     sys.modules[spec.name]=living
     try:
         spec.loader.exec_module(living)
-        block,errors=living._current_registration_v01(REPOSITORY_ROOT)
+        block,errors=living._current_registration_v01(source_root)
         assert errors==() and len(block['rows'])==9
         assert block['basis']==living._TESTFLIX_L_V11
         assert all(row['authority']=='EVIDENCE_ONLY' and row['effect_access']=='NONE' for row in block['rows'])
@@ -7554,7 +7574,7 @@ def test_testflix_living_registration_source_and_schema_v11(tmp_path):
             'release/current_schema_surface_v01.json','release/current_status_overlay_v01.json')
         for path in paths:
             target=root/path;target.parent.mkdir(parents=True,exist_ok=True)
-            target.write_bytes((REPOSITORY_ROOT/path).read_bytes())
+            target.write_bytes((source_root/path).read_bytes())
         overlay_path=root/'release/current_status_overlay_v01.json'
         original=json.loads(overlay_path.read_text())
         assert living._current_registration_v01(root)==(block,())
@@ -7574,10 +7594,148 @@ def test_testflix_living_registration_source_and_schema_v11(tmp_path):
         schema=json.loads(schema_path.read_text());schema['current_schema_paths'].append('schemas/retired/foreign.json')
         schema_path.write_text(json.dumps(schema)+'\n')
         assert 'registration_schema_inventory' in living._current_registration_v01(root)[1]
-        schema_path.write_bytes((REPOSITORY_ROOT/'release/current_schema_surface_v01.json').read_bytes())
+        schema_path.write_bytes((source_root/'release/current_schema_surface_v01.json').read_bytes())
         host=root/'hedgehog/work_execution_host_v01.py';body=host.read_bytes();host.write_bytes(body+b'\nUNAPPROVED=True\n')
         assert 'registration_source:hedgehog/work_execution_host_v01.py' in living._current_registration_v01(root)[1]
         host.write_bytes(body)
         assert living._current_registration_v01(root)==(block,())
     finally:
         sys.modules.pop(spec.name,None)
+
+
+def _ews_isolated_base_v01(tmp_path):
+    """Own Git objects/worktree; no shared branch or owner index mutations."""
+    root = _testflix_historical_L_root_v11(tmp_path)
+    base = "e42d37fa98dfec7110b8cf75b1aceaa614f461be"
+    for args in (("update-ref", "refs/heads/main", base),
+                 ("update-ref", "refs/remotes/origin/main", base),
+                 ("read-tree", base), ("checkout-index", "--all", "--force")):
+        subprocess.run(("git", *args), cwd=root, check=True)
+    return root
+
+
+def test_ews_admission_real_git_states_and_hostile_neighbors_v01(tmp_path):
+    import os
+    import shutil
+    namespace = runpy.run_path(str(GUARD_PATH))
+    root = _ews_isolated_base_v01(tmp_path)
+    actions = namespace["EWS_PATH_ACTIONS_V01"]
+    base = namespace["EWS_BASE_V01"]
+    for path in actions:
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPOSITORY_ROOT / path, target)
+        assert target.stat().st_ino != (REPOSITORY_ROOT / path).stat().st_ino
+
+    def git(*args, **kwargs):
+        return subprocess.check_output(("git", *args), cwd=root, **kwargs).decode().strip()
+
+    def check(expected=None, reason=None):
+        failures = []
+        phase = namespace["_validate_ephemeral_workspace_admission_v01"](root, failures)
+        if reason:
+            assert reason in failures, (reason, failures)
+            assert namespace["collect_failures"](root)
+        else:
+            assert not failures, failures
+            assert phase == expected
+            result = _run_guard(root)
+            assert result.returncode == 0, result.stdout + result.stderr
+            assert "EPHEMERAL_WORKSPACE_PHASE=" + expected in result.stdout
+        return failures
+
+    unstaged = "EWS_ADMISSION_CANDIDATE_UNSTAGED"
+    staged = "EWS_ADMISSION_CANDIDATE_STAGED"
+    committed = "EWS_IMPLEMENTATION_ADMITTED_COMMITTED"
+    check(unstaged)
+    path = "hedgehog/action_commit_packet_v02.py"
+    file = root / path
+    original = file.read_bytes()
+    file.write_bytes(original + b"\n# Unapproved bytes\n")
+    check(reason="ews.source_identity:" + path)
+    file.write_bytes(original)
+    file.chmod(0o755)
+    check(reason="ews.mode_or_lf:" + path)
+    file.chmod(0o644)
+    file.unlink()
+    check(reason="ews.file_type:" + path)
+    file.symlink_to(REPOSITORY_ROOT / path)
+    check(reason="ews.file_type:" + path)
+    file.unlink()
+    file.write_bytes(original)
+    extra = root / "foreign_landing.txt"
+    extra.write_text("Unapproved path\n")
+    check(reason="ews.candidate.exact_ledger")
+    extra.unlink()
+    metadata_path = root / "release/current_status_overlay_v01.json"
+    raw = metadata_path.read_bytes()
+    metadata = json.loads(raw)
+    metadata["ephemeral_workspace_admission_v01"]["authority"] = "ROOT"
+    metadata_path.write_text(json.dumps(metadata) + "\n")
+    check(reason="ews.admission_metadata")
+    metadata_path.write_bytes(raw)
+    git("add", "--", path)
+    check(reason="ews.candidate.exact_ledger")
+    git("read-tree", base)
+    git("update-index", "--assume-unchanged", "README.md")
+    check(reason="ews.index.flags")
+    git("update-index", "--no-assume-unchanged", "README.md")
+    git("update-index", "--skip-worktree", "README.md")
+    check(reason="ews.index.hidden_flags")
+    git("update-index", "--no-skip-worktree", "README.md")
+    parent = namespace["EWS_BASE_PARENT_V01"]
+    git("update-ref", "refs/remotes/origin/main", parent)
+    check(reason="ews.candidate.basis_origin")
+    git("update-ref", "refs/remotes/origin/main", base)
+    git("update-ref", "refs/heads/main", parent)
+    check(reason="ews.exact_immediate_L_child")
+    git("update-ref", "refs/heads/main", base)
+    check(unstaged)
+    git("add", "--", *sorted(actions))
+    check(staged)
+    tree = git("write-tree")
+    env = dict(os.environ, GIT_AUTHOR_NAME="Isolated admission fixture",
+               GIT_AUTHOR_EMAIL="fixture@example.invalid",
+               GIT_COMMITTER_NAME="Isolated admission fixture",
+               GIT_COMMITTER_EMAIL="fixture@example.invalid")
+    child = git("commit-tree", tree, "-p", base, "-m", namespace["EWS_COMMIT_MESSAGE_V01"], env=env)
+    git("update-ref", "refs/heads/main", child)
+    check(committed)
+    git("update-ref", "refs/remotes/origin/main", child)
+    check(committed)
+    foreign = git("commit-tree", tree, "-p", base, "-m", "Isolated foreign sibling", env=env)
+    git("update-ref", "refs/remotes/origin/main", foreign)
+    check(reason="ews.committed.origin")
+    git("update-ref", "refs/remotes/origin/main", child)
+    generation = git("commit-tree", tree, "-p", child, "-m", "Isolated extra generation", env=env)
+    git("update-ref", "refs/heads/main", generation)
+    check(reason="ews.exact_immediate_L_child")
+    merge = git("commit-tree", tree, "-p", base, "-p", foreign, "-m", "Isolated merge", env=env)
+    git("update-ref", "refs/heads/main", merge)
+    check(reason="ews.exact_immediate_L_child")
+    git("update-ref", "refs/heads/main", child)
+    check(committed)
+
+
+def test_ews_exact_sources_projection_and_audit_lanes_v01():
+    import tomllib
+    namespace = runpy.run_path(str(GUARD_PATH))
+    pins = namespace["EWS_SOURCE_IDENTITIES_V01"]
+    digest = namespace["_ews_source_digest_v01"]
+    assert len(pins) == 65
+    assert len(namespace["EWS_IMPLEMENTATION_IDENTITIES_V01"]) == 27
+    for path, expected in pins.items():
+        body = (REPOSITORY_ROOT / path).read_bytes()
+        assert digest(path, body) == expected, path
+        assert digest(path, body + b"\n# Changed input\n") != expected
+    guard = "tools/check_active_architecture_authority_v01.py"
+    body = ('EWS_SOURCE_IDENTITIES_V01 = {"'+guard+'": "'+'a'*64+'", "other": "'+'b'*64+'"}\n').encode()
+    assert digest(guard, body) == digest(guard, body.replace(b'a'*64, b'c'*64))
+    assert digest(guard, body) != digest(guard, body.replace(b'b'*64, b'c'*64))
+    with pytest.raises(ValueError):
+        digest(guard, body + body)
+    config = tomllib.loads((REPOSITORY_ROOT / "pyproject.toml").read_text())
+    previous = tomllib.loads(subprocess.check_output(("git", "show", namespace["EWS_BASE_V01"]+":pyproject.toml"), cwd=REPOSITORY_ROOT).decode())
+    options = config["tool"]["pytest"]["ini_options"]
+    assert options.pop("addopts") == ["--ignore=tests/test_ephemeral_workspace_evidence_v01.py", "--ignore=tests/test_ephemeral_workspace_adversarial_v01.py"]
+    assert config == previous

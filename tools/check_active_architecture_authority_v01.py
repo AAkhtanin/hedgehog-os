@@ -449,6 +449,460 @@ TESTFLIX_SOURCE_IDENTITIES_V11 = {'AGENTS.md': '128c12af719e0dfb0f49ffc5b2d13bbf
  'tools/check_active_architecture_authority_v01.py': 'ae21bc7d4bb7072ea0b27064652d3d1b5bd9648ef9b5feb875e4a3acce5a6168'}
 
 
+# EWS identities are separate from the unchanged historical Testflix/U4 pins.
+EWS_BASE_V01 = "e42d37fa98dfec7110b8cf75b1aceaa614f461be"
+EWS_BASE_PARENT_V01 = "54e32dbcc0e4d68431ec2b9428eac965f88ee47c"
+EWS_BASE_TREE_V01 = "8f795d00b04b2604bb9d5c0fd973adaa98eb70d0"
+EWS_COMMIT_MESSAGE_V01 = 'Admit Ephemeral Workspace v0.1 and verified offline evidence'
+EWS_REPLAY_SCRIPT_V01 = "docs/showcase/ephemeral_workspace_v01/verify_replay.sh"
+EWS_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'README.md': 'M',
+ 'demo/ephemeral_workspace_fixtures_v01.py': 'A',
+ 'demo/run_ephemeral_workspace_evidence_v01.py': 'A',
+ 'demo/run_ephemeral_workspace_v01.py': 'A',
+ 'demo/run_living_gauntlet_v01.py': 'M',
+ 'docs/demo_designs/ephemeral_workspace_v01.md': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/EVIDENCE.md': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/README.md': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/SHA256SUMS': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/anchor_verification_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/external_anchor_publication_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/lead_reviewed_anchor_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/capability_discovery_snapshot_safe_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/device_grant_summary_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/kernel_integrity_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/sealed_package_manifest_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/secret_scan_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_intent_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_lease_safe_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/source_index_v01.json': 'A',
+ 'docs/showcase/ephemeral_workspace_v01/verify_replay.sh': 'A',
+ 'hedgehog/action_commit_packet_v02.py': 'M',
+ 'hedgehog/domains/ephemeral_workspace/__init__.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/capability_registry_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/contracts_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/evidence_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/local_services_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/media_continuation_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/media_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/session_runtime_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/viewer_v01.py': 'A',
+ 'hedgehog/kernel/transition_registry_v01.py': 'M',
+ 'pyproject.toml': 'M',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_action_packet_validation_cost_v01.py': 'A',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_ephemeral_workspace_adversarial_v01.py': 'A',
+ 'tests/test_ephemeral_workspace_evidence_v01.py': 'A',
+ 'tests/test_ephemeral_workspace_ews3r_temporal_v01.py': 'A',
+ 'tests/test_ephemeral_workspace_ews3r_v01.py': 'A',
+ 'tests/test_ephemeral_workspace_services_v01.py': 'A',
+ 'tests/test_ephemeral_workspace_v01.py': 'A',
+ 'tests/test_living_gauntlet_v01_runner.py': 'M',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+EWS_IMPLEMENTATION_IDENTITIES_V01 = {'demo/ephemeral_workspace_fixtures_v01.py': '107e8ae5e05d6dc8f081faf813b43957642414299557446a6f5fe97e11fd531b',
+ 'demo/run_ephemeral_workspace_evidence_v01.py': 'f4f0caa7b4cb59a8ed67683bedebdf5cbac3ba7ac17cd65c0f637b4e86461eee',
+ 'demo/run_ephemeral_workspace_v01.py': 'efc1acbb957b1919ce421a0cae36fc9a7881a86c359ba907cd4417a54b835425',
+ 'docs/demo_designs/ephemeral_workspace_v01.md': '6cadd90a3aa121b6003a00ecfadf1219ba150663756fa85a16eb0a92a0f49379',
+ 'hedgehog/action_commit_packet_v02.py': 'e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac',
+ 'hedgehog/domains/ephemeral_workspace/__init__.py': 'f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f',
+ 'hedgehog/domains/ephemeral_workspace/capability_registry_v01.py': 'c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3',
+ 'hedgehog/domains/ephemeral_workspace/contracts_v01.py': '9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b',
+ 'hedgehog/domains/ephemeral_workspace/evidence_v01.py': '792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7',
+ 'hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py': '15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee',
+ 'hedgehog/domains/ephemeral_workspace/local_services_v01.py': '1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3',
+ 'hedgehog/domains/ephemeral_workspace/media_continuation_v01.py': '8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210',
+ 'hedgehog/domains/ephemeral_workspace/media_v01.py': '87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa',
+ 'hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py': 'ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569',
+ 'hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py': '774ca55f581ff6e5829144c524aa5fd2522cc8e9efaade97fb4ea169f8d1e6e7',
+ 'hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py': 'ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce',
+ 'hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py': '1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d',
+ 'hedgehog/domains/ephemeral_workspace/session_runtime_v01.py': 'd3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc',
+ 'hedgehog/domains/ephemeral_workspace/viewer_v01.py': 'f77077d285128bb87f237f3c376f9ebd198fff991f7814764564633cd58e0d3b',
+ 'hedgehog/kernel/transition_registry_v01.py': '16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca',
+ 'tests/test_action_packet_validation_cost_v01.py': '61efca1fbb1a2a8f264bba59521226ddeebe69cee86f82b1cf87c4abcb6e34a7',
+ 'tests/test_ephemeral_workspace_adversarial_v01.py': '4c0f5555446aa72c7ea590afdb4884be3befdf46d2f48cbd317c4daf33504075',
+ 'tests/test_ephemeral_workspace_evidence_v01.py': '6ed60d526985275d6cbd3ae55986199aaeb6879afc8f3ee77c594724cae55dca',
+ 'tests/test_ephemeral_workspace_ews3r_temporal_v01.py': '474e8668916913db4597bdac2a6ce6e3ad980562e1d44d4546791a0d732bb7b6',
+ 'tests/test_ephemeral_workspace_ews3r_v01.py': '79dee0e9392b9c4e99159eb866045e65d73424409b175c78c03309f4e3450611',
+ 'tests/test_ephemeral_workspace_services_v01.py': '08650b92ee6c9f0ac776c8b0e857c9988f23b8f0e3a0000d135bca006c5f8cf7',
+ 'tests/test_ephemeral_workspace_v01.py': '1cfddbd3c0d682b01355f76b457567e72d31229f44f98775b560d330639f1918'}
+EWS_ADMISSION_METADATA_V01 = {'accepted_scope': 'LEAD_REVIEWED_EWS4R_DEMONSTRATION_AND_EVIDENCE_ONLY',
+ 'authority': 'NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': 'e42d37fa98dfec7110b8cf75b1aceaa614f461be',
+ 'basis_parent': '54e32dbcc0e4d68431ec2b9428eac965f88ee47c',
+ 'basis_tree': '8f795d00b04b2604bb9d5c0fd973adaa98eb70d0',
+ 'commit_message': 'Admit Ephemeral Workspace v0.1 and verified offline '
+                   'evidence',
+ 'historical_laws': 'TESTFLIX_U4_GATES_RETAIN_EXACT_SOURCE_PROVENANCE',
+ 'identity_projection': 'ONLY_GUARD_OWN_EWS_SOURCE_IDENTITIES_LITERAL_EXCLUDED; '
+                        'DETACHED_MANIFEST_BINDS_FULL_BYTES',
+ 'implementation_ledger_sha256': 'd3c3bd7280382fb3e59cf23abdc79eaf0ec08c84d08ad8d41f575d654cfcc89b',
+ 'implementation_source_identities': {'demo/ephemeral_workspace_fixtures_v01.py': '107e8ae5e05d6dc8f081faf813b43957642414299557446a6f5fe97e11fd531b',
+                                      'demo/run_ephemeral_workspace_evidence_v01.py': 'f4f0caa7b4cb59a8ed67683bedebdf5cbac3ba7ac17cd65c0f637b4e86461eee',
+                                      'demo/run_ephemeral_workspace_v01.py': 'efc1acbb957b1919ce421a0cae36fc9a7881a86c359ba907cd4417a54b835425',
+                                      'docs/demo_designs/ephemeral_workspace_v01.md': '6cadd90a3aa121b6003a00ecfadf1219ba150663756fa85a16eb0a92a0f49379',
+                                      'hedgehog/action_commit_packet_v02.py': 'e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac',
+                                      'hedgehog/domains/ephemeral_workspace/__init__.py': 'f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f',
+                                      'hedgehog/domains/ephemeral_workspace/capability_registry_v01.py': 'c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3',
+                                      'hedgehog/domains/ephemeral_workspace/contracts_v01.py': '9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b',
+                                      'hedgehog/domains/ephemeral_workspace/evidence_v01.py': '792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7',
+                                      'hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py': '15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee',
+                                      'hedgehog/domains/ephemeral_workspace/local_services_v01.py': '1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3',
+                                      'hedgehog/domains/ephemeral_workspace/media_continuation_v01.py': '8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210',
+                                      'hedgehog/domains/ephemeral_workspace/media_v01.py': '87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa',
+                                      'hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py': 'ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569',
+                                      'hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py': '774ca55f581ff6e5829144c524aa5fd2522cc8e9efaade97fb4ea169f8d1e6e7',
+                                      'hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py': 'ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce',
+                                      'hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py': '1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d',
+                                      'hedgehog/domains/ephemeral_workspace/session_runtime_v01.py': 'd3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc',
+                                      'hedgehog/domains/ephemeral_workspace/viewer_v01.py': 'f77077d285128bb87f237f3c376f9ebd198fff991f7814764564633cd58e0d3b',
+                                      'hedgehog/kernel/transition_registry_v01.py': '16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca',
+                                      'tests/test_action_packet_validation_cost_v01.py': '61efca1fbb1a2a8f264bba59521226ddeebe69cee86f82b1cf87c4abcb6e34a7',
+                                      'tests/test_ephemeral_workspace_adversarial_v01.py': '4c0f5555446aa72c7ea590afdb4884be3befdf46d2f48cbd317c4daf33504075',
+                                      'tests/test_ephemeral_workspace_evidence_v01.py': '6ed60d526985275d6cbd3ae55986199aaeb6879afc8f3ee77c594724cae55dca',
+                                      'tests/test_ephemeral_workspace_ews3r_temporal_v01.py': '474e8668916913db4597bdac2a6ce6e3ad980562e1d44d4546791a0d732bb7b6',
+                                      'tests/test_ephemeral_workspace_ews3r_v01.py': '79dee0e9392b9c4e99159eb866045e65d73424409b175c78c03309f4e3450611',
+                                      'tests/test_ephemeral_workspace_services_v01.py': '08650b92ee6c9f0ac776c8b0e857c9988f23b8f0e3a0000d135bca006c5f8cf7',
+                                      'tests/test_ephemeral_workspace_v01.py': '1cfddbd3c0d682b01355f76b457567e72d31229f44f98775b560d330639f1918'},
+ 'new_gate': 'NONE',
+ 'path_actions': {'AGENTS.md': 'M',
+                  'README.md': 'M',
+                  'demo/ephemeral_workspace_fixtures_v01.py': 'A',
+                  'demo/run_ephemeral_workspace_evidence_v01.py': 'A',
+                  'demo/run_ephemeral_workspace_v01.py': 'A',
+                  'demo/run_living_gauntlet_v01.py': 'M',
+                  'docs/demo_designs/ephemeral_workspace_v01.md': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/EVIDENCE.md': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/README.md': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/SHA256SUMS': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/anchor_verification_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/external_anchor_publication_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/lead_reviewed_anchor_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/capability_discovery_snapshot_safe_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/device_grant_summary_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/kernel_integrity_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/sealed_package_manifest_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/secret_scan_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_intent_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_lease_safe_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/source_index_v01.json': 'A',
+                  'docs/showcase/ephemeral_workspace_v01/verify_replay.sh': 'A',
+                  'hedgehog/action_commit_packet_v02.py': 'M',
+                  'hedgehog/domains/ephemeral_workspace/__init__.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/capability_registry_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/contracts_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/evidence_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/local_services_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/media_continuation_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/media_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/session_runtime_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/viewer_v01.py': 'A',
+                  'hedgehog/kernel/transition_registry_v01.py': 'M',
+                  'pyproject.toml': 'M',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_action_packet_validation_cost_v01.py': 'A',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_ephemeral_workspace_adversarial_v01.py': 'A',
+                  'tests/test_ephemeral_workspace_evidence_v01.py': 'A',
+                  'tests/test_ephemeral_workspace_ews3r_temporal_v01.py': 'A',
+                  'tests/test_ephemeral_workspace_ews3r_v01.py': 'A',
+                  'tests/test_ephemeral_workspace_services_v01.py': 'A',
+                  'tests/test_ephemeral_workspace_v01.py': 'A',
+                  'tests/test_living_gauntlet_v01_runner.py': 'M',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'production_certification': 'NOT_CLAIMED',
+ 'profile': 'EPHEMERAL_WORKSPACE_ADMISSION_V01',
+ 'showcase': 'docs/showcase/ephemeral_workspace_v01/README.md',
+ 'showcase_authority': 'INFORMATIONAL_EXCLUDED_FROM_AUTOMATIC_NORMATIVE_ONBOARDING',
+ 'status': 'EXACT_PROPOSAL_OR_SINGLE_PARENT_COMMIT_DERIVED_FROM_GIT',
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED'}
+EWS_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '9a64f93d93180cde3170ea117cc57a3b6c53a4143d4d3aea61951ec27c8e59ad',
+ 'README.md': '23bf7262288d57bb3c6f02650beea834854cb99ae2fa0b6c2904fc2a1bd03255',
+ 'demo/ephemeral_workspace_fixtures_v01.py': '107e8ae5e05d6dc8f081faf813b43957642414299557446a6f5fe97e11fd531b',
+ 'demo/run_ephemeral_workspace_evidence_v01.py': 'f4f0caa7b4cb59a8ed67683bedebdf5cbac3ba7ac17cd65c0f637b4e86461eee',
+ 'demo/run_ephemeral_workspace_v01.py': 'efc1acbb957b1919ce421a0cae36fc9a7881a86c359ba907cd4417a54b835425',
+ 'demo/run_living_gauntlet_v01.py': '762cc717eb188dc51b92f5b360981ab3d61f959691d7ab80417db458bddfb753',
+ 'docs/demo_designs/ephemeral_workspace_v01.md': '6cadd90a3aa121b6003a00ecfadf1219ba150663756fa85a16eb0a92a0f49379',
+ 'docs/showcase/ephemeral_workspace_v01/EVIDENCE.md': 'f605dc048515487a7904898089c92c1feb6d665df69cae978b5f11b4058ba160',
+ 'docs/showcase/ephemeral_workspace_v01/README.md': 'ee122befa20ee88d1847eb0bdf9386cf3561d0175bf9e6096ca790dc3251c209',
+ 'docs/showcase/ephemeral_workspace_v01/SHA256SUMS': '46b675e5e5da5f6a1bfb8e459ad9c6bc4c36593beff90d1f9e56999bf674a5a7',
+ 'docs/showcase/ephemeral_workspace_v01/anchor_verification_v01.json': '48d486c891518ad7cff4e22e9d3e5297e78e49bb9e31656ed80cbf5e2266aba7',
+ 'docs/showcase/ephemeral_workspace_v01/external_anchor_publication_v01.json': '31506a2a34b30ff8ade37fba85692fed766954e46b6eccf84f91ac3cf76b52a5',
+ 'docs/showcase/ephemeral_workspace_v01/lead_reviewed_anchor_v01.json': 'f391c5ed7aef20abf7f7d188ae20360a13d23a25aa4eb1c735eac073287c2d1a',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json': '75ce2741d162d3611f672f02854c61c77268d85501076debede05d84b5feb935',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json': '88088a00fd3566d48540cbbacf1bdc4f76314b9ab1c10e7b972283bdfd7ddcd9',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/capability_discovery_snapshot_safe_v01.json': '46521edc7196943aef7b0e9a131fe4bf36a15f3c868aafd67318a8ee09de4a49',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/device_grant_summary_v01.json': 'b1955b396a3de058cc75ee5f3cd60f129b45555348c6ab1b2d66bb763b4508ee',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json': 'ded43a32bba9573651f0f2640eee0fb4e7e61ddce5f4869d6e5311380b9646c6',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/kernel_integrity_v01.json': '9ea8192afd1f0fd6a35e04d6f414a60ae7e7da0e311f01e98c34bb1b21cbcc43',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json': '924e91e122dc27f2ef9b2155f8cdfad524f6c7bffcc52bca7f2905c7fe0c9974',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json': '64304fb8aa56b1f5fd73952215b086b40c9481a6b70a46a62b25e886ed2cb3bf',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json': '8410d3ed276dd7860b0ca96e1ebaa3885c035157f0abea11d26ee9954e72c205',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/sealed_package_manifest_v01.json': '500722f5906b7f87108b043d751b7965e14a59b84f72512b19f581229cd18483',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/secret_scan_v01.json': '6521045869f0e8a3b66212d1633f2975f237abd7ac7d19872c75349ec075b22c',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json': 'f8bbe9f59400401b945c433638c3fbf5e0cd2db69c758e3d6657928b83a348d9',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json': '1452c260308b090127b632120275eb90efef281ebeb3935399a21a243beecfbb',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json': '3c2326b4457e06965253c4b242127fdca8b6b0e8ece1ad9890cb0d3f6f071537',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json': 'eef7063933c3acadf39645ea5947e66f10f2d68747955ae5d7b017cb9e459bc7',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json': '0684e0809fda9f4acd0507ebd16515cf2d90a1a45f1ebb7227e23fb4a33c5067',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_intent_v01.json': 'cfae253f2b78fd649fe3748a06f4e0402cee354e54be9aae187e0e87f2f9f9dd',
+ 'docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_lease_safe_v01.json': '79f0b8c38ac3419f0b46c9ec486bf77f8e9821364c81e0daa1d141bd9dc0c78a',
+ 'docs/showcase/ephemeral_workspace_v01/source_index_v01.json': '49b3f5a42e9cf87de12c5bb22396d3eade67a87f41bda849ca655e78e6d22c81',
+ 'docs/showcase/ephemeral_workspace_v01/verify_replay.sh': '3a33996a383dad621d2cbe4a7ead0224754597e92383b23177b1a939d0ad77a2',
+ 'hedgehog/action_commit_packet_v02.py': 'e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac',
+ 'hedgehog/domains/ephemeral_workspace/__init__.py': 'f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f',
+ 'hedgehog/domains/ephemeral_workspace/capability_registry_v01.py': 'c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3',
+ 'hedgehog/domains/ephemeral_workspace/contracts_v01.py': '9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b',
+ 'hedgehog/domains/ephemeral_workspace/evidence_v01.py': '792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7',
+ 'hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py': '15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee',
+ 'hedgehog/domains/ephemeral_workspace/local_services_v01.py': '1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3',
+ 'hedgehog/domains/ephemeral_workspace/media_continuation_v01.py': '8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210',
+ 'hedgehog/domains/ephemeral_workspace/media_v01.py': '87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa',
+ 'hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py': 'ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569',
+ 'hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py': '774ca55f581ff6e5829144c524aa5fd2522cc8e9efaade97fb4ea169f8d1e6e7',
+ 'hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py': 'ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce',
+ 'hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py': '1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d',
+ 'hedgehog/domains/ephemeral_workspace/session_runtime_v01.py': 'd3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc',
+ 'hedgehog/domains/ephemeral_workspace/viewer_v01.py': 'f77077d285128bb87f237f3c376f9ebd198fff991f7814764564633cd58e0d3b',
+ 'hedgehog/kernel/transition_registry_v01.py': '16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca',
+ 'pyproject.toml': 'b9d0ba6c3ef5aba0e75882a5c7501c4ac3631b9ccf8559f17ed73ce34a8efea0',
+ 'release/current_status_overlay_v01.json': 'ba2397fc7472a08ba5db38defd5abc752aeadbd9c685ffb866a81a119c15e219',
+ 'release/successor_context_manifest_v01.json': '7c0f3f26f078e18e318409535a05042db8b745342d1f5393fda4964fac49c49f',
+ 'specs/current_architecture_lock_v01.md': '287b652767e586200b39dfbbcf6f85a94b1627474d1acbc24abbf59bbf64339d',
+ 'specs/document_authority_index_v01.json': '8fce347588c089942ff11650f295328bb15449a9236d43e411e265bca7af6466',
+ 'tests/test_action_packet_validation_cost_v01.py': '61efca1fbb1a2a8f264bba59521226ddeebe69cee86f82b1cf87c4abcb6e34a7',
+ 'tests/test_active_architecture_authority_v01.py': '57bf2433e35d86fa5e0d3e081e9a361515c24450348df92cb3ab0fad41597484',
+ 'tests/test_ephemeral_workspace_adversarial_v01.py': '4c0f5555446aa72c7ea590afdb4884be3befdf46d2f48cbd317c4daf33504075',
+ 'tests/test_ephemeral_workspace_evidence_v01.py': '6ed60d526985275d6cbd3ae55986199aaeb6879afc8f3ee77c594724cae55dca',
+ 'tests/test_ephemeral_workspace_ews3r_temporal_v01.py': '474e8668916913db4597bdac2a6ce6e3ad980562e1d44d4546791a0d732bb7b6',
+ 'tests/test_ephemeral_workspace_ews3r_v01.py': '79dee0e9392b9c4e99159eb866045e65d73424409b175c78c03309f4e3450611',
+ 'tests/test_ephemeral_workspace_services_v01.py': '08650b92ee6c9f0ac776c8b0e857c9988f23b8f0e3a0000d135bca006c5f8cf7',
+ 'tests/test_ephemeral_workspace_v01.py': '1cfddbd3c0d682b01355f76b457567e72d31229f44f98775b560d330639f1918',
+ 'tests/test_living_gauntlet_v01_runner.py': '847e03be87e0259318043e80d82bdc1434b32a7f73777b7784ff718a7134d4f9',
+ 'tests/test_repository_release_spine_v01.py': '12bdef0223b74dc19db58c2f41251872425495d039a3565fa3782ac59559fa32',
+ 'tools/check_active_architecture_authority_v01.py': '33b55f3acc0759c93553cf8369cb10467cc3181f7437162788469d632cd26232'}
+
+
+def _ews_requested_v01(root: Path) -> bool:
+    # Presence selects a validator, never a success state or historical fallback.
+    if any((root / p).exists() for p, op in EWS_PATH_ACTIONS_V01.items() if op == "A"):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"ephemeral_workspace_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _ews_source_digest_v01(path: str, body: bytes) -> str:
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(n, ast.Name) and n.id == "EWS_SOURCE_IDENTITIES_V01" for target in targets for n in ast.walk(target)):
+            nodes.append(node)
+    if len(nodes) != 1 or not isinstance(nodes[0], ast.Assign) or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name) or not isinstance(nodes[0].value, ast.Dict):
+        raise ValueError("self identity projection")
+    node = nodes[0]
+    if any(not isinstance(k, ast.Constant) or type(k.value) is not str for k in node.value.keys):
+        raise ValueError("self identity projection")
+    names = [k.value for k in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("self identity projection")
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or type(value.value) is not str or re.fullmatch(r"[0-9a-f]{64}", value.value) is None or value.end_lineno != value.lineno or value.end_col_offset is None:
+        raise ValueError("self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if re.fullmatch(br"(['\"])[0-9a-f]{64}\1", literal) is None or literal[1:-1].decode("ascii") != value.value:
+        raise ValueError("self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_EWS_V01"' + body[end:]).hexdigest()
+
+
+def _classify_ews_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                                branch: str, status: dict[str, str], delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    errors: list[str] = []
+    phase = "EWS_INVALID"
+    if branch != "main":
+        errors.append("ews.branch")
+    if head == EWS_BASE_V01:
+        if parents != (EWS_BASE_PARENT_V01,) or origin != EWS_BASE_V01:
+            errors.append("ews.candidate.basis_origin")
+        unstaged = {p: "??" if op == "A" else " M" for p, op in EWS_PATH_ACTIONS_V01.items()}
+        staged = {p: op + " " for p, op in EWS_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "EWS_ADMISSION_CANDIDATE_UNSTAGED"
+        elif status == staged:
+            phase = "EWS_ADMISSION_CANDIDATE_STAGED"
+        else:
+            errors.append("ews.candidate.exact_ledger")
+        if delta:
+            errors.append("ews.candidate.delta")
+    elif parents == (EWS_BASE_V01,):
+        phase = "EWS_IMPLEMENTATION_ADMITTED_COMMITTED"
+        if origin not in (EWS_BASE_V01, head):
+            errors.append("ews.committed.origin")
+        if status or delta != EWS_PATH_ACTIONS_V01:
+            errors.append("ews.committed.clean_exact_delta")
+    else:
+        errors.append("ews.exact_immediate_L_child")
+    return phase, tuple(errors)
+
+
+def _validate_ephemeral_workspace_admission_v01(root: Path, failures: list[str]) -> str:
+    """One exact EWS successor; historical Testflix/U4 validators stay unchanged."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="ews.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, EWS_BASE_V01 + "..HEAD", failures), label="ews.delta", failures=failures)
+    phase, reasons = _classify_ews_ledger_v01(head=head, parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(), status=status, delta=delta)
+    failures.extend(reasons)
+    if git("rev-parse", EWS_BASE_V01 + "^{tree}").decode().strip() != EWS_BASE_TREE_V01:
+        failures.append("ews.L_tree")
+    if git("rev-list", "--parents", "-n", "1", EWS_BASE_V01).decode().split() != [EWS_BASE_V01, EWS_BASE_PARENT_V01]:
+        failures.append("ews.L_parent")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", EWS_BASE_V01), failures)
+    if len(baseline) != 947 or len(EWS_PATH_ACTIONS_V01) != 65 or set(EWS_SOURCE_IDENTITIES_V01) != set(EWS_PATH_ACTIONS_V01):
+        failures.append("ews.exact_source_universe")
+    if any(EWS_SOURCE_IDENTITIES_V01.get(p) != h for p, h in EWS_IMPLEMENTATION_IDENTITIES_V01.items()):
+        failures.append("ews.accepted_implementation_inventory")
+    expected_paths = set(baseline) | set(EWS_PATH_ACTIONS_V01)
+    actual: dict[str, tuple[str, str]] = {}
+    for path in sorted(expected_paths):
+        file = root / path
+        if file.is_symlink() or not file.is_file():
+            failures.append("ews.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = ("100755" if mode & 0o111 else "100644", hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest())
+        if path in EWS_PATH_ACTIONS_V01:
+            if mode != (0o755 if path == EWS_REPLAY_SCRIPT_V01 else 0o644) or not body.endswith(b"\n") or b"\r\n" in body:
+                failures.append("ews.mode_or_lf:" + path)
+            try:
+                if _ews_source_digest_v01(path, body) != EWS_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("ews.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("ews.identity_projection:" + path)
+            if (path in baseline) != (EWS_PATH_ACTIONS_V01[path] == "M") or actual[path] == baseline.get(path):
+                failures.append("ews.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("ews.frozen_source:" + path)
+    entries: dict[str, tuple[str, str]] = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in entries:
+                failures.append("ews.index.stage_duplicate")
+            entries[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("ews.index.parse")
+    if entries != (baseline if phase == "EWS_ADMISSION_CANDIDATE_UNSTAGED" else actual):
+        failures.append("ews.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("ews.index.flags")
+    if any(int(f, 16) != 0 for f in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("ews.index.hidden_flags")
+    if phase == "EWS_IMPLEMENTATION_ADMITTED_COMMITTED":
+        if _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual or len(actual) != 998:
+            failures.append("ews.committed.tree")
+        if git("show", "-s", "--format=%B", "HEAD").decode().strip() != EWS_COMMIT_MESSAGE_V01:
+            failures.append("ews.committed.message")
+    for marker in ("index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock", "packed-refs.lock"):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if (marker == "index" and (path.is_symlink() or not path.is_file())) or (marker != "index" and path.exists()):
+            failures.append("ews.git_operation:" + marker)
+    completion = _load_json(root / COMPLETION_MANIFEST_PATH, "ews.base.completion", failures)
+    seams = _load_json(root / SEAM_INDEX_PATH, "ews.base.seams", failures)
+    _validate_release_succession(completion, seams, failures)
+    retired = _load_json(root / RETIRED_INVENTORY_PATH, "ews.retired", failures)
+    _validate_s3_inventory(root, retired, failures)
+    current = []
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "ews.json:" + path, failures)
+        old = json.loads(git("show", EWS_BASE_V01 + ":" + path))
+        for key in ("universality_admission_v01", "testflix_admission_v11", "testflix_current_registration_v11"):
+            if value.get(key) != old.get(key):
+                failures.append("ews.historical_metadata:" + path + ":" + key)
+        current.append(value.get("ephemeral_workspace_admission_v01"))
+    if any(v != EWS_ADMISSION_METADATA_V01 for v in current):
+        failures.append("ews.admission_metadata")
+    if not failures:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ews_admission_living_v11", root / "demo/run_living_gauntlet_v01.py")
+        if spec is None or spec.loader is None:
+            failures.append("ews.living.import_spec")
+        else:
+            living = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = living
+            try:
+                spec.loader.exec_module(living)
+                _, errors = living._current_registration_v01(root)
+                failures.extend("ews." + error for error in errors)
+            except (ImportError, ValueError, OSError) as exc:
+                failures.append("ews.living.import:" + type(exc).__name__)
+            finally:
+                sys.modules.pop(spec.name, None)
+    return phase
+
+
+
 def _testflix_requested_v11(root: Path) -> bool:
     if (root / TESTFLIX_CHECKPOINT_V11).exists():
         return True
@@ -12625,6 +13079,9 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    if _ews_requested_v01(root):
+        _validate_ephemeral_workspace_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
     if _testflix_requested_v11(root):
         _validate_testflix_admission_v11(root, failures)
         return tuple(sorted(set(failures)))
@@ -12760,6 +13217,19 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        if _ews_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_ephemeral_workspace_admission_v01(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("ews.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print(f"EPHEMERAL_WORKSPACE_PHASE={phase}")
+            return 0
         if _testflix_requested_v11(args.root.resolve()):
             current_errors: list[str] = []
             phase = _validate_testflix_admission_v11(args.root.resolve(), current_errors)

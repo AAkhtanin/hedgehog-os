@@ -1,0 +1,197 @@
+{
+  "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+  "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+  "ledger": "source_review/source_ledger.json",
+  "ledger_sha256": "d3c3bd7280382fb3e59cf23abdc79eaf0ec08c84d08ad8d41f575d654cfcc89b",
+  "paths": [
+    {
+      "path": "demo/ephemeral_workspace_fixtures_v01.py",
+      "sha256": "107e8ae5e05d6dc8f081faf813b43957642414299557446a6f5fe97e11fd531b",
+      "bytes": 2882,
+      "action": "A",
+      "repository_link": "../../../demo/ephemeral_workspace_fixtures_v01.py"
+    },
+    {
+      "path": "demo/run_ephemeral_workspace_evidence_v01.py",
+      "sha256": "f4f0caa7b4cb59a8ed67683bedebdf5cbac3ba7ac17cd65c0f637b4e86461eee",
+      "bytes": 4577,
+      "action": "A",
+      "repository_link": "../../../demo/run_ephemeral_workspace_evidence_v01.py"
+    },
+    {
+      "path": "demo/run_ephemeral_workspace_v01.py",
+      "sha256": "efc1acbb957b1919ce421a0cae36fc9a7881a86c359ba907cd4417a54b835425",
+      "bytes": 8059,
+      "action": "A",
+      "repository_link": "../../../demo/run_ephemeral_workspace_v01.py"
+    },
+    {
+      "path": "docs/demo_designs/ephemeral_workspace_v01.md",
+      "sha256": "6cadd90a3aa121b6003a00ecfadf1219ba150663756fa85a16eb0a92a0f49379",
+      "bytes": 25702,
+      "action": "A",
+      "repository_link": "../../../docs/demo_designs/ephemeral_workspace_v01.md"
+    },
+    {
+      "path": "hedgehog/action_commit_packet_v02.py",
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+      "bytes": 792178,
+      "action": "M",
+      "repository_link": "../../../hedgehog/action_commit_packet_v02.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/__init__.py",
+      "sha256": "f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f",
+      "bytes": 82,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/__init__.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3",
+      "bytes": 5616,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/capability_registry_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b",
+      "bytes": 3046,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/contracts_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "sha256": "792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7",
+      "bytes": 4843,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/evidence_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee",
+      "bytes": 25003,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3",
+      "bytes": 13086,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/local_services_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "sha256": "8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210",
+      "bytes": 37303,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/media_continuation_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa",
+      "bytes": 7487,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/media_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569",
+      "bytes": 12701,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py",
+      "sha256": "774ca55f581ff6e5829144c524aa5fd2522cc8e9efaade97fb4ea169f8d1e6e7",
+      "bytes": 89753,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/sealed_evidence_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce",
+      "bytes": 29180,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d",
+      "bytes": 5691,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc",
+      "bytes": 42605,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/session_runtime_v01.py"
+    },
+    {
+      "path": "hedgehog/domains/ephemeral_workspace/viewer_v01.py",
+      "sha256": "f77077d285128bb87f237f3c376f9ebd198fff991f7814764564633cd58e0d3b",
+      "bytes": 23838,
+      "action": "A",
+      "repository_link": "../../../hedgehog/domains/ephemeral_workspace/viewer_v01.py"
+    },
+    {
+      "path": "hedgehog/kernel/transition_registry_v01.py",
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca",
+      "bytes": 142980,
+      "action": "M",
+      "repository_link": "../../../hedgehog/kernel/transition_registry_v01.py"
+    },
+    {
+      "path": "tests/test_action_packet_validation_cost_v01.py",
+      "sha256": "61efca1fbb1a2a8f264bba59521226ddeebe69cee86f82b1cf87c4abcb6e34a7",
+      "bytes": 5103,
+      "action": "A",
+      "repository_link": "../../../tests/test_action_packet_validation_cost_v01.py"
+    },
+    {
+      "path": "tests/test_ephemeral_workspace_adversarial_v01.py",
+      "sha256": "4c0f5555446aa72c7ea590afdb4884be3befdf46d2f48cbd317c4daf33504075",
+      "bytes": 17224,
+      "action": "A",
+      "repository_link": "../../../tests/test_ephemeral_workspace_adversarial_v01.py"
+    },
+    {
+      "path": "tests/test_ephemeral_workspace_evidence_v01.py",
+      "sha256": "6ed60d526985275d6cbd3ae55986199aaeb6879afc8f3ee77c594724cae55dca",
+      "bytes": 49205,
+      "action": "A",
+      "repository_link": "../../../tests/test_ephemeral_workspace_evidence_v01.py"
+    },
+    {
+      "path": "tests/test_ephemeral_workspace_ews3r_temporal_v01.py",
+      "sha256": "474e8668916913db4597bdac2a6ce6e3ad980562e1d44d4546791a0d732bb7b6",
+      "bytes": 14875,
+      "action": "A",
+      "repository_link": "../../../tests/test_ephemeral_workspace_ews3r_temporal_v01.py"
+    },
+    {
+      "path": "tests/test_ephemeral_workspace_ews3r_v01.py",
+      "sha256": "79dee0e9392b9c4e99159eb866045e65d73424409b175c78c03309f4e3450611",
+      "bytes": 16320,
+      "action": "A",
+      "repository_link": "../../../tests/test_ephemeral_workspace_ews3r_v01.py"
+    },
+    {
+      "path": "tests/test_ephemeral_workspace_services_v01.py",
+      "sha256": "08650b92ee6c9f0ac776c8b0e857c9988f23b8f0e3a0000d135bca006c5f8cf7",
+      "bytes": 40507,
+      "action": "A",
+      "repository_link": "../../../tests/test_ephemeral_workspace_services_v01.py"
+    },
+    {
+      "path": "tests/test_ephemeral_workspace_v01.py",
+      "sha256": "1cfddbd3c0d682b01355f76b457567e72d31229f44f98775b560d330639f1918",
+      "bytes": 49586,
+      "action": "A",
+      "repository_link": "../../../tests/test_ephemeral_workspace_v01.py"
+    }
+  ]
+}

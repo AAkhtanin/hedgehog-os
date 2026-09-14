@@ -430,12 +430,7 @@ class ActionPacketTransitionRegistryProfileV01:
 
 def build_default_transition_registry_v01() -> TransitionRegistryV01:
     rules = _canonical_rules()
-    material = {
-        "registry_version": TRANSITION_REGISTRY_VERSION,
-        "abi_major_version": 1,
-        "rules": [_rule_plain(rule) for rule in rules],
-    }
-    registry_id = _hash(_REGISTRY_DOMAIN, material)
+    registry_id = _default_reference_v01()[0]
     return TransitionRegistryV01(
         registry_id=registry_id,
         registry_version=TRANSITION_REGISTRY_VERSION,
@@ -471,7 +466,26 @@ def lookup_transition_v01(
     root_commit_present: object,
 ) -> TransitionDecisionV01:
     try:
-        if not _registry_accepted_for_lookup_v01(registry) or not _lookup_input_valid(
+        if not _registry_accepted_for_lookup_v01(registry):
+            raise ValueError("transition_lookup_invalid")
+        return _lookup_transition_checked_v01(
+            registry=registry, abi_major_version=abi_major_version,
+            source_artifact_type=source_artifact_type,
+            source_lifecycle_state=source_lifecycle_state, actor_role=actor_role,
+            attempted_effect=attempted_effect, target_artifact_type=target_artifact_type,
+            satisfied_guards=satisfied_guards, root_commit_present=root_commit_present,
+        )
+    except Exception:
+        raise ValueError("transition_lookup_invalid") from None
+
+
+def _lookup_transition_checked_v01(
+    *, registry: object, abi_major_version: object, source_artifact_type: object,
+    source_lifecycle_state: object, actor_role: object, attempted_effect: object,
+    target_artifact_type: object, satisfied_guards: object, root_commit_present: object,
+) -> TransitionDecisionV01:
+    try:
+        if not _lookup_input_valid(
             abi_major_version=abi_major_version,
             source_artifact_type=source_artifact_type,
             source_lifecycle_state=source_lifecycle_state,
@@ -611,7 +625,7 @@ def validate_transition_decision_v01(
             return ("transition_decision_invalid",)
         if not _decision_structure_valid(decision):
             return ("transition_decision_invalid",)
-        expected = lookup_transition_v01(
+        expected = _lookup_transition_checked_v01(
             registry=registry,
             abi_major_version=decision.abi_major_version,
             source_artifact_type=decision.source_artifact_type,
@@ -769,8 +783,8 @@ def _rule_errors(rule: object) -> tuple[str, ...]:
     if type(rule.root_commit_required) is not bool:
         errors.append("transition_rule_invalid")
     if not errors:
-        canonical = tuple(_rule_plain(item) for item in _canonical_rules())
-        if _rule_plain(rule) not in canonical:
+        canonical = _default_reference_v01()[1]
+        if _rule_reference_material_v01(rule) not in canonical:
             errors.append("transition_rule_invalid")
     return _dedupe(errors)
 
@@ -778,6 +792,8 @@ def _rule_errors(rule: object) -> tuple[str, ...]:
 def _registry_errors(registry: object) -> tuple[str, ...]:
     if type(registry) is not TransitionRegistryV01:
         return ("transition_registry_invalid",)
+    if _default_registry_matches_reference_v01(registry):
+        return ()
     errors: list[str] = []
     if not _valid_text(registry.registry_id):
         errors.append("transition_registry_invalid")
@@ -798,26 +814,72 @@ def _registry_errors(registry: object) -> tuple[str, ...]:
     keys = tuple(_rule_key(rule) for rule in registry.rules if type(rule) is TransitionRuleV01)
     if len(set(keys)) != len(keys):
         errors.append("transition_lookup_key_duplicate")
-    expected = _canonical_rules()
-    expected_ids = tuple(rule.rule_id for rule in expected)
+    expected_id, expected, expected_bytes = _default_reference_v01()
+    expected_ids = tuple(row[0] for row in expected)
     if set(ids) != set(expected_ids):
         errors.append("transition_rule_set_mismatch")
     elif ids != expected_ids:
         errors.append("transition_rule_order_mismatch")
     if len(registry.rules) == len(expected):
         try:
-            if _canonical_bytes([_rule_plain(rule) for rule in registry.rules]) != _canonical_bytes([_rule_plain(rule) for rule in expected]):
+            if _canonical_bytes([_rule_plain(rule) for rule in registry.rules]) != expected_bytes:
                 errors.append("transition_rule_set_mismatch")
         except Exception:
             errors.append("transition_registry_invalid")
-    expected_material = {
-        "registry_version": TRANSITION_REGISTRY_VERSION,
-        "abi_major_version": 1,
-        "rules": [_rule_plain(rule) for rule in expected],
-    }
-    if registry.registry_id != _hash(_REGISTRY_DOMAIN, expected_material):
+    if registry.registry_id != expected_id:
         errors.append("transition_registry_id_mismatch")
     return _dedupe(errors)
+
+
+def _rule_reference_material_v01(rule: TransitionRuleV01) -> tuple[object, ...]:
+    return tuple(tuple(value) if type(value) is list else value
+                 for value in _rule_plain(rule).values())
+
+
+def _default_reference_v01() -> tuple[object, ...]:
+    return _DEFAULT_REFERENCE_V01
+
+
+def _build_default_reference_v01() -> tuple[object, ...]:
+    # Source-version constants only: no supplied value, validation result or authority.
+    rules = _canonical_rules()
+    plain = [_rule_plain(rule) for rule in rules]
+    return (
+        _hash(_REGISTRY_DOMAIN, dict(registry_version=TRANSITION_REGISTRY_VERSION,
+                                    abi_major_version=1, rules=plain)),
+        tuple(_rule_reference_material_v01(rule) for rule in rules),
+        _canonical_bytes(plain),
+    )
+
+
+def _exact_constant_value_v01(actual: object, expected: object) -> bool:
+    # A complete typed comparison, never equality on a caller-defined object.
+    pending = [(actual, expected)]
+    while pending:
+        a, b = pending.pop()
+        kind = type(b)
+        if type(a) is not kind:
+            return False
+        if kind is tuple:
+            if len(a) != len(b):
+                return False
+            pending.extend(zip(a, b))
+        elif kind not in (str, int, bool, bytes) or a != b:
+            return False
+    return True
+
+
+def _default_registry_matches_reference_v01(registry: TransitionRegistryV01) -> bool:
+    identity, rows, _ = _default_reference_v01()
+    if not _exact_constant_value_v01(
+        (registry.registry_id, registry.registry_version, registry.abi_major_version),
+        (identity, TRANSITION_REGISTRY_VERSION, 1),
+    ) or type(registry.rules) is not tuple or len(registry.rules) != len(rows):
+        return False
+    names = tuple(TransitionRuleV01.__dataclass_fields__)
+    return all(type(rule) is TransitionRuleV01 and _exact_constant_value_v01(
+        tuple(getattr(rule, name) for name in names), row)
+        for rule, row in zip(registry.rules, rows))
 
 
 def _lookup_input_valid(**values: object) -> bool:
@@ -1763,15 +1825,13 @@ def validate_action_packet_transition_rule_v01(
         if type(rule.terminal_target) is not bool:
             errors.append("action_packet_transition_terminal_type_invalid")
         if not errors:
-            expected = _canonical_action_packet_transition_rules_v01()
+            expected = _action_profile_reference_v01()[1][2][1]
             index = ACTION_PACKET_TRANSITION_RULE_IDS_V01.index(
                 rule.transition_rule_id
             )
             if (
                 _action_packet_transition_rule_material_unchecked_v01(rule)
-                != _action_packet_transition_rule_material_unchecked_v01(
-                    expected[index]
-                )
+                != expected[index]
             ):
                 errors.append("action_packet_transition_rule_mismatch")
         return _dedupe(errors)
@@ -1796,6 +1856,21 @@ def action_packet_transition_rule_to_plain_dict_v01(
 
 def build_action_packet_transition_registry_profile_v01(
 ) -> ActionPacketTransitionRegistryProfileV01:
+    identity, material, _ = _action_profile_reference_v01()
+    return ActionPacketTransitionRegistryProfileV01(
+        transition_registry_id=identity,
+        registry_profile_version=ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
+        lifecycle_profile_id=material[1][1],
+        ordered_transition_rules=_canonical_action_packet_transition_rules_v01(),
+    )
+
+
+def _action_profile_reference_v01() -> tuple[object, ...]:
+    return _ACTION_PROFILE_REFERENCE_V01
+
+
+def _build_action_profile_reference_v01() -> tuple[object, ...]:
+    # Deeply immutable expected material. Public builders always return fresh records.
     lifecycle_profile = _build_action_packet_lifecycle_profile_v01()
     if _validate_action_packet_lifecycle_profile_v01(lifecycle_profile):
         raise ValueError("action_packet_lifecycle_profile_invalid")
@@ -1811,16 +1886,8 @@ def build_action_packet_transition_registry_profile_v01(
         domain=ACTION_PACKET_TRANSITION_REGISTRY_DOMAIN_V01,
         payload=_canonical_json_bytes_v01(material),
     )
-    return ActionPacketTransitionRegistryProfileV01(
-        transition_registry_id=(
-            ACTION_PACKET_TRANSITION_REGISTRY_PREFIX_V01 + digest
-        ),
-        registry_profile_version=(
-            ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
-        ),
-        lifecycle_profile_id=lifecycle_profile.profile_id,
-        ordered_transition_rules=rules,
-    )
+    return (ACTION_PACKET_TRANSITION_REGISTRY_PREFIX_V01 + digest,
+            material, _canonical_json_bytes_v01(material))
 
 
 def validate_action_packet_transition_registry_profile_v01(
@@ -1829,6 +1896,8 @@ def validate_action_packet_transition_registry_profile_v01(
     try:
         if type(registry) is not ActionPacketTransitionRegistryProfileV01:
             return ("action_packet_transition_registry_invalid",)
+        if _action_profile_matches_reference_v01(registry):
+            return ()
         errors: list[str] = []
         if (
             type(registry.transition_registry_id) is not str
@@ -1848,10 +1917,9 @@ def validate_action_packet_transition_registry_profile_v01(
             != ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01
         ):
             errors.append("action_packet_transition_registry_version_mismatch")
-        lifecycle_profile = _build_action_packet_lifecycle_profile_v01()
+        expected_id, expected_material, expected_bytes = _action_profile_reference_v01()
         if (
-            _validate_action_packet_lifecycle_profile_v01(lifecycle_profile)
-            or type(registry.lifecycle_profile_id) is not str
+            type(registry.lifecycle_profile_id) is not str
             or registry.lifecycle_profile_id
             != ACTION_PACKET_LIFECYCLE_PROFILE_ID_V01
         ):
@@ -1875,7 +1943,6 @@ def validate_action_packet_transition_registry_profile_v01(
             errors.append("action_packet_transition_rule_order_mismatch")
         if errors:
             return _dedupe(errors)
-        expected = build_action_packet_transition_registry_profile_v01()
         supplied_material = (
             _action_packet_transition_registry_material_unchecked_v01(
                 registry_profile_version=registry.registry_profile_version,
@@ -1883,21 +1950,14 @@ def validate_action_packet_transition_registry_profile_v01(
                 rules=registry.ordered_transition_rules,
             )
         )
-        expected_material = (
-            _action_packet_transition_registry_material_unchecked_v01(
-                registry_profile_version=expected.registry_profile_version,
-                lifecycle_profile_id=expected.lifecycle_profile_id,
-                rules=expected.ordered_transition_rules,
-            )
-        )
         if _canonical_json_bytes_v01(supplied_material) != (
-            _canonical_json_bytes_v01(expected_material)
+            expected_bytes
         ):
             errors.append("action_packet_transition_registry_material_mismatch")
         if (
             type(registry.transition_registry_id) is not str
             or registry.transition_registry_id
-            != expected.transition_registry_id
+            != expected_id
         ):
             errors.append("action_packet_transition_registry_id_mismatch")
         return _dedupe(errors)
@@ -1916,6 +1976,19 @@ def action_packet_transition_registry_material_v01(
         lifecycle_profile_id=registry.lifecycle_profile_id,
         rules=registry.ordered_transition_rules,
     )
+
+
+def _action_profile_matches_reference_v01(registry: ActionPacketTransitionRegistryProfileV01) -> bool:
+    identity, material, _ = _action_profile_reference_v01()
+    rows = material[2][1]
+    if not _exact_constant_value_v01(
+        (registry.transition_registry_id, registry.registry_profile_version, registry.lifecycle_profile_id),
+        (identity, material[0][1], material[1][1]),
+    ) or type(registry.ordered_transition_rules) is not tuple or len(registry.ordered_transition_rules) != len(rows):
+        return False
+    return all(type(rule) is ActionPacketTransitionRuleV01 and _exact_constant_value_v01(
+        _action_packet_transition_rule_material_unchecked_v01(rule), row)
+        for rule, row in zip(registry.ordered_transition_rules, rows))
 
 
 def action_packet_transition_registry_to_plain_dict_v01(
@@ -1947,6 +2020,16 @@ def lookup_action_packet_transition_rule_v01(
     try:
         if validate_action_packet_transition_registry_profile_v01(registry):
             raise ValueError("unknown_transition")
+        return _lookup_action_packet_transition_rule_checked_v01(
+            registry=registry, transition_rule_id=transition_rule_id)
+    except Exception:
+        raise ValueError("unknown_transition") from None
+
+
+def _lookup_action_packet_transition_rule_checked_v01(
+    *, registry: ActionPacketTransitionRegistryProfileV01, transition_rule_id: object,
+) -> ActionPacketTransitionRuleV01:
+    try:
         if (
             type(transition_rule_id) is not str
             or transition_rule_id not in ACTION_PACKET_TRANSITION_RULE_IDS_V01
@@ -3710,3 +3793,9 @@ def rebuild_continuous_delta_transition_decision_identity_v01(
         return _hash(_DECISION_DOMAIN, material)
     except Exception:
         raise ValueError("g2e_object_invalid") from None
+
+
+# Only immutable source-defined expected values survive module initialization.
+# Supplied profiles, decisions, validation results and time are never retained.
+_DEFAULT_REFERENCE_V01 = _build_default_reference_v01()
+_ACTION_PROFILE_REFERENCE_V01 = _build_action_profile_reference_v01()

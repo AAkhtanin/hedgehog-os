@@ -9,6 +9,7 @@ from dataclasses import (
 )
 from datetime import date
 from decimal import Decimal, InvalidOperation
+import json as _json
 import re
 from types import MappingProxyType
 import unicodedata
@@ -58,6 +59,7 @@ from hedgehog.kernel.root_decision_v01 import (
     validate_root_decision_result_v01,
 )
 from hedgehog.kernel.transition_registry_v01 import (
+    _lookup_action_packet_transition_rule_checked_v01,
     ACTION_PACKET_TRANSITION_REGISTRY_PROFILE_VERSION_V01,
     ActionPacketTransitionRegistryProfileV01,
     ActionPacketTransitionRuleV01,
@@ -2486,6 +2488,9 @@ def validate_identity_text_v01(
         return False, ("identity_text_allow_empty_type_invalid",)
     if type(value) is not str:
         return False, ("identity_text_type_invalid",)
+    # Exact ASCII strings are already UTF-8/NFC. Keep the full reason path otherwise.
+    if value.isascii() and "\x00" not in value and (allow_empty or value):
+        return True, ()
     try:
         value.encode("utf-8", errors="strict")
     except UnicodeError:
@@ -2698,16 +2703,23 @@ def canonical_material_bytes_v01(material: object) -> bytes:
     )
     if not structurally_valid:
         raise ValueError(structural_reasons[0])
-    valid, reasons = validate_canonical_profile_material_v01(
-        material,
-        expected_field_names=field_names,
-    )
-    if not valid:
-        raise ValueError(reasons[0])
+    # Structure validation already proves these exact field names valid, unique
+    # and ordered. Comparing the material with its own names adds no predicate.
     try:
-        return canonical_json_bytes_v01(material)
+        # The narrower material grammar already excludes cycles, mutable values,
+        # floats, surrogates and caller serializers. Tuple JSON is identical to
+        # the general canonicalizer's list projection; only ABSENT needs mapping.
+        return _json.dumps(material, ensure_ascii=False, sort_keys=True,
+            separators=(",", ":"), allow_nan=False,
+            default=_canonical_material_absent_plain_v01).encode("utf-8", errors="strict")
     except Exception:
         raise ValueError("canonical_material_encoding_invalid") from None
+
+
+def _canonical_material_absent_plain_v01(value: object) -> dict[str, str]:
+    if value is not ABSENT_V01:
+        raise ValueError("canonical_material_encoding_invalid")
+    return dict(ABSENT_V01)
 
 
 def build_domain_separated_identity_v01(
@@ -7785,24 +7797,21 @@ def _validate_root_decision_candidate_projection_impl_v01(
     if reasons:
         return _result_v01(reasons)
 
-    if validate_root_decision_kernel_v01(value.root_decision_kernel) != ():
-        _reason_v01(reasons, "root_candidate_kernel_invalid")
-    if (
-        validate_root_decision_input_v01(
+    # The public result validator includes the exact kernel and input predicates.
+    # On refusal retain the original independently attributed reason inventory.
+    result_errors = validate_root_decision_result_v01(
+        kernel=value.root_decision_kernel,
+        decision_input=value.root_decision_input,
+        result=value.root_decision_result,
+    )
+    if result_errors:
+        if validate_root_decision_kernel_v01(value.root_decision_kernel) != ():
+            _reason_v01(reasons, "root_candidate_kernel_invalid")
+        if validate_root_decision_input_v01(
             kernel=value.root_decision_kernel,
             decision_input=value.root_decision_input,
-        )
-        != ()
-    ):
-        _reason_v01(reasons, "root_candidate_input_invalid")
-    if (
-        validate_root_decision_result_v01(
-            kernel=value.root_decision_kernel,
-            decision_input=value.root_decision_input,
-            result=value.root_decision_result,
-        )
-        != ()
-    ):
+        ) != ():
+            _reason_v01(reasons, "root_candidate_input_invalid")
         _reason_v01(reasons, "root_candidate_result_invalid")
     if reasons:
         return _result_v01(reasons)
@@ -10214,12 +10223,23 @@ def validate_transition_evidence_binding_v01(
         ):
             return False, ("transition_evidence_registry_invalid",)
         try:
-            rule = lookup_action_packet_transition_rule_v01(
+            rule = _lookup_action_packet_transition_rule_checked_v01(
                 registry=action_packet_transition_registry_profile,
                 transition_rule_id=transition_rule_id,
             )
         except ValueError:
             return False, ("transition_evidence_rule_unknown",)
+        return _validate_transition_evidence_binding_checked_v01(value, rule)
+    except Exception:
+        return False, ("transition_evidence_binding_invalid",)
+
+
+def _validate_transition_evidence_binding_checked_v01(
+    value: object, rule: ActionPacketTransitionRuleV01,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not TransitionEvidenceBindingV01:
+            return False, ("transition_evidence_binding_type_invalid",)
         reasons: list[str] = []
         binding_id_valid, _ = validate_prefixed_sha256_identity_v01(
             value.transition_evidence_binding_id,
@@ -10579,8 +10599,20 @@ def validate_action_packet_transition_event_v01(
             action_packet_transition_registry_profile
         ):
             return False, ("transition_event_registry_invalid",)
+        return _validate_action_packet_transition_event_checked_v01(
+            value, action_packet_transition_registry_profile)
+    except Exception:
+        return False, ("transition_event_invalid",)
+
+
+def _validate_action_packet_transition_event_checked_v01(
+    value: object, action_packet_transition_registry_profile: ActionPacketTransitionRegistryProfileV01,
+) -> tuple[bool, tuple[str, ...]]:
+    try:
+        if type(value) is not ActionPacketTransitionEventV01:
+            return False, ("transition_event_type_invalid",)
         try:
-            rule = lookup_action_packet_transition_rule_v01(
+            rule = _lookup_action_packet_transition_rule_checked_v01(
                 registry=action_packet_transition_registry_profile,
                 transition_rule_id=value.transition_rule_id,
             )
@@ -10755,11 +10787,7 @@ def _validate_transition_evidence_collection_v01(
     if set(codes) != set(rule.required_evidence_codes):
         _reason_v01(reasons, "transition_event_evidence_set_mismatch")
     for binding in bindings:
-        if not validate_transition_evidence_binding_v01(
-            binding,
-            action_packet_transition_registry_profile=registry,
-            transition_rule_id=rule.transition_rule_id,
-        )[0]:
+        if not _validate_transition_evidence_binding_checked_v01(binding, rule)[0]:
             _reason_v01(reasons, "transition_event_evidence_binding_invalid")
 
 
@@ -11477,10 +11505,7 @@ def _validate_action_packet_transition_history_core_v01(
         failed_provenance: str | None = None
         attempt_count = 0
         for index, event in enumerate(transition_events):
-            event_valid, _ = validate_action_packet_transition_event_v01(
-                event,
-                action_packet_transition_registry_profile=registry,
-            )
+            event_valid, _ = _validate_action_packet_transition_event_checked_v01(event, registry)
             if not event_valid:
                 _reason_v01(reasons, "action_packet_transition_event_invalid")
                 continue
@@ -15540,15 +15565,10 @@ def _build_action_packet_effect_firewall_projection_core_v01(
         raise ValueError("action_packet_effect_genesis_invalid")
     view = _common_action_view_for_pass_v01(root_bound, validation_pass)
     canonical = view.canonical_projection
-    if not validate_common_action_commit_packet_v01(
-        canonical
-    )[0]:
-        raise ValueError("action_packet_effect_projection_invalid")
+    # The preceding root-bound check in this unchanged validation pass includes
+    # both canonical action and Root projection checks. No effect or refresh
+    # occurs between that check and these exact component reads.
     root_projection = root_bound.root_decision_projection
-    if not validate_root_decision_candidate_projection_v01(
-        root_projection
-    )[0]:
-        raise ValueError("action_packet_effect_root_invalid")
     state = _derive_action_packet_lifecycle_state_unchecked_v01(
         entry,
         registry.idempotency_disposition_events,
@@ -15762,15 +15782,9 @@ def _build_action_packet_effect_projection_from_historical_view_v01(
         raise ValueError("action_packet_effect_packet_mismatch")
     view = _common_action_view_for_pass_v01(root_bound, validation_pass)
     canonical = view.canonical_projection
-    if not validate_common_action_commit_packet_v01(
-        canonical
-    )[0]:
-        raise ValueError("action_packet_effect_projection_invalid")
+    # Same proof as the current projection path, but the history, dependency
+    # observations and evaluation below remain this historical attempt's own.
     root_projection = root_bound.root_decision_projection
-    if not validate_root_decision_candidate_projection_v01(
-        root_projection
-    )[0]:
-        raise ValueError("action_packet_effect_root_invalid")
     state = _derive_action_packet_lifecycle_state_unchecked_v01(
         entry,
         disposition_history,

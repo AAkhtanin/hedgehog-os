@@ -1,5 +1,20 @@
 # Hedgehog OS — Current Assistant Operations
 
+## Ephemeral Workspace: Bounded Current Admission
+
+The explicitly authorized `ephemeral_workspace_admission_v01` is the exact
+27-path reviewed EWS4R implementation plus bounded landing controls and safe
+showcase, based on `e42d37fa98dfec7110b8cf75b1aceaa614f461be`.
+The guard derives complete unstaged, staged and clean single-parent committed
+states from exact sources and Git; no future commit is self-recorded.
+[Current commands and evidence](docs/showcase/ephemeral_workspace_v01/README.md) are informational and excluded
+from automatic normative onboarding. Source admission grants no Root permission,
+new effect owner or Gate. The same nine Living registrations and all historical
+Testflix/U4 bases, pins and laws remain. Older pending/status passages below
+describe their named predecessors, not this EWS successor. Production security,
+universal sandboxing and native historical-graph replay are not claimed.
+
+
 ## Testflix V11 Admission Preparation
 
 The exact next proposal is based on accepted L

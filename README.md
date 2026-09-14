@@ -1,5 +1,16 @@
 # Hedgehog OS
 
+## Ephemeral Workspace v0.1
+
+[Explore the photo workspace and verified safe evidence](docs/showcase/ephemeral_workspace_v01/README.md).
+The reviewed EWS4R demonstration covers bounded media work, independent Root
+decisions, selective continuation after AudioSink disappearance, separate sidecar
+approval and cleanup. The public package supports offline anchored derivative
+replay without private originals or provider calls. It does not restore authority.
+The linked showcase contains current commands and explicit audit lanes; the
+accepted design and older status passages retain their historical provenance.
+
+
 ## Testflix V11 Preparation
 
 Testflix has recorded controlled and live/captured demonstrations with mocked

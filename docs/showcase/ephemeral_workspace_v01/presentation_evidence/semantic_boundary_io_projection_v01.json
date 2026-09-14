@@ -1,0 +1,1963 @@
+{
+  "schema": "ews_semantic_boundary_io_projection_v01",
+  "authority_class": "EVIDENCE_ONLY",
+  "projection_kind": "NEW_PRESENTATION_RESEARCH_DERIVATIVE",
+  "covered_by_ews4r_anchor": false,
+  "new_runtime_or_provider_execution": false,
+  "method": "Explicit selected-field copy, canonical omission digests, source-manifest checks and cross-record equality comparisons.",
+  "hash_convention": "SHA256 over exact member bytes; raw_response_utf8_sha256 over the exact stored string; selected_value_canonical_json_sha256 over UTF-8 JSON sorted keys, compact separators, ensure_ascii=false.",
+  "scope_limits": [
+    "Six historical accepted LIVE role captures are separate from three controlled principal browser-role outputs.",
+    "Nine historical attempts include three failures. Failed raw bodies are not supplied by the attempt records; no missing text or diagnosis is invented.",
+    "Asset and media source filenames, inventory identifiers and per-file digests are omitted and represented by field classification plus canonical value digest.",
+    "Safe media counts/descriptors and exact user scenario requests are synthetic-demo bounded inputs, not original private media.",
+    "Raw response bodies are the short retained structured role responses, not full transport or hidden provider reasoning.",
+    "Role outputs and native BSEP remain evidence/candidate information; permission requires current Root review and the execution corridor.",
+    "This newly assembled projection is not part of the older sealed public package. It does not grant whole native graph canonical-schema support."
+  ],
+  "historical_attempt_counts": {
+    "attempts": 9,
+    "returned": 6,
+    "failed": 3
+  },
+  "historical_attempts": [
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/attempts.json",
+        "member_bytes": 2502,
+        "member_sha256": "4786166f1f78e770e3ebdc6d158d60b1eb93828b46b0adad6730611d77be81b4",
+        "record_selector": "/0"
+      },
+      "exact_selected_fields": {
+        "attempt": 1,
+        "role": "ephemeral_workspace_orchestrator_llm",
+        "status": "FAILED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 3.3400995414704084,
+        "error_type": "ValueError",
+        "usage": {
+          "candidates_token_count": 68,
+          "prompt_token_count": 2082,
+          "total_token_count": 2558
+        }
+      },
+      "omitted": [
+        {
+          "selector": "/0/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "6924134559dec5c76c0be419254bc8d75ead2a68ea685e3e4db866694609bb89"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": false
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/attempts.json",
+        "member_bytes": 2502,
+        "member_sha256": "4786166f1f78e770e3ebdc6d158d60b1eb93828b46b0adad6730611d77be81b4",
+        "record_selector": "/1"
+      },
+      "exact_selected_fields": {
+        "attempt": 2,
+        "role": "ephemeral_workspace_orchestrator_llm",
+        "status": "FAILED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 3.2137676244601607,
+        "error_type": "ValueError",
+        "usage": {
+          "candidates_token_count": 79,
+          "prompt_token_count": 2135,
+          "total_token_count": 2636
+        }
+      },
+      "omitted": [
+        {
+          "selector": "/1/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "6924134559dec5c76c0be419254bc8d75ead2a68ea685e3e4db866694609bb89"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": false
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/attempts.json",
+        "member_bytes": 2502,
+        "member_sha256": "4786166f1f78e770e3ebdc6d158d60b1eb93828b46b0adad6730611d77be81b4",
+        "record_selector": "/2"
+      },
+      "exact_selected_fields": {
+        "attempt": 3,
+        "role": "ephemeral_workspace_orchestrator_llm",
+        "status": "RETURNED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 3.759936625137925,
+        "usage": {
+          "candidates_token_count": 54,
+          "prompt_token_count": 2200,
+          "total_token_count": 2758
+        },
+        "raw_sha256": "c9dc01b665a54b24945835dcbb326ac4061ddba4dc1a40ca631f8e974fd2f2dd"
+      },
+      "omitted": [
+        {
+          "selector": "/2/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "6924134559dec5c76c0be419254bc8d75ead2a68ea685e3e4db866694609bb89"
+        },
+        {
+          "selector": "/2/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "3ebfb4e04ad8acdcc1ae2246d42a2947f081d31a8b3d04715a11fb010cf8b764"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": null
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/attempts.json",
+        "member_bytes": 2502,
+        "member_sha256": "4786166f1f78e770e3ebdc6d158d60b1eb93828b46b0adad6730611d77be81b4",
+        "record_selector": "/3"
+      },
+      "exact_selected_fields": {
+        "attempt": 4,
+        "role": "ephemeral_workspace_semantic_architect_llm",
+        "status": "RETURNED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 5.802870583720505,
+        "usage": {
+          "candidates_token_count": 77,
+          "prompt_token_count": 2278,
+          "total_token_count": 3509
+        },
+        "raw_sha256": "fb3d3420e40ef171b6b07cac5ebca2cbb50ade47d7fc99d6f4cd93b75fb7d48e"
+      },
+      "omitted": [
+        {
+          "selector": "/3/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "62f41a6611351afdf7c4d831dcf684970e1affdd7fe7fd38283aefe910956f3c"
+        },
+        {
+          "selector": "/3/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "3b424183d34b96cd5e64970b4a1e118e4c517b616834cb498978344169b41609"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": null
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/attempts.json",
+        "member_bytes": 2502,
+        "member_sha256": "4786166f1f78e770e3ebdc6d158d60b1eb93828b46b0adad6730611d77be81b4",
+        "record_selector": "/4"
+      },
+      "exact_selected_fields": {
+        "attempt": 5,
+        "role": "ephemeral_workspace_privacy_boundary_reviewer_llm",
+        "status": "RETURNED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 8.400909166783094,
+        "usage": {
+          "candidates_token_count": 28,
+          "prompt_token_count": 2285,
+          "total_token_count": 3787
+        },
+        "raw_sha256": "32a2fca798f38f41d523431217ed1d63246cfff0d454fa7adfb00a5ec1f36978"
+      },
+      "omitted": [
+        {
+          "selector": "/4/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "7342aa069b5818d98c73fe6d5e21cfeb9cd9e2716a3337514601f4d0f5007561"
+        },
+        {
+          "selector": "/4/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "62c9aad9f7f1b42ab6b27eba759bc124e0cd553bff76103b60330c03160d3957"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": null
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/attempts.json",
+        "member_bytes": 2108,
+        "member_sha256": "d3310da21338dbc5241e5e99f907a1850a06efaeaa21287dd46300c362f0b950",
+        "record_selector": "/0"
+      },
+      "exact_selected_fields": {
+        "attempt": 1,
+        "role": "ephemeral_workspace_orchestrator_llm",
+        "status": "FAILED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 10.051271041855216,
+        "error_type": "JSONDecodeError",
+        "usage": {
+          "candidates_token_count": 70,
+          "prompt_token_count": 2120,
+          "total_token_count": 4154
+        }
+      },
+      "omitted": [
+        {
+          "selector": "/0/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "675269bc486f0d6c485536a677269f33118ae6fdea768f8656c0d30b86cb65eb"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": false
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/attempts.json",
+        "member_bytes": 2108,
+        "member_sha256": "d3310da21338dbc5241e5e99f907a1850a06efaeaa21287dd46300c362f0b950",
+        "record_selector": "/1"
+      },
+      "exact_selected_fields": {
+        "attempt": 2,
+        "role": "ephemeral_workspace_orchestrator_llm",
+        "status": "RETURNED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 2.6881940001621842,
+        "usage": {
+          "candidates_token_count": 34,
+          "prompt_token_count": 2162,
+          "total_token_count": 2482
+        },
+        "raw_sha256": "5ecc1f5313658ce00ec8b8e3abd227ff4107f4f589dc0c3ccfff5a9de6b184ee"
+      },
+      "omitted": [
+        {
+          "selector": "/1/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "675269bc486f0d6c485536a677269f33118ae6fdea768f8656c0d30b86cb65eb"
+        },
+        {
+          "selector": "/1/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "87af51119597d3a9f83ac3008c87a109bc91d1901f14b9b5504d20fe3fed4d8e"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": null
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/attempts.json",
+        "member_bytes": 2108,
+        "member_sha256": "d3310da21338dbc5241e5e99f907a1850a06efaeaa21287dd46300c362f0b950",
+        "record_selector": "/2"
+      },
+      "exact_selected_fields": {
+        "attempt": 3,
+        "role": "ephemeral_workspace_semantic_architect_llm",
+        "status": "RETURNED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 4.513908040709794,
+        "usage": {
+          "candidates_token_count": 63,
+          "prompt_token_count": 2200,
+          "total_token_count": 2997
+        },
+        "raw_sha256": "905269d97fd44b9af68ac9969543ade7201733b468da4892c8579fb276ffbc06"
+      },
+      "omitted": [
+        {
+          "selector": "/2/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "f5522a9e0f980c06d394cf34403f1a703ee1c260eb9534b705e8bd4b1c7db344"
+        },
+        {
+          "selector": "/2/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "78b1578dd307babfa3bdf18111dbbee6f101f77b7821a921e8b4f6e4cf6a4b62"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": null
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/attempts.json",
+        "member_bytes": 2108,
+        "member_sha256": "d3310da21338dbc5241e5e99f907a1850a06efaeaa21287dd46300c362f0b950",
+        "record_selector": "/3"
+      },
+      "exact_selected_fields": {
+        "attempt": 4,
+        "role": "ephemeral_workspace_privacy_boundary_reviewer_llm",
+        "status": "RETURNED",
+        "model": "gemini-2.5-flash",
+        "response_model": "gemini-2.5-flash",
+        "elapsed_seconds": 10.383880250155926,
+        "usage": {
+          "candidates_token_count": 30,
+          "prompt_token_count": 2221,
+          "total_token_count": 4213
+        },
+        "raw_sha256": "aabaa57f8e5696372667712517a44a27fb20e2d964a2cc4095c6b17bf96258c7"
+      },
+      "omitted": [
+        {
+          "selector": "/3/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "3e05c9340fa54ac4a65b4c72f3d198c59407b7125ba469dd804bb9bf0ab94231"
+        },
+        {
+          "selector": "/3/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "d84c34259bce42da42112fabea5ed72d14e2ea7706b7ec4b1e8e2e928c28b0a2"
+        }
+      ],
+      "failed_raw_body_available_in_this_record": null
+    }
+  ],
+  "historical_accepted_role_records": [
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/capture_01.json",
+        "member_bytes": 3928,
+        "member_sha256": "3e2fa761bd111a6c8d922f44d5cd3e420ba387dbdd5dd53c799949be86adb993",
+        "record_selector": "/"
+      },
+      "mode": "LIVE",
+      "model": "gemini-2.5-flash",
+      "role": "ephemeral_workspace_orchestrator_llm",
+      "role_order": 0,
+      "attempt": 3,
+      "provider": "gemini",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "Browse, rate and select the photographs, adjust exposure and crop, and review the short video with audio. If audio becomes unavailable, continue the visual work silently. Never modify sources or publish. Save selected ratings and preview parameters only after separate confirmation.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ]
+      },
+      "input_selectors": [
+        "/context/version",
+        "/context/request",
+        "/context/capability_classes"
+      ],
+      "input_context_canonical_json_sha256": "038db28ff7a09104567774705067b1400ea85df2aa5e4f4bedf604ddd4c4bd7c",
+      "input_omissions": [
+        {
+          "selector": "/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/context/media_inventory/version",
+          "/context/media_inventory/kind",
+          "/context/media_inventory/content",
+          "/context/media_inventory/duration_seconds",
+          "/context/media_inventory/fps",
+          "/context/media_inventory/width",
+          "/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/context/asset_inventory",
+      "structured_output": {
+        "needs": [
+          "browse",
+          "rate",
+          "select",
+          "exposure",
+          "crop",
+          "video",
+          "audio"
+        ],
+        "uncertainty": []
+      },
+      "output_selector": "/output",
+      "structured_output_canonical_json_sha256": "afafd78e59e88f89dae4adbcac37927e6d5358a9b3d14aa3541fcb687f858cdb",
+      "raw_response_body": "{\n  \"needs\": [\n    \"browse\",\n    \"rate\",\n    \"select\",\n    \"exposure\",\n    \"crop\",\n    \"video\",\n    \"audio\"\n  ],\n  \"uncertainty\": []\n}",
+      "raw_response_selector": "/raw",
+      "raw_response_utf8_sha256": "c9dc01b665a54b24945835dcbb326ac4061ddba4dc1a40ca631f8e974fd2f2dd",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "6924134559dec5c76c0be419254bc8d75ead2a68ea685e3e4db866694609bb89"
+        },
+        {
+          "selector": "/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "87df13d6f5bfe07081c8c594a87492676af1ccf8506c103b1698385361765fca"
+        },
+        {
+          "selector": "/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "3ebfb4e04ad8acdcc1ae2246d42a2947f081d31a8b3d04715a11fb010cf8b764"
+        }
+      ]
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/capture_02.json",
+        "member_bytes": 4309,
+        "member_sha256": "f9b7d15ab4421025d84069760a0d19ff2aae43f45baba54e97fc960a34c8963d",
+        "record_selector": "/"
+      },
+      "mode": "LIVE",
+      "model": "gemini-2.5-flash",
+      "role": "ephemeral_workspace_semantic_architect_llm",
+      "role_order": 1,
+      "attempt": 4,
+      "provider": "gemini",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "Browse, rate and select the photographs, adjust exposure and crop, and review the short video with audio. If audio becomes unavailable, continue the visual work silently. Never modify sources or publish. Save selected ratings and preview parameters only after separate confirmation.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ],
+        "bsep": {
+          "needs": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ],
+          "publication": false,
+          "separate_save": true,
+          "source_write": false
+        },
+        "route_acceptance": {
+          "decision": "ACCEPT",
+          "scope": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ]
+        }
+      },
+      "input_selectors": [
+        "/context/version",
+        "/context/request",
+        "/context/capability_classes",
+        "/context/bsep",
+        "/context/route_acceptance"
+      ],
+      "input_context_canonical_json_sha256": "3b3fe0bf01bd8406dac8cdf7d7743c2931178e6fa400cb609ec5d9dbbd63f671",
+      "input_omissions": [
+        {
+          "selector": "/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/context/media_inventory/version",
+          "/context/media_inventory/kind",
+          "/context/media_inventory/content",
+          "/context/media_inventory/duration_seconds",
+          "/context/media_inventory/fps",
+          "/context/media_inventory/width",
+          "/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/context/asset_inventory",
+      "structured_output": {
+        "audio_policy": "SILENT_CONTINUE",
+        "cleanup": "on_end",
+        "phases": [
+          "preview",
+          "interact",
+          "confirm_save",
+          "close"
+        ],
+        "preview": "fit",
+        "save": "selected_only"
+      },
+      "output_selector": "/output",
+      "structured_output_canonical_json_sha256": "6dfdaa027111be00f2ab4ef2f86f88aaea6ee5c5e5fe666cc4b48b4de126065a",
+      "raw_response_body": "{\n  \"preview\": \"fit\",\n  \"cleanup\": \"on_end\",\n  \"save\": \"selected_only\",\n  \"phases\": [\n    \"preview\",\n    \"interact\",\n    \"confirm_save\",\n    \"close\"\n  ],\n  \"audio_policy\": \"SILENT_CONTINUE\"\n}",
+      "raw_response_selector": "/raw",
+      "raw_response_utf8_sha256": "fb3d3420e40ef171b6b07cac5ebca2cbb50ade47d7fc99d6f4cd93b75fb7d48e",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "62f41a6611351afdf7c4d831dcf684970e1affdd7fe7fd38283aefe910956f3c"
+        },
+        {
+          "selector": "/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "e20e29c7a5b65f6f8e395ee836e7d32e6e7404b317ef5a2531053d1d5fe51b3a"
+        },
+        {
+          "selector": "/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "3b424183d34b96cd5e64970b4a1e118e4c517b616834cb498978344169b41609"
+        }
+      ]
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/main/budget/capture_03.json",
+        "member_bytes": 4252,
+        "member_sha256": "1b06ae33288689bdc0b393ac78718b207acaeb244fc07d335f767048d0bc056e",
+        "record_selector": "/"
+      },
+      "mode": "LIVE",
+      "model": "gemini-2.5-flash",
+      "role": "ephemeral_workspace_privacy_boundary_reviewer_llm",
+      "role_order": 2,
+      "attempt": 5,
+      "provider": "gemini",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "Browse, rate and select the photographs, adjust exposure and crop, and review the short video with audio. If audio becomes unavailable, continue the visual work silently. Never modify sources or publish. Save selected ratings and preview parameters only after separate confirmation.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ],
+        "bsep": {
+          "needs": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ],
+          "publication": false,
+          "separate_save": true,
+          "source_write": false
+        },
+        "route_acceptance": {
+          "decision": "ACCEPT",
+          "scope": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ]
+        },
+        "obligations": {
+          "audio_policy": "SILENT_CONTINUE",
+          "cleanup": "on_end",
+          "phases": [
+            "preview",
+            "interact",
+            "confirm_save",
+            "close"
+          ],
+          "preview": "fit",
+          "save": "selected_only"
+        }
+      },
+      "input_selectors": [
+        "/context/version",
+        "/context/request",
+        "/context/capability_classes",
+        "/context/bsep",
+        "/context/route_acceptance",
+        "/context/obligations"
+      ],
+      "input_context_canonical_json_sha256": "3be484de077e7f149393d3298a2c28c70c047331eef35c05f6c42ec7578f82f9",
+      "input_omissions": [
+        {
+          "selector": "/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/context/media_inventory/version",
+          "/context/media_inventory/kind",
+          "/context/media_inventory/content",
+          "/context/media_inventory/duration_seconds",
+          "/context/media_inventory/fps",
+          "/context/media_inventory/width",
+          "/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/context/asset_inventory",
+      "structured_output": {
+        "conflicts": [],
+        "decision": "allow",
+        "minimize": "preview_only"
+      },
+      "output_selector": "/output",
+      "structured_output_canonical_json_sha256": "c843a3244f523dd746e81dd0e9c4645017fa728cd1089d64ea682e800cef420e",
+      "raw_response_body": "{\n  \"decision\": \"allow\",\n  \"minimize\": \"preview_only\",\n  \"conflicts\": []\n}",
+      "raw_response_selector": "/raw",
+      "raw_response_utf8_sha256": "32a2fca798f38f41d523431217ed1d63246cfff0d454fa7adfb00a5ec1f36978",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "7342aa069b5818d98c73fe6d5e21cfeb9cd9e2716a3337514601f4d0f5007561"
+        },
+        {
+          "selector": "/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "811105783578910d3bbebc8ace8f61222920618770047593206e77ba4eea75b6"
+        },
+        {
+          "selector": "/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "62c9aad9f7f1b42ab6b27eba759bc124e0cd553bff76103b60330c03160d3957"
+        }
+      ]
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/capture_01.json",
+        "member_bytes": 3708,
+        "member_sha256": "288bca4e99c6e9efc2c2382eb5dfd26d33c88fbfdc641a8d45c3112978a17995",
+        "record_selector": "/"
+      },
+      "mode": "LIVE",
+      "model": "gemini-2.5-flash",
+      "role": "ephemeral_workspace_orchestrator_llm",
+      "role_order": 0,
+      "attempt": 2,
+      "provider": "gemini",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "I only want to browse, rate and select these photographs. I do not need editing, video or sound. Keep the same source, publication and separate-save restrictions.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ]
+      },
+      "input_selectors": [
+        "/context/version",
+        "/context/request",
+        "/context/capability_classes"
+      ],
+      "input_context_canonical_json_sha256": "0a40205da3b68ff99c307d00f025cf4e7a971228333c81044fc3ee9eb21f7d7b",
+      "input_omissions": [
+        {
+          "selector": "/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/context/media_inventory/version",
+          "/context/media_inventory/kind",
+          "/context/media_inventory/content",
+          "/context/media_inventory/duration_seconds",
+          "/context/media_inventory/fps",
+          "/context/media_inventory/width",
+          "/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/context/asset_inventory",
+      "structured_output": {
+        "needs": [
+          "browse",
+          "rate",
+          "select"
+        ],
+        "uncertainty": []
+      },
+      "output_selector": "/output",
+      "structured_output_canonical_json_sha256": "5f297d5f69f1571cae087d3e5a96dae1ac677e38a0645203026063a7b19f0338",
+      "raw_response_body": "{\n  \"needs\": [\n    \"browse\",\n    \"rate\",\n    \"select\"\n  ],\n  \"uncertainty\": []\n}",
+      "raw_response_selector": "/raw",
+      "raw_response_utf8_sha256": "5ecc1f5313658ce00ec8b8e3abd227ff4107f4f589dc0c3ccfff5a9de6b184ee",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "675269bc486f0d6c485536a677269f33118ae6fdea768f8656c0d30b86cb65eb"
+        },
+        {
+          "selector": "/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "c145012bf3c259743b06d59c843bb58f85c74e1ec10411997906c98974dfe610"
+        },
+        {
+          "selector": "/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "87af51119597d3a9f83ac3008c87a109bc91d1901f14b9b5504d20fe3fed4d8e"
+        }
+      ]
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/capture_02.json",
+        "member_bytes": 4046,
+        "member_sha256": "9020d8606f29c4de77365298bebc318c9f23057564eb41637dd2d6e40e85bb4c",
+        "record_selector": "/"
+      },
+      "mode": "LIVE",
+      "model": "gemini-2.5-flash",
+      "role": "ephemeral_workspace_semantic_architect_llm",
+      "role_order": 1,
+      "attempt": 3,
+      "provider": "gemini",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "I only want to browse, rate and select these photographs. I do not need editing, video or sound. Keep the same source, publication and separate-save restrictions.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ],
+        "bsep": {
+          "needs": [
+            "browse",
+            "rate",
+            "select"
+          ],
+          "publication": false,
+          "separate_save": true,
+          "source_write": false
+        },
+        "route_acceptance": {
+          "decision": "ACCEPT",
+          "scope": [
+            "browse",
+            "rate",
+            "select"
+          ]
+        }
+      },
+      "input_selectors": [
+        "/context/version",
+        "/context/request",
+        "/context/capability_classes",
+        "/context/bsep",
+        "/context/route_acceptance"
+      ],
+      "input_context_canonical_json_sha256": "62147359dacb3cee4908e8c9bd4f80a4bc53d50353308c090102416956198664",
+      "input_omissions": [
+        {
+          "selector": "/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/context/media_inventory/version",
+          "/context/media_inventory/kind",
+          "/context/media_inventory/content",
+          "/context/media_inventory/duration_seconds",
+          "/context/media_inventory/fps",
+          "/context/media_inventory/width",
+          "/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/context/asset_inventory",
+      "structured_output": {
+        "cleanup": "on_end",
+        "phases": [
+          "preview",
+          "interact",
+          "confirm_save",
+          "close"
+        ],
+        "preview": "fit",
+        "save": "selected_only"
+      },
+      "output_selector": "/output",
+      "structured_output_canonical_json_sha256": "d9dbf4ca549d47f8401cdafc8a99d5c696d83e3ceeb0a5cf4f27a66095805151",
+      "raw_response_body": "{\n  \"preview\": \"fit\",\n  \"cleanup\": \"on_end\",\n  \"save\": \"selected_only\",\n  \"phases\": [\n    \"preview\",\n    \"interact\",\n    \"confirm_save\",\n    \"close\"\n  ]\n}",
+      "raw_response_selector": "/raw",
+      "raw_response_utf8_sha256": "905269d97fd44b9af68ac9969543ade7201733b468da4892c8579fb276ffbc06",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "f5522a9e0f980c06d394cf34403f1a703ee1c260eb9534b705e8bd4b1c7db344"
+        },
+        {
+          "selector": "/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "7c8b7e928da56e2515708ecd0bb8c95a972d27c97979d722c326435e46017076"
+        },
+        {
+          "selector": "/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "78b1578dd307babfa3bdf18111dbbee6f101f77b7821a921e8b4f6e4cf6a4b62"
+        }
+      ]
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/live/contrast/budget/capture_03.json",
+        "member_bytes": 4055,
+        "member_sha256": "39e0c770bde1bdeb6e1456c20846626e680f0d9ac0eab5c183c8bcc19f2c1112",
+        "record_selector": "/"
+      },
+      "mode": "LIVE",
+      "model": "gemini-2.5-flash",
+      "role": "ephemeral_workspace_privacy_boundary_reviewer_llm",
+      "role_order": 2,
+      "attempt": 4,
+      "provider": "gemini",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "I only want to browse, rate and select these photographs. I do not need editing, video or sound. Keep the same source, publication and separate-save restrictions.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ],
+        "bsep": {
+          "needs": [
+            "browse",
+            "rate",
+            "select"
+          ],
+          "publication": false,
+          "separate_save": true,
+          "source_write": false
+        },
+        "route_acceptance": {
+          "decision": "ACCEPT",
+          "scope": [
+            "browse",
+            "rate",
+            "select"
+          ]
+        },
+        "obligations": {
+          "cleanup": "on_end",
+          "phases": [
+            "preview",
+            "interact",
+            "confirm_save",
+            "close"
+          ],
+          "preview": "fit",
+          "save": "selected_only"
+        }
+      },
+      "input_selectors": [
+        "/context/version",
+        "/context/request",
+        "/context/capability_classes",
+        "/context/bsep",
+        "/context/route_acceptance",
+        "/context/obligations"
+      ],
+      "input_context_canonical_json_sha256": "7f430b84f70179bcf09919affc2acb725c467b4664540a1c3a40daff9dea560c",
+      "input_omissions": [
+        {
+          "selector": "/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/context/media_inventory/version",
+          "/context/media_inventory/kind",
+          "/context/media_inventory/content",
+          "/context/media_inventory/duration_seconds",
+          "/context/media_inventory/fps",
+          "/context/media_inventory/width",
+          "/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/context/asset_inventory",
+      "structured_output": {
+        "conflicts": [],
+        "decision": "allow",
+        "minimize": "preview_without_metadata"
+      },
+      "output_selector": "/output",
+      "structured_output_canonical_json_sha256": "eeaa816955d93874daed413937fd979cfbd776b8de2e5974ba30d26b706e4223",
+      "raw_response_body": "{\n  \"decision\": \"allow\",\n  \"minimize\": \"preview_without_metadata\",\n  \"conflicts\": []\n}",
+      "raw_response_selector": "/raw",
+      "raw_response_utf8_sha256": "aabaa57f8e5696372667712517a44a27fb20e2d964a2cc4095c6b17bf96258c7",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "3e05c9340fa54ac4a65b4c72f3d198c59407b7125ba469dd804bb9bf0ab94231"
+        },
+        {
+          "selector": "/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "9af6f8f8e6eaf72f9323dafe6d4cef21f4cf85a80c0ab3e79ddd59b1f5ed79d3"
+        },
+        {
+          "selector": "/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "d84c34259bce42da42112fabea5ed72d14e2ea7706b7ec4b1e8e2e928c28b0a2"
+        }
+      ]
+    }
+  ],
+  "historical_consumption_crosschecks": [
+    {
+      "scenario": "HISTORICAL_LIVE_MIXED",
+      "kind": "INDEPENDENT_RETAINED_RECORD_COMPARISON",
+      "accepted_capture_records_equal_later_consumed_records": true,
+      "later_consumed_source": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/main_captured_04/semantic_captures.json",
+        "member_bytes": 12493,
+        "member_sha256": "8ced3d0185794348e58f3152f8dc9ebcb9fdfcb6b33f433d067a219ab2c7075c"
+      },
+      "comparison": "Each of the three complete capture JSON records equals its retained later consumed record.",
+      "orchestrator_needs_equal_architect_bounded_input_needs": true,
+      "architect_output_equals_privacy_reviewer_input_obligations": true,
+      "new_runtime_execution_performed": false,
+      "code_binding": {
+        "path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+        "symbol": "collect",
+        "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+      }
+    },
+    {
+      "scenario": "HISTORICAL_LIVE_PHOTO_ONLY",
+      "kind": "INDEPENDENT_RETAINED_RECORD_COMPARISON",
+      "accepted_capture_records_equal_later_consumed_records": true,
+      "later_consumed_source": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+        "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+        "member": "evidence/contrast_memory_04/contrast/semantic_captures.json",
+        "member_bytes": 11813,
+        "member_sha256": "7ebf65bb0318acfc56cad2a037a832e1d3282c760299f0c31c30c17bc69c2d00"
+      },
+      "comparison": "Each of the three complete capture JSON records equals its retained later consumed record.",
+      "orchestrator_needs_equal_architect_bounded_input_needs": true,
+      "architect_output_equals_privacy_reviewer_input_obligations": true,
+      "new_runtime_execution_performed": false,
+      "code_binding": {
+        "path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+        "symbol": "collect",
+        "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+      }
+    }
+  ],
+  "principal_controlled_role_records": [
+    {
+      "scenario": "PRINCIPAL_EWS3R2_CONTROLLED_BROWSER",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+        "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+        "member": "browser_run_01/native_final/private/semantic_captures.json",
+        "member_bytes": 12468,
+        "member_sha256": "76dbcec16685b103c29f2ab5cce6cf7e7827764b937fdb0592f11b11cbc5b891",
+        "record_selector": "/0"
+      },
+      "mode": "CONTROLLED_DETERMINISTIC",
+      "model": "local-semantic-rules-v01",
+      "role": "ephemeral_workspace_orchestrator_llm",
+      "role_order": 0,
+      "attempt": 0,
+      "provider": "local",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "Browse, rate and select the photographs, adjust exposure and crop, and review the short video with audio. If audio becomes unavailable, continue the visual work silently. Never modify sources or publish. Save selected ratings and preview parameters only after separate confirmation.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ]
+      },
+      "input_selectors": [
+        "/0/context/version",
+        "/0/context/request",
+        "/0/context/capability_classes"
+      ],
+      "input_context_canonical_json_sha256": "038db28ff7a09104567774705067b1400ea85df2aa5e4f4bedf604ddd4c4bd7c",
+      "input_omissions": [
+        {
+          "selector": "/0/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/0/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/0/context/media_inventory/version",
+          "/0/context/media_inventory/kind",
+          "/0/context/media_inventory/content",
+          "/0/context/media_inventory/duration_seconds",
+          "/0/context/media_inventory/fps",
+          "/0/context/media_inventory/width",
+          "/0/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/0/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/0/context/asset_inventory",
+      "structured_output": {
+        "needs": [
+          "browse",
+          "rate",
+          "select",
+          "exposure",
+          "crop",
+          "video",
+          "audio"
+        ],
+        "uncertainty": []
+      },
+      "output_selector": "/0/output",
+      "structured_output_canonical_json_sha256": "afafd78e59e88f89dae4adbcac37927e6d5358a9b3d14aa3541fcb687f858cdb",
+      "raw_response_body": "{\"needs\":[\"browse\",\"rate\",\"select\",\"exposure\",\"crop\",\"video\",\"audio\"],\"uncertainty\":[]}",
+      "raw_response_selector": "/0/raw",
+      "raw_response_utf8_sha256": "afafd78e59e88f89dae4adbcac37927e6d5358a9b3d14aa3541fcb687f858cdb",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/0/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "6924134559dec5c76c0be419254bc8d75ead2a68ea685e3e4db866694609bb89"
+        },
+        {
+          "selector": "/0/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "87df13d6f5bfe07081c8c594a87492676af1ccf8506c103b1698385361765fca"
+        },
+        {
+          "selector": "/0/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "f3350d5bb3e444cc33df2b3e6bed1b0e457989e8525b66e3a545853c62564934"
+        }
+      ],
+      "provider_call_performed_for_this_role": false,
+      "safe_role_crosscheck": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+        "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+        "member": "browser_run_01/native_final/semantic_safe.json",
+        "member_bytes": 1650,
+        "member_sha256": "80bdaef645c4f1483fb3d695df48f3f8a62b049dfc52332bdf48df0c9417a423",
+        "record_selector": "/0",
+        "output_equal": true
+      }
+    },
+    {
+      "scenario": "PRINCIPAL_EWS3R2_CONTROLLED_BROWSER",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+        "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+        "member": "browser_run_01/native_final/private/semantic_captures.json",
+        "member_bytes": 12468,
+        "member_sha256": "76dbcec16685b103c29f2ab5cce6cf7e7827764b937fdb0592f11b11cbc5b891",
+        "record_selector": "/1"
+      },
+      "mode": "CONTROLLED_DETERMINISTIC",
+      "model": "local-semantic-rules-v01",
+      "role": "ephemeral_workspace_semantic_architect_llm",
+      "role_order": 1,
+      "attempt": 0,
+      "provider": "local",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "Browse, rate and select the photographs, adjust exposure and crop, and review the short video with audio. If audio becomes unavailable, continue the visual work silently. Never modify sources or publish. Save selected ratings and preview parameters only after separate confirmation.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ],
+        "bsep": {
+          "needs": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ],
+          "publication": false,
+          "separate_save": true,
+          "source_write": false
+        },
+        "route_acceptance": {
+          "decision": "ACCEPT",
+          "scope": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ]
+        }
+      },
+      "input_selectors": [
+        "/1/context/version",
+        "/1/context/request",
+        "/1/context/capability_classes",
+        "/1/context/bsep",
+        "/1/context/route_acceptance"
+      ],
+      "input_context_canonical_json_sha256": "3b3fe0bf01bd8406dac8cdf7d7743c2931178e6fa400cb609ec5d9dbbd63f671",
+      "input_omissions": [
+        {
+          "selector": "/1/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/1/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/1/context/media_inventory/version",
+          "/1/context/media_inventory/kind",
+          "/1/context/media_inventory/content",
+          "/1/context/media_inventory/duration_seconds",
+          "/1/context/media_inventory/fps",
+          "/1/context/media_inventory/width",
+          "/1/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/1/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/1/context/asset_inventory",
+      "structured_output": {
+        "audio_policy": "SILENT_CONTINUE",
+        "cleanup": "on_end",
+        "phases": [
+          "preview",
+          "interact",
+          "confirm_save",
+          "close"
+        ],
+        "preview": "fit",
+        "save": "selected_only"
+      },
+      "output_selector": "/1/output",
+      "structured_output_canonical_json_sha256": "6dfdaa027111be00f2ab4ef2f86f88aaea6ee5c5e5fe666cc4b48b4de126065a",
+      "raw_response_body": "{\"audio_policy\":\"SILENT_CONTINUE\",\"cleanup\":\"on_end\",\"phases\":[\"preview\",\"interact\",\"confirm_save\",\"close\"],\"preview\":\"fit\",\"save\":\"selected_only\"}",
+      "raw_response_selector": "/1/raw",
+      "raw_response_utf8_sha256": "6dfdaa027111be00f2ab4ef2f86f88aaea6ee5c5e5fe666cc4b48b4de126065a",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/1/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "62f41a6611351afdf7c4d831dcf684970e1affdd7fe7fd38283aefe910956f3c"
+        },
+        {
+          "selector": "/1/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "e20e29c7a5b65f6f8e395ee836e7d32e6e7404b317ef5a2531053d1d5fe51b3a"
+        },
+        {
+          "selector": "/1/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "dc65893f737b9ac32d1ee04f1bf7dd5f314248f31d176f0079f549cd6ac5ed8b"
+        }
+      ],
+      "provider_call_performed_for_this_role": false,
+      "safe_role_crosscheck": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+        "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+        "member": "browser_run_01/native_final/semantic_safe.json",
+        "member_bytes": 1650,
+        "member_sha256": "80bdaef645c4f1483fb3d695df48f3f8a62b049dfc52332bdf48df0c9417a423",
+        "record_selector": "/1",
+        "output_equal": true
+      }
+    },
+    {
+      "scenario": "PRINCIPAL_EWS3R2_CONTROLLED_BROWSER",
+      "projection_kind": "EXACT_SELECTED_FIELDS_WITH_OMISSION_DIGESTS",
+      "whole_source_record_embedded": false,
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+        "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+        "member": "browser_run_01/native_final/private/semantic_captures.json",
+        "member_bytes": 12468,
+        "member_sha256": "76dbcec16685b103c29f2ab5cce6cf7e7827764b937fdb0592f11b11cbc5b891",
+        "record_selector": "/2"
+      },
+      "mode": "CONTROLLED_DETERMINISTIC",
+      "model": "local-semantic-rules-v01",
+      "role": "ephemeral_workspace_privacy_boundary_reviewer_llm",
+      "role_order": 2,
+      "attempt": 0,
+      "provider": "local",
+      "bounded_input": {
+        "version": "ews.mixed.v01",
+        "request": "Browse, rate and select the photographs, adjust exposure and crop, and review the short video with audio. If audio becomes unavailable, continue the visual work silently. Never modify sources or publish. Save selected ratings and preview parameters only after separate confirmation.",
+        "capability_classes": [
+          "MediaSourceNeedle",
+          "RenderEngineNeedle",
+          "DisplayGatewayNeedle",
+          "ControlSurfaceNeedle",
+          "AudioSinkNeedle",
+          "SidecarWriteNeedle"
+        ],
+        "bsep": {
+          "needs": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ],
+          "publication": false,
+          "separate_save": true,
+          "source_write": false
+        },
+        "route_acceptance": {
+          "decision": "ACCEPT",
+          "scope": [
+            "browse",
+            "rate",
+            "select",
+            "exposure",
+            "crop",
+            "video",
+            "audio"
+          ]
+        },
+        "obligations": {
+          "audio_policy": "SILENT_CONTINUE",
+          "cleanup": "on_end",
+          "phases": [
+            "preview",
+            "interact",
+            "confirm_save",
+            "close"
+          ],
+          "preview": "fit",
+          "save": "selected_only"
+        }
+      },
+      "input_selectors": [
+        "/2/context/version",
+        "/2/context/request",
+        "/2/context/capability_classes",
+        "/2/context/bsep",
+        "/2/context/route_acceptance",
+        "/2/context/obligations"
+      ],
+      "input_context_canonical_json_sha256": "3be484de077e7f149393d3298a2c28c70c047331eef35c05f6c42ec7578f82f9",
+      "input_omissions": [
+        {
+          "selector": "/2/context/asset_inventory",
+          "classification": "asset inventory references and source digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "830b9a95883fc3458d1b07ae5e94dac6ebd12f19d12bbdd7b8ad5ac2b2ae9882"
+        },
+        {
+          "selector": "/2/context/media_inventory",
+          "classification": "media manifest with source filenames and per-file digests",
+          "published": false,
+          "selected_value_canonical_json_sha256": "65d0a91c0a66bf5242c2a55fa455d7d1af5c2c1ca996457ac04f577843342ecb"
+        }
+      ],
+      "media_description_derivative": {
+        "values": {
+          "version": "ews.media_fixture.v01",
+          "kind": "SYNTHETIC_FRAME_SEQUENCE_AND_PCM_WAV",
+          "content": "Moving rectangle with alternating tones; no recorded speech or physical sound claim.",
+          "duration_seconds": 8,
+          "fps": 2,
+          "width": 480,
+          "height": 270
+        },
+        "selectors": [
+          "/2/context/media_inventory/version",
+          "/2/context/media_inventory/kind",
+          "/2/context/media_inventory/content",
+          "/2/context/media_inventory/duration_seconds",
+          "/2/context/media_inventory/fps",
+          "/2/context/media_inventory/width",
+          "/2/context/media_inventory/height"
+        ],
+        "derived_frame_count": 16,
+        "frame_count_source_selector": "/2/context/media_inventory/frames",
+        "audio_values": {
+          "channels": 1,
+          "sample_rate": 8000,
+          "sample_width": 2,
+          "samples": 64000
+        }
+      },
+      "asset_count_derivative": 6,
+      "asset_count_source_selector": "/2/context/asset_inventory",
+      "structured_output": {
+        "conflicts": [],
+        "decision": "allow",
+        "minimize": "preview_without_metadata"
+      },
+      "output_selector": "/2/output",
+      "structured_output_canonical_json_sha256": "eeaa816955d93874daed413937fd979cfbd776b8de2e5974ba30d26b706e4223",
+      "raw_response_body": "{\"conflicts\":[],\"decision\":\"allow\",\"minimize\":\"preview_without_metadata\"}",
+      "raw_response_selector": "/2/raw",
+      "raw_response_utf8_sha256": "eeaa816955d93874daed413937fd979cfbd776b8de2e5974ba30d26b706e4223",
+      "raw_response_scope": "Exact stored role response string, independently parsed equal to structured_output. Not full HTTP/provider transport.",
+      "omitted_record_references": [
+        {
+          "selector": "/2/projection_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "7342aa069b5818d98c73fe6d5e21cfeb9cd9e2716a3337514601f4d0f5007561"
+        },
+        {
+          "selector": "/2/request_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "811105783578910d3bbebc8ace8f61222920618770047593206e77ba4eea75b6"
+        },
+        {
+          "selector": "/2/response_ref",
+          "classification": "opaque semantic capture reference",
+          "published": false,
+          "selected_value_canonical_json_sha256": "bc5a550cd7849fec981da019ecca196c816de6cd41c5873d7b557560005bb5e9"
+        }
+      ],
+      "provider_call_performed_for_this_role": false,
+      "safe_role_crosscheck": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+        "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+        "member": "browser_run_01/native_final/semantic_safe.json",
+        "member_bytes": 1650,
+        "member_sha256": "80bdaef645c4f1483fb3d695df48f3f8a62b049dfc52332bdf48df0c9417a423",
+        "record_selector": "/2",
+        "output_equal": true
+      }
+    }
+  ],
+  "principal_published_summary_crosschecks": [
+    {
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+        "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+        "member": "postimages/docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json",
+        "member_bytes": 6578,
+        "member_sha256": "924e91e122dc27f2ef9b2155f8cdfad524f6c7bffcc52bca7f2905c7fe0c9974",
+        "selector": "/payload/safe_document/summary"
+      },
+      "exact_selected_summary": {
+        "actual_work_consumption_verified": true,
+        "needs": [
+          "browse",
+          "rate",
+          "select",
+          "exposure",
+          "crop",
+          "video",
+          "audio"
+        ],
+        "semantic_role": {
+          "mode": "CONTROLLED_DETERMINISTIC",
+          "response_sha256": "afafd78e59e88f89dae4adbcac37927e6d5358a9b3d14aa3541fcb687f858cdb",
+          "role": "ephemeral_workspace_orchestrator_llm",
+          "source_projection_ref_sha256": "6924134559dec5c76c0be419254bc8d75ead2a68ea685e3e4db866694609bb89"
+        }
+      },
+      "comparison": "Principal structured output digest equals the previously sealed public summary response digest."
+    },
+    {
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+        "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+        "member": "postimages/docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json",
+        "member_bytes": 6544,
+        "member_sha256": "f8bbe9f59400401b945c433638c3fbf5e0cd2db69c758e3d6657928b83a348d9",
+        "selector": "/payload/safe_document/summary"
+      },
+      "exact_selected_summary": {
+        "audio_policy": "SILENT_CONTINUE",
+        "cleanup": "on_end",
+        "save": "selected_only",
+        "semantic_role": {
+          "mode": "CONTROLLED_DETERMINISTIC",
+          "response_sha256": "6dfdaa027111be00f2ab4ef2f86f88aaea6ee5c5e5fe666cc4b48b4de126065a",
+          "role": "ephemeral_workspace_semantic_architect_llm",
+          "source_projection_ref_sha256": "62f41a6611351afdf7c4d831dcf684970e1affdd7fe7fd38283aefe910956f3c"
+        }
+      },
+      "comparison": "Principal structured output digest equals the previously sealed public summary response digest."
+    },
+    {
+      "source_binding": {
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+        "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+        "member": "postimages/docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json",
+        "member_bytes": 6628,
+        "member_sha256": "64304fb8aa56b1f5fd73952215b086b40c9481a6b70a46a62b25e886ed2cb3bf",
+        "selector": "/payload/safe_document/summary"
+      },
+      "exact_selected_summary": {
+        "minimize": "preview_without_metadata",
+        "original_private_graph_published": false,
+        "projection_method": "explicit_field_whitelist_with_private_reference_hashes",
+        "semantic_role": {
+          "mode": "CONTROLLED_DETERMINISTIC",
+          "response_sha256": "eeaa816955d93874daed413937fd979cfbd776b8de2e5974ba30d26b706e4223",
+          "role": "ephemeral_workspace_privacy_boundary_reviewer_llm",
+          "source_projection_ref_sha256": "7342aa069b5818d98c73fe6d5e21cfeb9cd9e2716a3337514601f4d0f5007561"
+        }
+      },
+      "comparison": "Principal structured output digest equals the previously sealed public summary response digest."
+    }
+  ],
+  "native_bsep_selected_fields": {
+    "projection_kind": "EXACT_SELECTED_NATIVE_BSEP_FIELDS",
+    "source_binding": {
+      "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+      "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+      "member": "browser_run_01/native_common_return/D_baseline.json",
+      "member_bytes": 1100235,
+      "member_sha256": "67eff98a00873b68690ce691d9a7b5145bbf7f8802c82e2251b852b79e597d32",
+      "selector": "/source_context/g2c_source_context/bsep_packet"
+    },
+    "whole_native_packet_embedded": false,
+    "canonical_native_packet_sha256": "247912e13f057e147104d60a660f24f548f7f965a2329eefc5b6282d399c3ed1",
+    "exact_selected_fields": {
+      "BoundedSemanticEvidencePacket is not ActionCommitPacket": true,
+      "BoundedSemanticEvidencePacket is not FinalOutput": true,
+      "BoundedSemanticEvidencePacket is not authority": true,
+      "BoundedSemanticEvidencePacket is not truth": true,
+      "ContextPacket is not authority": true,
+      "ContextPacket is not truth": true,
+      "Evidence packet is not action permission": true,
+      "Gemini proposes, Root disposes": true,
+      "Root remains final authority": true,
+      "action_commit_packet_claimed": false,
+      "action_permission_claimed": false,
+      "authority_boundary_notes": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "authority_boundary",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "No authority transfer."
+        }
+      ],
+      "authority_claimed": false,
+      "connector_command_claimed": false,
+      "created_by": "runtime/bounded_context_packet_builder",
+      "domain": "EPHEMERAL_WORKSPACE",
+      "drs_write_claimed": false,
+      "final_output_claimed": false,
+      "missing_evidence": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "missing_evidence",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "Device activation and save require their own current review."
+        }
+      ],
+      "observed_semantic_facts": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "{\"needs\":[\"browse\",\"rate\",\"select\",\"exposure\",\"crop\",\"video\",\"audio\"],\"uncertainty\":[]}"
+        }
+      ],
+      "packet_type": "BoundedSemanticEvidencePacket",
+      "raw_cross_role_text_included": false,
+      "raw_user_text_included": false,
+      "real_world_effects_allowed": false,
+      "rejected_action_routes": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "rejected_route",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "No publication."
+        }
+      ],
+      "required_guards": [
+        "guard:ews:current_root"
+      ],
+      "risk_boundary_notes": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "risk_boundary",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "Local effects require finite packets."
+        }
+      ],
+      "root_bypass_claimed": false,
+      "root_final_authority_preserved": true,
+      "schema_version": "bounded_semantic_evidence_packet_v0.1",
+      "source_role": "orchestrator",
+      "target_role": "architect",
+      "truth_claimed": false,
+      "uncertainty_notes": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "uncertainty",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "Proposal only."
+        }
+      ]
+    },
+    "omitted_fields": [
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/packet_id",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "68fb1530cb747d4b8bc995bf80f4f0fcca178ba2771ed97394cf650d0a3853d9"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/required_approvals_or_conditions",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "347b6d381ad510593d59583b9fa8b85906aa76925daddfb575a88a610ad7c8c9"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/selected_vector_ids",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "aa9d23b42928794c99f2d9919400921b7d150f88fa9d1283d0e24c61171b5e9e"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/source_context_packet_id",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "37c99d9a1e0d5be20645d93d1890246bcd471ba613be1e0a90e6daecd69821cb"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/source_proposal_id",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "3a8638f6330614d3f50ce9eec9258e27b01d7fc99e589b65caf8af8e5b89900a"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/source_refs",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "48ca1fe3ae5da2d792634bf294df332b1b37e138c4f7e733cd41599d7b667206"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/source_route_id",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "ae656f434ad0b0608701d368babbf556a43ad68914036bfe33a14e3267cde072"
+      },
+      {
+        "selector": "/source_context/g2c_source_context/bsep_packet/source_structured_rationale_ref",
+        "classification": "native packet/source/route identifiers or opaque approval binding",
+        "published": false,
+        "selected_value_canonical_json_sha256": "f4a9440d440b19c0fa9fad8f89e0e896ebdca3e7111b40be227df9efd021c4f5"
+      }
+    ],
+    "required_guards_note": "The retained guard identifier is the static source-defined guard class; session and Root identities are omitted."
+  },
+  "native_runtime_structured_rationale": {
+    "projection_kind": "EXACT_SELECTED_RUNTIME_STRUCTURED_RATIONALE",
+    "source_binding": {
+      "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+      "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+      "member": "browser_run_01/native_common_return/D_baseline.json",
+      "member_bytes": 1100235,
+      "member_sha256": "67eff98a00873b68690ce691d9a7b5145bbf7f8802c82e2251b852b79e597d32",
+      "selector": "/source_context/g2c_source_context/bsep_structured_rationale"
+    },
+    "canonical_selected_rationale_sha256": "e84e94e30a9a6b3897915491be9be0024056a5fed405a100cd035cf52d19a15d",
+    "exact_selected_fields": {
+      "Root remains final authority": true,
+      "action_commit_packet_claimed": false,
+      "action_permission_claimed": false,
+      "authority_boundary": [
+        "PersonalRoot alone accepts."
+      ],
+      "authority_claimed": false,
+      "calls_connectors": false,
+      "connector_command_claimed": false,
+      "creates_action_commit_packet": false,
+      "drs_write_claimed": false,
+      "final_output_claimed": false,
+      "observed_semantics": [
+        "{\"needs\":[\"browse\",\"rate\",\"select\",\"exposure\",\"crop\",\"video\",\"audio\"],\"uncertainty\":[]}"
+      ],
+      "orchestrator_is_root": false,
+      "rationale_type": "structured_orchestrator_rationale",
+      "rejected_routes": [
+        "No source edits or publication."
+      ],
+      "required_guards_reasoning": [
+        "Current Root required per command."
+      ],
+      "root_bypass_claimed": false,
+      "root_final_authority_preserved": true,
+      "root_review_required": true,
+      "route_selection_reason": [
+        "Bounded local photo work."
+      ],
+      "schema_version": "structured_rationale_v0.1",
+      "selected_vector_reasoning": [
+        "Actual requested photo operations."
+      ],
+      "truth_claimed": false,
+      "uncertainty_notes": [
+        "Semantic proposal is not action permission."
+      ]
+    },
+    "origin_note": "This is the recorded runtime structured rationale, not a claim to expose hidden provider reasoning."
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "asset": "assets/desktop_workspace.jpg",
+    "sha256": "a4b79746b6f1a76666d386d0a20540ca237ba7400c7b2f37a257bdc12fd3acef",
+    "bytes": 52363,
+    "source_archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+    "source_archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+    "source_member": "browser_transport/snapshot_final/desktop_sidecar_saved.jpg",
+    "treatment": "EXACT_COPY",
+    "mode": "SCRIPTED_BROWSER_TEST",
+    "dimensions": [
+      1440,
+      1000
+    ],
+    "scope": "Accepted synthetic-media UI capture. No live physical device or personal manual action is inferred."
+  },
+  {
+    "asset": "assets/mobile_controls.jpg",
+    "sha256": "1d4eabf3fb378fad84d1f9ae6b258746d5480ae76440eb88d6a2f03d543e93a4",
+    "bytes": 21070,
+    "source_archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+    "source_archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+    "source_member": "browser_transport/snapshot_final/mobile_photo_controls.jpg",
+    "treatment": "EXACT_COPY",
+    "mode": "SCRIPTED_BROWSER_TEST",
+    "dimensions": [
+      390,
+      844
+    ],
+    "scope": "Accepted synthetic-media UI capture. No live physical device or personal manual action is inferred."
+  }
+]

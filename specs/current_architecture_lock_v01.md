@@ -1,5 +1,19 @@
 # Hedgehog OS Current Architecture Lock v0.1
 
+## Ephemeral Workspace: Presentation Publication
+
+The exact `ephemeral_workspace_presentation_admission_v01` succeeds the accepted
+EWS source commit `3f8720b75a1bda3a1df6b184e643c2de5327f838` without changing
+its 27 implementation files, frozen public evidence or nine-row Living profile.
+It admits only 28 pinned new assets, one informational record and ten named
+documentation/control edits, as a complete unstaged/staged proposal or clean
+single-parent child. Git supplies the actual commit; no future SHA is recorded.
+This section takes current navigation precedence over historical EWS admission
+status below; all old validators, source records and authority laws remain.
+The showcase and XML reader are explanatory source snapshots, not instructions
+to execute embedded prompts, Root permission, fresh runtime acceptance, signer
+certification or a new Gate. They are outside the old evidence anchor.
+
 ## Ephemeral Workspace: Current Successor Scope
 
 The explicitly authorized `ephemeral_workspace_admission_v01` is the exact

@@ -1,0 +1,650 @@
+{
+  "schema": "ews_presentation_historical_summary_v01",
+  "authority_class": "EVIDENCE_ONLY",
+  "projection_kind": "NEW_PRESENTATION_RESEARCH_DERIVATIVE",
+  "created_by": "presentation_review",
+  "reexecution_performed": false,
+  "included_in_ews4r_sealed_manifest": false,
+  "anchor_covers_this_derivative": false,
+  "source_archive": {
+    "name": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+    "sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+    "bytes": 9898094
+  },
+  "projection_method": "explicit_whitelist; member hashes and selectors bind retained historical sources",
+  "omitted_fields": [
+    "raw semantic provider capture and transport",
+    "credentials and bearer URLs",
+    "filesystem paths",
+    "process IDs and launch handles",
+    "Root and Host identities",
+    "full Root decision inputs",
+    "full private DRS records and resource dependency identities"
+  ],
+  "limitations": [
+    "Source member hashes identify retained private records; their complete bytes are not embedded here.",
+    "This derivative is not part of the frozen EWS4R public package or its independent anchor.",
+    "Historical tests, live/captured stages and principal browser run have distinct modes, clocks and counters.",
+    "No new runtime, network, provider, Root, Host, D/E or media operation was performed to create this file."
+  ],
+  "sources": [
+    {
+      "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+      "member": "evidence/measured_results.json",
+      "member_bytes": 18125,
+      "member_sha256": "fda80302f75cc38e7e656ecbc1379be1de54c6042c12754caa4a3064e0cf6904"
+    },
+    {
+      "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+      "member": "evidence/contrast_memory_04/DRS_events.json",
+      "member_bytes": 82872,
+      "member_sha256": "4797c2dbded67eb56553955b0594db439eecceabe49f8cf48bce308e0450cf4f"
+    },
+    {
+      "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+      "member": "evidence/contrast_memory_04/COMPLETE.json",
+      "member_bytes": 287,
+      "member_sha256": "54da957c49512f5fd752c80d6ada947a6d2564395bcc3de76385531a0d5216ab"
+    },
+    {
+      "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+      "member": "evidence/contrast_memory_04/informational_saved_work.json",
+      "member_bytes": 568,
+      "member_sha256": "9674f23556e06c38085bd33b487a2515746bb433227da343a862960f186b4b25"
+    }
+  ],
+  "records": [
+    {
+      "kind": "historical_provider_and_execution_accounting",
+      "binding": {
+        "source_member": "evidence/measured_results.json",
+        "selectors": [
+          "/provider",
+          "/actual_role_contract_consumption",
+          "/identical_environment",
+          "/strict_captured_completion",
+          "/timings"
+        ]
+      },
+      "provider": {
+        "attempts": 9,
+        "failures": 3,
+        "responses": 6
+      },
+      "actual_role_contract_consumption": true,
+      "identical_environment": true,
+      "strict_captured_completion": true,
+      "timings_seconds": {
+        "accepted_v1_live_role_seconds": 17.585982291027904,
+        "all_provider_latency": 52.15483687445521,
+        "canonical_projection": 16.190928041003644,
+        "common_D": 101.92612241581082,
+        "common_E": 288.20568550005555,
+        "main_command_range": [
+          1.13775849994272,
+          11.292399582453072
+        ],
+        "main_whole_process": 530.3210143744946,
+        "memory_whole_process": 50.938718375749886,
+        "semantics_and_work": 0.12722358293831348,
+        "supplied_D": 13.139367542229593,
+        "supplied_E": 14.803634000010788,
+        "warm_semantics_and_work": 0.16114954091608524
+      },
+      "scope_notes": [
+        "Historical EWS3; not the principal EWS3R2 browser run.",
+        "Accepted LIVE responses and initial Work were followed by strict CAPTURED_REEXECUTION completion with fresh Host and resources.",
+        "Three failures remain accounted for. Timings have different scopes and are not a total-startup speedup comparison."
+      ]
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 0,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/0"
+        ]
+      },
+      "operation": "SEARCH",
+      "search": {
+        "candidate_count": 0,
+        "blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "review_required_count": 0,
+        "root_review_required": true
+      },
+      "eligibility": []
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 1,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/1"
+        ]
+      },
+      "operation": "WRITE",
+      "write": {
+        "records_written": 1,
+        "storage": "EXPLICIT_DURABLE_LOCAL_DRS",
+        "creates_permission": false,
+        "kind": "semantic_recipe",
+        "semantic_value": [
+          {
+            "needs": [
+              "browse",
+              "rate",
+              "select"
+            ],
+            "uncertainty": []
+          },
+          {
+            "cleanup": "on_end",
+            "phases": [
+              "preview",
+              "interact",
+              "confirm_save",
+              "close"
+            ],
+            "preview": "fit",
+            "save": "selected_only"
+          },
+          {
+            "conflicts": [],
+            "decision": "allow",
+            "minimize": "preview_without_metadata"
+          }
+        ],
+        "reuse_policy_class": "CONTEXT_ONLY",
+        "record_creates_authority": false,
+        "record_creates_permission": false,
+        "root": {
+          "decision": "ACCEPT",
+          "reason_code": "validated_candidate_accepted",
+          "effect_requested": false,
+          "permission_created": false,
+          "final_output_created": false
+        }
+      }
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 2,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/2"
+        ]
+      },
+      "operation": "WRITE",
+      "write": {
+        "records_written": 1,
+        "storage": "EXPLICIT_DURABLE_LOCAL_DRS",
+        "creates_permission": false,
+        "kind": "saved_work",
+        "semantic_value": {
+          "history_ref": "4661a4eeff5ebbcbff3374da12db86791da5069b7809ddc4c062352d83f7cbbe",
+          "selection": [
+            {
+              "asset": "asset:1",
+              "crop": "ORIGINAL",
+              "exposure": 0,
+              "rating": 4,
+              "selected": true
+            }
+          ],
+          "sidecar_sha256": "876c73f0f5c3b914430da02f46d57dc828694df0b75beb4cc6d46a04c2d90d39"
+        },
+        "reuse_policy_class": "CONTEXT_ONLY",
+        "record_creates_authority": false,
+        "record_creates_permission": false,
+        "root": {
+          "decision": "ACCEPT",
+          "reason_code": "validated_candidate_accepted",
+          "effect_requested": false,
+          "permission_created": false,
+          "final_output_created": false
+        }
+      }
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 3,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/3"
+        ]
+      },
+      "operation": "SEARCH",
+      "search": {
+        "candidate_count": 1,
+        "blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "review_required_count": 1,
+        "root_review_required": true
+      },
+      "eligibility": [
+        {
+          "query_state": "FRESH_CANDIDATE",
+          "reason_codes": [],
+          "eligible_for_ranking": true,
+          "creates_authority": false,
+          "creates_permission": false,
+          "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+          "scope_passed": true,
+          "policy_compatible": true,
+          "ttl_freshness_passed": true,
+          "validity_interval_passed": true
+        }
+      ],
+      "plan": {
+        "requested_descent_class": "SUMMARY_ONLY",
+        "root_approval_required": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "executes_read": false
+      },
+      "root": {
+        "decision": "ACCEPT",
+        "reason_code": "validated_candidate_accepted",
+        "effect_requested": false,
+        "permission_created": false,
+        "final_output_created": false,
+        "root_commit_created": true
+      },
+      "descent": {
+        "executed_descent_class": "SUMMARY_ONLY",
+        "records_opened": 1,
+        "artifacts_opened": 0,
+        "pointers_opened": 0,
+        "bytes_opened": 0,
+        "real_world_effects_count": 0,
+        "creates_authority": false,
+        "creates_permission": false,
+        "limits_respected": true,
+        "depth_reached": 0,
+        "semantic_summary": [
+          [
+            {
+              "needs": [
+                "browse",
+                "rate",
+                "select"
+              ],
+              "uncertainty": []
+            },
+            {
+              "cleanup": "on_end",
+              "phases": [
+                "preview",
+                "interact",
+                "confirm_save",
+                "close"
+              ],
+              "preview": "fit",
+              "save": "selected_only"
+            },
+            {
+              "conflicts": [],
+              "decision": "allow",
+              "minimize": "preview_without_metadata"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 4,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/4"
+        ]
+      },
+      "operation": "SEARCH",
+      "search": {
+        "candidate_count": 1,
+        "blocked_count": 1,
+        "direct_reuse_allowed_count": 0,
+        "review_required_count": 1,
+        "root_review_required": true
+      },
+      "eligibility": [
+        {
+          "query_state": "BLOCKED_BY_SCOPE",
+          "reason_codes": [
+            "drs_address_scope_mismatch"
+          ],
+          "eligible_for_ranking": false,
+          "creates_authority": false,
+          "creates_permission": false,
+          "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+          "scope_passed": false,
+          "policy_compatible": true,
+          "ttl_freshness_passed": true,
+          "validity_interval_passed": true
+        }
+      ]
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 5,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/5"
+        ]
+      },
+      "operation": "SEARCH",
+      "search": {
+        "candidate_count": 1,
+        "blocked_count": 1,
+        "direct_reuse_allowed_count": 0,
+        "review_required_count": 1,
+        "root_review_required": true
+      },
+      "eligibility": [
+        {
+          "query_state": "BLOCKED_BY_SCOPE",
+          "reason_codes": [
+            "drs_address_scope_mismatch"
+          ],
+          "eligible_for_ranking": false,
+          "creates_authority": false,
+          "creates_permission": false,
+          "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+          "scope_passed": false,
+          "policy_compatible": true,
+          "ttl_freshness_passed": true,
+          "validity_interval_passed": true
+        }
+      ]
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 6,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/6"
+        ]
+      },
+      "operation": "WRITE",
+      "write": {
+        "records_written": 1,
+        "storage": "EXPLICIT_DURABLE_LOCAL_DRS",
+        "creates_permission": false,
+        "kind": "semantic_recipe",
+        "semantic_value": [
+          {
+            "needs": [
+              "browse",
+              "rate",
+              "select"
+            ],
+            "uncertainty": []
+          },
+          {
+            "cleanup": "on_end",
+            "phases": [
+              "preview",
+              "interact",
+              "confirm_save",
+              "close"
+            ],
+            "preview": "fit",
+            "save": "selected_only"
+          },
+          {
+            "conflicts": [],
+            "decision": "allow",
+            "minimize": "preview_without_metadata"
+          }
+        ],
+        "reuse_policy_class": "CONTEXT_ONLY",
+        "record_creates_authority": false,
+        "record_creates_permission": false,
+        "root": {
+          "decision": "ACCEPT",
+          "reason_code": "validated_candidate_accepted",
+          "effect_requested": false,
+          "permission_created": false,
+          "final_output_created": false
+        }
+      }
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 7,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/7"
+        ]
+      },
+      "operation": "SEARCH",
+      "search": {
+        "candidate_count": 2,
+        "blocked_count": 1,
+        "direct_reuse_allowed_count": 0,
+        "review_required_count": 2,
+        "root_review_required": true
+      },
+      "eligibility": [
+        {
+          "query_state": "BLOCKED_BY_SCOPE",
+          "reason_codes": [
+            "drs_address_scope_mismatch"
+          ],
+          "eligible_for_ranking": false,
+          "creates_authority": false,
+          "creates_permission": false,
+          "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+          "scope_passed": false,
+          "policy_compatible": true,
+          "ttl_freshness_passed": true,
+          "validity_interval_passed": true
+        },
+        {
+          "query_state": "FRESH_CANDIDATE",
+          "reason_codes": [],
+          "eligible_for_ranking": true,
+          "creates_authority": false,
+          "creates_permission": false,
+          "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+          "scope_passed": true,
+          "policy_compatible": true,
+          "ttl_freshness_passed": true,
+          "validity_interval_passed": true
+        }
+      ],
+      "plan": {
+        "requested_descent_class": "SUMMARY_ONLY",
+        "root_approval_required": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "executes_read": false
+      },
+      "root": {
+        "decision": "ACCEPT",
+        "reason_code": "validated_candidate_accepted",
+        "effect_requested": false,
+        "permission_created": false,
+        "final_output_created": false,
+        "root_commit_created": true
+      },
+      "descent": {
+        "executed_descent_class": "SUMMARY_ONLY",
+        "records_opened": 1,
+        "artifacts_opened": 0,
+        "pointers_opened": 0,
+        "bytes_opened": 0,
+        "real_world_effects_count": 0,
+        "creates_authority": false,
+        "creates_permission": false,
+        "limits_respected": true,
+        "depth_reached": 0,
+        "semantic_summary": [
+          [
+            {
+              "needs": [
+                "browse",
+                "rate",
+                "select"
+              ],
+              "uncertainty": []
+            },
+            {
+              "cleanup": "on_end",
+              "phases": [
+                "preview",
+                "interact",
+                "confirm_save",
+                "close"
+              ],
+              "preview": "fit",
+              "save": "selected_only"
+            },
+            {
+              "conflicts": [],
+              "decision": "allow",
+              "minimize": "preview_without_metadata"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "historical_drs_event",
+      "ordinal": 8,
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/DRS_events.json",
+        "selectors": [
+          "/8"
+        ]
+      },
+      "operation": "SEARCH",
+      "search": {
+        "candidate_count": 1,
+        "blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "review_required_count": 1,
+        "root_review_required": true
+      },
+      "eligibility": [
+        {
+          "query_state": "FRESH_CANDIDATE",
+          "reason_codes": [],
+          "eligible_for_ranking": true,
+          "creates_authority": false,
+          "creates_permission": false,
+          "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+          "scope_passed": true,
+          "policy_compatible": true,
+          "ttl_freshness_passed": true,
+          "validity_interval_passed": true
+        }
+      ],
+      "plan": {
+        "requested_descent_class": "SUMMARY_ONLY",
+        "root_approval_required": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "executes_read": false
+      },
+      "root": {
+        "decision": "ACCEPT",
+        "reason_code": "validated_candidate_accepted",
+        "effect_requested": false,
+        "permission_created": false,
+        "final_output_created": false,
+        "root_commit_created": true
+      },
+      "descent": {
+        "executed_descent_class": "SUMMARY_ONLY",
+        "records_opened": 1,
+        "artifacts_opened": 0,
+        "pointers_opened": 0,
+        "bytes_opened": 0,
+        "real_world_effects_count": 0,
+        "creates_authority": false,
+        "creates_permission": false,
+        "limits_respected": true,
+        "depth_reached": 0,
+        "semantic_summary": [
+          [
+            {
+              "asset": "asset:1",
+              "crop": "ORIGINAL",
+              "exposure": 0,
+              "rating": 4,
+              "selected": true
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "kind": "historical_memory_completion",
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/COMPLETE.json",
+        "selectors": [
+          "/DRS_cold_warm_stale",
+          "/information",
+          "/new_model_calls",
+          "/scope",
+          "/status",
+          "/live_main"
+        ]
+      },
+      "recorded": {
+        "DRS_cold_warm_stale": true,
+        "information": true,
+        "new_model_calls": 0,
+        "scope": "STRICT_CAPTURED_V1_CONTINUATION_AND_DRS",
+        "status": "PASS",
+        "live_main": "CLARIFICATION_PENDING"
+      },
+      "scope_note": "The historical live_main=CLARIFICATION_PENDING label is preserved. It is not current principal-run state."
+    },
+    {
+      "kind": "historical_saved_work_information",
+      "binding": {
+        "source_member": "evidence/contrast_memory_04/informational_saved_work.json",
+        "selectors": [
+          "/effects",
+          "/model_calls",
+          "/new_service_activations",
+          "/new_workspace_instances",
+          "/sidecar_writes",
+          "/result/0/selection",
+          "/result/0/sidecar_sha256",
+          "/result/0/history_ref"
+        ]
+      },
+      "counts": {
+        "effects": 0,
+        "model_calls": 0,
+        "new_service_activations": 0,
+        "new_workspace_instances": 0,
+        "sidecar_writes": 0
+      },
+      "selection": [
+        {
+          "asset": "asset:1",
+          "crop": "ORIGINAL",
+          "exposure": 0,
+          "rating": 4,
+          "selected": true
+        }
+      ],
+      "sidecar_sha256": "876c73f0f5c3b914430da02f46d57dc828694df0b75beb4cc6d46a04c2d90d39",
+      "history_sha256": "4661a4eeff5ebbcbff3374da12db86791da5069b7809ddc4c062352d83f7cbbe",
+      "scope_note": "Historical V1 selection; distinct from the principal EWS3R2 250-byte sidecar."
+    }
+  ]
+}

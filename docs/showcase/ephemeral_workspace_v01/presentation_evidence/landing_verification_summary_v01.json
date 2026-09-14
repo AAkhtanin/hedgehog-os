@@ -1,0 +1,55 @@
+{
+  "schema": "ews_presentation_landing_summary_v01",
+  "authority_class": "EVIDENCE_ONLY",
+  "treatment": "NEW_SELECTED_FIELD_DERIVATIVE",
+  "covered_by_existing_anchor": false,
+  "reexecution_performed": false,
+  "source_archive": {
+    "name": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+    "sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5"
+  },
+  "commit_record": {
+    "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+    "parent": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+    "tree": "76447935f0f09d60dbe387eb9706e34965f06594",
+    "tracked_paths": 998,
+    "changed_paths": 65
+  },
+  "outcomes": {
+    "local_remote_equal": true,
+    "worktree_clean": true,
+    "implementation_files_preserved": 27,
+    "public_files_preserved": 19,
+    "changed_files": 65,
+    "targeted_tests": 10,
+    "passed_phases": 30,
+    "test_recorder_seconds": 86.395431,
+    "owner_replay_seconds": 1.37489,
+    "anchor_outcome": "ANCHORED_PASS",
+    "sealed_replay": "PASS"
+  },
+  "preserved_failure": {
+    "description": "An initial narrow selection entered legacy autouse setup and was interrupted. No completed D/E or Living result was claimed. The final no-report selection corrected that preparation issue.",
+    "seconds": 100.204663
+  },
+  "sources": [
+    {
+      "member": "actual_commit.json",
+      "bytes": 216,
+      "sha256": "f9143af2a6f686faf47c6837313312da3b9e6b872dc61f97e15549371683786d",
+      "selector": "complete commit fields"
+    },
+    {
+      "member": "FINAL_REPORT.md",
+      "bytes": 6958,
+      "sha256": "2fbb40f0bbbd29568779ddbaf7620f31173e456f0b62488ea26b56c1afeeee41",
+      "selector": "Actual Verification; Preserved Attempts and Limits"
+    },
+    {
+      "member": "owner_final.json",
+      "bytes": 1126,
+      "sha256": "fa6649b217378b656efd40f4e0be6f370b799382e69f27fbd61aa1dea247f697",
+      "selector": "head; branch; status; staged"
+    }
+  ]
+}

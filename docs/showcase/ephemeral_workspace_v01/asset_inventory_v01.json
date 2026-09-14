@@ -1,0 +1,59 @@
+{
+  "schema": "ews_presentation_binary_inventory_v01",
+  "authority_class": "EVIDENCE_ONLY",
+  "covered_by_original_anchor": false,
+  "source_commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+  "scope": "Final binary presentation assets. The XML and inventory do not hash themselves; the outer distribution manifest binds the complete finished payload.",
+  "files": [
+    {
+      "path": "assets/cover.png",
+      "bytes": 1510782,
+      "sha256": "cbbfb22fa609cd3a7a9fac206068d0172fce2c80bda17818ca5cbbcca7eca1b8"
+    },
+    {
+      "path": "assets/desktop_workspace.jpg",
+      "bytes": 52363,
+      "sha256": "a4b79746b6f1a76666d386d0a20540ca237ba7400c7b2f37a257bdc12fd3acef"
+    },
+    {
+      "path": "assets/fonts/Inter-Bold.ttf",
+      "bytes": 343104,
+      "sha256": "c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73"
+    },
+    {
+      "path": "assets/fonts/Inter-Regular.ttf",
+      "bytes": 341396,
+      "sha256": "fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2"
+    },
+    {
+      "path": "assets/mobile_controls.jpg",
+      "bytes": 21070,
+      "sha256": "1d4eabf3fb378fad84d1f9ae6b258746d5480ae76440eb88d6a2f03d543e93a4"
+    },
+    {
+      "path": "assets/radiolaria_ephemeral_workspace_hero.png",
+      "bytes": 1271713,
+      "sha256": "441d0fe55678f101cc3a5daac00c6af1bba4c137a118c64908eafdb2815fed95"
+    },
+    {
+      "path": "ephemeral_workspace_showcase_v01.pdf",
+      "bytes": 433962,
+      "sha256": "f6eabe67a4a83f01cd2da6bb43f7736102dd40435793779dde67c22b85baf219"
+    },
+    {
+      "path": "ephemeral_workspace_showcase_v01.pptx",
+      "bytes": 1416623,
+      "sha256": "10d9b695c59ed8d1836443d78680e91805caccec6e75af6add588d104fa10d7c"
+    },
+    {
+      "path": "executive_one_pager_v01.pdf",
+      "bytes": 1709612,
+      "sha256": "9292a7a7926c2581ceb8e260e6fa334851471f9af1ff73843494e6c6f0080c2e"
+    },
+    {
+      "path": "technical_appendix_v01.pdf",
+      "bytes": 56063,
+      "sha256": "4812f9e434169932c94e0b4135aaf9f8a885c9995c55bf615f862e9cced8e97e"
+    }
+  ]
+}

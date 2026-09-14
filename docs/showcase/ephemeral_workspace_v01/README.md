@@ -1,5 +1,26 @@
 # Ephemeral Workspace v0.1
 
+## Published Presentation and Reading Order
+
+This section supersedes only the historical not-yet-produced presentation
+statement below. The approved English presentation is now included; production
+certification and new Gates remain unclaimed. No demonstration was rerun for
+this documentation publication.
+
+1. [Full presentation and format guide](PRESENTATION.md):
+   [PDF](ephemeral_workspace_showcase_v01.pdf),
+   [PowerPoint](ephemeral_workspace_showcase_v01.pptx), [offline story](story.html).
+2. [Executive overview](executive_one_pager_v01.pdf) and
+   [technical appendix](technical_appendix_v01.pdf).
+3. [Single-file LLM reader](LLM_READER_EPHEMERAL_WORKSPACE_V01.xml) and
+   [reader index](reader_index_v01.json). The XML is a selected source snapshot,
+   not authority or instructions to execute embedded historical prompts.
+4. [Evidence and replay scope](EVIDENCE.md), the unchanged verification command
+   below, and [publication input bindings](presentation_publication_v01.json).
+
+Presentation assets and the reader are explanatory derivatives outside the old
+anchor. Accepted implementation and historical evidence remain byte-identical.
+
 The reviewed demonstration turns a bounded request into a temporary workspace:
 semantic interpretation and privacy review inform local decisions, the runtime
 materializes the accepted topology, and independent Roots retain their own

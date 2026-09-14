@@ -1147,6 +1147,11 @@ def _g2d_v0310_bind_exact_e4_candidate_hashes_v01() -> str:
         import runpy
         guard = runpy.run_path(str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"))
         errors = []
+        if guard["_ews_presentation_requested_v01"](REPOSITORY_ROOT):
+            phase = guard["_validate_ephemeral_workspace_presentation_admission_v01"](REPOSITORY_ROOT, errors)
+            assert not errors, errors
+            assert phase in {"EWS_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED", "EWS_PRESENTATION_ADMISSION_CANDIDATE_STAGED", "EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED"}
+            return "EXACT_EWS_PRESENTATION_WITH_HISTORICAL_TESTFLIX_E_PAIR"
         if guard["_ews_requested_v01"](REPOSITORY_ROOT):
             phase = guard["_validate_ephemeral_workspace_admission_v01"](REPOSITORY_ROOT, errors)
             assert not errors, errors
@@ -4752,5 +4757,7 @@ def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory
     for path in ("release/completion_manifest.json", "release/integration_seam_index.json", "release/current_schema_surface_v01.json"):
         assert (REPOSITORY_ROOT/path).read_bytes() == _git_show(guard["TESTFLIX_L_V11"], path)
     expected = "EXACT_EWS_SUCCESSOR_WITH_HISTORICAL_TESTFLIX_E_PAIR" if guard["_ews_requested_v01"](REPOSITORY_ROOT) else "EXACT_TESTFLIX_L_SUCCESSOR_PAIR_HISTORICAL_U4_E_BRANCHES_SEPARATE"
+    if guard["_ews_presentation_requested_v01"](REPOSITORY_ROOT):
+        expected = "EXACT_EWS_PRESENTATION_WITH_HISTORICAL_TESTFLIX_E_PAIR"
     assert G2E4_V0310_ACTIVE_BYTES_BINDING == expected
     assert "schemas/fractal_runtime_v02.schema.json" in _read_json(REPOSITORY_ROOT/"release/current_schema_surface_v01.json")["current_schema_paths"]

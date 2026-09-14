@@ -1,0 +1,917 @@
+{
+  "schema_version": "ews_presentation_claim_evidence_matrix_v01",
+  "metadata": {
+    "project": "Radiolaria OS",
+    "title": "Ephemeral Workspace",
+    "version": "v0.1",
+    "date": "2026-09-14",
+    "language": "en",
+    "source_commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+    "repository": "AAkhtanin/hedgehog-os",
+    "showcase_path": "docs/showcase/ephemeral_workspace_v01/",
+    "evidence_pin": "693fc6b5c2e8499161b40dc7bb6c22a21ca040c38325f1e657f176e9ff7bf525",
+    "claim_boundary": "Scoped demonstration and verified safe evidence; no self-awarded full EWS acceptance."
+  },
+  "claims": [
+    {
+      "claim_id": "EWS-C01",
+      "slide": 1,
+      "claim": "A bounded request is materialized as a temporary local workspace.",
+      "evidence_lane": "SOURCE_CONTRACT",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/README.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/README.md",
+          "selector": "Demonstrated Lifecycle",
+          "sha256": "ee122befa20ee88d1847eb0bdf9386cf3561d0175bf9e6096ca790dc3251c209"
+        }
+      ],
+      "scope": "14 September 2026. Source 3f8720b"
+    },
+    {
+      "claim_id": "EWS-C02",
+      "slide": 2,
+      "claim": "The principal run performed requested photo and media work, an exact separate save and cleanup.",
+      "evidence_lane": "PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+          "selector": "REQUEST_MIXED",
+          "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_intent_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_intent_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "cfae253f2b78fd649fe3748a06f4e0402cee354e54be9aae187e0e87f2f9f9dd"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb",
+          "selector": "Browser, retained work and save"
+        }
+      ],
+      "scope": "Principal run: controlled semantics, real local fixture operations."
+    },
+    {
+      "claim_id": "EWS-C03",
+      "slide": 3,
+      "claim": "Identical capability availability supports different mixed and photo-only contracts.",
+      "evidence_lane": "HISTORICAL_EWS3",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+          "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+          "member": "evidence/measured_results.json",
+          "member_sha256": "fda80302f75cc38e7e656ecbc1379be1de54c6042c12754caa4a3064e0cf6904",
+          "selector": "/actual_role_contract_consumption; /identical_environment; /strict_captured_completion"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+          "selector": "compile_contract",
+          "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json",
+          "sha256": "6342561c728cb01d186b502ea218cd17cfde707fa578d67eddaf4e81a19307ca",
+          "bytes": 83096,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "SEMANTIC_BOUNDARY_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale."
+        }
+      ],
+      "scope": "Historical EWS3 live roles; completion through strict captured reexecution."
+    },
+    {
+      "claim_id": "EWS-C04",
+      "slide": 4,
+      "claim": "Three validated semantic roles contribute needs, obligations and privacy policy without granting permission.",
+      "evidence_lane": "PRINCIPAL_RUN_AND_SOURCE",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+          "selector": "collect",
+          "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+          "selector": "ROLES; schema; validate",
+          "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "924e91e122dc27f2ef9b2155f8cdfad524f6c7bffcc52bca7f2905c7fe0c9974"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "f8bbe9f59400401b945c433638c3fbf5e0cd2db69c758e3d6657928b83a348d9"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "64304fb8aa56b1f5fd73952215b086b40c9481a6b70a46a62b25e886ed2cb3bf"
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json",
+          "sha256": "6342561c728cb01d186b502ea218cd17cfde707fa578d67eddaf4e81a19307ca",
+          "bytes": 83096,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "SEMANTIC_BOUNDARY_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale."
+        }
+      ],
+      "scope": "Principal run: three CONTROLLED_DETERMINISTIC responses; zero provider calls."
+    },
+    {
+      "claim_id": "EWS-C05",
+      "slide": 5,
+      "claim": "The native BSEP binds semantic facts and conditions from orchestrator to architect; a smaller role projection is distinct.",
+      "evidence_lane": "SOURCE_AND_NATIVE_DTO",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+          "selector": "semantic_source",
+          "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+          "selector": "collect",
+          "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json",
+          "selector": "/payload/safe_document/summary/native_bsep",
+          "sha256": "88088a00fd3566d48540cbbacf1bdc4f76314b9ab1c10e7b972283bdfd7ddcd9"
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json",
+          "sha256": "6342561c728cb01d186b502ea218cd17cfde707fa578d67eddaf4e81a19307ca",
+          "bytes": 83096,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "SEMANTIC_BOUNDARY_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale."
+        }
+      ],
+      "scope": "BSEP is evidence, not an ActionCommitPacket, truth or permission."
+    },
+    {
+      "claim_id": "EWS-C06",
+      "slide": 6,
+      "claim": "Accepted semantics do not authorize future effects; each consequential command follows current Root, Host and Firewall checks.",
+      "evidence_lane": "SOURCE_CONTRACT",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+          "selector": "root_review; semantic_source; prepare_command; dispatch",
+          "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json",
+          "selector": "/payload/safe_document/summary/native_bsep/authority_boundary_flags",
+          "sha256": "88088a00fd3566d48540cbbacf1bdc4f76314b9ab1c10e7b972283bdfd7ddcd9"
+        }
+      ],
+      "scope": "Route acceptance does not grant permission to later commands."
+    },
+    {
+      "claim_id": "EWS-C07",
+      "slide": 7,
+      "claim": "Two common Work items compile role responses and consume the resulting contract to gate actual operations.",
+      "evidence_lane": "SOURCE_AND_PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+          "selector": "materialize",
+          "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+          "selector": "compute; validate_outputs_v01",
+          "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json",
+          "selector": "/payload/safe_document/summary/work_roles",
+          "sha256": "8410d3ed276dd7860b0ca96e1ebaa3885c035157f0abea11d26ee9954e72c205"
+        }
+      ],
+      "scope": "Runtime materializes topology; the semantic proposal remains advisory."
+    },
+    {
+      "claim_id": "EWS-C08",
+      "slide": 8,
+      "claim": "The principal contract selects five active capability classes and leaves sidecar writing dormant.",
+      "evidence_lane": "PRINCIPAL_RUN_AND_SOURCE",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/capability_discovery_snapshot_safe_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/capability_discovery_snapshot_safe_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "46521edc7196943aef7b0e9a131fe4bf36a15f3c868aafd67318a8ee09de4a49"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/device_grant_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/device_grant_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "b1955b396a3de058cc75ee5f3cd60f129b45555348c6ab1b2d66bb763b4508ee"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "selector": "__init__; execute_effect",
+          "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+        }
+      ],
+      "scope": "Recorded contract classes; no current device grants are recreated."
+    },
+    {
+      "claim_id": "EWS-C09",
+      "slide": 9,
+      "claim": "Finite typed commands reject shell and generic file operations and are checked against current session state.",
+      "evidence_lane": "SOURCE_AND_LOCAL_PROBE",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json",
+          "selector": "/payload/safe_document/summary/compiled_contract_summary/typed_commands",
+          "sha256": "88088a00fd3566d48540cbbacf1bdc4f76314b9ab1c10e7b972283bdfd7ddcd9"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+          "selector": "command",
+          "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "selector": "validate_effect; command",
+          "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json",
+          "selector": "/payload/safe_document/summary/coverage/3",
+          "sha256": "75ce2741d162d3611f672f02854c61c77268d85501076debede05d84b5feb935"
+        }
+      ],
+      "scope": "No LLM call, D/E pass or U2 revision per click or frame."
+    },
+    {
+      "claim_id": "EWS-C10",
+      "slide": 10,
+      "claim": "The selected privacy policy is enforced at media production, session forwarding and display consumption.",
+      "evidence_lane": "SOURCE_AND_PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "64304fb8aa56b1f5fd73952215b086b40c9481a6b70a46a62b25e886ed2cb3bf"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/demo_designs/ephemeral_workspace_v01.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/demo_designs/ephemeral_workspace_v01.md",
+          "selector": "EWS1R Privacy And UI Addendum",
+          "sha256": "6cadd90a3aa121b6003a00ecfadf1219ba150663756fa85a16eb0a92a0f49379"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/media_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/media_v01.py",
+          "selector": "privacy_policy; validate_transfer",
+          "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+        }
+      ],
+      "scope": "Metadata minimization; no image-content redaction or OS sandbox claim."
+    },
+    {
+      "claim_id": "EWS-C11",
+      "slide": 11,
+      "claim": "Accepted desktop and mobile browser captures record actual local interaction and exact save state.",
+      "evidence_lane": "SCRIPTED_BROWSER_TEST",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "BROWSER_EVIDENCE.md",
+          "member_sha256": "5a8690318f6ac341af5cc6ebc24d8b30681a08dccc04e407556e2a8619950649",
+          "selector": "Screenshot navigation"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb",
+          "selector": "Browser, retained work and save"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "browser_run_01/native_final/verified_sidecar.json",
+          "member_sha256": "20e01b3ebd6f813bccf2ce51d23c71406a0f2b2cd706ab8bda92e71bed28a915",
+          "selector": "/selection/0"
+        }
+      ],
+      "scope": "SCRIPTED_BROWSER_TEST. Desktop 1440×1000; mobile 390×844."
+    },
+    {
+      "claim_id": "EWS-C12",
+      "slide": 12,
+      "claim": "An intentional owned AudioSink process death is observed during playback and pauses the affected path.",
+      "evidence_lane": "PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb",
+          "selector": "Real delayed-loss result"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "browser_run_01/complete.json",
+          "member_sha256": "8343c6632364affb7562c4783f7b4ac8205553f640e4a61914fe7b64dc263b0c",
+          "selector": "/cleanup/processes; /media_state"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "selector": "_observe_audio_liveness; _check_audio_current",
+          "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+        }
+      ],
+      "scope": "Intentional owned-process failure; synthetic audio, no physical speaker claim."
+    },
+    {
+      "claim_id": "EWS-C13",
+      "slide": 13,
+      "claim": "New loss evidence is acquired86seconds after old packet expiry while original authority remains unchanged.",
+      "evidence_lane": "PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_lease_safe_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_lease_safe_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "79f0b8c38ac3419f0b46c9ec486bf77f8e9821364c81e0daa1d141bd9dc0c78a"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb",
+          "selector": "Real delayed-loss result"
+        }
+      ],
+      "scope": "New evidence window; old packet and Workspace expiry remain unchanged."
+    },
+    {
+      "claim_id": "EWS-C14",
+      "slide": 14,
+      "claim": "One E pass performs retained D recomputation and consumes changed-source outputs while preserving unaffected work.",
+      "evidence_lane": "PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "8410d3ed276dd7860b0ca96e1ebaa3885c035157f0abea11d26ee9954e72c205"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "browser_run_01/native_common_return/media_consumption.json",
+          "member_sha256": "024450f5f32e46b7fe35c8cd4646285cead83cae3c2f64d642288237a593d1e6",
+          "selector": "/delta_result_ref; /recomputed_result_ref; /preserved_D_result_ref; /retained_consumption_ref"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+          "selector": "prepare_delta_baseline; consume_delta; recompute",
+          "sha256": "8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210"
+        }
+      ],
+      "scope": "One top-level D, one public E and one retained D inside E."
+    },
+    {
+      "claim_id": "EWS-C15",
+      "slide": 15,
+      "claim": "Silent continuation adds twelve frames with no new PCM and preserves the photo snapshot.",
+      "evidence_lane": "PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "1452c260308b090127b632120275eb90efef281ebeb3935399a21a243beecfbb"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "browser_run_01/complete.json",
+          "member_sha256": "8343c6632364affb7562c4783f7b4ac8205553f640e4a61914fe7b64dc263b0c",
+          "selector": "/producer_counts"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb",
+          "selector": "Browser, retained work and save"
+        }
+      ],
+      "scope": "Optional audio policy SILENT_CONTINUE; no new audio samples."
+    },
+    {
+      "claim_id": "EWS-C16",
+      "slide": 16,
+      "claim": "Separate approval binds exact content before one scoped sidecar write.",
+      "evidence_lane": "PRINCIPAL_RUN_AND_SOURCE",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "3c2326b4457e06965253c4b242127fdca8b6b0e8ece1ad9890cb0d3f6f071537"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "eef7063933c3acadf39645ea5947e66f10f2d68747955ae5d7b017cb9e459bc7"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "selector": "save_candidate; approve; validate_effect; execute_effect",
+          "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+        }
+      ],
+      "scope": "One 250-byte sidecar; exact approval; originals preserved."
+    },
+    {
+      "claim_id": "EWS-C17",
+      "slide": 17,
+      "claim": "Historical LocalDRS reuse skips semantic production while retaining fresh authority and resource creation.",
+      "evidence_lane": "HISTORICAL_EWS3_DRS",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+          "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+          "member": "evidence/contrast_memory_04/DRS_events.json",
+          "member_sha256": "4797c2dbded67eb56553955b0594db439eecceabe49f8cf48bce308e0450cf4f",
+          "selector": "/0; /1; /3"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+          "selector": "SemanticMemory; MemoryProvider",
+          "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/historical_semantic_memory_summary_v01.json",
+          "sha256": "c419cfc517c36bd4d561e4d684edc295937cd3c4d956e347155729fa25201a33",
+          "bytes": 19861,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "HISTORICAL_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Whitelisted historical provider, current DRS eligibility/descent and saved-work summaries."
+        }
+      ],
+      "scope": "Historical EWS3 LocalDRS; fresh Root, Host, resources and save consent."
+    },
+    {
+      "claim_id": "EWS-C18",
+      "slide": 18,
+      "claim": "Changed-source queries refuse old DRS scope and informational saved-work retrieval causes no effect.",
+      "evidence_lane": "HISTORICAL_EWS3_DRS",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+          "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+          "member": "evidence/contrast_memory_04/DRS_events.json",
+          "member_sha256": "4797c2dbded67eb56553955b0594db439eecceabe49f8cf48bce308e0450cf4f",
+          "selector": "/4; /5; /6; /7; /8"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+          "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+          "member": "evidence/contrast_memory_04/informational_saved_work.json",
+          "member_sha256": "9674f23556e06c38085bd33b487a2515746bb433227da343a862960f186b4b25",
+          "selector": "/effects; /model_calls; /new_service_activations; /new_workspace_instances; /sidecar_writes"
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/historical_semantic_memory_summary_v01.json",
+          "sha256": "c419cfc517c36bd4d561e4d684edc295937cd3c4d956e347155729fa25201a33",
+          "bytes": 19861,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "HISTORICAL_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Whitelisted historical provider, current DRS eligibility/descent and saved-work summaries."
+        }
+      ],
+      "scope": "Historical DRS evidence; saved-work information does not repeat a write."
+    },
+    {
+      "claim_id": "EWS-C19",
+      "slide": 19,
+      "claim": "Live, captured, controlled, probe and offline evidence are distinct and are not relabelled.",
+      "evidence_lane": "MULTIPLE_EXPLICIT_LANES",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+          "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "2a61d406fa006c154afbddba62228f93300f05e760b4ef6017ad39013f0fce13",
+          "selector": "Completed Scope and Limitations"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz",
+          "archive_sha256": "3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed",
+          "member": "evidence/measured_results.json",
+          "member_sha256": "fda80302f75cc38e7e656ecbc1379be1de54c6042c12754caa4a3064e0cf6904",
+          "selector": "/provider"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json",
+          "selector": "/payload/safe_document/summary/mode_mapping",
+          "sha256": "ded43a32bba9573651f0f2640eee0fb4e7e61ddce5f4869d6e5311380b9646c6"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/EVIDENCE.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/EVIDENCE.md",
+          "selector": "Scope and provenance",
+          "sha256": "f605dc048515487a7904898089c92c1feb6d665df69cae978b5f11b4058ba160"
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json",
+          "sha256": "6342561c728cb01d186b502ea218cd17cfde707fa578d67eddaf4e81a19307ca",
+          "bytes": 83096,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "SEMANTIC_BOUNDARY_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale."
+        },
+        {
+          "kind": "NEW_PRESENTATION_DERIVATIVE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/historical_semantic_memory_summary_v01.json",
+          "sha256": "c419cfc517c36bd4d561e4d684edc295937cd3c4d956e347155729fa25201a33",
+          "bytes": 19861,
+          "selector": "Entire source-bound derivative; embedded original archive/member selectors",
+          "evidence_lane": "HISTORICAL_SAFE_PROJECTION",
+          "old_seal_or_anchor_covers_this_file": false,
+          "description": "Whitelisted historical provider, current DRS eligibility/descent and saved-work summaries."
+        }
+      ],
+      "scope": "No uninterrupted live end-to-end or newly rerun historical proof claim."
+    },
+    {
+      "claim_id": "EWS-C20",
+      "slide": 20,
+      "claim": "Twelve named rows are supported by five current probes and seven carried positions with exact limitations.",
+      "evidence_lane": "LOCAL_PROBES_AND_CARRIED_EVIDENCE",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json",
+          "selector": "/payload/safe_document/summary/coverage",
+          "sha256": "75ce2741d162d3611f672f02854c61c77268d85501076debede05d84b5feb935"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json",
+          "selector": "/payload/safe_document/summary/coverage_counts",
+          "sha256": "75ce2741d162d3611f672f02854c61c77268d85501076debede05d84b5feb935"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/EVIDENCE.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/EVIDENCE.md",
+          "selector": "Twelve named requirements",
+          "sha256": "f605dc048515487a7904898089c92c1feb6d665df69cae978b5f11b4058ba160"
+        }
+      ],
+      "scope": "Bounded proof matrix; not a universal OS or adversarial security certificate."
+    },
+    {
+      "claim_id": "EWS-C21",
+      "slide": 21,
+      "claim": "The principal lifecycle closes owned services and retains original media and the approved sidecar.",
+      "evidence_lane": "PRINCIPAL_RUN",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json",
+          "selector": "/payload/safe_document/summary",
+          "sha256": "0684e0809fda9f4acd0507ebd16515cf2d90a1a45f1ebb7227e23fb4a33c5067"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "browser_run_01/complete.json",
+          "member_sha256": "8343c6632364affb7562c4783f7b4ac8205553f640e4a61914fe7b64dc263b0c",
+          "selector": "/cleanup; /viewer_threads; /media_thread_alive"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+          "selector": "close",
+          "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+        }
+      ],
+      "scope": "Recorded CLOSED_SUCCESS; dead audio child has no fabricated graceful receipt."
+    },
+    {
+      "claim_id": "EWS-C22",
+      "slide": 22,
+      "claim": "Public replay verifies frozen safe derivatives against a separately supplied independent pin.",
+      "evidence_lane": "OFFLINE_REPLAY",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/README.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/README.md",
+          "selector": "Public Offline Verification",
+          "sha256": "ee122befa20ee88d1847eb0bdf9386cf3561d0175bf9e6096ca790dc3251c209"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/lead_reviewed_anchor_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/lead_reviewed_anchor_v01.json",
+          "selector": "Entire detached pin record",
+          "sha256": "f391c5ed7aef20abf7f7d188ae20360a13d23a25aa4eb1c735eac073287c2d1a"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/anchor_verification_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/anchor_verification_v01.json",
+          "selector": "Independent anchored verification",
+          "sha256": "48d486c891518ad7cff4e22e9d3e5297e78e49bb9e31656ed80cbf5e2266aba7"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/external_anchor_publication_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/external_anchor_publication_v01.json",
+          "selector": "Frozen publication",
+          "sha256": "31506a2a34b30ff8ade37fba85692fed766954e46b6eccf84f91ac3cf76b52a5"
+        }
+      ],
+      "scope": "ANCHORED_PASS applies to exact safe derivatives, not hidden private originals."
+    },
+    {
+      "claim_id": "EWS-C23",
+      "slide": 23,
+      "claim": "The main runtime and verification timings remain separately scoped rather than combined into a misleading performance figure.",
+      "evidence_lane": "PRINCIPAL_RUN_AND_AUDIT",
+      "sources": [
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS3R2",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz",
+          "archive_sha256": "5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb",
+          "selector": "Real delayed-loss result"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "EWS4R",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+          "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "ec9142cdc01981606a78cb8541b8b2219013dab635aa8fd26f666c194eae2381",
+          "selector": "Actual verification, failures and preservation"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "LANDING",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+          "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "member": "FINAL_REPORT.md",
+          "member_sha256": "2fbb40f0bbbd29568779ddbaf7620f31173e456f0b62488ea26b56c1afeeee41",
+          "selector": "Actual Verification"
+        }
+      ],
+      "scope": "Observed timings; overlapping runtime stages are not additive or a production SLA."
+    },
+    {
+      "claim_id": "EWS-C24",
+      "slide": 24,
+      "claim": "The evidence supports bounded local behavior while preserving native-schema and production limits.",
+      "evidence_lane": "SCOPED_REVIEW",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/README.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/README.md",
+          "selector": "Public Offline Verification",
+          "sha256": "ee122befa20ee88d1847eb0bdf9386cf3561d0175bf9e6096ca790dc3251c209"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/EVIDENCE.md",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/EVIDENCE.md",
+          "selector": "Native BSEP and original graph limitations",
+          "sha256": "f605dc048515487a7904898089c92c1feb6d665df69cae978b5f11b4058ba160"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json",
+          "selector": "/payload/safe_document/summary/limitations",
+          "sha256": "ded43a32bba9573651f0f2640eee0fb4e7e61ddce5f4869d6e5311380b9646c6"
+        }
+      ],
+      "scope": "Overall EWS acceptance is not self-awarded; native legacy schema limit remains."
+    },
+    {
+      "claim_id": "EWS-C25",
+      "slide": 25,
+      "claim": "The committed implementation and portable evidence provide inspectable entry points; the new reader does not extend the old seal.",
+      "evidence_lane": "COMMITTED_SOURCE_AND_PRESENTATION",
+      "sources": [
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/source_index_v01.json",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/source_index_v01.json",
+          "selector": "27 accepted implementation sources",
+          "sha256": "49b3f5a42e9cf87de12c5bb22396d3eade67a87f41bda849ca655e78e6d22c81"
+        },
+        {
+          "kind": "COMMITTED_SOURCE_OR_EVIDENCE",
+          "repository_path": "docs/showcase/ephemeral_workspace_v01/verify_replay.sh",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/verify_replay.sh",
+          "selector": "Caller-supplied expected pin",
+          "sha256": "3a33996a383dad621d2cbe4a7ead0224754597e92383b23177b1a939d0ad77a2"
+        },
+        {
+          "kind": "ARCHIVE_MEMBER",
+          "stage": "LANDING",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+          "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "member": "RESUME_STATE.json",
+          "member_sha256": "2e24280114efd784c7a68a896cdc3ce70bb4aec454196102498eab827a417519",
+          "selector": "/commit; /remote_main"
+        }
+      ],
+      "scope": "Source 3f8720b. Presentation and XML are explanatory derivatives."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "artifact_role": "Conceptual brand illustration for the Ephemeral Workspace presentation; not runtime topology or execution evidence.",
+  "mode": "built-in image_gen",
+  "tool": "image_gen__imagegen",
+  "generation_date": "2026-09-14",
+  "prompt": "Use case: stylized-concept.\nAsset type: original editorial hero artwork for an English technical presentation, landscape 16:9, high resolution (3840x2160 if supported).\nCreate one extraordinary premium 3D product rendering of a radiolarian-inspired sculptural organism, a translucent pearl-glass ovoid lattice with an elegant concentric inner shell. The organism is rounded and voluminous, not a star or flat snowflake. Fine tapered graphite-titanium structural ribs trace the open perforated lattice, with six to eight delicate tapered radial spines projecting gracefully in three dimensions. Restrained deep cobalt details appear only at selected inner junctions and along a few slender inner ribs. Glass has subtle pearlescent smoky translucency with crisp refractions, soft spectral highlights and precise delicate organic geometry, no plastic appearance. Clear nested spaces and a beautiful natural radial symmetry, sophisticated scientific sculpture rather than a literal mechanical machine.\nComposition: subject entirely in the right half of the image, centered around 77 percent of image width, complete silhouette within the frame. Left 55 percent is empty pure white negative space for separately typeset slide copy. Sculpture occupies approximately 37 percent of total image width and 83 percent of image height, floating just above a white seamless surface. Camera straight-on with gentle three-quarter perspective to reveal concentric depth, realistic premium studio material rendering, strong geometric legibility.\nBackground: seamless pure white with the faintest very pale gray beneath the object. One extremely soft subtle grounding shadow directly below the sculpture, no horizon line. Soft large studio lighting, luminous white and pearl surfaces, dark graphite/titanium ribs, restrained cobalt accent. The composition is calm, spacious, exacting, elegant, architectural.\nThis is conceptual brand illustration only, not a diagram or runtime topology.\nNo text, no letters, no logos, no labels, no arrows, no interface, no watermark, no extra objects, no decorative particles, no borders.",
+  "style_reference": "presentation/reference/slide-01.png was visually inspected for palette, material treatment, and editorial composition; it was not passed as an edit target.",
+  "input_image_paths": [],
+  "original_generated_path": "/workspace/scratch/7085cdc7c562/generated_images/exec-a3bd96dd-9056-4344-9fed-895426fc20d5.png",
+  "workspace_asset_path": "/workspace/scratch/7085cdc7c562/presentation/assets/radiolaria_ephemeral_workspace_hero.png",
+  "postprocessing": "None. Exact generated PNG bytes copied to the presentation asset path.",
+  "output": {
+    "width": 1672,
+    "height": 941,
+    "mode": "RGB",
+    "bytes": 1271713,
+    "sha256": "441d0fe55678f101cc3a5daac00c6af1bba4c137a118c64908eafdb2815fed95"
+  }
+}

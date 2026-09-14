@@ -1,0 +1,542 @@
+{
+  "schema": "ews_actual_pptx_text_v01",
+  "authority_class": "EVIDENCE_ONLY",
+  "covered_by_original_anchor": false,
+  "source_file": "ephemeral_workspace_showcase_v01.pptx",
+  "source_bytes": 1416623,
+  "source_sha256": "10d9b695c59ed8d1836443d78680e91805caccec6e75af6add588d104fa10d7c",
+  "extraction": "Actual final PPTX slide XML paragraphs, native table cells and body speaker notes. Paragraph order follows OOXML, not a reconstructed visual reading order.",
+  "slides": [
+    {
+      "number": 1,
+      "visible_paragraphs_in_xml_order": [
+        "RADIOLARIA OS",
+        "Ephemeral",
+        "Workspace",
+        "A temporary computer",
+        "built around a task.",
+        "Semantic work. Current local decisions.",
+        "An inspectable execution history.",
+        "v0.1  /  Main implementation: 14 September 2026",
+        "Conceptual artwork"
+      ],
+      "speaker_notes": "Ephemeral Workspace v0.1 is a local demonstration of bounded semantic composition, current authority and verifiable evidence. The implementation and its accepted evidence are committed. The radiolarian cover is conceptual artwork, not a screenshot or evidence of execution.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/README.md | selector: Demonstrated Lifecycle\n\nClaim IDs: EWS-C01\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C01"
+      ]
+    },
+    {
+      "number": 2,
+      "visible_paragraphs_in_xml_order": [
+        "01 / THE TASK",
+        "A request becomes a working environment",
+        "Requested work",
+        "Browse, rate and select photographs. Adjust exposure and crop. Review video with audio.",
+        "Required boundaries",
+        "Keep originals unchanged. Continue visual work if audio disappears. Save only after separate confirmation; then close.",
+        "Principal run: controlled semantics, real local fixture operations.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "02"
+      ],
+      "speaker_notes": "The mixed request asks for photo browsing, ratings, selection, manual exposure and crop, and review of a short video with optional audio. It forbids source modification and publication. Actual browser controls operated against generated local fixtures. Six synthetic photographs, a sixteen-frame sequence and synthetic PCM tones define the demonstrated material; camera RAW development is outside scope.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/contracts_v01.py | selector: REQUEST_MIXED\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_intent_v01.json | selector: /payload/safe_document/summary\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::FINAL_REPORT.md SHA256 3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb | selector: Browser, retained work and save\n\nClaim IDs: EWS-C02\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C02"
+      ]
+    },
+    {
+      "number": 3,
+      "visible_paragraphs_in_xml_order": [
+        "02 / SEMANTIC COMPOSITION",
+        "Different meaning selects different work",
+        "Request",
+        "Compiled work",
+        "Deferred or omitted",
+        "Mixed review",
+        "Browse, rate, select, exposure, crop, video, audio",
+        "Sidecar write requires separate approval",
+        "Photo-only selection",
+        "Browse, rate, select",
+        "No editing, video or audio operations",
+        "Historical EWS3 live roles; completion through strict captured reexecution.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "03"
+      ],
+      "speaker_notes": "Historical EWS3 compared a mixed request with a photo-only request against the same declared source and capability availability. Accepted model responses were consumed by actual Work and Root review. The photo-only case omitted edit and media operations. Completion used strict captured reexecution after the accepted live roles; it was not an uninterrupted live demonstration or a broad NLP generalization benchmark.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz::evidence/measured_results.json SHA256 fda80302f75cc38e7e656ecbc1379be1de54c6042c12754caa4a3064e0cf6904 | selector: /actual_role_contract_consumption; /identical_environment; /strict_captured_completion\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py | selector: compile_contract\n\nCompanion evidence-only derivative: presentation_evidence/semantic_boundary_io_projection_v01.json. Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nClaim IDs: EWS-C03\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C03"
+      ]
+    },
+    {
+      "number": 4,
+      "visible_paragraphs_in_xml_order": [
+        "03 / SEMANTIC DUTIES",
+        "Three semantic duties",
+        "Role",
+        "Bounded input",
+        "Contribution",
+        "Orchestrator",
+        "Request and declared capabilities",
+        "Needs and blocking uncertainty",
+        "Semantic architect",
+        "Accepted needs and route",
+        "Preview, cleanup, save and audio policy",
+        "Privacy reviewer",
+        "Bounded context and obligations",
+        "Allow/block, minimization and conflicts",
+        "Principal run: three CONTROLLED_DETERMINISTIC responses; zero provider calls.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "04"
+      ],
+      "speaker_notes": "The orchestrator receives the request, capability classes and bounded logical asset/hash inventory, plus declared media inventory. The architect additionally receives accepted needs and route review. The privacy reviewer also receives the architectural obligations. Each output has a closed schema. The principal run used three CONTROLLED_DETERMINISTIC responses, despite the historical role identifiers ending in _llm. Earlier EWS3 used live Gemini responses with distinct provenance.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py | selector: collect\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py | selector: ROLES; schema; validate\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/orchestrator_semantic_summary_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/semantic_architect_summary_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json | selector: /payload/safe_document/summary\n\nCompanion evidence-only derivative: presentation_evidence/semantic_boundary_io_projection_v01.json. Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nClaim IDs: EWS-C04\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C04"
+      ]
+    },
+    {
+      "number": 5,
+      "visible_paragraphs_in_xml_order": [
+        "04 / BSEP",
+        "The membrane carries bounded evidence",
+        "What crosses",
+        "Observed semantics, missing evidence, uncertainty, rejected routes, conditions and guards.",
+        "What stays separate",
+        "Executable commands, private resource handles, local Root decisions and current action authority.",
+        "BSEP is evidence, not an ActionCommitPacket, truth or permission.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "05"
+      ],
+      "speaker_notes": "BSEP means Bounded Semantic Evidence Packet. The native DTO is built from the actual orchestrator proposal, route context and structured rationale. It includes observed facts, missing evidence, uncertainty, risk boundaries, rejected routes, required conditions, selected vectors and guards. The domain role context also uses a smaller needs/source_write/publication/separate_save projection. This is not the entire native BSEP. Public offline validation checks the recorded native DTO and source binding without reconstructing live authority.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py | selector: semantic_source\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py | selector: collect\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json | selector: /payload/safe_document/summary/native_bsep\n\nCompanion evidence-only derivative: presentation_evidence/semantic_boundary_io_projection_v01.json. Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nClaim IDs: EWS-C05\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C05"
+      ]
+    },
+    {
+      "number": 6,
+      "visible_paragraphs_in_xml_order": [
+        "05 / AUTHORITY",
+        "Root reviews the route and each effect",
+        "Semantic acceptance",
+        "The route returns to Root with explicit evidence, constraints and unresolved issues.",
+        "Current action",
+        "Each consequential command receives a finite packet, current Root review and Host/Firewall validation.",
+        "Route acceptance does not grant permission to later commands.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "06"
+      ],
+      "speaker_notes": "The runtime normalizes bounded claims and assembles evidence, checks, policy, time and permission state for the public Root decision kernel. Route acceptance happens before architect consumption. For a consequential command the system constructs a fresh finite packet, binds the actual local Root result, installs its lifecycle in the persistent Host and dispatches through the Effect Firewall. Neither model output nor an old receipt is a reusable grant. The BSEP explicitly records the rule: Gemini proposes, Root disposes.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py | selector: root_review; semantic_source; prepare_command; dispatch\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json | selector: /payload/safe_document/summary/native_bsep/authority_boundary_flags\n\nClaim IDs: EWS-C06\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C06"
+      ]
+    },
+    {
+      "number": 7,
+      "visible_paragraphs_in_xml_order": [
+        "06 / WORK",
+        "The next step consumes the actual output",
+        "Work item",
+        "Input",
+        "Consumed result",
+        "compile_contract",
+        "Three validated role outputs",
+        "Typed command contract",
+        "consume_contract",
+        "Actual compile_contract output",
+        "Session operation gate",
+        "Mixed media Work",
+        "Actual D-gated media context",
+        "Finite frame and PCM plan",
+        "Runtime materializes topology; the semantic proposal remains advisory.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "07"
+      ],
+      "speaker_notes": "The advisory SemanticArchitectProposal contains the role responses. Runtime materialization creates two Work items. compile_contract executes the deterministic compiler; consume_contract receives the first item material through an explicit WorkOutputBindingV01. Actual output validators compare produced values with computation, and the session reads the consumed contract. Mixed media later adds a separate finite media-plan Work under the same task and Host. Runtime constructs topology; model output does not supply arbitrary executable edges.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py | selector: materialize\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py | selector: compute; validate_outputs_v01\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json | selector: /payload/safe_document/summary/work_roles\n\nClaim IDs: EWS-C07\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C07"
+      ]
+    },
+    {
+      "number": 8,
+      "visible_paragraphs_in_xml_order": [
+        "07 / RESOURCES",
+        "A finite set of resource roles",
+        "Class",
+        "Bounded role",
+        "MediaSourceNeedle",
+        "Scoped original-source access",
+        "RenderEngineNeedle",
+        "Derived preview generation",
+        "DisplayGatewayNeedle",
+        "Derived frames only",
+        "ControlSurfaceNeedle",
+        "Typed session commands",
+        "AudioSinkNeedle",
+        "Finite PCM consumption",
+        "SidecarWriteNeedle",
+        "Independent approval before writing",
+        "Recorded contract classes; no current device grants are recreated.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "08"
+      ],
+      "speaker_notes": "The recorded classes are MediaSourceNeedle, RenderEngineNeedle, DisplayGatewayNeedle, ControlSurfaceNeedle and AudioSinkNeedle. SidecarWriteNeedle is dormant until its separate approval. The actual local implementation uses media, display and audio child processes plus viewer threads and separate loopback origins. Class selection does not prove discovery of arbitrary external devices. Public grant summaries are historical; they contain no current grant authority.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/capability_discovery_snapshot_safe_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/device_grant_summary_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py | selector: __init__; execute_effect\n\nClaim IDs: EWS-C08\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C08"
+      ]
+    },
+    {
+      "number": 9,
+      "visible_paragraphs_in_xml_order": [
+        "08 / CONTROL PLANE",
+        "Commands have types, scope and currentness",
+        "Finite operations",
+        "Browse, rate, select, exposure, crop, playback, pause, seek and media review.",
+        "Current boundary",
+        "Exact session, version, operation and value. Shell, exec and generic file operations are refused.",
+        "No LLM call, D/E pass or U2 revision per click or frame.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "09"
+      ],
+      "speaker_notes": "The principal compiled contract has ten operations: CROP, EXPOSURE, NEXT, PAUSE, PLAY, PREVIOUS, RATE, REVIEW_MEDIA, SEEK and SELECT. OPEN, REQUEST_SAVE, SAVE and END are separately managed lifecycle/save operations. Commands are checked for exact fields, ranges, session identity and version. The explicit shell/file probe exercises the production pure validator with a continuation canary, not an end-to-end hostile Host. UI state is advisory and does not grant action authority.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/bsep_safe_projection_v01.json | selector: /payload/safe_document/summary/compiled_contract_summary/typed_commands\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/contracts_v01.py | selector: command\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py | selector: validate_effect; command\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json | selector: /payload/safe_document/summary/coverage/3\n\nClaim IDs: EWS-C09\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C09"
+      ]
+    },
+    {
+      "number": 10,
+      "visible_paragraphs_in_xml_order": [
+        "09 / PRIVACY",
+        "Privacy policy changes the actual transfer",
+        "Boundary",
+        "Principal permitted fields",
+        "Media to session",
+        "png, sha256, asset, session",
+        "Session to display",
+        "png, sha256, frame_ref",
+        "Enforcement",
+        "Producer, session and display check closed schemas",
+        "Metadata minimization; no image-content redaction or OS sandbox claim.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "10"
+      ],
+      "speaker_notes": "The principal selected preview_without_metadata. Fresh RGB encoding strips metadata; checked PNG chunks and bounded schemas constrain what crosses services. The media-to-session projection contains png, sha256, asset and session; session-to-display contains png, sha256 and frame_ref. The preview_only neighbor additionally permits checked derived output metadata. Source paths, credentials and EXIF/GPS are not forwarded to display. This is metadata minimization, not pixel-content redaction or same-UID isolation.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/privacy_boundary_summary_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/demo_designs/ephemeral_workspace_v01.md | selector: EWS1R Privacy And UI Addendum\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/media_v01.py | selector: privacy_policy; validate_transfer\n\nClaim IDs: EWS-C10\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C10"
+      ]
+    },
+    {
+      "number": 11,
+      "visible_paragraphs_in_xml_order": [
+        "10 / ACTUAL INTERACTION",
+        "Desktop and mobile operate the same session",
+        "Desktop 1440 × 1000",
+        "Mobile 390 × 844",
+        "SCRIPTED_BROWSER_TEST. Desktop 1440×1000; mobile 390×844.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "11"
+      ],
+      "speaker_notes": "The accepted desktop viewport is 1440 by 1000 CSS pixels, the mobile viewport 390 by 844. Real browser controls selected asset 1, set exposure 5 tenths (+0.5), applied SQUARE crop and produced a final rating 5. Captures are actual browser evidence. The first control-tab viewport mismatch and its correction remain in history. Every browser action is SCRIPTED_BROWSER_TEST; the endpoint label MANUAL_OWNER_CONFIRMATION does not prove that Andrey personally clicked. Public screenshot preparation must preserve any redaction/cropping provenance separately.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::BROWSER_EVIDENCE.md SHA256 5a8690318f6ac341af5cc6ebc24d8b30681a08dccc04e407556e2a8619950649 | selector: Screenshot navigation\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::FINAL_REPORT.md SHA256 3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb | selector: Browser, retained work and save\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::browser_run_01/native_final/verified_sidecar.json SHA256 20e01b3ebd6f813bccf2ce51d23c71406a0f2b2cd706ab8bda92e71bed28a915 | selector: /selection/0\n\nClaim IDs: EWS-C11\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C11"
+      ]
+    },
+    {
+      "number": 12,
+      "visible_paragraphs_in_xml_order": [
+        "11 / DELIBERATE FAILURE",
+        "AudioSink disappears during real work",
+        "4",
+        "frames before loss",
+        "16,000",
+        "PCM samples delivered",
+        "Observed",
+        "actual child exit",
+        "Intentional owned-process failure; synthetic audio, no physical speaker claim.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "12"
+      ],
+      "speaker_notes": "The test deliberately killed only the owned AudioSink after four frames and 16,000 PCM samples. The runtime observed the actual child exit at current command and delivery boundaries. Its recorded exit code is-9; cleanup reports ALREADY_EXITED and no graceful receipt. Photo work remains unrelated to the failed resource. Required audio cannot silently proceed; optional audio must go through fresh observation and E before continuation.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::FINAL_REPORT.md SHA256 3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb | selector: Real delayed-loss result\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::browser_run_01/complete.json SHA256 8343c6632364affb7562c4783f7b4ac8205553f640e4a61914fe7b64dc263b0c | selector: /cleanup/processes; /media_state\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py | selector: _observe_audio_liveness; _check_audio_current\n\nClaim IDs: EWS-C12\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C12"
+      ]
+    },
+    {
+      "number": 13,
+      "visible_paragraphs_in_xml_order": [
+        "12 / TIME",
+        "Fresh evidence keeps old authority unchanged",
+        "Event",
+        "UTC",
+        "Meaning",
+        "Old packet expires",
+        "11:00:00",
+        "Old permission is no longer current",
+        "Owned AudioSink dies",
+        "11:01:05",
+        "Actual resource state changes",
+        "New loss evidence acquired",
+        "11:01:26",
+        "86 seconds after old expiry",
+        "New observation expires",
+        "11:03:26",
+        "Fresh two-minute evidence interval",
+        "New evidence window; old packet and Workspace expiry remain unchanged.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "13"
+      ],
+      "speaker_notes": "The original packet issued at 10:58:00 UTC expires at 11:00:00. Audio dies at 11:01:05, 65 seconds beyond expiry. New evidence is acquired at 11:01:26 and expires at 11:03:26; the Workspace expiry stays 11:16:07. Real source clock offset remains zero. Old packet bytes, its Root-bound authority, prior dependency envelope and D baseline are preserved. Invalidation names the original dependency envelope. Independent use of the old packet returns host_current_action_not_executable.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/workspace_lease_safe_v01.json | selector: /payload/safe_document/summary\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::FINAL_REPORT.md SHA256 3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb | selector: Real delayed-loss result\n\nClaim IDs: EWS-C13\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C13"
+      ]
+    },
+    {
+      "number": 14,
+      "visible_paragraphs_in_xml_order": [
+        "13 / SELECTIVE CONTINUATION",
+        "Only the affected branch is recomputed",
+        "Recompute",
+        "The changed audio dependency drives an actual retained D result consumed by E.",
+        "Preserve",
+        "Unchanged photo Work, preview and unaffected sibling evidence remain bound to their original results.",
+        "One top-level D, one public E and one retained D inside E.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "14"
+      ],
+      "speaker_notes": "There is one top-level D setup, one public E and one retained D recomputation inside E. The changed-source binding is followed into actual returned D output; unaffected photo and sibling output evidence is checked. A fresh informational Root review requests no effect and creates no permission. Subsequent PLAY and SAVE still take their normal fresh Root/Host/Firewall path. Do not describe this as zero recomputation or as E automatically authorizing a new effect.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json | selector: /payload/safe_document/summary\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::browser_run_01/native_common_return/media_consumption.json SHA256 024450f5f32e46b7fe35c8cd4646285cead83cae3c2f64d642288237a593d1e6 | selector: /delta_result_ref; /recomputed_result_ref; /preserved_D_result_ref; /retained_consumption_ref\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py | selector: prepare_delta_baseline; consume_delta; recompute\n\nClaim IDs: EWS-C14\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C14"
+      ]
+    },
+    {
+      "number": 15,
+      "visible_paragraphs_in_xml_order": [
+        "14 / OBSERVED RESULT",
+        "Visual work continues without audio",
+        "Unchanged",
+        "photo Work and preview",
+        "+12",
+        "video frames, 4 to 16",
+        "+0",
+        "PCM samples after loss",
+        "Optional audio policy SILENT_CONTINUE; no new audio samples.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "15"
+      ],
+      "speaker_notes": "Immediately before loss and automatically after E, photo Work, state and preview bytes compare equal. The preview hash is114187f18e0b3773feb36def9751076cf72dcd367a2fa1c3d862be0269dea298. Photo preview producer count stays 3. Silent PLAY then adds 12 frames, from 4 to 16, while PCM remains 16,000. Commands/effect history stay 7 across E; later commands are distinct current actions. This is optional-audio behavior, not a claim of speech intelligibility or audible playback.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json | selector: /payload/safe_document/summary\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::browser_run_01/complete.json SHA256 8343c6632364affb7562c4783f7b4ac8205553f640e4a61914fe7b64dc263b0c | selector: /producer_counts\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::FINAL_REPORT.md SHA256 3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb | selector: Browser, retained work and save\n\nClaim IDs: EWS-C15\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C15"
+      ]
+    },
+    {
+      "number": 16,
+      "visible_paragraphs_in_xml_order": [
+        "15 / SEPARATE SAVE",
+        "Saving needs its own approval",
+        "Request and review",
+        "REQUEST_SAVE forms the exact candidate. Separate owner approval binds the selected content.",
+        "Current write",
+        "A fresh SAVE packet writes that sidecar once. A changed candidate needs new approval.",
+        "One 250-byte sidecar; exact approval; originals preserved.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "16"
+      ],
+      "speaker_notes": "REQUEST_SAVE only produces a candidate. Owner-origin confirmation binds session/version, fixed output slot, selected assets, rating, exposure, crop and intended bytes. SAVE obtains a current native packet and executes exactly once. A changed candidate requires a new approval. The principal result is 250 bytes with SHA25620e01b3ebd6f813bccf2ce51d23c71406a0f2b2cd706ab8bda92e71bed28a915. This sidecar stores parameters and source hashes, not rewritten originals or an external publication.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json | selector: /payload/safe_document/summary\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py | selector: save_candidate; approve; validate_effect; execute_effect\n\nClaim IDs: EWS-C16\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C16"
+      ]
+    },
+    {
+      "number": 17,
+      "visible_paragraphs_in_xml_order": [
+        "16 / SEMANTIC MEMORY",
+        "Memory carries meaning across sessions",
+        "Reused meaning",
+        "A reviewed recipe supplies bounded needs, obligations and privacy policy through summary-only descent.",
+        "Fresh execution",
+        "Root review and current resource authority are rebuilt. The durable recipe carries no action permission.",
+        "Historical EWS3 LocalDRS; fresh Root, Host, resources and save consent.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "17"
+      ],
+      "speaker_notes": "The actual historical DRS sequence starts with a cold SEARCH returning no candidate. Root-reviewed semantic content is written through public LocalDRS interfaces. Warm SEARCH evaluates current eligibility, requires fresh Root-approved SUMMARY_ONLY descent and returns bounded role values to their normal validators. New Host/resources and separate save consent remain necessary. DRS is durable retained storage; no Host, action permission, launch token or URL is restored from it. This history is distinct from the principal browser run.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz::evidence/contrast_memory_04/DRS_events.json SHA256 4797c2dbded67eb56553955b0594db439eecceabe49f8cf48bce308e0450cf4f | selector: /0; /1; /3\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py | selector: SemanticMemory; MemoryProvider\n\nCompanion evidence-only derivative: presentation_evidence/historical_semantic_memory_summary_v01.json. Whitelisted historical provider, current DRS eligibility/descent and saved-work summaries. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nClaim IDs: EWS-C17\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C17"
+      ]
+    },
+    {
+      "number": 18,
+      "visible_paragraphs_in_xml_order": [
+        "17 / CURRENT MEMORY",
+        "Changed sources block the old recipe",
+        "Situation",
+        "Recorded behavior",
+        "Changed source scope",
+        "Old recipe: BLOCKED_BY_SCOPE",
+        "Fresh reviewed recipe",
+        "New candidate eligible; old candidate remains blocked",
+        "What was saved?",
+        "Bounded summary; zero model calls, effects or activations",
+        "Historical DRS evidence; saved-work information does not repeat a write.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "18"
+      ],
+      "speaker_notes": "Rows 4 and 5 of the actual historical DRS log show BLOCKED_BY_SCOPE with drs_address_scope_mismatch. Row 6 records new meaning for changed dependencies; row 7 selects the new candidate while the old remains blocked. Row 8 retrieves a saved-work summary. The informational response records zero model calls, effects, service activations, new Workspace instances and sidecar writes. Its historical V1 sidecar is distinct from the 250-byte principal sidecar. Foreign-root/policy/expiry test neighbors are additional focused tests, not all events in this log.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz::evidence/contrast_memory_04/DRS_events.json SHA256 4797c2dbded67eb56553955b0594db439eecceabe49f8cf48bce308e0450cf4f | selector: /4; /5; /6; /7; /8\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz::evidence/contrast_memory_04/informational_saved_work.json SHA256 9674f23556e06c38085bd33b487a2515746bb433227da343a862960f186b4b25 | selector: /effects; /model_calls; /new_service_activations; /new_workspace_instances; /sidecar_writes\n\nCompanion evidence-only derivative: presentation_evidence/historical_semantic_memory_summary_v01.json. Whitelisted historical provider, current DRS eligibility/descent and saved-work summaries. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nClaim IDs: EWS-C18\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C18"
+      ]
+    },
+    {
+      "number": 19,
+      "visible_paragraphs_in_xml_order": [
+        "18 / PROVENANCE",
+        "Each execution mode keeps its own evidence",
+        "Lane",
+        "Recorded scope",
+        "Historical LIVE",
+        "9 attempts; 6 accepted responses; 3 failures",
+        "CAPTURED_REEXECUTION",
+        "Pinned responses; fresh Host and resources",
+        "Principal controlled run",
+        "Three semantic responses; real local browser/media",
+        "Five local probes",
+        "Explicit production boundaries and separate fixtures",
+        "Offline replay",
+        "Safe evidence verification without runtime execution",
+        "No uninterrupted live end-to-end or newly rerun historical proof claim.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "19"
+      ],
+      "speaker_notes": "Historical EWS3 has 9 provider attempts, 6 accepted responses and 3 failures. Initial live roles reached actual Work, then harness mistakes were preserved. Strict captured reexecution completed the work using independently pinned original contexts and fresh Host/resources. The principal browser run is CONTROLLED_DETERMINISTIC with three local responses and zero provider calls. Five local probes use separate generated fixtures. Offline replay reconstructs no Workspace and performs no provider/media operation. None of these are interchangeable claims.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz::FINAL_REPORT.md SHA256 2a61d406fa006c154afbddba62228f93300f05e760b4ef6017ad39013f0fce13 | selector: Completed Scope and Limitations\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz::evidence/measured_results.json SHA256 fda80302f75cc38e7e656ecbc1379be1de54c6042c12754caa4a3064e0cf6904 | selector: /provider\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json | selector: /payload/safe_document/summary/mode_mapping\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/EVIDENCE.md | selector: Scope and provenance\n\nCompanion evidence-only derivative: presentation_evidence/semantic_boundary_io_projection_v01.json. Exact selected bounded inputs, six accepted historical LIVE role outputs and nine attempt outcomes, three principal controlled outputs, native BSEP and runtime rationale. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nCompanion evidence-only derivative: presentation_evidence/historical_semantic_memory_summary_v01.json. Whitelisted historical provider, current DRS eligibility/descent and saved-work summaries. Its original source hashes and selectors are embedded; it is not covered by the frozen EWS4R seal or anchor.\n\nClaim IDs: EWS-C19\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C19"
+      ]
+    },
+    {
+      "number": 20,
+      "visible_paragraphs_in_xml_order": [
+        "19 / BOUNDARY PROOF",
+        "Twelve requirements have explicit provenance",
+        "12",
+        "named requirements",
+        "5",
+        "current local probes",
+        "7",
+        "carried historical positions",
+        "Bounded proof matrix; not a universal OS or adversarial security certificate.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "20"
+      ],
+      "speaker_notes": "Five current probes cover raw source reads, renderer source overwrite, shell/file commands, audio-role render misuse and injected device/topology fields in model DTOs. Seven positions carry historical proof; six EWS1R rows bind five actual nodes because A07 and A08 share a test. A12 carries the actual EWS3R2 loss/continuation. A08 tests approval target substitution rather than direct writer invocation. A10 tests NEXT on a closed session rather than serialized lease replay. Exact error/status values are not invented where only exception assertions were recorded.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json | selector: /payload/safe_document/summary/coverage\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/adversarial_matrix_v01.json | selector: /payload/safe_document/summary/coverage_counts\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/EVIDENCE.md | selector: Twelve named requirements\n\nClaim IDs: EWS-C20\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C20"
+      ]
+    },
+    {
+      "number": 21,
+      "visible_paragraphs_in_xml_order": [
+        "20 / TEARDOWN",
+        "The workspace closes its owned resources",
+        "3",
+        "owned service processes reaped",
+        "2",
+        "viewer threads closed",
+        "Preserved",
+        "originals and approved sidecar",
+        "Recorded CLOSED_SUCCESS; dead audio child has no fabricated graceful receipt.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "21"
+      ],
+      "speaker_notes": "The principal run ends CLOSED_SUCCESS. Audio was already exited and reaped after the deliberate kill. Display and media acknowledged graceful close and exited 0. Two viewer threads and the finite media thread stop. Original source/media bytes and the approved sidecar remain; owned preview cache is removed. Cleanup checks owned file identity and preserves foreign replacements. This is a finite resource-owner cleanup obligation, not a general proof of remote pixel erasure or operating-system process isolation.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json | selector: /payload/safe_document/summary\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::browser_run_01/complete.json SHA256 8343c6632364affb7562c4783f7b4ac8205553f640e4a61914fe7b64dc263b0c | selector: /cleanup; /viewer_threads; /media_thread_alive\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py | selector: close\n\nClaim IDs: EWS-C21\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C21"
+      ]
+    },
+    {
+      "number": 22,
+      "visible_paragraphs_in_xml_order": [
+        "21 / VERIFIABLE EVIDENCE",
+        "An independent pin anchors safe evidence",
+        "Frozen package",
+        "18 public files, with source bindings, manifest and integrity records. Historical fields remain unchanged.",
+        "Independent verification",
+        "The caller supplies the expected pin. Offline replay verifies the package without recreating live authority.",
+        "ANCHORED_PASS applies to exact safe derivatives, not hidden private originals.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "22"
+      ],
+      "speaker_notes": "The package has 18 files: 16 evidence-only derivatives, one integrity record and one sealed manifest. A separate publication identifies the sealed package. The independently supplied expected publication pin is693fc6b5c2e8499161b40dc7bb6c22a21ca040c38325f1e657f176e9ff7bf525. The verifier takes that value from its caller, not from the checked package. Frozen publication fields remain EVIDENCE_ONLY; a detached verification reports ANCHORED_PASS. This does not establish semantic truth, signer identity, trusted time or current Root authority.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/README.md | selector: Public Offline Verification\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/lead_reviewed_anchor_v01.json | selector: Entire detached pin record\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/anchor_verification_v01.json | selector: Independent anchored verification\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/external_anchor_publication_v01.json | selector: Frozen publication\n\nClaim IDs: EWS-C22\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C22"
+      ]
+    },
+    {
+      "number": 23,
+      "visible_paragraphs_in_xml_order": [
+        "22 / MEASUREMENTS",
+        "Recorded times describe different scopes",
+        "Stage",
+        "Time",
+        "Scope",
+        "D preparation",
+        "113.107 s",
+        "Principal mixed setup",
+        "Selective E",
+        "300.125 s",
+        "Actual recomputation",
+        "Browser launcher",
+        "866.681 s",
+        "Complete principal session",
+        "EWS4R evidence audit",
+        "23.307 s",
+        "59 cases",
+        "Landing checks",
+        "86.395 s",
+        "10 narrow tests",
+        "Landed public replay",
+        "1.375 s",
+        "Offline verification",
+        "Observed timings; overlapping runtime stages are not additive or a production SLA.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "23"
+      ],
+      "speaker_notes": "Complete principal D preparation 113.107234 s includes native D 104.050470 s. E takes 300.124708 s; the full browser launcher 866.681320 s, about 14 minutes 27 seconds, includes other work. EWS4R five probes 1.702 s, 59 evidence tests 23.307 s and export 5.908 s belong to later audit stages. Main landing records ten narrow tests 86.395 s and public replay 1.375 s. These are observed runs, not an SLA. Do not add overlapping stages or compare historical warm semantics plus Work 0.161 s with total workspace startup.\n\nEvidence:\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz::FINAL_REPORT.md SHA256 3c54e911992ec466ad818a82345bb853ab7e841d354ea9487448cb460e945ccb | selector: Real delayed-loss result\nRADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz::FINAL_REPORT.md SHA256 ec9142cdc01981606a78cb8541b8b2219013dab635aa8fd26f666c194eae2381 | selector: Actual verification, failures and preservation\nRADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz::FINAL_REPORT.md SHA256 2fbb40f0bbbd29568779ddbaf7620f31173e456f0b62488ea26b56c1afeeee41 | selector: Actual Verification\n\nClaim IDs: EWS-C23\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C23"
+      ]
+    },
+    {
+      "number": 24,
+      "visible_paragraphs_in_xml_order": [
+        "23 / CLAIM BOUNDARY",
+        "The demonstrated scope stays explicit",
+        "Demonstrated",
+        "Semantic choices affect work. Authority stays current. Loss is observed. Unaffected results survive. Save and cleanup are evidenced.",
+        "Outside this proof",
+        "General OS isolation, physical audio, image understanding, production certification and replay of hidden native originals.",
+        "Overall EWS acceptance is not self-awarded; native legacy schema limit remains.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "24"
+      ],
+      "speaker_notes": "The recorded scenarios establish semantic causality, actual local service operations, explicit current authority, retained work after a resource loss, an independently approved write and reproducible safe evidence verification. They do not certify a production OS, arbitrary application generation, physical audio, image understanding or universal security. Older native canonical schemas remain UNSUPPORTED_NATIVE_SCHEMA; private aggregate wrapper integrity is not an original-native-manifest PASS. Overall EWS acceptance remains NOT_SELF_AWARDED. Main landing is later evidence than frozen candidate-status fields.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/README.md | selector: Public Offline Verification\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/EVIDENCE.md | selector: Native BSEP and original graph limitations\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/public_safe_package/final_safe_execution_report_v01.json | selector: /payload/safe_document/summary/limitations\n\nClaim IDs: EWS-C24\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C24"
+      ]
+    },
+    {
+      "number": 25,
+      "visible_paragraphs_in_xml_order": [
+        "24 / INSPECT AND VERIFY",
+        "Code, evidence and a reader in one showcase",
+        "Developer entry points",
+        "Inspect the source index and technical appendix. Run portable replay with the independent expected pin.",
+        "One-file model reader",
+        "Read slide text, exact public evidence and implementation sources with explicit provenance and omissions.",
+        "Source 3f8720b. Presentation and XML are explanatory derivatives.",
+        "RADIOLARIA OS  /  EPHEMERAL WORKSPACE v0.1",
+        "25"
+      ],
+      "speaker_notes": "The implementation is committed at 3f8720b75a1bda3a1df6b184e643c2de5327f838. The source index binds 27 accepted implementation files and portable public replay checks the retained package. The accompanying technical appendix and XML reader explain the source, actual evidence and historical modes. New presentation and historical-summary derivatives must have their own identities and declared omissions; they are not silently inserted into the already anchored evidence. No new runtime execution or authority is created by the reader.\n\nEvidence:\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/source_index_v01.json | selector: 27 accepted implementation sources\nhttps://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/docs/showcase/ephemeral_workspace_v01/verify_replay.sh | selector: Caller-supplied expected pin\nRADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz::RESUME_STATE.json SHA256 2e24280114efd784c7a68a896cdc3ce70bb4aec454196102498eab827a417519 | selector: /commit; /remote_main\n\nClaim IDs: EWS-C25\n\nThis slide is presentation material. Its provenance labels retain each recorded execution lane. The cover is conceptual generated artwork and is not a technical diagram.",
+      "claim_ids": [
+        "EWS-C25"
+      ]
+    }
+  ]
+}

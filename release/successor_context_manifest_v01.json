@@ -1314,5 +1314,273 @@
     "production_certification": "NOT_CLAIMED",
     "new_gate": "NONE",
     "identity_projection": "ONLY_GUARD_OWN_EWS_SOURCE_IDENTITIES_LITERAL_EXCLUDED; DETACHED_MANIFEST_BINDS_FULL_BYTES"
+  },
+  "ephemeral_workspace_presentation_admission_v01": {
+    "basis": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+    "basis_parent": "e42d37fa98dfec7110b8cf75b1aceaa614f461be",
+    "basis_tree": "76447935f0f09d60dbe387eb9706e34965f06594",
+    "basis_regular_files": 998,
+    "status": "EXACT_DOCUMENTATION_SUCCESSOR_DERIVED_FROM_GIT",
+    "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+    "input_archive_sha256": "e0b5c45dae67bc10b770eaa62d25fbe8ef0984a442d3857dcba89551eec52d26",
+    "input_manifest_sha256": "df7b01c5dc88a3ec4c1475181fe30db3530b6fbb6319397795e0f38da7727d44",
+    "path_actions": {
+      "AGENTS.md": "M",
+      "docs/showcase/ephemeral_workspace_v01/DESIGN_NOTES.md": "A",
+      "docs/showcase/ephemeral_workspace_v01/LLM_READER_EPHEMERAL_WORKSPACE_V01.xml": "A",
+      "docs/showcase/ephemeral_workspace_v01/PRESENTATION.md": "A",
+      "docs/showcase/ephemeral_workspace_v01/README.md": "M",
+      "docs/showcase/ephemeral_workspace_v01/SHA256SUMS": "M",
+      "docs/showcase/ephemeral_workspace_v01/asset_inventory_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/browser_capture_provenance_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/cover.png": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/desktop_workspace.jpg": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/fonts/Inter-Bold.ttf": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/fonts/Inter-Regular.ttf": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/fonts/OFL.txt": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/mobile_controls.jpg": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/radiolaria_ephemeral_workspace_hero.png": "A",
+      "docs/showcase/ephemeral_workspace_v01/assets/radiolaria_ephemeral_workspace_hero.provenance.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/claim_evidence_matrix_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/ephemeral_workspace_showcase_v01.pdf": "A",
+      "docs/showcase/ephemeral_workspace_v01/ephemeral_workspace_showcase_v01.pptx": "A",
+      "docs/showcase/ephemeral_workspace_v01/executive_one_pager_v01.md": "A",
+      "docs/showcase/ephemeral_workspace_v01/executive_one_pager_v01.pdf": "A",
+      "docs/showcase/ephemeral_workspace_v01/presentation_content_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/presentation_evidence/historical_semantic_memory_summary_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/presentation_evidence/landing_verification_summary_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/presentation_publication_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/reader_index_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/rendered_pdf_text_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/slide_text_and_notes_v01.json": "A",
+      "docs/showcase/ephemeral_workspace_v01/story.html": "A",
+      "docs/showcase/ephemeral_workspace_v01/technical_appendix_v01.md": "A",
+      "docs/showcase/ephemeral_workspace_v01/technical_appendix_v01.pdf": "A",
+      "release/current_status_overlay_v01.json": "M",
+      "release/successor_context_manifest_v01.json": "M",
+      "specs/current_architecture_lock_v01.md": "M",
+      "specs/document_authority_index_v01.json": "M",
+      "tests/test_active_architecture_authority_v01.py": "M",
+      "tests/test_repository_release_spine_v01.py": "M",
+      "tools/check_active_architecture_authority_v01.py": "M"
+    },
+    "path_modes": {
+      "AGENTS.md": "100644",
+      "docs/showcase/ephemeral_workspace_v01/DESIGN_NOTES.md": "100644",
+      "docs/showcase/ephemeral_workspace_v01/LLM_READER_EPHEMERAL_WORKSPACE_V01.xml": "100644",
+      "docs/showcase/ephemeral_workspace_v01/PRESENTATION.md": "100644",
+      "docs/showcase/ephemeral_workspace_v01/README.md": "100644",
+      "docs/showcase/ephemeral_workspace_v01/SHA256SUMS": "100644",
+      "docs/showcase/ephemeral_workspace_v01/asset_inventory_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/browser_capture_provenance_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/cover.png": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/desktop_workspace.jpg": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/fonts/Inter-Bold.ttf": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/fonts/Inter-Regular.ttf": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/fonts/OFL.txt": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/mobile_controls.jpg": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/radiolaria_ephemeral_workspace_hero.png": "100644",
+      "docs/showcase/ephemeral_workspace_v01/assets/radiolaria_ephemeral_workspace_hero.provenance.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/claim_evidence_matrix_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/ephemeral_workspace_showcase_v01.pdf": "100644",
+      "docs/showcase/ephemeral_workspace_v01/ephemeral_workspace_showcase_v01.pptx": "100644",
+      "docs/showcase/ephemeral_workspace_v01/executive_one_pager_v01.md": "100644",
+      "docs/showcase/ephemeral_workspace_v01/executive_one_pager_v01.pdf": "100644",
+      "docs/showcase/ephemeral_workspace_v01/presentation_content_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/presentation_evidence/historical_semantic_memory_summary_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/presentation_evidence/landing_verification_summary_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/presentation_publication_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/reader_index_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/rendered_pdf_text_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/slide_text_and_notes_v01.json": "100644",
+      "docs/showcase/ephemeral_workspace_v01/story.html": "100644",
+      "docs/showcase/ephemeral_workspace_v01/technical_appendix_v01.md": "100644",
+      "docs/showcase/ephemeral_workspace_v01/technical_appendix_v01.pdf": "100644",
+      "release/current_status_overlay_v01.json": "100644",
+      "release/successor_context_manifest_v01.json": "100644",
+      "specs/current_architecture_lock_v01.md": "100644",
+      "specs/document_authority_index_v01.json": "100644",
+      "tests/test_active_architecture_authority_v01.py": "100644",
+      "tests/test_repository_release_spine_v01.py": "100644",
+      "tools/check_active_architecture_authority_v01.py": "100644"
+    },
+    "payload_files": [
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/DESIGN_NOTES.md",
+        "bytes": 3140,
+        "sha256": "9bb27ec6e4adeb60bbb9c41e6f397fbb580163916830df386edb2481c63764ff",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/LLM_READER_EPHEMERAL_WORKSPACE_V01.xml",
+        "bytes": 3644456,
+        "sha256": "9a80273fb97a96d61e2f987d7f8d82a7d6163296d6a3730aad92c799425c0a46",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/PRESENTATION.md",
+        "bytes": 4232,
+        "sha256": "73fd7952d4fe57dfc4022174f6115239c7c9ea067471d9b5781cf70d29097271",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/asset_inventory_v01.json",
+        "bytes": 2046,
+        "sha256": "cb01807a7f0cfd13d154b78a7c5efbfd79b707978c90a77cdcf3b07cbf167b4a",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/browser_capture_provenance_v01.json",
+        "bytes": 1359,
+        "sha256": "6052ac415c695b9c5c208ad5d1ea346baf2f95017535780fc1fbf0b2d5411a0c",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/cover.png",
+        "bytes": 1510782,
+        "sha256": "cbbfb22fa609cd3a7a9fac206068d0172fce2c80bda17818ca5cbbcca7eca1b8",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/desktop_workspace.jpg",
+        "bytes": 52363,
+        "sha256": "a4b79746b6f1a76666d386d0a20540ca237ba7400c7b2f37a257bdc12fd3acef",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/fonts/Inter-Bold.ttf",
+        "bytes": 343104,
+        "sha256": "c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/fonts/Inter-Regular.ttf",
+        "bytes": 341396,
+        "sha256": "fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/fonts/OFL.txt",
+        "bytes": 4377,
+        "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/mobile_controls.jpg",
+        "bytes": 21070,
+        "sha256": "1d4eabf3fb378fad84d1f9ae6b258746d5480ae76440eb88d6a2f03d543e93a4",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/radiolaria_ephemeral_workspace_hero.png",
+        "bytes": 1271713,
+        "sha256": "441d0fe55678f101cc3a5daac00c6af1bba4c137a118c64908eafdb2815fed95",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/assets/radiolaria_ephemeral_workspace_hero.provenance.json",
+        "bytes": 3096,
+        "sha256": "03834cdc3a15598e84bd5fd6de65fef01928ef7d1ede7f60c8f10899dc12a5c9",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/claim_evidence_matrix_v01.json",
+        "bytes": 53719,
+        "sha256": "668d67956edaefb67cd36764e9654e89c9661d32e5f274d8e8cd4c6a96c679e0",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/ephemeral_workspace_showcase_v01.pdf",
+        "bytes": 433962,
+        "sha256": "f6eabe67a4a83f01cd2da6bb43f7736102dd40435793779dde67c22b85baf219",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/ephemeral_workspace_showcase_v01.pptx",
+        "bytes": 1416623,
+        "sha256": "10d9b695c59ed8d1836443d78680e91805caccec6e75af6add588d104fa10d7c",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/executive_one_pager_v01.md",
+        "bytes": 3053,
+        "sha256": "868a593db0c3d3d1db3ec263db3a63049d7f87d64d70ab077a60c6f4c03d1db6",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/executive_one_pager_v01.pdf",
+        "bytes": 1709612,
+        "sha256": "9292a7a7926c2581ceb8e260e6fa334851471f9af1ff73843494e6c6f0080c2e",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/presentation_content_v01.json",
+        "bytes": 50508,
+        "sha256": "a20692ae60e6f2b348af1670cc27a426c6671dca01965cf24c9e8b28f7485391",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/historical_semantic_memory_summary_v01.json",
+        "bytes": 19861,
+        "sha256": "c419cfc517c36bd4d561e4d684edc295937cd3c4d956e347155729fa25201a33",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/landing_verification_summary_v01.json",
+        "bytes": 1948,
+        "sha256": "6a5fa026a0a3fb031adaa529a515b682d65e2b5f5a6dd39dda29321073ba5019",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json",
+        "bytes": 83096,
+        "sha256": "6342561c728cb01d186b502ea218cd17cfde707fa578d67eddaf4e81a19307ca",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/reader_index_v01.json",
+        "bytes": 114431,
+        "sha256": "be295dba8b92e3b311830099e3c8ba8e413f04a5b44a185d2b383c6de40e4f8b",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/rendered_pdf_text_v01.json",
+        "bytes": 45945,
+        "sha256": "8c016bcaf99e75b47a6a6bcdf86676d0155ea2a672c56dc0f12a962f69de0091",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/slide_text_and_notes_v01.json",
+        "bytes": 53041,
+        "sha256": "018c12167cb7588cf6d6349fae8df72b872f54a34ea051c4fe326cdba50393b6",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/story.html",
+        "bytes": 50887,
+        "sha256": "671bcdc5afee17b590d58a8644f7bb2c674da568e2172820cca82772afdc0f36",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/technical_appendix_v01.md",
+        "bytes": 31024,
+        "sha256": "98f83c980284298586dcc86ba81003b5066c3f27ebae975cc3437ff3cf100cd7",
+        "mode": "100644"
+      },
+      {
+        "path": "docs/showcase/ephemeral_workspace_v01/technical_appendix_v01.pdf",
+        "bytes": 56063,
+        "sha256": "4812f9e434169932c94e0b4135aaf9f8a885c9995c55bf615f862e9cced8e97e",
+        "mode": "100644"
+      }
+    ],
+    "commit_message": "Publish Ephemeral Workspace presentation and source-bound reader",
+    "historical_runtime": "UNCHANGED_RECORDED_NOT_FRESH_PASS",
+    "covered_by_original_anchor": false,
+    "independent_publication_pin": "693fc6b5c2e8499161b40dc7bb6c22a21ca040c38325f1e657f176e9ff7bf525",
+    "source_identity_projection": "ONLY_NEW_GUARD_PRESENTATION_LITERAL_EXCLUDED; DETACHED_MANIFEST_BINDS_RAW_BYTES",
+    "living_registration": "EXISTING_NINE_ROWS_UNCHANGED_NO_NEW_PROFILE"
   }
 }

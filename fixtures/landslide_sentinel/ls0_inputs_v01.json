@@ -1,0 +1,14 @@
+{
+  "site": "slope_demo_site_001",
+  "reference_note": "Check reference integrity before diagnosing a sudden offset; an independent reserve series is available.",
+  "frames": [
+    {"sensor": "rainfall", "value": 12000, "unit": "mm_x1000", "scenario_tick": 0, "healthy": true, "calibration": "calibration:sentinel:v01"},
+    {"sensor": "displacement", "value": 400, "unit": "um", "scenario_tick": 0, "healthy": true, "calibration": "calibration:sentinel:v01"},
+    {"sensor": "reserve", "value": 350, "unit": "um", "scenario_tick": 0, "healthy": true, "calibration": "calibration:sentinel:v01"}
+  ],
+  "changed_rainfall": {"sensor": "rainfall", "value": 41000, "unit": "mm_x1000", "scenario_tick": 30, "healthy": true, "calibration": "calibration:sentinel:v01"},
+  "critical_local": [
+    {"sensor": "displacement", "value": 6200, "unit": "um", "scenario_tick": 90, "healthy": true, "calibration": "calibration:sentinel:v01"},
+    {"sensor": "reserve", "value": 5800, "unit": "um", "scenario_tick": 90, "healthy": true, "calibration": "calibration:sentinel:v01"}
+  ]
+}

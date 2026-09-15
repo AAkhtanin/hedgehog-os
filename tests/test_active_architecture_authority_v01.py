@@ -15,6 +15,94 @@ import textwrap
 import pytest
 
 
+def test_sentinel_real_git_states_and_hostile_neighbors_v01(tmp_path):
+    namespace = runpy.run_path(str(GUARD_PATH))
+    base = namespace['SENTINEL_BASE_V01']
+    root = tmp_path / 'sentinel'
+    subprocess.run(('git','clone','--no-hardlinks','--no-checkout',str(REPOSITORY_ROOT),str(root)),check=True,capture_output=True)
+    def git(*args, **kwargs):
+        return subprocess.check_output(('git',*args),cwd=root,**kwargs).decode().strip()
+    git('checkout','main')
+    git('update-ref','refs/remotes/origin/main',base)
+    # Execute the unmodified predecessor before adding the complete proposal.
+    before = subprocess.run((sys.executable,str(root/'tools/check_active_architecture_authority_v01.py'),'--root',str(root)),cwd=root,capture_output=True,text=True)
+    assert before.returncode == 0 and 'EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED' in before.stdout, before.stdout + before.stderr
+    for path in namespace['SENTINEL_PATH_ACTIONS_V01']:
+        target=root/path;target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copy2(REPOSITORY_ROOT/path,target)
+        assert target.stat().st_ino != (REPOSITORY_ROOT/path).stat().st_ino
+    def check(phase=None,reason=None):
+        errors=[];actual=namespace['_validate_landslide_sentinel_admission_v01'](root,errors)
+        public=subprocess.run((sys.executable,str(root/'tools/check_active_architecture_authority_v01.py'),'--root',str(root)),cwd=root,capture_output=True,text=True)
+        if reason:
+            assert reason in errors,(reason,errors)
+            assert public.returncode != 0 and reason in public.stdout+public.stderr
+        else:
+            assert errors==[] and actual==phase,(errors,actual)
+            assert public.returncode==0 and 'LANDSLIDE_SENTINEL_PHASE='+phase in public.stdout,public.stdout+public.stderr
+        print('SENTINEL_CONTROL='+str(reason or phase),flush=True)
+    unstaged='SENTINEL_ADMISSION_CANDIDATE_UNSTAGED';staged='SENTINEL_ADMISSION_CANDIDATE_STAGED';committed='SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED'
+    check(unstaged)
+    source='hedgehog/domains/landslide_sentinel/contracts_v01.py'
+    package='docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json'
+    for path in (source,package):
+        file=root/path;body=file.read_bytes();file.write_bytes(body+b'\n')
+        check(reason='sentinel.source_identity:'+path);file.write_bytes(body)
+    file=root/source;file.chmod(0o755);check(reason='sentinel.mode:'+source);file.chmod(0o644)
+    body=file.read_bytes();file.unlink();check(reason='sentinel.file_type:'+source)
+    file.symlink_to(REPOSITORY_ROOT/source);check(reason='sentinel.file_type:'+source);file.unlink();file.write_bytes(body)
+    extra=root/'unapproved_sentinel.txt';extra.write_text('Unapproved\n');check(reason='sentinel.candidate.exact_ledger');extra.unlink()
+    overlay=root/'release/current_status_overlay_v01.json';body=overlay.read_bytes();value=json.loads(body)
+    value['landslide_sentinel_admission_v01']['authority']='ROOT';overlay.write_text(json.dumps(value)+'\n')
+    check(reason='sentinel.admission_metadata');overlay.write_bytes(body)
+    git('add','--',source);check(reason='sentinel.candidate.exact_ledger');git('read-tree',base)
+    for flag,undo,reason in (('--assume-unchanged','--no-assume-unchanged','sentinel.index.flags'),('--skip-worktree','--no-skip-worktree','sentinel.index.hidden_flags')):
+        git('update-index',flag,'README.md');check(reason=reason);git('update-index',undo,'README.md')
+    marker=root/'.git/MERGE_HEAD';marker.write_text(base+'\n');check(reason='sentinel.git_operation:MERGE_HEAD');marker.unlink()
+    git('update-ref','refs/heads/foreign',base);git('symbolic-ref','HEAD','refs/heads/foreign');check(reason='sentinel.branch');git('symbolic-ref','HEAD','refs/heads/main')
+    parent=namespace['SENTINEL_BASE_PARENT_V01']
+    git('update-ref','refs/remotes/origin/main',parent);check(reason='sentinel.candidate.basis_origin');git('update-ref','refs/remotes/origin/main',base)
+    git('update-ref','refs/heads/main',parent);check(reason='sentinel.exact_immediate_base_child');git('update-ref','refs/heads/main',base)
+    check(unstaged);git('add','--',*sorted(namespace['SENTINEL_PATH_ACTIONS_V01']));check(staged)
+    tree=git('write-tree');env=dict(os.environ,GIT_AUTHOR_NAME='Isolated Sentinel fixture',GIT_AUTHOR_EMAIL='fixture@example.invalid',GIT_COMMITTER_NAME='Isolated Sentinel fixture',GIT_COMMITTER_EMAIL='fixture@example.invalid')
+    child=git('commit-tree',tree,'-p',base,'-m',namespace['SENTINEL_COMMIT_MESSAGE_V01'],env=env)
+    git('update-ref','refs/heads/main',child);check(committed)
+    git('update-ref','refs/remotes/origin/main',child);check(committed)
+    foreign=git('commit-tree',tree,'-p',base,'-m','Isolated foreign sibling',env=env)
+    git('update-ref','refs/remotes/origin/main',foreign);check(reason='sentinel.committed.origin');git('update-ref','refs/remotes/origin/main',child)
+    for parents in ((child,),(base,foreign)):
+        args=[arg for parent in parents for arg in ('-p',parent)]
+        bad=git('commit-tree',tree,*args,'-m','Isolated wrong generation or merge',env=env)
+        git('update-ref','refs/heads/main',bad);check(reason='sentinel.exact_immediate_base_child')
+    git('update-ref','refs/heads/main',child);check(committed)
+
+
+def test_sentinel_exact_sources_and_historical_predicates_v01():
+    namespace=runpy.run_path(str(GUARD_PATH));base=namespace['SENTINEL_BASE_V01']
+    old=subprocess.check_output(('git','show',base+':tools/check_active_architecture_authority_v01.py'),cwd=REPOSITORY_ROOT)
+    before=ast.parse(old);after=ast.parse(GUARD_PATH.read_bytes())
+    functions={n.name:n for n in after.body if isinstance(n,ast.FunctionDef)}
+    for n in before.body:
+        if isinstance(n,ast.FunctionDef) and n.name not in ('collect_failures','main'):
+            assert ast.dump(n)==ast.dump(functions[n.name]),n.name
+    constants=lambda tree:{ast.dump(n.targets[0]):ast.dump(n) for n in tree.body if isinstance(n,ast.Assign)}
+    assert all(constants(after).get(k)==v for k,v in constants(before).items())
+    digest=namespace['_sentinel_source_digest_v01'];pins=namespace['SENTINEL_SOURCE_IDENTITIES_V01']
+    for path,pin in pins.items():
+        raw=(REPOSITORY_ROOT/path).read_bytes();assert digest(path,raw)==pin,path
+        assert digest(path,raw+b'\n# Changed\n')!=pin
+    p='tools/check_active_architecture_authority_v01.py'
+    raw=('SENTINEL_SOURCE_IDENTITIES_V01 = {"'+p+'": "'+'a'*64+'", "other": "'+'b'*64+'"}\n').encode()
+    assert digest(p,raw)==digest(p,raw.replace(b'a'*64,b'c'*64))
+    assert digest(p,raw)!=digest(p,raw.replace(b'b'*64,b'c'*64))
+    for malformed in (raw+raw,raw.replace(b'"other"',('"'+p+'"').encode()),raw.replace(b'a'*64,b'wrong')):
+        with pytest.raises(ValueError):digest(p,malformed)
+    import tomllib
+    options=tomllib.loads((REPOSITORY_ROOT/'pyproject.toml').read_text())['tool']['pytest']['ini_options']['addopts']
+    old_options=tomllib.loads(subprocess.check_output(('git','show',base+':pyproject.toml'),cwd=REPOSITORY_ROOT).decode())['tool']['pytest']['ini_options']['addopts']
+    assert options==old_options+[f'--ignore=tests/test_landslide_sentinel_ls{i}_v01.py' for i in range(3)]
+
+
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 GUARD_PATH = REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"
 E5_IMPLEMENTATION_BASIS_COMMIT = "f582701208b603463a03d404aa841c302a8221d6"

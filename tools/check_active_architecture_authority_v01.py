@@ -1186,6 +1186,428 @@ EWS_PRESENTATION_SOURCE_IDENTITIES_V01 = {'AGENTS.md': 'c0461e79ffd9ddd8dd9de723
  'tools/check_active_architecture_authority_v01.py': 'b255cf2ecb04cbf39a23ace597034a0d2715a1ade551b4ecc625326b5d412be9'}
 
 
+# Exact Sentinel source successor. The prior classifiers and constants are unchanged.
+SENTINEL_BASE_V01 = '50ab3916bff55e8034cf7e6c509d4803c5447589'
+SENTINEL_BASE_PARENT_V01 = '3f8720b75a1bda3a1df6b184e643c2de5327f838'
+SENTINEL_BASE_TREE_V01 = '9de6789b6a53eb2c4f8abed919985981838ebe63'
+SENTINEL_COMMIT_MESSAGE_V01 = 'Admit Landslide Sentinel v0.1 and source-bound showcase evidence'
+SENTINEL_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'README.md': 'M',
+ 'demo/run_landslide_sentinel_ls0_v01.py': 'A',
+ 'demo/run_landslide_sentinel_ls1_v01.py': 'A',
+ 'demo/run_landslide_sentinel_ls2_v01.py': 'A',
+ 'demo/run_living_gauntlet_v01.py': 'M',
+ 'docs/demo_designs/landslide_sentinel_v01.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/EVIDENCE.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/README.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/SHA256SUMS': 'A',
+ 'docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/source_index_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/verify_replay.sh': 'A',
+ 'fixtures/landslide_sentinel/ls0_inputs_v01.json': 'A',
+ 'fixtures/landslide_sentinel/ls1_inputs_v01.json': 'A',
+ 'fixtures/landslide_sentinel/ls2_inputs_v01.json': 'A',
+ 'hedgehog/domains/landslide_sentinel/__init__.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/capability_registry_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/contracts_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/contrasts_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/events_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/evidence_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/incident_policy_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/outbox_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py': 'A',
+ 'pyproject.toml': 'M',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_landslide_sentinel_ls0_v01.py': 'A',
+ 'tests/test_landslide_sentinel_ls1_v01.py': 'A',
+ 'tests/test_landslide_sentinel_ls2_v01.py': 'A',
+ 'tests/test_living_gauntlet_v01_runner.py': 'M',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+SENTINEL_PATH_MODES_V01 = {'AGENTS.md': '100644',
+ 'README.md': '100644',
+ 'demo/run_landslide_sentinel_ls0_v01.py': '100644',
+ 'demo/run_landslide_sentinel_ls1_v01.py': '100644',
+ 'demo/run_landslide_sentinel_ls2_v01.py': '100644',
+ 'demo/run_living_gauntlet_v01.py': '100644',
+ 'docs/demo_designs/landslide_sentinel_v01.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/EVIDENCE.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/README.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/SHA256SUMS': '100644',
+ 'docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/source_index_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/verify_replay.sh': '100755',
+ 'fixtures/landslide_sentinel/ls0_inputs_v01.json': '100644',
+ 'fixtures/landslide_sentinel/ls1_inputs_v01.json': '100644',
+ 'fixtures/landslide_sentinel/ls2_inputs_v01.json': '100644',
+ 'hedgehog/domains/landslide_sentinel/__init__.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/capability_registry_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/contracts_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/contrasts_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/events_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/evidence_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/incident_policy_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/outbox_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py': '100644',
+ 'hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py': '100644',
+ 'pyproject.toml': '100644',
+ 'release/current_status_overlay_v01.json': '100644',
+ 'release/successor_context_manifest_v01.json': '100644',
+ 'specs/current_architecture_lock_v01.md': '100644',
+ 'specs/document_authority_index_v01.json': '100644',
+ 'tests/test_active_architecture_authority_v01.py': '100644',
+ 'tests/test_landslide_sentinel_ls0_v01.py': '100644',
+ 'tests/test_landslide_sentinel_ls1_v01.py': '100644',
+ 'tests/test_landslide_sentinel_ls2_v01.py': '100644',
+ 'tests/test_living_gauntlet_v01_runner.py': '100644',
+ 'tests/test_repository_release_spine_v01.py': '100644',
+ 'tools/check_active_architecture_authority_v01.py': '100644'}
+SENTINEL_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '4565c007f3c3cbc672fe4e0f883d860a51ac20bb238c06f7e2dab3cb85ca9751',
+ 'README.md': '1a8460836091303936de55437ba9250680ccf409cb8fa9b2b754179f1dced8af',
+ 'demo/run_landslide_sentinel_ls0_v01.py': '69831ef4dcd4503b4d75e796cbfb3bb8688b3109c59d8e404e78bec2491fb0ba',
+ 'demo/run_landslide_sentinel_ls1_v01.py': '6166b954a3ebad4d1e7a2b1a0321d4502bcf797a50c7ebbea15835825cecd597',
+ 'demo/run_landslide_sentinel_ls2_v01.py': 'e0ff341fe93e74073a46b74d888f801d290830b6548ebf738115c4d16dfe0711',
+ 'demo/run_living_gauntlet_v01.py': '8e2d529c0b03a3dbdb353ac061736d5b4383a3b5ef301b26f80d20e68e00fae9',
+ 'docs/demo_designs/landslide_sentinel_v01.md': '90564aa3f8e15898c39391c7865e1735ffbe68b12a3a7f00797c2781903e43e1',
+ 'docs/showcase/landslide_sentinel_v01/EVIDENCE.md': 'a847ff4b1582666b8da192a231a2c8a8006e5deba28a3f74c07a14bfb7927a1f',
+ 'docs/showcase/landslide_sentinel_v01/README.md': '2092220430550923ba9f6cd4c947c56814b452191472b2456e609d54ade49aa7',
+ 'docs/showcase/landslide_sentinel_v01/SHA256SUMS': 'fd50bd5a640b081668b25954972774c79a48d0ed00bfa1b6b36629b16bf7c81c',
+ 'docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json': '3fd54a3dc278ec65335034802a0934933a21ec9c3c8fe51d8063df33471bbd7b',
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json': '061b48f6c51d2e9ed4ef0254229f5f08fd7b58821794eb26e773883264836f0f',
+ 'docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json': '3a5c698796419ba5747d4062dd5c4db78de62f9e88b007d15121ff4eaf1218ef',
+ 'docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json': '23888cc67ce1ab637d2defbfe14bcb9a5f6a2cfa55ecf7a9e5259f653cd89101',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json': 'd9be468f9cca3593c993d9b9cbfaaf7a519db31719b3e10ca3719f7b24f0c83e',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json': '9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881',
+ 'docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json': '39239fedb6186d5205ed1ffad0141332c874232ad907a4d5b54e2cfcdb5a1607',
+ 'docs/showcase/landslide_sentinel_v01/source_index_v01.json': '991db7b54b406d785c48471fa3e620632f0a171b58688dc8fe943182522b1b6a',
+ 'docs/showcase/landslide_sentinel_v01/verify_replay.sh': '187cfa17308e2ec42424600a121e6a8b247732caebc385792a0aa8090b406b84',
+ 'fixtures/landslide_sentinel/ls0_inputs_v01.json': '7ee7ee607179d0e4b981fd84e9397914a2c067fe7eaa8d719e4b32bd75d78a40',
+ 'fixtures/landslide_sentinel/ls1_inputs_v01.json': 'abb013d9f2618775087a2cc570e4b57d99a2d3aea6a7799a82fbfdfd2be2b0ab',
+ 'fixtures/landslide_sentinel/ls2_inputs_v01.json': '7edd9f9eed21ee91439f8011d82e4c0cf354e01ff65e17a5bc96ca0ee4faa9c6',
+ 'hedgehog/domains/landslide_sentinel/__init__.py': '3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5',
+ 'hedgehog/domains/landslide_sentinel/capability_registry_v01.py': '2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28',
+ 'hedgehog/domains/landslide_sentinel/contracts_v01.py': 'bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226',
+ 'hedgehog/domains/landslide_sentinel/contrasts_v01.py': 'd528ee2471a87b0aaf1eee7044dd013c3254b864d9fc17d8ddde0a38e0fb5d57',
+ 'hedgehog/domains/landslide_sentinel/events_v01.py': 'e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be',
+ 'hedgehog/domains/landslide_sentinel/evidence_v01.py': '0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27',
+ 'hedgehog/domains/landslide_sentinel/incident_policy_v01.py': '9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947',
+ 'hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py': '9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '53417d829ea281d21b16e31f4760763ae60d57bd9a8cafdf301ad90e642461ab',
+ 'hedgehog/domains/landslide_sentinel/outbox_v01.py': 'c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e',
+ 'hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py': '4662e5b4d83be23e9390f0a8232ba76fa003d925306c0c951013168297ef5d29',
+ 'hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py': '6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa',
+ 'pyproject.toml': '86485a92ac1bdaa3a73743190e70eda2ac37d66cb4d7653f69fb81d70f319ee6',
+ 'release/current_status_overlay_v01.json': '63571108c6aadfd72750889d0099c5122f42f8be3b9dc5a6853712039494c564',
+ 'release/successor_context_manifest_v01.json': '366ff9b8ed71b1a773fc57946ebf2fa6bc099f894dae9e202d7368a63318b288',
+ 'specs/current_architecture_lock_v01.md': '6c5ece93c569a3a55115750b42bd4143184e132233413db1d026661b330e1457',
+ 'specs/document_authority_index_v01.json': '8fba19abc8d20823acce7bb9cee5ce634168effe38f47941bb86c7166ffc1c37',
+ 'tests/test_active_architecture_authority_v01.py': 'a87fdf3bcd00f22ddbeb3229637843eca0b7372ee2c5a0f1965a7f0410908e7b',
+ 'tests/test_landslide_sentinel_ls0_v01.py': 'fde4c1fa2c4d4fd3ae4fad96dbcc20416ac3fb47ca245e5b47e40f91c70e4dc4',
+ 'tests/test_landslide_sentinel_ls1_v01.py': '28c72c093878208d39f97df1c276734ac611bc26b9c86343a5fb941494c3f7ef',
+ 'tests/test_landslide_sentinel_ls2_v01.py': '189ac7bf0393fb2d5458535ea6ff7203ffd450dfd5ddc71b525acc51cb33b445',
+ 'tests/test_living_gauntlet_v01_runner.py': 'beda603de47d7d8ef83afe1b3ba344970feed4296c143880ed6035bc9eba8281',
+ 'tests/test_repository_release_spine_v01.py': '0ffd6ddcb55c74703598a4f268acbffe2047a15d2e8e5c0d08882bab77411a2d',
+ 'tools/check_active_architecture_authority_v01.py': 'db8f442ea738962ad5c3ea98f1d5056d5cb8fb7482c17d32fd2e15f620ba2307'}
+SENTINEL_ADMISSION_METADATA_V01 = {'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_PERMISSION',
+ 'basis': '50ab3916bff55e8034cf7e6c509d4803c5447589',
+ 'basis_parent': '3f8720b75a1bda3a1df6b184e643c2de5327f838',
+ 'basis_tree': '9de6789b6a53eb2c4f8abed919985981838ebe63',
+ 'control_count': 12,
+ 'detached_binding': 'EVERY_FINAL_BODY_AND_MODE_PINNED_BY_EXECUTED_APPLY_MANIFEST',
+ 'effect_owner': 'EXISTING_EXCLUSIVE_FIREWALL',
+ 'excluded_from_automatic_onboarding': True,
+ 'living_rows': 9,
+ 'new_gate': False,
+ 'path_actions': {'AGENTS.md': 'M',
+                  'README.md': 'M',
+                  'demo/run_landslide_sentinel_ls0_v01.py': 'A',
+                  'demo/run_landslide_sentinel_ls1_v01.py': 'A',
+                  'demo/run_landslide_sentinel_ls2_v01.py': 'A',
+                  'demo/run_living_gauntlet_v01.py': 'M',
+                  'docs/demo_designs/landslide_sentinel_v01.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/EVIDENCE.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/README.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/SHA256SUMS': 'A',
+                  'docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/source_index_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/verify_replay.sh': 'A',
+                  'fixtures/landslide_sentinel/ls0_inputs_v01.json': 'A',
+                  'fixtures/landslide_sentinel/ls1_inputs_v01.json': 'A',
+                  'fixtures/landslide_sentinel/ls2_inputs_v01.json': 'A',
+                  'hedgehog/domains/landslide_sentinel/__init__.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/capability_registry_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/contracts_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/contrasts_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/events_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/evidence_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/incident_policy_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/outbox_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py': 'A',
+                  'pyproject.toml': 'M',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_landslide_sentinel_ls0_v01.py': 'A',
+                  'tests/test_landslide_sentinel_ls1_v01.py': 'A',
+                  'tests/test_landslide_sentinel_ls2_v01.py': 'A',
+                  'tests/test_living_gauntlet_v01_runner.py': 'M',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'path_modes': {'AGENTS.md': '100644',
+                'README.md': '100644',
+                'demo/run_landslide_sentinel_ls0_v01.py': '100644',
+                'demo/run_landslide_sentinel_ls1_v01.py': '100644',
+                'demo/run_landslide_sentinel_ls2_v01.py': '100644',
+                'demo/run_living_gauntlet_v01.py': '100644',
+                'docs/demo_designs/landslide_sentinel_v01.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/EVIDENCE.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/README.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/SHA256SUMS': '100644',
+                'docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/source_index_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/verify_replay.sh': '100755',
+                'fixtures/landslide_sentinel/ls0_inputs_v01.json': '100644',
+                'fixtures/landslide_sentinel/ls1_inputs_v01.json': '100644',
+                'fixtures/landslide_sentinel/ls2_inputs_v01.json': '100644',
+                'hedgehog/domains/landslide_sentinel/__init__.py': '100644',
+                'hedgehog/domains/landslide_sentinel/capability_registry_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/contracts_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/contrasts_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/events_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/evidence_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/incident_policy_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/outbox_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py': '100644',
+                'hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py': '100644',
+                'pyproject.toml': '100644',
+                'release/current_status_overlay_v01.json': '100644',
+                'release/successor_context_manifest_v01.json': '100644',
+                'specs/current_architecture_lock_v01.md': '100644',
+                'specs/document_authority_index_v01.json': '100644',
+                'tests/test_active_architecture_authority_v01.py': '100644',
+                'tests/test_landslide_sentinel_ls0_v01.py': '100644',
+                'tests/test_landslide_sentinel_ls1_v01.py': '100644',
+                'tests/test_landslide_sentinel_ls2_v01.py': '100644',
+                'tests/test_living_gauntlet_v01_runner.py': '100644',
+                'tests/test_repository_release_spine_v01.py': '100644',
+                'tools/check_active_architecture_authority_v01.py': '100644'},
+ 'presentation': 'NOT_STARTED',
+ 'profile': 'EXACT_SENTINEL_SOURCE_AND_INFORMATIONAL_SHOWCASE',
+ 'reviewed_semantics': 'ACCEPTED_WITHIN_DECLARED_SYNTHETIC_SCOPE',
+ 'self_hash_exclusion': 'ONLY_SENTINEL_SOURCE_IDENTITIES_V01_OWN_GUARD_LITERAL',
+ 'showcase': 'docs/showcase/landslide_sentinel_v01/README.md',
+ 'showcase_count': 12,
+ 'showcase_normative': False,
+ 'source_count': 22,
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED',
+ 'test_derivation': 'tests/test_landslide_sentinel_ls2_v01.py:TWO_STALE_SETUPS_ONLY'}
+
+
+def _sentinel_requested_v01(root: Path) -> bool:
+    if any((root / p).exists() or (root / p).is_symlink()
+           for p, action in SENTINEL_PATH_ACTIONS_V01.items() if action == 'A'):
+        return True
+    for p in (INDEX_PATH, MANIFEST_PATH, 'release/current_status_overlay_v01.json'):
+        try:
+            if '"landslide_sentinel_admission_v01"' in (root / p).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _sentinel_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude only this guard's own single digest literal, never another pin."""
+    if path != 'tools/check_active_architecture_authority_v01.py':
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode('utf-8')).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(n, ast.Name) and n.id == 'SENTINEL_SOURCE_IDENTITIES_V01' for target in targets for n in ast.walk(target)):
+            nodes.append(node)
+    if len(nodes) != 1 or not isinstance(nodes[0], ast.Assign) or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name) or not isinstance(nodes[0].value, ast.Dict):
+        raise ValueError('sentinel self identity projection')
+    node = nodes[0]
+    if any(not isinstance(k, ast.Constant) or type(k.value) is not str for k in node.value.keys):
+        raise ValueError('sentinel self identity projection')
+    names = [k.value for k in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError('sentinel self identity projection')
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or type(value.value) is not str or re.fullmatch(r'[0-9a-f]{64}', value.value) is None or value.end_lineno != value.lineno or value.end_col_offset is None:
+        raise ValueError('sentinel self identity projection')
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if re.fullmatch(br"(['\"])[0-9a-f]{64}\1", literal) is None or literal[1:-1].decode('ascii') != value.value:
+        raise ValueError('sentinel self identity projection')
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_SENTINEL_V01"' + body[end:]).hexdigest()
+
+
+def _classify_sentinel_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                                branch: str, status: dict[str, str], delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    errors: list[str] = []
+    phase = 'SENTINEL_INVALID'
+    if branch != 'main':
+        errors.append('sentinel.branch')
+    if head == SENTINEL_BASE_V01:
+        if parents != (SENTINEL_BASE_PARENT_V01,) or origin != SENTINEL_BASE_V01:
+            errors.append('sentinel.candidate.basis_origin')
+        unstaged = {p: '??' if op == 'A' else ' M' for p, op in SENTINEL_PATH_ACTIONS_V01.items()}
+        staged = {p: op + ' ' for p, op in SENTINEL_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = 'SENTINEL_ADMISSION_CANDIDATE_UNSTAGED'
+        elif status == staged:
+            phase = 'SENTINEL_ADMISSION_CANDIDATE_STAGED'
+        else:
+            errors.append('sentinel.candidate.exact_ledger')
+        if delta:
+            errors.append('sentinel.candidate.delta')
+    elif parents == (SENTINEL_BASE_V01,):
+        phase = 'SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED'
+        if origin not in (SENTINEL_BASE_V01, head):
+            errors.append('sentinel.committed.origin')
+        if status or delta != SENTINEL_PATH_ACTIONS_V01:
+            errors.append('sentinel.committed.clean_exact_delta')
+    else:
+        errors.append('sentinel.exact_immediate_base_child')
+    return phase, tuple(errors)
+
+
+def _validate_landslide_sentinel_admission_v01(root: Path, failures: list[str]) -> str:
+    """Exact source admission, not runtime acceptance or action permission."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+    head = git('rev-parse', 'HEAD').decode().strip()
+    parents = tuple(git('rev-list', '--parents', '-n', '1', 'HEAD').decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label='sentinel.status', failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, SENTINEL_BASE_V01 + '..HEAD', failures), label='sentinel.delta', failures=failures)
+    phase, errors = _classify_sentinel_ledger_v01(head=head, parents=parents,
+        origin=git('rev-parse', 'refs/remotes/origin/main').decode().strip(),
+        branch=git('branch', '--show-current').decode().strip(), status=status, delta=delta)
+    failures.extend(errors)
+    if git('rev-parse', SENTINEL_BASE_V01 + '^{tree}').decode().strip() != SENTINEL_BASE_TREE_V01:
+        failures.append('sentinel.base.tree')
+    if git('rev-list', '--parents', '-n', '1', SENTINEL_BASE_V01).decode().split() != [SENTINEL_BASE_V01, SENTINEL_BASE_PARENT_V01]:
+        failures.append('sentinel.base.parent')
+    baseline = _u1_tree_v01(git('ls-tree', '-rz', SENTINEL_BASE_V01), failures)
+    if len(baseline) != 1027 or set(SENTINEL_PATH_ACTIONS_V01) != set(SENTINEL_SOURCE_IDENTITIES_V01) or set(SENTINEL_PATH_MODES_V01) != set(SENTINEL_PATH_ACTIONS_V01):
+        failures.append('sentinel.exact_inventory')
+    actual: dict[str, tuple[str, str]] = {}
+    for path in sorted(set(baseline) | set(SENTINEL_PATH_ACTIONS_V01)):
+        file = root / path
+        if file.is_symlink() or not file.is_file() or any(p.is_symlink() for p in file.parents if p != root and root in p.parents):
+            failures.append('sentinel.file_type:' + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = ('100755' if mode & 0o111 else '100644', hashlib.sha1(b'blob ' + str(len(body)).encode() + b'\0' + body).hexdigest())
+        if path in SENTINEL_PATH_ACTIONS_V01:
+            if mode != int(SENTINEL_PATH_MODES_V01[path][-3:], 8):
+                failures.append('sentinel.mode:' + path)
+            try:
+                if _sentinel_source_digest_v01(path, body) != SENTINEL_SOURCE_IDENTITIES_V01[path]:
+                    failures.append('sentinel.source_identity:' + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append('sentinel.identity_projection:' + path)
+            if (path in baseline) != (SENTINEL_PATH_ACTIONS_V01[path] == 'M') or actual[path] == baseline.get(path):
+                failures.append('sentinel.path_action:' + path)
+        elif actual[path] != baseline[path]:
+            failures.append('sentinel.frozen_source:' + path)
+    index: dict[str, tuple[str, str]] = {}
+    for row in git('ls-files', '--stage', '-z').split(b'\0'):
+        if not row:
+            continue
+        try:
+            meta, name = row.split(b'\t');mode, oid, stage = meta.decode().split();path = name.decode()
+            if stage != '0' or path in index:
+                failures.append('sentinel.index.stage_duplicate')
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append('sentinel.index.parse')
+    if index != (baseline if phase == 'SENTINEL_ADMISSION_CANDIDATE_UNSTAGED' else actual):
+        failures.append('sentinel.index.content_mode_worktree')
+    if any(row and not row.startswith(b'H ') for row in git('ls-files', '-v', '-z').split(b'\0')):
+        failures.append('sentinel.index.flags')
+    if any(int(f, 16) != 0 for f in re.findall(r'flags: ([a-fA-F0-9]+)', git('ls-files', '--debug').decode())):
+        failures.append('sentinel.index.hidden_flags')
+    if phase == 'SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED':
+        if _u1_tree_v01(git('ls-tree', '-rz', 'HEAD'), failures) != actual:
+            failures.append('sentinel.committed.tree')
+        if git('show', '-s', '--format=%B', 'HEAD').decode().strip() != SENTINEL_COMMIT_MESSAGE_V01:
+            failures.append('sentinel.committed.message')
+    for marker in ('index','MERGE_HEAD','REBASE_HEAD','CHERRY_PICK_HEAD','REVERT_HEAD','BISECT_LOG','rebase-merge','rebase-apply','sequencer','index.lock','HEAD.lock','packed-refs.lock'):
+        p = Path(git('rev-parse', '--git-path', marker).decode().strip())
+        if not p.is_absolute():
+            p = root / p
+        if (marker == 'index' and (p.is_symlink() or not p.is_file())) or (marker != 'index' and p.exists()):
+            failures.append('sentinel.git_operation:' + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, 'release/current_status_overlay_v01.json'):
+        value = _load_json(root / path, 'sentinel.json:' + path, failures)
+        old = json.loads(git('show', SENTINEL_BASE_V01 + ':' + path))
+        if {k:v for k,v in value.items() if k not in ('landslide_sentinel_admission_v01','landslide_sentinel_current_registration_v01')} != old:
+            failures.append('sentinel.historical_metadata:' + path)
+        if value.get('landslide_sentinel_admission_v01') != SENTINEL_ADMISSION_METADATA_V01:
+            failures.append('sentinel.admission_metadata')
+    if not failures:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('sentinel_admission_living_v01', root / 'demo/run_living_gauntlet_v01.py')
+        if spec is None or spec.loader is None:
+            failures.append('sentinel.living.import_spec')
+        else:
+            living = importlib.util.module_from_spec(spec);sys.modules[spec.name] = living
+            try:
+                spec.loader.exec_module(living)
+                _, errors = living._current_registration_v01(root)
+                failures.extend('sentinel.' + error for error in errors)
+            except (ImportError, ValueError, OSError) as exc:
+                failures.append('sentinel.living.import:' + type(exc).__name__)
+            finally:
+                sys.modules.pop(spec.name, None)
+    return phase
+
+
 def _ews_presentation_requested_v01(root: Path) -> bool:
     if any((root / path).exists() or (root / path).is_symlink()
            for path, action in EWS_PRESENTATION_PATH_ACTIONS_V01.items() if action == "A"):
@@ -13735,6 +14157,9 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    if _sentinel_requested_v01(root):
+        _validate_landslide_sentinel_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
     if _ews_presentation_requested_v01(root):
         _validate_ephemeral_workspace_presentation_admission_v01(root, failures)
         return tuple(sorted(set(failures)))
@@ -13876,6 +14301,14 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        if _sentinel_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_landslide_sentinel_admission_v01(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("sentinel.state_changed_during_guard")
+            print("LANDSLIDE_SENTINEL_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_NEW_GATE_OR_EFFECT_HANDLE")
+            return 0
         if _ews_presentation_requested_v01(args.root.resolve()):
             current_errors: list[str] = []
             phase = _validate_ephemeral_workspace_presentation_admission_v01(args.root.resolve(), current_errors)

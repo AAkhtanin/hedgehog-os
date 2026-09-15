@@ -1,5 +1,19 @@
 # Hedgehog OS
 
+## Landslide Sentinel: Bounded Source Admission
+
+The exact `landslide_sentinel_admission_v01` succeeds accepted main
+`50ab3916bff55e8034cf7e6c509d4803c5447589` with 22 reviewed domain paths (one test-only
+setup alignment), 12 named controls and the pinned informational showcase.
+The guard recognizes only the complete unstaged/staged proposal or its clean
+sole-parent child. Git derives the commit; source admission grants no Root
+permission, new Gate or effect owner. The same nine Living rows remain.
+[Current Sentinel evidence and commands](docs/showcase/landslide_sentinel_v01/README.md) separate
+reviewed synthetic semantics, recorded execution and safe-derived replay from
+physical certification. Showcase material is excluded from normative onboarding.
+This section takes current navigation precedence; all historical EWS, Testflix,
+U4 and earlier constants, runtime and authority laws remain unchanged.
+
 ## Ephemeral Workspace v0.1
 
 [Explore the photo workspace and verified safe evidence](docs/showcase/ephemeral_workspace_v01/README.md).

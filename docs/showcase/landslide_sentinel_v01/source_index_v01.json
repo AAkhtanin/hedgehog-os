@@ -1,0 +1,183 @@
+{
+  "basis": "50ab3916bff55e8034cf7e6c509d4803c5447589",
+  "reviewed_archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+  "sources": [
+    {
+      "path": "demo/run_landslide_sentinel_ls0_v01.py",
+      "mode": "100644",
+      "bytes": 4304,
+      "sha256": "69831ef4dcd4503b4d75e796cbfb3bb8688b3109c59d8e404e78bec2491fb0ba",
+      "reviewed_ls2r2_sha256": "69831ef4dcd4503b4d75e796cbfb3bb8688b3109c59d8e404e78bec2491fb0ba",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "demo/run_landslide_sentinel_ls1_v01.py",
+      "mode": "100644",
+      "bytes": 9947,
+      "sha256": "6166b954a3ebad4d1e7a2b1a0321d4502bcf797a50c7ebbea15835825cecd597",
+      "reviewed_ls2r2_sha256": "6166b954a3ebad4d1e7a2b1a0321d4502bcf797a50c7ebbea15835825cecd597",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "demo/run_landslide_sentinel_ls2_v01.py",
+      "mode": "100644",
+      "bytes": 11358,
+      "sha256": "e0ff341fe93e74073a46b74d888f801d290830b6548ebf738115c4d16dfe0711",
+      "reviewed_ls2r2_sha256": "e0ff341fe93e74073a46b74d888f801d290830b6548ebf738115c4d16dfe0711",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "docs/demo_designs/landslide_sentinel_v01.md",
+      "mode": "100644",
+      "bytes": 18831,
+      "sha256": "90564aa3f8e15898c39391c7865e1735ffbe68b12a3a7f00797c2781903e43e1",
+      "reviewed_ls2r2_sha256": "90564aa3f8e15898c39391c7865e1735ffbe68b12a3a7f00797c2781903e43e1",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "fixtures/landslide_sentinel/ls0_inputs_v01.json",
+      "mode": "100644",
+      "bytes": 1069,
+      "sha256": "7ee7ee607179d0e4b981fd84e9397914a2c067fe7eaa8d719e4b32bd75d78a40",
+      "reviewed_ls2r2_sha256": "7ee7ee607179d0e4b981fd84e9397914a2c067fe7eaa8d719e4b32bd75d78a40",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "fixtures/landslide_sentinel/ls1_inputs_v01.json",
+      "mode": "100644",
+      "bytes": 2037,
+      "sha256": "abb013d9f2618775087a2cc570e4b57d99a2d3aea6a7799a82fbfdfd2be2b0ab",
+      "reviewed_ls2r2_sha256": "abb013d9f2618775087a2cc570e4b57d99a2d3aea6a7799a82fbfdfd2be2b0ab",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "fixtures/landslide_sentinel/ls2_inputs_v01.json",
+      "mode": "100644",
+      "bytes": 1335,
+      "sha256": "7edd9f9eed21ee91439f8011d82e4c0cf354e01ff65e17a5bc96ca0ee4faa9c6",
+      "reviewed_ls2r2_sha256": "7edd9f9eed21ee91439f8011d82e4c0cf354e01ff65e17a5bc96ca0ee4faa9c6",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/__init__.py",
+      "mode": "100644",
+      "bytes": 76,
+      "sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5",
+      "reviewed_ls2r2_sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "mode": "100644",
+      "bytes": 7410,
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28",
+      "reviewed_ls2r2_sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "mode": "100644",
+      "bytes": 21977,
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226",
+      "reviewed_ls2r2_sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+      "mode": "100644",
+      "bytes": 1342,
+      "sha256": "d528ee2471a87b0aaf1eee7044dd013c3254b864d9fc17d8ddde0a38e0fb5d57",
+      "reviewed_ls2r2_sha256": "d528ee2471a87b0aaf1eee7044dd013c3254b864d9fc17d8ddde0a38e0fb5d57",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/events_v01.py",
+      "mode": "100644",
+      "bytes": 6942,
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be",
+      "reviewed_ls2r2_sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "mode": "100644",
+      "bytes": 20335,
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27",
+      "reviewed_ls2r2_sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "mode": "100644",
+      "bytes": 4726,
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947",
+      "reviewed_ls2r2_sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "mode": "100644",
+      "bytes": 70774,
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521",
+      "reviewed_ls2r2_sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "mode": "100644",
+      "bytes": 57192,
+      "sha256": "53417d829ea281d21b16e31f4760763ae60d57bd9a8cafdf301ad90e642461ab",
+      "reviewed_ls2r2_sha256": "53417d829ea281d21b16e31f4760763ae60d57bd9a8cafdf301ad90e642461ab",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "mode": "100644",
+      "bytes": 2128,
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e",
+      "reviewed_ls2r2_sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py",
+      "mode": "100644",
+      "bytes": 10743,
+      "sha256": "4662e5b4d83be23e9390f0a8232ba76fa003d925306c0c951013168297ef5d29",
+      "reviewed_ls2r2_sha256": "4662e5b4d83be23e9390f0a8232ba76fa003d925306c0c951013168297ef5d29",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "mode": "100644",
+      "bytes": 17433,
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa",
+      "reviewed_ls2r2_sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "tests/test_landslide_sentinel_ls0_v01.py",
+      "mode": "100644",
+      "bytes": 4982,
+      "sha256": "fde4c1fa2c4d4fd3ae4fad96dbcc20416ac3fb47ca245e5b47e40f91c70e4dc4",
+      "reviewed_ls2r2_sha256": "fde4c1fa2c4d4fd3ae4fad96dbcc20416ac3fb47ca245e5b47e40f91c70e4dc4",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "tests/test_landslide_sentinel_ls1_v01.py",
+      "mode": "100644",
+      "bytes": 9697,
+      "sha256": "28c72c093878208d39f97df1c276734ac611bc26b9c86343a5fb941494c3f7ef",
+      "reviewed_ls2r2_sha256": "28c72c093878208d39f97df1c276734ac611bc26b9c86343a5fb941494c3f7ef",
+      "derivation": "EXACT_REVIEWED_BODY"
+    },
+    {
+      "path": "tests/test_landslide_sentinel_ls2_v01.py",
+      "mode": "100644",
+      "bytes": 35934,
+      "sha256": "189ac7bf0393fb2d5458535ea6ff7203ffd450dfd5ddc71b525acc51cb33b445",
+      "reviewed_ls2r2_sha256": "b97aa4a4ad462b6c8b80466cc32fb2a871260e8cc2f2572457a4f0f3ae630c2e",
+      "derivation": "TWO_TEST_SETUPS_ONLY"
+    }
+  ],
+  "implementation_change": false
+}

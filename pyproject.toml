@@ -32,4 +32,7 @@ testpaths = ["tests"]
 addopts = [
   "--ignore=tests/test_ephemeral_workspace_evidence_v01.py",
   "--ignore=tests/test_ephemeral_workspace_adversarial_v01.py",
+  "--ignore=tests/test_landslide_sentinel_ls0_v01.py",
+  "--ignore=tests/test_landslide_sentinel_ls1_v01.py",
+  "--ignore=tests/test_landslide_sentinel_ls2_v01.py",
 ]

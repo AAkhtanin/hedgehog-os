@@ -5733,7 +5733,9 @@ def test_ews_registration_direct_no_report_v01(tmp_path):
     living = _demo.run_living_gauntlet_v01
     block, errors = living._current_registration_v01(REPOSITORY_ROOT)
     assert errors == () and len(block["rows"]) == 9
-    assert block["basis"] == living._EWS_BASE_V01
+    sentinel = living._SENTINEL_REGISTRATION_KEY_V01 in json.loads((REPOSITORY_ROOT/"release/current_status_overlay_v01.json").read_bytes())
+    key = living._SENTINEL_REGISTRATION_KEY_V01 if sentinel else living._EWS_REGISTRATION_KEY_V01
+    assert block["basis"] == (living._SENTINEL_BASE_V01 if sentinel else living._EWS_BASE_V01)
     assert [row["seam_id"] for row in block["rows"]] == [row["seam_id"] for row in living._U4_REGISTRATION_ROWS]
     assert all(row["authority"] == "EVIDENCE_ONLY" and row["effect_access"] == "NONE" for row in block["rows"])
     for path in ("hedgehog/action_commit_packet_v02.py", "pyproject.toml"):
@@ -5744,7 +5746,7 @@ def test_ews_registration_direct_no_report_v01(tmp_path):
     subprocess.run(("git", "init", "-q", "-b", "main"), cwd=root, check=True)
     objects = Path(subprocess.check_output(("git", "rev-parse", "--path-format=absolute", "--git-path", "objects"), cwd=REPOSITORY_ROOT, text=True).strip())
     shutil.copytree(objects, root/".git/objects", dirs_exist_ok=True, copy_function=shutil.copyfile)
-    paths = (*living._EWS_FROZEN_SOURCES_V01, *living._U4_BASE_IDENTITIES, "release/current_schema_surface_v01.json", "release/current_status_overlay_v01.json")
+    paths = (*block["frozen_source_identities"], *living._U4_BASE_IDENTITIES, "release/current_schema_surface_v01.json", "release/current_status_overlay_v01.json")
     for path in paths:
         target = root/path
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -5755,7 +5757,7 @@ def test_ews_registration_direct_no_report_v01(tmp_path):
     assert living._current_registration_v01(root) == (block, ())
     for mutation in ("effect", "row", "schema", "binding"):
         changed = deepcopy(original)
-        current = changed[living._EWS_REGISTRATION_KEY_V01]
+        current = changed[key]
         if mutation == "effect":current["rows"][0]["effect_access"] = "BOUNDED_EFFECT_HANDLE_OWNER"
         elif mutation == "row":current["rows"].pop()
         elif mutation == "schema":current["schema_paths"].append("schemas/foreign.json")

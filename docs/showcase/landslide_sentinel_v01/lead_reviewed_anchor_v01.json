@@ -1,0 +1,23 @@
+{
+  "provenance": "LEAD_REVIEWED_PIN_FROM_THIS_PROMPT",
+  "prompt_sha256": "d63c88d22a111b6390fd59ec6ab0975680d2c60cdec5400f60e8e1b8edd47fc4",
+  "expected_publication_id": "7b91c496521e11c69fab9ea89a576474d37dbcb93c494b58a93269884fffb9b8",
+  "manifest_id": "822663d3e661bd6f02e0bf9cfe5d23789bee680cab669463ba4e68bab3e791bb",
+  "package_content_hash": "9890322dc6ccd5bb8f81f3b3f43a4576a6aa51ee92b906f47f9fbf3ccdaa6507",
+  "kernel_manifest_hash": "d83bbe9ea83410cf56245afc1361c82a4ee74a4db0750e37d62ee6a6e2efd7b9",
+  "authority": "REVIEW_METADATA_NOT_SIGNATURE_ROOT_OR_PHYSICAL_ATTESTATION",
+  "frozen_package": {
+    "projection.json": [
+      36079,
+      "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881"
+    ],
+    "manifest.json": [
+      1801,
+      "d9be468f9cca3593c993d9b9cbfaaf7a519db31719b3e10ca3719f7b24f0c83e"
+    ],
+    "publication.json": [
+      1342,
+      "39239fedb6186d5205ed1ffad0141332c874232ad907a4d5b54e2cfcdb5a1607"
+    ]
+  }
+}

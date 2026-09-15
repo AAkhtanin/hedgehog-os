@@ -1,0 +1,15 @@
+{
+  "site":"slope_demo_site_001",
+  "tick":3720,
+  "rainfall_observed_start":120,
+  "notes":{
+    "maintenance":{"text":"Survey log: the primary reference mount was replaced during routine work at time100. Its zero check has not yet been signed off. No fresh crack was recorded on the face during that visit.","observed_at":3710,"received_at":3715,"site":"slope_demo_site_001","source":"synthetic_maintenance_log","version":2},
+    "new_crack":{"text":"Survey log: neither reference nor sensor mount has been serviced. The marks match the previous inspection. A narrow new crack was observed on the face at time110; its growth over the last few samples has not been measured independently.","observed_at":3710,"received_at":3715,"site":"slope_demo_site_001","source":"synthetic_maintenance_log","version":2}
+  },
+  "frames":[
+    {"sensor":"rainfall","value":12000,"unit":"mm_x1000","scenario_tick":3720,"healthy":true,"calibration":"calibration:sentinel:v01"},
+    {"sensor":"displacement","value":1800,"unit":"um","scenario_tick":3720,"healthy":true,"calibration":"calibration:sentinel:v01"},
+    {"sensor":"reserve","value":1700,"unit":"um","scenario_tick":3720,"healthy":true,"calibration":"calibration:sentinel:v01"}
+  ],
+  "reserve_series_raw":[{"tick":3700,"value":1600},{"tick":3710,"value":1700},{"tick":3720,"value":1750}]
+}

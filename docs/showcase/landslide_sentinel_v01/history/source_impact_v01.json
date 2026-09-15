@@ -1,0 +1,50 @@
+{
+  "kind": "NEW_INDEX_DERIVATIVE",
+  "source_records": [
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "commands/20260915T055855458304Z_source_impact/receipt.json",
+      "bytes": 5362,
+      "sha256": "8ad988dbe97409f7fd8251a724b33c1aaa9e14f423896588e971062aed770bb2"
+    },
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "commands/20260915T055855458304Z_source_impact/started.json",
+      "bytes": 4999,
+      "sha256": "84a4726d3e6c149719733323dda8cd37b814be62515bab6c067a7b38b374b9fa"
+    },
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "prior_review/source_impact_bridge.json",
+      "bytes": 13506,
+      "sha256": "71fc654a038d74c89ff7f66be3781aec17a58f68eddfac7bb695726a9c50911c"
+    },
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "source_impact_bridge.json",
+      "bytes": 6861,
+      "sha256": "d8a58203933039851978f9bf40b1401c641b60ebb24fd7b53c3655b7b7089474"
+    },
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "final_source_ledger.json",
+      "bytes": 9347,
+      "sha256": "64da79b28d889d64afa085657d3f57ccccdf44dd57366ca45dc61276e69ff45a"
+    }
+  ],
+  "mapping": "References and current interpretation only; original records are unchanged in review archives.",
+  "landing": {
+    "runtime_sources": "21_EXACT_REVIEWED_BODIES",
+    "test_derivation": "Only two obsolete LS2 setups; no runtime behavior change",
+    "source_index": "../source_index_v01.json"
+  },
+  "limitations": [
+    "Historical source-version evidence is not a fresh run on every successor body.",
+    "No physical safety, full native historical replay or universal prediction claim."
+  ]
+}

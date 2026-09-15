@@ -1,0 +1,876 @@
+{
+  "scope": "SOURCE_BOUND_INDEX_NOT_AGGREGATE_EXECUTION_PROOF",
+  "claims": [
+    {
+      "claim": "C01",
+      "behavior": "Maintenance note only; non-note contexts compared exactly",
+      "execution_mode": "LIVE_HARNESS",
+      "original_outcome": "VALID_LIVE_CONTRAST_NOT_DEMONSTRATED",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "live_04/live_AB.json",
+          "bytes": 21830,
+          "sha256": "be1bb1e223fa533cdacd839e35d0b5da16babdb3711a223cbaf24129d9260585"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "live_04/composition_1.json",
+          "bytes": 96591,
+          "sha256": "21b079f54cc231ab09196f7ff946da4d96cd236ebde590bc67d5d0019f42613a"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "live_04/composition_2.json",
+          "bytes": 95995,
+          "sha256": "c7d9f5584d045220a5fee4bf606979466bb101f649ef57503c79aabdae026eb7"
+        }
+      ],
+      "later_correction": "LS2R2 demonstrates metadata versus actual native history work; both previous attempts remain inconclusive.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C02",
+      "behavior": "Old event/new receipt and same-event correction -> actual applicability Work -> Root",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235815068481Z/c02_consumer/result.json",
+          "bytes": 261972,
+          "sha256": "9ac4121207bbc6fc60b34ececb14de9a740cf570f7daf600212e68eb9d910f24"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/c02_consumer/result.json",
+          "bytes": 261972,
+          "sha256": "08afc0072e81402d7aa8c7163bfdc8a1d3d477845a6c90c935e2cc1375102910"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "bff644089a289f871251ef6b20040755a83b4397b78dc97ae33c8d7cf76025cb"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "0cf5b59700106009274d3c0330eff318ca43da97a4d76bb5898d8a318e743039"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "a4b3bbbe63f9c253c96489ef0f9ed1ac1d5e8809184647f62f300ad4605b0c0d"
+        }
+      ],
+      "later_correction": "LS2R2 requires coherent hourly intervals. The landing aligns only the stale test setup and freshly checks historical refusal.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C03",
+      "behavior": "Missing primary -> LIMITED; missing reserve too -> INSUFFICIENT; no fabricated ON",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "bff644089a289f871251ef6b20040755a83b4397b78dc97ae33c8d7cf76025cb"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "0cf5b59700106009274d3c0330eff318ca43da97a4d76bb5898d8a318e743039"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "a4b3bbbe63f9c253c96489ef0f9ed1ac1d5e8809184647f62f300ad4605b0c0d"
+        }
+      ],
+      "later_correction": "Retained as scoped historical evidence; no fresh execution claimed at landing.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C04",
+      "behavior": "Typed chronology/projection, independent lineage and duplicate/reorder checks -> actual observability Work",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233334223062Z/projection/result.json",
+          "bytes": 2179,
+          "sha256": "3dc50fb3b4fc76787dd2be350e5848fe9d4cff3ed117437265791e85a77615da"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/projection/result.json",
+          "bytes": 2179,
+          "sha256": "3dc50fb3b4fc76787dd2be350e5848fe9d4cff3ed117437265791e85a77615da"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/projection/result.json",
+          "bytes": 2179,
+          "sha256": "3dc50fb3b4fc76787dd2be350e5848fe9d4cff3ed117437265791e85a77615da"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/projection/result.json",
+          "bytes": 2179,
+          "sha256": "3dc50fb3b4fc76787dd2be350e5848fe9d4cff3ed117437265791e85a77615da"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "bff644089a289f871251ef6b20040755a83b4397b78dc97ae33c8d7cf76025cb"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "0cf5b59700106009274d3c0330eff318ca43da97a4d76bb5898d8a318e743039"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/c02_c03_c04/result.json",
+          "bytes": 55701,
+          "sha256": "a4b3bbbe63f9c253c96489ef0f9ed1ac1d5e8809184647f62f300ad4605b0c0d"
+        }
+      ],
+      "later_correction": "Retained as scoped historical evidence; no fresh execution claimed at landing.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C05",
+      "behavior": "Actual Work budget 2 -> 1 -> infeasible 0; same episode budget",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233952354313Z/c05_result.json",
+          "bytes": 128968,
+          "sha256": "5b335874f3b81dcba459313a67e73e9541bae85ffe3ce84bb55e94368cd5bcbb"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/c05_result.json",
+          "bytes": 128968,
+          "sha256": "5685ae6d7f6401d94b5e3e98a090709fa58a4fec6ecc8600f4507b90aff3b362"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/c05_result.json",
+          "bytes": 128968,
+          "sha256": "86f73b975f0b97731fc97799a3e07108b99a8c4c7d27852a91b62d743b843e81"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T003923643523Z/c05_result.json",
+          "bytes": 128956,
+          "sha256": "3c348b781c2598b06506e929ff3bfe299f3fde4d5d34aec399683c425f871526"
+        }
+      ],
+      "later_correction": "Retained as scoped historical evidence; no fresh execution claimed at landing.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C06",
+      "behavior": "Worker started -> critical local Work -> native ON before response; offline and online nonresponding branches",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_CONTROLLED_PENDING_NOT_PAID_TIMEOUT",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/pending_False/result.json",
+          "bytes": 102238,
+          "sha256": "0b0e241fb1584288e1b6c9372f6693a9786e47426a0fe5ee5a80d59b1b7f4c8e"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/pending_True/result.json",
+          "bytes": 102238,
+          "sha256": "5f12d1bc76e70de7f9d5a72dcbf784dcf14d0104b61464fcc5dcecb4b051aacc"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/pending_False/result.json",
+          "bytes": 102237,
+          "sha256": "32def85b08c3c09e77ea61dc65e8463596843bfa1e0e5219c928c7cb472b626f"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/pending_True/result.json",
+          "bytes": 102237,
+          "sha256": "56287931a815bdbb4af873c0d1a81f25550a6c9c190e31f3105dd4c4a8022bd8"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/pending_False/result.json",
+          "bytes": 102237,
+          "sha256": "c073881884bebde05c90e892857d56ebb8f8202f912ec2dc8cc4a06458260682"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/pending_True/result.json",
+          "bytes": 102235,
+          "sha256": "68ad97906e57019a2afc9fdaee9589cff4d6a5255226dd176c708e41ef7e51b8"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        }
+      ],
+      "later_correction": "Retained as scoped historical evidence; no fresh execution claimed at landing.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C07",
+      "behavior": "Both measured channels, cadence and duration; normal negative Root boundary; separate native OFF",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233501115920Z/r1/result.json",
+          "bytes": 109684,
+          "sha256": "b6943a540a39214debc753b28215a37a24904465129b82f18d5953ed87ec2916"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/r1/result.json",
+          "bytes": 112258,
+          "sha256": "c8690dec95642850bbe383a846d5617e577ce2fae512a435b04b342a843d79b3"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/r1/result.json",
+          "bytes": 112258,
+          "sha256": "62b307916657f580254b4de991b8de7cc441cd660ae55405d8ce9d0d97919651"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235600945652Z/r1/result.json",
+          "bytes": 112258,
+          "sha256": "51beb8f95b03803c921711aaf17b77b83faefe7cbaa4e93be24625eb31045cb1"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/r1/result.json",
+          "bytes": 112258,
+          "sha256": "f4450a91d4f2f64c01b36b05c08701e8e2f0a549147e72dfe7352a19da6d7b12"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/clearance.json",
+          "bytes": 33735,
+          "sha256": "a9488e6859e8ddfdaf9a33333e04252069806cbbb0047c80ee2e6e0c1703c5bd"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "held_out_execution_03/HO03-R1.json",
+          "bytes": 83668,
+          "sha256": "81930e51c0a7e333a4bf88f689c4867881fb6b9916d22c91c0605e25ef419ef5"
+        }
+      ],
+      "later_correction": "LS2R binds stable dependencies; LS2R2 consumes accepted current age including 2 and 12.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C08",
+      "behavior": "Channel level and vibration -> actual Work/current Root/native ON",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_SYNTHETIC_SAME_SITE_ROOT",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/c08/result.json",
+          "bytes": 50380,
+          "sha256": "75063388f06627e2bf17a9f0d6536bd6776e68e4e7145a5a1d57212a5365fa1d"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/c08/result.json",
+          "bytes": 50380,
+          "sha256": "cb10ba795926a2cbc08ea4526617dd0dbe0930443309fcae291e4cfbfc165bdc"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/c08/result.json",
+          "bytes": 50380,
+          "sha256": "265fdd18dd58016345721d1e9c6e8371c28df4836acbe0e62e6657996e0cbbb6"
+        }
+      ],
+      "later_correction": "Retained as scoped historical evidence; no fresh execution claimed at landing.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C09",
+      "behavior": "Immutable outbox -> receiver exact identity/hash; missing acknowledgement UNKNOWN; receipt/expired packet refusals",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_LOCAL_MOCK_NOT_DISTRIBUTED_EXACTLY_ONCE",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/pending_False/result.json",
+          "bytes": 102238,
+          "sha256": "0b0e241fb1584288e1b6c9372f6693a9786e47426a0fe5ee5a80d59b1b7f4c8e"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233825758862Z/pending_True/result.json",
+          "bytes": 102238,
+          "sha256": "5f12d1bc76e70de7f9d5a72dcbf784dcf14d0104b61464fcc5dcecb4b051aacc"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/pending_False/result.json",
+          "bytes": 102237,
+          "sha256": "32def85b08c3c09e77ea61dc65e8463596843bfa1e0e5219c928c7cb472b626f"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/pending_True/result.json",
+          "bytes": 102237,
+          "sha256": "56287931a815bdbb4af873c0d1a81f25550a6c9c190e31f3105dd4c4a8022bd8"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/pending_False/result.json",
+          "bytes": 102237,
+          "sha256": "c073881884bebde05c90e892857d56ebb8f8202f912ec2dc8cc4a06458260682"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/pending_True/result.json",
+          "bytes": 102235,
+          "sha256": "68ad97906e57019a2afc9fdaee9589cff4d6a5255226dd176c708e41ef7e51b8"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T000651618300Z/expired/result.json",
+          "bytes": 264,
+          "sha256": "77176757e4dcf05f7d7ddd1eeae50874d618fecc4de509222b9eeea2a4ba8ef6"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/expired/result.json",
+          "bytes": 264,
+          "sha256": "025a6146aa3ddde4a128c970be4da470590a707037c6d5357cd40ca064b1229a"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/effects.json",
+          "bytes": 168878,
+          "sha256": "d9ceab125538b2605175ed7cb736505ce2e611e49fc50d84b0c458cb82885387"
+        }
+      ],
+      "later_correction": "Retained as scoped historical evidence; no fresh execution claimed at landing.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "C10",
+      "behavior": "Typed policy/calibration -> stale DRS eligibility loss -> actual fresh Work/Root; actual accepted rainfall E consumes changed result and retained sibling",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_SCOPED",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T233952354313Z/memory/result.json",
+          "bytes": 61859,
+          "sha256": "c0406804bd5635b255ac5a942848c00ca257a3e1f831cb57f6f7ce6f79843ac3"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235214994572Z/memory/result.json",
+          "bytes": 62039,
+          "sha256": "d191d461b457aec24d7b5b6aca62369bfb9ad5b6ff892fdfbb5e20588d03ace2"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260914T235600945652Z/memory/result.json",
+          "bytes": 62039,
+          "sha256": "1250efeb6f5aa1d7b4823bde0b7155373717f7de541cde0c5dab9e2ee1e72420"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001201754409Z/memory/result.json",
+          "bytes": 62039,
+          "sha256": "0f7668c3d454325b4b185273be34ceb529495d559ac4d64864638dfdb186d1f0"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "held_out_execution_03/HO03-S1.json",
+          "bytes": 244808,
+          "sha256": "8e5b8eca8c1bdbeba8e5ad6b7f09959719dcfe958720ab7eaf6da758f55d8c58"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/logs/delta_causal_material.json",
+          "bytes": 689870,
+          "sha256": "69810716530c4faaa54a9303590a5401e5d2801ab7bd362edfdc1f80da23f3c6"
+        }
+      ],
+      "later_correction": "LS2R current-policy real E output supersedes the original fixed-policy setup.",
+      "current_applicability": "SCOPED_SOURCE_IMPACT_NOT_UNIVERSAL_OR_PHYSICAL",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE_FOR_THIS_HISTORICAL_SUMMARY"
+    },
+    {
+      "claim": "S0",
+      "behavior": "Initial configuration, new calm intake and LocalDRS consumption",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_RECORDED_LS1_AND_LS2_STORIES",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS1_RETURN_20260914T230203Z.tar.gz",
+          "archive_sha256": "eacb5329b5e5d0919b30cedb46affdc19cdd386c80cca61747362fd86596d663",
+          "member": "runs/20260914T225201759395Z/story/story.json",
+          "bytes": 19813,
+          "sha256": "1711e4c9f80a16001ea8ac588cec92274e3a9f5a057522602938d0195a3fa1ca"
+        }
+      ],
+      "later_correction": "LS2R current-policy and stable recovery; LS2R2 accepted age and duty contracts",
+      "current_applicability": "HISTORICAL_STORY_WITH_EXPLICIT_SCOPED_CORRECTIONS",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "S1",
+      "behavior": "Rainfall invalidation, real D/E, preserved sibling and changed cadence",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_RECORDED_LS1_AND_LS2_STORIES",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS1_RETURN_20260914T230203Z.tar.gz",
+          "archive_sha256": "eacb5329b5e5d0919b30cedb46affdc19cdd386c80cca61747362fd86596d663",
+          "member": "runs/20260914T225201759395Z/story/story.json",
+          "bytes": 19813,
+          "sha256": "1711e4c9f80a16001ea8ac588cec92274e3a9f5a057522602938d0195a3fa1ca"
+        }
+      ],
+      "later_correction": "LS2R current-policy and stable recovery; LS2R2 accepted age and duty contracts",
+      "current_applicability": "HISTORICAL_STORY_WITH_EXPLICIT_SCOPED_CORRECTIONS",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "S2",
+      "behavior": "Three controlled roles and independent current Work/Root",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_RECORDED_LS1_AND_LS2_STORIES",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS1_RETURN_20260914T230203Z.tar.gz",
+          "archive_sha256": "eacb5329b5e5d0919b30cedb46affdc19cdd386c80cca61747362fd86596d663",
+          "member": "runs/20260914T225201759395Z/story/story.json",
+          "bytes": 19813,
+          "sha256": "1711e4c9f80a16001ea8ac588cec92274e3a9f5a057522602938d0195a3fa1ca"
+        }
+      ],
+      "later_correction": "LS2R current-policy and stable recovery; LS2R2 accepted age and duty contracts",
+      "current_applicability": "HISTORICAL_STORY_WITH_EXPLICIT_SCOPED_CORRECTIONS",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "S3",
+      "behavior": "Pending optional worker, outage, native ON before response and duplicate refusal",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_RECORDED_LS1_AND_LS2_STORIES",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS1_RETURN_20260914T230203Z.tar.gz",
+          "archive_sha256": "eacb5329b5e5d0919b30cedb46affdc19cdd386c80cca61747362fd86596d663",
+          "member": "runs/20260914T225201759395Z/story/story.json",
+          "bytes": 19813,
+          "sha256": "1711e4c9f80a16001ea8ac588cec92274e3a9f5a057522602938d0195a3fa1ca"
+        }
+      ],
+      "later_correction": "LS2R current-policy and stable recovery; LS2R2 accepted age and duty contracts",
+      "current_applicability": "HISTORICAL_STORY_WITH_EXPLICIT_SCOPED_CORRECTIONS",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "S4",
+      "behavior": "Immutable queued report and later receiver acknowledgement",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_RECORDED_LS1_AND_LS2_STORIES",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS1_RETURN_20260914T230203Z.tar.gz",
+          "archive_sha256": "eacb5329b5e5d0919b30cedb46affdc19cdd386c80cca61747362fd86596d663",
+          "member": "runs/20260914T225201759395Z/story/story.json",
+          "bytes": 19813,
+          "sha256": "1711e4c9f80a16001ea8ac588cec92274e3a9f5a057522602938d0195a3fa1ca"
+        }
+      ],
+      "later_correction": "LS2R current-policy and stable recovery; LS2R2 accepted age and duty contracts",
+      "current_applicability": "HISTORICAL_STORY_WITH_EXPLICIT_SCOPED_CORRECTIONS",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "S5",
+      "behavior": "Measured recovery, separate native OFF and fresh informational LocalDRS",
+      "execution_mode": "CONTROLLED_SYNTHETIC",
+      "original_outcome": "PASS_RECORDED_LS1_AND_LS2_STORIES",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+          "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+          "member": "runs/20260915T001421055364Z/story/story.json",
+          "bytes": 20118,
+          "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b"
+        },
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS1_RETURN_20260914T230203Z.tar.gz",
+          "archive_sha256": "eacb5329b5e5d0919b30cedb46affdc19cdd386c80cca61747362fd86596d663",
+          "member": "runs/20260914T225201759395Z/story/story.json",
+          "bytes": 19813,
+          "sha256": "1711e4c9f80a16001ea8ac588cec92274e3a9f5a057522602938d0195a3fa1ca"
+        }
+      ],
+      "later_correction": "LS2R current-policy and stable recovery; LS2R2 accepted age and duty contracts",
+      "current_applicability": "HISTORICAL_STORY_WITH_EXPLICIT_SCOPED_CORRECTIONS",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "CURRENT_POLICY_E",
+      "behavior": "Actual current threshold50000, E consumption and next intake60; no fresh E at landing.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+          "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+          "member": "configuration_01/actual_policy_E_result.json",
+          "bytes": 39331,
+          "sha256": "279e7785a0f4eb0e9514a8684dc30d5328762f516999551c44e2cc5454a1ea11"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "LS0_FOUNDATION",
+      "behavior": "Original rc1 export preserved; separately repaired saved export, not a clean original episode.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS0_RETURN_20260914T220503Z.tar.gz",
+          "archive_sha256": "0827aa53f8baba605aa851a1dd607159ce522073091b8ff2030e6088dc1bfb50",
+          "member": "FINAL_REPORT.md",
+          "bytes": 9235,
+          "sha256": "9f4a615d2e1e8d57ee89f184ef5bc7bbe237bdc612597a8c86bd3ce06975bd37"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "LIVE_C01",
+      "behavior": "Actual metadata checks versus reserve span20/range150 work.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+          "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+          "member": "live_01/live_AB.json",
+          "bytes": 31872,
+          "sha256": "3080c1d6efb6295534daf8c5a94c8f1ea320cbb2157c29f46e83e7f5a07b7ab1"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "LS2R2_PIN_ONLY_FOR_FIELDS_INSIDE_FROZEN_PROJECTION"
+    },
+    {
+      "claim": "THREE_LIVE_ROLES",
+      "behavior": "Three actual Gemini contributions consumed by one current BSEP/D/Work/Root.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+          "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+          "member": "semantic_completion.json",
+          "bytes": 16760,
+          "sha256": "4f534cbc0910639c38236386747fcaa0e99844371e9c36cfd22690cb966c8231"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "LS2R2_PIN_ONLY_FOR_FIELDS_INSIDE_FROZEN_PROJECTION"
+    },
+    {
+      "claim": "CAPTURED_REEXECUTION",
+      "behavior": "Exact captured semantics through current consumers, zero new provider/effect calls.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+          "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+          "member": "live_01/captured_reexecution.json",
+          "bytes": 411674,
+          "sha256": "1b600d34c3e4b412a9bcc438c2a7fbda0801741f898c6f33f4b54f712530806d"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "LS2R2_PIN_ONLY_FOR_FIELDS_INSIDE_FROZEN_PROJECTION"
+    },
+    {
+      "claim": "TWO_NODE_PROFILES",
+      "behavior": "CLOUD_LLM/provider_llm harness emulates an internal SLM role, not offline Gemini or installed local hardware.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+          "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+          "member": "live_01/profile_provenance.json",
+          "bytes": 3817,
+          "sha256": "b0780bcf62bdefd686ab1463701aa6f518bff7cc4aaaa7d66cbecbde362359cf"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "LS2R2_PIN_ONLY_FOR_FIELDS_INSIDE_FROZEN_PROJECTION"
+    },
+    {
+      "claim": "FRESH_LOCAL_ONLY_DRS",
+      "behavior": "Fresh local algorithms, local memory descent, no model transport.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+          "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+          "member": "live_01/local_only_drs.json",
+          "bytes": 29652,
+          "sha256": "06a16b7b774cd39ac42594e7f5c42353e5b43abddbe511b9f2e5bdc0be22ebc3"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "LS2R2_PIN_ONLY_FOR_FIELDS_INSIDE_FROZEN_PROJECTION"
+    },
+    {
+      "claim": "PRIOR_INCONCLUSIVE_LS2R",
+      "behavior": "Both arms chose series; NOT_DEMONSTRATED remains historical.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "NOT_DEMONSTRATED",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+          "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+          "member": "live_02/live_AB.json",
+          "bytes": 22144,
+          "sha256": "c419bc1be8d7698f1e0358582c6954590bc9a5cfafcf1fcde2396234948aaa05"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    },
+    {
+      "claim": "LS2R2_SCOPE",
+      "behavior": "Current bounded review closure; physical certification and native replay not claimed.",
+      "execution_mode": "RECORDED_SOURCE_BOUND",
+      "original_outcome": "SEE_EXACT_SOURCE_RECORD",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+          "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+          "member": "closure_matrix.json",
+          "bytes": 1481,
+          "sha256": "694d6c82cfdca5526ac17f1aea930a8045e25df692fa6435648a75960b1ef538"
+        }
+      ],
+      "later_correction": "No mutation of the recorded outcome",
+      "current_applicability": "SCOPED_REVIEWED_HISTORY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "LS2R2_PIN_ONLY_FOR_FIELDS_INSIDE_FROZEN_PROJECTION"
+    },
+    {
+      "claim": "EA_ACQUISITION",
+      "behavior": "Eight actual source4163 readings, including valid zeros. Unknown intervals preclude aggregation; no UK-to-synthetic mapping.",
+      "execution_mode": "ACTUAL_EA_HTTP_RECORDED_NOT_CURRENT_SENSOR",
+      "original_outcome": "8_NORMALIZED_UNCONFIRMED_INTERVALS",
+      "sources": [
+        {
+          "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+          "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+          "member": "ea_capture_02/result.json",
+          "bytes": 8776,
+          "sha256": "aeb5b1ddce8ed7fe3d23efc8afeb06a255574f614fd75807a9a498bea08049db"
+        }
+      ],
+      "later_correction": "Supersedes the LS2 empty-reading acquisition, not physical applicability",
+      "current_applicability": "HISTORICAL_CONTEXT_ONLY",
+      "source_impact": "history/source_impact_v01.json",
+      "public_inclusion": "DERIVED_INDEX_ONLY_ORIGINALS_PRIVATE_REVIEW",
+      "anchor": "NONE"
+    }
+  ],
+  "lead_pin_scope": "Only the immutable LS2R2 three-file package; never these new summaries"
+}

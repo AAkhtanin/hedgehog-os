@@ -15,92 +15,165 @@ import textwrap
 import pytest
 
 
+SENTINEL_ACCEPTED_COMMIT_V01 = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+
+
+def _sentinel_historical_namespace_v01():
+    raw = subprocess.check_output(
+        ("git", "show", SENTINEL_ACCEPTED_COMMIT_V01 + ":tools/check_active_architecture_authority_v01.py"),
+        cwd=REPOSITORY_ROOT,
+    )
+    namespace = {"__file__": str(GUARD_PATH), "__name__": "sentinel_historical_guard_v01"}
+    exec(compile(raw, SENTINEL_ACCEPTED_COMMIT_V01 + ":tools/check_active_architecture_authority_v01.py", "exec"), namespace)
+    return namespace
+
+
 def test_sentinel_real_git_states_and_hostile_neighbors_v01(tmp_path):
-    namespace = runpy.run_path(str(GUARD_PATH))
-    base = namespace['SENTINEL_BASE_V01']
-    root = tmp_path / 'sentinel'
-    subprocess.run(('git','clone','--no-hardlinks','--no-checkout',str(REPOSITORY_ROOT),str(root)),check=True,capture_output=True)
+    namespace = _sentinel_historical_namespace_v01()
+    base = namespace["SENTINEL_BASE_V01"]
+    root = tmp_path / "sentinel"
+    subprocess.run(("git", "clone", "--no-hardlinks", "--no-checkout", str(REPOSITORY_ROOT), str(root)), check=True, capture_output=True)
+
     def git(*args, **kwargs):
-        return subprocess.check_output(('git',*args),cwd=root,**kwargs).decode().strip()
-    git('checkout','main')
-    git('update-ref','refs/remotes/origin/main',base)
-    # Execute the unmodified predecessor before adding the complete proposal.
-    before = subprocess.run((sys.executable,str(root/'tools/check_active_architecture_authority_v01.py'),'--root',str(root)),cwd=root,capture_output=True,text=True)
-    assert before.returncode == 0 and 'EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED' in before.stdout, before.stdout + before.stderr
-    for path in namespace['SENTINEL_PATH_ACTIONS_V01']:
-        target=root/path;target.parent.mkdir(parents=True,exist_ok=True)
-        shutil.copy2(REPOSITORY_ROOT/path,target)
-        assert target.stat().st_ino != (REPOSITORY_ROOT/path).stat().st_ino
-    def check(phase=None,reason=None):
-        errors=[];actual=namespace['_validate_landslide_sentinel_admission_v01'](root,errors)
-        public=subprocess.run((sys.executable,str(root/'tools/check_active_architecture_authority_v01.py'),'--root',str(root)),cwd=root,capture_output=True,text=True)
+        return subprocess.check_output(("git", *args), cwd=root, **kwargs).decode().strip()
+
+    for args in (("update-ref", "refs/heads/main", base),
+                 ("symbolic-ref", "HEAD", "refs/heads/main"),
+                 ("update-ref", "refs/remotes/origin/main", base),
+                 ("read-tree", base), ("checkout-index", "--all", "--force")):
+        git(*args)
+    before = subprocess.run((sys.executable, str(root / "tools/check_active_architecture_authority_v01.py"), "--root", str(root)), cwd=root, capture_output=True, text=True)
+    assert before.returncode == 0 and "EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED" in before.stdout, before.stdout + before.stderr
+    for path in namespace["SENTINEL_PATH_ACTIONS_V01"]:
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(subprocess.check_output(("git", "show", SENTINEL_ACCEPTED_COMMIT_V01 + ":" + path), cwd=REPOSITORY_ROOT))
+        mode = subprocess.check_output(("git", "ls-tree", SENTINEL_ACCEPTED_COMMIT_V01, "--", path), cwd=REPOSITORY_ROOT).split()[0]
+        target.chmod(int(mode[-3:], 8))
+
+    def check(phase=None, reason=None):
+        errors = []
+        actual = namespace["_validate_landslide_sentinel_admission_v01"](root, errors)
+        public = subprocess.run((sys.executable, str(root / "tools/check_active_architecture_authority_v01.py"), "--root", str(root)), cwd=root, capture_output=True, text=True)
         if reason:
-            assert reason in errors,(reason,errors)
-            assert public.returncode != 0 and reason in public.stdout+public.stderr
+            assert reason in errors, (reason, errors)
+            assert public.returncode != 0 and reason in public.stdout + public.stderr
         else:
-            assert errors==[] and actual==phase,(errors,actual)
-            assert public.returncode==0 and 'LANDSLIDE_SENTINEL_PHASE='+phase in public.stdout,public.stdout+public.stderr
-        print('SENTINEL_CONTROL='+str(reason or phase),flush=True)
-    unstaged='SENTINEL_ADMISSION_CANDIDATE_UNSTAGED';staged='SENTINEL_ADMISSION_CANDIDATE_STAGED';committed='SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED'
+            assert errors == [] and actual == phase, (errors, actual)
+            assert public.returncode == 0 and "LANDSLIDE_SENTINEL_PHASE=" + phase in public.stdout, public.stdout + public.stderr
+        print("SENTINEL_CONTROL=" + str(reason or phase), flush=True)
+
+    unstaged = "SENTINEL_ADMISSION_CANDIDATE_UNSTAGED"
+    staged = "SENTINEL_ADMISSION_CANDIDATE_STAGED"
+    committed = "SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED"
     check(unstaged)
-    source='hedgehog/domains/landslide_sentinel/contracts_v01.py'
-    package='docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json'
-    for path in (source,package):
-        file=root/path;body=file.read_bytes();file.write_bytes(body+b'\n')
-        check(reason='sentinel.source_identity:'+path);file.write_bytes(body)
-    file=root/source;file.chmod(0o755);check(reason='sentinel.mode:'+source);file.chmod(0o644)
-    body=file.read_bytes();file.unlink();check(reason='sentinel.file_type:'+source)
-    file.symlink_to(REPOSITORY_ROOT/source);check(reason='sentinel.file_type:'+source);file.unlink();file.write_bytes(body)
-    extra=root/'unapproved_sentinel.txt';extra.write_text('Unapproved\n');check(reason='sentinel.candidate.exact_ledger');extra.unlink()
-    overlay=root/'release/current_status_overlay_v01.json';body=overlay.read_bytes();value=json.loads(body)
-    value['landslide_sentinel_admission_v01']['authority']='ROOT';overlay.write_text(json.dumps(value)+'\n')
-    check(reason='sentinel.admission_metadata');overlay.write_bytes(body)
-    git('add','--',source);check(reason='sentinel.candidate.exact_ledger');git('read-tree',base)
-    for flag,undo,reason in (('--assume-unchanged','--no-assume-unchanged','sentinel.index.flags'),('--skip-worktree','--no-skip-worktree','sentinel.index.hidden_flags')):
-        git('update-index',flag,'README.md');check(reason=reason);git('update-index',undo,'README.md')
-    marker=root/'.git/MERGE_HEAD';marker.write_text(base+'\n');check(reason='sentinel.git_operation:MERGE_HEAD');marker.unlink()
-    git('update-ref','refs/heads/foreign',base);git('symbolic-ref','HEAD','refs/heads/foreign');check(reason='sentinel.branch');git('symbolic-ref','HEAD','refs/heads/main')
-    parent=namespace['SENTINEL_BASE_PARENT_V01']
-    git('update-ref','refs/remotes/origin/main',parent);check(reason='sentinel.candidate.basis_origin');git('update-ref','refs/remotes/origin/main',base)
-    git('update-ref','refs/heads/main',parent);check(reason='sentinel.exact_immediate_base_child');git('update-ref','refs/heads/main',base)
-    check(unstaged);git('add','--',*sorted(namespace['SENTINEL_PATH_ACTIONS_V01']));check(staged)
-    tree=git('write-tree');env=dict(os.environ,GIT_AUTHOR_NAME='Isolated Sentinel fixture',GIT_AUTHOR_EMAIL='fixture@example.invalid',GIT_COMMITTER_NAME='Isolated Sentinel fixture',GIT_COMMITTER_EMAIL='fixture@example.invalid')
-    child=git('commit-tree',tree,'-p',base,'-m',namespace['SENTINEL_COMMIT_MESSAGE_V01'],env=env)
-    git('update-ref','refs/heads/main',child);check(committed)
-    git('update-ref','refs/remotes/origin/main',child);check(committed)
-    foreign=git('commit-tree',tree,'-p',base,'-m','Isolated foreign sibling',env=env)
-    git('update-ref','refs/remotes/origin/main',foreign);check(reason='sentinel.committed.origin');git('update-ref','refs/remotes/origin/main',child)
-    for parents in ((child,),(base,foreign)):
-        args=[arg for parent in parents for arg in ('-p',parent)]
-        bad=git('commit-tree',tree,*args,'-m','Isolated wrong generation or merge',env=env)
-        git('update-ref','refs/heads/main',bad);check(reason='sentinel.exact_immediate_base_child')
-    git('update-ref','refs/heads/main',child);check(committed)
+    source = "hedgehog/domains/landslide_sentinel/contracts_v01.py"
+    package = "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json"
+    for path in (source, package):
+        file = root / path
+        body = file.read_bytes()
+        file.write_bytes(body + b"\n")
+        check(reason="sentinel.source_identity:" + path)
+        file.write_bytes(body)
+    file = root / source
+    file.chmod(0o755)
+    check(reason="sentinel.mode:" + source)
+    file.chmod(0o644)
+    body = file.read_bytes()
+    file.unlink()
+    check(reason="sentinel.file_type:" + source)
+    file.symlink_to(REPOSITORY_ROOT / source)
+    check(reason="sentinel.file_type:" + source)
+    file.unlink()
+    file.write_bytes(body)
+    extra = root / "unapproved_sentinel.txt"
+    extra.write_text("Unapproved\n")
+    check(reason="sentinel.candidate.exact_ledger")
+    extra.unlink()
+    overlay = root / "release/current_status_overlay_v01.json"
+    body = overlay.read_bytes()
+    value = json.loads(body)
+    value["landslide_sentinel_admission_v01"]["authority"] = "ROOT"
+    overlay.write_text(json.dumps(value) + "\n")
+    check(reason="sentinel.admission_metadata")
+    overlay.write_bytes(body)
+    git("add", "--", source)
+    check(reason="sentinel.candidate.exact_ledger")
+    git("read-tree", base)
+    for flag, undo, reason in (("--assume-unchanged", "--no-assume-unchanged", "sentinel.index.flags"),
+                               ("--skip-worktree", "--no-skip-worktree", "sentinel.index.hidden_flags")):
+        git("update-index", flag, "README.md")
+        check(reason=reason)
+        git("update-index", undo, "README.md")
+    marker = root / ".git/MERGE_HEAD"
+    marker.write_text(base + "\n")
+    check(reason="sentinel.git_operation:MERGE_HEAD")
+    marker.unlink()
+    git("update-ref", "refs/heads/foreign", base)
+    git("symbolic-ref", "HEAD", "refs/heads/foreign")
+    check(reason="sentinel.branch")
+    git("symbolic-ref", "HEAD", "refs/heads/main")
+    parent = namespace["SENTINEL_BASE_PARENT_V01"]
+    git("update-ref", "refs/remotes/origin/main", parent)
+    check(reason="sentinel.candidate.basis_origin")
+    git("update-ref", "refs/remotes/origin/main", base)
+    git("update-ref", "refs/heads/main", parent)
+    check(reason="sentinel.exact_immediate_base_child")
+    git("update-ref", "refs/heads/main", base)
+    check(unstaged)
+    git("add", "--", *sorted(namespace["SENTINEL_PATH_ACTIONS_V01"]))
+    check(staged)
+    tree = git("write-tree")
+    env = dict(os.environ, GIT_AUTHOR_NAME="Isolated Sentinel fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid", GIT_COMMITTER_NAME="Isolated Sentinel fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid")
+    child = git("commit-tree", tree, "-p", base, "-m", namespace["SENTINEL_COMMIT_MESSAGE_V01"], env=env)
+    git("update-ref", "refs/heads/main", child)
+    check(committed)
+    git("update-ref", "refs/remotes/origin/main", child)
+    check(committed)
+    foreign = git("commit-tree", tree, "-p", base, "-m", "Isolated foreign sibling", env=env)
+    git("update-ref", "refs/remotes/origin/main", foreign)
+    check(reason="sentinel.committed.origin")
+    git("update-ref", "refs/remotes/origin/main", child)
+    for parents in ((child,), (base, foreign)):
+        args = [argument for parent in parents for argument in ("-p", parent)]
+        bad = git("commit-tree", tree, *args, "-m", "Isolated wrong generation or merge", env=env)
+        git("update-ref", "refs/heads/main", bad)
+        check(reason="sentinel.exact_immediate_base_child")
+    git("update-ref", "refs/heads/main", child)
+    check(committed)
 
 
 def test_sentinel_exact_sources_and_historical_predicates_v01():
-    namespace=runpy.run_path(str(GUARD_PATH));base=namespace['SENTINEL_BASE_V01']
-    old=subprocess.check_output(('git','show',base+':tools/check_active_architecture_authority_v01.py'),cwd=REPOSITORY_ROOT)
-    before=ast.parse(old);after=ast.parse(GUARD_PATH.read_bytes())
-    functions={n.name:n for n in after.body if isinstance(n,ast.FunctionDef)}
-    for n in before.body:
-        if isinstance(n,ast.FunctionDef) and n.name not in ('collect_failures','main'):
-            assert ast.dump(n)==ast.dump(functions[n.name]),n.name
-    constants=lambda tree:{ast.dump(n.targets[0]):ast.dump(n) for n in tree.body if isinstance(n,ast.Assign)}
-    assert all(constants(after).get(k)==v for k,v in constants(before).items())
-    digest=namespace['_sentinel_source_digest_v01'];pins=namespace['SENTINEL_SOURCE_IDENTITIES_V01']
-    for path,pin in pins.items():
-        raw=(REPOSITORY_ROOT/path).read_bytes();assert digest(path,raw)==pin,path
-        assert digest(path,raw+b'\n# Changed\n')!=pin
-    p='tools/check_active_architecture_authority_v01.py'
-    raw=('SENTINEL_SOURCE_IDENTITIES_V01 = {"'+p+'": "'+'a'*64+'", "other": "'+'b'*64+'"}\n').encode()
-    assert digest(p,raw)==digest(p,raw.replace(b'a'*64,b'c'*64))
-    assert digest(p,raw)!=digest(p,raw.replace(b'b'*64,b'c'*64))
-    for malformed in (raw+raw,raw.replace(b'"other"',('"'+p+'"').encode()),raw.replace(b'a'*64,b'wrong')):
-        with pytest.raises(ValueError):digest(p,malformed)
+    namespace = _sentinel_historical_namespace_v01()
+    base = namespace["SENTINEL_BASE_V01"]
+    old = subprocess.check_output(("git", "show", base + ":tools/check_active_architecture_authority_v01.py"), cwd=REPOSITORY_ROOT)
+    historical = subprocess.check_output(("git", "show", SENTINEL_ACCEPTED_COMMIT_V01 + ":tools/check_active_architecture_authority_v01.py"), cwd=REPOSITORY_ROOT)
+    before = ast.parse(old)
+    after = ast.parse(historical)
+    functions = {node.name: node for node in after.body if isinstance(node, ast.FunctionDef)}
+    for node in before.body:
+        if isinstance(node, ast.FunctionDef) and node.name not in ("collect_failures", "main"):
+            assert ast.dump(node) == ast.dump(functions[node.name]), node.name
+    constants = lambda tree: {ast.dump(node.targets[0]): ast.dump(node) for node in tree.body if isinstance(node, ast.Assign)}
+    assert all(constants(after).get(key) == value for key, value in constants(before).items())
+    digest = namespace["_sentinel_source_digest_v01"]
+    pins = namespace["SENTINEL_SOURCE_IDENTITIES_V01"]
+    for path, pin in pins.items():
+        raw = subprocess.check_output(("git", "show", SENTINEL_ACCEPTED_COMMIT_V01 + ":" + path), cwd=REPOSITORY_ROOT)
+        assert digest(path, raw) == pin, path
+        assert digest(path, raw + b"\n# Changed\n") != pin
+    path = "tools/check_active_architecture_authority_v01.py"
+    raw = ('SENTINEL_SOURCE_IDENTITIES_V01 = {"' + path + '": "' + 'a'*64 + '", "other": "' + 'b'*64 + '"}\n').encode()
+    assert digest(path, raw) == digest(path, raw.replace(b'a'*64, b'c'*64))
+    assert digest(path, raw) != digest(path, raw.replace(b'b'*64, b'c'*64))
+    for malformed in (raw + raw, raw.replace(b'"other"', ('"' + path + '"').encode()), raw.replace(b'a'*64, b'wrong')):
+        with pytest.raises(ValueError):
+            digest(path, malformed)
     import tomllib
-    options=tomllib.loads((REPOSITORY_ROOT/'pyproject.toml').read_text())['tool']['pytest']['ini_options']['addopts']
-    old_options=tomllib.loads(subprocess.check_output(('git','show',base+':pyproject.toml'),cwd=REPOSITORY_ROOT).decode())['tool']['pytest']['ini_options']['addopts']
-    assert options==old_options+[f'--ignore=tests/test_landslide_sentinel_ls{i}_v01.py' for i in range(3)]
+    current_options = tomllib.loads((REPOSITORY_ROOT / "pyproject.toml").read_text())["tool"]["pytest"]["ini_options"]["addopts"]
+    accepted_options = tomllib.loads(subprocess.check_output(("git", "show", SENTINEL_ACCEPTED_COMMIT_V01 + ":pyproject.toml"), cwd=REPOSITORY_ROOT).decode())["tool"]["pytest"]["ini_options"]["addopts"]
+    old_options = tomllib.loads(subprocess.check_output(("git", "show", base + ":pyproject.toml"), cwd=REPOSITORY_ROOT).decode())["tool"]["pytest"]["ini_options"]["addopts"]
+    assert current_options == accepted_options == old_options + [f"--ignore=tests/test_landslide_sentinel_ls{i}_v01.py" for i in range(3)]
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -440,6 +513,20 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     prepush = False
     closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
     overlay = json.loads((root / "release/current_status_overlay_v01.json").read_text())
+    if "landslide_sentinel_presentation_admission_v01" in overlay:
+        actions = overlay["landslide_sentinel_presentation_admission_v01"]["path_actions"]
+        assert len(actions) == 44 and sum(op == "A" for op in actions.values()) == 34
+        base = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+        if head == base:
+            assert parent == "50ab3916bff55e8034cf7e6c509d4803c5447589" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED" if status == unstaged else "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED"
+        return "G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\nTESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\nLANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED\nLANDSLIDE_SENTINEL_PRESENTATION_PHASE=" + phase + "\n"
     if "ephemeral_workspace_presentation_admission_v01" in overlay:
         actions = overlay["ephemeral_workspace_presentation_admission_v01"]["path_actions"]
         assert len(actions) == 39 and sum(op == "A" for op in actions.values()) == 29
@@ -8017,6 +8104,186 @@ def test_ews_presentation_exact_projection_historical_bodies_and_registration_v0
         block, errors = living._current_registration_v01(REPOSITORY_ROOT)
         assert not errors, errors
         previous = json.loads(subprocess.check_output(("git", "show", base + ":release/current_status_overlay_v01.json"), cwd=REPOSITORY_ROOT))["ephemeral_workspace_current_registration_v01"]
+        assert block == previous and len(block["rows"]) == 9
+    finally:
+        sys.modules.pop(spec.name, None)
+
+
+
+def test_sentinel_presentation_real_git_states_and_hostile_neighbors_v01(tmp_path):
+    namespace = runpy.run_path(str(GUARD_PATH))
+    root = tmp_path / "sentinel_presentation"
+    subprocess.run(("git", "clone", "--no-hardlinks", "--no-checkout", str(REPOSITORY_ROOT), str(root)), check=True, capture_output=True)
+    actions = namespace["SENTINEL_PRESENTATION_PATH_ACTIONS_V01"]
+    base = namespace["SENTINEL_PRESENTATION_BASE_V01"]
+
+    def git(*args, **kwargs):
+        return subprocess.check_output(("git", *args), cwd=root, **kwargs).decode().strip()
+
+    for args in (("update-ref", "refs/heads/main", base),
+                 ("symbolic-ref", "HEAD", "refs/heads/main"),
+                 ("update-ref", "refs/remotes/origin/main", base),
+                 ("read-tree", base), ("checkout-index", "--all", "--force")):
+        git(*args)
+    for path in actions:
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPOSITORY_ROOT / path, target)
+        assert target.stat().st_ino != (REPOSITORY_ROOT / path).stat().st_ino
+
+    def check(expected=None, reason=None):
+        failures = []
+        phase = namespace["_validate_landslide_sentinel_presentation_admission_v01"](root, failures)
+        public = _run_guard(root)
+        if reason:
+            assert reason in failures, (reason, failures)
+            assert public.returncode != 0 and reason in public.stdout + public.stderr
+        else:
+            assert not failures, failures
+            assert phase == expected
+            assert public.returncode == 0, public.stdout + public.stderr
+            assert "LANDSLIDE_SENTINEL_PRESENTATION_PHASE=" + expected in public.stdout
+            assert _expected_g2f_landing_stdout_v01(root) in public.stdout
+        print("SENTINEL_PRESENTATION_CONTROL=" + (reason or expected), flush=True)
+
+    unstaged = "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED"
+    staged = "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_STAGED"
+    committed = "SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED"
+    check(unstaged)
+    asset = "docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf"
+    for path in ("hedgehog/domains/landslide_sentinel/contracts_v01.py",
+                 "docs/showcase/landslide_sentinel_v01/EVIDENCE.md",
+                 "docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json"):
+        file = root / path
+        body = file.read_bytes()
+        file.write_bytes(body + b"\nUnapproved bytes\n")
+        check(reason="sentinel_presentation.frozen_source:" + path)
+        file.write_bytes(body)
+    file = root / asset
+    body = file.read_bytes()
+    file.write_bytes(body + b"Unapproved binary change")
+    check(reason="sentinel_presentation.payload_identity:" + asset)
+    file.write_bytes(body)
+    file.chmod(0o755)
+    check(reason="sentinel_presentation.mode:" + asset)
+    file.chmod(0o644)
+    file.unlink()
+    check(reason="sentinel_presentation.file_type:" + asset)
+    file.symlink_to(REPOSITORY_ROOT / asset)
+    check(reason="sentinel_presentation.file_type:" + asset)
+    file.unlink()
+    file.write_bytes(body)
+    extra = root / "unapproved_publication.txt"
+    extra.write_text("Foreign file\n")
+    check(reason="sentinel_presentation.candidate.exact_ledger")
+    extra.unlink()
+    overlay = root / "release/current_status_overlay_v01.json"
+    raw = overlay.read_bytes()
+    value = json.loads(raw)
+    value["landslide_sentinel_presentation_admission_v01"]["authority"] = "ROOT"
+    overlay.write_text(json.dumps(value) + "\n")
+    check(reason="sentinel_presentation.admission_metadata")
+    overlay.write_bytes(raw)
+    value = json.loads(raw)
+    value["landslide_sentinel_current_registration_v01"]["status"] = "PASS"
+    overlay.write_text(json.dumps(value) + "\n")
+    check(reason="sentinel_presentation.historical_metadata:release/current_status_overlay_v01.json")
+    overlay.write_bytes(raw)
+    git("add", "--", asset)
+    check(reason="sentinel_presentation.candidate.exact_ledger")
+    git("read-tree", base)
+    for flag, undo, reason in (("--assume-unchanged", "--no-assume-unchanged", "sentinel_presentation.index.flags"),
+                               ("--skip-worktree", "--no-skip-worktree", "sentinel_presentation.index.hidden_flags")):
+        git("update-index", flag, "README.md")
+        check(reason=reason)
+        git("update-index", undo, "README.md")
+    marker = root / ".git/MERGE_HEAD"
+    marker.write_text(base + "\n")
+    check(reason="sentinel_presentation.git_operation:MERGE_HEAD")
+    marker.unlink()
+    git("update-ref", "refs/heads/publication-fixture", base)
+    git("symbolic-ref", "HEAD", "refs/heads/publication-fixture")
+    check(reason="sentinel_presentation.branch")
+    git("symbolic-ref", "HEAD", "refs/heads/main")
+    parent = namespace["SENTINEL_PRESENTATION_BASE_PARENT_V01"]
+    git("update-ref", "refs/remotes/origin/main", parent)
+    check(reason="sentinel_presentation.candidate.basis_origin")
+    git("update-ref", "refs/remotes/origin/main", base)
+    git("update-ref", "refs/heads/main", parent)
+    check(reason="sentinel_presentation.exact_immediate_base_child")
+    git("update-ref", "refs/heads/main", base)
+    check(unstaged)
+    git("add", "--", *sorted(actions))
+    check(staged)
+    tree = git("write-tree")
+    env = dict(os.environ, GIT_AUTHOR_NAME="Isolated Sentinel presentation fixture",
+               GIT_AUTHOR_EMAIL="fixture@example.invalid",
+               GIT_COMMITTER_NAME="Isolated Sentinel presentation fixture",
+               GIT_COMMITTER_EMAIL="fixture@example.invalid")
+    child = git("commit-tree", tree, "-p", base, "-m", namespace["SENTINEL_PRESENTATION_COMMIT_MESSAGE_V01"], env=env)
+    git("update-ref", "refs/heads/main", child)
+    check(committed)
+    git("update-ref", "refs/remotes/origin/main", child)
+    check(committed)
+    foreign = git("commit-tree", tree, "-p", base, "-m", "Isolated foreign sibling", env=env)
+    git("update-ref", "refs/remotes/origin/main", foreign)
+    check(reason="sentinel_presentation.committed.origin")
+    git("update-ref", "refs/remotes/origin/main", child)
+    for parents in ((child,), (base, foreign)):
+        args = [argument for parent in parents for argument in ("-p", parent)]
+        bad = git("commit-tree", tree, *args, "-m", "Isolated wrong generation or merge", env=env)
+        git("update-ref", "refs/heads/main", bad)
+        check(reason="sentinel_presentation.exact_immediate_base_child")
+    git("update-ref", "refs/heads/main", child)
+    check(committed)
+
+
+def test_sentinel_presentation_projection_historical_bodies_and_registration_v01():
+    import importlib.util
+    namespace = runpy.run_path(str(GUARD_PATH))
+    base = namespace["SENTINEL_PRESENTATION_BASE_V01"]
+    old = subprocess.check_output(("git", "show", base + ":tools/check_active_architecture_authority_v01.py"), cwd=REPOSITORY_ROOT)
+    current = GUARD_PATH.read_bytes()
+    old_nodes = {node.name: node for node in ast.parse(old).body if isinstance(node, ast.FunctionDef)}
+    new_nodes = {node.name: node for node in ast.parse(current).body if isinstance(node, ast.FunctionDef)}
+    for name, node in old_nodes.items():
+        if name not in ("collect_failures", "main"):
+            assert ast.dump(node) == ast.dump(new_nodes[name]), name
+
+    def constants(body):
+        return {ast.dump(node.targets[0]): ast.dump(node) for node in ast.parse(body).body if isinstance(node, ast.Assign)}
+
+    before, after = constants(old), constants(current)
+    assert all(after.get(key) == value for key, value in before.items())
+    digest = namespace["_sentinel_presentation_source_digest_v01"]
+    pins = namespace["SENTINEL_PRESENTATION_SOURCE_IDENTITIES_V01"]
+    assert len(pins) == len(namespace["SENTINEL_PRESENTATION_PATH_ACTIONS_V01"]) == 44
+    for path, expected in pins.items():
+        body = (REPOSITORY_ROOT / path).read_bytes()
+        assert digest(path, body) == expected, path
+        assert digest(path, body + b"\n# Unapproved bytes\n") != expected
+    guard = "tools/check_active_architecture_authority_v01.py"
+    body = ('SENTINEL_PRESENTATION_SOURCE_IDENTITIES_V01 = {"' + guard + '": "' + 'a'*64 + '", "old": "' + 'b'*64 + '"}\n').encode()
+    assert digest(guard, body) == digest(guard, body.replace(b'a'*64, b'c'*64))
+    assert digest(guard, body) != digest(guard, body.replace(b'b'*64, b'c'*64))
+    for malformed in (body + body, body.replace(b'"old"', ('"' + guard + '"').encode()), body.replace(b'a'*64, b'wrong')):
+        with pytest.raises(ValueError):
+            digest(guard, malformed)
+    payload = namespace["SENTINEL_PRESENTATION_PAYLOAD_V01"]
+    assert len(payload) == 33
+    for path, row in payload.items():
+        file = REPOSITORY_ROOT / path
+        assert file.stat().st_size == row["bytes"]
+        assert hashlib.sha256(file.read_bytes()).hexdigest() == row["sha256"]
+    spec = importlib.util.spec_from_file_location("sentinel_presentation_direct_living", REPOSITORY_ROOT / "demo/run_living_gauntlet_v01.py")
+    assert spec is not None and spec.loader is not None
+    living = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = living
+    try:
+        spec.loader.exec_module(living)
+        block, errors = living._current_registration_v01(REPOSITORY_ROOT)
+        assert not errors, errors
+        previous = json.loads(subprocess.check_output(("git", "show", base + ":release/current_status_overlay_v01.json"), cwd=REPOSITORY_ROOT))["landslide_sentinel_current_registration_v01"]
         assert block == previous and len(block["rows"]) == 9
     finally:
         sys.modules.pop(spec.name, None)

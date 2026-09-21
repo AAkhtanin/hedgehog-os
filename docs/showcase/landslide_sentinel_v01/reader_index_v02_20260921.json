@@ -1,0 +1,3251 @@
+{
+  "schema": "sentinel_reader_external_index_v01",
+  "reader": "LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml",
+  "reader_sha256": "0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d",
+  "reader_bytes": 10837394,
+  "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "tree": "8db682205049c72c85500ebafade0696532338ef",
+  "file_count": 165,
+  "file_manifest": [
+    {
+      "path": "reader/README_SCOPE.md",
+      "kind": "NEW_READER_METADATA",
+      "bytes": 4298,
+      "sha256": "6e07a2bc14f3a3dcbc38fbeb5ad96091082bf5ef09296fc1b217693b9c8494d1",
+      "lines": 32,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "provenance": "New explanatory reading material; no new execution or acceptance"
+      }
+    },
+    {
+      "path": "presentation/DESIGN_NOTES.md",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 1904,
+      "sha256": "e59499c40252768d23a762539db56f109a31d2d973c4df18dfabd95dab11fa82",
+      "lines": 22,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/PRESENTATION.md",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 6587,
+      "sha256": "44543dcc1a8f9bed17f748980d841cc8ab82cef6b919cfbc271e8b53619a82f2",
+      "lines": 58,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/asset_inventory_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 1873,
+      "sha256": "cde6de3e0f13052f6a61a53813992b8bf602562f742d5caaedeea17a8d8d9f02",
+      "lines": 57,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/claim_evidence_matrix_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 54429,
+      "sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+      "lines": 1121,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/executive_one_pager_v01.md",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 3144,
+      "sha256": "c3a88210658380b14143b1d429674aa3c293ee1a794fe6ab46905c4475c53f52",
+      "lines": 33,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/landing_verification_summary_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 1495,
+      "sha256": "9d91c5471461546b65c6197185ba4f519fe1edfed23781cce4b6cc28c182baee",
+      "lines": 43,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/presentation_update_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 424,
+      "sha256": "92044036ff24429033d772b4102abb815c4750b43582b85591faf80b4fb9d688",
+      "lines": 11,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/publication_identity_v02_20260921.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 1781,
+      "sha256": "d114939c34f80e7afb238c8c66a90ea436514216ad7cc8d5279ffecf3539823a",
+      "lines": 40,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/rendered_pdf_text_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 94334,
+      "sha256": "bd2060cc781adfaa37e3e58f3fc9bff4b0e204dc7c7687b04235605b08993a01",
+      "lines": 244,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/research_context_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 21225,
+      "sha256": "631be72663131d328290083128d9093ca70fab50d3ddd5ea46bc150f4e1ef8f9",
+      "lines": 429,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/research_context_v01.md",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 15730,
+      "sha256": "28a670b45e89e26693f14e92525c19eb2d43d321a477b888662d01ff51daf701",
+      "lines": 78,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/research_insert_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 25628,
+      "sha256": "5775b99e6b3ca53bef7e6b0c5397c588f85a9a9aea2f7826a1de10a6dd722d5f",
+      "lines": 288,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/semantic_boundary_trace_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 59054,
+      "sha256": "dec3fce3e3846943353e1b57476fe8a3129ed7bb28d2a233eef4341fd9316213",
+      "lines": 1287,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/slide_text_and_notes_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 177424,
+      "sha256": "4232a3d2a60bf2f932977f16fdd74e6795f41479b70576e94ce25407019473f3",
+      "lines": 1633,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/slides_v01.json",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 269315,
+      "sha256": "b52bbe603e796d9eb60f751f7e535583235de31a0d3383a655a9340468169127",
+      "lines": 2932,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "presentation/technical_appendix_v01.md",
+      "kind": "NEW_PRESENTATION_TEXT",
+      "bytes": 71936,
+      "sha256": "ffba3591605a8d2c4e6734e6fd90e2a017e270fc8ae4eeebe3ef5281250304bd",
+      "lines": 387,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "created_for": "Sentinel presentation",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/EVIDENCE.md",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 2162,
+      "sha256": "a847ff4b1582666b8da192a231a2c8a8006e5deba28a3f74c07a14bfb7927a1f",
+      "lines": 33,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/EVIDENCE.md",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/EVIDENCE.md",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/EVIDENCE.md",
+        "source_bytes_modified": false,
+        "git_blob": "565c381339c844c915b25c67775c52277d1c4ec5",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/README.md",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 3211,
+      "sha256": "2092220430550923ba9f6cd4c947c56814b452191472b2456e609d54ade49aa7",
+      "lines": 56,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/README.md",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/README.md",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/README.md",
+        "source_bytes_modified": false,
+        "git_blob": "10dcbde4ae8b79ef75f2fd74a6afee237e869d24",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/SHA256SUMS",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 1012,
+      "sha256": "fd50bd5a640b081668b25954972774c79a48d0ed00bfa1b6b36629b16bf7c81c",
+      "lines": 11,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/SHA256SUMS",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/SHA256SUMS",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/SHA256SUMS",
+        "source_bytes_modified": false,
+        "git_blob": "d96d14b606e13466e0b05800fa788c2b5c675c5f",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 9835,
+      "sha256": "3fd54a3dc278ec65335034802a0934933a21ec9c3c8fe51d8063df33471bbd7b",
+      "lines": 95,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/anchor_verification_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "26b703087e0aad1e88b493e09797c425f7160a90",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 45648,
+      "sha256": "061b48f6c51d2e9ed4ef0254229f5f08fd7b58821794eb26e773883264836f0f",
+      "lines": 876,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "64b363b9301808c43018911f2608c8c930aa5bf5",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 2356,
+      "sha256": "3a5c698796419ba5747d4062dd5c4db78de62f9e88b007d15121ff4eaf1218ef",
+      "lines": 50,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/history/source_impact_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "894664c9e61699dd46d72f7da9e952ad9c56ec68",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 968,
+      "sha256": "23888cc67ce1ab637d2defbfe14bcb9a5f6a2cfa55ecf7a9e5259f653cd89101",
+      "lines": 23,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/lead_reviewed_anchor_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "95a447b3d6581bd58c67b54dfc03b45a4c2f2bd9",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 1801,
+      "sha256": "d9be468f9cca3593c993d9b9cbfaaf7a519db31719b3e10ca3719f7b24f0c83e",
+      "lines": 1,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/public_safe_package/manifest.json",
+        "source_bytes_modified": false,
+        "git_blob": "98ebca7ff920c0ab3f0672dba1da346a6e5eedc2",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 36079,
+      "sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+      "lines": 1,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+        "source_bytes_modified": false,
+        "git_blob": "96fddf62f224e34b80301128e5b94e1d1b773419",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 1342,
+      "sha256": "39239fedb6186d5205ed1ffad0141332c874232ad907a4d5b54e2cfcdb5a1607",
+      "lines": 1,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/public_safe_package/publication.json",
+        "source_bytes_modified": false,
+        "git_blob": "e70717a783bd782aa75d33ec817a3014892b42e6",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/source_index_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 7912,
+      "sha256": "991db7b54b406d785c48471fa3e620632f0a171b58688dc8fe943182522b1b6a",
+      "lines": 183,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/source_index_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/source_index_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/source_index_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "1d0cfcf607354fca83d91a69cff49553b66108d2",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/verify_replay.sh",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 671,
+      "sha256": "187cfa17308e2ec42424600a121e6a8b247732caebc385792a0aa8090b406b84",
+      "lines": 21,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/showcase/landslide_sentinel_v01/verify_replay.sh",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/showcase/landslide_sentinel_v01/verify_replay.sh",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/showcase/landslide_sentinel_v01/verify_replay.sh",
+        "source_bytes_modified": false,
+        "git_blob": "44debfb43f752f5c20c924ebef29e863f1b45265",
+        "mode": "100755"
+      }
+    },
+    {
+      "path": "reader/IMPLEMENTATION_ROUTE_GUIDE.md",
+      "kind": "NEW_READER_METADATA",
+      "bytes": 2714,
+      "sha256": "2df1f70b57398e334b755302dd44a4e6b5eefa2ab6ac917aa7d43d56cccd1223",
+      "lines": 20,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "provenance": "New explanatory reading material; no new execution or acceptance"
+      }
+    },
+    {
+      "path": "reader/pinned_external_source_references_v01.json",
+      "kind": "NEW_READER_METADATA",
+      "bytes": 54548,
+      "sha256": "3b6d1392f2ca23ce1d319d0599917b713b2c640a7b2c5baf0eb67241e7adb9aa",
+      "lines": 1132,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "provenance": "New explanatory reading material; no new execution or acceptance"
+      }
+    },
+    {
+      "path": "reader/source_inventory_v01.json",
+      "kind": "NEW_READER_METADATA",
+      "bytes": 169806,
+      "sha256": "16dceb1df0221064cb66f562e2c1d938fa62d78a905723f8fe0f478362040469",
+      "lines": 3241,
+      "provenance": {
+        "authority_class": "EVIDENCE_ONLY",
+        "original_anchor_coverage": false,
+        "provenance": "New explanatory reading material; no new execution or acceptance"
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/live_04/live_AB.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 21830,
+      "sha256": "be1bb1e223fa533cdacd839e35d0b5da16babdb3711a223cbaf24129d9260585",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "live_04/live_AB.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/c02_c03_c04/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 55701,
+      "sha256": "a4b3bbbe63f9c253c96489ef0f9ed1ac1d5e8809184647f62f300ad4605b0c0d",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/c02_c03_c04/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/c08/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 50380,
+      "sha256": "265fdd18dd58016345721d1e9c6e8371c28df4836acbe0e62e6657996e0cbbb6",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/c08/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/expired/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 264,
+      "sha256": "025a6146aa3ddde4a128c970be4da470590a707037c6d5357cd40ca064b1229a",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/expired/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/memory/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 62039,
+      "sha256": "0f7668c3d454325b4b185273be34ceb529495d559ac4d64864638dfdb186d1f0",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/memory/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/pending_False/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 102237,
+      "sha256": "c073881884bebde05c90e892857d56ebb8f8202f912ec2dc8cc4a06458260682",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/pending_False/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/pending_True/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 102235,
+      "sha256": "68ad97906e57019a2afc9fdaee9589cff4d6a5255226dd176c708e41ef7e51b8",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/pending_True/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001201754409Z/projection/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 2179,
+      "sha256": "3dc50fb3b4fc76787dd2be350e5848fe9d4cff3ed117437265791e85a77615da",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001201754409Z/projection/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001421055364Z/story/clearance.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 33735,
+      "sha256": "a9488e6859e8ddfdaf9a33333e04252069806cbbb0047c80ee2e6e0c1703c5bd",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001421055364Z/story/clearance.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T001421055364Z/story/story.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 20118,
+      "sha256": "1baace288320533fd056eedc76f41e7ae8e0554b766d734aa74075d2dccc7b5b",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T001421055364Z/story/story.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2/runs/20260915T003923643523Z/c05_result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 128956,
+      "sha256": "3c348b781c2598b06506e929ff3bfe299f3fde4d5d34aec399683c425f871526",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2_RETURN_20260915T005304Z.tar.gz",
+        "archive_sha256": "c26ec2bad672071ba05ef597b5c64e5f00f8d5cc83da37f4d8c7b057ed526ef9",
+        "archive_member": "runs/20260915T003923643523Z/c05_result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/configuration_01/actual_policy_E_result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 39331,
+      "sha256": "279e7785a0f4eb0e9514a8684dc30d5328762f516999551c44e2cc5454a1ea11",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "configuration_01/actual_policy_E_result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/configuration_01/policy_continuation_refusal.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 568,
+      "sha256": "7a35ef6d8456fb599194e7aa1d167bec89cee32d8ed88226c2030185b4738556",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "configuration_01/policy_continuation_refusal.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/ea_capture_02/plan.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 932,
+      "sha256": "6832908e7a429e4a31f43532e5b384963dd47b26a83100349c94430d1e32ee78",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "ea_capture_02/plan.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/ea_capture_02/result.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 8776,
+      "sha256": "aeb5b1ddce8ed7fe3d23efc8afeb06a255574f614fd75807a9a498bea08049db",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "ea_capture_02/result.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/ea_capture_02/selected_pin.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 2087,
+      "sha256": "d299726b1503dcaf450b3e9c4f33d7afc0659022ca65b6130092f6232f9f6a00",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "ea_capture_02/selected_pin.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/live_02/live_AB.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 22144,
+      "sha256": "c419bc1be8d7698f1e0358582c6954590bc9a5cfafcf1fcde2396234948aaa05",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "live_02/live_AB.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r/semantic_completion.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 5306,
+      "sha256": "d0b67ae376d2d26858318c5ab663b5a0043492894a77b7f3b36816ee0f35b29a",
+      "lines": 166,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R_RETURN_20260915T021418Z.tar.gz",
+        "archive_sha256": "96a3e7fc1d959fd959433413681e6d91ed9b9799e31cb765db3bd00d6d24f45e",
+        "archive_member": "semantic_completion.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/active_freeze.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 4253,
+      "sha256": "d9d2d6f2adc78017362655d07891b433f689fa2408b5b6b0d9a1fbfdff13d147",
+      "lines": 99,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "active_freeze.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/closure_matrix.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 1481,
+      "sha256": "694d6c82cfdca5526ac17f1aea930a8045e25df692fa6435648a75960b1ef538",
+      "lines": 18,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "closure_matrix.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/completion_counts.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 309,
+      "sha256": "b8d8fcec14b7f0a0dbc0fef473266addaae37ac75da2f8df9f8ddbdb12422ed7",
+      "lines": 14,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "completion_counts.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/experiment_input.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 541,
+      "sha256": "ea7d6874bd1fb7fe3bd36ce07a06ab6b306836c6427f08d2ef7d894af92f5618",
+      "lines": 6,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "experiment_input.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/final_source_ledger.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 9347,
+      "sha256": "64da79b28d889d64afa085657d3f57ccccdf44dd57366ca45dc61276e69ff45a",
+      "lines": 222,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "final_source_ledger.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/independent_selection.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 18805,
+      "sha256": "c054b763ace76703ed7fefa61ac645cffeb2d1dfe14618061c1b3326e877f6c7",
+      "lines": 246,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "independent_selection.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/D_identity_refusal.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 646,
+      "sha256": "c61be3a38b4dc464a91b56dfc5dfd0156d097708c81391eb58235cf3e3404ae7",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/D_identity_refusal.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/D_work_review.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 1330,
+      "sha256": "c0b7fa4d7217eda98f625ce299d0979e3ade2d0f525587b7efb01b619d5b6bf0",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/D_work_review.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_001/receipt.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 766,
+      "sha256": "c1aa60d5c7197783f8bcc56d803ae2a41bdbc0c9f0aea2ad6b73e7c2deac283f",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_001/receipt.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_001/request.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 8781,
+      "sha256": "e6264ae0d6897c85a11f5fa20cf849ef89a2f12b0c5143d5f2551bc62358c5e6",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_001/request.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_001/response.txt",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 723,
+      "sha256": "0f9c4575adf0f25ed310111388b91f9efe5369b0072faae440f935028ced14b9",
+      "lines": 11,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_001/response.txt",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_002/receipt.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 774,
+      "sha256": "5109d307570653708efd1ed2517245645f16b6988690954fa21cb36fe7132ec9",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_002/receipt.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_002/request.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 6791,
+      "sha256": "c4cebd692633cada2ea00ef1a14a242b9c021264b4db3508051b3464a9506379",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_002/request.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_002/response.txt",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 478,
+      "sha256": "c9a9ad1e47bf1524961ea350ea6babdf509ca9d5271e738f3c7ae6cfd0941650",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_002/response.txt",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_003/receipt.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 774,
+      "sha256": "1b2d1f36a4c6a9e3c8c00577cb11fb6aecc7613ad27db9b75a1c7ec7ffcba091",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_003/receipt.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_003/request.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 8829,
+      "sha256": "3b5ac06ebd9e5eb35932fb4b66ded00a625d84ad2b8704caece2545a5ad98535",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_003/request.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_003/response.txt",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 659,
+      "sha256": "f9fd304786015dcc4b9c413d0f24b32207a1466e2da43d77398f4d84b204b8b8",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_003/response.txt",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_004/receipt.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 766,
+      "sha256": "b057be133f3f435f37c5e7e2f8afa8b40316eff300dcc7995f98c6578d9206a5",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_004/receipt.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_004/request.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 8758,
+      "sha256": "0e600d90131f514b5a1fa35c974069a97c142b0f4c380ffb444da3d4d355b6d9",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_004/request.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_004/response.txt",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 595,
+      "sha256": "db58b80c47d3afc302409149c55350ff6df2098330c001941977faf3a8fcf34c",
+      "lines": 9,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_004/response.txt",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_005/receipt.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 766,
+      "sha256": "7125f743ea16585468bb72e90890fa48e3ce548d0541465e8ff017cfaa35ed29",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_005/receipt.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_005/request.json",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 8760,
+      "sha256": "7d7dd070e3c26c2bf86a0b6d98f847309ecaa25c4f4a66eb01cb783c9ecd7ba7",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_005/request.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/captures/attempt_005/response.txt",
+      "kind": "EXACT_BOUNDED_MODEL_IO",
+      "bytes": 551,
+      "sha256": "f36748488729f8bbb85db1ed03365d081b8175a3f08ecc9dde7eff36cb49162c",
+      "lines": 9,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/captures/attempt_005/response.txt",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/common_D.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 1101855,
+      "sha256": "50e89ec81bd4edbb4e73212af91048b43095da0174b4ea86714e5b85510d6c2c",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/common_D.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/composition_1.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 599507,
+      "sha256": "d1cc223323abd65851f41f7b6fd1c8f1563c5659b6d76633155376b4030d76d3",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/composition_1.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/composition_2.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 398705,
+      "sha256": "415e886d1c000346078854cd25cc7d192627405814acb545bf48b208a01faf82",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/composition_2.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/live_AB.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 31872,
+      "sha256": "3080c1d6efb6295534daf8c5a94c8f1ea320cbb2157c29f46e83e7f5a07b7ab1",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/live_AB.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/local_only_drs.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 29652,
+      "sha256": "06a16b7b774cd39ac42594e7f5c42353e5b43abddbe511b9f2e5bdc0be22ebc3",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/local_only_drs.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/phases.jsonl",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 11892,
+      "sha256": "00bd2a701d0e5efeb4e33da39f41d5a30e931fb0611e60038ea589ec2045a72d",
+      "lines": 30,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/phases.jsonl",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/plan_1.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 217521,
+      "sha256": "f696ca54048d55b52b21e01727f0fa70a82794bef0d17fb282be2127b38981a1",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/plan_1.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/plan_2.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 85955,
+      "sha256": "61aabdf9df74f621030277143d3455c78f096edc1fdcf3e1909e3636d9cad80f",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/plan_2.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/profile_provenance.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 3817,
+      "sha256": "b0780bcf62bdefd686ab1463701aa6f518bff7cc4aaaa7d66cbecbde362359cf",
+      "lines": 116,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/profile_provenance.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/live_01/supplied_D.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 610,
+      "sha256": "e701dabf9d93a8054f7ad1bdae3a783982a57b24cf8c7ac61d32e2a3b2282ce9",
+      "lines": 1,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "live_01/supplied_D.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/package_control_results.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 7836,
+      "sha256": "c36f198e8d50effab194221874f317b2d50f14965ab952deebaa0c861089393b",
+      "lines": 212,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "package_control_results.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/semantic_completion.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 16760,
+      "sha256": "4f534cbc0910639c38236386747fcaa0e99844371e9c36cfd22690cb966c8231",
+      "lines": 510,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "semantic_completion.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/ls2r2/source_impact_bridge.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 6861,
+      "sha256": "d8a58203933039851978f9bf40b1401c641b60ebb24fd7b53c3655b7b7089474",
+      "lines": 161,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "archive_member": "source_impact_bridge.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/main/archive_verification.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 290,
+      "sha256": "35f04283c35f0a0fca4a8265d6f3139338149300e41976da305a2e55ef9455ad",
+      "lines": 8,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "archive_verification.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/main/final_preservation.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 373,
+      "sha256": "cfb24931900632daeb1723e8dbb13a6afeb8c407d79fdc784ab8d2ca49d0f100",
+      "lines": 11,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "final_preservation.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/main/landing_source_impact.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 862,
+      "sha256": "506ccf0d6daa19190246271cfb802121955ce607505e706e762dee3876f3e4a8",
+      "lines": 12,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "landing_source_impact.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/main/lane_results.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 18577,
+      "sha256": "82797eba40e813f9b3045c7d53d24453b3a30be376093b55d7fae0fdcfee1647",
+      "lines": 286,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "lane_results.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/main/source_derivation.json",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 6371,
+      "sha256": "285c086805ce666a1d2f71803f2a0e5666394ca4b37846982069c25be3508b5c",
+      "lines": 138,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "source_derivation.json",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "recorded_evidence/main/test_alignment.patch",
+      "kind": "EXACT_HISTORICAL_EVIDENCE",
+      "bytes": 2987,
+      "sha256": "106b23d96d5ae384e2b2da9712a88f33a94cf04860895c7806b5c4ba8101ade1",
+      "lines": 37,
+      "provenance": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "test_alignment.patch",
+        "source_bytes_modified": false,
+        "historical_status_preserved": true,
+        "original_anchor_coverage": false
+      }
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 16880,
+      "sha256": "4565c007f3c3cbc672fe4e0f883d860a51ac20bb238c06f7e2dab3cb85ca9751",
+      "lines": 306,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "AGENTS.md",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/AGENTS.md",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/AGENTS.md",
+        "source_bytes_modified": false,
+        "git_blob": "5dff3e2ddf4d24fa9952b15ed960ed4a0026e337",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "README.md",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 16817,
+      "sha256": "1a8460836091303936de55437ba9250680ccf409cb8fa9b2b754179f1dced8af",
+      "lines": 309,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "README.md",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/README.md",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/README.md",
+        "source_bytes_modified": false,
+        "git_blob": "e3cccc25700436e0519df2b112f2ba446e942ded",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "demo/run_landslide_sentinel_ls0_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 4304,
+      "sha256": "69831ef4dcd4503b4d75e796cbfb3bb8688b3109c59d8e404e78bec2491fb0ba",
+      "lines": 62,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "demo/run_landslide_sentinel_ls0_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/demo/run_landslide_sentinel_ls0_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/demo/run_landslide_sentinel_ls0_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "556c9ee1d4766b604a9988808e3fee64f1df244e",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "demo/run_landslide_sentinel_ls1_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 9947,
+      "sha256": "6166b954a3ebad4d1e7a2b1a0321d4502bcf797a50c7ebbea15835825cecd597",
+      "lines": 136,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "demo/run_landslide_sentinel_ls1_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/demo/run_landslide_sentinel_ls1_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/demo/run_landslide_sentinel_ls1_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "b4e27d83299b73cbdcd180a3404f7c6576ac8ff5",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "demo/run_landslide_sentinel_ls2_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 11358,
+      "sha256": "e0ff341fe93e74073a46b74d888f801d290830b6548ebf738115c4d16dfe0711",
+      "lines": 150,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "demo/run_landslide_sentinel_ls2_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/demo/run_landslide_sentinel_ls2_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/demo/run_landslide_sentinel_ls2_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "a9b050efa15816a1d20f93420b9010960610a07b",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "demo/run_living_gauntlet_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 258372,
+      "sha256": "8e2d529c0b03a3dbdb353ac061736d5b4383a3b5ef301b26f80d20e68e00fae9",
+      "lines": 6440,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "demo/run_living_gauntlet_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/demo/run_living_gauntlet_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/demo/run_living_gauntlet_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "1474c2f6888e36c9de4689c385ed3de1c44ebc0b",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "docs/demo_designs/landslide_sentinel_v01.md",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 18831,
+      "sha256": "90564aa3f8e15898c39391c7865e1735ffbe68b12a3a7f00797c2781903e43e1",
+      "lines": 307,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "docs/demo_designs/landslide_sentinel_v01.md",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/docs/demo_designs/landslide_sentinel_v01.md",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/docs/demo_designs/landslide_sentinel_v01.md",
+        "source_bytes_modified": false,
+        "git_blob": "1fe7d747b9cbe8f7db8e3fff33f4062e25373630",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "fixtures/landslide_sentinel/ls0_inputs_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 1069,
+      "sha256": "7ee7ee607179d0e4b981fd84e9397914a2c067fe7eaa8d719e4b32bd75d78a40",
+      "lines": 14,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "fixtures/landslide_sentinel/ls0_inputs_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/fixtures/landslide_sentinel/ls0_inputs_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/fixtures/landslide_sentinel/ls0_inputs_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "c66e3260416534b63434c6e6774cee3c5ef6fa2e",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "fixtures/landslide_sentinel/ls1_inputs_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 2037,
+      "sha256": "abb013d9f2618775087a2cc570e4b57d99a2d3aea6a7799a82fbfdfd2be2b0ab",
+      "lines": 30,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "fixtures/landslide_sentinel/ls1_inputs_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/fixtures/landslide_sentinel/ls1_inputs_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/fixtures/landslide_sentinel/ls1_inputs_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "2d426ac9f658d2bdb5feea4ebbd2167b9cd57e60",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "fixtures/landslide_sentinel/ls2_inputs_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 1335,
+      "sha256": "7edd9f9eed21ee91439f8011d82e4c0cf354e01ff65e17a5bc96ca0ee4faa9c6",
+      "lines": 15,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "fixtures/landslide_sentinel/ls2_inputs_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/fixtures/landslide_sentinel/ls2_inputs_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/fixtures/landslide_sentinel/ls2_inputs_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "07c50ea79977141b19ca58ae444dce2ba82226bf",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/action_commit_packet_v02.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 792178,
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+      "lines": 20174,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/action_commit_packet_v02.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/action_commit_packet_v02.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/action_commit_packet_v02.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/action_commit_packet_v02.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+          "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "archive_member": "postimages/hedgehog/action_commit_packet_v02.py",
+          "accepted_archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+          "accepted_archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+          "accepted_ledger_member": "source_review/source_ledger.json",
+          "accepted_source_member": "source_objects/e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+          "accepted_implementation": true,
+          "source_text_modified": false,
+          "git_blob": "039406ff76d3fff213af2b5e4169f49f4a192518"
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "039406ff76d3fff213af2b5e4169f49f4a192518",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/capability_admission_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 18116,
+      "sha256": "2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda",
+      "lines": 387,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/capability_admission_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/capability_admission_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/capability_admission_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/capability_admission_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/capability_admission_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "4c0ad71b5e113daf756b90cfe981a98bab9b11b8",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "4c0ad71b5e113daf756b90cfe981a98bab9b11b8",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/capability_memory_binding_v01.py",
+      "kind": "EXACT_SHARED_SCHEMA_OR_SOURCE",
+      "bytes": 31977,
+      "sha256": "6e4f2ca3be12a1e9a93d7b59318d9a6ba90ea6f43bbd9bccc81d8bdefe1b1b79",
+      "lines": 427,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/capability_memory_binding_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/capability_memory_binding_v01.py",
+        "source_xml": "RADIOLARIA_U1_U4_REAL_SOURCE_AND_AUDIT_REPOMIX_V01(3).xml",
+        "source_xml_sha256": "b6a011c471c0bfd43e28302f1acfcdd3859ef7e1cd331d1290fbc4b95b132c74",
+        "source_xml_file_path": "repository/hedgehog/capability_memory_binding_v01.py",
+        "restored_final_lf": true,
+        "restoration_verified": "Exact current SHA256, byte size and Git blob",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "76334fc8074e4a82b9697590747a15c3ba06f3d2",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/context_packets.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 57747,
+      "sha256": "080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32",
+      "lines": 1553,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/context_packets.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/context_packets.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/context_packets.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/context_packets.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/context_packets.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "44dc8c5590e273cffc0d35173e4b4207986f0d44",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "44dc8c5590e273cffc0d35173e4b4207986f0d44",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/__init__.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 76,
+      "sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5",
+      "lines": 1,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/__init__.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/__init__.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/__init__.py",
+        "source_bytes_modified": false,
+        "git_blob": "e3e0a9bfcf09cc238bb77f4af380175fa7174fc2",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 7410,
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28",
+      "lines": 136,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "b9ce2df4de78b0b660caa6cf31ee1d8c0082e26a",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 21977,
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226",
+      "lines": 281,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/contracts_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "972a89b2de50281479277a6b3899a9c5644a6739",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 1342,
+      "sha256": "d528ee2471a87b0aaf1eee7044dd013c3254b864d9fc17d8ddde0a38e0fb5d57",
+      "lines": 26,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "811e916d6481f835a17f3dec8225252e7a3330ff",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/events_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 6942,
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be",
+      "lines": 120,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/events_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/events_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/events_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "f8c29accc66609793e02b97f8be825695942a9ca",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 20335,
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27",
+      "lines": 245,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/evidence_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "e5e281f1873231ada3cfabacb1a04e59a713d8a7",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 4726,
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947",
+      "lines": 77,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "3675f1bc52669a80158812eb57a12b3c2dba6dba",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 70774,
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521",
+      "lines": 765,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "70f5da5e5baa0287ac0c25a80d582c05787069c8",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 57192,
+      "sha256": "53417d829ea281d21b16e31f4760763ae60d57bd9a8cafdf301ad90e642461ab",
+      "lines": 733,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "cb0f561af7a521c04dc9c61e1cbc7a0fbc72a7dd",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 2128,
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e",
+      "lines": 48,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/outbox_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "5b69db4d4a8e4410e6f958adb8c759b9ab75ae33",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 10743,
+      "sha256": "4662e5b4d83be23e9390f0a8232ba76fa003d925306c0c951013168297ef5d29",
+      "lines": 137,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/rainfall_adapter_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "1f4b0399c623e397cb41aad23b4cc5b8d2e67ac2",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 17433,
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa",
+      "lines": 240,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "16a633b7f93572fbbbfa3d55721d82ee7390120b",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "hedgehog/drs.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 3888,
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4",
+      "lines": 121,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/drs.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/drs.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/drs.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/drs.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/drs.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "36eef5aff836e174d906bb4985f8b81352486bad",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "36eef5aff836e174d906bb4985f8b81352486bad",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/drs_g2b_compatibility_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 48098,
+      "sha256": "dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5",
+      "lines": 1493,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/drs_g2b_compatibility_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/drs_g2b_compatibility_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/drs_g2b_compatibility_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/drs_g2b_compatibility_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/drs_g2b_compatibility_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "a9e5160229f58a87b39ac33a9f83872ccce3b4ce",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "a9e5160229f58a87b39ac33a9f83872ccce3b4ce",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/drs_memory_resolution_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 157202,
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+      "lines": 3962,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/drs_memory_resolution_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/drs_memory_resolution_v01.py",
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+        "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+        "archive_member": "source_review/source_objects/698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "bc3de6f379ada4f4bbf288556ea9039a32d9b5f6",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/drs_semantic_address_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 57213,
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20",
+      "lines": 1753,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/drs_semantic_address_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/drs_semantic_address_v01.py",
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+        "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+        "archive_member": "source_review/source_objects/9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "f8cfc14e28210b1af3ee3383001847c5e562af3d",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/evidence/__init__.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 3830,
+      "sha256": "2fa905efbd7f2a968d8a648ef14ef676a4f64bac94a159651c7a4d7b71a81b8b",
+      "lines": 101,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/evidence/__init__.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/evidence/__init__.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/evidence/__init__.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/evidence/__init__.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/evidence/__init__.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "9cccdce5d99201f5d2655248b28bf92b91c7908d",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "9cccdce5d99201f5d2655248b28bf92b91c7908d",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/evidence/external_anchor_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 35826,
+      "sha256": "299c6d2daabfe53c0c93c76a46709d09c4cc26b89907af17a30dab8ce8537994",
+      "lines": 953,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/evidence/external_anchor_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/evidence/external_anchor_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/evidence/external_anchor_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/evidence/external_anchor_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/evidence/external_anchor_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "469e0cf1274db069663cdc3afe6103f2686a922b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "469e0cf1274db069663cdc3afe6103f2686a922b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 54293,
+      "sha256": "3845a246e641aea8da3d9314e2d140bcb701a5488cb9de8153a62f0d84529b37",
+      "lines": 1481,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/evidence/sealed_evidence_profile_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/evidence/sealed_evidence_profile_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/evidence/sealed_evidence_profile_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/evidence/sealed_evidence_profile_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/evidence/sealed_evidence_profile_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "ed7b1916b18a135442f492365d8d9b73478bda99",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "ed7b1916b18a135442f492365d8d9b73478bda99",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/evidence/sealed_package_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 30908,
+      "sha256": "4fecf1b24696316348256acd1bd5a9e7a237dc37bd5b11abc41a71257796af53",
+      "lines": 836,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/evidence/sealed_package_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/evidence/sealed_package_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/evidence/sealed_package_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/evidence/sealed_package_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/evidence/sealed_package_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "9b17c7a85cad4969eec393753c2c8bd248d6ab1b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "9b17c7a85cad4969eec393753c2c8bd248d6ab1b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 38035,
+      "sha256": "f40e48f3d32f4b67250534f5d47d5bb4e076890497506ec4315d9ce06261c5a3",
+      "lines": 935,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/evidence/sealed_replay_evidence_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/evidence/sealed_replay_evidence_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/evidence/sealed_replay_evidence_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/evidence/sealed_replay_evidence_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/evidence/sealed_replay_evidence_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "0c71b610a2e9dbf29e56adb128da217d795c756f",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "0c71b610a2e9dbf29e56adb128da217d795c756f",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/gt_validator.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 21496,
+      "sha256": "e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd",
+      "lines": 594,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/gt_validator.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/gt_validator.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/gt_validator.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/gt_validator.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/gt_validator.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "8ea6e2c197ba5e584c8c5e112bbc84b9f56399af",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "8ea6e2c197ba5e584c8c5e112bbc84b9f56399af",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/__init__.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 24063,
+      "sha256": "b26dad7e3a5d47b2d717f002a0982bd0bb0fcde95110627846d81d747a0e4be1",
+      "lines": 580,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/__init__.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/__init__.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/__init__.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/__init__.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/__init__.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "ab7178b683ac31c39b6c53137673d9c78ab24939",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "ab7178b683ac31c39b6c53137673d9c78ab24939",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/abi_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 43017,
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31",
+      "lines": 1198,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/abi_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/abi_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/abi_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/abi_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/abi_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "ceb304d91cbd259622ef66881215bace231a2a87",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "ceb304d91cbd259622ef66881215bace231a2a87",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 554433,
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0",
+      "lines": 13452,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/continuous_delta_runtime_v01.py",
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+        "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+        "archive_member": "source_review/source_objects/879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "c346545061e67d924c695f3acad945a3b478c8cb",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/effect_firewall_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 128809,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "lines": 2848,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/effect_firewall_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/effect_firewall_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/effect_firewall_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/effect_firewall_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+          "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+          "archive_member": "baseline_pin_command_01/executed_sources/hedgehog/kernel/effect_firewall_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "b2cfb986cef7b6723ab5c37a69d0e6edf98f0066",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "b2cfb986cef7b6723ab5c37a69d0e6edf98f0066",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/execution_mode_router_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 293681,
+      "sha256": "4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4",
+      "lines": 7594,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/execution_mode_router_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/execution_mode_router_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/execution_mode_router_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/execution_mode_router_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/execution_mode_router_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "343c83bb23ddce229c5fbd10d9aa4c0bda831ec7",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "343c83bb23ddce229c5fbd10d9aa4c0bda831ec7",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/fractal_runtime_v02.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 947221,
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba",
+      "lines": 20454,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/fractal_runtime_v02.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/fractal_runtime_v02.py",
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+        "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+        "archive_member": "source_review/source_objects/ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "95820ec375d944f836154751e183e522b3137c6c",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/integrity_replay_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 48487,
+      "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be",
+      "lines": 1321,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/integrity_replay_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/integrity_replay_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/integrity_replay_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/integrity_replay_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/integrity_replay_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "bef709ddbcea19712ff2329a13af77aed6fbb081",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "bef709ddbcea19712ff2329a13af77aed6fbb081",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/root_decision_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 43352,
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
+      "lines": 1116,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/root_decision_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/root_decision_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/root_decision_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/root_decision_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/root_decision_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "24f6f869a57cce7e59fb09a84295cfc76db3706b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "24f6f869a57cce7e59fb09a84295cfc76db3706b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/root_signer_isolation_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 31043,
+      "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8",
+      "lines": 879,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/root_signer_isolation_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/root_signer_isolation_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/root_signer_isolation_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/root_signer_isolation_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/root_signer_isolation_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "2a38949079139fb7cf288c8ecdd01c225cd8defd",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "2a38949079139fb7cf288c8ecdd01c225cd8defd",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/semantic_work_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 58880,
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1",
+      "lines": 1570,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/semantic_work_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/semantic_work_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/semantic_work_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/semantic_work_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/semantic_work_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "c5f162fbc3bfbeefb070ba316e90e78884b5f78b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "c5f162fbc3bfbeefb070ba316e90e78884b5f78b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/transition_registry_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 142980,
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca",
+      "lines": 3801,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/transition_registry_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/transition_registry_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/transition_registry_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/transition_registry_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_MAIN_LANDING_RETURN_20260914T142858Z.tar.gz",
+          "archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "archive_member": "postimages/hedgehog/kernel/transition_registry_v01.py",
+          "accepted_archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+          "accepted_archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+          "accepted_ledger_member": "source_review/source_ledger.json",
+          "accepted_source_member": "source_objects/16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca",
+          "accepted_implementation": true,
+          "source_text_modified": false,
+          "git_blob": "8ea45cd5232aaca9612cc744108aa158a5c9c558"
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "8ea45cd5232aaca9612cc744108aa158a5c9c558",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/trust_model_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 15364,
+      "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d",
+      "lines": 467,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/trust_model_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/trust_model_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/trust_model_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/trust_model_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/kernel/trust_model_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "2a80b39d905f082e5ffc59c306bad603bb28d10b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "2a80b39d905f082e5ffc59c306bad603bb28d10b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/kernel/work_composition_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 89161,
+      "sha256": "f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061",
+      "lines": 1402,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/kernel/work_composition_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/kernel/work_composition_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/kernel/work_composition_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/kernel/work_composition_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+          "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+          "archive_member": "baseline_pin_command_01/executed_sources/hedgehog/kernel/work_composition_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "7b0d48dd58ee73b33ec6495c7ee3346dca957fa7",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "7b0d48dd58ee73b33ec6495c7ee3346dca957fa7",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/local_drs_resolver.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 53552,
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4",
+      "lines": 1503,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/local_drs_resolver.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/local_drs_resolver.py",
+        "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+        "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+        "archive_member": "source_review/source_objects/5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "2562a8923fd7a5d12007c7a7e0f6005e83476eb4",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/local_drs_v02.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 30549,
+      "sha256": "831c3c7e0a1bfcb2ad9cc56d61c2c33ccbc8982add7ac46434c55676c03a34af",
+      "lines": 885,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/local_drs_v02.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/local_drs_v02.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/local_drs_v02.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/local_drs_v02.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/local_drs_v02.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "398b73f0d9a9e75e10bb1e71e42c4ad256e8e369",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "398b73f0d9a9e75e10bb1e71e42c4ad256e8e369",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/post_vv.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 18910,
+      "sha256": "e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3",
+      "lines": 598,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/post_vv.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/post_vv.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/post_vv.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/post_vv.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/post_vv.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "05cf3cbf3cc33b093312eb7b60d8073615d9bc0b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "05cf3cbf3cc33b093312eb7b60d8073615d9bc0b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/reuse_certificate_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 50900,
+      "sha256": "55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c",
+      "lines": 1382,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/reuse_certificate_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/reuse_certificate_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/reuse_certificate_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/reuse_certificate_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/reuse_certificate_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "73436753a215035a5012bfbf218db27be805839b",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "73436753a215035a5012bfbf218db27be805839b",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/reuse_gate.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 4052,
+      "sha256": "964bd4ae925c934710f1055514a256b2a5d7521e91841628180c418742df9584",
+      "lines": 133,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/reuse_gate.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/reuse_gate.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/reuse_gate.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/reuse_gate.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/reuse_gate.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "156b8554b02c614c597574cd5cce1a40f4f2b339",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "156b8554b02c614c597574cd5cce1a40f4f2b339",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/semantic_reasoning_adapter.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 14728,
+      "sha256": "3900b23d3f15ee42b21b7f28895e1badf6639d56a98ce3fcbe5a9f9c072009f6",
+      "lines": 451,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/semantic_reasoning_adapter.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/semantic_reasoning_adapter.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/semantic_reasoning_adapter.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/semantic_reasoning_adapter.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/semantic_reasoning_adapter.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "f644fd3d437a3ecb5ecff4ce963215aac548770e",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "f644fd3d437a3ecb5ecff4ce963215aac548770e",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/structured_rationale.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 17449,
+      "sha256": "05686cd42bc4ea0bd9b0bc2586c7df6fd51369d43ee0fb15af4c95326e3d1f03",
+      "lines": 524,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/structured_rationale.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/structured_rationale.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/structured_rationale.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/structured_rationale.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/structured_rationale.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "5940df6059ed5ab3cb80cf7302db1e903d964dd7",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "5940df6059ed5ab3cb80cf7302db1e903d964dd7",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/time_model.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 974,
+      "sha256": "1b461cf013f2e60a82509669b0ac692d0121b8d5f3c9d3a46a3d5fd33fc48cba",
+      "lines": 42,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/time_model.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/time_model.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/time_model.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/time_model.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/time_model.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "506b21f6d02a5787bf3bb3eec548b5c125c5b1c7",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "506b21f6d02a5787bf3bb3eec548b5c125c5b1c7",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/wasm_pure_worker_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 11394,
+      "sha256": "e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae",
+      "lines": 261,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/wasm_pure_worker_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/wasm_pure_worker_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/wasm_pure_worker_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/wasm_pure_worker_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R_BROWSER_ACCEPTANCE_RETURN_20260914T103155Z.tar.gz",
+          "archive_sha256": "5d2aae019dc2006e0cf0cc962a3dde03825235ac41eb8de74f0dbe5632e2dc48",
+          "archive_member": "source_material/hedgehog/wasm_pure_worker_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "497d2746ff8e17894d6d136724c7bf7bc393cc8d",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "497d2746ff8e17894d6d136724c7bf7bc393cc8d",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "hedgehog/work_execution_host_v01.py",
+      "kind": "EXACT_SHARED_RUNTIME_SOURCE",
+      "bytes": 52262,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b",
+      "lines": 978,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "hedgehog/work_execution_host_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/hedgehog/work_execution_host_v01.py",
+        "recovered_from": "Previously verified Ephemeral Workspace reader payload",
+        "original_source": {
+          "repository": "AAkhtanin/hedgehog-os",
+          "commit": "3f8720b75a1bda3a1df6b184e643c2de5327f838",
+          "repository_path": "hedgehog/work_execution_host_v01.py",
+          "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/3f8720b75a1bda3a1df6b184e643c2de5327f838/hedgehog/work_execution_host_v01.py",
+          "archive": "RADIOLARIA_EPHEMERAL_WORKSPACE_EWS4R_PROOF_COMPLETION_RETURN_20260914T132459Z.tar.gz",
+          "archive_sha256": "ca404254ef1cfa57b232126c94dbef7c836fa56ed80e4caeae3b65ecf331b975",
+          "archive_member": "baseline_pin_command_01/executed_sources/hedgehog/work_execution_host_v01.py",
+          "main_identity_check": "sha256, byte size and Git blob pinned by landing protected_base_paths",
+          "landing_manifest_member": "landing_manifest.json",
+          "landing_archive_sha256": "530a71cf7b72b411043ee2113d86dd5957da0eccc786d3d9a099a47e49fc84b5",
+          "git_blob": "e333897699dc8b35ab4b50824ae0a7521e24faf1",
+          "source_text_modified": false
+        },
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "e333897699dc8b35ab4b50824ae0a7521e24faf1",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "pyproject.toml",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 866,
+      "sha256": "86485a92ac1bdaa3a73743190e70eda2ac37d66cb4d7653f69fb81d70f319ee6",
+      "lines": 38,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "pyproject.toml",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/pyproject.toml",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/pyproject.toml",
+        "source_bytes_modified": false,
+        "git_blob": "6381e69ddd4d480ee915d1a70b009741c08d5550",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "release/current_status_overlay_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 111660,
+      "sha256": "63571108c6aadfd72750889d0099c5122f42f8be3b9dc5a6853712039494c564",
+      "lines": 1779,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "release/current_status_overlay_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/release/current_status_overlay_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/release/current_status_overlay_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "be631d020abd6e735a4fe8d2ec31b61efc60ad95",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "release/successor_context_manifest_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 87604,
+      "sha256": "366ff9b8ed71b1a773fc57946ebf2fa6bc099f894dae9e202d7368a63318b288",
+      "lines": 1704,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "release/successor_context_manifest_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/release/successor_context_manifest_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/release/successor_context_manifest_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "db03ae24bebf3fb1629545d7a38236a1717fe35b",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "schemas/capability_admission_v01.schema.json",
+      "kind": "EXACT_SHARED_SCHEMA_OR_SOURCE",
+      "bytes": 2711,
+      "sha256": "b09ac99cb2e62ffd95098401a5695a0f018d87d4f2e61f9de723f710ac7455e0",
+      "lines": 51,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "schemas/capability_admission_v01.schema.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/schemas/capability_admission_v01.schema.json",
+        "source_xml": "RADIOLARIA_U1_U4_REAL_SOURCE_AND_AUDIT_REPOMIX_V01(3).xml",
+        "source_xml_sha256": "b6a011c471c0bfd43e28302f1acfcdd3859ef7e1cd331d1290fbc4b95b132c74",
+        "source_xml_file_path": "repository/schemas/capability_admission_v01.schema.json",
+        "restored_final_lf": true,
+        "restoration_verified": "Exact current SHA256, byte size and Git blob",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "43e5c7fa35d8458fcdc320afcdd2b91223f29e6e",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "schemas/work_composition_v01.schema.json",
+      "kind": "EXACT_SHARED_SCHEMA_OR_SOURCE",
+      "bytes": 14114,
+      "sha256": "ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0",
+      "lines": 237,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "repository_path": "schemas/work_composition_v01.schema.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/schemas/work_composition_v01.schema.json",
+        "source_xml": "RADIOLARIA_U1_U4_REAL_SOURCE_AND_AUDIT_REPOMIX_V01(3).xml",
+        "source_xml_sha256": "b6a011c471c0bfd43e28302f1acfcdd3859ef7e1cd331d1290fbc4b95b132c74",
+        "source_xml_file_path": "repository/schemas/work_composition_v01.schema.json",
+        "restored_final_lf": true,
+        "restoration_verified": "Exact current SHA256, byte size and Git blob",
+        "current_pin_member": "owner_basis.json",
+        "current_pin_archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "git_blob": "c3a1e3e384ab5e7139993279e624ca1e645daddd",
+        "source_bytes_modified": false
+      }
+    },
+    {
+      "path": "specs/current_architecture_lock_v01.md",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 25902,
+      "sha256": "6c5ece93c569a3a55115750b42bd4143184e132233413db1d026661b330e1457",
+      "lines": 467,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "specs/current_architecture_lock_v01.md",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/specs/current_architecture_lock_v01.md",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/specs/current_architecture_lock_v01.md",
+        "source_bytes_modified": false,
+        "git_blob": "18eca0613e6467d19fce0b1dd8a33fcafc8f2e35",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "specs/document_authority_index_v01.json",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 77885,
+      "sha256": "8fba19abc8d20823acce7bb9cee5ce634168effe38f47941bb86c7166ffc1c37",
+      "lines": 1456,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "specs/document_authority_index_v01.json",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/specs/document_authority_index_v01.json",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/specs/document_authority_index_v01.json",
+        "source_bytes_modified": false,
+        "git_blob": "8b1e228e11e32786f48f903de350413678ed328e",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tests/test_active_architecture_authority_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 317849,
+      "sha256": "a87fdf3bcd00f22ddbeb3229637843eca0b7372ee2c5a0f1965a7f0410908e7b",
+      "lines": 8022,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tests/test_active_architecture_authority_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tests/test_active_architecture_authority_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tests/test_active_architecture_authority_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "f979892f48b0b3f30c43c41aa5380b28810414ad",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tests/test_landslide_sentinel_ls0_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 4982,
+      "sha256": "fde4c1fa2c4d4fd3ae4fad96dbcc20416ac3fb47ca245e5b47e40f91c70e4dc4",
+      "lines": 84,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tests/test_landslide_sentinel_ls0_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tests/test_landslide_sentinel_ls0_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tests/test_landslide_sentinel_ls0_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "d0d3a521b9504e401382bda97277ed6739b6efcc",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tests/test_landslide_sentinel_ls1_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 9697,
+      "sha256": "28c72c093878208d39f97df1c276734ac611bc26b9c86343a5fb941494c3f7ef",
+      "lines": 147,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tests/test_landslide_sentinel_ls1_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tests/test_landslide_sentinel_ls1_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tests/test_landslide_sentinel_ls1_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "0c49c6606c02755785135542acb13b57c16faf60",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tests/test_landslide_sentinel_ls2_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 35934,
+      "sha256": "189ac7bf0393fb2d5458535ea6ff7203ffd450dfd5ddc71b525acc51cb33b445",
+      "lines": 516,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tests/test_landslide_sentinel_ls2_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tests/test_landslide_sentinel_ls2_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tests/test_landslide_sentinel_ls2_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "582321fa68a7172273d1fc33377e6bc5e128b951",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tests/test_living_gauntlet_v01_runner.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 226412,
+      "sha256": "beda603de47d7d8ef83afe1b3ba344970feed4296c143880ed6035bc9eba8281",
+      "lines": 5781,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tests/test_living_gauntlet_v01_runner.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tests/test_living_gauntlet_v01_runner.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tests/test_living_gauntlet_v01_runner.py",
+        "source_bytes_modified": false,
+        "git_blob": "57fc44f555275732ee6f9356d0701dda17675d66",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tests/test_repository_release_spine_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 205990,
+      "sha256": "0ffd6ddcb55c74703598a4f268acbffe2047a15d2e8e5c0d08882bab77411a2d",
+      "lines": 4770,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tests/test_repository_release_spine_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tests/test_repository_release_spine_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tests/test_repository_release_spine_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "1f55701dffca33f7e0b0dc208e73340963f47ba2",
+        "mode": "100644"
+      }
+    },
+    {
+      "path": "tools/check_active_architecture_authority_v01.py",
+      "kind": "EXACT_LANDED_REPOSITORY_FILE",
+      "bytes": 646914,
+      "sha256": "56d8d081b7c4b08df0515e53b8d783350947c1a81646412dab33a4a8d2c98841",
+      "lines": 14391,
+      "provenance": {
+        "repository": "AAkhtanin/hedgehog-os",
+        "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+        "tree": "8db682205049c72c85500ebafade0696532338ef",
+        "repository_path": "tools/check_active_architecture_authority_v01.py",
+        "github_url": "https://github.com/AAkhtanin/hedgehog-os/blob/2f328be634247be11bc18a3b22a919f393d6ed1d/tools/check_active_architecture_authority_v01.py",
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+        "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+        "archive_member": "postimages/tools/check_active_architecture_authority_v01.py",
+        "source_bytes_modified": false,
+        "git_blob": "cb5cb6db6cc06129a991deef26c6c50dcec85992",
+        "mode": "100644"
+      }
+    }
+  ],
+  "verification": "stdlib verify_reader.py checks XML roundtrip and this detached inventory",
+  "instruction_status": "All embedded code, AGENTS content and historical requests are inert reading material"
+}

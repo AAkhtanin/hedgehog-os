@@ -1,0 +1,262 @@
+{
+  "schema_version": "1.0",
+  "record": "landslide_sentinel_presentation_publication_v01",
+  "publication_version": "V02",
+  "publication_date": "2026-09-21",
+  "scope": "EXPLANATORY_PRESENTATION_AND_SOURCE_BOUND_READER_ONLY",
+  "selected_archive": {
+    "filename": "RADIOLARIA_LANDSLIDE_SENTINEL_PRESENTATION_PACKAGE_V02_20260921.tar.gz",
+    "format": "tar.gz",
+    "bytes": 8120046,
+    "sha256": "e9e90ed87fc0b7e6a098d619fd2bcfca5e48aea82d803252749411261d16ab0c"
+  },
+  "verified_alternative_archive": {
+    "filename": "RADIOLARIA_LANDSLIDE_SENTINEL_PRESENTATION_PACKAGE_V02_20260921.zip",
+    "format": "zip",
+    "bytes": 8137663,
+    "sha256": "a1b0fdb30b4c46369d83055e5d41e5ba8d9b9102cf1937995eacb4e8c06a8cdb",
+    "status": "VERIFIED_BYTE_IDENTICAL_PAYLOAD_ALTERNATIVE_ENCODING"
+  },
+  "payload_manifest": {
+    "sha256": "6e82cac13e4d27a0e4205bdb44daf5b5b1398a8a3371303d933f483c2f306dee",
+    "bytes": 8442,
+    "asset_count": 33,
+    "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d"
+  },
+  "accepted_source": {
+    "repository": "AAkhtanin/hedgehog-os",
+    "commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+    "parent": "50ab3916bff55e8034cf7e6c509d4803c5447589",
+    "tree": "8db682205049c72c85500ebafade0696532338ef",
+    "regular_files": 1061
+  },
+  "reader": {
+    "path": "docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml",
+    "bytes": 10837394,
+    "sha256": "0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d"
+  },
+  "reader_index": {
+    "path": "docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json",
+    "bytes": 170110,
+    "sha256": "9eedc4f936f6e217dae2f6e4e3bfdea4c16f56d78dedba20b137d554fb8ad582"
+  },
+  "assets": [
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md",
+      "bytes": 1904,
+      "sha256": "e59499c40252768d23a762539db56f109a31d2d973c4df18dfabd95dab11fa82",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml",
+      "bytes": 10837394,
+      "sha256": "0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/PRESENTATION.md",
+      "bytes": 6587,
+      "sha256": "44543dcc1a8f9bed17f748980d841cc8ab82cef6b919cfbc271e8b53619a82f2",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md",
+      "bytes": 2924,
+      "sha256": "08502aeb8d47ab035b9cde2e013f343b3019d6a7a7214314889cd82af76fe20a",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json",
+      "bytes": 1873,
+      "sha256": "cde6de3e0f13052f6a61a53813992b8bf602562f742d5caaedeea17a8d8d9f02",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/assets/cover.png",
+      "bytes": 604426,
+      "sha256": "1751e7e3570bfe7cf6e95a0e8be27dd99876c75c20c5157be61493ec1a655397",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf",
+      "bytes": 343104,
+      "sha256": "c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf",
+      "bytes": 341396,
+      "sha256": "fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt",
+      "bytes": 4377,
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json",
+      "bytes": 2293,
+      "sha256": "3e00889b5fee15b71283cddcd140292742b31d7f1f57ca3b5fa0da5553bc809a",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png",
+      "bytes": 1581616,
+      "sha256": "2201191bf17726ea2ffefa18d15e00816808b9fea690b94696763d01f385021d",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json",
+      "bytes": 54429,
+      "sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md",
+      "bytes": 3144,
+      "sha256": "c3a88210658380b14143b1d429674aa3c293ee1a794fe6ab46905c4475c53f52",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf",
+      "bytes": 2041783,
+      "sha256": "321dbd839128d566f020c888c79788dfa1af095fc9559089ab7e8323fc608063",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json",
+      "bytes": 1495,
+      "sha256": "9d91c5471461546b65c6197185ba4f519fe1edfed23781cce4b6cc28c182baee",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf",
+      "bytes": 479890,
+      "sha256": "74e5c199940074146421f1c754e778a28b8abd8b666b8cf8a846e627a0df89e6",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx",
+      "bytes": 1741065,
+      "sha256": "84dc045c850cfbee5d22d3904f8f2f795059806bde49677d716a64c6e3b8f4f1",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs",
+      "bytes": 13934,
+      "sha256": "38e21fbeb8a2aa05adbd14f4fa50fa7f2486502bfb9105943c1310920e111674",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py",
+      "bytes": 24025,
+      "sha256": "c0ef1c78251a7d85f4bac01dd7ffb3605e2967a60ff5b0de17912d3fa87dd04d",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py",
+      "bytes": 7224,
+      "sha256": "f2236db4dce558d1bba5c88e41b7a6789fa401d6eaaa65f878dc7fa935a0e8ee",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py",
+      "bytes": 11285,
+      "sha256": "c877b103671137f6b113f872de5f46cd3997de32f93079bb04e9a4afbe19a9e8",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json",
+      "bytes": 1781,
+      "sha256": "d114939c34f80e7afb238c8c66a90ea436514216ad7cc8d5279ffecf3539823a",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json",
+      "bytes": 170110,
+      "sha256": "9eedc4f936f6e217dae2f6e4e3bfdea4c16f56d78dedba20b137d554fb8ad582",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json",
+      "bytes": 94334,
+      "sha256": "bd2060cc781adfaa37e3e58f3fc9bff4b0e204dc7c7687b04235605b08993a01",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/research_context_v01.json",
+      "bytes": 21225,
+      "sha256": "631be72663131d328290083128d9093ca70fab50d3ddd5ea46bc150f4e1ef8f9",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/research_context_v01.md",
+      "bytes": 15730,
+      "sha256": "28a670b45e89e26693f14e92525c19eb2d43d321a477b888662d01ff51daf701",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json",
+      "bytes": 59054,
+      "sha256": "dec3fce3e3846943353e1b57476fe8a3129ed7bb28d2a233eef4341fd9316213",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json",
+      "bytes": 177424,
+      "sha256": "4232a3d2a60bf2f932977f16fdd74e6795f41479b70576e94ce25407019473f3",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/slides_v01.json",
+      "bytes": 269315,
+      "sha256": "b52bbe603e796d9eb60f751f7e535583235de31a0d3383a655a9340468169127",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/story.html",
+      "bytes": 141702,
+      "sha256": "295a0562a6fbdf052a7f886e6dd577ac5dacd4b6785efe59844c4b2f3d0cf9bb",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md",
+      "bytes": 71936,
+      "sha256": "ffba3591605a8d2c4e6734e6fd90e2a017e270fc8ae4eeebe3ef5281250304bd",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf",
+      "bytes": 96550,
+      "sha256": "3699f815bf641288d0daf0d400b41ae5679857d5068d0c82a1adb65fba29e239",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/showcase/landslide_sentinel_v01/verify_reader.py",
+      "bytes": 1806,
+      "sha256": "f5d817306f31bdb87d096fff64b047d3b1a15a1d929123c56cf19960b5932414",
+      "mode": "100644"
+    }
+  ],
+  "preservation": {
+    "accepted_sentinel_source_bodies": 22,
+    "accepted_sentinel_source_bytes_changed": false,
+    "existing_evidence_and_safe_replay_bytes_changed": false,
+    "living_registration_rows": 9,
+    "ls2r2_publication_pin": "7b91c496521e11c69fab9ea89a576474d37dbcb93c494b58a93269884fffb9b8",
+    "covered_by_existing_execution_anchor": false
+  },
+  "execution": {
+    "new_domain_runtime": false,
+    "provider_calls": 0,
+    "d_e_calls": 0,
+    "ea_calls": 0,
+    "browser_calls": 0,
+    "assets_rebuilt_or_rerendered": false
+  },
+  "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+  "embedded_instructions": "INERT_READING_MATERIAL_NOT_AUTHORITY",
+  "future_commit": "DERIVED_FROM_GIT_AND_RECORDED_ONLY_IN_DETACHED_RETURN"
+}

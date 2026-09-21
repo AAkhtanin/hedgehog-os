@@ -1,0 +1,57 @@
+{
+  "scope": "New explanatory publication; outside prior execution anchor",
+  "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "reader_not_included_to_avoid_self_reference": true,
+  "files": [
+    {
+      "path": "landslide_sentinel_showcase_v01.pdf",
+      "bytes": 479890,
+      "sha256": "74e5c199940074146421f1c754e778a28b8abd8b666b8cf8a846e627a0df89e6"
+    },
+    {
+      "path": "landslide_sentinel_showcase_v01.pptx",
+      "bytes": 1741065,
+      "sha256": "84dc045c850cfbee5d22d3904f8f2f795059806bde49677d716a64c6e3b8f4f1"
+    },
+    {
+      "path": "technical_appendix_v01.pdf",
+      "bytes": 96550,
+      "sha256": "3699f815bf641288d0daf0d400b41ae5679857d5068d0c82a1adb65fba29e239"
+    },
+    {
+      "path": "executive_one_pager_v01.pdf",
+      "bytes": 2041783,
+      "sha256": "321dbd839128d566f020c888c79788dfa1af095fc9559089ab7e8323fc608063"
+    },
+    {
+      "path": "assets/cover.png",
+      "bytes": 604426,
+      "sha256": "1751e7e3570bfe7cf6e95a0e8be27dd99876c75c20c5157be61493ec1a655397"
+    },
+    {
+      "path": "assets/fonts/Inter-Bold.ttf",
+      "bytes": 343104,
+      "sha256": "c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73"
+    },
+    {
+      "path": "assets/fonts/Inter-Regular.ttf",
+      "bytes": 341396,
+      "sha256": "fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2"
+    },
+    {
+      "path": "assets/fonts/OFL.txt",
+      "bytes": 4377,
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+    },
+    {
+      "path": "assets/hero_provenance_v01.json",
+      "bytes": 2293,
+      "sha256": "3e00889b5fee15b71283cddcd140292742b31d7f1f57ca3b5fa0da5553bc809a"
+    },
+    {
+      "path": "assets/radiolaria_landslide_sentinel_hero.png",
+      "bytes": 1581616,
+      "sha256": "2201191bf17726ea2ffefa18d15e00816808b9fea690b94696763d01f385021d"
+    }
+  ]
+}

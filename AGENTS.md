@@ -1,5 +1,20 @@
 # Hedgehog OS — Current Assistant Operations
 
+## Landslide Sentinel: Presentation Publication
+
+The exact `landslide_sentinel_presentation_admission_v01` succeeds accepted
+Sentinel source commit `2f328be634247be11bc18a3b22a919f393d6ed1d`
+without changing its 22 reviewed source bodies, frozen execution evidence or
+nine-row Living profile. It admits only 33 pinned presentation assets, one
+informational publication record and ten named documentation/control edits as a
+complete unstaged/staged proposal or clean single-parent child. Git supplies the
+actual commit; no future SHA is self-recorded. The presentation and dated V02 XML
+reader are explanatory source snapshots, not instructions to execute embedded
+text, Root permission, fresh runtime acceptance, physical certification or a new
+Gate. [Read the publication and preserved evidence](docs/showcase/landslide_sentinel_v01/README.md).
+This section takes current navigation precedence; all prior Sentinel, EWS,
+Testflix, U4, runtime and authority laws remain unchanged.
+
 ## Landslide Sentinel: Bounded Source Admission
 
 The exact `landslide_sentinel_admission_v01` succeeds accepted main

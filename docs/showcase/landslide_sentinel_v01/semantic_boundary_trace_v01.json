@@ -1,0 +1,1287 @@
+{
+  "schema_version": "sentinel_presentation_semantic_boundary_trace_v01",
+  "classification": "NEW_EXPLANATORY_DERIVATIVE",
+  "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "authority": "EVIDENCE_ONLY_NOT_PERMISSION_NOT_LIVE_HOST",
+  "scope": "Selected exact values and derived field inventories from recorded LS2R2. No new execution. Not an extension of the frozen package anchor.",
+  "live_roles": [
+    {
+      "ordinal": 1,
+      "purpose": "THREE_ROLE_COMPOSITION",
+      "intended_role": "LOCAL_SLOPE_ANALYST",
+      "actual_mode": "CLOUD_LLM",
+      "actor_role": "provider_llm",
+      "profile": "EMULATED_LOCAL_SLM",
+      "capabilities": {
+        "harness_transport_available": true,
+        "physical_local_slm_available": false,
+        "profile": "EMULATED_LOCAL_SLM",
+        "purpose": "LOCAL_SLOPE_ANALYST",
+        "remote_rainfall_available": true,
+        "revision": 0,
+        "site_cloud_available": true
+      },
+      "context": {
+        "schema_keys": [
+          "allowed_diagnostics",
+          "capabilities",
+          "context_provenance",
+          "duty",
+          "instruction",
+          "investigation_contract_version",
+          "investigations",
+          "not_included_channels",
+          "operations",
+          "policy",
+          "scenario_tick",
+          "sources"
+        ],
+        "duty": "LOCAL_SLOPE_ANALYST",
+        "allowed_diagnostics": [
+          "REFERENCE_INTEGRITY",
+          "INDEPENDENT_RESERVE_SERIES",
+          "EVIDENCE_GAPS"
+        ],
+        "omitted_channels": [
+          "rainfall"
+        ],
+        "provenance": "SYNTHETIC_SITE_CONTEXT_NOT_REAL_EA_OR_PHYSICAL_SENSOR",
+        "source_count": 5,
+        "scenario_tick": 3720,
+        "scope": "DERIVED_CONTEXT_INVENTORY_NOT_FULL_CONTEXT"
+      },
+      "request_id": "request:sentinel:semantic_context:6fd0fd3eee663e95c88d3bd8877677cd2f6eb1814b0dbf9d8602ffa74ff05187",
+      "bounded_context_refs": [
+        "sentinel:semantic_context:6fd0fd3eee663e95c88d3bd8877677cd2f6eb1814b0dbf9d8602ffa74ff05187"
+      ],
+      "contribution_id": "sentinel:contribution:618493bb1a825e60ed256aad7abb91b6e31cc4059aea9b6dd6b8c07e7cbf6959",
+      "response": {
+        "diagnostic": "REFERENCE_INTEGRITY",
+        "source_refs": [
+          "sentinel:maintenance_note:d578e1bb41906088a4781d1c91fd97b74f1e317433a8baec8b362c8003dac6f1",
+          "sentinel:measurement:e882aa0abc76ab3cadf4ceae6e6af82ccf67146dc9f325f49772835462db61bb",
+          "sentinel:measurement:fa817cf3e01f553874f21a3289460c4cb1b41d64e2efabfad7980c91e71fe074",
+          "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+          "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb"
+        ],
+        "reason_scope": "Exact structured reason preserved in separately reviewed bounded model IO; this trace projects selection and citations only."
+      },
+      "source": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "member": "live_01/semantic_0.json",
+        "bytes": 13792,
+        "sha256": "53beea49b231f07cbca8a45630998931ea9a4f22edf92374e51bca8bc5fe0a51"
+      }
+    },
+    {
+      "ordinal": 2,
+      "purpose": "THREE_ROLE_COMPOSITION",
+      "intended_role": "CLOUD_ENVIRONMENTAL_ANALYST",
+      "actual_mode": "CLOUD_LLM",
+      "actor_role": "provider_llm",
+      "profile": "EMULATED_LOCAL_SLM",
+      "capabilities": {
+        "harness_transport_available": true,
+        "physical_local_slm_available": false,
+        "profile": "EMULATED_LOCAL_SLM",
+        "purpose": "CLOUD_ENVIRONMENTAL_ANALYST",
+        "remote_rainfall_available": true,
+        "revision": 0,
+        "site_cloud_available": true
+      },
+      "context": {
+        "schema_keys": [
+          "allowed_diagnostics",
+          "capabilities",
+          "context_provenance",
+          "duty",
+          "instruction",
+          "investigation_contract_version",
+          "investigations",
+          "not_included_channels",
+          "operations",
+          "policy",
+          "scenario_tick",
+          "sources"
+        ],
+        "duty": "CLOUD_ENVIRONMENTAL_ANALYST",
+        "allowed_diagnostics": [
+          "TEMPORAL_CONTEXT_APPLICABILITY",
+          "SPATIAL_CONTEXT_APPLICABILITY",
+          "EVIDENCE_GAPS"
+        ],
+        "omitted_channels": [
+          "displacement",
+          "reserve"
+        ],
+        "provenance": "SYNTHETIC_SITE_CONTEXT_NOT_REAL_EA_OR_PHYSICAL_SENSOR",
+        "source_count": 2,
+        "scenario_tick": 3720,
+        "scope": "DERIVED_CONTEXT_INVENTORY_NOT_FULL_CONTEXT"
+      },
+      "request_id": "request:sentinel:semantic_context:c89e6e38f366712707f8526d4917afc01c26644ac97fc382aa7b71617f343079",
+      "bounded_context_refs": [
+        "sentinel:semantic_context:c89e6e38f366712707f8526d4917afc01c26644ac97fc382aa7b71617f343079"
+      ],
+      "contribution_id": "sentinel:contribution:dd4d6b0956a5cd5d982a41fd58ca73b47df6f7d29df098295dbc7fab7589c2d0",
+      "response": {
+        "diagnostic": "SPATIAL_CONTEXT_APPLICABILITY",
+        "source_refs": [
+          "sentinel:measurement:c65d16812f08de79adf59f5bb3f204f3e3978e7f511d683dc167a13027e68f43",
+          "sentinel:observation:d90cdafd83b718e4a50a1e7d9cf4613fae51045fbfea5fa68d59cc215afe0f15"
+        ],
+        "reason_scope": "Exact structured reason preserved in separately reviewed bounded model IO; this trace projects selection and citations only."
+      },
+      "source": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "member": "live_01/semantic_1.json",
+        "bytes": 11708,
+        "sha256": "c96c755f4d5f614e1404a9a4ecfdde0690566fb16942a4dd803ff92945d6c391"
+      }
+    },
+    {
+      "ordinal": 3,
+      "purpose": "THREE_ROLE_COMPOSITION",
+      "intended_role": "ADVERSARIAL_SENSOR_REVIEWER",
+      "actual_mode": "CLOUD_LLM",
+      "actor_role": "provider_llm",
+      "profile": "EMULATED_LOCAL_SLM",
+      "capabilities": {
+        "harness_transport_available": true,
+        "physical_local_slm_available": false,
+        "profile": "EMULATED_LOCAL_SLM",
+        "purpose": "ADVERSARIAL_SENSOR_REVIEWER",
+        "remote_rainfall_available": true,
+        "revision": 0,
+        "site_cloud_available": true
+      },
+      "context": {
+        "schema_keys": [
+          "allowed_diagnostics",
+          "capabilities",
+          "context_provenance",
+          "duty",
+          "instruction",
+          "investigation_contract_version",
+          "investigations",
+          "not_included_channels",
+          "operations",
+          "policy",
+          "scenario_tick",
+          "sources"
+        ],
+        "duty": "ADVERSARIAL_SENSOR_REVIEWER",
+        "allowed_diagnostics": [
+          "REFERENCE_INTEGRITY",
+          "INDEPENDENT_RESERVE_SERIES",
+          "EVIDENCE_GAPS"
+        ],
+        "omitted_channels": [
+          "rainfall"
+        ],
+        "provenance": "SYNTHETIC_SITE_CONTEXT_NOT_REAL_EA_OR_PHYSICAL_SENSOR",
+        "source_count": 5,
+        "scenario_tick": 3720,
+        "scope": "DERIVED_CONTEXT_INVENTORY_NOT_FULL_CONTEXT"
+      },
+      "request_id": "request:sentinel:semantic_context:0babe97d70258d2d83408218dd2078f316cc679d396a894426dd226456e68769",
+      "bounded_context_refs": [
+        "sentinel:semantic_context:0babe97d70258d2d83408218dd2078f316cc679d396a894426dd226456e68769"
+      ],
+      "contribution_id": "sentinel:contribution:88dcb48e8d04c1ae37b6592431a85e794470af78c95a3c67d19b1e4c35c7bef7",
+      "response": {
+        "diagnostic": "REFERENCE_INTEGRITY",
+        "source_refs": [
+          "sentinel:maintenance_note:d578e1bb41906088a4781d1c91fd97b74f1e317433a8baec8b362c8003dac6f1",
+          "sentinel:measurement:e882aa0abc76ab3cadf4ceae6e6af82ccf67146dc9f325f49772835462db61bb",
+          "sentinel:measurement:fa817cf3e01f553874f21a3289460c4cb1b41d64e2efabfad7980c91e71fe074",
+          "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+          "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb"
+        ],
+        "reason_scope": "Exact structured reason preserved in separately reviewed bounded model IO; this trace projects selection and citations only."
+      },
+      "source": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "member": "live_01/semantic_2.json",
+        "bytes": 13779,
+        "sha256": "1eaa1a2ec3e7fddde056cd245253a144c31a0825d8e5de5d8f57faf703f102dd"
+      }
+    },
+    {
+      "ordinal": 4,
+      "purpose": "LIVE_AB_SECOND_ARM",
+      "intended_role": "LOCAL_SLOPE_ANALYST",
+      "actual_mode": "CLOUD_LLM",
+      "actor_role": "provider_llm",
+      "profile": "EMULATED_LOCAL_SLM",
+      "capabilities": {
+        "harness_transport_available": true,
+        "physical_local_slm_available": false,
+        "profile": "EMULATED_LOCAL_SLM",
+        "purpose": "LOCAL_SLOPE_ANALYST",
+        "remote_rainfall_available": true,
+        "revision": 0,
+        "site_cloud_available": true
+      },
+      "context": {
+        "schema_keys": [
+          "allowed_diagnostics",
+          "capabilities",
+          "context_provenance",
+          "duty",
+          "instruction",
+          "investigation_contract_version",
+          "investigations",
+          "not_included_channels",
+          "operations",
+          "policy",
+          "scenario_tick",
+          "sources"
+        ],
+        "duty": "LOCAL_SLOPE_ANALYST",
+        "allowed_diagnostics": [
+          "REFERENCE_INTEGRITY",
+          "INDEPENDENT_RESERVE_SERIES",
+          "EVIDENCE_GAPS"
+        ],
+        "omitted_channels": [
+          "rainfall"
+        ],
+        "provenance": "SYNTHETIC_SITE_CONTEXT_NOT_REAL_EA_OR_PHYSICAL_SENSOR",
+        "source_count": 5,
+        "scenario_tick": 3720,
+        "scope": "DERIVED_CONTEXT_INVENTORY_NOT_FULL_CONTEXT"
+      },
+      "request_id": "request:sentinel:semantic_context:2cdd9e5831e07164eea45225f15f9b1e0546b851070b68d53823dbd0d3a1362f",
+      "bounded_context_refs": [
+        "sentinel:semantic_context:2cdd9e5831e07164eea45225f15f9b1e0546b851070b68d53823dbd0d3a1362f"
+      ],
+      "contribution_id": "sentinel:contribution:3b65b14d9a45b19ae014a14f8719576507e6f50aa8aa3fb4d22b59fc8b624aad",
+      "response": {
+        "diagnostic": "INDEPENDENT_RESERVE_SERIES",
+        "source_refs": [
+          "sentinel:maintenance_note:f1feeb288a5f79b6a8155107196ff0e788b50b04054630edba465043aaeed1c5",
+          "sentinel:measurement:e882aa0abc76ab3cadf4ceae6e6af82ccf67146dc9f325f49772835462db61bb",
+          "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d"
+        ],
+        "reason_scope": "Exact structured reason preserved in separately reviewed bounded model IO; this trace projects selection and citations only."
+      },
+      "source": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "member": "live_01/semantic_3.json",
+        "bytes": 13415,
+        "sha256": "144d5254c0ae6fc9d4c8805683d0a64d592c2a2bd2ad2f85f81a9d954f569c51"
+      }
+    },
+    {
+      "ordinal": 5,
+      "purpose": "INTERNAL_ROLE_AFTER_SITE_WITHDRAWAL",
+      "intended_role": "LOCAL_SLOPE_ANALYST",
+      "actual_mode": "CLOUD_LLM",
+      "actor_role": "provider_llm",
+      "profile": "EMULATED_LOCAL_SLM",
+      "capabilities": {
+        "harness_transport_available": true,
+        "physical_local_slm_available": false,
+        "profile": "EMULATED_LOCAL_SLM",
+        "purpose": "LOCAL_SLOPE_ANALYST",
+        "remote_rainfall_available": false,
+        "revision": 1,
+        "site_cloud_available": false
+      },
+      "context": {
+        "schema_keys": [
+          "allowed_diagnostics",
+          "capabilities",
+          "context_provenance",
+          "duty",
+          "instruction",
+          "investigation_contract_version",
+          "investigations",
+          "not_included_channels",
+          "operations",
+          "policy",
+          "scenario_tick",
+          "sources"
+        ],
+        "duty": "LOCAL_SLOPE_ANALYST",
+        "allowed_diagnostics": [
+          "REFERENCE_INTEGRITY",
+          "INDEPENDENT_RESERVE_SERIES",
+          "EVIDENCE_GAPS"
+        ],
+        "omitted_channels": [
+          "rainfall"
+        ],
+        "provenance": "SYNTHETIC_SITE_CONTEXT_NOT_REAL_EA_OR_PHYSICAL_SENSOR",
+        "source_count": 5,
+        "scenario_tick": 3720,
+        "scope": "DERIVED_CONTEXT_INVENTORY_NOT_FULL_CONTEXT"
+      },
+      "request_id": "request:sentinel:semantic_context:41c288c210faa134bd53ec677f7940dc2af7f26a9194fa64d1ea760f23e5a4ac",
+      "bounded_context_refs": [
+        "sentinel:semantic_context:41c288c210faa134bd53ec677f7940dc2af7f26a9194fa64d1ea760f23e5a4ac"
+      ],
+      "contribution_id": "sentinel:contribution:04ab9aaabee49c2ac6c91b5e1e9b862a746d1426dd6fcb6420e391f130adeeaa",
+      "response": {
+        "diagnostic": "INDEPENDENT_RESERVE_SERIES",
+        "source_refs": [
+          "sentinel:maintenance_note:f1feeb288a5f79b6a8155107196ff0e788b50b04054630edba465043aaeed1c5",
+          "sentinel:measurement:e882aa0abc76ab3cadf4ceae6e6af82ccf67146dc9f325f49772835462db61bb",
+          "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d"
+        ],
+        "reason_scope": "Exact structured reason preserved in separately reviewed bounded model IO; this trace projects selection and citations only."
+      },
+      "source": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "member": "live_01/semantic_4.json",
+        "bytes": 13289,
+        "sha256": "6571b90a0a125acd10b5fc05f58756b5f02e401f64b4fc67d2a336be3ff61295"
+      }
+    }
+  ],
+  "membrane": {
+    "model_return_keys": [
+      "diagnostic",
+      "source_refs",
+      "reason"
+    ],
+    "source_refs_meaning": "CITATIONS_NOT_ACQUISITION_OR_OPTIONAL_SAFETY_FILTERS",
+    "compulsory_sources": "The consumer uses all required duty observations regardless of citations.",
+    "not_authorized": [
+      "ARBITRARY_SOURCE_ACQUISITION",
+      "POLICY_CHANGE",
+      "HOST_STATE_MUTATION",
+      "SIGNAL_AUTHORITY",
+      "PHYSICAL_CERTIFICATION"
+    ]
+  },
+  "three_role_composition": {
+    "plan_bsep": {
+      "packet_id": "bsep:sentinel:orchestrator:9ca7630b3dca877abb091858766c003d2c5a3fd16e7ae17d431978a7476a0e5a",
+      "schema_version": "bounded_semantic_evidence_packet_v0.1",
+      "packet_type": "BoundedSemanticEvidencePacket",
+      "source_context_packet_id": "route_context:sentinel:orchestrator:9ca7630b3dca877abb091858766c003d2c5a3fd16e7ae17d431978a7476a0e5a",
+      "observed_semantic_facts": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "{\"input_ref\":\"sentinel:diagnostic_inputs:359cdf91079ed27ad797be9a994038ec4044444ea21e094484b82fd4b0ef104e\",\"selection\":\"REFERENCE_INTEGRITY\"}"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "request:sentinel:semantic_context:6fd0fd3eee663e95c88d3bd8877677cd2f6eb1814b0dbf9d8602ffa74ff05187"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:semantic_context:6fd0fd3eee663e95c88d3bd8877677cd2f6eb1814b0dbf9d8602ffa74ff05187"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:contribution:618493bb1a825e60ed256aad7abb91b6e31cc4059aea9b6dd6b8c07e7cbf6959 LOCAL_SLOPE_ANALYST REFERENCE_INTEGRITY"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "request:sentinel:semantic_context:c89e6e38f366712707f8526d4917afc01c26644ac97fc382aa7b71617f343079"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:semantic_context:c89e6e38f366712707f8526d4917afc01c26644ac97fc382aa7b71617f343079"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:contribution:dd4d6b0956a5cd5d982a41fd58ca73b47df6f7d29df098295dbc7fab7589c2d0 CLOUD_ENVIRONMENTAL_ANALYST SPATIAL_CONTEXT_APPLICABILITY"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "request:sentinel:semantic_context:0babe97d70258d2d83408218dd2078f316cc679d396a894426dd226456e68769"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:semantic_context:0babe97d70258d2d83408218dd2078f316cc679d396a894426dd226456e68769"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:contribution:88dcb48e8d04c1ae37b6592431a85e794470af78c95a3c67d19b1e4c35c7bef7 ADVERSARIAL_SENSOR_REVIEWER REFERENCE_INTEGRITY"
+        }
+      ],
+      "authority_flags": {
+        "truth_claimed": false,
+        "authority_claimed": false,
+        "action_permission_claimed": false,
+        "action_commit_packet_claimed": false,
+        "final_output_claimed": false,
+        "root_bypass_claimed": false,
+        "real_world_effects_allowed": false,
+        "root_final_authority_preserved": true,
+        "raw_user_text_included": false,
+        "raw_cross_role_text_included": false
+      },
+      "scope": "SELECTED_EXACT_FIELDS_FROM_NATIVE_BSEP_NOT_THE_NATIVE_PACKET"
+    },
+    "result_bsep": {
+      "packet_id": "bsep:sentinel:orchestrator:05001c1a1b8a7dba7a41cae51280666ab6b58df86aada1b253a4fd2720af16ec",
+      "schema_version": "bounded_semantic_evidence_packet_v0.1",
+      "packet_type": "BoundedSemanticEvidencePacket",
+      "source_context_packet_id": "route_context:sentinel:orchestrator:05001c1a1b8a7dba7a41cae51280666ab6b58df86aada1b253a4fd2720af16ec",
+      "observed_semantic_facts": [
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "{\"input_ref\":\"sentinel:diagnostic_inputs:dbe817cde5a14d92b07d9b6aa466a8ca78f88fe1952bfe1eb7497605d8bc3e3b\",\"selection\":\"REFERENCE_INTEGRITY\"}"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "request:sentinel:semantic_context:6fd0fd3eee663e95c88d3bd8877677cd2f6eb1814b0dbf9d8602ffa74ff05187"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:semantic_context:6fd0fd3eee663e95c88d3bd8877677cd2f6eb1814b0dbf9d8602ffa74ff05187"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:contribution:618493bb1a825e60ed256aad7abb91b6e31cc4059aea9b6dd6b8c07e7cbf6959 LOCAL_SLOPE_ANALYST REFERENCE_INTEGRITY"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "request:sentinel:semantic_context:c89e6e38f366712707f8526d4917afc01c26644ac97fc382aa7b71617f343079"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:semantic_context:c89e6e38f366712707f8526d4917afc01c26644ac97fc382aa7b71617f343079"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:contribution:dd4d6b0956a5cd5d982a41fd58ca73b47df6f7d29df098295dbc7fab7589c2d0 CLOUD_ENVIRONMENTAL_ANALYST SPATIAL_CONTEXT_APPLICABILITY"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "request:sentinel:semantic_context:0babe97d70258d2d83408218dd2078f316cc679d396a894426dd226456e68769"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:semantic_context:0babe97d70258d2d83408218dd2078f316cc679d396a894426dd226456e68769"
+        },
+        {
+          "candidate_only": true,
+          "confidence_label": "medium",
+          "evidence_kind": "observed_fact",
+          "raw_quote": false,
+          "source": "runtime_canonicalization",
+          "text": "sentinel:contribution:88dcb48e8d04c1ae37b6592431a85e794470af78c95a3c67d19b1e4c35c7bef7 ADVERSARIAL_SENSOR_REVIEWER REFERENCE_INTEGRITY"
+        }
+      ],
+      "authority_flags": {
+        "truth_claimed": false,
+        "authority_claimed": false,
+        "action_permission_claimed": false,
+        "action_commit_packet_claimed": false,
+        "final_output_claimed": false,
+        "root_bypass_claimed": false,
+        "real_world_effects_allowed": false,
+        "root_final_authority_preserved": true,
+        "raw_user_text_included": false,
+        "raw_cross_role_text_included": false
+      },
+      "scope": "SELECTED_EXACT_FIELDS_FROM_NATIVE_BSEP_NOT_THE_NATIVE_PACKET"
+    },
+    "plan_root": {
+      "target_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+      "decision": "ACCEPT",
+      "decision_id": "643be8eaf78ad74905f95f34ce466b226c8c1fcc90b052cf80b1ff98c7f1159e",
+      "decision_input_id": "90d460aa1773c05bc159e7ea78fdd4ba006ef1c701461d4aa5c1147de9fb78f7",
+      "selected_candidate_id": "sentinel:accepted_work:29b683ac1786cd37087808319d4f15c57845b2f9a49092e9ca2522e71f8d3b9d",
+      "effect_requested": false,
+      "permission_created": false,
+      "root_commit_created": true,
+      "final_output_created": false
+    },
+    "result_root": {
+      "target_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+      "decision": "ACCEPT",
+      "decision_id": "f5679c23f0581795dcaaf509596227676cabf60ab238c178264343d7f33f5154",
+      "decision_input_id": "06f06391327a32cdfba3bff0c7a7dbaaa09c1db1677496eb778cc431b19bf4b0",
+      "selected_candidate_id": "sentinel:accepted_work:e78f657f0248edff39cdf77aa6768866fa6f78ae192fbfdb8e740891c1ebb320",
+      "effect_requested": false,
+      "permission_created": false,
+      "root_commit_created": true,
+      "final_output_created": false
+    },
+    "plan_basis": {
+      "bsep_ref": "bsep:sentinel:orchestrator:9ca7630b3dca877abb091858766c003d2c5a3fd16e7ae17d431978a7476a0e5a",
+      "material_sha256": "359cdf91079ed27ad797be9a994038ec4044444ea21e094484b82fd4b0ef104e",
+      "result_refs": [
+        "capability_result:05d3c463b28db764ec13ca20a461de93bbd797805718f8ca6f7b3ce3ea7a35cc"
+      ],
+      "root_decision_ref": "643be8eaf78ad74905f95f34ce466b226c8c1fcc90b052cf80b1ff98c7f1159e",
+      "topology_ref": "work_topology:bbec044e1f1850327e36fefdd638038cd6f4213996494b6787600b13cd38694a",
+      "work_artifact_ref": "work_results:370c7721bb2396a11488ab30198bc2a229351186c5d327b74bff1fcfce9518b0"
+    },
+    "role_consumptions": [
+      {
+        "intended_role": "LOCAL_SLOPE_ANALYST",
+        "contribution_id": "sentinel:contribution:618493bb1a825e60ed256aad7abb91b6e31cc4059aea9b6dd6b8c07e7cbf6959",
+        "selection": "REFERENCE_INTEGRITY",
+        "consumed": {
+          "detail": {
+            "findings": [
+              {
+                "calibration": "calibration:sentinel:v01",
+                "channel": "displacement",
+                "reasons": [],
+                "source_id": "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb",
+                "status": "SUPPORTED"
+              },
+              {
+                "calibration": "calibration:sentinel:v01",
+                "channel": "reserve",
+                "reasons": [],
+                "source_id": "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+                "status": "SUPPORTED"
+              },
+              {
+                "lineages": [
+                  "independent:reserve",
+                  "independent:displacement"
+                ],
+                "reasons": [],
+                "relationship": "CURRENT_PAIR_LINEAGE_SEPARATION",
+                "status": "SUPPORTED"
+              }
+            ],
+            "outcome": "SUPPORTED_FOR_DECLARED_USE",
+            "physical_zero_check": "NOT_ESTABLISHED",
+            "source_ids": [
+              "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+              "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb"
+            ]
+          },
+          "healthy": true,
+          "input_sha256": "939ab4940de030427fb061cec41632badc14b7a69e271a7f81099a54ed4ac319",
+          "investigation": {
+            "bounded_results": [
+              "SUPPORTED",
+              "MISSING",
+              "INCOMPATIBLE",
+              "UNRESOLVED"
+            ],
+            "cannot_establish": [
+              "PHYSICAL_CALIBRATION_CERTIFICATION",
+              "GEOGRAPHICAL_RELEVANCE",
+              "LANDSLIDE_PREDICTION",
+              "ACTION_PERMISSION"
+            ],
+            "checked_relationship": "Compare actual current channel/calibration associations and distinct lineage identifiers, not reserve history variation.",
+            "duty": "LOCAL_SLOPE_ANALYST",
+            "intended_use": "CURRENT_PAIR_METADATA_COMPARISON",
+            "required_evidence": [
+              "CURRENT_DISPLACEMENT_RECORD",
+              "CURRENT_RESERVE_RECORD",
+              "CURRENT_CALIBRATION_IDS",
+              "HEALTH",
+              "DISTINCT_LINEAGES"
+            ],
+            "source_refs_meaning": "CITATIONS_NOT_ACQUISITION_OR_OPTIONAL_SAFETY_FILTERS",
+            "source_scope": "DUTY_OBSERVATIONS_WITH_COMPULSORY_COMPANIONS",
+            "target": "CURRENT_CHANNEL_METADATA",
+            "version": "sentinel.investigation.v02"
+          },
+          "selection": "REFERENCE_INTEGRITY",
+          "semantic_ref": "sentinel:contribution:618493bb1a825e60ed256aad7abb91b6e31cc4059aea9b6dd6b8c07e7cbf6959"
+        },
+        "root_decision": {
+          "decision": "ACCEPT",
+          "decision_id": "f5679c23f0581795dcaaf509596227676cabf60ab238c178264343d7f33f5154",
+          "target_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+          "permission_created": false,
+          "effect_requested": false,
+          "final_output_created": false
+        }
+      },
+      {
+        "intended_role": "CLOUD_ENVIRONMENTAL_ANALYST",
+        "contribution_id": "sentinel:contribution:dd4d6b0956a5cd5d982a41fd58ca73b47df6f7d29df098295dbc7fab7589c2d0",
+        "selection": "SPATIAL_CONTEXT_APPLICABILITY",
+        "consumed": {
+          "detail": {
+            "findings": [
+              {
+                "reasons": [],
+                "relationship": "SYNTHETIC_SITE_IDENTITY",
+                "source_id": "sentinel:observation:d90cdafd83b718e4a50a1e7d9cf4613fae51045fbfea5fa68d59cc215afe0f15",
+                "status": "SUPPORTED"
+              }
+            ],
+            "outcome": "SUPPORTED_FOR_DECLARED_USE",
+            "physical_applicability": "UNRESOLVED_NO_VERIFIED_MAPPING",
+            "physical_mapping": "NOT_ESTABLISHED",
+            "sites": [
+              "slope_demo_site_001"
+            ],
+            "target_site": "slope_demo_site_001"
+          },
+          "healthy": true,
+          "input_sha256": "0ee7dd934f81b77d22d586bf63ceb139c6f18e865011d37a931ea85d4758c0ba",
+          "investigation": {
+            "bounded_results": [
+              "SUPPORTED",
+              "MISSING",
+              "INCOMPATIBLE",
+              "UNRESOLVED"
+            ],
+            "cannot_establish": [
+              "PHYSICAL_CALIBRATION_CERTIFICATION",
+              "GEOGRAPHICAL_RELEVANCE",
+              "LANDSLIDE_PREDICTION",
+              "ACTION_PERMISSION"
+            ],
+            "checked_relationship": "Compare declared synthetic site identities; separately retain missing verified physical mapping.",
+            "duty": "CLOUD_ENVIRONMENTAL_ANALYST",
+            "intended_use": "CONTEXT_FOR_SYNTHETIC_SITE",
+            "required_evidence": [
+              "RAINFALL_RECORD",
+              "SOURCE_SITE_ID",
+              "TARGET_SITE_ID"
+            ],
+            "source_refs_meaning": "CITATIONS_NOT_ACQUISITION_OR_OPTIONAL_SAFETY_FILTERS",
+            "source_scope": "DUTY_OBSERVATIONS_WITH_COMPULSORY_COMPANIONS",
+            "target": "CONTEXT_SITE_RELATIONSHIP",
+            "version": "sentinel.investigation.v02"
+          },
+          "selection": "SPATIAL_CONTEXT_APPLICABILITY",
+          "semantic_ref": "sentinel:contribution:dd4d6b0956a5cd5d982a41fd58ca73b47df6f7d29df098295dbc7fab7589c2d0"
+        },
+        "root_decision": {
+          "decision": "ACCEPT",
+          "decision_id": "f5679c23f0581795dcaaf509596227676cabf60ab238c178264343d7f33f5154",
+          "target_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+          "permission_created": false,
+          "effect_requested": false,
+          "final_output_created": false
+        }
+      },
+      {
+        "intended_role": "ADVERSARIAL_SENSOR_REVIEWER",
+        "contribution_id": "sentinel:contribution:88dcb48e8d04c1ae37b6592431a85e794470af78c95a3c67d19b1e4c35c7bef7",
+        "selection": "REFERENCE_INTEGRITY",
+        "consumed": {
+          "detail": {
+            "findings": [
+              {
+                "calibration": "calibration:sentinel:v01",
+                "channel": "displacement",
+                "reasons": [],
+                "source_id": "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb",
+                "status": "SUPPORTED"
+              },
+              {
+                "calibration": "calibration:sentinel:v01",
+                "channel": "reserve",
+                "reasons": [],
+                "source_id": "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+                "status": "SUPPORTED"
+              },
+              {
+                "lineages": [
+                  "independent:reserve",
+                  "independent:displacement"
+                ],
+                "reasons": [],
+                "relationship": "CURRENT_PAIR_LINEAGE_SEPARATION",
+                "status": "SUPPORTED"
+              }
+            ],
+            "outcome": "SUPPORTED_FOR_DECLARED_USE",
+            "physical_zero_check": "NOT_ESTABLISHED",
+            "source_ids": [
+              "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+              "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb"
+            ]
+          },
+          "healthy": true,
+          "input_sha256": "15046c0d350c9038696db634faa84e0b0922546507e665d36cfc05dc017ec03e",
+          "investigation": {
+            "bounded_results": [
+              "SUPPORTED",
+              "MISSING",
+              "INCOMPATIBLE",
+              "UNRESOLVED"
+            ],
+            "cannot_establish": [
+              "PHYSICAL_CALIBRATION_CERTIFICATION",
+              "GEOGRAPHICAL_RELEVANCE",
+              "LANDSLIDE_PREDICTION",
+              "ACTION_PERMISSION"
+            ],
+            "checked_relationship": "Compare actual current channel/calibration associations and distinct lineage identifiers, not reserve history variation.",
+            "duty": "ADVERSARIAL_SENSOR_REVIEWER",
+            "intended_use": "CURRENT_PAIR_METADATA_COMPARISON",
+            "required_evidence": [
+              "CURRENT_DISPLACEMENT_RECORD",
+              "CURRENT_RESERVE_RECORD",
+              "CURRENT_CALIBRATION_IDS",
+              "HEALTH",
+              "DISTINCT_LINEAGES"
+            ],
+            "source_refs_meaning": "CITATIONS_NOT_ACQUISITION_OR_OPTIONAL_SAFETY_FILTERS",
+            "source_scope": "DUTY_OBSERVATIONS_WITH_COMPULSORY_COMPANIONS",
+            "target": "CURRENT_CHANNEL_METADATA",
+            "version": "sentinel.investigation.v02"
+          },
+          "selection": "REFERENCE_INTEGRITY",
+          "semantic_ref": "sentinel:contribution:88dcb48e8d04c1ae37b6592431a85e794470af78c95a3c67d19b1e4c35c7bef7"
+        },
+        "root_decision": {
+          "decision": "ACCEPT",
+          "decision_id": "f5679c23f0581795dcaaf509596227676cabf60ab238c178264343d7f33f5154",
+          "target_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+          "permission_created": false,
+          "effect_requested": false,
+          "final_output_created": false
+        }
+      }
+    ],
+    "source": {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "live_01/composition_1.json",
+      "bytes": 599507,
+      "sha256": "d1cc223323abd65851f41f7b6fd1c8f1563c5659b6d76633155376b4030d76d3"
+    },
+    "current_result_work_artifact_ref": "work_results:5de65fe80a035097b95f463321c9fa7c3992f183c3081a37e17175c4d46df45f"
+  },
+  "D": {
+    "source_binding": {
+      "accepted_mode": "full_fractal",
+      "accepted_scope_ref": "work_control_scope:32d8457d45d902848afe6e07001500c7500ce70494f3a7fa35faeb72b09fb0eb",
+      "authority_created": false,
+      "domain_id": "LANDSLIDE_SENTINEL",
+      "downstream_action_packet_required": false,
+      "g2c_abi_profile_id": "execution_mode_router_g2c_abi_profile_v01",
+      "owning_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+      "permission_created": false,
+      "permitted_narrower_scope_refs": [],
+      "post_root_transition_decision_id": "966e980d4587e11dee964d204688c359b04fb342687080837355174823ed2c16",
+      "proposal_transition_decision_id": "0551becdc0c9ab8e6df891d5c50f26a15fb8b61883d4fa038140cb0c83ed6c0c",
+      "real_world_effects_count": 0,
+      "request_id": "sentinel:xtejqhnufwcs",
+      "required_downstream_capability_ids": [
+        "capability:sentinel:full_fractal"
+      ],
+      "root_review_required": true,
+      "route_eligibility_artifact_id": "emabi_route_v01:8ec8083d9787a5c81a9546611ef48c08e7bbbe0bc69f61581cb06139cf547763",
+      "route_eligibility_artifact_sha256": "878dc7fd13202acfc68930e5e56598037c249d04fac92b54c00e1e61286c5d2f",
+      "runtime_policy_id": "frpolicy_v02:347fbd3e00072bce3e3b597e4eaa7dd4c3814ef6dc9994537ceb0128e2c619e8",
+      "selected_expected_cost_units": 8,
+      "selected_feasibility_row_id": "emrow_v01:ff568a65b0a4b02dd5b7d365a18521054ebe5b275394ccea4d34a63201cc844d",
+      "selected_local_mode_profile_id": "emprofile_v01:43f76c6fe4dc5e32f3a1cea10c23c92f6e39b66440453ad5ea026888ef18120b",
+      "selected_safe_depth_rank": 70,
+      "source_binding_id": "frsource_v02:e0bba537ea206f9c848ec187b6a77d2cab826a26d35fd96e5d17651642ba762c",
+      "source_capability_snapshot_id": "sentinel:capabilities:2d0694309120b32c62c4d05288da9d0bbc111e508832e394a69a17a638efe81f",
+      "source_decision_artifact_id": "emabi_decision_v01:e644f97114ad7e9fb8308e9279319708baae242e893ed6f2449c2819042f24ad",
+      "source_mode_profile_set_id": "emprofiles_v01:af354e466d74669491f5ccd79eb38a298c4af39724167e74c30cef2817e64b71",
+      "source_parent_refs": [
+        "emabi_decision_v01:e644f97114ad7e9fb8308e9279319708baae242e893ed6f2449c2819042f24ad"
+      ],
+      "source_policy_snapshot_id": "policy:sentinel:monitor_review",
+      "source_proposal_artifact_id": "emabi_proposal_v01:093a3d1d90c7bc6c084ff489e02124a9b53af58955407e3ae283466c02214953",
+      "source_root_decision_result_id": "a70cdad400aeb8d561f302f57afe6270df4232f4ca5c31c8a33881bdf0a28a29",
+      "source_root_transition_decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+      "source_time_envelope_ref": "emtime_v01:ae27232de96a79e22134628e1e8170d0c5f99734757a1ed76228f1941226ed3f",
+      "source_trace_refs": [
+        "966e980d4587e11dee964d204688c359b04fb342687080837355174823ed2c16",
+        "a44c497efb934d85d08b1ca097bdae8c4fa07806906e95176d232b1341572376",
+        "emabi_decision_v01:e644f97114ad7e9fb8308e9279319708baae242e893ed6f2449c2819042f24ad",
+        "emdecision_v01:3e5fb330ace7a6eca0ca6df259e9e00798d5d47a14898fe98b8fc73b9b4fd2e4"
+      ],
+      "transaction_id": "drsquery_v01:bd88413b31f71cd8d6c223a137c86c188256e92dd8f4785be70648d60505a058",
+      "transition_registry_id": "a44c497efb934d85d08b1ca097bdae8c4fa07806906e95176d232b1341572376"
+    },
+    "runtime_report": {
+      "accepted_mode": "full_fractal",
+      "accepted_scope_ref": "work_control_scope:32d8457d45d902848afe6e07001500c7500ce70494f3a7fa35faeb72b09fb0eb",
+      "action_commit_packets_created": 0,
+      "authority_created_count": 0,
+      "backpressure_state_ids": [],
+      "blocked_cell_count": 0,
+      "completed_cell_count": 3,
+      "connector_calls": 0,
+      "deadend_cell_count": 0,
+      "degraded_cell_count": 0,
+      "domain_id": "LANDSLIDE_SENTINEL",
+      "drs_writes": 0,
+      "external_drs_calls": 0,
+      "final_budget_id": "frbudget_v02:5a4989a0a85e868759906d2026395e8d86e89731cc386aa0fbb010d98b383508",
+      "final_outputs_created": 0,
+      "model_calls": 0,
+      "needs_user_cell_count": 0,
+      "network_calls": 0,
+      "ordered_cell_result_ids": [
+        "frcellresult_v02:4f843088a78b9660c4f3abf57a9e6696757a12c9df68f8acdc50e30548b01cd3",
+        "frcellresult_v02:1eb08ab5f097d18c0250f400163ef09e27a8cb12db15a9dec03e2e9e09a68385",
+        "frcellresult_v02:37c4ee0e056f3884b0691f408953c42d881158977a7dc3a6b2e5fb3cc85d937a"
+      ],
+      "owning_root_id": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+      "parent_return_refs": [
+        "frabi_result_v02:5e909e73c15376ccdc937e3b72fdd8e4c37dd8470bc016e9561762dc715ddc50"
+      ],
+      "parent_return_transition_decision_id": "558dcb8866a25f27f57b653181911014dabd11c725f87ed708e4e50e5deda398",
+      "permissions_created": 0,
+      "profile_id": "fractal_runtime_g2d_profile_v02",
+      "provider_calls": 0,
+      "queue_entry_ids": [
+        "frqueue_v02:dab9f343c47c200b52dbcf1e06f53bcfb972355af8f4c16c44ba39bdbb1ab3b4",
+        "frqueue_v02:ee0ab4a3b471707fff9ad7e7789641d88a623bac599f54b417f29a2a0af49bec",
+        "frqueue_v02:0dfbbed9c715472031077c0aa226a421efc5b172e2a6ec1612f330e4a18e802e",
+        "frqueue_v02:03dba436cc6a527007025ac7f04e803c73b50d8c3fc02345fdb04d667eb52253",
+        "frqueue_v02:0a887b2ddba13d1861b7a00efb281f0fc5ef1348a418864fa9e1d45dd488c582",
+        "frqueue_v02:4484e9b5ecef441d6a1af2b0485e4ff2ffd11f4258156355742e59016b1dbb63",
+        "frqueue_v02:4dcbd2e03c95f4f9e08a7c213ee33ff592f9282f0f137c1433cc2a7a161574fd",
+        "frqueue_v02:005646ce4d22315a0f4cf7477180a65ac8faca1b80e75bad3a7c4d22f644c920",
+        "frqueue_v02:e5dba44f5d542cf2e880e9062a3036bf6abf047b16df25adc830656a3d8973f3",
+        "frqueue_v02:2e9cb053806f487794a8866e871149c1a49cb1f01a002238468d3976693b139f",
+        "frqueue_v02:e3d1438a61e76270f46c216ca435b55ef2f679862ebab86c3bcfa4900fc570b7",
+        "frqueue_v02:07b44c1e85455c01d415f636fb4be6c007db2dfe6aabccdff5daa8d38eb1f795",
+        "frqueue_v02:25f73b745b670a81d2a5f244e2ae0a5834e736f3f77064b73bb5444acf316062",
+        "frqueue_v02:df2a3d06c893d6fbb4bca6e63b7134ad272e2a59cb50ad7e8378fe177a5d5a48",
+        "frqueue_v02:7c46d1c1b4895063718ff782932331bf717de0292394b5df0047830c45442232",
+        "frqueue_v02:0199444e1b63089d77d67c3ae613160a79eeb933994591f90eefa49c7264fb38",
+        "frqueue_v02:cb7736592cb140c34cc6f467da217f2f54537dde6e12dcabc406f727b00dc89b",
+        "frqueue_v02:f35be933c60215f42e4d1bc6d7c8f35b674e16e35ad46cc7265adb3558a73873",
+        "frqueue_v02:f40acb26256ddfd953bcf0a3b14951e76edee1aa60fd123b12f1dd0f77074a97",
+        "frqueue_v02:8af46bba67ff42bd04272257e67805169d334d3b02cc02113929f9689bd3c30f",
+        "frqueue_v02:4ad5160501f1ab8a1132d546a968f76097b31118353fc79e70267bf3b43593d5",
+        "frqueue_v02:a02b462a589281f57783042cf85fca2b5bd2b1f5d1fbd3d16de6048aea1c2a56",
+        "frqueue_v02:b10eba75e41a9a013dfcaf60323ca3598941528222864b33e975f4433b992dfb",
+        "frqueue_v02:d5cff8060bd69e3473f79c57af26f8d44fab86f11f9332b5730292812a35374a",
+        "frqueue_v02:b2f8c1727afb272ff309049b859505c8e09ee86de2c38f947726287747044ad1",
+        "frqueue_v02:a2332fa5c18592492555e727d25f842a8b6c3991458c35bba895716387c43f29",
+        "frqueue_v02:888542aedb4b967cc2a176641af75421972d2d2c98f2fa4827f3ec581c24272c",
+        "frqueue_v02:4cdb114614347b35e8f2ef9fbcb3758b6a238920f9acb06c13de4d8dee57dfc7",
+        "frqueue_v02:785cb9aad35aa98767603a4fa8953c9e44154defe9184a5f4cd92f19b93e3054",
+        "frqueue_v02:b999f7bcd247f3dd54fa3b90a77dd00241286cad553892aa7626cace8946eacd",
+        "frqueue_v02:a88d716a06d0f2c6fedffd16eb979f07d273c5741a29718e6c5ac594fba1f136",
+        "frqueue_v02:07f569ae472e0096b0487cdb277187ce583949c9821b96b6ce39e2369e04ca7f",
+        "frqueue_v02:d065e668a4bd73d3dff1f5b8e44f373b45e54b66eb1ea2fdedaf3574504cc89a",
+        "frqueue_v02:73029995688b413620ceed1b6c66e69553293aa31f3ab7a0c2581ac97000aa74",
+        "frqueue_v02:1320b13d845ef4fc8ed71fcb994ea0c7bf94fa7f187eff8ee51b0033b4f082d3",
+        "frqueue_v02:42e319a1ba9d053ee9c4c34fcbcbd81269f968134db86fa996832044f8cdb947",
+        "frqueue_v02:0f0b0e14e4a6218caef5a6081efe19619e6806b5c94e2892a34ffa676c94881f",
+        "frqueue_v02:1ba627ab1d061a7a5bd157aad48880e1e8e70644d4aa6aeeb7dfcf348ff7f4d1",
+        "frqueue_v02:382fca90cc029366093210bfbefa30e365e2773de39a67d2d7abd0fa59555964",
+        "frqueue_v02:b929d8cf78f6b37b3e679c52645e0a9d53e12c53c9cfc6054fbd7022a6b440d1",
+        "frqueue_v02:fdf9ab2975682270214e7d96124b864feedfeeb307d39757a0283c5406e8f724",
+        "frqueue_v02:c5687cb2b8ecfc5343533e4cbac89fe717bf0ca32769d1f4fdca39ed2488d4fc",
+        "frqueue_v02:d5b0b19f7b9f6b63df1960ace8a7489a4b2fd25dfda7c0bb3596a59794d23244",
+        "frqueue_v02:737fad830373212cc266f4d503b53dc77196e95f581c2574e4aaec54091f546e",
+        "frqueue_v02:b722cf3a8023601cad959d075aec8543f26a3d5e0155e0dafc2d042ab760ccfb",
+        "frqueue_v02:fd90b423522c0519932bdc72f0c42ae159ed6687ec7e39128ccc9cd1eceebd09",
+        "frqueue_v02:efd45c13226de491edee85def45d4f5b31e9d4622533181fb512a9c5714de83f",
+        "frqueue_v02:50931015d843abd62296d87f89497ed1eaa060380f6760b755f4160e273393f8",
+        "frqueue_v02:d308bf4a189fc1d87242f37823ee615904ab65423cb1d70c66d0a8b8935aea08",
+        "frqueue_v02:86d540baa6062c8fd64e89c4593d8d3f003b34703827ac653ea760db58cb4f9e",
+        "frqueue_v02:306ff63482b9ff5c19e5b5fd2861cdb6af561efe318f7f918038730b7b7df4e6",
+        "frqueue_v02:0091f134ebaa6293da4e03d0a3fbf8b76d4ec2d4945f6b5158067b0a7e75230c",
+        "frqueue_v02:e2702e9e122684ecedb8b3be6edbe60e37e652415cb41b9002b88ef622b2d744",
+        "frqueue_v02:d68b20b4d05fbb7d69d4f4d169f2fa1caea28eb782e933c09b0de4d028f81264",
+        "frqueue_v02:c20f4c187e9c97acc1d6d776af61b39f082b8cb826f54097a6e31336f52f0022",
+        "frqueue_v02:5106d47963fd6322d12f8c54374051f5fc038e518d5f3f21fc69748435f32935",
+        "frqueue_v02:70f13e641fa3e78a3fec7e0c9e5bde0999607abe3b0977ec2c1c1e43c5a0ef7e",
+        "frqueue_v02:57c5436f7e747edbfe7ee917bb3a3a84bef6cce0ff73bf749d2705bc0f83daf6",
+        "frqueue_v02:c7051c176bc66ad837af9f34c9a9873a5323bb06e060469db7d01d665b989f37",
+        "frqueue_v02:e57133d333b21d46b7adef090d0343440de582105f3c392ad07af23ea83c7071",
+        "frqueue_v02:0237b969af3298b181e86a08a6d28c2956a33e60163d9107d9829fab8dd4fc6c",
+        "frqueue_v02:6faf472f24af9177fe69b85793184aa0d40f7609a71d65ed9eae08375f22490e",
+        "frqueue_v02:739904c030936f27a7ddddb26af02f04d9cbfe6bc4bdfaccfe925c76fc9b3628",
+        "frqueue_v02:c1a0365e40c1db38c14a088e16721fba7c976580bfae41f1d7d137574c48c1b4",
+        "frqueue_v02:61f7977e0e3f5c03e5c4239e4f5c1a6cd6cdef4740e255810774477376d9e56e",
+        "frqueue_v02:6cb4a8e3b0469d62bffa0b60bb154c8fa6239b1bbb84ee442816443bd8748fc0",
+        "frqueue_v02:f9849e2ad33bebfb3e026d3a2a6b085858a592ed09257136c8805d25b4da3722",
+        "frqueue_v02:50f20207597cac0522ba86cd186d65357acf397ee4cba9540899215ce19f4093",
+        "frqueue_v02:3a7bd6fadf51cdbb13d969b14cbe2935482b2d698ddb702032052985fc5b6b46",
+        "frqueue_v02:cf7425d32eab9ade0dcf22b7a5c768a1d1da643b15ebd1a7ae6de187f777d284",
+        "frqueue_v02:df4c4c719dbe3eb8738e2aa199c333766925048f198ad89ee5a096400df2a4e0",
+        "frqueue_v02:93592782d6fdee2c4e14928d474854780c60a78160e84975a28224384475da82",
+        "frqueue_v02:1593892dcd84a97c090673623d47dcecaf5c57eb0be896e3f7b0d5b76302847b",
+        "frqueue_v02:af8171a67003906a4d944b8099ae02b5b74c02bc81e63b2c119416aafcee185b",
+        "frqueue_v02:a22792ab9fb2a624d61ae973f9051dbf043d30106a67b132cf4ebff19266b221"
+      ],
+      "real_world_effects_count": 0,
+      "reason_codes": [],
+      "receipts_created": 0,
+      "report_id": "frreport_v02:7d06bc1e9810acfe57191d2b760897c0e5e3eb56a7ded8130da102de2de5c13b",
+      "report_status": "PASS",
+      "report_version": "v0.2",
+      "request_id": "sentinel:xtejqhnufwcs",
+      "root_review_required": true,
+      "runtime_outcome": "COMPLETED",
+      "runtime_trace_id": "frtrace_v02:c3d01cf580dc1c185bbee0c4e0e94fd7f11525fcd21dc0642486dbc92946c231",
+      "source_binding_id": "frsource_v02:e0bba537ea206f9c848ec187b6a77d2cab826a26d35fd96e5d17651642ba762c",
+      "topology_artifact_id": "frabi_topology_v02:48fe1716f9df970980335537c052fe34f2c02867d8f0218bd9acd36f967c24e2",
+      "topology_created_count": 1,
+      "topology_id": "frtopology_v02:1214873693d407139e3eedba1906d39476d930102483596bbc75409fa97c9e3a",
+      "topology_seed_id": "frseed_v02:91e163740e51076bda7611c6fabb5c288c91064df882ef1647789ffd0a0a063f",
+      "transaction_id": "drsquery_v01:bd88413b31f71cd8d6c223a137c86c188256e92dd8f4785be70648d60505a058"
+    },
+    "report_artifact_id": "frabi_report_v02:20ae283845d3da5579303bbc80b34833d1f4f11d73cb10515cee255c6e9cbfac",
+    "topology": {
+      "topology_id": "frtopology_v02:1214873693d407139e3eedba1906d39476d930102483596bbc75409fa97c9e3a",
+      "nodes": 7,
+      "edges": 10,
+      "scope": "COUNTS_OF_RECORDED_D_GRAPH_NOT_SLIDE_TOPOLOGY"
+    },
+    "source": {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "live_01/common_D.json",
+      "bytes": 1101855,
+      "sha256": "50e89ec81bd4edbb4e73212af91048b43095da0174b4ea86714e5b85510d6c2c"
+    }
+  },
+  "plan_read_result_order": [
+    {
+      "ordinal": 5,
+      "artifact_ref": "work_results:370c7721bb2396a11488ab30198bc2a229351186c5d327b74bff1fcfce9518b0",
+      "bsep_ref": "bsep:sentinel:orchestrator:9ca7630b3dca877abb091858766c003d2c5a3fd16e7ae17d431978a7476a0e5a",
+      "monotonic": 5080751.703154208,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "643be8eaf78ad74905f95f34ce466b226c8c1fcc90b052cf80b1ff98c7f1159e",
+      "stage": "PLAN"
+    },
+    {
+      "ordinal": 6,
+      "artifact_ref": "work_results:5de65fe80a035097b95f463321c9fa7c3992f183c3081a37e17175c4d46df45f",
+      "bsep_ref": "bsep:sentinel:orchestrator:05001c1a1b8a7dba7a41cae51280666ab6b58df86aada1b253a4fd2720af16ec",
+      "monotonic": 5080759.796827708,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "f5679c23f0581795dcaaf509596227676cabf60ab238c178264343d7f33f5154",
+      "stage": "RESULT"
+    },
+    {
+      "ordinal": 10,
+      "artifact_ref": "work_results:c086aee81faae9e6f4d788804a3d8e8d648ba34496edd7432765d5ffb3af53ab",
+      "bsep_ref": "bsep:sentinel:orchestrator:b68f79a830b2bba0adeaed1d59b8a7b23378397e3f0b59bba9316b33a2ec60f6",
+      "monotonic": 5080777.126451958,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "82905a7729aef02682305b11ad3d133d2adadd9121d29d9577ad9a0db2914e98",
+      "stage": "PLAN"
+    },
+    {
+      "ordinal": 15,
+      "monotonic": 5080778.171672541,
+      "phase": "ACTUAL_REVIEWED_SERIES_READ",
+      "plan_ref": "work_results:c086aee81faae9e6f4d788804a3d8e8d648ba34496edd7432765d5ffb3af53ab",
+      "receipt_ref": "effect_receipt_v01:63c9578fc7c4c80acc92f0f668b151be7dbdb39250ff39147764501512b825df",
+      "root": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+      "semantic_ref": "sentinel:contribution:3b65b14d9a45b19ae014a14f8719576507e6f50aa8aa3fb4d22b59fc8b624aad",
+      "source_ref": "synthetic:reserve_series:v01"
+    },
+    {
+      "ordinal": 16,
+      "artifact_ref": "work_results:92834ad5629d707de5c5d16f7dc011aa431d218f7bdb945e2124e1687b18d0b6",
+      "bsep_ref": "bsep:sentinel:orchestrator:7a1be002cb31a7535d1bb4da4df088fcc0fdaec3ad39b1d3721eee58e5772653",
+      "monotonic": 5080780.024976,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "4c84a83baefc0a6470ce5eeb8c638f580c7ad59ada5bd70a60775ce644197dff",
+      "stage": "RESULT"
+    },
+    {
+      "ordinal": 18,
+      "artifact_ref": "work_results:14588637d9996fc31a0d00a53b711168c713b88cc7ec62951d66f9bb3d16d3fc",
+      "bsep_ref": "bsep:sentinel:orchestrator:9726dc33ee309a1580fbcc9046071ec9655b6771e9a67a6944db2d5687b65284",
+      "monotonic": 5080793.472143041,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "c6ec7305f88aa67f3a5c91cad5e063baa1990b8840a44de6c22685bd4dcd0fc2",
+      "stage": "PLAN"
+    },
+    {
+      "ordinal": 23,
+      "monotonic": 5080795.47170875,
+      "phase": "ACTUAL_REVIEWED_SERIES_READ",
+      "plan_ref": "work_results:14588637d9996fc31a0d00a53b711168c713b88cc7ec62951d66f9bb3d16d3fc",
+      "receipt_ref": "effect_receipt_v01:a325de79cc2ec20e217360c59804e951cf203d71da4fed20cbada61a3b317558",
+      "root": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+      "semantic_ref": "sentinel:contribution:04ab9aaabee49c2ac6c91b5e1e9b862a746d1426dd6fcb6420e391f130adeeaa",
+      "source_ref": "synthetic:reserve_series:v01"
+    },
+    {
+      "ordinal": 24,
+      "artifact_ref": "work_results:8e87ca18491b9fb76ba92783a01aa882b77b9d3406d8f8dc58e97c8ac5244e35",
+      "bsep_ref": "bsep:sentinel:orchestrator:b92b29464ee1f1d39b2c8972ebe9e623ae4bf8fed26ef7bf8170e412f00650a7",
+      "monotonic": 5080797.321633208,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "4e23c1445d8fa8dc9d4c11ae528c590351f14494e79c10daff5842cc21cba041",
+      "stage": "RESULT"
+    },
+    {
+      "ordinal": 25,
+      "artifact_ref": "work_results:5a9a9dc8a88fb72f086a4dbe3a0d6fe652fef9da403cae4757321dadc59d3984",
+      "bsep_ref": "bsep:sentinel:orchestrator:9726dc33ee309a1580fbcc9046071ec9655b6771e9a67a6944db2d5687b65284",
+      "monotonic": 5080798.938690833,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "1bab6a626fc92cc5cc28c99096518d95c6834d0585f13e93f080a3eb04d71c28",
+      "stage": "PLAN"
+    },
+    {
+      "ordinal": 26,
+      "creates_action": false,
+      "monotonic": 5080799.004172083,
+      "phase": "RECORDED_SERIES_INPUT_CONSUMED",
+      "receipt_ref": "effect_receipt_v01:a325de79cc2ec20e217360c59804e951cf203d71da4fed20cbada61a3b317558",
+      "semantic_ref": "sentinel:contribution:04ab9aaabee49c2ac6c91b5e1e9b862a746d1426dd6fcb6420e391f130adeeaa"
+    },
+    {
+      "ordinal": 27,
+      "artifact_ref": "work_results:94f50be21cf471ea483c22bc8a8f9ad353469a38ebe3465b722a1d14c8461a60",
+      "bsep_ref": "bsep:sentinel:orchestrator:391d25dcb29b9aae3e95f06dc620f8beb07214fbfd21784fa64d029efd1ca152",
+      "monotonic": 5080800.857413291,
+      "phase": "CURRENT_WORK_ROOT_ACCEPTED",
+      "root_decision": "5ad14a8273f5fc84e57631325bd61c4744b96662b0fd1f9749870fd9302b1eb2",
+      "stage": "RESULT"
+    }
+  ],
+  "actual_work_contrast": [
+    {
+      "work": "RECORD_RELATIONSHIP_CHECKS",
+      "findings": [
+        {
+          "calibration": "calibration:sentinel:v01",
+          "channel": "displacement",
+          "reasons": [],
+          "source_id": "sentinel:observation:4b2f2e50114cfb3806af3575ac4a0f0866111f7a3530ec6a6559a956e5d75bcb",
+          "status": "SUPPORTED"
+        },
+        {
+          "calibration": "calibration:sentinel:v01",
+          "channel": "reserve",
+          "reasons": [],
+          "source_id": "sentinel:observation:326e1f7513879f2b07d5c5f5a4ac01e013f6595d3f07efb297290d438ed9d32d",
+          "status": "SUPPORTED"
+        },
+        {
+          "lineages": [
+            "independent:reserve",
+            "independent:displacement"
+          ],
+          "reasons": [],
+          "relationship": "CURRENT_PAIR_LINEAGE_SEPARATION",
+          "status": "SUPPORTED"
+        }
+      ]
+    },
+    {
+      "work": "RESERVE_WINDOW_VARIATION",
+      "source_ref": "synthetic:reserve_series:v01",
+      "samples": [
+        "sentinel:observation:8dda6b4f0c1ecf8132fd96598731ae8561666a6c3cc6f2f2f57b83ac85d085da",
+        "sentinel:observation:576b0602efcf5f2b5783c55806221346792716bac15b84cec3581f77cbf84f7c",
+        "sentinel:observation:95ece2c5057e07cead450f5b239f7954985ee97b728aeeeeb63d86235ec2120e"
+      ],
+      "span": 20,
+      "range_value": 150,
+      "fitness": "ELIGIBLE",
+      "reasons": []
+    }
+  ],
+  "non_note_context_sha256": "27305ed252d2c7b5badd107739ca2c292e6c135c6271c4331f75b47daf1859d0",
+  "non_text_note_envelope": {
+    "observed_at": 3710,
+    "received_at": 3715,
+    "site": "slope_demo_site_001",
+    "source": "synthetic_maintenance_log",
+    "version": 2
+  },
+  "counts": {
+    "configuration_effect": 0,
+    "drs_descent": 1,
+    "drs_search": 1,
+    "drs_write": 1,
+    "harness_async_transport": 0,
+    "harness_attempt": 5,
+    "harness_completed": 5,
+    "harness_rejected": 0,
+    "harness_transport": 5,
+    "local_work": 9,
+    "mock_effect": 2,
+    "native_dispatch": 2,
+    "outbox_deliver": 0,
+    "outbox_queue": 0,
+    "public_D": 1,
+    "public_E": 0,
+    "receiver_receive": 0,
+    "report_effect": 0,
+    "sensor_attempt": 1,
+    "sensor_completed": 1,
+    "series_effect": 2,
+    "series_read": 2,
+    "signal_effect": 0,
+    "site_completed": 5,
+    "site_rejected": 0,
+    "site_request": 5
+  },
+  "captured_counts": {
+    "configuration_effect": 0,
+    "drs_descent": 0,
+    "drs_search": 0,
+    "drs_write": 0,
+    "harness_async_transport": 0,
+    "harness_attempt": 0,
+    "harness_completed": 0,
+    "harness_rejected": 0,
+    "harness_transport": 0,
+    "local_work": 2,
+    "mock_effect": 0,
+    "native_dispatch": 0,
+    "outbox_deliver": 0,
+    "outbox_queue": 0,
+    "public_D": 0,
+    "public_E": 0,
+    "receiver_receive": 0,
+    "report_effect": 0,
+    "sensor_attempt": 0,
+    "sensor_completed": 0,
+    "series_effect": 0,
+    "series_read": 0,
+    "signal_effect": 0,
+    "site_completed": 0,
+    "site_rejected": 0,
+    "site_request": 0
+  },
+  "local_only_counts": {
+    "configuration_effect": 0,
+    "drs_descent": 1,
+    "drs_search": 1,
+    "drs_write": 0,
+    "harness_async_transport": 0,
+    "harness_attempt": 0,
+    "harness_completed": 0,
+    "harness_rejected": 0,
+    "harness_transport": 0,
+    "local_work": 2,
+    "mock_effect": 0,
+    "native_dispatch": 0,
+    "outbox_deliver": 0,
+    "outbox_queue": 0,
+    "public_D": 0,
+    "public_E": 0,
+    "receiver_receive": 0,
+    "report_effect": 0,
+    "sensor_attempt": 1,
+    "sensor_completed": 1,
+    "series_effect": 0,
+    "series_read": 0,
+    "signal_effect": 0,
+    "site_completed": 0,
+    "site_rejected": 0,
+    "site_request": 0
+  },
+  "sources": [
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "semantic_completion.json",
+      "bytes": 16760,
+      "sha256": "4f534cbc0910639c38236386747fcaa0e99844371e9c36cfd22690cb966c8231"
+    },
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "live_01/phases.jsonl",
+      "bytes": 11892,
+      "sha256": "00bd2a701d0e5efeb4e33da39f41d5a30e931fb0611e60038ea589ec2045a72d"
+    },
+    {
+      "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+      "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+      "member": "live_01/live_AB.json",
+      "bytes": 31872,
+      "sha256": "3080c1d6efb6295534daf8c5a94c8f1ea320cbb2157c29f46e83e7f5a07b7ab1"
+    }
+  ],
+  "limitations": [
+    "Mock source read and synthetic site observations, not physical sensing.",
+    "Actual provider transport is cloud, not installed local SLM hardware.",
+    "No full native historical replay or physical calibration/geographical prediction claim.",
+    "Saved references document prior execution and cannot reconstruct its live authority."
+  ],
+  "plan_read_result_index_basis": "Zero-based source JSONL phase indices, not one-based line numbers"
+}

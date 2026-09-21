@@ -1186,6 +1186,495 @@ EWS_PRESENTATION_SOURCE_IDENTITIES_V01 = {'AGENTS.md': 'c0461e79ffd9ddd8dd9de723
  'tools/check_active_architecture_authority_v01.py': 'b255cf2ecb04cbf39a23ace597034a0d2715a1ade551b4ecc625326b5d412be9'}
 
 
+# Exact Landslide Sentinel presentation documentation successor.
+SENTINEL_PRESENTATION_BASE_V01 = '2f328be634247be11bc18a3b22a919f393d6ed1d'
+SENTINEL_PRESENTATION_BASE_PARENT_V01 = '50ab3916bff55e8034cf7e6c509d4803c5447589'
+SENTINEL_PRESENTATION_BASE_TREE_V01 = '8db682205049c72c85500ebafade0696532338ef'
+SENTINEL_PRESENTATION_COMMIT_MESSAGE_V01 = 'Publish Landslide Sentinel presentation and source-bound reader'
+SENTINEL_PRESENTATION_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml': 'A',
+ 'docs/showcase/landslide_sentinel_v01/PRESENTATION.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/README.md': 'M',
+ 'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/SHA256SUMS': 'M',
+ 'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/assets/cover.png': 'A',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf': 'A',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf': 'A',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt': 'A',
+ 'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png': 'A',
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf': 'A',
+ 'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf': 'A',
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx': 'A',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs': 'A',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py': 'A',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py': 'A',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py': 'A',
+ 'docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/slides_v01.json': 'A',
+ 'docs/showcase/landslide_sentinel_v01/story.html': 'A',
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md': 'A',
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf': 'A',
+ 'docs/showcase/landslide_sentinel_v01/verify_reader.py': 'A',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+SENTINEL_PRESENTATION_PATH_MODES_V01 = {'AGENTS.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml': '100644',
+ 'docs/showcase/landslide_sentinel_v01/PRESENTATION.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/README.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/SHA256SUMS': '100644',
+ 'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/assets/cover.png': '100644',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf': '100644',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf': '100644',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt': '100644',
+ 'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png': '100644',
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf': '100644',
+ 'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf': '100644',
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx': '100644',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs': '100644',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py': '100644',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py': '100644',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py': '100644',
+ 'docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/slides_v01.json': '100644',
+ 'docs/showcase/landslide_sentinel_v01/story.html': '100644',
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md': '100644',
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf': '100644',
+ 'docs/showcase/landslide_sentinel_v01/verify_reader.py': '100644',
+ 'release/current_status_overlay_v01.json': '100644',
+ 'release/successor_context_manifest_v01.json': '100644',
+ 'specs/current_architecture_lock_v01.md': '100644',
+ 'specs/document_authority_index_v01.json': '100644',
+ 'tests/test_active_architecture_authority_v01.py': '100644',
+ 'tests/test_repository_release_spine_v01.py': '100644',
+ 'tools/check_active_architecture_authority_v01.py': '100644'}
+SENTINEL_PRESENTATION_PAYLOAD_V01 = {'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md': {'bytes': 1904,
+                                                          'mode': '100644',
+                                                          'sha256': 'e59499c40252768d23a762539db56f109a31d2d973c4df18dfabd95dab11fa82'},
+ 'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml': {'bytes': 10837394,
+                                                                                                      'mode': '100644',
+                                                                                                      'sha256': '0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d'},
+ 'docs/showcase/landslide_sentinel_v01/PRESENTATION.md': {'bytes': 6587,
+                                                          'mode': '100644',
+                                                          'sha256': '44543dcc1a8f9bed17f748980d841cc8ab82cef6b919cfbc271e8b53619a82f2'},
+ 'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md': {'bytes': 2924,
+                                                                 'mode': '100644',
+                                                                 'sha256': '08502aeb8d47ab035b9cde2e013f343b3019d6a7a7214314889cd82af76fe20a'},
+ 'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json': {'bytes': 1873,
+                                                                   'mode': '100644',
+                                                                   'sha256': 'cde6de3e0f13052f6a61a53813992b8bf602562f742d5caaedeea17a8d8d9f02'},
+ 'docs/showcase/landslide_sentinel_v01/assets/cover.png': {'bytes': 604426,
+                                                           'mode': '100644',
+                                                           'sha256': '1751e7e3570bfe7cf6e95a0e8be27dd99876c75c20c5157be61493ec1a655397'},
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf': {'bytes': 343104,
+                                                                      'mode': '100644',
+                                                                      'sha256': 'c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73'},
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf': {'bytes': 341396,
+                                                                         'mode': '100644',
+                                                                         'sha256': 'fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2'},
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt': {'bytes': 4377,
+                                                               'mode': '100644',
+                                                               'sha256': '5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57'},
+ 'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json': {'bytes': 2293,
+                                                                          'mode': '100644',
+                                                                          'sha256': '3e00889b5fee15b71283cddcd140292742b31d7f1f57ca3b5fa0da5553bc809a'},
+ 'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png': {'bytes': 1581616,
+                                                                                        'mode': '100644',
+                                                                                        'sha256': '2201191bf17726ea2ffefa18d15e00816808b9fea690b94696763d01f385021d'},
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json': {'bytes': 54429,
+                                                                         'mode': '100644',
+                                                                         'sha256': 'b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd'},
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md': {'bytes': 3144,
+                                                                     'mode': '100644',
+                                                                     'sha256': 'c3a88210658380b14143b1d429674aa3c293ee1a794fe6ab46905c4475c53f52'},
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf': {'bytes': 2041783,
+                                                                      'mode': '100644',
+                                                                      'sha256': '321dbd839128d566f020c888c79788dfa1af095fc9559089ab7e8323fc608063'},
+ 'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json': {'bytes': 1495,
+                                                                                'mode': '100644',
+                                                                                'sha256': '9d91c5471461546b65c6197185ba4f519fe1edfed23781cce4b6cc28c182baee'},
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf': {'bytes': 479890,
+                                                                              'mode': '100644',
+                                                                              'sha256': '74e5c199940074146421f1c754e778a28b8abd8b666b8cf8a846e627a0df89e6'},
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx': {'bytes': 1741065,
+                                                                               'mode': '100644',
+                                                                               'sha256': '84dc045c850cfbee5d22d3904f8f2f795059806bde49677d716a64c6e3b8f4f1'},
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs': {'bytes': 13934,
+                                                                            'mode': '100644',
+                                                                            'sha256': '38e21fbeb8a2aa05adbd14f4fa50fa7f2486502bfb9105943c1310920e111674'},
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py': {'bytes': 24025,
+                                                                             'mode': '100644',
+                                                                             'sha256': 'c0ef1c78251a7d85f4bac01dd7ffb3605e2967a60ff5b0de17912d3fa87dd04d'},
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py': {'bytes': 7224,
+                                                                            'mode': '100644',
+                                                                            'sha256': 'f2236db4dce558d1bba5c88e41b7a6789fa401d6eaaa65f878dc7fa935a0e8ee'},
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py': {'bytes': 11285,
+                                                                                   'mode': '100644',
+                                                                                   'sha256': 'c877b103671137f6b113f872de5f46cd3997de32f93079bb04e9a4afbe19a9e8'},
+ 'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json': {'bytes': 1781,
+                                                                                 'mode': '100644',
+                                                                                 'sha256': 'd114939c34f80e7afb238c8c66a90ea436514216ad7cc8d5279ffecf3539823a'},
+ 'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json': {'bytes': 170110,
+                                                                         'mode': '100644',
+                                                                         'sha256': '9eedc4f936f6e217dae2f6e4e3bfdea4c16f56d78dedba20b137d554fb8ad582'},
+ 'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json': {'bytes': 94334,
+                                                                     'mode': '100644',
+                                                                     'sha256': 'bd2060cc781adfaa37e3e58f3fc9bff4b0e204dc7c7687b04235605b08993a01'},
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.json': {'bytes': 21225,
+                                                                    'mode': '100644',
+                                                                    'sha256': '631be72663131d328290083128d9093ca70fab50d3ddd5ea46bc150f4e1ef8f9'},
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.md': {'bytes': 15730,
+                                                                  'mode': '100644',
+                                                                  'sha256': '28a670b45e89e26693f14e92525c19eb2d43d321a477b888662d01ff51daf701'},
+ 'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json': {'bytes': 59054,
+                                                                           'mode': '100644',
+                                                                           'sha256': 'dec3fce3e3846943353e1b57476fe8a3129ed7bb28d2a233eef4341fd9316213'},
+ 'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json': {'bytes': 177424,
+                                                                        'mode': '100644',
+                                                                        'sha256': '4232a3d2a60bf2f932977f16fdd74e6795f41479b70576e94ce25407019473f3'},
+ 'docs/showcase/landslide_sentinel_v01/slides_v01.json': {'bytes': 269315,
+                                                          'mode': '100644',
+                                                          'sha256': 'b52bbe603e796d9eb60f751f7e535583235de31a0d3383a655a9340468169127'},
+ 'docs/showcase/landslide_sentinel_v01/story.html': {'bytes': 141702,
+                                                     'mode': '100644',
+                                                     'sha256': '295a0562a6fbdf052a7f886e6dd577ac5dacd4b6785efe59844c4b2f3d0cf9bb'},
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md': {'bytes': 71936,
+                                                                    'mode': '100644',
+                                                                    'sha256': 'ffba3591605a8d2c4e6734e6fd90e2a017e270fc8ae4eeebe3ef5281250304bd'},
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf': {'bytes': 96550,
+                                                                     'mode': '100644',
+                                                                     'sha256': '3699f815bf641288d0daf0d400b41ae5679857d5068d0c82a1adb65fba29e239'},
+ 'docs/showcase/landslide_sentinel_v01/verify_reader.py': {'bytes': 1806,
+                                                           'mode': '100644',
+                                                           'sha256': 'f5d817306f31bdb87d096fff64b047d3b1a15a1d929123c56cf19960b5932414'}}
+SENTINEL_PRESENTATION_ADMISSION_METADATA_V01 = {'accepted_source_bodies': 22,
+ 'authority': 'EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': '2f328be634247be11bc18a3b22a919f393d6ed1d',
+ 'basis_parent': '50ab3916bff55e8034cf7e6c509d4803c5447589',
+ 'basis_regular_files': 1061,
+ 'basis_tree': '8db682205049c72c85500ebafade0696532338ef',
+ 'commit_message': 'Publish Landslide Sentinel presentation and source-bound reader',
+ 'covered_by_original_anchor': False,
+ 'generated_record': 'docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json',
+ 'historical_runtime': 'UNCHANGED_RECORDED_NOT_FRESH_PASS',
+ 'independent_ls2r2_publication_pin': '7b91c496521e11c69fab9ea89a576474d37dbcb93c494b58a93269884fffb9b8',
+ 'input_archive': {'bytes': 8120046,
+                   'filename': 'RADIOLARIA_LANDSLIDE_SENTINEL_PRESENTATION_PACKAGE_V02_20260921.tar.gz',
+                   'format': 'tar.gz',
+                   'sha256': 'e9e90ed87fc0b7e6a098d619fd2bcfca5e48aea82d803252749411261d16ab0c'},
+ 'input_manifest_sha256': '6e82cac13e4d27a0e4205bdb44daf5b5b1398a8a3371303d933f483c2f306dee',
+ 'living_registration': 'EXISTING_NINE_ROWS_UNCHANGED_NO_NEW_PROFILE',
+ 'path_actions': {'AGENTS.md': 'M',
+                  'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml': 'A',
+                  'docs/showcase/landslide_sentinel_v01/PRESENTATION.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/README.md': 'M',
+                  'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/SHA256SUMS': 'M',
+                  'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/assets/cover.png': 'A',
+                  'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf': 'A',
+                  'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf': 'A',
+                  'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt': 'A',
+                  'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png': 'A',
+                  'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf': 'A',
+                  'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf': 'A',
+                  'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx': 'A',
+                  'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs': 'A',
+                  'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py': 'A',
+                  'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py': 'A',
+                  'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py': 'A',
+                  'docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/research_context_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/research_context_v01.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/slides_v01.json': 'A',
+                  'docs/showcase/landslide_sentinel_v01/story.html': 'A',
+                  'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md': 'A',
+                  'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf': 'A',
+                  'docs/showcase/landslide_sentinel_v01/verify_reader.py': 'A',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'path_modes': {'AGENTS.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml': '100644',
+                'docs/showcase/landslide_sentinel_v01/PRESENTATION.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/README.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/SHA256SUMS': '100644',
+                'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/assets/cover.png': '100644',
+                'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf': '100644',
+                'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf': '100644',
+                'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt': '100644',
+                'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png': '100644',
+                'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf': '100644',
+                'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf': '100644',
+                'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx': '100644',
+                'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs': '100644',
+                'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py': '100644',
+                'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py': '100644',
+                'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py': '100644',
+                'docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/research_context_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/research_context_v01.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/slides_v01.json': '100644',
+                'docs/showcase/landslide_sentinel_v01/story.html': '100644',
+                'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md': '100644',
+                'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf': '100644',
+                'docs/showcase/landslide_sentinel_v01/verify_reader.py': '100644',
+                'release/current_status_overlay_v01.json': '100644',
+                'release/successor_context_manifest_v01.json': '100644',
+                'specs/current_architecture_lock_v01.md': '100644',
+                'specs/document_authority_index_v01.json': '100644',
+                'tests/test_active_architecture_authority_v01.py': '100644',
+                'tests/test_repository_release_spine_v01.py': '100644',
+                'tools/check_active_architecture_authority_v01.py': '100644'},
+ 'payload_files': [{'bytes': 1904,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md',
+                    'sha256': 'e59499c40252768d23a762539db56f109a31d2d973c4df18dfabd95dab11fa82'},
+                   {'bytes': 10837394,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml',
+                    'sha256': '0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d'},
+                   {'bytes': 6587,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/PRESENTATION.md',
+                    'sha256': '44543dcc1a8f9bed17f748980d841cc8ab82cef6b919cfbc271e8b53619a82f2'},
+                   {'bytes': 2924,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md',
+                    'sha256': '08502aeb8d47ab035b9cde2e013f343b3019d6a7a7214314889cd82af76fe20a'},
+                   {'bytes': 1873,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json',
+                    'sha256': 'cde6de3e0f13052f6a61a53813992b8bf602562f742d5caaedeea17a8d8d9f02'},
+                   {'bytes': 604426,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/assets/cover.png',
+                    'sha256': '1751e7e3570bfe7cf6e95a0e8be27dd99876c75c20c5157be61493ec1a655397'},
+                   {'bytes': 343104,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf',
+                    'sha256': 'c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73'},
+                   {'bytes': 341396,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf',
+                    'sha256': 'fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2'},
+                   {'bytes': 4377,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt',
+                    'sha256': '5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57'},
+                   {'bytes': 2293,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json',
+                    'sha256': '3e00889b5fee15b71283cddcd140292742b31d7f1f57ca3b5fa0da5553bc809a'},
+                   {'bytes': 1581616,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png',
+                    'sha256': '2201191bf17726ea2ffefa18d15e00816808b9fea690b94696763d01f385021d'},
+                   {'bytes': 54429,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json',
+                    'sha256': 'b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd'},
+                   {'bytes': 3144,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md',
+                    'sha256': 'c3a88210658380b14143b1d429674aa3c293ee1a794fe6ab46905c4475c53f52'},
+                   {'bytes': 2041783,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf',
+                    'sha256': '321dbd839128d566f020c888c79788dfa1af095fc9559089ab7e8323fc608063'},
+                   {'bytes': 1495,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json',
+                    'sha256': '9d91c5471461546b65c6197185ba4f519fe1edfed23781cce4b6cc28c182baee'},
+                   {'bytes': 479890,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf',
+                    'sha256': '74e5c199940074146421f1c754e778a28b8abd8b666b8cf8a846e627a0df89e6'},
+                   {'bytes': 1741065,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx',
+                    'sha256': '84dc045c850cfbee5d22d3904f8f2f795059806bde49677d716a64c6e3b8f4f1'},
+                   {'bytes': 13934,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs',
+                    'sha256': '38e21fbeb8a2aa05adbd14f4fa50fa7f2486502bfb9105943c1310920e111674'},
+                   {'bytes': 24025,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py',
+                    'sha256': 'c0ef1c78251a7d85f4bac01dd7ffb3605e2967a60ff5b0de17912d3fa87dd04d'},
+                   {'bytes': 7224,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py',
+                    'sha256': 'f2236db4dce558d1bba5c88e41b7a6789fa401d6eaaa65f878dc7fa935a0e8ee'},
+                   {'bytes': 11285,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py',
+                    'sha256': 'c877b103671137f6b113f872de5f46cd3997de32f93079bb04e9a4afbe19a9e8'},
+                   {'bytes': 1781,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json',
+                    'sha256': 'd114939c34f80e7afb238c8c66a90ea436514216ad7cc8d5279ffecf3539823a'},
+                   {'bytes': 170110,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json',
+                    'sha256': '9eedc4f936f6e217dae2f6e4e3bfdea4c16f56d78dedba20b137d554fb8ad582'},
+                   {'bytes': 94334,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json',
+                    'sha256': 'bd2060cc781adfaa37e3e58f3fc9bff4b0e204dc7c7687b04235605b08993a01'},
+                   {'bytes': 21225,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/research_context_v01.json',
+                    'sha256': '631be72663131d328290083128d9093ca70fab50d3ddd5ea46bc150f4e1ef8f9'},
+                   {'bytes': 15730,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/research_context_v01.md',
+                    'sha256': '28a670b45e89e26693f14e92525c19eb2d43d321a477b888662d01ff51daf701'},
+                   {'bytes': 59054,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json',
+                    'sha256': 'dec3fce3e3846943353e1b57476fe8a3129ed7bb28d2a233eef4341fd9316213'},
+                   {'bytes': 177424,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json',
+                    'sha256': '4232a3d2a60bf2f932977f16fdd74e6795f41479b70576e94ce25407019473f3'},
+                   {'bytes': 269315,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/slides_v01.json',
+                    'sha256': 'b52bbe603e796d9eb60f751f7e535583235de31a0d3383a655a9340468169127'},
+                   {'bytes': 141702,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/story.html',
+                    'sha256': '295a0562a6fbdf052a7f886e6dd577ac5dacd4b6785efe59844c4b2f3d0cf9bb'},
+                   {'bytes': 71936,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md',
+                    'sha256': 'ffba3591605a8d2c4e6734e6fd90e2a017e270fc8ae4eeebe3ef5281250304bd'},
+                   {'bytes': 96550,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf',
+                    'sha256': '3699f815bf641288d0daf0d400b41ae5679857d5068d0c82a1adb65fba29e239'},
+                   {'bytes': 1806,
+                    'mode': '100644',
+                    'path': 'docs/showcase/landslide_sentinel_v01/verify_reader.py',
+                    'sha256': 'f5d817306f31bdb87d096fff64b047d3b1a15a1d929123c56cf19960b5932414'}],
+ 'reader': {'bytes': 10837394,
+            'path': 'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml',
+            'sha256': '0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d'},
+ 'reader_index': {'bytes': 170110,
+                  'path': 'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json',
+                  'sha256': '9eedc4f936f6e217dae2f6e4e3bfdea4c16f56d78dedba20b137d554fb8ad582'},
+ 'source_identity_projection': 'ONLY_NEW_SENTINEL_PRESENTATION_GUARD_LITERAL_EXCLUDED; '
+                               'DETACHED_MANIFEST_BINDS_RAW_BYTES',
+ 'status': 'EXACT_DOCUMENTATION_SUCCESSOR_DERIVED_FROM_GIT',
+ 'verified_alternative_archive': {'bytes': 8137663,
+                                  'filename': 'RADIOLARIA_LANDSLIDE_SENTINEL_PRESENTATION_PACKAGE_V02_20260921.zip',
+                                  'format': 'zip',
+                                  'sha256': 'a1b0fdb30b4c46369d83055e5d41e5ba8d9b9102cf1937995eacb4e8c06a8cdb',
+                                  'status': 'VERIFIED_BYTE_IDENTICAL_PAYLOAD_ALTERNATIVE_ENCODING'}}
+SENTINEL_PRESENTATION_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '49f53b3c1b99fa9ce52b73cfa49a8cf6be0ca08af38c8aa8464389da902313fe',
+ 'docs/showcase/landslide_sentinel_v01/DESIGN_NOTES.md': 'e59499c40252768d23a762539db56f109a31d2d973c4df18dfabd95dab11fa82',
+ 'docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml': '0a78b7781112e5089edd11a0d837a806b997f4efc94bcfec5e928b4b1d95fc6d',
+ 'docs/showcase/landslide_sentinel_v01/PRESENTATION.md': '44543dcc1a8f9bed17f748980d841cc8ab82cef6b919cfbc271e8b53619a82f2',
+ 'docs/showcase/landslide_sentinel_v01/README.md': 'd915963679d1546bd76c0f8ddaa76a435b9a90457e1870f23c341feb49be1ee6',
+ 'docs/showcase/landslide_sentinel_v01/README_READER_BUILD.md': '08502aeb8d47ab035b9cde2e013f343b3019d6a7a7214314889cd82af76fe20a',
+ 'docs/showcase/landslide_sentinel_v01/SHA256SUMS': '9bef234db6a2c6853ee09977f375fcaaf073a70e3e4e09be5b62c47783fb687b',
+ 'docs/showcase/landslide_sentinel_v01/asset_inventory_v01.json': 'cde6de3e0f13052f6a61a53813992b8bf602562f742d5caaedeea17a8d8d9f02',
+ 'docs/showcase/landslide_sentinel_v01/assets/cover.png': '1751e7e3570bfe7cf6e95a0e8be27dd99876c75c20c5157be61493ec1a655397',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Bold.ttf': 'c5a3cf8eda33e1dd8cd3787274aa2114ab89ce9fc262f04ebc857a687f4d9e73',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/Inter-Regular.ttf': 'fd63d8ee1d0784520a471091006003385f23cc950d6491241b1ba2914bc3dae2',
+ 'docs/showcase/landslide_sentinel_v01/assets/fonts/OFL.txt': '5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57',
+ 'docs/showcase/landslide_sentinel_v01/assets/hero_provenance_v01.json': '3e00889b5fee15b71283cddcd140292742b31d7f1f57ca3b5fa0da5553bc809a',
+ 'docs/showcase/landslide_sentinel_v01/assets/radiolaria_landslide_sentinel_hero.png': '2201191bf17726ea2ffefa18d15e00816808b9fea690b94696763d01f385021d',
+ 'docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json': 'b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd',
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.md': 'c3a88210658380b14143b1d429674aa3c293ee1a794fe6ab46905c4475c53f52',
+ 'docs/showcase/landslide_sentinel_v01/executive_one_pager_v01.pdf': '321dbd839128d566f020c888c79788dfa1af095fc9559089ab7e8323fc608063',
+ 'docs/showcase/landslide_sentinel_v01/landing_verification_summary_v01.json': '9d91c5471461546b65c6197185ba4f519fe1edfed23781cce4b6cc28c182baee',
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pdf': '74e5c199940074146421f1c754e778a28b8abd8b666b8cf8a846e627a0df89e6',
+ 'docs/showcase/landslide_sentinel_v01/landslide_sentinel_showcase_v01.pptx': '84dc045c850cfbee5d22d3904f8f2f795059806bde49677d716a64c6e3b8f4f1',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_deck.mjs': '38e21fbeb8a2aa05adbd14f4fa50fa7f2486502bfb9105943c1310920e111674',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_reader.py': 'c0ef1c78251a7d85f4bac01dd7ffb3605e2967a60ff5b0de17912d3fa87dd04d',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_story.py': 'f2236db4dce558d1bba5c88e41b7a6789fa401d6eaaa65f878dc7fa935a0e8ee',
+ 'docs/showcase/landslide_sentinel_v01/presentation_build/build_support_pdfs.py': 'c877b103671137f6b113f872de5f46cd3997de32f93079bb04e9a4afbe19a9e8',
+ 'docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json': 'dca665f2b16bd055d7ee9200fcee7ce4a14a62609bc96165e5ef3e488bc16ea8',
+ 'docs/showcase/landslide_sentinel_v01/publication_identity_v02_20260921.json': 'd114939c34f80e7afb238c8c66a90ea436514216ad7cc8d5279ffecf3539823a',
+ 'docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json': '9eedc4f936f6e217dae2f6e4e3bfdea4c16f56d78dedba20b137d554fb8ad582',
+ 'docs/showcase/landslide_sentinel_v01/rendered_pdf_text_v01.json': 'bd2060cc781adfaa37e3e58f3fc9bff4b0e204dc7c7687b04235605b08993a01',
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.json': '631be72663131d328290083128d9093ca70fab50d3ddd5ea46bc150f4e1ef8f9',
+ 'docs/showcase/landslide_sentinel_v01/research_context_v01.md': '28a670b45e89e26693f14e92525c19eb2d43d321a477b888662d01ff51daf701',
+ 'docs/showcase/landslide_sentinel_v01/semantic_boundary_trace_v01.json': 'dec3fce3e3846943353e1b57476fe8a3129ed7bb28d2a233eef4341fd9316213',
+ 'docs/showcase/landslide_sentinel_v01/slide_text_and_notes_v01.json': '4232a3d2a60bf2f932977f16fdd74e6795f41479b70576e94ce25407019473f3',
+ 'docs/showcase/landslide_sentinel_v01/slides_v01.json': 'b52bbe603e796d9eb60f751f7e535583235de31a0d3383a655a9340468169127',
+ 'docs/showcase/landslide_sentinel_v01/story.html': '295a0562a6fbdf052a7f886e6dd577ac5dacd4b6785efe59844c4b2f3d0cf9bb',
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.md': 'ffba3591605a8d2c4e6734e6fd90e2a017e270fc8ae4eeebe3ef5281250304bd',
+ 'docs/showcase/landslide_sentinel_v01/technical_appendix_v01.pdf': '3699f815bf641288d0daf0d400b41ae5679857d5068d0c82a1adb65fba29e239',
+ 'docs/showcase/landslide_sentinel_v01/verify_reader.py': 'f5d817306f31bdb87d096fff64b047d3b1a15a1d929123c56cf19960b5932414',
+ 'release/current_status_overlay_v01.json': 'c2461d1b255daa98670dd99df3179500f6dce4b7a638cf68beed0e3b9556ba15',
+ 'release/successor_context_manifest_v01.json': '28bce24caa9f89a46a23ae6b69994d258b3dccaddf995ca3b7d4bf93a0b921bb',
+ 'specs/current_architecture_lock_v01.md': '5aea59e077a88b2597a5205ccce9e0faa4f36c56604888dc249f87a818421a72',
+ 'specs/document_authority_index_v01.json': '38f35d860bcb5af46a4ba4323673405ce2e11ef79951b4988d6b151cfc58c271',
+ 'tests/test_active_architecture_authority_v01.py': 'dd2a76dd50026451995d3e6f21cd96a610bd4cec93ff0231cd2d151905b0b336',
+ 'tests/test_repository_release_spine_v01.py': 'e1ca9dacb3e03b639f5ab537504b56660338248d6f9efe824f33ca96db046d1a',
+ 'tools/check_active_architecture_authority_v01.py': '2492c65313a0b1131777c72046bfab8b859d98a09937ac2671685947f7588def'}
+
+
 # Exact Sentinel source successor. The prior classifiers and constants are unchanged.
 SENTINEL_BASE_V01 = '50ab3916bff55e8034cf7e6c509d4803c5447589'
 SENTINEL_BASE_PARENT_V01 = '3f8720b75a1bda3a1df6b184e643c2de5327f838'
@@ -1441,6 +1930,216 @@ SENTINEL_ADMISSION_METADATA_V01 = {'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_P
  'source_count': 22,
  'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED',
  'test_derivation': 'tests/test_landslide_sentinel_ls2_v01.py:TWO_STALE_SETUPS_ONLY'}
+
+
+def _sentinel_presentation_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in SENTINEL_PRESENTATION_PATH_ACTIONS_V01.items() if action == "A"):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"landslide_sentinel_presentation_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _sentinel_presentation_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude only this successor's own single digest literal."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "SENTINEL_PRESENTATION_SOURCE_IDENTITIES_V01" for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if len(nodes) != 1 or not isinstance(nodes[0], ast.Assign) or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name) or not isinstance(nodes[0].value, ast.Dict):
+        raise ValueError("sentinel presentation self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("sentinel presentation self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("sentinel presentation self identity projection")
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or type(value.value) is not str or re.fullmatch(r"[0-9a-f]{64}", value.value) is None or value.end_lineno != value.lineno or value.end_col_offset is None:
+        raise ValueError("sentinel presentation self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if re.fullmatch(br"(['\"])[0-9a-f]{64}\1", literal) is None or literal[1:-1].decode("ascii") != value.value:
+        raise ValueError("sentinel presentation self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_SENTINEL_PRESENTATION_V01"' + body[end:]).hexdigest()
+
+
+def _classify_sentinel_presentation_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                                                branch: str, status: dict[str, str],
+                                                delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    errors: list[str] = []
+    phase = "SENTINEL_PRESENTATION_INVALID"
+    if branch != "main":
+        errors.append("sentinel_presentation.branch")
+    if head == SENTINEL_PRESENTATION_BASE_V01:
+        if parents != (SENTINEL_PRESENTATION_BASE_PARENT_V01,) or origin != SENTINEL_PRESENTATION_BASE_V01:
+            errors.append("sentinel_presentation.candidate.basis_origin")
+        unstaged = {path: "??" if action == "A" else " M" for path, action in SENTINEL_PRESENTATION_PATH_ACTIONS_V01.items()}
+        staged = {path: action + " " for path, action in SENTINEL_PRESENTATION_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED"
+        elif status == staged:
+            phase = "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_STAGED"
+        else:
+            errors.append("sentinel_presentation.candidate.exact_ledger")
+        if delta:
+            errors.append("sentinel_presentation.candidate.delta")
+    elif parents == (SENTINEL_PRESENTATION_BASE_V01,):
+        phase = "SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED"
+        if origin not in (SENTINEL_PRESENTATION_BASE_V01, head):
+            errors.append("sentinel_presentation.committed.origin")
+        if status or delta != SENTINEL_PRESENTATION_PATH_ACTIONS_V01:
+            errors.append("sentinel_presentation.committed.clean_exact_delta")
+    else:
+        errors.append("sentinel_presentation.exact_immediate_base_child")
+    return phase, tuple(errors)
+
+
+def _validate_landslide_sentinel_presentation_admission_v01(root: Path, failures: list[str]) -> str:
+    """Admit one exact explanatory publication without runtime authority."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="sentinel_presentation.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, SENTINEL_PRESENTATION_BASE_V01 + "..HEAD", failures), label="sentinel_presentation.delta", failures=failures)
+    phase, reasons = _classify_sentinel_presentation_ledger_v01(
+        head=head,
+        parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(),
+        status=status,
+        delta=delta,
+    )
+    failures.extend(reasons)
+    if git("rev-parse", SENTINEL_PRESENTATION_BASE_V01 + "^{tree}").decode().strip() != SENTINEL_PRESENTATION_BASE_TREE_V01:
+        failures.append("sentinel_presentation.base.tree")
+    if git("rev-list", "--parents", "-n", "1", SENTINEL_PRESENTATION_BASE_V01).decode().split() != [SENTINEL_PRESENTATION_BASE_V01, SENTINEL_PRESENTATION_BASE_PARENT_V01]:
+        failures.append("sentinel_presentation.base.parent")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", SENTINEL_PRESENTATION_BASE_V01), failures)
+    if (len(baseline) != 1061 or len(SENTINEL_PRESENTATION_PATH_ACTIONS_V01) != 44
+            or len(SENTINEL_PRESENTATION_PAYLOAD_V01) != 33
+            or set(SENTINEL_PRESENTATION_PATH_ACTIONS_V01) != set(SENTINEL_PRESENTATION_PATH_MODES_V01)
+            or set(SENTINEL_PRESENTATION_SOURCE_IDENTITIES_V01) != set(SENTINEL_PRESENTATION_PATH_ACTIONS_V01)):
+        failures.append("sentinel_presentation.exact_inventory")
+    for path, row in SENTINEL_PRESENTATION_PAYLOAD_V01.items():
+        file = root / path
+        if (path in baseline or SENTINEL_PRESENTATION_PATH_ACTIONS_V01.get(path) != "A"
+                or not file.is_file() or file.is_symlink() or file.stat().st_size != row["bytes"]
+                or hashlib.sha256(file.read_bytes()).hexdigest() != row["sha256"]
+                or SENTINEL_PRESENTATION_PATH_MODES_V01.get(path) != row["mode"]):
+            failures.append("sentinel_presentation.payload_identity:" + path)
+    expected_paths = set(baseline) | set(SENTINEL_PRESENTATION_PATH_ACTIONS_V01)
+    actual: dict[str, tuple[str, str]] = {}
+    for path in sorted(expected_paths):
+        file = root / path
+        if file.is_symlink() or not file.is_file() or any(parent.is_symlink() for parent in file.parents if parent != root and root in parent.parents):
+            failures.append("sentinel_presentation.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = ("100755" if mode & 0o111 else "100644", hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest())
+        if path in SENTINEL_PRESENTATION_PATH_ACTIONS_V01:
+            if mode != int(SENTINEL_PRESENTATION_PATH_MODES_V01[path][-3:], 8):
+                failures.append("sentinel_presentation.mode:" + path)
+            try:
+                if _sentinel_presentation_source_digest_v01(path, body) != SENTINEL_PRESENTATION_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("sentinel_presentation.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("sentinel_presentation.identity_projection:" + path)
+            if (path in baseline) != (SENTINEL_PRESENTATION_PATH_ACTIONS_V01[path] == "M") or actual[path] == baseline.get(path):
+                failures.append("sentinel_presentation.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("sentinel_presentation.frozen_source:" + path)
+    index: dict[str, tuple[str, str]] = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("sentinel_presentation.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("sentinel_presentation.index.parse")
+    if index != (baseline if phase == "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED" else actual):
+        failures.append("sentinel_presentation.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("sentinel_presentation.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("sentinel_presentation.index.hidden_flags")
+    if phase == "SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED":
+        if _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual or len(actual) != 1095:
+            failures.append("sentinel_presentation.committed.tree")
+        if git("show", "-s", "--format=%B", "HEAD").decode().strip() != SENTINEL_PRESENTATION_COMMIT_MESSAGE_V01:
+            failures.append("sentinel_presentation.committed.message")
+    for marker in ("index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock", "packed-refs.lock"):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if (marker == "index" and (path.is_symlink() or not path.is_file())) or (marker != "index" and path.exists()):
+            failures.append("sentinel_presentation.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "sentinel_presentation.json:" + path, failures)
+        old = json.loads(git("show", SENTINEL_PRESENTATION_BASE_V01 + ":" + path))
+        if {key: item for key, item in value.items() if key != "landslide_sentinel_presentation_admission_v01"} != old:
+            failures.append("sentinel_presentation.historical_metadata:" + path)
+        if value.get("landslide_sentinel_presentation_admission_v01") != SENTINEL_PRESENTATION_ADMISSION_METADATA_V01:
+            failures.append("sentinel_presentation.admission_metadata")
+    record = _load_json(root / "docs/showcase/landslide_sentinel_v01/presentation_publication_v01.json", "sentinel_presentation.publication_record", failures)
+    if (record.get("accepted_source", {}).get("commit") != SENTINEL_PRESENTATION_BASE_V01
+            or record.get("accepted_source", {}).get("tree") != SENTINEL_PRESENTATION_BASE_TREE_V01
+            or record.get("reader", {}).get("sha256") != SENTINEL_PRESENTATION_PAYLOAD_V01["docs/showcase/landslide_sentinel_v01/LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml"]["sha256"]
+            or record.get("reader_index", {}).get("sha256") != SENTINEL_PRESENTATION_PAYLOAD_V01["docs/showcase/landslide_sentinel_v01/reader_index_v02_20260921.json"]["sha256"]
+            or record.get("assets") != [{"path": path, **row} for path, row in SENTINEL_PRESENTATION_PAYLOAD_V01.items()]):
+        failures.append("sentinel_presentation.publication_record")
+    showcase = root / "docs/showcase/landslide_sentinel_v01"
+    checksum_path = showcase / "SHA256SUMS"
+    checksum_expected = {
+        path.relative_to(showcase).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in showcase.rglob("*") if path.is_file() and path != checksum_path
+    }
+    checksum_actual: dict[str, str] = {}
+    try:
+        for line in checksum_path.read_text().splitlines():
+            digest, name = line.split("  ", 1)
+            if name in checksum_actual or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                raise ValueError
+            checksum_actual[name] = digest
+    except (OSError, UnicodeError, ValueError):
+        failures.append("sentinel_presentation.showcase_checksums_parse")
+    if checksum_actual != checksum_expected:
+        failures.append("sentinel_presentation.showcase_checksums")
+    if not failures:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("sentinel_presentation_living_v01", root / "demo/run_living_gauntlet_v01.py")
+        if spec is None or spec.loader is None:
+            failures.append("sentinel_presentation.living.import_spec")
+        else:
+            living = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = living
+            try:
+                spec.loader.exec_module(living)
+                _, errors = living._current_registration_v01(root)
+                failures.extend("sentinel_presentation." + error for error in errors)
+            except (ImportError, ValueError, OSError) as exc:
+                failures.append("sentinel_presentation.living.import:" + type(exc).__name__)
+            finally:
+                sys.modules.pop(spec.name, None)
+    return phase
 
 
 def _sentinel_requested_v01(root: Path) -> bool:
@@ -14157,6 +14856,9 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    if _sentinel_presentation_requested_v01(root):
+        _validate_landslide_sentinel_presentation_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
     if _sentinel_requested_v01(root):
         _validate_landslide_sentinel_admission_v01(root, failures)
         return tuple(sorted(set(failures)))
@@ -14301,6 +15003,23 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        if _sentinel_presentation_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_landslide_sentinel_presentation_admission_v01(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("sentinel_presentation.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=" + phase)
+            print("AUTHORITY=EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
         if _sentinel_requested_v01(args.root.resolve()):
             current_errors: list[str] = []
             phase = _validate_landslide_sentinel_admission_v01(args.root.resolve(), current_errors)

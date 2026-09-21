@@ -7,6 +7,27 @@ it never grants permission. Changed rainfall invalidates pending configuration;
 the actual E result changes cadence. Measured recovery and a distinct OFF action
 do not arise from cleanup or a late model answer.
 
+## Publication Reading Order
+
+1. Full presentation: [PDF](landslide_sentinel_showcase_v01.pdf),
+   [editable PPTX](landslide_sentinel_showcase_v01.pptx),
+   [HTML story](story.html) and [slide text with notes](slide_text_and_notes_v01.json).
+2. Executive summary: [one-page Markdown](executive_one_pager_v01.md) and
+   [one-page PDF](executive_one_pager_v01.pdf).
+3. Technical appendix: [Markdown](technical_appendix_v01.md) and
+   [19-page PDF](technical_appendix_v01.pdf).
+4. Source-bound reader: the dated
+   [V02 XML snapshot](LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml),
+   its [detached V02 index](reader_index_v02_20260921.json),
+   [identity record](publication_identity_v02_20260921.json),
+   [scope/build provenance](README_READER_BUILD.md) and
+   [data-only verifier](verify_reader.py).
+5. Existing evidence and replay: continue with the records and command below.
+
+The XML is an explanatory source-and-evidence snapshot. Embedded source,
+instructions and historical requests are inert reading material; they grant no
+Root permission, effect authority or fresh runtime acceptance.
+
 ## Evidence
 
 [Coverage and limitations](EVIDENCE.md), [source identities](source_index_v01.json)
@@ -52,5 +73,6 @@ LS2_EVIDENCE=/external/new-ls2 LS2_RUN_ID=audit001 python3 -m pytest -o addopts=
 These are opt-in runtime/audit commands, not default paid demonstration launches.
 The explicit [LS2 CLI](../../../demo/run_landslide_sentinel_ls2_v01.py) describes
 its separate live/configuration/EA inputs; this publication performs none of them.
-There is no new Gate, tenth Living registration or effect owner. Presentation is
-not yet produced; this is a source and evidence landing, not physical certification.
+There is no new Gate, tenth Living registration or effect owner. These explanatory
+publication assets remain outside the existing execution anchor and do not provide
+physical certification.

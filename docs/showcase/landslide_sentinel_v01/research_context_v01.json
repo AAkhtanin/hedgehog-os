@@ -1,0 +1,429 @@
+{
+  "schema_version": "sentinel_research_context_v01",
+  "language": "en",
+  "prepared_date": "2026-09-21",
+  "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "authority": "Explanatory derivative following owner handoff V02; no new runtime contract, evidence anchor or domain execution.",
+  "intro": "Research-informed scenarios. Source-bound execution evidence. Published operational challenges informed the scenario design. Radiolaria demonstrates selected software responses on controlled observations and mock effects; the cited researchers and institutions are not presented as project endorsers.",
+  "method": "The chain is published problem → our software criterion → observed Sentinel behavior → exact execution source. R01–R12 establish external context; S and C identify recorded scenarios and contrasts; D01–D07 locate internal evidence. The translation into requirements is our engineering judgment, not a request attributed to the cited authors. Human direction, prepared AI assistants, Codex, domain adapters and the existing kernel all contributed. This is not automatic compilation of articles by BSEP. Specialists can inspect and challenge the mapping; a specialist-led revision cycle remains a future possibility, not an experiment already conducted.",
+  "matrix": [
+    {
+      "row": 1,
+      "research_ids": [
+        "R01",
+        "R02"
+      ],
+      "published_challenge": "Local hydrology and multiple observations matter to warning decisions.",
+      "our_software_criterion": "Keep source purpose and dependencies; do not collapse the task to one rainfall value.",
+      "recorded_result": "S1 / CURRENT_POLICY_E consumes changed monitoring configuration and cadence; C08 admits another evidence profile.",
+      "claim_ids": [
+        "S1",
+        "CURRENT_POLICY_E",
+        "C08"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D04"
+      ],
+      "limit": "Software dependency handling, not the authors’ hydrologic model or geological accuracy."
+    },
+    {
+      "row": 2,
+      "research_ids": [
+        "R04"
+      ],
+      "published_challenge": "Storms, power loss and poor visibility can interrupt monitoring.",
+      "our_software_criterion": "Distinguish capability failure, usable reserve and insufficient observations.",
+      "recorded_result": "C03 records LIMITED after primary loss and INSUFFICIENT after reserve loss; S3 permits bounded local continuation.",
+      "claim_ids": [
+        "C03",
+        "S3"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D05"
+      ],
+      "limit": "Controlled inputs; no reproduction of Bertorelle et al.’s virtual-sensor model."
+    },
+    {
+      "row": 3,
+      "research_ids": [
+        "R03"
+      ],
+      "published_challenge": "Operator experience highlights robust monitoring and redundancy.",
+      "our_software_criterion": "Check provenance and independence, not just the presence of a second message.",
+      "recorded_result": "C04 rejects duplicate, misordered or shared-upstream evidence as independent confirmation.",
+      "claim_ids": [
+        "C04"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D03"
+      ],
+      "limit": "Declared lineage checks cannot independently establish physical truth."
+    },
+    {
+      "row": 4,
+      "research_ids": [
+        "R05"
+      ],
+      "published_challenge": "Debris-flow vibrations must be distinguished from other signals.",
+      "our_software_criterion": "Use ambiguity to select a bounded additional investigation.",
+      "recorded_result": "S2/C01’s latest live pair changes only the source-bound note; actual Work checks metadata or reads and processes reserve history.",
+      "claim_ids": [
+        "S2",
+        "C01"
+      ],
+      "internal_evidence_ids": [
+        "D03"
+      ],
+      "limit": "Meaning affects executed work; no seismic ML detector or claimed superiority."
+    },
+    {
+      "row": 5,
+      "research_ids": [
+        "R06"
+      ],
+      "published_challenge": "Post-fire debris flows may leave inadequate warning time after local detection.",
+      "our_software_criterion": "Avoid mandatory dependence on optional cloud reasoning once local action is authorized.",
+      "recorded_result": "C06/S3 performs fresh local Work through the same Root/Host and mock ON while the controlled provider worker remains pending.",
+      "claim_ids": [
+        "C06",
+        "S3"
+      ],
+      "internal_evidence_ids": [
+        "D02"
+      ],
+      "limit": "Our timeliness criterion; no forecast lead-time result or field deadline."
+    },
+    {
+      "row": 6,
+      "research_ids": [
+        "R07"
+      ],
+      "published_challenge": "A measurement interval and its telemetry delivery frequency differ.",
+      "our_software_criterion": "Separate observed and received time; check interval, statistic, units and purpose.",
+      "recorded_result": "C02 rejects fresh arrival as proof of freshness; later checks require supported hourly intervals. Real EA capture preserves unknown endpoints.",
+      "claim_ids": [
+        "C02"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D03",
+        "D06"
+      ],
+      "limit": "HTTP success establishes neither current slope evidence nor a verified gauge-to-site mapping."
+    },
+    {
+      "row": 7,
+      "research_ids": [
+        "R08"
+      ],
+      "published_challenge": "Open review asks for clarity about temporal resolution and operator-dependent interpretation.",
+      "our_software_criterion": "Retain source-bound notes, versions, windows and inputs actually used.",
+      "recorded_result": "C01/C02/C04/C10 retain the evidence and conditions behind investigation, applicability and policy decisions.",
+      "claim_ids": [
+        "C01",
+        "C02",
+        "C04",
+        "C10"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D03"
+      ],
+      "limit": "Process inspectability; no inter-operator study, ROC/AUC evaluation or judgment that final article errors remain."
+    },
+    {
+      "row": 8,
+      "research_ids": [
+        "R09"
+      ],
+      "published_challenge": "Delayed soil-moisture products can remain useful as prior context.",
+      "our_software_criterion": "Distinguish historical usefulness from eligibility for a current action.",
+      "recorded_result": "C02 preserves context-only data; C10/LocalDRS makes stale policy or calibration dependencies ineligible for current reuse.",
+      "claim_ids": [
+        "C02",
+        "C10",
+        "FRESH_LOCAL_ONLY_DRS"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D05"
+      ],
+      "limit": "Conditional memory reuse; the authors’ ERA5-Land model was not executed."
+    },
+    {
+      "row": 9,
+      "research_ids": [
+        "R10"
+      ],
+      "published_challenge": "Multiple surges complicate the duration of an alarm.",
+      "our_software_criterion": "Require positive recovery evidence; quiet, missing messages and expiry alone cannot clear an incident.",
+      "recorded_result": "C07/S5 uses a fresh measured sequence and a separate native OFF; repeated frames and cleanup do not establish recovery.",
+      "claim_ids": [
+        "C07",
+        "S5"
+      ],
+      "internal_evidence_ids": [
+        "D02",
+        "D03"
+      ],
+      "limit": "Synthetic recovery rules; operational thresholds still require domain expertise."
+    },
+    {
+      "row": 10,
+      "research_ids": [
+        "R11",
+        "R12"
+      ],
+      "published_challenge": "Observation, warning dissemination and human response are distinct; alert messages have a lifecycle.",
+      "our_software_criterion": "Separate incident state, signal, outbox delivery and acknowledgement.",
+      "recorded_result": "S4/C09 retains an immutable report, fresh delivery, matching identity/hash and UNKNOWN after missing acknowledgement, without repeating ON.",
+      "claim_ids": [
+        "S4",
+        "C09"
+      ],
+      "internal_evidence_ids": [
+        "D02"
+      ],
+      "limit": "Local mock receiver; CAP-inspired clarity, not CAP conformance, mass warning or demonstrated evacuation."
+    }
+  ],
+  "owner_reported_time": "Approximately 12 hours of Sentinel implementation on the existing kernel — owner-reported elapsed time. The owner’s estimate covers implementation and checks reaching accepted commit/push. Earlier kernel/domain development is excluded; the complete duration and cost of prior research and specification are not established. Presentation preparation followed implementation and was interrupted by tool limits. This is neither an independently timed benchmark nor a comparison against another stack, a model-call duration, an alarm-response measurement or total research-and-development time.",
+  "whitepaper_paragraph": "Landslide Sentinel demonstrates a path from published domain challenges to executable software criteria. Reports of monitoring failures, delayed telemetry and multi-surge alarm handling informed selected requirements and counterexamples. Built on the existing Radiolaria kernel, the demonstration connects these responses to local decisions, actual result consumption and inspectable execution records. Its value is a rapidly constructed, traceable prototype: published context, explicit requirement, implementation and recorded evidence remain distinguishable and linked. The owner reports approximately 12 hours for Sentinel implementation on the established foundation; this is not total research-and-development time or a comparative benchmark. The case supports a practical direction for testing software responses to domain requirements, not a claim of completed geophysical validation, field readiness or measured scaling performance.",
+  "whitepaper_bindings": {
+    "published_context": [
+      "R04",
+      "R07",
+      "R10"
+    ],
+    "existing_foundation": [
+      "D01"
+    ],
+    "recorded_behavior": [
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06"
+    ],
+    "time": "Owner report in handoff V02 §3.2"
+  },
+  "evidence_scope": "S0–S5 and C01–C10 span controlled, live and later correction lanes. They are not a newly executed aggregate test suite. Earlier inconclusive C01 pairs remain history beside the later valid live pair. The real cloud provider’s provenance remains visible; a physical local SLM was not installed. A model-free local branch is distinct from cloud emulation of a local analyst role. The independent safe-derived pin covers only enumerated LS2R2 package fields, not this research insert, the whole history or physical truth. No domain, provider, sensor or D/E execution was performed for this update.",
+  "attribution_and_limits": "Research references identify published context, not collaboration or endorsement. The scenario mapping and software implementation are Radiolaria’s own. Scientific performance reported by cited authors is not attributed to this demonstration. All external descriptions are short original paraphrases with bibliographic attribution; no third-party figures, photographs, logos or long quotations are reproduced. The source collection spans different years and countries and establishes no causal narrative about a particular Nepal disaster. No scientists’ participation in the project is implied.",
+  "references": [
+    {
+      "id": "R01",
+      "authors": [
+        "USGS Landslide Hazards Program"
+      ],
+      "title": "Real-Time Monitoring for Potential Landslides",
+      "date": "2018-05-30",
+      "url": "https://www.usgs.gov/programs/landslide-hazards/science/real-time-monitoring-potential-landslides",
+      "license": "USGS public-domain material; third-party asset credits require separate review.",
+      "scope": "Monitoring description only; site list is not treated as a current inventory."
+    },
+    {
+      "id": "R02",
+      "authors": [
+        "Benjamin B. Mirus",
+        "Thom Bogaard",
+        "Roberto Greco",
+        "Manfred Stähli"
+      ],
+      "title": "Invited perspectives: Integrating hydrologic information into the next generation of landslide early warning systems",
+      "date": "2025-01-07",
+      "publication": "NHESS 25, 169–182",
+      "url": "https://nhess.copernicus.org/articles/25/169/2025/",
+      "doi": "https://doi.org/10.5194/nhess-25-169-2025",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "scope": "Hydrologic context; no performance transfer to Sentinel."
+    },
+    {
+      "id": "R03",
+      "authors": [
+        "C. Michoud",
+        "S. Bazin",
+        "L. H. Blikra",
+        "M.-H. Derron",
+        "M. Jaboyedoff"
+      ],
+      "title": "Experiences from site-specific landslide early warning systems",
+      "date": "2013-10-22",
+      "publication": "NHESS 13, 2659–2673",
+      "url": "https://nhess.copernicus.org/articles/13/2659/2013/",
+      "doi": "https://doi.org/10.5194/nhess-13-2659-2013",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "scope": "SafeLand operator experience; this historical survey is not ours."
+    },
+    {
+      "id": "R04",
+      "authors": [
+        "Emilia Bertorelle",
+        "Mohammad Jeddi",
+        "Paolo Falcone",
+        "Laura Giarrè",
+        "Monica Ghirotti",
+        "Angelo Ballaera",
+        "Federica Ceccotto",
+        "Matteo Mantovani"
+      ],
+      "title": "A Rainfall-Driven Virtual Sensors Model to preserve Landslide Early-Warning Capabilities under Monitoring Systems Failures",
+      "date": "2026",
+      "publication": "EGU General Assembly, Vienna and online, 3–8 May 2026; EGU26-10345",
+      "url": "https://meetingorganizer.copernicus.org/EGU26/EGU26-10345.html",
+      "doi": "https://doi.org/10.5194/egusphere-egu26-10345",
+      "license": "CC BY 4.0 (open abstract)",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "scope": "Open abstract inspected; conference presentation not accessed. Authors report their own model tested on Rotolon data."
+    },
+    {
+      "id": "R05",
+      "authors": [
+        "Michael Keller"
+      ],
+      "title": "AI provides debris flow warnings",
+      "date": "2021-03-26",
+      "publication": "ETH Zürich",
+      "url": "https://ethz.ch/en/news-and-events/eth-news/news/2021/03/ai-provides-debris-flow-warnings.html",
+      "license": "No reusable asset licence established for this deliverable; bibliography and own paraphrase only.",
+      "scope": "Institutional account names Małgorzata Chmiel and Fabian Walter. Linked research: Chmiel, M.; Walter, F.; Wenner, M.; Zhang, Z.; McArdell, B. W.; Hibert, C., Machine Learning Improves Debris Flow Warning, Geophysical Research Letters (2021).",
+      "related_url": "https://doi.org/10.1029/2020GL090874"
+    },
+    {
+      "id": "R06",
+      "authors": [
+        "USGS Communications and Publishing"
+      ],
+      "title": "PubTalk 10/2018 — Post-fire debris flow early warning",
+      "date": "2018-10-25",
+      "url": "https://www.usgs.gov/media/videos/pubtalk-102018-post-fire-debris-flow-early-warning",
+      "license": "Public Domain (page Sources/Usage).",
+      "scope": "Description inspected; full 72-minute video not reviewed. Video-service contact is not attributed as scientific author."
+    },
+    {
+      "id": "R07",
+      "authors": [
+        "Environment Agency"
+      ],
+      "title": "Rainfall",
+      "date": "undated; accessed 2026-09-21",
+      "publication": "UK API Catalogue",
+      "url": "https://www.api.gov.uk/ea/rainfall/",
+      "license": "Open Government Licence; catalogue does not identify a version. OGL v3 linked as the standard terms reference.",
+      "license_url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+      "scope": "Catalogue distinguishes 15-minute accumulations from typical once/twice-daily delivery. Capture metadata controls any individual record.",
+      "required_attribution": "This uses Environment Agency rainfall data from the real-time data API (Beta)"
+    },
+    {
+      "id": "R08",
+      "authors": [
+        "Francesco Marra"
+      ],
+      "title": "Comment on egusphere-2025-3478 (RC1)",
+      "date": "2025-08-07",
+      "url": "https://nhess.copernicus.org/articles/25/4941/2025/nhess-25-4941-2025-discussion.html",
+      "doi": "https://doi.org/10.5194/egusphere-2025-3478-RC1",
+      "license": "CC BY 4.0 on discussion page",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "scope": "Review addresses Elena Ioriatti; Mauro Reguzzoni; Edoardo Reguzzoni; Andreas Schimmel; Luca Beretta; Massimo Ceriani; Matteo Berti, Identification of rainfall thresholds for debris-flow occurrence through field monitoring data, NHESS 25, 4941–4959; final publication 12 December 2025. Review questions belong to that manuscript, not Radiolaria.",
+      "related_url": "https://doi.org/10.5194/nhess-25-4941-2025"
+    },
+    {
+      "id": "R09",
+      "authors": [
+        "Nunziarita Palazzolo",
+        "Antonino Cancelliere",
+        "Robert D. Zofei",
+        "David J. Peres"
+      ],
+      "title": "Use of delayed ERA5-Land soil moisture products for improving landslide early warning",
+      "date": "2025-12-10",
+      "publication": "NHESS 25, 4907–4919",
+      "url": "https://nhess.copernicus.org/articles/25/4907/2025/",
+      "doi": "https://doi.org/10.5194/nhess-25-4907-2025",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "scope": "University of Catania study; its scientific results are not Sentinel results."
+    },
+    {
+      "id": "R10",
+      "authors": [
+        "Alexandre Badoux",
+        "Christoph Graf",
+        "Jakob Rhyner",
+        "Richard Kuntner",
+        "Brian W. McArdell"
+      ],
+      "title": "A debris-flow alarm system for the Alpine Illgraben catchment: design and performance",
+      "date": "2008-11-07 online; June 2009 issue",
+      "publication": "Natural Hazards 49, 517–539",
+      "url": "https://link.springer.com/article/10.1007/s11069-008-9303-x",
+      "doi": "https://doi.org/10.1007/s11069-008-9303-x",
+      "license": "Subscription article; no open reuse licence asserted.",
+      "scope": "Publisher’s open abstract inspected, not subscription full text. Describes an implemented and operating alarm system."
+    },
+    {
+      "id": "R11",
+      "authors": [
+        "World Meteorological Organization"
+      ],
+      "title": "WMO and the Early Warnings for All Initiative",
+      "date": "undated; accessed 2026-09-21",
+      "url": "https://public.wmo.int/activities/early-warnings-all/wmo-and-early-warnings-all-initiative",
+      "license": "No blanket reuse licence established here; own paraphrase only.",
+      "scope": "Four-pillar framework; no initiative membership or implementation of every pillar claimed."
+    },
+    {
+      "id": "R12",
+      "authors": [
+        "OASIS Emergency Management Technical Committee"
+      ],
+      "title": "Common Alerting Protocol Version 1.2",
+      "date": "2010-07-01",
+      "publication": "OASIS Standard",
+      "url": "https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2.html",
+      "license": "Copyright OASIS 2010; reproduction and explanatory derivatives subject to the document’s notice conditions.",
+      "scope": "Sections 1.3.1, 2.2 and 3.2.1 inform lifecycle distinctions; no normative text or dictionary reproduced."
+    }
+  ],
+  "internal_evidence": [
+    {
+      "id": "D01",
+      "description": "MAIN landing return → FINAL_REPORT.md: acceptance, preserved foundation and commit 2f328be634247be11bc18a3b22a919f393d6ed1d."
+    },
+    {
+      "id": "D02",
+      "description": "Committed showcase README.md, EVIDENCE.md, claim_evidence_map_v01.json and history/source_impact_v01.json: exact historical records and later applicability."
+    },
+    {
+      "id": "D03",
+      "description": "LS2R2 return → closure_matrix.json, semantic_completion.json and live_01/live_AB.json: latest semantics, provenance and scoped corrections."
+    },
+    {
+      "id": "D04",
+      "description": "LS2R return → configuration_01/actual_policy_E_result.json: changed configuration actually consumed."
+    },
+    {
+      "id": "D05",
+      "description": "LS2R2 return → live_01/local_only_drs.json and live_01/captured_reexecution.json: distinct fresh local and captured-response paths."
+    },
+    {
+      "id": "D06",
+      "description": "LS2R return → ea_capture_02/result.json: eight normalized records from source 4163, real zeros, unknown endpoints and unverified physical mapping."
+    },
+    {
+      "id": "D07",
+      "description": "Committed public_safe_package plus lead_reviewed_anchor_v01.json, anchor_verification_v01.json and verify_replay.sh: bounded independently pinned derivative."
+    }
+  ],
+  "verification": {
+    "date": "2026-09-21",
+    "method": "Primary publisher, institutional and standards pages; central R04 abstract, R07 catalogue and R10 publisher abstract inspected. Bibliographic metadata of remaining entries checked in batched page reads.",
+    "improvement": "R05 news byline is Michael Keller; research authors remain separately attributed.",
+    "substantive_mismatch": null
+  }
+}

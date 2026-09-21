@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "asset": "assets/radiolaria_landslide_sentinel_hero.png",
+  "sha256": "2201191bf17726ea2ffefa18d15e00816808b9fea690b94696763d01f385021d",
+  "role": "Conceptual scientific brand illustration, not runtime or physical sensor evidence",
+  "generation": {
+    "tool": "image_gen.imagegen",
+    "mode": "new morphology using prior EWS artwork as a style reference",
+    "prompt": "Use case: stylized-concept. Asset type: high-end scientific brand illustration for an English Radiolaria OS technical presentation cover. The attached image is STYLE REFERENCE ONLY, not an edit target. Create a NEW radiolarian morphology in the same exquisite white, silver silica and deep restrained cobalt family. This domain is LANDSLIDE SENTINEL: its distinctive organism should have a slightly broader, oblate faceted porous silica shell, a clearly visible nested inner lattice, six graceful radial spines, and elegant layered equatorial ribs that evoke stratified stone and geological sensing without depicting a literal sensor, shield, terrain or device. Preserve bilateral balance and delicate open pores; more crisp hexagonal and teardrop openings than the reference's rounded oval pores. New biological architecture, unmistakably related family. An intricate tangible museum-quality 3D micro-sculpture with slender silver edges, pearly translucent internal membranes, subtle cobalt concentrated at a few structural junctions, realistic studio lighting, delicate soft contact shadow. Pure white seamless background. Wide 16:9 landscape composition, subject occupying the RIGHT 47 percent with ample margin around all spine tips and completely empty clean white LEFT 48 percent for separately typeset presentation title. Refined luxury scientific publication, precise and calm. No letters, no typography, no logos, no watermark, no border, no decorative particles, no dark background, no bright colored lighting. Produce high-resolution artwork intended for export in a professional PDF and PPTX.",
+    "style_reference": {
+      "asset": "radiolaria_ephemeral_workspace_hero.png",
+      "sha256": "441d0fe55678f101cc3a5daac00c6af1bba4c137a118c64908eafdb2815fed95"
+    }
+  },
+  "model_disclosure": "Generated artwork; separately typeset title and editable technical diagrams."
+}

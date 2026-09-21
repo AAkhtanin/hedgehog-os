@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "verification_mode": "Independent read-only inspection of supplied landing return; no new remote query or domain execution",
+  "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_MAIN_LANDING_RETURN_20260915T070849Z.tar.gz",
+  "archive_sha256": "11e6b98a58420bc2e7fcf7a30b1bcbab40eea3fd52812db7dfd80fbe7042a1a6",
+  "archive_bytes": 3544262,
+  "manifest_rows_verified": 471,
+  "postimages_verified": 46,
+  "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "parent": "50ab3916bff55e8034cf7e6c509d4803c5447589",
+  "tree": "8db682205049c72c85500ebafade0696532338ef",
+  "tree_entries": 1061,
+  "protected_base_entries": 1015,
+  "landed_source_bodies": 22,
+  "final_admission": "SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED",
+  "recorded_remote": "normal push, independent query and fetched object/tree/parent agree",
+  "recorded_owner_status": "clean",
+  "recorded_checks": [
+    {
+      "scope": "aligned source tests",
+      "passed": 2,
+      "seconds": 11.82
+    },
+    {
+      "scope": "guard/release",
+      "passed": 3,
+      "seconds": 72.92
+    },
+    {
+      "scope": "direct Living registration",
+      "passed": 1,
+      "seconds": 7.37,
+      "registrations": 9
+    }
+  ],
+  "recorded_replay": {
+    "seconds": 0.399,
+    "status": "ANCHORED_PASS",
+    "new_provider_network_sensor_effect_calls": 0,
+    "native_replay": "UNSUPPORTED_NATIVE_SCHEMA"
+  },
+  "claim_boundary": "Explanatory independent-review summary outside the frozen safe-package seal."
+}

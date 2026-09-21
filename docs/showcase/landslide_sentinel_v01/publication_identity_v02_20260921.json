@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "publication_version": "V02",
+  "publication_date": "2026-09-21",
+  "reader": "LLM_READER_LANDSLIDE_SENTINEL_PRESENTATION_V02_20260921.xml",
+  "reader_index": "reader_index_v02_20260921.json",
+  "implementation_version": "Landslide Sentinel v0.1",
+  "source_commit": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "reason": "Distinct publication identity; replaces the ambiguous expanded V01 delivery name without overwriting historical V01.",
+  "history": [
+    {
+      "date": "2026-09-15",
+      "name": "LLM_READER_LANDSLIDE_SENTINEL_V01.xml",
+      "approximate_bytes_from_owner_screenshot": 3700000,
+      "status": "Historical reader; retain unchanged"
+    },
+    {
+      "date": "2026-09-21",
+      "name": "LLM_READER_LANDSLIDE_SENTINEL_V01.xml",
+      "bytes": 10834334,
+      "sha256": "5f0f534f65433f99c800006ba0aa64504e6afb17fd5540ec317be24c23a28802",
+      "status": "Expanded reader delivered with an ambiguous reused name; superseded for publication by V02"
+    }
+  ],
+  "expanded_scope": [
+    "Presentation and technical appendix text",
+    "Full selected shared D/E implementation bodies",
+    "Exact bounded synthetic model inputs and outputs",
+    "Source and evidence maps with byte identities"
+  ],
+  "unchanged_visual_artifacts": [
+    "landslide_sentinel_showcase_v01.pdf",
+    "landslide_sentinel_showcase_v01.pptx",
+    "technical_appendix_v01.pdf",
+    "executive_one_pager_v01.pdf",
+    "assets/radiolaria_landslide_sentinel_hero.png"
+  ],
+  "verification_scope": "Packaging and reader integrity only; no new semantic or physical acceptance; historical safe-derived anchor unchanged",
+  "release_naming": "The reader/publication version is distinct from the accepted domain v0.1 and unchanged visual artifact versions."
+}

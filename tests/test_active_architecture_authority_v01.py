@@ -389,7 +389,16 @@ def _g37_reconstructed_root_v01(root, source_root):
     for path in namespace["G37_PATH_ACTIONS_V01"]:
         target = root / path
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REPOSITORY_ROOT / path, target)
+        body = subprocess.check_output(
+            ("git", "show", "71e166ccb88b024fd3ca3a25e17da110c6db1a3f:" + path),
+            cwd=source_root,
+        )
+        target.write_bytes(body)
+        mode = subprocess.check_output(
+            ("git", "ls-tree", "71e166ccb88b024fd3ca3a25e17da110c6db1a3f", "--", path),
+            cwd=source_root,
+        ).split()[0]
+        target.chmod(0o755 if mode == b"100755" else 0o644)
     return root, runpy.run_path(
         str(root / "tools/check_active_architecture_authority_v01.py")
     )

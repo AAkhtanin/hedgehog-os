@@ -1,0 +1,12 @@
+{
+  "child_pid": 92492,
+  "command": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/helpers/full_successor_report.py",
+    "living",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_living_successor"
+  ],
+  "started_at": "2026-09-22T08:44:37.417021Z",
+  "supervisor_pid": 92491
+}

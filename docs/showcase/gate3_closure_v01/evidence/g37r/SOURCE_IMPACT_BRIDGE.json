@@ -1,0 +1,18 @@
+{
+  "changed_from_g37": [
+    "demo/run_living_gauntlet_v01.py",
+    "release/current_status_overlay_v01.json",
+    "tests/test_active_architecture_authority_v01.py",
+    "tests/test_repository_release_spine_v01.py",
+    "tools/check_active_architecture_authority_v01.py"
+  ],
+  "conformance_projection": "The retained generic JSON list-of-pairs claim map is decoded to the existing tuple-of-tuples dataclass field; the public plain projection is the corresponding mapping. All other values are unchanged.",
+  "frozen_g37_paths": 54,
+  "living_projection": "Only legacy.current_registration is replaced with the public final current-registration block. No deterministic ID changes are required.",
+  "old_raw_reports": "PRESERVED_BYTE_EXACT",
+  "product_runtime_changed": false,
+  "public_supplied_validation": "PASS_LIVING_AND_CONFORMANCE",
+  "recollection": "NONE",
+  "source_impact": "The Living registration constants and matching overlay are corrected; focused tests and the G37 source-admission identity table are updated. Gate3, D, E5, Conformance runtime, Work and effect implementations are byte-identical to G37.",
+  "status": "PASS"
+}

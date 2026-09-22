@@ -1,0 +1,50 @@
+{
+  "counts": {
+    "SAVED_ROOT_PURE_RECOMPUTATION": 1364,
+    "demo.run_gate3_calibration_v01.gemini_adversary_origins_v01": 0,
+    "hedgehog.domains.supplier_water_filter.adversarial_feedback_v01.SupplierAdviceEpisodeV01.__init__": 0,
+    "hedgehog.domains.supplier_water_filter.adversarial_feedback_v01.collect_episode_v01": 0,
+    "hedgehog.gate3_mechanism_v01.collect_mechanism_v01": 0,
+    "hedgehog.kernel.continuous_delta_runtime_v01.run_continuous_delta_runtime_v01": 0,
+    "hedgehog.kernel.fractal_runtime_v02.run_fractal_runtime_v02": 0,
+    "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+    "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+    "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+    "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+    "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+    "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+    "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.read_v01": 0,
+    "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+    "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0,
+    "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01": 0
+  },
+  "elapsed_seconds": 52.41798325069249,
+  "network": [],
+  "results": {
+    "captured_final": {
+      "bytes": 41861,
+      "seconds": 31.64654220826924,
+      "sha256": "85152cdf5456d2747d8cc0bcc4dfcc739c818730360582bc06197cb78a714a93"
+    },
+    "controlled_final": {
+      "bytes": 42392,
+      "seconds": 4.91516291629523,
+      "sha256": "50cdbbf3ee587a3548d76267ca3e96deeb3701b76f375ee15e674598dc7c7e83"
+    },
+    "final_pack_v2": {
+      "bytes": 144756,
+      "seconds": 3.0818027080968022,
+      "sha256": "f9ca8e48dc61c815e1235afa0c5141aed96128823dd094ae44aef8ecd03ee75d"
+    },
+    "two_deliveries": {
+      "bytes": 20281,
+      "sha256": "213271d7cccb0484dc001b5867da836b4902db881e2de2a972fe49c272473d34"
+    }
+  },
+  "writes": [
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/commands/0015_g37_pure_replay_one/controlled_final_replay.json",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/commands/0015_g37_pure_replay_one/captured_final_replay.json",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/commands/0015_g37_pure_replay_one/final_pack_v2_replay.json",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/commands/0015_g37_pure_replay_one/two_delivery_replay.json"
+  ]
+}

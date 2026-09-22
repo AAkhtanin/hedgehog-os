@@ -1,0 +1,170 @@
+{
+  "actual_calls": 4,
+  "attempts": [
+    {
+      "origin_sha256": "272e67459dc1704ee0e487d396fa7b7b517a0ecb77fec3fd0ce8d971c5894fb4",
+      "path": "runtime/g36_captured_complete_captures/CONTINUE_1/receipt.json",
+      "receipt": {
+        "attempt": 1,
+        "case": "CONTINUE",
+        "elapsed_us": 3717133,
+        "finish_reasons": [
+          "FinishReason.STOP"
+        ],
+        "model": "gemini-2.5-flash",
+        "model_version": "gemini-2.5-flash",
+        "money": "UNKNOWN",
+        "provider": "Gemini",
+        "response_id": "y62xaqHDGdLWxN8P-PmdiQM",
+        "response_sha256": "aa3f4c3b97b92c1f13e34bae91a15cff5f02cd2ae95ec1cc08335a4394d6b018",
+        "sdk_attempts": 1,
+        "status": "RESPONSE",
+        "usage": {
+          "cache_tokens_details": null,
+          "cached_content_token_count": null,
+          "candidates_token_count": 50,
+          "candidates_tokens_details": null,
+          "prompt_token_count": 292,
+          "prompt_tokens_details": [
+            {
+              "modality": "TEXT",
+              "token_count": 292
+            }
+          ],
+          "thoughts_token_count": 666,
+          "tool_use_prompt_token_count": null,
+          "tool_use_prompt_tokens_details": null,
+          "total_token_count": 1008,
+          "traffic_type": null
+        }
+      },
+      "request": "runtime/g36_captured_complete_captures/CONTINUE_1/request.json",
+      "response": "runtime/g36_captured_complete_captures/CONTINUE_1/response.txt"
+    },
+    {
+      "origin_sha256": "1654cb43445f3b7acd6c4eb7f62715f518008df19f6fb412d5999fc2eac3b391",
+      "path": "runtime/g36_live_captures/ADV-1_1/receipt.json",
+      "receipt": {
+        "attempt": 1,
+        "case": "ADV-1",
+        "elapsed_us": 7829225,
+        "finish_reasons": [
+          "FinishReason.STOP"
+        ],
+        "model": "gemini-2.5-flash",
+        "model_version": "gemini-2.5-flash",
+        "money": "UNKNOWN",
+        "provider": "Gemini",
+        "response_id": "-6uxaozSItetvdIP7q7QMA",
+        "response_sha256": "c25f96d273bf1f50c5b94acb6c6cd6b56f52466b34035dcd907557b6d07ef197",
+        "sdk_attempts": 1,
+        "status": "RESPONSE",
+        "usage": {
+          "cache_tokens_details": null,
+          "cached_content_token_count": null,
+          "candidates_token_count": 43,
+          "candidates_tokens_details": null,
+          "prompt_token_count": 289,
+          "prompt_tokens_details": [
+            {
+              "modality": "TEXT",
+              "token_count": 289
+            }
+          ],
+          "thoughts_token_count": 1586,
+          "tool_use_prompt_token_count": null,
+          "tool_use_prompt_tokens_details": null,
+          "total_token_count": 1918,
+          "traffic_type": null
+        }
+      },
+      "request": "runtime/g36_live_captures/ADV-1_1/request.json",
+      "response": "runtime/g36_live_captures/ADV-1_1/response.txt"
+    },
+    {
+      "origin_sha256": "62b196eb25710aee7cd9d1be6fa3b1d4d7b8439eb7c62652dbe13d7288c59d6d",
+      "path": "runtime/g36_live_captures/ADV-2_1/receipt.json",
+      "receipt": {
+        "attempt": 1,
+        "case": "ADV-2",
+        "elapsed_us": 5750054,
+        "finish_reasons": [
+          "FinishReason.STOP"
+        ],
+        "model": "gemini-2.5-flash",
+        "model_version": "gemini-2.5-flash",
+        "money": "UNKNOWN",
+        "provider": "Gemini",
+        "response_id": "CayxaqOqDd6JxN8P2s63mAY",
+        "response_sha256": "feb385d3209410186f74f4ee17676a21bdbf5d6f10f368bb8a05bf217e01d3f6",
+        "sdk_attempts": 1,
+        "status": "RESPONSE",
+        "usage": {
+          "cache_tokens_details": null,
+          "cached_content_token_count": null,
+          "candidates_token_count": 43,
+          "candidates_tokens_details": null,
+          "prompt_token_count": 296,
+          "prompt_tokens_details": [
+            {
+              "modality": "TEXT",
+              "token_count": 296
+            }
+          ],
+          "thoughts_token_count": 1098,
+          "tool_use_prompt_token_count": null,
+          "tool_use_prompt_tokens_details": null,
+          "total_token_count": 1437,
+          "traffic_type": null
+        }
+      },
+      "request": "runtime/g36_live_captures/ADV-2_1/request.json",
+      "response": "runtime/g36_live_captures/ADV-2_1/response.txt"
+    },
+    {
+      "origin_sha256": "460dd49639b0dfe3852361b07a246c5dcaeeb9773cb405038e25bb5f5f3c474d",
+      "path": "runtime/g36_live_resumed_captures/ADV-3_1/receipt.json",
+      "receipt": {
+        "attempt": 1,
+        "case": "ADV-3",
+        "elapsed_us": 6064455,
+        "finish_reasons": [
+          "FinishReason.STOP"
+        ],
+        "model": "gemini-2.5-flash",
+        "model_version": "gemini-2.5-flash",
+        "money": "UNKNOWN",
+        "provider": "Gemini",
+        "response_id": "A62xatHgBcf5xN8Pt-W-mAY",
+        "response_sha256": "1347583716e9eaa978c77394956ddad78a7831c51d8912b0281a9e3e2582b056",
+        "sdk_attempts": 1,
+        "status": "RESPONSE",
+        "usage": {
+          "cache_tokens_details": null,
+          "cached_content_token_count": null,
+          "candidates_token_count": 52,
+          "candidates_tokens_details": null,
+          "prompt_token_count": 297,
+          "prompt_tokens_details": [
+            {
+              "modality": "TEXT",
+              "token_count": 297
+            }
+          ],
+          "thoughts_token_count": 1201,
+          "tool_use_prompt_token_count": null,
+          "tool_use_prompt_tokens_details": null,
+          "total_token_count": 1550,
+          "traffic_type": null
+        }
+      },
+      "request": "runtime/g36_live_resumed_captures/ADV-3_1/request.json",
+      "response": "runtime/g36_live_resumed_captures/ADV-3_1/response.txt"
+    }
+  ],
+  "captured_receipts_are_not_new_independent_samples": true,
+  "final_captured_new_provider_calls": 0,
+  "model": "gemini-2.5-flash",
+  "money": "UNKNOWN",
+  "retry_valid_reply": false
+}

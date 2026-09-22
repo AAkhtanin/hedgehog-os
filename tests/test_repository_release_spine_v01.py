@@ -1156,7 +1156,13 @@ def _g2d_v0310_bind_exact_e4_candidate_hashes_v01() -> str:
                 "G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED",
                 "G37_FROZEN_RELEASE_PROPOSAL_STAGED",
                 "G37_FROZEN_RELEASE_COMMITTED",
+            } | {
+                "REVIEWED_" + kind + "_" + state
+                for kind in ("BOOTSTRAP", "DOCUMENTATION", "ENGINEERING")
+                for state in ("PREPARED_UNSTAGED", "PREPARED_STAGED",
+                              "PREPARED_COMMITTED", "FINALIZED")
             }
+            # The same historical runtime/checkpoint assertions above still bind.
             return "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
         if guard.get('_g36_requested_v01',lambda root:False)(REPOSITORY_ROOT):
             phase=guard['_validate_g36_adversary_admission_v01'](REPOSITORY_ROOT,errors)

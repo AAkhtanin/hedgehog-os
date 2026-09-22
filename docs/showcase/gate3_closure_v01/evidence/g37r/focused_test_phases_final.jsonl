@@ -1,0 +1,15 @@
+{"duration_seconds": 1.0450697923079133, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_current_registration_complete_negative_matrix_v01", "outcome": "passed", "phase": "setup"}
+{"duration_seconds": 4.353794625028968, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_current_registration_complete_negative_matrix_v01", "outcome": "passed", "phase": "call"}
+{"duration_seconds": 0.00010529160499572754, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_current_registration_complete_negative_matrix_v01", "outcome": "passed", "phase": "teardown"}
+{"duration_seconds": 0.00015420839190483093, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_exact_unstaged_staged_and_hostile_controls_v01", "outcome": "passed", "phase": "setup"}
+{"duration_seconds": 4.479530416429043, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_exact_unstaged_staged_and_hostile_controls_v01", "outcome": "passed", "phase": "call"}
+{"duration_seconds": 8.937530219554901e-05, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_exact_unstaged_staged_and_hostile_controls_v01", "outcome": "passed", "phase": "teardown"}
+{"duration_seconds": 4.1124410927295685e-05, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_clean_sole_parent_child_classification_v01", "outcome": "passed", "phase": "setup"}
+{"duration_seconds": 0.09139358438551426, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_clean_sole_parent_child_classification_v01", "outcome": "passed", "phase": "call"}
+{"duration_seconds": 0.00010241661220788956, "nodeid": "tests/test_active_architecture_authority_v01.py::test_g37_clean_sole_parent_child_classification_v01", "outcome": "passed", "phase": "teardown"}
+{"duration_seconds": 4.279240965843201e-05, "nodeid": "tests/test_repository_release_spine_v01.py::test_g37_current_registration_pins_actual_release_files_v01", "outcome": "passed", "phase": "setup"}
+{"duration_seconds": 0.0005510402843356133, "nodeid": "tests/test_repository_release_spine_v01.py::test_g37_current_registration_pins_actual_release_files_v01", "outcome": "passed", "phase": "call"}
+{"duration_seconds": 3.016740083694458e-05, "nodeid": "tests/test_repository_release_spine_v01.py::test_g37_current_registration_pins_actual_release_files_v01", "outcome": "passed", "phase": "teardown"}
+{"duration_seconds": 3.9167702198028564e-05, "nodeid": "tests/test_repository_release_spine_v01.py::test_g37_binder_has_final_precedence_v01", "outcome": "passed", "phase": "setup"}
+{"duration_seconds": 0.2268177503719926, "nodeid": "tests/test_repository_release_spine_v01.py::test_g37_binder_has_final_precedence_v01", "outcome": "passed", "phase": "call"}
+{"duration_seconds": 0.0001565413549542427, "nodeid": "tests/test_repository_release_spine_v01.py::test_g37_binder_has_final_precedence_v01", "outcome": "passed", "phase": "teardown"}

@@ -1,0 +1,37 @@
+{
+  "final_revision": "v04",
+  "slides": 28,
+  "native_tables": 9,
+  "native_charts": 2,
+  "embedded_chart_workbooks": 2,
+  "exact_source_path_notes": true,
+  "pptx_to_pdf_text_parity": "PASS, 423 paragraphs and 6 native chart labels",
+  "rendered_all_final_slides": true,
+  "full_size_visual_review": "Slides 1-14 by deck builder; slides 15-28 by separate visual reviewer. Changed chart and retention slides checked again by builder.",
+  "changed_final_pages_from_v03": [
+    10
+  ],
+  "final_changed_page_review": "Slide 10 rounded native data labels to six displayed decimals, exact underlying data unchanged. Inspected at full size, no wrapping.",
+  "style_reference": "sentinel_presentation/output/v06/landslide_sentinel_showcase_v01.pptx",
+  "application_scope": "PDF exported directly by bundled LibreOffice. Native Microsoft PowerPoint was not opened.",
+  "finalizer_report": "deck_build/validation_v04.json",
+  "text_parity_report": "deck_build/text_parity_v04.json",
+  "content": "deck_build/deck_content.json",
+  "files": [
+    {
+      "path": "/workspace/scratch/7085cdc7c562/gate3/presentation/output/v04/gate3_closure_v01_20260922.pptx",
+      "bytes": 1271306,
+      "sha256": "529e6a34d20d606c75ea330fe62447e8ed26286e6380d64fd3002a88269b1ff5"
+    },
+    {
+      "path": "/workspace/scratch/7085cdc7c562/gate3/presentation/output/v04/gate3_closure_v01_20260922.pdf",
+      "bytes": 435584,
+      "sha256": "082d5c81eaf73fcea2f775460a1d1372f0125be0e4a0ea606216adff61b561c0"
+    },
+    {
+      "path": "/workspace/scratch/7085cdc7c562/gate3/presentation/output/v04/contact_sheet.png",
+      "bytes": 1063823,
+      "sha256": "a9875779f7f02e44703cac8ccf159b446ea336acb6a2f25ec9b132f41feb5ac1"
+    }
+  ]
+}

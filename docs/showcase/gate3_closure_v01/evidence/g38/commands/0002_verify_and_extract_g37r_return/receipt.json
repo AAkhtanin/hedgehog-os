@@ -1,0 +1,51 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/extract_verified_return_v01.py",
+    "--archive",
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input",
+    "--report",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/G37R_INPUT_VERIFICATION.json",
+    "--sha256",
+    "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9",
+    "--bytes",
+    "19193417",
+    "--members",
+    "1495",
+    "--rows",
+    "1494",
+    "--prefix",
+    "RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922",
+  "elapsed_seconds": 1.012401,
+  "ended_at": "2026-09-22T14:23:26.940541Z",
+  "label": "verify_and_extract_g37r_return",
+  "rc": 0,
+  "sources": {
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz": {
+      "bytes": 19193417,
+      "sha256": "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/extract_verified_return_v01.py": {
+      "bytes": 3951,
+      "sha256": "f9f1fe95059ec4118b7d7d2da2d0c15e15367ecc4d02ad9a7435ae48461a4c54"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/run_command_v01.py": {
+      "bytes": 4421,
+      "sha256": "ad1e5b9c16ef4a363a6b6911564066c772256049d89d5b47c7cfef8ea324d2eb"
+    }
+  },
+  "started_at": "2026-09-22T14:23:25.928023Z",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 404,
+    "sha256": "8a04ebb1b63cc5c7f01e5410c0ca8f36b5cae3ecb4c2f1d8c3cf81fec376b8b8"
+  }
+}

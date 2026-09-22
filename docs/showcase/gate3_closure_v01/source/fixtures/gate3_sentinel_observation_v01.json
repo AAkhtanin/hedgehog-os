@@ -1,0 +1,25 @@
+{
+  "profile_id": "G32_NATIVE_ROLE_SCENARIO_V01",
+  "native_source_profile_id": "G32_NATIVE_REVIEWED_WORK_V01",
+  "claim_profile_id": "G32_CURRENT_ROLE_FAITHFUL_OUTPUT_V01",
+  "source_fixture": "fixtures/landslide_sentinel/ls1_inputs_v01.json",
+  "scenario_tick": 120,
+  "role": "ADVERSARIAL_SENSOR_REVIEWER",
+  "response": {"diagnostic": "REFERENCE_INTEGRITY", "reason": "Inspect exact current references using bounded local work."},
+  "healthy_expectation_fp": 1000000000,
+  "neighbor_expectation_fp": null,
+  "early_contrast": "COHERENT_FOREIGN_ROOT_SEMANTIC_REQUEST",
+  "oracle_rules": [
+    "Validate the actual retained RESULT basis with validate_reviewed_work.",
+    "Consume the exact role contribution and output under the same Root and task.",
+    "An earlier semantic refusal must not fabricate Work, Root, packet or receipt refs.",
+    "Absent prospective expectation is UNKNOWN and NO_UPDATE, not a zero prediction.",
+    "Use one fresh local Root review of the exact genesis candidate before persistence.",
+    "Semantic rediscovery requires review and cannot grant current reuse permission."
+  ],
+  "fractal": false,
+  "live_calls": false,
+  "external_effects": false,
+  "physical_certification": false,
+  "history_scope": "SINGLE_GENESIS_NO_CALIBRATION_NO_NEW_TASK_REUSE"
+}

@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/final_preservation_v01.py",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--evidence",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_PRESERVATION.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "environment": {
+    "PATH": "/opt/homebrew/Caskroom/codex/0.154.0/codex-path:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/admin/.codex/tmp/arg0/codex-arg0VQoagn:/opt/homebrew/Caskroom/codex/0.154.0/codex-path:/Users/admin/Projects/hedgehog-os/.venv/bin:/Users/admin/.vscode/extensions/ms-python.debugpy-2026.6.0-darwin-arm64/bundled/scripts/noConfigScripts"
+  },
+  "label": "final_preservation",
+  "sources": {
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_OWNER_READBACK.json": {
+      "bytes": 956,
+      "sha256": "c1e0b4e2f0b418a28795a6b99c5ca0ddef40d6ccf99498c218998e228226e91a"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/RECOVERY_STATUS.json": {
+      "bytes": 1685,
+      "sha256": "032701eb4d747d4ddc1415a54a36658ad527ef042327a85107eb077295d2fb2b"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/final_preservation_v01.py": {
+      "bytes": 4860,
+      "sha256": "243e6bf9547a2ff609640b7a88061129cfd4b0f66771c4b459680182041befd5"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/run_command_v01.py": {
+      "bytes": 4421,
+      "sha256": "ad1e5b9c16ef4a363a6b6911564066c772256049d89d5b47c7cfef8ea324d2eb"
+    }
+  }
+}

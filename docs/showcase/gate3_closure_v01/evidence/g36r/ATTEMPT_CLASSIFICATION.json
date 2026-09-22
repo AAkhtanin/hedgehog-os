@@ -1,0 +1,81 @@
+{
+  "explanations": {
+    "0004_pointer_diagnostic": "Diagnostic captured the exact generated reference and regex match, then stopped on missing review passed to _meaning. Not a semantic acceptance run.",
+    "0005_pointer_control": "New test used the wrong return convention; validator returned (True, ()). Assertion corrected, 0006 passed.",
+    "0009_focused_saved": "57 passed; missing-E positive omitted the new sample identity update. Correct coherent helper retained NO_UPDATE; 0010 and final 0014 passed.",
+    "controlled_01": "Actual DRS pointer rejection: generated digest contained a card-like digit run. Repaired through public pointer construction."
+  },
+  "failures": {
+    "0004_pointer_diagnostic": {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/diagnose_pointer.py"
+      ],
+      "command": "0004_pointer_diagnostic",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 2.252742750570178,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:08:42.308223Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:08:40.054973Z"
+    },
+    "0005_pointer_control": {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard"
+      ],
+      "command": "0005_pointer_control",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 0.6941661247983575,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:11:34.404066Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:11:33.709345Z"
+    },
+    "0009_focused_saved": {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py",
+        "tests/test_gate3_mechanism_registration_v01.py"
+      ],
+      "command": "0009_focused_saved",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 133.75990008283406,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:20:55.551200Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:18:41.789736Z"
+    },
+    "controlled_01": {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "demo/run_gate3_calibration_v01.py",
+        "controlled-adversary",
+        "--output",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/runtime/controlled_01"
+      ],
+      "command": "controlled_01",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 4.143550958484411,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:06:40.480153Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:06:36.335820Z"
+    }
+  },
+  "intermediate_controlled_02": "Completed before stronger independent row binding; preserved but not the final accepted native episode."
+}

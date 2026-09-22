@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_landing/g38_owner_landing.py",
+    "--archive",
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz",
+    "--archive-sha256",
+    "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--python",
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/owner_execution/real_owner_run_01",
+    "--execute"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "label": "real_owner_landing_commit_push",
+  "pid": 16911,
+  "started_at": "2026-09-22T14:27:29.546502Z",
+  "started_ns": 1790087249546654000
+}

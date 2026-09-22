@@ -1,0 +1,61 @@
+{
+  "conformance": {
+    "decode_projection": "GENERIC_LIST_PAIRS_TO_TYPED_TUPLES; PUBLIC_PLAIN_MAPPING",
+    "input_bytes": 5988284,
+    "input_sha256": "e7983c25d588878f8f535c5037bbddd519672241d6e004361188e3ff2f682b66",
+    "legacy_plain_round_trip": "VALUE_IDENTICAL_AFTER_EXPLICIT_CLAIM_MAP_PROJECTION",
+    "public_supplied_validation": "PASS"
+  },
+  "forbidden_operation_counts": {
+    "collector.conformance_legacy": 0,
+    "collector.conformance_successor": 0,
+    "collector.e5": 0,
+    "collector.gate3": 0,
+    "collector.living_legacy": 0,
+    "collector.living_successor": 0,
+    "effect.authorize": 0,
+    "effect.execute_bound": 0,
+    "effect.execute_mock": 0,
+    "history.review_recording": 0,
+    "host.capture_current_source": 0,
+    "host.dispatch_current_action": 0,
+    "host.execute_admitted_work": 0,
+    "root.decide": 0,
+    "work.execute_review": 0
+  },
+  "living": {
+    "derived_bytes": 5875142,
+    "derived_sha256": "bae9e7d481d20660086ed93d66283ea15029fb62d0e88ef939dcf9fe08c0aa6b",
+    "input_bytes": 5875142,
+    "input_sha256": "d84cdd50e918c36f06ea60d0c3d4154760438d7cbcd4cd9124dc9f2745bfdc08",
+    "prior_base_identities": {
+      "release/completion_manifest.json": "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1",
+      "release/integration_seam_index.json": "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f"
+    },
+    "projected_base_identities": {
+      "release/completion_manifest.json": "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0",
+      "release/integration_seam_index.json": "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
+    },
+    "projection": [
+      "legacy.current_registration"
+    ],
+    "public_supplied_validation": "PASS"
+  },
+  "negative_controls": {
+    "conformance_binding": [
+      "g36_conformance_binding"
+    ],
+    "conformance_identity": [
+      "conformance_identity_mismatch"
+    ],
+    "living_binding": [
+      "g36_living_binding"
+    ],
+    "living_registration": [
+      "report_current_registration_mismatch",
+      "report_failed_checks_not_fail_closed"
+    ]
+  },
+  "provider_calls": 0,
+  "real_effects": 0
+}

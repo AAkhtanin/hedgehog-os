@@ -1,0 +1,69 @@
+{
+  "captured": {
+    "overhead_attribution": "NOT_PROFILED_INDIVIDUALLY",
+    "phases": [
+      {
+        "elapsed_us": 347263,
+        "phase": "ADV-1"
+      },
+      {
+        "elapsed_us": 463687,
+        "phase": "ADV-2"
+      },
+      {
+        "elapsed_us": 119692889,
+        "phase": "ADV-3"
+      },
+      {
+        "elapsed_us": 44555552,
+        "phase": "history_record"
+      },
+      {
+        "elapsed_us": 125315432,
+        "phase": "current_history_work"
+      },
+      {
+        "elapsed_us": 5987787,
+        "phase": "lawful_objective"
+      }
+    ],
+    "total_seconds": 353.9225097503513,
+    "unlabelled_overhead_seconds": 57.55989975035129
+  },
+  "controlled": {
+    "overhead_attribution": "NOT_PROFILED_INDIVIDUALLY",
+    "phases": [
+      {
+        "elapsed_us": 54955,
+        "phase": "ADV-1"
+      },
+      {
+        "elapsed_us": 53438,
+        "phase": "ADV-2"
+      },
+      {
+        "elapsed_us": 500037,
+        "phase": "ADV-3"
+      },
+      {
+        "elapsed_us": 3718036,
+        "phase": "history_record"
+      },
+      {
+        "elapsed_us": 12502119,
+        "phase": "current_history_work"
+      },
+      {
+        "elapsed_us": 1586089,
+        "phase": "lawful_objective"
+      }
+    ],
+    "total_seconds": 26.288659874349833,
+    "unlabelled_overhead_seconds": 7.873985874349831
+  },
+  "final_focused_seconds": 246.81954625062644,
+  "pure_replay": [
+    52.806392416357994,
+    52.6564104584977
+  ]
+}

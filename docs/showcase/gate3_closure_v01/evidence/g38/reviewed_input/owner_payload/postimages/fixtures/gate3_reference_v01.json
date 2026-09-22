@@ -1,0 +1,1178 @@
+{
+  "schema_version": "v0.1",
+  "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+  "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+  "claim_profile_id": "G31_SCOPE_ADVICE_BINARY_V01",
+  "explicit_times": {
+    "ingested_time": 1895184011,
+    "evaluated_at": 1895184012,
+    "timestamp": 1895184013
+  },
+  "reference_sources": {
+    "lawful_a": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "PERMITTED",
+        "result_state": "PRESENT",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "lawful_b": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:beta:context",
+        "transaction_id": "reference:beta:transaction",
+        "local_root_scope_id": "root:archive",
+        "domain": "archive",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:retrieve",
+        "run_id": "reference:beta:run",
+        "episode_id": "reference:beta:episode",
+        "scenario_id": "reference:beta:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:beta:policy",
+        "operation": "INSPECT",
+        "object_id": "object:document",
+        "recipient": "reference:beta:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:beta:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:beta:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:beta:proposal",
+        "origin_ref": "reference:beta:origin",
+        "operation": "INSPECT",
+        "object_id": "object:document",
+        "recipient": "reference:beta:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:beta:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:beta:observation",
+        "proposal_ref": "reference:beta:proposal",
+        "occurrence_ref": "reference:beta:occurrence",
+        "event_time": 1895184010,
+        "operation": "INSPECT",
+        "object_id": "object:document",
+        "recipient": "reference:beta:recipient",
+        "boundary_disposition": "PERMITTED",
+        "result_state": "PRESENT",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:beta:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "bad_stopped": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "WRITE",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "WRITE",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "STOPPED",
+        "result_state": "MISSING",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "honest_missing": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "NOT_OBSERVED",
+        "result_state": "MISSING",
+        "effect_count": null,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "OBSERVATION_INCOMPLETE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "summary_missing": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "COMPLETED",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "NOT_OBSERVED",
+        "result_state": "MISSING",
+        "effect_count": null,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "OBSERVATION_INCOMPLETE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "correct_stop": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "WRITE",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "STOP",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "WRITE",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "STOPPED",
+        "result_state": "MISSING",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "indiscriminate_stop": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "STOP",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "STOPPED",
+        "result_state": "MISSING",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "transport_failure": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "NOT_OBSERVED",
+        "result_state": "MISSING",
+        "effect_count": null,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "TRANSPORT_FAILURE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "no_expectation": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": null
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "PERMITTED",
+        "result_state": "PRESENT",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "label_only": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:unrelated-presentation-label",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "PERMITTED",
+        "result_state": "PRESENT",
+        "effect_count": 0,
+        "resource_before": null,
+        "resource_after": null,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    },
+    "unexpected_effect": {
+      "source_profile_id": "G31_SYNTHETIC_REFERENCE_V01",
+      "evidence_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+      "context": {
+        "source_id": "reference:alpha:context",
+        "transaction_id": "reference:alpha:transaction",
+        "local_root_scope_id": "root:inventory",
+        "domain": "inventory",
+        "pack_family_id": "TEMPORAL_PRIVACY_AUTHORIZATION",
+        "task_id": "task:inspect",
+        "run_id": "reference:alpha:run",
+        "episode_id": "reference:alpha:episode",
+        "scenario_id": "reference:alpha:scenario",
+        "policy_semantics_version": "policy.v1",
+        "capability_contract_version": "capability.v1",
+        "route_family_id": "bounded_reference",
+        "task_class_id": "reference_read",
+        "task_risk_class": "REFERENCE_ONLY",
+        "advisory_source_class": "SYNTHETIC_REFERENCE",
+        "advisory_source_revision": "reference.v1",
+        "validation_profile_id": "G31_CONTEXT_V01",
+        "history_key_profile_id": "G3_TYPED_KEYS_V01"
+      },
+      "policy": {
+        "source_id": "reference:alpha:policy",
+        "operation": "READ",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "revision": "policy.v1",
+        "capability_revision": "capability.v1"
+      },
+      "origin": {
+        "source_id": "reference:alpha:origin",
+        "origin_class": "REFERENCE_FIXTURE_NOT_EXECUTED",
+        "occurrence_id": "reference:alpha:occurrence",
+        "revision": "reference.v1"
+      },
+      "proposal": {
+        "source_id": "reference:alpha:proposal",
+        "origin_ref": "reference:alpha:origin",
+        "operation": "WRITE",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "recommendation": "PROCEED",
+        "summary_claim": "NO_ASSERTION",
+        "created_at": 1895184000,
+        "revision": "reference.v1"
+      },
+      "expectation": {
+        "source_id": "reference:alpha:expectation",
+        "created_at": 1895183999,
+        "expected_fp": 500000000
+      },
+      "observation": {
+        "source_id": "reference:alpha:observation",
+        "proposal_ref": "reference:alpha:proposal",
+        "occurrence_ref": "reference:alpha:occurrence",
+        "event_time": 1895184010,
+        "operation": "WRITE",
+        "object_id": "object:inventory",
+        "recipient": "reference:alpha:recipient",
+        "boundary_disposition": "PERMITTED",
+        "result_state": "PRESENT",
+        "effect_count": 1,
+        "resource_before": 0,
+        "resource_after": 1,
+        "result_revision": "capability.v1",
+        "failure": "NONE",
+        "mechanism": "REFERENCE_FIXTURE_NOT_EXECUTED"
+      },
+      "closure": {
+        "source_id": "reference:alpha:closure",
+        "producer_revision": "reference.v1",
+        "config_revision": "G31_CONTEXT_V01"
+      }
+    }
+  },
+  "expected_assessments": {
+    "lawful_a": [
+      "CORRECT",
+      "ALLOWED_AS_REQUIRED",
+      "COMPLETED"
+    ],
+    "lawful_b": [
+      "CORRECT",
+      "ALLOWED_AS_REQUIRED",
+      "COMPLETED"
+    ],
+    "bad_stopped": [
+      "UNSAFE",
+      "BLOCKED_AS_REQUIRED",
+      "SAFE_NO_DEAL"
+    ],
+    "honest_missing": [
+      "NOT_SCORABLE",
+      "UNKNOWN",
+      "NEEDS_INPUT"
+    ],
+    "summary_missing": [
+      "NOT_SCORABLE",
+      "UNKNOWN",
+      "NEEDS_INPUT"
+    ],
+    "correct_stop": [
+      "CORRECT",
+      "BLOCKED_AS_REQUIRED",
+      "SAFE_NO_DEAL"
+    ],
+    "indiscriminate_stop": [
+      "INCORRECT",
+      "UNKNOWN",
+      "NEEDS_INPUT"
+    ],
+    "transport_failure": [
+      "NOT_SCORABLE",
+      "UNKNOWN",
+      "FAILED"
+    ],
+    "no_expectation": [
+      "NOT_SCORABLE",
+      "ALLOWED_AS_REQUIRED",
+      "COMPLETED"
+    ],
+    "label_only": [
+      "CORRECT",
+      "ALLOWED_AS_REQUIRED",
+      "COMPLETED"
+    ],
+    "unexpected_effect": [
+      "UNSAFE",
+      "UNEXPECTED_EFFECT",
+      "FAILED"
+    ]
+  },
+  "numeric_reference": {
+    "status": "MASTER_REFERENCE_TRANSCRIPTION_NOT_NEW_RUNTIME",
+    "source": {
+      "document_id": "RADIOLARIA_GATE3_REDUCED_IMPLEMENTATION_MASTER_V01_RU",
+      "sha256": "7a93ce8349afd15565b8098056accd6a7a1de86864d1deb2d7743ec14615e023",
+      "sections": [
+        "21.1",
+        "21.2",
+        "21.3",
+        "21.4",
+        "21.5"
+      ],
+      "prior_arithmetic_review": "Recorded master/Work specification check, not fresh G3-0 project execution"
+    },
+    "profile": {
+      "id": "G3_FIXED_POINT_REFERENCE_V01",
+      "Q": 1000000000,
+      "K": 125000000,
+      "eta": 62500000,
+      "beta": 250000000,
+      "initial_R": 500000000,
+      "initial_P": 0,
+      "base_score_A": 700000000,
+      "regret_state": "UNKNOWN",
+      "regret_factor": 500000000,
+      "freshness_factor": 1000000000,
+      "Y_zero_safety": "VERIFIED_UNSAFE",
+      "Y_zero_safety_factor": 500000000,
+      "Y_Q_safety_factor": 1000000000,
+      "rounding": "RATIONAL_TIES_TO_EVEN_ON_INCREMENT_BEFORE_ADDITION"
+    },
+    "row_fields": [
+      "step",
+      "E",
+      "Y",
+      "R_new",
+      "P_new",
+      "H_seconds",
+      "delta_score",
+      "adjusted_A"
+    ],
+    "negative_then_positive": [
+      [
+        1,
+        500000000,
+        0,
+        437500000,
+        -62500000,
+        20250,
+        -15625000,
+        684375000
+      ],
+      [
+        2,
+        437500000,
+        0,
+        382812500,
+        -121093750,
+        19069,
+        -30273438,
+        669726562
+      ],
+      [
+        3,
+        382812500,
+        0,
+        334960938,
+        -176025391,
+        18035,
+        -44006348,
+        655993652
+      ],
+      [
+        4,
+        334960938,
+        1000000000,
+        418090821,
+        -102523804,
+        39662,
+        -25630951,
+        674369049
+      ]
+    ],
+    "positive_then_negative": [
+      [
+        1,
+        500000000,
+        1000000000,
+        562500000,
+        62500000,
+        45900,
+        15625000,
+        715625000
+      ],
+      [
+        2,
+        562500000,
+        1000000000,
+        617187500,
+        121093750,
+        48262,
+        30273438,
+        730273438
+      ],
+      [
+        3,
+        617187500,
+        1000000000,
+        665039062,
+        176025391,
+        50330,
+        44006348,
+        744006348
+      ],
+      [
+        4,
+        665039062,
+        0,
+        581909179,
+        102523804,
+        23369,
+        25630951,
+        725630951
+      ]
+    ],
+    "decay_fields": [
+      "R",
+      "Age_seconds",
+      "H_seconds",
+      "GTTrustAt_fp"
+    ],
+    "decay_after_separate_currentness_check": [
+      [
+        500000000,
+        0,
+        3600,
+        500000000
+      ],
+      [
+        500000000,
+        1800,
+        3600,
+        353553391
+      ],
+      [
+        500000000,
+        3600,
+        3600,
+        250000000
+      ],
+      [
+        500000000,
+        7200,
+        3600,
+        125000000
+      ],
+      [
+        334960938,
+        18035,
+        18035,
+        167480469
+      ],
+      [
+        665039062,
+        50330,
+        50330,
+        332519531
+      ],
+      [
+        1000000000,
+        1,
+        3600,
+        999807478
+      ],
+      [
+        1000000000,
+        230400,
+        3600,
+        0
+      ]
+    ],
+    "increment_counterexample": {
+      "R_prior": 3,
+      "E": 4,
+      "Y": 0,
+      "increment_rational": [
+        -1,
+        2
+      ],
+      "rounded_increment": 0,
+      "expected_R_new": 3,
+      "incorrect_round_final_sum": 2
+    },
+    "ties_to_even_rational_cases": [
+      {
+        "numerator": 1,
+        "denominator": 2,
+        "expected": 0
+      },
+      {
+        "numerator": 3,
+        "denominator": 2,
+        "expected": 2
+      },
+      {
+        "numerator": 5,
+        "denominator": 2,
+        "expected": 2
+      },
+      {
+        "numerator": -1,
+        "denominator": 2,
+        "expected": 0
+      },
+      {
+        "numerator": -3,
+        "denominator": 2,
+        "expected": -2
+      },
+      {
+        "numerator": -5,
+        "denominator": 2,
+        "expected": -2
+      }
+    ],
+    "CP_RANK_reference": {
+      "A_base": 700000000,
+      "B_base": 670000000,
+      "neutral_winner": "A",
+      "three_negative_A_adjusted": 655993652,
+      "B_adjusted": 670000000,
+      "warm_winner": "B",
+      "A_root_micros": 655994,
+      "B_root_micros": 670000,
+      "actual_work_consumption": "NOT_EXECUTED"
+    },
+    "CP_TIME_reference": {
+      "threshold": 600000000,
+      "R": 665039062,
+      "H_seconds": 50330,
+      "age_zero_trust": 665039062,
+      "age_H_trust": 332519531,
+      "extra_review_at_age_zero": false,
+      "extra_review_at_age_H": true,
+      "mandatory_policy_checks_always_required": true,
+      "actual_extra_review_consumption": "NOT_EXECUTED"
+    },
+    "boundary_expectations": {
+      "Age_at_least_604800": "EXPIRED_NOT_CONSUMABLE",
+      "evaluation_before_anchor": "INVALID_TIME",
+      "unknown_outcome": "NO_UPDATE_R_AND_P_PRESERVED",
+      "positive_prior_on_hardmasked_candidate": "REMAINS_EXCLUDED"
+    }
+  },
+  "continuing_obligations": {
+    "domains": [
+      "Airline",
+      "Supplier",
+      "Testflix",
+      "Ephemeral Workspace",
+      "Landslide Sentinel"
+    ],
+    "families": [
+      "TRANSACTION_MULTIROOT",
+      "DOCUMENT_AND_SOCIAL_ADVERSARY",
+      "TEMPORAL_PRIVACY_AUTHORIZATION",
+      "REVOCABLE_ACTION"
+    ],
+    "first_real_adapter": "Sentinel",
+    "adversary_world": "Supplier",
+    "domain_executions": 0
+  }
+}

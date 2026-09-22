@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/final_preservation_v01.py",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--evidence",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_PRESERVATION.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "label": "final_preservation",
+  "pid": 18807,
+  "started_at": "2026-09-22T14:44:36.953005Z",
+  "started_ns": 1790088276953131000
+}

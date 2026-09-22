@@ -1,5 +1,9 @@
 # Hedgehog OS
 
+## Gate 3 Closure
+
+[Read the independently reviewed Gate 3 closure publication](docs/showcase/gate3_closure_v01/README.md).
+
 ## Landslide Sentinel: Bounded Source Admission
 
 The exact `landslide_sentinel_admission_v01` succeeds accepted main

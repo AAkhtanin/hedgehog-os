@@ -1,0 +1,588 @@
+{
+  "active_runtime_acts": [
+    {
+      "act_id": "airline_deterministic_transaction_runtime",
+      "claim_ids": [
+        "claim_airline_runtime_execution"
+      ],
+      "focused_test": "tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py",
+      "source_module": "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "source_symbol": "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "generic_integrity_replay",
+      "claim_ids": [
+        "claim_generic_integrity_replay_execution",
+        "claim_airline_kernel_adapter_execution"
+      ],
+      "focused_test": "tests/test_kernel_integrity_replay_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_generic_integrity_replay_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "root_signer_isolation_conformance",
+      "claim_ids": [
+        "claim_root_signer_isolation_conformance_execution"
+      ],
+      "focused_test": "tests/test_root_signer_isolation_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_root_signer_isolation_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "semantic_work_contract",
+      "claim_ids": [
+        "claim_kernel_trust_model_conformance_execution",
+        "claim_semantic_work_contract_conformance_execution"
+      ],
+      "focused_test": "tests/test_semantic_work_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_semantic_work_contract_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "domain_neutral_kernel_abi",
+      "claim_ids": [
+        "claim_domain_neutral_kernel_abi_conformance_execution"
+      ],
+      "focused_test": "tests/test_kernel_abi_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "causal_consumption",
+      "claim_ids": [
+        "claim_causal_consumption_conformance_execution"
+      ],
+      "focused_test": "tests/test_kernel_abi_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_causal_consumption_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "transition_registry",
+      "claim_ids": [
+        "claim_transition_registry_runtime_execution"
+      ],
+      "focused_test": "tests/test_transition_registry_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_transition_registry_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "root_decision_kernel",
+      "claim_ids": [
+        "claim_root_decision_kernel_runtime_execution"
+      ],
+      "focused_test": "tests/test_root_decision_kernel_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_root_decision_kernel_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "effect_firewall",
+      "claim_ids": [
+        "claim_effect_firewall_runtime_execution"
+      ],
+      "focused_test": "tests/test_effect_firewall_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_effect_firewall_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "generic_multiroot",
+      "claim_ids": [
+        "claim_generic_multiroot_execution"
+      ],
+      "focused_test": "tests/test_multiroot_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_generic_multiroot_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "supplier_water_filter_portability",
+      "claim_ids": [
+        "claim_supplier_water_filter_portability_execution"
+      ],
+      "focused_test": "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_supplier_water_filter_portability_gauntlet_act_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "act_id": "kernel_conformance_closure",
+      "claim_ids": [
+        "claim_kernel_conformance_closure_execution"
+      ],
+      "focused_test": "tests/test_kernel_conformance_v01_runner.py",
+      "source_module": "demo.run_living_gauntlet_v01",
+      "source_symbol": "collect_kernel_conformance_closure_gauntlet_act_v01",
+      "status": "ACTIVE"
+    }
+  ],
+  "document_id": "living_release_completion_manifest_v01",
+  "current_kernel_conformance_profile": "kernel_conformance_v0_6_current",
+  "kernel_conformance_profiles": {
+    "historical_v0_5": {
+      "profile_id": "kernel_conformance_v0_5_historical",
+      "profile_version": "v0.5",
+      "profile_status": "HISTORICAL_EVIDENCE_ONLY",
+      "default_current": false,
+      "active_gauntlet_refs": [
+        "airline_deterministic_transaction_runtime",
+        "all_layers_invariant_super_smoke",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
+        "fractal_runtime"
+      ],
+      "historical_act_id": "all_layers_invariant_super_smoke"
+    },
+    "current_v0_6": {
+      "profile_id": "kernel_conformance_v0_6_current",
+      "profile_version": "v0.6",
+      "profile_status": "CURRENT_ACTIVE",
+      "default_current": true,
+      "active_gauntlet_refs": [
+        "airline_deterministic_transaction_runtime",
+        "generic_integrity_replay",
+        "root_signer_isolation_conformance",
+        "semantic_work_contract",
+        "domain_neutral_kernel_abi",
+        "causal_consumption",
+        "transition_registry",
+        "root_decision_kernel",
+        "effect_firewall",
+        "generic_multiroot",
+        "supplier_water_filter_portability",
+        "action_packet_lifecycle",
+        "drs_semantic_address_and_reuse_certificate",
+        "execution_mode_router",
+        "fractal_runtime"
+      ],
+      "historical_profile_ref": "kernel_conformance_v0_5_historical",
+      "historical_act_id_rebound": false
+    }
+  },
+  "current_regression_claim_mapping": {
+    "root_sole_local_final_commit_authority": [
+      "root_decision_kernel",
+      "action_packet_lifecycle",
+      "fractal_runtime"
+    ],
+    "no_superroot_exists": [
+      "generic_multiroot"
+    ],
+    "bsep_semantic_membrane": [
+      "execution_mode_router",
+      "fractal_runtime"
+    ],
+    "runtime_execution_topology_runtime_owned": [
+      "fractal_runtime"
+    ],
+    "provider_model_advisory_only": [
+      "semantic_work_contract",
+      "fractal_runtime"
+    ],
+    "actor_output_cannot_create_final_output": [
+      "semantic_work_contract",
+      "fractal_runtime"
+    ],
+    "resultproposal_postvv_terminal_gt_before_root": [
+      "fractal_runtime"
+    ],
+    "drs_retrieval_reuse_no_authority": [
+      "drs_semantic_address_and_reuse_certificate"
+    ],
+    "receipt_evidence_only": [
+      "effect_firewall",
+      "action_packet_lifecycle"
+    ],
+    "effect_capability_bounded_corridor_only": [
+      "effect_firewall"
+    ],
+    "airline_supplier_same_authority_law": [
+      "airline_deterministic_transaction_runtime",
+      "supplier_water_filter_portability",
+      "action_packet_lifecycle"
+    ],
+    "real_world_effects_zero": [
+      "airline_deterministic_transaction_runtime",
+      "generic_integrity_replay",
+      "root_signer_isolation_conformance",
+      "semantic_work_contract",
+      "domain_neutral_kernel_abi",
+      "causal_consumption",
+      "transition_registry",
+      "root_decision_kernel",
+      "effect_firewall",
+      "generic_multiroot",
+      "supplier_water_filter_portability",
+      "action_packet_lifecycle",
+      "drs_semantic_address_and_reuse_certificate",
+      "execution_mode_router",
+      "fractal_runtime"
+    ]
+  },
+  "evidence_only_references": [
+    {
+      "act_id": "airline_all_real_frozen_reference",
+      "claim_ids": [
+        "claim_airline_all_real_frozen_evidence"
+      ],
+      "evidence_paths": [
+        "docs/airline_all_real_evidence_showcase_checkpoint_v01.md",
+        "docs/audit_reports/auditor_airline_all_real_evidence_showcase_v01.log"
+      ],
+      "focused_test": "tests/test_living_gauntlet_v01_runner.py",
+      "notes": "Frozen committed reference evidence; never executed or replayed by the living gauntlet.",
+      "status": "EVIDENCE_ONLY"
+    },
+    {
+      "act_id": "all_layers_invariant_super_smoke",
+      "claim_ids": [
+        "claim_invariant_runtime_execution"
+      ],
+      "evidence_paths": [
+        "demo/run_all_layers_applied_super_smoke.py",
+        "tests/test_all_layers_applied_super_smoke_runner.py"
+      ],
+      "focused_test": "tests/test_all_layers_applied_super_smoke_runner.py",
+      "source_module": "demo.run_all_layers_applied_super_smoke",
+      "source_symbol": "collect_all_layers_applied_super_smoke",
+      "historical_profile_ref": "kernel_conformance_v0_5_historical",
+      "current_execution_enabled": false,
+      "successor_onboarding_allowed": false,
+      "notes": "Immutable historical Gate-1 v0.5 act identity and evidence. It is not executed by current Living Gauntlet or current Kernel Conformance and is never rebound to another implementation.",
+      "status": "HISTORICAL_EVIDENCE_ONLY"
+    }
+  ],
+  "limitations": [
+    {
+      "limitation_id": "limitation_deterministic_local_scaffold",
+      "statement": "The active acts are deterministic local collectors and permit no real external action."
+    },
+    {
+      "limitation_id": "limitation_frozen_evidence_not_runtime",
+      "statement": "Frozen Airline all-real evidence is a committed reference and cannot satisfy an executed-runtime claim."
+    },
+    {
+      "limitation_id": "limitation_gate1_not_implemented",
+      "statement": "Gate-1 runtime implementation is active through Kernel Conformance; independent audit, official committed-HEAD execution evidence, and consolidated documentation closure remain pending."
+    },
+    {
+      "limitation_id": "limitation_g1a1_neutral_fixtures_only",
+      "statement": "G1-A1 itself remains limited to neutral in-memory fixtures, expected-hash provenance is not external trust, and G1-A1 does not exercise signer isolation; the frozen Airline projection is separately active through G1-D1, while Supplier / Water Filter projection and Generic MultiRoot are separately active through G1-D2."
+    },
+    {
+      "limitation_id": "limitation_g1a2_conformance_only_signer_isolation",
+      "statement": "Keys are ephemeral and in-memory with no key persistence, production identity, PKI, certificate authority, Airline Root Attestation, permission, or effect; the frozen Airline remains UNSIGNED_PLACEHOLDER with signature_verified false."
+    },
+    {
+      "limitation_id": "limitation_g1b1_in_memory_contract_conformance_only",
+      "statement": "G1-B1 remains an in-memory SemanticWork and Trust conformance slice: no real cloud LLM, local SLM, or fractal runtime is executed, no provider output is trusted, and no permission, Root decision, FinalOutput, or effect is created by G1-B1; Trust Model metadata is descriptive and conformance-consumed; Kernel ABI and CausalConsumptionRef are separately active in G1-B2, Transition Registry and Root Decision Kernel in G1-C1, the mock-only Effect Firewall in G1-C2, the frozen Airline adapter in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot in G1-D2."
+    },
+    {
+      "limitation_id": "limitation_g1b2_in_memory_abi_and_counterfactual_only",
+      "statement": "G1-B2 artifacts remain neutral in-memory conformance fixtures with no production ABI compatibility guarantee, and only ABI v1.0 is supported; CausalConsumptionRef proves declared controlled influence, not semantic truth; Transition Registry and Root Decision Kernel are separately active in G1-C1, the mock-only Effect Firewall in G1-C2, the frozen Airline adapter in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot in G1-D2; no permission, Root decision, FinalOutput, connector call, or effect is created by G1-B2."
+    },
+    {
+      "limitation_id": "limitation_g1c1_in_memory_transition_and_root_decision_only",
+      "statement": "The G1-C1 Registry and decisions are domain-neutral in-memory runtime fixtures: the Registry performs lookup and does not mutate artifacts or execute transitions, and the Root Decision Kernel creates RootDecisionResult only; G1-C1 creates no permission, FinalOutput, ActionCommitPacket, ExecutionRequest, or receipt, and no effect occurs in G1-C1; the mock-only Effect Firewall is separately active in G1-C2, the frozen Airline adapter in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot in G1-D2. This is not production policy certification."
+    },
+    {
+      "limitation_id": "limitation_g1c2_in_memory_mock_effect_only",
+      "statement": "The Firewall is domain-neutral and in-memory, and its private capability is invocation-local rather than production authorization; only logical ticks and one neutral mock execution are used. No real adapter exists. No real connector, payment, booking, ticket, shipment, or external operation exists. Scope is Root-supplied conformance scope, no production permission registry is consulted, and no revocation, supersession, production retry, or distributed idempotency is implemented. The receipt is evidence only, creates no future permission, and requires later Root confirmation. The frozen Airline projection adapter is separately active in G1-D1, and Supplier / Water Filter projection with Generic MultiRoot is separately active in G1-D2. This is not production security certification."
+    },
+    {
+      "limitation_id": "limitation_g1d1_frozen_airline_projection_only",
+      "statement": "The adapter is constrained to the accepted frozen Airline contract shape, Offer A, exact transaction, three Roots, type sequence, and 19 / 29 / 3 Ledger, 9 / 11 Crypto, and 19-row timeline geometry. The Living fixture is deterministic and synthetic in-memory; it does not prove byte equality with the committed all-real package, and its caller-supplied expected hash is not committed external trust. No package or filesystem access occurs and no all-real lane is rerun. The original Ledger, Crypto, Replay, Anchor, audits, Human Story, and Showcase remain unchanged. The generic Manifest is a derived projection identity, dependency-hash CausalConsumptionRef rows do not prove semantic truth, signature verification remains false, and Root Attestation remains deferred. Supplier / Water Filter portability and Generic MultiRoot are separately active in G1-D2. This is not production integration."
+    },
+    {
+      "limitation_id": "limitation_g1d2_generic_multiroot_conformance_only",
+      "statement": "Generic MultiRoot is pure in-memory protocol geometry with independent Root outcomes, no production federation, no distributed Root registry, no signer identity, no SuperRoot, no authority transfer, no permission transfer, no real effect, and no external system."
+    },
+    {
+      "limitation_id": "limitation_g1d2_supplier_water_filter_projection_only",
+      "statement": "The Supplier / Water Filter adapter accepts only the exact deterministic Full WOW v1.2 product-trace contract, not arbitrary Supplier transactions. It uses no live provider and no real supplier, bank, warehouse API, payment, shipment release, or connector. The source collector remains unchanged, the adapter retains no complete source report, its generic Manifest is a derived local identity, and its causal rows prove declared ordered-card continuity only. The represented Supplier MultiRoot outcome remains MIXED. This is not production integration."
+    },
+    {
+      "limitation_id": "limitation_g1e_kernel_conformance_scope",
+      "statement": "This is deterministic current-repository conformance for the exact accepted Airline and Supplier adapters, not arbitrary domains. It includes no fresh all-real run, no Supplier external Anchor, no Airline package regeneration, no Root Attestation, no production PKI, no production federation, no production connector, and no full-repository certification. Independent audit and consolidated documentation closure remain pending."
+    },
+    {
+      "limitation_id": "limitation_not_production",
+      "statement": "This scaffold is proof-level and is not production-ready."
+    }
+  ],
+  "manifest_status": "ACTIVE_GATE1_G1E",
+  "non_claims": [
+    "not production",
+    "not production certification",
+    "not a real ticket, booking, payment, airline, bank, GDS, shipment, or connector integration",
+    "not an Airline runtime rewrite",
+    "not an arbitrary Airline adapter",
+    "not package or filesystem Replay",
+    "not a new all-real run",
+    "not execution of the committed all-real package",
+    "not committed external Anchor provenance",
+    "not production Root signing",
+    "not Airline Root Attestation",
+    "not PKI",
+    "not production signer identity",
+    "not certificate issuance",
+    "not real provider execution",
+    "not semantic truth",
+    "not provider authority",
+    "not a production API stability certification",
+    "not transition execution or artifact-state mutation",
+    "not permission creation",
+    "not causal truth proof",
+    "not FinalOutput",
+    "not a real effect",
+    "not a real connector",
+    "not production authorization",
+    "not a transferable capability",
+    "not production MultiRoot federation",
+    "not production retry or distributed idempotency",
+    "not production policy certification",
+    "not arbitrary Supplier integration",
+    "not real bank, supplier, or warehouse integration",
+    "not real payment",
+    "not shipment release",
+    "not a production connector",
+    "not Root Attestation",
+    "not Gate 1 final closure"
+  ],
+  "planned_gate1_acts": [],
+  "public_claims": [
+    {
+      "act_ids": [
+        "airline_deterministic_transaction_runtime"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_airline_runtime_execution",
+      "evidence_ref": "demo/run_tri_party_airline_ticket_purchase_mock_e2e_v01.py",
+      "focused_test_ref": "tests/test_tri_party_airline_ticket_purchase_mock_e2e_v01_runner.py",
+      "limitation_ref": "limitation_deterministic_local_scaffold",
+      "runtime_ref": "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01:collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "statement": "The living gauntlet executes the deterministic Airline transaction collector and derives its result from the returned report."
+    },
+    {
+      "act_ids": [
+        "all_layers_invariant_super_smoke"
+      ],
+      "claim_class": "HISTORICAL_EVIDENCE_ONLY",
+      "claim_id": "claim_invariant_runtime_execution",
+      "evidence_ref": "demo/run_all_layers_applied_super_smoke.py",
+      "focused_test_ref": "tests/test_all_layers_applied_super_smoke_runner.py",
+      "limitation_ref": "limitation_deterministic_local_scaffold",
+      "runtime_ref": "not_executed:kernel_conformance_v0_5_historical",
+      "statement": "The all-layers invariant super-smoke remains immutable historical Gate-1 v0.5 evidence. Current v0.6 regression coverage is supplied only by the named existing current acts in current_regression_claim_mapping; the historical act is not executed or rebound."
+    },
+    {
+      "act_ids": [
+        "generic_integrity_replay"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_generic_integrity_replay_execution",
+      "evidence_ref": "hedgehog/kernel/integrity_replay_v01.py",
+      "focused_test_ref": "tests/test_kernel_integrity_replay_v01.py",
+      "limitation_ref": "limitation_g1a1_neutral_fixtures_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_generic_integrity_replay_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the pure G1-A1 integrity and Replay core against linear and fan-out domain-neutral in-memory fixtures."
+    },
+    {
+      "act_ids": [
+        "generic_integrity_replay"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_airline_kernel_adapter_execution",
+      "evidence_ref": "hedgehog/domains/airline/kernel_adapter_v01.py",
+      "focused_test_ref": "tests/test_airline_kernel_adapter_v01.py",
+      "limitation_ref": "limitation_g1d1_frozen_airline_projection_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_generic_integrity_replay_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the Airline Kernel adapter against a deterministic in-memory Offer A conformance fixture built from frozen Airline contracts. It preserves the exact transaction, three Roots, type sequence, 19 / 29 / 3 Ledger geometry, 9 / 11 Crypto geometry, generic Manifest and Replay PASS, and twenty-nine dependency-hash CausalConsumptionRef rows with provider, network, Gemini, and real-world effect counts at zero. It does not load or execute the committed all-real package or historical committed evidence."
+    },
+    {
+      "act_ids": [
+        "root_signer_isolation_conformance"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_root_signer_isolation_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/root_signer_isolation_v01.py",
+      "focused_test_ref": "tests/test_root_signer_isolation_v01.py",
+      "limitation_ref": "limitation_g1a2_conformance_only_signer_isolation",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_root_signer_isolation_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes an in-memory Ed25519 conformance fixture proving that three test Root capabilities cannot sign or verify as one another."
+    },
+    {
+      "act_ids": [
+        "semantic_work_contract"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_kernel_trust_model_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/trust_model_v01.py",
+      "focused_test_ref": "tests/test_kernel_trust_model_v01.py",
+      "limitation_ref": "limitation_g1b1_in_memory_contract_conformance_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_semantic_work_contract_gauntlet_act_v01",
+      "statement": "The Living Gauntlet validates the eighteen-profile Kernel Trust and Compromise Model and its Root, permission, request, and bounded effect-handle boundaries."
+    },
+    {
+      "act_ids": [
+        "semantic_work_contract"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_semantic_work_contract_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/semantic_work_v01.py",
+      "focused_test_ref": "tests/test_semantic_work_v01.py",
+      "limitation_ref": "limitation_g1b1_in_memory_contract_conformance_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_semantic_work_contract_gauntlet_act_v01",
+      "statement": "The Living Gauntlet normalizes deterministic, informational reuse, cloud LLM, local SLM, and fractal-child provenance modes into one advisory RootReviewPacket while preserving conflicts and missing evidence."
+    },
+    {
+      "act_ids": [
+        "domain_neutral_kernel_abi"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_domain_neutral_kernel_abi_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/abi_v01.py",
+      "focused_test_ref": "tests/test_kernel_abi_v01.py",
+      "limitation_ref": "limitation_g1b2_in_memory_abi_and_counterfactual_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_domain_neutral_kernel_abi_gauntlet_act_v01",
+      "statement": "The Living Gauntlet validates a versioned domain-neutral KernelArtifact envelope with independent identity, lifecycle, authority, payload, lineage, and time-envelope axes and converts six neutral artifacts into the G1-A1 canonical integrity subset."
+    },
+    {
+      "act_ids": [
+        "causal_consumption"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_causal_consumption_conformance_execution",
+      "evidence_ref": "hedgehog/kernel/abi_v01.py",
+      "focused_test_ref": "tests/test_kernel_abi_v01.py",
+      "limitation_ref": "limitation_g1b2_in_memory_abi_and_counterfactual_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_causal_consumption_gauntlet_act_v01",
+      "statement": "The Living Gauntlet validates field-level USED, REJECTED, IGNORED_WITH_REASON, and BLOCKED_BY_GATE references and executes controlled counterfactual proofs of downstream influence or accepted-authority non-influence."
+    },
+    {
+      "act_ids": [
+        "transition_registry"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_transition_registry_runtime_execution",
+      "evidence_ref": "hedgehog/kernel/transition_registry_v01.py",
+      "focused_test_ref": "tests/test_transition_registry_v01.py",
+      "limitation_ref": "limitation_g1c1_in_memory_transition_and_root_decision_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_transition_registry_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the immutable domain-neutral Transition Registry, validates all eighteen canonical rules, and proves deterministic ALLOW, RETURN_TO_ROOT, NEEDS_USER, NEEDS_MORE_EVIDENCE, and fail-closed lookup outcomes without executing a transition."
+    },
+    {
+      "act_ids": [
+        "root_decision_kernel"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_root_decision_kernel_runtime_execution",
+      "evidence_ref": "hedgehog/kernel/root_decision_v01.py",
+      "focused_test_ref": "tests/test_root_decision_kernel_v01.py",
+      "limitation_ref": "limitation_g1c1_in_memory_transition_and_root_decision_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_root_decision_kernel_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the deterministic Root Decision Kernel across ten precedence scenarios and produces in-memory RootDecisionResult objects while creating no permission, FinalOutput, effect request, connector call, or real-world effect."
+    },
+    {
+      "act_ids": [
+        "effect_firewall"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_effect_firewall_runtime_execution",
+      "evidence_ref": "hedgehog/kernel/effect_firewall_v01.py",
+      "focused_test_ref": "tests/test_effect_firewall_v01.py",
+      "limitation_ref": "limitation_g1c2_in_memory_mock_effect_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_effect_firewall_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes one Root-bound, permission-bound, scope-bound, TTL-bound, adapter-bound, one-shot mock effect through the exclusive Effect Firewall and returns an evidence-only receipt that creates no permission, Root decision, FinalOutput, connector call, or real-world effect."
+    },
+    {
+      "act_ids": [
+        "generic_multiroot"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_generic_multiroot_execution",
+      "evidence_ref": "hedgehog/kernel/multiroot_v01.py",
+      "focused_test_ref": "tests/test_multiroot_v01.py",
+      "limitation_ref": "limitation_g1d2_generic_multiroot_conformance_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_generic_multiroot_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes pure in-memory three-Root and four-Root all-accepted fixtures, a visible MIXED fixture, an INCOMPLETE fixture, and fail-closed unknown, duplicate, and reserved Root cases without authority transfer, permission transfer, or effect."
+    },
+    {
+      "act_ids": [
+        "supplier_water_filter_portability"
+      ],
+      "claim_class": "EXECUTED_RUNTIME",
+      "claim_id": "claim_supplier_water_filter_portability_execution",
+      "evidence_ref": "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "focused_test_ref": "tests/test_supplier_water_filter_kernel_adapter_v01.py",
+      "limitation_ref": "limitation_g1d2_supplier_water_filter_projection_only",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_supplier_water_filter_portability_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the Supplier / Water Filter adapter against one explicit deterministic Full WOW v1.2 product-trace report, projects twenty-three Kernel artifacts and twenty-two dependencies, verifies the derived generic Manifest and Replay, emits twenty-two ordered-card CausalConsumptionRef rows, and preserves the one-Root MIXED business outcome with zero provider, network, Gemini, and real-world effects."
+    },
+    {
+      "act_ids": [
+        "airline_all_real_frozen_reference"
+      ],
+      "claim_class": "EVIDENCE_ONLY",
+      "claim_id": "claim_airline_all_real_frozen_evidence",
+      "evidence_ref": "docs/airline_all_real_evidence_showcase_checkpoint_v01.md",
+      "focused_test_ref": "tests/test_living_gauntlet_v01_runner.py",
+      "limitation_ref": "limitation_frozen_evidence_not_runtime",
+      "runtime_ref": "not_executed:evidence_only",
+      "statement": "The frozen Airline all-real checkpoint remains visible as committed evidence only."
+    },
+    {
+      "act_ids": [
+        "kernel_conformance_closure"
+      ],
+      "claim_class": "EXECUTED_CONFORMANCE",
+      "claim_id": "claim_kernel_conformance_closure_execution",
+      "evidence_ref": "hedgehog/kernel/conformance_v01.py",
+      "focused_test_ref": "tests/test_kernel_conformance_v01_runner.py",
+      "limitation_ref": "limitation_g1e_kernel_conformance_scope",
+      "runtime_ref": "demo.run_living_gauntlet_v01:collect_kernel_conformance_closure_gauntlet_act_v01",
+      "statement": "The Living Gauntlet executes the current v0.6 machine-readable Kernel Conformance profile derived from fifteen current act results plus fifty executed negative conformance checks, producing fourteen category results and two domain results with no stored synthetic PASS and zero provider, network, Gemini, authority, permission, and real-world effect counts. Historical v0.5 remains evidence only. This is not production certification, and final independent audit and consolidated documentation closure remain pending."
+    }
+  ],
+  "runner_version": "v1.5",
+  "version": "v0.1",
+  "gate3_g36_mechanism_v01": {
+    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
+    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
+    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
+    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
+    "conformance_entry": "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01",
+    "direct_test": "tests/test_gate3_mechanism_registration_v01.py",
+    "inventory": [
+      "NATIVE_BOUNDARY_FEEDBACK",
+      "ROOT_RECORDED_HISTORY",
+      "CURRENT_REVIEWED_WORK",
+      "LAWFUL_SAME_HOST_OBJECTIVE",
+      "SUPPLIED_PROOF_REFUSAL"
+    ],
+    "top_level_fresh_e5": 1,
+    "top_level_fresh_g3": 1,
+    "shared_collectors": 0,
+    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
+    "source_admission_is_root_permission": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/verify_kit_v01.py",
+    "--root",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/input_kit",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/input_kit/VERIFICATION.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922",
+  "environment": {
+    "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/opt/homebrew/Caskroom/codex/0.154.0/codex-path:/Users/admin/.codex/tmp/arg0/codex-arg0VQoagn:/Users/admin/Projects/hedgehog-os/.venv/bin:/Users/admin/.vscode/extensions/ms-python.debugpy-2026.6.0-darwin-arm64/bundled/scripts/noConfigScripts"
+  },
+  "label": "verify_instruction_kit",
+  "sources": {
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/run_command_v01.py": {
+      "bytes": 4421,
+      "sha256": "ad1e5b9c16ef4a363a6b6911564066c772256049d89d5b47c7cfef8ea324d2eb"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/verify_kit_v01.py": {
+      "bytes": 1860,
+      "sha256": "1467970919aa629a9f579908dfef12d0c3af8f49d161c734fe4b053458ec0ad8"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/input_kit/MANIFEST.json": {
+      "bytes": 1455,
+      "sha256": "cdd1ce6b784e3018fca3195a069f1b79b6d6132e76810867b3a10f7c973d2d72"
+    }
+  }
+}

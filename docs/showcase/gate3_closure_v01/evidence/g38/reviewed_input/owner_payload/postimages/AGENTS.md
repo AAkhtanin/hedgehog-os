@@ -1,0 +1,414 @@
+# Hedgehog OS — Current Assistant Operations
+
+## Gate 3 G3-7: Frozen Release Candidate
+
+The exact `gate3_g37_frozen_release_admission_v01` proposal freezes the
+reviewed 59-path Gate3 successor on accepted main
+`d199199a578c078c913a2381f595549175bd9235`. Fresh source-bound Living and
+standalone Conformance successor reports each own one legacy E5 and one G3
+collection; their supplied consumers do not recollect either result. The
+candidate also preserves two independent pure replays and the reviewed G36R
+captured provenance evidence. Source admission is evidence only: it grants no
+Root permission, effect ownership, Gate3 closure, production certification or
+owner landing. Git derives any later commit identity. G3-8 remains a separately
+reviewed owner operation; no commit or push is authorized by this proposal.
+See `docs/gate3_outcome_feedback_checkpoint_v01.md` for the evidence classes,
+measured costs and pending owner-dependent rows.
+
+## G3-6 Supplier Learning Mechanism
+
+The G36 external successor adds one finite Supplier action-advice profile,
+actual native refusal/receipt sources, numerical Root-recorded local history,
+current Root descent and consumed pure review Work. Controlled and configured
+Gemini origins are separate; captures are evidence, never restored authority.
+The versioned Living/Conformance entrypoints consume the same checked G3 bundle.
+An independent top-level successor owns one fresh E5 and one fresh G3 collection;
+shared supplied consumers add neither. Historical profile geometry is unchanged.
+At the G36 checkpoint, direct mechanism proof was not a full top-level release
+PASS and G3-7 remained pending. The G37 section above supersedes only that
+historical status. G3-8 owner landing, full Gate3 closure and production
+certification are not claimed. The historical G36 guard route is
+gate3_g36_adversary_admission_v01, based on d199.
+No commit is self-recorded; source admission gives no Root/effect permission.
+See the G3 checkpoint for commands, limitations and the frozen-release plan.
+
+
+## Gate3 G35: Controlled Five-Domain Proposal
+
+The bounded G35 successor retains the reviewed G34R2 Work correction and adds
+five source profiles, one common OFE/report contract, independently supplied
+verification and pure safe-derived replay. Its exact 44-path proposal is based
+on `d199199a578c078c913a2381f595549175bd9235`; no owner landing or Gate3 closure
+is awarded. Historical G31-G34 records remain tied to their frozen predecessors.
+See the G35 section in `docs/gate3_outcome_feedback_checkpoint_v01.md`.
+G36 adversarial/live work, Living registration and Atlas remain pending.
+Source admission never creates current Root permission or a new effect owner.
+
+## Gate3 G3-3: Source-Bound GT-TTL Proposal
+
+The exact `gate3_g33_calibration_admission_v01` proposal succeeds accepted main
+`d199199a578c078c913a2381f595549175bd9235` with 24 cumulative paths. It preserves
+the reviewed G3-2 producer/history bodies and adds pure signed fixed-point rating,
+explicit-time decay and a 64-event deterministic reducer. Mathematical reference
+events remain separate from the one native Sentinel source-bound example.
+
+This source proposal is advisory evidence only. It grants no Root permission,
+effect ownership, durable accepted history or current-task reuse. G3-4 EMA,
+independent persistent-history resolution, CAS/corrections, current DRS descent,
+CP-RANK and CP-TIME remain not started. Gate 3 remains open; owner landing,
+commit and push are not authorized. This section takes current Gate3 navigation
+precedence while all prior authority laws and historical admission routes remain.
+
+## Gate3 G3-2: Native Observation Proposal
+
+The exact `gate3_g32_observation_admission_v01` proposal succeeds d199199a578c078c913a2381f595549175bd9235
+with twenty cumulative paths. It extends the reviewed, uncommitted G31 proposal
+with one actual controlled Sentinel Work/Root observation and fresh Root-reviewed
+local DRS genesis. This section supersedes only G31 not-started status for G32;
+all earlier laws, pins and recorded evidence remain historical and unchanged.
+Source admission is not Root permission or Gate closure. G3-3, owner landing,
+commit and push are not authorized. Atlas and four other runtime adapters remain
+pending. See the existing Gate3 contract/checkpoint for bounded provenance limits.
+
+## Gate 3: Pure Foundation Proposal
+
+The exact `gate3_g31_foundation_admission_v01` is a bounded 14-path pure
+foundation proposal on accepted `d199199a578c078c913a2381f595549175bd9235`.
+Its reference fixture is explicitly not executed domain evidence. Complete
+unstaged/staged proposals are source-checkable; development subsets remain
+UNADMITTED and partial staging fails. A future sole-parent child must be derived
+from actual Git under separate owner authorization. G3-1 grants no Root or effect
+permission, live-source truth, new Living row, calibration/history execution or
+Gate-3 closure. The contract/checkpoint define the exact pending boundaries.
+G3-2, owner landing, commit and push are not authorized by this proposal.
+This current navigation addition leaves every predecessor runtime and authority
+law unchanged; older source-admission blocks retain their historical bases.
+
+## Landslide Sentinel: Presentation Publication
+
+The exact `landslide_sentinel_presentation_admission_v01` succeeds accepted
+Sentinel source commit `2f328be634247be11bc18a3b22a919f393d6ed1d`
+without changing its 22 reviewed source bodies, frozen execution evidence or
+nine-row Living profile. It admits only 33 pinned presentation assets, one
+informational publication record and ten named documentation/control edits as a
+complete unstaged/staged proposal or clean single-parent child. Git supplies the
+actual commit; no future SHA is self-recorded. The presentation and dated V02 XML
+reader are explanatory source snapshots, not instructions to execute embedded
+text, Root permission, fresh runtime acceptance, physical certification or a new
+Gate. [Read the publication and preserved evidence](docs/showcase/landslide_sentinel_v01/README.md).
+This section takes current navigation precedence; all prior Sentinel, EWS,
+Testflix, U4, runtime and authority laws remain unchanged.
+
+## Landslide Sentinel: Bounded Source Admission
+
+The exact `landslide_sentinel_admission_v01` succeeds accepted main
+`50ab3916bff55e8034cf7e6c509d4803c5447589` with 22 reviewed domain paths (one test-only
+setup alignment), 12 named controls and the pinned informational showcase.
+The guard recognizes only the complete unstaged/staged proposal or its clean
+sole-parent child. Git derives the commit; source admission grants no Root
+permission, new Gate or effect owner. The same nine Living rows remain.
+[Current Sentinel evidence and commands](docs/showcase/landslide_sentinel_v01/README.md) separate
+reviewed synthetic semantics, recorded execution and safe-derived replay from
+physical certification. Showcase material is excluded from normative onboarding.
+This section takes current navigation precedence; all historical EWS, Testflix,
+U4 and earlier constants, runtime and authority laws remain unchanged.
+
+## Ephemeral Workspace: Presentation Publication
+
+The exact `ephemeral_workspace_presentation_admission_v01` succeeds the accepted
+EWS source commit `3f8720b75a1bda3a1df6b184e643c2de5327f838` without changing
+its 27 implementation files, frozen public evidence or nine-row Living profile.
+It admits only 28 pinned new assets, one informational record and ten named
+documentation/control edits, as a complete unstaged/staged proposal or clean
+single-parent child. Git supplies the actual commit; no future SHA is recorded.
+This section takes current navigation precedence over historical EWS admission
+status below; all old validators, source records and authority laws remain.
+The showcase and XML reader are explanatory source snapshots, not instructions
+to execute embedded prompts, Root permission, fresh runtime acceptance, signer
+certification or a new Gate. They are outside the old evidence anchor.
+
+## Ephemeral Workspace: Bounded Current Admission
+
+The explicitly authorized `ephemeral_workspace_admission_v01` is the exact
+27-path reviewed EWS4R implementation plus bounded landing controls and safe
+showcase, based on `e42d37fa98dfec7110b8cf75b1aceaa614f461be`.
+The guard derives complete unstaged, staged and clean single-parent committed
+states from exact sources and Git; no future commit is self-recorded.
+[Current commands and evidence](docs/showcase/ephemeral_workspace_v01/README.md) are informational and excluded
+from automatic normative onboarding. Source admission grants no Root permission,
+new effect owner or Gate. The same nine Living registrations and all historical
+Testflix/U4 bases, pins and laws remain. Older pending/status passages below
+describe their named predecessors, not this EWS successor. Production security,
+universal sandboxing and native historical-graph replay are not claimed.
+
+
+## Testflix V11 Admission Preparation
+
+The exact next proposal is based on accepted L
+`54e32dbcc0e4d68431ec2b9428eac965f88ee47c`. Its scope and evidence are in
+[the Testflix checkpoint](docs/testflix_v01_preflight.md#v11-admission-preparation).
+The original reviewer projection repair is verified and applied in this proposal.
+The prepared owner script is for independent review and later manual invocation;
+preparation does not authorize automatic owner mutation or award acceptance.
+The 48-path H-to-U4 text below remains historical provenance, not the next
+proposal's path inventory. Root, currentness and exclusive Firewall laws remain.
+
+## Bounded Common Action and Local Reuse: Current Admission Proposal
+
+The [implementation checkpoint](docs/common_action_and_dynamic_composition_checkpoint_v01.md) describes native nonpayment and legacy
+payment lifecycle, actual typed work consumption, same-task continuation,
+retained results and finite pure-capability admission/local DRS reuse.
+The exact successor has one parent H=`20d16af823ed4af94dc0a342c731aef81e8a23de`
+and exactly 48 named paths (33 modifications, 15 additions). No future commit
+hash is self-recorded. Owner landing and independent final acceptance are PENDING.
+
+The common-action contract sections 1 and 14 and the old Contract Only block
+below describe H, not the current candidate's implementation status. This
+checkpoint, lock and overlay supersede only those historical status fields;
+all Root, currentness, lifecycle, typed admission and retained-work laws remain.
+Historical D/E accepted/pending statements retain their named source provenance.
+Gate2 C is not retroactively extended to arbitrary tasks. No new Gate is created.
+
+Living validates one effective inventory: frozen Gate1 base plus exactly nine
+bounded current seams. Registration is evidence, never Root permission or a
+second effect handle; Effect Firewall remains the exclusive bounded owner.
+Controlled proposals and mock receipts are not an arbitrary free-text planner
+or OS monitoring. Pure code is finite pure-i32-closed-v01/Wasmtime48/macOS arm64,
+256 u8 trials per admission, no WASI/world I/O; local DRS is not federation.
+Public release and production/security certification remain NOT_CLAIMED.
+
+<!-- BEGIN U1 CONTRACT SUCCESSOR -->
+## Common Action and Composition: Contract Only
+
+Accepted Gate2/RC2 basis is `19de35c3b77725c4763b33cbac5c42118fd3c382`. Its evidence and runtime
+remain unchanged. The following scoped successor is a contract proposal,
+not implementation acceptance or permission to edit runtime.
+
+Read the [common action and composition contract](docs/common_action_and_dynamic_composition_contract_v01.md) for exact native/legacy
+carriers, actual invocation, current-state ordering, composition and
+mandatory later continuation/admission/DRS work. U0 proves CONTROL into
+a SCRATCH_PROTOTYPE only, not business computation or action authority.
+
+U1_RUNTIME_IMPLEMENTATION=NOT_IMPLEMENTED
+U1_U2_U3_ACCEPTANCE=NOT_CLAIMED
+U1_IMPLEMENTATION_AUTHORIZED=false
+
+The guard recognizes only the exact nine-path entirely unstaged or
+entirely staged contract candidate and one clean immediate child of C.
+Partial staging and unproved future implementation phases are rejected.
+Owner review/contract acceptance and a later bounded source-edit prompt
+remain separate. Historical Gate2 current-count fields keep their C
+provenance; new governance node inventories belong to the proposal receipt.
+No executable seam, active schema, new acceptance claim or future Gate is
+created. Existing named-gate annex classification is reused only for this
+bounded planning scope; U1 is not a new architectural Gate.
+<!-- END U1 CONTRACT SUCCESSOR -->
+
+## Whole Gate 2: Current Closure Transition
+
+The current implementation is `90cb073695bf8c5f5a2673c7aba84b6615719b37`,
+sole child of maintenance `5d6fd6d98f3412a1d999bfe84101cabe39301573`.
+The [Whole Gate 2 checkpoint](docs/consolidated_gate2_gauntlet_g2_f_checkpoint_v01.md)
+explains layers A-F, the eleven-stage thread, seven operational laws, exact
+24-node evidence and limitations. It is the current reader and successor route.
+Safe informational reuse saves work; action-like/high-risk requests require
+independent Root review and bounded deeper work. Changed dependencies revoke
+current eligibility and cause complete/minimal selective recomputation, while
+unaffected bytes and old replay history remain intact. F invokes no real adapter.
+
+`G2F_STATUS=CLOSED_PASS` and `GATE2_STATUS=CLOSED_PASS` are intended accepted
+closure records, effective `ONLY_EXACT_OWNER_COMMITTED_FOURTEEN_PATH_SUCCESSOR`.
+The guard independently derives `G2F_CLOSURE_CANDIDATE` on the exact dirty
+proposal, or `G2F_CLOSED_PASS_COMMITTED` only on its exact one-parent owner
+closure child. Proposal preparation alone does not close either gate. Audit
+files are evidence-only and excluded from automatic onboarding. Root remains
+the sole local final and commit authority; no SuperRoot or permission transfer.
+
+The bounded internal name "Hedgehog OS Operational Reference Kernel RC2" is
+available only after actual accepted owner closure. Public release, production
+readiness/security certification, real integrations/effects and future Gates
+remain NOT_CLAIMED. Typed zero-operation counters are not OS monitoring.
+Earlier G2-E and Class-A/landing status passages below are explicitly historical
+snapshots, superseded as current status by this section; their runtime and
+architecture laws remain binding. The immutable G2F preflight's sections 6-9
+still define the scenario, 24 tests and acceptance/closure boundaries. No
+source repair, Gate3/4 decision, new demo or future implementation is authorized.
+
+This is the compact operational entrypoint for coding assistants. It is
+subordinate to the [Current Architecture Lock](specs/current_architecture_lock_v01.md)
+and applies only to current, explicitly authorized work.
+
+## Source-of-truth order
+
+1. [Current Architecture Lock](specs/current_architecture_lock_v01.md).
+2. Accepted current Kernel and Gate runtime contracts with their focused tests.
+3. Accepted current Gate planning contracts, addenda, and successor
+   checkpoints, limited to their named scope.
+4. Current release-status and claim/evidence surfaces.
+5. This operational file.
+6. [README](README.md) as the public engineering view.
+
+The machine-readable classification is the
+[Document Authority Index](specs/document_authority_index_v01.json). Historical,
+reference-only, and audit-only material is never current implementation law.
+
+## Canonical runtime
+
+```text
+User / Event
+-> local Root Intake Boundary
+-> Orchestrator route proposal
+-> WorldState / TemporalQuery / Local DRS retrieval
+-> CandidateVectors
+-> AVF / HardMask / SoftMask
+-> Root-controlled route acceptance
+-> BSEP creation and validation
+-> side-specific BSEP projections
+-> Semantic Architect proposal
+-> local validation
+-> runtime-owned RuntimeExecutionTopology
+-> bounded actors / executors / child cells
+-> ResultProposal / receipts / boundary snapshots
+-> Post V&V
+-> terminal GT advisory
+-> independent local Root decision(s)
+-> optional Root-created ActionCommitPacket
+-> Effect Firewall / bounded Corridor
+-> EvidenceReceipt
+-> transaction ledger / crypto seal / offline replay
+-> local DRS outcome writeback
+```
+
+Shortcuts may reduce work only through accepted current route, time, reuse,
+policy, validation, and Root gates. They do not change the authority topology.
+
+## Current authority law
+
+- Root is the sole local final and commit authority.
+- Orchestrator proposes bounded routes and cannot accept its own proposal.
+- BSEP is the canonical semantic membrane.
+- Semantic Architect proposes semantic structure and validation obligations.
+- RuntimeExecutionTopology is materialized and owned locally by runtime; it is
+  not authority.
+- Actors, executors, children, Post V&V, and GT return proposals or evidence.
+- LLM/provider output is untrusted evidence or proposal only.
+- DRS, AVF, GT, receipts, ledger, crypto, and replay are not Root.
+- ClientRoot, AirlineRoot, and BankRoot decide independently. No SuperRoot or
+  cross-Root authority/permission transfer exists.
+- A consequential effect requires a current Root-created scoped
+  ActionCommitPacket and the exclusive Effect Firewall / bounded Corridor.
+- Memory may inform a new decision but cannot preserve authority, permission,
+  finality, or proof of action.
+
+## Current Gate status and G2-F handoff
+
+Historical G2-E checkpoint snapshot, retained for provenance only. The current
+Whole Gate 2 transition above supersedes this subsection's old F handoff.
+
+At committed implementation/control-plane basis HEAD
+`6079ddcfe59f582936e7b13af2753a6533117970`:
+
+- Gate 1 and G2-A, G2-B, G2-C, and G2-D are `CLOSED_PASS`.
+- G2-E3 is `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS_ON_CORRECTED_G2D`.
+- G2-E4, G2-E5, and G2-E6 are
+  `IMPLEMENTED_COMMITTED_ACCEPTANCE_PASS`.
+- G2-E is `CLOSED_PASS` under the current
+  [G2-E checkpoint](docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md).
+- G2-F is `NEXT_NOT_STARTED_NOT_AUTHORIZED`; G2-F implementation authorization
+  is `false`.
+- Gate 2 is `NOT_CLOSED`.
+- Public release, RC2, production readiness, and production security
+  certification are `NOT_CLAIMED`; real-world effects remain zero.
+
+The exact committed chain is E5 `f582701208b603463a03d404aa841c302a8221d6`,
+Class-A reconciliation `7f3c7138b553096252fefee7930f89100d835fcd`,
+Class-B integration `4c133da11b8bcbd642e1aaa3413ce0a9c357731d`,
+and post-successor control-plane repair
+`6079ddcfe59f582936e7b13af2753a6533117970`. The Living v1.6 and Kernel
+Conformance v0.7 runtime bytes are accepted and frozen. The next bounded
+handoff is G2-F preparation only; do not begin G2-F implementation without a
+separate explicit owner authorization.
+
+## Worktree discipline
+
+- Confirm the repository path, HEAD, and full porcelain status before editing.
+- Follow the exact path allowlist in the current task. Treat every unlisted
+  runtime, schema, contract, demo, test, evidence, and historical path as
+  read-only.
+- Preserve unrelated user changes. Do not use destructive Git operations.
+- Do not checkout, reset, clean, stash, commit, push, or contact a provider or
+  network service unless the owner explicitly authorizes that exact action.
+- Do not install dependencies to complete a bounded local task.
+- A planning document, checkpoint, audit, status record, test fixture, model
+  output, or prior success cannot self-authorize implementation.
+- Never fabricate a missing external roadmap, evidence object, or candidate
+  byte stream.
+
+## Test and commit discipline
+
+- Use the smallest deterministic static and focused validation proportional to
+  the change. Do not silently substitute a full suite for a scoped task.
+- Keep provider, network, connector, credential, and real-effect lanes off
+  unless an explicit task requires and authorizes them.
+- Report exact commands and results, including skipped or unavailable checks.
+- `git diff --check` and an exact changed-path review are required before handoff.
+- Do not commit unless the current owner request explicitly asks for a commit.
+- The current offline operator commands are documented in the
+  [One-Command Gauntlet](release/one_command_gauntlet.md). Do not run them when
+  a task restricts validation to narrower commands.
+
+## Bounded context and onboarding
+
+The [Successor Context Manifest](release/successor_context_manifest_v01.json)
+is `SUCCESSOR_ONBOARDING_READY`; its `onboarding_ready` value is `true` and its
+blocking-repair list is empty. S1 document-authority succession, S2 vocabulary
+repair, and S3 active-schema and retired-subsystem isolation are closed. The
+bounded successor context is architecture-clean and ready for guarded use.
+
+The exact committed G2-E successor and its current checkpoint are permanent
+bounded onboarding inputs. The independent G2-E audit remains explicit-request
+evidence and `docs/audit_reports/**` remains excluded from automatic onboarding.
+Retired schemas and subsystem files are historical byte evidence only: no
+compatibility, migration, alias, or revival path exists. G2-E closure does not
+authorize G2-F, Gate-2 closure, public release, RC2, production readiness, or
+production security certification.
+
+Within that scope, the manifest is an allowlist, not a suggestion to load the
+whole repository. Expand context only for a named current contract, focused
+test, or explicit evidence question. Excluded historical material is available
+only by explicit Git/file request and remains non-authoritative.
+
+Run the onboarding guard after control-plane changes:
+
+```bash
+python3 tools/check_active_architecture_authority_v01.py
+```
+
+## Current navigation
+
+- Architecture: [Current Architecture Lock](specs/current_architecture_lock_v01.md)
+- Authority classification: [Document Authority Index](specs/document_authority_index_v01.json)
+- Repository Gate continuation roadmap: [accepted G2-E preflight](docs/continuous_delta_runtime_v0_1_g2_e_preflight_v01.md)
+- Current G2-E contract: [post-acceptance addendum](docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md)
+- Current G2-E closure: [G2-E checkpoint](docs/continuous_delta_runtime_v0_1_g2_e_checkpoint_v01.md)
+- Independent G2-E closure evidence (explicit request only): `docs/audit_reports/auditor_continuous_delta_runtime_g2_e_v01.log`
+- Current lifecycle metadata: [status overlay](release/current_status_overlay_v01.json)
+- Claim navigation: [claim-to-evidence index](release/claim_to_evidence_index.md)
+- Release spine: [engineering notes](release/current_release_notes.md),
+  [limitations](release/current_limitations.md),
+  [current completion/profile index](release/completion_manifest.json), and
+  [current seam/profile index](release/integration_seam_index.json)
+- Operator entrypoint: [deterministic gauntlet commands](release/one_command_gauntlet.md)
+
+The full owner-supplied Gate roadmap is not tracked in this worktree. The
+accepted G2-E preflight is the repository-local Gate sequence and continuation
+source; absent companion text must not be reconstructed.
+# G34: Bounded Durable History Proposal
+
+The exact external G34 proposal extends the repaired G33R source proposal on
+d199199a578c078c913a2381f595549175bd9235 with 32 cumulative paths. Its separate
+source guard preserves all earlier routes and admits only the complete exact
+unstaged/staged proposal or structurally verified immediate child. It grants no
+Root permission or Gate closure. See docs/gate3_outcome_feedback_checkpoint_v01.md
+for current navigation. G35, Atlas, owner landing, commit and push are not authorized.
+Prior sections retain their historical source and authority meaning.

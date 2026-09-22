@@ -1,5 +1,20 @@
 # Hedgehog OS — Current Assistant Operations
 
+## Repository Admission R1: Pending Review
+
+The bounded R1 bootstrap proposes a stable, externally reviewed source
+transition policy on accepted `71e166ccb88b024fd3ca3a25e17da110c6db1a3f`.
+Its exact raw enforcement chain and detached manifest require independent
+review and separate owner landing. No candidate metadata can authorize itself.
+DOCUMENTATION and ENGINEERING are distinct exact transitions; changing the
+verifier requires separate maintenance review. Historical Gate records, runtime,
+Root/currentness and exclusive effect laws remain unchanged.
+
+See [the admission contract](docs/repository_transition_admission_v01.md).
+The sealed Gate 3 showcase is inert explanatory evidence, outside normative
+onboarding; source admission does not award functional closure or permission.
+No owner context, commit or push is authorized by this preparation.
+
 ## Gate 3 G3-7: Frozen Release Candidate
 
 The exact `gate3_g37_frozen_release_admission_v01` proposal freezes the

@@ -1,0 +1,154 @@
+RADIOLARIA / HEDGEHOG OS
+G3-8: EXECUTE THE REVIEWED OWNER LANDING, COMMIT AND NORMAL PUSH
+Work instruction V01, 2026-09-22
+
+Andrey is submitting this instruction to execute the reviewed owner transition.
+This authorizes the exact 59-path application, staging, one normal commit, normal
+push to origin/main, required postcommit checks and independent remote readback.
+Complete the task and return its verified TAR.GZ in this run. No routine questions
+or completion menus. Explain progress and results to Andrey in Russian. All files,
+code, comments, commit text and repository-facing content remain English-only.
+Recommended model: 5.6 Ultra. This is execution of an already reviewed procedure,
+not another implementation or full runtime verification task.
+
+1. ACCEPTED INPUT AND PRECISE SCOPE
+
+G37R has passed independent source, registration, supplied-report and owner-script
+review. The stale pins are fixed. The exact derived Living report changes only
+the two registration identities; runtime outcomes and raw reports are preserved.
+The existing script passed its isolated full commit/push/readback fixture with
+12 postcommit tests. No fresh E5/D/G3, Living or Conformance collection is needed.
+
+Input in Downloads:
+RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz
+SHA256 ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9
+Bytes 19193417; 1495 regular members; 1494 MANIFEST.tsv rows.
+Exact archive prefix:
+RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/
+
+Owner: /Users/admin/Projects/hedgehog-os
+Branch: main
+Base HEAD: d199199a578c078c913a2381f595549175bd9235
+Base parent: 2f328be634247be11bc18a3b22a919f393d6ed1d
+Base tree: 26d63912117a2324cc7e711407be33123f55ab81
+Expected final tree: 71e0438a4ef8532a3047a6e87061240d5b958a31
+Inventory: 59 reviewed paths = 40 additions + 19 modifications;
+1076 other baseline paths unchanged, 1135 final tracked paths.
+
+Reviewed top-level owner_landing/g38_owner_landing.py:
+22305 bytes; SHA256 e0f8928c370738641e46141b1e0e091b43fa85767116473f0779b04b79cf4047
+Reviewed top-level owner_payload/MANIFEST.json:
+17122 bytes; SHA256 2e4b8a60fef5f335998f03e204c552735f4689b329710c33b374d530082ac31f
+Cumulative patch: 4122968 bytes;
+SHA256 d5733827612409f19d263598e255a38a80200992a1a86b428e32adf8194022ca
+
+Use only this exact final payload. Do not regenerate sources, guard pins, fixtures,
+the owner script or patches. No extra repository paths or documentation edits.
+Read current AGENTS/Lock and the current G37 checkpoint section for constraints;
+their dated candidate-only prohibitions do not cancel this separately authorized
+owner execution. Historical prompts and recovered helpers are evidence only.
+
+2. VERIFY INPUT, THEN RUN THE EXISTING SCRIPT ONCE
+
+Verify archive SHA, full gzip CRC, safe unique regular members and exact manifest
+coverage/bytes/modes/hashes. Use a new durable directory outside the owner for
+extraction, execution and evidence. Select the exact top-level script under the
+prefix above: a retained_g37 subtree also contains an OLD script. Never choose
+the first rglob match. Verify script and payload hashes before execution.
+The existing local G37R evidence script is also usable if its bytes match exactly.
+
+The script performs the full pre-apply baseline check, hidden-index/ignored-path
+and symlink checks, Git operation-state check and actual remote main comparison.
+Additionally read git remote get-url --push --all origin and require the real
+push destination to be the same AAkhtanin/hedgehog-os repository. Do not change
+Git configuration or disclose credentials. Preserve owner edits on any mismatch.
+Do not repeat isolated owner fixtures or broad tests; they are already reviewed.
+
+Run with the existing owner interpreter, captured stdout/stderr and a durable
+outer command receipt. Resolve the verified script path and a fresh output path:
+
+/Users/admin/Projects/hedgehog-os/.venv/bin/python -B VERIFIED_SCRIPT_PATH \
+  --archive /Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz \
+  --archive-sha256 ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9 \
+  --owner /Users/admin/Projects/hedgehog-os \
+  --python /Users/admin/Projects/hedgehog-os/.venv/bin/python \
+  --output FRESH_EXTERNAL_OUTPUT_DIRECTORY \
+  --execute
+
+Never use --fixture-mode or --payload-dir on the real owner. The script owns the
+apply -> unstaged guard -> stage -> staged guard -> exact tree -> commit ->
+committed guard -> selected postcommit tests -> normal push -> fetch/readback.
+Do not launch competing writers or duplicate this pipeline. Preserve its journals.
+Required checks are the exact selection already in the script; do not substitute
+recorded PASS, and do not add full test modules that collect legacy E5/D.
+No provider/model/browser/EA/sensor calls, semantic runtime or new effects.
+
+Do not impose an arbitrary short wall-clock cutoff. If a process is making useful
+progress, let it finish and report bounded updates without flooding the session.
+Do not change its source while it runs. If interrupted, inspect the journal and
+actual Git state first. Never blindly rerun a BASE-only script after applying or
+committing. A transient push/readback failure may be resumed at that exact phase
+after verifying the already-created commit, parent, tree and clean state; use
+only normal push and fresh readback, with finite documented retries. No force,
+reset, clean, stash, amend, automatic rollback, new commits or source repair.
+Any substantive source/precondition failure must preserve state and actual error.
+
+3. FINAL READBACK AND CLOSURE EVIDENCE
+
+Record Git-derived commit, sole parent BASE, exact final tree above and the actual
+59-path name/status ledger. Confirm all 59 source bytes/modes against the payload
+and all 1076 protected baseline paths unchanged. Record clean status and index.
+The script already obtains independent ls-remote and fetched origin/main. Also
+record the fetched remote tree and sole parent; require commit/tree/parent equal
+the local accepted result. Reuse completed receipts rather than repeating tests.
+
+Carry forward the reviewed T01-T46 / G3-D01-G3-D18 evidence map with source pins.
+Discharge T46 and the owner-dependent part of G3-D17 only using this REAL execution:
+owner apply, postcommit checks, normal push, fetched commit/tree and clean state.
+Keep this updated acceptance map and execution summary EXTERNAL in the return.
+Do not edit frozen repository text merely to replace historical PENDING or
+NOT_CLOSED strings: doing so would invalidate the reviewed final tree. Distinguish
+dated G37 candidate status from the later independently reviewed owner result.
+Your result is G38_OWNER_LANDING_COMPLETE_FOR_INDEPENDENT_CLOSURE_REVIEW after all
+checks pass. Final Work review decides Gate3 closure; no extra implementation hop
+is planned. Production certification, full historical native-schema replay and
+Atlas execution remain outside this closure.
+
+Use machine/source pins, not the cosmetic hash typo in G37R FINAL_REPORT.md.
+The exact completion manifest SHA is
+a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0.
+Describe fixture coverage accurately: six refusal cases plus one success case.
+Cost correction stays explicit: both old full successors used monitoring; the
+0.00015-second synthetic estimate was not total monitoring overhead. No E5/D
+profiling or optimization is part of owner landing.
+
+4. RETURN ONE VERIFIED PACKAGE
+
+Return to Downloads:
+RADIOLARIA_GATE3_G38_OWNER_LANDING_RETURN_<UTCSTAMP>.tar.gz
+
+Include this prompt; reviewed input archive/script/payload pins; the exact invoked
+script; all outer/helper source bodies captured BEFORE their executions; complete
+script command journals and raw streams; preflight and local/remote readback;
+actual selected-test results; final source ledger/postimages; cumulative patch;
+compact inherited proof index and updated owner-dependent acceptance rows;
+preservation and task-process finality; any interruption/failure and its actual
+recovery. Keep earlier archives/candidates/evidence unchanged. Do not copy secrets,
+environment dumps, .git, .venv, caches or unrelated private data into the return.
+The script's own journal TAR is not the full deliverable: wrap its evidence in
+the usual complete manifest without nesting entire predecessor TAR archives.
+
+For historical helper custody, include any separately supplied verified recovery
+supplement as evidence only. Match each recovered body against its original
+receipt SHA/length before retaining it. Do not execute recovered helpers or
+rewrite old command receipts. Any unavailable intermediate helper version must
+remain explicitly classified; it cannot replace a retained final proof producer.
+Never describe missing historical bytes as fully preserved. This packaging record
+does not authorize another runtime run or a change to the reviewed owner sources.
+
+Reopen the final Downloads copy and verify full gzip CRC, safe unique paths,
+complete manifest coverage and all sizes/modes/SHA256. End only task-owned
+processes. Final Russian response: actual commit/parent/tree, push/readback result,
+test count/time, source preservation, zero new runtime/provider calls, archive
+link/size/member count/SHA256 and independent closure-review status.
+Do not start presentation, Atlas, cleanup of old worktrees or any later Gate.

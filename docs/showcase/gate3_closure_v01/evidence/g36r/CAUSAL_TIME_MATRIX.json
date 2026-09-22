@@ -1,0 +1,138 @@
+[
+  {
+    "actual_native_clock": {
+      "evaluation_context_id": "supplier:dispatch",
+      "evaluation_time": 1790061829,
+      "evaluation_time_source": "supplier.controlled_utc",
+      "source_revision": 0
+    },
+    "case": "ADV-1",
+    "delivery_measurement": {
+      "boundary_return_ns": "1790061825779557000",
+      "boundary_started_ns": "1790061825723297000",
+      "captured_ns": "1790061825780071000",
+      "elapsed_us": 57072,
+      "sequence": 0,
+      "started_ns": "1790061825722999000"
+    },
+    "new_acquisition": false,
+    "original_live_origin": true,
+    "original_observed_ns": "1790028807994707000",
+    "original_prospective_claim": {
+      "claim_id": "075ab8b7136a0ff4b59d8183f495807fce33331a38a994a06566c7733daa9cb2",
+      "committed_ns": "1790028802931294000",
+      "expected_fp": null,
+      "profile": "G36_INDEPENDENT_SCOPE_ADVICE_V01",
+      "proposal_sha256": "d09190f22e9606a8983c428993d6a9e45c072ad315d3b51f673d1b83e40253c0",
+      "request_sha256": "e4b49ddbe9c4be412468ec8d3da45923c7e4f609aa5d88871982faa12b6a3e50"
+    },
+    "original_source_sha256": "26eccbdcb4c9b79e0c73e449b22f3e00598a567fbfe966ed98e9e2bf4a7eae3d",
+    "response_id": "-6uxaozSItetvdIP7q7QMA",
+    "response_sha256": "c25f96d273bf1f50c5b94acb6c6cd6b56f52466b34035dcd907557b6d07ef197",
+    "sample_id": "27e6a3ac9d355be7dea4a9a5051381c3489d36ad864caccf55e82244ae9ad88b",
+    "scored_event_time": 1790028807,
+    "update_eligibility": "NO_UPDATE"
+  },
+  {
+    "actual_native_clock": {
+      "evaluation_context_id": "supplier:dispatch",
+      "evaluation_time": 1790061829,
+      "evaluation_time_source": "supplier.controlled_utc",
+      "source_revision": 0
+    },
+    "case": "ADV-2",
+    "delivery_measurement": {
+      "boundary_return_ns": "1790061827870618000",
+      "boundary_started_ns": "1790061827814072000",
+      "captured_ns": "1790061827871011000",
+      "elapsed_us": 57234,
+      "sequence": 1,
+      "started_ns": "1790061827813777000"
+    },
+    "new_acquisition": false,
+    "original_live_origin": true,
+    "original_observed_ns": "1790029057305588000",
+    "original_prospective_claim": {
+      "claim_id": "1d6a48306af8053ed876af4bb0ffd0837640f0565cb367b70726eea43a37aa8f",
+      "committed_ns": "1790029053940397000",
+      "expected_fp": null,
+      "profile": "G36_INDEPENDENT_SCOPE_ADVICE_V01",
+      "proposal_sha256": "b437bdf9a0785003b3ee1d326673528b2ac1d8a15380b1a639e06e6c26a14d02",
+      "request_sha256": "dbe4c1fe84437889c34433c1125dbb3caedcdc82aff55c2a7818c7afd2e9549b"
+    },
+    "original_source_sha256": "77baf8a5db190b13b22e36360ffa3f2a8b9932b65ef68cf6714c139ef67577c5",
+    "response_id": "CayxaqOqDd6JxN8P2s63mAY",
+    "response_sha256": "feb385d3209410186f74f4ee17676a21bdbf5d6f10f368bb8a05bf217e01d3f6",
+    "sample_id": "a2f2b72357896d5567fd663e5f4555d82db900fb641948fb8762df5c4e1d389c",
+    "scored_event_time": 1790029057,
+    "update_eligibility": "NO_UPDATE"
+  },
+  {
+    "actual_native_clock": {
+      "evaluation_context_id": "supplier:dispatch",
+      "evaluation_time": 1790061950,
+      "evaluation_time_source": "supplier.controlled_utc",
+      "source_revision": 3
+    },
+    "case": "ADV-3",
+    "delivery_measurement": {
+      "boundary_return_ns": "1790061950082690000",
+      "boundary_started_ns": "1790061830891632000",
+      "captured_ns": "1790061950091055000",
+      "elapsed_us": 119200334,
+      "sequence": 2,
+      "started_ns": "1790061830891362000"
+    },
+    "new_acquisition": false,
+    "original_live_origin": true,
+    "original_observed_ns": "1790029184254432000",
+    "original_prospective_claim": {
+      "claim_id": "d10fad78742106ae17cc11c4977898a0cb05d056af2be3a157686edb5825db97",
+      "committed_ns": "1790029064867667000",
+      "expected_fp": 1000000000,
+      "profile": "G36_INDEPENDENT_SCOPE_ADVICE_V01",
+      "proposal_sha256": "45bfa2b72982b767d7e6c771b55794e67d5e050591bbc93357176a5295006b46",
+      "request_sha256": "27a7c068831b3e6068c209752a3dfb020245b4ce80a489d253f603419e30e26e"
+    },
+    "original_source_sha256": "97e8fb866d5aed1e72d66a44ff2a7ea1892de0b51e672deca64a7b49ae8b57f8",
+    "response_id": "A62xatHgBcf5xN8Pt-W-mAY",
+    "response_sha256": "1347583716e9eaa978c77394956ddad78a7831c51d8912b0281a9e3e2582b056",
+    "sample_id": "330902547c2d2044b9c1f8d4d27b4d24834a267215cc932d3379ece2630a57d4",
+    "scored_event_time": 1790029184,
+    "update_eligibility": "ELIGIBLE"
+  },
+  {
+    "actual_native_clock": {
+      "evaluation_context_id": "supplier:dispatch",
+      "evaluation_time": 1790062143,
+      "evaluation_time_source": "supplier.controlled_utc",
+      "source_revision": 7
+    },
+    "case": "CONTINUE",
+    "delivery_measurement": {
+      "boundary_return_ns": "1790062144234076000",
+      "boundary_started_ns": "1790062139017138000",
+      "captured_ns": "1790062144258849000",
+      "elapsed_us": 5250144,
+      "sequence": 3,
+      "started_ns": "1790062139008733000"
+    },
+    "new_acquisition": false,
+    "original_live_origin": true,
+    "original_observed_ns": "1790030029300829000",
+    "original_prospective_claim": {
+      "claim_id": "cb9237d972bc820dac03678c7a173e5db3c6b88fa799b14f0121eef7321e6341",
+      "committed_ns": "1790030025968848000",
+      "expected_fp": null,
+      "profile": "G36_INDEPENDENT_SCOPE_ADVICE_V01",
+      "proposal_sha256": "7b5ce50019c8af8f7e1e89095126cfc78a2207b6063f490406cd4e977b45a202",
+      "request_sha256": "7fc00b8f46f5927a1790ef49e42dc2844ff4c6ba5cd0633d8953fbd2eb06ffc1"
+    },
+    "original_source_sha256": "58db78e8e08a2a8a7c46b47781bc7f7474ce0b700d5fa491bf1cbfe051389462",
+    "response_id": "y62xaqHDGdLWxN8P-PmdiQM",
+    "response_sha256": "aa3f4c3b97b92c1f13e34bae91a15cff5f02cd2ae95ec1cc08335a4394d6b018",
+    "sample_id": "395dfe78d2e6b7c3219446ecafadd8916f97148c32a800a8992dd289d59d7ae3",
+    "scored_event_time": 1790030029,
+    "update_eligibility": "NO_UPDATE"
+  }
+]

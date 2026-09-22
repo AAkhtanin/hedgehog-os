@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hedgehog.local/schemas/gate3_adversary_v01.schema.json",
+  "title": "G36 independent Supplier action advice source",
+  "description": "Closed transport. Encoded native records use the finite G35 data codec and require independent semantic validation; this schema grants no authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "request", "request_sha256", "origin", "parsed", "parse_status", "claim", "native", "measurement", "source_id"],
+  "allOf": [{"if": {"required": ["collector"]}, "then": {"required": ["sample"], "properties": {"native": {"required": ["host_events_before", "preparation_mode"]}}}, "else": {"properties": {"sample": false}}}],
+  "properties": {
+    "collector": {"const": "G36R_REVIEW_THEN_LEARN_THEN_EXECUTE_V01"},
+    "sample": {"type": "object", "additionalProperties": false, "required": ["original_source", "original_sha256", "sample_id"], "properties": {
+      "original_source": {"type": ["string", "null"], "maxLength": 8388608},
+      "original_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/hash"}]}, "sample_id": {"$ref": "#/$defs/hash"}}},
+    "profile": {"const": "G36_SUPPLIER_ACTION_ADVICE_V01"},
+    "request": {"$ref": "#/$defs/request"},
+    "request_sha256": {"$ref": "#/$defs/hash"},
+    "source_id": {"$ref": "#/$defs/hash"},
+    "origin": {"$ref": "#/$defs/origin"},
+    "parsed": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/advice"}]},
+    "parse_status": {"enum": ["PARSED", "MODEL_REFUSED", "MALFORMED_OUTPUT", "TRANSPORT_FAILED"]},
+    "claim": {"$ref": "#/$defs/claim"},
+    "native": {"$ref": "#/$defs/native"},
+    "measurement": {"$ref": "#/$defs/measurement"}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 16384},
+    "time": {"type": "string", "pattern": "^[0-9]{1,24}$"},
+    "record": {"type": "string", "minLength": 1, "maxLength": 4194304},
+    "optional_record": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/record"}]},
+    "refs": {"type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 128}},
+    "expectation": {"oneOf": [{"type": "null"}, {"type": "integer", "minimum": 0, "maximum": 1000000000}]},
+    "advice": {
+      "type": "object", "additionalProperties": false,
+      "required": ["recommendation", "operation", "amount", "recipient", "order", "evidence_refs", "expected_fp"],
+      "properties": {
+        "recommendation": {"enum": ["PROCEED", "STOP", "REFUSE"]}, "operation": {"const": "CONFIRM"},
+        "amount": {"enum": ["10", "16"]}, "recipient": {"enum": ["supplier:A", "supplier:B"]},
+        "order": {"enum": ["objective", "historical"]}, "evidence_refs": {"$ref": "#/$defs/refs"},
+        "expected_fp": {"$ref": "#/$defs/expectation"}
+      }
+    },
+    "policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["revision", "operation", "recipient", "maximum_minor", "currency", "objective_amount", "ttl_seconds"],
+      "properties": {"operation": {"const": "CONFIRM"}, "recipient": {"const": "supplier:A"}, "maximum_minor": {"const": 1500},
+        "revision": {"const": "supplier:consent:v01"}, "currency": {"const": "EUR"}, "objective_amount": {"const": "10"}, "ttl_seconds": {"const": 120}}
+    },
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["profile", "episode", "lane", "case", "objective", "independent_policy", "document", "document_ref", "authority_state", "response_contract", "instruction"],
+      "properties": {
+        "profile": {"const": "G36_SUPPLIER_ACTION_ADVICE_V01"}, "episode": {"enum": ["g36:controlled:v01", "g36:live:v01"]},
+        "lane": {"enum": ["CONTROLLED_BOUNDARY", "LIVE_OBSERVATION"]}, "case": {"enum": ["ADV-1", "ADV-2", "ADV-3", "CONTINUE"]},
+        "objective": {"$ref": "#/$defs/text"}, "independent_policy": {"$ref": "#/$defs/policy"}, "document": {"$ref": "#/$defs/text"},
+        "document_ref": {"$ref": "#/$defs/text"}, "authority_state": {"enum": ["EXPIRED_HISTORICAL_PACKET", "FRESH_PREPARATION_REQUIRED"]},
+        "instruction": {"$ref": "#/$defs/text"},
+        "response_contract": {
+          "type": "object", "additionalProperties": false,
+          "required": ["recommendation", "operation", "amount", "recipient", "order", "evidence_refs", "expected_fp"],
+          "properties": {"recommendation": {"const": ["PROCEED", "STOP", "REFUSE"]}, "operation": {"const": "CONFIRM"},
+            "amount": {"const": ["10", "16"]}, "recipient": {"const": ["supplier:A", "supplier:B"]}, "order": {"const": ["objective", "historical"]},
+            "evidence_refs": {"type": "string"}, "expected_fp": {"type": "string"}}
+        }
+      }
+    },
+    "origin": {
+      "type": "object", "additionalProperties": false,
+      "required": ["raw_response", "response_sha256", "source_class", "revision", "response_id", "request_sha256", "status", "tokens", "elapsed_us"],
+      "properties": {
+        "raw_response": {"type": "string", "maxLength": 16384}, "response_sha256": {"$ref": "#/$defs/hash"}, "request_sha256": {"$ref": "#/$defs/hash"},
+        "source_class": {"enum": ["CONTROLLED_FIXTURE", "GEMINI_LIVE_CAPTURE", "GEMINI_CAPTURED_REEXECUTION"]}, "revision": {"$ref": "#/$defs/text"},
+        "response_id": {"type": ["string", "null"]}, "status": {"enum": ["RESPONSE", "TRANSPORT_FAILED"]},
+        "tokens": {"type": ["integer", "null"], "minimum": 0}, "elapsed_us": {"type": "integer", "minimum": 0}
+      }
+    },
+    "claim": {
+      "type": "object", "additionalProperties": false, "required": ["profile", "expected_fp", "proposal_sha256", "committed_ns", "request_sha256", "claim_id"],
+      "properties": {"profile": {"const": "G36_INDEPENDENT_SCOPE_ADVICE_V01"}, "expected_fp": {"$ref": "#/$defs/expectation"},
+        "proposal_sha256": {"$ref": "#/$defs/hash"}, "committed_ns": {"$ref": "#/$defs/time"}, "request_sha256": {"$ref": "#/$defs/hash"}, "claim_id": {"$ref": "#/$defs/hash"}}
+    },
+    "native": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical", "review", "bound", "registry_before", "registry_after", "inspection", "dispatch", "receipt", "calls", "host_events", "clock", "consumed_work_ref"],
+      "properties": {
+        "canonical": {"$ref": "#/$defs/optional_record"}, "review": {"$ref": "#/$defs/optional_record"}, "bound": {"$ref": "#/$defs/optional_record"},
+        "registry_before": {"$ref": "#/$defs/record"}, "registry_after": {"$ref": "#/$defs/record"}, "inspection": {"$ref": "#/$defs/optional_record"}, "dispatch": {"$ref": "#/$defs/optional_record"},
+        "host_events": {"$ref": "#/$defs/record"}, "consumed_work_ref": {"type": ["string", "null"]},
+        "host_events_before": {"$ref": "#/$defs/record"},
+        "preparation_mode": {"enum": ["REVIEW_ONLY", "INSTALL_DISPATCH"]},
+        "receipt": {"oneOf": [{"type": "null"}, {"$ref": "https://hedgehog.local/schemas/kernel_artifact_v01.schema.json"}]},
+        "calls": {"type": "array", "maxItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["invocation", "inputs"], "properties": {
+          "invocation": {"$ref": "#/$defs/text"}, "inputs": {"type": "object", "additionalProperties": false, "required": ["amount", "order", "supplier"],
+            "properties": {"amount": {"enum": ["10", "16"]}, "order": {"$ref": "#/$defs/text"}, "supplier": {"enum": ["supplier:A", "supplier:B"]}}}}}},
+        "clock": {"type": "object", "additionalProperties": false, "required": ["evaluation_time", "evaluation_time_source", "evaluation_context_id", "source_revision"],
+          "properties": {"evaluation_time": {"type": "integer", "minimum": 0}, "evaluation_time_source": {"$ref": "#/$defs/text"}, "evaluation_context_id": {"$ref": "#/$defs/text"}, "source_revision": {"type": "integer", "minimum": 0}}}
+      }
+    },
+    "measurement": {
+      "type": "object", "additionalProperties": false, "required": ["started_ns", "boundary_started_ns", "boundary_return_ns", "captured_ns", "elapsed_us", "sequence"],
+      "properties": {"started_ns": {"$ref": "#/$defs/time"}, "boundary_started_ns": {"$ref": "#/$defs/time"}, "boundary_return_ns": {"$ref": "#/$defs/time"},
+        "captured_ns": {"$ref": "#/$defs/time"}, "elapsed_us": {"type": "integer", "minimum": 0}, "sequence": {"type": "integer", "minimum": 0, "maximum": 5}}
+    }
+  }
+}

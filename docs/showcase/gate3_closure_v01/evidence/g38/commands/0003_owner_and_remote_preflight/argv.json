@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/capture_preflight_v01.py",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--archive",
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz",
+    "--script",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_landing/g38_owner_landing.py",
+    "--payload",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_payload/MANIFEST.json",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/OWNER_PREFLIGHT.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "environment": {
+    "PATH": "/opt/homebrew/Caskroom/codex/0.154.0/codex-path:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Users/admin/.codex/tmp/arg0/codex-arg0VQoagn:/opt/homebrew/Caskroom/codex/0.154.0/codex-path:/Users/admin/Projects/hedgehog-os/.venv/bin:/Users/admin/.vscode/extensions/ms-python.debugpy-2026.6.0-darwin-arm64/bundled/scripts/noConfigScripts"
+  },
+  "label": "owner_and_remote_preflight",
+  "sources": {
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz": {
+      "bytes": 19193417,
+      "sha256": "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_landing/g38_owner_landing.py": {
+      "bytes": 22305,
+      "sha256": "e0f8928c370738641e46141b1e0e091b43fa85767116473f0779b04b79cf4047"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_payload/MANIFEST.json": {
+      "bytes": 17122,
+      "sha256": "2e4b8a60fef5f335998f03e204c552735f4689b329710c33b374d530082ac31f"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/capture_preflight_v01.py": {
+      "bytes": 4477,
+      "sha256": "5b489971f4b3673e6c9858b674a136ab4540906907a4e26a91c28650dfce5285"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/run_command_v01.py": {
+      "bytes": 4421,
+      "sha256": "ad1e5b9c16ef4a363a6b6911564066c772256049d89d5b47c7cfef8ea324d2eb"
+    }
+  }
+}

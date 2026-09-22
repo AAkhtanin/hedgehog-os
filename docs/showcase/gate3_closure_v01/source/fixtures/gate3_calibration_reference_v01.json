@@ -1,0 +1,121 @@
+{
+  "schema_version": "v0.1",
+  "evidence_class": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+  "profile": {
+    "profile_id": "G3_FIXED_POINT_REFERENCE_V01",
+    "Q": 1000000000,
+    "K_fp": 125000000,
+    "base_half_life_seconds": 86400,
+    "half_life_min_seconds": 3600,
+    "half_life_max_seconds": 604800,
+    "maximum_trust_age_seconds": 604800,
+    "warm_sample_count": 3,
+    "maximum_effective_events": 64,
+    "review_threshold_fp": 600000000,
+    "rounding": "SIGNED_RATIONAL_TIES_TO_EVEN_ON_INCREMENT_BEFORE_ADDITION"
+  },
+  "subject_key": {
+    "local_root_scope_id": "root:g33:numerical",
+    "domain_scope_id": "gate3_numerical_reference",
+    "pack_family_id": "NUMERICAL_REFERENCE",
+    "advisory_source_class": "DECLARED_REFERENCE",
+    "advisory_source_revision": "v0.1",
+    "advice_claim_profile_id": "G31_SCOPE_ADVICE_BINARY_V01",
+    "route_family_id": "GT_TTL_REFERENCE",
+    "task_risk_class": "REFERENCE_ONLY",
+    "validation_profile_id": "G33_NUMERICAL_ORACLE_V01",
+    "policy_semantics_version": "v0.1",
+    "history_key_profile_id": "G3_EXACT_SUBJECT_V01"
+  },
+  "advice_window": {
+    "advice_ref": "advice:g33:numerical",
+    "advice_created_at": 1000,
+    "advice_valid_from": 1000,
+    "advice_valid_to": 1000000,
+    "advice_ttl_seconds": 999000
+  },
+  "rounding_cases": [
+    [1, 2, 0],
+    [3, 2, 2],
+    [5, 2, 2],
+    [-1, 2, 0],
+    [-3, 2, -2],
+    [-5, 2, -2]
+  ],
+  "increment_counterexample": {
+    "rating_before_fp": 3,
+    "expected_fp": 4,
+    "observed_result_fp": 0,
+    "rounded_increment": 0,
+    "rating_after_fp": 3,
+    "incorrect_complete_sum_rounding": 2
+  },
+  "negative_then_positive": [
+    {"expected_fp": 500000000, "observed_result_fp": 0, "proposal_assessment": "UNSAFE", "rating_after_fp": 437500000, "half_life_seconds": 20250},
+    {"expected_fp": 437500000, "observed_result_fp": 0, "proposal_assessment": "UNSAFE", "rating_after_fp": 382812500, "half_life_seconds": 19069},
+    {"expected_fp": 382812500, "observed_result_fp": 0, "proposal_assessment": "UNSAFE", "rating_after_fp": 334960938, "half_life_seconds": 18035},
+    {"expected_fp": 334960938, "observed_result_fp": 1000000000, "proposal_assessment": "CORRECT", "rating_after_fp": 418090821, "half_life_seconds": 39662}
+  ],
+  "positive_then_negative": [
+    {"expected_fp": 500000000, "observed_result_fp": 1000000000, "proposal_assessment": "CORRECT", "rating_after_fp": 562500000, "half_life_seconds": 45900},
+    {"expected_fp": 562500000, "observed_result_fp": 1000000000, "proposal_assessment": "CORRECT", "rating_after_fp": 617187500, "half_life_seconds": 48262},
+    {"expected_fp": 617187500, "observed_result_fp": 1000000000, "proposal_assessment": "CORRECT", "rating_after_fp": 665039062, "half_life_seconds": 50330},
+    {"expected_fp": 665039062, "observed_result_fp": 0, "proposal_assessment": "UNSAFE", "rating_after_fp": 581909179, "half_life_seconds": 23369}
+  ],
+  "decay_vectors": [
+    [500000000, 0, 3600, 500000000],
+    [500000000, 1800, 3600, 353553391],
+    [500000000, 3600, 3600, 250000000],
+    [500000000, 7200, 3600, 125000000],
+    [334960938, 18035, 18035, 167480469],
+    [665039062, 50330, 50330, 332519531],
+    [1000000000, 1, 3600, 999807478],
+    [1000000000, 230400, 3600, 0]
+  ],
+  "time_boundaries": {
+    "maximum_age_seconds": 604800,
+    "maximum_age_status": "EXPIRED_NOT_CONSUMABLE",
+    "future_anchor_status": "INVALID_TIME",
+    "not_yet_valid_status": "NOT_YET_VALID",
+    "valid_to_is_exclusive": true,
+    "ttl_end_is_exclusive": true,
+    "threshold_no_extra_review_fp": 600000000,
+    "below_threshold_extra_review_fp": 599999999
+  },
+  "cap_series": {
+    "event_count": 65,
+    "occurrence_format": "occurrence:g33:cap:{index}",
+    "proposal_format": "proposal:g33:cap:{index}",
+    "feedback_seed_format": "g33-cap-feedback-{index}",
+    "purpose": "G31_SCOPE_ADVICE_BINARY_V01",
+    "first_event_time": 2000,
+    "expected_fp": 500000000,
+    "observed_result_fp": 1000000000,
+    "proposal_assessment": "CORRECT",
+    "regret_status": "UNKNOWN",
+    "safety_status": "NOT_VERIFIED_UNSAFE"
+  },
+  "delivery_batch_bounds": {
+    "accepted_sizes": [128, 129, 256],
+    "maximum_inputs": 256,
+    "maximum_effective_events": 64,
+    "refused_size": 257,
+    "audit_policy": "ONE_CHRONOLOGICAL_ROW_PER_DELIVERY"
+  },
+  "seeded_decay_oracle": {
+    "seed": 33032026,
+    "case_count": 256,
+    "rating_range": [0, 1000000000],
+    "age_range": [0, 604799],
+    "half_life_range": [3600, 604800],
+    "precision": 220,
+    "maximum_fixed_point_difference": 1
+  },
+  "limitations": {
+    "runtime_observations": 0,
+    "root_decisions": 0,
+    "persistent_history_writes": 0,
+    "ema_or_prior": "NOT_IMPLEMENTED",
+    "current_consumer_bridge": "G34_PENDING"
+  }
+}

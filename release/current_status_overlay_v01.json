@@ -2641,5 +2641,13 @@
     "real_effects": 0,
     "successor_commit": "DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED",
     "checkpoint": "docs/gate3_outcome_feedback_checkpoint_v01.md"
+  },
+  "repository_transition_admission_v01": {
+    "version": "reviewed_repository_transition_v01",
+    "authority": "SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+    "review_context": "EXTERNAL_OPERATOR_SUPPLIED_NOT_A_SIGNATURE",
+    "bootstrap": "PENDING_INDEPENDENT_REVIEW_AND_SEPARATE_OWNER_LANDING",
+    "contract": "docs/repository_transition_admission_v01.md",
+    "historical_runtime_and_registration": "PRESERVED"
   }
 }

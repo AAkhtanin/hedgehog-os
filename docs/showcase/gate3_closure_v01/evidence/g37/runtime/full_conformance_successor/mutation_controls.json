@@ -1,0 +1,20 @@
+{
+  "bad_collection_count": [
+    "g36_conformance_binding"
+  ],
+  "bad_consumer_link": [
+    "g36_conformance_binding"
+  ],
+  "bad_legacy_report": [
+    "conformance_status_mismatch",
+    "conformance_identity_mismatch"
+  ],
+  "coherent_bad_report": [
+    "g36_conformance_supplied_invalid"
+  ],
+  "coherent_bad_source": [
+    "g36_conformance_supplied_invalid"
+  ],
+  "exact_neighbor": [],
+  "original_after_controls": []
+}

@@ -1,0 +1,25 @@
+{
+  "base": "d199199a578c078c913a2381f595549175bd9235",
+  "base_parent": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+  "base_tree": "26d63912117a2324cc7e711407be33123f55ab81",
+  "commit": "71e166ccb88b024fd3ca3a25e17da110c6db1a3f",
+  "final_tree": "71e0438a4ef8532a3047a6e87061240d5b958a31",
+  "input_archive": {
+    "bytes": 19193417,
+    "sha256": "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9"
+  },
+  "owner_script": {
+    "bytes": 22305,
+    "sha256": "e0f8928c370738641e46141b1e0e091b43fa85767116473f0779b04b79cf4047"
+  },
+  "payload_manifest": {
+    "bytes": 17122,
+    "sha256": "2e4b8a60fef5f335998f03e204c552735f4689b329710c33b374d530082ac31f"
+  },
+  "cumulative_patch": {
+    "bytes": 4122968,
+    "sha256": "d5733827612409f19d263598e255a38a80200992a1a86b428e32adf8194022ca"
+  },
+  "completion_manifest_sha256": "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0",
+  "integration_seam_index_sha256": "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
+}

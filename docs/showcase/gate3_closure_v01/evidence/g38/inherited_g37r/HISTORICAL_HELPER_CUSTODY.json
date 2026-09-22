@@ -1,0 +1,78 @@
+{
+  "execution_count": 0,
+  "status": "VERIFIED_NOT_EXECUTED",
+  "versions": {
+    "3d026e6f5050b04522895221e20bf07930694f22a2cd902d250813f2c9c40073": {
+      "bytes": 12892,
+      "commands": [
+        "0001_current_guard",
+        "0002_harness_compile",
+        "0003_full_living_successor",
+        "0004_living_failure_diagnosis",
+        "0005_living_cost_assessment",
+        "0006_living_metadata_repair_control"
+      ],
+      "helper": "full_successor_report.py",
+      "recovered_path": "recovered_helpers/full_successor_report.original_failed.py",
+      "stored_path": "historical_helpers/3d026e6f5050b04522895221e20bf07930694f22a2cd902d250813f2c9c40073.py"
+    },
+    "49dea8e25ecc69e1f60ff3b0c03e14f7463d603fcc386741fd1754ccfac09d1d": {
+      "bytes": 16574,
+      "commands": [
+        "0023_final_preservation_repair_01"
+      ],
+      "helper": "final_preservation.py",
+      "recovered_path": "recovered_helpers/final_preservation.repair01_failed.py",
+      "stored_path": "historical_helpers/49dea8e25ecc69e1f60ff3b0c03e14f7463d603fcc386741fd1754ccfac09d1d.py"
+    },
+    "555941030766e15cc10a180606af5fdc29fd0fa3f2e94add4e8aa62507e97c53": {
+      "bytes": 1627,
+      "commands": [
+        "0001_current_guard",
+        "0002_harness_compile",
+        "0003_full_living_successor",
+        "0004_living_failure_diagnosis",
+        "0005_living_cost_assessment",
+        "0006_living_metadata_repair_control",
+        "0007_full_living_successor_repair_01",
+        "0008_living_source_ledger_label_correction",
+        "0009_living_source_ledger_label_correction",
+        "0010_full_conformance_successor",
+        "0011_runtime_source_freeze",
+        "0012_g37_static_candidate_check",
+        "0013_freeze_g37_source_identities",
+        "0014_g37_guard_unstaged"
+      ],
+      "helper": "launch.py",
+      "recovered_path": "recovered_helpers/launch.original.py",
+      "stored_path": "historical_helpers/555941030766e15cc10a180606af5fdc29fd0fa3f2e94add4e8aa62507e97c53.py"
+    },
+    "71c48d2ecd9f49f64ee102adf6d6bff28e0fcc35978d4e629233b2a630f6df76": {
+      "bytes": 14853,
+      "commands": [
+        "0007_full_living_successor_repair_01"
+      ],
+      "helper": "full_successor_report.py",
+      "recovered_path": "recovered_helpers/full_successor_report.living.py",
+      "stored_path": "historical_helpers/71c48d2ecd9f49f64ee102adf6d6bff28e0fcc35978d4e629233b2a630f6df76.py"
+    },
+    "80af9ddf1c99974a611a80cec2220728ce74f320d6c5033fde0adc8f23f2578b": {
+      "bytes": 6640,
+      "commands": [
+        "0020_validate_g38_owner_procedure"
+      ],
+      "helper": "validate_g38_procedure.py",
+      "recovered_path": "recovered_helpers/validate_g38_procedure.failed.py",
+      "stored_path": "historical_helpers/80af9ddf1c99974a611a80cec2220728ce74f320d6c5033fde0adc8f23f2578b.py"
+    },
+    "914b22f07fe1692fe41c9d4faaabb0c221f9a5ec30429bfb625268dc7f218628": {
+      "bytes": 15903,
+      "commands": [
+        "0022_final_preservation"
+      ],
+      "helper": "final_preservation.py",
+      "recovered_path": "recovered_helpers/final_preservation.original_failed.py",
+      "stored_path": "historical_helpers/914b22f07fe1692fe41c9d4faaabb0c221f9a5ec30429bfb625268dc7f218628.py"
+    }
+  }
+}

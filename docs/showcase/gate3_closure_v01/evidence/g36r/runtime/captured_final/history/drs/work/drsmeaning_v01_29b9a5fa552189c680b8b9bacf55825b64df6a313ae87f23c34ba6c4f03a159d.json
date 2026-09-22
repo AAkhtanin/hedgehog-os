@@ -1,0 +1,150 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "history_key": {
+      "advisory_source_revision": "gemini-2.5-flash",
+      "capability_contract_version": "supplier.confirm.v01:v01",
+      "domain_scope_id": "SUPPLIER_WATER_FILTER",
+      "evidence_validation_profile_id": "G36_NATIVE_SCOPE_FACTS_V01",
+      "history_key_profile_id": "G3_TYPED_HISTORY_KEY_V01",
+      "local_root_scope_id": "root:gate3:supplier:bank",
+      "pack_family_id": "DOCUMENT_AND_SOCIAL_ADVERSARY",
+      "policy_semantics_version": "policy:de5c9f7ad31955ff1b8ec3ca025496ce56697f06b000aa04b5f3b45ff15ec6e1",
+      "route_family_id": "SUPPLIER_SCOPE_ADVICE",
+      "task_class_id": "SUPPLIER_ACTION_ADVICE",
+      "task_risk_class": "ACTION_REVIEW"
+    },
+    "kind": "G34_DURABLE_SOURCE_BOUND_HISTORY_V01",
+    "record": {
+      "artifact_pointers": [
+        {
+          "access_policy_id": "g34:history_context_read:v01",
+          "allowed_use_classes": [
+            "OPEN_ONE_ARTIFACT"
+          ],
+          "byte_length": 15683,
+          "content_sha256": "27e95f201a8f15b35fa51ea2994e6b0be87f4c64af02b7169de0f5c8851a9953",
+          "creates_authority": false,
+          "creates_permission": false,
+          "forbidden_use_classes": [],
+          "media_type": "application/json",
+          "object_reference": "g34:payload:7d3398af41d95034a3823b513aa4e004c91965998c8f5ab0a2351b5ab14c7bad",
+          "payload_read_permitted": true,
+          "pointer_id": "drsart_v01:74ddb3c460f0b40d3f328fd52d2996e14fc51ad9c31a3e137b398f9b9ab6bed3",
+          "pointer_version": "v0.1",
+          "sensitivity_class": "INTERNAL",
+          "storage_class": "LOCAL_DOCUMENT",
+          "summary_read_permitted": true
+        }
+      ],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:5658604e9fe7ac5727431ce6e49cd29584627ce16dc3a00968c1d0476fb5df83",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "75f210669d0916d96dc341e50c0b5e860dae0ab636a0533187f7a09724869dd5",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "root:gate3:supplier:bank",
+        "recording_component": "g34:history",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "4a85a6f8a512e58d7cc37b6f52147976813f06b935ace88c7efc8be1d2359b7f",
+        "source_root_decision_id": "9242e6b77840f2577e463b481799cbc941988fb0c6078f09a2983a7e03b61aaf",
+        "source_root_decision_input_id": "1629a489c1ac3d968caeaed16419f489190cf4e7990509c783e8027cf3f31ded"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "f1fb5c5a9de3e005b535ca3d4ca325063644d428304a4ff7825f41cb7265948b",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:29b9a5fa552189c680b8b9bacf55825b64df6a313ae87f23c34ba6c4f03a159d",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "policy:de5c9f7ad31955ff1b8ec3ca025496ce56697f06b000aa04b5f3b45ff15ec6e1",
+      "predecessor_record_id": null,
+      "recording_component": "g34:history",
+      "resonance_reason": "Source-bound evidence only; current Root review is mandatory.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "7d3398af41d95034a3823b513aa4e004c91965998c8f5ab0a2351b5ab14c7bad",
+      "schema_versions": [
+        "G34_DURABLE_SOURCE_BOUND_HISTORY_V01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "SUPPLIER_WATER_FILTER",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "G34_DURABLE_SOURCE_BOUND_HISTORY_V01",
+        "meaning_schema_version": "v01",
+        "namespace": "g34",
+        "semantic_address_id": "drsaddr_v01:f3c0695c36719678ab41796df58e7047956cb71051b2850dc9bc6cdd46af4e3f",
+        "subject_class": "source_bound_history"
+      },
+      "semantic_tags": [
+        "g34_history"
+      ],
+      "source_reference_ids": [
+        "02cf9e465652e54afa3ce002a065e31f1ce6f706d9c4008d29d405bb5a96bdc7",
+        "713a89c531f2fe58244f4e22110d31ae5ca88e14124e1b9bb12427eae7f1ef22",
+        "9b2b1170e7109dc0283b3b9ac30ceff7077f580d27a00cb4f810d4305ccc2614"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1790061953,
+        "et_observed_at": 1790029184,
+        "freshness_policy_id": "g34:bounded_history",
+        "kt_as_of": 1790061953,
+        "pt_created_at": 1790061953,
+        "source_observed_at": 1790061953,
+        "source_reported_at": 1790061953,
+        "system_ingested_at": 1790061953,
+        "system_verified_at": 1790061953,
+        "time_envelope_id": "drstime_v01:97e8564151e599d8869abd422ea82bac3910cdf88ff7857f8a0628ba857aaba4",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 53254,
+        "valid_from": 1790061953,
+        "valid_to": 1790115207
+      }
+    },
+    "root_final_ref": "9242e6b77840f2577e463b481799cbc941988fb0c6078f09a2983a7e03b61aaf",
+    "semantic_keys": [
+      "g34_history"
+    ],
+    "snapshot_id": "7d3398af41d95034a3823b513aa4e004c91965998c8f5ab0a2351b5ab14c7bad",
+    "worldstate_ref": "e26f92205dfc7be5bb462036477daa278de3ffec939c8f893bfd72b248a99f5d"
+  },
+  "domain": "SUPPLIER_WATER_FILTER",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "7d3398af41d95034a3823b513aa4e004c91965998c8f5ab0a2351b5ab14c7bad",
+    "trace_refs": [
+      {
+        "trace_id": "7d3398af41d95034a3823b513aa4e004c91965998c8f5ab0a2351b5ab14c7bad"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:29b9a5fa552189c680b8b9bacf55825b64df6a313ae87f23c34ba6c4f03a159d",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "7d3398af41d95034a3823b513aa4e004c91965998c8f5ab0a2351b5ab14c7bad",
+    "et_observed_at": "2026-09-22T07:25:53+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2026-09-22T07:25:53+00:00",
+    "pt_created_at": "2026-09-22T07:25:53+00:00",
+    "ttl_seconds": 53254,
+    "valid_from": "2026-09-22T07:25:53+00:00",
+    "valid_to": "2026-09-22T22:13:27+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:29b9a5fa552189c680b8b9bacf55825b64df6a313ae87f23c34ba6c4f03a159d"
+    }
+  ],
+  "type": "generic"
+}

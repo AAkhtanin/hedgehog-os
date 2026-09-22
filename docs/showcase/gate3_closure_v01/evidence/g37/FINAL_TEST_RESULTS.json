@@ -1,0 +1,74 @@
+{
+  "gate3_status": "NOT_CLOSED",
+  "owner_operation": "NOT_PERFORMED",
+  "result": "G37_READY_FOR_INDEPENDENT_REVIEW",
+  "results": {
+    "full_conformance": {
+      "command": "0010_full_conformance_successor",
+      "elapsed_seconds": 2212.7700132075697,
+      "provider_calls": 0,
+      "real_effects": 0,
+      "status": "PASS",
+      "successor_report_sha256": "e7983c25d588878f8f535c5037bbddd519672241d6e004361188e3ff2f682b66"
+    },
+    "full_living": {
+      "command": "0007_full_living_successor_repair_01",
+      "elapsed_seconds": 2300.16765008308,
+      "provider_calls": 0,
+      "real_effects": 0,
+      "status": "PASS",
+      "successor_report_sha256": "d84cdd50e918c36f06ea60d0c3d4154760438d7cbcd4cd9124dc9f2745bfdc08"
+    },
+    "focused": {
+      "command": "0018_final_focused",
+      "elapsed_seconds": 245.01034720800817,
+      "passed_phases": 216,
+      "passed_tests": 72,
+      "status": "PASS"
+    },
+    "g37_guard": {
+      "command": "0014_g37_guard_unstaged",
+      "phase": "G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED",
+      "status": "PASS"
+    },
+    "owner_procedure_fixture": {
+      "command": "0021_validate_g38_owner_procedure_repair_01",
+      "dirty_refusal": "PASS",
+      "normal_push_and_readback": "PASS",
+      "postimage_tamper_refusal": "PASS",
+      "status": "PASS",
+      "wrong_archive_hash_refusal": "PASS"
+    },
+    "patch_reconstruction": {
+      "command": "0019_build_and_reconstruct_source_payload",
+      "routes": 2,
+      "status": "BOTH_PATCHES_BYTE_AND_MODE_EXACT",
+      "tree": "9797a0f68624e029d55d490753a26536e7ac3785"
+    },
+    "preservation": {
+      "command": "0024_final_preservation_repair_02",
+      "owner_unchanged": true,
+      "previous_candidate_unchanged": true,
+      "previous_evidence_unchanged": true,
+      "protected_paths": 1076,
+      "status": "PASS"
+    },
+    "pure_replay": {
+      "commands": [
+        "0015_g37_pure_replay_one",
+        "0016_g37_pure_replay_two",
+        "0017_compare_g37_pure_replays"
+      ],
+      "g35_replay_sha256": "f9ca8e48dc61c815e1235afa0c5141aed96128823dd094ae44aef8ecd03ee75d",
+      "processes": 2,
+      "status": "PASS_BYTE_IDENTICAL"
+    }
+  },
+  "retained_failures": {
+    "0003_full_living_successor": "CLOSED_METADATA_INTEGRATION_MISMATCH",
+    "0008_living_source_ledger_label_correction": "HELPER_PERMISSION_FAILURE",
+    "0020_validate_g38_owner_procedure": "SYNTHETIC_ORIGIN_FIXTURE_MISMATCH",
+    "0022_final_preservation": "FILESYSTEM_MODE_VS_GIT_MODE_HELPER_ERROR",
+    "0023_final_preservation_repair_01": "EXPECTED_IDENTITY_FREEZE_SOURCE_CHANGE_NOT_CLASSIFIED"
+  }
+}

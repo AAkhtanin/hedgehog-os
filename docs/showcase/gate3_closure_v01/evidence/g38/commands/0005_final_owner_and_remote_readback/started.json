@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/verify_final_owner_v01.py",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--payload",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_payload",
+    "--journal",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/owner_execution/real_owner_run_01/g38_20260922T142729Z",
+    "--outer-receipt",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/commands/0004_real_owner_landing_commit_push/receipt.json",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_OWNER_READBACK.json",
+    "--ledger",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_SOURCE_LEDGER.json",
+    "--paths",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_CHANGED_PATHS.tsv"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "label": "final_owner_and_remote_readback",
+  "pid": 18226,
+  "started_at": "2026-09-22T14:35:04.583524Z",
+  "started_ns": 1790087704583664000
+}

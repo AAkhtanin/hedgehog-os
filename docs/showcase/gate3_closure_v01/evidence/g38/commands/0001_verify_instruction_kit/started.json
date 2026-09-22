@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/verify_kit_v01.py",
+    "--root",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/input_kit",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/input_kit/VERIFICATION.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922",
+  "label": "verify_instruction_kit",
+  "pid": 16502,
+  "started_at": "2026-09-22T14:22:26.626439Z",
+  "started_ns": 1790086946626566000
+}

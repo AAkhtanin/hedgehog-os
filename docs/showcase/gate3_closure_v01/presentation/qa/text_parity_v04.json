@@ -1,0 +1,231 @@
+{
+  "status": "PASS",
+  "slide_count": 28,
+  "pptx_slide_count": 28,
+  "checked_paragraphs": 423,
+  "missing_paragraphs": [],
+  "private_path_leaks": [],
+  "chart_label_checks": [
+    {
+      "slide": 10,
+      "labels": [
+        "0.665039",
+        "0.332520"
+      ],
+      "all_present": true
+    },
+    {
+      "slide": 17,
+      "labels": [
+        "0.700000",
+        "0.690000",
+        "0.684375",
+        "0.690000"
+      ],
+      "all_present": true
+    }
+  ],
+  "rows": [
+    {
+      "slide": 1,
+      "paragraphs": 7,
+      "missing": 0,
+      "pdf_characters": 188
+    },
+    {
+      "slide": 2,
+      "paragraphs": 15,
+      "missing": 0,
+      "pdf_characters": 364
+    },
+    {
+      "slide": 3,
+      "paragraphs": 11,
+      "missing": 0,
+      "pdf_characters": 523
+    },
+    {
+      "slide": 4,
+      "paragraphs": 26,
+      "missing": 0,
+      "pdf_characters": 539
+    },
+    {
+      "slide": 5,
+      "paragraphs": 17,
+      "missing": 0,
+      "pdf_characters": 518
+    },
+    {
+      "slide": 6,
+      "paragraphs": 20,
+      "missing": 0,
+      "pdf_characters": 559
+    },
+    {
+      "slide": 7,
+      "paragraphs": 14,
+      "missing": 0,
+      "pdf_characters": 511
+    },
+    {
+      "slide": 8,
+      "paragraphs": 11,
+      "missing": 0,
+      "pdf_characters": 537
+    },
+    {
+      "slide": 9,
+      "paragraphs": 18,
+      "missing": 0,
+      "pdf_characters": 416
+    },
+    {
+      "slide": 10,
+      "paragraphs": 10,
+      "missing": 0,
+      "pdf_characters": 554
+    },
+    {
+      "slide": 11,
+      "paragraphs": 21,
+      "missing": 0,
+      "pdf_characters": 483
+    },
+    {
+      "slide": 12,
+      "paragraphs": 15,
+      "missing": 0,
+      "pdf_characters": 428
+    },
+    {
+      "slide": 13,
+      "paragraphs": 15,
+      "missing": 0,
+      "pdf_characters": 425
+    },
+    {
+      "slide": 14,
+      "paragraphs": 15,
+      "missing": 0,
+      "pdf_characters": 426
+    },
+    {
+      "slide": 15,
+      "paragraphs": 22,
+      "missing": 0,
+      "pdf_characters": 509
+    },
+    {
+      "slide": 16,
+      "paragraphs": 11,
+      "missing": 0,
+      "pdf_characters": 644
+    },
+    {
+      "slide": 17,
+      "paragraphs": 10,
+      "missing": 0,
+      "pdf_characters": 595
+    },
+    {
+      "slide": 18,
+      "paragraphs": 20,
+      "missing": 0,
+      "pdf_characters": 538
+    },
+    {
+      "slide": 19,
+      "paragraphs": 10,
+      "missing": 0,
+      "pdf_characters": 564
+    },
+    {
+      "slide": 20,
+      "paragraphs": 12,
+      "missing": 0,
+      "pdf_characters": 554
+    },
+    {
+      "slide": 21,
+      "paragraphs": 20,
+      "missing": 0,
+      "pdf_characters": 491
+    },
+    {
+      "slide": 22,
+      "paragraphs": 21,
+      "missing": 0,
+      "pdf_characters": 382
+    },
+    {
+      "slide": 23,
+      "paragraphs": 18,
+      "missing": 0,
+      "pdf_characters": 504
+    },
+    {
+      "slide": 24,
+      "paragraphs": 8,
+      "missing": 0,
+      "pdf_characters": 580
+    },
+    {
+      "slide": 25,
+      "paragraphs": 11,
+      "missing": 0,
+      "pdf_characters": 551
+    },
+    {
+      "slide": 26,
+      "paragraphs": 17,
+      "missing": 0,
+      "pdf_characters": 562
+    },
+    {
+      "slide": 27,
+      "paragraphs": 17,
+      "missing": 0,
+      "pdf_characters": 552
+    },
+    {
+      "slide": 28,
+      "paragraphs": 11,
+      "missing": 0,
+      "pdf_characters": 657
+    }
+  ],
+  "pdf_export": "Bundled LibreOffice directly from finalized PPTX",
+  "pptx_sha256": "529e6a34d20d606c75ea330fe62447e8ed26286e6380d64fd3002a88269b1ff5",
+  "pdf_sha256": "082d5c81eaf73fcea2f775460a1d1372f0125be0e4a0ea606216adff61b561c0",
+  "pdf_fonts": [
+    "ABAAAA+Inter-Regular",
+    "BAAAAA+Inter-Regular",
+    "BBAAAA+Inter-Regular",
+    "CAAAAA+Inter-Regular",
+    "CBAAAA+Inter-Regular",
+    "DAAAAA+Inter-Regular",
+    "EAAAAA+Inter-Regular",
+    "FAAAAA+Inter-Regular",
+    "GAAAAA+Inter-Regular",
+    "HAAAAA+Inter-Regular",
+    "IAAAAA+Inter-Regular",
+    "JAAAAA+Inter-Regular",
+    "KAAAAA+Inter-Regular",
+    "LAAAAA+Inter-Regular",
+    "MAAAAA+Inter-Regular",
+    "NAAAAA+Inter-Regular",
+    "OAAAAA+Inter-Regular",
+    "PAAAAA+Inter-Regular",
+    "QAAAAA+Inter-Regular",
+    "RAAAAA+Inter-Regular",
+    "SAAAAA+Inter-Regular",
+    "TAAAAA+Inter-Regular",
+    "UAAAAA+Inter-Regular",
+    "VAAAAA+Inter-Regular",
+    "WAAAAA+Inter-Regular",
+    "XAAAAA+Inter-Regular",
+    "YAAAAA+Inter-Regular",
+    "ZAAAAA+Inter-Regular"
+  ]
+}

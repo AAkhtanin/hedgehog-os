@@ -1,0 +1,191 @@
+diff --git a/demo/run_living_gauntlet_v01.py b/demo/run_living_gauntlet_v01.py
+index b7329063a2f376482f97873add5275430a1b2cb2..444d53e57754ab62e87447bf544def522dc0ad9e 100644
+--- a/demo/run_living_gauntlet_v01.py
++++ b/demo/run_living_gauntlet_v01.py
+@@ -5825,8 +5825,8 @@ _SENTINEL_REGISTRATION_ROWS_V01 = _EWS_REGISTRATION_ROWS_V01
+ _G37_REGISTRATION_KEY_V01 = "gate3_g37_current_registration_v01"
+ _G37_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"
+ _G37_BASE_IDENTITIES_V01 = {
+-    "release/completion_manifest.json": "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1",
+-    "release/integration_seam_index.json": "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f",
++    "release/completion_manifest.json": "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0",
++    "release/integration_seam_index.json": "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d",
+ }
+ _G37_FROZEN_SOURCES_V01 = {
+     **_SENTINEL_FROZEN_SOURCES_V01,
+diff --git a/release/current_status_overlay_v01.json b/release/current_status_overlay_v01.json
+index 6bc7f2a4951f75564294787fbaa09f82f1291daa..0beca0978149c409c9fc1ae72630e8381d548c88 100644
+--- a/release/current_status_overlay_v01.json
++++ b/release/current_status_overlay_v01.json
+@@ -2424,8 +2424,8 @@
+     "status": "EXACT_SOURCE_ADMISSION_DERIVED_FROM_GIT",
+     "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_HANDLE",
+     "base_identities": {
+-      "release/completion_manifest.json": "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1",
+-      "release/integration_seam_index.json": "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f"
++      "release/completion_manifest.json": "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0",
++      "release/integration_seam_index.json": "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
+     },
+     "frozen_source_identities": {
+       "demo/run_action_packet_portability_v01.py": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb",
+diff --git a/tests/test_active_architecture_authority_v01.py b/tests/test_active_architecture_authority_v01.py
+index 98cacf4c5809f43151488810d7ee77bcac6571e6..697db1f3f1352eb2543dbc17f3ed88ee85673916 100644
+--- a/tests/test_active_architecture_authority_v01.py
++++ b/tests/test_active_architecture_authority_v01.py
+@@ -563,6 +563,89 @@ def test_g37_clean_sole_parent_child_classification_v01():
+     assert not errors
+ 
+ 
++def test_g37_current_registration_complete_negative_matrix_v01(
++    g37_admission_tree,
++):
++    import importlib.util
++
++    root, _ = g37_admission_tree
++    module_name = "g37r_current_registration_probe_v01"
++    spec = importlib.util.spec_from_file_location(
++        module_name, root / "demo/run_living_gauntlet_v01.py"
++    )
++    assert spec is not None and spec.loader is not None
++    living = importlib.util.module_from_spec(spec)
++    sys.modules[module_name] = living
++    try:
++        spec.loader.exec_module(living)
++        block, errors = living._current_registration_v01(root)
++        assert errors == ()
++        assert block is not None
++        assert block["base_identities"] == {
++            "release/completion_manifest.json": (
++                "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0"
++            ),
++            "release/integration_seam_index.json": (
++                "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
++            ),
++        }
++        assert len(block["rows"]) == 9
++        assert all(
++            row["authority"] == "EVIDENCE_ONLY"
++            and row["effect_access"] == "NONE"
++            for row in block["rows"]
++        )
++
++        for path in (
++            "release/completion_manifest.json",
++            "release/integration_seam_index.json",
++        ):
++            target = root / path
++            original = target.read_bytes()
++            try:
++                target.unlink()
++                assert (
++                    "registration_source:" + path
++                    in living._current_registration_v01(root)[1]
++                )
++                target.write_bytes(original + b"\n")
++                assert (
++                    "registration_source:" + path
++                    in living._current_registration_v01(root)[1]
++                )
++            finally:
++                target.write_bytes(original)
++
++        overlay_path = root / "release/current_status_overlay_v01.json"
++        original_overlay = json.loads(overlay_path.read_text())
++        registration = original_overlay[living._G37_REGISTRATION_KEY_V01]
++        stale = {
++            "release/completion_manifest.json": (
++                "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1"
++            ),
++            "release/integration_seam_index.json": (
++                "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f"
++            ),
++        }
++        old_pin = deepcopy(original_overlay)
++        old_pin[living._G37_REGISTRATION_KEY_V01]["base_identities"][
++            "release/completion_manifest.json"
++        ] = stale["release/completion_manifest.json"]
++        overlay_path.write_text(json.dumps(old_pin) + "\n")
++        assert "registration_exact_block" in living._current_registration_v01(root)[1]
++
++        overlay_only = deepcopy(original_overlay)
++        overlay_only[living._G37_REGISTRATION_KEY_V01]["base_identities"] = stale
++        overlay_path.write_text(json.dumps(overlay_only) + "\n")
++        assert "registration_exact_block" in living._current_registration_v01(root)[1]
++        assert registration["base_identities"] != stale
++    finally:
++        (root / "release/current_status_overlay_v01.json").write_bytes(
++            (REPOSITORY_ROOT / "release/current_status_overlay_v01.json").read_bytes()
++        )
++        sys.modules.pop(module_name, None)
++
++
+ @pytest.fixture(scope="module")
+ def g34_admission_tree(tmp_path_factory):
+     return _g34_reconstructed_root_v01(tmp_path_factory.mktemp('g34r2_frozen_source_controls')/'candidate',REPOSITORY_ROOT)
+diff --git a/tests/test_repository_release_spine_v01.py b/tests/test_repository_release_spine_v01.py
+index d06fe80595cc15715a74274b38581b397c895d94..d92d49ce84dc68d3a4c4adc164f0c0cdc9ab1803 100644
+--- a/tests/test_repository_release_spine_v01.py
++++ b/tests/test_repository_release_spine_v01.py
+@@ -5005,3 +5005,19 @@ def test_g37_binder_has_final_precedence_v01():
+         == "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+     )
+     test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
++
++
++def test_g37_current_registration_pins_actual_release_files_v01():
++    overlay = _read_json(REPOSITORY_ROOT / "release/current_status_overlay_v01.json")
++    registration = overlay["gate3_g37_current_registration_v01"]
++    expected = {
++        "release/completion_manifest.json": (
++            "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0"
++        ),
++        "release/integration_seam_index.json": (
++            "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
++        ),
++    }
++    assert registration["base_identities"] == expected
++    for path, digest in expected.items():
++        assert hashlib.sha256((REPOSITORY_ROOT / path).read_bytes()).hexdigest() == digest
+diff --git a/tools/check_active_architecture_authority_v01.py b/tools/check_active_architecture_authority_v01.py
+index 60e669f30ee1b0b1712ed37438a230b8eacbc877..ac3b72df6743576a6ca9890b16e54f20c3f02201 100644
+--- a/tools/check_active_architecture_authority_v01.py
++++ b/tools/check_active_architecture_authority_v01.py
+@@ -3080,7 +3080,7 @@ G37_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '34c42fe602aa442c30e7b39ce3b2dd36c9c60
+  'demo/gate3_scenario_packs_v01.py': 'cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc',
+  'demo/run_gate3_calibration_v01.py': '53c958c775d488fbae0c1b03072db55d8d7b24ccfde79449f304637a55a1b640',
+  'demo/run_kernel_conformance_v01.py': 'dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503',
+- 'demo/run_living_gauntlet_v01.py': 'f4ac08b4b4978ce6cabb5f30a2533b6023a4450a03b2cf272df7f870acbf0546',
++ 'demo/run_living_gauntlet_v01.py': '997fb5cb883fea10433b98cbbeda760945c5606dc033609bf2464fe8b99e8fc9',
+  'docs/gate3_outcome_feedback_checkpoint_v01.md': '9c617e2b9363b314c9648561058386a629a439e7a2a0825feeb097a00ba82f1c',
+  'docs/gate3_outcome_feedback_contract_v01.md': 'abd975e70d3b92f14b283dc0fe961a50c9d0d12db4e907f682d2dc9d6fcf3862',
+  'fixtures/gate3_adversary_reference_v01.json': '5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5',
+@@ -3113,7 +3113,7 @@ G37_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '34c42fe602aa442c30e7b39ce3b2dd36c9c60
+  'release/completion_manifest.json': 'a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0',
+  'release/current_limitations.md': '14f4525f4adaf4ca3b2765f8461bc90efc478445301c481d1389c4af40940805',
+  'release/current_schema_surface_v01.json': '7094cc2438599ce3ae450acca4876e177df736893caf9ffba1ebcaf8480cf451',
+- 'release/current_status_overlay_v01.json': 'fdbc4b480d84bd2ef320f7777fdfc7d092e9a6268dfbab7eb3d513762cd7c3ea',
++ 'release/current_status_overlay_v01.json': 'dc0c1c29aa78eb153a17ac9fd3cc8a304f77819c5e1832b25ce007cde950bab6',
+  'release/integration_seam_index.json': '0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d',
+  'release/integration_seam_index.md': 'fda81d632c4c39c5727e3bcf53fcc1834008b58f53f40397f5cf5abe61e805c6',
+  'release/successor_context_manifest_v01.json': 'eda89e0a2ba92ea6c066737af2c9d5fef4aca2cb35a2735bc0884754a18d9e60',
+@@ -3123,7 +3123,7 @@ G37_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '34c42fe602aa442c30e7b39ce3b2dd36c9c60
+  'schemas/outcome_feedback_v01.schema.json': 'e89426aabdc36f62997a15b26e04fe6a1e07e046dcf609977a221ba337bcf26e',
+  'specs/current_architecture_lock_v01.md': '2f6440c4d1fa15d8ab39a19dd551b156e57213688db27e2c0e08acc14a41d9e6',
+  'specs/document_authority_index_v01.json': 'a1e33d238bdcd16cf2057f2281ba9c356e69be6a5c87df3abc7a21485ce7c071',
+- 'tests/test_active_architecture_authority_v01.py': '57a93585a3ea8130ca42c64275349079ce9681ff01aeaee87b9d8aa9df2d888b',
++ 'tests/test_active_architecture_authority_v01.py': '6eae55852d4cc0368dc639ca72fef9e355e16bc44cab531e4b7c32389ce9bcf7',
+  'tests/test_gate3_adversary_v01.py': '59fd0205053bb55f2431ad79efa26442f3f0a315f4250b58ba6c0d9b12c5b4d5',
+  'tests/test_gate3_calibration_v01.py': 'ce98b57c28ef3ff02616743e1876dd17e2520b9eb1dc66e50bc2df4bb46d1126',
+  'tests/test_gate3_current_advisory_v01.py': '377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385',
+@@ -3132,9 +3132,9 @@ G37_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '34c42fe602aa442c30e7b39ce3b2dd36c9c60
+  'tests/test_outcome_calibration_v01.py': '994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a',
+  'tests/test_outcome_feedback_history_v01.py': '3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca',
+  'tests/test_outcome_feedback_v01.py': '7d5218ad85fd8e709bff09a927257dbda5934587446bc26288e73400a776347e',
+- 'tests/test_repository_release_spine_v01.py': 'eff0be0454f5b2cb2a23426a61af14c5333956f5ea86e4f1dab8cdd34d957178',
++ 'tests/test_repository_release_spine_v01.py': 'ba22f1fbee83e60f7f5e57abb1c738bbf001fe20dc8d6002aae199e9723d949b',
+  'tests/test_work_composition_v01.py': 'aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc',
+- 'tools/check_active_architecture_authority_v01.py': 'aaf4b79385d5486c622ee35ee4f52bc17acd3c91d9892908ebab33ee1e05c28e'}
++ 'tools/check_active_architecture_authority_v01.py': 'b67d4d2a4f97342349ca8e675e813720dc2ca1849c5b842b46a566297d6f4fdc'}
+ 
+ 
+ def _g37_requested_v01(root: Path) -> bool:

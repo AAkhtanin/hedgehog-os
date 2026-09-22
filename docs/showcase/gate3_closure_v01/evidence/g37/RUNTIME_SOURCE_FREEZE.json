@@ -1,0 +1,439 @@
+{
+  "head": "d199199a578c078c913a2381f595549175bd9235",
+  "path_count": 59,
+  "protected": {
+    "fixtures/gate3_adversary_reference_v01.json": {
+      "bytes": 2770,
+      "git_blob": "ae7f4cbc73b42378b8d4c8a46f6a64d029a7ada1",
+      "mode": "0o644",
+      "sha256": "5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5"
+    },
+    "hedgehog/kernel/work_composition_v01.py": {
+      "bytes": 89168,
+      "git_blob": "8780f4e719a885ee73cf5df6c74890fa6c4855cc",
+      "mode": "0o644",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    }
+  },
+  "recorded_at": "2026-09-22T11:10:10.653329Z",
+  "runtime": {
+    "full_conformance_successor": {
+      "ownership": {
+        "bytes": 1789,
+        "git_blob": "c2e566056101a84c0d84dc2fecf905b1803514de",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_conformance_successor/collection_ownership.json",
+        "sha256": "c296b62a34a62b9f4676f035550b84e0cb31f62ed4124ded80e6260c10890123"
+      },
+      "receipt": {
+        "bytes": 22999,
+        "git_blob": "378540624e220ed71b8e71451a9b8a0d7ea2817f",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/commands/0010_full_conformance_successor/receipt.json",
+        "sha256": "a4eaed5d0ddfead263387157e378c89d5cd583d8568099967060e0dba79dfbab"
+      },
+      "result": {
+        "bytes": 1012,
+        "git_blob": "4414a3edc75565378f3d786abab1e542d7832795",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_conformance_successor/result.json",
+        "sha256": "c2f4bf9b74c95bd481a163055dcb6161c6cb302cf578816fc0b8916ffe7277a6"
+      },
+      "successor_report": {
+        "bytes": 5988284,
+        "git_blob": "47d85c52fa48bc529680b74f4989d7b57bd25a08",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_conformance_successor/successor_report.json",
+        "sha256": "e7983c25d588878f8f535c5037bbddd519672241d6e004361188e3ff2f682b66"
+      }
+    },
+    "full_living_successor_repair_01": {
+      "ownership": {
+        "bytes": 1674,
+        "git_blob": "cca645d836bbc8f6ec645501a37473d9ea15fcd4",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_living_successor_repair_01/collection_ownership.json",
+        "sha256": "ea470a46a73cd2c5288a9bc0497553fb3a288c208ef2b24680707828c0351b95"
+      },
+      "receipt": {
+        "bytes": 22817,
+        "git_blob": "de7961d26ae641e47bca297c27dbda3e6cd79ac6",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/commands/0007_full_living_successor_repair_01/receipt.json",
+        "sha256": "aa7da2bde29bbd783a985e313567f859cda66d4a94ce69255bbe75755f3629e7"
+      },
+      "result": {
+        "bytes": 1006,
+        "git_blob": "f567ff67f3f07447082c682f12884dc9f671cbc4",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_living_successor_repair_01/result.json",
+        "sha256": "69d44b9f91c4e27712bcaef0b28453f417f0b6e2a3f57bcee41cd15b4c4432cc"
+      },
+      "successor_report": {
+        "bytes": 5875142,
+        "git_blob": "af673f90504ad343014294901eac850e8a5b125c",
+        "mode": "0o644",
+        "path": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_living_successor_repair_01/successor_report.json",
+        "sha256": "d84cdd50e918c36f06ea60d0c3d4154760438d7cbcd4cd9124dc9f2745bfdc08"
+      }
+    }
+  },
+  "sources": {
+    "AGENTS.md": {
+      "bytes": 22637,
+      "git_blob": "e3d32df562184d60c9d950f6b87052ef90b779c8",
+      "mode": "0o644",
+      "sha256": "7a1f56d2e0b5206bc558a5b011d9b6240bf0ec817d8598138343168985898285"
+    },
+    "demo/gate3_scenario_packs_v01.py": {
+      "bytes": 3465,
+      "git_blob": "e594e3dfcc88bddd11b42a019e29d0328cf8e096",
+      "mode": "0o644",
+      "sha256": "cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc"
+    },
+    "demo/run_gate3_calibration_v01.py": {
+      "bytes": 10028,
+      "git_blob": "7c171c9b1fbc90dd11d868dd9a9184ae0b096a82",
+      "mode": "0o644",
+      "sha256": "53c958c775d488fbae0c1b03072db55d8d7b24ccfde79449f304637a55a1b640"
+    },
+    "demo/run_kernel_conformance_v01.py": {
+      "bytes": 136478,
+      "git_blob": "c32a309679c07bb5b75639f0ea717ea892d7f50b",
+      "mode": "0o644",
+      "sha256": "dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503"
+    },
+    "demo/run_living_gauntlet_v01.py": {
+      "bytes": 262910,
+      "git_blob": "8f20fdd5852ef4fbae3bd0e178b64452228ea379",
+      "mode": "0o644",
+      "sha256": "85f371ff67322d085586a767389371f0f34f8abf13e6903ae15c6a50a2c54f45"
+    },
+    "docs/gate3_outcome_feedback_checkpoint_v01.md": {
+      "bytes": 24783,
+      "git_blob": "5d1a3727ca0d665f814763481a0a6f648bd7e10d",
+      "mode": "0o644",
+      "sha256": "fc392f57b910ff52ef0099c8f03ee0ae372c72331737ba2ad2af14e0c721d122"
+    },
+    "docs/gate3_outcome_feedback_contract_v01.md": {
+      "bytes": 42731,
+      "git_blob": "b6e644f055acdc9da0aab037d7fd6a2ec2e504b2",
+      "mode": "0o644",
+      "sha256": "e76978c430ba64e573fd9a977518b0566dc6dff5c9b3764275d7923caa85bc21"
+    },
+    "fixtures/gate3_adversary_reference_v01.json": {
+      "bytes": 2770,
+      "git_blob": "ae7f4cbc73b42378b8d4c8a46f6a64d029a7ada1",
+      "mode": "0o644",
+      "sha256": "5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5"
+    },
+    "fixtures/gate3_calibration_reference_v01.json": {
+      "bytes": 4739,
+      "git_blob": "d6547c19c696cde974886dd82d0bb14838b8e919",
+      "mode": "0o644",
+      "sha256": "4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5"
+    },
+    "fixtures/gate3_domain_cases_v01.json": {
+      "bytes": 5261,
+      "git_blob": "120406fef3d1bfef2e77488e72224c27a67b848e",
+      "mode": "0o644",
+      "sha256": "53039dcfb81fe8a6a075968552214c46eb1f28c6e7286ec6bdde87463a77dc1d"
+    },
+    "fixtures/gate3_g31_predecessor_v01.patch.gz": {
+      "bytes": 33398,
+      "git_blob": "e140b983b912a10814da4988965e7a238afd07ad",
+      "mode": "0o644",
+      "sha256": "5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84"
+    },
+    "fixtures/gate3_g32_predecessor_v01.patch.gz": {
+      "bytes": 95355,
+      "git_blob": "83bac365abe9e61e32827c41c8d3a5fc6706e423",
+      "mode": "0o644",
+      "sha256": "3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4"
+    },
+    "fixtures/gate3_g33r_predecessor_v01.patch.gz": {
+      "bytes": 225435,
+      "git_blob": "4681ec1033a59f4ebb8b39b4643d1dadcb0ce3e1",
+      "mode": "0o644",
+      "sha256": "d59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c"
+    },
+    "fixtures/gate3_g34r2_predecessor_v01.patch.gz": {
+      "bytes": 514708,
+      "git_blob": "c8ae900d1fc2806c46e3ef809304b39b9fcdaf51",
+      "mode": "0o644",
+      "sha256": "b735220c1b35d84a90fe6a40b1796af8723e17853656413fb9b9c90cea3113b8"
+    },
+    "fixtures/gate3_g35r_predecessor_v01.patch.gz": {
+      "bytes": 1121978,
+      "git_blob": "918af236f4f70f882dbcce38947688cd43eb16ec",
+      "mode": "0o644",
+      "sha256": "0d6a750a55a5672794bb7aac71463ff4626f3a80a2f4298a9c1497caccb953c2"
+    },
+    "fixtures/gate3_history_reference_v01.json": {
+      "bytes": 3392,
+      "git_blob": "da7f5fe0204dd8d499ea095b7984673c3295e28d",
+      "mode": "0o644",
+      "sha256": "1bed519b08f0a5a79f46f35ea1f463331ee00522f83800cf396d88d7b6bcd4be"
+    },
+    "fixtures/gate3_reference_v01.json": {
+      "bytes": 38820,
+      "git_blob": "670174163682b85e6936786e375d46dc52e197e5",
+      "mode": "0o644",
+      "sha256": "e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da"
+    },
+    "fixtures/gate3_sentinel_observation_v01.json": {
+      "bytes": 1290,
+      "git_blob": "8c832e646926c9093d393be38abaedd0c76332d7",
+      "mode": "0o644",
+      "sha256": "f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507"
+    },
+    "hedgehog/domains/airline/outcome_feedback_adapter_v01.py": {
+      "bytes": 14151,
+      "git_blob": "7af93c9364d3b62e4c9a36c87f6f888ea9e24054",
+      "mode": "0o644",
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    "hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py": {
+      "bytes": 4453,
+      "git_blob": "9de10adbc49d92842842e85e8b9b7b959024abe7",
+      "mode": "0o644",
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py": {
+      "bytes": 57487,
+      "git_blob": "af561253c1eef05f7e3b0c9e78172e7ae69021ae",
+      "mode": "0o644",
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    "hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py": {
+      "bytes": 38463,
+      "git_blob": "06ae8ad54e57f7cb636b81ddb690927af746f014",
+      "mode": "0o644",
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    "hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py": {
+      "bytes": 65393,
+      "git_blob": "1dcfc479231f4fe773c7917d11d286849f9847a6",
+      "mode": "0o644",
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    "hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py": {
+      "bytes": 22566,
+      "git_blob": "8fb68d1655744ac54b92b965868178e5449333b7",
+      "mode": "0o644",
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    "hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py": {
+      "bytes": 4909,
+      "git_blob": "24b3d673a25d92990ef8511887af500f7cbcd060",
+      "mode": "0o644",
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py": {
+      "bytes": 10502,
+      "git_blob": "d5122595f1d281e489085197310967c76eefec0c",
+      "mode": "0o644",
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    "hedgehog/gate3_mechanism_v01.py": {
+      "bytes": 26640,
+      "git_blob": "4431531b18a1267bbc371c4c26264c11f1721375",
+      "mode": "0o644",
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    "hedgehog/kernel/conformance_v01.py": {
+      "bytes": 76437,
+      "git_blob": "a528a879e8bae54fdd506fec2e2549a862246c44",
+      "mode": "0o644",
+      "sha256": "6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f"
+    },
+    "hedgehog/kernel/work_composition_v01.py": {
+      "bytes": 89168,
+      "git_blob": "8780f4e719a885ee73cf5df6c74890fa6c4855cc",
+      "mode": "0o644",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    "hedgehog/outcome_calibration_v01.py": {
+      "bytes": 57704,
+      "git_blob": "0404db8ee87535206d20cd4152ad274855ec4c0b",
+      "mode": "0o644",
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    "hedgehog/outcome_feedback_consumer_v01.py": {
+      "bytes": 29609,
+      "git_blob": "c0534ede4eb9f9a8e05fae47a5b55c4e1898296d",
+      "mode": "0o644",
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    "hedgehog/outcome_feedback_history_v01.py": {
+      "bytes": 57644,
+      "git_blob": "1d49677fbb6c5c28f611fc075960d5454240fe0a",
+      "mode": "0o644",
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    "hedgehog/outcome_feedback_report_v01.py": {
+      "bytes": 6105,
+      "git_blob": "7cade44784cf0a67c6df84820c284eb05160b2aa",
+      "mode": "0o644",
+      "sha256": "aa382adb332e5925a0f94b228417768fef03382e420d13441c34b9ffb71df385"
+    },
+    "hedgehog/outcome_feedback_v01.py": {
+      "bytes": 65821,
+      "git_blob": "d4c6a6a13a1789d07ad67da59de99476e70aeeb3",
+      "mode": "0o644",
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    "release/completion_manifest.json": {
+      "bytes": 31548,
+      "git_blob": "083ed12d93d6209fd2844dc8b3a3447437ecc30d",
+      "mode": "0o644",
+      "sha256": "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1"
+    },
+    "release/current_limitations.md": {
+      "bytes": 12424,
+      "git_blob": "12300f87e959afbec2e542b01cea90c54f2c3b2d",
+      "mode": "0o644",
+      "sha256": "4a69fe851612459824f9245fbdcd1cddb86f29df44a486233ea68a21689accd6"
+    },
+    "release/current_schema_surface_v01.json": {
+      "bytes": 4764,
+      "git_blob": "9383b76eda0f02cdf13f71a44ec06ee64280b40f",
+      "mode": "0o644",
+      "sha256": "8f5d4703c7a0f502550595475666e88b905c443c4be07cff746fb43cd9449f15"
+    },
+    "release/current_status_overlay_v01.json": {
+      "bytes": 155137,
+      "git_blob": "85de8c1db08762f7f5ee46617d551bd9111e0566",
+      "mode": "0o644",
+      "sha256": "59e49e5ac8e6ddf66bfc9088be1df8a357cd4737dbd321de548313c41f96a513"
+    },
+    "release/integration_seam_index.json": {
+      "bytes": 16507,
+      "git_blob": "6e627b9caa6dca1579267a77f6442392d90f3497",
+      "mode": "0o644",
+      "sha256": "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f"
+    },
+    "release/integration_seam_index.md": {
+      "bytes": 7274,
+      "git_blob": "e35ae43de319e2780d028fb9023ff3def44202ed",
+      "mode": "0o644",
+      "sha256": "51c62ebc77818fad1e72efa232675a0ba0245463f0ce1d4cf9f1b4ee0af12c84"
+    },
+    "release/successor_context_manifest_v01.json": {
+      "bytes": 120901,
+      "git_blob": "e3f59ccfdc26b878129ccec455abd1763c14b028",
+      "mode": "0o644",
+      "sha256": "a1c48ce64458ead4c3b7fa5e3f59b252d749639c7650686597c7058b1463e9e5"
+    },
+    "schemas/gate3_adversary_v01.schema.json": {
+      "bytes": 8515,
+      "git_blob": "132b786df75303c5ab522c39ca71e161ebbc0fd6",
+      "mode": "0o644",
+      "sha256": "dee9e823eec92579ae5a9a26943eb6fb3265657cb9314f8fee780783e50b24b6"
+    },
+    "schemas/outcome_feedback_g34_predictive_v01.schema.json": {
+      "bytes": 31692,
+      "git_blob": "bf03e993f972d4d30445210be35b160a140b569e",
+      "mode": "0o644",
+      "sha256": "cb92d9429dd96efbda062dbe9507df18453402e481a8135c87841f9ac9fd6668"
+    },
+    "schemas/outcome_feedback_g35_sources_v01.schema.json": {
+      "bytes": 357296,
+      "git_blob": "8e979d594beaaf9e76334d5762fb397dc93b3516",
+      "mode": "0o644",
+      "sha256": "9272dd580aa7514a4e807aaec28abfccf415d250159d4648d8329cfee2375e1b"
+    },
+    "schemas/outcome_feedback_v01.schema.json": {
+      "bytes": 32082,
+      "git_blob": "b78c3b3fba7aa2278d4ef055cf35373911e0cc61",
+      "mode": "0o644",
+      "sha256": "e89426aabdc36f62997a15b26e04fe6a1e07e046dcf609977a221ba337bcf26e"
+    },
+    "specs/current_architecture_lock_v01.md": {
+      "bytes": 31407,
+      "git_blob": "7b6748eec97a537938b05d6865e9deb6e9d3cc25",
+      "mode": "0o644",
+      "sha256": "df82860383d96dd1d44d81ebd2289923cfb913f50a1d2f342e48189bc842e7ab"
+    },
+    "specs/document_authority_index_v01.json": {
+      "bytes": 111182,
+      "git_blob": "0cf93eba02500c56c1e7002e1b4c8a44e8609eb0",
+      "mode": "0o644",
+      "sha256": "1fd7dac5fd7cd294cb0e8e78327d359d622607762cd6f0d4782493c1e9c310ff"
+    },
+    "tests/test_active_architecture_authority_v01.py": {
+      "bytes": 413233,
+      "git_blob": "86d576c388aab4f13f3b880ee1bab05ec4a1b061",
+      "mode": "0o644",
+      "sha256": "5c659569b262bbbadfa2c6d128ae4aeb451a6b7ad4633eb8c4f6813cdd465f09"
+    },
+    "tests/test_gate3_adversary_v01.py": {
+      "bytes": 23043,
+      "git_blob": "152a5441b0fedbe57d0826282be5fbe0b4bb9ea8",
+      "mode": "0o644",
+      "sha256": "59fd0205053bb55f2431ad79efa26442f3f0a315f4250b58ba6c0d9b12c5b4d5"
+    },
+    "tests/test_gate3_calibration_v01.py": {
+      "bytes": 17807,
+      "git_blob": "ca16b2b53ae028996653c1c2ca49df1166bbb64d",
+      "mode": "0o644",
+      "sha256": "ce98b57c28ef3ff02616743e1876dd17e2520b9eb1dc66e50bc2df4bb46d1126"
+    },
+    "tests/test_gate3_current_advisory_v01.py": {
+      "bytes": 45615,
+      "git_blob": "769dbda41e7fd76a50226f901d30f5690b96c14d",
+      "mode": "0o644",
+      "sha256": "377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385"
+    },
+    "tests/test_gate3_mechanism_registration_v01.py": {
+      "bytes": 3081,
+      "git_blob": "89fff0ceb77e9ecd922f6254396d07dfcb218f19",
+      "mode": "0o644",
+      "sha256": "63f5557395bb3b0c755ddac1e28e1d3b514f33af1e51b4b71db297fdccd46f9b"
+    },
+    "tests/test_gate3_sentinel_observation_v01.py": {
+      "bytes": 18154,
+      "git_blob": "d82239ce35403b00199131f78bd0e687890718a3",
+      "mode": "0o644",
+      "sha256": "401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83"
+    },
+    "tests/test_outcome_calibration_v01.py": {
+      "bytes": 44656,
+      "git_blob": "132dbddeee4bfe8d1d5a68e17a5e8698419bcdb6",
+      "mode": "0o644",
+      "sha256": "994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a"
+    },
+    "tests/test_outcome_feedback_history_v01.py": {
+      "bytes": 8473,
+      "git_blob": "c13adf99b5d81585e7c71d85ba24b7e55164d425",
+      "mode": "0o644",
+      "sha256": "3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca"
+    },
+    "tests/test_outcome_feedback_v01.py": {
+      "bytes": 16003,
+      "git_blob": "ccc39449fb4839755f815c53de4d53a2ac044541",
+      "mode": "0o644",
+      "sha256": "7d5218ad85fd8e709bff09a927257dbda5934587446bc26288e73400a776347e"
+    },
+    "tests/test_repository_release_spine_v01.py": {
+      "bytes": 216539,
+      "git_blob": "42995a66751e46e403c45e71584e3f5c7f97d641",
+      "mode": "0o644",
+      "sha256": "cfdf6be514fc0b7a8a53a95f68f80e26725121003edb8d46207c02f8fbd74df2"
+    },
+    "tests/test_work_composition_v01.py": {
+      "bytes": 131755,
+      "git_blob": "38f4e2ed7ef52bb54b01bd1102715e2374921f7b",
+      "mode": "0o644",
+      "sha256": "aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc"
+    },
+    "tools/check_active_architecture_authority_v01.py": {
+      "bytes": 827157,
+      "git_blob": "683b86af2b52bb03a02ff88a4c77a3c8d20a60f9",
+      "mode": "0o644",
+      "sha256": "5638f673cf0e072f3b3844ee58f91f481b4eed12f7576f79ea08df444acacf47"
+    }
+  },
+  "staging_empty": true,
+  "status": "PRE_GOVERNANCE_RUNTIME_SOURCE_FREEZE"
+}

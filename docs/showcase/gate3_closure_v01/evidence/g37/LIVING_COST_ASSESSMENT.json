@@ -1,0 +1,67 @@
+{
+  "aggregate_residual_scope": "Imports, legacy post-E5 work, wrapper source pinning, validation failure, process startup and finalization; not attributed to one component.",
+  "aggregate_residual_seconds": 12.937343042343855,
+  "command_seconds": 1856.8583067925647,
+  "controlled_g3_command_fraction": 0.014605457724701712,
+  "controlled_g3_seconds": 27.120265500620008,
+  "d_collector_entries": 0,
+  "decision": "Standalone Conformance is deferred until the exact current release metadata integration defect is repaired and cheap validators pass.",
+  "external_sample_scope": "One passive macOS sample attachment, 1680 one-millisecond samples. Its exact perturbation is not separable from wall time.",
+  "external_sample_seconds": 1.68,
+  "legacy_e5_command_fraction": 0.9784272131069833,
+  "legacy_e5_seconds": 1816.8006982496008,
+  "living_failure": {
+    "completion_manifest_errors": [
+      "completion_manifest_field_surface_mismatch"
+    ],
+    "integration_seam_errors": [
+      "integration_seam_index_field_surface_mismatch"
+    ],
+    "registration_errors": [
+      "registration_source:release/completion_manifest.json",
+      "registration_source:release/integration_seam_index.json",
+      "registration_source:demo/run_kernel_conformance_v01.py",
+      "registration_source:hedgehog/kernel/work_composition_v01.py",
+      "registration_source:tests/test_work_composition_v01.py"
+    ]
+  },
+  "monitor_callback_only_estimate": {
+    "estimated_seconds_per_event": 3.916374873369932e-08,
+    "estimated_six_event_seconds": 2.3498249240219593e-07,
+    "iterations_per_trial": 100000,
+    "monitored_median_seconds": 0.010052959434688091,
+    "monitored_seconds": [
+      0.010052959434688091,
+      0.010382374748587608,
+      0.010038291104137897
+    ],
+    "observed_callback_events": 600000,
+    "plain_median_seconds": 0.002220209687948227,
+    "plain_seconds": [
+      0.0023062918335199356,
+      0.002220209687948227,
+      0.0021705403923988342
+    ],
+    "scope": "Synthetic local-event upper-bound estimate; not an E5 benchmark."
+  },
+  "monitor_trace_write_estimate": {
+    "estimated_six_event_seconds": 0.00014931375160813333,
+    "median_seconds_per_event": 2.488562526802222e-05,
+    "rows_per_trial": 600,
+    "scope": "Synthetic same-volume estimate of the actual JSON/open/write/close callback body; no fsync and not an E5 benchmark.",
+    "trial_seconds": [
+      0.016211125068366528,
+      0.015515624545514584,
+      0.014931375160813332,
+      0.014217999763786793,
+      0.01424491684883833
+    ]
+  },
+  "observed_monitor_events": 6,
+  "saved_g3_validation": {
+    "cross_consumer_equal": true,
+    "living_repeat_equal": true,
+    "supplied_errors": []
+  },
+  "status": "ASSESSED_BEFORE_STANDALONE_CONFORMANCE"
+}

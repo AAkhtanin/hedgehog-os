@@ -1,0 +1,221 @@
+{
+  "captured": [
+    {
+      "elapsed_us": 8515483,
+      "phase": "ADV-1"
+    },
+    {
+      "elapsed_us": 3643099,
+      "phase": "ADV-2"
+    },
+    {
+      "elapsed_us": 119840144,
+      "phase": "ADV-3"
+    },
+    {
+      "elapsed_us": 16971500,
+      "phase": "history_record"
+    },
+    {
+      "elapsed_us": 34967116,
+      "phase": "current_history_work"
+    },
+    {
+      "elapsed_us": 3733719,
+      "phase": "lawful_objective"
+    }
+  ],
+  "commands": [
+    {
+      "command": "0001_boundaries",
+      "elapsed_seconds": 0.7851541256532073,
+      "rc": 1
+    },
+    {
+      "command": "0002_boundaries",
+      "elapsed_seconds": 1.3375514168292284,
+      "rc": 1
+    },
+    {
+      "command": "0003_boundaries",
+      "elapsed_seconds": 1.4250632086768746,
+      "rc": 1
+    },
+    {
+      "command": "0004_boundaries",
+      "elapsed_seconds": 1.8468949170783162,
+      "rc": 0
+    },
+    {
+      "command": "0005_history",
+      "elapsed_seconds": 5.308900624513626,
+      "rc": 1
+    },
+    {
+      "command": "0006_history",
+      "elapsed_seconds": 8.820188459008932,
+      "rc": 1
+    },
+    {
+      "command": "0007_history",
+      "elapsed_seconds": 8.971901999786496,
+      "rc": 1
+    },
+    {
+      "command": "0008_history",
+      "elapsed_seconds": 8.985374208539724,
+      "rc": 1
+    },
+    {
+      "command": "0009_history",
+      "elapsed_seconds": 14.434739707969129,
+      "rc": 0
+    },
+    {
+      "command": "0010_mechanism",
+      "elapsed_seconds": 18.647239333949983,
+      "rc": 1
+    },
+    {
+      "command": "0011_saved_verify",
+      "elapsed_seconds": 6.527639416977763,
+      "rc": 0
+    },
+    {
+      "command": "0012_controlled",
+      "elapsed_seconds": 21.761508791707456,
+      "rc": 0
+    },
+    {
+      "command": "0013_focused",
+      "elapsed_seconds": 42.1131262909621,
+      "rc": 1
+    },
+    {
+      "command": "0014_schema",
+      "elapsed_seconds": 0.7626552097499371,
+      "rc": 1
+    },
+    {
+      "command": "0015_schema",
+      "elapsed_seconds": 0.7216619998216629,
+      "rc": 0
+    },
+    {
+      "command": "0016_live",
+      "elapsed_seconds": 24.567119624465704,
+      "rc": 1
+    },
+    {
+      "command": "0017_idempotency",
+      "elapsed_seconds": 6.289155709557235,
+      "rc": 0
+    },
+    {
+      "command": "0018_live_resume",
+      "elapsed_seconds": 145.75350225064903,
+      "rc": 1
+    },
+    {
+      "command": "0019_captured_completion",
+      "elapsed_seconds": 180.72650929261,
+      "rc": 1
+    },
+    {
+      "command": "0020_bsep_cause",
+      "elapsed_seconds": 0.6173015423119068,
+      "rc": 0
+    },
+    {
+      "command": "0021_bsep_fixed",
+      "elapsed_seconds": 0.7937672501429915,
+      "rc": 0
+    },
+    {
+      "command": "0022_captured_final",
+      "elapsed_seconds": 208.7606423748657,
+      "rc": 0
+    },
+    {
+      "command": "0023_guard",
+      "elapsed_seconds": 1.3497729999944568,
+      "rc": 0
+    },
+    {
+      "command": "0024_controlled_final",
+      "elapsed_seconds": 21.897331291809678,
+      "rc": 0
+    },
+    {
+      "command": "0025_final_focused",
+      "elapsed_seconds": 122.88581008277833,
+      "rc": 1
+    },
+    {
+      "command": "0026_binder_alignment",
+      "elapsed_seconds": 27.439414916560054,
+      "rc": 0
+    },
+    {
+      "command": "0027_pure_replay_one",
+      "elapsed_seconds": 17.081463834270835,
+      "rc": 0
+    },
+    {
+      "command": "0028_pure_replay_two",
+      "elapsed_seconds": 16.928096500225365,
+      "rc": 0
+    },
+    {
+      "command": "0029_final_source_controls",
+      "elapsed_seconds": 36.68289695773274,
+      "rc": 0
+    },
+    {
+      "command": "0030_patch_and_preservation",
+      "elapsed_seconds": 16.082933083176613,
+      "rc": 0
+    },
+    {
+      "command": "0031_evidence_summary",
+      "elapsed_seconds": 0.36461883410811424,
+      "rc": 1
+    },
+    {
+      "command": "0032_evidence_summary",
+      "elapsed_seconds": 0.6931937914341688,
+      "rc": 1
+    }
+  ],
+  "controlled": [
+    {
+      "elapsed_us": 117877,
+      "phase": "ADV-1"
+    },
+    {
+      "elapsed_us": 65840,
+      "phase": "ADV-2"
+    },
+    {
+      "elapsed_us": 502209,
+      "phase": "ADV-3"
+    },
+    {
+      "elapsed_us": 3355125,
+      "phase": "history_record"
+    },
+    {
+      "elapsed_us": 7532327,
+      "phase": "current_history_work"
+    },
+    {
+      "elapsed_us": 1588449,
+      "phase": "lawful_objective"
+    }
+  ],
+  "full_release_cost": "UNKNOWN_NOT_RUN",
+  "latency_limitation": "Command/phase totals overlap; do not add provider phases to their enclosing command. Source setup and combined Root/Work subtotals not separately instrumented are UNKNOWN.",
+  "packaging": "Detached PACKAGE_RESULT.json",
+  "provider_seconds": 23.360867,
+  "total_completed_command_seconds": 971.3631300479174
+}

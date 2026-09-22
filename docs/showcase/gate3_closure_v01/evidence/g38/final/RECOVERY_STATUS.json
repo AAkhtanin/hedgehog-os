@@ -1,0 +1,39 @@
+{
+  "status": "FOUR_HISTORICAL_BODIES_RECOVERED_EXACTLY_TWO_FAILED_VERSIONS_UNRESOLVED",
+  "executed_by_g38": false,
+  "recovered": {
+    "b9532eaa0de0cb72608a50d922f70f0321c3d35301deb14b457e72d9b9b7e225": {
+      "bytes": 7549,
+      "path": "input_kit/historical_helpers/validate_owner_procedure.original_failed.py",
+      "source_command": "0008_validate_g38_owner_procedure"
+    },
+    "97d1779a6b8820c33ec94249a8ca9cf231f6a0a03665639da29188d02ad3b7c7": {
+      "bytes": 7755,
+      "path": "input_kit/historical_helpers/validate_owner_procedure.repair01.py",
+      "source_command": "0009_validate_g38_owner_procedure_repair_01"
+    },
+    "7ab6d5a40b47d76e36db8e1bc2ce7a8bd452a82e9f53e1b26d8b2fed104b9bc1": {
+      "bytes": 15081,
+      "path": "input_kit/historical_helpers/validate_saved_successors.repair01.py",
+      "source_command": "0004_retained_supplied_validation_repair_01"
+    },
+    "2ad2dc566c5d5da737bf8e8ead3ad81006a1e3b0761163e468d6fc1fd502816e": {
+      "bytes": 2362,
+      "path": "historical_recovery/local_recovered/verify_g37r_archive.py",
+      "source_command": "0015_verify_return_archive"
+    }
+  },
+  "unresolved": {
+    "5a445a42b89d8e7f6b3412690759c1fcdc021c3fb6928e31cef1a8e2a4014326": {
+      "bytes": 14542,
+      "helper": "validate_saved_successors_v01.py",
+      "status": "FAILED_SUPERSEDED_BODY_UNAVAILABLE"
+    },
+    "32ca986cf61cc5c242974437f8f1c9fc95cdab093fb5a2b1b2f8ab9c6566fc9b": {
+      "bytes": 10016,
+      "helper": "build_source_payload_v01.py",
+      "status": "FAILED_SUPERSEDED_BODY_UNAVAILABLE"
+    }
+  },
+  "note": "Current same-name final helpers have different hashes and do not replace unresolved historical versions."
+}

@@ -1,0 +1,1 @@
+{"amount":"10","evidence_refs":["document:ADV-1"],"expected_fp":null,"operation":"CONFIRM","order":"objective","recipient":"supplier:A","recommendation":"PROCEED"}

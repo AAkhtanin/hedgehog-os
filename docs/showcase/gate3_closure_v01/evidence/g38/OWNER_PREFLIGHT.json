@@ -1,0 +1,35 @@
+{
+  "archive": {
+    "bytes": 19193417,
+    "sha256": "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9"
+  },
+  "owner": {
+    "branch": "main",
+    "fetch_urls": [
+      "https://github.com/AAkhtanin/hedgehog-os.git"
+    ],
+    "head": "d199199a578c078c913a2381f595549175bd9235",
+    "index_sha256": "59554fdf1b27b8f241b4395a2b5f360f60e7bdb40ee23d22ab1361a5b0e64c47",
+    "parent": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+    "push_urls": [
+      "https://github.com/AAkhtanin/hedgehog-os.git"
+    ],
+    "remote_main": [
+      "d199199a578c078c913a2381f595549175bd9235",
+      "refs/heads/main"
+    ],
+    "staging_empty": true,
+    "status_clean": true,
+    "tracked_rows": 1095,
+    "tree": "26d63912117a2324cc7e711407be33123f55ab81"
+  },
+  "payload_manifest": {
+    "bytes": 17122,
+    "sha256": "2e4b8a60fef5f335998f03e204c552735f4689b329710c33b374d530082ac31f"
+  },
+  "script": {
+    "bytes": 22305,
+    "sha256": "e0f8928c370738641e46141b1e0e091b43fa85767116473f0779b04b79cf4047"
+  },
+  "status": "PASS"
+}

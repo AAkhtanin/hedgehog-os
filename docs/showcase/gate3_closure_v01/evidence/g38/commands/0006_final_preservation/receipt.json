@@ -1,0 +1,45 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/final_preservation_v01.py",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--evidence",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_PRESERVATION.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "elapsed_seconds": 1.012159,
+  "ended_at": "2026-09-22T14:44:37.965259Z",
+  "label": "final_preservation",
+  "rc": 0,
+  "sources": {
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/FINAL_OWNER_READBACK.json": {
+      "bytes": 956,
+      "sha256": "c1e0b4e2f0b418a28795a6b99c5ca0ddef40d6ccf99498c218998e228226e91a"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/final/RECOVERY_STATUS.json": {
+      "bytes": 1685,
+      "sha256": "032701eb4d747d4ddc1415a54a36658ad527ef042327a85107eb077295d2fb2b"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/final_preservation_v01.py": {
+      "bytes": 4860,
+      "sha256": "243e6bf9547a2ff609640b7a88061129cfd4b0f66771c4b459680182041befd5"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/run_command_v01.py": {
+      "bytes": 4421,
+      "sha256": "ad1e5b9c16ef4a363a6b6911564066c772256049d89d5b47c7cfef8ea324d2eb"
+    }
+  },
+  "started_at": "2026-09-22T14:44:36.953005Z",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 1915,
+    "sha256": "344bed20cf50b500d01b51338726d526a75151466f4cf6f765aa19952d233531"
+  }
+}

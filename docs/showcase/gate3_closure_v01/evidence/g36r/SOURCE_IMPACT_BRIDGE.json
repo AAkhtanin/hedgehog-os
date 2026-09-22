@@ -1,0 +1,23 @@
+{
+  "current": {
+    "0008_controlled_03": {
+      "changed_production": {
+        "hedgehog/gate3_mechanism_v01.py": {
+          "after": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8",
+          "before": "d800aba1b151f81bec16a41904321d1465673a9e3bde214976bab055f9a6b354",
+          "impact": "Only derived native_boundaries report projection; producer predicates unchanged by AST"
+        }
+      },
+      "final_consumer_validation": "0014 and two independent pure replays"
+    },
+    "0012_captured": {
+      "changed_production": {},
+      "final_consumer_validation": "0014 and two independent pure replays"
+    }
+  },
+  "g35": "Original source/report/baseline untouched; fresh replay remains exactly 144756 bytes and f9ca8e48dc61c815e1235afa0c5141aed96128823dd094ae44aef8ecd03ee75d.",
+  "historical_admission": "Predicates/constants preserved except the current G36 source pin table; independently reconstructed guard controls passed.",
+  "numeric": "Algorithms and their files are unchanged. Selected prior/dedup/64-effective/256-delivery controls executed fresh.",
+  "ordinary_legacy_history": "Optional compact projections apply only to corrected G36 source events. Accepted old pointers remain exact; only previously rejected generated references use reversible encoding.",
+  "previous_g36": "Recorded 42-node evidence is preserved, not promoted to fresh repaired acceptance. Old supplied mechanism is explicitly legacy incomplete."
+}

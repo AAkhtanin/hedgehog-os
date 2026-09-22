@@ -1,0 +1,2107 @@
+{
+  "all_attempt_receipts": [
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/prepare_inputs.py"
+      ],
+      "command": "0001_originals_and_compile",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 1.8098961673676968,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:00:15.227758Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:00:13.417438Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py::test_g36r_review_only_isolation_and_legacy_default",
+        "tests/test_gate3_adversary_v01.py::test_g36r_two_recorded_deliveries_keep_original_anchor",
+        "tests/test_gate3_adversary_v01.py::test_g36_early_lawful_advice_does_not_revive_consumed_order",
+        "tests/test_gate3_adversary_v01.py::test_g36_closed_parser"
+      ],
+      "command": "0002_pure_and_boundaries",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 18.46656887512654,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:01:16.904674Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:00:58.437483Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/diagnose_pointer.py"
+      ],
+      "command": "0004_pointer_diagnostic",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 2.252742750570178,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:08:42.308223Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:08:40.054973Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard"
+      ],
+      "command": "0005_pointer_control",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 0.6941661247983575,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:11:34.404066Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:11:33.709345Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard"
+      ],
+      "command": "0006_pointer_control",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 0.6426422093063593,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:12:03.300020Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:12:02.656925Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "demo/run_gate3_calibration_v01.py",
+        "controlled-adversary",
+        "--output",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/runtime/controlled_02"
+      ],
+      "command": "0007_controlled_02",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 24.52842874918133,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:12:45.931059Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:12:21.401901Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "demo/run_gate3_calibration_v01.py",
+        "controlled-adversary",
+        "--output",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/runtime/controlled_03"
+      ],
+      "command": "0008_controlled_03",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 26.288659874349833,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:18:16.193410Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:17:49.904015Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py",
+        "tests/test_gate3_mechanism_registration_v01.py"
+      ],
+      "command": "0009_focused_saved",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 133.75990008283406,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:20:55.551200Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:18:41.789736Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py::test_g36_missing_prospective_expectation_is_no_update",
+        "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal"
+      ],
+      "command": "0010_expectation_control",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 1.1923851668834686,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:22:10.102615Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:22:08.909752Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/refresh_proof.py"
+      ],
+      "command": "0011_refresh_proof",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 10.555524707771838,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:23:17.930236Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:23:07.374236Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "demo/run_gate3_calibration_v01.py",
+        "captured-adversary",
+        "--output",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/runtime/captured_final",
+        "--captures",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/retained/runtime/g36_captured_final_captures",
+        "--originals",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/originals",
+        "--original-pins",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/ORIGINAL_PINS.json"
+      ],
+      "command": "0012_captured",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 353.9225097503513,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:29:37.829053Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:23:43.907802Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "tools/check_active_architecture_authority_v01.py"
+      ],
+      "command": "0013_guard",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 1.3848043326288462,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:36:27.347747Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:36:25.962527Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "phase_plugin",
+        "tests/test_gate3_adversary_v01.py",
+        "tests/test_gate3_mechanism_registration_v01.py",
+        "tests/test_outcome_feedback_history_v01.py::test_g34_prior_integer_boundary_oracle",
+        "tests/test_outcome_feedback_history_v01.py::test_g34_closed_prior_boundary_64_and_reference_idempotence",
+        "tests/test_outcome_calibration_v01.py::test_g33_exact_redelivery_audit_and_supplied_validation",
+        "tests/test_outcome_calibration_v01.py::test_g33_delivery_batch_128_129_256_and_257_refusal",
+        "tests/test_outcome_calibration_v01.py::test_g33_subject_lane_and_bad_scalar_controls",
+        "tests/test_active_architecture_authority_v01.py::test_g36_exact_unstaged_staged_and_hostile_controls",
+        "tests/test_active_architecture_authority_v01.py::test_g36_historical_g35_predicates_and_work_frozen",
+        "tests/test_active_architecture_authority_v01.py::test_g36_fixture_from_advanced_disposable_head",
+        "tests/test_repository_release_spine_v01.py::test_g36_binder_has_final_precedence_v01"
+      ],
+      "command": "0014_final_focused",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 246.81954625062644,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:41:26.122621Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:37:19.303784Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/g36_pure_process.py"
+      ],
+      "command": "0015_pure_replay_one",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 53.512606458738446,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:44:27.964984Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:43:34.451985Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/g36_pure_process.py"
+      ],
+      "command": "0016_pure_replay_two",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 53.31311858352274,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:47:00.153267Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:46:06.839878Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/helpers/verify_return.py"
+      ],
+      "command": "0017_preservation_and_patches",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 17.278350166976452,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:51:07.212520Z",
+      "returncode": 0,
+      "started_at": "2026-09-22T07:50:49.933813Z"
+    },
+    {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+        "-B",
+        "demo/run_gate3_calibration_v01.py",
+        "controlled-adversary",
+        "--output",
+        "/Users/admin/Projects/hedgehog-os-gate3-g36r-evidence-20260922/runtime/controlled_01"
+      ],
+      "command": "controlled_01",
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g36r-candidate-20260922",
+      "elapsed_seconds": 4.143550958484411,
+      "finalizers_complete": true,
+      "finished_at": "2026-09-22T07:06:40.480153Z",
+      "returncode": 1,
+      "started_at": "2026-09-22T07:06:36.335820Z"
+    }
+  ],
+  "command": "0014_final_focused",
+  "earlier_failures_retained": true,
+  "full_living_conformance": false,
+  "nodes": {
+    "tests/test_active_architecture_authority_v01.py::test_g36_exact_unstaged_staged_and_hostile_controls": [
+      {
+        "duration_seconds": 0.9915744159370661,
+        "elapsed_seconds": 235.642458666116,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_exact_unstaged_staged_and_hostile_controls",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 5.339517208747566,
+        "elapsed_seconds": 240.98241387493908,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_exact_unstaged_staged_and_hostile_controls",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 0.0006749164313077927,
+        "elapsed_seconds": 240.98515112511814,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_exact_unstaged_staged_and_hostile_controls",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_active_architecture_authority_v01.py::test_g36_fixture_from_advanced_disposable_head": [
+      {
+        "duration_seconds": 0.0005361251533031464,
+        "elapsed_seconds": 242.91800833307207,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_fixture_from_advanced_disposable_head",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.3207546658813953,
+        "elapsed_seconds": 246.23903758265078,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_fixture_from_advanced_disposable_head",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 0.0002522077411413193,
+        "elapsed_seconds": 246.23948362469673,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_fixture_from_advanced_disposable_head",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_active_architecture_authority_v01.py::test_g36_historical_g35_predicates_and_work_frozen": [
+      {
+        "duration_seconds": 0.8507477501407266,
+        "elapsed_seconds": 241.8386959163472,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_historical_g35_predicates_and_work_frozen",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 1.0775797497481108,
+        "elapsed_seconds": 242.9167110407725,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_historical_g35_predicates_and_work_frozen",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 0.00012958422303199768,
+        "elapsed_seconds": 242.91709520854056,
+        "failure": null,
+        "nodeid": "tests/test_active_architecture_authority_v01.py::test_g36_historical_g35_predicates_and_work_frozen",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_actual_boundaries_and_useful_continuation": [
+      {
+        "duration_seconds": 0.011351792141795158,
+        "elapsed_seconds": 53.4485129583627,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_actual_boundaries_and_useful_continuation",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.902755250222981,
+        "elapsed_seconds": 58.35157850012183,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_actual_boundaries_and_useful_continuation",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.61252236366272e-05,
+        "elapsed_seconds": 58.351793540641665,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_actual_boundaries_and_useful_continuation",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_closed_local_source_and_feedback_schema": [
+      {
+        "duration_seconds": 0.00010120775550603867,
+        "elapsed_seconds": 153.7306898329407,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_local_source_and_feedback_schema",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.05272487457841635,
+        "elapsed_seconds": 153.78358958289027,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_local_source_and_feedback_schema",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.4958276450634e-05,
+        "elapsed_seconds": 153.78384600020945,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_local_source_and_feedback_schema",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[[]]": [
+      {
+        "duration_seconds": 6.3333660364151e-05,
+        "elapsed_seconds": 153.78497641626745,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[[]]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 5.1458366215229034e-05,
+        "elapsed_seconds": 153.7850977499038,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[[]]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 3.854185342788696e-05,
+        "elapsed_seconds": 153.78519616648555,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[[]]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"expected_fp\":NaN}]": [
+      {
+        "duration_seconds": 6.633345037698746e-05,
+        "elapsed_seconds": 153.78536679130048,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"expected_fp\":NaN}]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.908256232738495e-05,
+        "elapsed_seconds": 153.78549283277243,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"expected_fp\":NaN}]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 3.187544643878937e-05,
+        "elapsed_seconds": 153.78558050002903,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"expected_fp\":NaN}]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"recommendation\":\"PROCEED\",\"recommendation\":\"STOP\"}]": [
+      {
+        "duration_seconds": 6.591714918613434e-05,
+        "elapsed_seconds": 153.78457900043577,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"recommendation\":\"PROCEED\",\"recommendation\":\"STOP\"}]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 5.812477320432663e-05,
+        "elapsed_seconds": 153.78471241611987,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"recommendation\":\"PROCEED\",\"recommendation\":\"STOP\"}]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.108250141143799e-05,
+        "elapsed_seconds": 153.78481016587466,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{\"recommendation\":\"PROCEED\",\"recommendation\":\"STOP\"}]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{}]": [
+      {
+        "duration_seconds": 0.00010429136455059052,
+        "elapsed_seconds": 153.7841173755005,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{}]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 6.470829248428345e-05,
+        "elapsed_seconds": 153.78426658269018,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{}]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 3.8292258977890015e-05,
+        "elapsed_seconds": 153.78439641650766,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_parser[{}]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[late_E]": [
+      {
+        "duration_seconds": 0.00011091772466897964,
+        "elapsed_seconds": 58.36207929067314,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[late_E]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.008838166482746601,
+        "elapsed_seconds": 58.37099870853126,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[late_E]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.2708590626716614e-05,
+        "elapsed_seconds": 58.37110216636211,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[late_E]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[missing_E]": [
+      {
+        "duration_seconds": 0.00012695789337158203,
+        "elapsed_seconds": 58.35224412474781,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[missing_E]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.009283917024731636,
+        "elapsed_seconds": 58.3616549577564,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[missing_E]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.929133087396622e-05,
+        "elapsed_seconds": 58.36182741634548,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[missing_E]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[model]": [
+      {
+        "duration_seconds": 0.00010254140943288803,
+        "elapsed_seconds": 58.39856449980289,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[model]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.009002957493066788,
+        "elapsed_seconds": 58.40765804145485,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[model]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.187505692243576e-05,
+        "elapsed_seconds": 58.4077722504735,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[model]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[origin]": [
+      {
+        "duration_seconds": 8.454173803329468e-05,
+        "elapsed_seconds": 58.38893337547779,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[origin]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.009169374592602253,
+        "elapsed_seconds": 58.398206000216305,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[origin]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.8833899199962616e-05,
+        "elapsed_seconds": 58.398339457809925,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[origin]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[policy]": [
+      {
+        "duration_seconds": 8.833315223455429e-05,
+        "elapsed_seconds": 58.40799433272332,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[policy]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.008739417418837547,
+        "elapsed_seconds": 58.41680375020951,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[policy]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 3.704242408275604e-05,
+        "elapsed_seconds": 58.4168940410018,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[policy]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[receipt]": [
+      {
+        "duration_seconds": 7.870793342590332e-05,
+        "elapsed_seconds": 58.41706524975598,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[receipt]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.25408124923706055,
+        "elapsed_seconds": 58.67127250041813,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[receipt]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.7833269238471985e-05,
+        "elapsed_seconds": 58.671515541151166,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[receipt]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[root]": [
+      {
+        "duration_seconds": 8.449982851743698e-05,
+        "elapsed_seconds": 58.371292625553906,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[root]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.017249291762709618,
+        "elapsed_seconds": 58.38862050045282,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[root]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.483293741941452e-05,
+        "elapsed_seconds": 58.3887383332476,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[root]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[unknown]": [
+      {
+        "duration_seconds": 0.00011095777153968811,
+        "elapsed_seconds": 58.67198137473315,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[unknown]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.009309791959822178,
+        "elapsed_seconds": 58.68141558300704,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[unknown]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.524978041648865e-05,
+        "elapsed_seconds": 58.68156983330846,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_coherently_rehashed_source_refusal[unknown]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[MALFORMED]": [
+      {
+        "duration_seconds": 9.987503290176392e-05,
+        "elapsed_seconds": 172.1267705829814,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[MALFORMED]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.20701029058545828,
+        "elapsed_seconds": 172.33391691651195,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[MALFORMED]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.7499855756759644e-05,
+        "elapsed_seconds": 172.33412112481892,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[MALFORMED]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[REFUSE]": [
+      {
+        "duration_seconds": 9.770877659320831e-05,
+        "elapsed_seconds": 171.9118352504447,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[REFUSE]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.21415979228913784,
+        "elapsed_seconds": 172.12612095847726,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[REFUSE]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.558319389820099e-05,
+        "elapsed_seconds": 172.1263217907399,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[REFUSE]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[STOP]": [
+      {
+        "duration_seconds": 0.00010100007057189941,
+        "elapsed_seconds": 171.6823238749057,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[STOP]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.22896841634064913,
+        "elapsed_seconds": 171.9114140411839,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[STOP]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.7250261306762695e-05,
+        "elapsed_seconds": 171.91159158293158,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[STOP]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[TRANSPORT_FAILED]": [
+      {
+        "duration_seconds": 9.320862591266632e-05,
+        "elapsed_seconds": 172.33459837548435,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[TRANSPORT_FAILED]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.2081352500244975,
+        "elapsed_seconds": 172.5428951252252,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[TRANSPORT_FAILED]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.158370524644852e-05,
+        "elapsed_seconds": 172.54311675019562,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_distinct_semantic_outcomes_not_fake_firewall_blocks[TRANSPORT_FAILED]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_early_lawful_advice_does_not_revive_consumed_order": [
+      {
+        "duration_seconds": 3.295857459306717e-05,
+        "elapsed_seconds": 153.7857191255316,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_early_lawful_advice_does_not_revive_consumed_order",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.5109837502241135,
+        "elapsed_seconds": 154.2968290410936,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_early_lawful_advice_does_not_revive_consumed_order",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.904251545667648e-05,
+        "elapsed_seconds": 154.29702895786613,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_early_lawful_advice_does_not_revive_consumed_order",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_missing_prospective_expectation_is_no_update": [
+      {
+        "duration_seconds": 7.83335417509079e-05,
+        "elapsed_seconds": 58.681786875240505,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_missing_prospective_expectation_is_no_update",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.12733641639351845,
+        "elapsed_seconds": 58.80924979131669,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_missing_prospective_expectation_is_no_update",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.662534385919571e-05,
+        "elapsed_seconds": 58.8094319999218,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_missing_prospective_expectation_is_no_update",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_multiple_source_refs_keep_bsep_bounded": [
+      {
+        "duration_seconds": 4.2875297367572784e-05,
+        "elapsed_seconds": 171.67993591632694,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_multiple_source_refs_keep_bsep_bounded",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.0019428757950663567,
+        "elapsed_seconds": 171.681983333081,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_multiple_source_refs_keep_bsep_bounded",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.099961370229721e-05,
+        "elapsed_seconds": 171.68210295774043,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_multiple_source_refs_keep_bsep_bounded",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_redelivery_is_not_independent_sample": [
+      {
+        "duration_seconds": 3.7750229239463806e-05,
+        "elapsed_seconds": 58.809765791520476,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_redelivery_is_not_independent_sample",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 2.5269225845113397,
+        "elapsed_seconds": 61.336832541041076,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_redelivery_is_not_independent_sample",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.845818668603897e-05,
+        "elapsed_seconds": 61.33706933353096,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_redelivery_is_not_independent_sample",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[descent]": [
+      {
+        "duration_seconds": 0.00011570844799280167,
+        "elapsed_seconds": 140.23398237489164,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[descent]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.386383666656911,
+        "elapsed_seconds": 144.62053600046784,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[descent]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.779097020626068e-05,
+        "elapsed_seconds": 144.62078866641968,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[descent]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[pin]": [
+      {
+        "duration_seconds": 0.00011833291500806808,
+        "elapsed_seconds": 130.7433959580958,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[pin]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.3490676246583462,
+        "elapsed_seconds": 131.09262233320624,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[pin]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.033293902873993e-05,
+        "elapsed_seconds": 131.0928904581815,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[pin]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[prior]": [
+      {
+        "duration_seconds": 0.00014695804566144943,
+        "elapsed_seconds": 144.62128379102796,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[prior]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.29731862526387,
+        "elapsed_seconds": 148.91878200042993,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[prior]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.862450391054153e-05,
+        "elapsed_seconds": 148.91901850048453,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[prior]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[report]": [
+      {
+        "duration_seconds": 0.0001442907378077507,
+        "elapsed_seconds": 148.9195349579677,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[report]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.8103020414710045,
+        "elapsed_seconds": 153.7300179162994,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[report]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.033293902873993e-05,
+        "elapsed_seconds": 153.73026679083705,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[report]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_history]": [
+      {
+        "duration_seconds": 0.00011862535029649734,
+        "elapsed_seconds": 135.6657260833308,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_history]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.567365124821663,
+        "elapsed_seconds": 140.23325120843947,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_history]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.875062197446823e-05,
+        "elapsed_seconds": 140.2334878332913,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_history]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_output]": [
+      {
+        "duration_seconds": 0.0001110835000872612,
+        "elapsed_seconds": 131.09336545784026,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_output]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.571475499309599,
+        "elapsed_seconds": 135.66498654149473,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_output]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 7.229018956422806e-05,
+        "elapsed_seconds": 135.66522808279842,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_supplied_relation_refusal[work_output]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_captured_original_time_and_actual_continuation": [
+      {
+        "duration_seconds": 3.7250109016895294e-05,
+        "elapsed_seconds": 98.64609966613352,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_captured_original_time_and_actual_continuation",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 31.796782040968537,
+        "elapsed_seconds": 130.44304429087788,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_captured_original_time_and_actual_continuation",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.7666562497615814e-05,
+        "elapsed_seconds": 130.44330841582268,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_captured_original_time_and_actual_continuation",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_missing]": [
+      {
+        "duration_seconds": 0.00011041667312383652,
+        "elapsed_seconds": 86.66766262520105,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_missing]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.897078040987253,
+        "elapsed_seconds": 90.56487924978137,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_missing]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.387569010257721e-05,
+        "elapsed_seconds": 90.56513937469572,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_missing]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_refusal]": [
+      {
+        "duration_seconds": 0.00011762510985136032,
+        "elapsed_seconds": 94.49770570825785,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_refusal]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.984753042459488,
+        "elapsed_seconds": 98.48261620849371,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_refusal]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.337463855743408e-05,
+        "elapsed_seconds": 98.48283325042576,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_refusal]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_scope]": [
+      {
+        "duration_seconds": 0.00014591682702302933,
+        "elapsed_seconds": 90.56566054094583,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_scope]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.931198874488473,
+        "elapsed_seconds": 94.49700404144824,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_scope]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.00004568696022e-05,
+        "elapsed_seconds": 94.49723795801401,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[adv4_scope]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[cold_contract]": [
+      {
+        "duration_seconds": 0.00012466683983802795,
+        "elapsed_seconds": 67.35579416621476,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[cold_contract]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.93436558265239,
+        "elapsed_seconds": 71.29031649976969,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[cold_contract]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.8040954172611237e-05,
+        "elapsed_seconds": 71.2905150000006,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[cold_contract]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[consumed_removed]": [
+      {
+        "duration_seconds": 0.00012629199773073196,
+        "elapsed_seconds": 78.97243683319539,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[consumed_removed]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.871581207960844,
+        "elapsed_seconds": 82.8441712083295,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[consumed_removed]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 7.041636854410172e-05,
+        "elapsed_seconds": 82.8444470828399,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[consumed_removed]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[host_event]": [
+      {
+        "duration_seconds": 0.0001411670818924904,
+        "elapsed_seconds": 82.84494666568935,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[host_event]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.8218750841915607,
+        "elapsed_seconds": 86.6669958755374,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[host_event]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.991663783788681e-05,
+        "elapsed_seconds": 86.66724279150367,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[host_event]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[main_contract]": [
+      {
+        "duration_seconds": 0.00011970847845077515,
+        "elapsed_seconds": 63.2705044997856,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[main_contract]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.084395250305533,
+        "elapsed_seconds": 67.35506954137236,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[main_contract]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.204098463058472e-05,
+        "elapsed_seconds": 67.35531408339739,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[main_contract]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[splice]": [
+      {
+        "duration_seconds": 0.00011508353054523468,
+        "elapsed_seconds": 75.60181420855224,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[splice]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 3.3697505416348577,
+        "elapsed_seconds": 78.97171925008297,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[splice]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.733369082212448e-05,
+        "elapsed_seconds": 78.97199379093945,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[splice]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[work_contract]": [
+      {
+        "duration_seconds": 0.00011404231190681458,
+        "elapsed_seconds": 71.29077699966729,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[work_contract]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.31021758262068,
+        "elapsed_seconds": 75.60117745772004,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[work_contract]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.9582293033599854e-05,
+        "elapsed_seconds": 75.60138991568238,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_coherent_saved_relations_rejected[work_contract]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard": [
+      {
+        "duration_seconds": 5.270913243293762e-05,
+        "elapsed_seconds": 155.4557450413704,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.0004787091165781021,
+        "elapsed_seconds": 155.456347707659,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.308391362428665e-05,
+        "elapsed_seconds": 155.4565052082762,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_generated_pointer_preserves_public_secret_guard",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_legacy_incomplete_not_promoted": [
+      {
+        "duration_seconds": 4.0500424802303314e-05,
+        "elapsed_seconds": 130.44370279088616,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_legacy_incomplete_not_promoted",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.2988048745319247,
+        "elapsed_seconds": 130.74265066627413,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_legacy_incomplete_not_promoted",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.2374787628650665e-05,
+        "elapsed_seconds": 130.7428882503882,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_legacy_incomplete_not_promoted",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_original_sample_conflict_and_distinct_identity": [
+      {
+        "duration_seconds": 8.862465620040894e-05,
+        "elapsed_seconds": 98.48308062553406,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_original_sample_conflict_and_distinct_identity",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.16253520734608173,
+        "elapsed_seconds": 98.64575141575187,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_original_sample_conflict_and_distinct_identity",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.9999915063381195e-05,
+        "elapsed_seconds": 98.64591525029391,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_original_sample_conflict_and_distinct_identity",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[coherent_origin]": [
+      {
+        "duration_seconds": 0.00011558365076780319,
+        "elapsed_seconds": 63.04188499972224,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[coherent_origin]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.22777262516319752,
+        "elapsed_seconds": 63.269805249758065,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[coherent_origin]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.350036710500717e-05,
+        "elapsed_seconds": 63.270047708414495,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[coherent_origin]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[empty]": [
+      {
+        "duration_seconds": 0.00011441577225923538,
+        "elapsed_seconds": 61.540140458382666,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[empty]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.20869600027799606,
+        "elapsed_seconds": 61.74896745849401,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[empty]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.416626274585724e-05,
+        "elapsed_seconds": 61.74916116613895,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[empty]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[history]": [
+      {
+        "duration_seconds": 0.00013416633009910583,
+        "elapsed_seconds": 62.38351795822382,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[history]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.210529375821352,
+        "elapsed_seconds": 62.594210708513856,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[history]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.8292411267757416e-05,
+        "elapsed_seconds": 62.59446612466127,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[history]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[missing]": [
+      {
+        "duration_seconds": 0.00013666599988937378,
+        "elapsed_seconds": 61.33738441579044,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[missing]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.2019527917727828,
+        "elapsed_seconds": 61.539488040842116,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[missing]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.9917569160461426e-05,
+        "elapsed_seconds": 61.5397168751806,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[missing]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[request]": [
+      {
+        "duration_seconds": 0.00012033246457576752,
+        "elapsed_seconds": 61.961483540944755,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[request]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.2094109170138836,
+        "elapsed_seconds": 62.17102316580713,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[request]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.520787090063095e-05,
+        "elapsed_seconds": 62.17120537534356,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[request]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[response]": [
+      {
+        "duration_seconds": 0.00011258386075496674,
+        "elapsed_seconds": 62.17170595843345,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[response]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.21091233473271132,
+        "elapsed_seconds": 62.382779208011925,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[response]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 7.741712033748627e-05,
+        "elapsed_seconds": 62.38306254148483,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[response]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[root]": [
+      {
+        "duration_seconds": 0.00011487491428852081,
+        "elapsed_seconds": 61.74941933341324,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[root]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.21126733347773552,
+        "elapsed_seconds": 61.960830207914114,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[root]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.124936044216156e-05,
+        "elapsed_seconds": 61.96104983333498,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[root]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[snapshot]": [
+      {
+        "duration_seconds": 0.000108291395008564,
+        "elapsed_seconds": 62.594886125065386,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[snapshot]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.2209018748253584,
+        "elapsed_seconds": 62.81592295784503,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[snapshot]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.674920976161957e-05,
+        "elapsed_seconds": 62.81613575015217,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[snapshot]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[source_pin]": [
+      {
+        "duration_seconds": 0.00011154171079397202,
+        "elapsed_seconds": 62.816621040925384,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[source_pin]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.22447937540709972,
+        "elapsed_seconds": 63.04124083276838,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[source_pin]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.670823156833649e-05,
+        "elapsed_seconds": 63.04143591597676,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_provenance_is_additional_capability_validation[source_pin]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_review_only_isolation_and_legacy_default": [
+      {
+        "duration_seconds": 4.9209222197532654e-05,
+        "elapsed_seconds": 154.2974499585107,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_review_only_isolation_and_legacy_default",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 1.1575299156829715,
+        "elapsed_seconds": 155.45512975007296,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_review_only_isolation_and_legacy_default",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.975032061338425e-05,
+        "elapsed_seconds": 155.4553643334657,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_review_only_isolation_and_legacy_default",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_adversary_v01.py::test_g36r_two_recorded_deliveries_keep_original_anchor": [
+      {
+        "duration_seconds": 3.4875236451625824e-05,
+        "elapsed_seconds": 155.45665666647255,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_two_recorded_deliveries_keep_original_anchor",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 16.222504625096917,
+        "elapsed_seconds": 171.67930070776492,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_two_recorded_deliveries_keep_original_anchor",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.420856177806854e-05,
+        "elapsed_seconds": 171.67953850049525,
+        "failure": null,
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36r_two_recorded_deliveries_keep_original_anchor",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_both_mechanism_consumers_and_zero_collection": [
+      {
+        "duration_seconds": 0.011116540990769863,
+        "elapsed_seconds": 172.55465137492865,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_both_mechanism_consumers_and_zero_collection",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 14.659522250294685,
+        "elapsed_seconds": 187.21435787528753,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_both_mechanism_consumers_and_zero_collection",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.699973553419113e-05,
+        "elapsed_seconds": 187.21454987488687,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_both_mechanism_consumers_and_zero_collection",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_successor_cannot_replace_full_legacy_report_with_g3_pass": [
+      {
+        "duration_seconds": 8.574966341257095e-05,
+        "elapsed_seconds": 207.7438394157216,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_successor_cannot_replace_full_legacy_report_with_g3_pass",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 15.300745375454426,
+        "elapsed_seconds": 223.0448341248557,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_successor_cannot_replace_full_legacy_report_with_g3_pass",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 7.266644388437271e-05,
+        "elapsed_seconds": 223.04587154090405,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_successor_cannot_replace_full_legacy_report_with_g3_pass",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-conformance]": [
+      {
+        "duration_seconds": 0.00013458263128995895,
+        "elapsed_seconds": 203.08814816642553,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-conformance]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.6547781666740775,
+        "elapsed_seconds": 207.74310399964452,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-conformance]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 7.170811295509338e-05,
+        "elapsed_seconds": 207.7433885000646,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-conformance]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-living]": [
+      {
+        "duration_seconds": 0.0001338748261332512,
+        "elapsed_seconds": 198.51841066591442,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-living]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 4.568822833709419,
+        "elapsed_seconds": 203.08738791570067,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-living]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.191711872816086e-05,
+        "elapsed_seconds": 203.08763520792127,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[link-living]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-conformance]": [
+      {
+        "duration_seconds": 0.00013654213398694992,
+        "elapsed_seconds": 192.29890862479806,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-conformance]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 5.00972262583673,
+        "elapsed_seconds": 197.3087814161554,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-conformance]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.308406591415405e-05,
+        "elapsed_seconds": 197.3090120833367,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-conformance]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-living]": [
+      {
+        "duration_seconds": 0.00014445744454860687,
+        "elapsed_seconds": 187.21486025024205,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-living]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 5.083164416253567,
+        "elapsed_seconds": 192.29817050043494,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-living]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.408430635929108e-05,
+        "elapsed_seconds": 192.29841599985957,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[report-living]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-conformance]": [
+      {
+        "duration_seconds": 0.00014620833098888397,
+        "elapsed_seconds": 197.91542533319443,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-conformance]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.6021302072331309,
+        "elapsed_seconds": 198.51770533341914,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-conformance]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.908403545618057e-05,
+        "elapsed_seconds": 198.51790975034237,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-conformance]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-living]": [
+      {
+        "duration_seconds": 0.00013525038957595825,
+        "elapsed_seconds": 197.30950108263642,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-living]",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.6049928329885006,
+        "elapsed_seconds": 197.91463783290237,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-living]",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 6.12093135714531e-05,
+        "elapsed_seconds": 197.9148714998737,
+        "failure": null,
+        "nodeid": "tests/test_gate3_mechanism_registration_v01.py::test_g36_wrapper_rejects_coherent_bad_supplied_proof[source-living]",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_outcome_calibration_v01.py::test_g33_delivery_batch_128_129_256_and_257_refusal": [
+      {
+        "duration_seconds": 5.7999975979328156e-05,
+        "elapsed_seconds": 233.56001512520015,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_delivery_batch_128_129_256_and_257_refusal",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 1.0709396246820688,
+        "elapsed_seconds": 234.63110600039363,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_delivery_batch_128_129_256_and_257_refusal",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 4.916638135910034e-05,
+        "elapsed_seconds": 234.63133179116994,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_delivery_batch_128_129_256_and_257_refusal",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_outcome_calibration_v01.py::test_g33_exact_redelivery_audit_and_supplied_validation": [
+      {
+        "duration_seconds": 0.00042416714131832123,
+        "elapsed_seconds": 233.50791133288294,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_exact_redelivery_audit_and_supplied_validation",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.051462999545037746,
+        "elapsed_seconds": 233.55952766630799,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_exact_redelivery_audit_and_supplied_validation",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.2624382078647614e-05,
+        "elapsed_seconds": 233.5597738334909,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_exact_redelivery_audit_and_supplied_validation",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_outcome_calibration_v01.py::test_g33_subject_lane_and_bad_scalar_controls": [
+      {
+        "duration_seconds": 4.899967461824417e-05,
+        "elapsed_seconds": 234.6317682908848,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_subject_lane_and_bad_scalar_controls",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.01840308401733637,
+        "elapsed_seconds": 234.65032725036144,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_subject_lane_and_bad_scalar_controls",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 8.195918053388596e-05,
+        "elapsed_seconds": 234.6506012501195,
+        "failure": null,
+        "nodeid": "tests/test_outcome_calibration_v01.py::test_g33_subject_lane_and_bad_scalar_controls",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_outcome_feedback_history_v01.py::test_g34_closed_prior_boundary_64_and_reference_idempotence": [
+      {
+        "duration_seconds": 3.5249628126621246e-05,
+        "elapsed_seconds": 223.0467092078179,
+        "failure": null,
+        "nodeid": "tests/test_outcome_feedback_history_v01.py::test_g34_closed_prior_boundary_64_and_reference_idempotence",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 10.459954208694398,
+        "elapsed_seconds": 233.5068435408175,
+        "failure": null,
+        "nodeid": "tests/test_outcome_feedback_history_v01.py::test_g34_closed_prior_boundary_64_and_reference_idempotence",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 5.941558629274368e-05,
+        "elapsed_seconds": 233.50710279121995,
+        "failure": null,
+        "nodeid": "tests/test_outcome_feedback_history_v01.py::test_g34_closed_prior_boundary_64_and_reference_idempotence",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_outcome_feedback_history_v01.py::test_g34_prior_integer_boundary_oracle": [
+      {
+        "duration_seconds": 4.429090768098831e-05,
+        "elapsed_seconds": 223.04616450052708,
+        "failure": null,
+        "nodeid": "tests/test_outcome_feedback_history_v01.py::test_g34_prior_integer_boundary_oracle",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.0001682918518781662,
+        "elapsed_seconds": 223.0464375829324,
+        "failure": null,
+        "nodeid": "tests/test_outcome_feedback_history_v01.py::test_g34_prior_integer_boundary_oracle",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 3.4166499972343445e-05,
+        "elapsed_seconds": 223.04655550047755,
+        "failure": null,
+        "nodeid": "tests/test_outcome_feedback_history_v01.py::test_g34_prior_integer_boundary_oracle",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ],
+    "tests/test_repository_release_spine_v01.py::test_g36_binder_has_final_precedence_v01": [
+      {
+        "duration_seconds": 4.700012505054474e-05,
+        "elapsed_seconds": 246.23981166630983,
+        "failure": null,
+        "nodeid": "tests/test_repository_release_spine_v01.py::test_g36_binder_has_final_precedence_v01",
+        "outcome": "passed",
+        "phase": "setup"
+      },
+      {
+        "duration_seconds": 0.2452004998922348,
+        "elapsed_seconds": 246.48527083266526,
+        "failure": null,
+        "nodeid": "tests/test_repository_release_spine_v01.py::test_g36_binder_has_final_precedence_v01",
+        "outcome": "passed",
+        "phase": "call"
+      },
+      {
+        "duration_seconds": 0.002312958240509033,
+        "elapsed_seconds": 246.48776912502944,
+        "failure": null,
+        "nodeid": "tests/test_repository_release_spine_v01.py::test_g36_binder_has_final_precedence_v01",
+        "outcome": "passed",
+        "phase": "teardown"
+      }
+    ]
+  },
+  "passed_phases": 207,
+  "source_bound_final": true,
+  "unique_nodes": 69
+}

@@ -1,0 +1,459 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/helpers/full_successor_report.py",
+    "living",
+    "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_living_successor_repair_01"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922",
+  "elapsed_seconds": 2300.16765008308,
+  "final_progress": {
+    "at": "2026-09-22T10:20:15.572112Z",
+    "elapsed_seconds": 2299.1245307093486,
+    "phase": "living_finalizer",
+    "state": "COMPLETE"
+  },
+  "finalizers_complete": true,
+  "finished_at": "2026-09-22T10:20:15.689599Z",
+  "helper_identities_after": {
+    "check_living_metadata_repair.py": {
+      "bytes": 2322,
+      "mode": "0o644",
+      "sha256": "85337a212bf06e1c9f4ce59f40da7e768d6630e8e00b81bfb7719650173e252d"
+    },
+    "compile_helpers.py": {
+      "bytes": 485,
+      "mode": "0o644",
+      "sha256": "959c53ee613a5ed225820363ee16fa1593fc41e3a5c22e2e95f2671d3d9402c8"
+    },
+    "diagnose_living_static.py": {
+      "bytes": 4104,
+      "mode": "0o644",
+      "sha256": "904adff14e5ee043c66e1ce6457cb88143a5fd68245675f0aa5c05e26f0b1f87"
+    },
+    "full_successor_report.py": {
+      "bytes": 14853,
+      "mode": "0o644",
+      "sha256": "71c48d2ecd9f49f64ee102adf6d6bff28e0fcc35978d4e629233b2a630f6df76"
+    },
+    "launch.py": {
+      "bytes": 1627,
+      "mode": "0o644",
+      "sha256": "555941030766e15cc10a180606af5fdc29fd0fa3f2e94add4e8aa62507e97c53"
+    },
+    "phase_plugin.py": {
+      "bytes": 2124,
+      "mode": "0o644",
+      "sha256": "ed54f06e4eb68f4bbbabf45878fc3bc961bdc13b288f8eba977f798554d5710a"
+    },
+    "run_command.py": {
+      "bytes": 6853,
+      "mode": "0o644",
+      "sha256": "33cb0ed6f70de2c97e0cc2dff6c8bbf81fb9ea1b6b9a06569530a6e8ef980237"
+    },
+    "setup_g37.py": {
+      "bytes": 11976,
+      "mode": "0o644",
+      "sha256": "1030ddfd88535b35dc2effc4768b8a5b53fca6dbe47ec213a43a3dc618e600e4"
+    },
+    "write_living_cost_assessment.py": {
+      "bytes": 5768,
+      "mode": "0o644",
+      "sha256": "fc3974388d233481300aa3ad1c5ee7c21b4625dbf5821c7c43838170c1b9e0a2"
+    },
+    "write_preflight.py": {
+      "bytes": 8888,
+      "mode": "0o644",
+      "sha256": "b79be110262b9dd5b5415a0c9b7ed10d74c19d2a0de8e02a75ca9c628f5e3782"
+    }
+  },
+  "helpers_unchanged": true,
+  "returncode": 0,
+  "source_identities_after": {
+    "AGENTS.md": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/AGENTS.md",
+      "bytes": 22637,
+      "mode": "0o644",
+      "sha256": "7a1f56d2e0b5206bc558a5b011d9b6240bf0ec817d8598138343168985898285"
+    },
+    "demo/gate3_scenario_packs_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/gate3_scenario_packs_v01.py",
+      "bytes": 3465,
+      "mode": "0o644",
+      "sha256": "cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc"
+    },
+    "demo/run_continuous_delta_runtime_g2_e_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/run_continuous_delta_runtime_g2_e_v01.py",
+      "bytes": 381288,
+      "mode": "0o644",
+      "sha256": "5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c"
+    },
+    "demo/run_fractal_runtime_g2_d_v02.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/run_fractal_runtime_g2_d_v02.py",
+      "bytes": 487211,
+      "mode": "0o644",
+      "sha256": "6399913a0aaca15dc11476045fb514e6059e7d43ed012e0da539b3546a2a80a6"
+    },
+    "demo/run_gate3_calibration_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/run_gate3_calibration_v01.py",
+      "bytes": 10028,
+      "mode": "0o644",
+      "sha256": "53c958c775d488fbae0c1b03072db55d8d7b24ccfde79449f304637a55a1b640"
+    },
+    "demo/run_kernel_conformance_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/run_kernel_conformance_v01.py",
+      "bytes": 136478,
+      "mode": "0o644",
+      "sha256": "dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503"
+    },
+    "demo/run_living_gauntlet_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/run_living_gauntlet_v01.py",
+      "bytes": 262910,
+      "mode": "0o644",
+      "sha256": "85f371ff67322d085586a767389371f0f34f8abf13e6903ae15c6a50a2c54f45"
+    },
+    "docs/gate3_outcome_feedback_checkpoint_v01.md": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/docs/gate3_outcome_feedback_checkpoint_v01.md",
+      "bytes": 24783,
+      "mode": "0o644",
+      "sha256": "fc392f57b910ff52ef0099c8f03ee0ae372c72331737ba2ad2af14e0c721d122"
+    },
+    "docs/gate3_outcome_feedback_contract_v01.md": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/docs/gate3_outcome_feedback_contract_v01.md",
+      "bytes": 42731,
+      "mode": "0o644",
+      "sha256": "e76978c430ba64e573fd9a977518b0566dc6dff5c9b3764275d7923caa85bc21"
+    },
+    "fixtures/gate3_adversary_reference_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_adversary_reference_v01.json",
+      "bytes": 2770,
+      "mode": "0o644",
+      "sha256": "5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5"
+    },
+    "fixtures/gate3_calibration_reference_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_calibration_reference_v01.json",
+      "bytes": 4739,
+      "mode": "0o644",
+      "sha256": "4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5"
+    },
+    "fixtures/gate3_domain_cases_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_domain_cases_v01.json",
+      "bytes": 5261,
+      "mode": "0o644",
+      "sha256": "53039dcfb81fe8a6a075968552214c46eb1f28c6e7286ec6bdde87463a77dc1d"
+    },
+    "fixtures/gate3_g31_predecessor_v01.patch.gz": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_g31_predecessor_v01.patch.gz",
+      "bytes": 33398,
+      "mode": "0o644",
+      "sha256": "5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84"
+    },
+    "fixtures/gate3_g32_predecessor_v01.patch.gz": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_g32_predecessor_v01.patch.gz",
+      "bytes": 95355,
+      "mode": "0o644",
+      "sha256": "3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4"
+    },
+    "fixtures/gate3_g33r_predecessor_v01.patch.gz": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_g33r_predecessor_v01.patch.gz",
+      "bytes": 225435,
+      "mode": "0o644",
+      "sha256": "d59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c"
+    },
+    "fixtures/gate3_g34r2_predecessor_v01.patch.gz": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_g34r2_predecessor_v01.patch.gz",
+      "bytes": 514708,
+      "mode": "0o644",
+      "sha256": "b735220c1b35d84a90fe6a40b1796af8723e17853656413fb9b9c90cea3113b8"
+    },
+    "fixtures/gate3_g35r_predecessor_v01.patch.gz": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_g35r_predecessor_v01.patch.gz",
+      "bytes": 1121978,
+      "mode": "0o644",
+      "sha256": "0d6a750a55a5672794bb7aac71463ff4626f3a80a2f4298a9c1497caccb953c2"
+    },
+    "fixtures/gate3_history_reference_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_history_reference_v01.json",
+      "bytes": 3392,
+      "mode": "0o644",
+      "sha256": "1bed519b08f0a5a79f46f35ea1f463331ee00522f83800cf396d88d7b6bcd4be"
+    },
+    "fixtures/gate3_reference_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_reference_v01.json",
+      "bytes": 38820,
+      "mode": "0o644",
+      "sha256": "e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da"
+    },
+    "fixtures/gate3_sentinel_observation_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/fixtures/gate3_sentinel_observation_v01.json",
+      "bytes": 1290,
+      "mode": "0o644",
+      "sha256": "f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507"
+    },
+    "hedgehog/domains/airline/outcome_feedback_adapter_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "bytes": 14151,
+      "mode": "0o644",
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    "hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "bytes": 4453,
+      "mode": "0o644",
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "bytes": 57487,
+      "mode": "0o644",
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    "hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "bytes": 38463,
+      "mode": "0o644",
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    "hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "bytes": 65393,
+      "mode": "0o644",
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    "hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "bytes": 22566,
+      "mode": "0o644",
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    "hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "bytes": 4909,
+      "mode": "0o644",
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "bytes": 10502,
+      "mode": "0o644",
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    "hedgehog/gate3_mechanism_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/gate3_mechanism_v01.py",
+      "bytes": 26640,
+      "mode": "0o644",
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    "hedgehog/kernel/conformance_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/kernel/conformance_v01.py",
+      "bytes": 76437,
+      "mode": "0o644",
+      "sha256": "6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f"
+    },
+    "hedgehog/kernel/work_composition_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/kernel/work_composition_v01.py",
+      "bytes": 89168,
+      "mode": "0o644",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    "hedgehog/outcome_calibration_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/outcome_calibration_v01.py",
+      "bytes": 57704,
+      "mode": "0o644",
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    "hedgehog/outcome_feedback_consumer_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/outcome_feedback_consumer_v01.py",
+      "bytes": 29609,
+      "mode": "0o644",
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    "hedgehog/outcome_feedback_history_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/outcome_feedback_history_v01.py",
+      "bytes": 57644,
+      "mode": "0o644",
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    "hedgehog/outcome_feedback_report_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/outcome_feedback_report_v01.py",
+      "bytes": 6105,
+      "mode": "0o644",
+      "sha256": "aa382adb332e5925a0f94b228417768fef03382e420d13441c34b9ffb71df385"
+    },
+    "hedgehog/outcome_feedback_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/hedgehog/outcome_feedback_v01.py",
+      "bytes": 65821,
+      "mode": "0o644",
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    "release/completion_manifest.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/completion_manifest.json",
+      "bytes": 31548,
+      "mode": "0o644",
+      "sha256": "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1"
+    },
+    "release/current_limitations.md": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/current_limitations.md",
+      "bytes": 12424,
+      "mode": "0o644",
+      "sha256": "4a69fe851612459824f9245fbdcd1cddb86f29df44a486233ea68a21689accd6"
+    },
+    "release/current_schema_surface_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/current_schema_surface_v01.json",
+      "bytes": 4764,
+      "mode": "0o644",
+      "sha256": "8f5d4703c7a0f502550595475666e88b905c443c4be07cff746fb43cd9449f15"
+    },
+    "release/current_status_overlay_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/current_status_overlay_v01.json",
+      "bytes": 155137,
+      "mode": "0o644",
+      "sha256": "59e49e5ac8e6ddf66bfc9088be1df8a357cd4737dbd321de548313c41f96a513"
+    },
+    "release/integration_seam_index.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/integration_seam_index.json",
+      "bytes": 16507,
+      "mode": "0o644",
+      "sha256": "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f"
+    },
+    "release/integration_seam_index.md": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/integration_seam_index.md",
+      "bytes": 7274,
+      "mode": "0o644",
+      "sha256": "51c62ebc77818fad1e72efa232675a0ba0245463f0ce1d4cf9f1b4ee0af12c84"
+    },
+    "release/successor_context_manifest_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/release/successor_context_manifest_v01.json",
+      "bytes": 120901,
+      "mode": "0o644",
+      "sha256": "a1c48ce64458ead4c3b7fa5e3f59b252d749639c7650686597c7058b1463e9e5"
+    },
+    "schemas/gate3_adversary_v01.schema.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/schemas/gate3_adversary_v01.schema.json",
+      "bytes": 8515,
+      "mode": "0o644",
+      "sha256": "dee9e823eec92579ae5a9a26943eb6fb3265657cb9314f8fee780783e50b24b6"
+    },
+    "schemas/outcome_feedback_g34_predictive_v01.schema.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/schemas/outcome_feedback_g34_predictive_v01.schema.json",
+      "bytes": 31692,
+      "mode": "0o644",
+      "sha256": "cb92d9429dd96efbda062dbe9507df18453402e481a8135c87841f9ac9fd6668"
+    },
+    "schemas/outcome_feedback_g35_sources_v01.schema.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/schemas/outcome_feedback_g35_sources_v01.schema.json",
+      "bytes": 357296,
+      "mode": "0o644",
+      "sha256": "9272dd580aa7514a4e807aaec28abfccf415d250159d4648d8329cfee2375e1b"
+    },
+    "schemas/outcome_feedback_v01.schema.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/schemas/outcome_feedback_v01.schema.json",
+      "bytes": 32082,
+      "mode": "0o644",
+      "sha256": "e89426aabdc36f62997a15b26e04fe6a1e07e046dcf609977a221ba337bcf26e"
+    },
+    "specs/current_architecture_lock_v01.md": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/specs/current_architecture_lock_v01.md",
+      "bytes": 31407,
+      "mode": "0o644",
+      "sha256": "df82860383d96dd1d44d81ebd2289923cfb913f50a1d2f342e48189bc842e7ab"
+    },
+    "specs/document_authority_index_v01.json": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/specs/document_authority_index_v01.json",
+      "bytes": 111182,
+      "mode": "0o644",
+      "sha256": "1fd7dac5fd7cd294cb0e8e78327d359d622607762cd6f0d4782493c1e9c310ff"
+    },
+    "tests/test_active_architecture_authority_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_active_architecture_authority_v01.py",
+      "bytes": 413233,
+      "mode": "0o644",
+      "sha256": "5c659569b262bbbadfa2c6d128ae4aeb451a6b7ad4633eb8c4f6813cdd465f09"
+    },
+    "tests/test_gate3_adversary_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_gate3_adversary_v01.py",
+      "bytes": 23043,
+      "mode": "0o644",
+      "sha256": "59fd0205053bb55f2431ad79efa26442f3f0a315f4250b58ba6c0d9b12c5b4d5"
+    },
+    "tests/test_gate3_calibration_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_gate3_calibration_v01.py",
+      "bytes": 17807,
+      "mode": "0o644",
+      "sha256": "ce98b57c28ef3ff02616743e1876dd17e2520b9eb1dc66e50bc2df4bb46d1126"
+    },
+    "tests/test_gate3_current_advisory_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_gate3_current_advisory_v01.py",
+      "bytes": 45615,
+      "mode": "0o644",
+      "sha256": "377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385"
+    },
+    "tests/test_gate3_mechanism_registration_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_gate3_mechanism_registration_v01.py",
+      "bytes": 3081,
+      "mode": "0o644",
+      "sha256": "63f5557395bb3b0c755ddac1e28e1d3b514f33af1e51b4b71db297fdccd46f9b"
+    },
+    "tests/test_gate3_sentinel_observation_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_gate3_sentinel_observation_v01.py",
+      "bytes": 18154,
+      "mode": "0o644",
+      "sha256": "401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83"
+    },
+    "tests/test_kernel_conformance_v01_runner.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_kernel_conformance_v01_runner.py",
+      "bytes": 126972,
+      "mode": "0o644",
+      "sha256": "d24bbac266b020b5c9d66f9376eead51cdf836fcb537fea393251a44d99a0ed0"
+    },
+    "tests/test_living_gauntlet_v01_runner.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_living_gauntlet_v01_runner.py",
+      "bytes": 226412,
+      "mode": "0o644",
+      "sha256": "beda603de47d7d8ef83afe1b3ba344970feed4296c143880ed6035bc9eba8281"
+    },
+    "tests/test_outcome_calibration_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_outcome_calibration_v01.py",
+      "bytes": 44656,
+      "mode": "0o644",
+      "sha256": "994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a"
+    },
+    "tests/test_outcome_feedback_history_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_outcome_feedback_history_v01.py",
+      "bytes": 8473,
+      "mode": "0o644",
+      "sha256": "3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca"
+    },
+    "tests/test_outcome_feedback_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_outcome_feedback_v01.py",
+      "bytes": 16003,
+      "mode": "0o644",
+      "sha256": "7d5218ad85fd8e709bff09a927257dbda5934587446bc26288e73400a776347e"
+    },
+    "tests/test_repository_release_spine_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_repository_release_spine_v01.py",
+      "bytes": 216539,
+      "mode": "0o644",
+      "sha256": "cfdf6be514fc0b7a8a53a95f68f80e26725121003edb8d46207c02f8fbd74df2"
+    },
+    "tests/test_work_composition_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tests/test_work_composition_v01.py",
+      "bytes": 131755,
+      "mode": "0o644",
+      "sha256": "aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc"
+    },
+    "tools/check_active_architecture_authority_v01.py": {
+      "absolute_path": "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/tools/check_active_architecture_authority_v01.py",
+      "bytes": 827157,
+      "mode": "0o644",
+      "sha256": "5638f673cf0e072f3b3844ee58f91f481b4eed12f7576f79ea08df444acacf47"
+    }
+  },
+  "source_unchanged": true,
+  "started_at": "2026-09-22T09:41:55.554528Z",
+  "stderr_bytes": 0,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_bytes": 503,
+  "stdout_sha256": "cd2a5b71ae1c37241040e6e6cda1d6092214764aabdd7904c7da1fb0f1fa94ad"
+}

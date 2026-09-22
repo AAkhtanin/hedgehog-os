@@ -1,0 +1,54 @@
+{
+  "candidate_tree": "e18a24a4c47b54ed0fd24cf83559e2e0ac9605d0",
+  "counts": {
+    "conformance_legacy_owner": {
+      "returns": 0,
+      "starts": 0
+    },
+    "g3_mechanism_collector": {
+      "returns": 1,
+      "starts": 1
+    },
+    "legacy_d5_collector": {
+      "returns": 1,
+      "starts": 1
+    },
+    "legacy_e5_collector": {
+      "returns": 1,
+      "starts": 1
+    },
+    "living_legacy_owner": {
+      "returns": 1,
+      "starts": 1
+    },
+    "shared_conformance_consumer": {
+      "returns": 1,
+      "starts": 1
+    }
+  },
+  "e5_identity": {
+    "owner_bytes": 1384305,
+    "owner_sha256": "78576b50034ecfd6e8c88ebe7c51f22d57a2b24c58662b4566584199ae48ddf9",
+    "shared_bytes": 1384305,
+    "shared_collector_calls": 0,
+    "shared_sha256": "78576b50034ecfd6e8c88ebe7c51f22d57a2b24c58662b4566584199ae48ddf9"
+  },
+  "expected": {
+    "g3_mechanism_collector": 1,
+    "legacy_d5_collector": 1,
+    "legacy_e5_collector": 1
+  },
+  "g3_baseline_sha256": "72659394768eba5df00540437728126619b10158979257106f32856e32a6970f",
+  "g3_report_id": "ef5408aeeb0f33adb1c4a9e0241ebe767a7e40a31f7a704e38870b2422394941",
+  "g3_source_sha256": "00ab5528a6cf93fae2914b9f99349ec797149c9e1ca383ef510093d91c811461",
+  "implementation_commit_field": "d199199a578c078c913a2381f595549175bd9235",
+  "supplied_validation_collector_delta": {
+    "conformance_legacy_owner": 0,
+    "g3_mechanism_collector": 0,
+    "legacy_d5_collector": 0,
+    "legacy_e5_collector": 0,
+    "living_legacy_owner": 0,
+    "shared_conformance_consumer": 0
+  },
+  "trace": "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/runtime/full_living_successor_repair_01_ownership_trace.jsonl"
+}

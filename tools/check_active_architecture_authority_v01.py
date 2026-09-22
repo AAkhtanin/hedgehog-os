@@ -3034,6 +3034,7 @@ def _validate_g36_adversary_admission_v01(root: Path, failures: list[str]) -> st
     return phase
 
 
+# Exact Gate 3 closure presentation successor.
 G37_BASE_V01 = G36_BASE_V01
 G37_PARENT_V01 = G36_PARENT_V01
 G37_TREE_V01 = G36_TREE_V01
@@ -3217,7 +3218,39 @@ def _classify_g37_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str
     return phase, tuple(failures)
 
 
+def _repository_transition_policy_v01():
+    """Load only the verifier installed beside this trusted guard."""
+    import importlib.util
+    policy_path = Path(__file__).resolve().with_name("reviewed_repository_transition_v01.py")
+    spec = importlib.util.spec_from_file_location("reviewed_repository_transition_v01", policy_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def _validate_g37_frozen_release_admission_v01(
+    root: Path, failures: list[str]
+) -> str:
+    """Historical G37 or exact external review; shared current checks always run."""
+    policy = _repository_transition_policy_v01()
+    failures.extend(policy.current_invariants(root))
+    try:
+        context = policy.resolve_context(root)
+    except (policy.Refusal, OSError, ValueError, TypeError) as exc:
+        failures.append(str(exc))
+        return "REPOSITORY_TRANSITION_UNADMITTED"
+    if context is not None:
+        result = policy.validate_transition(root)
+        failures.extend(result["errors"])
+        return result["phase"]
+    # Exact historical inputs keep their original source/index/lineage predicates.
+    phase = _validate_g37_historical_state_v01(root, failures)
+    if failures:
+        failures.append("REVIEW_CONTEXT_REQUIRED")
+    return phase
+
+
+def _validate_g37_historical_state_v01(
     root: Path, failures: list[str]
 ) -> str:
     """Validate the exact frozen G37 source proposal without executing runtime."""
@@ -3374,6 +3407,7 @@ def _validate_g37_frozen_release_admission_v01(
         if value.get("gate3_g36_mechanism_v01") != expected:
             failures.append("g37.release_registration:" + path)
     return phase
+
 
 
 G33_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"

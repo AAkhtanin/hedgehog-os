@@ -1,0 +1,312 @@
+[
+  {
+    "command": "0001_boundaries",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0001_boundaries/stderr.bin",
+    "stderr_tail": [
+      "Traceback (most recent call last):",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-evidence-20260921/helpers/probe_boundaries.py\", line 9, in <module>",
+      "    context=episode.observe_v01(case,s.controlled_origin_v01(case))",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py\", line 298, in observe_v01",
+      "    validate_action_source_v01(context)",
+      "    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py\", line 201, in validate_action_source_v01",
+      "    fact=_native_fact_v01(value,proposal)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py\", line 115, in _native_fact_v01",
+      "    require(actions.validate_action_commit_packet_registry_v02(registry,action_packet_transition_registry_profile=profile)[0],'g36_native_registry')",
+      "            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "TypeError: validate_action_commit_packet_registry_v02() got an unexpected keyword argument 'action_packet_transition_registry_profile'"
+    ],
+    "stdout": "commands/0001_boundaries/stdout.bin"
+  },
+  {
+    "command": "0002_boundaries",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0002_boundaries/stderr.bin",
+    "stderr_tail": [
+      "    context=episode.observe_v01(case,s.controlled_origin_v01(case))",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py\", line 276, in observe_v01",
+      "    self.historical=self.session.prepare_v01('supplier:A',amount='10',order='order:'+self.id+':historical',document_claim=request['document'])",
+      "                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py\", line 185, in prepare_v01",
+      "    h.install_current_action_v01(self.host,root_bound=bound,admission_id=admitted.admission_id,inputs=inputs,**pending_material_v01(bound),",
+      "    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "        expected_revision=self.host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,evaluation_context_id=clock.evaluation_context_id)",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/work_execution_host_v01.py\", line 970, in install_current_action_v01",
+      "    raise ValueError('host_installed_action_not_current')",
+      "ValueError: host_installed_action_not_current"
+    ],
+    "stdout": "commands/0002_boundaries/stdout.bin"
+  },
+  {
+    "command": "0003_boundaries",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0003_boundaries/stderr.bin",
+    "stderr_tail": [
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-evidence-20260921/helpers/probe_boundaries.py\", line 9, in <module>",
+      "    context=episode.observe_v01(case,s.controlled_origin_v01(case))",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py\", line 282, in observe_v01",
+      "    dispatched=hosts.dispatch_current_action_v01(self.host,packet_id=prepared['bound'].packet_identity.packet_id,task_id='g36:old_authority',expected_revision=self.host.revision,",
+      "        evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,evaluation_context_id=clock.evaluation_context_id)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/work_execution_host_v01.py\", line 501, in dispatch_current_action_v01",
+      "    evidence = host.dispatch(packet_id=packet_id, task_id=task_id, expected_revision=expected_revision,",
+      "        evaluation_time=evaluation_time, evaluation_time_source=evaluation_time_source,",
+      "        evaluation_context_id=evaluation_context_id, work_instance_id=work_instance_id)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/work_execution_host_v01.py\", line 395, in dispatch",
+      "    raise ValueError('host_current_action_not_executable')",
+      "ValueError: host_current_action_not_executable"
+    ],
+    "stdout": "commands/0003_boundaries/stdout.bin"
+  },
+  {
+    "command": "0005_history",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0005_history/stderr.bin",
+    "stderr_tail": [
+      "        bsep_orchestrator_proposal=proposal,bsep_structured_rationale=structured,sealed_replay_evidence=None,replay_source_manifest=None,replay_source_domain_projection=None,",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "    ...<3 lines>...",
+      "        g2a_evaluation_context_id=clock.evaluation_context_id,g2a_transition_registry_profile=None,g2b_resolution_report=None,g2b_compatibility_projections=(),g2b_use_time=None,",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "        g2b_root_kernel=None,g2b_root_decision_input=None,g2b_root_decision_result=None,g2b_writeback_evidence=None)",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/kernel/execution_mode_router_v01.py\", line 3035, in build_execution_mode_source_context_v01",
+      "    return _public_c2_builder(build, \"g2c_source_context_invalid\")  # type: ignore[return-value]",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/kernel/execution_mode_router_v01.py\", line 2938, in _public_c2_builder",
+      "    raise ValueError(exc.reason) from None",
+      "ValueError: g2c_source_context_invalid"
+    ],
+    "stdout": "commands/0005_history/stdout.bin"
+  },
+  {
+    "command": "0006_history",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0006_history/stderr.bin",
+    "stderr_tail": [
+      "                                                        ~~~~~~~~~~~~~~~~~~~~~~^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_consumer_v01.py\", line 134, in to_plain_data",
+      "    require(claim['operation']==check['operation'] and claim['definition_id']==check['definition_id']",
+      "    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "        and claim['material_sha256']==hashlib.sha256(canonical(check['material'])).hexdigest()",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "        and claim['observation_refs']==check['observation_refs'],'g34_fixed_check_material')",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_consumer_v01.py\", line 22, in require",
+      "    if not condition: raise ValueError(reason)",
+      "                      ^^^^^^^^^^^^^^^^^^^^^^^^",
+      "ValueError: g34_fixed_check_material"
+    ],
+    "stdout": "commands/0006_history/stdout.bin"
+  },
+  {
+    "command": "0007_history",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0007_history/stderr.bin",
+    "stderr_tail": [
+      "        catalogue=episode.catalogue,host=episode.host,item=item,material=material,budget=work.WorkBudgetV01(1,0,0,1,0),task_id=task,trusted_inputs=trusted,additional_receipt=receipt)",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_consumer_v01.py\", line 369, in execute_reviewed_pure_work_v01",
+      "    candidate=work.build_work_program_candidate_v01(task_id=task_id,previous_revision_id=None,intent_ref='g34:intent:'+task_id,",
+      "        bsep_ref=source_context.bsep_packet['packet_id'],semantic_proposal_ref=semantic_proposal.artifact_id,",
+      "        catalogue_revision=0,budget=budget,items=(item,),trigger_evidence_refs=(),**common)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/kernel/work_composition_v01.py\", line 299, in build_work_program_candidate_v01",
+      "    _require(ok, reasons[0] if reasons else 'work_invalid')",
+      "    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/kernel/work_composition_v01.py\", line 138, in _require",
+      "    raise ValueError(reason)",
+      "ValueError: g2c_bsep_invalid"
+    ],
+    "stdout": "commands/0007_history/stdout.bin"
+  },
+  {
+    "command": "0008_history",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0008_history/stderr.bin",
+    "stderr_tail": [
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_v01.py\", line 763, in encode",
+      "    if type(v) is tuple:return {'tuple_items':[encode(x) for x in v]}",
+      "                                               ~~~~~~^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_v01.py\", line 762, in encode",
+      "    return {'record_type':name,'fields':{f.name:encode(getattr(v,f.name)) for f in fields(v)}}",
+      "                                                ~~~~~~^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_v01.py\", line 766, in encode",
+      "    _require(v is None or type(v) in (str,int,bool,float),'g35_record_scalar')",
+      "    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_v01.py\", line 58, in _require",
+      "    raise ValueError(reason)",
+      "ValueError: g35_record_scalar"
+    ],
+    "stdout": "commands/0008_history/stdout.bin"
+  },
+  {
+    "command": "0010_mechanism",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0010_mechanism/stderr.bin",
+    "stderr_tail": [
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/gate3_mechanism_v01.py\", line 144, in collect_mechanism_v01",
+      "    baseline=independent_baseline_v01(sources);report=build_report_v01(sources=sources,baseline=baseline)",
+      "                                                      ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/gate3_mechanism_v01.py\", line 100, in build_report_v01",
+      "    _projection_v01(cold['projection'],prior=None,history_ref=None,material=cold['material'])",
+      "    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/gate3_mechanism_v01.py\", line 57, in _projection_v01",
+      "    require(row['base_decimal']==strategy['base'] and row['base_fp']==int(__import__('decimal').Decimal(strategy['base'])*cal.Q),'g36_fixed_base')",
+      "    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_v01.py\", line 58, in _require",
+      "    raise ValueError(reason)",
+      "ValueError: g36_fixed_base"
+    ],
+    "stdout": "commands/0010_mechanism/stdout.bin"
+  },
+  {
+    "command": "0013_focused",
+    "failed_phases": [
+      {
+        "duration_seconds": 0.008318291045725346,
+        "elapsed_seconds": 19.53138920944184,
+        "failure": "g36_bundle = {'baseline': {'observation_pins': {'ADV-1': 'c788c409c5e557d3bda65cb4be7d1d6e3c9fc889c37b08037a63b634c259328a', 'ADV-2...ency_keys\":{\"tuple_items\":[]}},\"record_type\":\"hedgehog.action_commit_packet_v02.ActionCommitPacketRegistryV02\"}', ...}}\n\n    def test_g36_closed_local_source_and_feedback_schema(g36_bundle):\n        from jsonschema import Draft202012Validator\n        from referencing import Registry,Resource\n        root=Path(__file__).resolve().parents[1];resources=[]\n        for path in (root/'schemas').glob('*.json'):\n>           data=json.loads(path.read_bytes())\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_gate3_adversary_v01.py:96: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py:352: in loads\n    return _default_decoder.decode(s)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py:345: in decode\n    obj, end = self.raw_decode(s, idx=_w(s, 0).end())\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <json.decoder.JSONDecoder object at 0x1056370e0>\ns = '{\\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\\n  \"$id\": \"https://hedgehog.local/schemas/gate3_adver..._us\": {\"type\": \"integer\", \"minimum\": 0}, \"sequence\": {\"type\": \"integer\", \"minimum\": 0, \"maximum\": 5}}\\n    }\\n  }\\n}\\n'\nidx = 0\n\n    def raw_decode(self, s, idx=0):\n        \"\"\"Decode a JSON document from ``s`` (a ``str`` beginning with\n        a JSON document) and return a 2-tuple of the Python\n        representation and the index in ``s`` where the document ended.\n    \n        This can be used to decode a JSON document from a string that may\n        have extraneous data at the end.\n    \n        \"\"\"\n        try:\n>           obj, end = self.scan_once(s, idx)\n                       ^^^^^^^^^^^^^^^^^^^^^^\nE           json.decoder.JSONDecodeError: Expecting ',' delimiter: line 100 column 1 (char 7714)\n\n/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py:361: JSONDecodeError",
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_local_source_and_feedback_schema",
+        "outcome": "failed",
+        "phase": "call"
+      }
+    ],
+    "rc": 1,
+    "stderr": "commands/0013_focused/stderr.bin",
+    "stderr_tail": [],
+    "stdout": "commands/0013_focused/stdout.bin"
+  },
+  {
+    "command": "0014_schema",
+    "failed_phases": [
+      {
+        "duration_seconds": 0.009672041982412338,
+        "elapsed_seconds": 0.5362886665388942,
+        "failure": "g36_bundle = {'baseline': {'observation_pins': {'ADV-1': 'c788c409c5e557d3bda65cb4be7d1d6e3c9fc889c37b08037a63b634c259328a', 'ADV-2...ency_keys\":{\"tuple_items\":[]}},\"record_type\":\"hedgehog.action_commit_packet_v02.ActionCommitPacketRegistryV02\"}', ...}}\n\n    def test_g36_closed_local_source_and_feedback_schema(g36_bundle):\n        from jsonschema import Draft202012Validator\n        from referencing import Registry,Resource\n        root=Path(__file__).resolve().parents[1];resources=[]\n        for path in (root/'schemas').glob('*.json'):\n            data=json.loads(path.read_bytes())\n            if '$id' in data:resources.append((data['$id'],Resource.from_contents(data,default_specification=__import__('referencing.jsonschema',fromlist=['DRAFT202012']).DRAFT202012)))\n        registry=Registry(retrieve=lambda uri:(_ for _ in ()).throw(ValueError('local_schema_missing:'+uri))).with_resources(resources)\n        schema=json.loads((root/'schemas/gate3_adversary_v01.schema.json').read_bytes());validator=Draft202012Validator(schema,registry=registry)\n        for value in g36_bundle['sources']['observations']:\n>           validator.validate(value)\n\ntests/test_gate3_adversary_v01.py:101: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = Draft202012Validator(schema={'$defs': {'advice': {'additionalProperties': False, 'properties': {'amount': {'enum': ['1......1.schema.json', '$schema': 'https://json...020-12/schema', 'additionalProperties': False, ...}, format_checker=None)\nargs = ({'claim': {'claim_id': '0a45e1fffbd875634bab36840df44cd7ba34b9d024a143832896f3d39c5cdea8', 'committed_ns': '179002843...6': '8d60ef191e370e7b3406e2561cefc245cdb5acab683c8ea191fa54e70b041d43', 'response_id': 'controlled:ADV-1', ...}, ...},)\nkwargs = {}, error = <ValidationError: \"1 is not of type 'string'\">\n\n    def validate(self, *args, **kwargs):\n        for error in self.iter_errors(*args, **kwargs):\n>           raise error\nE           jsonschema.exceptions.ValidationError: 1 is not of type 'string'\nE           \nE           Failed validating 'type' in schema['properties']['native']['properties']['clock']['properties']['source_revision']:\nE               {'type': 'string', 'minLength': 1, 'maxLength': 16384}\nE           \nE           On instance['native']['clock']['source_revision']:\nE               1\n\n../hedgehog-os/.venv/lib/python3.14/site-packages/jsonschema/validators.py:450: ValidationError",
+        "nodeid": "tests/test_gate3_adversary_v01.py::test_g36_closed_local_source_and_feedback_schema",
+        "outcome": "failed",
+        "phase": "call"
+      }
+    ],
+    "rc": 1,
+    "stderr": "commands/0014_schema/stderr.bin",
+    "stderr_tail": [],
+    "stdout": "commands/0014_schema/stdout.bin"
+  },
+  {
+    "command": "0016_live",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0016_live/stderr.bin",
+    "stderr_tail": [
+      "    h.install_current_action_v01(self.host,root_bound=bound,admission_id=admitted.admission_id,inputs=inputs,**pending_material_v01(bound),",
+      "    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "        expected_revision=self.host.revision,evaluation_time=clock.evaluation_time,evaluation_time_source=clock.evaluation_time_source,evaluation_context_id=clock.evaluation_context_id)",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/work_execution_host_v01.py\", line 956, in install_current_action_v01",
+      "    proposed = action.record_action_packet_genesis_v01(host._registry,",
+      "        root_bound_genesis=root_bound, action_packet_transition_registry_profile=profile)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/action_commit_packet_v02.py\", line 14045, in record_action_packet_genesis_v01",
+      "    raise ValueError(",
+      "    ...<4 lines>...",
+      "    ) from None",
+      "ValueError: consumed_key_permanently_closed"
+    ],
+    "stdout": "commands/0016_live/stdout.bin"
+  },
+  {
+    "command": "0018_live_resume",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0018_live_resume/stderr.bin",
+    "stderr_tail": [
+      "    snapshot=self._derive(refs,epoch=old['snapshot']['epoch']+1 if old else 0,",
+      "        predecessor=expected_head,evaluated_at=evaluated_at,corrections=correction_rows)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_history_v01.py\", line 135, in _derive",
+      "    prior=cal.fold_avf_history_prior_v01(events,evaluated_at=evaluated_at)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_calibration_v01.py\", line 1413, in fold_avf_history_prior_v01",
+      "    _require(all((v['avf_history_key'],v['source_profile_id'],v['execution_lane']) ==",
+      "    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "        (first['avf_history_key'],first['source_profile_id'],first['execution_lane']) for v in values),'g34_incomparable_history')",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_calibration_v01.py\", line 195, in _require",
+      "    raise ValueError(reason)",
+      "ValueError: g34_incomparable_history"
+    ],
+    "stdout": "commands/0018_live_resume/stdout.bin"
+  },
+  {
+    "command": "0019_captured_completion",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0019_captured_completion/stderr.bin",
+    "stderr_tail": [
+      "        catalogue=episode.catalogue,host=episode.host,item=item,material=material,budget=work.WorkBudgetV01(1,0,0,1,0),task_id=task,trusted_inputs=trusted,additional_receipt=receipt)",
+      "        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/outcome_feedback_consumer_v01.py\", line 369, in execute_reviewed_pure_work_v01",
+      "    candidate=work.build_work_program_candidate_v01(task_id=task_id,previous_revision_id=None,intent_ref='g34:intent:'+task_id,",
+      "        bsep_ref=source_context.bsep_packet['packet_id'],semantic_proposal_ref=semantic_proposal.artifact_id,",
+      "        catalogue_revision=0,budget=budget,items=(item,),trigger_evidence_refs=(),**common)",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/kernel/work_composition_v01.py\", line 299, in build_work_program_candidate_v01",
+      "    _require(ok, reasons[0] if reasons else 'work_invalid')",
+      "    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-candidate-20260921/hedgehog/kernel/work_composition_v01.py\", line 138, in _require",
+      "    raise ValueError(reason)",
+      "ValueError: g2c_bsep_invalid"
+    ],
+    "stdout": "commands/0019_captured_completion/stdout.bin"
+  },
+  {
+    "command": "0025_final_focused",
+    "failed_phases": [
+      {
+        "duration_seconds": 0.23568179178982973,
+        "elapsed_seconds": 120.78761320747435,
+        "failure": "def test_g36_binder_has_final_precedence_v01():\n        import runpy\n        guard=runpy.run_path(str(REPOSITORY_ROOT/'tools/check_active_architecture_authority_v01.py'))\n        assert guard['_g36_requested_v01'](REPOSITORY_ROOT)\n        assert G2E4_V0310_ACTIVE_BYTES_BINDING=='EXACT_G36_WITH_HISTORICAL_TESTFLIX_E_PAIR'\n>       test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()\n\ntests/test_repository_release_spine_v01.py:4931: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11():\n        import runpy\n        guard = runpy.run_path(str(REPOSITORY_ROOT / \"tools/check_active_architecture_authority_v01.py\"))\n        paths = (\"specs/document_authority_index_v01.json\", \"release/successor_context_manifest_v01.json\", \"release/current_status_overlay_v01.json\")\n        documents = [_read_json(REPOSITORY_ROOT/path) for path in paths]\n        current = documents[0][\"testflix_admission_v11\"]\n        assert all(document[\"testflix_admission_v11\"] == current for document in documents)\n        assert current[\"basis\"] == guard[\"TESTFLIX_L_V11\"]\n        assert current[\"path_actions\"] == guard[\"TESTFLIX_PATH_ACTIONS_V11\"] and len(current[\"path_actions\"]) == 51\n        assert current[\"successor_commit\"] == \"DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED\"\n        assert current[\"independent_owner_acceptance\"] == \"PENDING_OWNER_EXECUTION\"\n        for path, document in zip(paths, documents):\n            historical = json.loads(_git_show(guard[\"TESTFLIX_L_V11\"], path))\n            assert document[\"universality_admission_v01\"] == historical[\"universality_admission_v01\"]\n        for path in (\"release/completion_manifest.json\", \"release/integration_seam_index.json\", \"release/current_schema_surface_v01.json\"):\n>           assert (REPOSITORY_ROOT/path).read_bytes() == _git_show(guard[\"TESTFLIX_L_V11\"], path)\nE           assert b'{\\n  \"activ...lse\\n  }\\n}\\n' == b'{\\n  \"activ...: \"v0.1\"\\n}\\n'\nE             \nE             At index 18942 diff: b' ' != b'{'\nE             Use -v to get more diff\n\ntests/test_repository_release_spine_v01.py:4829: AssertionError",
+        "nodeid": "tests/test_repository_release_spine_v01.py::test_g36_binder_has_final_precedence_v01",
+        "outcome": "failed",
+        "phase": "call"
+      }
+    ],
+    "rc": 1,
+    "stderr": "commands/0025_final_focused/stderr.bin",
+    "stderr_tail": [],
+    "stdout": "commands/0025_final_focused/stdout.bin"
+  },
+  {
+    "command": "0031_evidence_summary",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0031_evidence_summary/stderr.bin",
+    "stderr_tail": [
+      "Traceback (most recent call last):",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-evidence-20260921/helpers/summarize_return.py\", line 67, in <module>",
+      "    assert request['request_sha256']==sha(json.dumps(request['request'],sort_keys=True,separators=(',',':'),ensure_ascii=True).encode())",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "AssertionError"
+    ],
+    "stdout": "commands/0031_evidence_summary/stdout.bin"
+  },
+  {
+    "command": "0032_evidence_summary",
+    "failed_phases": [],
+    "rc": 1,
+    "stderr": "commands/0032_evidence_summary/stderr.bin",
+    "stderr_tail": [
+      "Traceback (most recent call last):",
+      "  File \"/Users/admin/Projects/hedgehog-os-gate3-g36-evidence-20260921/helpers/summarize_return.py\", line 99, in <module>",
+      "    assert not any(p.startswith(('hedgehog/','demo/','schemas/','fixtures/')) for p in changed),changed",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "AssertionError: {'demo/run_kernel_conformance_v01.py': {'executed': '420bcbd2b194b161e311e2cd4e4275c8cd4e954e7f97cd61f20790b29c93b0a8', 'final': 'dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503'}, 'demo/run_living_gauntlet_v01.py': {'executed': 'ff93bde99c9dcc99e7af8dc7d0259e463261decc4dc598e1eab97e9b57c40c4a', 'final': '7b124e5d9054a4f8c3c4c96975c6dd6cd52c2a56470cb64717827e5e9a546f47'}, 'docs/gate3_outcome_feedback_checkpoint_v01.md': {'executed': '3271994b0a4bdb882efbab36fc0f8d3ba25b1a5b920c08ef80dc7967fbb4309b', 'final': '474a17e2cce2a99f0a318d705191432de4a049a9ccc26f18ffa2d4a2c84e2d6a'}, 'tests/test_active_architecture_authority_v01.py': {'executed': '77cc08e8876413a16fade97353dbec6a7de900fe417c9120437e98334aa4f939', 'final': '5c659569b262bbbadfa2c6d128ae4aeb451a6b7ad4633eb8c4f6813cdd465f09'}, 'tests/test_gate3_adversary_v01.py': {'executed': '5286425e2c02e24311439ccdf4f46d7b598b7066d3fd850c4587714d12208257', 'final': '0f8f4210754e010aaf1984712392176e214031e5fd29e726b73264b280c5297b'}, 'tests/test_gate3_mechanism_registration_v01.py': {'executed': 'f4c90ecb874a988c286052b1c79e57551b6a1a111fd0e2c761a9c45e69f59929', 'final': '63f5557395bb3b0c755ddac1e28e1d3b514f33af1e51b4b71db297fdccd46f9b'}, 'tests/test_repository_release_spine_v01.py': {'executed': '1f5f628aec627224e5b2ef544e19d864b8f85ad0db06db5563f5c002ceb79348', 'final': 'cfdf6be514fc0b7a8a53a95f68f80e26725121003edb8d46207c02f8fbd74df2'}, 'tools/check_active_architecture_authority_v01.py': {'executed': '5f83603e0c5bc4370d921a79156bb80ced4f490dcf81f9820fe13224708b437e', 'final': '6e5b02dd15c76448bca70e146da9eff025f4a6c8f8d84d056b16f95c169b8223'}}"
+    ],
+    "stdout": "commands/0032_evidence_summary/stdout.bin"
+  }
+]

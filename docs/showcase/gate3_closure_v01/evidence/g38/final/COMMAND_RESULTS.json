@@ -1,0 +1,32 @@
+{
+  "0001_verify_instruction_kit": {
+    "elapsed_seconds": 1.012419,
+    "rc": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "f7e90e4b73ec9cd69e875bcb662c0d1c28c61ec05085424b377ebf06be72ce6d"
+  },
+  "0002_verify_and_extract_g37r_return": {
+    "elapsed_seconds": 1.012401,
+    "rc": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "8a04ebb1b63cc5c7f01e5410c0ca8f36b5cae3ecb4c2f1d8c3cf81fec376b8b8"
+  },
+  "0003_owner_and_remote_preflight": {
+    "elapsed_seconds": 1.012085,
+    "rc": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "e600f7df9bde88b1d9597577259d309052c15a331ea892c13e4c24c2ca415444"
+  },
+  "0004_real_owner_landing_commit_push": {
+    "elapsed_seconds": 149.789346,
+    "rc": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "8981c661fb49cf658a58ece69e930b6d97393e8ac852e4227383052811941efb"
+  },
+  "0005_final_owner_and_remote_readback": {
+    "elapsed_seconds": 1.00724,
+    "rc": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "c5c594fcfcce00969040693010abc87436d17cf2aa0cc676adce3027b1c7ecd5"
+  }
+}

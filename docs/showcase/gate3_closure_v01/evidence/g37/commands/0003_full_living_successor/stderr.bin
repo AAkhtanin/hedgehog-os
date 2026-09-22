@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/helpers/full_successor_report.py", line 340, in <module>
+    main()
+    ~~~~^^
+  File "/Users/admin/Projects/hedgehog-os-gate3-g37-evidence-20260922/helpers/full_successor_report.py", line 226, in main
+    report = living_runner.collect_living_g36_v01(output)
+  File "/Users/admin/Projects/hedgehog-os-gate3-g37-candidate-20260922/demo/run_living_gauntlet_v01.py", line 23, in collect_living_g36_v01
+    if validate_living_g36_v01(result):raise ValueError('g36_living_successor_invalid')
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: g36_living_successor_invalid

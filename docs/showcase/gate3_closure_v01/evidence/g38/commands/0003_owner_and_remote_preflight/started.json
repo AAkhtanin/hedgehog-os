@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/capture_preflight_v01.py",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--archive",
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz",
+    "--script",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_landing/g38_owner_landing.py",
+    "--payload",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_payload/MANIFEST.json",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/OWNER_PREFLIGHT.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "label": "owner_and_remote_preflight",
+  "pid": 16826,
+  "started_at": "2026-09-22T14:26:13.525140Z",
+  "started_ns": 1790087173525326000
+}

@@ -1,0 +1,54 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_landing/g38_owner_landing.py",
+    "--archive",
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz",
+    "--archive-sha256",
+    "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9",
+    "--owner",
+    "/Users/admin/Projects/hedgehog-os",
+    "--python",
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/owner_execution/real_owner_run_01",
+    "--execute"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "elapsed_seconds": 149.789346,
+  "ended_at": "2026-09-22T14:29:59.335977Z",
+  "label": "real_owner_landing_commit_push",
+  "rc": 0,
+  "sources": {
+    "/Users/admin/Downloads/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z.tar.gz": {
+      "bytes": 19193417,
+      "sha256": "ad24dc58ae05784694ee83ae75affc44c3c0058b442faa31add77d3c2f8ee1e9"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_landing/g38_owner_landing.py": {
+      "bytes": 22305,
+      "sha256": "e0f8928c370738641e46141b1e0e091b43fa85767116473f0779b04b79cf4047"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/g37r_input/RADIOLARIA_GATE3_G37R_REGISTRATION_EVIDENCE_RETURN_20260922T140535Z/owner_payload/MANIFEST.json": {
+      "bytes": 17122,
+      "sha256": "2e4b8a60fef5f335998f03e204c552735f4689b329710c33b374d530082ac31f"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/helpers/run_command_v01.py": {
+      "bytes": 4421,
+      "sha256": "ad1e5b9c16ef4a363a6b6911564066c772256049d89d5b47c7cfef8ea324d2eb"
+    },
+    "/Users/admin/Projects/hedgehog-os-gate3-g38-evidence-20260922/input_kit/PROMPT.txt": {
+      "bytes": 9379,
+      "sha256": "e514493a78e55f53ed0aba26e45a9c448a8745d4a87ac8ffc7d3bf767390e943"
+    }
+  },
+  "started_at": "2026-09-22T14:27:29.546502Z",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 237,
+    "sha256": "8981c661fb49cf658a58ece69e930b6d97393e8ac852e4227383052811941efb"
+  }
+}

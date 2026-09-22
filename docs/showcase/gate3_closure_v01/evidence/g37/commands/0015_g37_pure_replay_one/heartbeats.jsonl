@@ -1,0 +1,1 @@
+{"at": "2026-09-22T11:39:00.677553Z", "child_pid": 4682, "elapsed_seconds": 30.011731915175915, "progress": {"at": "2026-09-22T11:06:34.110766Z", "elapsed_seconds": 2211.7372347498313, "phase": "conformance_finalizer", "state": "COMPLETE"}, "state": "RUNNING"}

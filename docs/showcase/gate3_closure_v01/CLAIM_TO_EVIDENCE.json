@@ -1,0 +1,243 @@
+[
+  {
+    "slide": 1,
+    "title": "Gate 3",
+    "evidence": [
+      "evidence/g38/final/FINAL_REPORT.md",
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md"
+    ]
+  },
+  {
+    "slide": 2,
+    "title": "Gate 3 closure",
+    "evidence": [
+      "evidence/g36r/runtime/captured_final/report.json",
+      "evidence/g38/final/FINAL_REPORT.md",
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md"
+    ]
+  },
+  {
+    "slide": 3,
+    "title": "Why outcome feedback needs a gate",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 4,
+    "title": "Outcome feedback architecture",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 5,
+    "title": "One envelope across five domains",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 6,
+    "title": "Evidence classes remain separate",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md",
+      "evidence/g36r/runtime/captured_final/report.json",
+      "evidence/g36/PROVIDER_ATTEMPT_LEDGER.json"
+    ]
+  },
+  {
+    "slide": 7,
+    "title": "Fixed point and round-half-even",
+    "evidence": [
+      "evidence/g36r/postimages/hedgehog/outcome_calibration_v01.py",
+      "evidence/g36r/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 8,
+    "title": "Trust ages from the original observation",
+    "evidence": [
+      "evidence/g36r/postimages/hedgehog/outcome_calibration_v01.py",
+      "evidence/g36r/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 9,
+    "title": "CP-RANK changes the selected Work",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 10,
+    "title": "CP-TIME adds an evidence obligation",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 11,
+    "title": "Four original calls to one model",
+    "evidence": [
+      "evidence/g36/PROVIDER_ATTEMPT_LEDGER.json",
+      "evidence/g36/runtime/g36_live_captures/ADV-1_1/receipt.json",
+      "evidence/g36/runtime/g36_live_captures/ADV-2_1/receipt.json",
+      "evidence/g36/runtime/g36_live_resumed_captures/ADV-3_1/receipt.json",
+      "evidence/g36/runtime/g36_captured_complete_captures/CONTINUE_1/receipt.json"
+    ]
+  },
+  {
+    "slide": 12,
+    "title": "ADV-1: recipient redirection",
+    "evidence": [
+      "evidence/g36/runtime/g36_live_captures/ADV-1_1/request.json",
+      "evidence/g36/runtime/g36_live_captures/ADV-1_1/response.txt",
+      "evidence/g36r/runtime/captured_final/report.json"
+    ]
+  },
+  {
+    "slide": 13,
+    "title": "ADV-2: amount manipulation",
+    "evidence": [
+      "evidence/g36/runtime/g36_live_captures/ADV-2_1/request.json",
+      "evidence/g36/runtime/g36_live_captures/ADV-2_1/response.txt",
+      "evidence/g36r/runtime/captured_final/report.json"
+    ]
+  },
+  {
+    "slide": 14,
+    "title": "ADV-3: obsolete permission",
+    "evidence": [
+      "evidence/g36/runtime/g36_live_resumed_captures/ADV-3_1/request.json",
+      "evidence/g36/runtime/g36_live_resumed_captures/ADV-3_1/response.txt",
+      "evidence/g36r/runtime/captured_final/report.json"
+    ]
+  },
+  {
+    "slide": 15,
+    "title": "CONTINUE completes the lawful objective",
+    "evidence": [
+      "evidence/g36r/runtime/captured_final/report.json",
+      "evidence/g36r/runtime/captured_final/current.json",
+      "evidence/g36r/runtime/captured_final/sources.json"
+    ]
+  },
+  {
+    "slide": 16,
+    "title": "Why G36R needed a chronology repair",
+    "evidence": [
+      "evidence/g36/FINAL_REPORT.md",
+      "evidence/g36r/REPAIR_NOTES.md"
+    ]
+  },
+  {
+    "slide": 17,
+    "title": "One negative outcome changes current choice",
+    "evidence": [
+      "evidence/g36r/runtime/captured_final/report.json",
+      "evidence/g36r/runtime/captured_final/current.json"
+    ]
+  },
+  {
+    "slide": 18,
+    "title": "Root authority stays local",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md",
+      "evidence/g36r/runtime/captured_final/report.json"
+    ]
+  },
+  {
+    "slide": 19,
+    "title": "Cryptographic identity and its limits",
+    "evidence": [
+      "evidence/g38/final/FINAL_REPORT.md",
+      "evidence/g38/final/FINAL_SOURCE_LEDGER.json",
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 20,
+    "title": "Pure replay checks saved relations",
+    "evidence": [
+      "evidence/g37/PURE_REPLAY_COMPARISON.json",
+      "evidence/g36r/runtime/captured_final/report.json",
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 21,
+    "title": "Verification records by stage",
+    "evidence": [
+      "evidence/g36r/FINAL_REPORT.md",
+      "evidence/g37/FINAL_REPORT.md",
+      "evidence/g37r/FINAL_REPORT.md",
+      "evidence/g38/final/FINAL_REPORT.md",
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md"
+    ]
+  },
+  {
+    "slide": 22,
+    "title": "Recorded cost sits mainly in E5",
+    "evidence": [
+      "evidence/g37/LIVING_COST_ASSESSMENT.json",
+      "evidence/g37/FINAL_REPORT.md",
+      "evidence/g37r/COST_INTERPRETATION.md"
+    ]
+  },
+  {
+    "slide": 23,
+    "title": "The reviewed owner tree is in main",
+    "evidence": [
+      "evidence/g38/final/FINAL_REPORT.md",
+      "evidence/g38/final/FINAL_OWNER_READBACK.json",
+      "audit/g38_landing_review.md",
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md"
+    ]
+  },
+  {
+    "slide": 24,
+    "title": "Declared limits",
+    "evidence": [
+      "evidence/g36/FINAL_REPORT.md",
+      "evidence/g36r/REPAIR_NOTES.md",
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md"
+    ]
+  },
+  {
+    "slide": 25,
+    "title": "Atlas remains a future application",
+    "evidence": [
+      "evidence/g37/owner_payload/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 26,
+    "title": "Auditable entry points",
+    "evidence": [
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md",
+      "evidence/g38/final/FINAL_REPORT.md",
+      "evidence/g36/PROVIDER_ATTEMPT_LEDGER.json",
+      "evidence/g36r/REPAIR_NOTES.md",
+      "evidence/g36r/runtime/captured_final/report.json",
+      "evidence/g37/PURE_REPLAY_COMPARISON.json",
+      "evidence/g38/final/FINAL_SOURCE_LEDGER.json",
+      "evidence/g38/final/FINAL_OWNER_READBACK.json"
+    ]
+  },
+  {
+    "slide": 27,
+    "title": "Appendix: bounded update and time laws",
+    "evidence": [
+      "evidence/g36r/postimages/hedgehog/outcome_calibration_v01.py",
+      "evidence/g36r/postimages/docs/gate3_outcome_feedback_contract_v01.md"
+    ]
+  },
+  {
+    "slide": 28,
+    "title": "Appendix: historical helper availability",
+    "evidence": [
+      "audit/GATE3_INDEPENDENT_CLOSURE_REVIEW_V01_20260922.md"
+    ]
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "collection_ownership": {
+    "conformance_legacy_owner": {
+      "returns": 1,
+      "starts": 1
+    },
+    "g3_mechanism_collector": {
+      "returns": 1,
+      "starts": 1
+    },
+    "legacy_d5_collector": {
+      "returns": 1,
+      "starts": 1
+    },
+    "legacy_e5_collector": {
+      "returns": 1,
+      "starts": 1
+    },
+    "living_legacy_owner": {
+      "returns": 0,
+      "starts": 0
+    },
+    "shared_conformance_consumer": {
+      "returns": 1,
+      "starts": 1
+    }
+  },
+  "elapsed_seconds": 2211.732940208167,
+  "gate3_bundle": {
+    "bytes": 5842323,
+    "sha256": "c50fb928a698fbf61e461e5a5f18a33441a33130976a816952f3c6f809c79fde"
+  },
+  "kind": "conformance",
+  "legacy_report": {
+    "bytes": 145175,
+    "sha256": "93eb7eebb5016cadab56aadc5e55bf31d27bb595363ff43f600528c9935a4143"
+  },
+  "provider_calls": 0,
+  "real_effects": 0,
+  "status": "PASS",
+  "successor_report": {
+    "bytes": 5988284,
+    "sha256": "e7983c25d588878f8f535c5037bbddd519672241d6e004361188e3ff2f682b66"
+  }
+}

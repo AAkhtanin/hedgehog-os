@@ -1,0 +1,48 @@
+{
+  "format": "G38_OWNER_LANDING_KIT_V01",
+  "scope": "All regular kit files except this manifest.",
+  "files": [
+    {
+      "path": "INDEPENDENT_REVIEW.md",
+      "bytes": 2762,
+      "mode": "0644",
+      "sha256": "c8d61654df486d22899f982fc531d3579a2118ffb258b0188fb887e2d79a6220"
+    },
+    {
+      "path": "PROMPT.txt",
+      "bytes": 9379,
+      "mode": "0644",
+      "sha256": "e514493a78e55f53ed0aba26e45a9c448a8745d4a87ac8ffc7d3bf767390e943"
+    },
+    {
+      "path": "README.txt",
+      "bytes": 321,
+      "mode": "0644",
+      "sha256": "bca15208ae5148e59916b0df57b035a4403a729eaad75c6cc5e22696b03d0401"
+    },
+    {
+      "path": "RECOVERY_INVENTORY.json",
+      "bytes": 2192,
+      "mode": "0644",
+      "sha256": "7d9cf08420d51db4179059ca73d9213c9fbfe5ebbe43b6091380d72522b6a128"
+    },
+    {
+      "path": "historical_helpers/validate_owner_procedure.original_failed.py",
+      "bytes": 7549,
+      "mode": "0644",
+      "sha256": "b9532eaa0de0cb72608a50d922f70f0321c3d35301deb14b457e72d9b9b7e225"
+    },
+    {
+      "path": "historical_helpers/validate_owner_procedure.repair01.py",
+      "bytes": 7755,
+      "mode": "0644",
+      "sha256": "97d1779a6b8820c33ec94249a8ca9cf231f6a0a03665639da29188d02ad3b7c7"
+    },
+    {
+      "path": "historical_helpers/validate_saved_successors.repair01.py",
+      "bytes": 15081,
+      "mode": "0644",
+      "sha256": "7ab6d5a40b47d76e36db8e1bc2ce7a8bd452a82e9f53e1b26d8b2fed104b9bc1"
+    }
+  ]
+}

@@ -1932,6 +1932,2180 @@ SENTINEL_ADMISSION_METADATA_V01 = {'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_P
  'test_derivation': 'tests/test_landslide_sentinel_ls2_v01.py:TWO_STALE_SETUPS_ONLY'}
 
 
+G34_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"
+G34_PARENT_V01 = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+G34_TREE_V01 = "26d63912117a2324cc7e711407be33123f55ab81"
+G34_COMMON_BASE_SHA256_V01 = {
+    'hedgehog/kernel/work_composition_v01.py': 'f4085174a6cdfcb9a0c9983854a26c32625f4a811b2e1c4b81888c28a83f6061',
+    'tests/test_work_composition_v01.py': '62c9b9f5769aa447ec858b3b40fe6c346499e058db0546efd3f539a73222396c',
+}
+G34_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+ 'fixtures/gate3_calibration_reference_v01.json': 'A',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_history_reference_v01.json': 'A',
+ 'fixtures/gate3_reference_v01.json': 'A',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'A',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/kernel/work_composition_v01.py': 'M',
+ 'hedgehog/outcome_calibration_v01.py': 'A',
+ 'hedgehog/outcome_feedback_consumer_v01.py': 'A',
+ 'hedgehog/outcome_feedback_history_v01.py': 'A',
+ 'hedgehog/outcome_feedback_v01.py': 'A',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'A',
+ 'schemas/outcome_feedback_v01.schema.json': 'A',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_gate3_current_advisory_v01.py': 'A',
+ 'tests/test_gate3_sentinel_observation_v01.py': 'A',
+ 'tests/test_outcome_calibration_v01.py': 'A',
+ 'tests/test_outcome_feedback_history_v01.py': 'A',
+ 'tests/test_outcome_feedback_v01.py': 'A',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tests/test_work_composition_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+G34_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '58acc1a8dfb87dde4e801acde11f66275de821d7877bead71ba9910ee437a5d7',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': '60992da5f663764985445014c37763d0c23c22e3dd350cdd6b2dfc7c5458e2de',
+ 'docs/gate3_outcome_feedback_contract_v01.md': '07ae8882b4fa50416c3904e3fe187ff9d4cd722b0ec57fd492707c8b4f90ab11',
+ 'fixtures/gate3_calibration_reference_v01.json': '4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': '5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': '3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'd59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c',
+ 'fixtures/gate3_history_reference_v01.json': '1bed519b08f0a5a79f46f35ea1f463331ee00522f83800cf396d88d7b6bcd4be',
+ 'fixtures/gate3_reference_v01.json': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': '1837a8534d6088abadff23e01528b98e0acc48fcc3f749c5ac0efdcd513554bc',
+ 'hedgehog/kernel/work_composition_v01.py': '1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0',
+ 'hedgehog/outcome_calibration_v01.py': 'fec98a589f0dca670316e88acac897279c66c298f317bb3ab8b94e85cb83e448',
+ 'hedgehog/outcome_feedback_consumer_v01.py': '19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938',
+ 'hedgehog/outcome_feedback_history_v01.py': '5303a4c8bde12005fed27fc5ee9d5497489c8abe538d10e891d4264b62d1e1e7',
+ 'hedgehog/outcome_feedback_v01.py': '3593fa5939f68407efd869acc5b29042b7b598e189430ab0d0f16183d7fd3121',
+ 'release/current_status_overlay_v01.json': '69baf66d0a1d74c9690ea6f20e262ef1d6d5fbeaeda47b615e498116b7852849',
+ 'release/successor_context_manifest_v01.json': '16ea8d80d66120dadf2290447d8933dd6cf42692cb89ef797502815bdf25afe9',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'cb92d9429dd96efbda062dbe9507df18453402e481a8135c87841f9ac9fd6668',
+ 'schemas/outcome_feedback_v01.schema.json': 'b55438e84d0d4f8a120d3a0d0dcf99513c86683c5ce861bbac1b675541e9f58a',
+ 'specs/current_architecture_lock_v01.md': 'f23dab862e982fb99d6a108d0c746fb0c6017517d490dc90f491353b6d3961af',
+ 'specs/document_authority_index_v01.json': 'f90eae1081c538e54c7620e6f04b15989a04d044caf0b92325767675dc7a2874',
+ 'tests/test_active_architecture_authority_v01.py': '161d22825a2dc00e6832eab637d04c0da36dc340fe7adb4892858022c553b585',
+ 'tests/test_gate3_current_advisory_v01.py': '377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385',
+ 'tests/test_gate3_sentinel_observation_v01.py': '401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83',
+ 'tests/test_outcome_calibration_v01.py': '994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a',
+ 'tests/test_outcome_feedback_history_v01.py': '3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca',
+ 'tests/test_outcome_feedback_v01.py': '1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97',
+ 'tests/test_repository_release_spine_v01.py': '5ed82e08c303694cc009d37e033f743abc87bdc2a3d2e9efcd151f3cfe681cb0',
+ 'tests/test_work_composition_v01.py': 'aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc',
+ 'tools/check_active_architecture_authority_v01.py': '1af314dbd538d43a07cf4309fe2366c77a7b3a6d8fce0b049d4303be2dba7c54'}
+G34_ADMISSION_METADATA_V01 = {'G32_started': True,
+ 'G33_started': True,
+ 'G34_started': True,
+ 'G35_started': False,
+ 'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': 'd199199a578c078c913a2381f595549175bd9235',
+ 'basis_tree': '26d63912117a2324cc7e711407be33123f55ab81',
+ 'checkpoint': 'docs/gate3_outcome_feedback_checkpoint_v01.md',
+ 'common_work_acceptance': 'G34_REPAIR_PROPOSAL_NOT_OLD_U4_ACCEPTANCE',
+ 'common_work_change': 'EXACT_NATIVE_CAUSAL_CONSUMER_FROM_TOPOLOGY_ONLY',
+ 'contract': 'docs/gate3_outcome_feedback_contract_v01.md',
+ 'gate3_status': 'NOT_CLOSED',
+ 'history': 'DURABLE_LOCAL_CAS_AND_CURRENT_ROOT_WORK_CONSUMPTION',
+ 'living_inventory': 'PRESERVED_NINE_ROWS',
+ 'numeric_algorithms': 'SOURCE_BOUND_GT_RATING_EXPLICIT_TIME_DECAY',
+ 'owner_landing': 'NOT_AUTHORIZED',
+ 'parent': '2f328be634247be11bc18a3b22a919f393d6ed1d',
+ 'path_actions': {'AGENTS.md': 'M',
+                  'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+                  'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+                  'fixtures/gate3_calibration_reference_v01.json': 'A',
+                  'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_history_reference_v01.json': 'A',
+                  'fixtures/gate3_reference_v01.json': 'A',
+                  'fixtures/gate3_sentinel_observation_v01.json': 'A',
+                  'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+                  'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/kernel/work_composition_v01.py': 'M',
+                  'hedgehog/outcome_calibration_v01.py': 'A',
+                  'hedgehog/outcome_feedback_consumer_v01.py': 'A',
+                  'hedgehog/outcome_feedback_history_v01.py': 'A',
+                  'hedgehog/outcome_feedback_v01.py': 'A',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'A',
+                  'schemas/outcome_feedback_v01.schema.json': 'A',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_gate3_current_advisory_v01.py': 'A',
+                  'tests/test_gate3_sentinel_observation_v01.py': 'A',
+                  'tests/test_outcome_calibration_v01.py': 'A',
+                  'tests/test_outcome_feedback_history_v01.py': 'A',
+                  'tests/test_outcome_feedback_v01.py': 'A',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tests/test_work_composition_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'scope': 'G34_HISTORY_CONSUMPTION_ONLY',
+ 'source_profile': 'G34_CONTROLLED_BOOLEAN_WORK_PREDICTION_V01',
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED'}
+
+
+def _g34_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in G34_PATH_ACTIONS_V01.items()
+           if action == "A" and path not in G33_PATH_ACTIONS_V01):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g34_history_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _g34_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly the G34 guard's own digest literal."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G34_SOURCE_IDENTITIES_V01"
+               for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if (len(nodes) != 1 or not isinstance(nodes[0], ast.Assign)
+            or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name)
+            or not isinstance(nodes[0].value, ast.Dict)):
+        raise ValueError("g34 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g34 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g34 self identity projection")
+    value = node.value.values[names.index(path)]
+    if (not isinstance(value, ast.Constant) or type(value.value) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", value.value) is None
+            or value.end_lineno != value.lineno):
+        raise ValueError("g34 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (("\"" + value.value + "\"").encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g34 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G34_V01"' + body[end:]).hexdigest()
+
+
+def _classify_g34_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                            branch: str, status: dict[str, str],
+                            delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G34_INVALID"
+    if branch != "main":
+        failures.append("g34.branch")
+    if head == G34_BASE_V01:
+        if parents != (G34_PARENT_V01,) or origin != G34_BASE_V01:
+            failures.append("g34.candidate.basis_origin")
+        unstaged = {path: "??" if action == "A" else " M"
+                    for path, action in G34_PATH_ACTIONS_V01.items()}
+        staged = {path: action + " " for path, action in G34_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G34_HISTORY_CONSUMPTION_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(unstaged[path] == state for path, state in status.items()):
+            phase = "G34_DEVELOPMENT_UNADMITTED"
+            failures.append("g34.development_unadmitted")
+        else:
+            failures.append("g34.candidate.exact_ledger")
+        if delta:
+            failures.append("g34.candidate.delta")
+    elif parents == (G34_BASE_V01,):
+        phase = "G34_HISTORY_CONSUMPTION_COMMITTED"
+        if origin not in (G34_BASE_V01, head):
+            failures.append("g34.committed.origin")
+        if status or delta != G34_PATH_ACTIONS_V01:
+            failures.append("g34.committed.clean_exact_delta")
+    else:
+        failures.append("g34.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+
+def _validate_g34_history_admission_v01(root: Path, failures: list[str]) -> str:
+    """Validate exact G34 source succession; never execute calibration runtime."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="g34.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, G34_BASE_V01 + "..HEAD", failures), label="g34.delta", failures=failures)
+    phase, reasons = _classify_g34_ledger_v01(
+        head=head,
+        parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(),
+        status=status,
+        delta=delta,
+    )
+    failures.extend(reasons)
+    if git("rev-parse", G34_BASE_V01 + "^{tree}").decode().strip() != G34_TREE_V01:
+        failures.append("g34.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G34_BASE_V01).decode().split() != [G34_BASE_V01, G34_PARENT_V01]:
+        failures.append("g34.base.parent")
+    origin_url = git("config", "--get", "remote.origin.url").decode().strip()
+    if origin_url not in (
+        "https://github.com/AAkhtanin/hedgehog-os",
+        "https://github.com/AAkhtanin/hedgehog-os.git",
+        "git@github.com:AAkhtanin/hedgehog-os.git",
+    ):
+        failures.append("g34.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G34_BASE_V01), failures)
+    if (len(baseline) != 1095 or len(G34_PATH_ACTIONS_V01) != 32
+            or sum(action == "A" for action in G34_PATH_ACTIONS_V01.values()) != 21
+            or set(G34_SOURCE_IDENTITIES_V01) != set(G34_PATH_ACTIONS_V01)):
+        failures.append("g34.exact_inventory")
+    for path, expected in G34_COMMON_BASE_SHA256_V01.items():
+        old_body = git("show", G34_BASE_V01 + ":" + path)
+        if hashlib.sha256(old_body).hexdigest() != expected:
+            failures.append("g34.common_base_identity:" + path)
+        try:
+            new_body = (root / path).read_bytes()
+            if path == "hedgehog/kernel/work_composition_v01.py":
+                old_argument = b"consumer_component='work_composition', downstream_artifact_id=topology.artifact_id,"
+                new_argument = b"consumer_component=topology.source_component, downstream_artifact_id=topology.artifact_id,"
+                if old_body.count(old_argument) != 1 or new_body != old_body.replace(old_argument, new_argument, 1):
+                    failures.append("g34.work_exact_causal_argument")
+            else:
+                old_ast, new_ast = ast.parse(old_body), ast.parse(new_body)
+                old_names = {n.name for n in old_ast.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
+                new_ast.body = [n for n in new_ast.body if not isinstance(n, (ast.FunctionDef, ast.ClassDef)) or n.name in old_names]
+                if ast.dump(old_ast) != ast.dump(new_ast):
+                    failures.append("g34.work_existing_tests_changed")
+        except (OSError, ValueError, SyntaxError):
+            failures.append("g34.common_source_shape:" + path)
+    actual = {}
+    for path in sorted(set(baseline) | set(G34_PATH_ACTIONS_V01)):
+        file = root / path
+        if (file.is_symlink() or not file.is_file()
+                or any(parent.is_symlink() for parent in file.parents
+                       if parent != root and root in parent.parents)):
+            failures.append("g34.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = (
+            "100755" if mode & 0o111 else "100644",
+            hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest(),
+        )
+        if path in G34_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g34.mode:" + path)
+            try:
+                if _g34_source_digest_v01(path, body) != G34_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g34.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g34.identity_projection:" + path)
+            if ((path in baseline) != (G34_PATH_ACTIONS_V01[path] == "M")
+                    or actual[path] == baseline.get(path)):
+                failures.append("g34.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g34.frozen_source:" + path)
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g34.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g34.index.parse")
+    if index != (baseline if phase in ("G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED", "G34_DEVELOPMENT_UNADMITTED") else actual):
+        failures.append("g34.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g34.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g34.index.hidden_flags")
+    if phase == "G34_HISTORY_CONSUMPTION_COMMITTED" and _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g34.committed.tree")
+    for marker in (
+        "index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD",
+        "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock",
+        "HEAD.lock", "packed-refs.lock",
+    ):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if ((marker == "index" and (path.is_symlink() or not path.is_file()))
+                or (marker != "index" and path.exists())):
+            failures.append("g34.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "g34.json:" + path, failures)
+        old = json.loads(git("show", G34_BASE_V01 + ":" + path))
+        old["gate3_g31_foundation_admission_v01"] = G31_ADMISSION_METADATA_V01
+        old["gate3_g32_observation_admission_v01"] = G32_ADMISSION_METADATA_V01
+        old["gate3_g33_calibration_admission_v01"] = G33_ADMISSION_METADATA_V01
+        if {key: item for key, item in value.items()
+                if key != "gate3_g34_history_admission_v01"} != old:
+            failures.append("g34.historical_metadata:" + path)
+        if value.get("gate3_g34_history_admission_v01") != G34_ADMISSION_METADATA_V01:
+            failures.append("g34.admission_metadata:" + path)
+    return phase
+
+
+
+
+# G35 is a separate bounded proposal; all earlier source records remain historical.
+G35_BASE_V01 = 'd199199a578c078c913a2381f595549175bd9235'
+G35_PARENT_V01 = '2f328be634247be11bc18a3b22a919f393d6ed1d'
+G35_TREE_V01 = '26d63912117a2324cc7e711407be33123f55ab81'
+G35_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'demo/gate3_scenario_packs_v01.py': 'A',
+ 'demo/run_gate3_calibration_v01.py': 'A',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+ 'fixtures/gate3_calibration_reference_v01.json': 'A',
+ 'fixtures/gate3_domain_cases_v01.json': 'A',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_history_reference_v01.json': 'A',
+ 'fixtures/gate3_reference_v01.json': 'A',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'A',
+ 'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': 'A',
+ 'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/kernel/work_composition_v01.py': 'M',
+ 'hedgehog/outcome_calibration_v01.py': 'A',
+ 'hedgehog/outcome_feedback_consumer_v01.py': 'A',
+ 'hedgehog/outcome_feedback_history_v01.py': 'A',
+ 'hedgehog/outcome_feedback_report_v01.py': 'A',
+ 'hedgehog/outcome_feedback_v01.py': 'A',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'A',
+ 'schemas/outcome_feedback_g35_sources_v01.schema.json': 'A',
+ 'schemas/outcome_feedback_v01.schema.json': 'A',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_gate3_calibration_v01.py': 'A',
+ 'tests/test_gate3_current_advisory_v01.py': 'A',
+ 'tests/test_gate3_sentinel_observation_v01.py': 'A',
+ 'tests/test_outcome_calibration_v01.py': 'A',
+ 'tests/test_outcome_feedback_history_v01.py': 'A',
+ 'tests/test_outcome_feedback_v01.py': 'A',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tests/test_work_composition_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+G35_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '1adf6caa30d0b685ae3028d79017bca7f11468ecfafd9253346af927cc99afcb',
+ 'demo/gate3_scenario_packs_v01.py': 'cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc',
+ 'demo/run_gate3_calibration_v01.py': '3b9b477a5747af6ac6108f41d6ee585dee8bf149034289064c5e5c6466fa56d5',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': '5121865dab9f4d6563f7e70e39f9afe6e9abbb1fe2831cbca9b1ada430c28a75',
+ 'docs/gate3_outcome_feedback_contract_v01.md': '7e6d654fef536e6170d576407486cc64f190655ea443095aa27649ece86130f5',
+ 'fixtures/gate3_calibration_reference_v01.json': '4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5',
+ 'fixtures/gate3_domain_cases_v01.json': '53039dcfb81fe8a6a075968552214c46eb1f28c6e7286ec6bdde87463a77dc1d',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': '5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': '3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'd59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c',
+ 'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'b735220c1b35d84a90fe6a40b1796af8723e17853656413fb9b9c90cea3113b8',
+ 'fixtures/gate3_history_reference_v01.json': '1bed519b08f0a5a79f46f35ea1f463331ee00522f83800cf396d88d7b6bcd4be',
+ 'fixtures/gate3_reference_v01.json': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507',
+ 'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575',
+ 'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': '886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4',
+ 'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': '2672b6f661db964c460b069a57714a6ffa9e41ef6a0930739d43c8624497379c',
+ 'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2',
+ 'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2',
+ 'hedgehog/kernel/work_composition_v01.py': '1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0',
+ 'hedgehog/outcome_calibration_v01.py': 'fec98a589f0dca670316e88acac897279c66c298f317bb3ab8b94e85cb83e448',
+ 'hedgehog/outcome_feedback_consumer_v01.py': '19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938',
+ 'hedgehog/outcome_feedback_history_v01.py': '5303a4c8bde12005fed27fc5ee9d5497489c8abe538d10e891d4264b62d1e1e7',
+ 'hedgehog/outcome_feedback_report_v01.py': 'aa382adb332e5925a0f94b228417768fef03382e420d13441c34b9ffb71df385',
+ 'hedgehog/outcome_feedback_v01.py': '4bca7a0d53672c24d976f9a4126eac1ec5f4ad714bfd14b3140c4ceb7163c5e2',
+ 'release/current_status_overlay_v01.json': 'd16b784122fb359797c04d7e17a50f7768f34da57f4eeb022d79336864ff7594',
+ 'release/successor_context_manifest_v01.json': '41244361d6f3756e7dc73445709661dc5fdf32e8eb243f31e30221cf594b71e2',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'cb92d9429dd96efbda062dbe9507df18453402e481a8135c87841f9ac9fd6668',
+ 'schemas/outcome_feedback_g35_sources_v01.schema.json': '9272dd580aa7514a4e807aaec28abfccf415d250159d4648d8329cfee2375e1b',
+ 'schemas/outcome_feedback_v01.schema.json': 'd9ec33870b01a98ec1694f2c22e9d199babb835195de00438e235bed0f1af9c1',
+ 'specs/current_architecture_lock_v01.md': '438374572831e12455c84f78a24aa8b2dde76eba067b631c8f886432238b96a0',
+ 'specs/document_authority_index_v01.json': 'f9f6b224aa7a4b2ffc170dc752e0f97c9d0bd400beab8e559b2d903466fa8c91',
+ 'tests/test_active_architecture_authority_v01.py': '4fded3f3279efa30a880f95ed6cd41ac356b347828417b9899a97a6cc5150606',
+ 'tests/test_gate3_calibration_v01.py': 'ce98b57c28ef3ff02616743e1876dd17e2520b9eb1dc66e50bc2df4bb46d1126',
+ 'tests/test_gate3_current_advisory_v01.py': '377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385',
+ 'tests/test_gate3_sentinel_observation_v01.py': '401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83',
+ 'tests/test_outcome_calibration_v01.py': '994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a',
+ 'tests/test_outcome_feedback_history_v01.py': '3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca',
+ 'tests/test_outcome_feedback_v01.py': '7d5218ad85fd8e709bff09a927257dbda5934587446bc26288e73400a776347e',
+ 'tests/test_repository_release_spine_v01.py': '17cf47b3fa68ae84be280ed03c4ca6838580534fc13dad65f7cab5c2f28e1f3b',
+ 'tests/test_work_composition_v01.py': 'aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc',
+ 'tools/check_active_architecture_authority_v01.py': '03ce72642319867ed4a819152935ed762ae70735b15d3eed4bfdd016d141175b'}
+G35_ADMISSION_METADATA_V01 = {'G35_started': True,
+ 'G36_started': False,
+ 'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': 'd199199a578c078c913a2381f595549175bd9235',
+ 'basis_tree': '26d63912117a2324cc7e711407be33123f55ab81',
+ 'checkpoint': 'docs/gate3_outcome_feedback_checkpoint_v01.md',
+ 'contract': 'docs/gate3_outcome_feedback_contract_v01.md',
+ 'gate3_status': 'NOT_CLOSED',
+ 'living_inventory': 'PRESERVED_NINE_ROWS',
+ 'owner_landing': 'NOT_AUTHORIZED',
+ 'parent': '2f328be634247be11bc18a3b22a919f393d6ed1d',
+ 'path_actions': {'AGENTS.md': 'M',
+                  'demo/gate3_scenario_packs_v01.py': 'A',
+                  'demo/run_gate3_calibration_v01.py': 'A',
+                  'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+                  'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+                  'fixtures/gate3_calibration_reference_v01.json': 'A',
+                  'fixtures/gate3_domain_cases_v01.json': 'A',
+                  'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_history_reference_v01.json': 'A',
+                  'fixtures/gate3_reference_v01.json': 'A',
+                  'fixtures/gate3_sentinel_observation_v01.json': 'A',
+                  'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+                  'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': 'A',
+                  'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/kernel/work_composition_v01.py': 'M',
+                  'hedgehog/outcome_calibration_v01.py': 'A',
+                  'hedgehog/outcome_feedback_consumer_v01.py': 'A',
+                  'hedgehog/outcome_feedback_history_v01.py': 'A',
+                  'hedgehog/outcome_feedback_report_v01.py': 'A',
+                  'hedgehog/outcome_feedback_v01.py': 'A',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'A',
+                  'schemas/outcome_feedback_g35_sources_v01.schema.json': 'A',
+                  'schemas/outcome_feedback_v01.schema.json': 'A',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_gate3_calibration_v01.py': 'A',
+                  'tests/test_gate3_current_advisory_v01.py': 'A',
+                  'tests/test_gate3_sentinel_observation_v01.py': 'A',
+                  'tests/test_outcome_calibration_v01.py': 'A',
+                  'tests/test_outcome_feedback_history_v01.py': 'A',
+                  'tests/test_outcome_feedback_v01.py': 'A',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tests/test_work_composition_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'replay': 'SAFE_DERIVED_PUBLIC_SOURCE_RELATIONS_UNSUPPORTED_NATIVE_SCHEMA',
+ 'scope': 'G35_FIVE_DOMAIN_CONTROLLED_HARNESS',
+ 'source_profiles': 'FINITE_G35_FIVE_DOMAIN_V01',
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED'}
+G35_COMMON_BASE_SHA256_V01 = G34_COMMON_BASE_SHA256_V01
+
+def _g35_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in G35_PATH_ACTIONS_V01.items()
+           if action == "A" and path not in G34_PATH_ACTIONS_V01):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g35_harness_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+def _g35_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly the G35 guard's own digest literal."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G35_SOURCE_IDENTITIES_V01"
+               for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if (len(nodes) != 1 or not isinstance(nodes[0], ast.Assign)
+            or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name)
+            or not isinstance(nodes[0].value, ast.Dict)):
+        raise ValueError("g35 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g35 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g35 self identity projection")
+    value = node.value.values[names.index(path)]
+    if (not isinstance(value, ast.Constant) or type(value.value) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", value.value) is None
+            or value.end_lineno != value.lineno):
+        raise ValueError("g35 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (("\"" + value.value + "\"").encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g35 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G35_V01"' + body[end:]).hexdigest()
+
+def _classify_g35_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                            branch: str, status: dict[str, str],
+                            delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G35_INVALID"
+    if branch != "main":
+        failures.append("g35.branch")
+    if head == G35_BASE_V01:
+        if parents != (G35_PARENT_V01,) or origin != G35_BASE_V01:
+            failures.append("g35.candidate.basis_origin")
+        unstaged = {path: "??" if action == "A" else " M"
+                    for path, action in G35_PATH_ACTIONS_V01.items()}
+        staged = {path: action + " " for path, action in G35_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G35_FIVE_DOMAIN_HARNESS_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(unstaged[path] == state for path, state in status.items()):
+            phase = "G35_DEVELOPMENT_UNADMITTED"
+            failures.append("g35.development_unadmitted")
+        else:
+            failures.append("g35.candidate.exact_ledger")
+        if delta:
+            failures.append("g35.candidate.delta")
+    elif parents == (G35_BASE_V01,):
+        phase = "G35_FIVE_DOMAIN_HARNESS_COMMITTED"
+        if origin not in (G35_BASE_V01, head):
+            failures.append("g35.committed.origin")
+        if status or delta != G35_PATH_ACTIONS_V01:
+            failures.append("g35.committed.clean_exact_delta")
+    else:
+        failures.append("g35.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+def _validate_g35_harness_admission_v01(root: Path, failures: list[str]) -> str:
+    """Validate exact G35 source succession; never execute calibration runtime."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="g35.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, G35_BASE_V01 + "..HEAD", failures), label="g35.delta", failures=failures)
+    phase, reasons = _classify_g35_ledger_v01(
+        head=head,
+        parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(),
+        status=status,
+        delta=delta,
+    )
+    failures.extend(reasons)
+    if git("rev-parse", G35_BASE_V01 + "^{tree}").decode().strip() != G35_TREE_V01:
+        failures.append("g35.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G35_BASE_V01).decode().split() != [G35_BASE_V01, G35_PARENT_V01]:
+        failures.append("g35.base.parent")
+    origin_url = git("config", "--get", "remote.origin.url").decode().strip()
+    if origin_url not in (
+        "https://github.com/AAkhtanin/hedgehog-os",
+        "https://github.com/AAkhtanin/hedgehog-os.git",
+        "git@github.com:AAkhtanin/hedgehog-os.git",
+    ):
+        failures.append("g35.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G35_BASE_V01), failures)
+    if (len(baseline) != 1095 or len(G35_PATH_ACTIONS_V01) != 44
+            or sum(action == "A" for action in G35_PATH_ACTIONS_V01.values()) != 33
+            or set(G35_SOURCE_IDENTITIES_V01) != set(G35_PATH_ACTIONS_V01)):
+        failures.append("g35.exact_inventory")
+    for path, expected in G35_COMMON_BASE_SHA256_V01.items():
+        old_body = git("show", G35_BASE_V01 + ":" + path)
+        if hashlib.sha256(old_body).hexdigest() != expected:
+            failures.append("g35.common_base_identity:" + path)
+        try:
+            new_body = (root / path).read_bytes()
+            if path == "hedgehog/kernel/work_composition_v01.py":
+                old_argument = b"consumer_component='work_composition', downstream_artifact_id=topology.artifact_id,"
+                new_argument = b"consumer_component=topology.source_component, downstream_artifact_id=topology.artifact_id,"
+                if old_body.count(old_argument) != 1 or new_body != old_body.replace(old_argument, new_argument, 1):
+                    failures.append("g35.work_exact_causal_argument")
+            else:
+                old_ast, new_ast = ast.parse(old_body), ast.parse(new_body)
+                old_names = {n.name for n in old_ast.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
+                new_ast.body = [n for n in new_ast.body if not isinstance(n, (ast.FunctionDef, ast.ClassDef)) or n.name in old_names]
+                if ast.dump(old_ast) != ast.dump(new_ast):
+                    failures.append("g35.work_existing_tests_changed")
+        except (OSError, ValueError, SyntaxError):
+            failures.append("g35.common_source_shape:" + path)
+    actual = {}
+    for path in sorted(set(baseline) | set(G35_PATH_ACTIONS_V01)):
+        file = root / path
+        if (file.is_symlink() or not file.is_file()
+                or any(parent.is_symlink() for parent in file.parents
+                       if parent != root and root in parent.parents)):
+            failures.append("g35.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = (
+            "100755" if mode & 0o111 else "100644",
+            hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest(),
+        )
+        if path in G35_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g35.mode:" + path)
+            try:
+                if _g35_source_digest_v01(path, body) != G35_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g35.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g35.identity_projection:" + path)
+            if ((path in baseline) != (G35_PATH_ACTIONS_V01[path] == "M")
+                    or actual[path] == baseline.get(path)):
+                failures.append("g35.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g35.frozen_source:" + path)
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g35.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g35.index.parse")
+    if index != (baseline if phase in ("G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED", "G35_DEVELOPMENT_UNADMITTED") else actual):
+        failures.append("g35.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g35.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g35.index.hidden_flags")
+    if phase == "G35_FIVE_DOMAIN_HARNESS_COMMITTED" and _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g35.committed.tree")
+    for marker in (
+        "index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD",
+        "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock",
+        "HEAD.lock", "packed-refs.lock",
+    ):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if ((marker == "index" and (path.is_symlink() or not path.is_file()))
+                or (marker != "index" and path.exists())):
+            failures.append("g35.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "g35.json:" + path, failures)
+        old = json.loads(git("show", G35_BASE_V01 + ":" + path))
+        old["gate3_g31_foundation_admission_v01"] = G31_ADMISSION_METADATA_V01
+        old["gate3_g32_observation_admission_v01"] = G32_ADMISSION_METADATA_V01
+        old["gate3_g33_calibration_admission_v01"] = G33_ADMISSION_METADATA_V01
+        old["gate3_g34_history_admission_v01"] = G34_ADMISSION_METADATA_V01
+        if {key: item for key, item in value.items()
+                if key != "gate3_g35_harness_admission_v01"} != old:
+            failures.append("g35.historical_metadata:" + path)
+        if value.get("gate3_g35_harness_admission_v01") != G35_ADMISSION_METADATA_V01:
+            failures.append("g35.admission_metadata:" + path)
+    return phase
+
+
+G36_BASE_V01 = G35_BASE_V01
+G36_PARENT_V01 = G35_PARENT_V01
+G36_TREE_V01 = G35_TREE_V01
+G36_COMMON_BASE_SHA256_V01 = G35_COMMON_BASE_SHA256_V01
+G36_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'demo/gate3_scenario_packs_v01.py': 'A',
+ 'demo/run_gate3_calibration_v01.py': 'A',
+ 'demo/run_kernel_conformance_v01.py': 'M',
+ 'demo/run_living_gauntlet_v01.py': 'M',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+ 'fixtures/gate3_adversary_reference_v01.json': 'A',
+ 'fixtures/gate3_calibration_reference_v01.json': 'A',
+ 'fixtures/gate3_domain_cases_v01.json': 'A',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g35r_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_history_reference_v01.json': 'A',
+ 'fixtures/gate3_reference_v01.json': 'A',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'A',
+ 'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py': 'A',
+ 'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': 'A',
+ 'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/gate3_mechanism_v01.py': 'A',
+ 'hedgehog/kernel/conformance_v01.py': 'M',
+ 'hedgehog/kernel/work_composition_v01.py': 'M',
+ 'hedgehog/outcome_calibration_v01.py': 'A',
+ 'hedgehog/outcome_feedback_consumer_v01.py': 'A',
+ 'hedgehog/outcome_feedback_history_v01.py': 'A',
+ 'hedgehog/outcome_feedback_report_v01.py': 'A',
+ 'hedgehog/outcome_feedback_v01.py': 'A',
+ 'release/completion_manifest.json': 'M',
+ 'release/current_limitations.md': 'M',
+ 'release/current_schema_surface_v01.json': 'M',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/integration_seam_index.json': 'M',
+ 'release/integration_seam_index.md': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'schemas/gate3_adversary_v01.schema.json': 'A',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'A',
+ 'schemas/outcome_feedback_g35_sources_v01.schema.json': 'A',
+ 'schemas/outcome_feedback_v01.schema.json': 'A',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_gate3_adversary_v01.py': 'A',
+ 'tests/test_gate3_calibration_v01.py': 'A',
+ 'tests/test_gate3_current_advisory_v01.py': 'A',
+ 'tests/test_gate3_mechanism_registration_v01.py': 'A',
+ 'tests/test_gate3_sentinel_observation_v01.py': 'A',
+ 'tests/test_outcome_calibration_v01.py': 'A',
+ 'tests/test_outcome_feedback_history_v01.py': 'A',
+ 'tests/test_outcome_feedback_v01.py': 'A',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tests/test_work_composition_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+G36_ADMISSION_METADATA_V01 = {'G37': 'PLANNED_NOT_EXECUTED',
+ 'Gate3': 'NOT_CLOSED',
+ 'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': 'd199199a578c078c913a2381f595549175bd9235',
+ 'checkpoint': 'docs/gate3_outcome_feedback_checkpoint_v01.md',
+ 'implementation_status': 'IMPLEMENTED_EXTERNAL_REVIEW_PENDING',
+ 'mechanism': 'G36_SOURCE_BOUND_LEARNING_MECHANISM_V01',
+ 'path_actions': {'AGENTS.md': 'M',
+                  'demo/gate3_scenario_packs_v01.py': 'A',
+                  'demo/run_gate3_calibration_v01.py': 'A',
+                  'demo/run_kernel_conformance_v01.py': 'M',
+                  'demo/run_living_gauntlet_v01.py': 'M',
+                  'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+                  'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+                  'fixtures/gate3_adversary_reference_v01.json': 'A',
+                  'fixtures/gate3_calibration_reference_v01.json': 'A',
+                  'fixtures/gate3_domain_cases_v01.json': 'A',
+                  'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_g35r_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_history_reference_v01.json': 'A',
+                  'fixtures/gate3_reference_v01.json': 'A',
+                  'fixtures/gate3_sentinel_observation_v01.json': 'A',
+                  'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+                  'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py': 'A',
+                  'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': 'A',
+                  'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/gate3_mechanism_v01.py': 'A',
+                  'hedgehog/kernel/conformance_v01.py': 'M',
+                  'hedgehog/kernel/work_composition_v01.py': 'M',
+                  'hedgehog/outcome_calibration_v01.py': 'A',
+                  'hedgehog/outcome_feedback_consumer_v01.py': 'A',
+                  'hedgehog/outcome_feedback_history_v01.py': 'A',
+                  'hedgehog/outcome_feedback_report_v01.py': 'A',
+                  'hedgehog/outcome_feedback_v01.py': 'A',
+                  'release/completion_manifest.json': 'M',
+                  'release/current_limitations.md': 'M',
+                  'release/current_schema_surface_v01.json': 'M',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/integration_seam_index.json': 'M',
+                  'release/integration_seam_index.md': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'schemas/gate3_adversary_v01.schema.json': 'A',
+                  'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'A',
+                  'schemas/outcome_feedback_g35_sources_v01.schema.json': 'A',
+                  'schemas/outcome_feedback_v01.schema.json': 'A',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_gate3_adversary_v01.py': 'A',
+                  'tests/test_gate3_calibration_v01.py': 'A',
+                  'tests/test_gate3_current_advisory_v01.py': 'A',
+                  'tests/test_gate3_mechanism_registration_v01.py': 'A',
+                  'tests/test_gate3_sentinel_observation_v01.py': 'A',
+                  'tests/test_outcome_calibration_v01.py': 'A',
+                  'tests/test_outcome_feedback_history_v01.py': 'A',
+                  'tests/test_outcome_feedback_v01.py': 'A',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tests/test_work_composition_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'provider': 'OPT_IN_CONFIGURED_GEMINI_SYNTHETIC_ONLY',
+ 'scope': 'G36_SUPPLIER_ADVERSARY_SOURCE_BOUND_LEARNING',
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED'}
+G36_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '7a1f56d2e0b5206bc558a5b011d9b6240bf0ec817d8598138343168985898285',
+ 'demo/gate3_scenario_packs_v01.py': 'cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc',
+ 'demo/run_gate3_calibration_v01.py': '53c958c775d488fbae0c1b03072db55d8d7b24ccfde79449f304637a55a1b640',
+ 'demo/run_kernel_conformance_v01.py': 'dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503',
+ 'demo/run_living_gauntlet_v01.py': '7b124e5d9054a4f8c3c4c96975c6dd6cd52c2a56470cb64717827e5e9a546f47',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': 'fc392f57b910ff52ef0099c8f03ee0ae372c72331737ba2ad2af14e0c721d122',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'e76978c430ba64e573fd9a977518b0566dc6dff5c9b3764275d7923caa85bc21',
+ 'fixtures/gate3_adversary_reference_v01.json': '5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5',
+ 'fixtures/gate3_calibration_reference_v01.json': '4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5',
+ 'fixtures/gate3_domain_cases_v01.json': '53039dcfb81fe8a6a075968552214c46eb1f28c6e7286ec6bdde87463a77dc1d',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': '5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': '3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'd59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c',
+ 'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'b735220c1b35d84a90fe6a40b1796af8723e17853656413fb9b9c90cea3113b8',
+ 'fixtures/gate3_g35r_predecessor_v01.patch.gz': '0d6a750a55a5672794bb7aac71463ff4626f3a80a2f4298a9c1497caccb953c2',
+ 'fixtures/gate3_history_reference_v01.json': '1bed519b08f0a5a79f46f35ea1f463331ee00522f83800cf396d88d7b6bcd4be',
+ 'fixtures/gate3_reference_v01.json': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507',
+ 'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575',
+ 'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': '886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4',
+ 'hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py': '683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6',
+ 'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': '4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc',
+ 'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2',
+ 'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2',
+ 'hedgehog/gate3_mechanism_v01.py': 'ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8',
+ 'hedgehog/kernel/conformance_v01.py': '6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f',
+ 'hedgehog/kernel/work_composition_v01.py': '1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0',
+ 'hedgehog/outcome_calibration_v01.py': 'ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079',
+ 'hedgehog/outcome_feedback_consumer_v01.py': '19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938',
+ 'hedgehog/outcome_feedback_history_v01.py': 'aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6',
+ 'hedgehog/outcome_feedback_report_v01.py': 'aa382adb332e5925a0f94b228417768fef03382e420d13441c34b9ffb71df385',
+ 'hedgehog/outcome_feedback_v01.py': '16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13',
+ 'release/completion_manifest.json': '8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1',
+ 'release/current_limitations.md': '4a69fe851612459824f9245fbdcd1cddb86f29df44a486233ea68a21689accd6',
+ 'release/current_schema_surface_v01.json': '8f5d4703c7a0f502550595475666e88b905c443c4be07cff746fb43cd9449f15',
+ 'release/current_status_overlay_v01.json': 'f2eb9c8bd381fed205c9371a6f4731ee5507cde5280cfb36a58ea1b01846f002',
+ 'release/integration_seam_index.json': 'e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f',
+ 'release/integration_seam_index.md': '51c62ebc77818fad1e72efa232675a0ba0245463f0ce1d4cf9f1b4ee0af12c84',
+ 'release/successor_context_manifest_v01.json': 'a1c48ce64458ead4c3b7fa5e3f59b252d749639c7650686597c7058b1463e9e5',
+ 'schemas/gate3_adversary_v01.schema.json': 'dee9e823eec92579ae5a9a26943eb6fb3265657cb9314f8fee780783e50b24b6',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'cb92d9429dd96efbda062dbe9507df18453402e481a8135c87841f9ac9fd6668',
+ 'schemas/outcome_feedback_g35_sources_v01.schema.json': '9272dd580aa7514a4e807aaec28abfccf415d250159d4648d8329cfee2375e1b',
+ 'schemas/outcome_feedback_v01.schema.json': 'e89426aabdc36f62997a15b26e04fe6a1e07e046dcf609977a221ba337bcf26e',
+ 'specs/current_architecture_lock_v01.md': 'df82860383d96dd1d44d81ebd2289923cfb913f50a1d2f342e48189bc842e7ab',
+ 'specs/document_authority_index_v01.json': '1fd7dac5fd7cd294cb0e8e78327d359d622607762cd6f0d4782493c1e9c310ff',
+ 'tests/test_active_architecture_authority_v01.py': '5c659569b262bbbadfa2c6d128ae4aeb451a6b7ad4633eb8c4f6813cdd465f09',
+ 'tests/test_gate3_adversary_v01.py': '59fd0205053bb55f2431ad79efa26442f3f0a315f4250b58ba6c0d9b12c5b4d5',
+ 'tests/test_gate3_calibration_v01.py': 'ce98b57c28ef3ff02616743e1876dd17e2520b9eb1dc66e50bc2df4bb46d1126',
+ 'tests/test_gate3_current_advisory_v01.py': '377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385',
+ 'tests/test_gate3_mechanism_registration_v01.py': '63f5557395bb3b0c755ddac1e28e1d3b514f33af1e51b4b71db297fdccd46f9b',
+ 'tests/test_gate3_sentinel_observation_v01.py': '401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83',
+ 'tests/test_outcome_calibration_v01.py': '994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a',
+ 'tests/test_outcome_feedback_history_v01.py': '3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca',
+ 'tests/test_outcome_feedback_v01.py': '7d5218ad85fd8e709bff09a927257dbda5934587446bc26288e73400a776347e',
+ 'tests/test_repository_release_spine_v01.py': 'cfdf6be514fc0b7a8a53a95f68f80e26725121003edb8d46207c02f8fbd74df2',
+ 'tests/test_work_composition_v01.py': 'aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc',
+ 'tools/check_active_architecture_authority_v01.py': '793e4855b9a38fe3bcc98fec7846afab56b5f6d3334070730dbe4b0e90d1413b'}
+
+def _g36_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in G36_PATH_ACTIONS_V01.items()
+           if action == "A" and path not in G35_PATH_ACTIONS_V01):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g36_adversary_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _g36_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly the G36 guard's own digest literal."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G36_SOURCE_IDENTITIES_V01"
+               for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if (len(nodes) != 1 or not isinstance(nodes[0], ast.Assign)
+            or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name)
+            or not isinstance(nodes[0].value, ast.Dict)):
+        raise ValueError("g36 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g36 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g36 self identity projection")
+    value = node.value.values[names.index(path)]
+    if (not isinstance(value, ast.Constant) or type(value.value) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", value.value) is None
+            or value.end_lineno != value.lineno):
+        raise ValueError("g36 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (("\"" + value.value + "\"").encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g36 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G36_V01"' + body[end:]).hexdigest()
+
+
+def _classify_g36_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                            branch: str, status: dict[str, str],
+                            delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G36_INVALID"
+    if branch != "main":
+        failures.append("g36.branch")
+    if head == G36_BASE_V01:
+        if parents != (G36_PARENT_V01,) or origin != G36_BASE_V01:
+            failures.append("g36.candidate.basis_origin")
+        unstaged = {path: "??" if action == "A" else " M"
+                    for path, action in G36_PATH_ACTIONS_V01.items()}
+        staged = {path: action + " " for path, action in G36_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G36_ADVERSARY_MECHANISM_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(unstaged[path] == state for path, state in status.items()):
+            phase = "G36_DEVELOPMENT_UNADMITTED"
+            failures.append("g36.development_unadmitted")
+        else:
+            failures.append("g36.candidate.exact_ledger")
+        if delta:
+            failures.append("g36.candidate.delta")
+    elif parents == (G36_BASE_V01,):
+        phase = "G36_ADVERSARY_MECHANISM_COMMITTED"
+        if origin not in (G36_BASE_V01, head):
+            failures.append("g36.committed.origin")
+        if status or delta != G36_PATH_ACTIONS_V01:
+            failures.append("g36.committed.clean_exact_delta")
+    else:
+        failures.append("g36.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+
+def _validate_g36_adversary_admission_v01(root: Path, failures: list[str]) -> str:
+    """Validate exact G36 source succession; never execute calibration runtime."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="g36.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, G36_BASE_V01 + "..HEAD", failures), label="g36.delta", failures=failures)
+    phase, reasons = _classify_g36_ledger_v01(
+        head=head,
+        parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(),
+        status=status,
+        delta=delta,
+    )
+    failures.extend(reasons)
+    if git("rev-parse", G36_BASE_V01 + "^{tree}").decode().strip() != G36_TREE_V01:
+        failures.append("g36.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G36_BASE_V01).decode().split() != [G36_BASE_V01, G36_PARENT_V01]:
+        failures.append("g36.base.parent")
+    origin_url = git("config", "--get", "remote.origin.url").decode().strip()
+    if origin_url not in (
+        "https://github.com/AAkhtanin/hedgehog-os",
+        "https://github.com/AAkhtanin/hedgehog-os.git",
+        "git@github.com:AAkhtanin/hedgehog-os.git",
+    ):
+        failures.append("g36.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G36_BASE_V01), failures)
+    if (len(baseline) != 1095 or len(G36_PATH_ACTIONS_V01) != 59
+            or sum(action == "A" for action in G36_PATH_ACTIONS_V01.values()) != 40
+            or set(G36_SOURCE_IDENTITIES_V01) != set(G36_PATH_ACTIONS_V01)):
+        failures.append("g36.exact_inventory")
+    for path, expected in G36_COMMON_BASE_SHA256_V01.items():
+        old_body = git("show", G36_BASE_V01 + ":" + path)
+        if hashlib.sha256(old_body).hexdigest() != expected:
+            failures.append("g36.common_base_identity:" + path)
+        try:
+            new_body = (root / path).read_bytes()
+            if path == "hedgehog/kernel/work_composition_v01.py":
+                old_argument = b"consumer_component='work_composition', downstream_artifact_id=topology.artifact_id,"
+                new_argument = b"consumer_component=topology.source_component, downstream_artifact_id=topology.artifact_id,"
+                if old_body.count(old_argument) != 1 or new_body != old_body.replace(old_argument, new_argument, 1):
+                    failures.append("g36.work_exact_causal_argument")
+            else:
+                old_ast, new_ast = ast.parse(old_body), ast.parse(new_body)
+                old_names = {n.name for n in old_ast.body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
+                new_ast.body = [n for n in new_ast.body if not isinstance(n, (ast.FunctionDef, ast.ClassDef)) or n.name in old_names]
+                if ast.dump(old_ast) != ast.dump(new_ast):
+                    failures.append("g36.work_existing_tests_changed")
+        except (OSError, ValueError, SyntaxError):
+            failures.append("g36.common_source_shape:" + path)
+    actual = {}
+    for path in sorted(set(baseline) | set(G36_PATH_ACTIONS_V01)):
+        file = root / path
+        if (file.is_symlink() or not file.is_file()
+                or any(parent.is_symlink() for parent in file.parents
+                       if parent != root and root in parent.parents)):
+            failures.append("g36.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = (
+            "100755" if mode & 0o111 else "100644",
+            hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest(),
+        )
+        if path in G36_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g36.mode:" + path)
+            try:
+                if _g36_source_digest_v01(path, body) != G36_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g36.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g36.identity_projection:" + path)
+            if ((path in baseline) != (G36_PATH_ACTIONS_V01[path] == "M")
+                    or actual[path] == baseline.get(path)):
+                failures.append("g36.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g36.frozen_source:" + path)
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g36.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g36.index.parse")
+    if index != (baseline if phase in ("G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED", "G36_DEVELOPMENT_UNADMITTED") else actual):
+        failures.append("g36.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g36.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g36.index.hidden_flags")
+    if phase == "G36_ADVERSARY_MECHANISM_COMMITTED" and _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g36.committed.tree")
+    for marker in (
+        "index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD",
+        "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock",
+        "HEAD.lock", "packed-refs.lock",
+    ):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if ((marker == "index" and (path.is_symlink() or not path.is_file()))
+                or (marker != "index" and path.exists())):
+            failures.append("g36.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "g36.json:" + path, failures)
+        old = json.loads(git("show", G36_BASE_V01 + ":" + path))
+        old["gate3_g31_foundation_admission_v01"] = G31_ADMISSION_METADATA_V01
+        old["gate3_g32_observation_admission_v01"] = G32_ADMISSION_METADATA_V01
+        old["gate3_g33_calibration_admission_v01"] = G33_ADMISSION_METADATA_V01
+        old["gate3_g34_history_admission_v01"] = G34_ADMISSION_METADATA_V01
+        old["gate3_g35_harness_admission_v01"] = G35_ADMISSION_METADATA_V01
+        if {key: item for key, item in value.items()
+                if key != "gate3_g36_adversary_admission_v01"} != old:
+            failures.append("g36.historical_metadata:" + path)
+        if value.get("gate3_g36_adversary_admission_v01") != G36_ADMISSION_METADATA_V01:
+            failures.append("g36.admission_metadata:" + path)
+    return phase
+
+
+G37_BASE_V01 = G36_BASE_V01
+G37_PARENT_V01 = G36_PARENT_V01
+G37_TREE_V01 = G36_TREE_V01
+G37_COMMON_BASE_SHA256_V01 = G36_COMMON_BASE_SHA256_V01
+G37_PATH_ACTIONS_V01 = dict(G36_PATH_ACTIONS_V01)
+G37_ADMISSION_METADATA_V01 = {
+    "basis": G37_BASE_V01,
+    "reviewed_predecessor_tree": "e18a24a4c47b54ed0fd24cf83559e2e0ac9605d0",
+    "reviewed_input_archive_sha256": "9bed9034761f92ec6ab710f278db25c6cfc7d6db346a386a6a7321a10aee86de",
+    "scope": "G37_FROZEN_RELEASE_VERIFICATION_AND_REVIEWABLE_LANDING_PREPARATION",
+    "authority": "SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+    "path_actions": G37_PATH_ACTIONS_V01,
+    "implementation_status": "FROZEN_CANDIDATE_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "Gate3": "NOT_CLOSED",
+    "owner_landing": "PENDING_SEPARATE_G38_EXECUTION",
+    "full_successor_reports": "FRESH_EXTERNAL_SOURCE_BOUND_EVIDENCE",
+    "provider_calls": 0,
+    "real_effects": 0,
+    "successor_commit": "DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED",
+    "checkpoint": "docs/gate3_outcome_feedback_checkpoint_v01.md",
+}
+G37_RELEASE_REGISTRATION_V01 = {
+    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
+    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
+    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
+    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
+    "conformance_entry": "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01",
+    "direct_test": "tests/test_gate3_mechanism_registration_v01.py",
+    "inventory": [
+        "NATIVE_BOUNDARY_FEEDBACK",
+        "ROOT_RECORDED_HISTORY",
+        "CURRENT_REVIEWED_WORK",
+        "LAWFUL_SAME_HOST_OBJECTIVE",
+        "SUPPLIED_PROOF_REFUSAL",
+    ],
+    "top_level_fresh_e5": 1,
+    "top_level_fresh_g3": 1,
+    "shared_collectors": 0,
+    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
+    "source_admission_is_root_permission": False,
+}
+G37_SOURCE_IDENTITIES_V01 = {'AGENTS.md': '34c42fe602aa442c30e7b39ce3b2dd36c9c60e0d182480d0de64becdc4ff9af6',
+ 'demo/gate3_scenario_packs_v01.py': 'cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc',
+ 'demo/run_gate3_calibration_v01.py': '53c958c775d488fbae0c1b03072db55d8d7b24ccfde79449f304637a55a1b640',
+ 'demo/run_kernel_conformance_v01.py': 'dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503',
+ 'demo/run_living_gauntlet_v01.py': '997fb5cb883fea10433b98cbbeda760945c5606dc033609bf2464fe8b99e8fc9',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': '9c617e2b9363b314c9648561058386a629a439e7a2a0825feeb097a00ba82f1c',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'abd975e70d3b92f14b283dc0fe961a50c9d0d12db4e907f682d2dc9d6fcf3862',
+ 'fixtures/gate3_adversary_reference_v01.json': '5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5',
+ 'fixtures/gate3_calibration_reference_v01.json': '4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5',
+ 'fixtures/gate3_domain_cases_v01.json': '53039dcfb81fe8a6a075968552214c46eb1f28c6e7286ec6bdde87463a77dc1d',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': '5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': '3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4',
+ 'fixtures/gate3_g33r_predecessor_v01.patch.gz': 'd59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c',
+ 'fixtures/gate3_g34r2_predecessor_v01.patch.gz': 'b735220c1b35d84a90fe6a40b1796af8723e17853656413fb9b9c90cea3113b8',
+ 'fixtures/gate3_g35r_predecessor_v01.patch.gz': '0d6a750a55a5672794bb7aac71463ff4626f3a80a2f4298a9c1497caccb953c2',
+ 'fixtures/gate3_history_reference_v01.json': '1bed519b08f0a5a79f46f35ea1f463331ee00522f83800cf396d88d7b6bcd4be',
+ 'fixtures/gate3_reference_v01.json': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507',
+ 'hedgehog/domains/airline/outcome_feedback_adapter_v01.py': 'fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575',
+ 'hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py': 'a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': '5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': '886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4',
+ 'hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py': '683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6',
+ 'hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py': '4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc',
+ 'hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py': 'e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2',
+ 'hedgehog/domains/testflix/outcome_feedback_adapter_v01.py': 'ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2',
+ 'hedgehog/gate3_mechanism_v01.py': 'ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8',
+ 'hedgehog/kernel/conformance_v01.py': '6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f',
+ 'hedgehog/kernel/work_composition_v01.py': '1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0',
+ 'hedgehog/outcome_calibration_v01.py': 'ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079',
+ 'hedgehog/outcome_feedback_consumer_v01.py': '19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938',
+ 'hedgehog/outcome_feedback_history_v01.py': 'aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6',
+ 'hedgehog/outcome_feedback_report_v01.py': 'aa382adb332e5925a0f94b228417768fef03382e420d13441c34b9ffb71df385',
+ 'hedgehog/outcome_feedback_v01.py': '16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13',
+ 'release/completion_manifest.json': 'a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0',
+ 'release/current_limitations.md': '14f4525f4adaf4ca3b2765f8461bc90efc478445301c481d1389c4af40940805',
+ 'release/current_schema_surface_v01.json': '7094cc2438599ce3ae450acca4876e177df736893caf9ffba1ebcaf8480cf451',
+ 'release/current_status_overlay_v01.json': 'dc0c1c29aa78eb153a17ac9fd3cc8a304f77819c5e1832b25ce007cde950bab6',
+ 'release/integration_seam_index.json': '0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d',
+ 'release/integration_seam_index.md': 'fda81d632c4c39c5727e3bcf53fcc1834008b58f53f40397f5cf5abe61e805c6',
+ 'release/successor_context_manifest_v01.json': 'eda89e0a2ba92ea6c066737af2c9d5fef4aca2cb35a2735bc0884754a18d9e60',
+ 'schemas/gate3_adversary_v01.schema.json': 'dee9e823eec92579ae5a9a26943eb6fb3265657cb9314f8fee780783e50b24b6',
+ 'schemas/outcome_feedback_g34_predictive_v01.schema.json': 'cb92d9429dd96efbda062dbe9507df18453402e481a8135c87841f9ac9fd6668',
+ 'schemas/outcome_feedback_g35_sources_v01.schema.json': '9272dd580aa7514a4e807aaec28abfccf415d250159d4648d8329cfee2375e1b',
+ 'schemas/outcome_feedback_v01.schema.json': 'e89426aabdc36f62997a15b26e04fe6a1e07e046dcf609977a221ba337bcf26e',
+ 'specs/current_architecture_lock_v01.md': '2f6440c4d1fa15d8ab39a19dd551b156e57213688db27e2c0e08acc14a41d9e6',
+ 'specs/document_authority_index_v01.json': 'a1e33d238bdcd16cf2057f2281ba9c356e69be6a5c87df3abc7a21485ce7c071',
+ 'tests/test_active_architecture_authority_v01.py': '6eae55852d4cc0368dc639ca72fef9e355e16bc44cab531e4b7c32389ce9bcf7',
+ 'tests/test_gate3_adversary_v01.py': '59fd0205053bb55f2431ad79efa26442f3f0a315f4250b58ba6c0d9b12c5b4d5',
+ 'tests/test_gate3_calibration_v01.py': 'ce98b57c28ef3ff02616743e1876dd17e2520b9eb1dc66e50bc2df4bb46d1126',
+ 'tests/test_gate3_current_advisory_v01.py': '377f44a67f7934cd5fc545029c576764eecacf98706afc7ee6410a83169e5385',
+ 'tests/test_gate3_mechanism_registration_v01.py': '63f5557395bb3b0c755ddac1e28e1d3b514f33af1e51b4b71db297fdccd46f9b',
+ 'tests/test_gate3_sentinel_observation_v01.py': '401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83',
+ 'tests/test_outcome_calibration_v01.py': '994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a',
+ 'tests/test_outcome_feedback_history_v01.py': '3f2a0a5633dda5db89ff283a7a33686d366c1b558f3c62ff92e4be25afd792ca',
+ 'tests/test_outcome_feedback_v01.py': '7d5218ad85fd8e709bff09a927257dbda5934587446bc26288e73400a776347e',
+ 'tests/test_repository_release_spine_v01.py': 'ba22f1fbee83e60f7f5e57abb1c738bbf001fe20dc8d6002aae199e9723d949b',
+ 'tests/test_work_composition_v01.py': 'aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc',
+ 'tools/check_active_architecture_authority_v01.py': 'b67d4d2a4f97342349ca8e675e813720dc2ca1849c5b842b46a566297d6f4fdc'}
+
+
+def _g37_requested_v01(root: Path) -> bool:
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g37_frozen_release_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _g37_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly the G37 guard's own digest literal."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G37_SOURCE_IDENTITIES_V01"
+               for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if (len(nodes) != 1 or not isinstance(nodes[0], ast.Assign)
+            or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name)
+            or not isinstance(nodes[0].value, ast.Dict)):
+        raise ValueError("g37 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g37 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g37 self identity projection")
+    value = node.value.values[names.index(path)]
+    if (not isinstance(value, ast.Constant) or type(value.value) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", value.value) is None
+            or value.end_lineno != value.lineno):
+        raise ValueError("g37 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (("\"" + value.value + "\"").encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g37 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G37_V01"' + body[end:]).hexdigest()
+
+
+def _classify_g37_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                             branch: str, status: dict[str, str],
+                             delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G37_INVALID"
+    if branch != "main":
+        failures.append("g37.branch")
+    if head == G37_BASE_V01:
+        if parents != (G37_PARENT_V01,) or origin != G37_BASE_V01:
+            failures.append("g37.candidate.basis_origin")
+        unstaged = {path: "??" if action == "A" else " M"
+                    for path, action in G37_PATH_ACTIONS_V01.items()}
+        staged = {path: action + " " for path, action in G37_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G37_FROZEN_RELEASE_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(
+                unstaged[path] == state for path, state in status.items()):
+            phase = "G37_DEVELOPMENT_UNADMITTED"
+            failures.append("g37.development_unadmitted")
+        else:
+            failures.append("g37.candidate.exact_ledger")
+        if delta:
+            failures.append("g37.candidate.delta")
+    elif parents == (G37_BASE_V01,):
+        phase = "G37_FROZEN_RELEASE_COMMITTED"
+        if origin not in (G37_BASE_V01, head):
+            failures.append("g37.committed.origin")
+        if status or delta != G37_PATH_ACTIONS_V01:
+            failures.append("g37.committed.clean_exact_delta")
+    else:
+        failures.append("g37.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+
+def _validate_g37_frozen_release_admission_v01(
+    root: Path, failures: list[str]
+) -> str:
+    """Validate the exact frozen G37 source proposal without executing runtime."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(
+        _git_status_entries_v02(root, failures), label="g37.status", failures=failures
+    )
+    delta = _entry_map_v02(
+        _git_name_status_entries_v01(root, G37_BASE_V01 + "..HEAD", failures),
+        label="g37.delta",
+        failures=failures,
+    )
+    phase, reasons = _classify_g37_ledger_v01(
+        head=head,
+        parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(),
+        status=status,
+        delta=delta,
+    )
+    failures.extend(reasons)
+    if git("rev-parse", G37_BASE_V01 + "^{tree}").decode().strip() != G37_TREE_V01:
+        failures.append("g37.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G37_BASE_V01).decode().split() != [
+        G37_BASE_V01, G37_PARENT_V01
+    ]:
+        failures.append("g37.base.parent")
+    if git("config", "--get", "remote.origin.url").decode().strip() not in (
+        "https://github.com/AAkhtanin/hedgehog-os",
+        "https://github.com/AAkhtanin/hedgehog-os.git",
+        "git@github.com:AAkhtanin/hedgehog-os.git",
+    ):
+        failures.append("g37.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G37_BASE_V01), failures)
+    if (len(baseline) != 1095 or len(G37_PATH_ACTIONS_V01) != 59
+            or sum(action == "A" for action in G37_PATH_ACTIONS_V01.values()) != 40
+            or set(G37_SOURCE_IDENTITIES_V01) != set(G37_PATH_ACTIONS_V01)):
+        failures.append("g37.exact_inventory")
+    for path, expected in G37_COMMON_BASE_SHA256_V01.items():
+        if hashlib.sha256(git("show", G37_BASE_V01 + ":" + path)).hexdigest() != expected:
+            failures.append("g37.common_base_identity:" + path)
+    actual = {}
+    for path in sorted(set(baseline) | set(G37_PATH_ACTIONS_V01)):
+        file = root / path
+        if (file.is_symlink() or not file.is_file()
+                or any(parent.is_symlink() for parent in file.parents
+                       if parent != root and root in parent.parents)):
+            failures.append("g37.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = (
+            "100755" if mode & 0o111 else "100644",
+            hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest(),
+        )
+        if path in G37_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g37.mode:" + path)
+            try:
+                if _g37_source_digest_v01(path, body) != G37_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g37.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g37.identity_projection:" + path)
+            if ((path in baseline) != (G37_PATH_ACTIONS_V01[path] == "M")
+                    or actual[path] == baseline.get(path)):
+                failures.append("g37.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g37.frozen_source:" + path)
+    if hashlib.sha256(
+        (root / "hedgehog/kernel/work_composition_v01.py").read_bytes()
+    ).hexdigest() != "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0":
+        failures.append("g37.common_work_identity")
+    if hashlib.sha256(
+        (root / "fixtures/gate3_adversary_reference_v01.json").read_bytes()
+    ).hexdigest() != "5fe0e6852030c727538ae18823b375a92e2a10010e960e23ae75ef48189052f5":
+        failures.append("g37.adversary_fixture_identity")
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g37.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g37.index.parse")
+    if index != (
+        baseline if phase in ("G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED", "G37_DEVELOPMENT_UNADMITTED")
+        else actual
+    ):
+        failures.append("g37.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g37.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(
+            r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g37.index.hidden_flags")
+    if phase == "G37_FROZEN_RELEASE_COMMITTED" and _u1_tree_v01(
+            git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g37.committed.tree")
+    for marker in (
+        "index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD",
+        "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock",
+        "HEAD.lock", "packed-refs.lock",
+    ):
+        marker_path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not marker_path.is_absolute():
+            marker_path = root / marker_path
+        if ((marker == "index" and (marker_path.is_symlink() or not marker_path.is_file()))
+                or (marker != "index" and marker_path.exists())):
+            failures.append("g37.git_operation:" + marker)
+    admission_paths = (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json")
+    for path in admission_paths:
+        value = _load_json(root / path, "g37.json:" + path, failures)
+        old = json.loads(git("show", G37_BASE_V01 + ":" + path))
+        old["gate3_g31_foundation_admission_v01"] = G31_ADMISSION_METADATA_V01
+        old["gate3_g32_observation_admission_v01"] = G32_ADMISSION_METADATA_V01
+        old["gate3_g33_calibration_admission_v01"] = G33_ADMISSION_METADATA_V01
+        old["gate3_g34_history_admission_v01"] = G34_ADMISSION_METADATA_V01
+        old["gate3_g35_harness_admission_v01"] = G35_ADMISSION_METADATA_V01
+        old["gate3_g36_adversary_admission_v01"] = G36_ADMISSION_METADATA_V01
+        excluded = {"gate3_g37_frozen_release_admission_v01"}
+        if path == "release/current_status_overlay_v01.json":
+            excluded.add("gate3_g37_current_registration_v01")
+            registration = value.get("gate3_g37_current_registration_v01")
+            if (not isinstance(registration, dict)
+                    or registration.get("profile") != "GATE3_G37_FROZEN_RELEASE_ADMISSION_V01"
+                    or registration.get("basis") != G37_BASE_V01
+                    or registration.get("authority") != "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_HANDLE"):
+                failures.append("g37.current_registration")
+        if {key: item for key, item in value.items() if key not in excluded} != old:
+            failures.append("g37.historical_metadata:" + path)
+        if value.get("gate3_g37_frozen_release_admission_v01") != G37_ADMISSION_METADATA_V01:
+            failures.append("g37.admission_metadata:" + path)
+    for path in (
+        "release/completion_manifest.json",
+        "release/integration_seam_index.json",
+        "release/current_schema_surface_v01.json",
+    ):
+        value = _load_json(root / path, "g37.release:" + path, failures)
+        expected = dict(G37_RELEASE_REGISTRATION_V01)
+        if path == "release/current_schema_surface_v01.json":
+            expected["schema_paths"] = [
+                "schemas/gate3_adversary_v01.schema.json",
+                "schemas/outcome_feedback_v01.schema.json",
+            ]
+        if value.get("gate3_g36_mechanism_v01") != expected:
+            failures.append("g37.release_registration:" + path)
+    return phase
+
+
+G33_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"
+G33_PARENT_V01 = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+G33_TREE_V01 = "26d63912117a2324cc7e711407be33123f55ab81"
+G33_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+ 'fixtures/gate3_calibration_reference_v01.json': 'A',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_reference_v01.json': 'A',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'A',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/outcome_calibration_v01.py': 'A',
+ 'hedgehog/outcome_feedback_history_v01.py': 'A',
+ 'hedgehog/outcome_feedback_v01.py': 'A',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'schemas/outcome_feedback_v01.schema.json': 'A',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_gate3_sentinel_observation_v01.py': 'A',
+ 'tests/test_outcome_calibration_v01.py': 'A',
+ 'tests/test_outcome_feedback_v01.py': 'A',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+G33_SOURCE_IDENTITIES_V01 = {'AGENTS.md': "e0fa2295b0dfa169a6a6943051c394c61fe66f731900de581f75d20662b54f4f",
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': "82d1abb1cfa2105ae7b595041619acaca0177bc288a335cdb64ed9b540d023be",
+ 'docs/gate3_outcome_feedback_contract_v01.md': "453d863a81f7a252e09df153fa99741e65588e1b5a5de5a50b6fa5647cd61259",
+ 'fixtures/gate3_calibration_reference_v01.json': "4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5",
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': "5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84",
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': "3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4",
+ 'fixtures/gate3_reference_v01.json': "e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da",
+ 'fixtures/gate3_sentinel_observation_v01.json': "f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507",
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003",
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': "62db3a565425b8fdb67ad968a1e3e965165c43be9f8e40675abe24987756b642",
+ 'hedgehog/outcome_calibration_v01.py': "e68ad66ce54b891eebaf098a14e43cefae39155cdd0ceb368286bf18511b1ac8",
+ 'hedgehog/outcome_feedback_history_v01.py': "5ea974704a71d30dab36ae0b8a0896dc32cc5fcd07a0b38876b0f55167178105",
+ 'hedgehog/outcome_feedback_v01.py': "0278abd1f84f3f148c2c2fe991f2f9bc30cfdf26ab6386b2f5c23c853f966e17",
+ 'release/current_status_overlay_v01.json': "0e2c31f9db99575ebd19742c3a82b532ff2aff6c3921f740f2f1f83b571c1e7e",
+ 'release/successor_context_manifest_v01.json': "fed78fb21111d9b9b505301b9edfd03556745940602fc8c47c6dd7aa97f04d99",
+ 'schemas/outcome_feedback_v01.schema.json': "b55438e84d0d4f8a120d3a0d0dcf99513c86683c5ce861bbac1b675541e9f58a",
+ 'specs/current_architecture_lock_v01.md': "50c3f66a89d569f1eced8968ea9087bc870b4801e78c0220de897c7865d676e7",
+ 'specs/document_authority_index_v01.json': "b5bb50e4cc60e0c7535fc9bd35800e4bed6c53adf51fec53d2c3f673ce4c54e1",
+ 'tests/test_active_architecture_authority_v01.py': "df5e15d9bb22b95eb377ff5789114eaef06e5cb3334a61139868c8af904df9c9",
+ 'tests/test_gate3_sentinel_observation_v01.py': "401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83",
+ 'tests/test_outcome_calibration_v01.py': "994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a",
+ 'tests/test_outcome_feedback_v01.py': "1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97",
+ 'tests/test_repository_release_spine_v01.py': "76d5b53abaefb590f9921eb946aaa4c21264422f98feb6d90b0c4e9d774eee6e",
+ 'tools/check_active_architecture_authority_v01.py': "1a15c149780c3b88c9985710f2982929c0cc934903ac5dc85a3e043b3c05698c"}
+G33_ADMISSION_METADATA_V01 = {
+ 'G32_started': True,
+ 'G33_started': True,
+ 'G34_started': False,
+ 'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': G33_BASE_V01,
+ 'basis_tree': G33_TREE_V01,
+ 'checkpoint': 'docs/gate3_outcome_feedback_checkpoint_v01.md',
+ 'contract': 'docs/gate3_outcome_feedback_contract_v01.md',
+ 'gate3_status': 'NOT_CLOSED',
+ 'history': 'PURE_BOUNDED_REFOLD_NOT_DURABLE_NOT_CURRENT_REUSE',
+ 'living_inventory': 'PRESERVED_NINE_ROWS',
+ 'numeric_algorithms': 'SOURCE_BOUND_GT_RATING_EXPLICIT_TIME_DECAY',
+ 'owner_landing': 'NOT_AUTHORIZED',
+ 'parent': G33_PARENT_V01,
+ 'path_actions': G33_PATH_ACTIONS_V01,
+ 'scope': 'G33_SOURCE_BOUND_GT_TTL_AND_BOUNDED_DEDUPLICATION_ONLY',
+ 'source_profile': 'G32_NATIVE_REVIEWED_WORK_V01',
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED'}
+
+
+def _g33_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in G33_PATH_ACTIONS_V01.items()
+           if action == "A" and path not in G32_PATH_ACTIONS_V01):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g33_calibration_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _g33_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly the G33 guard's own digest literal."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G33_SOURCE_IDENTITIES_V01"
+               for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if (len(nodes) != 1 or not isinstance(nodes[0], ast.Assign)
+            or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name)
+            or not isinstance(nodes[0].value, ast.Dict)):
+        raise ValueError("g33 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g33 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g33 self identity projection")
+    value = node.value.values[names.index(path)]
+    if (not isinstance(value, ast.Constant) or type(value.value) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", value.value) is None
+            or value.end_lineno != value.lineno):
+        raise ValueError("g33 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (("\"" + value.value + "\"").encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g33 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G33_V01"' + body[end:]).hexdigest()
+
+
+def _classify_g33_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                            branch: str, status: dict[str, str],
+                            delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G33_INVALID"
+    if branch != "main":
+        failures.append("g33.branch")
+    if head == G33_BASE_V01:
+        if parents != (G33_PARENT_V01,) or origin != G33_BASE_V01:
+            failures.append("g33.candidate.basis_origin")
+        unstaged = {path: "??" if action == "A" else " M"
+                    for path, action in G33_PATH_ACTIONS_V01.items()}
+        staged = {path: action + " " for path, action in G33_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G33_GT_TTL_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G33_GT_TTL_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(unstaged[path] == state for path, state in status.items()):
+            phase = "G33_DEVELOPMENT_UNADMITTED"
+            failures.append("g33.development_unadmitted")
+        else:
+            failures.append("g33.candidate.exact_ledger")
+        if delta:
+            failures.append("g33.candidate.delta")
+    elif parents == (G33_BASE_V01,):
+        phase = "G33_GT_TTL_COMMITTED"
+        if origin not in (G33_BASE_V01, head):
+            failures.append("g33.committed.origin")
+        if status or delta != G33_PATH_ACTIONS_V01:
+            failures.append("g33.committed.clean_exact_delta")
+    else:
+        failures.append("g33.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+
+def _validate_g33_calibration_admission_v01(root: Path, failures: list[str]) -> str:
+    """Validate exact G33 source succession; never execute calibration runtime."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="g33.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, G33_BASE_V01 + "..HEAD", failures), label="g33.delta", failures=failures)
+    phase, reasons = _classify_g33_ledger_v01(
+        head=head,
+        parents=parents,
+        origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(),
+        status=status,
+        delta=delta,
+    )
+    failures.extend(reasons)
+    if git("rev-parse", G33_BASE_V01 + "^{tree}").decode().strip() != G33_TREE_V01:
+        failures.append("g33.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G33_BASE_V01).decode().split() != [G33_BASE_V01, G33_PARENT_V01]:
+        failures.append("g33.base.parent")
+    origin_url = git("config", "--get", "remote.origin.url").decode().strip()
+    if origin_url not in (
+        "https://github.com/AAkhtanin/hedgehog-os",
+        "https://github.com/AAkhtanin/hedgehog-os.git",
+        "git@github.com:AAkhtanin/hedgehog-os.git",
+    ):
+        failures.append("g33.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G33_BASE_V01), failures)
+    if (len(baseline) != 1095 or len(G33_PATH_ACTIONS_V01) != 24
+            or sum(action == "A" for action in G33_PATH_ACTIONS_V01.values()) != 15
+            or set(G33_SOURCE_IDENTITIES_V01) != set(G33_PATH_ACTIONS_V01)):
+        failures.append("g33.exact_inventory")
+    actual = {}
+    for path in sorted(set(baseline) | set(G33_PATH_ACTIONS_V01)):
+        file = root / path
+        if (file.is_symlink() or not file.is_file()
+                or any(parent.is_symlink() for parent in file.parents
+                       if parent != root and root in parent.parents)):
+            failures.append("g33.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = (
+            "100755" if mode & 0o111 else "100644",
+            hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest(),
+        )
+        if path in G33_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g33.mode:" + path)
+            try:
+                if _g33_source_digest_v01(path, body) != G33_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g33.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g33.identity_projection:" + path)
+            if ((path in baseline) != (G33_PATH_ACTIONS_V01[path] == "M")
+                    or actual[path] == baseline.get(path)):
+                failures.append("g33.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g33.frozen_source:" + path)
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g33.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g33.index.parse")
+    if index != (baseline if phase in ("G33_GT_TTL_PROPOSAL_UNSTAGED", "G33_DEVELOPMENT_UNADMITTED") else actual):
+        failures.append("g33.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g33.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g33.index.hidden_flags")
+    if phase == "G33_GT_TTL_COMMITTED" and _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g33.committed.tree")
+    for marker in (
+        "index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD",
+        "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock",
+        "HEAD.lock", "packed-refs.lock",
+    ):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if ((marker == "index" and (path.is_symlink() or not path.is_file()))
+                or (marker != "index" and path.exists())):
+            failures.append("g33.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "g33.json:" + path, failures)
+        old = json.loads(git("show", G33_BASE_V01 + ":" + path))
+        old["gate3_g31_foundation_admission_v01"] = G31_ADMISSION_METADATA_V01
+        old["gate3_g32_observation_admission_v01"] = G32_ADMISSION_METADATA_V01
+        if {key: item for key, item in value.items()
+                if key != "gate3_g33_calibration_admission_v01"} != old:
+            failures.append("g33.historical_metadata:" + path)
+        if value.get("gate3_g33_calibration_admission_v01") != G33_ADMISSION_METADATA_V01:
+            failures.append("g33.admission_metadata:" + path)
+    return phase
+
+
+G32_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"
+G32_PARENT_V01 = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+G32_TREE_V01 = "26d63912117a2324cc7e711407be33123f55ab81"
+G32_PATH_ACTIONS_V01 = {'AGENTS.md': 'M',
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+ 'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+ 'fixtures/gate3_reference_v01.json': 'A',
+ 'fixtures/gate3_sentinel_observation_v01.json': 'A',
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+ 'hedgehog/outcome_feedback_history_v01.py': 'A',
+ 'hedgehog/outcome_feedback_v01.py': 'A',
+ 'release/current_status_overlay_v01.json': 'M',
+ 'release/successor_context_manifest_v01.json': 'M',
+ 'schemas/outcome_feedback_v01.schema.json': 'A',
+ 'specs/current_architecture_lock_v01.md': 'M',
+ 'specs/document_authority_index_v01.json': 'M',
+ 'tests/test_active_architecture_authority_v01.py': 'M',
+ 'tests/test_gate3_sentinel_observation_v01.py': 'A',
+ 'tests/test_outcome_feedback_v01.py': 'A',
+ 'tests/test_repository_release_spine_v01.py': 'M',
+ 'tools/check_active_architecture_authority_v01.py': 'M'}
+G32_SOURCE_IDENTITIES_V01 = {'AGENTS.md': "de9e1a5ced982a17af082a545c6165b7f127bbfab0b802c6c8173f032b205bac",
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': "d2e16252b15dc68e9434d6cb67886ebac9d8c23ee0199ff48a3454e0b637697c",
+ 'docs/gate3_outcome_feedback_contract_v01.md': "8630563c63bcbf0361fef93e389faae59d17fa01b47654661178bdf76d803766",
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': "5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84",
+ 'fixtures/gate3_reference_v01.json': "e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da",
+ 'fixtures/gate3_sentinel_observation_v01.json': "f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507",
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003",
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': "62db3a565425b8fdb67ad968a1e3e965165c43be9f8e40675abe24987756b642",
+ 'hedgehog/outcome_feedback_history_v01.py': "5ea974704a71d30dab36ae0b8a0896dc32cc5fcd07a0b38876b0f55167178105",
+ 'hedgehog/outcome_feedback_v01.py': "0278abd1f84f3f148c2c2fe991f2f9bc30cfdf26ab6386b2f5c23c853f966e17",
+ 'release/current_status_overlay_v01.json': "bf81677fbb4674ac4d991a14aa97ca5b212e30841691d19096ffeaf316b1ca3e",
+ 'release/successor_context_manifest_v01.json': "c272396b6da81d1fccdbf6f22561bba6402b74b74e2492ed5ddd34dfd8109b21",
+ 'schemas/outcome_feedback_v01.schema.json': "b55438e84d0d4f8a120d3a0d0dcf99513c86683c5ce861bbac1b675541e9f58a",
+ 'specs/current_architecture_lock_v01.md': "117fe6d9544084fa4579843912d288bb4f90eb1376349b2e780c13fd83552080",
+ 'specs/document_authority_index_v01.json': "85e5586223d5179ac98e3f47289540af20f40c40e601a687438ce754238d9983",
+ 'tests/test_active_architecture_authority_v01.py': "6c7963aff253fa729faf72b2fc9dc54703a393e1e2e9a5edbad145f092e99278",
+ 'tests/test_gate3_sentinel_observation_v01.py': "401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83",
+ 'tests/test_outcome_feedback_v01.py': "1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97",
+ 'tests/test_repository_release_spine_v01.py': "c8d296c71c55f7d91a7c90a009c5133024bd518cc0d034fce074ae2b6e7550ed",
+ 'tools/check_active_architecture_authority_v01.py': "7ff942a4330926113530ac204f5f35aa708bc26cf3d807123b366dd7c8a2212d"}
+G32_ADMISSION_METADATA_V01 = {'G32_started': True,
+ 'G33_started': False,
+ 'authority': 'SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION',
+ 'basis': 'd199199a578c078c913a2381f595549175bd9235',
+ 'basis_tree': '26d63912117a2324cc7e711407be33123f55ab81',
+ 'checkpoint': 'docs/gate3_outcome_feedback_checkpoint_v01.md',
+ 'contract': 'docs/gate3_outcome_feedback_contract_v01.md',
+ 'gate3_status': 'NOT_CLOSED',
+ 'history': 'ROOT_REVIEWED_LOCAL_GENESIS_NOT_WARM_NOT_CURRENT_REUSE',
+ 'living_inventory': 'PRESERVED_NINE_ROWS',
+ 'numeric_algorithms': 'NOT_IMPLEMENTED',
+ 'owner_landing': 'NOT_AUTHORIZED',
+ 'parent': '2f328be634247be11bc18a3b22a919f393d6ed1d',
+ 'path_actions': {'AGENTS.md': 'M',
+                  'docs/gate3_outcome_feedback_checkpoint_v01.md': 'A',
+                  'docs/gate3_outcome_feedback_contract_v01.md': 'A',
+                  'fixtures/gate3_g31_predecessor_v01.patch.gz': 'A',
+                  'fixtures/gate3_reference_v01.json': 'A',
+                  'fixtures/gate3_sentinel_observation_v01.json': 'A',
+                  'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': 'M',
+                  'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': 'A',
+                  'hedgehog/outcome_feedback_history_v01.py': 'A',
+                  'hedgehog/outcome_feedback_v01.py': 'A',
+                  'release/current_status_overlay_v01.json': 'M',
+                  'release/successor_context_manifest_v01.json': 'M',
+                  'schemas/outcome_feedback_v01.schema.json': 'A',
+                  'specs/current_architecture_lock_v01.md': 'M',
+                  'specs/document_authority_index_v01.json': 'M',
+                  'tests/test_active_architecture_authority_v01.py': 'M',
+                  'tests/test_gate3_sentinel_observation_v01.py': 'A',
+                  'tests/test_outcome_feedback_v01.py': 'A',
+                  'tests/test_repository_release_spine_v01.py': 'M',
+                  'tools/check_active_architecture_authority_v01.py': 'M'},
+ 'scope': 'G32_NATIVE_OBSERVATION_AND_LOCAL_GENESIS_ONLY',
+ 'source_profile': 'G32_NATIVE_REVIEWED_WORK_V01',
+ 'successor_commit': 'DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED'}
+
+def _g32_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in G32_PATH_ACTIONS_V01.items() if action == "A" and path not in G31_PATH_ACTIONS_V01):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g32_observation_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _g32_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly one own digest literal, never another source or field."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G32_SOURCE_IDENTITIES_V01" for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if len(nodes) != 1 or not isinstance(nodes[0], ast.Assign) or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name) or not isinstance(nodes[0].value, ast.Dict):
+        raise ValueError("g32 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g32 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g32 self identity projection")
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or type(value.value) is not str or re.fullmatch(r"[0-9a-f]{64}", value.value) is None or value.end_lineno != value.lineno:
+        raise ValueError("g32 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (('"' + value.value + '"').encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g32 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G32_V01"' + body[end:]).hexdigest()
+
+
+def _classify_g32_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                            branch: str, status: dict[str, str],
+                            delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G32_INVALID"
+    if branch != "main":
+        failures.append("g32.branch")
+    if head == G32_BASE_V01:
+        if parents != (G32_PARENT_V01,) or origin != G32_BASE_V01:
+            failures.append("g32.candidate.basis_origin")
+        unstaged = {p: "??" if a == "A" else " M" for p, a in G32_PATH_ACTIONS_V01.items()}
+        staged = {p: a + " " for p, a in G32_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G32_OBSERVATION_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G32_OBSERVATION_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(unstaged[p] == s for p, s in status.items()):
+            phase = "G32_DEVELOPMENT_UNADMITTED"
+            failures.append("g32.development_unadmitted")
+        else:
+            failures.append("g32.candidate.exact_ledger")
+        if delta:
+            failures.append("g32.candidate.delta")
+    elif parents == (G32_BASE_V01,):
+        phase = "G32_OBSERVATION_COMMITTED"
+        if origin not in (G32_BASE_V01, head):
+            failures.append("g32.committed.origin")
+        if status or delta != G32_PATH_ACTIONS_V01:
+            failures.append("g32.committed.clean_exact_delta")
+    else:
+        failures.append("g32.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+
+def _validate_g32_observation_admission_v01(root: Path, failures: list[str]) -> str:
+    """Check exact source succession only; never import a runtime collector."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="g32.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, G32_BASE_V01 + "..HEAD", failures), label="g32.delta", failures=failures)
+    phase, reasons = _classify_g32_ledger_v01(
+        head=head, parents=parents, origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(), status=status, delta=delta)
+    failures.extend(reasons)
+    if git("rev-parse", G32_BASE_V01 + "^{tree}").decode().strip() != G32_TREE_V01:
+        failures.append("g32.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G32_BASE_V01).decode().split() != [G32_BASE_V01, G32_PARENT_V01]:
+        failures.append("g32.base.parent")
+    origin_url = git("config", "--get", "remote.origin.url").decode().strip()
+    if origin_url not in ("https://github.com/AAkhtanin/hedgehog-os", "https://github.com/AAkhtanin/hedgehog-os.git", "git@github.com:AAkhtanin/hedgehog-os.git"):
+        failures.append("g32.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G32_BASE_V01), failures)
+    if len(baseline) != 1095 or len(G32_PATH_ACTIONS_V01) != 20 or set(G32_SOURCE_IDENTITIES_V01) != set(G32_PATH_ACTIONS_V01):
+        failures.append("g32.exact_inventory")
+    actual = {}
+    for path in sorted(set(baseline) | set(G32_PATH_ACTIONS_V01)):
+        file = root / path
+        if file.is_symlink() or not file.is_file() or any(parent.is_symlink() for parent in file.parents if parent != root and root in parent.parents):
+            failures.append("g32.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = ("100755" if mode & 0o111 else "100644",
+                        hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest())
+        if path in G32_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g32.mode:" + path)
+            try:
+                if _g32_source_digest_v01(path, body) != G32_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g32.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g32.identity_projection:" + path)
+            if (path in baseline) != (G32_PATH_ACTIONS_V01[path] == "M") or actual[path] == baseline.get(path):
+                failures.append("g32.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g32.frozen_source:" + path)
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g32.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g32.index.parse")
+    if index != (baseline if phase in ("G32_OBSERVATION_PROPOSAL_UNSTAGED", "G32_DEVELOPMENT_UNADMITTED") else actual):
+        failures.append("g32.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g32.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g32.index.hidden_flags")
+    if phase == "G32_OBSERVATION_COMMITTED" and _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g32.committed.tree")
+    for marker in ("index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock", "packed-refs.lock"):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if (marker == "index" and (path.is_symlink() or not path.is_file())) or (marker != "index" and path.exists()):
+            failures.append("g32.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "g32.json:" + path, failures)
+        old = json.loads(git("show", G32_BASE_V01 + ":" + path))
+        old["gate3_g31_foundation_admission_v01"] = G31_ADMISSION_METADATA_V01
+        if {key: item for key, item in value.items() if key != "gate3_g32_observation_admission_v01"} != old:
+            failures.append("g32.historical_metadata:" + path)
+        if value.get("gate3_g32_observation_admission_v01") != G32_ADMISSION_METADATA_V01:
+            failures.append("g32.admission_metadata:" + path)
+    return phase
+
+
+G31_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"
+G31_PARENT_V01 = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+G31_TREE_V01 = "26d63912117a2324cc7e711407be33123f55ab81"
+G31_PATH_ACTIONS_V01 = {
+    "AGENTS.md": "M",
+    "docs/gate3_outcome_feedback_checkpoint_v01.md": "A",
+    "docs/gate3_outcome_feedback_contract_v01.md": "A",
+    "fixtures/gate3_reference_v01.json": "A",
+    "hedgehog/outcome_feedback_v01.py": "A",
+    "release/current_status_overlay_v01.json": "M",
+    "release/successor_context_manifest_v01.json": "M",
+    "schemas/outcome_feedback_v01.schema.json": "A",
+    "specs/current_architecture_lock_v01.md": "M",
+    "specs/document_authority_index_v01.json": "M",
+    "tests/test_active_architecture_authority_v01.py": "M",
+    "tests/test_outcome_feedback_v01.py": "A",
+    "tests/test_repository_release_spine_v01.py": "M",
+    "tools/check_active_architecture_authority_v01.py": "M"
+}
+G31_SOURCE_IDENTITIES_V01 = {
+    "AGENTS.md": "6c7643a9707a2be36253de104a176313b9fa89a48d4622a64262c054a392e777",
+    "docs/gate3_outcome_feedback_checkpoint_v01.md": "0760657b736de8781f891b5fc93c7e44d388835dc79d3a58b45908674a7cc5b9",
+    "docs/gate3_outcome_feedback_contract_v01.md": "0d8e046598f66879b7888761ec436000aae02eea8f9561bb74835b14c1fe9957",
+    "fixtures/gate3_reference_v01.json": "e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da",
+    "hedgehog/outcome_feedback_v01.py": "521ac303ef850aff7a444ec614c860d07f3964fdc5270a3cfa1f9e852674cd2d",
+    "release/current_status_overlay_v01.json": "89943903fd8e5b3614226f214e76743ded0cb1e1241b6f48147cf2c26a14150f",
+    "release/successor_context_manifest_v01.json": "8bcbaaf9e3604d30477cf481ca0880ba789704b7664c504a8e13d9ef4839e07f",
+    "schemas/outcome_feedback_v01.schema.json": "257d0456677887b6c6650c28b35d0e1835f408aaeebd6a7dfc3b1123faee72ac",
+    "specs/current_architecture_lock_v01.md": "8365525ffc9e6fb3506721801ad92050f6dec1c087440eaec8e735f169d7bcc5",
+    "specs/document_authority_index_v01.json": "828616feb4fc606505b81174b15a2a808fb02e2a5407be7c1c75203b9200afa6",
+    "tests/test_active_architecture_authority_v01.py": "63ff3eb68d963567f23fe9cfaf4440928dbe1cbb5f584ff2d820c0630c3585f5",
+    "tests/test_outcome_feedback_v01.py": "1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97",
+    "tests/test_repository_release_spine_v01.py": "dfb1d20e1cd53a7ac87b07c46217239ee823c953f0228f8a0dff38afb3cbe54c",
+    "tools/check_active_architecture_authority_v01.py": "d48bfbb5dbdba0bbf366c55e97d9edcb0f4076d1581e3f01ac45df3fcbb4b2e4"
+}
+G31_ADMISSION_METADATA_V01 = {
+    "basis": "d199199a578c078c913a2381f595549175bd9235",
+    "parent": "2f328be634247be11bc18a3b22a919f393d6ed1d",
+    "basis_tree": "26d63912117a2324cc7e711407be33123f55ab81",
+    "path_actions": {
+        "AGENTS.md": "M",
+        "docs/gate3_outcome_feedback_checkpoint_v01.md": "A",
+        "docs/gate3_outcome_feedback_contract_v01.md": "A",
+        "fixtures/gate3_reference_v01.json": "A",
+        "hedgehog/outcome_feedback_v01.py": "A",
+        "release/current_status_overlay_v01.json": "M",
+        "release/successor_context_manifest_v01.json": "M",
+        "schemas/outcome_feedback_v01.schema.json": "A",
+        "specs/current_architecture_lock_v01.md": "M",
+        "specs/document_authority_index_v01.json": "M",
+        "tests/test_active_architecture_authority_v01.py": "M",
+        "tests/test_outcome_feedback_v01.py": "A",
+        "tests/test_repository_release_spine_v01.py": "M",
+        "tools/check_active_architecture_authority_v01.py": "M"
+    },
+    "scope": "G31_PURE_FOUNDATION_REFERENCE_ONLY",
+    "authority": "SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+    "successor_commit": "DERIVED_FROM_ACTUAL_GIT_NOT_SELF_EMBEDDED",
+    "owner_landing": "NOT_AUTHORIZED",
+    "gate3_status": "NOT_CLOSED",
+    "G32_started": False,
+    "checkpoint": "docs/gate3_outcome_feedback_checkpoint_v01.md",
+    "contract": "docs/gate3_outcome_feedback_contract_v01.md",
+    "numeric_algorithms": "NOT_IMPLEMENTED",
+    "source_profile": "G31_SYNTHETIC_REFERENCE_V01",
+    "reference_evidence": "REFERENCE_FIXTURE_NOT_EXECUTED",
+    "living_inventory": "PRESERVED_NINE_ROWS"
+}
+
+def _g31_requested_v01(root: Path) -> bool:
+    if any((root / path).exists() or (root / path).is_symlink()
+           for path, action in G31_PATH_ACTIONS_V01.items() if action == "A"):
+        return True
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        try:
+            if '"gate3_g31_foundation_admission_v01"' in (root / path).read_text():
+                return True
+        except (OSError, UnicodeError):
+            pass
+    return False
+
+
+def _g31_source_digest_v01(path: str, body: bytes) -> str:
+    """Exclude exactly one own digest literal, never another source or field."""
+    if path != "tools/check_active_architecture_authority_v01.py":
+        return hashlib.sha256(body).hexdigest()
+    nodes = []
+    for node in ast.parse(body.decode("utf-8")).body:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, (ast.AnnAssign, ast.AugAssign)) else []
+        if any(isinstance(item, ast.Name) and item.id == "G31_SOURCE_IDENTITIES_V01" for target in targets for item in ast.walk(target)):
+            nodes.append(node)
+    if len(nodes) != 1 or not isinstance(nodes[0], ast.Assign) or len(nodes[0].targets) != 1 or not isinstance(nodes[0].targets[0], ast.Name) or not isinstance(nodes[0].value, ast.Dict):
+        raise ValueError("g31 self identity projection")
+    node = nodes[0]
+    if any(not isinstance(key, ast.Constant) or type(key.value) is not str for key in node.value.keys):
+        raise ValueError("g31 self identity projection")
+    names = [key.value for key in node.value.keys]
+    if len(set(names)) != len(names) or names.count(path) != 1:
+        raise ValueError("g31 self identity projection")
+    value = node.value.values[names.index(path)]
+    if not isinstance(value, ast.Constant) or type(value.value) is not str or re.fullmatch(r"[0-9a-f]{64}", value.value) is None or value.end_lineno != value.lineno:
+        raise ValueError("g31 self identity projection")
+    lines = body.splitlines(keepends=True)
+    start = sum(map(len, lines[:value.lineno - 1])) + value.col_offset
+    end = sum(map(len, lines[:value.end_lineno - 1])) + value.end_col_offset
+    literal = body[start:end]
+    if literal not in (('"' + value.value + '"').encode(), ("'" + value.value + "'").encode()):
+        raise ValueError("g31 self identity projection")
+    return hashlib.sha256(body[:start] + b'"SELF_DIGEST_EXCLUDED_G31_V01"' + body[end:]).hexdigest()
+
+
+def _classify_g31_ledger_v01(*, head: str, parents: tuple[str, ...], origin: str,
+                            branch: str, status: dict[str, str],
+                            delta: dict[str, str]) -> tuple[str, tuple[str, ...]]:
+    failures = []
+    phase = "G31_INVALID"
+    if branch != "main":
+        failures.append("g31.branch")
+    if head == G31_BASE_V01:
+        if parents != (G31_PARENT_V01,) or origin != G31_BASE_V01:
+            failures.append("g31.candidate.basis_origin")
+        unstaged = {p: "??" if a == "A" else " M" for p, a in G31_PATH_ACTIONS_V01.items()}
+        staged = {p: a + " " for p, a in G31_PATH_ACTIONS_V01.items()}
+        if status == unstaged:
+            phase = "G31_FOUNDATION_PROPOSAL_UNSTAGED"
+        elif status == staged:
+            phase = "G31_FOUNDATION_PROPOSAL_STAGED"
+        elif status and set(status) < set(unstaged) and all(unstaged[p] == s for p, s in status.items()):
+            phase = "G31_DEVELOPMENT_UNADMITTED"
+            failures.append("g31.development_unadmitted")
+        else:
+            failures.append("g31.candidate.exact_ledger")
+        if delta:
+            failures.append("g31.candidate.delta")
+    elif parents == (G31_BASE_V01,):
+        phase = "G31_FOUNDATION_COMMITTED"
+        if origin not in (G31_BASE_V01, head):
+            failures.append("g31.committed.origin")
+        if status or delta != G31_PATH_ACTIONS_V01:
+            failures.append("g31.committed.clean_exact_delta")
+    else:
+        failures.append("g31.exact_immediate_base_child")
+    return phase, tuple(failures)
+
+
+def _validate_g31_foundation_admission_v01(root: Path, failures: list[str]) -> str:
+    """Check exact source succession only; never import a runtime collector."""
+    def git(*args: str) -> bytes:
+        return _u1_git_v01(root, args, failures)
+
+    head = git("rev-parse", "HEAD").decode().strip()
+    parents = tuple(git("rev-list", "--parents", "-n", "1", "HEAD").decode().split()[1:])
+    status = _entry_map_v02(_git_status_entries_v02(root, failures), label="g31.status", failures=failures)
+    delta = _entry_map_v02(_git_name_status_entries_v01(root, G31_BASE_V01 + "..HEAD", failures), label="g31.delta", failures=failures)
+    phase, reasons = _classify_g31_ledger_v01(
+        head=head, parents=parents, origin=git("rev-parse", "refs/remotes/origin/main").decode().strip(),
+        branch=git("branch", "--show-current").decode().strip(), status=status, delta=delta)
+    failures.extend(reasons)
+    if git("rev-parse", G31_BASE_V01 + "^{tree}").decode().strip() != G31_TREE_V01:
+        failures.append("g31.base.tree")
+    if git("rev-list", "--parents", "-n", "1", G31_BASE_V01).decode().split() != [G31_BASE_V01, G31_PARENT_V01]:
+        failures.append("g31.base.parent")
+    origin_url = git("config", "--get", "remote.origin.url").decode().strip()
+    if origin_url not in ("https://github.com/AAkhtanin/hedgehog-os", "https://github.com/AAkhtanin/hedgehog-os.git", "git@github.com:AAkhtanin/hedgehog-os.git"):
+        failures.append("g31.origin_repository")
+    baseline = _u1_tree_v01(git("ls-tree", "-rz", G31_BASE_V01), failures)
+    if len(baseline) != 1095 or len(G31_PATH_ACTIONS_V01) != 14 or set(G31_SOURCE_IDENTITIES_V01) != set(G31_PATH_ACTIONS_V01):
+        failures.append("g31.exact_inventory")
+    actual = {}
+    for path in sorted(set(baseline) | set(G31_PATH_ACTIONS_V01)):
+        file = root / path
+        if file.is_symlink() or not file.is_file() or any(parent.is_symlink() for parent in file.parents if parent != root and root in parent.parents):
+            failures.append("g31.file_type:" + path)
+            continue
+        body = file.read_bytes()
+        mode = file.stat().st_mode & 0o777
+        actual[path] = ("100755" if mode & 0o111 else "100644",
+                        hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest())
+        if path in G31_PATH_ACTIONS_V01:
+            expected_mode = baseline[path][0] if path in baseline else "100644"
+            if mode != int(expected_mode[-3:], 8):
+                failures.append("g31.mode:" + path)
+            try:
+                if _g31_source_digest_v01(path, body) != G31_SOURCE_IDENTITIES_V01[path]:
+                    failures.append("g31.source_identity:" + path)
+            except (ValueError, SyntaxError, AttributeError, KeyError):
+                failures.append("g31.identity_projection:" + path)
+            if (path in baseline) != (G31_PATH_ACTIONS_V01[path] == "M") or actual[path] == baseline.get(path):
+                failures.append("g31.path_action:" + path)
+        elif actual[path] != baseline[path]:
+            failures.append("g31.frozen_source:" + path)
+    index = {}
+    for row in git("ls-files", "--stage", "-z").split(b"\0"):
+        if not row:
+            continue
+        try:
+            metadata, name = row.split(b"\t")
+            mode, oid, stage = metadata.decode().split()
+            path = name.decode()
+            if stage != "0" or path in index:
+                failures.append("g31.index.stage_duplicate")
+            index[path] = mode, oid
+        except (ValueError, UnicodeError):
+            failures.append("g31.index.parse")
+    if index != (baseline if phase in ("G31_FOUNDATION_PROPOSAL_UNSTAGED", "G31_DEVELOPMENT_UNADMITTED") else actual):
+        failures.append("g31.index.content_mode_worktree")
+    if any(row and not row.startswith(b"H ") for row in git("ls-files", "-v", "-z").split(b"\0")):
+        failures.append("g31.index.flags")
+    if any(int(flag, 16) != 0 for flag in re.findall(r"flags: ([a-fA-F0-9]+)", git("ls-files", "--debug").decode())):
+        failures.append("g31.index.hidden_flags")
+    if phase == "G31_FOUNDATION_COMMITTED" and _u1_tree_v01(git("ls-tree", "-rz", "HEAD"), failures) != actual:
+        failures.append("g31.committed.tree")
+    for marker in ("index", "MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD", "BISECT_LOG", "rebase-merge", "rebase-apply", "sequencer", "index.lock", "HEAD.lock", "packed-refs.lock"):
+        path = Path(git("rev-parse", "--git-path", marker).decode().strip())
+        if not path.is_absolute():
+            path = root / path
+        if (marker == "index" and (path.is_symlink() or not path.is_file())) or (marker != "index" and path.exists()):
+            failures.append("g31.git_operation:" + marker)
+    for path in (INDEX_PATH, MANIFEST_PATH, "release/current_status_overlay_v01.json"):
+        value = _load_json(root / path, "g31.json:" + path, failures)
+        old = json.loads(git("show", G31_BASE_V01 + ":" + path))
+        if {key: item for key, item in value.items() if key != "gate3_g31_foundation_admission_v01"} != old:
+            failures.append("g31.historical_metadata:" + path)
+        if value.get("gate3_g31_foundation_admission_v01") != G31_ADMISSION_METADATA_V01:
+            failures.append("g31.admission_metadata:" + path)
+    return phase
+
+
 def _sentinel_presentation_requested_v01(root: Path) -> bool:
     if any((root / path).exists() or (root / path).is_symlink()
            for path, action in SENTINEL_PRESENTATION_PATH_ACTIONS_V01.items() if action == "A"):
@@ -14856,6 +17030,27 @@ def collect_failures(
 
     root = repo_root.resolve()
     failures: list[str] = []
+    if _g37_requested_v01(root):
+        _validate_g37_frozen_release_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
+    if _g36_requested_v01(root):
+        _validate_g36_adversary_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
+    if _g35_requested_v01(root):
+        _validate_g35_harness_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
+    if _g34_requested_v01(root):
+        _validate_g34_history_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
+    if _g33_requested_v01(root):
+        _validate_g33_calibration_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
+    if _g32_requested_v01(root):
+        _validate_g32_observation_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
+    if _g31_requested_v01(root):
+        _validate_g31_foundation_admission_v01(root, failures)
+        return tuple(sorted(set(failures)))
     if _sentinel_presentation_requested_v01(root):
         _validate_landslide_sentinel_presentation_admission_v01(root, failures)
         return tuple(sorted(set(failures)))
@@ -15003,6 +17198,143 @@ def main(arguments: Sequence[str] | None = None) -> int:
     failures = collect_failures(args.root)
     if not failures:
         print("ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS")
+        if _g37_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g37_frozen_release_admission_v01(
+                args.root.resolve(), current_errors
+            )
+            if current_errors:
+                raise RuntimeError("g37.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G37_PHASE=" + phase)
+            print("GATE3_STATUS=NOT_CLOSED")
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
+        if _g36_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g36_adversary_admission_v01(
+                args.root.resolve(), current_errors
+            )
+            if current_errors:
+                raise RuntimeError("g36.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G36_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
+        if _g35_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g35_harness_admission_v01(
+                args.root.resolve(), current_errors
+            )
+            if current_errors:
+                raise RuntimeError("g35.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G35_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
+        if _g34_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g34_history_admission_v01(
+                args.root.resolve(), current_errors
+            )
+            if current_errors:
+                raise RuntimeError("g34.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G34_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
+        if _g33_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g33_calibration_admission_v01(
+                args.root.resolve(), current_errors
+            )
+            if current_errors:
+                raise RuntimeError("g33.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G33_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
+        if _g32_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g32_observation_admission_v01(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("g32.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G32_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
+        if _g31_requested_v01(args.root.resolve()):
+            current_errors: list[str] = []
+            phase = _validate_g31_foundation_admission_v01(args.root.resolve(), current_errors)
+            if current_errors:
+                raise RuntimeError("g31.state_changed_during_guard")
+            print("CURRENT_PHASE=POST_E6_SUCCESSOR")
+            print("LIFECYCLE_PHASE=G2E_CLOSED_PASS")
+            print("LIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED")
+            print("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED")
+            print("UNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED")
+            print("G31_PHASE=" + phase)
+            print("AUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION")
+            return 0
         if _sentinel_presentation_requested_v01(args.root.resolve()):
             current_errors: list[str] = []
             phase = _validate_landslide_sentinel_presentation_admission_v01(args.root.resolve(), current_errors)

@@ -1,5 +1,16 @@
 # Current Integration Seam Index
 
+## Gate 3 G3-7 Frozen Registration
+
+The exact G37 proposal retains the finite G36 mechanism registration and records
+fresh external Living and standalone Conformance successor evidence. Each
+top-level report owns exactly one E5 and one G3 collection; shared and supplied
+consumers collect neither. This registration is evidence only and creates no
+Root permission, effect handle, new Living row or Gate3 closure. The exact
+source-admission guard accepts only the complete 59-path unstaged/staged proposal
+or its clean sole-parent child. Owner landing and remote verification remain
+pending separate G3-8 execution.
+
 ## Testflix Current Registration Proposal
 
 V11 keeps the same nine bounded current registrations and frozen Gate1 base.
@@ -49,3 +60,20 @@ The frozen integration_seam_index.json and completion_manifest.json remain the G
 | local_pure_capability_reuse | `hedgehog.capability_memory_binding_v01:retrieve_pure_memory_v01` | `hedgehog.capability_memory_binding_v01:validate_pure_memory_retrieval_v01` | `hedgehog.capability_admission_v01:admit_pure_candidate_v01` |
 | retained_fractal_work | `hedgehog.kernel.fractal_runtime_v02:consume_fractal_retained_work_v01` | `hedgehog.kernel.fractal_runtime_v02:validate_fractal_retained_work_consumption_v01` | `hedgehog.kernel.continuous_delta_runtime_v01:validate_retained_work_preservation_v01` |
 | retained_selective_recomputation | `hedgehog.kernel.continuous_delta_runtime_v01:build_retained_selective_recomputation_plan_v01` | `hedgehog.kernel.continuous_delta_runtime_v01:validate_retained_selective_recomputation_plan_v01` | `hedgehog.kernel.continuous_delta_runtime_v01:prove_retained_work_preservation_v01` |
+
+## G3-6 Supplier Learning Mechanism
+
+The G36 external successor adds one finite Supplier action-advice profile,
+actual native refusal/receipt sources, numerical Root-recorded local history,
+current Root descent and consumed pure review Work. Controlled and configured
+Gemini origins are separate; captures are evidence, never restored authority.
+The versioned Living/Conformance entrypoints consume the same checked G3 bundle.
+An independent top-level successor owns one fresh E5 and one fresh G3 collection;
+shared supplied consumers add neither. Historical profile geometry is unchanged.
+At the G36 checkpoint, direct mechanism proof was not a full top-level release
+PASS and G3-7 remained pending. The G37 section above supersedes only that
+historical status. G3-8 owner landing, full Gate3 closure and production
+certification are not claimed. The historical G36 guard route is
+gate3_g36_adversary_admission_v01, based on d199.
+No commit is self-recorded; source admission gives no Root/effect permission.
+See the G3 checkpoint for commands, limitations and the frozen-release plan.

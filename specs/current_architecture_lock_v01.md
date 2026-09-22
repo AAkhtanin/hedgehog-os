@@ -1,5 +1,61 @@
 # Hedgehog OS Current Architecture Lock v0.1
 
+## Gate 3 G3-7 Frozen Release Boundary
+
+The exact gate3_g37_frozen_release_admission_v01 proposal freezes 59 reviewed
+Gate3 paths on accepted main d199199a578c078c913a2381f595549175bd9235.
+Its fresh external evidence contains complete Living and standalone Conformance
+successor reports, each with one owned E5 and one owned G3 collection, plus
+supplied validation that does not recollect either result. Two independent pure
+replay processes retain zero provider, current Root, Host, Work,
+current-history-write and effect calls.
+
+This is source admission and reviewable landing preparation only. A report,
+stored score, capture, history row, replay result or admission state cannot
+grant Root permission, currentness or effect authority. Gate3 is not closed.
+No owner commit, push, remote readback, production certification or G3-8
+execution is authorized here; Git must derive any later commit identity.
+All earlier Root, Host, Firewall, transition and source-origin laws remain exact.
+
+## G3-3 Bounded Numerical Succession
+
+The exact `gate3_g33_calibration_admission_v01` proposal is a 24-path successor
+of accepted `d199199a578c078c913a2381f595549175bd9235`. The reviewed G3-2 source,
+native observation and local genesis bodies remain frozen. The successor adds one
+pure module for source-bound GT updates, explicit UTC decay and finite canonical
+event folding. Its output is advisory evidence and never Root authority.
+
+The reducer is not an online writer, correction epoch, current DRS consumer or
+permission cache. No EMA, AVF adjusted ranking, CP-RANK, CP-TIME, effect or new
+Living row is introduced. G3-4, owner landing and Gate-3 closure remain not
+started. Historical G3-2/G3-1 and all earlier admission predicates, Root,
+currentness, ABI, Host and Firewall laws remain exact and independently binding.
+
+## G3-2 Bounded Source Succession
+
+The exact `gate3_g32_observation_admission_v01` proposal succeeds d199199a578c078c913a2381f595549175bd9235
+with twenty cumulative paths. It extends the reviewed, uncommitted G31 proposal
+with one actual controlled Sentinel Work/Root observation and fresh Root-reviewed
+local DRS genesis. This section supersedes only G31 not-started status for G32;
+all earlier laws, pins and recorded evidence remain historical and unchanged.
+Source admission is not Root permission or Gate closure. G3-3, owner landing,
+commit and push are not authorized. Atlas and four other runtime adapters remain
+pending. See the existing Gate3 contract/checkpoint for bounded provenance limits.
+
+## Gate 3: Pure Foundation Proposal
+
+The exact `gate3_g31_foundation_admission_v01` is a bounded 14-path pure
+foundation proposal on accepted `d199199a578c078c913a2381f595549175bd9235`.
+Its reference fixture is explicitly not executed domain evidence. Complete
+unstaged/staged proposals are source-checkable; development subsets remain
+UNADMITTED and partial staging fails. A future sole-parent child must be derived
+from actual Git under separate owner authorization. G3-1 grants no Root or effect
+permission, live-source truth, new Living row, calibration/history execution or
+Gate-3 closure. The contract/checkpoint define the exact pending boundaries.
+G3-2, owner landing, commit and push are not authorized by this proposal.
+This current navigation addition leaves every predecessor runtime and authority
+law unchanged; older source-admission blocks retain their historical bases.
+
 ## Landslide Sentinel: Presentation Publication
 
 The exact `landslide_sentinel_presentation_admission_v01` succeeds accepted
@@ -480,3 +536,35 @@ Expand context only when the current task requires a named contract, test, or
 evidence source. Validate the control plane with
 `python3 tools/check_active_architecture_authority_v01.py` before handing the
 worktree to a successor assistant.
+# G34 Narrow Source Successor
+
+G34 adds source-bound controlled predictive feedback, finite durable local GT/AVF
+history and current advisory consumption through existing public DRS, AVF, Root
+and pure Work laws. The exact 32-path source proposal on d199 has a separate
+append-only admission route. Earlier laws, constants and source records remain.
+History can change advice strength and add a contract-permitted review obligation;
+it cannot replace HardMask, current Root, mandatory evidence or exclusive effect
+ownership. No protected runtime law, owner landing, Gate closure or G35 is granted.
+# G35 Additive Source Proposal
+
+The bounded five-domain controlled harness succeeds the reviewed G34R2 external
+candidate on owner basis `d199199a578c078c913a2381f595549175bd9235`. It adds finite
+source profiles and pure supplied verification/replay without changing Root,
+Host, Firewall, ABI, Work or numerical authority laws. Exact scope is 44 paths;
+historical admissions remain bound to frozen predecessors. G36, Atlas, owner
+landing and full Gate3 closure remain pending. See the G35 contract/checkpoint.
+
+## G3-6 Supplier Learning Mechanism
+
+The G36 external successor adds one finite Supplier action-advice profile,
+actual native refusal/receipt sources, numerical Root-recorded local history,
+current Root descent and consumed pure review Work. Controlled and configured
+Gemini origins are separate; captures are evidence, never restored authority.
+The versioned Living/Conformance entrypoints consume the same checked G3 bundle.
+An independent top-level successor owns one fresh E5 and one fresh G3 collection;
+shared supplied consumers add neither. Historical profile geometry is unchanged.
+Direct mechanism proof is not a full top-level release PASS. G3-7 remains pending,
+and G3-8 owner landing, full Gate3 closure and production certification are not claimed.
+The exact guard route is gate3_g36_adversary_admission_v01, based on d199.
+No commit is self-recorded; source admission gives no Root/effect permission.
+See the G3 checkpoint for commands, limitations and the frozen-release plan.

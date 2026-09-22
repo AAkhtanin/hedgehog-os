@@ -1,0 +1,1324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hedgehog:g3:outcome-feedback:v0.1",
+  "$comment": "Closed structural schema. Raw JSON must first reject duplicates/noninteger numeric tokens. Exact source/identity/time-order admission is a separate public contextual validator.",
+  "$ref": "#/$defs/feedback",
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\u0000-\\u001f\\ud800-\\udfff]+$"
+    },
+    "uint": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tag_REFERENCE": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "REFERENCE"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "$ref": "#/$defs/text"
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_FP_Q": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "FP_Q"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_RANK": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "RANK"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_TEXT": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "TEXT"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "$ref": "#/$defs/text"
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_COUNT": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "COUNT"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_MINOR_UNITS": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "MINOR_UNITS"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_CURRENCY": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "CURRENCY"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "tag_MICROSECONDS": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "NOT_APPLICABLE",
+            "NOT_REACHED"
+          ]
+        },
+        "value": {},
+        "reason_code": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "unit": {
+          "const": "MICROSECONDS"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "reason_code",
+        "evidence_refs",
+        "unit"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "reason_code": {
+              "const": ""
+            },
+            "evidence_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "enum": [
+                "UNKNOWN",
+                "NOT_APPLICABLE",
+                "NOT_REACHED"
+              ]
+            },
+            "value": {
+              "type": "null"
+            },
+            "reason_code": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "properties": {
+        "local_root_scope_id": {
+          "$ref": "#/$defs/text"
+        },
+        "domain_scope_id": {
+          "$ref": "#/$defs/text"
+        },
+        "pack_family_id": {
+          "$ref": "#/$defs/text"
+        },
+        "advisory_source_class": {
+          "$ref": "#/$defs/text"
+        },
+        "advisory_source_revision": {
+          "$ref": "#/$defs/text"
+        },
+        "advice_claim_profile_id": {
+          "$ref": "#/$defs/text"
+        },
+        "route_family_id": {
+          "$ref": "#/$defs/text"
+        },
+        "task_risk_class": {
+          "$ref": "#/$defs/text"
+        },
+        "validation_profile_id": {
+          "$ref": "#/$defs/text"
+        },
+        "policy_semantics_version": {
+          "$ref": "#/$defs/text"
+        },
+        "history_key_profile_id": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "local_root_scope_id",
+        "domain_scope_id",
+        "pack_family_id",
+        "advisory_source_class",
+        "advisory_source_revision",
+        "advice_claim_profile_id",
+        "route_family_id",
+        "task_risk_class",
+        "validation_profile_id",
+        "policy_semantics_version",
+        "history_key_profile_id"
+      ],
+      "additionalProperties": false
+    },
+    "history": {
+      "type": "object",
+      "properties": {
+        "local_root_scope_id": {
+          "$ref": "#/$defs/text"
+        },
+        "domain_scope_id": {
+          "$ref": "#/$defs/text"
+        },
+        "pack_family_id": {
+          "$ref": "#/$defs/text"
+        },
+        "route_family_id": {
+          "$ref": "#/$defs/text"
+        },
+        "task_class_id": {
+          "$ref": "#/$defs/text"
+        },
+        "task_risk_class": {
+          "$ref": "#/$defs/text"
+        },
+        "policy_semantics_version": {
+          "$ref": "#/$defs/text"
+        },
+        "capability_contract_version": {
+          "$ref": "#/$defs/text"
+        },
+        "evidence_validation_profile_id": {
+          "$ref": "#/$defs/text"
+        },
+        "advisory_source_revision": {
+          "$ref": "#/$defs/text"
+        },
+        "history_key_profile_id": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "local_root_scope_id",
+        "domain_scope_id",
+        "pack_family_id",
+        "route_family_id",
+        "task_class_id",
+        "task_risk_class",
+        "policy_semantics_version",
+        "capability_contract_version",
+        "evidence_validation_profile_id",
+        "advisory_source_revision",
+        "history_key_profile_id"
+      ],
+      "additionalProperties": false
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "ct_session_anchor": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00$"
+        },
+        "et_observed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00$"
+        },
+        "kt_asof": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00$"
+        },
+        "pt_created_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00$"
+        },
+        "valid_from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00$"
+        },
+        "valid_to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00$"
+        },
+        "freshness_class": {
+          "const": "static"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 604800
+        }
+      },
+      "required": [
+        "ct_session_anchor",
+        "et_observed_at",
+        "kt_asof",
+        "pt_created_at",
+        "valid_from",
+        "valid_to",
+        "freshness_class",
+        "ttl_seconds"
+      ],
+      "additionalProperties": false
+    },
+    "feedback": {
+      "type": "object",
+      "properties": {
+        "feedback_id": {
+          "$ref": "#/$defs/digest"
+        },
+        "profile_id": {
+          "const": "G3_OUTCOME_FEEDBACK_V01"
+        },
+        "schema_version": {
+          "const": "v0.1"
+        },
+        "numeric_profile_id": {
+          "const": "G3_FIXED_POINT_REFERENCE_V01"
+        },
+        "source_profile_id": {
+          "$ref": "#/$defs/text"
+        },
+        "evidence_class": {
+          "$ref": "#/$defs/text"
+        },
+        "transaction_id": {
+          "$ref": "#/$defs/text"
+        },
+        "run_id": {
+          "$ref": "#/$defs/text"
+        },
+        "episode_id": {
+          "$ref": "#/$defs/text"
+        },
+        "observation_id": {
+          "$ref": "#/$defs/digest"
+        },
+        "scenario_id": {
+          "$ref": "#/$defs/text"
+        },
+        "domain": {
+          "$ref": "#/$defs/text"
+        },
+        "pack_family_id": {
+          "$ref": "#/$defs/text"
+        },
+        "local_root_scope_id": {
+          "$ref": "#/$defs/text"
+        },
+        "strategy_candidate_id": {
+          "$ref": "#/$defs/text"
+        },
+        "context_fingerprint": {
+          "$ref": "#/$defs/digest"
+        },
+        "execution_lane": {
+          "enum": [
+            "CONTROLLED_RUNTIME",
+            "LIVE_CAPTURED_ORIGIN",
+            "CAPTURED_REEXECUTION",
+            "HISTORICAL_IMPORT"
+          ]
+        },
+        "advice_claim_profile_id": {
+          "$ref": "#/$defs/text"
+        },
+        "execution_status": {
+          "enum": [
+            "COMPLETED",
+            "BLOCKED_BEFORE_EFFECT",
+            "NEEDS_MORE_EVIDENCE",
+            "NEEDS_USER",
+            "NO_DEAL",
+            "CANCELLED",
+            "PARTIAL",
+            "EXECUTOR_FAILED",
+            "TRANSPORT_FAILED",
+            "EXPIRED_OR_REVOKED",
+            "UNKNOWN"
+          ]
+        },
+        "blocking_stage": {
+          "enum": [
+            "NONE",
+            "SEMANTIC_VALIDATION",
+            "POST_VV",
+            "ROOT",
+            "CURRENTNESS",
+            "FIREWALL",
+            "EXECUTOR",
+            "TRANSPORT",
+            "OBSERVATION"
+          ]
+        },
+        "validation_status": {
+          "const": "CONTEXT_VALIDATED"
+        },
+        "failure_class": {
+          "enum": [
+            "NONE",
+            "PROPOSAL_INVALID",
+            "PROPOSAL_UNSAFE",
+            "EXECUTOR_FAILURE",
+            "TRANSPORT_FAILURE",
+            "SOURCE_UNAVAILABLE",
+            "OBSERVATION_INCOMPLETE",
+            "CONFLICTING"
+          ]
+        },
+        "proposal_assessment": {
+          "enum": [
+            "CORRECT",
+            "INCORRECT",
+            "UNSAFE",
+            "NOT_SCORABLE"
+          ]
+        },
+        "enforcement_outcome": {
+          "enum": [
+            "BLOCKED_AS_REQUIRED",
+            "ALLOWED_AS_REQUIRED",
+            "UNEXPECTED_EFFECT",
+            "NOT_EXERCISED",
+            "UNKNOWN"
+          ]
+        },
+        "task_outcome": {
+          "enum": [
+            "COMPLETED",
+            "PARTIAL",
+            "SAFE_NO_DEAL",
+            "CANCELLED",
+            "NEEDS_INPUT",
+            "FAILED",
+            "UNKNOWN"
+          ]
+        },
+        "update_eligibility": {
+          "enum": [
+            "ELIGIBLE",
+            "NO_UPDATE"
+          ]
+        },
+        "source_closure_ref": {
+          "$ref": "#/$defs/text"
+        },
+        "timestamp": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "event_time": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "ingested_time": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "evaluated_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "causal_event_sequence": {
+          "$ref": "#/$defs/uint"
+        },
+        "decision_basis_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "other_root_evidence_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "receipt_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "provenance_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "validation_refs": {
+          "$ref": "#/$defs/refs"
+        },
+        "update_reasons": {
+          "$ref": "#/$defs/refs"
+        },
+        "parent_correlation_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "proposal_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "avf_prediction": {
+          "$ref": "#/$defs/tag_FP_Q"
+        },
+        "avf_rank": {
+          "$ref": "#/$defs/tag_RANK"
+        },
+        "gt_advice_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "pre_decision_expectation": {
+          "$ref": "#/$defs/tag_FP_Q"
+        },
+        "prior_state_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "root_decision_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "action_packet_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "firewall_decision_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "manual_override": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "observed_result": {
+          "$ref": "#/$defs/tag_FP_Q"
+        },
+        "observed_regret": {
+          "$ref": "#/$defs/tag_FP_Q"
+        },
+        "predecessor_feedback_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "supersedes_ref": {
+          "$ref": "#/$defs/tag_REFERENCE"
+        },
+        "correction_reason": {
+          "$ref": "#/$defs/tag_TEXT"
+        },
+        "advisory_subject_key": {
+          "$ref": "#/$defs/subject"
+        },
+        "avf_history_key": {
+          "$ref": "#/$defs/history"
+        },
+        "time_envelope": {},
+        "policy_violations": {
+          "type": "object",
+          "properties": {
+            "attempted_violation_refs": {
+              "$ref": "#/$defs/refs"
+            },
+            "realized_violation_refs": {
+              "$ref": "#/$defs/refs"
+            }
+          },
+          "required": [
+            "attempted_violation_refs",
+            "realized_violation_refs"
+          ],
+          "additionalProperties": false
+        },
+        "observation_scope": {
+          "type": "object",
+          "properties": {
+            "mechanism": {
+              "$ref": "#/$defs/text"
+            },
+            "occurrence_ref": {
+              "$ref": "#/$defs/text"
+            },
+            "operation_ref": {
+              "$ref": "#/$defs/text"
+            },
+            "measurement_refs": {
+              "$ref": "#/$defs/refs"
+            },
+            "limitations": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "required": [
+            "mechanism",
+            "occurrence_ref",
+            "operation_ref",
+            "measurement_refs",
+            "limitations"
+          ],
+          "additionalProperties": false
+        },
+        "attribution": {
+          "type": "object",
+          "properties": {
+            "subject_ref": {
+              "$ref": "#/$defs/text"
+            },
+            "claim_profile_id": {
+              "$ref": "#/$defs/text"
+            },
+            "reason_code": {
+              "$ref": "#/$defs/text"
+            },
+            "source_refs": {
+              "$ref": "#/$defs/refs"
+            },
+            "scoring_eligibility": {
+              "enum": [
+                "ELIGIBLE",
+                "NO_UPDATE"
+              ]
+            }
+          },
+          "required": [
+            "subject_ref",
+            "claim_profile_id",
+            "reason_code",
+            "source_refs",
+            "scoring_eligibility"
+          ],
+          "additionalProperties": false
+        },
+        "actual_cost": {
+          "type": "object",
+          "properties": {
+            "model_calls": {
+              "$ref": "#/$defs/tag_COUNT"
+            },
+            "input_tokens": {
+              "$ref": "#/$defs/tag_COUNT"
+            },
+            "output_tokens": {
+              "$ref": "#/$defs/tag_COUNT"
+            },
+            "work_invocations": {
+              "$ref": "#/$defs/tag_COUNT"
+            },
+            "money": {
+              "$ref": "#/$defs/tag_MINOR_UNITS"
+            },
+            "currency": {
+              "$ref": "#/$defs/tag_CURRENCY"
+            },
+            "scope_ref": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "required": [
+            "model_calls",
+            "input_tokens",
+            "output_tokens",
+            "work_invocations",
+            "money",
+            "currency",
+            "scope_ref"
+          ],
+          "additionalProperties": false
+        },
+        "actual_latency": {
+          "type": "object",
+          "properties": {
+            "elapsed_us": {
+              "$ref": "#/$defs/tag_MICROSECONDS"
+            },
+            "phase_scope": {
+              "$ref": "#/$defs/text"
+            },
+            "receipt_ref": {
+              "$ref": "#/$defs/tag_REFERENCE"
+            }
+          },
+          "required": [
+            "elapsed_us",
+            "phase_scope",
+            "receipt_ref"
+          ],
+          "additionalProperties": false
+        },
+        "non_authority_flags": {
+          "type": "object",
+          "properties": {
+            "claims_permission": {
+              "type": "boolean",
+              "const": false
+            },
+            "claims_root_decision": {
+              "type": "boolean",
+              "const": false
+            },
+            "requests_effect": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "claims_permission",
+            "claims_root_decision",
+            "requests_effect"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "feedback_id",
+        "profile_id",
+        "schema_version",
+        "numeric_profile_id",
+        "source_profile_id",
+        "evidence_class",
+        "transaction_id",
+        "run_id",
+        "episode_id",
+        "observation_id",
+        "scenario_id",
+        "domain",
+        "pack_family_id",
+        "local_root_scope_id",
+        "strategy_candidate_id",
+        "context_fingerprint",
+        "execution_lane",
+        "advice_claim_profile_id",
+        "execution_status",
+        "blocking_stage",
+        "validation_status",
+        "failure_class",
+        "proposal_assessment",
+        "enforcement_outcome",
+        "task_outcome",
+        "update_eligibility",
+        "source_closure_ref",
+        "timestamp",
+        "event_time",
+        "ingested_time",
+        "evaluated_at",
+        "causal_event_sequence",
+        "decision_basis_refs",
+        "other_root_evidence_refs",
+        "receipt_refs",
+        "source_refs",
+        "provenance_refs",
+        "validation_refs",
+        "update_reasons",
+        "parent_correlation_ref",
+        "proposal_ref",
+        "avf_prediction",
+        "avf_rank",
+        "gt_advice_ref",
+        "pre_decision_expectation",
+        "prior_state_ref",
+        "root_decision_ref",
+        "action_packet_ref",
+        "firewall_decision_ref",
+        "manual_override",
+        "observed_result",
+        "observed_regret",
+        "predecessor_feedback_ref",
+        "supersedes_ref",
+        "correction_reason",
+        "advisory_subject_key",
+        "avf_history_key",
+        "time_envelope",
+        "policy_violations",
+        "observation_scope",
+        "attribution",
+        "actual_cost",
+        "actual_latency",
+        "non_authority_flags"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source_profile_id": {
+                "enum": ["G32_NATIVE_REVIEWED_WORK_V01", "G35_AIRLINE_CORRIDOR_V01", "G35_SUPPLIER_NATIVE_ACTION_V01", "G35_TESTFLIX_NATIVE_ACTION_V01", "G35_WORKSPACE_CONSUMED_WORK_V01", "G35_SENTINEL_WORK_V01", "G36_SUPPLIER_ACTION_ADVICE_V01"]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "time_envelope": {
+                "$ref": "#/$defs/native_time"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "time_envelope": {
+                "$ref": "#/$defs/time"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "properties": {
+        "observation_id": {
+          "$ref": "#/$defs/digest"
+        },
+        "schema_version": {
+          "const": "v0.1"
+        },
+        "source_profile_id": {
+          "enum": [
+            "G31_SYNTHETIC_REFERENCE_V01",
+            "G32_NATIVE_REVIEWED_WORK_V01", "G35_AIRLINE_CORRIDOR_V01", "G35_SUPPLIER_NATIVE_ACTION_V01", "G35_TESTFLIX_NATIVE_ACTION_V01", "G35_WORKSPACE_CONSUMED_WORK_V01", "G35_SENTINEL_WORK_V01", "G36_SUPPLIER_ACTION_ADVICE_V01"
+          ]
+        },
+        "source_bundle_ref": {
+          "$ref": "#/$defs/digest"
+        },
+        "event_time": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "ingested_time": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "evaluated_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "timestamp": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "source_refs": {
+          "$ref": "#/$defs/refs"
+        }
+      },
+      "required": [
+        "observation_id",
+        "schema_version",
+        "source_profile_id",
+        "source_bundle_ref",
+        "event_time",
+        "ingested_time",
+        "evaluated_at",
+        "timestamp",
+        "source_refs"
+      ],
+      "additionalProperties": false
+    },
+    "native_time": {
+      "type": "object",
+      "properties": {
+        "ct_session_anchor": {
+          "$ref": "#/$defs/text"
+        },
+        "et_observed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(\\+00:00|Z)$"
+        },
+        "kt_asof": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(\\+00:00|Z)$"
+        },
+        "pt_created_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(\\+00:00|Z)$"
+        },
+        "valid_from": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(\\+00:00|Z)$"
+        },
+        "valid_to": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(\\+00:00|Z)$"
+        },
+        "freshness_class": {
+          "const": "static"
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 604800
+        }
+      },
+      "required": [
+        "ct_session_anchor",
+        "et_observed_at",
+        "kt_asof",
+        "pt_created_at",
+        "valid_from",
+        "valid_to",
+        "freshness_class",
+        "ttl_seconds"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

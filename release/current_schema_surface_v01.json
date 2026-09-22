@@ -102,5 +102,30 @@
     "RETIRED_SCHEMAS_NOT_REGISTERED_BY_CURRENT_LOADER",
     "GIT_BYTE_PRESERVATION_ALLOWED",
     "HISTORICAL_TEST_REFERENCES_OUTSIDE_CURRENT_CONFORMANCE_ONLY"
-  ]
+  ],
+  "gate3_g36_mechanism_v01": {
+    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
+    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
+    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
+    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
+    "conformance_entry": "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01",
+    "direct_test": "tests/test_gate3_mechanism_registration_v01.py",
+    "inventory": [
+      "NATIVE_BOUNDARY_FEEDBACK",
+      "ROOT_RECORDED_HISTORY",
+      "CURRENT_REVIEWED_WORK",
+      "LAWFUL_SAME_HOST_OBJECTIVE",
+      "SUPPLIED_PROOF_REFUSAL"
+    ],
+    "top_level_fresh_e5": 1,
+    "top_level_fresh_g3": 1,
+    "shared_collectors": 0,
+    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
+    "source_admission_is_root_permission": false,
+    "schema_paths": [
+      "schemas/gate3_adversary_v01.schema.json",
+      "schemas/outcome_feedback_v01.schema.json"
+    ]
+  }
 }

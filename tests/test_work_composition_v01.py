@@ -69,6 +69,61 @@ def pure_setup():
     return host, program, common, kwargs
 
 
+def _g34r2_native_causal_artifacts(program, common, result=None):
+    """Preserve the public program ancestry and exact BSEP evidence payload."""
+    semantic=common['semantic_proposal']
+    packet=common['source_context'].bsep_packet
+    bsep=abi.build_kernel_artifact_v01(abi_version='v1.0',artifact_id=packet['packet_id'],
+        artifact_type='SemanticEvidence',schema_version='v1',transaction_id=semantic.transaction_id,
+        owner_root_id=semantic.owner_root_id,source_component='g34r2_bsep_projection',
+        authority_class='EVIDENCE_ONLY',lifecycle_state='VALIDATED',payload={'bsep':packet},
+        trace_refs=(program.candidate.task_id,),parent_refs=(),
+        time_envelope=abi.kernel_artifact_to_plain_dict_v01(semantic)['time_envelope'])
+    artifacts=(bsep,semantic,work.work_program_candidate_to_artifact_v01(program.candidate,**common),program.topology_artifact)
+    return artifacts+((result,) if result is not None else ())
+
+
+def test_work_native_causal_consumer_matches_topology_g34r2():
+    import os
+    host,program,common,_=pure_setup()
+    refs=program.source_bindings;artifacts=_g34r2_native_causal_artifacts(program,common)
+    assert len(refs)==3 and all(r.consumer_component==program.topology_artifact.source_component=='runtime' for r in refs)
+    assert not abi.validate_causal_consumption_bundle_v01(artifacts=artifacts,causal_refs=refs)
+    controls={}
+    controls['legacy_component']=abi.validate_causal_consumption_bundle_v01(artifacts=artifacts,
+        causal_refs=(replace(refs[0],consumer_component='work_composition'),)+refs[1:])
+    assert controls['legacy_component']==('causal_consumer_mismatch',)
+    controls['missing_parent']=abi.validate_causal_consumption_bundle_v01(
+        artifacts=artifacts[:-1]+(replace(program.topology_artifact,parent_refs=()),),causal_refs=refs)
+    assert 'causal_parent_binding_missing' in controls['missing_parent']
+    controls['output_pointer']=abi.validate_causal_consumption_bundle_v01(artifacts=artifacts,
+        causal_refs=(replace(refs[0],output_field='/work_program/missing'),)+refs[1:])
+    assert 'causal_output_field_missing' in controls['output_pointer']
+    controls['foreign_transaction']=abi.validate_causal_consumption_bundle_v01(
+        artifacts=artifacts[:-1]+(replace(program.topology_artifact,transaction_id='transaction:foreign'),),causal_refs=refs)
+    assert 'causal_transaction_mismatch' in controls['foreign_transaction']
+    assert not abi.validate_causal_consumption_bundle_v01(artifacts=artifacts,causal_refs=refs)
+    mapping={host.owning_root_id:host}
+    results=work.advance_work_program_v01(program,**common,host_map=mapping)
+    assert len(results)==1 and results[0].status=='COMPLETED'
+    assert results[0].invocation.inputs==tuple(v.source.value for v in program.candidate.items[0].inputs)
+    assert results[0].result.output[0].value=='would_play:content:actual:cedar@device:actual:one'
+    assert work.validate_work_program_result_v01(program,results,**common,host_map=mapping)==(True,())
+    result=work.work_program_result_to_artifact_v01(program,results,**common,host_map=mapping)
+    artifacts=_g34r2_native_causal_artifacts(program,common,result)
+    assert not abi.validate_causal_consumption_bundle_v01(artifacts=artifacts,causal_refs=refs)
+    for bad in (replace(program,source_bindings=()),replace(program,source_bindings=(replace(refs[0],consumer_component='work_composition'),)+refs[1:])):
+        assert not work.validate_work_program_result_v01(bad,results,**common,host_map=mapping)[0]
+        with pytest.raises(ValueError):work.advance_work_program_v01(bad,**common,host_map=mapping)
+    assert work.validate_work_program_result_v01(program,results,**common,host_map=mapping)==(True,())
+    assert host.registry.action_packet_lifecycle_entries==()
+    if 'G33R_EVIDENCE' in os.environ:
+        out=Path(os.environ['G33R_EVIDENCE'])/'commands'/os.environ['G33R_COMMAND']/'generic_causal.json'
+        out.write_text(json.dumps(dict(artifacts=[abi.kernel_artifact_to_plain_dict_v01(a) for a in artifacts],
+            native_refs=actual_evidence_plain_v03(refs),results=actual_evidence_plain_v03(results),controls=controls,
+            source_file=work.__file__,work_sha256=hashlib.sha256(Path(work.__file__).read_bytes()).hexdigest(),effects=0),indent=2)+'\n')
+
+
 def test_work_public_pure_execution_and_retained_input_identity():
     host, program, common, _ = pure_setup()
     results = work.advance_work_program_v01(program, **common, host_map={host.owning_root_id: host})

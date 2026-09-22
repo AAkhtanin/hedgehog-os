@@ -326,7 +326,7 @@ def materialize_work_program_v01(candidate, *, catalogue, source_context, semant
         parent_refs=(proposal.artifact_id,), time_envelope=source['time_envelope'])
     bindings = tuple(abi.build_causal_consumption_ref_v01(producer_actor_id='semantic_architect',
         source_artifact_id=proposal.artifact_id, output_field='/work_program/' + field,
-        consumer_component='work_composition', downstream_artifact_id=topology.artifact_id,
+        consumer_component=topology.source_component, downstream_artifact_id=topology.artifact_id,
         decision_effect='materialize_work', disposition='USED', reason_code='used:validated_program_' + field,
         trace_refs=(candidate.task_id, candidate.revision_id)) for field in ('items', 'budget', 'bsep_ref'))
     return MaterializedWorkProgramV01(candidate, topology, ordered, bindings)

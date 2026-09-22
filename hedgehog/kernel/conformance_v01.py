@@ -8,6 +8,14 @@ PASS is derived from validated observations and is never caller supplied.
 
 from __future__ import annotations
 
+
+def build_gate3_mechanism_receipt_v01(bundle):
+    """Consume the shared G36 proof; registration never dispatches collection."""
+    from hedgehog.gate3_mechanism_v01 import consume_mechanism_v01
+    receipt=consume_mechanism_v01(bundle)
+    return dict(profile='KERNEL_CONFORMANCE_G36_MECHANISM_V01',mechanism=receipt,
+        checked_count=receipt['checked_count'],shared_e5_collector_calls=0,shared_g3_collector_calls=0)
+
 from dataclasses import dataclass as _dataclass
 import re as _re
 

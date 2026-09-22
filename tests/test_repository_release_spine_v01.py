@@ -1147,6 +1147,55 @@ def _g2d_v0310_bind_exact_e4_candidate_hashes_v01() -> str:
         import runpy
         guard = runpy.run_path(str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"))
         errors = []
+        if guard.get("_g37_requested_v01", lambda root: False)(REPOSITORY_ROOT):
+            phase = guard["_validate_g37_frozen_release_admission_v01"](
+                REPOSITORY_ROOT, errors
+            )
+            assert not errors, errors
+            assert phase in {
+                "G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED",
+                "G37_FROZEN_RELEASE_PROPOSAL_STAGED",
+                "G37_FROZEN_RELEASE_COMMITTED",
+            }
+            return "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+        if guard.get('_g36_requested_v01',lambda root:False)(REPOSITORY_ROOT):
+            phase=guard['_validate_g36_adversary_admission_v01'](REPOSITORY_ROOT,errors)
+            assert not errors,errors
+            assert phase in {'G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED','G36_ADVERSARY_MECHANISM_PROPOSAL_STAGED','G36_ADVERSARY_MECHANISM_COMMITTED'}
+            return 'EXACT_G36_WITH_HISTORICAL_TESTFLIX_E_PAIR'
+        if guard["_g35_requested_v01"](REPOSITORY_ROOT):
+            phase=guard["_validate_g35_harness_admission_v01"](REPOSITORY_ROOT,errors)
+            assert not errors,errors
+            assert phase in {'G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED','G35_FIVE_DOMAIN_HARNESS_PROPOSAL_STAGED','G35_FIVE_DOMAIN_HARNESS_COMMITTED'}
+            return 'EXACT_G35_WITH_HISTORICAL_TESTFLIX_E_PAIR'
+        if guard["_g34_requested_v01"](REPOSITORY_ROOT):
+            phase = guard["_validate_g34_history_admission_v01"](REPOSITORY_ROOT, errors)
+            assert not errors, errors
+            assert phase in {
+                "G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED",
+                "G34_HISTORY_CONSUMPTION_PROPOSAL_STAGED",
+                "G34_HISTORY_CONSUMPTION_COMMITTED",
+            }
+            return "EXACT_G34_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+        if guard["_g33_requested_v01"](REPOSITORY_ROOT):
+            phase = guard["_validate_g33_calibration_admission_v01"](REPOSITORY_ROOT, errors)
+            assert not errors, errors
+            assert phase in {
+                "G33_GT_TTL_PROPOSAL_UNSTAGED",
+                "G33_GT_TTL_PROPOSAL_STAGED",
+                "G33_GT_TTL_COMMITTED",
+            }
+            return "EXACT_G33_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+        if guard["_g32_requested_v01"](REPOSITORY_ROOT):
+            phase = guard["_validate_g32_observation_admission_v01"](REPOSITORY_ROOT, errors)
+            assert not errors, errors
+            assert phase in {"G32_OBSERVATION_PROPOSAL_UNSTAGED", "G32_OBSERVATION_PROPOSAL_STAGED", "G32_OBSERVATION_COMMITTED"}
+            return "EXACT_G32_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+        if guard["_g31_requested_v01"](REPOSITORY_ROOT):
+            phase = guard["_validate_g31_foundation_admission_v01"](REPOSITORY_ROOT, errors)
+            assert not errors, errors
+            assert phase in {"G31_FOUNDATION_PROPOSAL_UNSTAGED", "G31_FOUNDATION_PROPOSAL_STAGED", "G31_FOUNDATION_COMMITTED"}
+            return "EXACT_G31_WITH_HISTORICAL_TESTFLIX_E_PAIR"
         if guard["_sentinel_presentation_requested_v01"](REPOSITORY_ROOT):
             phase = guard["_validate_landslide_sentinel_presentation_admission_v01"](REPOSITORY_ROOT, errors)
             assert not errors, errors
@@ -4750,6 +4799,29 @@ def u4_historical_release_module(tmp_path_factory):
     return runpy.run_path(str(source))
 
 
+from tests.test_active_architecture_authority_v01 import (
+    g31_admission_tree,
+    g32_admission_tree,
+    g33_admission_tree,
+    g34_admission_tree,
+    g35_admission_tree,
+)
+
+
+def test_g31_binder_has_precedence_with_historical_markers_v01(g31_admission_tree):
+    import runpy
+    if "gate3_g32_observation_admission_v01" in _read_json(REPOSITORY_ROOT/"release/current_status_overlay_v01.json"):
+        historical=runpy.run_path(str(g31_admission_tree[0]/"tests/test_repository_release_spine_v01.py"))
+        historical["test_g31_binder_has_precedence_with_historical_markers_v01"]()
+        return
+    import runpy
+    guard = runpy.run_path(str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"))
+    assert guard["_g31_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_sentinel_presentation_requested_v01"](REPOSITORY_ROOT)
+    assert G2E4_V0310_ACTIVE_BYTES_BINDING == "EXACT_G31_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
 def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11():
     import runpy
     guard = runpy.run_path(str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py"))
@@ -4765,7 +4837,22 @@ def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory
         historical = json.loads(_git_show(guard["TESTFLIX_L_V11"], path))
         assert document["universality_admission_v01"] == historical["universality_admission_v01"]
     for path in ("release/completion_manifest.json", "release/integration_seam_index.json", "release/current_schema_surface_v01.json"):
-        assert (REPOSITORY_ROOT/path).read_bytes() == _git_show(guard["TESTFLIX_L_V11"], path)
+        current_bytes = (REPOSITORY_ROOT/path).read_bytes()
+        historical_bytes = _git_show(guard["TESTFLIX_L_V11"], path)
+        if guard.get("_g37_requested_v01", lambda root: False)(REPOSITORY_ROOT):
+            expected_document = json.loads(historical_bytes)
+            assert "gate3_g36_mechanism_v01" not in expected_document
+            expected_document["gate3_g36_mechanism_v01"] = (
+                _g37_expected_registration_v01(path)
+            )
+            assert json.loads(current_bytes) == expected_document
+        elif guard.get('_g36_requested_v01', lambda root: False)(REPOSITORY_ROOT):
+            expected_document = json.loads(historical_bytes)
+            assert 'gate3_g36_mechanism_v01' not in expected_document
+            expected_document['gate3_g36_mechanism_v01'] = _g36_expected_registration_v01(path)
+            assert json.loads(current_bytes) == expected_document
+        else:
+            assert current_bytes == historical_bytes
     expected = "EXACT_EWS_SUCCESSOR_WITH_HISTORICAL_TESTFLIX_E_PAIR" if guard["_ews_requested_v01"](REPOSITORY_ROOT) else "EXACT_TESTFLIX_L_SUCCESSOR_PAIR_HISTORICAL_U4_E_BRANCHES_SEPARATE"
     if guard["_ews_presentation_requested_v01"](REPOSITORY_ROOT):
         expected = "EXACT_EWS_PRESENTATION_WITH_HISTORICAL_TESTFLIX_E_PAIR"
@@ -4773,5 +4860,164 @@ def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory
         expected = "EXACT_SENTINEL_WITH_HISTORICAL_TESTFLIX_E_PAIR"
     if guard["_sentinel_presentation_requested_v01"](REPOSITORY_ROOT):
         expected = "EXACT_SENTINEL_PRESENTATION_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard["_g31_requested_v01"](REPOSITORY_ROOT):
+        expected = "EXACT_G31_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard["_g32_requested_v01"](REPOSITORY_ROOT):
+        expected = "EXACT_G32_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard["_g33_requested_v01"](REPOSITORY_ROOT):
+        expected = "EXACT_G33_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard["_g34_requested_v01"](REPOSITORY_ROOT):
+        expected = "EXACT_G34_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard["_g35_requested_v01"](REPOSITORY_ROOT):
+        expected = "EXACT_G35_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard.get('_g36_requested_v01',lambda root:False)(REPOSITORY_ROOT):
+        expected = "EXACT_G36_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard.get("_g37_requested_v01", lambda root: False)(REPOSITORY_ROOT):
+        expected = "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
     assert G2E4_V0310_ACTIVE_BYTES_BINDING == expected
     assert "schemas/fractal_runtime_v02.schema.json" in _read_json(REPOSITORY_ROOT/"release/current_schema_surface_v01.json")["current_schema_paths"]
+
+
+def test_g32_binder_has_final_precedence_with_historical_markers_v01(g32_admission_tree):
+    import runpy
+    if "gate3_g33_calibration_admission_v01" in _read_json(
+        REPOSITORY_ROOT / "release/current_status_overlay_v01.json"
+    ):
+        historical = runpy.run_path(
+            str(g32_admission_tree[0] / "tests/test_repository_release_spine_v01.py")
+        )
+        historical["test_g32_binder_has_final_precedence_with_historical_markers_v01"]()
+        return
+    guard=runpy.run_path(str(REPOSITORY_ROOT/"tools/check_active_architecture_authority_v01.py"))
+    assert guard['_g32_requested_v01'](REPOSITORY_ROOT)
+    assert guard['_g31_requested_v01'](REPOSITORY_ROOT)
+    assert guard['_sentinel_presentation_requested_v01'](REPOSITORY_ROOT)
+    assert G2E4_V0310_ACTIVE_BYTES_BINDING=="EXACT_G32_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
+def test_g33_binder_has_final_precedence_with_historical_markers_v01(g33_admission_tree):
+    import runpy
+    if "gate3_g34_history_admission_v01" in _read_json(REPOSITORY_ROOT / "release/current_status_overlay_v01.json"):
+        historical = runpy.run_path(str(g33_admission_tree[0] / "tests/test_repository_release_spine_v01.py"))
+        historical["test_g33_binder_has_final_precedence_with_historical_markers_v01"]()
+        return
+
+    guard = runpy.run_path(
+        str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py")
+    )
+    assert guard["_g33_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_g32_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_g31_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_sentinel_presentation_requested_v01"](REPOSITORY_ROOT)
+    assert (
+        G2E4_V0310_ACTIVE_BYTES_BINDING
+        == "EXACT_G33_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    )
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
+def test_g34_binder_has_final_precedence_with_historical_markers_v01(g34_admission_tree):
+    import runpy
+
+    if 'gate3_g35_harness_admission_v01' in _read_json(OVERLAY_PATH):
+        historical=runpy.run_path(str(g34_admission_tree[0]/'tests/test_repository_release_spine_v01.py'))
+        historical['test_g34_binder_has_final_precedence_with_historical_markers_v01']()
+        return
+
+    guard = runpy.run_path(
+        str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py")
+    )
+    assert guard["_g34_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_g32_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_g31_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_sentinel_presentation_requested_v01"](REPOSITORY_ROOT)
+    assert (
+        G2E4_V0310_ACTIVE_BYTES_BINDING
+        == "EXACT_G34_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    )
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
+def test_g35_binder_has_final_precedence_v01(g35_admission_tree):
+    import runpy
+    if 'gate3_g36_adversary_admission_v01' in _read_json(OVERLAY_PATH):
+        historical=runpy.run_path(str(g35_admission_tree[0]/'tests/test_repository_release_spine_v01.py'))
+        historical['test_g35_binder_has_final_precedence_v01']()
+        return
+    guard=runpy.run_path(str(REPOSITORY_ROOT/'tools/check_active_architecture_authority_v01.py'))
+    assert guard['_g35_requested_v01'](REPOSITORY_ROOT)
+    assert G2E4_V0310_ACTIVE_BYTES_BINDING=='EXACT_G35_WITH_HISTORICAL_TESTFLIX_E_PAIR'
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
+def _g36_expected_registration_v01(path):
+    registration = {
+        'profile': 'G36_SOURCE_BOUND_LEARNING_MECHANISM_V01',
+        'status': 'SCOPED_EXTERNAL_IMPLEMENTATION_REVIEW_PENDING',
+        'producer': 'hedgehog.gate3_mechanism_v01.collect_mechanism_v01',
+        'supplied_validator': 'hedgehog.gate3_mechanism_v01.validate_supplied_report_v01',
+        'living_entry': 'demo.run_living_gauntlet_v01.collect_living_g36_v01',
+        'conformance_entry': 'demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01',
+        'direct_test': 'tests/test_gate3_mechanism_registration_v01.py',
+        'inventory': ['NATIVE_BOUNDARY_FEEDBACK', 'ROOT_RECORDED_HISTORY',
+                      'CURRENT_REVIEWED_WORK', 'LAWFUL_SAME_HOST_OBJECTIVE',
+                      'SUPPLIED_PROOF_REFUSAL'],
+        'top_level_fresh_e5': 1, 'top_level_fresh_g3': 1, 'shared_collectors': 0,
+        'full_top_level_run': 'G37_PENDING', 'source_admission_is_root_permission': False,
+    }
+    if path == 'release/current_schema_surface_v01.json':
+        registration['schema_paths'] = ['schemas/gate3_adversary_v01.schema.json',
+                                        'schemas/outcome_feedback_v01.schema.json']
+    return registration
+
+
+def _g37_expected_registration_v01(path):
+    registration = _g36_expected_registration_v01(path)
+    registration["status"] = (
+        "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW"
+    )
+    registration["full_top_level_run"] = "G37_FRESH_PASS_EXTERNAL_EVIDENCE"
+    return registration
+
+
+def test_g36_binder_has_final_precedence_v01():
+    import runpy
+    guard=runpy.run_path(str(REPOSITORY_ROOT/'tools/check_active_architecture_authority_v01.py'))
+    assert guard['_g36_requested_v01'](REPOSITORY_ROOT)
+    expected = "EXACT_G36_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    if guard.get("_g37_requested_v01", lambda root: False)(REPOSITORY_ROOT):
+        expected = "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    assert G2E4_V0310_ACTIVE_BYTES_BINDING == expected
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
+def test_g37_binder_has_final_precedence_v01():
+    import runpy
+
+    guard = runpy.run_path(
+        str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py")
+    )
+    assert guard["_g37_requested_v01"](REPOSITORY_ROOT)
+    assert guard["_g36_requested_v01"](REPOSITORY_ROOT)
+    assert (
+        G2E4_V0310_ACTIVE_BYTES_BINDING
+        == "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
+    )
+    test_testflix_current_admission_preserves_historical_U4_and_schema_inventory_v11()
+
+
+def test_g37_current_registration_pins_actual_release_files_v01():
+    overlay = _read_json(REPOSITORY_ROOT / "release/current_status_overlay_v01.json")
+    registration = overlay["gate3_g37_current_registration_v01"]
+    expected = {
+        "release/completion_manifest.json": (
+            "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0"
+        ),
+        "release/integration_seam_index.json": (
+            "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
+        ),
+    }
+    assert registration["base_identities"] == expected
+    for path, digest in expected.items():
+        assert hashlib.sha256((REPOSITORY_ROOT / path).read_bytes()).hexdigest() == digest

@@ -1,5 +1,39 @@
 from __future__ import annotations
 
+
+def consume_gate3_mechanism_v01(bundle):
+    """Living and shared Conformance consume the same supplied native proof."""
+    from hedgehog.gate3_mechanism_v01 import consume_mechanism_v01
+    from demo.run_kernel_conformance_v01 import consume_gate3_mechanism_v01 as shared
+    checked=consume_mechanism_v01(bundle)
+    conformance=shared(bundle)
+    if checked!=conformance['mechanism']:
+        raise ValueError('g36_living_shared_source_mismatch')
+    return dict(profile='LIVING_G36_MECHANISM_V01',mechanism=checked,conformance=conformance,
+        checked_count=checked['checked_count'],shared_e5_collector_calls=0,shared_g3_collector_calls=0)
+
+
+def collect_living_g36_v01(directory):
+    """G3-7 successor owner; old 17-act geometry remains a historical profile."""
+    from hedgehog.gate3_mechanism_v01 import collect_mechanism_v01
+    legacy=collect_living_gauntlet_v01()
+    bundle=collect_mechanism_v01(directory)
+    result=dict(profile='LIVING_G36_SUCCESSOR_V01',legacy=legacy,gate3=consume_gate3_mechanism_v01(bundle),
+        gate3_bundle=bundle,g3_collector_calls=1,e5_collector_calls=1)
+    if validate_living_g36_v01(result):raise ValueError('g36_living_successor_invalid')
+    return result
+
+
+def validate_living_g36_v01(value):
+    """Independent supplied successor validation; never recollect E5 or G3."""
+    try:
+        if set(value)!={'profile','legacy','gate3','gate3_bundle','g3_collector_calls','e5_collector_calls'} or value['profile']!='LIVING_G36_SUCCESSOR_V01':return ('g36_living_shape',)
+        errors=validate_living_gauntlet_report_v01(value['legacy'])
+        if errors:return errors
+        if value['gate3']!=consume_gate3_mechanism_v01(value['gate3_bundle']) or (value['g3_collector_calls'],value['e5_collector_calls'])!=(1,1):return ('g36_living_binding',)
+        return ()
+    except (TypeError,KeyError,ValueError):return ('g36_living_supplied_invalid',)
+
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, replace
 import copy
@@ -230,6 +264,7 @@ _MANIFEST_FIELD_NAMES = frozenset(
         "current_kernel_conformance_profile",
         "kernel_conformance_profiles",
         "current_regression_claim_mapping",
+        "gate3_g36_mechanism_v01",
     }
 )
 _SEAM_INDEX_FIELD_NAMES = frozenset(
@@ -240,8 +275,30 @@ _SEAM_INDEX_FIELD_NAMES = frozenset(
         "index_status",
         "seams",
         "version",
+        "gate3_g36_mechanism_v01",
     }
 )
+_G36_RELEASE_MECHANISM_V01 = {
+    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
+    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
+    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
+    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
+    "conformance_entry": "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01",
+    "direct_test": "tests/test_gate3_mechanism_registration_v01.py",
+    "inventory": [
+        "NATIVE_BOUNDARY_FEEDBACK",
+        "ROOT_RECORDED_HISTORY",
+        "CURRENT_REVIEWED_WORK",
+        "LAWFUL_SAME_HOST_OBJECTIVE",
+        "SUPPLIED_PROOF_REFUSAL",
+    ],
+    "top_level_fresh_e5": 1,
+    "top_level_fresh_g3": 1,
+    "shared_collectors": 0,
+    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
+    "source_admission_is_root_permission": False,
+}
 _SEAM_FIELD_NAMES = frozenset(
     {
         "authority_status",
@@ -1097,6 +1154,8 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     ):
         if manifest.get(key) != expected:
             errors.append(f"completion_manifest_value_mismatch:{key}")
+    if manifest.get("gate3_g36_mechanism_v01") != _G36_RELEASE_MECHANISM_V01:
+        errors.append("completion_manifest_gate3_g36_mechanism_mismatch")
 
     active = manifest.get("active_runtime_acts")
     evidence = manifest.get("evidence_only_references")
@@ -1381,6 +1440,8 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     ):
         if index.get(key) != expected:
             errors.append(f"integration_seam_index_value_mismatch:{key}")
+    if index.get("gate3_g36_mechanism_v01") != _G36_RELEASE_MECHANISM_V01:
+        errors.append("integration_seam_gate3_g36_mechanism_mismatch")
     if (
         index.get("current_kernel_conformance_profile")
         != "kernel_conformance_v0_6_current"
@@ -5761,6 +5822,28 @@ _SENTINEL_BASE_V01 = "50ab3916bff55e8034cf7e6c509d4803c5447589"
 _SENTINEL_FROZEN_SOURCES_V01 = {**_EWS_FROZEN_SOURCES_V01, "pyproject.toml": "86485a92ac1bdaa3a73743190e70eda2ac37d66cb4d7653f69fb81d70f319ee6"}
 _SENTINEL_REGISTRATION_ROWS_V01 = _EWS_REGISTRATION_ROWS_V01
 
+_G37_REGISTRATION_KEY_V01 = "gate3_g37_current_registration_v01"
+_G37_BASE_V01 = "d199199a578c078c913a2381f595549175bd9235"
+_G37_BASE_IDENTITIES_V01 = {
+    "release/completion_manifest.json": "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0",
+    "release/integration_seam_index.json": "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d",
+}
+_G37_FROZEN_SOURCES_V01 = {
+    **_SENTINEL_FROZEN_SOURCES_V01,
+    "demo/run_kernel_conformance_v01.py": "dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503",
+    "hedgehog/kernel/work_composition_v01.py": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0",
+    "tests/test_work_composition_v01.py": "aa83388fd756a34442e836a0830226fd44fc38362561c40a6d222ad3a6de87bc",
+}
+_G37_REGISTRATION_ROWS_V01 = tuple(
+    {
+        **row,
+        "source_sha256": _G37_FROZEN_SOURCES_V01[
+            row["producer"].split(":")[0].replace(".", "/") + ".py"
+        ],
+    }
+    for row in _SENTINEL_REGISTRATION_ROWS_V01
+)
+
 
 def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[str, ...]]:
     """Read current registration as evidence, never dispatch metadata symbols."""
@@ -5770,12 +5853,14 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
     errors: list[str] = []
     try:
         overlay = _load_strict_json_object(root / "release/current_status_overlay_v01.json")
+        g37 = _G37_REGISTRATION_KEY_V01 in overlay
         sentinel = _SENTINEL_REGISTRATION_KEY_V01 in overlay
         ews = _EWS_REGISTRATION_KEY_V01 in overlay
         testflix = _TESTFLIX_REGISTRATION_KEY_V11 in overlay
-        block = overlay.get(_SENTINEL_REGISTRATION_KEY_V01 if sentinel else _EWS_REGISTRATION_KEY_V01 if ews else _TESTFLIX_REGISTRATION_KEY_V11 if testflix else _U4_REGISTRATION_KEY)
-        sources = _SENTINEL_FROZEN_SOURCES_V01 if sentinel else _EWS_FROZEN_SOURCES_V01 if ews else _TESTFLIX_FROZEN_SOURCES_V11 if testflix else _U4_FROZEN_SOURCES
-        rows = _SENTINEL_REGISTRATION_ROWS_V01 if sentinel else _EWS_REGISTRATION_ROWS_V01 if ews else _TESTFLIX_REGISTRATION_ROWS_V11 if testflix else _U4_REGISTRATION_ROWS
+        block = overlay.get(_G37_REGISTRATION_KEY_V01 if g37 else _SENTINEL_REGISTRATION_KEY_V01 if sentinel else _EWS_REGISTRATION_KEY_V01 if ews else _TESTFLIX_REGISTRATION_KEY_V11 if testflix else _U4_REGISTRATION_KEY)
+        sources = _G37_FROZEN_SOURCES_V01 if g37 else _SENTINEL_FROZEN_SOURCES_V01 if sentinel else _EWS_FROZEN_SOURCES_V01 if ews else _TESTFLIX_FROZEN_SOURCES_V11 if testflix else _U4_FROZEN_SOURCES
+        rows = _G37_REGISTRATION_ROWS_V01 if g37 else _SENTINEL_REGISTRATION_ROWS_V01 if sentinel else _EWS_REGISTRATION_ROWS_V01 if ews else _TESTFLIX_REGISTRATION_ROWS_V11 if testflix else _U4_REGISTRATION_ROWS
+        base_identities = _G37_BASE_IDENTITIES_V01 if g37 else _U4_BASE_IDENTITIES
         if block is None:
             # A missing block is historical only with the entire exact H tree.
             head = subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=root).decode().strip()
@@ -5799,18 +5884,18 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
                 return None, ("registration_missing_current",)
             return None, ()
         expected = {
-            "profile": "LANDSLIDE_SENTINEL_ADMISSION_V01" if sentinel else "EPHEMERAL_WORKSPACE_ADMISSION_V01" if ews else "TESTFLIX_TEMPORAL_IMPLEMENTATION_ADMISSION_V11" if testflix else "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
-            "basis": _SENTINEL_BASE_V01 if sentinel else _EWS_BASE_V01 if ews else _TESTFLIX_L_V11 if testflix else _U4_H,
-            "status": "EXACT_SOURCE_ADMISSION_DERIVED_FROM_GIT" if sentinel or ews else "IMPLEMENTED_REGISTRATION_CANDIDATE_OWNER_ACCEPTANCE_PENDING",
+            "profile": "GATE3_G37_FROZEN_RELEASE_ADMISSION_V01" if g37 else "LANDSLIDE_SENTINEL_ADMISSION_V01" if sentinel else "EPHEMERAL_WORKSPACE_ADMISSION_V01" if ews else "TESTFLIX_TEMPORAL_IMPLEMENTATION_ADMISSION_V11" if testflix else "U1_U4_BOUNDED_IMPLEMENTATION_ADMISSION_V01",
+            "basis": _G37_BASE_V01 if g37 else _SENTINEL_BASE_V01 if sentinel else _EWS_BASE_V01 if ews else _TESTFLIX_L_V11 if testflix else _U4_H,
+            "status": "EXACT_SOURCE_ADMISSION_DERIVED_FROM_GIT" if g37 or sentinel or ews else "IMPLEMENTED_REGISTRATION_CANDIDATE_OWNER_ACCEPTANCE_PENDING",
             "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_HANDLE",
-            "base_identities": _U4_BASE_IDENTITIES,
+            "base_identities": base_identities,
             "frozen_source_identities": sources,
             "rows": list(rows),
             "schema_paths": ["schemas/work_composition_v01.schema.json", "schemas/capability_admission_v01.schema.json"],
         }
         if block != expected:
             errors.append("registration_exact_block")
-        for path, digest in {**_U4_BASE_IDENTITIES, **sources}.items():
+        for path, digest in {**base_identities, **sources}.items():
             file = root / path
             if file.is_symlink() or not file.is_file() or hashlib.sha256(file.read_bytes()).hexdigest() != digest:
                 errors.append("registration_source:" + path)

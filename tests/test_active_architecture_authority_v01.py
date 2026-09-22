@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 from copy import deepcopy
 import hashlib
+import gzip
 import json
 import os
 from pathlib import Path
@@ -16,6 +17,1305 @@ import pytest
 
 
 SENTINEL_ACCEPTED_COMMIT_V01 = "2f328be634247be11bc18a3b22a919f393d6ed1d"
+
+
+G31_REVIEWED_ARCHIVE_SHA256_V01 = "01680208bdce0d9ba16ab41a71c2aab1b3b2e72b894f0ddaa73dca34abba79ce"
+G31_REVIEWED_POSTIMAGES_V01 = {'AGENTS.md': {'bytes': 18748,
+               'git_blob': '6a06157422dd6cae405e6b51d13599c1dc329526',
+               'mode': '0o644',
+               'sha256': '6c7643a9707a2be36253de104a176313b9fa89a48d4622a64262c054a392e777'},
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': {'bytes': 4481,
+                                                   'git_blob': '7b179da60d7fb4d01fac7b681946b72c9262e551',
+                                                   'mode': '0o644',
+                                                   'sha256': '0760657b736de8781f891b5fc93c7e44d388835dc79d3a58b45908674a7cc5b9'},
+ 'docs/gate3_outcome_feedback_contract_v01.md': {'bytes': 9997,
+                                                 'git_blob': '8f77653231b14f6d660d0074b183091e27ef1ea7',
+                                                 'mode': '0o644',
+                                                 'sha256': '0d8e046598f66879b7888761ec436000aae02eea8f9561bb74835b14c1fe9957'},
+ 'fixtures/gate3_reference_v01.json': {'bytes': 38820,
+                                       'git_blob': '670174163682b85e6936786e375d46dc52e197e5',
+                                       'mode': '0o644',
+                                       'sha256': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da'},
+ 'hedgehog/outcome_feedback_v01.py': {'bytes': 28678,
+                                      'git_blob': '39daa50e64874c538685141d11f5ed8092d24b6b',
+                                      'mode': '0o644',
+                                      'sha256': '521ac303ef850aff7a444ec614c860d07f3964fdc5270a3cfa1f9e852674cd2d'},
+ 'release/current_status_overlay_v01.json': {'bytes': 130159,
+                                             'git_blob': 'fb352c664c92a0dbb473783a095d1a0bba8528f3',
+                                             'mode': '0o644',
+                                             'sha256': '89943903fd8e5b3614226f214e76743ded0cb1e1241b6f48147cf2c26a14150f'},
+ 'release/successor_context_manifest_v01.json': {'bytes': 106103,
+                                                 'git_blob': '01a5ef416a7f543165170d3260cac0b66519cf41',
+                                                 'mode': '0o644',
+                                                 'sha256': '8bcbaaf9e3604d30477cf481ca0880ba789704b7664c504a8e13d9ef4839e07f'},
+ 'schemas/outcome_feedback_v01.schema.json': {'bytes': 29619,
+                                              'git_blob': 'd5f49d3d20964a83bdd5b49926b5ae060a958a69',
+                                              'mode': '0o644',
+                                              'sha256': '257d0456677887b6c6650c28b35d0e1835f408aaeebd6a7dfc3b1123faee72ac'},
+ 'specs/current_architecture_lock_v01.md': {'bytes': 27773,
+                                            'git_blob': '41804ab2cd669e2a52a2c4c9b34a03110ab778ef',
+                                            'mode': '0o644',
+                                            'sha256': '8365525ffc9e6fb3506721801ad92050f6dec1c087440eaec8e735f169d7bcc5'},
+ 'specs/document_authority_index_v01.json': {'bytes': 96384,
+                                             'git_blob': 'c1e8705b332f42352ec45fe4e10fbb26845b30e2',
+                                             'mode': '0o644',
+                                             'sha256': '828616feb4fc606505b81174b15a2a808fb02e2a5407be7c1c75203b9200afa6'},
+ 'tests/test_active_architecture_authority_v01.py': {'bytes': 341703,
+                                                     'git_blob': 'dfc6225ea1d5a036f52c1622190a2f51ac2f1ae5',
+                                                     'mode': '0o644',
+                                                     'sha256': '63ff3eb68d963567f23fe9cfaf4440928dbe1cbb5f584ff2d820c0630c3585f5'},
+ 'tests/test_outcome_feedback_v01.py': {'bytes': 15578,
+                                        'git_blob': '0d82b15f1f47ec65cade3646d46eb9e0344a57e7',
+                                        'mode': '0o644',
+                                        'sha256': '1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97'},
+ 'tests/test_repository_release_spine_v01.py': {'bytes': 207628,
+                                                'git_blob': 'f176fdea354c82985ff25b08fb6906eb120f0be5',
+                                                'mode': '0o644',
+                                                'sha256': 'dfb1d20e1cd53a7ac87b07c46217239ee823c953f0228f8a0dff38afb3cbe54c'},
+ 'tools/check_active_architecture_authority_v01.py': {'bytes': 719642,
+                                                      'git_blob': 'add12404f96309049816e3bfa9f028a2665d0eb5',
+                                                      'mode': '0o644',
+                                                      'sha256': '23b5452aabc92cee3a6b4c668394fa2ff16b1d31be3668ccd4ff30a3c210802a'}}
+
+G32_REVIEWED_ARCHIVE_SHA256_V01 = "a1f38380d93985107f72ac86081aa1b3df1e55178f9c6e4d67d9f4bb76e8a500"
+G32_REVIEWED_PATCH_GZIP_BYTES_V01 = 95355
+G32_REVIEWED_PATCH_GZIP_SHA256_V01 = "3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4"
+G32_REVIEWED_PATCH_BYTES_V01 = 329249
+G32_REVIEWED_PATCH_SHA256_V01 = "f78e9ba9a9f782316eb78f3ebbd59be626468eea23739ed70b6c8575e80f7556"
+G32_REVIEWED_POSTIMAGES_V01 = {
+    'AGENTS.md': {'bytes': 19462, 'git_blob': '0fbd59e658460d618af0be6335b573bc3c221ec1', 'mode': '0o644', 'sha256': 'de9e1a5ced982a17af082a545c6165b7f127bbfab0b802c6c8173f032b205bac'},
+    'docs/gate3_outcome_feedback_checkpoint_v01.md': {'bytes': 8014, 'git_blob': 'f37088a05d6538b006428efeaf9c695fe427931d', 'mode': '0o644', 'sha256': 'd2e16252b15dc68e9434d6cb67886ebac9d8c23ee0199ff48a3454e0b637697c'},
+    'docs/gate3_outcome_feedback_contract_v01.md': {'bytes': 16785, 'git_blob': '2f0801eaf396038b7e7a91ee063343ab7b317b17', 'mode': '0o644', 'sha256': '8630563c63bcbf0361fef93e389faae59d17fa01b47654661178bdf76d803766'},
+    'fixtures/gate3_g31_predecessor_v01.patch.gz': {'bytes': 33398, 'git_blob': 'e140b983b912a10814da4988965e7a238afd07ad', 'mode': '0o644', 'sha256': '5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84'},
+    'fixtures/gate3_reference_v01.json': {'bytes': 38820, 'git_blob': '670174163682b85e6936786e375d46dc52e197e5', 'mode': '0o644', 'sha256': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da'},
+    'fixtures/gate3_sentinel_observation_v01.json': {'bytes': 1290, 'git_blob': '8c832e646926c9093d393be38abaedd0c76332d7', 'mode': '0o644', 'sha256': 'f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507'},
+    'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': {'bytes': 57487, 'git_blob': 'af561253c1eef05f7e3b0c9e78172e7ae69021ae', 'mode': '0o644', 'sha256': '5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003'},
+    'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': {'bytes': 13053, 'git_blob': '05f8b69165609f343b6799f9b94d66008eef1239', 'mode': '0o644', 'sha256': '62db3a565425b8fdb67ad968a1e3e965165c43be9f8e40675abe24987756b642'},
+    'hedgehog/outcome_feedback_history_v01.py': {'bytes': 14349, 'git_blob': '5c8c5f46285f8d2933f26f0384a899a529b97a50', 'mode': '0o644', 'sha256': '5ea974704a71d30dab36ae0b8a0896dc32cc5fcd07a0b38876b0f55167178105'},
+    'hedgehog/outcome_feedback_v01.py': {'bytes': 36319, 'git_blob': 'c489e4b946d1ea8c299484063ce932f73f402515', 'mode': '0o644', 'sha256': '0278abd1f84f3f148c2c2fe991f2f9bc30cfdf26ab6386b2f5c23c853f966e17'},
+    'release/current_status_overlay_v01.json': {'bytes': 132217, 'git_blob': '8dd25ad136ade051e57c3bb6a7db574b29f191e5', 'mode': '0o644', 'sha256': 'bf81677fbb4674ac4d991a14aa97ca5b212e30841691d19096ffeaf316b1ca3e'},
+    'release/successor_context_manifest_v01.json': {'bytes': 108161, 'git_blob': '74bf65eb15d860a84455d980b9abe7c0d9665726', 'mode': '0o644', 'sha256': 'c272396b6da81d1fccdbf6f22561bba6402b74b74e2492ed5ddd34dfd8109b21'},
+    'schemas/outcome_feedback_v01.schema.json': {'bytes': 31701, 'git_blob': 'c89a290b2449bb48ddd3d7bc590f548d902dca95', 'mode': '0o644', 'sha256': 'b55438e84d0d4f8a120d3a0d0dcf99513c86683c5ce861bbac1b675541e9f58a'},
+    'specs/current_architecture_lock_v01.md': {'bytes': 28478, 'git_blob': '8ca0e476b18852f3cb16299964a81e41a386970a', 'mode': '0o644', 'sha256': '117fe6d9544084fa4579843912d288bb4f90eb1376349b2e780c13fd83552080'},
+    'specs/document_authority_index_v01.json': {'bytes': 98442, 'git_blob': '5c790098c3e14a33f9a5ca5d5991288398fe837a', 'mode': '0o644', 'sha256': '85e5586223d5179ac98e3f47289540af20f40c40e601a687438ce754238d9983'},
+    'tests/test_active_architecture_authority_v01.py': {'bytes': 357070, 'git_blob': 'bccdde1838004205b0c5f4a629a1739a0c3e6071', 'mode': '0o644', 'sha256': '6c7963aff253fa729faf72b2fc9dc54703a393e1e2e9a5edbad145f092e99278'},
+    'tests/test_gate3_sentinel_observation_v01.py': {'bytes': 18154, 'git_blob': 'd82239ce35403b00199131f78bd0e687890718a3', 'mode': '0o644', 'sha256': '401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83'},
+    'tests/test_outcome_feedback_v01.py': {'bytes': 15578, 'git_blob': '0d82b15f1f47ec65cade3646d46eb9e0344a57e7', 'mode': '0o644', 'sha256': '1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97'},
+    'tests/test_repository_release_spine_v01.py': {'bytes': 209113, 'git_blob': 'e922bb6ec39ac6a222e61f775fb20677292a43be', 'mode': '0o644', 'sha256': 'c8d296c71c55f7d91a7c90a009c5133024bd518cc0d034fce074ae2b6e7550ed'},
+    'tools/check_active_architecture_authority_v01.py': {'bytes': 736282, 'git_blob': '6a9bb8060a06ef0516121ce44523d617f3a4f92a', 'mode': '0o644', 'sha256': 'bb0aa13d79f34c12fb94f5bcba8aa0533ad6b0d4dc3fffa1022ac404431c5ae2'},
+}
+
+
+
+G33R_REVIEWED_POSTIMAGES_V01 = {'AGENTS.md': {'bytes': 20382,
+               'git_blob': '41bbd425de4fe9daabd5b93b9a0461fef678456f',
+               'mode': '0o644',
+               'sha256': 'e0fa2295b0dfa169a6a6943051c394c61fe66f731900de581f75d20662b54f4f'},
+ 'docs/gate3_outcome_feedback_checkpoint_v01.md': {'bytes': 11622,
+                                                   'git_blob': 'f054c3961ba5bce2b8728cd76d6ecd11ed78250d',
+                                                   'mode': '0o644',
+                                                   'sha256': '82d1abb1cfa2105ae7b595041619acaca0177bc288a335cdb64ed9b540d023be'},
+ 'docs/gate3_outcome_feedback_contract_v01.md': {'bytes': 22357,
+                                                 'git_blob': '31f0f2d1166b5db131a07608793f01721879f89d',
+                                                 'mode': '0o644',
+                                                 'sha256': '453d863a81f7a252e09df153fa99741e65588e1b5a5de5a50b6fa5647cd61259'},
+ 'fixtures/gate3_calibration_reference_v01.json': {'bytes': 4739,
+                                                   'git_blob': 'd6547c19c696cde974886dd82d0bb14838b8e919',
+                                                   'mode': '0o644',
+                                                   'sha256': '4d26d532d45148c712b5ced0067186cbf073d174f77dd13ec26806c2612c3ea5'},
+ 'fixtures/gate3_g31_predecessor_v01.patch.gz': {'bytes': 33398,
+                                                 'git_blob': 'e140b983b912a10814da4988965e7a238afd07ad',
+                                                 'mode': '0o644',
+                                                 'sha256': '5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84'},
+ 'fixtures/gate3_g32_predecessor_v01.patch.gz': {'bytes': 95355,
+                                                 'git_blob': '83bac365abe9e61e32827c41c8d3a5fc6706e423',
+                                                 'mode': '0o644',
+                                                 'sha256': '3f7ea835627456a3d0d467552ba546a6bf508d14ae479c8f4bb1d7c597953ef4'},
+ 'fixtures/gate3_reference_v01.json': {'bytes': 38820,
+                                       'git_blob': '670174163682b85e6936786e375d46dc52e197e5',
+                                       'mode': '0o644',
+                                       'sha256': 'e2dfbae20579653282f5a4178e7a55f4f8784b67eaa954eb5eacef95ce57a9da'},
+ 'fixtures/gate3_sentinel_observation_v01.json': {'bytes': 1290,
+                                                  'git_blob': '8c832e646926c9093d393be38abaedd0c76332d7',
+                                                  'mode': '0o644',
+                                                  'sha256': 'f998d80d07ee2ea218a96bd009ed2a119d4233caa0a1c402003b29959bbf7507'},
+ 'hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py': {'bytes': 57487,
+                                                                   'git_blob': 'af561253c1eef05f7e3b0c9e78172e7ae69021ae',
+                                                                   'mode': '0o644',
+                                                                   'sha256': '5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003'},
+ 'hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py': {'bytes': 13053,
+                                                                         'git_blob': '05f8b69165609f343b6799f9b94d66008eef1239',
+                                                                         'mode': '0o644',
+                                                                         'sha256': '62db3a565425b8fdb67ad968a1e3e965165c43be9f8e40675abe24987756b642'},
+ 'hedgehog/outcome_calibration_v01.py': {'bytes': 51741,
+                                         'git_blob': 'f0340f054b1ad1bf42acda8fc3e6cdcf338eb86d',
+                                         'mode': '0o644',
+                                         'sha256': 'e68ad66ce54b891eebaf098a14e43cefae39155cdd0ceb368286bf18511b1ac8'},
+ 'hedgehog/outcome_feedback_history_v01.py': {'bytes': 14349,
+                                              'git_blob': '5c8c5f46285f8d2933f26f0384a899a529b97a50',
+                                              'mode': '0o644',
+                                              'sha256': '5ea974704a71d30dab36ae0b8a0896dc32cc5fcd07a0b38876b0f55167178105'},
+ 'hedgehog/outcome_feedback_v01.py': {'bytes': 36319,
+                                      'git_blob': 'c489e4b946d1ea8c299484063ce932f73f402515',
+                                      'mode': '0o644',
+                                      'sha256': '0278abd1f84f3f148c2c2fe991f2f9bc30cfdf26ab6386b2f5c23c853f966e17'},
+ 'release/current_status_overlay_v01.json': {'bytes': 134551,
+                                             'git_blob': '0a884bd496ff013bfc1089ab0958643a86eebc28',
+                                             'mode': '0o644',
+                                             'sha256': '0e2c31f9db99575ebd19742c3a82b532ff2aff6c3921f740f2f1f83b571c1e7e'},
+ 'release/successor_context_manifest_v01.json': {'bytes': 110495,
+                                                 'git_blob': '69398a2b6b74e63b5c02db692bf1c01e4bfbd3c1',
+                                                 'mode': '0o644',
+                                                 'sha256': 'fed78fb21111d9b9b505301b9edfd03556745940602fc8c47c6dd7aa97f04d99'},
+ 'schemas/outcome_feedback_v01.schema.json': {'bytes': 31701,
+                                              'git_blob': 'c89a290b2449bb48ddd3d7bc590f548d902dca95',
+                                              'mode': '0o644',
+                                              'sha256': 'b55438e84d0d4f8a120d3a0d0dcf99513c86683c5ce861bbac1b675541e9f58a'},
+ 'specs/current_architecture_lock_v01.md': {'bytes': 29306,
+                                            'git_blob': 'bc6a888cf420fef70e5105ca26476e388ccb60f3',
+                                            'mode': '0o644',
+                                            'sha256': '50c3f66a89d569f1eced8968ea9087bc870b4801e78c0220de897c7865d676e7'},
+ 'specs/document_authority_index_v01.json': {'bytes': 100776,
+                                             'git_blob': 'da3696d9cff60dd6062e895ac5021a162339bf42',
+                                             'mode': '0o644',
+                                             'sha256': 'b5bb50e4cc60e0c7535fc9bd35800e4bed6c53adf51fec53d2c3f673ce4c54e1'},
+ 'tests/test_active_architecture_authority_v01.py': {'bytes': 373762,
+                                                     'git_blob': '7b69c9e6affb1cb346823ade8a4866aa87cf427e',
+                                                     'mode': '0o644',
+                                                     'sha256': 'df5e15d9bb22b95eb377ff5789114eaef06e5cb3334a61139868c8af904df9c9'},
+ 'tests/test_gate3_sentinel_observation_v01.py': {'bytes': 18154,
+                                                  'git_blob': 'd82239ce35403b00199131f78bd0e687890718a3',
+                                                  'mode': '0o644',
+                                                  'sha256': '401bbee00d6eeda7e935182d14e5ec6b3e4db7657ec96855249b2a88cab3ef83'},
+ 'tests/test_outcome_calibration_v01.py': {'bytes': 44656,
+                                           'git_blob': '132dbddeee4bfe8d1d5a68e17a5e8698419bcdb6',
+                                           'mode': '0o644',
+                                           'sha256': '994f031849106a88ae6e1d65d95ddf391992b419f87aa9bebdd2797f35354a7a'},
+ 'tests/test_outcome_feedback_v01.py': {'bytes': 15578,
+                                        'git_blob': '0d82b15f1f47ec65cade3646d46eb9e0344a57e7',
+                                        'mode': '0o644',
+                                        'sha256': '1b770859771bc10d2be252f8cf7446be9ca9770e00f906714cc2219d04fc8c97'},
+ 'tests/test_repository_release_spine_v01.py': {'bytes': 210733,
+                                                'git_blob': '72bbfd892bcc6b448512ed93a9c5df1df364a449',
+                                                'mode': '0o644',
+                                                'sha256': '76d5b53abaefb590f9921eb946aaa4c21264422f98feb6d90b0c4e9d774eee6e'},
+ 'tools/check_active_architecture_authority_v01.py': {'bytes': 752730,
+                                                      'git_blob': '8b3e92d1f654a23b9bbf65f845d42b97a6682d1b',
+                                                      'mode': '0o644',
+                                                      'sha256': '2d5c67c1b5f5fac2803fcc718c8a0bcfafad997b4e8bcf55414c6801bbd99055'}}
+G33R_REVIEWED_PATCH_GZIP_BYTES_V01 = 225435
+G33R_REVIEWED_PATCH_GZIP_SHA256_V01 = 'd59897845d2167d273aa87f59bfa560f0e197cf7d69276e0fdda319e5c320d5c'
+G33R_REVIEWED_PATCH_BYTES_V01 = 610581
+G33R_REVIEWED_PATCH_SHA256_V01 = "f33662ce9bc8b09350cf1cbb07ab4fc7511775e63cc2b4fd88712a434d8158f8"
+
+def _g33_reconstructed_root_v01(root):
+    """Reconstruct the reviewed G33R proposal from its fixed cumulative patch."""
+    compressed = (REPOSITORY_ROOT / "fixtures/gate3_g33r_predecessor_v01.patch.gz").read_bytes()
+    assert len(compressed) == G33R_REVIEWED_PATCH_GZIP_BYTES_V01
+    assert hashlib.sha256(compressed).hexdigest() == G33R_REVIEWED_PATCH_GZIP_SHA256_V01
+    patch = gzip.decompress(compressed)
+    assert len(patch) == G33R_REVIEWED_PATCH_BYTES_V01
+    assert hashlib.sha256(patch).hexdigest() == G33R_REVIEWED_PATCH_SHA256_V01
+    base = "d199199a578c078c913a2381f595549175bd9235"
+    subprocess.run(
+        ("git", "clone", "--local", "--no-hardlinks", "--no-checkout", str(REPOSITORY_ROOT), str(root)),
+        check=True,
+        capture_output=True,
+    )
+
+    def git(*args, **kwargs):
+        return subprocess.run(("git", *args), cwd=root, check=True, capture_output=True, **kwargs)
+
+    git("config", "remote.origin.url", "https://github.com/AAkhtanin/hedgehog-os.git")
+    git("update-ref", "refs/heads/main", base)
+    git("update-ref", "refs/remotes/origin/main", base)
+    git("symbolic-ref", "HEAD", "refs/heads/main")
+    git("read-tree", base)
+    git("checkout-index", "--all")
+    assert git("rev-parse", "HEAD^{tree}").stdout.decode().strip() == "26d63912117a2324cc7e711407be33123f55ab81"
+    git("apply", "--check", "-", input=patch)
+    git("apply", "-", input=patch)
+    assert set(G33R_REVIEWED_POSTIMAGES_V01) == set(
+        runpy.run_path(str(root / "tools/check_active_architecture_authority_v01.py"))["G33_PATH_ACTIONS_V01"]
+    )
+    for path, pin in G33R_REVIEWED_POSTIMAGES_V01.items():
+        file = root / path
+        raw = file.read_bytes()
+        assert not file.is_symlink()
+        assert len(raw) == pin["bytes"]
+        assert hashlib.sha256(raw).hexdigest() == pin["sha256"]
+        assert oct(file.stat().st_mode & 0o777) == pin["mode"]
+        assert hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest() == pin["git_blob"]
+    return root
+
+
+def _g31_reconstructed_root_v01(root):
+    """Verify the fixed reviewed patch before applying it only in this fixture."""
+    compressed=(REPOSITORY_ROOT/"fixtures/gate3_g31_predecessor_v01.patch.gz").read_bytes()
+    assert len(compressed)==33398 and hashlib.sha256(compressed).hexdigest()=="5969760cfafce0db57d5f11b296bd88d4beaedfbc2652e0ec5e23eed1af20d84"
+    patch=gzip.decompress(compressed)
+    assert len(patch)==169173 and hashlib.sha256(patch).hexdigest()=="cb823ebe8dbe8f4ca9ac2e8a8a039c95b544f7df8a36d8228775270fbe34da81"
+    base="d199199a578c078c913a2381f595549175bd9235"
+    subprocess.run(("git","clone","--local","--no-hardlinks","--no-checkout",str(REPOSITORY_ROOT),str(root)),check=True,capture_output=True)
+    def git(*args,**kwargs):return subprocess.run(("git",*args),cwd=root,check=True,capture_output=True,**kwargs)
+    git("config","remote.origin.url","https://github.com/AAkhtanin/hedgehog-os.git")
+    git("update-ref","refs/heads/main",base);git("update-ref","refs/remotes/origin/main",base)
+    git("symbolic-ref","HEAD","refs/heads/main");git("read-tree",base);git("checkout-index","--all")
+    assert git("rev-parse","HEAD^{tree}").stdout.decode().strip()=="26d63912117a2324cc7e711407be33123f55ab81"
+    git("apply","--check","-",input=patch);git("apply","-",input=patch)
+    for path,pin in G31_REVIEWED_POSTIMAGES_V01.items():
+        file=root/path;raw=file.read_bytes()
+        assert not file.is_symlink() and len(raw)==pin['bytes'] and hashlib.sha256(raw).hexdigest()==pin['sha256']
+        assert oct(file.stat().st_mode & 0o777)==pin['mode']
+        assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==pin['git_blob']
+    return root
+
+
+def _g32_reconstructed_root_v01(root):
+    """Reconstruct the reviewed G32 proposal from its fixed cumulative patch."""
+    compressed = (REPOSITORY_ROOT / "fixtures/gate3_g32_predecessor_v01.patch.gz").read_bytes()
+    assert len(compressed) == G32_REVIEWED_PATCH_GZIP_BYTES_V01
+    assert hashlib.sha256(compressed).hexdigest() == G32_REVIEWED_PATCH_GZIP_SHA256_V01
+    patch = gzip.decompress(compressed)
+    assert len(patch) == G32_REVIEWED_PATCH_BYTES_V01
+    assert hashlib.sha256(patch).hexdigest() == G32_REVIEWED_PATCH_SHA256_V01
+    base = "d199199a578c078c913a2381f595549175bd9235"
+    subprocess.run(
+        ("git", "clone", "--local", "--no-hardlinks", "--no-checkout", str(REPOSITORY_ROOT), str(root)),
+        check=True,
+        capture_output=True,
+    )
+
+    def git(*args, **kwargs):
+        return subprocess.run(("git", *args), cwd=root, check=True, capture_output=True, **kwargs)
+
+    git("config", "remote.origin.url", "https://github.com/AAkhtanin/hedgehog-os.git")
+    git("update-ref", "refs/heads/main", base)
+    git("update-ref", "refs/remotes/origin/main", base)
+    git("symbolic-ref", "HEAD", "refs/heads/main")
+    git("read-tree", base)
+    git("checkout-index", "--all")
+    assert git("rev-parse", "HEAD^{tree}").stdout.decode().strip() == "26d63912117a2324cc7e711407be33123f55ab81"
+    git("apply", "--check", "-", input=patch)
+    git("apply", "-", input=patch)
+    assert set(G32_REVIEWED_POSTIMAGES_V01) == set(
+        runpy.run_path(str(root / "tools/check_active_architecture_authority_v01.py"))["G32_PATH_ACTIONS_V01"]
+    )
+    for path, pin in G32_REVIEWED_POSTIMAGES_V01.items():
+        file = root / path
+        raw = file.read_bytes()
+        assert not file.is_symlink()
+        assert len(raw) == pin["bytes"]
+        assert hashlib.sha256(raw).hexdigest() == pin["sha256"]
+        assert oct(file.stat().st_mode & 0o777) == pin["mode"]
+        assert hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest() == pin["git_blob"]
+    return root
+
+
+@pytest.fixture(scope="module")
+def g31_admission_tree(tmp_path_factory):
+    root=_g31_reconstructed_root_v01(tmp_path_factory.mktemp("g31_source_controls")/"candidate")
+    namespace=runpy.run_path(str(root/"tools/check_active_architecture_authority_v01.py"))
+    assert subprocess.check_output(("git","rev-parse","HEAD"),cwd=root).decode().strip()==namespace['G31_BASE_V01']
+    return root,namespace
+
+
+@pytest.fixture(scope="module")
+def g32_admission_tree(tmp_path_factory):
+    root = _g32_reconstructed_root_v01(
+        tmp_path_factory.mktemp("g32_source_controls") / "candidate"
+    )
+    namespace = runpy.run_path(str(root / "tools/check_active_architecture_authority_v01.py"))
+    assert subprocess.check_output(("git", "rev-parse", "HEAD"), cwd=root).decode().strip() == namespace[
+        "G32_BASE_V01"
+    ]
+    return root,namespace
+
+
+@pytest.fixture(scope="module")
+def g33_admission_tree(tmp_path_factory):
+    root = _g33_reconstructed_root_v01(tmp_path_factory.mktemp("g33r_source_controls") / "candidate")
+    return root, runpy.run_path(str(root / "tools/check_active_architecture_authority_v01.py"))
+
+
+def _g35_explicit_base_v01(root, source_root):
+    """Disposable fixture only: inherited HEAD must never choose the predecessor."""
+    base='d199199a578c078c913a2381f595549175bd9235'
+    tree='26d63912117a2324cc7e711407be33123f55ab81'
+    subprocess.run(('git','clone','--local','--no-hardlinks','--no-checkout',str(source_root),str(root)),check=True,capture_output=True)
+    def git(*args):return subprocess.check_output(('git',*args),cwd=root).decode().strip()
+    git('config','remote.origin.url','https://github.com/AAkhtanin/hedgehog-os.git')
+    git('update-ref','refs/heads/main',base);git('update-ref','refs/remotes/origin/main',base)
+    git('symbolic-ref','HEAD','refs/heads/main');git('read-tree',base);git('checkout-index','--all')
+    assert git('rev-parse','HEAD')==git('rev-parse','origin/main')==base
+    assert git('rev-parse','HEAD^{tree}')==git('write-tree')==tree
+    assert not git('status','--porcelain=v1','-uall')
+
+
+def _g34_reconstructed_root_v01(root, source_root):
+    compressed=(source_root/'fixtures/gate3_g34r2_predecessor_v01.patch.gz').read_bytes()
+    assert len(compressed)==514708 and hashlib.sha256(compressed).hexdigest()=='b735220c1b35d84a90fe6a40b1796af8723e17853656413fb9b9c90cea3113b8'
+    patch=gzip.decompress(compressed)
+    assert len(patch)==1179133 and hashlib.sha256(patch).hexdigest()=='c30bf63206794739e87ca2bff96129ee60c8844a1f5f2d04d566639751dc0364'
+    _g35_explicit_base_v01(root,source_root)
+    subprocess.run(('git','apply','--check','-'),cwd=root,input=patch,check=True)
+    subprocess.run(('git','apply','-'),cwd=root,input=patch,check=True)
+    return root,runpy.run_path(str(root/'tools/check_active_architecture_authority_v01.py'))
+
+
+def _g35_reconstructed_root_v01(root, source_root):
+    _g35_explicit_base_v01(root,source_root)
+    patch=gzip.decompress((REPOSITORY_ROOT/'fixtures/gate3_g35r_predecessor_v01.patch.gz').read_bytes())
+    assert len(patch)==2379540 and hashlib.sha256(patch).hexdigest()=='8146b4115ebb4f3c4fdd4414ad4bcd1cc53397964d11bba5da238ef6ace2cbc8'
+    subprocess.run(('git','apply','--check','-'),cwd=root,input=patch,check=True)
+    subprocess.run(('git','apply','-'),cwd=root,input=patch,check=True)
+    return root,runpy.run_path(str(root/'tools/check_active_architecture_authority_v01.py'))
+
+
+def _g36_reconstructed_root_v01(root,source_root):
+    _g35_explicit_base_v01(root,source_root)
+    namespace=runpy.run_path(str(REPOSITORY_ROOT/'tools/check_active_architecture_authority_v01.py'))
+    for path in namespace['G36_PATH_ACTIONS_V01']:
+        target=root/path;target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copy2(REPOSITORY_ROOT/path,target)
+    return root,runpy.run_path(str(root/'tools/check_active_architecture_authority_v01.py'))
+
+
+def _g37_reconstructed_root_v01(root, source_root):
+    _g35_explicit_base_v01(root, source_root)
+    namespace = runpy.run_path(
+        str(REPOSITORY_ROOT / "tools/check_active_architecture_authority_v01.py")
+    )
+    for path in namespace["G37_PATH_ACTIONS_V01"]:
+        target = root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPOSITORY_ROOT / path, target)
+    return root, runpy.run_path(
+        str(root / "tools/check_active_architecture_authority_v01.py")
+    )
+
+
+@pytest.fixture(scope='module')
+def g36_admission_tree(tmp_path_factory):
+    return _g36_reconstructed_root_v01(tmp_path_factory.mktemp('g36_source_controls')/'candidate',REPOSITORY_ROOT)
+
+
+def test_g36_exact_unstaged_staged_and_hostile_controls(g36_admission_tree):
+    root,ns=g36_admission_tree
+    if "gate3_g37_frozen_release_admission_v01" in json.loads(
+        (REPOSITORY_ROOT / "release/current_status_overlay_v01.json").read_text()
+    ):
+        actions = ns["G36_PATH_ACTIONS_V01"]
+        unstaged = {path: "??" if action == "A" else " M"
+                    for path, action in actions.items()}
+        staged = {path: action + " " for path, action in actions.items()}
+        classify = ns["_classify_g36_ledger_v01"]
+        common = dict(
+            head=ns["G36_BASE_V01"],
+            parents=(ns["G36_PARENT_V01"],),
+            origin=ns["G36_BASE_V01"],
+            branch="main",
+            delta={},
+        )
+        assert classify(status=unstaged, **common) == (
+            "G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED", ()
+        )
+        assert classify(status=staged, **common) == (
+            "G36_ADVERSARY_MECHANISM_PROPOSAL_STAGED", ()
+        )
+        partial = dict(unstaged)
+        partial.pop(next(iter(partial)))
+        assert "g36.development_unadmitted" in classify(
+            status=partial, **common
+        )[1]
+        return
+    def git(*args):return subprocess.check_output(('git',*args),cwd=root)
+    def check():
+        errors=[];phase=ns['_validate_g36_adversary_admission_v01'](root,errors);return phase,errors
+    assert check()==('G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED',[])
+    actions=ns['G36_PATH_ACTIONS_V01'];protected=root/'hedgehog/kernel/root_decision_v01.py';body=protected.read_bytes()
+    try:
+        protected.write_bytes(body+b'\n# Unapproved mutation\n')
+        assert 'g36.frozen_source:hedgehog/kernel/root_decision_v01.py' in check()[1]
+    finally:protected.write_bytes(body)
+    target=root/'hedgehog/gate3_mechanism_v01.py';body=target.read_bytes()
+    try:
+        target.write_bytes(body+b'\n# Unpinned source\n')
+        assert 'g36.source_identity:hedgehog/gate3_mechanism_v01.py' in check()[1]
+    finally:target.write_bytes(body)
+    try:
+        git('add','--',*sorted(actions));assert check()==('G36_ADVERSARY_MECHANISM_PROPOSAL_STAGED',[])
+        git('read-tree',ns['G36_BASE_V01']);git('add','--','hedgehog/gate3_mechanism_v01.py')
+        assert 'g36.candidate.exact_ledger' in check()[1]
+    finally:git('read-tree',ns['G36_BASE_V01'])
+    assert check()==('G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED',[])
+    assert _run_guard(root).returncode==0
+
+
+def test_g36_historical_g35_predicates_and_work_frozen(g35_admission_tree):
+    import ast
+    root,oldns=g35_admission_tree;ns=runpy.run_path(str(GUARD_PATH))
+    old=ast.parse((root/'tools/check_active_architecture_authority_v01.py').read_bytes());new=ast.parse(GUARD_PATH.read_bytes())
+    functions={n.name:ast.dump(n) for n in new.body if isinstance(n,(ast.FunctionDef,ast.ClassDef))}
+    for node in old.body:
+        if isinstance(node,(ast.FunctionDef,ast.ClassDef)) and node.name not in ('collect_failures','main'):assert ast.dump(node)==functions[node.name]
+    constants={ast.dump(n.targets[0]):ast.dump(n) for n in new.body if isinstance(n,ast.Assign)}
+    for node in old.body:
+        if isinstance(node,ast.Assign):assert constants[ast.dump(node.targets[0])]==ast.dump(node)
+    assert hashlib.sha256((REPOSITORY_ROOT/'hedgehog/kernel/work_composition_v01.py').read_bytes()).hexdigest()=='1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0'
+    assert not oldns['_validate_g35_harness_admission_v01'](root,errors:=[]) is None and not errors
+
+
+def test_g36_fixture_from_advanced_disposable_head(tmp_path):
+    if "gate3_g37_frozen_release_admission_v01" in json.loads(
+        (REPOSITORY_ROOT / "release/current_status_overlay_v01.json").read_text()
+    ):
+        namespace = runpy.run_path(str(GUARD_PATH))
+        phase, errors = namespace["_classify_g36_ledger_v01"](
+            head="synthetic-child",
+            parents=(namespace["G36_BASE_V01"],),
+            origin=namespace["G36_BASE_V01"],
+            branch="main",
+            status={},
+            delta=namespace["G36_PATH_ACTIONS_V01"],
+        )
+        assert phase == "G36_ADVERSARY_MECHANISM_COMMITTED"
+        assert not errors
+        return
+    source,ns=_g36_reconstructed_root_v01(tmp_path/'advanced',REPOSITORY_ROOT)
+    def git(root,*args,env=None):return subprocess.check_output(('git',*args),cwd=root,env=env).decode().strip()
+    git(source,'add','--',*sorted(ns['G36_PATH_ACTIONS_V01']))
+    tree=git(source,'write-tree')
+    env=dict(os.environ,GIT_AUTHOR_NAME='G36 fixture',GIT_AUTHOR_EMAIL='fixture@example.invalid',GIT_COMMITTER_NAME='G36 fixture',GIT_COMMITTER_EMAIL='fixture@example.invalid')
+    child=git(source,'commit-tree',tree,'-p',ns['G36_BASE_V01'],'-m','Disposable G36 fixture only',env=env)
+    git(source,'update-ref','refs/heads/main',child)
+    errors=[];assert ns['_validate_g36_adversary_admission_v01'](source,errors)=='G36_ADVERSARY_MECHANISM_COMMITTED' and not errors
+    root,current=_g36_reconstructed_root_v01(tmp_path/'from_advanced',source)
+    assert git(root,'rev-parse','HEAD')==current['G36_BASE_V01']
+    errors=[];assert current['_validate_g36_adversary_admission_v01'](root,errors)=='G36_ADVERSARY_MECHANISM_PROPOSAL_UNSTAGED' and not errors
+    assert subprocess.check_output(('git','diff','--cached','--name-only'),cwd=REPOSITORY_ROOT)==b''
+
+
+@pytest.fixture(scope="module")
+def g37_admission_tree(tmp_path_factory):
+    return _g37_reconstructed_root_v01(
+        tmp_path_factory.mktemp("g37_source_controls") / "candidate",
+        REPOSITORY_ROOT,
+    )
+
+
+def test_g37_exact_unstaged_staged_and_hostile_controls_v01(
+    g37_admission_tree,
+):
+    root, namespace = g37_admission_tree
+
+    def git(*args):
+        return subprocess.check_output(("git", *args), cwd=root)
+
+    def check():
+        errors = []
+        phase = namespace["_validate_g37_frozen_release_admission_v01"](
+            root, errors
+        )
+        return phase, errors
+
+    assert check() == ("G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED", [])
+    actions = namespace["G37_PATH_ACTIONS_V01"]
+    protected = root / "hedgehog/kernel/root_decision_v01.py"
+    protected_body = protected.read_bytes()
+    try:
+        protected.write_bytes(protected_body + b"\n# Unapproved mutation\n")
+        assert "g37.frozen_source:hedgehog/kernel/root_decision_v01.py" in check()[1]
+    finally:
+        protected.write_bytes(protected_body)
+    candidate = root / "hedgehog/gate3_mechanism_v01.py"
+    candidate_body = candidate.read_bytes()
+    try:
+        candidate.write_bytes(candidate_body + b"\n# Unpinned source\n")
+        assert "g37.source_identity:hedgehog/gate3_mechanism_v01.py" in check()[1]
+    finally:
+        candidate.write_bytes(candidate_body)
+    try:
+        git("add", "--", *sorted(actions))
+        assert check() == ("G37_FROZEN_RELEASE_PROPOSAL_STAGED", [])
+        git("read-tree", namespace["G37_BASE_V01"])
+        git("add", "--", "hedgehog/gate3_mechanism_v01.py")
+        assert "g37.candidate.exact_ledger" in check()[1]
+    finally:
+        git("read-tree", namespace["G37_BASE_V01"])
+    assert check() == ("G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED", [])
+    completed = _run_guard(root)
+    assert completed.returncode == 0
+    assert "G37_PHASE=G37_FROZEN_RELEASE_PROPOSAL_UNSTAGED" in completed.stdout
+
+
+def test_g37_clean_sole_parent_child_classification_v01():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    phase, errors = namespace["_classify_g37_ledger_v01"](
+        head="synthetic-child",
+        parents=(namespace["G37_BASE_V01"],),
+        origin=namespace["G37_BASE_V01"],
+        branch="main",
+        status={},
+        delta=namespace["G37_PATH_ACTIONS_V01"],
+    )
+    assert phase == "G37_FROZEN_RELEASE_COMMITTED"
+    assert not errors
+
+
+def test_g37_current_registration_complete_negative_matrix_v01(
+    g37_admission_tree,
+):
+    import importlib.util
+
+    root, _ = g37_admission_tree
+    module_name = "g37r_current_registration_probe_v01"
+    spec = importlib.util.spec_from_file_location(
+        module_name, root / "demo/run_living_gauntlet_v01.py"
+    )
+    assert spec is not None and spec.loader is not None
+    living = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = living
+    try:
+        spec.loader.exec_module(living)
+        block, errors = living._current_registration_v01(root)
+        assert errors == ()
+        assert block is not None
+        assert block["base_identities"] == {
+            "release/completion_manifest.json": (
+                "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0"
+            ),
+            "release/integration_seam_index.json": (
+                "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d"
+            ),
+        }
+        assert len(block["rows"]) == 9
+        assert all(
+            row["authority"] == "EVIDENCE_ONLY"
+            and row["effect_access"] == "NONE"
+            for row in block["rows"]
+        )
+
+        for path in (
+            "release/completion_manifest.json",
+            "release/integration_seam_index.json",
+        ):
+            target = root / path
+            original = target.read_bytes()
+            try:
+                target.unlink()
+                assert (
+                    "registration_source:" + path
+                    in living._current_registration_v01(root)[1]
+                )
+                target.write_bytes(original + b"\n")
+                assert (
+                    "registration_source:" + path
+                    in living._current_registration_v01(root)[1]
+                )
+            finally:
+                target.write_bytes(original)
+
+        overlay_path = root / "release/current_status_overlay_v01.json"
+        original_overlay = json.loads(overlay_path.read_text())
+        registration = original_overlay[living._G37_REGISTRATION_KEY_V01]
+        stale = {
+            "release/completion_manifest.json": (
+                "8abf63662285e237b432c598ac2da283cc5eee89abb7651cbde3ffeb13addee1"
+            ),
+            "release/integration_seam_index.json": (
+                "e50e620ba43fe8ae8a2b08b14b551e1eb11d9c08b3de948c2fc34a73f54e771f"
+            ),
+        }
+        old_pin = deepcopy(original_overlay)
+        old_pin[living._G37_REGISTRATION_KEY_V01]["base_identities"][
+            "release/completion_manifest.json"
+        ] = stale["release/completion_manifest.json"]
+        overlay_path.write_text(json.dumps(old_pin) + "\n")
+        assert "registration_exact_block" in living._current_registration_v01(root)[1]
+
+        overlay_only = deepcopy(original_overlay)
+        overlay_only[living._G37_REGISTRATION_KEY_V01]["base_identities"] = stale
+        overlay_path.write_text(json.dumps(overlay_only) + "\n")
+        assert "registration_exact_block" in living._current_registration_v01(root)[1]
+        assert registration["base_identities"] != stale
+    finally:
+        (root / "release/current_status_overlay_v01.json").write_bytes(
+            (REPOSITORY_ROOT / "release/current_status_overlay_v01.json").read_bytes()
+        )
+        sys.modules.pop(module_name, None)
+
+
+@pytest.fixture(scope="module")
+def g34_admission_tree(tmp_path_factory):
+    return _g34_reconstructed_root_v01(tmp_path_factory.mktemp('g34r2_frozen_source_controls')/'candidate',REPOSITORY_ROOT)
+
+
+@pytest.fixture(scope='module')
+def g35_admission_tree(tmp_path_factory):
+    return _g35_reconstructed_root_v01(tmp_path_factory.mktemp('g35_source_controls')/'candidate',REPOSITORY_ROOT)
+
+
+def _g31_check_tree_v01(root, namespace):
+    failures = []
+    phase = namespace["_validate_g31_foundation_admission_v01"](root, failures)
+    return phase, tuple(failures)
+
+
+def test_g31_real_unstaged_staged_and_partial_index_v01(g31_admission_tree):
+    root, namespace = g31_admission_tree
+    assert _g31_check_tree_v01(root, namespace) == ("G31_FOUNDATION_PROPOSAL_UNSTAGED", ())
+    paths = tuple(namespace["G31_PATH_ACTIONS_V01"])
+    try:
+        subprocess.run(("git", "add", "--", *paths), cwd=root, check=True)
+        assert _g31_check_tree_v01(root, namespace) == ("G31_FOUNDATION_PROPOSAL_STAGED", ())
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+        subprocess.run(("git", "add", "--", paths[0]), cwd=root, check=True)
+        assert "g31.candidate.exact_ledger" in _g31_check_tree_v01(root, namespace)[1]
+    finally:
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+    assert _g31_check_tree_v01(root, namespace) == ("G31_FOUNDATION_PROPOSAL_UNSTAGED", ())
+
+
+@pytest.mark.parametrize("change", ("extra", "protected", "mode", "source_ledger", "metadata", "symlink", "assume_unchanged", "stale_origin", "stale_head"))
+def test_g31_real_hostile_neighbors_v01(g31_admission_tree, change):
+    root, namespace = g31_admission_tree
+    target = root / "hedgehog/outcome_feedback_v01.py"
+    body, mode = target.read_bytes(), target.stat().st_mode & 0o777
+    protected = root / "hedgehog/kernel/root_decision_v01.py"
+    old_protected = protected.read_bytes()
+    metadata = root / "release/current_status_overlay_v01.json"
+    old_metadata = metadata.read_bytes()
+    guard = root / "tools/check_active_architecture_authority_v01.py"
+    old_guard = guard.read_bytes()
+    extra = root / "g31_unapproved_file.txt"
+    reasons = {"extra":"g31.candidate.exact_ledger", "protected":"g31.frozen_source:hedgehog/kernel/root_decision_v01.py",
+               "mode":"g31.mode:hedgehog/outcome_feedback_v01.py", "source_ledger":"g31.source_identity:tools/check_active_architecture_authority_v01.py",
+               "metadata":"g31.admission_metadata:release/current_status_overlay_v01.json", "symlink":"g31.file_type:hedgehog/outcome_feedback_v01.py",
+               "assume_unchanged":"g31.index.flags", "stale_origin":"g31.candidate.basis_origin", "stale_head":"g31.exact_immediate_base_child"}
+    try:
+        if change == "extra": extra.write_text("Unapproved source fixture\n")
+        elif change == "protected": protected.write_bytes(old_protected + b"\n# Not permitted\n")
+        elif change == "mode": target.chmod(0o755)
+        elif change == "source_ledger":
+            digest = namespace["G31_SOURCE_IDENTITIES_V01"]["hedgehog/outcome_feedback_v01.py"].encode()
+            guard.write_bytes(old_guard.replace(digest, b"0"*64, 1))
+        elif change == "metadata":
+            value = json.loads(old_metadata)
+            value["gate3_g31_foundation_admission_v01"]["authority"] = "ROOT"
+            metadata.write_text(json.dumps(value))
+        elif change == "symlink":
+            target.unlink()
+            target.symlink_to(protected)
+        elif change == "assume_unchanged": subprocess.run(("git","update-index","--assume-unchanged","AGENTS.md"),cwd=root,check=True)
+        elif change == "stale_origin": subprocess.run(("git","update-ref","refs/remotes/origin/main",namespace["G31_PARENT_V01"]),cwd=root,check=True)
+        elif change == "stale_head": subprocess.run(("git","update-ref","refs/heads/main",namespace["G31_PARENT_V01"]),cwd=root,check=True)
+        assert reasons[change] in _g31_check_tree_v01(root, namespace)[1]
+    finally:
+        if extra.exists(): extra.unlink()
+        if target.is_symlink(): target.unlink()
+        target.write_bytes(body)
+        target.chmod(mode)
+        protected.write_bytes(old_protected)
+        metadata.write_bytes(old_metadata)
+        guard.write_bytes(old_guard)
+        subprocess.run(("git","update-index","--no-assume-unchanged","AGENTS.md"),cwd=root,check=True)
+        subprocess.run(("git","update-ref","refs/remotes/origin/main",namespace["G31_BASE_V01"]),cwd=root,check=True)
+        subprocess.run(("git","update-ref","refs/heads/main",namespace["G31_BASE_V01"]),cwd=root,check=True)
+    assert _g31_check_tree_v01(root, namespace) == ("G31_FOUNDATION_PROPOSAL_UNSTAGED", ())
+
+
+def test_g31_development_is_not_admitted_and_future_child_is_structural_only_v01():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g31_ledger_v01"]
+    actions = namespace["G31_PATH_ACTIONS_V01"]
+    params = dict(head=namespace["G31_BASE_V01"], parents=(namespace["G31_PARENT_V01"],), origin=namespace["G31_BASE_V01"], branch="main", delta={})
+    phase, errors = classify(**params, status={"hedgehog/outcome_feedback_v01.py":"??"})
+    assert phase == "G31_DEVELOPMENT_UNADMITTED" and errors == ("g31.development_unadmitted",)
+    assert classify(**{**params, "parents":()}, status={})[1]
+    # An abstract ledger control, not a generated commit or owner acceptance.
+    child = dict(head="synthetic-child-not-a-git-object", parents=(namespace["G31_BASE_V01"],), origin=namespace["G31_BASE_V01"], branch="main", status={}, delta=actions)
+    assert classify(**child) == ("G31_FOUNDATION_COMMITTED", ())
+    assert classify(**{**child, "parents":(namespace["G31_BASE_V01"],namespace["G31_PARENT_V01"])})[1]
+
+
+def test_g31_self_projection_and_predecessor_bodies_v01():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    digest = namespace["_g31_source_digest_v01"]
+    path = "tools/check_active_architecture_authority_v01.py"
+    sample = ('G31_SOURCE_IDENTITIES_V01 = {"'+path+'": "'+'a'*64+'", "other": "'+'b'*64+'"}\nX=1\n').encode()
+    assert digest(path,sample) == digest(path,sample.replace(b'a'*64,b'c'*64))
+    assert digest(path,sample) != digest(path,sample.replace(b'b'*64,b'd'*64))
+    for invalid in (sample+sample, sample.replace(b' = {',b' = ALIAS = {'),sample.replace(b'a'*64,b'a'*63),sample+b'G31_SOURCE_IDENTITIES_V01 += {}\n'):
+        with pytest.raises(ValueError): digest(path,invalid)
+    old = ast.parse(subprocess.check_output(("git","show",namespace["G31_BASE_V01"]+":"+path),cwd=REPOSITORY_ROOT))
+    current = ast.parse(GUARD_PATH.read_bytes())
+    old_defs = {node.name:node for node in old.body if isinstance(node,(ast.FunctionDef,ast.ClassDef))}
+    new_defs = {node.name:node for node in current.body if isinstance(node,(ast.FunctionDef,ast.ClassDef))}
+    for name, node in old_defs.items():
+        if name in ("collect_failures","main"):
+            continue
+        assert ast.dump(node) == ast.dump(new_defs[name]), name
+    for name in ("_classify_sentinel_presentation_ledger_v01", "_classify_ews_presentation_ledger_v01", "_classify_testflix_ledger_v11"):
+        assert name in namespace and name in old_defs
+    old_constants = {ast.dump(node.targets[0]): ast.dump(node) for node in old.body if isinstance(node, ast.Assign)}
+    new_constants = {ast.dump(node.targets[0]): ast.dump(node) for node in current.body if isinstance(node, ast.Assign)}
+    assert all(new_constants.get(key) == value for key, value in old_constants.items())
+
+
+@pytest.mark.parametrize("family", ("sentinel", "ews", "testflix"))
+def test_g31_historical_presentation_classifier_positive_and_refusal_v01(family):
+    namespace = runpy.run_path(str(GUARD_PATH))
+    names = {
+        "sentinel": ("_classify_sentinel_presentation_ledger_v01", "SENTINEL_PRESENTATION_BASE_V01", "SENTINEL_PRESENTATION_BASE_PARENT_V01", "SENTINEL_PRESENTATION_PATH_ACTIONS_V01", "SENTINEL_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED"),
+        "ews": ("_classify_ews_presentation_ledger_v01", "EWS_PRESENTATION_BASE_V01", "EWS_PRESENTATION_BASE_PARENT_V01", "EWS_PRESENTATION_PATH_ACTIONS_V01", "EWS_PRESENTATION_ADMISSION_CANDIDATE_UNSTAGED"),
+        "testflix": ("_classify_testflix_ledger_v11", "TESTFLIX_L_V11", "U4_H_V01", "TESTFLIX_PATH_ACTIONS_V11", "TESTFLIX_ADMISSION_CANDIDATE_UNSTAGED"),
+    }
+    function, base, parent, paths, expected = names[family]
+    classify, actions = namespace[function], namespace[paths]
+    params = dict(head=namespace[base], parents=(namespace[parent],), origin=namespace[base], branch="main", status={p:"??" if a=="A" else " M" for p,a in actions.items()}, delta={})
+    assert classify(**params) == (expected, ())
+    assert classify(**{**params,"status":{**params["status"],"forged":"??"}})[1]
+
+
+def _g32_check_tree_v01(root, namespace):
+    failures = []
+    phase = namespace["_validate_g32_observation_admission_v01"](root, failures)
+    return phase, tuple(failures)
+
+
+def test_g32_real_unstaged_staged_and_partial_index_v01(g32_admission_tree):
+    root, namespace = g32_admission_tree
+    assert _g32_check_tree_v01(root, namespace) == ("G32_OBSERVATION_PROPOSAL_UNSTAGED", ())
+    paths = tuple(namespace["G32_PATH_ACTIONS_V01"])
+    try:
+        subprocess.run(("git", "add", "--", *paths), cwd=root, check=True)
+        assert _g32_check_tree_v01(root, namespace) == ("G32_OBSERVATION_PROPOSAL_STAGED", ())
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+        subprocess.run(("git", "add", "--", paths[0]), cwd=root, check=True)
+        assert "g32.candidate.exact_ledger" in _g32_check_tree_v01(root, namespace)[1]
+    finally:
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+    assert _g32_check_tree_v01(root, namespace) == ("G32_OBSERVATION_PROPOSAL_UNSTAGED", ())
+
+
+@pytest.mark.parametrize("change", ("extra", "protected", "mode", "source_ledger", "metadata", "symlink", "assume_unchanged", "stale_origin", "stale_head"))
+def test_g32_real_hostile_neighbors_v01(g32_admission_tree, change):
+    root, namespace = g32_admission_tree
+    target = root / "hedgehog/outcome_feedback_v01.py"
+    body, mode = target.read_bytes(), target.stat().st_mode & 0o777
+    protected = root / "hedgehog/kernel/root_decision_v01.py"
+    old_protected = protected.read_bytes()
+    metadata = root / "release/current_status_overlay_v01.json"
+    old_metadata = metadata.read_bytes()
+    guard = root / "tools/check_active_architecture_authority_v01.py"
+    old_guard = guard.read_bytes()
+    extra = root / "g32_unapproved_file.txt"
+    reasons = {"extra":"g32.candidate.exact_ledger", "protected":"g32.frozen_source:hedgehog/kernel/root_decision_v01.py",
+               "mode":"g32.mode:hedgehog/outcome_feedback_v01.py", "source_ledger":"g32.source_identity:tools/check_active_architecture_authority_v01.py",
+               "metadata":"g32.admission_metadata:release/current_status_overlay_v01.json", "symlink":"g32.file_type:hedgehog/outcome_feedback_v01.py",
+               "assume_unchanged":"g32.index.flags", "stale_origin":"g32.candidate.basis_origin", "stale_head":"g32.exact_immediate_base_child"}
+    try:
+        if change == "extra": extra.write_text("Unapproved source fixture\n")
+        elif change == "protected": protected.write_bytes(old_protected + b"\n# Not permitted\n")
+        elif change == "mode": target.chmod(0o755)
+        elif change == "source_ledger":
+            digest = namespace["G32_SOURCE_IDENTITIES_V01"]["hedgehog/outcome_feedback_v01.py"].encode()
+            guard.write_bytes(old_guard.replace(digest, b"0"*64, 1))
+        elif change == "metadata":
+            value = json.loads(old_metadata)
+            value["gate3_g32_observation_admission_v01"]["authority"] = "ROOT"
+            metadata.write_text(json.dumps(value))
+        elif change == "symlink":
+            target.unlink()
+            target.symlink_to(protected)
+        elif change == "assume_unchanged": subprocess.run(("git","update-index","--assume-unchanged","AGENTS.md"),cwd=root,check=True)
+        elif change == "stale_origin": subprocess.run(("git","update-ref","refs/remotes/origin/main",namespace["G32_PARENT_V01"]),cwd=root,check=True)
+        elif change == "stale_head": subprocess.run(("git","update-ref","refs/heads/main",namespace["G32_PARENT_V01"]),cwd=root,check=True)
+        assert reasons[change] in _g32_check_tree_v01(root, namespace)[1]
+    finally:
+        if extra.exists(): extra.unlink()
+        if target.is_symlink(): target.unlink()
+        target.write_bytes(body)
+        target.chmod(mode)
+        protected.write_bytes(old_protected)
+        metadata.write_bytes(old_metadata)
+        guard.write_bytes(old_guard)
+        subprocess.run(("git","update-index","--no-assume-unchanged","AGENTS.md"),cwd=root,check=True)
+        subprocess.run(("git","update-ref","refs/remotes/origin/main",namespace["G32_BASE_V01"]),cwd=root,check=True)
+        subprocess.run(("git","update-ref","refs/heads/main",namespace["G32_BASE_V01"]),cwd=root,check=True)
+    assert _g32_check_tree_v01(root, namespace) == ("G32_OBSERVATION_PROPOSAL_UNSTAGED", ())
+
+
+def test_g32_development_is_not_admitted_and_future_child_is_structural_only_v01():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g32_ledger_v01"]
+    actions = namespace["G32_PATH_ACTIONS_V01"]
+    params = dict(head=namespace["G32_BASE_V01"], parents=(namespace["G32_PARENT_V01"],), origin=namespace["G32_BASE_V01"], branch="main", delta={})
+    phase, errors = classify(**params, status={"hedgehog/outcome_feedback_v01.py":"??"})
+    assert phase == "G32_DEVELOPMENT_UNADMITTED" and errors == ("g32.development_unadmitted",)
+    assert classify(**{**params, "parents":()}, status={})[1]
+    # An abstract ledger control, not a generated commit or owner acceptance.
+    child = dict(head="synthetic-child-not-a-git-object", parents=(namespace["G32_BASE_V01"],), origin=namespace["G32_BASE_V01"], branch="main", status={}, delta=actions)
+    assert classify(**child) == ("G32_OBSERVATION_COMMITTED", ())
+    assert classify(**{**child, "parents":(namespace["G32_BASE_V01"],namespace["G32_PARENT_V01"])})[1]
+
+
+def test_g32_self_projection_and_predecessor_bodies_v01(g31_admission_tree):
+    namespace = runpy.run_path(str(GUARD_PATH))
+    digest = namespace["_g32_source_digest_v01"]
+    path = "tools/check_active_architecture_authority_v01.py"
+    sample = ('G32_SOURCE_IDENTITIES_V01 = {"'+path+'": "'+'a'*64+'", "other": "'+'b'*64+'"}\nX=1\n').encode()
+    assert digest(path,sample) == digest(path,sample.replace(b'a'*64,b'c'*64))
+    assert digest(path,sample) != digest(path,sample.replace(b'b'*64,b'd'*64))
+    for invalid in (sample+sample, sample.replace(b' = {',b' = ALIAS = {'),sample.replace(b'a'*64,b'a'*63),sample+b'G32_SOURCE_IDENTITIES_V01 += {}\n'):
+        with pytest.raises(ValueError): digest(path,invalid)
+    old = ast.parse((g31_admission_tree[0]/path).read_bytes())
+    current = ast.parse(GUARD_PATH.read_bytes())
+    old_defs = {node.name:node for node in old.body if isinstance(node,(ast.FunctionDef,ast.ClassDef))}
+    new_defs = {node.name:node for node in current.body if isinstance(node,(ast.FunctionDef,ast.ClassDef))}
+    for name, node in old_defs.items():
+        if name in ("collect_failures","main"):
+            continue
+        assert ast.dump(node) == ast.dump(new_defs[name]), name
+    for name in ("_classify_sentinel_presentation_ledger_v01", "_classify_ews_presentation_ledger_v01", "_classify_testflix_ledger_v11"):
+        assert name in namespace and name in old_defs
+    old_constants = {ast.dump(node.targets[0]): ast.dump(node) for node in old.body if isinstance(node, ast.Assign)}
+    new_constants = {ast.dump(node.targets[0]): ast.dump(node) for node in current.body if isinstance(node, ast.Assign)}
+    assert all(new_constants.get(key) == value for key, value in old_constants.items())
+
+
+def _g33_check_tree_v01(root, namespace):
+    failures = []
+    phase = namespace["_validate_g33_calibration_admission_v01"](root, failures)
+    return phase, tuple(failures)
+
+
+def test_g33_real_unstaged_staged_and_partial_index_v01(g33_admission_tree):
+    root, namespace = g33_admission_tree
+    assert _g33_check_tree_v01(root, namespace) == ("G33_GT_TTL_PROPOSAL_UNSTAGED", ())
+    paths = tuple(namespace["G33_PATH_ACTIONS_V01"])
+    try:
+        subprocess.run(("git", "add", "--", *paths), cwd=root, check=True)
+        assert _g33_check_tree_v01(root, namespace) == ("G33_GT_TTL_PROPOSAL_STAGED", ())
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+        subprocess.run(("git", "add", "--", paths[0]), cwd=root, check=True)
+        assert "g33.candidate.exact_ledger" in _g33_check_tree_v01(root, namespace)[1]
+    finally:
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+    assert _g33_check_tree_v01(root, namespace) == ("G33_GT_TTL_PROPOSAL_UNSTAGED", ())
+
+
+@pytest.mark.parametrize(
+    "change",
+    (
+        "extra",
+        "protected",
+        "mode",
+        "source_ledger",
+        "metadata",
+        "symlink",
+        "assume_unchanged",
+        "stale_origin",
+        "stale_head",
+    ),
+)
+def test_g33_real_hostile_neighbors_v01(g33_admission_tree, change):
+    root, namespace = g33_admission_tree
+    target = root / "hedgehog/outcome_calibration_v01.py"
+    body, mode = target.read_bytes(), target.stat().st_mode & 0o777
+    protected = root / "hedgehog/kernel/root_decision_v01.py"
+    old_protected = protected.read_bytes()
+    metadata = root / "release/current_status_overlay_v01.json"
+    old_metadata = metadata.read_bytes()
+    guard = root / "tools/check_active_architecture_authority_v01.py"
+    old_guard = guard.read_bytes()
+    extra = root / "g33_unapproved_file.txt"
+    reasons = {
+        "extra": "g33.candidate.exact_ledger",
+        "protected": "g33.frozen_source:hedgehog/kernel/root_decision_v01.py",
+        "mode": "g33.mode:hedgehog/outcome_calibration_v01.py",
+        "source_ledger": "g33.source_identity:tools/check_active_architecture_authority_v01.py",
+        "metadata": "g33.admission_metadata:release/current_status_overlay_v01.json",
+        "symlink": "g33.file_type:hedgehog/outcome_calibration_v01.py",
+        "assume_unchanged": "g33.index.flags",
+        "stale_origin": "g33.candidate.basis_origin",
+        "stale_head": "g33.exact_immediate_base_child",
+    }
+    try:
+        if change == "extra":
+            extra.write_text("Unapproved G33 source\n")
+        elif change == "protected":
+            protected.write_bytes(old_protected + b"\n# Not permitted\n")
+        elif change == "mode":
+            target.chmod(0o755)
+        elif change == "source_ledger":
+            digest = namespace["G33_SOURCE_IDENTITIES_V01"][
+                "hedgehog/outcome_calibration_v01.py"
+            ].encode()
+            guard.write_bytes(old_guard.replace(digest, b"0" * 64, 1))
+        elif change == "metadata":
+            value = json.loads(old_metadata)
+            value["gate3_g33_calibration_admission_v01"]["authority"] = "ROOT"
+            metadata.write_text(json.dumps(value))
+        elif change == "symlink":
+            target.unlink()
+            target.symlink_to(protected)
+        elif change == "assume_unchanged":
+            subprocess.run(
+                ("git", "update-index", "--assume-unchanged", "AGENTS.md"),
+                cwd=root,
+                check=True,
+            )
+        elif change == "stale_origin":
+            subprocess.run(
+                ("git", "update-ref", "refs/remotes/origin/main", namespace["G33_PARENT_V01"]),
+                cwd=root,
+                check=True,
+            )
+        elif change == "stale_head":
+            subprocess.run(
+                ("git", "update-ref", "refs/heads/main", namespace["G33_PARENT_V01"]),
+                cwd=root,
+                check=True,
+            )
+        assert reasons[change] in _g33_check_tree_v01(root, namespace)[1]
+    finally:
+        if extra.exists():
+            extra.unlink()
+        if target.is_symlink():
+            target.unlink()
+        target.write_bytes(body)
+        target.chmod(mode)
+        protected.write_bytes(old_protected)
+        metadata.write_bytes(old_metadata)
+        guard.write_bytes(old_guard)
+        subprocess.run(
+            ("git", "update-index", "--no-assume-unchanged", "AGENTS.md"),
+            cwd=root,
+            check=True,
+        )
+        subprocess.run(
+            ("git", "update-ref", "refs/remotes/origin/main", namespace["G33_BASE_V01"]),
+            cwd=root,
+            check=True,
+        )
+        subprocess.run(
+            ("git", "update-ref", "refs/heads/main", namespace["G33_BASE_V01"]),
+            cwd=root,
+            check=True,
+        )
+    assert _g33_check_tree_v01(root, namespace) == ("G33_GT_TTL_PROPOSAL_UNSTAGED", ())
+
+
+def test_g33_development_is_not_admitted_and_future_child_is_structural_only_v01():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g33_ledger_v01"]
+    actions = namespace["G33_PATH_ACTIONS_V01"]
+    parameters = {
+        "head": namespace["G33_BASE_V01"],
+        "parents": (namespace["G33_PARENT_V01"],),
+        "origin": namespace["G33_BASE_V01"],
+        "branch": "main",
+        "delta": {},
+    }
+    phase, errors = classify(
+        **parameters, status={"hedgehog/outcome_calibration_v01.py": "??"}
+    )
+    assert phase == "G33_DEVELOPMENT_UNADMITTED"
+    assert errors == ("g33.development_unadmitted",)
+    child = {
+        "head": "synthetic-child-not-a-git-object",
+        "parents": (namespace["G33_BASE_V01"],),
+        "origin": namespace["G33_BASE_V01"],
+        "branch": "main",
+        "status": {},
+        "delta": actions,
+    }
+    assert classify(**child) == ("G33_GT_TTL_COMMITTED", ())
+    assert classify(
+        **{**child, "parents": (namespace["G33_BASE_V01"], namespace["G33_PARENT_V01"])}
+    )[1]
+
+
+def test_g33_self_projection_and_exact_g32_predecessor_v01(g32_admission_tree):
+    namespace = runpy.run_path(str(GUARD_PATH))
+    digest = namespace["_g33_source_digest_v01"]
+    path = "tools/check_active_architecture_authority_v01.py"
+    sample = (
+        'G33_SOURCE_IDENTITIES_V01 = {"'
+        + path
+        + '": "'
+        + "a" * 64
+        + '", "other": "'
+        + "b" * 64
+        + '"}\nX=1\n'
+    ).encode()
+    assert digest(path, sample) == digest(path, sample.replace(b"a" * 64, b"c" * 64))
+    assert digest(path, sample) != digest(path, sample.replace(b"b" * 64, b"d" * 64))
+    for invalid in (
+        sample + sample,
+        sample.replace(b" = {", b" = ALIAS = {"),
+        sample.replace(b"a" * 64, b"a" * 63),
+        sample + b"G33_SOURCE_IDENTITIES_V01 += {}\n",
+    ):
+        with pytest.raises(ValueError):
+            digest(path, invalid)
+    old = ast.parse((g32_admission_tree[0] / path).read_bytes())
+    current = ast.parse(GUARD_PATH.read_bytes())
+    old_defs = {
+        node.name: node
+        for node in old.body
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef))
+    }
+    new_defs = {
+        node.name: node
+        for node in current.body
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef))
+    }
+    for name, node in old_defs.items():
+        if name in ("collect_failures", "main"):
+            continue
+        assert ast.dump(node) == ast.dump(new_defs[name]), name
+    old_constants = {
+        ast.dump(node.targets[0]): ast.dump(node)
+        for node in old.body
+        if isinstance(node, ast.Assign)
+    }
+    new_constants = {
+        ast.dump(node.targets[0]): ast.dump(node)
+        for node in current.body
+        if isinstance(node, ast.Assign)
+    }
+    assert all(new_constants.get(key) == value for key, value in old_constants.items())
+
+def _g34_check_tree_v01(root, namespace):
+    failures = []
+    phase = namespace["_validate_g34_history_admission_v01"](root, failures)
+    return phase, tuple(failures)
+
+
+def test_g34_real_unstaged_staged_and_partial_index_v01(g34_admission_tree):
+    root, namespace = g34_admission_tree
+    assert _g34_check_tree_v01(root, namespace) == ("G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED", ())
+    paths = tuple(namespace["G34_PATH_ACTIONS_V01"])
+    try:
+        subprocess.run(("git", "add", "--", *paths), cwd=root, check=True)
+        assert _g34_check_tree_v01(root, namespace) == ("G34_HISTORY_CONSUMPTION_PROPOSAL_STAGED", ())
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+        subprocess.run(("git", "add", "--", paths[0]), cwd=root, check=True)
+        assert "g34.candidate.exact_ledger" in _g34_check_tree_v01(root, namespace)[1]
+    finally:
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+    assert _g34_check_tree_v01(root, namespace) == ("G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED", ())
+
+
+@pytest.mark.parametrize(
+    "change",
+    (
+        "extra",
+        "protected",
+        "mode",
+        "source_ledger",
+        "metadata",
+        "symlink",
+        "assume_unchanged",
+        "stale_origin",
+        "stale_head",
+    ),
+)
+def test_g34_real_hostile_neighbors_v01(g34_admission_tree, change):
+    root, namespace = g34_admission_tree
+    target = root / "hedgehog/outcome_calibration_v01.py"
+    body, mode = target.read_bytes(), target.stat().st_mode & 0o777
+    protected = root / "hedgehog/kernel/root_decision_v01.py"
+    old_protected = protected.read_bytes()
+    metadata = root / "release/current_status_overlay_v01.json"
+    old_metadata = metadata.read_bytes()
+    guard = root / "tools/check_active_architecture_authority_v01.py"
+    old_guard = guard.read_bytes()
+    extra = root / "g34_unapproved_file.txt"
+    reasons = {
+        "extra": "g34.candidate.exact_ledger",
+        "protected": "g34.frozen_source:hedgehog/kernel/root_decision_v01.py",
+        "mode": "g34.mode:hedgehog/outcome_calibration_v01.py",
+        "source_ledger": "g34.source_identity:tools/check_active_architecture_authority_v01.py",
+        "metadata": "g34.admission_metadata:release/current_status_overlay_v01.json",
+        "symlink": "g34.file_type:hedgehog/outcome_calibration_v01.py",
+        "assume_unchanged": "g34.index.flags",
+        "stale_origin": "g34.candidate.basis_origin",
+        "stale_head": "g34.exact_immediate_base_child",
+    }
+    try:
+        if change == "extra":
+            extra.write_text("Unapproved G34 source\n")
+        elif change == "protected":
+            protected.write_bytes(old_protected + b"\n# Not permitted\n")
+        elif change == "mode":
+            target.chmod(0o755)
+        elif change == "source_ledger":
+            digest = namespace["G34_SOURCE_IDENTITIES_V01"][
+                "hedgehog/outcome_calibration_v01.py"
+            ].encode()
+            guard.write_bytes(old_guard.replace(digest, b"0" * 64, 1))
+        elif change == "metadata":
+            value = json.loads(old_metadata)
+            value["gate3_g34_history_admission_v01"]["authority"] = "ROOT"
+            metadata.write_text(json.dumps(value))
+        elif change == "symlink":
+            target.unlink()
+            target.symlink_to(protected)
+        elif change == "assume_unchanged":
+            subprocess.run(
+                ("git", "update-index", "--assume-unchanged", "AGENTS.md"),
+                cwd=root,
+                check=True,
+            )
+        elif change == "stale_origin":
+            subprocess.run(
+                ("git", "update-ref", "refs/remotes/origin/main", namespace["G34_PARENT_V01"]),
+                cwd=root,
+                check=True,
+            )
+        elif change == "stale_head":
+            subprocess.run(
+                ("git", "update-ref", "refs/heads/main", namespace["G34_PARENT_V01"]),
+                cwd=root,
+                check=True,
+            )
+        assert reasons[change] in _g34_check_tree_v01(root, namespace)[1]
+    finally:
+        if extra.exists():
+            extra.unlink()
+        if target.is_symlink():
+            target.unlink()
+        target.write_bytes(body)
+        target.chmod(mode)
+        protected.write_bytes(old_protected)
+        metadata.write_bytes(old_metadata)
+        guard.write_bytes(old_guard)
+        subprocess.run(
+            ("git", "update-index", "--no-assume-unchanged", "AGENTS.md"),
+            cwd=root,
+            check=True,
+        )
+        subprocess.run(
+            ("git", "update-ref", "refs/remotes/origin/main", namespace["G34_BASE_V01"]),
+            cwd=root,
+            check=True,
+        )
+        subprocess.run(
+            ("git", "update-ref", "refs/heads/main", namespace["G34_BASE_V01"]),
+            cwd=root,
+            check=True,
+        )
+    assert _g34_check_tree_v01(root, namespace) == ("G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED", ())
+
+
+def test_g34r2_common_work_exception_is_exact(g34_admission_tree):
+    root,namespace=g34_admission_tree
+    path=root/'hedgehog/kernel/work_composition_v01.py'
+    original=path.read_bytes()
+    test_path=root/'tests/test_work_composition_v01.py'
+    test_original=test_path.read_bytes()
+    assert len(namespace['G34_PATH_ACTIONS_V01'])==32
+    assert _g34_check_tree_v01(root,namespace)==('G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED',())
+    try:
+        path.write_bytes(original+b'\n# Unauthorized common change\n')
+        assert 'g34.work_exact_causal_argument' in _g34_check_tree_v01(root,namespace)[1]
+        path.write_bytes(original.replace(b'consumer_component=topology.source_component,',b"consumer_component='work_composition',",1))
+        assert 'g34.work_exact_causal_argument' in _g34_check_tree_v01(root,namespace)[1]
+        path.write_bytes(original)
+        test_path.write_bytes(test_original.replace(b'def test_work_exact_candidate_types_and_budget_and_identity():',
+            b'def test_work_exact_candidate_types_and_budget_and_identity():\n    return'))
+        assert 'g34.work_existing_tests_changed' in _g34_check_tree_v01(root,namespace)[1]
+    finally:
+        path.write_bytes(original);test_path.write_bytes(test_original)
+    assert _g34_check_tree_v01(root,namespace)==('G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED',())
+
+
+def test_g34_development_is_not_admitted_and_future_child_is_structural_only_v01():
+    namespace = runpy.run_path(str(GUARD_PATH))
+    classify = namespace["_classify_g34_ledger_v01"]
+    actions = namespace["G34_PATH_ACTIONS_V01"]
+    parameters = {
+        "head": namespace["G34_BASE_V01"],
+        "parents": (namespace["G34_PARENT_V01"],),
+        "origin": namespace["G34_BASE_V01"],
+        "branch": "main",
+        "delta": {},
+    }
+    phase, errors = classify(
+        **parameters, status={"hedgehog/outcome_calibration_v01.py": "??"}
+    )
+    assert phase == "G34_DEVELOPMENT_UNADMITTED"
+    assert errors == ("g34.development_unadmitted",)
+    child = {
+        "head": "synthetic-child-not-a-git-object",
+        "parents": (namespace["G34_BASE_V01"],),
+        "origin": namespace["G34_BASE_V01"],
+        "branch": "main",
+        "status": {},
+        "delta": actions,
+    }
+    assert classify(**child) == ("G34_HISTORY_CONSUMPTION_COMMITTED", ())
+    assert classify(
+        **{**child, "parents": (namespace["G34_BASE_V01"], namespace["G34_PARENT_V01"])}
+    )[1]
+
+
+def test_g34_self_projection_and_exact_g33r_predecessor_v01(g33_admission_tree):
+    namespace = runpy.run_path(str(GUARD_PATH))
+    digest = namespace["_g34_source_digest_v01"]
+    path = "tools/check_active_architecture_authority_v01.py"
+    sample = (
+        'G34_SOURCE_IDENTITIES_V01 = {"'
+        + path
+        + '": "'
+        + "a" * 64
+        + '", "other": "'
+        + "b" * 64
+        + '"}\nX=1\n'
+    ).encode()
+    assert digest(path, sample) == digest(path, sample.replace(b"a" * 64, b"c" * 64))
+    assert digest(path, sample) != digest(path, sample.replace(b"b" * 64, b"d" * 64))
+    for invalid in (
+        sample + sample,
+        sample.replace(b" = {", b" = ALIAS = {"),
+        sample.replace(b"a" * 64, b"a" * 63),
+        sample + b"G34_SOURCE_IDENTITIES_V01 += {}\n",
+    ):
+        with pytest.raises(ValueError):
+            digest(path, invalid)
+    old = ast.parse((g33_admission_tree[0] / path).read_bytes())
+    current = ast.parse(GUARD_PATH.read_bytes())
+    old_defs = {
+        node.name: node
+        for node in old.body
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef))
+    }
+    new_defs = {
+        node.name: node
+        for node in current.body
+        if isinstance(node, (ast.FunctionDef, ast.ClassDef))
+    }
+    for name, node in old_defs.items():
+        if name in ("collect_failures", "main"):
+            continue
+        assert ast.dump(node) == ast.dump(new_defs[name]), name
+    old_constants = {
+        ast.dump(node.targets[0]): ast.dump(node)
+        for node in old.body
+        if isinstance(node, ast.Assign)
+    }
+    new_constants = {
+        ast.dump(node.targets[0]): ast.dump(node)
+        for node in current.body
+        if isinstance(node, ast.Assign)
+    }
+    assert all(new_constants.get(key) == value for key, value in old_constants.items())
+
+
 
 
 def _sentinel_historical_namespace_v01():
@@ -513,6 +1813,101 @@ def _expected_g2f_landing_stdout_v01(root: Path) -> str:
     prepush = False
     closure_ledger = {p: "A" if p in G2F_CLOSURE_ADDS else "M" for p in G2F_CLOSURE_PATHS}
     overlay = json.loads((root / "release/current_status_overlay_v01.json").read_text())
+    if "gate3_g35_harness_admission_v01" in overlay:
+        actions = overlay["gate3_g35_harness_admission_v01"]["path_actions"]
+        assert len(actions) == 44 and sum(op == "A" for op in actions.values()) == 33
+        base = "d199199a578c078c913a2381f595549175bd9235"
+        if head == base:
+            assert parent == "2f328be634247be11bc18a3b22a919f393d6ed1d" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED" if status == unstaged else "G35_FIVE_DOMAIN_HARNESS_PROPOSAL_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "G35_FIVE_DOMAIN_HARNESS_COMMITTED"
+        return ("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "G35_PHASE=" + phase + "\nAUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION\n")
+    if "gate3_g34_history_admission_v01" in overlay:
+        actions = overlay["gate3_g34_history_admission_v01"]["path_actions"]
+        assert len(actions) == 30 and sum(op == "A" for op in actions.values()) == 21
+        base = "d199199a578c078c913a2381f595549175bd9235"
+        if head == base:
+            assert parent == "2f328be634247be11bc18a3b22a919f393d6ed1d" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "G34_HISTORY_CONSUMPTION_PROPOSAL_UNSTAGED" if status == unstaged else "G34_HISTORY_CONSUMPTION_PROPOSAL_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "G34_HISTORY_CONSUMPTION_COMMITTED"
+        return ("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "G34_PHASE=" + phase + "\nAUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION\n")
+    if "gate3_g33_calibration_admission_v01" in overlay:
+        actions = overlay["gate3_g33_calibration_admission_v01"]["path_actions"]
+        assert len(actions) == 24 and sum(op == "A" for op in actions.values()) == 15
+        base = "d199199a578c078c913a2381f595549175bd9235"
+        if head == base:
+            assert parent == "2f328be634247be11bc18a3b22a919f393d6ed1d" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "G33_GT_TTL_PROPOSAL_UNSTAGED" if status == unstaged else "G33_GT_TTL_PROPOSAL_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "G33_GT_TTL_COMMITTED"
+        return ("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "G33_PHASE=" + phase + "\nAUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION\n")
+    if "gate3_g32_observation_admission_v01" in overlay:
+        actions = overlay["gate3_g32_observation_admission_v01"]["path_actions"]
+        assert len(actions) == 20 and sum(op == "A" for op in actions.values()) == 11
+        base = "d199199a578c078c913a2381f595549175bd9235"
+        if head == base:
+            assert parent == "2f328be634247be11bc18a3b22a919f393d6ed1d" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "G32_OBSERVATION_PROPOSAL_UNSTAGED" if status == unstaged else "G32_OBSERVATION_PROPOSAL_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "G32_OBSERVATION_COMMITTED"
+        return ("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "G32_PHASE=" + phase + "\nAUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION\n")
+    if "gate3_g31_foundation_admission_v01" in overlay:
+        actions = overlay["gate3_g31_foundation_admission_v01"]["path_actions"]
+        assert len(actions) == 14 and sum(op == "A" for op in actions.values()) == 6
+        base = "d199199a578c078c913a2381f595549175bd9235"
+        if head == base:
+            assert parent == "2f328be634247be11bc18a3b22a919f393d6ed1d" and origin == base
+            unstaged = {p: "??" if op == "A" else " M" for p, op in actions.items()}
+            staged = {p: op + " " for p, op in actions.items()}
+            assert status in (unstaged, staged)
+            phase = "G31_FOUNDATION_PROPOSAL_UNSTAGED" if status == unstaged else "G31_FOUNDATION_PROPOSAL_STAGED"
+        else:
+            assert parent == base and not status and ledger == actions and origin in (base, head)
+            phase = "G31_FOUNDATION_COMMITTED"
+        return ("G2F_PHASE=G2F_CLOSED_PASS_COMMITTED\nUNIVERSALITY_PHASE=U4_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "TESTFLIX_PHASE=TESTFLIX_IMPLEMENTATION_ADMITTED_COMMITTED\nEPHEMERAL_WORKSPACE_PHASE=EWS_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "EPHEMERAL_WORKSPACE_PRESENTATION_PHASE=EWS_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PHASE=SENTINEL_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "LANDSLIDE_SENTINEL_PRESENTATION_PHASE=SENTINEL_PRESENTATION_IMPLEMENTATION_ADMITTED_COMMITTED\n"
+                "G31_PHASE=" + phase + "\nAUTHORITY=SOURCE_ADMISSION_ONLY_NO_ROOT_OR_EFFECT_PERMISSION\n")
     if "landslide_sentinel_presentation_admission_v01" in overlay:
         actions = overlay["landslide_sentinel_presentation_admission_v01"]["path_actions"]
         assert len(actions) == 44 and sum(op == "A" for op in actions.values()) == 34
@@ -8107,6 +9502,190 @@ def test_ews_presentation_exact_projection_historical_bodies_and_registration_v0
         assert block == previous and len(block["rows"]) == 9
     finally:
         sys.modules.pop(spec.name, None)
+
+
+def _g35_check_tree_v01(root, namespace):
+    failures = []
+    phase = namespace["_validate_g35_harness_admission_v01"](root, failures)
+    return phase, tuple(failures)
+
+def test_g35_real_unstaged_staged_and_partial_index_v01(g35_admission_tree):
+    root, namespace = g35_admission_tree
+    assert _g35_check_tree_v01(root, namespace) == ("G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED", ())
+    paths = tuple(namespace["G35_PATH_ACTIONS_V01"])
+    try:
+        subprocess.run(("git", "add", "--", *paths), cwd=root, check=True)
+        assert _g35_check_tree_v01(root, namespace) == ("G35_FIVE_DOMAIN_HARNESS_PROPOSAL_STAGED", ())
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+        subprocess.run(("git", "add", "--", paths[0]), cwd=root, check=True)
+        assert "g35.candidate.exact_ledger" in _g35_check_tree_v01(root, namespace)[1]
+    finally:
+        subprocess.run(("git", "read-tree", "HEAD"), cwd=root, check=True)
+    assert _g35_check_tree_v01(root, namespace) == ("G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED", ())
+
+@pytest.mark.parametrize(
+    "change",
+    (
+        "extra",
+        "protected",
+        "mode",
+        "source_ledger",
+        "metadata",
+        "symlink",
+        "assume_unchanged",
+        "stale_origin",
+        "stale_head",
+    ),
+)
+def test_g35_real_hostile_neighbors_v01(g35_admission_tree, change):
+    root, namespace = g35_admission_tree
+    target = root / "hedgehog/outcome_calibration_v01.py"
+    body, mode = target.read_bytes(), target.stat().st_mode & 0o777
+    protected = root / "hedgehog/kernel/root_decision_v01.py"
+    old_protected = protected.read_bytes()
+    metadata = root / "release/current_status_overlay_v01.json"
+    old_metadata = metadata.read_bytes()
+    guard = root / "tools/check_active_architecture_authority_v01.py"
+    old_guard = guard.read_bytes()
+    extra = root / "g35_unapproved_file.txt"
+    reasons = {
+        "extra": "g35.candidate.exact_ledger",
+        "protected": "g35.frozen_source:hedgehog/kernel/root_decision_v01.py",
+        "mode": "g35.mode:hedgehog/outcome_calibration_v01.py",
+        "source_ledger": "g35.source_identity:tools/check_active_architecture_authority_v01.py",
+        "metadata": "g35.admission_metadata:release/current_status_overlay_v01.json",
+        "symlink": "g35.file_type:hedgehog/outcome_calibration_v01.py",
+        "assume_unchanged": "g35.index.flags",
+        "stale_origin": "g35.candidate.basis_origin",
+        "stale_head": "g35.exact_immediate_base_child",
+    }
+    try:
+        if change == "extra":
+            extra.write_text("Unapproved G35 source\n")
+        elif change == "protected":
+            protected.write_bytes(old_protected + b"\n# Not permitted\n")
+        elif change == "mode":
+            target.chmod(0o755)
+        elif change == "source_ledger":
+            digest = namespace["G35_SOURCE_IDENTITIES_V01"][
+                "hedgehog/outcome_calibration_v01.py"
+            ].encode()
+            guard.write_bytes(old_guard.replace(digest, b"0" * 64, 1))
+        elif change == "metadata":
+            value = json.loads(old_metadata)
+            value["gate3_g35_harness_admission_v01"]["authority"] = "ROOT"
+            metadata.write_text(json.dumps(value))
+        elif change == "symlink":
+            target.unlink()
+            target.symlink_to(protected)
+        elif change == "assume_unchanged":
+            subprocess.run(
+                ("git", "update-index", "--assume-unchanged", "AGENTS.md"),
+                cwd=root,
+                check=True,
+            )
+        elif change == "stale_origin":
+            subprocess.run(
+                ("git", "update-ref", "refs/remotes/origin/main", namespace["G35_PARENT_V01"]),
+                cwd=root,
+                check=True,
+            )
+        elif change == "stale_head":
+            subprocess.run(
+                ("git", "update-ref", "refs/heads/main", namespace["G35_PARENT_V01"]),
+                cwd=root,
+                check=True,
+            )
+        assert reasons[change] in _g35_check_tree_v01(root, namespace)[1]
+    finally:
+        if extra.exists():
+            extra.unlink()
+        if target.is_symlink():
+            target.unlink()
+        target.write_bytes(body)
+        target.chmod(mode)
+        protected.write_bytes(old_protected)
+        metadata.write_bytes(old_metadata)
+        guard.write_bytes(old_guard)
+        subprocess.run(
+            ("git", "update-index", "--no-assume-unchanged", "AGENTS.md"),
+            cwd=root,
+            check=True,
+        )
+        subprocess.run(
+            ("git", "update-ref", "refs/remotes/origin/main", namespace["G35_BASE_V01"]),
+            cwd=root,
+            check=True,
+        )
+        subprocess.run(
+            ("git", "update-ref", "refs/heads/main", namespace["G35_BASE_V01"]),
+            cwd=root,
+            check=True,
+        )
+    assert _g35_check_tree_v01(root, namespace) == ("G35_FIVE_DOMAIN_HARNESS_PROPOSAL_UNSTAGED", ())
+
+@pytest.mark.parametrize('path', ('hedgehog/kernel/work_composition_v01.py','tests/test_work_composition_v01.py','hedgehog/domains/testflix/outcome_feedback_adapter_v01.py','fixtures/gate3_domain_cases_v01.json'))
+def test_g35_common_work_and_profile_mutations(g35_admission_tree,path):
+    root,namespace=g35_admission_tree;target=root/path;old=target.read_bytes()
+    try:
+        target.write_bytes(old+b'\n')
+        assert 'g35.source_identity:'+path in _g35_check_tree_v01(root,namespace)[1]
+    finally:target.write_bytes(old)
+    assert not _g35_check_tree_v01(root,namespace)[1]
+
+
+def test_g35_historical_predicates_and_work_frozen(g34_admission_tree):
+    root,_=g34_admission_tree
+    old=ast.parse((root/'tools/check_active_architecture_authority_v01.py').read_bytes())
+    new=ast.parse(GUARD_PATH.read_bytes())
+    before={n.name:ast.dump(n) for n in old.body if isinstance(n,ast.FunctionDef) and n.name.startswith(('_g34_','_classify_g34_','_validate_g34_'))}
+    after={n.name:ast.dump(n) for n in new.body if isinstance(n,ast.FunctionDef)}
+    assert before and all(after[k]==v for k,v in before.items())
+    for path in ('hedgehog/kernel/work_composition_v01.py','tests/test_work_composition_v01.py','fixtures/gate3_g31_predecessor_v01.patch.gz','fixtures/gate3_g32_predecessor_v01.patch.gz','fixtures/gate3_g33r_predecessor_v01.patch.gz'):
+        assert (root/path).read_bytes()==(REPOSITORY_ROOT/path).read_bytes()
+
+
+def test_g35_cli_phase_independently_derived(g35_admission_tree):
+    root,_=g35_admission_tree
+    actual=_run_guard(root,guard_path=root/'tools/check_active_architecture_authority_v01.py')
+    assert actual.returncode==0,actual.stdout+actual.stderr
+    prefix=('ACTIVE_ARCHITECTURE_AUTHORITY_V01 PASS\nCURRENT_PHASE=POST_E6_SUCCESSOR\n'
+        'LIFECYCLE_PHASE=G2E_CLOSED_PASS\nLIFECYCLE_MODE=G2E_CLOSED_PASS_COMMITTED\n')
+    assert actual.stdout==prefix+_expected_g2f_landing_stdout_v01(root)
+
+
+def test_g35r_portable_fixtures_from_advanced_head(tmp_path):
+    source,namespace=_g35_reconstructed_root_v01(tmp_path/'synthetic_source',REPOSITORY_ROOT)
+    def git(*args,**kwargs):return subprocess.check_output(('git',*args),cwd=source,**kwargs).decode().strip()
+    base=namespace['G35_BASE_V01'];paths=tuple(namespace['G35_PATH_ACTIONS_V01'])
+    git('add','--',*paths);tree=git('write-tree')
+    env=dict(os.environ,GIT_AUTHOR_NAME='Synthetic Fixture',GIT_AUTHOR_EMAIL='fixture@invalid',
+        GIT_COMMITTER_NAME='Synthetic Fixture',GIT_COMMITTER_EMAIL='fixture@invalid')
+    descendant=git('commit-tree',tree,'-p',base,'-m','Synthetic G35 portability fixture; not source admission',env=env)
+    git('update-ref','refs/heads/main',descendant)
+    assert git('rev-parse','HEAD')!=base and not git('status','--porcelain=v1','-uall')
+    historical=_g34_reconstructed_root_v01(tmp_path/'historical_from_descendant',source)
+    current=_g35_reconstructed_root_v01(tmp_path/'current_from_descendant',source)
+    for root,_ in (historical,current):
+        assert subprocess.check_output(('git','rev-parse','HEAD'),cwd=root).decode().strip()==base
+        assert subprocess.check_output(('git','rev-parse','origin/main'),cwd=root).decode().strip()==base
+    for path in paths:
+        actual=current[0]/path;expected=REPOSITORY_ROOT/path
+        assert actual.read_bytes()==expected.read_bytes() and actual.stat().st_mode&0o777==expected.stat().st_mode&0o777
+    test_g34_real_unstaged_staged_and_partial_index_v01(historical)
+    test_g35_real_unstaged_staged_and_partial_index_v01(current)
+    for pair,name in ((historical,'test_g34_binder_has_final_precedence_with_historical_markers_v01'),
+                      (current,'test_g35_binder_has_final_precedence_v01')):
+        binder=runpy.run_path(str(pair[0]/'tests/test_repository_release_spine_v01.py'))
+        binder[name]()
+    assert git('rev-parse','HEAD')==descendant
+    proof=dict(synthetic_descendant=descendant,synthetic_parent=base,synthetic_tree=tree,
+        historical_fixture=str(historical[0]),current_fixture=str(current[0]),reconstructed_base=base,
+        unstaged_staged_partial_and_binders='PASS',owner_and_candidate_commit=False)
+    if 'G33R_EVIDENCE' in os.environ:
+        location=Path(os.environ['G33R_EVIDENCE'])/'commands'/os.environ['G33R_COMMAND']/'portable_fixture.json'
+    else:location=tmp_path/'portable_fixture.json'
+    location.write_text(json.dumps(proof,indent=2)+'\n')
 
 
 

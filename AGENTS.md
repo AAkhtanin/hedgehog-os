@@ -1,5 +1,89 @@
 # Hedgehog OS — Current Assistant Operations
 
+## Gate 3 G3-7: Frozen Release Candidate
+
+The exact `gate3_g37_frozen_release_admission_v01` proposal freezes the
+reviewed 59-path Gate3 successor on accepted main
+`d199199a578c078c913a2381f595549175bd9235`. Fresh source-bound Living and
+standalone Conformance successor reports each own one legacy E5 and one G3
+collection; their supplied consumers do not recollect either result. The
+candidate also preserves two independent pure replays and the reviewed G36R
+captured provenance evidence. Source admission is evidence only: it grants no
+Root permission, effect ownership, Gate3 closure, production certification or
+owner landing. Git derives any later commit identity. G3-8 remains a separately
+reviewed owner operation; no commit or push is authorized by this proposal.
+See `docs/gate3_outcome_feedback_checkpoint_v01.md` for the evidence classes,
+measured costs and pending owner-dependent rows.
+
+## G3-6 Supplier Learning Mechanism
+
+The G36 external successor adds one finite Supplier action-advice profile,
+actual native refusal/receipt sources, numerical Root-recorded local history,
+current Root descent and consumed pure review Work. Controlled and configured
+Gemini origins are separate; captures are evidence, never restored authority.
+The versioned Living/Conformance entrypoints consume the same checked G3 bundle.
+An independent top-level successor owns one fresh E5 and one fresh G3 collection;
+shared supplied consumers add neither. Historical profile geometry is unchanged.
+At the G36 checkpoint, direct mechanism proof was not a full top-level release
+PASS and G3-7 remained pending. The G37 section above supersedes only that
+historical status. G3-8 owner landing, full Gate3 closure and production
+certification are not claimed. The historical G36 guard route is
+gate3_g36_adversary_admission_v01, based on d199.
+No commit is self-recorded; source admission gives no Root/effect permission.
+See the G3 checkpoint for commands, limitations and the frozen-release plan.
+
+
+## Gate3 G35: Controlled Five-Domain Proposal
+
+The bounded G35 successor retains the reviewed G34R2 Work correction and adds
+five source profiles, one common OFE/report contract, independently supplied
+verification and pure safe-derived replay. Its exact 44-path proposal is based
+on `d199199a578c078c913a2381f595549175bd9235`; no owner landing or Gate3 closure
+is awarded. Historical G31-G34 records remain tied to their frozen predecessors.
+See the G35 section in `docs/gate3_outcome_feedback_checkpoint_v01.md`.
+G36 adversarial/live work, Living registration and Atlas remain pending.
+Source admission never creates current Root permission or a new effect owner.
+
+## Gate3 G3-3: Source-Bound GT-TTL Proposal
+
+The exact `gate3_g33_calibration_admission_v01` proposal succeeds accepted main
+`d199199a578c078c913a2381f595549175bd9235` with 24 cumulative paths. It preserves
+the reviewed G3-2 producer/history bodies and adds pure signed fixed-point rating,
+explicit-time decay and a 64-event deterministic reducer. Mathematical reference
+events remain separate from the one native Sentinel source-bound example.
+
+This source proposal is advisory evidence only. It grants no Root permission,
+effect ownership, durable accepted history or current-task reuse. G3-4 EMA,
+independent persistent-history resolution, CAS/corrections, current DRS descent,
+CP-RANK and CP-TIME remain not started. Gate 3 remains open; owner landing,
+commit and push are not authorized. This section takes current Gate3 navigation
+precedence while all prior authority laws and historical admission routes remain.
+
+## Gate3 G3-2: Native Observation Proposal
+
+The exact `gate3_g32_observation_admission_v01` proposal succeeds d199199a578c078c913a2381f595549175bd9235
+with twenty cumulative paths. It extends the reviewed, uncommitted G31 proposal
+with one actual controlled Sentinel Work/Root observation and fresh Root-reviewed
+local DRS genesis. This section supersedes only G31 not-started status for G32;
+all earlier laws, pins and recorded evidence remain historical and unchanged.
+Source admission is not Root permission or Gate closure. G3-3, owner landing,
+commit and push are not authorized. Atlas and four other runtime adapters remain
+pending. See the existing Gate3 contract/checkpoint for bounded provenance limits.
+
+## Gate 3: Pure Foundation Proposal
+
+The exact `gate3_g31_foundation_admission_v01` is a bounded 14-path pure
+foundation proposal on accepted `d199199a578c078c913a2381f595549175bd9235`.
+Its reference fixture is explicitly not executed domain evidence. Complete
+unstaged/staged proposals are source-checkable; development subsets remain
+UNADMITTED and partial staging fails. A future sole-parent child must be derived
+from actual Git under separate owner authorization. G3-1 grants no Root or effect
+permission, live-source truth, new Living row, calibration/history execution or
+Gate-3 closure. The contract/checkpoint define the exact pending boundaries.
+G3-2, owner landing, commit and push are not authorized by this proposal.
+This current navigation addition leaves every predecessor runtime and authority
+law unchanged; older source-admission blocks retain their historical bases.
+
 ## Landslide Sentinel: Presentation Publication
 
 The exact `landslide_sentinel_presentation_admission_v01` succeeds accepted
@@ -319,3 +403,12 @@ python3 tools/check_active_architecture_authority_v01.py
 The full owner-supplied Gate roadmap is not tracked in this worktree. The
 accepted G2-E preflight is the repository-local Gate sequence and continuation
 source; absent companion text must not be reconstructed.
+# G34: Bounded Durable History Proposal
+
+The exact external G34 proposal extends the repaired G33R source proposal on
+d199199a578c078c913a2381f595549175bd9235 with 32 cumulative paths. Its separate
+source guard preserves all earlier routes and admits only the complete exact
+unstaged/staged proposal or structurally verified immediate child. It grants no
+Root permission or Gate closure. See docs/gate3_outcome_feedback_checkpoint_v01.md
+for current navigation. G35, Atlas, owner landing, commit and push are not authorized.
+Prior sections retain their historical source and authority meaning.

@@ -8,6 +8,34 @@ effect operation. It is not production certification.
 
 from __future__ import annotations
 
+
+def consume_gate3_mechanism_v01(bundle):
+    """The supplied G3 path is independent of expensive E5 collection."""
+    from hedgehog.kernel.conformance_v01 import build_gate3_mechanism_receipt_v01
+    return build_gate3_mechanism_receipt_v01(bundle)
+
+
+def collect_kernel_conformance_g36_v01(directory, *, implementation_commit=None):
+    """G3-7 successor owner: one legacy E5 and one fresh G3 collection."""
+    from hedgehog.gate3_mechanism_v01 import collect_mechanism_v01
+    legacy=collect_standalone_kernel_conformance_v01(implementation_commit=implementation_commit)
+    bundle=collect_mechanism_v01(directory)
+    result=dict(profile='KERNEL_CONFORMANCE_G36_SUCCESSOR_V01',legacy=legacy,
+        gate3=consume_gate3_mechanism_v01(bundle),gate3_bundle=bundle,g3_collector_calls=1,e5_collector_calls=1)
+    if validate_kernel_conformance_g36_v01(result):raise ValueError('g36_conformance_successor_invalid')
+    return result
+
+
+def validate_kernel_conformance_g36_v01(value):
+    """The existing full-report law remains mandatory alongside the G3 proof."""
+    try:
+        if set(value)!={'profile','legacy','gate3','gate3_bundle','g3_collector_calls','e5_collector_calls'} or value['profile']!='KERNEL_CONFORMANCE_G36_SUCCESSOR_V01':return ('g36_conformance_shape',)
+        errors=conformance.validate_kernel_conformance_report_v01(value['legacy'])
+        if errors:return errors
+        if value['gate3']!=consume_gate3_mechanism_v01(value['gate3_bundle']) or (value['g3_collector_calls'],value['e5_collector_calls'])!=(1,1):return ('g36_conformance_binding',)
+        return ()
+    except (TypeError,KeyError,ValueError):return ('g36_conformance_supplied_invalid',)
+
 from collections.abc import Mapping
 from dataclasses import asdict as _asdict
 from dataclasses import fields, replace

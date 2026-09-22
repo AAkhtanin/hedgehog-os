@@ -1,5 +1,17 @@
 # Current Limitations
 
+## Gate 3 G3-7 Frozen Candidate
+
+The 59-path G37 proposal has fresh source-bound Living and standalone
+Conformance successor evidence, but remains uncommitted and pending independent
+review. Gate3 is not closed. G37 does not establish physical truth, a digital
+signature, uninterrupted live-provider execution, production security,
+universal domain behavior or native replay for the unsupported historical
+schema. Captured Gemini material remains untrusted evidence; no provider calls
+or real effects occur in G37. Pure replay cannot restore Host, current Root,
+current Work or effect authority. Owner landing, the actual commit, normal push
+and remote readback are pending a separate G3-8 execution instruction.
+
 ## Testflix V11 Boundaries
 
 Owner landing and independent final acceptance remain pending. The original
@@ -136,3 +148,20 @@ source repair, Gate3/4 decision, new demo or future implementation is authorized
 
 These limitations are current engineering boundaries, not a public release
 statement or a substitute for an independent audit.
+
+## G3-6 Supplier Learning Mechanism
+
+The G36 external successor adds one finite Supplier action-advice profile,
+actual native refusal/receipt sources, numerical Root-recorded local history,
+current Root descent and consumed pure review Work. Controlled and configured
+Gemini origins are separate; captures are evidence, never restored authority.
+The versioned Living/Conformance entrypoints consume the same checked G3 bundle.
+An independent top-level successor owns one fresh E5 and one fresh G3 collection;
+shared supplied consumers add neither. Historical profile geometry is unchanged.
+At the G36 checkpoint, direct mechanism proof was not a full top-level release
+PASS and G3-7 remained pending. The G37 section above supersedes only that
+historical status. G3-8 owner landing, full Gate3 closure and production
+certification are not claimed. The historical G36 guard route is
+gate3_g36_adversary_admission_v01, based on d199.
+No commit is self-recorded; source admission gives no Root/effect permission.
+See the G3 checkpoint for commands, limitations and the frozen-release plan.

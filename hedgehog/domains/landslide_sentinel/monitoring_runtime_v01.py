@@ -413,6 +413,7 @@ class ControlledEpisode(Sentinel):
         self.incident=Incident();self.routes=[];self.work_mode='deterministic';self.role_results=[]
         self.outbox=Outbox(self.directory/'outbox');self.receiver=Receiver(self.directory/'receiver')
         self.pending_worker=None;self.pending_return=[];self.effects=[];self.report=None
+        self.reviewed_role_results={}
         save(self.directory/'signal_readback.json',dict(signal=False,receipt_ref=None))
 
     def ingest(self,records,tick):
@@ -627,7 +628,12 @@ class ControlledEpisode(Sentinel):
             for v,check in zip(material['semantic_bindings'],output['checks'],strict=True)]
         self.role_results.append(record)
         save(self.directory/('composition_'+str(len(self.role_results))+'.json'),record)
+        self.reviewed_role_results[artifact.artifact_id]=result_basis
         return record
+
+    def reviewed_role_result(self,artifact_id):
+        """Return retained native evidence; callers still validate currentness."""
+        return self.reviewed_role_results[artifact_id]
 
     def consume_roles(self,semantics_rows,*,fractal=False):
         basis,execution=self.plan_roles(semantics_rows,fractal=fractal)

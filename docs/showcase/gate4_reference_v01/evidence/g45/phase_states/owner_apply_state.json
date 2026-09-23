@@ -1,0 +1,41 @@
+{
+  "context": {
+    "accepted_basis": {
+      "commit": "71e166ccb88b024fd3ca3a25e17da110c6db1a3f",
+      "parent": "d199199a578c078c913a2381f595549175bd9235",
+      "tree": "71e0438a4ef8532a3047a6e87061240d5b958a31"
+    },
+    "base": {
+      "commit": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+      "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+    },
+    "finalized": null,
+    "installation": {
+      "path": "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/bridge.json",
+      "sha256": "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea",
+      "tip": null
+    },
+    "kind": "POLICY_INSTALLATION",
+    "manifest": {
+      "path": "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/manifest.json",
+      "sha256": "01e05b5a81cbf70ca4b5eca6060cbd9f3e621f6dd54e5d5370174753fadafc03"
+    },
+    "policy_id": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+    "previous": {
+      "commit": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+      "manifest_sha256": "53b9c6dfae6ba85658f60c8c8fbde5b70c5be7a084b8aaff950e2a19111197a2",
+      "policy_id": "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+      "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+    },
+    "purpose": "INDEPENDENT_REVIEW",
+    "repository": "AAkhtanin/hedgehog-os",
+    "schema": "reviewed_repository_policy_installation_v01",
+    "state": "PREPARED"
+  },
+  "head": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+  "phase": "apply",
+  "root": "/Users/admin/Projects/hedgehog-os",
+  "scope": "AUTHORIZED_OWNER_LANDING",
+  "status": "M demo/run_kernel_conformance_v01.py\n M demo/run_living_gauntlet_v01.py\n M docs/repository_transition_admission_v01.md\n M release/completion_manifest.json\n M release/current_schema_surface_v01.json\n M release/integration_seam_index.json\n M tests/test_repository_release_spine_v01.py\n M tools/reviewed_repository_transition_v01.py\n?? demo/run_gate4_reference_v01.py\n?? docs/gate4_reference_checkpoint_v01.md\n?? docs/gate4_reference_contract_v01.md\n?? docs/gate4_reference_evidence_checkpoint_v01.md\n?? docs/gate4_reference_math_checkpoint_v01.md\n?? docs/gate4_reference_native_checkpoint_v01.md\n?? docs/gate4_reference_release_checkpoint_v01.md\n?? fixtures/gate4_reference_math_v01.json\n?? fixtures/gate4_reference_native_v01.json\n?? fixtures/gate4_reference_v01.json\n?? hedgehog/domains/airline/gate4_reference_adapter_v01.py\n?? hedgehog/domains/airline/gate4_reference_history_v01.py\n?? hedgehog/gate4_pressure_budget_v01.py\n?? hedgehog/gate4_reference_contracts_v01.py\n?? hedgehog/gate4_reference_evidence_v01.py\n?? hedgehog/gate4_reference_release_v01.py\n?? hedgehog/gate4_reference_runtime_v01.py\n?? hedgehog/gate4_strategy_reference_v01.py\n?? schemas/gate4_reference_v01.schema.json\n?? tests/test_gate4_reference_evidence_v01.py\n?? tests/test_gate4_reference_history_v01.py\n?? tests/test_gate4_reference_math_v01.py\n?? tests/test_gate4_reference_native_v01.py\n?? tests/test_gate4_reference_preflight_v01.py\n?? tests/test_gate4_reference_registration_v01.py\n?? tests/test_gate4_reference_supplied_v01.py",
+  "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+}

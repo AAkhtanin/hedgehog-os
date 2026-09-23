@@ -1,0 +1,15 @@
+{
+  "note": "Recorded result provenance unchanged; actual G45 landing is evidenced separately",
+  "result": {
+    "bytes": 1151634,
+    "mode": "0644",
+    "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9"
+  },
+  "status": "BYTE_IDENTICAL_TO_REVIEWED_G44",
+  "trust_record": {
+    "bytes": 151,
+    "mode": "0644",
+    "sha256": "7bedf475bb61cf16cfd1ccc9887cf6ba87662217b246f4d121a1f1e96b3ac481"
+  },
+  "trust_status_unchanged": "TEST_SUPPLIED_PIN"
+}

@@ -1,0 +1,30 @@
+.................................F                                       [100%]
+=================================== FAILURES ===================================
+__________________ test_review_repository_mode_boundaries_v01 __________________
+
+tmp_path = PosixPath('/private/var/folders/h7/t2v139m52y72cp8k3vd5m_yw0000gn/T/pytest-of-admin/pytest-666/test_review_repository_mode_bo0')
+
+    def test_review_repository_mode_boundaries_v01(tmp_path):
+        root = tmp_path.resolve()
+        file = root / "sample.txt"
+        file.write_bytes(b"Reviewed bytes\n")
+        file.chmod(0o644)
+        normal, normal_oid = REVIEW._current_file(root, file.name)
+        file.chmod(0o755)
+        executable, _ = REVIEW._current_file(root, file.name)
+        assert executable["mode"] == "100755"
+        assert executable != normal
+        file.chmod(0o644)
+        file.write_bytes(b"Changed bytes\n")
+        changed, changed_oid = REVIEW._current_file(root, file.name)
+        assert changed["sha256"] != normal["sha256"] and changed_oid != normal_oid
+        for mode in (0o666, 0o4644):
+            file.chmod(mode)
+>           with pytest.raises(REVIEW.Refusal, match="CURRENT_FILE:sample.txt:MODE"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'reviewed_transition_under_test.Refusal'>
+
+tests/test_reviewed_repository_transition_v01.py:89: Failed
+=========================== short test summary info ============================
+FAILED tests/test_reviewed_repository_transition_v01.py::test_review_repository_mode_boundaries_v01
+1 failed, 33 passed in 44.70s

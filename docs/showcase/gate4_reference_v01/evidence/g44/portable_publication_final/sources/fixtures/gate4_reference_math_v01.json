@@ -1,0 +1,970 @@
+{
+  "allocation_vectors": [
+    [
+      5,
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        4,
+        4,
+        4
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        2,
+        1
+      ],
+      0
+    ],
+    [
+      10,
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        8,
+        8
+      ],
+      [
+        4,
+        1,
+        1
+      ],
+      [
+        2,
+        4,
+        4
+      ],
+      0
+    ],
+    [
+      20,
+      [
+        1,
+        1
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        3,
+        4
+      ],
+      13
+    ],
+    [
+      3,
+      [
+        2,
+        2
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        1,
+        1
+      ],
+      null,
+      null
+    ],
+    [
+      4,
+      [
+        2,
+        2
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      0
+    ],
+    [
+      0,
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        0
+      ],
+      0
+    ]
+  ],
+  "budget": {
+    "context": {
+      "bsep_ref": "g4_reference:bsep:1",
+      "candidate_set_hash": "1110f63dea278670a0a5cf6fd2034f3a03cb2e0d06b1e3b05309587feafcccae",
+      "candidate_set_ref": "g4_reference:candidates:1",
+      "catalogue_revision": "g4_reference:catalogue:1",
+      "dependencies": [
+        "g4_reference:dependency:1"
+      ],
+      "dispositions": [
+        {
+          "id": "g4_reference:disposition:source",
+          "source_ref": "g4_reference:source:known",
+          "state": "KNOWN"
+        }
+      ],
+      "domain_id": "g4_reference:reference",
+      "evaluation_id": "g4_reference:evaluation:1",
+      "evaluation_time": 1800000000,
+      "intent_ref": "g4_reference:intent:1",
+      "numeric_profile_hash": "78616c5327c93321e4953a1b7065de0c3d71d997f3420dc0cfdc0638b0a9a858",
+      "numeric_profile_ref": "g4_reference:numeric:v01",
+      "origin": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+      "owner_root_id": "g4_reference:root:1",
+      "participants": [
+        "g4_reference:root:1",
+        "g4_reference:root:2",
+        "g4_reference:root:3"
+      ],
+      "policy_hash": "8f9b21e91bfa5430c6fabc981894248e4de33ffb200130438c4051c6a3ee7683",
+      "policy_ref": "g4_reference:policy:1",
+      "profile": "G4_REFERENCE_NUMERIC_V01",
+      "schema": "g4_reference:v01",
+      "scope": "G4_REFERENCE_SCOPE_V01",
+      "source_snapshot_hash": "40dd997544043009812e0e90d9e7b5ce957516badae39d85a0748d646a24f8e3",
+      "source_snapshot_ref": "g4_reference:snapshot:1",
+      "task_id": "g4_reference:task:1",
+      "time_envelope_ref": "g4_reference:time:1",
+      "transaction_id": "g4_reference:transaction:1",
+      "utility_profile_hash": "ec0515ae717d39e7e454bacc991dda855aa5671404f036d5f664048e09cf07b8",
+      "utility_profile_ref": "g4_reference:utility:v01"
+    },
+    "host_revision": 3,
+    "id": "g4_reference:budget:1",
+    "mandatory": [
+      {
+        "branch_ref": "g4_reference:branch:A",
+        "catalogue_revision": "g4_reference:catalogue:1",
+        "count": 2,
+        "id": "g4_reference:mandatory:checks",
+        "material_ref": "g4_reference:material:A"
+      }
+    ],
+    "original_policy_hash": "8f9b21e91bfa5430c6fabc981894248e4de33ffb200130438c4051c6a3ee7683",
+    "original_policy_ref": "g4_reference:policy:1",
+    "pressure_inputs": {
+      "branches": [
+        {
+          "available": "TRUE",
+          "catalogue_revision": "g4_reference:catalogue:1",
+          "cost": {
+            "interpretation": "Bounded reference cost",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:A:cost",
+            "value": 400000000
+          },
+          "eligible": "TRUE",
+          "hard": [
+            {
+              "evidence_ref": "g4_reference:evidence:A",
+              "id": "g4_reference:hard:1",
+              "state": "TRUE"
+            }
+          ],
+          "id": "g4_reference:branch:A",
+          "lineage": {
+            "interpretation": "Bounded reference lineage",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:A:lineage",
+            "value": 800000000
+          },
+          "lower": 2,
+          "material_ref": "g4_reference:material:A",
+          "prior": {
+            "disposition": "ABSENT",
+            "interpretation": "Independent reference prior only",
+            "normalization": "FIXED_Q_SIGNED",
+            "source_ref": "g4_reference:A:history",
+            "value": 0
+          },
+          "relevance": {
+            "interpretation": "Bounded reference relevance",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:A:relevance",
+            "value": 800000000
+          },
+          "uncertainty": {
+            "interpretation": "Bounded reference uncertainty",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:A:uncertainty",
+            "value": 500000000
+          },
+          "upper": 6
+        },
+        {
+          "available": "TRUE",
+          "catalogue_revision": "g4_reference:catalogue:1",
+          "cost": {
+            "interpretation": "Bounded reference cost",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:B:cost",
+            "value": 430000000
+          },
+          "eligible": "TRUE",
+          "hard": [
+            {
+              "evidence_ref": "g4_reference:evidence:B",
+              "id": "g4_reference:hard:1",
+              "state": "TRUE"
+            }
+          ],
+          "id": "g4_reference:branch:B",
+          "lineage": {
+            "interpretation": "Bounded reference lineage",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:B:lineage",
+            "value": 800000000
+          },
+          "lower": 2,
+          "material_ref": "g4_reference:material:B",
+          "prior": {
+            "disposition": "ABSENT",
+            "interpretation": "Independent reference prior only",
+            "normalization": "FIXED_Q_SIGNED",
+            "source_ref": "g4_reference:B:history",
+            "value": 0
+          },
+          "relevance": {
+            "interpretation": "Bounded reference relevance",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:B:relevance",
+            "value": 800000000
+          },
+          "uncertainty": {
+            "interpretation": "Bounded reference uncertainty",
+            "normalization": "FIXED_Q_0_1",
+            "source_ref": "g4_reference:B:uncertainty",
+            "value": 500000000
+          },
+          "upper": 6
+        }
+      ],
+      "context": {
+        "bsep_ref": "g4_reference:bsep:1",
+        "candidate_set_hash": "1110f63dea278670a0a5cf6fd2034f3a03cb2e0d06b1e3b05309587feafcccae",
+        "candidate_set_ref": "g4_reference:candidates:1",
+        "catalogue_revision": "g4_reference:catalogue:1",
+        "dependencies": [
+          "g4_reference:dependency:1"
+        ],
+        "dispositions": [
+          {
+            "id": "g4_reference:disposition:source",
+            "source_ref": "g4_reference:source:known",
+            "state": "KNOWN"
+          }
+        ],
+        "domain_id": "g4_reference:reference",
+        "evaluation_id": "g4_reference:evaluation:1",
+        "evaluation_time": 1800000000,
+        "intent_ref": "g4_reference:intent:1",
+        "numeric_profile_hash": "78616c5327c93321e4953a1b7065de0c3d71d997f3420dc0cfdc0638b0a9a858",
+        "numeric_profile_ref": "g4_reference:numeric:v01",
+        "origin": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+        "owner_root_id": "g4_reference:root:1",
+        "participants": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "policy_hash": "8f9b21e91bfa5430c6fabc981894248e4de33ffb200130438c4051c6a3ee7683",
+        "policy_ref": "g4_reference:policy:1",
+        "profile": "G4_REFERENCE_NUMERIC_V01",
+        "schema": "g4_reference:v01",
+        "scope": "G4_REFERENCE_SCOPE_V01",
+        "source_snapshot_hash": "40dd997544043009812e0e90d9e7b5ce957516badae39d85a0748d646a24f8e3",
+        "source_snapshot_ref": "g4_reference:snapshot:1",
+        "task_id": "g4_reference:task:1",
+        "time_envelope_ref": "g4_reference:time:1",
+        "transaction_id": "g4_reference:transaction:1",
+        "utility_profile_hash": "ec0515ae717d39e7e454bacc991dda855aa5671404f036d5f664048e09cf07b8",
+        "utility_profile_ref": "g4_reference:utility:v01"
+      }
+    },
+    "spending_snapshot_hash": "d12b1ceabaccacd05574022a9a4ae85b5c5de4a0b8e39cb03b196974ff1c98c5",
+    "spending_snapshot_ref": "g4_reference:spending:1",
+    "spent": 0,
+    "total": 9
+  },
+  "classification": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+  "pressure": {
+    "branches": [
+      {
+        "available": "TRUE",
+        "catalogue_revision": "g4_reference:catalogue:1",
+        "cost": {
+          "interpretation": "Bounded reference cost",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:A:cost",
+          "value": 400000000
+        },
+        "eligible": "TRUE",
+        "hard": [
+          {
+            "evidence_ref": "g4_reference:evidence:A",
+            "id": "g4_reference:hard:1",
+            "state": "TRUE"
+          }
+        ],
+        "id": "g4_reference:branch:A",
+        "lineage": {
+          "interpretation": "Bounded reference lineage",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:A:lineage",
+          "value": 800000000
+        },
+        "lower": 2,
+        "material_ref": "g4_reference:material:A",
+        "prior": {
+          "disposition": "ABSENT",
+          "interpretation": "Independent reference prior only",
+          "normalization": "FIXED_Q_SIGNED",
+          "source_ref": "g4_reference:A:history",
+          "value": 0
+        },
+        "relevance": {
+          "interpretation": "Bounded reference relevance",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:A:relevance",
+          "value": 800000000
+        },
+        "uncertainty": {
+          "interpretation": "Bounded reference uncertainty",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:A:uncertainty",
+          "value": 500000000
+        },
+        "upper": 6
+      },
+      {
+        "available": "TRUE",
+        "catalogue_revision": "g4_reference:catalogue:1",
+        "cost": {
+          "interpretation": "Bounded reference cost",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:B:cost",
+          "value": 430000000
+        },
+        "eligible": "TRUE",
+        "hard": [
+          {
+            "evidence_ref": "g4_reference:evidence:B",
+            "id": "g4_reference:hard:1",
+            "state": "TRUE"
+          }
+        ],
+        "id": "g4_reference:branch:B",
+        "lineage": {
+          "interpretation": "Bounded reference lineage",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:B:lineage",
+          "value": 800000000
+        },
+        "lower": 2,
+        "material_ref": "g4_reference:material:B",
+        "prior": {
+          "disposition": "ABSENT",
+          "interpretation": "Independent reference prior only",
+          "normalization": "FIXED_Q_SIGNED",
+          "source_ref": "g4_reference:B:history",
+          "value": 0
+        },
+        "relevance": {
+          "interpretation": "Bounded reference relevance",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:B:relevance",
+          "value": 800000000
+        },
+        "uncertainty": {
+          "interpretation": "Bounded reference uncertainty",
+          "normalization": "FIXED_Q_0_1",
+          "source_ref": "g4_reference:B:uncertainty",
+          "value": 500000000
+        },
+        "upper": 6
+      }
+    ],
+    "context": {
+      "bsep_ref": "g4_reference:bsep:1",
+      "candidate_set_hash": "1110f63dea278670a0a5cf6fd2034f3a03cb2e0d06b1e3b05309587feafcccae",
+      "candidate_set_ref": "g4_reference:candidates:1",
+      "catalogue_revision": "g4_reference:catalogue:1",
+      "dependencies": [
+        "g4_reference:dependency:1"
+      ],
+      "dispositions": [
+        {
+          "id": "g4_reference:disposition:source",
+          "source_ref": "g4_reference:source:known",
+          "state": "KNOWN"
+        }
+      ],
+      "domain_id": "g4_reference:reference",
+      "evaluation_id": "g4_reference:evaluation:1",
+      "evaluation_time": 1800000000,
+      "intent_ref": "g4_reference:intent:1",
+      "numeric_profile_hash": "78616c5327c93321e4953a1b7065de0c3d71d997f3420dc0cfdc0638b0a9a858",
+      "numeric_profile_ref": "g4_reference:numeric:v01",
+      "origin": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+      "owner_root_id": "g4_reference:root:1",
+      "participants": [
+        "g4_reference:root:1",
+        "g4_reference:root:2",
+        "g4_reference:root:3"
+      ],
+      "policy_hash": "8f9b21e91bfa5430c6fabc981894248e4de33ffb200130438c4051c6a3ee7683",
+      "policy_ref": "g4_reference:policy:1",
+      "profile": "G4_REFERENCE_NUMERIC_V01",
+      "schema": "g4_reference:v01",
+      "scope": "G4_REFERENCE_SCOPE_V01",
+      "source_snapshot_hash": "40dd997544043009812e0e90d9e7b5ce957516badae39d85a0748d646a24f8e3",
+      "source_snapshot_ref": "g4_reference:snapshot:1",
+      "task_id": "g4_reference:task:1",
+      "time_envelope_ref": "g4_reference:time:1",
+      "transaction_id": "g4_reference:transaction:1",
+      "utility_profile_hash": "ec0515ae717d39e7e454bacc991dda855aa5671404f036d5f664048e09cf07b8",
+      "utility_profile_ref": "g4_reference:utility:v01"
+    }
+  },
+  "seed": 41012026,
+  "strategy": {
+    "candidates": [
+      {
+        "capability_ref": "g4_reference:capability:1",
+        "feature_refs": [
+          "g4_reference:feature:A"
+        ],
+        "hard": [
+          {
+            "evidence_ref": "g4_reference:evidence:A",
+            "id": "g4_reference:hard:1",
+            "state": "TRUE"
+          }
+        ],
+        "id": "g4_reference:candidate:A",
+        "no_deal_ref": "g4_reference:no_deal:1",
+        "participants": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "policy_ref": "g4_reference:policy:1",
+        "required_roots": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "source_hash": "33e520461ae474380245b10dcd5ce73dc031f149eecf93c810e53a6a52333f84",
+        "source_ref": "g4_reference:source:A",
+        "time_envelope_ref": "g4_reference:time:1",
+        "utilities": [
+          {
+            "candidate_id": "g4_reference:candidate:A",
+            "issuer_ref": "g4_reference:root:1",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:1",
+            "source_ref": "g4_reference:A:1:utility",
+            "terms": [
+              {
+                "feature_fp": 900000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:A",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:A",
+            "issuer_ref": "g4_reference:root:2",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:2",
+            "source_ref": "g4_reference:A:2:utility",
+            "terms": [
+              {
+                "feature_fp": 100000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:A",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:A",
+            "issuer_ref": "g4_reference:root:3",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:3",
+            "source_ref": "g4_reference:A:3:utility",
+            "terms": [
+              {
+                "feature_fp": 500000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:A",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          }
+        ]
+      },
+      {
+        "capability_ref": "g4_reference:capability:1",
+        "feature_refs": [
+          "g4_reference:feature:B"
+        ],
+        "hard": [
+          {
+            "evidence_ref": "g4_reference:evidence:B",
+            "id": "g4_reference:hard:1",
+            "state": "TRUE"
+          }
+        ],
+        "id": "g4_reference:candidate:B",
+        "no_deal_ref": "g4_reference:no_deal:1",
+        "participants": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "policy_ref": "g4_reference:policy:1",
+        "required_roots": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "source_hash": "c792a8600cfc69fc4fc84cd95acce20e19e8a64508272337fb1da2adb11edda0",
+        "source_ref": "g4_reference:source:B",
+        "time_envelope_ref": "g4_reference:time:1",
+        "utilities": [
+          {
+            "candidate_id": "g4_reference:candidate:B",
+            "issuer_ref": "g4_reference:root:1",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:1",
+            "source_ref": "g4_reference:B:1:utility",
+            "terms": [
+              {
+                "feature_fp": 500000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:B",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:B",
+            "issuer_ref": "g4_reference:root:2",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:2",
+            "source_ref": "g4_reference:B:2:utility",
+            "terms": [
+              {
+                "feature_fp": 500000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:B",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:B",
+            "issuer_ref": "g4_reference:root:3",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:3",
+            "source_ref": "g4_reference:B:3:utility",
+            "terms": [
+              {
+                "feature_fp": 500000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:B",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          }
+        ]
+      },
+      {
+        "capability_ref": "g4_reference:capability:1",
+        "feature_refs": [
+          "g4_reference:feature:C"
+        ],
+        "hard": [
+          {
+            "evidence_ref": "g4_reference:evidence:C",
+            "id": "g4_reference:hard:1",
+            "state": "TRUE"
+          }
+        ],
+        "id": "g4_reference:candidate:C",
+        "no_deal_ref": "g4_reference:no_deal:1",
+        "participants": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "policy_ref": "g4_reference:policy:1",
+        "required_roots": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "source_hash": "fbfe05f697c1a425e552ddbc74968e89203540d7073a4f85ca9331732fbce219",
+        "source_ref": "g4_reference:source:C",
+        "time_envelope_ref": "g4_reference:time:1",
+        "utilities": [
+          {
+            "candidate_id": "g4_reference:candidate:C",
+            "issuer_ref": "g4_reference:root:1",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:1",
+            "source_ref": "g4_reference:C:1:utility",
+            "terms": [
+              {
+                "feature_fp": 400000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:C",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:C",
+            "issuer_ref": "g4_reference:root:2",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:2",
+            "source_ref": "g4_reference:C:2:utility",
+            "terms": [
+              {
+                "feature_fp": 400000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:C",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:C",
+            "issuer_ref": "g4_reference:root:3",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:3",
+            "source_ref": "g4_reference:C:3:utility",
+            "terms": [
+              {
+                "feature_fp": 400000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:C",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          }
+        ]
+      },
+      {
+        "capability_ref": "g4_reference:capability:1",
+        "feature_refs": [
+          "g4_reference:feature:D"
+        ],
+        "hard": [
+          {
+            "evidence_ref": "g4_reference:evidence:D",
+            "id": "g4_reference:hard:1",
+            "state": "TRUE"
+          }
+        ],
+        "id": "g4_reference:candidate:D",
+        "no_deal_ref": "g4_reference:no_deal:1",
+        "participants": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "policy_ref": "g4_reference:policy:1",
+        "required_roots": [
+          "g4_reference:root:1",
+          "g4_reference:root:2",
+          "g4_reference:root:3"
+        ],
+        "source_hash": "4866c7e4834ab6f89713bbc1a6966219eb76a758e44bca41a33e2ab8885b8984",
+        "source_ref": "g4_reference:source:D",
+        "time_envelope_ref": "g4_reference:time:1",
+        "utilities": [
+          {
+            "candidate_id": "g4_reference:candidate:D",
+            "issuer_ref": "g4_reference:root:1",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:1",
+            "source_ref": "g4_reference:D:1:utility",
+            "terms": [
+              {
+                "feature_fp": 950000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:D",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:D",
+            "issuer_ref": "g4_reference:root:2",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:2",
+            "source_ref": "g4_reference:D:2:utility",
+            "terms": [
+              {
+                "feature_fp": -100000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:D",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          },
+          {
+            "candidate_id": "g4_reference:candidate:D",
+            "issuer_ref": "g4_reference:root:3",
+            "penalties": {
+              "coordination": 0,
+              "latency": 0,
+              "risk": 0
+            },
+            "profile": "G4_REFERENCE_NUMERIC_V01",
+            "role_ref": "g4_reference:role:utility",
+            "root_id": "g4_reference:root:3",
+            "source_ref": "g4_reference:D:3:utility",
+            "terms": [
+              {
+                "feature_fp": 600000000,
+                "id": "g4_reference:term:1",
+                "interpretation": "Disclosed reference utility feature",
+                "source_ref": "g4_reference:feature:D",
+                "weight_fp": 1000000000
+              }
+            ],
+            "uncertainty": "DISCLOSED",
+            "unit": "FIXED_POINT_Q",
+            "validity": "CURRENT",
+            "version": 1
+          }
+        ]
+      }
+    ],
+    "context": {
+      "bsep_ref": "g4_reference:bsep:1",
+      "candidate_set_hash": "d767efae1025d1e9776d58c51bd46043c02f51fe56ba0452f3ebfa2c806ac6cc",
+      "candidate_set_ref": "g4_reference:candidates:1",
+      "catalogue_revision": "g4_reference:catalogue:1",
+      "dependencies": [
+        "g4_reference:dependency:1"
+      ],
+      "dispositions": [
+        {
+          "id": "g4_reference:disposition:source",
+          "source_ref": "g4_reference:source:known",
+          "state": "KNOWN"
+        }
+      ],
+      "domain_id": "g4_reference:reference",
+      "evaluation_id": "g4_reference:evaluation:1",
+      "evaluation_time": 1800000000,
+      "intent_ref": "g4_reference:intent:1",
+      "numeric_profile_hash": "78616c5327c93321e4953a1b7065de0c3d71d997f3420dc0cfdc0638b0a9a858",
+      "numeric_profile_ref": "g4_reference:numeric:v01",
+      "origin": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+      "owner_root_id": "g4_reference:root:1",
+      "participants": [
+        "g4_reference:root:1",
+        "g4_reference:root:2",
+        "g4_reference:root:3"
+      ],
+      "policy_hash": "8f9b21e91bfa5430c6fabc981894248e4de33ffb200130438c4051c6a3ee7683",
+      "policy_ref": "g4_reference:policy:1",
+      "profile": "G4_REFERENCE_NUMERIC_V01",
+      "schema": "g4_reference:v01",
+      "scope": "G4_REFERENCE_SCOPE_V01",
+      "source_snapshot_hash": "b4bc7bdd8720018db8ac97915fd651c723ab93ac5c1d6f18917b49e9d4b0d058",
+      "source_snapshot_ref": "g4_reference:snapshot:1",
+      "task_id": "g4_reference:task:1",
+      "time_envelope_ref": "g4_reference:time:1",
+      "transaction_id": "g4_reference:transaction:1",
+      "utility_profile_hash": "ec0515ae717d39e7e454bacc991dda855aa5671404f036d5f664048e09cf07b8",
+      "utility_profile_ref": "g4_reference:utility:v01"
+    },
+    "disagreements": [
+      {
+        "root_id": "g4_reference:root:1",
+        "source_ref": "g4_reference:disagreement:0",
+        "validity": "CURRENT",
+        "value": 0
+      },
+      {
+        "root_id": "g4_reference:root:2",
+        "source_ref": "g4_reference:disagreement:1",
+        "validity": "CURRENT",
+        "value": 0
+      },
+      {
+        "root_id": "g4_reference:root:3",
+        "source_ref": "g4_reference:disagreement:2",
+        "validity": "CURRENT",
+        "value": 0
+      }
+    ]
+  }
+}

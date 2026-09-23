@@ -1,0 +1,14 @@
+{
+  "different_working_directories": true,
+  "identity": {
+    "bytes": 1151634,
+    "mode": "0o644",
+    "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9"
+  },
+  "native_recollection": 0,
+  "processes": [
+    "/private/tmp/RADIOLARIA_GATE4_G44.6ffPyN/commands/0020_supplied_living_final",
+    "/private/tmp/RADIOLARIA_GATE4_G44.6ffPyN/commands/0021_supplied_conformance_final"
+  ],
+  "status": "BYTE_IDENTICAL"
+}

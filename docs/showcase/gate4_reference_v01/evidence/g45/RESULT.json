@@ -1,0 +1,30 @@
+{
+  "business_effect_calls": 0,
+  "changes": {
+    "added": 26,
+    "deleted": 0,
+    "modified": 8
+  },
+  "closure": "INDEPENDENT_FINAL_REVIEW_PENDING",
+  "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+  "context": "FINALIZED",
+  "fixture_commits": 1,
+  "full_native_canonical_replay": "UNSUPPORTED_NATIVE_SCHEMA",
+  "model_calls": 0,
+  "new_pytest_count": 0,
+  "operator_bytes_unchanged": true,
+  "owner_clean": true,
+  "owner_commits": 1,
+  "owner_push": "NORMAL",
+  "parent": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+  "presentation": "NOT_STARTED",
+  "preserved_neighbors": 1980,
+  "preserved_restricted_modes": 21,
+  "processes_final": true,
+  "recorded_test_limitation": "Unchanged 04644-mode test FAIL remains recorded; not rerun or relabelled PASS",
+  "remote_matches": true,
+  "runtime_collectors": 0,
+  "staging_empty": true,
+  "status": "G45_REVIEWED_OWNER_LANDING_COMPLETE_FOR_CLOSURE_REVIEW",
+  "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"
+}

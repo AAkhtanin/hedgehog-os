@@ -1,0 +1,226 @@
+{
+  "commands": {
+    "0001_proof_export_01": {
+      "rc": 0,
+      "seconds": 5.686616875231266
+    },
+    "0002_saved_proof_controls_01": {
+      "rc": 1,
+      "seconds": 0.1511897500604391
+    },
+    "0003_saved_proof_controls_02": {
+      "rc": 0,
+      "seconds": 29.674740792252123
+    },
+    "0004_registration_parent_prepare": {
+      "rc": 1,
+      "seconds": 0.7292646253481507
+    },
+    "0005_registration_controls_01": {
+      "rc": 1,
+      "seconds": 1.3377436669543386
+    },
+    "0006_registration_parent_prepare_02": {
+      "rc": 0,
+      "seconds": 0.7670570416375995
+    },
+    "0007_registration_controls_02": {
+      "rc": 0,
+      "seconds": 16.368962000124156
+    },
+    "0008_freeze_development": {
+      "rc": 0,
+      "seconds": 0.3658685004338622
+    },
+    "0009_installation_preflight_01": {
+      "rc": 1,
+      "seconds": 50.25139562506229
+    },
+    "0010_registration_parent_refresh": {
+      "rc": 0,
+      "seconds": 0.7360407505184412
+    },
+    "0011_freeze_candidate_02": {
+      "rc": 0,
+      "seconds": 0.2926479587331414
+    },
+    "0012_disposable_rehearsal_02": {
+      "rc": 0,
+      "seconds": 552.3981905411929
+    },
+    "0013_proof_export_final": {
+      "rc": 1,
+      "seconds": 0.6750579997897148
+    },
+    "0014_registration_final_refresh": {
+      "rc": 0,
+      "seconds": 0.7218951657414436
+    },
+    "0015_freeze_final": {
+      "rc": 0,
+      "seconds": 0.3404611246660352
+    },
+    "0016_proof_export_final_02": {
+      "rc": 0,
+      "seconds": 5.524530000053346
+    },
+    "0017_final_focused": {
+      "rc": 1,
+      "seconds": 45.05628408305347
+    },
+    "0018_final_parent_controls": {
+      "rc": 0,
+      "seconds": 16.30543233267963
+    },
+    "0019_filesystem_mode_diagnostic": {
+      "rc": 0,
+      "seconds": 0.0786230405792594
+    },
+    "0020_supplied_living_final": {
+      "rc": 0,
+      "seconds": 19.888030958361924
+    },
+    "0021_supplied_conformance_final": {
+      "rc": 0,
+      "seconds": 19.903165166266263
+    },
+    "0022_static_source_impact": {
+      "rc": 0,
+      "seconds": 0.1913730837404728
+    },
+    "0023_final_disposable_rehearsal": {
+      "rc": 0,
+      "seconds": 551.8464562902227
+    },
+    "0024_patch_and_payload_verification": {
+      "rc": 1,
+      "seconds": 0.1433713324368
+    },
+    "0025_patch_and_payload_verification_02": {
+      "rc": 0,
+      "seconds": 0.2548001669347286
+    },
+    "0026_owner_helper_invalid_input_only": {
+      "rc": 0,
+      "seconds": 0.1443380005657673
+    }
+  },
+  "supplied": {
+    "0020_supplied_living_final": {
+      "entries": {
+        "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01": 0,
+        "demo.run_kernel_conformance_v01.collect_standalone_kernel_conformance_v01": 0,
+        "demo.run_living_gauntlet_v01.collect_living_g36_v01": 0,
+        "demo.run_living_gauntlet_v01.collect_living_gauntlet_v01": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+        "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+        "hedgehog.gate3_mechanism_v01.collect_mechanism_v01": 0,
+        "hedgehog.gate4_reference_evidence_v01.verify_package_v01": 1,
+        "hedgehog.gate4_reference_release_v01.validate_parents_v01": 1,
+        "hedgehog.gate4_reference_release_v01.validate_registration_v01": 4,
+        "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+        "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 430,
+        "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+        "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+        "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+        "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+        "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+      },
+      "inclusive_seconds_not_additive": {
+        "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01": 0.0,
+        "demo.run_kernel_conformance_v01.collect_standalone_kernel_conformance_v01": 0.0,
+        "demo.run_living_gauntlet_v01.collect_living_g36_v01": 0.0,
+        "demo.run_living_gauntlet_v01.collect_living_gauntlet_v01": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0.0,
+        "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0.0,
+        "hedgehog.gate3_mechanism_v01.collect_mechanism_v01": 0.0,
+        "hedgehog.gate4_reference_evidence_v01.verify_package_v01": 3.8260389156639576,
+        "hedgehog.gate4_reference_release_v01.validate_parents_v01": 14.92518416699022,
+        "hedgehog.gate4_reference_release_v01.validate_registration_v01": 0.20788862463086843,
+        "hedgehog.kernel.root_decision_v01.decide_root_v01": 0.0,
+        "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 2.392800415866077,
+        "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0.0,
+        "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0.0,
+        "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0.0,
+        "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0.0,
+        "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0.0
+      },
+      "operation_seconds": 18.842912582680583,
+      "process_seconds": 19.888030958361924
+    },
+    "0021_supplied_conformance_final": {
+      "entries": {
+        "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01": 0,
+        "demo.run_kernel_conformance_v01.collect_standalone_kernel_conformance_v01": 0,
+        "demo.run_living_gauntlet_v01.collect_living_g36_v01": 0,
+        "demo.run_living_gauntlet_v01.collect_living_gauntlet_v01": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+        "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+        "hedgehog.gate3_mechanism_v01.collect_mechanism_v01": 0,
+        "hedgehog.gate4_reference_evidence_v01.verify_package_v01": 1,
+        "hedgehog.gate4_reference_release_v01.validate_parents_v01": 1,
+        "hedgehog.gate4_reference_release_v01.validate_registration_v01": 4,
+        "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+        "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 430,
+        "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+        "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+        "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+        "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+        "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+      },
+      "inclusive_seconds_not_additive": {
+        "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01": 0.0,
+        "demo.run_kernel_conformance_v01.collect_standalone_kernel_conformance_v01": 0.0,
+        "demo.run_living_gauntlet_v01.collect_living_g36_v01": 0.0,
+        "demo.run_living_gauntlet_v01.collect_living_gauntlet_v01": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0.0,
+        "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0.0,
+        "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0.0,
+        "hedgehog.gate3_mechanism_v01.collect_mechanism_v01": 0.0,
+        "hedgehog.gate4_reference_evidence_v01.verify_package_v01": 3.827700207941234,
+        "hedgehog.gate4_reference_release_v01.validate_parents_v01": 14.97916491702199,
+        "hedgehog.gate4_reference_release_v01.validate_registration_v01": 0.21747395861893892,
+        "hedgehog.kernel.root_decision_v01.decide_root_v01": 0.0,
+        "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 2.406650654040277,
+        "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0.0,
+        "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0.0,
+        "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0.0,
+        "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0.0,
+        "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0.0,
+        "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0.0
+      },
+      "operation_seconds": 18.90114099998027,
+      "process_seconds": 19.903165166266263
+    }
+  }
+}

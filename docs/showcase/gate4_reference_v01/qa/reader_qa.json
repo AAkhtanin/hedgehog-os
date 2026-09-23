@@ -1,0 +1,617 @@
+{
+  "documents_checked": [
+    "VERIFICATION.md",
+    "READ_ME_FIRST.md",
+    "technical_appendix_v01.md",
+    "README.md",
+    "evidence/SELECTION.md",
+    "presentation/BUILD.md",
+    "presentation/BUILD_APPENDIX.md",
+    "evidence/review/INDEPENDENT_ENGINEERING_REVIEW_20260923.md",
+    "presentation/build/BUILD_PRESENTATION.md"
+  ],
+  "errors": [],
+  "external_urls_syntax_only": 6,
+  "links": [
+    {
+      "document": "READ_ME_FIRST.md",
+      "label": "VERIFICATION.md",
+      "resolved_path": "VERIFICATION.md",
+      "status": "PASS",
+      "target": "VERIFICATION.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "`5b259441994ba41ed3467e8ffcb9ae6ee8d371f0`",
+      "scope": "External accessibility and future publication are covered by separate publication receipts, not this static check.",
+      "status": "EXTERNAL_URL_SYNTAX_ONLY",
+      "target": "https://github.com/AAkhtanin/hedgehog-os/commit/5b259441994ba41ed3467e8ffcb9ae6ee8d371f0"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "claim and evidence matrix",
+      "resolved_path": "presentation/claim_evidence_matrix_v01.json",
+      "status": "PASS",
+      "target": "presentation/claim_evidence_matrix_v01.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "A. Result, scope and status",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#a-result-scope-status"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "B. Architecture context",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#b-architecture-context"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "C. Evidence chronology",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#c-evidence-chronology"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "D. Data and assumptions",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#d-data-assumptions"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "E. Strategy mathematics",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#e-strategy-mathematics"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "F. Pressure and allocation",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#f-pressure-allocation"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G. CP-STRATEGY",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#g-cp-strategy"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "H. CP-BUDGET",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#h-cp-budget"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "I. Boundary controls",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#i-boundary-controls"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "J. Currentness and replay",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#j-currentness-replay"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "K. Verification inventory",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#k-verification-inventory"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "L. Verification route and deferred work",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "#l-verification-route"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G45 report",
+      "resolved_path": "evidence/g45/FINAL_REPORT.md",
+      "status": "PASS",
+      "target": "evidence/g45/FINAL_REPORT.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G45 result",
+      "resolved_path": "evidence/g45/RESULT.json",
+      "status": "PASS",
+      "target": "evidence/g45/RESULT.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "scope contract",
+      "resolved_path": "source_snapshot/installed/docs/gate4_reference_contract_v01.md",
+      "status": "PASS",
+      "target": "source_snapshot/installed/docs/gate4_reference_contract_v01.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "runtime consumer",
+      "resolved_path": "source_snapshot/installed/hedgehog/gate4_reference_runtime_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/hedgehog/gate4_reference_runtime_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "Airline adapter",
+      "resolved_path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "native checkpoint",
+      "resolved_path": "source_snapshot/installed/docs/gate4_reference_native_checkpoint_v01.md",
+      "status": "PASS",
+      "target": "source_snapshot/installed/docs/gate4_reference_native_checkpoint_v01.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G43 report retained in G44",
+      "resolved_path": "evidence/g44/recorded_g43/FINAL_REPORT.md",
+      "status": "PASS",
+      "target": "evidence/g44/recorded_g43/FINAL_REPORT.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G44 report",
+      "resolved_path": "evidence/g44/FINAL_REPORT.md",
+      "status": "PASS",
+      "target": "evidence/g44/FINAL_REPORT.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G45 report",
+      "resolved_path": "evidence/g45/FINAL_REPORT.md",
+      "status": "PASS",
+      "target": "evidence/g45/FINAL_REPORT.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "portable manifest",
+      "resolved_path": "evidence/g44/portable_publication_final/MANIFEST.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/MANIFEST.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "comparisons and fixed configuration",
+      "resolved_path": "evidence/g44/portable_publication_final/story/comparisons.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/comparisons.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "original domain",
+      "resolved_path": "evidence/g44/portable_publication_final/story/original_domain.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/original_domain.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "cold mapping and inputs",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "strategy source",
+      "resolved_path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "strict contracts",
+      "resolved_path": "source_snapshot/installed/hedgehog/gate4_reference_contracts_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/hedgehog/gate4_reference_contracts_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "math tests",
+      "resolved_path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "cold report",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "contrast report",
+      "resolved_path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "pressure/allocation source",
+      "resolved_path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "cold allocation",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "warm allocation",
+      "resolved_path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "frozen configuration",
+      "resolved_path": "evidence/g44/portable_publication_final/story/frozen_configuration.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/frozen_configuration.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "cold consumption",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "contrast consumption",
+      "resolved_path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "consent controls",
+      "resolved_path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "prospective/captured G3 material",
+      "resolved_path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/observed_g3.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "history recording",
+      "resolved_path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/history_recorded.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "warm discovery",
+      "resolved_path": "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/warm/history_discovery.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "cold completed Work",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/completed_work.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "warm completed Work",
+      "resolved_path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/warm/completed_work.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "portable actual Work records",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/portable_records.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/portable_records.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "constructor controls",
+      "resolved_path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "native source controls",
+      "resolved_path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/native_supplied_controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "final saved-proof controls",
+      "resolved_path": "evidence/g44/commands/0017_final_focused/proof_controls/supported_result.json",
+      "status": "PASS",
+      "target": "evidence/g44/commands/0017_final_focused/proof_controls/supported_result.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "parent controls",
+      "resolved_path": "evidence/g44/commands/0018_final_parent_controls/controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/commands/0018_final_parent_controls/controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "evidence tests",
+      "resolved_path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "checker manifest/environment",
+      "resolved_path": "evidence/g44/portable_publication_final/MANIFEST.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/MANIFEST.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G44 checker code",
+      "resolved_path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "expiry controls",
+      "resolved_path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/current_expiry_controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "current retained-history controls",
+      "resolved_path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G43 report",
+      "resolved_path": "evidence/g44/recorded_g43/FINAL_REPORT.md",
+      "status": "PASS",
+      "target": "evidence/g44/recorded_g43/FINAL_REPORT.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G44 report",
+      "resolved_path": "evidence/g44/FINAL_REPORT.md",
+      "status": "PASS",
+      "target": "evidence/g44/FINAL_REPORT.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "mode diagnostic",
+      "resolved_path": "evidence/g44/commands/0019_filesystem_mode_diagnostic/mode_controls.json",
+      "status": "PASS",
+      "target": "evidence/g44/commands/0019_filesystem_mode_diagnostic/mode_controls.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G44 Living combined",
+      "resolved_path": "evidence/g44/commands/0020_supplied_living_final/combined.json",
+      "status": "PASS",
+      "target": "evidence/g44/commands/0020_supplied_living_final/combined.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G44 Conformance combined",
+      "resolved_path": "evidence/g44/commands/0021_supplied_conformance_final/combined.json",
+      "status": "PASS",
+      "target": "evidence/g44/commands/0021_supplied_conformance_final/combined.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "G45 installed combined",
+      "resolved_path": "evidence/g45/installed_supplied/combined.json",
+      "status": "PASS",
+      "target": "evidence/g45/installed_supplied/combined.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "capsule README",
+      "resolved_path": "README.md",
+      "status": "PASS",
+      "target": "README.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "source-bound XML Reader",
+      "resolved_path": "LLM_READER_GATE4_REFERENCE_V01.xml",
+      "status": "PASS",
+      "target": "LLM_READER_GATE4_REFERENCE_V01.xml"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "artifact-review approach",
+      "scope": "External accessibility and future publication are covered by separate publication receipts, not this static check.",
+      "status": "EXTERNAL_URL_SYNTAX_ONLY",
+      "target": "https://www.usenix.org/conference/osdi26/call-for-artifacts"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "claim\u2013argument\u2013evidence structure",
+      "scope": "External accessibility and future publication are covered by separate publication receipts, not this static check.",
+      "status": "EXTERNAL_URL_SYNTAX_ONLY",
+      "target": "https://www.sei.cmu.edu/blog/assurance-cases-and-confidence/"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "explicit measurement provenance",
+      "scope": "External accessibility and future publication are covered by separate publication receipts, not this static check.",
+      "status": "EXTERNAL_URL_SYNTAX_ONLY",
+      "target": "https://airc.nist.gov/airmf-resources/playbook/measure/"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "message-led visual evidence",
+      "scope": "External accessibility and future publication are covered by separate publication receipts, not this static check.",
+      "status": "EXTERNAL_URL_SYNTAX_ONLY",
+      "target": "https://www.assertion-evidence.com/"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "pinned CLI",
+      "resolved_path": "source_snapshot/installed/demo/run_gate4_reference_v01.py",
+      "status": "PASS",
+      "target": "source_snapshot/installed/demo/run_gate4_reference_v01.py"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "original publication",
+      "resolved_path": "evidence/g44/portable_publication_final/PUBLICATION.json",
+      "status": "PASS",
+      "target": "evidence/g44/portable_publication_final/PUBLICATION.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "parent manifest",
+      "resolved_path": "evidence/g44/parents/MANIFEST.json",
+      "status": "PASS",
+      "target": "evidence/g44/parents/MANIFEST.json"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "verification guide",
+      "resolved_path": "README.md",
+      "status": "PASS",
+      "target": "README.md"
+    },
+    {
+      "document": "technical_appendix_v01.md",
+      "label": "claim matrix",
+      "resolved_path": "presentation/claim_evidence_matrix_v01.json",
+      "status": "PASS",
+      "target": "presentation/claim_evidence_matrix_v01.json"
+    },
+    {
+      "document": "README.md",
+      "label": "Presentation PDF",
+      "resolved_path": "gate4_reference_v01.pdf",
+      "status": "PASS",
+      "target": "gate4_reference_v01.pdf"
+    },
+    {
+      "document": "README.md",
+      "label": "editable PPTX",
+      "resolved_path": "gate4_reference_v01.pptx",
+      "status": "PASS",
+      "target": "gate4_reference_v01.pptx"
+    },
+    {
+      "document": "README.md",
+      "label": "Technical appendix PDF",
+      "resolved_path": "technical_appendix_v01.pdf",
+      "status": "PASS",
+      "target": "technical_appendix_v01.pdf"
+    },
+    {
+      "document": "README.md",
+      "label": "searchable Markdown",
+      "resolved_path": "technical_appendix_v01.md",
+      "status": "PASS",
+      "target": "technical_appendix_v01.md"
+    },
+    {
+      "document": "README.md",
+      "label": "Source-bound XML Reader",
+      "resolved_path": "LLM_READER_GATE4_REFERENCE_V01.xml",
+      "status": "PASS",
+      "target": "LLM_READER_GATE4_REFERENCE_V01.xml"
+    },
+    {
+      "document": "README.md",
+      "label": "detached index",
+      "resolved_path": "READER_INDEX.json",
+      "status": "PASS",
+      "target": "READER_INDEX.json"
+    },
+    {
+      "document": "README.md",
+      "label": "Two-minute reading map",
+      "resolved_path": "READ_ME_FIRST.md",
+      "status": "PASS",
+      "target": "READ_ME_FIRST.md"
+    },
+    {
+      "document": "README.md",
+      "label": "Verification guide",
+      "resolved_path": "VERIFICATION.md",
+      "status": "PASS",
+      "target": "VERIFICATION.md"
+    },
+    {
+      "document": "README.md",
+      "label": "Claim-to-evidence matrix",
+      "resolved_path": "presentation/claim_evidence_matrix_v01.json",
+      "status": "PASS",
+      "target": "presentation/claim_evidence_matrix_v01.json"
+    },
+    {
+      "document": "README.md",
+      "label": "Independent engineering review",
+      "resolved_path": "evidence/review/INDEPENDENT_ENGINEERING_REVIEW_20260923.md",
+      "status": "PASS",
+      "target": "evidence/review/INDEPENDENT_ENGINEERING_REVIEW_20260923.md"
+    },
+    {
+      "document": "README.md",
+      "label": "Current publication status",
+      "resolved_path": "publication_status_v01.json",
+      "status": "PASS",
+      "target": "publication_status_v01.json"
+    },
+    {
+      "document": "README.md",
+      "label": "`5b259441994ba41ed3467e8ffcb9ae6ee8d371f0`",
+      "scope": "External accessibility and future publication are covered by separate publication receipts, not this static check.",
+      "status": "EXTERNAL_URL_SYNTAX_ONLY",
+      "target": "https://github.com/AAkhtanin/hedgehog-os/commit/5b259441994ba41ed3467e8ffcb9ae6ee8d371f0"
+    },
+    {
+      "document": "README.md",
+      "label": "VERIFICATION.md",
+      "resolved_path": "VERIFICATION.md",
+      "status": "PASS",
+      "target": "VERIFICATION.md"
+    }
+  ],
+  "links_checked": 85,
+  "local_links": 79,
+  "new_project_execution": false,
+  "profile": "GATE4_READER_EDITORIAL_LINK_QA_V01",
+  "status": "PASS"
+}

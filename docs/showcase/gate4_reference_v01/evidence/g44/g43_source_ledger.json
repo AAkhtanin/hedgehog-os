@@ -1,0 +1,140 @@
+{
+  "demo/run_gate4_reference_v01.py": {
+    "bytes": 2673,
+    "git_blob": "8650663063f24fe4e1e7828aa2152a2675ef7f40",
+    "mode": "0o644",
+    "sha256": "4a1ff8c0dd8894323c88eb6d627eb78b2d091e672ec534b6358c01bc2b8f4b29"
+  },
+  "docs/gate4_reference_checkpoint_v01.md": {
+    "bytes": 8218,
+    "git_blob": "c5acb7e5175b2b0f2439fd923e5b1baaa79aabc3",
+    "mode": "0o644",
+    "sha256": "ab60e29717441d8a6c979cfc02091a5a88d92e10b0a1ad3ef4dc2f0beaab52a2"
+  },
+  "docs/gate4_reference_contract_v01.md": {
+    "bytes": 9603,
+    "git_blob": "206c8a039c0fe9b338c0ef1a3ce5db5dc2cd6a3f",
+    "mode": "0o644",
+    "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec"
+  },
+  "docs/gate4_reference_evidence_checkpoint_v01.md": {
+    "bytes": 6592,
+    "git_blob": "a2f75a1fd9d983108c76697b90fe33281f6c805e",
+    "mode": "0o644",
+    "sha256": "211ae9b5b67beb3eae8d454a65c30b0e3d41edc3256c9cf0b89b2c7deb0565bc"
+  },
+  "docs/gate4_reference_math_checkpoint_v01.md": {
+    "bytes": 6729,
+    "git_blob": "8226e0ff114adb59745730eae1f4540027cdd090",
+    "mode": "0o644",
+    "sha256": "a8935586aaffe1a79ac34cc6de6c26bbccefcb901fd7d1ba5d0c50d0f3a4eed0"
+  },
+  "docs/gate4_reference_native_checkpoint_v01.md": {
+    "bytes": 7141,
+    "git_blob": "7816cf1f9b169575275e80a45f442030389e53d9",
+    "mode": "0o644",
+    "sha256": "3ca510aac80308e85a9627362ad24351ecdc4168e582d9a05dd8cf6dd98ed1a5"
+  },
+  "fixtures/gate4_reference_math_v01.json": {
+    "bytes": 31054,
+    "git_blob": "67c0637074513fdcc114f7ec59a7729bf5e06f6f",
+    "mode": "0o644",
+    "sha256": "1d58da7a6b424db760acd1b703c765e463ee02f2d6d3df80b64f7c12dd4d8ff3"
+  },
+  "fixtures/gate4_reference_native_v01.json": {
+    "bytes": 1881,
+    "git_blob": "350d46811fa5c3da3398b6f8fe69b7975ace0de3",
+    "mode": "0o644",
+    "sha256": "69db28b8739c4f12de9a833a422e9d812234d908ac371385e013889e41831b1b"
+  },
+  "fixtures/gate4_reference_v01.json": {
+    "bytes": 1729,
+    "git_blob": "dc2c63dbcb64d3879ca2b8b019076e9c065bdb6d",
+    "mode": "0o644",
+    "sha256": "4bc893bcab8c2c7272d6dae15f81e1812f24833b3a43e07b24512fcb0492fd39"
+  },
+  "hedgehog/domains/airline/gate4_reference_adapter_v01.py": {
+    "bytes": 97270,
+    "git_blob": "95bca4bb32b23a64d650bd9cdac79d1825954f25",
+    "mode": "0o644",
+    "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4"
+  },
+  "hedgehog/domains/airline/gate4_reference_history_v01.py": {
+    "bytes": 9362,
+    "git_blob": "4b5b685cba4bf273a6c09e099b686e6e4f410e10",
+    "mode": "0o644",
+    "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870"
+  },
+  "hedgehog/gate4_pressure_budget_v01.py": {
+    "bytes": 9665,
+    "git_blob": "30f7602ca8ee07a7572af65331922c85da6a38e1",
+    "mode": "0o644",
+    "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27"
+  },
+  "hedgehog/gate4_reference_contracts_v01.py": {
+    "bytes": 15842,
+    "git_blob": "ed924bec731a4c69f03e0cf54046718e97c787cf",
+    "mode": "0o644",
+    "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42"
+  },
+  "hedgehog/gate4_reference_evidence_v01.py": {
+    "bytes": 24236,
+    "git_blob": "1cf368a2d39fcb8408c1e93b87082c112a35c819",
+    "mode": "0o644",
+    "sha256": "5e9c4ac7ffbf9a06cfe7d8d58b0c187de1aaa52458a99b78eb52114711a94193"
+  },
+  "hedgehog/gate4_reference_runtime_v01.py": {
+    "bytes": 11357,
+    "git_blob": "c9be0a70f5be7b879e9aec36d62eebe5897c6ed6",
+    "mode": "0o644",
+    "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a"
+  },
+  "hedgehog/gate4_strategy_reference_v01.py": {
+    "bytes": 6667,
+    "git_blob": "3df579541dea43b2ce74d6da30f72329596f42b2",
+    "mode": "0o644",
+    "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06"
+  },
+  "schemas/gate4_reference_v01.schema.json": {
+    "bytes": 59314,
+    "git_blob": "158dd63dc2212e079bcc256a8a12f8092a9fd75b",
+    "mode": "0o644",
+    "sha256": "392e821ccdee2eaf99cc462553fb4f5308d41f8847554fe9c35a075afdc2f30d"
+  },
+  "tests/test_gate4_reference_evidence_v01.py": {
+    "bytes": 5856,
+    "git_blob": "a0e5de5eae895bd7d7c22bc8165bddbc971d71ff",
+    "mode": "0o644",
+    "sha256": "e07f9807b43134adf3a0164fe5e0250436ac6683b49478a95dbec5cbe590c675"
+  },
+  "tests/test_gate4_reference_history_v01.py": {
+    "bytes": 4824,
+    "git_blob": "d1ecbfe0f254694233716b6ad4a782a277404bfe",
+    "mode": "0o644",
+    "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b"
+  },
+  "tests/test_gate4_reference_math_v01.py": {
+    "bytes": 20127,
+    "git_blob": "e34bfe1e6bc59c327df154c2f82c09667ea66462",
+    "mode": "0o644",
+    "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744"
+  },
+  "tests/test_gate4_reference_native_v01.py": {
+    "bytes": 12250,
+    "git_blob": "a89f9847508db4247cfee26d13d594c1d4033ae2",
+    "mode": "0o644",
+    "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91"
+  },
+  "tests/test_gate4_reference_preflight_v01.py": {
+    "bytes": 4149,
+    "git_blob": "01f2899f7faa1e6af8e640f989ca52a397ff3ff0",
+    "mode": "0o644",
+    "sha256": "1baa6014bfa1904936b2185ec71ea1b9ceb5fe258729abce08a3f61cdce44cb8"
+  },
+  "tests/test_gate4_reference_supplied_v01.py": {
+    "bytes": 10258,
+    "git_blob": "9c78730cebaee2675334d09d7a49cbd5045546a3",
+    "mode": "0o644",
+    "sha256": "fab345105785362c95a058a7a08defa40809e4d4a3c49bba3bfe52e9c69f6226"
+  }
+}

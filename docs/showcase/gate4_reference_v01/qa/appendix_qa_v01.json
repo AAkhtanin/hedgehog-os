@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "pdf_sha256": "419a3a01d59c3e3f5fd5fff83a387bb7083e3180aaab8b50e66b02beca53a416",
+  "pages": 19,
+  "explicit_section_anchors": 12,
+  "uri_links": 62,
+  "visual_review": "All 19 final pages individually inspected; root pages 1-9 and final revised page 19, independent reviewer pages 10-19. No clipping or overlaps.",
+  "source": "technical_appendix_v01.md",
+  "anchor_map": "presentation/appendix_anchors.json",
+  "scope": "Document rendering and static source-link checks only; no project import, test, replay or native execution.",
+  "remote_links": "New capsule targets require separate publication and repository access.",
+  "review_renders": "Authoring-workspace-only PNGs are not capsule payload."
+}

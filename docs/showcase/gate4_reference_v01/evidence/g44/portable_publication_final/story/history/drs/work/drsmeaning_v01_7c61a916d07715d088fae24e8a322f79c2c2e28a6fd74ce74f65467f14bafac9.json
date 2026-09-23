@@ -1,0 +1,148 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "history_key": {
+      "advisory_source_revision": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+      "capability_contract_version": "atlas.airline.constraint.v01",
+      "domain_scope_id": "AIRLINE",
+      "evidence_validation_profile_id": "G34_TYPED_BOOLEAN_COMPLETED_WORK_V01",
+      "history_key_profile_id": "G3_TYPED_HISTORY_KEY_V01",
+      "local_root_scope_id": "root:client_os_001",
+      "pack_family_id": "REVOCABLE_ACTION",
+      "policy_semantics_version": "g42:prediction_policy:4f178f22e1ab35adbb811887d2e4ce7bedb8c6db763360491a14442b2ab0bf33",
+      "route_family_id": "PURE_AIRLINE_CONSTRAINT",
+      "task_class_id": "AIRLINE_CONSTRAINT_CHECK",
+      "task_risk_class": "INFORMATIONAL"
+    },
+    "kind": "G34_DURABLE_SOURCE_BOUND_HISTORY_V01",
+    "record": {
+      "artifact_pointers": [
+        {
+          "access_policy_id": "g34:history_context_read:v01",
+          "allowed_use_classes": [
+            "OPEN_ONE_ARTIFACT"
+          ],
+          "byte_length": 7564,
+          "content_sha256": "fc865d867e0f3cc2f8644404de8b93086cd88831e900662586775ce74488b7dd",
+          "creates_authority": false,
+          "creates_permission": false,
+          "forbidden_use_classes": [],
+          "media_type": "application/json",
+          "object_reference": "g34:payload:a134b272cd4ba380c6bbdbe3c2f986dea0af2b315a02fe95fc343dec1a81330e",
+          "payload_read_permitted": true,
+          "pointer_id": "drsart_v01:540142cbedadd6df38b73d96366a8131a511076e866cf6b465adc13013d989c2",
+          "pointer_version": "v0.1",
+          "sensitivity_class": "INTERNAL",
+          "storage_class": "LOCAL_DOCUMENT",
+          "summary_read_permitted": true
+        }
+      ],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:ed398b71408febb073203fdcee71591946dbb3aaef5e2876a6a8779158fae601",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "0c98ec08ef03848e6110245b83591310ecb00eaf439ad9f6f7a0985fc09d2489",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "root:client_os_001",
+        "recording_component": "g34:history",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "8b685bf663552bccee2d19a4491a09080970b9700ce8f0ffc34d71f996c2f14c",
+        "source_root_decision_id": "a50bbda44acb0b28b04fe1c4c098276c2f6f0fc416d8760b2109cba0b369694f",
+        "source_root_decision_input_id": "834232600eddadc72398c23bacde7e2ad4369cb451cf8a19cc7f0fa3c19d17cb"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "301db71e24560c6d781ebce277d8c1fe00a4ffab7cc3afa9201e290a86c766a2",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:7c61a916d07715d088fae24e8a322f79c2c2e28a6fd74ce74f65467f14bafac9",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "g42:prediction_policy:4f178f22e1ab35adbb811887d2e4ce7bedb8c6db763360491a14442b2ab0bf33",
+      "predecessor_record_id": null,
+      "recording_component": "g34:history",
+      "resonance_reason": "Source-bound evidence only; current Root review is mandatory.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "a134b272cd4ba380c6bbdbe3c2f986dea0af2b315a02fe95fc343dec1a81330e",
+      "schema_versions": [
+        "G34_DURABLE_SOURCE_BOUND_HISTORY_V01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "AIRLINE",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "G34_DURABLE_SOURCE_BOUND_HISTORY_V01",
+        "meaning_schema_version": "v01",
+        "namespace": "g34",
+        "semantic_address_id": "drsaddr_v01:1b2fa4aec4e03b429244525614c58c2b81979481829dbd53ce3b155c5d5ea773",
+        "subject_class": "source_bound_history"
+      },
+      "semantic_tags": [
+        "g34_history"
+      ],
+      "source_reference_ids": [
+        "7c1b9a36f0869665e40c6ccd384dcf81aae97620b1cfe6eb97932dc4892a4e02"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1790170830,
+        "et_observed_at": 1790170817,
+        "freshness_policy_id": "g34:bounded_history",
+        "kt_as_of": 1790170830,
+        "pt_created_at": 1790170830,
+        "source_observed_at": 1790170830,
+        "source_reported_at": 1790170830,
+        "system_ingested_at": 1790170830,
+        "system_verified_at": 1790170830,
+        "time_envelope_id": "drstime_v01:5bed7ff29ac3d99d0cf92446afea94d09b610ee487f0c701538bc82ba231ee1d",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 887,
+        "valid_from": 1790170830,
+        "valid_to": 1790171717
+      }
+    },
+    "root_final_ref": "a50bbda44acb0b28b04fe1c4c098276c2f6f0fc416d8760b2109cba0b369694f",
+    "semantic_keys": [
+      "g34_history"
+    ],
+    "snapshot_id": "a134b272cd4ba380c6bbdbe3c2f986dea0af2b315a02fe95fc343dec1a81330e",
+    "worldstate_ref": "bea1f856c5a833fde04c02889daecef8aaa10e56931b66bd43348c562c6da591"
+  },
+  "domain": "AIRLINE",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "a134b272cd4ba380c6bbdbe3c2f986dea0af2b315a02fe95fc343dec1a81330e",
+    "trace_refs": [
+      {
+        "trace_id": "a134b272cd4ba380c6bbdbe3c2f986dea0af2b315a02fe95fc343dec1a81330e"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:7c61a916d07715d088fae24e8a322f79c2c2e28a6fd74ce74f65467f14bafac9",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "a134b272cd4ba380c6bbdbe3c2f986dea0af2b315a02fe95fc343dec1a81330e",
+    "et_observed_at": "2026-09-23T13:40:30+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2026-09-23T13:40:30+00:00",
+    "pt_created_at": "2026-09-23T13:40:30+00:00",
+    "ttl_seconds": 887,
+    "valid_from": "2026-09-23T13:40:30+00:00",
+    "valid_to": "2026-09-23T13:55:17+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:7c61a916d07715d088fae24e8a322f79c2c2e28a6fd74ce74f65467f14bafac9"
+    }
+  ],
+  "type": "generic"
+}

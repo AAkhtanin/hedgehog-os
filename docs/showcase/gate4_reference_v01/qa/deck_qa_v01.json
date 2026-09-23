@@ -1,0 +1,205 @@
+{
+  "status": "PASS",
+  "pptx_sha256": "1164536b567a544683634a210b838e4d9d36c8423cf1bcb5a7dc676c32dc4bb2",
+  "pdf_sha256": "1186fc3d44ab914876511d8b977661206c69ddb32dbe93c78929982f04f87c28",
+  "slides": 12,
+  "native_tables_by_slide": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0
+  ],
+  "native_shapes_by_slide": [
+    4,
+    22,
+    14,
+    10,
+    9,
+    32,
+    11,
+    42,
+    22,
+    6,
+    8,
+    13
+  ],
+  "pptx_hyperlinks": [
+    {
+      "slide": 2,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 3,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 4,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 5,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 6,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 7,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 8,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 9,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 10,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 11,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf",
+      "mode": "External"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/LLM_READER_GATE4_REFERENCE_V01.xml",
+      "mode": "External"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/READER_INDEX.json",
+      "mode": "External"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/tree/5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+      "mode": "External"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/README.md",
+      "mode": "External"
+    }
+  ],
+  "pdf_uri_annotations": [
+    {
+      "slide": 2,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 3,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 4,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 5,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 6,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 7,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 8,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 9,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 10,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 11,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/technical_appendix_v01.pdf"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/LLM_READER_GATE4_REFERENCE_V01.xml"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/READER_INDEX.json"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/tree/5b259441994ba41ed3467e8ffcb9ae6ee8d371f0"
+    },
+    {
+      "slide": 12,
+      "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/gate4_reference_v01/README.md"
+    }
+  ],
+  "final_page_target_count": 5,
+  "text_extraction": "PASS with exact utility products, scope and status",
+  "remote_target_status": "STAGED_PUBLICATION_TARGETS_REPOSITORY_ACCESS_REQUIRED",
+  "no_project_execution": true,
+  "visual_review": {
+    "all_artifact_pngs_full_size": "PASS",
+    "all_pdf_pages_full_size": "PASS",
+    "pdf_review_render": {
+      "location_kind": "AUTHORING_WORKSPACE_REVIEW_ONLY_NOT_INCLUDED_IN_CAPSULE",
+      "working_relative_path": "gate4/presentation/build/pdf_render_r2/slide-01.png through slide-12.png"
+    },
+    "final_pdf_render": {
+      "location_kind": "AUTHORING_WORKSPACE_REVIEW_ONLY_NOT_INCLUDED_IN_CAPSULE",
+      "working_relative_path": "gate4/presentation/build/pdf_render_r3/slide-01.png through slide-12.png"
+    },
+    "final_metadata_only_revision_pixel_parity": "12/12 exact pixel equality with individually inspected r2 pages",
+    "independent_visual_review": "PASS, all 12 Artifact Tool PNGs inspected by separate agent",
+    "repairs": [
+      "Materialized zero text insets in PPTX for Office/LibreOffice parity",
+      "Footer digits and Baggage labels fit",
+      "Preparation status clears footer"
+    ],
+    "contact_sheet": {
+      "location_kind": "OUTER_RETURN_OUTPUT_ONLY_NOT_INCLUDED_IN_CAPSULE",
+      "filename": "deck_contact_sheet_v01.png"
+    }
+  },
+  "source_notes": "Per-slide source SHA and shared claim routes embedded",
+  "canonical_validated_revision": "r3",
+  "font_check": "Inter subset fonts embedded in PDF, no font files in PPTX",
+  "finalization_receipt": "presentation/build/validation_r3.json",
+  "receipt_path_note": "Receipt paths identify the original authoring workspace and validated r3 file. Canonical deck bytes match the receipt-bound r3 PPTX; the canonical SHA256 is recorded in this QA file."
+}

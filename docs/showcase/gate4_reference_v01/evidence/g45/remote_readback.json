@@ -1,0 +1,9 @@
+{
+  "expected_tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+  "fetched_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+  "fetched_parent": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+  "fetched_tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+  "force": false,
+  "ls_remote": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+  "normal_push": true
+}

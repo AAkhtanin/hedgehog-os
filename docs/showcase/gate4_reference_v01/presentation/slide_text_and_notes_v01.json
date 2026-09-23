@@ -1,0 +1,3359 @@
+{
+  "schema": "GATE4_PRESENTATION_CONTENT_V01",
+  "language": "English",
+  "units": {
+    "utility": "Q=10^9",
+    "product": "Q^3=10^27",
+    "work": "ONE_NATIVE_WORK_DISPATCH_UNIT"
+  },
+  "strategy_rows": [
+    [
+      "PRICE_FIRST",
+      "offer:0",
+      "0.500",
+      "0.790",
+      "0.050",
+      "0.01975"
+    ],
+    [
+      "PRICE_FIRST",
+      "offer:1",
+      "0.250",
+      "0.815",
+      "0.025",
+      "0.00509375"
+    ],
+    [
+      "COMFORT_FIRST",
+      "offer:0",
+      "0.050",
+      "0.790",
+      "0.050",
+      "0.001975"
+    ],
+    [
+      "COMFORT_FIRST",
+      "offer:1",
+      "0.925",
+      "0.815",
+      "0.025",
+      "0.018846875"
+    ]
+  ],
+  "lane_data": {
+    "cold": {
+      "mapping": [
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:97ea298d1d523ecb731c2653b3b41ab4e9c0f49de317ba83785dec495f1b3960",
+          "native_id": "root:client_os_001"
+        },
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:c36bb9ede1fea0b733686c2d7c292f91660af477652aebdce5b9bcba3c9a6366",
+          "native_id": "root:mock_airline_al"
+        },
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:0d33439a855efe98f5352e16c43279503be325fdae72f2fe0e99f3372e25278c",
+          "native_id": "root:mock_bank_a"
+        },
+        {
+          "kind": "offer",
+          "local_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+          "native_id": "g40:offer:0"
+        },
+        {
+          "kind": "offer",
+          "local_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+          "native_id": "g40:offer:1"
+        },
+        {
+          "kind": "task",
+          "local_id": "g4_reference:task:f7dfd386d22a936aa9b7fe2fed0e9a72f36d817ea1f324da12f6a45e67afd829",
+          "native_id": "g42:cold:1790170817093198000"
+        },
+        {
+          "kind": "transaction",
+          "local_id": "g4_reference:transaction:5afa15f59c4d4bec54de1beff034d4691a5d48d3476fcb282c1e2d95f85f6056",
+          "native_id": "transaction:g42:cold:1790170817093198000"
+        },
+        {
+          "kind": "bsep",
+          "local_id": "g4_reference:bsep:18f77e0753bb720366a099c18ca64b6478cbcc1220a4aab94c289b6c47c085fc",
+          "native_id": "bsep:884fd31b0653dffbc222a38c95b7c52097eda92fd65248d078d11e7b3ca20ca7"
+        },
+        {
+          "kind": "intent",
+          "local_id": "g4_reference:intent:4cc55cc0f60604956147a926c3bb6fc7623e0aaf179e936af895464178b7b38a",
+          "native_id": "g42:intent:g42:cold:1790170817093198000"
+        },
+        {
+          "kind": "policy",
+          "local_id": "g4_reference:policy:142738116e4771d2688631bcf1ff421b7e9221a86e32319569e43e4ac600866f",
+          "native_id": "work_task_source:5b3a30a3266c98c06da25cef471f86bcaa1c18e587cc752ee1989d69837efb1d"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:7c4ff4ceb9bcffce4aa06f0abe86983818e22345ad076b2d12af6e3d95eefaa2",
+          "native_id": "capability_definition:0c2942bcf993eb7c147305b10fbdd23eef7700437ab9e36252a34cd51fb4dcf0"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:28dbe4434fa732cba47ee6ca9f886b151b1b6436b328ba94e0530c01cd265c3b",
+          "native_id": "capability_definition:d123d8d33cc86e43517c84176f1216c1d3888de38f72b2ed077990f332bcc6d0"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:3c7b0c412161dff73aad96837eb3915fca77db6d5db17b47f4eb9c6bf9b014ad",
+          "native_id": "capability_definition:50259fe3d591e9cec40db10fd2fb72a1258ba4cc19a3be017eade6a4987eb3f9"
+        }
+      ],
+      "selected_offer": "g40:offer:0",
+      "status": "PREPARATION_ONLY_NOT_EXECUTED",
+      "allocation_rows": [
+        {
+          "allocation": 3,
+          "extra": {
+            "denominator": 1985111939603,
+            "numerator": 2955335818809
+          },
+          "floor": 1,
+          "id": "g4_reference:branch:297e03a0299905e46034e9b1a7f5a96d9c1f82b75bfbd0481eba2a06b04fa94f",
+          "lower": 2,
+          "remainder": {
+            "denominator": 1985111939603,
+            "numerator": 970223879206
+          },
+          "upper": 6,
+          "weight": 985111939603,
+          "z_fp": 421250000
+        },
+        {
+          "allocation": 4,
+          "extra": {
+            "denominator": 1985111939603,
+            "numerator": 3000000000000
+          },
+          "floor": 1,
+          "id": "g4_reference:branch:aa53f7aa77ec1bfcac6845396c8cd1a02463c13e842514e007bc290b9507fbcb",
+          "lower": 2,
+          "remainder": {
+            "denominator": 1985111939603,
+            "numerator": 1014888060397
+          },
+          "upper": 6,
+          "weight": 1000000000000,
+          "z_fp": 425000000
+        }
+      ],
+      "output_binding": {
+        "allocation_identity": "g4_reference:allocation_report:8b355465afc1b787bdb0f18b5629665f74ce8fdde15e2395583ecdf116656f57",
+        "allocation_proof_sha256": "aaa4344b54cfba3342c89f598df1326a9c9cb066312947657a7c2cdb3bafc5c2",
+        "original_basis_sha256": "c03c8c446ce2baf150c3ce12c786622ab6462f4bd75d0e621b076542e837743a"
+      },
+      "work_ids": [
+        "offer_0_1",
+        "offer_0_2",
+        "offer_0_3",
+        "offer_0_4",
+        "offer_1_1",
+        "offer_1_2",
+        "offer_1_3"
+      ]
+    },
+    "contrast": {
+      "mapping": [
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:97ea298d1d523ecb731c2653b3b41ab4e9c0f49de317ba83785dec495f1b3960",
+          "native_id": "root:client_os_001"
+        },
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:c36bb9ede1fea0b733686c2d7c292f91660af477652aebdce5b9bcba3c9a6366",
+          "native_id": "root:mock_airline_al"
+        },
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:0d33439a855efe98f5352e16c43279503be325fdae72f2fe0e99f3372e25278c",
+          "native_id": "root:mock_bank_a"
+        },
+        {
+          "kind": "offer",
+          "local_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+          "native_id": "g40:offer:0"
+        },
+        {
+          "kind": "offer",
+          "local_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+          "native_id": "g40:offer:1"
+        },
+        {
+          "kind": "task",
+          "local_id": "g4_reference:task:e37e9c5ac77a6daf0c41aceac5c767a64409f04c6aa73c54fdc76ab7d509621c",
+          "native_id": "g42:contrast:1790170823732274000"
+        },
+        {
+          "kind": "transaction",
+          "local_id": "g4_reference:transaction:bcf31f3a14abf58e72f90e67eb2663479c20b1921c26c1443a9c502c107a4336",
+          "native_id": "transaction:g42:contrast:1790170823732274000"
+        },
+        {
+          "kind": "bsep",
+          "local_id": "g4_reference:bsep:38fea78d59ff5339e7785a5aac76aa923f1ef5cdca342bae82de334d8923b716",
+          "native_id": "bsep:bfc2991c3fee284a7d9a523c526f1a100d48790c396e52aa1ae42e2f7a427aa6"
+        },
+        {
+          "kind": "intent",
+          "local_id": "g4_reference:intent:6108db005251a7cb04abda7cff92b54bffaa746487765b0821405573622ac5e2",
+          "native_id": "g42:intent:g42:contrast:1790170823732274000"
+        },
+        {
+          "kind": "policy",
+          "local_id": "g4_reference:policy:6cee701775d53d8fe5c39c77031e6741ae85eb3f0591ba0d92315f2550380ad9",
+          "native_id": "work_task_source:6e211054a0f04ae7906dfbff2201f40356f247da9bb3bef9161713ed555b1002"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:7c4ff4ceb9bcffce4aa06f0abe86983818e22345ad076b2d12af6e3d95eefaa2",
+          "native_id": "capability_definition:0c2942bcf993eb7c147305b10fbdd23eef7700437ab9e36252a34cd51fb4dcf0"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:28dbe4434fa732cba47ee6ca9f886b151b1b6436b328ba94e0530c01cd265c3b",
+          "native_id": "capability_definition:d123d8d33cc86e43517c84176f1216c1d3888de38f72b2ed077990f332bcc6d0"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:3c7b0c412161dff73aad96837eb3915fca77db6d5db17b47f4eb9c6bf9b014ad",
+          "native_id": "capability_definition:50259fe3d591e9cec40db10fd2fb72a1258ba4cc19a3be017eade6a4987eb3f9"
+        }
+      ],
+      "selected_offer": "g40:offer:1",
+      "status": "PREPARATION_ONLY_NOT_EXECUTED",
+      "allocation_rows": [
+        {
+          "allocation": 3,
+          "extra": {
+            "denominator": 1985111939603,
+            "numerator": 2955335818809
+          },
+          "floor": 1,
+          "id": "g4_reference:branch:297e03a0299905e46034e9b1a7f5a96d9c1f82b75bfbd0481eba2a06b04fa94f",
+          "lower": 2,
+          "remainder": {
+            "denominator": 1985111939603,
+            "numerator": 970223879206
+          },
+          "upper": 6,
+          "weight": 985111939603,
+          "z_fp": 421250000
+        },
+        {
+          "allocation": 4,
+          "extra": {
+            "denominator": 1985111939603,
+            "numerator": 3000000000000
+          },
+          "floor": 1,
+          "id": "g4_reference:branch:aa53f7aa77ec1bfcac6845396c8cd1a02463c13e842514e007bc290b9507fbcb",
+          "lower": 2,
+          "remainder": {
+            "denominator": 1985111939603,
+            "numerator": 1014888060397
+          },
+          "upper": 6,
+          "weight": 1000000000000,
+          "z_fp": 425000000
+        }
+      ],
+      "output_binding": {
+        "allocation_identity": "g4_reference:allocation_report:bd177ba86006bc9fe0acbdae04709252c8c480c76e99daa3aa46b7f5bbbecc83",
+        "allocation_proof_sha256": "fe1a35ff491d30bdb98733cc38345b7de2b60d67f2105dabb3f9847e8efd6ad0",
+        "original_basis_sha256": "115ec643219191135dbe6595ca4e7f6cece50ff76a3a1f86747c53da7a5ff610"
+      },
+      "work_ids": []
+    },
+    "warm": {
+      "mapping": [
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:97ea298d1d523ecb731c2653b3b41ab4e9c0f49de317ba83785dec495f1b3960",
+          "native_id": "root:client_os_001"
+        },
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:c36bb9ede1fea0b733686c2d7c292f91660af477652aebdce5b9bcba3c9a6366",
+          "native_id": "root:mock_airline_al"
+        },
+        {
+          "kind": "root",
+          "local_id": "g4_reference:root:0d33439a855efe98f5352e16c43279503be325fdae72f2fe0e99f3372e25278c",
+          "native_id": "root:mock_bank_a"
+        },
+        {
+          "kind": "offer",
+          "local_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+          "native_id": "g40:offer:0"
+        },
+        {
+          "kind": "offer",
+          "local_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+          "native_id": "g40:offer:1"
+        },
+        {
+          "kind": "task",
+          "local_id": "g4_reference:task:58395162eca71a05fbbe4db40ccf9a8c18c275b4d1104b53d1d68401af039909",
+          "native_id": "g42:warm:1790170830923460000"
+        },
+        {
+          "kind": "transaction",
+          "local_id": "g4_reference:transaction:e0e8da1a17a00c3b7b71827b493248d03a8080b4d045425aecf49a1015d69d26",
+          "native_id": "transaction:g42:warm:1790170830923460000"
+        },
+        {
+          "kind": "bsep",
+          "local_id": "g4_reference:bsep:44dd6c5a7fa3543b46e533965a5a40f737e246dc6d9a2c32a5ef49c47c05995a",
+          "native_id": "bsep:f9b47f6c7baa164a41f40ed65c0d54cac4c1ef7844c057b46096073564512a6d"
+        },
+        {
+          "kind": "intent",
+          "local_id": "g4_reference:intent:9dea93b54d6950c14d32b89ce7cd75130d967549cca08998459def12e84478b4",
+          "native_id": "g42:intent:g42:warm:1790170830923460000"
+        },
+        {
+          "kind": "policy",
+          "local_id": "g4_reference:policy:f9996c1cbbfeea2448e0a2de5f5cd5836b2ee0f5f8e45bfcacb478cb4b17c802",
+          "native_id": "work_task_source:833da3efe876baac0a7a7b258e60769cfaae29a04c475b794de78c4708cd0bda"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:7c4ff4ceb9bcffce4aa06f0abe86983818e22345ad076b2d12af6e3d95eefaa2",
+          "native_id": "capability_definition:0c2942bcf993eb7c147305b10fbdd23eef7700437ab9e36252a34cd51fb4dcf0"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:28dbe4434fa732cba47ee6ca9f886b151b1b6436b328ba94e0530c01cd265c3b",
+          "native_id": "capability_definition:d123d8d33cc86e43517c84176f1216c1d3888de38f72b2ed077990f332bcc6d0"
+        },
+        {
+          "kind": "definition",
+          "local_id": "g4_reference:definition:3c7b0c412161dff73aad96837eb3915fca77db6d5db17b47f4eb9c6bf9b014ad",
+          "native_id": "capability_definition:50259fe3d591e9cec40db10fd2fb72a1258ba4cc19a3be017eade6a4987eb3f9"
+        }
+      ],
+      "selected_offer": "g40:offer:0",
+      "status": "PREPARATION_ONLY_NOT_EXECUTED",
+      "allocation_rows": [
+        {
+          "allocation": 4,
+          "extra": {
+            "denominator": 1983881318977,
+            "numerator": 3000000000000
+          },
+          "floor": 1,
+          "id": "g4_reference:branch:297e03a0299905e46034e9b1a7f5a96d9c1f82b75bfbd0481eba2a06b04fa94f",
+          "lower": 2,
+          "remainder": {
+            "denominator": 1983881318977,
+            "numerator": 1016118681023
+          },
+          "upper": 6,
+          "weight": 1000000000000,
+          "z_fp": 421250000
+        },
+        {
+          "allocation": 3,
+          "extra": {
+            "denominator": 1983881318977,
+            "numerator": 2951643956931
+          },
+          "floor": 1,
+          "id": "g4_reference:branch:aa53f7aa77ec1bfcac6845396c8cd1a02463c13e842514e007bc290b9507fbcb",
+          "lower": 2,
+          "remainder": {
+            "denominator": 1983881318977,
+            "numerator": 967762637954
+          },
+          "upper": 6,
+          "weight": 983881318977,
+          "z_fp": 417187500
+        }
+      ],
+      "output_binding": {
+        "allocation_identity": "g4_reference:allocation_report:cc30bc0e91c2bbbb2d59985f0955b9cae938b301c9f781366a26359fb5b7bbeb",
+        "allocation_proof_sha256": "a99afa57b755e9b1b3af4d57517d23b7ca2398e849a9ac7b571e1ee2b3e4140d",
+        "original_basis_sha256": "fa874ea7246c4ef1b76bd3d9270e74cf93aa16afa5d2bb754f2eb082318e12d1"
+      },
+      "work_ids": [
+        "offer_0_1",
+        "offer_0_2",
+        "offer_0_3",
+        "offer_1_1",
+        "offer_1_2",
+        "offer_1_3",
+        "offer_1_4"
+      ]
+    }
+  },
+  "comparisons": {
+    "actual_raw_prior": -62500000,
+    "cold": {
+      "offer_0": 4,
+      "offer_1": 3
+    },
+    "cold_performed": [
+      "offer_0_1",
+      "offer_0_2",
+      "offer_0_3",
+      "offer_0_4",
+      "offer_1_1",
+      "offer_1_2",
+      "offer_1_3"
+    ],
+    "cold_prior": 0,
+    "mandatory": [
+      "initial_constraint",
+      "final_strategy_consumer"
+    ],
+    "prior_applications": 1,
+    "warm": {
+      "offer_0": 3,
+      "offer_1": 4
+    },
+    "warm_performed": [
+      "offer_0_1",
+      "offer_0_2",
+      "offer_0_3",
+      "offer_1_1",
+      "offer_1_2",
+      "offer_1_3",
+      "offer_1_4"
+    ]
+  },
+  "slides": [
+    {
+      "number": 1,
+      "title": "Gate 4\nReference",
+      "lead": "Explicit trade-offs\nBounded work\nIndependent owners",
+      "claim_ids": [
+        "C01",
+        "C16"
+      ],
+      "source_label": "C01 / C16",
+      "notes": {
+        "explanation": "Owner-approved reduced mathematical scope. Implementation commit 5b259441994ba41ed3467e8ffcb9ae6ee8d371f0. Conceptual AI-generated Radiolaria artwork is not an evidence graph or cryptographic seal.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+            "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C01",
+            "title": "Strategic comparison and actual bounded work",
+            "claim": "Gate 4 Reference adds finite multi-Root strategy comparison and bounded allocation of useful native work.",
+            "argument": "The strategy and allocation mechanisms enter actual Work results and local Root reviews, within the reduced contract.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                1,
+                2,
+                12
+              ],
+              "appendix": "a-result-scope-status",
+              "reader": "C01"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/docs/gate4_reference_contract_v01.md",
+                "symbol": null,
+                "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Full H-I-J mathematics and LGT remain deferred; no new model weights or authority."
+            ]
+          },
+          {
+            "claim_id": "C16",
+            "title": "Installation and presentation are separate",
+            "claim": "G45 landed the reviewed implementation at the pinned commit; presentation publication has a separate identity and review.",
+            "argument": "The installation report and result retain actual commit/parent/tree; historical NOT_CLOSED and TEST_SUPPLIED_PIN labels remain unchanged.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                1,
+                12
+              ],
+              "appendix": "a-result-scope-status",
+              "reader": "C16"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/docs/gate4_reference_release_checkpoint_v01.md",
+                "symbol": null,
+                "sha256": "5e835bceda254ea2626274cc1fe7dc26b437af89f22e33a1abdd61550785942d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g45/RESULT.json",
+                "json_pointer": "",
+                "sha256": "8786f2e76ba34b7650304d244ca26acfebfadbd05e03b19c5c3349c0d4037c5b",
+                "evidence_class": "RECORDED_OWNER_LANDING"
+              }
+            ],
+            "test_refs": [],
+            "positive_refs": [],
+            "negative_refs": [],
+            "consumer_refs": [],
+            "limits": [
+              "Unsigned Git commit is not an external audit signature. No future publication hash is invented."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "RADIOLARIA OS",
+        "Gate 4\nReference",
+        "Explicit trade-offs\nBounded work\nIndependent owners",
+        "Owner-approved reduced scope\n23 September 2026  /  Implementation 5b25944"
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Mathematics participates in the operating architecture",
+      "lead": "G4 compares interests and allocates finite local Work. Each Root retains its decision.",
+      "claim_ids": [
+        "C01",
+        "C03"
+      ],
+      "source_label": "C01 / C03",
+      "notes": {
+        "explanation": "Conceptual architecture view. G3 contributes accepted outcome, local-memory and calibration mechanisms. Runtime owns finite enrolled Work. This native profile has max_children=0, max_model_calls=0. Three in-process sovereign Root reviews do not prove internet federation or legal agreement.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+            "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C01",
+            "title": "Strategic comparison and actual bounded work",
+            "claim": "Gate 4 Reference adds finite multi-Root strategy comparison and bounded allocation of useful native work.",
+            "argument": "The strategy and allocation mechanisms enter actual Work results and local Root reviews, within the reduced contract.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                1,
+                2,
+                12
+              ],
+              "appendix": "a-result-scope-status",
+              "reader": "C01"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/docs/gate4_reference_contract_v01.md",
+                "symbol": null,
+                "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Full H-I-J mathematics and LGT remain deferred; no new model weights or authority."
+            ]
+          },
+          {
+            "claim_id": "C03",
+            "title": "Each owner makes a current decision",
+            "claim": "Removing Bank consent leaves the recommendation but produces Bank NEEDS_USER and overall MIXED without hold continuation.",
+            "argument": "A valid arithmetic recommendation does not provide the missing local permission; Client and Airline remain separately ACCEPT.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                5
+              ],
+              "appendix": "g-cp-strategy",
+              "reader": "C03"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "strategy_reviews_v42",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/missing_consent",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/mixed/outcome",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_independent_consent_and_cross_root",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/positive",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/mixed/reviews/root:mock_bank_a/2",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/other_valid_offer",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/current_reviews",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Genuine in-process Root reviews and cross-root references; not proof of internet federation or legal agreement."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Mathematics participates in the operating architecture",
+        "G4 compares interests and allocates finite local Work. Each Root retains its decision.",
+        "Intent + bounded\nsemantic inputs",
+        "Runtime-owned Work\nOne local task budget",
+        "G4",
+        "Finite strategy comparison\nExplainable work allocation",
+        "Client Root",
+        "Airline Root",
+        "Bank Root",
+        "G3 local experience",
+        "DRS and time qualify\ncurrent use",
+        "Conceptual architecture view. Dashed: advisory input. Solid: evidence for independent review.",
+        "C01 / C03   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "02"
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Two valid offers express different interests",
+      "lead": "Controlled Airline records share a EUR 840 ceiling, required baggage and no overnight layover.",
+      "claim_ids": [
+        "C02",
+        "C04",
+        "C05"
+      ],
+      "source_label": "C02 / C04",
+      "notes": {
+        "explanation": "Controlled records, not a live airline catalogue. Legacy departure and return dates remain in originals. Utility disclosures are configured reference normalizations for client price margin and seat preference, airline revenue and bank budget margin. They are not EUR, probabilities or empirical happiness.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+            "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C02",
+            "title": "Preference changes the prepared offer",
+            "claim": "PRICE_FIRST prepares offer0; COMFORT_FIRST prepares offer1.",
+            "argument": "Both reports rank the same two valid offers, then each selection is consumed by current reviews, resolution and a prepared hold.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                3,
+                4
+              ],
+              "appendix": "g-cp-strategy",
+              "reader": "C02"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "prepare_hold_v42",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "/cp_strategy",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/strategy_inputs",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/allocation_before_install.json",
+                "json_pointer": "/strategy_inputs",
+                "sha256": "0dfdb1ebee2a5a8986b2fb0418ac5b9daf9eddae29068bb079825feb8120ff0c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/binding",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+                "json_pointer": "/binding",
+                "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+                "json_pointer": "/coherent_changed_price",
+                "sha256": "e632aad1ce0aeb9fcdf4c2a74bb912e609aecc92e741769ed2df63b3b8703e6a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/hold",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+                "json_pointer": "/hold",
+                "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "PREPARATION_ONLY_NOT_EXECUTED; no booking, payment or seat reservation."
+            ]
+          },
+          {
+            "claim_id": "C04",
+            "title": "Exact finite ranking",
+            "claim": "Feasibility, IR, strict Pareto and equal-exponent integer products give an explainable finite recommendation.",
+            "argument": "Original integer utilities and products are retained; both native offers are feasible, IR and Pareto.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                4
+              ],
+              "appendix": "e-strategy-mathematics",
+              "reader": "C04"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "validate_reference_strategy_report_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+                "json_pointer": "/bridge/strategy",
+                "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_strategy_fixed_sets_products_and_witness",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_epsilon_pareto_equal_vectors_and_single_final_round",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy/scores",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output/strategy_report",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Configured utility units; not a probability, Nash equilibrium, incentive compatibility or universal fairness."
+            ]
+          },
+          {
+            "claim_id": "C05",
+            "title": "Suitability precedes ranking",
+            "claim": "Known hard-false cases are excluded before score allocation; missing required evidence does not become zero.",
+            "argument": "Strict contracts, explicit missing sets and report recomputation separate malformed, unknown and genuine no-deal outcomes.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                3,
+                10
+              ],
+              "appendix": "e-strategy-mathematics",
+              "reader": "C05"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "evaluate_reference_pressure_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy/exclusions",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_strategy_dispositions",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_mask_before_softmax_negative_score_and_history_once",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy/feasible",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+                "json_pointer": "/evaluation_time",
+                "sha256": "e632aad1ce0aeb9fcdf4c2a74bb912e609aecc92e741769ed2df63b3b8703e6a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [],
+            "limits": [
+              "Schema shape, arithmetic, contextual suitability and local permission remain separate checks."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Two valid offers express different interests",
+        "Controlled Airline records share a EUR 840 ceiling, required baggage and no overnight layover.",
+        "offer:0",
+        "EUR 790",
+        "Standard seat\nWindow",
+        "offer:1",
+        "EUR 815",
+        "Extra legroom\nAisle",
+        "Client: price + seat preference     Airline: revenue     Bank: budget margin",
+        "C02 / C04   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "03"
+      ]
+    },
+    {
+      "number": 4,
+      "title": "The declared preference changes the prepared offer",
+      "lead": "Configured utility units and the finite Nash-product criterion yield different winners.",
+      "claim_ids": [
+        "C02",
+        "C04"
+      ],
+      "source_label": "C02 / C04",
+      "notes": {
+        "explanation": "Both native candidates satisfy known hard predicates, individual rationality and Pareto filtering. D_i=0 and all alpha_i=1. Source fixed-point utility Q=10^9 and score denominator Q^3. Native integer reports determine ranking. This is finite reference bargaining, not Nash equilibrium or a fairness guarantee. No new live LLM calls.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+            "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+            "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+            "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+            "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/contrast/allocation_before_install.json",
+            "sha256": "0dfdb1ebee2a5a8986b2fb0418ac5b9daf9eddae29068bb079825feb8120ff0c"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C02",
+            "title": "Preference changes the prepared offer",
+            "claim": "PRICE_FIRST prepares offer0; COMFORT_FIRST prepares offer1.",
+            "argument": "Both reports rank the same two valid offers, then each selection is consumed by current reviews, resolution and a prepared hold.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                3,
+                4
+              ],
+              "appendix": "g-cp-strategy",
+              "reader": "C02"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "prepare_hold_v42",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "/cp_strategy",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/strategy_inputs",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/allocation_before_install.json",
+                "json_pointer": "/strategy_inputs",
+                "sha256": "0dfdb1ebee2a5a8986b2fb0418ac5b9daf9eddae29068bb079825feb8120ff0c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/binding",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+                "json_pointer": "/binding",
+                "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+                "json_pointer": "/coherent_changed_price",
+                "sha256": "e632aad1ce0aeb9fcdf4c2a74bb912e609aecc92e741769ed2df63b3b8703e6a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/hold",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+                "json_pointer": "/hold",
+                "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "PREPARATION_ONLY_NOT_EXECUTED; no booking, payment or seat reservation."
+            ]
+          },
+          {
+            "claim_id": "C04",
+            "title": "Exact finite ranking",
+            "claim": "Feasibility, IR, strict Pareto and equal-exponent integer products give an explainable finite recommendation.",
+            "argument": "Original integer utilities and products are retained; both native offers are feasible, IR and Pareto.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                4
+              ],
+              "appendix": "e-strategy-mathematics",
+              "reader": "C04"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "validate_reference_strategy_report_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+                "json_pointer": "/bridge/strategy",
+                "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_strategy_fixed_sets_products_and_witness",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_epsilon_pareto_equal_vectors_and_single_final_round",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy/scores",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output/strategy_report",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Configured utility units; not a probability, Nash equilibrium, incentive compatibility or universal fairness."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "The declared preference changes the prepared offer",
+        "Configured utility units and the finite Nash-product criterion yield different winners.",
+        "Profile",
+        "Offer",
+        "Client U",
+        "Airline U",
+        "Bank U",
+        "Product",
+        "PRICE_FIRST",
+        "offer:0",
+        "0.500",
+        "0.790",
+        "0.050",
+        "0.01975",
+        "PRICE_FIRST",
+        "offer:1",
+        "0.250",
+        "0.815",
+        "0.025",
+        "0.00509375",
+        "COMFORT_FIRST",
+        "offer:0",
+        "0.050",
+        "0.790",
+        "0.050",
+        "0.001975",
+        "COMFORT_FIRST",
+        "offer:1",
+        "0.925",
+        "0.815",
+        "0.025",
+        "0.018846875",
+        "PRICE_FIRST selects offer:0",
+        "COMFORT_FIRST selects offer:1",
+        "Current Root reviews and offer resolution create a prepared hold record",
+        "PREPARATION_ONLY_NOT_EXECUTED. No payment or external booking.",
+        "C02 / C04   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "04"
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Each owner makes a current decision",
+      "lead": "The recommendation remains offer:0 when Bank consent is missing.",
+      "claim_ids": [
+        "C03"
+      ],
+      "source_label": "C03",
+      "notes": {
+        "explanation": "Positive outcome PASS: Client, Airline and Bank ACCEPT. Removing the needed Bank consent produces Bank NEEDS_USER, overall MIXED and no domain continuation. Airline consent field is None in both lanes because its local admission requirements differ. Cross-root records carry evidence without transferred authority.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+            "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C03",
+            "title": "Each owner makes a current decision",
+            "claim": "Removing Bank consent leaves the recommendation but produces Bank NEEDS_USER and overall MIXED without hold continuation.",
+            "argument": "A valid arithmetic recommendation does not provide the missing local permission; Client and Airline remain separately ACCEPT.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                5
+              ],
+              "appendix": "g-cp-strategy",
+              "reader": "C03"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "strategy_reviews_v42",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/missing_consent",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/mixed/outcome",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_independent_consent_and_cross_root",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/positive",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/mixed/reviews/root:mock_bank_a/2",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+                "json_pointer": "/other_valid_offer",
+                "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/current_reviews",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Genuine in-process Root reviews and cross-root references; not proof of internet federation or legal agreement."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Each owner makes a current decision",
+        "The recommendation remains offer:0 when Bank consent is missing.",
+        "Independent owner",
+        "With required consent",
+        "Missing Bank consent",
+        "Client Root",
+        "ACCEPT",
+        "ACCEPT",
+        "Airline Root",
+        "ACCEPT",
+        "ACCEPT",
+        "Bank Root",
+        "ACCEPT",
+        "NEEDS_USER",
+        "Prepared offer:0",
+        "MIXED",
+        "No domain continuation",
+        "C03   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "05"
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Nine work units remain nine work units",
+      "lead": "One local task has a fixed cap of nine native Work dispatch units.",
+      "claim_ids": [
+        "C07",
+        "C08"
+      ],
+      "source_label": "C07 / C08",
+      "notes": {
+        "explanation": "One unit is ONE_NATIVE_WORK_DISPATCH_UNIT. The local original cap is 9, spent=1, reserved mandatory final consumer=1 and available optional=7. Branch lower=2 upper=6. Catalogue has 12 possible optional quanta, seven execute. CPU time, money and token savings were not measured.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+            "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+            "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C07",
+            "title": "History changes actual checks",
+            "claim": "Under the same PRICE_FIRST profile, allocations and performed optional checks change from 4/3 to 3/4.",
+            "argument": "The fourth price check moves from offer0 to offer1 and the final output lists the actual consumed quanta; offer0 remains selected.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                8,
+                9
+              ],
+              "appendix": "h-cp-budget",
+              "reader": "C07"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_runtime_v01.py",
+                "symbol": "NativeAllocationConsumerV01",
+                "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "/cp_budget",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output/consumed_quanta",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/output/consumed_quanta",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/final/program/ordered_work_ids",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/final/program/ordered_work_ids",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Seven optional checks of a 12-check catalogue; no measured CPU, price or outcome-quality improvement."
+            ]
+          },
+          {
+            "claim_id": "C08",
+            "title": "Original spending is conserved",
+            "claim": "The 9-unit cap contains one already-spent initial check, seven optional checks and one reserved final consumer.",
+            "argument": "Budget reconstruction uses original policy and actual ledger usage; subsequent reports cannot reset cumulative spending.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                6,
+                9
+              ],
+              "appendix": "f-pressure-allocation",
+              "reader": "C08"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "reconstruct_allocation_basis_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/enrolled.json",
+                "json_pointer": "",
+                "sha256": "bf1e438bc028ffcb49bb0af103026446d2ea0177c288cbedec762e5b7dd24b11",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/budget",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/after/usage",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_g43_new_consumer_original_budget_and_actual_proof",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_quota_refusals_and_real_exhaustion",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/after/usage",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/controls/stale_spending_revision",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json",
+                "json_pointer": "",
+                "sha256": "bb82e7b130da0ab1fbae80148a0443aa8933a39a9e5adefe56a73105f1e95353",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/controls/terminal_retry",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "ONE_NATIVE_WORK_DISPATCH_UNIT measures admitted dispatches, not time, tokens, money or FLOPs."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Nine work units remain nine work units",
+        "One local task has a fixed cap of nine native Work dispatch units.",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "1 spent",
+        "7 discretionary checks",
+        "1 reserved",
+        "initial_constraint",
+        "Branch limits: 2 minimum, 6 maximum",
+        "final_strategy_\nconsumer",
+        "9 - 1 - 1 = 7",
+        "ONE_NATIVE_WORK_DISPATCH_UNIT",
+        "C07 / C08   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "06"
+      ]
+    },
+    {
+      "number": 7,
+      "title": "An incorrect prediction becomes attributable experience",
+      "lead": "A controlled prediction is FALSE. The mandatory constraint check returns TRUE.",
+      "claim_ids": [
+        "C06"
+      ],
+      "source_label": "C06",
+      "notes": {
+        "explanation": "proposal_assessment=INCORRECT, enforcement_outcome=ALLOWED_AS_REQUIRED, execution_status=COMPLETED, task_outcome=COMPLETED. One native source-bound history sample, prior_fp=-62500000, effective_count=1, SPARSE. Warm names the presence of this sample, not a statistically robust population. No model retraining.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+            "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+            "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+            "sha256": "f6eb290683d12a62e37262a5bd001a67749897f9a63c3d2ae616111a1dcb669a"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C06",
+            "title": "Attributable experience changes one raw prior",
+            "claim": "One source-bound incorrect prediction yields prior -62500000, effective_count 1, SPARSE; the warm lane consumes it once.",
+            "argument": "The saved prospective claim, actual Work original, G3 feedback, independent recording review and current history descent bind the sample to the consumer.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                7,
+                8
+              ],
+              "appendix": "h-cp-budget",
+              "reader": "C06"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_history_v01.py",
+                "symbol": null,
+                "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "validate_observation_copies_v44",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "validate_history_subject_v44",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+                "json_pointer": "/claim/payload",
+                "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+                "json_pointer": "/feedback",
+                "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+                "json_pointer": "/snapshot/prior",
+                "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+                "json_pointer": "",
+                "sha256": "f6eb290683d12a62e37262a5bd001a67749897f9a63c3d2ae616111a1dcb669a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_history_v01.py",
+                "symbol": "test_history_actual_native_proof_and_recording",
+                "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+                "json_pointer": "/review",
+                "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+                "json_pointer": "/controls/coherent_cold_prior/reason",
+                "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+                "json_pointer": "/budget/pressure_inputs",
+                "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Warm names an available-history lane; its statistical sample state remains SPARSE. No model was called or trained."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "An incorrect prediction becomes attributable experience",
+        "A controlled prediction is FALSE. The mandatory constraint check returns TRUE.",
+        "FALSE",
+        "Configured prediction",
+        "TRUE",
+        "Completed mandatory check",
+        "Assessment",
+        "Recorded result",
+        "Proposal",
+        "INCORRECT",
+        "Enforcement",
+        "ALLOWED_AS_REQUIRED",
+        "Execution / task",
+        "COMPLETED / COMPLETED",
+        "One SPARSE sample through Root-reviewed recording and LocalDRS. No new LLM call.",
+        "C06   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "07"
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Experience changes which checks actually run",
+      "lead": "One source-bound sample changes the seven discretionary checks under PRICE_FIRST.",
+      "claim_ids": [
+        "C06",
+        "C07"
+      ],
+      "source_label": "C06 / C07",
+      "notes": {
+        "explanation": "CP-BUDGET fixes domain records, hard constraints, branch features, quota limits, policy values, mandatory checks and PRICE_FIRST. Context IDs, current native time, Host revision, history descent and properly scoped consents may differ. Six checks remain common. The seventh is offer_0_4 in cold and offer_1_4 in warm, field price. Both lanes prepare offer0. Raw prior applies once. z_fp cold offer0=425000000 offer1=421250000, warm offer0=417187500 offer1=421250000.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+            "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+            "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+            "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+            "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+            "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C06",
+            "title": "Attributable experience changes one raw prior",
+            "claim": "One source-bound incorrect prediction yields prior -62500000, effective_count 1, SPARSE; the warm lane consumes it once.",
+            "argument": "The saved prospective claim, actual Work original, G3 feedback, independent recording review and current history descent bind the sample to the consumer.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                7,
+                8
+              ],
+              "appendix": "h-cp-budget",
+              "reader": "C06"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_history_v01.py",
+                "symbol": null,
+                "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "validate_observation_copies_v44",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "validate_history_subject_v44",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+                "json_pointer": "/claim/payload",
+                "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+                "json_pointer": "/feedback",
+                "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+                "json_pointer": "/snapshot/prior",
+                "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+                "json_pointer": "",
+                "sha256": "f6eb290683d12a62e37262a5bd001a67749897f9a63c3d2ae616111a1dcb669a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_history_v01.py",
+                "symbol": "test_history_actual_native_proof_and_recording",
+                "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+                "json_pointer": "/review",
+                "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+                "json_pointer": "/controls/coherent_cold_prior/reason",
+                "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+                "json_pointer": "/budget/pressure_inputs",
+                "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Warm names an available-history lane; its statistical sample state remains SPARSE. No model was called or trained."
+            ]
+          },
+          {
+            "claim_id": "C07",
+            "title": "History changes actual checks",
+            "claim": "Under the same PRICE_FIRST profile, allocations and performed optional checks change from 4/3 to 3/4.",
+            "argument": "The fourth price check moves from offer0 to offer1 and the final output lists the actual consumed quanta; offer0 remains selected.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                8,
+                9
+              ],
+              "appendix": "h-cp-budget",
+              "reader": "C07"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_runtime_v01.py",
+                "symbol": "NativeAllocationConsumerV01",
+                "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "/cp_budget",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output/consumed_quanta",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/output/consumed_quanta",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/final/program/ordered_work_ids",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/final/program/ordered_work_ids",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Seven optional checks of a 12-check catalogue; no measured CPU, price or outcome-quality improvement."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Experience changes which checks actually run",
+        "One source-bound sample changes the seven discretionary checks under PRICE_FIRST.",
+        "Common six checks",
+        "Changed check",
+        "Cold\n4 / 3",
+        "0_1\nRoute",
+        "0_2\nBaggage",
+        "0_3\nSeat",
+        "1_1\nRoute",
+        "1_2\nBaggage",
+        "1_3\nSeat",
+        "0_4\nPrice",
+        "History-informed\n3 / 4",
+        "0_1\nRoute",
+        "0_2\nBaggage",
+        "0_3\nSeat",
+        "1_1\nRoute",
+        "1_2\nBaggage",
+        "1_3\nSeat",
+        "1_4\nPrice",
+        "Work IDs use the prefix offer_   (for example offer_0_4)",
+        "z offer0: 0.425 to 0.4171875",
+        "z offer1: 0.42125",
+        "Raw prior applies once. Both lanes prepare offer:0.",
+        "C06 / C07   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "08"
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Allocated work reaches the final consumer",
+      "lead": "The native Work input carries the allocation proof. Its output binds the same allocation.",
+      "claim_ids": [
+        "C09",
+        "C12",
+        "C07",
+        "C08"
+      ],
+      "source_label": "C09 / C12",
+      "notes": {
+        "explanation": "Independently reconstructed original basis binds accepted allocation, revised Work literal, enrolled Host dispatch, completed output and final PURE consumer allocation-proof input. Its output binds allocation_identity, allocation_proof_sha256 and original basis. coherent_6_1 refuses with g4_reference:native_source_derived_budget before a changed executor. Original accepted allocation is its positive neighbour.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+            "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/portable_records.json",
+            "sha256": "d2a428126edad928630cc61645c625cbb06143d5522dee07553281b4ddfb4498"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+            "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+            "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C09",
+            "title": "Allocated results reach the final consumer",
+            "claim": "The actual final PURE consumer receives allocation proof and produces an output bound to allocation identity, proof digest and original basis.",
+            "argument": "Explicit Work literals and completed results connect the allocation to downstream strategy and hold preparation.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                9
+              ],
+              "appendix": "h-cp-budget",
+              "reader": "C09"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "validate_allocation_proof_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "strategy_work_result_v42",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/portable_records.json",
+                "json_pointer": "/final_program",
+                "sha256": "d2a428126edad928630cc61645c625cbb06143d5522dee07553281b4ddfb4498",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_g43_new_consumer_original_budget_and_actual_proof",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output/allocation_proof_sha256",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_result.json",
+                "json_pointer": "/reason",
+                "sha256": "cdb85b8d5c09e16cf0092f36dafbabbc578ef0f77dd4e242d9090f65ff7cb64d",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/work_artifact",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Acyclic proof/material dependency; no independent authority is created by the output."
+            ]
+          },
+          {
+            "claim_id": "C12",
+            "title": "Coherent false relations are rejected",
+            "claim": "Resealing a wrong quota, prior, result, root or offer relation does not make it admissible.",
+            "argument": "The verifier compares against independent original basis and source relations after outer integrity has been rebuilt.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                9,
+                10
+              ],
+              "appendix": "i-boundary-controls",
+              "reader": "C12"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "reconstruct_allocation_basis_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "validate_saved_story_v01",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+                "json_pointer": "/controls",
+                "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/commands/0018_final_parent_controls/controls.json",
+                "json_pointer": "",
+                "sha256": "63a5195975c7ae9c9fbb8e16e3df79c578ec712ffe82ef93e35a0a2afa9c76e7",
+                "evidence_class": "RECORDED_PARENT_CONTROL"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+                "symbol": "test_g43_semantic_controls_with_resealed_test_pin",
+                "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_source_and_coherent_supplied_controls",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/supported_result.json",
+                "json_pointer": "",
+                "sha256": "40844eb6c44c6cb261fe2b32230947221d7585452e7c8c9c6ca0f73bcc9cc338",
+                "evidence_class": "RECORDED_SAVED_PROOF"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_quota.json",
+                "json_pointer": "/reason",
+                "sha256": "da5446dc5370341df3f87b4b7573e9a4b7b66e1e11ba20373a2ecae8aaf29be6",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_prior.json",
+                "json_pointer": "/reason",
+                "sha256": "50578e4030f46da3f287eccf609b628c8bb38be98f47a15949c9ed42da3a907d",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_result.json",
+                "json_pointer": "/reason",
+                "sha256": "cdb85b8d5c09e16cf0092f36dafbabbc578ef0f77dd4e242d9090f65ff7cb64d",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_root.json",
+                "json_pointer": "/reason",
+                "sha256": "a998a1da12b978cea3bee365212d8cec6c3cd3db9d64cc3efc1e75b969a85527",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_offer.json",
+                "json_pointer": "/reason",
+                "sha256": "7516e2ac15240a94135d85e022021e0eb9fe8fc71c5838188bb21500df76d27a",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Refusals occur at named constructor/currentness/saved-relation boundaries; they are not all Firewall blocks."
+            ]
+          },
+          {
+            "claim_id": "C07",
+            "title": "History changes actual checks",
+            "claim": "Under the same PRICE_FIRST profile, allocations and performed optional checks change from 4/3 to 3/4.",
+            "argument": "The fourth price check moves from offer0 to offer1 and the final output lists the actual consumed quanta; offer0 remains selected.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                8,
+                9
+              ],
+              "appendix": "h-cp-budget",
+              "reader": "C07"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_runtime_v01.py",
+                "symbol": "NativeAllocationConsumerV01",
+                "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "/cp_budget",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output/consumed_quanta",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/output/consumed_quanta",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/final/program/ordered_work_ids",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+                "json_pointer": "/final/program/ordered_work_ids",
+                "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Seven optional checks of a 12-check catalogue; no measured CPU, price or outcome-quality improvement."
+            ]
+          },
+          {
+            "claim_id": "C08",
+            "title": "Original spending is conserved",
+            "claim": "The 9-unit cap contains one already-spent initial check, seven optional checks and one reserved final consumer.",
+            "argument": "Budget reconstruction uses original policy and actual ledger usage; subsequent reports cannot reset cumulative spending.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                6,
+                9
+              ],
+              "appendix": "f-pressure-allocation",
+              "reader": "C08"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "reconstruct_allocation_basis_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/enrolled.json",
+                "json_pointer": "",
+                "sha256": "bf1e438bc028ffcb49bb0af103026446d2ea0177c288cbedec762e5b7dd24b11",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/budget",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/after/usage",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_g43_new_consumer_original_budget_and_actual_proof",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_quota_refusals_and_real_exhaustion",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/after/usage",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/controls/stale_spending_revision",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json",
+                "json_pointer": "",
+                "sha256": "bb82e7b130da0ab1fbae80148a0443aa8933a39a9e5adefe56a73105f1e95353",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/controls/terminal_retry",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "ONE_NATIVE_WORK_DISPATCH_UNIT measures admitted dispatches, not time, tokens, money or FLOPs."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Allocated work reaches the final consumer",
+        "The native Work input carries the allocation proof. Its output binds the same allocation.",
+        "Accepted allocation",
+        "Cold [4, 3]",
+        "Actual Work literal",
+        "offer_0_4\nfield: price",
+        "Completed output",
+        "EUR 790\nCOMPLETED",
+        "Final consumer",
+        "allocation_proof\ninput + bound output",
+        "Coherent 6 / 1 substitution",
+        "REFUSED before changed execution",
+        "Original source basis disagrees. The intact allocation is the passing neighbour.",
+        "C09 / C12   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "09"
+      ]
+    },
+    {
+      "number": 10,
+      "title": "Current context remains binding",
+      "lead": "Valid old records remain subject to the original budget, expiry and current history checks.",
+      "claim_ids": [
+        "C08",
+        "C10",
+        "C11",
+        "C05",
+        "C12"
+      ],
+      "source_label": "C08 / C10 / C11",
+      "notes": {
+        "explanation": "Current expiry just-before control prepares a result, at-boundary/after/future/rollback controls refuse. Retained history current descent has genuine accepted neighbours and refuses at/after the boundary. Current exhaustion retains original spending. Pure replay checks event-time relationships and does not renew authority today.",
+        "sources": [
+          {
+            "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+            "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+            "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c"
+          },
+          {
+            "path": "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json",
+            "sha256": "bb82e7b130da0ab1fbae80148a0443aa8933a39a9e5adefe56a73105f1e95353"
+          }
+        ],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C08",
+            "title": "Original spending is conserved",
+            "claim": "The 9-unit cap contains one already-spent initial check, seven optional checks and one reserved final consumer.",
+            "argument": "Budget reconstruction uses original policy and actual ledger usage; subsequent reports cannot reset cumulative spending.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                6,
+                9
+              ],
+              "appendix": "f-pressure-allocation",
+              "reader": "C08"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "reconstruct_allocation_basis_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/enrolled.json",
+                "json_pointer": "",
+                "sha256": "bf1e438bc028ffcb49bb0af103026446d2ea0177c288cbedec762e5b7dd24b11",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/budget",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/after/usage",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_g43_new_consumer_original_budget_and_actual_proof",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_quota_refusals_and_real_exhaustion",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/after/usage",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/controls/stale_spending_revision",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json",
+                "json_pointer": "",
+                "sha256": "bb82e7b130da0ab1fbae80148a0443aa8933a39a9e5adefe56a73105f1e95353",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/controls/terminal_retry",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "ONE_NATIVE_WORK_DISPATCH_UNIT measures admitted dispatches, not time, tokens, money or FLOPs."
+            ]
+          },
+          {
+            "claim_id": "C10",
+            "title": "Original validity is not renewed",
+            "claim": "Current consumers check original source expiry even when reviews or wrappers are fresh.",
+            "argument": "Just-before-expiry preparation is retained alongside boundary/after/future/rollback refusals and a separate shorter-offer task.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                10
+              ],
+              "appendix": "j-currentness-replay",
+              "reader": "C10"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "current_use_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+                "json_pointer": "",
+                "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/short_offer/shorter_offer_control.json",
+                "json_pointer": "",
+                "sha256": "8982cd84531bbc482848ae0737a3062f8015fa1d75c68fe324039b7288b840be",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_g43_current_expiry_actual_consumers",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_g43_shorter_offer_ttl",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+                "json_pointer": "/just_before/status",
+                "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+                "json_pointer": "/at_boundary",
+                "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+                "json_pointer": "/rollback",
+                "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/current_use.json",
+                "json_pointer": "",
+                "sha256": "4fa53a48e8c7e4ce925bab8976c59776b78c6c963d0f3b1161d4ddf22dc3e893",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Saved current-at-event-time suitability does not restore current permission today."
+            ]
+          },
+          {
+            "claim_id": "C11",
+            "title": "Retained history must qualify again",
+            "claim": "A previously valid history opening is not blindly reusable after time advances.",
+            "argument": "The warm lane performs current Root-approved descent and rejects invalid current history while preserving the enrolled basis and usage.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                10
+              ],
+              "appendix": "j-currentness-replay",
+              "reader": "C11"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_history_v01.py",
+                "symbol": null,
+                "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+                "json_pointer": "",
+                "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_history_v01.py",
+                "symbol": "test_g43_retained_history_current_requalification",
+                "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+                "json_pointer": "/current_descent",
+                "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+                "json_pointer": "/at_boundary",
+                "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/warm/current_history.json",
+                "json_pointer": "",
+                "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "History eligibility is narrower than physical truth; the trusted local memory boundary is explicit."
+            ]
+          },
+          {
+            "claim_id": "C05",
+            "title": "Suitability precedes ranking",
+            "claim": "Known hard-false cases are excluded before score allocation; missing required evidence does not become zero.",
+            "argument": "Strict contracts, explicit missing sets and report recomputation separate malformed, unknown and genuine no-deal outcomes.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                3,
+                10
+              ],
+              "appendix": "e-strategy-mathematics",
+              "reader": "C05"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "evaluate_reference_pressure_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy/exclusions",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_strategy_dispositions",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+                "symbol": "test_mask_before_softmax_negative_score_and_history_once",
+                "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+                "json_pointer": "/bridge/strategy/feasible",
+                "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+                "json_pointer": "/evaluation_time",
+                "sha256": "e632aad1ce0aeb9fcdf4c2a74bb912e609aecc92e741769ed2df63b3b8703e6a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "consumer_refs": [],
+            "limits": [
+              "Schema shape, arithmetic, contextual suitability and local permission remain separate checks."
+            ]
+          },
+          {
+            "claim_id": "C12",
+            "title": "Coherent false relations are rejected",
+            "claim": "Resealing a wrong quota, prior, result, root or offer relation does not make it admissible.",
+            "argument": "The verifier compares against independent original basis and source relations after outer integrity has been rebuilt.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                9,
+                10
+              ],
+              "appendix": "i-boundary-controls",
+              "reader": "C12"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+                "symbol": "reconstruct_allocation_basis_v43",
+                "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "validate_saved_story_v01",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+                "json_pointer": "/controls",
+                "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/commands/0018_final_parent_controls/controls.json",
+                "json_pointer": "",
+                "sha256": "63a5195975c7ae9c9fbb8e16e3df79c578ec712ffe82ef93e35a0a2afa9c76e7",
+                "evidence_class": "RECORDED_PARENT_CONTROL"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+                "symbol": "test_g43_semantic_controls_with_resealed_test_pin",
+                "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_source_and_coherent_supplied_controls",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+                "json_pointer": "/allocation/rows",
+                "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/supported_result.json",
+                "json_pointer": "",
+                "sha256": "40844eb6c44c6cb261fe2b32230947221d7585452e7c8c9c6ca0f73bcc9cc338",
+                "evidence_class": "RECORDED_SAVED_PROOF"
+              }
+            ],
+            "negative_refs": [
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_quota.json",
+                "json_pointer": "/reason",
+                "sha256": "da5446dc5370341df3f87b4b7573e9a4b7b66e1e11ba20373a2ecae8aaf29be6",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_prior.json",
+                "json_pointer": "/reason",
+                "sha256": "50578e4030f46da3f287eccf609b628c8bb38be98f47a15949c9ed42da3a907d",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_result.json",
+                "json_pointer": "/reason",
+                "sha256": "cdb85b8d5c09e16cf0092f36dafbabbc578ef0f77dd4e242d9090f65ff7cb64d",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_root.json",
+                "json_pointer": "/reason",
+                "sha256": "a998a1da12b978cea3bee365212d8cec6c3cd3db9d64cc3efc1e75b969a85527",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              },
+              {
+                "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_offer.json",
+                "json_pointer": "/reason",
+                "sha256": "7516e2ac15240a94135d85e022021e0eb9fe8fc71c5838188bb21500df76d27a",
+                "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+              }
+            ],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Refusals occur at named constructor/currentness/saved-relation boundaries; they are not all Firewall blocks."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Current context remains binding",
+        "Valid old records remain subject to the original budget, expiry and current history checks.",
+        "Boundary",
+        "Genuine positive",
+        "Refused continuation",
+        "Original budget",
+        "Seven optional checks\nplus mandatory endpoints",
+        "Fresh report cannot\nerase spent work",
+        "Original expiry",
+        "Just before expiry:\nprepared result",
+        "At boundary or after:\nREFUSED",
+        "Retained history",
+        "Current discovery and\nRoot-approved descent",
+        "Expired retained input:\nREFUSED",
+        "C08 / C10 / C11   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "10"
+      ]
+    },
+    {
+      "number": 11,
+      "title": "The saved result can be traced and checked",
+      "lead": "Numerical references, recorded native work and supplied verification have distinct scopes.",
+      "claim_ids": [
+        "C13",
+        "C15"
+      ],
+      "source_label": "C13 / C15",
+      "notes": {
+        "explanation": "Recorded G41:110 pure-math tests. Recorded G43:26 nodes/78 phases, including17 native/history/preflight. G44 focused0017:33 PASS/1 FAIL,102 phases,45.056284s. Fail: mode test requested04644 but actual0644, accepted environment limitation. G44 Living19.888031s,Conformance19.903165s,G45 installed supplied19.859283s. Their complete1151634-byte outputs share SHA256136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9. Named replay scope observes zero new model/collector/Host/Work/history-write/Root/effect/network calls,430 pure saved Root-result validations. SAFE_DERIVED_SAVED_RELATIONSHIPS_AT_RECORDED_EVENT_TIMES. Full native canonical replay UNSUPPORTED_NATIVE_SCHEMA. Trusted installed source and exact recorded checker environment required, including Python3.14.5,jsonschema4.26.0,referencing0.37.0 and executable identity. No universal clean-clone claim.",
+        "sources": [],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C13",
+            "title": "The checker is independently installed",
+            "claim": "Saved evidence cannot choose the checker implementation or substitute a transitive source body.",
+            "argument": "G44 P1 checks actual import origins, finite checker closure and exact recorded environment before saved semantics; archived source bodies remain inert.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                11
+              ],
+              "appendix": "j-currentness-replay",
+              "reader": "C13"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "checker_sources_v44",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "checker_environment_v44",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/MANIFEST.json",
+                "json_pointer": "/checker_source_ledger",
+                "sha256": "16cee34833de46c4fd03dee9da3990d03815237567dfecc7cc9870f69d6d6f02",
+                "evidence_class": "RECORDED_CHECKER_PROVENANCE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/MANIFEST.json",
+                "json_pointer": "/producer_source_ledger",
+                "sha256": "16cee34833de46c4fd03dee9da3990d03815237567dfecc7cc9870f69d6d6f02",
+                "evidence_class": "RECORDED_PRODUCER_PROVENANCE"
+              },
+              {
+                "path": "evidence/g44/portable_publication_final/MANIFEST.json",
+                "json_pointer": "/checker_environment",
+                "sha256": "16cee34833de46c4fd03dee9da3990d03815237567dfecc7cc9870f69d6d6f02",
+                "evidence_class": "RECORDED_CHECKER_ENVIRONMENT"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+                "symbol": "test_g44_missing_checker_dependency_refuses",
+                "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              },
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+                "symbol": "test_g44_preloaded_alternative_origin_core_mismatch_refuses",
+                "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [
+              {
+                "path": "evidence/g45/installed_supplied/combined.json",
+                "json_pointer": "/status",
+                "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+                "evidence_class": "RECORDED_INSTALLED_SUPPLIED"
+              }
+            ],
+            "negative_refs": [],
+            "consumer_refs": [],
+            "limits": [
+              "Requires a matching trusted environment; not an arbitrary clean-clone replay promise or hostile same-UID process containment."
+            ]
+          },
+          {
+            "claim_id": "C15",
+            "title": "Saved verification is deterministic without new authority",
+            "claim": "G44 Living, G44 Conformance and G45 installed supplied checks produced identical 1,151,634-byte canonical outputs.",
+            "argument": "Equal whole-file SHA256 and the named counters support deterministic saved relationship checks without new native execution.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                11
+              ],
+              "appendix": "k-verification-inventory",
+              "reader": "C15"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+                "symbol": "verify_package_v01",
+                "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/commands/0020_supplied_living_final/combined.json",
+                "json_pointer": "",
+                "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+                "evidence_class": "RECORDED_SUPPLIED_LIVING"
+              },
+              {
+                "path": "evidence/g44/commands/0021_supplied_conformance_final/combined.json",
+                "json_pointer": "",
+                "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+                "evidence_class": "RECORDED_SUPPLIED_CONFORMANCE"
+              },
+              {
+                "path": "evidence/g45/installed_supplied/combined.json",
+                "json_pointer": "",
+                "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+                "evidence_class": "RECORDED_INSTALLED_SUPPLIED"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+                "symbol": "test_g43_saved_positive_and_test_pin",
+                "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [],
+            "negative_refs": [],
+            "consumer_refs": [],
+            "limits": [
+              "SAFE_DERIVED_SAVED_RELATIONSHIPS_AT_RECORDED_EVENT_TIMES; full native canonical replay is UNSUPPORTED_NATIVE_SCHEMA. Named monitoring is not OS-wide surveillance."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "The saved result can be traced and checked",
+        "Numerical references, recorded native work and supplied verification have distinct scopes.",
+        "Evidence layer",
+        "Recorded scope",
+        "Result",
+        "G41 numerical",
+        "110 pure-math tests",
+        "Recorded reference",
+        "G43 native",
+        "3 tasks × 9 units = 27",
+        "Actual Work + consumption",
+        "G44 focused",
+        "33 PASS / 1 FAIL",
+        "Accepted mode-test limitation",
+        "G44 / G45 supplied",
+        "3 identical complete outputs",
+        "Saved relationships checked",
+        "Supplied checks require the trusted installed code and matching recorded environment.",
+        "Full native replay is unsupported. No new LLM or Work calls occur in the named replay scope.",
+        "C13 / C15   Technical evidence",
+        "GATE 4 REFERENCE  /  23 SEPTEMBER 2026",
+        "11"
+      ]
+    },
+    {
+      "number": 12,
+      "title": "Reference accepted, deeper mathematics deferred",
+      "lead": "Preferences change the prepared offer. Experience changes work allocation.",
+      "claim_ids": [
+        "C01",
+        "C16"
+      ],
+      "source_label": "C01 / C16",
+      "notes": {
+        "explanation": "Reference engineering accepted / presentation prepared. Full Gate4 H-I-J after Gate6 publication remains for separate future scope decision. Deferred unilateral regret, stability,robust/minimax,CVaR,sensitivity,full AVF catalogue,richer priors and broader calibration. LGT excluded. No delivery date or automatic work implied. Versioned main paths are staged publication targets requiring repository access. Implementation commit is pinned; no future publication commit invented.",
+        "sources": [],
+        "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "claim_matrix_ref": "presentation/claim_evidence_matrix_v01.json",
+        "claim_routes": [
+          {
+            "claim_id": "C01",
+            "title": "Strategic comparison and actual bounded work",
+            "claim": "Gate 4 Reference adds finite multi-Root strategy comparison and bounded allocation of useful native work.",
+            "argument": "The strategy and allocation mechanisms enter actual Work results and local Root reviews, within the reduced contract.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                1,
+                2,
+                12
+              ],
+              "appendix": "a-result-scope-status",
+              "reader": "C01"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/docs/gate4_reference_contract_v01.md",
+                "symbol": null,
+                "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+                "symbol": "evaluate_reference_strategy_v01",
+                "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              },
+              {
+                "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+                "symbol": "allocate_reference_work_budget_v01",
+                "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+                "json_pointer": "",
+                "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "test_refs": [
+              {
+                "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+                "symbol": "test_native_causal_strategy_and_budget",
+                "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+              }
+            ],
+            "positive_refs": [],
+            "negative_refs": [],
+            "consumer_refs": [
+              {
+                "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+                "json_pointer": "/output",
+                "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+                "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+              }
+            ],
+            "limits": [
+              "Full H-I-J mathematics and LGT remain deferred; no new model weights or authority."
+            ]
+          },
+          {
+            "claim_id": "C16",
+            "title": "Installation and presentation are separate",
+            "claim": "G45 landed the reviewed implementation at the pinned commit; presentation publication has a separate identity and review.",
+            "argument": "The installation report and result retain actual commit/parent/tree; historical NOT_CLOSED and TEST_SUPPLIED_PIN labels remain unchanged.",
+            "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+            "anchors": {
+              "slides": [
+                1,
+                12
+              ],
+              "appendix": "a-result-scope-status",
+              "reader": "C16"
+            },
+            "source_refs": [
+              {
+                "path": "source_snapshot/installed/docs/gate4_reference_release_checkpoint_v01.md",
+                "symbol": null,
+                "sha256": "5e835bceda254ea2626274cc1fe7dc26b437af89f22e33a1abdd61550785942d",
+                "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+              }
+            ],
+            "data_refs": [
+              {
+                "path": "evidence/g45/RESULT.json",
+                "json_pointer": "",
+                "sha256": "8786f2e76ba34b7650304d244ca26acfebfadbd05e03b19c5c3349c0d4037c5b",
+                "evidence_class": "RECORDED_OWNER_LANDING"
+              }
+            ],
+            "test_refs": [],
+            "positive_refs": [],
+            "negative_refs": [],
+            "consumer_refs": [],
+            "limits": [
+              "Unsigned Git commit is not an external audit signature. No future publication hash is invented."
+            ]
+          }
+        ]
+      },
+      "visible_text": [
+        "Reference accepted, deeper mathematics deferred",
+        "Preferences change the prepared offer. Experience changes work allocation.",
+        "ACCEPTED REFERENCE",
+        "Finite multi-Root comparison\nBounded allocation of actual Work\nIndependent owner decisions",
+        "DEFERRED PROGRAMME",
+        "Full H-I-J after Gate 6 publication\nSeparate future scope decision\nLGT excluded",
+        "Reference engineering accepted / presentation prepared",
+        "Technical appendix",
+        "XML Reader",
+        "Reader index",
+        "Pinned implementation",
+        "Verification guide",
+        "Repository access required. Document links are staged publication targets on main."
+      ]
+    }
+  ]
+}

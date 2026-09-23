@@ -1,0 +1,39 @@
+{
+  "schema": "gate4_reference_publication_status_v01",
+  "date": "2026-09-23",
+  "scope": "G4_REFERENCE_SCOPE_V01",
+  "engineering_review": "ACCEPTED_REDUCED_SCOPE_ON_RECORDED_EVIDENCE",
+  "review_source": "evidence/review/INDEPENDENT_ENGINEERING_REVIEW_20260923.md",
+  "implementation": {
+    "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+    "parent": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+    "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+    "source_landing": "G45_COMPLETE",
+    "remote_basis": "evidence/review/remote_basis_observation_v01.json",
+    "commit_signature": "UNSIGNED"
+  },
+  "presentation": "PREPARED_AND_DOCUMENT_QA_COMPLETE",
+  "reader": "PREPARED_FOR_FINAL_DATA_ONLY_VERIFICATION",
+  "publication": {
+    "status": "NOT_PERFORMED",
+    "commit": null,
+    "remote_readback": null,
+    "namespace": "docs/showcase/gate4_reference_v01"
+  },
+  "completion_requirements": {
+    "R01_R17": "ENGINEERING_ACCEPTED_WITH_RECORDED_LIMITATION",
+    "R18": "TRANSFERABLE_READER_PREPARED_DATA_ONLY_RESULT_SEPARATE",
+    "R19": "DOCUMENT_QA_COMPLETE_SEPARATE_PUBLICATION_PENDING",
+    "R20": "DEFERRAL_VISIBLE_IN_PREPARED_CAPSULE_ROOT_NAVIGATION_PENDING"
+  },
+  "full_gate4": "DEFERRED_AFTER_GATE6_PUBLICATION_SEPARATE_SCOPE_DECISION",
+  "lgt": "DEFERRED_EXCLUDED",
+  "historical_mode_test": "33_PASS_1_FAIL_ACTUAL_0644_INSTEAD_OF_REQUESTED_04644",
+  "full_native_canonical_replay": "UNSUPPORTED_NATIVE_SCHEMA",
+  "original_pin_provenance": "TEST_SUPPLIED_PIN_UNCHANGED",
+  "new_native_runtime_calls": 0,
+  "new_project_provider_calls": 0,
+  "new_business_effect_calls": 0,
+  "historical_records_edited": false,
+  "reader_result": "qa/data_verification.json"
+}

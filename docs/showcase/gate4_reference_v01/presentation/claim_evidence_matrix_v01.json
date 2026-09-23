@@ -1,0 +1,2678 @@
+{
+  "schema_version": "G4_PRESENTATION_CLAIM_EVIDENCE_MAP_V01",
+  "identity": {
+    "implementation_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+    "created_date": "2026-09-23",
+    "authoring_only": true
+  },
+  "scope": "G4_REFERENCE_SCOPE_V01",
+  "provenance_rules": {
+    "specification_intent": "The implementation master is a design source, not runtime evidence; its fixture vectors are NUMERICAL_REFERENCE_NOT_RUNTIME.",
+    "actual_source": "source_snapshot/installed contains G45 landed postimages, byte-equal to reviewed G44 postimages.",
+    "recorded_native": "G43 source-bound controlled native story retained in G44; no new native execution for presentation.",
+    "current_checker": "G44 checker closure and G45 installed supplied result are separate from recorded producer source.",
+    "schema_limit": "Pointer and schema checks validate shape/navigation; semantic and contextual obligations require their named validators."
+  },
+  "numerical_facts": {
+    "Q": 1000000000,
+    "W": 1000000000000,
+    "tau_fp": 250000000,
+    "epsilon_gain_fp": 1,
+    "alpha": 1,
+    "rho": 0,
+    "original_budget": {
+      "max_children": 0,
+      "max_compute_units": 9,
+      "max_items": 16,
+      "max_model_calls": 0,
+      "max_revisions": 2
+    },
+    "comparison": {
+      "cp_budget": {
+        "actual_raw_prior": -62500000,
+        "cold": {
+          "offer_0": 4,
+          "offer_1": 3
+        },
+        "cold_performed": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_0_4",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3"
+        ],
+        "cold_prior": 0,
+        "mandatory": [
+          "initial_constraint",
+          "final_strategy_consumer"
+        ],
+        "prior_applications": 1,
+        "warm": {
+          "offer_0": 3,
+          "offer_1": 4
+        },
+        "warm_performed": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3",
+          "offer_1_4"
+        ]
+      },
+      "cp_strategy": {
+        "actual_root_decisions": {
+          "cold": {
+            "root:client_os_001": "b3b12e49ec02ddef004ca1b06a5a2feb34cd5f2c5c0a2e8b138693c270e4641b",
+            "root:mock_airline_al": "1580e28908588f2d295aa5abb6f1b7990db00efd8c4995572bd8ea24b21d3f06",
+            "root:mock_bank_a": "82667740adbb708d6720665721b65c6ddfe58bf88d394bf8e4e4a268f9352c88"
+          },
+          "contrast": {
+            "root:client_os_001": "4ab4abc97d0cc9862d7e5dc5cb97a07aa92e0e49f7d8a90155520b12f3258157",
+            "root:mock_airline_al": "5f5042704fc65e036a9e3083dbf970518c9208dbfe9cadbd7a10e78008a46e48",
+            "root:mock_bank_a": "c7ae6e81d4dbde762191f33ede518b4c322d6757d9cdba87bde265d6fdc78b6c"
+          }
+        },
+        "profiles": [
+          "PRICE_FIRST",
+          "COMFORT_FIRST"
+        ],
+        "selected": [
+          "g40:offer:0",
+          "g40:offer:1"
+        ]
+      },
+      "declared_differences": [
+        "task_id",
+        "transaction_id",
+        "BSEP_binding",
+        "current_native_time",
+        "Host_revision",
+        "history_descent"
+      ],
+      "fixed": {
+        "configuration": {
+          "bank_limit": 840,
+          "branches": [
+            {
+              "cost": 400000000,
+              "id": "offer_0",
+              "lineage": 800000000,
+              "lower": 2,
+              "offer_index": 0,
+              "relevance": 800000000,
+              "uncertainty": 500000000,
+              "upper": 6
+            },
+            {
+              "cost": 430000000,
+              "id": "offer_1",
+              "lineage": 800000000,
+              "lower": 2,
+              "offer_index": 1,
+              "relevance": 800000000,
+              "uncertainty": 500000000,
+              "upper": 6
+            }
+          ],
+          "comparison": {
+            "fixed": [
+              "original_domain_records",
+              "hard_constraints",
+              "branch_features",
+              "quota_limits",
+              "original_policy_values",
+              "mandatory_checks"
+            ],
+            "history_branch": "offer_0",
+            "legitimate_differences": [
+              "task_id",
+              "transaction_id",
+              "BSEP_binding",
+              "current_native_time",
+              "Host_revision",
+              "history_descent"
+            ]
+          },
+          "disagreement_fp": 0,
+          "feature_interpretation": "Prospectively configured bounded inspection relevance, source lineage, uncertainty and estimated per-branch compute cost; not measured CPU or probabilities.",
+          "mandatory": [
+            "initial_constraint",
+            "final_strategy_consumer"
+          ],
+          "max_amount": 840,
+          "normalization": {
+            "bank_margin_denominator": 1000,
+            "client_margin_denominator": 100,
+            "revenue_denominator": 1000
+          },
+          "offer_amounts": [
+            790,
+            815
+          ],
+          "original_budget": {
+            "max_children": 0,
+            "max_compute_units": 9,
+            "max_items": 16,
+            "max_model_calls": 0,
+            "max_revisions": 2
+          },
+          "prediction": {
+            "expected_fp": 1000000000,
+            "meaning": "Controlled prospective incorrect prediction of the observed constraint Boolean; safety enforcement is independent.",
+            "predicted": false
+          },
+          "profile": "G42_CONTROLLED_AIRLINE_VERTICAL_V01",
+          "purpose": "PREPARATION_ONLY_NOT_EXECUTED",
+          "quantum_order": [
+            "route",
+            "baggage",
+            "seat",
+            "price",
+            "inventory",
+            "change_terms"
+          ],
+          "snapshot_ttl_seconds": 900,
+          "source": {
+            "max_amount": 840,
+            "offer_amounts": [
+              790,
+              815
+            ],
+            "snapshot_ttl_seconds": 900
+          },
+          "utility_profiles": {
+            "COMFORT_FIRST": {
+              "client_extra_legroom_weight": 900000000,
+              "client_price_weight": 100000000
+            },
+            "PRICE_FIRST": {
+              "client_extra_legroom_weight": 0,
+              "client_price_weight": 1000000000
+            }
+          }
+        },
+        "domain": {
+          "constraints": {
+            "fields": {
+              "authority_transferred": false,
+              "avoid_overnight_layover": true,
+              "baggage_required": true,
+              "changeable_preferred": true,
+              "client_root_id": "root:client_os_001",
+              "constraint_set_id": "g40:constraints:g42:shared:1790170817050739000",
+              "currency": "EUR",
+              "departure_date": "2026-08-12",
+              "destination": "LIM",
+              "max_amount": 840,
+              "origin": "PAR",
+              "preferred_seat_characteristics": {
+                "tuple_items": [
+                  "window"
+                ]
+              },
+              "raw_passport_included": false,
+              "raw_payment_data_included": false,
+              "real_world_effects_count": 0,
+              "return_date": "2026-08-21",
+              "soft_preference_priority": {
+                "tuple_items": [
+                  "lower_price",
+                  "window_seat"
+                ]
+              },
+              "transaction_id": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001",
+              "travel_intent_ref": "travel_intent:client_001:PAR-LIM:001"
+            },
+            "record_type": "hedgehog.domains.airline.semantic_to_contract_binding_v01.ClientRootTravelConstraintSetV01"
+          },
+          "selection": {
+            "fields": {
+              "airline_valid_candidate_ids": {
+                "tuple_items": [
+                  "g40:offer:0",
+                  "g40:offer:1"
+                ]
+              },
+              "client_hard_compatible_candidate_ids": {
+                "tuple_items": [
+                  "g40:offer:0",
+                  "g40:offer:1"
+                ]
+              },
+              "provider_authority_created": false,
+              "raw_secret_included": false,
+              "real_world_effects_count": 0,
+              "selection_input_id": "selection_input:airline:PAR-LIM:001",
+              "soft_tradeoff_candidate_ids": {
+                "tuple_items": [
+                  "g40:offer:0",
+                  "g40:offer:1"
+                ]
+              },
+              "source_bsep_projection_ref": "bsep_projection:airline_offer_selection:001",
+              "source_candidate_set_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8",
+              "source_candidate_set_ref": "g40:offers:g42:shared:1790170817050739000",
+              "source_candidate_set_snapshot_id": "g40:snapshot:g42:shared:1790170817050739000",
+              "source_client_constraint_set_id": "g40:constraints:g42:shared:1790170817050739000",
+              "transaction_id": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001",
+              "visible_candidate_ids": {
+                "tuple_items": [
+                  "g40:offer:0",
+                  "g40:offer:1"
+                ]
+              }
+            },
+            "record_type": "hedgehog.domains.airline.semantic_to_contract_binding_v01.AirlineSemanticSelectionInputV01"
+          },
+          "snapshot": {
+            "fields": {
+              "airline_root_id": "root:mock_airline_al",
+              "authoritative_offer_records": {
+                "tuple_items": [
+                  {
+                    "fields": {
+                      "airline_policy_valid": true,
+                      "airline_root_id": "root:mock_airline_al",
+                      "amount": 790,
+                      "baggage_included": true,
+                      "change_penalty_class": "low",
+                      "changeable": true,
+                      "currency": "EUR",
+                      "departure_date": "2026-08-12",
+                      "expired": false,
+                      "inventory_available": true,
+                      "offer_id": "g40:offer:0",
+                      "overnight_layover": false,
+                      "provider_created": false,
+                      "raw_secret_included": false,
+                      "real_world_effects_count": 0,
+                      "return_date": "2026-08-21",
+                      "route_ref": "route:PAR-LIM:2026-08-12:2026-08-21",
+                      "seat_characteristics": {
+                        "tuple_items": [
+                          "window",
+                          "standard"
+                        ]
+                      },
+                      "transaction_id": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001",
+                      "ttl_seconds": 900
+                    },
+                    "record_type": "hedgehog.domains.airline.semantic_to_contract_binding_v01.AirlineAuthoritativeOfferRecordV01"
+                  },
+                  {
+                    "fields": {
+                      "airline_policy_valid": true,
+                      "airline_root_id": "root:mock_airline_al",
+                      "amount": 815,
+                      "baggage_included": true,
+                      "change_penalty_class": "low",
+                      "changeable": true,
+                      "currency": "EUR",
+                      "departure_date": "2026-08-12",
+                      "expired": false,
+                      "inventory_available": true,
+                      "offer_id": "g40:offer:1",
+                      "overnight_layover": false,
+                      "provider_created": false,
+                      "raw_secret_included": false,
+                      "real_world_effects_count": 0,
+                      "return_date": "2026-08-21",
+                      "route_ref": "route:PAR-LIM:2026-08-12:2026-08-21",
+                      "seat_characteristics": {
+                        "tuple_items": [
+                          "extra_legroom",
+                          "aisle"
+                        ]
+                      },
+                      "transaction_id": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001",
+                      "ttl_seconds": 900
+                    },
+                    "record_type": "hedgehog.domains.airline.semantic_to_contract_binding_v01.AirlineAuthoritativeOfferRecordV01"
+                  }
+                ]
+              },
+              "candidate_set_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8",
+              "candidate_set_ref": "g40:offers:g42:shared:1790170817050739000",
+              "candidate_set_snapshot_id": "g40:snapshot:g42:shared:1790170817050739000",
+              "candidate_set_version": "v1",
+              "provider_created": false,
+              "raw_secret_included": false,
+              "real_world_effects_count": 0,
+              "snapshot_created_at": "2026-09-23T13:40:17+00:00",
+              "snapshot_expired": false,
+              "snapshot_ttl_seconds": 900,
+              "transaction_id": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
+            },
+            "record_type": "hedgehog.domains.airline.semantic_to_contract_binding_v01.AirlineRootOfferCandidateSetSnapshotV01"
+          }
+        },
+        "policy_values": {
+          "max_children": 0,
+          "max_compute_units": 9,
+          "max_items": 16,
+          "max_model_calls": 0,
+          "max_revisions": 2
+        }
+      }
+    },
+    "lanes": {
+      "cold": {
+        "profile": "PRICE_FIRST",
+        "mapping": [
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:97ea298d1d523ecb731c2653b3b41ab4e9c0f49de317ba83785dec495f1b3960",
+            "native_id": "root:client_os_001"
+          },
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:c36bb9ede1fea0b733686c2d7c292f91660af477652aebdce5b9bcba3c9a6366",
+            "native_id": "root:mock_airline_al"
+          },
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:0d33439a855efe98f5352e16c43279503be325fdae72f2fe0e99f3372e25278c",
+            "native_id": "root:mock_bank_a"
+          },
+          {
+            "kind": "offer",
+            "local_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "native_id": "g40:offer:0"
+          },
+          {
+            "kind": "offer",
+            "local_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "native_id": "g40:offer:1"
+          },
+          {
+            "kind": "task",
+            "local_id": "g4_reference:task:f7dfd386d22a936aa9b7fe2fed0e9a72f36d817ea1f324da12f6a45e67afd829",
+            "native_id": "g42:cold:1790170817093198000"
+          },
+          {
+            "kind": "transaction",
+            "local_id": "g4_reference:transaction:5afa15f59c4d4bec54de1beff034d4691a5d48d3476fcb282c1e2d95f85f6056",
+            "native_id": "transaction:g42:cold:1790170817093198000"
+          },
+          {
+            "kind": "bsep",
+            "local_id": "g4_reference:bsep:18f77e0753bb720366a099c18ca64b6478cbcc1220a4aab94c289b6c47c085fc",
+            "native_id": "bsep:884fd31b0653dffbc222a38c95b7c52097eda92fd65248d078d11e7b3ca20ca7"
+          },
+          {
+            "kind": "intent",
+            "local_id": "g4_reference:intent:4cc55cc0f60604956147a926c3bb6fc7623e0aaf179e936af895464178b7b38a",
+            "native_id": "g42:intent:g42:cold:1790170817093198000"
+          },
+          {
+            "kind": "policy",
+            "local_id": "g4_reference:policy:142738116e4771d2688631bcf1ff421b7e9221a86e32319569e43e4ac600866f",
+            "native_id": "work_task_source:5b3a30a3266c98c06da25cef471f86bcaa1c18e587cc752ee1989d69837efb1d"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:7c4ff4ceb9bcffce4aa06f0abe86983818e22345ad076b2d12af6e3d95eefaa2",
+            "native_id": "capability_definition:0c2942bcf993eb7c147305b10fbdd23eef7700437ab9e36252a34cd51fb4dcf0"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:28dbe4434fa732cba47ee6ca9f886b151b1b6436b328ba94e0530c01cd265c3b",
+            "native_id": "capability_definition:d123d8d33cc86e43517c84176f1216c1d3888de38f72b2ed077990f332bcc6d0"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:3c7b0c412161dff73aad96837eb3915fca77db6d5db17b47f4eb9c6bf9b014ad",
+            "native_id": "capability_definition:50259fe3d591e9cec40db10fd2fb72a1258ba4cc19a3be017eade6a4987eb3f9"
+          }
+        ],
+        "selected_offer": "g40:offer:0",
+        "status": "PREPARATION_ONLY_NOT_EXECUTED",
+        "strategy_rows": [
+          {
+            "offer_id": "g40:offer:0",
+            "candidate_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "utility_fp": {
+              "root:mock_bank_a": 50000000,
+              "root:client_os_001": 500000000,
+              "root:mock_airline_al": 790000000
+            },
+            "product_integer": "19750000000000000000000000",
+            "display_product": "0.01975"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "candidate_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "utility_fp": {
+              "root:mock_bank_a": 25000000,
+              "root:client_os_001": 250000000,
+              "root:mock_airline_al": 815000000
+            },
+            "product_integer": "5093750000000000000000000",
+            "display_product": "0.00509375"
+          }
+        ],
+        "strategy_sets": {
+          "feasible": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "ir": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "pareto": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "ranking": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ]
+        },
+        "allocation_rows": [
+          {
+            "allocation": 3,
+            "extra": {
+              "denominator": 1985111939603,
+              "numerator": 2955335818809
+            },
+            "floor": 1,
+            "id": "g4_reference:branch:297e03a0299905e46034e9b1a7f5a96d9c1f82b75bfbd0481eba2a06b04fa94f",
+            "lower": 2,
+            "remainder": {
+              "denominator": 1985111939603,
+              "numerator": 970223879206
+            },
+            "upper": 6,
+            "weight": 985111939603,
+            "z_fp": 421250000,
+            "offer_id": "g40:offer:1"
+          },
+          {
+            "allocation": 4,
+            "extra": {
+              "denominator": 1985111939603,
+              "numerator": 3000000000000
+            },
+            "floor": 1,
+            "id": "g4_reference:branch:aa53f7aa77ec1bfcac6845396c8cd1a02463c13e842514e007bc290b9507fbcb",
+            "lower": 2,
+            "remainder": {
+              "denominator": 1985111939603,
+              "numerator": 1014888060397
+            },
+            "upper": 6,
+            "weight": 1000000000000,
+            "z_fp": 425000000,
+            "offer_id": "g40:offer:0"
+          }
+        ],
+        "budget": {
+          "total": 9,
+          "spent": 1,
+          "reserved_mandatory": 1,
+          "available": 7,
+          "unallocated": 0
+        },
+        "actual_usage": {
+          "children": 0,
+          "compute_units": 9,
+          "model_calls": 0,
+          "reserved_children": 0,
+          "revisions": 1
+        },
+        "actual_attempt_count": 9,
+        "performed_ids": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_0_4",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3"
+        ],
+        "final_ordered_work_ids": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_0_4",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3",
+          "final_strategy"
+        ],
+        "consumed_quanta": [
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 1,
+            "field": "route",
+            "checked_value": [
+              "route:PAR-LIM:2026-08-12:2026-08-21",
+              "2026-08-12",
+              "2026-08-21"
+            ],
+            "input_sha256": "88f148454d4a1bff961b283d212cfcc43dc1dd226dd3d9bbb73a43b4396bb0e4",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 2,
+            "field": "baggage",
+            "checked_value": true,
+            "input_sha256": "ea8eabdaf6cf97519667e4d0ec580f95b55b119ecd0f0f666ca312af9bbdc1da",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 3,
+            "field": "seat",
+            "checked_value": [
+              "window",
+              "standard"
+            ],
+            "input_sha256": "3cbeea39c8cc2f8ce6d5295910a0868601fc40a5434307b7de0563d1fef35114",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 4,
+            "field": "price",
+            "checked_value": [
+              790,
+              "EUR"
+            ],
+            "input_sha256": "5264aef78f184593f6c6e97fd6f9287a2b745fe6218e33da2e049e0be277ac1b",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 1,
+            "field": "route",
+            "checked_value": [
+              "route:PAR-LIM:2026-08-12:2026-08-21",
+              "2026-08-12",
+              "2026-08-21"
+            ],
+            "input_sha256": "45b15f1c0425dcbcd54598ad5f94ef46370e6f0fdb3484925621197474e5e8e6",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 2,
+            "field": "baggage",
+            "checked_value": true,
+            "input_sha256": "848bac1dc3c29c335b0d735382807f69097df2dff86fe94a2f32dc594518546e",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 3,
+            "field": "seat",
+            "checked_value": [
+              "extra_legroom",
+              "aisle"
+            ],
+            "input_sha256": "1d11b166b4748e69131369a2c46833e813f0c89076ba535740e7215b680e552c",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          }
+        ],
+        "consumer_output": {
+          "allocation_identity": "g4_reference:allocation_report:8b355465afc1b787bdb0f18b5629665f74ce8fdde15e2395583ecdf116656f57",
+          "allocation_proof_sha256": "aaa4344b54cfba3342c89f598df1326a9c9cb066312947657a7c2cdb3bafc5c2",
+          "consumed_previous_sha256": "b0d04f9ba0466ac78c8335946bfadc3ff5a02cf4d41c6a87fdfe09bc29e82a63",
+          "domain_sha256": "188a7fd9db90ff35422d06bb58ed4bdfc09a29747cdd171905e99b51c1e9cfb2",
+          "input_sha256": "0250072111adb49297885c46247a4902ba779a8541fd8c891d2fb939eece4b52",
+          "original_basis_sha256": "c03c8c446ce2baf150c3ce12c786622ab6462f4bd75d0e621b076542e837743a",
+          "stage": "RESULT",
+          "strategy_identity": "g4_reference:strategy_report:f8c02691200f37f5a1999d4c261b36f30ce12c7c0369762b7de26e740b3cb8f0"
+        },
+        "current_decisions": {
+          "root:client_os_001": "ACCEPT",
+          "root:mock_airline_al": "ACCEPT",
+          "root:mock_bank_a": "ACCEPT"
+        },
+        "current_outcome": "PASS"
+      },
+      "contrast": {
+        "profile": "COMFORT_FIRST",
+        "mapping": [
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:97ea298d1d523ecb731c2653b3b41ab4e9c0f49de317ba83785dec495f1b3960",
+            "native_id": "root:client_os_001"
+          },
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:c36bb9ede1fea0b733686c2d7c292f91660af477652aebdce5b9bcba3c9a6366",
+            "native_id": "root:mock_airline_al"
+          },
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:0d33439a855efe98f5352e16c43279503be325fdae72f2fe0e99f3372e25278c",
+            "native_id": "root:mock_bank_a"
+          },
+          {
+            "kind": "offer",
+            "local_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "native_id": "g40:offer:0"
+          },
+          {
+            "kind": "offer",
+            "local_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "native_id": "g40:offer:1"
+          },
+          {
+            "kind": "task",
+            "local_id": "g4_reference:task:e37e9c5ac77a6daf0c41aceac5c767a64409f04c6aa73c54fdc76ab7d509621c",
+            "native_id": "g42:contrast:1790170823732274000"
+          },
+          {
+            "kind": "transaction",
+            "local_id": "g4_reference:transaction:bcf31f3a14abf58e72f90e67eb2663479c20b1921c26c1443a9c502c107a4336",
+            "native_id": "transaction:g42:contrast:1790170823732274000"
+          },
+          {
+            "kind": "bsep",
+            "local_id": "g4_reference:bsep:38fea78d59ff5339e7785a5aac76aa923f1ef5cdca342bae82de334d8923b716",
+            "native_id": "bsep:bfc2991c3fee284a7d9a523c526f1a100d48790c396e52aa1ae42e2f7a427aa6"
+          },
+          {
+            "kind": "intent",
+            "local_id": "g4_reference:intent:6108db005251a7cb04abda7cff92b54bffaa746487765b0821405573622ac5e2",
+            "native_id": "g42:intent:g42:contrast:1790170823732274000"
+          },
+          {
+            "kind": "policy",
+            "local_id": "g4_reference:policy:6cee701775d53d8fe5c39c77031e6741ae85eb3f0591ba0d92315f2550380ad9",
+            "native_id": "work_task_source:6e211054a0f04ae7906dfbff2201f40356f247da9bb3bef9161713ed555b1002"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:7c4ff4ceb9bcffce4aa06f0abe86983818e22345ad076b2d12af6e3d95eefaa2",
+            "native_id": "capability_definition:0c2942bcf993eb7c147305b10fbdd23eef7700437ab9e36252a34cd51fb4dcf0"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:28dbe4434fa732cba47ee6ca9f886b151b1b6436b328ba94e0530c01cd265c3b",
+            "native_id": "capability_definition:d123d8d33cc86e43517c84176f1216c1d3888de38f72b2ed077990f332bcc6d0"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:3c7b0c412161dff73aad96837eb3915fca77db6d5db17b47f4eb9c6bf9b014ad",
+            "native_id": "capability_definition:50259fe3d591e9cec40db10fd2fb72a1258ba4cc19a3be017eade6a4987eb3f9"
+          }
+        ],
+        "selected_offer": "g40:offer:1",
+        "status": "PREPARATION_ONLY_NOT_EXECUTED",
+        "strategy_rows": [
+          {
+            "offer_id": "g40:offer:0",
+            "candidate_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "utility_fp": {
+              "root:mock_bank_a": 50000000,
+              "root:client_os_001": 50000000,
+              "root:mock_airline_al": 790000000
+            },
+            "product_integer": "1975000000000000000000000",
+            "display_product": "0.001975"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "candidate_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "utility_fp": {
+              "root:mock_bank_a": 25000000,
+              "root:client_os_001": 925000000,
+              "root:mock_airline_al": 815000000
+            },
+            "product_integer": "18846875000000000000000000",
+            "display_product": "0.018846875"
+          }
+        ],
+        "strategy_sets": {
+          "feasible": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "ir": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "pareto": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "ranking": [
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74"
+          ]
+        },
+        "allocation_rows": [
+          {
+            "allocation": 3,
+            "extra": {
+              "denominator": 1985111939603,
+              "numerator": 2955335818809
+            },
+            "floor": 1,
+            "id": "g4_reference:branch:297e03a0299905e46034e9b1a7f5a96d9c1f82b75bfbd0481eba2a06b04fa94f",
+            "lower": 2,
+            "remainder": {
+              "denominator": 1985111939603,
+              "numerator": 970223879206
+            },
+            "upper": 6,
+            "weight": 985111939603,
+            "z_fp": 421250000,
+            "offer_id": "g40:offer:1"
+          },
+          {
+            "allocation": 4,
+            "extra": {
+              "denominator": 1985111939603,
+              "numerator": 3000000000000
+            },
+            "floor": 1,
+            "id": "g4_reference:branch:aa53f7aa77ec1bfcac6845396c8cd1a02463c13e842514e007bc290b9507fbcb",
+            "lower": 2,
+            "remainder": {
+              "denominator": 1985111939603,
+              "numerator": 1014888060397
+            },
+            "upper": 6,
+            "weight": 1000000000000,
+            "z_fp": 425000000,
+            "offer_id": "g40:offer:0"
+          }
+        ],
+        "budget": {
+          "total": 9,
+          "spent": 1,
+          "reserved_mandatory": 1,
+          "available": 7,
+          "unallocated": 0
+        },
+        "actual_usage": {
+          "children": 0,
+          "compute_units": 9,
+          "model_calls": 0,
+          "reserved_children": 0,
+          "revisions": 1
+        },
+        "actual_attempt_count": 9,
+        "performed_ids": null,
+        "final_ordered_work_ids": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_0_4",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3",
+          "final_strategy"
+        ],
+        "consumed_quanta": [
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 1,
+            "field": "route",
+            "checked_value": [
+              "route:PAR-LIM:2026-08-12:2026-08-21",
+              "2026-08-12",
+              "2026-08-21"
+            ],
+            "input_sha256": "88f148454d4a1bff961b283d212cfcc43dc1dd226dd3d9bbb73a43b4396bb0e4",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 2,
+            "field": "baggage",
+            "checked_value": true,
+            "input_sha256": "ea8eabdaf6cf97519667e4d0ec580f95b55b119ecd0f0f666ca312af9bbdc1da",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 3,
+            "field": "seat",
+            "checked_value": [
+              "window",
+              "standard"
+            ],
+            "input_sha256": "3cbeea39c8cc2f8ce6d5295910a0868601fc40a5434307b7de0563d1fef35114",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 4,
+            "field": "price",
+            "checked_value": [
+              790,
+              "EUR"
+            ],
+            "input_sha256": "5264aef78f184593f6c6e97fd6f9287a2b745fe6218e33da2e049e0be277ac1b",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 1,
+            "field": "route",
+            "checked_value": [
+              "route:PAR-LIM:2026-08-12:2026-08-21",
+              "2026-08-12",
+              "2026-08-21"
+            ],
+            "input_sha256": "45b15f1c0425dcbcd54598ad5f94ef46370e6f0fdb3484925621197474e5e8e6",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 2,
+            "field": "baggage",
+            "checked_value": true,
+            "input_sha256": "848bac1dc3c29c335b0d735382807f69097df2dff86fe94a2f32dc594518546e",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 3,
+            "field": "seat",
+            "checked_value": [
+              "extra_legroom",
+              "aisle"
+            ],
+            "input_sha256": "1d11b166b4748e69131369a2c46833e813f0c89076ba535740e7215b680e552c",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          }
+        ],
+        "consumer_output": {
+          "allocation_identity": "g4_reference:allocation_report:bd177ba86006bc9fe0acbdae04709252c8c480c76e99daa3aa46b7f5bbbecc83",
+          "allocation_proof_sha256": "fe1a35ff491d30bdb98733cc38345b7de2b60d67f2105dabb3f9847e8efd6ad0",
+          "consumed_previous_sha256": "66a5c919a8111bb68c12006f962963fcf03de6ace9fbebe9123f69b238bfe41c",
+          "domain_sha256": "188a7fd9db90ff35422d06bb58ed4bdfc09a29747cdd171905e99b51c1e9cfb2",
+          "input_sha256": "a4de6fff45f679808875e2bd11935eae37c8e782fcb05bc4149c6b7a9594c6fe",
+          "original_basis_sha256": "115ec643219191135dbe6595ca4e7f6cece50ff76a3a1f86747c53da7a5ff610",
+          "stage": "RESULT",
+          "strategy_identity": "g4_reference:strategy_report:b028d74d72ec3a220d3c2644b42c4ff111f6f6730bc1d09c3848eac0f051f63d"
+        },
+        "current_decisions": {
+          "root:client_os_001": "ACCEPT",
+          "root:mock_airline_al": "ACCEPT",
+          "root:mock_bank_a": "ACCEPT"
+        },
+        "current_outcome": "PASS"
+      },
+      "warm": {
+        "profile": "PRICE_FIRST",
+        "mapping": [
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:97ea298d1d523ecb731c2653b3b41ab4e9c0f49de317ba83785dec495f1b3960",
+            "native_id": "root:client_os_001"
+          },
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:c36bb9ede1fea0b733686c2d7c292f91660af477652aebdce5b9bcba3c9a6366",
+            "native_id": "root:mock_airline_al"
+          },
+          {
+            "kind": "root",
+            "local_id": "g4_reference:root:0d33439a855efe98f5352e16c43279503be325fdae72f2fe0e99f3372e25278c",
+            "native_id": "root:mock_bank_a"
+          },
+          {
+            "kind": "offer",
+            "local_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "native_id": "g40:offer:0"
+          },
+          {
+            "kind": "offer",
+            "local_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "native_id": "g40:offer:1"
+          },
+          {
+            "kind": "task",
+            "local_id": "g4_reference:task:58395162eca71a05fbbe4db40ccf9a8c18c275b4d1104b53d1d68401af039909",
+            "native_id": "g42:warm:1790170830923460000"
+          },
+          {
+            "kind": "transaction",
+            "local_id": "g4_reference:transaction:e0e8da1a17a00c3b7b71827b493248d03a8080b4d045425aecf49a1015d69d26",
+            "native_id": "transaction:g42:warm:1790170830923460000"
+          },
+          {
+            "kind": "bsep",
+            "local_id": "g4_reference:bsep:44dd6c5a7fa3543b46e533965a5a40f737e246dc6d9a2c32a5ef49c47c05995a",
+            "native_id": "bsep:f9b47f6c7baa164a41f40ed65c0d54cac4c1ef7844c057b46096073564512a6d"
+          },
+          {
+            "kind": "intent",
+            "local_id": "g4_reference:intent:9dea93b54d6950c14d32b89ce7cd75130d967549cca08998459def12e84478b4",
+            "native_id": "g42:intent:g42:warm:1790170830923460000"
+          },
+          {
+            "kind": "policy",
+            "local_id": "g4_reference:policy:f9996c1cbbfeea2448e0a2de5f5cd5836b2ee0f5f8e45bfcacb478cb4b17c802",
+            "native_id": "work_task_source:833da3efe876baac0a7a7b258e60769cfaae29a04c475b794de78c4708cd0bda"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:7c4ff4ceb9bcffce4aa06f0abe86983818e22345ad076b2d12af6e3d95eefaa2",
+            "native_id": "capability_definition:0c2942bcf993eb7c147305b10fbdd23eef7700437ab9e36252a34cd51fb4dcf0"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:28dbe4434fa732cba47ee6ca9f886b151b1b6436b328ba94e0530c01cd265c3b",
+            "native_id": "capability_definition:d123d8d33cc86e43517c84176f1216c1d3888de38f72b2ed077990f332bcc6d0"
+          },
+          {
+            "kind": "definition",
+            "local_id": "g4_reference:definition:3c7b0c412161dff73aad96837eb3915fca77db6d5db17b47f4eb9c6bf9b014ad",
+            "native_id": "capability_definition:50259fe3d591e9cec40db10fd2fb72a1258ba4cc19a3be017eade6a4987eb3f9"
+          }
+        ],
+        "selected_offer": "g40:offer:0",
+        "status": "PREPARATION_ONLY_NOT_EXECUTED",
+        "strategy_rows": [
+          {
+            "offer_id": "g40:offer:0",
+            "candidate_id": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "utility_fp": {
+              "root:mock_bank_a": 50000000,
+              "root:client_os_001": 500000000,
+              "root:mock_airline_al": 790000000
+            },
+            "product_integer": "19750000000000000000000000",
+            "display_product": "0.01975"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "candidate_id": "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7",
+            "utility_fp": {
+              "root:mock_bank_a": 25000000,
+              "root:client_os_001": 250000000,
+              "root:mock_airline_al": 815000000
+            },
+            "product_integer": "5093750000000000000000000",
+            "display_product": "0.00509375"
+          }
+        ],
+        "strategy_sets": {
+          "feasible": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "ir": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "pareto": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ],
+          "ranking": [
+            "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+            "g4_reference:offer:aceb2a219b05fbfb39469d935966f6f6b4d04d6221129ca6158522c9e640bdd7"
+          ]
+        },
+        "allocation_rows": [
+          {
+            "allocation": 4,
+            "extra": {
+              "denominator": 1983881318977,
+              "numerator": 3000000000000
+            },
+            "floor": 1,
+            "id": "g4_reference:branch:297e03a0299905e46034e9b1a7f5a96d9c1f82b75bfbd0481eba2a06b04fa94f",
+            "lower": 2,
+            "remainder": {
+              "denominator": 1983881318977,
+              "numerator": 1016118681023
+            },
+            "upper": 6,
+            "weight": 1000000000000,
+            "z_fp": 421250000,
+            "offer_id": "g40:offer:1"
+          },
+          {
+            "allocation": 3,
+            "extra": {
+              "denominator": 1983881318977,
+              "numerator": 2951643956931
+            },
+            "floor": 1,
+            "id": "g4_reference:branch:aa53f7aa77ec1bfcac6845396c8cd1a02463c13e842514e007bc290b9507fbcb",
+            "lower": 2,
+            "remainder": {
+              "denominator": 1983881318977,
+              "numerator": 967762637954
+            },
+            "upper": 6,
+            "weight": 983881318977,
+            "z_fp": 417187500,
+            "offer_id": "g40:offer:0"
+          }
+        ],
+        "budget": {
+          "total": 9,
+          "spent": 1,
+          "reserved_mandatory": 1,
+          "available": 7,
+          "unallocated": 0
+        },
+        "actual_usage": {
+          "children": 0,
+          "compute_units": 9,
+          "model_calls": 0,
+          "reserved_children": 0,
+          "revisions": 1
+        },
+        "actual_attempt_count": 9,
+        "performed_ids": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3",
+          "offer_1_4"
+        ],
+        "final_ordered_work_ids": [
+          "offer_0_1",
+          "offer_0_2",
+          "offer_0_3",
+          "offer_1_1",
+          "offer_1_2",
+          "offer_1_3",
+          "offer_1_4",
+          "final_strategy"
+        ],
+        "consumed_quanta": [
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 1,
+            "field": "route",
+            "checked_value": [
+              "route:PAR-LIM:2026-08-12:2026-08-21",
+              "2026-08-12",
+              "2026-08-21"
+            ],
+            "input_sha256": "88f148454d4a1bff961b283d212cfcc43dc1dd226dd3d9bbb73a43b4396bb0e4",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 2,
+            "field": "baggage",
+            "checked_value": true,
+            "input_sha256": "ea8eabdaf6cf97519667e4d0ec580f95b55b119ecd0f0f666ca312af9bbdc1da",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:0",
+            "ordinal": 3,
+            "field": "seat",
+            "checked_value": [
+              "window",
+              "standard"
+            ],
+            "input_sha256": "3cbeea39c8cc2f8ce6d5295910a0868601fc40a5434307b7de0563d1fef35114",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 1,
+            "field": "route",
+            "checked_value": [
+              "route:PAR-LIM:2026-08-12:2026-08-21",
+              "2026-08-12",
+              "2026-08-21"
+            ],
+            "input_sha256": "45b15f1c0425dcbcd54598ad5f94ef46370e6f0fdb3484925621197474e5e8e6",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 2,
+            "field": "baggage",
+            "checked_value": true,
+            "input_sha256": "848bac1dc3c29c335b0d735382807f69097df2dff86fe94a2f32dc594518546e",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 3,
+            "field": "seat",
+            "checked_value": [
+              "extra_legroom",
+              "aisle"
+            ],
+            "input_sha256": "1d11b166b4748e69131369a2c46833e813f0c89076ba535740e7215b680e552c",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          },
+          {
+            "offer_id": "g40:offer:1",
+            "ordinal": 4,
+            "field": "price",
+            "checked_value": [
+              815,
+              "EUR"
+            ],
+            "input_sha256": "f7366d294b3b20b00eb6105bf21373aa33d8a8ab0040d511af9e42c895506115",
+            "source_digest": "e8b27b7479c0f912778ffabc0540000a30fc5d1846e4ebdb3ff68f27eee511d8"
+          }
+        ],
+        "consumer_output": {
+          "allocation_identity": "g4_reference:allocation_report:cc30bc0e91c2bbbb2d59985f0955b9cae938b301c9f781366a26359fb5b7bbeb",
+          "allocation_proof_sha256": "a99afa57b755e9b1b3af4d57517d23b7ca2398e849a9ac7b571e1ee2b3e4140d",
+          "consumed_previous_sha256": "da5c122b5958a0cecd653766a16d0a2a540d63887b1f71d9600b060ac3d68115",
+          "domain_sha256": "188a7fd9db90ff35422d06bb58ed4bdfc09a29747cdd171905e99b51c1e9cfb2",
+          "input_sha256": "e39cd7b6d65079abc84a51d5de3b0f5a88bfc47bffc286eec1b0b46ca9ad7588",
+          "original_basis_sha256": "fa874ea7246c4ef1b76bd3d9270e74cf93aa16afa5d2bb754f2eb082318e12d1",
+          "stage": "RESULT",
+          "strategy_identity": "g4_reference:strategy_report:f8e4f731dc180ac51d3757639d2147c85b8085ecb5ea8dece530c8b12090c57c"
+        },
+        "current_decisions": {
+          "root:client_os_001": "ACCEPT",
+          "root:mock_airline_al": "ACCEPT",
+          "root:mock_bank_a": "ACCEPT"
+        },
+        "current_outcome": "PASS"
+      }
+    },
+    "scope": "G4_REFERENCE_SCOPE_V01",
+    "history_prior": {
+      "prior_fp": -62500000,
+      "effective_count": 1,
+      "sample_state": "SPARSE",
+      "negative": 1,
+      "positive": 0,
+      "unresolved": 0,
+      "profile": "G34_AVF_EMA_V01"
+    },
+    "observation": {
+      "predicted": false,
+      "expected_fp": 1000000000,
+      "proposal_assessment": "INCORRECT",
+      "enforcement_outcome": "ALLOWED_AS_REQUIRED",
+      "execution_status": "COMPLETED",
+      "task_outcome": "COMPLETED",
+      "blocking_stage": "NONE",
+      "failure_class": "PROPOSAL_INVALID"
+    },
+    "missing_consent": {
+      "status": "NEEDS_USER_NO_CONTINUATION",
+      "outcome": "MIXED",
+      "decisions": {
+        "root:client_os_001": "ACCEPT",
+        "root:mock_airline_al": "ACCEPT",
+        "root:mock_bank_a": "NEEDS_USER"
+      },
+      "reasons": {
+        "root:client_os_001": "validated_candidate_accepted",
+        "root:mock_airline_al": "validated_candidate_accepted",
+        "root:mock_bank_a": "user_permission_missing"
+      },
+      "selected": "g4_reference:offer:51c70c436ed4a0e45c3971295da0c2b4e3f4f3722019f6ee68c361c5093d6e74",
+      "permission_creation_count": 0
+    },
+    "checker_environment": {
+      "distributions": {
+        "jsonschema": "4.26.0",
+        "referencing": "0.37.0"
+      },
+      "executable": {
+        "bytes": 52448,
+        "sha256": "2477b47fa3ae65b9574eb18a15edb364e96948eaa1875ad3f1c80d780efc9c12"
+      },
+      "implementation": "cpython",
+      "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]"
+    },
+    "retained_mode_diagnostic": {
+      "external_0400_and_symlink": "REFUSED_BOTH_POLICIES",
+      "old_new_parity": true,
+      "rows": [
+        {
+          "actual": "0o400",
+          "new": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "old": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "requested": "0o400"
+        },
+        {
+          "actual": "0o600",
+          "new": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "old": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "requested": "0o600"
+        },
+        {
+          "actual": "0o644",
+          "new": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "old": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "requested": "0o644"
+        },
+        {
+          "actual": "0o755",
+          "new": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100755",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "old": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100755",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "requested": "0o755"
+        },
+        {
+          "actual": "0o666",
+          "new": {
+            "reason": "CURRENT_FILE:mode_sample.txt:MODE",
+            "status": "REFUSE"
+          },
+          "old": {
+            "reason": "CURRENT_FILE:mode_sample.txt:MODE",
+            "status": "REFUSE"
+          },
+          "requested": "0o666"
+        },
+        {
+          "actual": "0o644",
+          "evidence_limit": "REQUESTED_MODE_NOT_REPRESENTED_BY_FILESYSTEM",
+          "new": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "old": {
+            "identity": {
+              "bytes": 22,
+              "mode": "100644",
+              "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb",
+              "type": "regular"
+            },
+            "status": "ACCEPT"
+          },
+          "requested": "0o4644"
+        }
+      ]
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "C01",
+      "title": "Strategic comparison and actual bounded work",
+      "claim": "Gate 4 Reference adds finite multi-Root strategy comparison and bounded allocation of useful native work.",
+      "argument": "The strategy and allocation mechanisms enter actual Work results and local Root reviews, within the reduced contract.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          1,
+          2,
+          12
+        ],
+        "appendix": "a-result-scope-status",
+        "reader": "C01"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/docs/gate4_reference_contract_v01.md",
+          "symbol": null,
+          "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+          "symbol": "evaluate_reference_strategy_v01",
+          "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+          "symbol": "allocate_reference_work_budget_v01",
+          "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+          "json_pointer": "",
+          "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_native_causal_strategy_and_budget",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [],
+      "negative_refs": [],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/output",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Full H-I-J mathematics and LGT remain deferred; no new model weights or authority."
+      ]
+    },
+    {
+      "claim_id": "C02",
+      "title": "Preference changes the prepared offer",
+      "claim": "PRICE_FIRST prepares offer0; COMFORT_FIRST prepares offer1.",
+      "argument": "Both reports rank the same two valid offers, then each selection is consumed by current reviews, resolution and a prepared hold.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          3,
+          4
+        ],
+        "appendix": "g-cp-strategy",
+        "reader": "C02"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+          "symbol": "evaluate_reference_strategy_v01",
+          "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "prepare_hold_v42",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+          "json_pointer": "/cp_strategy",
+          "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+          "json_pointer": "/strategy_inputs",
+          "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/contrast/allocation_before_install.json",
+          "json_pointer": "/strategy_inputs",
+          "sha256": "0dfdb1ebee2a5a8986b2fb0418ac5b9daf9eddae29068bb079825feb8120ff0c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_native_causal_strategy_and_budget",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/binding",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+          "json_pointer": "/binding",
+          "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+          "json_pointer": "/coherent_changed_price",
+          "sha256": "e632aad1ce0aeb9fcdf4c2a74bb912e609aecc92e741769ed2df63b3b8703e6a",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/hold",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+          "json_pointer": "/hold",
+          "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "PREPARATION_ONLY_NOT_EXECUTED; no booking, payment or seat reservation."
+      ]
+    },
+    {
+      "claim_id": "C03",
+      "title": "Each owner makes a current decision",
+      "claim": "Removing Bank consent leaves the recommendation but produces Bank NEEDS_USER and overall MIXED without hold continuation.",
+      "argument": "A valid arithmetic recommendation does not provide the missing local permission; Client and Airline remain separately ACCEPT.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          5
+        ],
+        "appendix": "g-cp-strategy",
+        "reader": "C03"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "strategy_reviews_v42",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+          "json_pointer": "/missing_consent",
+          "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+          "json_pointer": "/mixed/outcome",
+          "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_native_independent_consent_and_cross_root",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+          "json_pointer": "/positive",
+          "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+          "json_pointer": "/mixed/reviews/root:mock_bank_a/2",
+          "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+          "json_pointer": "/other_valid_offer",
+          "sha256": "30ccd442bcd11890239f0faeb663d3d60e31c0fcb8c94c1e9bc58a72b9daf9d6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/current_reviews",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Genuine in-process Root reviews and cross-root references; not proof of internet federation or legal agreement."
+      ]
+    },
+    {
+      "claim_id": "C04",
+      "title": "Exact finite ranking",
+      "claim": "Feasibility, IR, strict Pareto and equal-exponent integer products give an explainable finite recommendation.",
+      "argument": "Original integer utilities and products are retained; both native offers are feasible, IR and Pareto.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          4
+        ],
+        "appendix": "e-strategy-mathematics",
+        "reader": "C04"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+          "symbol": "evaluate_reference_strategy_v01",
+          "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+          "symbol": "validate_reference_strategy_report_v01",
+          "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/bridge/strategy",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/contrast/domain_consumption.json",
+          "json_pointer": "/bridge/strategy",
+          "sha256": "b110242235108154f7fb2ba4002f174388b9e0d00ef88b99170ddf29db7c79ff",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+          "symbol": "test_strategy_fixed_sets_products_and_witness",
+          "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        },
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+          "symbol": "test_epsilon_pareto_equal_vectors_and_single_final_round",
+          "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/bridge/strategy/scores",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/output/strategy_report",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Configured utility units; not a probability, Nash equilibrium, incentive compatibility or universal fairness."
+      ]
+    },
+    {
+      "claim_id": "C05",
+      "title": "Suitability precedes ranking",
+      "claim": "Known hard-false cases are excluded before score allocation; missing required evidence does not become zero.",
+      "argument": "Strict contracts, explicit missing sets and report recomputation separate malformed, unknown and genuine no-deal outcomes.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          3,
+          10
+        ],
+        "appendix": "e-strategy-mathematics",
+        "reader": "C05"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+          "symbol": "evaluate_reference_strategy_v01",
+          "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+          "symbol": "evaluate_reference_pressure_v01",
+          "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/bridge/strategy/exclusions",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+          "symbol": "test_strategy_dispositions",
+          "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        },
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+          "symbol": "test_mask_before_softmax_negative_score_and_history_once",
+          "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/bridge/strategy/feasible",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+          "json_pointer": "/evaluation_time",
+          "sha256": "e632aad1ce0aeb9fcdf4c2a74bb912e609aecc92e741769ed2df63b3b8703e6a",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [],
+      "limits": [
+        "Schema shape, arithmetic, contextual suitability and local permission remain separate checks."
+      ]
+    },
+    {
+      "claim_id": "C06",
+      "title": "Attributable experience changes one raw prior",
+      "claim": "One source-bound incorrect prediction yields prior -62500000, effective_count 1, SPARSE; the warm lane consumes it once.",
+      "argument": "The saved prospective claim, actual Work original, G3 feedback, independent recording review and current history descent bind the sample to the consumer.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          7,
+          8
+        ],
+        "appendix": "h-cp-budget",
+        "reader": "C06"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_history_v01.py",
+          "symbol": null,
+          "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "validate_observation_copies_v44",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "validate_history_subject_v44",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+          "json_pointer": "/claim/payload",
+          "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+          "json_pointer": "/feedback",
+          "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+          "json_pointer": "/snapshot/prior",
+          "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+          "json_pointer": "",
+          "sha256": "f6eb290683d12a62e37262a5bd001a67749897f9a63c3d2ae616111a1dcb669a",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_history_v01.py",
+          "symbol": "test_history_actual_native_proof_and_recording",
+          "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+          "json_pointer": "/review",
+          "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+          "json_pointer": "/controls/coherent_cold_prior/reason",
+          "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+          "json_pointer": "/budget/pressure_inputs",
+          "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Warm names an available-history lane; its statistical sample state remains SPARSE. No model was called or trained."
+      ]
+    },
+    {
+      "claim_id": "C07",
+      "title": "History changes actual checks",
+      "claim": "Under the same PRICE_FIRST profile, allocations and performed optional checks change from 4/3 to 3/4.",
+      "argument": "The fourth price check moves from offer0 to offer1 and the final output lists the actual consumed quanta; offer0 remains selected.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          8,
+          9
+        ],
+        "appendix": "h-cp-budget",
+        "reader": "C07"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+          "symbol": "allocate_reference_work_budget_v01",
+          "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_runtime_v01.py",
+          "symbol": "NativeAllocationConsumerV01",
+          "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/comparisons.json",
+          "json_pointer": "/cp_budget",
+          "sha256": "dc273a2127eb0b5116b14a48cc1c5bd2789af5fe900a2a575d5b636b9459e26e",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+          "json_pointer": "/allocation/rows",
+          "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+          "json_pointer": "/allocation/rows",
+          "sha256": "21aa9271f419897ef046816d3a28e2a320635611c58388775a78ae5d0499ba95",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_native_causal_strategy_and_budget",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/output/consumed_quanta",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+          "json_pointer": "/output/consumed_quanta",
+          "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/final/program/ordered_work_ids",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+          "json_pointer": "/final/program/ordered_work_ids",
+          "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Seven optional checks of a 12-check catalogue; no measured CPU, price or outcome-quality improvement."
+      ]
+    },
+    {
+      "claim_id": "C08",
+      "title": "Original spending is conserved",
+      "claim": "The 9-unit cap contains one already-spent initial check, seven optional checks and one reserved final consumer.",
+      "argument": "Budget reconstruction uses original policy and actual ledger usage; subsequent reports cannot reset cumulative spending.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          6,
+          9
+        ],
+        "appendix": "f-pressure-allocation",
+        "reader": "C08"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "reconstruct_allocation_basis_v43",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+          "symbol": "allocate_reference_work_budget_v01",
+          "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/enrolled.json",
+          "json_pointer": "",
+          "sha256": "bf1e438bc028ffcb49bb0af103026446d2ea0177c288cbedec762e5b7dd24b11",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+          "json_pointer": "/budget",
+          "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/after/usage",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_g43_new_consumer_original_budget_and_actual_proof",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        },
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_native_quota_refusals_and_real_exhaustion",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/after/usage",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/controls/stale_spending_revision",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json",
+          "json_pointer": "",
+          "sha256": "bb82e7b130da0ab1fbae80148a0443aa8933a39a9e5adefe56a73105f1e95353",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/controls/terminal_retry",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "ONE_NATIVE_WORK_DISPATCH_UNIT measures admitted dispatches, not time, tokens, money or FLOPs."
+      ]
+    },
+    {
+      "claim_id": "C09",
+      "title": "Allocated results reach the final consumer",
+      "claim": "The actual final PURE consumer receives allocation proof and produces an output bound to allocation identity, proof digest and original basis.",
+      "argument": "Explicit Work literals and completed results connect the allocation to downstream strategy and hold preparation.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          9
+        ],
+        "appendix": "h-cp-budget",
+        "reader": "C09"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "validate_allocation_proof_v43",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "strategy_work_result_v42",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/output",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+          "json_pointer": "/output",
+          "sha256": "adea2bf51520806197c844133914554094c35bf4ef9ba78f3f498c430b022ab6",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/portable_records.json",
+          "json_pointer": "/final_program",
+          "sha256": "d2a428126edad928630cc61645c625cbb06143d5522dee07553281b4ddfb4498",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_g43_new_consumer_original_budget_and_actual_proof",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/output/allocation_proof_sha256",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_result.json",
+          "json_pointer": "/reason",
+          "sha256": "cdb85b8d5c09e16cf0092f36dafbabbc578ef0f77dd4e242d9090f65ff7cb64d",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+          "json_pointer": "/bridge/work_artifact",
+          "sha256": "7118fe39ef0ffc18e0c724955a10b2a861ff887b22ed5fbddfda2a1c934cf628",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Acyclic proof/material dependency; no independent authority is created by the output."
+      ]
+    },
+    {
+      "claim_id": "C10",
+      "title": "Original validity is not renewed",
+      "claim": "Current consumers check original source expiry even when reviews or wrappers are fresh.",
+      "argument": "Just-before-expiry preparation is retained alongside boundary/after/future/rollback refusals and a separate shorter-offer task.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          10
+        ],
+        "appendix": "j-currentness-replay",
+        "reader": "C10"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "current_use_v43",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+          "json_pointer": "",
+          "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/short_offer/shorter_offer_control.json",
+          "json_pointer": "",
+          "sha256": "8982cd84531bbc482848ae0737a3062f8015fa1d75c68fe324039b7288b840be",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_g43_current_expiry_actual_consumers",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        },
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_g43_shorter_offer_ttl",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+          "json_pointer": "/just_before/status",
+          "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+          "json_pointer": "/at_boundary",
+          "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+          "json_pointer": "/rollback",
+          "sha256": "9b9416cf0bb8dd11c1d44627b3ce4a767d87248069907e4aab539b06e7251a2c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/current_use.json",
+          "json_pointer": "",
+          "sha256": "4fa53a48e8c7e4ce925bab8976c59776b78c6c963d0f3b1161d4ddf22dc3e893",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Saved current-at-event-time suitability does not restore current permission today."
+      ]
+    },
+    {
+      "claim_id": "C11",
+      "title": "Retained history must qualify again",
+      "claim": "A previously valid history opening is not blindly reusable after time advances.",
+      "argument": "The warm lane performs current Root-approved descent and rejects invalid current history while preserving the enrolled basis and usage.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          10
+        ],
+        "appendix": "j-currentness-replay",
+        "reader": "C11"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_history_v01.py",
+          "symbol": null,
+          "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+          "json_pointer": "",
+          "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_history_v01.py",
+          "symbol": "test_g43_retained_history_current_requalification",
+          "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+          "json_pointer": "/current_descent",
+          "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+          "json_pointer": "/at_boundary",
+          "sha256": "c95bdfa4788505e7807e7cbeb450673e596144c2e538434591e5ef4ee81f5d1c",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/current_history.json",
+          "json_pointer": "",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "History eligibility is narrower than physical truth; the trusted local memory boundary is explicit."
+      ]
+    },
+    {
+      "claim_id": "C12",
+      "title": "Coherent false relations are rejected",
+      "claim": "Resealing a wrong quota, prior, result, root or offer relation does not make it admissible.",
+      "argument": "The verifier compares against independent original basis and source relations after outer integrity has been rebuilt.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          9,
+          10
+        ],
+        "appendix": "i-boundary-controls",
+        "reader": "C12"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+          "symbol": "reconstruct_allocation_basis_v43",
+          "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "validate_saved_story_v01",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+          "json_pointer": "/controls",
+          "sha256": "6c0796c7715e00f9656f739bbef7056d37819fc905e09e5b7d9675728a15336a",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/commands/0018_final_parent_controls/controls.json",
+          "json_pointer": "",
+          "sha256": "63a5195975c7ae9c9fbb8e16e3df79c578ec712ffe82ef93e35a0a2afa9c76e7",
+          "evidence_class": "RECORDED_PARENT_CONTROL"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+          "symbol": "test_g43_semantic_controls_with_resealed_test_pin",
+          "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        },
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_native_v01.py",
+          "symbol": "test_native_source_and_coherent_supplied_controls",
+          "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+          "json_pointer": "/allocation/rows",
+          "sha256": "189320e2e447e4c199c233b42ae9ec9ed6e07a7ba82e191342b075ff87aead98",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/supported_result.json",
+          "json_pointer": "",
+          "sha256": "40844eb6c44c6cb261fe2b32230947221d7585452e7c8c9c6ca0f73bcc9cc338",
+          "evidence_class": "RECORDED_SAVED_PROOF"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_quota.json",
+          "json_pointer": "/reason",
+          "sha256": "da5446dc5370341df3f87b4b7573e9a4b7b66e1e11ba20373a2ecae8aaf29be6",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        },
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_prior.json",
+          "json_pointer": "/reason",
+          "sha256": "50578e4030f46da3f287eccf609b628c8bb38be98f47a15949c9ed42da3a907d",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        },
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_result.json",
+          "json_pointer": "/reason",
+          "sha256": "cdb85b8d5c09e16cf0092f36dafbabbc578ef0f77dd4e242d9090f65ff7cb64d",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        },
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_root.json",
+          "json_pointer": "/reason",
+          "sha256": "a998a1da12b978cea3bee365212d8cec6c3cd3db9d64cc3efc1e75b969a85527",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        },
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_offer.json",
+          "json_pointer": "/reason",
+          "sha256": "7516e2ac15240a94135d85e022021e0eb9fe8fc71c5838188bb21500df76d27a",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+          "json_pointer": "/output",
+          "sha256": "2e0195eafb44fa9ea585ca8cda19e2ca35ee43a4ae7759cd4c7c0e1f6b10bbb8",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Refusals occur at named constructor/currentness/saved-relation boundaries; they are not all Firewall blocks."
+      ]
+    },
+    {
+      "claim_id": "C13",
+      "title": "The checker is independently installed",
+      "claim": "Saved evidence cannot choose the checker implementation or substitute a transitive source body.",
+      "argument": "G44 P1 checks actual import origins, finite checker closure and exact recorded environment before saved semantics; archived source bodies remain inert.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          11
+        ],
+        "appendix": "j-currentness-replay",
+        "reader": "C13"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "checker_sources_v44",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "checker_environment_v44",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/MANIFEST.json",
+          "json_pointer": "/checker_source_ledger",
+          "sha256": "16cee34833de46c4fd03dee9da3990d03815237567dfecc7cc9870f69d6d6f02",
+          "evidence_class": "RECORDED_CHECKER_PROVENANCE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/MANIFEST.json",
+          "json_pointer": "/producer_source_ledger",
+          "sha256": "16cee34833de46c4fd03dee9da3990d03815237567dfecc7cc9870f69d6d6f02",
+          "evidence_class": "RECORDED_PRODUCER_PROVENANCE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/MANIFEST.json",
+          "json_pointer": "/checker_environment",
+          "sha256": "16cee34833de46c4fd03dee9da3990d03815237567dfecc7cc9870f69d6d6f02",
+          "evidence_class": "RECORDED_CHECKER_ENVIRONMENT"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+          "symbol": "test_g44_missing_checker_dependency_refuses",
+          "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        },
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+          "symbol": "test_g44_preloaded_alternative_origin_core_mismatch_refuses",
+          "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g45/installed_supplied/combined.json",
+          "json_pointer": "/status",
+          "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+          "evidence_class": "RECORDED_INSTALLED_SUPPLIED"
+        }
+      ],
+      "negative_refs": [],
+      "consumer_refs": [],
+      "limits": [
+        "Requires a matching trusted environment; not an arbitrary clean-clone replay promise or hostile same-UID process containment."
+      ]
+    },
+    {
+      "claim_id": "C14",
+      "title": "A genuine approval can have the wrong subject",
+      "claim": "A real same-Root recording ACCEPT for another subject cannot authorize this history snapshot.",
+      "argument": "G44 P2 binds copied claim/result material to cold originals; P3 binds recording input, transaction, subject and meaning references.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [],
+        "appendix": "i-boundary-controls",
+        "reader": "C14"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "validate_observation_copies_v44",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        },
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "validate_history_subject_v44",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+          "json_pointer": "/review",
+          "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        },
+        {
+          "path": "evidence/g44/portable_publication_final/story/observed_g3.json",
+          "json_pointer": "/claim",
+          "sha256": "5ea9bd0d5ac6da63a904191b80be8ac696c5242e7e71794ce9e10febe0f87c41",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+          "symbol": "test_g44_history_same_root_other_genuine_subject_refuses",
+          "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/history_recorded.json",
+          "json_pointer": "/root_records",
+          "sha256": "511a30e8ec1bfcdafe7433feba34cbabdb8ba8cf033ef4980f364578e88a1bfe",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "negative_refs": [
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_claim_copy.json",
+          "json_pointer": "/reason",
+          "sha256": "07572f74a04cba47967f04f1824a139ed4cc71444e352cd66cff2c55c79fd755",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        },
+        {
+          "path": "evidence/g44/commands/0017_final_focused/proof_controls/negative_native_copy.json",
+          "json_pointer": "/reason",
+          "sha256": "65ad711a5b922276b8be27ef9b6c49f6e6ca7aa07b9bf5b7510a9a7eaa5bb2a4",
+          "evidence_class": "RECORDED_SAVED_PROOF_CONTROL"
+        }
+      ],
+      "consumer_refs": [
+        {
+          "path": "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+          "json_pointer": "",
+          "sha256": "f6eb290683d12a62e37262a5bd001a67749897f9a63c3d2ae616111a1dcb669a",
+          "evidence_class": "RECORDED_CONTROLLED_NATIVE"
+        }
+      ],
+      "limits": [
+        "Subject-specific evidence; a genuine signature or ACCEPT is not universal approval."
+      ]
+    },
+    {
+      "claim_id": "C15",
+      "title": "Saved verification is deterministic without new authority",
+      "claim": "G44 Living, G44 Conformance and G45 installed supplied checks produced identical 1,151,634-byte canonical outputs.",
+      "argument": "Equal whole-file SHA256 and the named counters support deterministic saved relationship checks without new native execution.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          11
+        ],
+        "appendix": "k-verification-inventory",
+        "reader": "C15"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/hedgehog/gate4_reference_evidence_v01.py",
+          "symbol": "verify_package_v01",
+          "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g44/commands/0020_supplied_living_final/combined.json",
+          "json_pointer": "",
+          "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+          "evidence_class": "RECORDED_SUPPLIED_LIVING"
+        },
+        {
+          "path": "evidence/g44/commands/0021_supplied_conformance_final/combined.json",
+          "json_pointer": "",
+          "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+          "evidence_class": "RECORDED_SUPPLIED_CONFORMANCE"
+        },
+        {
+          "path": "evidence/g45/installed_supplied/combined.json",
+          "json_pointer": "",
+          "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+          "evidence_class": "RECORDED_INSTALLED_SUPPLIED"
+        }
+      ],
+      "test_refs": [
+        {
+          "path": "source_snapshot/installed/tests/test_gate4_reference_evidence_v01.py",
+          "symbol": "test_g43_saved_positive_and_test_pin",
+          "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "TEST_LOCATOR_RECORDED_NOT_RUN_FOR_PRESENTATION"
+        }
+      ],
+      "positive_refs": [],
+      "negative_refs": [],
+      "consumer_refs": [],
+      "limits": [
+        "SAFE_DERIVED_SAVED_RELATIONSHIPS_AT_RECORDED_EVENT_TIMES; full native canonical replay is UNSUPPORTED_NATIVE_SCHEMA. Named monitoring is not OS-wide surveillance."
+      ]
+    },
+    {
+      "claim_id": "C16",
+      "title": "Installation and presentation are separate",
+      "claim": "G45 landed the reviewed implementation at the pinned commit; presentation publication has a separate identity and review.",
+      "argument": "The installation report and result retain actual commit/parent/tree; historical NOT_CLOSED and TEST_SUPPLIED_PIN labels remain unchanged.",
+      "evidence_class": "ACTUAL_SOURCE_AND_RECORDED_EVIDENCE",
+      "anchors": {
+        "slides": [
+          1,
+          12
+        ],
+        "appendix": "a-result-scope-status",
+        "reader": "C16"
+      },
+      "source_refs": [
+        {
+          "path": "source_snapshot/installed/docs/gate4_reference_release_checkpoint_v01.md",
+          "symbol": null,
+          "sha256": "5e835bceda254ea2626274cc1fe7dc26b437af89f22e33a1abdd61550785942d",
+          "source_pin": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+          "evidence_class": "ACTUAL_INSTALLED_SOURCE"
+        }
+      ],
+      "data_refs": [
+        {
+          "path": "evidence/g45/RESULT.json",
+          "json_pointer": "",
+          "sha256": "8786f2e76ba34b7650304d244ca26acfebfadbd05e03b19c5c3349c0d4037c5b",
+          "evidence_class": "RECORDED_OWNER_LANDING"
+        }
+      ],
+      "test_refs": [],
+      "positive_refs": [],
+      "negative_refs": [],
+      "consumer_refs": [],
+      "limits": [
+        "Unsigned Git commit is not an external audit signature. No future publication hash is invented."
+      ]
+    }
+  ]
+}

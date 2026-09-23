@@ -1,0 +1,628 @@
+{
+  "archive": {
+    "path": "upload/04-RADIOLARIA_GATE4_G45_OWNER_LANDING_RETURN_20260923T155224Z.tar.gz",
+    "bytes": 1584845,
+    "sha256": "14fc5ffc42b51b297f117bfc618dfc20cd001072f29ed5d65475a1683654a5ef",
+    "gzip_crc": "PASS",
+    "regular_members": 591,
+    "manifest_rows": 590,
+    "unsafe_members": [],
+    "duplicate_members": [],
+    "manifest_mismatches": [],
+    "unmanifested": [],
+    "extra_manifest_rows": []
+  },
+  "g44_saved_proof": {
+    "manifest": "evidence/g44/portable_publication_final/MANIFEST.json",
+    "rows": 222,
+    "mismatches": []
+  },
+  "g44_parents": {
+    "manifest": "evidence/g44/parents/MANIFEST.json",
+    "rows": 75,
+    "mismatches": []
+  },
+  "postimages": {
+    "count": 34,
+    "actions": {
+      "A": 26,
+      "M": 8
+    },
+    "mismatches": [],
+    "rows": [
+      {
+        "path": "demo/run_gate4_reference_v01.py",
+        "action": "A",
+        "bytes": 2673,
+        "sha256": "4a1ff8c0dd8894323c88eb6d627eb78b2d091e672ec534b6358c01bc2b8f4b29",
+        "matches_g44": true
+      },
+      {
+        "path": "demo/run_kernel_conformance_v01.py",
+        "action": "M",
+        "bytes": 136730,
+        "sha256": "77db1f8417ba1b746425e9854662476861418a35e52be511ec8627c30726eeaa",
+        "matches_g44": true
+      },
+      {
+        "path": "demo/run_living_gauntlet_v01.py",
+        "action": "M",
+        "bytes": 264699,
+        "sha256": "688951260b3986c82ad0d16417a474dcb61f412e9412806f863ec75c7994bb45",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/gate4_reference_checkpoint_v01.md",
+        "action": "A",
+        "bytes": 8218,
+        "sha256": "ab60e29717441d8a6c979cfc02091a5a88d92e10b0a1ad3ef4dc2f0beaab52a2",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/gate4_reference_contract_v01.md",
+        "action": "A",
+        "bytes": 9603,
+        "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/gate4_reference_evidence_checkpoint_v01.md",
+        "action": "A",
+        "bytes": 6592,
+        "sha256": "211ae9b5b67beb3eae8d454a65c30b0e3d41edc3256c9cf0b89b2c7deb0565bc",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/gate4_reference_math_checkpoint_v01.md",
+        "action": "A",
+        "bytes": 6729,
+        "sha256": "a8935586aaffe1a79ac34cc6de6c26bbccefcb901fd7d1ba5d0c50d0f3a4eed0",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/gate4_reference_native_checkpoint_v01.md",
+        "action": "A",
+        "bytes": 7141,
+        "sha256": "3ca510aac80308e85a9627362ad24351ecdc4168e582d9a05dd8cf6dd98ed1a5",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/gate4_reference_release_checkpoint_v01.md",
+        "action": "A",
+        "bytes": 4207,
+        "sha256": "5e835bceda254ea2626274cc1fe7dc26b437af89f22e33a1abdd61550785942d",
+        "matches_g44": true
+      },
+      {
+        "path": "docs/repository_transition_admission_v01.md",
+        "action": "M",
+        "bytes": 11224,
+        "sha256": "840a8d4b06501a08a1726d67f57979d8bb5e1ff2b49aa584da4c9f0b4d11e1ac",
+        "matches_g44": true
+      },
+      {
+        "path": "fixtures/gate4_reference_math_v01.json",
+        "action": "A",
+        "bytes": 31054,
+        "sha256": "1d58da7a6b424db760acd1b703c765e463ee02f2d6d3df80b64f7c12dd4d8ff3",
+        "matches_g44": true
+      },
+      {
+        "path": "fixtures/gate4_reference_native_v01.json",
+        "action": "A",
+        "bytes": 1881,
+        "sha256": "69db28b8739c4f12de9a833a422e9d812234d908ac371385e013889e41831b1b",
+        "matches_g44": true
+      },
+      {
+        "path": "fixtures/gate4_reference_v01.json",
+        "action": "A",
+        "bytes": 1729,
+        "sha256": "4bc893bcab8c2c7272d6dae15f81e1812f24833b3a43e07b24512fcb0492fd39",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+        "action": "A",
+        "bytes": 97270,
+        "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/domains/airline/gate4_reference_history_v01.py",
+        "action": "A",
+        "bytes": 9362,
+        "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/gate4_pressure_budget_v01.py",
+        "action": "A",
+        "bytes": 9665,
+        "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/gate4_reference_contracts_v01.py",
+        "action": "A",
+        "bytes": 15842,
+        "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/gate4_reference_evidence_v01.py",
+        "action": "A",
+        "bytes": 31489,
+        "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/gate4_reference_release_v01.py",
+        "action": "A",
+        "bytes": 10116,
+        "sha256": "2cef08b3496187f1984e0c69609d3d0afa33ba2ac426ec558c6c12a259ed9da0",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/gate4_reference_runtime_v01.py",
+        "action": "A",
+        "bytes": 11357,
+        "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a",
+        "matches_g44": true
+      },
+      {
+        "path": "hedgehog/gate4_strategy_reference_v01.py",
+        "action": "A",
+        "bytes": 6667,
+        "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+        "matches_g44": true
+      },
+      {
+        "path": "release/completion_manifest.json",
+        "action": "M",
+        "bytes": 36675,
+        "sha256": "1a3f2b52ae472333afdae45e525a105ef3fb3af2dee1c1dc61e1731f2d234d2f",
+        "matches_g44": true
+      },
+      {
+        "path": "release/current_schema_surface_v01.json",
+        "action": "M",
+        "bytes": 10166,
+        "sha256": "a410bb8dc729b93b9c3d8b0d57a0d06f951e69ceaeb7cd1f5ea8e4c5a3d613cf",
+        "matches_g44": true
+      },
+      {
+        "path": "release/integration_seam_index.json",
+        "action": "M",
+        "bytes": 21634,
+        "sha256": "3fef1dba34305ba5b98c6cd00e989571fca5391d669a2eb0e762a4b3e2a1097b",
+        "matches_g44": true
+      },
+      {
+        "path": "schemas/gate4_reference_v01.schema.json",
+        "action": "A",
+        "bytes": 59314,
+        "sha256": "392e821ccdee2eaf99cc462553fb4f5308d41f8847554fe9c35a075afdc2f30d",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_evidence_v01.py",
+        "action": "A",
+        "bytes": 9208,
+        "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_history_v01.py",
+        "action": "A",
+        "bytes": 4824,
+        "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_math_v01.py",
+        "action": "A",
+        "bytes": 20127,
+        "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_native_v01.py",
+        "action": "A",
+        "bytes": 12250,
+        "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_preflight_v01.py",
+        "action": "A",
+        "bytes": 4149,
+        "sha256": "1baa6014bfa1904936b2185ec71ea1b9ceb5fe258729abce08a3f61cdce44cb8",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_registration_v01.py",
+        "action": "A",
+        "bytes": 2172,
+        "sha256": "1ed4d4cc32bf75c82834fe252b36719e997003970bf3114065c14227e50327ce",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_gate4_reference_supplied_v01.py",
+        "action": "A",
+        "bytes": 10258,
+        "sha256": "fab345105785362c95a058a7a08defa40809e4d4a3c49bba3bfe52e9c69f6226",
+        "matches_g44": true
+      },
+      {
+        "path": "tests/test_repository_release_spine_v01.py",
+        "action": "M",
+        "bytes": 221693,
+        "sha256": "b36539a6a59658cb061a2c658963481231951ccdc7e17e25ead00175dc8132b0",
+        "matches_g44": true
+      },
+      {
+        "path": "tools/reviewed_repository_transition_v01.py",
+        "action": "M",
+        "bytes": 37551,
+        "sha256": "b44292c6f829876ae2c956aaf077db3e5cb22f9dbc9e224f8d5ebbb566c39407",
+        "matches_g44": true
+      }
+    ],
+    "bridge_ledger_equal": true
+  },
+  "preservation": {
+    "baseline_paths": 1988,
+    "final_paths": 2014,
+    "neighbors": 1980,
+    "changed_neighbors": [],
+    "restricted_mode_neighbors": 21,
+    "preserved_restricted_modes": true,
+    "added": 26,
+    "modified": 8,
+    "deleted": 0
+  },
+  "receipts": {
+    "count": 118,
+    "return_codes": {
+      "0": 118
+    },
+    "unreaped": [],
+    "raw_stream_mismatches": []
+  },
+  "combined": {
+    "files": [
+      "evidence/g45/installed_supplied/combined.json",
+      "evidence/g44/commands/0020_supplied_living_final/combined.json",
+      "evidence/g44/commands/0021_supplied_conformance_final/combined.json"
+    ],
+    "bytes": 1151634,
+    "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+    "all_byte_identical": true
+  },
+  "landing": {
+    "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+    "parent": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+    "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+    "branch": "main",
+    "status_empty": true,
+    "staging_empty": true,
+    "context_state": "FINALIZED",
+    "context_matches_owner_final": true,
+    "context_manifest_hash_matches": true,
+    "context_bridge_hash_matches": true,
+    "context_tip_matches": true,
+    "remote": {
+      "expected_tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+      "fetched_commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+      "fetched_parent": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+      "fetched_tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+      "force": false,
+      "ls_remote": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+      "normal_push": true
+    },
+    "config_unchanged": true,
+    "non_main_refs_unchanged": true,
+    "owner_phase_receipts": [
+      "evidence/g45/commands/067_remote_recheck_before_owner_apply/receipt.json",
+      "evidence/g45/commands/068_owner_apply/receipt.json",
+      "evidence/g45/commands/072_owner_stage/receipt.json",
+      "evidence/g45/commands/079_owner_commit/receipt.json",
+      "evidence/g45/commands/085_owner_finalize/receipt.json",
+      "evidence/g45/commands/092_owner_push/receipt.json"
+    ]
+  },
+  "installed_supplied": {
+    "status": "BYTE_IDENTICAL_TO_REVIEWED_G44",
+    "seconds": 19.85928316693753,
+    "rc": 0,
+    "forbidden_calls_all_zero": true,
+    "network_and_subprocess_audit_all_zero": true,
+    "new_root_decisions": 0,
+    "saved_root_validations": 430
+  },
+  "boundary": {
+    "review_mode": "READ_ONLY_ARCHIVE_BYTES_AND_RECORDED_EVIDENCE_WITH_COORDINATING_AGENT_LIVE_REMOTE_CORROBORATION",
+    "live_owner_or_github_reverified": null,
+    "project_imports": 0,
+    "runtime_collectors": 0,
+    "pytest_runs": 0,
+    "replay_runs": 0,
+    "model_calls": 0,
+    "business_effect_calls": 0,
+    "full_native_canonical_replay": "UNSUPPORTED_NATIVE_SCHEMA",
+    "historical_g44_tests": {
+      "passed": 33,
+      "failed": 1,
+      "unchanged_failure": "Filesystem clears requested 04644 to actual 0644; no new PASS claimed"
+    },
+    "original_historical_statuses_unchanged": true,
+    "full_gate4_closed": false,
+    "presentation_publication_separate": true,
+    "live_owner_mac_worktree_reverified": false,
+    "live_github_reverified_by_coordinating_agent": true,
+    "live_github_observation_path": "evidence/review/remote_basis_observation_v01.json"
+  },
+  "verification_errors": [],
+  "live_remote_corroboration": {
+    "observed_on": "2026-09-23",
+    "method": "Authenticated GitHub connector GET; read only",
+    "branch_url": "https://api.github.com/repos/AAkhtanin/hedgehog-os/branches/main",
+    "repository": "AAkhtanin/hedgehog-os",
+    "branch": "main",
+    "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+    "parent": [
+      "50b3df07ef4a1eddb50b3f958592161cea64dee6"
+    ],
+    "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62",
+    "message": "Install reviewed Gate4 reference release successor",
+    "commit_time": "2026-09-23T15:43:57Z",
+    "signature_status": "unsigned",
+    "namespace": "docs/showcase/gate4_reference_v01",
+    "namespace_absent_at_implementation": true,
+    "presentation_publication": "NOT_PERFORMED",
+    "note": "Future versioned presentation links require authorized repository access and actual publication.",
+    "matches_archived_landing": true
+  },
+  "obligation_review": [
+    {
+      "id": "R01",
+      "obligation": "Reduction and frozen numeric profiles",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Owner-approved finite strategy comparison and five-feature bounded work allocation. Full mathematics and LGT remain visibly deferred.",
+      "evidence": [
+        "source_snapshot/installed/docs/gate4_reference_contract_v01.md",
+        "source_snapshot/installed/hedgehog/gate4_reference_contracts_v01.py",
+        "source_snapshot/installed/docs/gate4_reference_release_checkpoint_v01.md"
+      ]
+    },
+    {
+      "id": "R02",
+      "obligation": "Independent inputs and strict serialization",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Closed bounded DTOs; native original source/policy/time bindings; wrong-source and coherent-substitution controls.",
+      "evidence": [
+        "source_snapshot/installed/hedgehog/gate4_reference_contracts_v01.py",
+        "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+        "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+        "evidence/g44/portable_publication_final/story/native_supplied_controls.json"
+      ]
+    },
+    {
+      "id": "R03",
+      "obligation": "Real finite candidate projection",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Two controlled source-bound offers, EUR790 and EUR815; declared utility coefficients and zero disagreement. Controlled preparation evidence, not live airline inventory.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/original_domain.json",
+        "evidence/g44/portable_publication_final/story/frozen_configuration.json",
+        "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+        "evidence/g44/portable_publication_final/story/contrast/allocation_before_install.json"
+      ]
+    },
+    {
+      "id": "R04",
+      "obligation": "Feasibility, IR, Pareto and compromise",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Finite exhaustive filters and exact Nash-product ranking; recorded 110 pure-math nodes are historical evidence, not newly executed tests.",
+      "evidence": [
+        "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+        "source_snapshot/installed/tests/test_gate4_reference_math_v01.py",
+        "evidence/g44/RESULT.json",
+        "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+        "evidence/g44/portable_publication_final/story/contrast/completed_work.json"
+      ]
+    },
+    {
+      "id": "R05",
+      "obligation": "Independent Root consumption",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Actual saved ClientRoot, AirlineRoot and BankRoot decisions consume the selected recommendation; super_root_created=false.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/cold/reviews.json",
+        "evidence/g44/portable_publication_final/story/contrast/reviews.json",
+        "evidence/g44/portable_publication_final/story/cold/portable_records.json",
+        "evidence/g44/portable_publication_final/story/cold/domain_consumption.json"
+      ]
+    },
+    {
+      "id": "R06",
+      "obligation": "Consent, no-deal, unknown and mixed outcomes",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Missing Bank consent yields NEEDS_USER and MIXED with no continuation; mathematical no-deal and missing-evidence outcomes remain distinct.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json",
+        "source_snapshot/installed/hedgehog/gate4_strategy_reference_v01.py",
+        "source_snapshot/installed/tests/test_gate4_reference_math_v01.py"
+      ]
+    },
+    {
+      "id": "R07",
+      "obligation": "Five contributions and hard exclusion",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Pressure records relevance, lineage, uncertainty, cost and prior contributions; hard exclusion precedes allocation.",
+      "evidence": [
+        "source_snapshot/installed/hedgehog/gate4_pressure_budget_v01.py",
+        "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+        "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+        "source_snapshot/installed/tests/test_gate4_reference_math_v01.py"
+      ]
+    },
+    {
+      "id": "R08",
+      "obligation": "Original budget, minima, maxima and mandatory work",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Each main task preserves original cap9, seven optional checks and mandatory1+1; coherent6/1 and unauthorized prior substitutions refuse.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/cold/allocation_before_install.json",
+        "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json",
+        "evidence/g44/portable_publication_final/story/cold/constructor_controls.json",
+        "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json"
+      ]
+    },
+    {
+      "id": "R09",
+      "obligation": "Allocated useful native Work",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Three recorded main tasks each execute nine enrolled native dispatch units (27 total), zero model calls. Units do not measure CPU time.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/summary.json",
+        "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+        "evidence/g44/portable_publication_final/story/contrast/completed_work.json",
+        "evidence/g44/portable_publication_final/story/warm/completed_work.json"
+      ]
+    },
+    {
+      "id": "R10",
+      "obligation": "Downstream consumption and wrong-source refusal",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Final PURE strategy consumer binds actual predecessor outputs, allocation proof and original basis; valid but wrong source/result/offer substitutions refuse.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+        "evidence/g44/portable_publication_final/story/cold/domain_consumption.json",
+        "evidence/g44/portable_publication_final/story/native_supplied_controls.json",
+        "evidence/g44/commands/0017_final_focused/proof_controls/negative_result.json",
+        "evidence/g44/commands/0017_final_focused/proof_controls/negative_offer.json"
+      ]
+    },
+    {
+      "id": "R11",
+      "obligation": "Accepted G3 history feeds new G4 consumer",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "One genuine completed Work result disproves a prospective Boolean prediction. Recording/head/query/descent yields raw prior -62500000, used once in warm pressure.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/observed_g3.json",
+        "evidence/g44/portable_publication_final/story/history_recorded.json",
+        "evidence/g44/portable_publication_final/story/history/HEAD.json",
+        "evidence/g44/portable_publication_final/story/warm/history_discovery.json",
+        "evidence/g44/portable_publication_final/story/warm/allocation_before_install.json"
+      ]
+    },
+    {
+      "id": "R12",
+      "obligation": "Two actual causal contrasts",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "PRICE_FIRST selects offer0; COMFORT_FIRST selects offer1. Cold4/3 becomes history-informed3/4, changing actual performed checks while original cap and mandatory work remain.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/comparisons.json",
+        "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+        "evidence/g44/portable_publication_final/story/contrast/completed_work.json",
+        "evidence/g44/portable_publication_final/story/warm/completed_work.json"
+      ]
+    },
+    {
+      "id": "R13",
+      "obligation": "History, TTL and negative samples preserve hard law",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Source/offer/history current-use boundaries and Root consent remain mandatory; no weight training or authority transfer. A bad prediction is not a failed constraint check.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/history_controls.json",
+        "evidence/g44/portable_publication_final/story/current_expiry_controls.json",
+        "evidence/g44/portable_publication_final/story/retained_history_current_controls.json",
+        "evidence/g44/portable_publication_final/story/short_offer/shorter_offer_control.json",
+        "evidence/g44/portable_publication_final/story/consent_cross_root_controls.json"
+      ]
+    },
+    {
+      "id": "R14",
+      "obligation": "Retry, continuation and immutable history",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Recorded continuation retains original cap, terminal retry and duplicate controls; exhausted tasks are not replenished and earlier evidence remains intact.",
+      "evidence": [
+        "evidence/g44/portable_publication_final/story/cold/completed_work.json",
+        "evidence/g44/portable_publication_final/story/warm/completed_work.json",
+        "evidence/g44/portable_publication_final/story/current_exhausted_budgets.json",
+        "evidence/g45/preservation.json",
+        "evidence/g45/baseline_inventory.json",
+        "evidence/g45/final_inventory.json"
+      ]
+    },
+    {
+      "id": "R15",
+      "obligation": "Effect-free supplied validation and coherent negatives",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Supported saved relationships and pure supplied release validation are byte-identical. P1-P3 and coherent mutations remain recorded. No Host or current permission is reconstructed; full native canonical replay is unsupported.",
+      "evidence": [
+        "evidence/g44/commands/0017_final_focused/phases.jsonl",
+        "evidence/g44/commands/0017_final_focused/proof_controls/negative_quota.json",
+        "evidence/g44/commands/0017_final_focused/proof_controls/negative_native_copy.json",
+        "evidence/g44/commands/0017_final_focused/proof_controls/negative_claim_copy.json",
+        "evidence/g44/commands/0020_supplied_living_final/combined.json",
+        "evidence/g44/commands/0021_supplied_conformance_final/combined.json",
+        "evidence/g45/installed_supplied/combined.json",
+        "evidence/g45/installed_supplied/execution.json"
+      ]
+    },
+    {
+      "id": "R16",
+      "obligation": "Measured cost and bounded execution",
+      "status": "SUPPORTED_RECORDED",
+      "finding": "Source-bound receipts separate native phases, pure validation, registration and guarded landing. G45 installed supplied validation took19.859283s; inclusive timings must not be summed as exclusive time.",
+      "evidence": [
+        "evidence/g44/recorded_g43/commands/0009_focused_candidate_02/receipt.json",
+        "evidence/g44/portable_publication_final/story/summary.json",
+        "evidence/g44/timings.json",
+        "evidence/g45/timings.json",
+        "evidence/g45/installed_supplied/execution.json"
+      ]
+    },
+    {
+      "id": "R17",
+      "obligation": "Exact reviewed landing and remote confirmation",
+      "status": "VERIFIED_LANDING",
+      "finding": "34 unchanged reviewed postimages;26 additions/8 modifications; FINALIZED context; ordinary push and fetched readback; coordinating live GitHub read corroborates the exact commit/parent/tree.",
+      "evidence": [
+        "evidence/g45/approved/manifest.json",
+        "evidence/g45/approved/bridge.json",
+        "evidence/g45/actual_finalized_owner_context.json",
+        "evidence/g45/commands/079_owner_commit/receipt.json",
+        "evidence/g45/commands/092_owner_push/receipt.json",
+        "evidence/g45/commands/117_independent_final_remote_readback/stdout.raw",
+        "evidence/g45/commands/118_git_show/stdout.raw",
+        "evidence/review/remote_basis_observation_v01.json"
+      ]
+    },
+    {
+      "id": "R18",
+      "obligation": "English checkpoint and transferable evidence route",
+      "status": "ENGINEERING_EVIDENCE_SUPPORTED_READER_PENDING_PUBLICATION",
+      "finding": "English contract/checkpoints, retained source bytes and exact manifests are present. Final human/LLM Reader navigation belongs to the new presentation capsule and is not declared published by this review.",
+      "evidence": [
+        "source_snapshot/installed/docs/gate4_reference_release_checkpoint_v01.md",
+        "source_snapshot/installed/docs/gate4_reference_evidence_checkpoint_v01.md",
+        "evidence/g44/portable_publication_final/MANIFEST.json",
+        "evidence/g44/parents/MANIFEST.json",
+        "evidence/g45/source_consumer_map.json"
+      ]
+    }
+  ],
+  "conclusion": {
+    "engineering": "ACCEPTED_REDUCED_SCOPE_ON_RECORDED_EVIDENCE",
+    "owner_landing": "REMOTE_CONFIRMED_ARCHIVE_AND_LIVE_GITHUB",
+    "R18_reader": "PENDING_NEW_CAPSULE_PUBLICATION",
+    "R19": "PENDING_PRESENTATION_AND_PUBLICATION_QA",
+    "R20": "DEFERRED_SCOPE_RECORDED_PUBLIC_NAVIGATION_PENDING",
+    "full_reference_with_publication": "NOT_CLOSED_BY_THIS_REVIEW",
+    "blocking_evidence_mismatches": 0
+  }
+}

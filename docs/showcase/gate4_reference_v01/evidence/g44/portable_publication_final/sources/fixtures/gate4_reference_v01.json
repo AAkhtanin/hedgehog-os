@@ -1,0 +1,46 @@
+{
+  "contract_id": "G4_REFERENCE_SCOPE_V01",
+  "numeric_profile_id": "G4_REFERENCE_NUMERIC_V01",
+  "decision_date": "2026-09-23",
+  "source_admission": "UNADMITTED_PENDING_INDEPENDENT_REVIEW",
+  "controlled": {
+    "scenario_id": "G40_NEW_AIRLINE_ENROLLED_CONSTRAINT_AND_PROVENANCE",
+    "offer_amounts": [790, 815],
+    "max_amount": 840,
+    "bank_limit": 840,
+    "consent": true,
+    "snapshot_ttl_seconds": 900,
+    "max_items": 4,
+    "max_compute_units": 4,
+    "max_children": 0,
+    "max_model_calls": 0,
+    "max_revisions": 1,
+    "mandatory_work_ids": ["constraint", "provenance"],
+    "root_consumer_dispatch_units": 0
+  },
+  "numerical_reference": {
+    "evidence_class": "NUMERICAL_REFERENCE_NOT_RUNTIME",
+    "Q": 1000000000,
+    "W": 1000000000000,
+    "tau_fp": 250000000,
+    "epsilon_gain_fp": 1,
+    "alpha_i": 1,
+    "rho_exploration": 0,
+    "gt": {
+      "disagreement": [0, 0, 0],
+      "utilities": {"A": [900000000, 100000000, 500000000], "B": [500000000, 500000000, 500000000], "C": [400000000, 400000000, 400000000], "D": [950000000, -100000000, 600000000]},
+      "ir": ["A", "B", "C"],
+      "pareto": ["A", "B"],
+      "products": {"A": "45000000000000000000000000", "B": "125000000000000000000000000"},
+      "recommend": "B"
+    },
+    "avf": {
+      "features": [[800000000,800000000,500000000,400000000],[800000000,800000000,500000000,430000000]],
+      "available": 7,
+      "lower": [2,2],
+      "upper": [6,6],
+      "neutral": {"prior": [0,0], "z": [425000000,421250000], "weights": [1000000000000,985111939603], "allocation": [4,3]},
+      "history_reference": {"prior": [-62500000,0], "z": [417187500,421250000], "weights": [983881318977,1000000000000], "allocation": [3,4]}
+    }
+  }
+}

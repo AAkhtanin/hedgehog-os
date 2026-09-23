@@ -1,0 +1,19 @@
+{
+  "binary_members": 4,
+  "counts_by_kind": {
+    "editorial_document": 12,
+    "exact_original_evidence": 425,
+    "installed_source_postimage": 34,
+    "presentation_asset": 2,
+    "presentation_content_or_build": 13,
+    "source_index": 1
+  },
+  "embedded_project_code_executed": false,
+  "members": 487,
+  "new_semantic_replay": false,
+  "profile": "GATE4_READER_STATIC_BUILD_V01",
+  "reader_bytes": 74672258,
+  "reader_sha256": "e6bc869dedec6ffe3b9ec354c0ee6c25044b4dfc1ed48e62084c3f2620ecd621",
+  "status": "PASS_EXACT_BYTES_AND_XML_ROUNDTRIP",
+  "text_members": 483
+}

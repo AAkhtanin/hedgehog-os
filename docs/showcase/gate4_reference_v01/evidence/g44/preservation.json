@@ -1,0 +1,17 @@
+{
+  "candidate": "REGULAR_UNCOMMITTED_EXTERNAL_COPY",
+  "g43_23_postimages_unchanged": true,
+  "index_refs_config_context_manifest_unchanged": true,
+  "owner_tracked": 1988,
+  "owner_unchanged": true,
+  "predecessors_preserved": [
+    "G40",
+    "G41",
+    "G42",
+    "G43"
+  ],
+  "previous_archive_rechecked": false,
+  "restricted_modes_preserved": 21,
+  "staging_empty": true,
+  "unmodified_candidate_basis_paths": 1980
+}

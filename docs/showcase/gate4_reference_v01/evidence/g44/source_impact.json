@@ -1,0 +1,58 @@
+{
+  "evidence_class": "STATIC_SOURCE_IMPACT_PLUS_RECORDED_EXECUTION_NOT_FRESH_NATIVE",
+  "g43_changed": [
+    "hedgehog/gate4_reference_evidence_v01.py",
+    "tests/test_gate4_reference_evidence_v01.py"
+  ],
+  "g43_preserved": [
+    "demo/run_gate4_reference_v01.py",
+    "docs/gate4_reference_checkpoint_v01.md",
+    "docs/gate4_reference_contract_v01.md",
+    "docs/gate4_reference_evidence_checkpoint_v01.md",
+    "docs/gate4_reference_math_checkpoint_v01.md",
+    "docs/gate4_reference_native_checkpoint_v01.md",
+    "fixtures/gate4_reference_math_v01.json",
+    "fixtures/gate4_reference_native_v01.json",
+    "fixtures/gate4_reference_v01.json",
+    "hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+    "hedgehog/domains/airline/gate4_reference_history_v01.py",
+    "hedgehog/gate4_pressure_budget_v01.py",
+    "hedgehog/gate4_reference_contracts_v01.py",
+    "hedgehog/gate4_reference_runtime_v01.py",
+    "hedgehog/gate4_strategy_reference_v01.py",
+    "schemas/gate4_reference_v01.schema.json",
+    "tests/test_gate4_reference_history_v01.py",
+    "tests/test_gate4_reference_math_v01.py",
+    "tests/test_gate4_reference_native_v01.py",
+    "tests/test_gate4_reference_preflight_v01.py",
+    "tests/test_gate4_reference_supplied_v01.py"
+  ],
+  "new_native_collectors": 0,
+  "parent_consumers": {
+    "demo/run_kernel_conformance_v01.py": {
+      "added": [
+        "validate_kernel_conformance_g44_v01"
+      ],
+      "changed_existing": [],
+      "preserved_count": 62
+    },
+    "demo/run_living_gauntlet_v01.py": {
+      "added": [
+        "validate_living_g44_v01",
+        "validate_living_parent_g44_v01"
+      ],
+      "changed_existing": [
+        "validate_living_g36_v01",
+        "_validate_completion_manifest_v01",
+        "_validate_integration_seam_index_v01",
+        "_current_registration_v01",
+        "validate_living_gauntlet_report_v01"
+      ],
+      "preserved_count": 80
+    }
+  },
+  "retained_tests": {
+    "G42_pure_math": 110,
+    "G43_native_history_preflight": 17
+  }
+}

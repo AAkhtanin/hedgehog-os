@@ -1,0 +1,27 @@
+{
+  "checks": [
+    "safe regular inventory",
+    "file sizes modes and SHA256",
+    "proof and parent manifests and original pins",
+    "distinct source closures",
+    "three complete combined outputs byte-identical",
+    "saved named counters",
+    "XML bodies and detached index offsets",
+    "claim paths pointers symbols and anchors"
+  ],
+  "claim_locators_checked": 134,
+  "claim_routes": 16,
+  "current_checker_sources": 123,
+  "historical_producer_sources": 34,
+  "installed_postimages": 34,
+  "members": 487,
+  "new_semantic_replay": false,
+  "parent_manifest_rows": 75,
+  "profile": "GATE4_DATA_ONLY_VERIFICATION_V01",
+  "project_code_executed": false,
+  "project_imports": 0,
+  "proof_manifest_rows": 222,
+  "reader_bytes": 74672258,
+  "reader_sha256": "e6bc869dedec6ffe3b9ec354c0ee6c25044b4dfc1ed48e62084c3f2620ecd621",
+  "status": "PASS"
+}

@@ -1,0 +1,105 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/input/owner_handoff/owner_handoff.py",
+    "--root",
+    "/Users/admin/Projects/hedgehog-os",
+    "--payload",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/input/postimages",
+    "--old-trusted-root",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/input/owner_handoff/trusted_old",
+    "--new-trusted-root",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/input/owner_handoff/trusted_new",
+    "--bridge",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/bridge.json",
+    "--manifest",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/manifest.json",
+    "--context",
+    "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/owner_context.json",
+    "--expected-bridge",
+    "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea",
+    "--expected-manifest",
+    "01e05b5a81cbf70ca4b5eca6060cbd9f3e621f6dd54e5d5370174753fadafc03",
+    "--expected-old-policy",
+    "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+    "--expected-new-policy",
+    "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+    "--independent-review-and-owner-authorization",
+    "--phase",
+    "commit"
+  ],
+  "context_environment_removed": false,
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "elapsed": 74.58340812474489,
+  "end_epoch": 1790178275.750219,
+  "environment": {
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "pid": 13134,
+  "rc": 0,
+  "reaped": true,
+  "sources": {
+    "approved/bridge.json": {
+      "bytes": 133569,
+      "mode": "0644",
+      "sha256": "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea"
+    },
+    "approved/manifest.json": {
+      "bytes": 12413,
+      "mode": "0644",
+      "sha256": "01e05b5a81cbf70ca4b5eca6060cbd9f3e621f6dd54e5d5370174753fadafc03"
+    },
+    "approved/owner_context.json": {
+      "bytes": 1341,
+      "mode": "0644",
+      "sha256": "2b002e5163326a23c40f78f95f1368e1d331668974f07e65d02fb0fff5c24461"
+    },
+    "approved/owner_context.json.creation.json": {
+      "bytes": 562,
+      "mode": "0644",
+      "sha256": "e9ceda2fe1ad1c8bee1388c1401f9537c668ff283994413ee6afb4deb20d00c7"
+    },
+    "finish.py": {
+      "bytes": 13786,
+      "mode": "0644",
+      "sha256": "7b94a4eecd350033914b9ae1571541c885f16490a4de560cb222822f113f818d"
+    },
+    "g45.py": {
+      "bytes": 17226,
+      "mode": "0644",
+      "sha256": "0ff72c8106c01f90f12e49566142610ba0facd243a824476a2d3dfef2dff743a"
+    },
+    "input/owner_handoff/owner_handoff.py": {
+      "bytes": 6940,
+      "mode": "0644",
+      "sha256": "5e380b3eeaa31feee4c39b0f39fa64ceee024570ba35f89e4aabb57414a497cf"
+    },
+    "preserved_legacy_test.py": {
+      "bytes": 22709,
+      "mode": "0644",
+      "sha256": "0e6eb00b2d259f07fc476a9a1d2e9159ca789257ad17915a91bc4ea29c3d5a9f"
+    },
+    "supplied_installed.py": {
+      "bytes": 4123,
+      "mode": "0644",
+      "sha256": "b56e1f9ee8f0e5be80ef4414c070fde32b0c94926b398fa4dd632f8d9dcffb80"
+    }
+  },
+  "start_epoch": 1790178201.16633,
+  "started_utc": "2026-09-23T15:43:21Z",
+  "streams": {
+    "stderr.raw": {
+      "bytes": 0,
+      "mode": "0644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout.raw": {
+      "bytes": 1526,
+      "mode": "0644",
+      "sha256": "fbec856a368527da0fc11c6f22bdb6f8c52045eb360381fb9f05554d07b01764"
+    }
+  },
+  "supervisor": 13133
+}

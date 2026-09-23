@@ -1,0 +1,443 @@
+{
+  "current_kernel_conformance_profile": "kernel_conformance_v0_6_current",
+  "document_id": "living_release_integration_seam_index_v01",
+  "gate3_g36_mechanism_v01": {
+    "conformance_entry": "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01",
+    "direct_test": "tests/test_gate3_mechanism_registration_v01.py",
+    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
+    "inventory": [
+      "NATIVE_BOUNDARY_FEEDBACK",
+      "ROOT_RECORDED_HISTORY",
+      "CURRENT_REVIEWED_WORK",
+      "LAWFUL_SAME_HOST_OBJECTIVE",
+      "SUPPLIED_PROOF_REFUSAL"
+    ],
+    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
+    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
+    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
+    "shared_collectors": 0,
+    "source_admission_is_root_permission": false,
+    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
+    "top_level_fresh_e5": 1,
+    "top_level_fresh_g3": 1
+  },
+  "gate4_reference_release_v01": {
+    "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+    "combined_counts": {
+      "current_schemas": 17,
+      "historical_acts_plus_reference_profiles": 13,
+      "historical_seams_plus_reference_profiles": 25
+    },
+    "evidence": [
+      "CP_STRATEGY",
+      "CP_BUDGET",
+      "ORIGINAL_SOURCE_BUDGET",
+      "ACTUAL_WORK_CONSUMPTION",
+      "G3_RECORDING_DESCENT",
+      "INDEPENDENT_ROOTS_CONSENT_CURRENT_TIME",
+      "REFUSALS",
+      "SUPPORTED_SAVED_VERIFICATION"
+    ],
+    "historical_counts": {
+      "acts": 12,
+      "current_schemas": 16,
+      "retired_schemas": 2,
+      "seams": 24
+    },
+    "native_replay": "UNSUPPORTED_NATIVE_SCHEMA",
+    "ownership": {
+      "fresh_g4_owner": "collect_release_v01",
+      "legacy_collectors": 0,
+      "supplied_g4_collectors": 0
+    },
+    "profile": "G44_REFERENCE_RELEASE_V01",
+    "schema": "schemas/gate4_reference_v01.schema.json",
+    "sources": {
+      "demo/run_kernel_conformance_v01.py": {
+        "bytes": 136730,
+        "sha256": "77db1f8417ba1b746425e9854662476861418a35e52be511ec8627c30726eeaa"
+      },
+      "demo/run_living_gauntlet_v01.py": {
+        "bytes": 264699,
+        "sha256": "688951260b3986c82ad0d16417a474dcb61f412e9412806f863ec75c7994bb45"
+      },
+      "hedgehog/domains/airline/gate4_reference_adapter_v01.py": {
+        "bytes": 97270,
+        "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4"
+      },
+      "hedgehog/domains/airline/gate4_reference_history_v01.py": {
+        "bytes": 9362,
+        "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870"
+      },
+      "hedgehog/gate4_pressure_budget_v01.py": {
+        "bytes": 9665,
+        "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27"
+      },
+      "hedgehog/gate4_reference_contracts_v01.py": {
+        "bytes": 15842,
+        "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42"
+      },
+      "hedgehog/gate4_reference_evidence_v01.py": {
+        "bytes": 31489,
+        "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d"
+      },
+      "hedgehog/gate4_reference_release_v01.py": {
+        "bytes": 10116,
+        "sha256": "2cef08b3496187f1984e0c69609d3d0afa33ba2ac426ec558c6c12a259ed9da0"
+      },
+      "hedgehog/gate4_reference_runtime_v01.py": {
+        "bytes": 11357,
+        "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a"
+      },
+      "hedgehog/gate4_strategy_reference_v01.py": {
+        "bytes": 6667,
+        "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06"
+      },
+      "schemas/gate4_reference_v01.schema.json": {
+        "bytes": 59314,
+        "sha256": "392e821ccdee2eaf99cc462553fb4f5308d41f8847554fe9c35a075afdc2f30d"
+      },
+      "tests/test_gate4_reference_evidence_v01.py": {
+        "bytes": 9208,
+        "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8"
+      },
+      "tests/test_gate4_reference_history_v01.py": {
+        "bytes": 4824,
+        "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b"
+      },
+      "tests/test_gate4_reference_math_v01.py": {
+        "bytes": 20127,
+        "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744"
+      },
+      "tests/test_gate4_reference_native_v01.py": {
+        "bytes": 12250,
+        "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91"
+      },
+      "tests/test_gate4_reference_preflight_v01.py": {
+        "bytes": 4149,
+        "sha256": "1baa6014bfa1904936b2185ec71ea1b9ceb5fe258729abce08a3f61cdce44cb8"
+      },
+      "tests/test_gate4_reference_registration_v01.py": {
+        "bytes": 2172,
+        "sha256": "1ed4d4cc32bf75c82834fe252b36719e997003970bf3114065c14227e50327ce"
+      },
+      "tests/test_gate4_reference_supplied_v01.py": {
+        "bytes": 10258,
+        "sha256": "fab345105785362c95a058a7a08defa40809e4d4a3c49bba3bfe52e9c69f6226"
+      }
+    },
+    "status": "PROPOSED_PENDING_INDEPENDENT_REVIEW",
+    "symbols": {
+      "collection_owner": "hedgehog.gate4_reference_release_v01:collect_release_v01",
+      "conformance": "demo.run_kernel_conformance_v01:validate_kernel_conformance_g44_v01",
+      "living": "demo.run_living_gauntlet_v01:validate_living_g44_v01",
+      "producer": "hedgehog.domains.airline.gate4_reference_adapter_v01:native_story_v42",
+      "schema_writer": "hedgehog.gate4_reference_contracts_v01:reference_schema_v01",
+      "supplied": "hedgehog.gate4_reference_release_v01:validate_release_v01",
+      "verifier": "hedgehog.gate4_reference_evidence_v01:verify_package_v01"
+    },
+    "tests": [
+      "tests/test_gate4_reference_math_v01.py",
+      "tests/test_gate4_reference_supplied_v01.py",
+      "tests/test_gate4_reference_preflight_v01.py",
+      "tests/test_gate4_reference_native_v01.py",
+      "tests/test_gate4_reference_history_v01.py",
+      "tests/test_gate4_reference_evidence_v01.py",
+      "tests/test_gate4_reference_registration_v01.py"
+    ]
+  },
+  "historical_kernel_conformance_profile": "kernel_conformance_v0_5_historical",
+  "index_status": "ACTIVE_GATE1_G1E",
+  "seams": [
+    {
+      "authority_status": "ROOT_BOUNDARIES_PRESERVED",
+      "current_mode": "DETERMINISTIC_LOCAL_COLLECTOR",
+      "effect_access": "NONE",
+      "gate1_target": "living_runtime_reference_act",
+      "notes": "Executed once by the living gauntlet; returned structures determine the act result.",
+      "seam_class": "RUNTIME_COLLECTOR",
+      "seam_id": "deterministic_airline_reference_collector",
+      "source_module": "demo.run_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "source_symbol": "collect_tri_party_airline_ticket_purchase_mock_e2e_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "OBSERVES_ROOT_BOUNDARY",
+      "current_mode": "HISTORICAL_PROFILE_METADATA_ONLY",
+      "effect_access": "NONE",
+      "gate1_target": "kernel_conformance_v0_5_historical",
+      "notes": "Immutable historical Gate-1 v0.5 act identity and evidence only. Current regression execution is disabled, successor onboarding is excluded, current v0.6 uses named existing current acts, and the old act ID is never rebound.",
+      "seam_class": "INVARIANT_COLLECTOR",
+      "seam_id": "all_layers_invariant_super_smoke_collector",
+      "source_module": "demo.run_all_layers_applied_super_smoke",
+      "source_symbol": "collect_all_layers_applied_super_smoke",
+      "status": "HISTORICAL_EVIDENCE_ONLY"
+    },
+    {
+      "authority_status": "NON_ROOT_INTEGRITY_RECONSTRUCTION",
+      "current_mode": "PURE_IN_MEMORY_KERNEL",
+      "effect_access": "NONE",
+      "gate1_target": "generic_integrity_replay",
+      "notes": "Pure domain-neutral integrity and Replay core; not truth, authority, permission, execution, Anchor provenance, or domain portability.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "generic_integrity_replay_core",
+      "source_module": "hedgehog.kernel.integrity_replay_v01",
+      "source_symbol": "verify_artifact_replay_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_TRACE_CONTRACT",
+      "current_mode": "AIRLINE_DOMAIN_REFERENCE",
+      "effect_access": "NONE",
+      "gate1_target": "generic_integrity_replay_adapter",
+      "notes": "Airline-domain Ledger reference; not promoted to a domain-neutral ABI.",
+      "seam_class": "DOMAIN_REFERENCE",
+      "seam_id": "airline_transaction_artifact_ledger_reference",
+      "source_module": "hedgehog.domains.airline.transaction_artifact_ledger_v01",
+      "source_symbol": "AirlineTransactionArtifactLedgerV01",
+      "status": "REFERENCE_ONLY"
+    },
+    {
+      "authority_status": "NON_ROOT_INTEGRITY_CONTRACT",
+      "current_mode": "AIRLINE_DOMAIN_REFERENCE",
+      "effect_access": "NONE",
+      "gate1_target": "generic_integrity_replay_adapter",
+      "notes": "Airline-domain Crypto reference; integrity is not truth or authority.",
+      "seam_class": "DOMAIN_REFERENCE",
+      "seam_id": "airline_crypto_artifact_seal_reference",
+      "source_module": "hedgehog.domains.airline.crypto_artifact_seal_v01",
+      "source_symbol": "AirlineCryptoArtifactSealEnvelopeV01",
+      "status": "REFERENCE_ONLY"
+    },
+    {
+      "authority_status": "NON_ROOT_RECONSTRUCTION_CONTRACT",
+      "current_mode": "AIRLINE_DOMAIN_REFERENCE",
+      "effect_access": "NONE",
+      "gate1_target": "generic_integrity_replay_adapter",
+      "notes": "Airline-domain Replay reference; replay is reconstruction, not effect authorization.",
+      "seam_class": "DOMAIN_REFERENCE",
+      "seam_id": "airline_sealed_trace_replay_reference",
+      "source_module": "hedgehog.domains.airline.sealed_trace_replay_v01",
+      "source_symbol": "AirlineSealedTraceReplayInputV01",
+      "status": "REFERENCE_ONLY"
+    },
+    {
+      "authority_status": "NON_ROOT_BOUNDED_CONTEXT",
+      "current_mode": "CORE_MODULE",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "ContextPacket evidence remains bounded and non-authoritative.",
+      "seam_class": "CORE_CONTRACT",
+      "seam_id": "core_context_packets",
+      "source_module": "hedgehog.context_packets",
+      "source_symbol": "build_bounded_semantic_evidence_packet",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_EXPLANATION",
+      "current_mode": "CORE_MODULE",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "Structured rationale is explanation only.",
+      "seam_class": "CORE_CONTRACT",
+      "seam_id": "core_structured_rationale",
+      "source_module": "hedgehog.structured_rationale",
+      "source_symbol": "validate_orchestrator_structured_rationale",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_SEMANTIC_PROPOSAL",
+      "current_mode": "CORE_MODULE",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "Provider semantics remain proposals subject to local canonicalization and validation.",
+      "seam_class": "CORE_CONTRACT",
+      "seam_id": "core_semantic_reasoning_adapter",
+      "source_module": "hedgehog.semantic_reasoning_adapter",
+      "source_symbol": "validate_orchestrator_semantic_reasoning_proposal",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "DESCRIPTIVE_NON_AUTHORITY_TRUST_PROFILE",
+      "current_mode": "PURE_IN_MEMORY_TRUST_MODEL",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "Validated descriptive trust and compromise profiles; no permission, transition, Root decision, effect handle, or runtime authority.",
+      "seam_class": "KERNEL_CONFORMANCE_CORE",
+      "seam_id": "kernel_trust_model_core",
+      "source_module": "hedgehog.kernel.trust_model_v01",
+      "source_symbol": "validate_component_trust_profiles_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_ADVISORY_SYNTHESIS",
+      "current_mode": "PURE_IN_MEMORY_SEMANTIC_NORMALIZATION",
+      "effect_access": "NONE",
+      "gate1_target": "semantic_work_contract",
+      "notes": "Normalizes five contribution provenance modes into an advisory RootReviewPacket; preserves conflicts and missing evidence; creates no Root decision, permission, FinalOutput, or effect.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "semantic_work_contract_core",
+      "source_module": "hedgehog.kernel.semantic_work_v01",
+      "source_symbol": "build_root_review_packet_from_contributions_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_CONTRACT_ENVELOPE",
+      "current_mode": "PURE_IN_MEMORY_VERSIONED_ABI",
+      "effect_access": "NONE",
+      "gate1_target": "domain_neutral_kernel_abi",
+      "notes": "Versioned domain-neutral artifact envelope with independent authority and lifecycle axes; no transition, permission, Root decision, effect handle, or domain adapter.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "kernel_abi_core",
+      "source_module": "hedgehog.kernel.abi_v01",
+      "source_symbol": "validate_kernel_artifact_bundle_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_CAUSAL_EVIDENCE",
+      "current_mode": "PURE_IN_MEMORY_FIELD_LEVEL_CAUSAL_PROOF",
+      "effect_access": "NONE",
+      "gate1_target": "causal_consumption",
+      "notes": "Field-level USED, REJECTED, IGNORED_WITH_REASON, and BLOCKED_BY_GATE traceability with controlled counterfactual evidence; not semantic truth, Root authority, permission, transition, or effect access.",
+      "seam_class": "KERNEL_CONFORMANCE_CORE",
+      "seam_id": "causal_consumption_core",
+      "source_module": "hedgehog.kernel.abi_v01",
+      "source_symbol": "validate_causal_counterfactual_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "ROOT_CREATED_PACKET_CONTRACT",
+      "current_mode": "CORE_MODULE",
+      "effect_access": "NONE",
+      "gate1_target": "root_decision_kernel",
+      "notes": "The packet contract is Root-created/mock-only; this seam does not execute an effect.",
+      "seam_class": "CORE_CONTRACT",
+      "seam_id": "core_action_commit_packet",
+      "source_module": "hedgehog.action_commit_packet",
+      "source_symbol": "build_mock_action_commit_packet",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_FAKE_ADAPTER",
+      "current_mode": "CORE_MODULE",
+      "effect_access": "NONE",
+      "gate1_target": "effect_firewall",
+      "notes": "Local fake-adapter sandbox only; no real connector access.",
+      "seam_class": "CORE_CONTRACT",
+      "seam_id": "core_mock_connector_sandbox",
+      "source_module": "hedgehog.mock_connector_sandbox",
+      "source_symbol": "run_mock_connector_sandbox",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_CHILD_TOPOLOGY",
+      "current_mode": "CORE_MODULE",
+      "effect_access": "NONE",
+      "gate1_target": "domain_neutral_kernel_abi",
+      "notes": "Child fulfillment topology produces proposals and does not become Root.",
+      "seam_class": "CORE_CONTRACT",
+      "seam_id": "core_fractal_fulfillment",
+      "source_module": "hedgehog.fractal_fulfillment",
+      "source_symbol": "run_fractal_order_fulfillment_dag",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_FROZEN_DOMAIN_ADAPTER",
+      "current_mode": "PURE_IN_MEMORY_FROZEN_AIRLINE_PROJECTION",
+      "effect_access": "NONE",
+      "gate1_target": "generic_integrity_replay",
+      "notes": "Maps explicit frozen Airline Ledger, Crypto, and Replay objects into the active Kernel ABI, generic Manifest verification, generic Replay, and dependency-hash CausalConsumptionRef rows. It performs no package discovery, filesystem I/O, provider/network/Gemini call, authority creation, effect access, all-real rerun, or mutation of the frozen Airline oracle.",
+      "seam_class": "DOMAIN_ADAPTER",
+      "seam_id": "generic_integrity_replay_adapter",
+      "source_module": "hedgehog.domains.airline.kernel_adapter_v01",
+      "source_symbol": "build_airline_kernel_adapter_result_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_SIGNER_ISOLATION",
+      "current_mode": "IN_MEMORY_TEST_ONLY_ED25519",
+      "effect_access": "NONE",
+      "gate1_target": "root_signer_isolation_conformance",
+      "notes": "Ephemeral in-memory Root-key isolation conformance only; not Airline Root Attestation, production identity, PKI, permission, authority creation, or effect access.",
+      "seam_class": "KERNEL_CONFORMANCE_CORE",
+      "seam_id": "root_signer_isolation_conformance",
+      "source_module": "hedgehog.kernel.root_signer_isolation_v01",
+      "source_symbol": "verify_root_signature_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_DOMAIN_ADAPTER",
+      "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_PRODUCT_TRACE_PROJECTION",
+      "effect_access": "NONE",
+      "gate1_target": "supplier_water_filter_portability",
+      "notes": "Consumes one explicit deterministic source report and projects 23 Kernel artifacts, 22 generic edges, a derived generic Manifest and Replay, 22 ordered-card causal refs, and a one-Root MIXED MultiRoot result. It edits no Kernel law, makes no provider, network, or Gemini call, owns no effect access, and invokes no real connector.",
+      "seam_class": "DOMAIN_ADAPTER",
+      "seam_id": "supplier_water_filter_abi_adapter",
+      "source_module": "hedgehog.domains.supplier_water_filter.kernel_adapter_v01",
+      "source_symbol": "build_supplier_water_filter_kernel_adapter_result_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_ROOT_IMMUTABLE_TRANSITION_POLICY",
+      "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_LOOKUP",
+      "effect_access": "NONE",
+      "gate1_target": "transition_registry",
+      "notes": "Immutable deterministic transition lookup; unknown transitions fail closed; the Registry does not mutate artifacts, create authority, create permission, create a Root decision, create FinalOutput, or execute an effect.",
+      "seam_class": "KERNEL_CORE",
+      "seam_id": "transition_registry",
+      "source_module": "hedgehog.kernel.transition_registry_v01",
+      "source_symbol": "lookup_transition_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "ROOT_DECISION_AUTHORITY",
+      "current_mode": "PURE_IN_MEMORY_DETERMINISTIC_ROOT_DECISION",
+      "effect_access": "NONE",
+      "gate1_target": "root_decision_kernel",
+      "notes": "Root-only deterministic decision precedence producing RootDecisionResult; creates no permission, FinalOutput, ActionCommitPacket, ExecutionRequest, receipt, DRS write, connector call, effect request, or effect.",
+      "seam_class": "KERNEL_ROOT_BOUNDARY",
+      "seam_id": "root_decision_kernel",
+      "source_module": "hedgehog.kernel.root_decision_v01",
+      "source_symbol": "decide_root_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "ROOT_SCOPED_EXCLUSIVE_EFFECT_BOUNDARY",
+      "current_mode": "PURE_IN_MEMORY_MOCK_ONLY_CAPABILITY_EXECUTION",
+      "effect_access": "BOUNDED_EFFECT_HANDLE_OWNER",
+      "gate1_target": "effect_firewall",
+      "notes": "The only active bounded effect-handle owner. The capability remains private to one Firewall invocation and is bound to one Root decision, permission, transaction, adapter, action, scope, and expiry. It executes one neutral mock effect only and returns an evidence-only receipt. No provider, DRS, AVF, GT, domain adapter, renderer, receipt, real connector, or external system receives the handle.",
+      "seam_class": "KERNEL_EFFECT_BOUNDARY",
+      "seam_id": "effect_firewall",
+      "source_module": "hedgehog.kernel.effect_firewall_v01",
+      "source_symbol": "execute_mock_effect_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "INDEPENDENT_ROOT_OUTCOME_PROTOCOL",
+      "current_mode": "PURE_IN_MEMORY_SOVEREIGN_ROOT_GEOMETRY",
+      "effect_access": "NONE",
+      "gate1_target": "generic_multiroot",
+      "notes": "Preserves independent Root decisions with no SuperRoot, keeps mixed and incomplete outcomes visible, fails unknown, duplicate, and reserved Roots closed, transfers no authority or permission, and performs no effect.",
+      "seam_class": "KERNEL_ROOT_BOUNDARY",
+      "seam_id": "multiroot_envelope",
+      "source_module": "hedgehog.kernel.multiroot_v01",
+      "source_symbol": "validate_multiroot_v01",
+      "status": "ACTIVE"
+    },
+    {
+      "authority_status": "NON_AUTHORITY_CONFORMANCE_EVIDENCE",
+      "current_mode": "DETERMINISTIC_MACHINE_READABLE_GATE1_CONFORMANCE",
+      "effect_access": "NONE",
+      "gate1_target": "kernel_conformance_closure",
+      "notes": "Executes the current v0.6 profile with exact fourteen-category, two-domain, fifty-negative-probe, and fifteen-active-reference geometry, with PASS derived from execution and no stored synthetic PASS. Historical v0.5 remains evidence only. It creates no authority or permission, has no effect access, performs no provider, network, or Gemini call, makes no production-certification claim, and leaves final independent audit and consolidated documentation closure pending.",
+      "seam_class": "RELEASE_CONFORMANCE",
+      "seam_id": "kernel_conformance_report",
+      "source_module": "demo.run_kernel_conformance_v01",
+      "source_symbol": "collect_kernel_conformance_v01",
+      "status": "ACTIVE"
+    }
+  ],
+  "version": "v0.1"
+}

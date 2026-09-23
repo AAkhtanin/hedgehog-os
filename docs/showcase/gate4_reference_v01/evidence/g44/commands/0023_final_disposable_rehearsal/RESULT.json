@@ -1,0 +1,33 @@
+{
+  "adversarial_commit_objects": 2,
+  "final_commit": "28b03bc387d825e4e2c4b3242149d038702089fe",
+  "installed_and_publication_commits": 3,
+  "owner_commits": 0,
+  "owner_pushes": 0,
+  "remote": "/private/tmp/RADIOLARIA_GATE4_G44.6ffPyN/commands/0023_final_disposable_rehearsal/remote.git",
+  "restricted_modes_preserved": 21,
+  "scope": "DISPOSABLE_TEST_ONLY",
+  "status": "PASS",
+  "unchanged_enforcement": {
+    "docs/repository_transition_admission_v01.md": {
+      "bytes": 11224,
+      "mode": "0o644",
+      "sha256": "840a8d4b06501a08a1726d67f57979d8bb5e1ff2b49aa584da4c9f0b4d11e1ac"
+    },
+    "tests/test_repository_release_spine_v01.py": {
+      "bytes": 221693,
+      "mode": "0o644",
+      "sha256": "b36539a6a59658cb061a2c658963481231951ccdc7e17e25ead00175dc8132b0"
+    },
+    "tools/check_active_architecture_authority_v01.py": {
+      "bytes": 851085,
+      "mode": "0o644",
+      "sha256": "01a261aeb3c36bd1e079b02a315133b2b90f5d778544418b4af8491b83c57738"
+    },
+    "tools/reviewed_repository_transition_v01.py": {
+      "bytes": 37551,
+      "mode": "0o644",
+      "sha256": "b44292c6f829876ae2c956aaf077db3e5cb22f9dbc9e224f8d5ebbb566c39407"
+    }
+  }
+}

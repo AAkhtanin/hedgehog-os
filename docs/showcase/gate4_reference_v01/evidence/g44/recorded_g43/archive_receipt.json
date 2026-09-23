@@ -1,0 +1,11 @@
+{
+  "all_bindings": "PASS",
+  "bytes": 23069790,
+  "gzip_crc": "PASS",
+  "manifest_rows": 721,
+  "packaging_seconds": 3.7745298324152827,
+  "path": "/Users/admin/Downloads/RADIOLARIA_GATE4_G43_BOUNDARY_PORTABLE_PROOF_RETURN_20260923T135005Z.tar.gz",
+  "publication": "VERIFIED_COMPLETE",
+  "regular_members": 722,
+  "sha256": "fceffe94809e49e48511f083715cbdc36838630c4c1574a056148223366a10fb"
+}

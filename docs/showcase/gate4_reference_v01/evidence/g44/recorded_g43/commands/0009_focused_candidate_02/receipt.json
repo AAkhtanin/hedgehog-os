@@ -1,0 +1,134 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_GATE4_G43.T4Tvz8/check.py",
+    "tests/test_gate4_reference_native_v01.py",
+    "tests/test_gate4_reference_history_v01.py",
+    "tests/test_gate4_reference_evidence_v01.py",
+    "tests/test_gate4_reference_preflight_v01.py",
+    "-x"
+  ],
+  "cwd": "/private/tmp/RADIOLARIA_GATE4_G43.T4Tvz8/candidate",
+  "elapsed": 60.50512349978089,
+  "ended": 1790170876.70644,
+  "env": {
+    "G42_COMMAND_DIR": "/private/tmp/RADIOLARIA_GATE4_G43.T4Tvz8/commands/0009_focused_candidate_02",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/private/tmp/RADIOLARIA_GATE4_G43.T4Tvz8/candidate"
+  },
+  "pid": 95040,
+  "rc": 0,
+  "reaped": true,
+  "source_pins": {
+    "before.py": {
+      "bytes": 3560,
+      "sha256": "ce32209302a591bca74bd2b39eb5c4a35785dddce9836cdc0690190225f0c2c9"
+    },
+    "candidate/demo/run_gate4_reference_v01.py": {
+      "bytes": 2673,
+      "sha256": "4a1ff8c0dd8894323c88eb6d627eb78b2d091e672ec534b6358c01bc2b8f4b29"
+    },
+    "candidate/docs/gate4_reference_evidence_checkpoint_v01.md": {
+      "bytes": 6592,
+      "sha256": "211ae9b5b67beb3eae8d454a65c30b0e3d41edc3256c9cf0b89b2c7deb0565bc"
+    },
+    "candidate/docs/gate4_reference_native_checkpoint_v01.md": {
+      "bytes": 7141,
+      "sha256": "3ca510aac80308e85a9627362ad24351ecdc4168e582d9a05dd8cf6dd98ed1a5"
+    },
+    "candidate/fixtures/gate4_reference_native_v01.json": {
+      "bytes": 1881,
+      "sha256": "69db28b8739c4f12de9a833a422e9d812234d908ac371385e013889e41831b1b"
+    },
+    "candidate/hedgehog/domains/airline/gate4_reference_adapter_v01.py": {
+      "bytes": 97270,
+      "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4"
+    },
+    "candidate/hedgehog/domains/airline/gate4_reference_history_v01.py": {
+      "bytes": 9362,
+      "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870"
+    },
+    "candidate/hedgehog/gate4_pressure_budget_v01.py": {
+      "bytes": 9665,
+      "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27"
+    },
+    "candidate/hedgehog/gate4_reference_contracts_v01.py": {
+      "bytes": 15842,
+      "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42"
+    },
+    "candidate/hedgehog/gate4_reference_evidence_v01.py": {
+      "bytes": 24236,
+      "sha256": "5e9c4ac7ffbf9a06cfe7d8d58b0c187de1aaa52458a99b78eb52114711a94193"
+    },
+    "candidate/hedgehog/gate4_reference_runtime_v01.py": {
+      "bytes": 11357,
+      "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a"
+    },
+    "candidate/hedgehog/gate4_strategy_reference_v01.py": {
+      "bytes": 6667,
+      "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06"
+    },
+    "candidate/schemas/gate4_reference_v01.schema.json": {
+      "bytes": 59314,
+      "sha256": "392e821ccdee2eaf99cc462553fb4f5308d41f8847554fe9c35a075afdc2f30d"
+    },
+    "candidate/tests/test_gate4_reference_evidence_v01.py": {
+      "bytes": 5856,
+      "sha256": "e07f9807b43134adf3a0164fe5e0250436ac6683b49478a95dbec5cbe590c675"
+    },
+    "candidate/tests/test_gate4_reference_history_v01.py": {
+      "bytes": 4824,
+      "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b"
+    },
+    "candidate/tests/test_gate4_reference_math_v01.py": {
+      "bytes": 20127,
+      "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744"
+    },
+    "candidate/tests/test_gate4_reference_native_v01.py": {
+      "bytes": 12250,
+      "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91"
+    },
+    "candidate/tests/test_gate4_reference_supplied_v01.py": {
+      "bytes": 10258,
+      "sha256": "fab345105785362c95a058a7a08defa40809e4d4a3c49bba3bfe52e9c69f6226"
+    },
+    "canonical.py": {
+      "bytes": 1877,
+      "sha256": "492a732632c26c1d6a1d355a965aa3222259befc29a63431fb54a0f701f34a38"
+    },
+    "check.py": {
+      "bytes": 1467,
+      "sha256": "d66cf779692de092f3b4ea96967f53b99b333395788e7f292804ac5d55714f81"
+    },
+    "observe.py": {
+      "bytes": 4440,
+      "sha256": "2ccc7d632c1a8b2b9c499f45f1a7df0f648af4036b4b65cad68405240b47d03c"
+    },
+    "prepare.py": {
+      "bytes": 4212,
+      "sha256": "9ca13c65fdc2d9398dff1db66596ffcb2ac064803170dd673263b3d2b7a8610b"
+    },
+    "saved_probe.py": {
+      "bytes": 380,
+      "sha256": "01faec42001ff7941109f4df901c1f8afb2162600bbf1e36de3877d3e0733951"
+    },
+    "task.py": {
+      "bytes": 3256,
+      "sha256": "4433935b12b9eec2c80bf7ac729c0060cedd0d8b6f87cd6e7bd9e9a7dd954ff0"
+    }
+  },
+  "started": 1790170816.227574,
+  "streams": {
+    "stderr.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout.raw": {
+      "bytes": 100,
+      "sha256": "d7dc99e13eb2928d204a0945cd4bba3dee8aab63ac89182c8269b1c55b2a8223"
+    }
+  },
+  "supervisor_pid": 95039
+}

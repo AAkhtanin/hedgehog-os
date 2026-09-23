@@ -1,0 +1,22 @@
+{
+  "profile": "G42_CONTROLLED_AIRLINE_VERTICAL_V01",
+  "source": {"offer_amounts": [790, 815], "max_amount": 840, "snapshot_ttl_seconds": 900},
+  "utility_profiles": {
+    "PRICE_FIRST": {"client_price_weight": 1000000000, "client_extra_legroom_weight": 0},
+    "COMFORT_FIRST": {"client_price_weight": 100000000, "client_extra_legroom_weight": 900000000}
+  },
+  "disagreement_fp": 0,
+  "normalization": {"client_margin_denominator": 100, "revenue_denominator": 1000, "bank_margin_denominator": 1000},
+  "bank_limit": 840,
+  "purpose": "PREPARATION_ONLY_NOT_EXECUTED",
+  "original_budget": {"max_items": 16, "max_children": 0, "max_model_calls": 0, "max_compute_units": 9, "max_revisions": 2},
+  "branches": [
+    {"id": "offer_0", "offer_index": 0, "lower": 2, "upper": 6, "relevance": 800000000, "lineage": 800000000, "uncertainty": 500000000, "cost": 400000000},
+    {"id": "offer_1", "offer_index": 1, "lower": 2, "upper": 6, "relevance": 800000000, "lineage": 800000000, "uncertainty": 500000000, "cost": 430000000}
+  ],
+  "feature_interpretation": "Prospectively configured bounded inspection relevance, source lineage, uncertainty and estimated per-branch compute cost; not measured CPU or probabilities.",
+  "quantum_order": ["route", "baggage", "seat", "price", "inventory", "change_terms"],
+  "mandatory": ["initial_constraint", "final_strategy_consumer"],
+  "prediction": {"predicted": false, "expected_fp": 1000000000, "meaning": "Controlled prospective incorrect prediction of the observed constraint Boolean; safety enforcement is independent."},
+  "comparison": {"fixed": ["original_domain_records", "hard_constraints", "branch_features", "quota_limits", "original_policy_values", "mandatory_checks"], "legitimate_differences": ["task_id", "transaction_id", "BSEP_binding", "current_native_time", "Host_revision", "history_descent"], "history_branch": "offer_0"}
+}

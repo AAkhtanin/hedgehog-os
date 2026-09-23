@@ -1,0 +1,71 @@
+{
+  "cumulative_owner_to_g44": {
+    "diff_check": "PASS",
+    "independent_application": "EXACT_BYTES_AND_MODES",
+    "patch": {
+      "bytes": 473237,
+      "mode": "0o644",
+      "sha256": "ca3c7fd274fe2abf73828dafbdcc9dcca41bbc70dae89455b5388879d7fc93cc"
+    },
+    "paths": [
+      "demo/run_gate4_reference_v01.py",
+      "demo/run_kernel_conformance_v01.py",
+      "demo/run_living_gauntlet_v01.py",
+      "docs/gate4_reference_checkpoint_v01.md",
+      "docs/gate4_reference_contract_v01.md",
+      "docs/gate4_reference_evidence_checkpoint_v01.md",
+      "docs/gate4_reference_math_checkpoint_v01.md",
+      "docs/gate4_reference_native_checkpoint_v01.md",
+      "docs/gate4_reference_release_checkpoint_v01.md",
+      "docs/repository_transition_admission_v01.md",
+      "fixtures/gate4_reference_math_v01.json",
+      "fixtures/gate4_reference_native_v01.json",
+      "fixtures/gate4_reference_v01.json",
+      "hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+      "hedgehog/domains/airline/gate4_reference_history_v01.py",
+      "hedgehog/gate4_pressure_budget_v01.py",
+      "hedgehog/gate4_reference_contracts_v01.py",
+      "hedgehog/gate4_reference_evidence_v01.py",
+      "hedgehog/gate4_reference_release_v01.py",
+      "hedgehog/gate4_reference_runtime_v01.py",
+      "hedgehog/gate4_strategy_reference_v01.py",
+      "release/completion_manifest.json",
+      "release/current_schema_surface_v01.json",
+      "release/integration_seam_index.json",
+      "schemas/gate4_reference_v01.schema.json",
+      "tests/test_gate4_reference_evidence_v01.py",
+      "tests/test_gate4_reference_history_v01.py",
+      "tests/test_gate4_reference_math_v01.py",
+      "tests/test_gate4_reference_native_v01.py",
+      "tests/test_gate4_reference_preflight_v01.py",
+      "tests/test_gate4_reference_registration_v01.py",
+      "tests/test_gate4_reference_supplied_v01.py",
+      "tests/test_repository_release_spine_v01.py",
+      "tools/reviewed_repository_transition_v01.py"
+    ]
+  },
+  "incremental_g43_to_g44": {
+    "diff_check": "PASS",
+    "independent_application": "EXACT_BYTES_AND_MODES",
+    "patch": {
+      "bytes": 102738,
+      "mode": "0o644",
+      "sha256": "78e05ff7d98fd2aa296d6641a69ce13b487648e3659511cde35f81649db3ad23"
+    },
+    "paths": [
+      "demo/run_kernel_conformance_v01.py",
+      "demo/run_living_gauntlet_v01.py",
+      "docs/gate4_reference_release_checkpoint_v01.md",
+      "docs/repository_transition_admission_v01.md",
+      "hedgehog/gate4_reference_evidence_v01.py",
+      "hedgehog/gate4_reference_release_v01.py",
+      "release/completion_manifest.json",
+      "release/current_schema_surface_v01.json",
+      "release/integration_seam_index.json",
+      "tests/test_gate4_reference_evidence_v01.py",
+      "tests/test_gate4_reference_registration_v01.py",
+      "tests/test_repository_release_spine_v01.py",
+      "tools/reviewed_repository_transition_v01.py"
+    ]
+  }
+}

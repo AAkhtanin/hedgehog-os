@@ -1,0 +1,22 @@
+{
+  "added": [
+    "docs/gate4_reference_evidence_checkpoint_v01.md",
+    "hedgehog/gate4_reference_evidence_v01.py",
+    "tests/test_gate4_reference_evidence_v01.py"
+  ],
+  "changed_after_final_test": [],
+  "cumulative": 23,
+  "earlier_runs": "Development and failed attempts preserved under original source pins",
+  "external_helpers_added_after_final": "Portable observation, verification and packaging only; not imported by final tests.",
+  "modified": [
+    "demo/run_gate4_reference_v01.py",
+    "hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+    "hedgehog/domains/airline/gate4_reference_history_v01.py",
+    "hedgehog/gate4_reference_runtime_v01.py",
+    "tests/test_gate4_reference_history_v01.py",
+    "tests/test_gate4_reference_native_v01.py"
+  ],
+  "native_history_evidence_preflight": "26 fresh tests; no G42 native result promoted across changed sources",
+  "owner_tracked_unchanged": 1988,
+  "pure_maths": "110 G42 tests RECORDED; same exact code/contracts/schema/tests; fresh five-vector byte comparison"
+}

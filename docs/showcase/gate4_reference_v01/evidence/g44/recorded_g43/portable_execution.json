@@ -1,0 +1,198 @@
+{
+  "native_schema": "UNSUPPORTED_NATIVE_SCHEMA",
+  "operations": {
+    "0010_explicit_export": {
+      "counts": {
+        "forbidden_calls": 0,
+        "function_entries": {
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.preflight_v01": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+          "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+          "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+          "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 20,
+          "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+          "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+          "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+        },
+        "network_audit": {
+          "socket.connect": 0,
+          "socket.getaddrinfo": 0,
+          "subprocess.Popen": 0,
+          "urllib.Request": 0
+        },
+        "new_model_provider_sensor_business_effect_calls": 0,
+        "pure_saved_root_validation_is_new_permission": false,
+        "rc": 0,
+        "scope": "Named public execution boundaries, all network/subprocess audit events; no provider/sensor dependency in pure path.",
+        "seconds": 2.771727708168328
+      },
+      "seconds": 3.4069691244512796
+    },
+    "0013_replay_one": {
+      "counts": {
+        "forbidden_calls": 0,
+        "function_entries": {
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.preflight_v01": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+          "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+          "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+          "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 20,
+          "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+          "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+          "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+        },
+        "network_audit": {
+          "socket.connect": 0,
+          "socket.getaddrinfo": 0,
+          "subprocess.Popen": 0,
+          "urllib.Request": 0
+        },
+        "new_model_provider_sensor_business_effect_calls": 0,
+        "pure_saved_root_validation_is_new_permission": false,
+        "rc": 0,
+        "scope": "Named public execution boundaries, all network/subprocess audit events; no provider/sensor dependency in pure path.",
+        "seconds": 2.771424707956612
+      },
+      "seconds": 3.408720332197845
+    },
+    "0014_replay_two": {
+      "counts": {
+        "forbidden_calls": 0,
+        "function_entries": {
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.preflight_v01": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+          "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+          "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+          "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 20,
+          "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+          "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+          "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+        },
+        "network_audit": {
+          "socket.connect": 0,
+          "socket.getaddrinfo": 0,
+          "subprocess.Popen": 0,
+          "urllib.Request": 0
+        },
+        "new_model_provider_sensor_business_effect_calls": 0,
+        "pure_saved_root_validation_is_new_permission": false,
+        "rc": 0,
+        "scope": "Named public execution boundaries, all network/subprocess audit events; no provider/sensor dependency in pure path.",
+        "seconds": 2.852648416534066
+      },
+      "seconds": 3.502372708171606
+    },
+    "0015_cli_inspect": {
+      "counts": {
+        "forbidden_calls": 0,
+        "function_entries": {
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.preflight_v01": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+          "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+          "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+          "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 0,
+          "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+          "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+          "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+        },
+        "network_audit": {
+          "socket.connect": 0,
+          "socket.getaddrinfo": 0,
+          "subprocess.Popen": 0,
+          "urllib.Request": 0
+        },
+        "new_model_provider_sensor_business_effect_calls": 0,
+        "pure_saved_root_validation_is_new_permission": false,
+        "rc": 0,
+        "scope": "Named public execution boundaries, all network/subprocess audit events; no provider/sensor dependency in pure path.",
+        "seconds": 0.005209499970078468
+      },
+      "seconds": 0.6265810830518603
+    },
+    "0016_cli_missing_trust": {
+      "counts": {
+        "forbidden_calls": 0,
+        "function_entries": {
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_quantum_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.execute_strategy_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.native_story_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.preflight_v01": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.run_allocated_v42": 0,
+          "hedgehog.domains.airline.gate4_reference_adapter_v01.start_native_v42": 0,
+          "hedgehog.domains.airline.incident_atlas_work_v01.execute_constraint_v01": 0,
+          "hedgehog.kernel.root_decision_v01.decide_root_v01": 0,
+          "hedgehog.kernel.root_decision_v01.validate_root_decision_result_v01": 0,
+          "hedgehog.kernel.work_composition_v01.advance_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.enroll_work_program_v01": 0,
+          "hedgehog.kernel.work_composition_v01.revise_work_program_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.__init__": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.commit_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.current_v01": 0,
+          "hedgehog.outcome_feedback_history_v01.OutcomeHistoryV01.prepare_v01": 0,
+          "hedgehog.work_execution_host_v01.build_root_work_execution_host_v01": 0,
+          "hedgehog.work_execution_host_v01.dispatch_current_action_v01": 0
+        },
+        "network_audit": {
+          "socket.connect": 0,
+          "socket.getaddrinfo": 0,
+          "subprocess.Popen": 0,
+          "urllib.Request": 0
+        },
+        "new_model_provider_sensor_business_effect_calls": 0,
+        "pure_saved_root_validation_is_new_permission": false,
+        "rc": 2,
+        "scope": "Named public execution boundaries, all network/subprocess audit events; no provider/sensor dependency in pure path.",
+        "seconds": 0.004635166376829147
+      },
+      "seconds": 0.5717518329620361
+    }
+  },
+  "publication": "EVIDENCE_ONLY_PENDING_INDEPENDENT_REVIEW",
+  "replay_result": {
+    "bytes": 1100471,
+    "comparison": "BYTE_IDENTICAL",
+    "mode": "0o644",
+    "sha256": "b6a34a77616f305daf8ec92a392b77e03dc30b2a9a3dccd7bad2fdeffd9e5534"
+  },
+  "status": "TEST_PIN_SUPPORTED_PASS"
+}

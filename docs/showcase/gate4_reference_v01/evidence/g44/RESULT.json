@@ -1,0 +1,76 @@
+{
+  "all_task_disposable_commits": {
+    "adversarial_commit_objects": 4,
+    "installed_and_publication_commits": 6,
+    "owner_commits": 0
+  },
+  "business_effect_calls": 0,
+  "combined_replay": {
+    "bytes": 1151634,
+    "mode": "0o644",
+    "sha256": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+    "status": "BYTE_IDENTICAL"
+  },
+  "commit": false,
+  "disposable_rehearsal": {
+    "adversarial_commit_objects": 2,
+    "final_commit": "28b03bc387d825e4e2c4b3242149d038702089fe",
+    "installed_and_publication_commits": 3,
+    "owner_commits": 0,
+    "owner_pushes": 0,
+    "remote": "/private/tmp/RADIOLARIA_GATE4_G44.6ffPyN/commands/0023_final_disposable_rehearsal/remote.git",
+    "restricted_modes_preserved": 21,
+    "scope": "DISPOSABLE_TEST_ONLY",
+    "status": "PASS",
+    "unchanged_enforcement": {
+      "docs/repository_transition_admission_v01.md": {
+        "bytes": 11224,
+        "mode": "0o644",
+        "sha256": "840a8d4b06501a08a1726d67f57979d8bb5e1ff2b49aa584da4c9f0b4d11e1ac"
+      },
+      "tests/test_repository_release_spine_v01.py": {
+        "bytes": 221693,
+        "mode": "0o644",
+        "sha256": "b36539a6a59658cb061a2c658963481231951ccdc7e17e25ead00175dc8132b0"
+      },
+      "tools/check_active_architecture_authority_v01.py": {
+        "bytes": 851085,
+        "mode": "0o644",
+        "sha256": "01a261aeb3c36bd1e079b02a315133b2b90f5d778544418b4af8491b83c57738"
+      },
+      "tools/reviewed_repository_transition_v01.py": {
+        "bytes": 37551,
+        "mode": "0o644",
+        "sha256": "b44292c6f829876ae2c956aaf077db3e5cb22f9dbc9e224f8d5ebbb566c39407"
+      }
+    }
+  },
+  "first_owner_dependent_step": "Independent exact-byte review and a separate owner landing instruction",
+  "fresh_native_collectors": 0,
+  "fresh_pytest": {
+    "all_g44_nodes_passed": 21,
+    "failed": 1,
+    "failed_node": "tests/test_reviewed_repository_transition_v01.py::test_review_repository_mode_boundaries_v01",
+    "failed_reason": "Filesystem clears requested 04644 to actual 0644; unchanged historical test precondition not met",
+    "legacy_assertions_changed": false,
+    "legacy_small_nodes_passed": 12,
+    "passed": 33,
+    "phases": 102
+  },
+  "full_native_canonical_replay": "UNSUPPORTED_NATIVE_SCHEMA",
+  "gate4_status": "NOT_CLOSED",
+  "legacy_collectors": 0,
+  "new_root_decisions_in_supplied_replay": 0,
+  "owner_admission": "NOT_PERFORMED",
+  "owner_changed": false,
+  "provider_calls": 0,
+  "push": false,
+  "recorded": {
+    "explanation": "Recorded groups overlap; never sum them as unique fresh passes",
+    "g42_math_nodes": 110,
+    "g43_native_history_preflight_nodes": 17,
+    "g43_original_complete_suite": 26
+  },
+  "residual_test_precondition": "No fresh OS-level 04644 refusal: host clears the bit; old/new predicates and all representable modes agree",
+  "result": "G44_RELEASE_AND_POLICY_SUCCESSOR_READY_FOR_INDEPENDENT_REVIEW"
+}

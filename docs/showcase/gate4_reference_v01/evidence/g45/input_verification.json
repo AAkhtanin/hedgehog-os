@@ -1,0 +1,28 @@
+{
+  "archive": "/Users/admin/Downloads/RADIOLARIA_GATE4_G44_REVIEWED_RELEASE_SUCCESSOR_RETURN_20260923T150703Z.tar.gz",
+  "bytes": 14553182,
+  "complete_manifest": true,
+  "gzip_crc": true,
+  "independent_pins": {
+    "archive": "ab7e4720b14abf208327c61be11b128bdc0bcc548ca564e5a1e803370a6c0845",
+    "bridge": "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea",
+    "combined": "136b2a76da196e42923886ffc5cf47d89e51d99ec8cc6c7ac549cfaea106b4b9",
+    "manifest": "01e05b5a81cbf70ca4b5eca6060cbd9f3e621f6dd54e5d5370174753fadafc03",
+    "new_policy": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+    "old_policy": "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+    "operator": "5e380b3eeaa31feee4c39b0f39fa64ceee024570ba35f89e4aabb57414a497cf",
+    "parent": "109c37f42ca220782971991c63f40037041d5c4548997fa1ab11262c578c81cd",
+    "previous": "53b9c6dfae6ba85658f60c8c8fbde5b70c5be7a084b8aaff950e2a19111197a2",
+    "publication": "8e7c4cb6412981436b704d2cc94736de91783d93a77849076007725029d9d08f"
+  },
+  "instruction": {
+    "bytes": 18368,
+    "mode": "0644",
+    "sha256": "52dee932bca6a299caea62c8b199dc3c97c061c52ccf4efc29c1fa304219a7b4"
+  },
+  "manifest_rows": 1242,
+  "mode": "0644",
+  "regular_members": 1243,
+  "safe_unique": true,
+  "sha256": "ab7e4720b14abf208327c61be11b128bdc0bcc548ca564e5a1e803370a6c0845"
+}

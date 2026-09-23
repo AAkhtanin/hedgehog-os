@@ -1,0 +1,50 @@
+{
+  "a-result-scope-status": {
+    "page": 2,
+    "title": "A. Result, exact scope and current status"
+  },
+  "b-architecture-context": {
+    "page": 3,
+    "title": "B. Mathematics within the operating architecture"
+  },
+  "c-evidence-chronology": {
+    "page": 4,
+    "title": "C. Evidence chronology and source roles"
+  },
+  "d-data-assumptions": {
+    "page": 5,
+    "title": "D. Exact data and declared assumptions"
+  },
+  "e-strategy-mathematics": {
+    "page": 6,
+    "title": "E. Exact finite strategy mathematics"
+  },
+  "f-pressure-allocation": {
+    "page": 8,
+    "title": "F. Pressure, exact apportionment and a real budget"
+  },
+  "g-cp-strategy": {
+    "page": 10,
+    "title": "G. CP-STRATEGY: the preference reaches a prepared offer"
+  },
+  "h-cp-budget": {
+    "page": 11,
+    "title": "H. CP-BUDGET: experience changes the executed work"
+  },
+  "i-boundary-controls": {
+    "page": 13,
+    "title": "I. Boundary controls with genuine positive neighbors"
+  },
+  "j-currentness-replay": {
+    "page": 15,
+    "title": "J. Currentness, trusted checker and supported replay"
+  },
+  "k-verification-inventory": {
+    "page": 16,
+    "title": "K. Verification inventory, measurements and retained limitation"
+  },
+  "l-verification-route": {
+    "page": 18,
+    "title": "L. Getting started, detailed verification and deferred work"
+  }
+}

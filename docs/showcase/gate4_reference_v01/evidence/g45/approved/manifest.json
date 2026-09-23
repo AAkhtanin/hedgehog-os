@@ -1,0 +1,439 @@
+{
+  "accepted_basis": {
+    "commit": "71e166ccb88b024fd3ca3a25e17da110c6db1a3f",
+    "parent": "d199199a578c078c913a2381f595549175bd9235",
+    "tree": "71e0438a4ef8532a3047a6e87061240d5b958a31"
+  },
+  "base": {
+    "commit": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+    "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+  },
+  "commit_message": "Install reviewed Gate4 reference release successor",
+  "governed_namespaces": [],
+  "kind": "POLICY_INSTALLATION",
+  "ledger": [
+    {
+      "action": "A",
+      "path": "demo/run_gate4_reference_v01.py",
+      "post": {
+        "bytes": 2673,
+        "mode": "100644",
+        "sha256": "4a1ff8c0dd8894323c88eb6d627eb78b2d091e672ec534b6358c01bc2b8f4b29",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "M",
+      "path": "demo/run_kernel_conformance_v01.py",
+      "post": {
+        "bytes": 136730,
+        "mode": "100644",
+        "sha256": "77db1f8417ba1b746425e9854662476861418a35e52be511ec8627c30726eeaa",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 136478,
+        "mode": "100644",
+        "sha256": "dca57897b51ed02803e3e543d0333a80abefe06902be88a9d2d0ba4547392503",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "M",
+      "path": "demo/run_living_gauntlet_v01.py",
+      "post": {
+        "bytes": 264699,
+        "mode": "100644",
+        "sha256": "688951260b3986c82ad0d16417a474dcb61f412e9412806f863ec75c7994bb45",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 262947,
+        "mode": "100644",
+        "sha256": "997fb5cb883fea10433b98cbbeda760945c5606dc033609bf2464fe8b99e8fc9",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "A",
+      "path": "docs/gate4_reference_checkpoint_v01.md",
+      "post": {
+        "bytes": 8218,
+        "mode": "100644",
+        "sha256": "ab60e29717441d8a6c979cfc02091a5a88d92e10b0a1ad3ef4dc2f0beaab52a2",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "docs/gate4_reference_contract_v01.md",
+      "post": {
+        "bytes": 9603,
+        "mode": "100644",
+        "sha256": "2de0e065adcea5df395fe8a5b62088b9c9d13ff3f91275ad993cf51b53b205ec",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "docs/gate4_reference_evidence_checkpoint_v01.md",
+      "post": {
+        "bytes": 6592,
+        "mode": "100644",
+        "sha256": "211ae9b5b67beb3eae8d454a65c30b0e3d41edc3256c9cf0b89b2c7deb0565bc",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "docs/gate4_reference_math_checkpoint_v01.md",
+      "post": {
+        "bytes": 6729,
+        "mode": "100644",
+        "sha256": "a8935586aaffe1a79ac34cc6de6c26bbccefcb901fd7d1ba5d0c50d0f3a4eed0",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "docs/gate4_reference_native_checkpoint_v01.md",
+      "post": {
+        "bytes": 7141,
+        "mode": "100644",
+        "sha256": "3ca510aac80308e85a9627362ad24351ecdc4168e582d9a05dd8cf6dd98ed1a5",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "docs/gate4_reference_release_checkpoint_v01.md",
+      "post": {
+        "bytes": 4207,
+        "mode": "100644",
+        "sha256": "5e835bceda254ea2626274cc1fe7dc26b437af89f22e33a1abdd61550785942d",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "M",
+      "path": "docs/repository_transition_admission_v01.md",
+      "post": {
+        "bytes": 11224,
+        "mode": "100644",
+        "sha256": "840a8d4b06501a08a1726d67f57979d8bb5e1ff2b49aa584da4c9f0b4d11e1ac",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 8274,
+        "mode": "100644",
+        "sha256": "a975b78197154133b4ea3b524ceb82791358ecf0b6c37a5822d006e3658aac52",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "A",
+      "path": "fixtures/gate4_reference_math_v01.json",
+      "post": {
+        "bytes": 31054,
+        "mode": "100644",
+        "sha256": "1d58da7a6b424db760acd1b703c765e463ee02f2d6d3df80b64f7c12dd4d8ff3",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "fixtures/gate4_reference_native_v01.json",
+      "post": {
+        "bytes": 1881,
+        "mode": "100644",
+        "sha256": "69db28b8739c4f12de9a833a422e9d812234d908ac371385e013889e41831b1b",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "fixtures/gate4_reference_v01.json",
+      "post": {
+        "bytes": 1729,
+        "mode": "100644",
+        "sha256": "4bc893bcab8c2c7272d6dae15f81e1812f24833b3a43e07b24512fcb0492fd39",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/airline/gate4_reference_adapter_v01.py",
+      "post": {
+        "bytes": 97270,
+        "mode": "100644",
+        "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/airline/gate4_reference_history_v01.py",
+      "post": {
+        "bytes": 9362,
+        "mode": "100644",
+        "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/gate4_pressure_budget_v01.py",
+      "post": {
+        "bytes": 9665,
+        "mode": "100644",
+        "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/gate4_reference_contracts_v01.py",
+      "post": {
+        "bytes": 15842,
+        "mode": "100644",
+        "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/gate4_reference_evidence_v01.py",
+      "post": {
+        "bytes": 31489,
+        "mode": "100644",
+        "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/gate4_reference_release_v01.py",
+      "post": {
+        "bytes": 10116,
+        "mode": "100644",
+        "sha256": "2cef08b3496187f1984e0c69609d3d0afa33ba2ac426ec558c6c12a259ed9da0",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/gate4_reference_runtime_v01.py",
+      "post": {
+        "bytes": 11357,
+        "mode": "100644",
+        "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/gate4_strategy_reference_v01.py",
+      "post": {
+        "bytes": 6667,
+        "mode": "100644",
+        "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "M",
+      "path": "release/completion_manifest.json",
+      "post": {
+        "bytes": 36675,
+        "mode": "100644",
+        "sha256": "1a3f2b52ae472333afdae45e525a105ef3fb3af2dee1c1dc61e1731f2d234d2f",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 31585,
+        "mode": "100644",
+        "sha256": "a5500c8763edb31b3edf01353e461295754af4651afa7792f642b172d6ca0bd0",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "M",
+      "path": "release/current_schema_surface_v01.json",
+      "post": {
+        "bytes": 10166,
+        "mode": "100644",
+        "sha256": "a410bb8dc729b93b9c3d8b0d57a0d06f951e69ceaeb7cd1f5ea8e4c5a3d613cf",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 4801,
+        "mode": "100644",
+        "sha256": "7094cc2438599ce3ae450acca4876e177df736893caf9ffba1ebcaf8480cf451",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "M",
+      "path": "release/integration_seam_index.json",
+      "post": {
+        "bytes": 21634,
+        "mode": "100644",
+        "sha256": "3fef1dba34305ba5b98c6cd00e989571fca5391d669a2eb0e762a4b3e2a1097b",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 16544,
+        "mode": "100644",
+        "sha256": "0db7692fd5d22d206afe3750c9940807b2e3b6947cd4d4b7dafa0afd98b3bb7d",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "A",
+      "path": "schemas/gate4_reference_v01.schema.json",
+      "post": {
+        "bytes": 59314,
+        "mode": "100644",
+        "sha256": "392e821ccdee2eaf99cc462553fb4f5308d41f8847554fe9c35a075afdc2f30d",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_evidence_v01.py",
+      "post": {
+        "bytes": 9208,
+        "mode": "100644",
+        "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_history_v01.py",
+      "post": {
+        "bytes": 4824,
+        "mode": "100644",
+        "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_math_v01.py",
+      "post": {
+        "bytes": 20127,
+        "mode": "100644",
+        "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_native_v01.py",
+      "post": {
+        "bytes": 12250,
+        "mode": "100644",
+        "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_preflight_v01.py",
+      "post": {
+        "bytes": 4149,
+        "mode": "100644",
+        "sha256": "1baa6014bfa1904936b2185ec71ea1b9ceb5fe258729abce08a3f61cdce44cb8",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_registration_v01.py",
+      "post": {
+        "bytes": 2172,
+        "mode": "100644",
+        "sha256": "1ed4d4cc32bf75c82834fe252b36719e997003970bf3114065c14227e50327ce",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_gate4_reference_supplied_v01.py",
+      "post": {
+        "bytes": 10258,
+        "mode": "100644",
+        "sha256": "fab345105785362c95a058a7a08defa40809e4d4a3c49bba3bfe52e9c69f6226",
+        "type": "regular"
+      },
+      "pre": null
+    },
+    {
+      "action": "M",
+      "path": "tests/test_repository_release_spine_v01.py",
+      "post": {
+        "bytes": 221693,
+        "mode": "100644",
+        "sha256": "b36539a6a59658cb061a2c658963481231951ccdc7e17e25ead00175dc8132b0",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 219634,
+        "mode": "100644",
+        "sha256": "902b4f3552525d267ac3ac360cc8d9e6086b366466771cbf9606ef4905a8b558",
+        "type": "regular"
+      }
+    },
+    {
+      "action": "M",
+      "path": "tools/reviewed_repository_transition_v01.py",
+      "post": {
+        "bytes": 37551,
+        "mode": "100644",
+        "sha256": "b44292c6f829876ae2c956aaf077db3e5cb22f9dbc9e224f8d5ebbb566c39407",
+        "type": "regular"
+      },
+      "pre": {
+        "bytes": 27772,
+        "mode": "100644",
+        "sha256": "9ec5d6ad6bd2ac93a6d40cad392a7fe6020459fcba0e45f318852f93d746c261",
+        "type": "regular"
+      }
+    }
+  ],
+  "policy_id": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+  "previous": {
+    "commit": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+    "manifest_sha256": "53b9c6dfae6ba85658f60c8c8fbde5b70c5be7a084b8aaff950e2a19111197a2",
+    "policy_id": "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+    "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+  },
+  "repository": "AAkhtanin/hedgehog-os",
+  "schema": "reviewed_repository_policy_installation_v01"
+}

@@ -1,0 +1,69 @@
+{
+  "branch": "main",
+  "config": {
+    "bytes": 528,
+    "mode": "0644",
+    "sha256": "c3a37464a39412f3550ad82628d904f1b5e907fd55bc1cd1510e52591ca8ec45"
+  },
+  "context": {
+    "bytes": 1576,
+    "mode": "0644",
+    "sha256": "eb595c3601d33a34bc368898fbe542e477d8c99f2e6c73cad1140f06549eb4cf"
+  },
+  "context_value": {
+    "accepted_basis": {
+      "commit": "71e166ccb88b024fd3ca3a25e17da110c6db1a3f",
+      "parent": "d199199a578c078c913a2381f595549175bd9235",
+      "tree": "71e0438a4ef8532a3047a6e87061240d5b958a31"
+    },
+    "base": {
+      "commit": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+      "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+    },
+    "finalized": {
+      "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+      "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"
+    },
+    "installation": {
+      "path": "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/bridge.json",
+      "sha256": "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea",
+      "tip": {
+        "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"
+      }
+    },
+    "kind": "POLICY_INSTALLATION",
+    "manifest": {
+      "path": "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/manifest.json",
+      "sha256": "01e05b5a81cbf70ca4b5eca6060cbd9f3e621f6dd54e5d5370174753fadafc03"
+    },
+    "policy_id": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+    "previous": {
+      "commit": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+      "manifest_sha256": "53b9c6dfae6ba85658f60c8c8fbde5b70c5be7a084b8aaff950e2a19111197a2",
+      "policy_id": "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+      "tree": "ec09dcd40537cf56f90829781a30a105ad8f83dc"
+    },
+    "purpose": "INDEPENDENT_REVIEW",
+    "repository": "AAkhtanin/hedgehog-os",
+    "schema": "reviewed_repository_policy_installation_v01",
+    "state": "FINALIZED"
+  },
+  "head": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+  "index": {
+    "bytes": 291512,
+    "mode": "0644",
+    "sha256": "74b7a47295497ae56f89a96a3142434d855d8145a1bb95603d3f1f5310dbcf50"
+  },
+  "origin": "https://github.com/AAkhtanin/hedgehog-os.git",
+  "parent": "50b3df07ef4a1eddb50b3f958592161cea64dee6",
+  "prior_manifest": {
+    "bytes": 12413,
+    "mode": "0644",
+    "sha256": "01e05b5a81cbf70ca4b5eca6060cbd9f3e621f6dd54e5d5370174753fadafc03"
+  },
+  "refs": "93a9abe4172c02ee90a2b45fe1593f33bfbeeeec refs/heads/arch-authority-successor-v01\n36c43db9045d56666e961b54b4f9b272079f41a8 refs/heads/g2d-v0310-corrected-contract-maintenance-v02\nb3b30b8be28d9880a5cbd2c150c0f609f9f375cf refs/heads/g2d-v0310-corrected-contract-maintenance-v03\n268f22a7940068fd58e00e6f96dc2d13a7d71890 refs/heads/history/testflix-v09-2026-09-12\n5b259441994ba41ed3467e8ffcb9ae6ee8d371f0 refs/heads/main\nb4aa8b7d39ccf71ec5122e0b02053481171cda9f refs/heads/showcase/testflix-v11-2026-09-13\n5b259441994ba41ed3467e8ffcb9ae6ee8d371f0 refs/remotes/origin/HEAD\n268f22a7940068fd58e00e6f96dc2d13a7d71890 refs/remotes/origin/history/testflix-v09-2026-09-12\n5b259441994ba41ed3467e8ffcb9ae6ee8d371f0 refs/remotes/origin/main\nb4aa8b7d39ccf71ec5122e0b02053481171cda9f refs/remotes/origin/showcase/testflix-v11-2026-09-13",
+  "staging": "",
+  "status": "",
+  "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"
+}

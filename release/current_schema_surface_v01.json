@@ -1,7 +1,83 @@
 {
-  "schema_surface_id": "current_schema_surface_v01",
-  "schema_surface_status": "CURRENT_SCHEMA_SURFACE_ISOLATED",
-  "generated_from_head": "237501110159f1adb6d8a4c5e9482d618e5a8187",
+  "current_loader_or_registry_refs": [
+    {
+      "role": "current_runtime_local_schema_loader",
+      "schema_paths": [
+        "schemas/common.schema.json",
+        "schemas/result_proposal.schema.json",
+        "schemas/time_envelope.schema.json",
+        "schemas/vv_report.schema.json"
+      ],
+      "source_path": "hedgehog/post_vv.py"
+    },
+    {
+      "role": "current_living_conformance_schema_validation",
+      "schema_paths": [
+        "schemas/kernel_artifact_v01.schema.json",
+        "schemas/semantic_work_v01.schema.json"
+      ],
+      "source_path": "demo/run_living_gauntlet_v01.py"
+    },
+    {
+      "role": "accepted_current_gate_schema_conformance",
+      "schema_paths": [
+        "schemas/drs_meaning_record_v01.schema.json",
+        "schemas/drs_memory_resolution_v01.schema.json",
+        "schemas/drs_semantic_address_v01.schema.json",
+        "schemas/reuse_certificate_v01.schema.json"
+      ],
+      "source_path": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py"
+    },
+    {
+      "role": "accepted_current_gate_schema_conformance",
+      "schema_paths": [
+        "schemas/execution_mode_router_v01.schema.json"
+      ],
+      "source_path": "tests/test_execution_mode_router_g2_c_v01.py"
+    },
+    {
+      "role": "accepted_current_gate_schema_conformance",
+      "schema_paths": [
+        "schemas/fractal_runtime_v02.schema.json"
+      ],
+      "source_path": "tests/test_fractal_runtime_g2_d_v02.py"
+    },
+    {
+      "role": "accepted_pre_e5_gate_schema_conformance",
+      "schema_paths": [
+        "schemas/continuous_delta_runtime_v01.schema.json"
+      ],
+      "source_path": "tests/test_continuous_delta_runtime_g2_e_v01.py"
+    },
+    {
+      "role": "current_terminal_gt_contract_registry_reference",
+      "schema_paths": [
+        "schemas/gt_report.schema.json"
+      ],
+      "source_path": "hedgehog/gt_validator.py"
+    },
+    {
+      "role": "bounded_native_capability_input_schema_loader",
+      "schema_paths": [
+        "schemas/capability_admission_v01.schema.json"
+      ],
+      "source_path": "hedgehog/capability_admission_v01.py"
+    },
+    {
+      "role": "typed_work_test_conformance_not_production_deserializer",
+      "schema_paths": [
+        "schemas/work_composition_v01.schema.json"
+      ],
+      "source_path": "tests/test_work_composition_v01.py"
+    },
+    {
+      "role": "single_writer_and_contextual_reference_validation",
+      "schema_paths": [
+        "schemas/gate4_reference_v01.schema.json"
+      ],
+      "source_path": "hedgehog/gate4_reference_contracts_v01.py"
+    }
+  ],
   "current_schema_paths": [
     "schemas/capability_admission_v01.schema.json",
     "schemas/common.schema.json",
@@ -11,6 +87,7 @@
     "schemas/drs_semantic_address_v01.schema.json",
     "schemas/execution_mode_router_v01.schema.json",
     "schemas/fractal_runtime_v02.schema.json",
+    "schemas/gate4_reference_v01.schema.json",
     "schemas/gt_report.schema.json",
     "schemas/kernel_artifact_v01.schema.json",
     "schemas/result_proposal.schema.json",
@@ -20,97 +97,10 @@
     "schemas/vv_report.schema.json",
     "schemas/work_composition_v01.schema.json"
   ],
-  "retired_schema_paths": [
-    "schemas/attractor_packet.schema.json",
-    "schemas/plan_graph.schema.json"
-  ],
-  "current_loader_or_registry_refs": [
-    {
-      "source_path": "hedgehog/post_vv.py",
-      "schema_paths": [
-        "schemas/common.schema.json",
-        "schemas/result_proposal.schema.json",
-        "schemas/time_envelope.schema.json",
-        "schemas/vv_report.schema.json"
-      ],
-      "role": "current_runtime_local_schema_loader"
-    },
-    {
-      "source_path": "demo/run_living_gauntlet_v01.py",
-      "schema_paths": [
-        "schemas/kernel_artifact_v01.schema.json",
-        "schemas/semantic_work_v01.schema.json"
-      ],
-      "role": "current_living_conformance_schema_validation"
-    },
-    {
-      "source_path": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py",
-      "schema_paths": [
-        "schemas/drs_meaning_record_v01.schema.json",
-        "schemas/drs_memory_resolution_v01.schema.json",
-        "schemas/drs_semantic_address_v01.schema.json",
-        "schemas/reuse_certificate_v01.schema.json"
-      ],
-      "role": "accepted_current_gate_schema_conformance"
-    },
-    {
-      "source_path": "tests/test_execution_mode_router_g2_c_v01.py",
-      "schema_paths": [
-        "schemas/execution_mode_router_v01.schema.json"
-      ],
-      "role": "accepted_current_gate_schema_conformance"
-    },
-    {
-      "source_path": "tests/test_fractal_runtime_g2_d_v02.py",
-      "schema_paths": [
-        "schemas/fractal_runtime_v02.schema.json"
-      ],
-      "role": "accepted_current_gate_schema_conformance"
-    },
-    {
-      "source_path": "tests/test_continuous_delta_runtime_g2_e_v01.py",
-      "schema_paths": [
-        "schemas/continuous_delta_runtime_v01.schema.json"
-      ],
-      "role": "accepted_pre_e5_gate_schema_conformance"
-    },
-    {
-      "source_path": "hedgehog/gt_validator.py",
-      "schema_paths": [
-        "schemas/gt_report.schema.json"
-      ],
-      "role": "current_terminal_gt_contract_registry_reference"
-    },
-    {
-      "source_path": "hedgehog/capability_admission_v01.py",
-      "schema_paths": [
-        "schemas/capability_admission_v01.schema.json"
-      ],
-      "role": "bounded_native_capability_input_schema_loader"
-    },
-    {
-      "source_path": "tests/test_work_composition_v01.py",
-      "schema_paths": [
-        "schemas/work_composition_v01.schema.json"
-      ],
-      "role": "typed_work_test_conformance_not_production_deserializer"
-    }
-  ],
-  "isolation_invariants": [
-    "RETIRED_SCHEMAS_ARE_NOT_CURRENT",
-    "RETIRED_SCHEMAS_EXCLUDED_FROM_SUCCESSOR_ONBOARDING",
-    "RETIRED_SCHEMAS_NOT_REGISTERED_BY_CURRENT_LOADER",
-    "GIT_BYTE_PRESERVATION_ALLOWED",
-    "HISTORICAL_TEST_REFERENCES_OUTSIDE_CURRENT_CONFORMANCE_ONLY"
-  ],
   "gate3_g36_mechanism_v01": {
-    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
-    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
-    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
-    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
-    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
     "conformance_entry": "demo.run_kernel_conformance_v01.collect_kernel_conformance_g36_v01",
     "direct_test": "tests/test_gate3_mechanism_registration_v01.py",
+    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
     "inventory": [
       "NATIVE_BOUNDARY_FEEDBACK",
       "ROOT_RECORDED_HISTORY",
@@ -118,14 +108,157 @@
       "LAWFUL_SAME_HOST_OBJECTIVE",
       "SUPPLIED_PROOF_REFUSAL"
     ],
-    "top_level_fresh_e5": 1,
-    "top_level_fresh_g3": 1,
-    "shared_collectors": 0,
-    "full_top_level_run": "G37_FRESH_PASS_EXTERNAL_EVIDENCE",
-    "source_admission_is_root_permission": false,
+    "living_entry": "demo.run_living_gauntlet_v01.collect_living_g36_v01",
+    "producer": "hedgehog.gate3_mechanism_v01.collect_mechanism_v01",
+    "profile": "G36_SOURCE_BOUND_LEARNING_MECHANISM_V01",
     "schema_paths": [
       "schemas/gate3_adversary_v01.schema.json",
       "schemas/outcome_feedback_v01.schema.json"
+    ],
+    "shared_collectors": 0,
+    "source_admission_is_root_permission": false,
+    "status": "SCOPED_IMPLEMENTATION_G37_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+    "supplied_validator": "hedgehog.gate3_mechanism_v01.validate_supplied_report_v01",
+    "top_level_fresh_e5": 1,
+    "top_level_fresh_g3": 1
+  },
+  "gate4_reference_release_v01": {
+    "authority": "EVIDENCE_ONLY_NO_ROOT_OR_EFFECT_PERMISSION",
+    "combined_counts": {
+      "current_schemas": 17,
+      "historical_acts_plus_reference_profiles": 13,
+      "historical_seams_plus_reference_profiles": 25
+    },
+    "evidence": [
+      "CP_STRATEGY",
+      "CP_BUDGET",
+      "ORIGINAL_SOURCE_BUDGET",
+      "ACTUAL_WORK_CONSUMPTION",
+      "G3_RECORDING_DESCENT",
+      "INDEPENDENT_ROOTS_CONSENT_CURRENT_TIME",
+      "REFUSALS",
+      "SUPPORTED_SAVED_VERIFICATION"
+    ],
+    "historical_counts": {
+      "acts": 12,
+      "current_schemas": 16,
+      "retired_schemas": 2,
+      "seams": 24
+    },
+    "native_replay": "UNSUPPORTED_NATIVE_SCHEMA",
+    "ownership": {
+      "fresh_g4_owner": "collect_release_v01",
+      "legacy_collectors": 0,
+      "supplied_g4_collectors": 0
+    },
+    "profile": "G44_REFERENCE_RELEASE_V01",
+    "schema": "schemas/gate4_reference_v01.schema.json",
+    "sources": {
+      "demo/run_kernel_conformance_v01.py": {
+        "bytes": 136730,
+        "sha256": "77db1f8417ba1b746425e9854662476861418a35e52be511ec8627c30726eeaa"
+      },
+      "demo/run_living_gauntlet_v01.py": {
+        "bytes": 264699,
+        "sha256": "688951260b3986c82ad0d16417a474dcb61f412e9412806f863ec75c7994bb45"
+      },
+      "hedgehog/domains/airline/gate4_reference_adapter_v01.py": {
+        "bytes": 97270,
+        "sha256": "78cae2c1fdb326f4a0c0a5b3c854d055634011ccce697c02f126d3e87df85df4"
+      },
+      "hedgehog/domains/airline/gate4_reference_history_v01.py": {
+        "bytes": 9362,
+        "sha256": "8cbd64a4e0d316a79b0648d40be31856d2d1370bb44dc7055073d2ef1512a870"
+      },
+      "hedgehog/gate4_pressure_budget_v01.py": {
+        "bytes": 9665,
+        "sha256": "768094bea0cc012046f6c1c514ccbf108e340932f86324d76c59cad0d6680d27"
+      },
+      "hedgehog/gate4_reference_contracts_v01.py": {
+        "bytes": 15842,
+        "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42"
+      },
+      "hedgehog/gate4_reference_evidence_v01.py": {
+        "bytes": 31489,
+        "sha256": "446d191e0cb0400909289187ad7ed4f0796ca861018a82c9ac1230433492832d"
+      },
+      "hedgehog/gate4_reference_release_v01.py": {
+        "bytes": 10116,
+        "sha256": "2cef08b3496187f1984e0c69609d3d0afa33ba2ac426ec558c6c12a259ed9da0"
+      },
+      "hedgehog/gate4_reference_runtime_v01.py": {
+        "bytes": 11357,
+        "sha256": "aefba35aa68209e7a2891bcc5daef3c921d4ca49c018b94b0434ff1ba7c6a02a"
+      },
+      "hedgehog/gate4_strategy_reference_v01.py": {
+        "bytes": 6667,
+        "sha256": "26d840964b017a508d15e8e9e039928dc9c9847aa186fb4940ea2a5b49b9de06"
+      },
+      "schemas/gate4_reference_v01.schema.json": {
+        "bytes": 59314,
+        "sha256": "392e821ccdee2eaf99cc462553fb4f5308d41f8847554fe9c35a075afdc2f30d"
+      },
+      "tests/test_gate4_reference_evidence_v01.py": {
+        "bytes": 9208,
+        "sha256": "3d983892182d9d012d733f8a19a5bd3dc5e0efeb8962371645accbf73735e5e8"
+      },
+      "tests/test_gate4_reference_history_v01.py": {
+        "bytes": 4824,
+        "sha256": "efd85a28409a8d82cb6e214df2cb2043af476c85f6dbc0d259a337e1e32c137b"
+      },
+      "tests/test_gate4_reference_math_v01.py": {
+        "bytes": 20127,
+        "sha256": "857bf0574b5e105211dc07569e5390db076ca6739eccb6d61d33d80717f0e744"
+      },
+      "tests/test_gate4_reference_native_v01.py": {
+        "bytes": 12250,
+        "sha256": "1ebd9174d855ca1aa96241a948431dd38d3f7009dbb47fcc806c9807f60bfb91"
+      },
+      "tests/test_gate4_reference_preflight_v01.py": {
+        "bytes": 4149,
+        "sha256": "1baa6014bfa1904936b2185ec71ea1b9ceb5fe258729abce08a3f61cdce44cb8"
+      },
+      "tests/test_gate4_reference_registration_v01.py": {
+        "bytes": 2172,
+        "sha256": "1ed4d4cc32bf75c82834fe252b36719e997003970bf3114065c14227e50327ce"
+      },
+      "tests/test_gate4_reference_supplied_v01.py": {
+        "bytes": 10258,
+        "sha256": "fab345105785362c95a058a7a08defa40809e4d4a3c49bba3bfe52e9c69f6226"
+      }
+    },
+    "status": "PROPOSED_PENDING_INDEPENDENT_REVIEW",
+    "symbols": {
+      "collection_owner": "hedgehog.gate4_reference_release_v01:collect_release_v01",
+      "conformance": "demo.run_kernel_conformance_v01:validate_kernel_conformance_g44_v01",
+      "living": "demo.run_living_gauntlet_v01:validate_living_g44_v01",
+      "producer": "hedgehog.domains.airline.gate4_reference_adapter_v01:native_story_v42",
+      "schema_writer": "hedgehog.gate4_reference_contracts_v01:reference_schema_v01",
+      "supplied": "hedgehog.gate4_reference_release_v01:validate_release_v01",
+      "verifier": "hedgehog.gate4_reference_evidence_v01:verify_package_v01"
+    },
+    "tests": [
+      "tests/test_gate4_reference_math_v01.py",
+      "tests/test_gate4_reference_supplied_v01.py",
+      "tests/test_gate4_reference_preflight_v01.py",
+      "tests/test_gate4_reference_native_v01.py",
+      "tests/test_gate4_reference_history_v01.py",
+      "tests/test_gate4_reference_evidence_v01.py",
+      "tests/test_gate4_reference_registration_v01.py"
     ]
-  }
+  },
+  "generated_from_head": "237501110159f1adb6d8a4c5e9482d618e5a8187",
+  "isolation_invariants": [
+    "RETIRED_SCHEMAS_ARE_NOT_CURRENT",
+    "RETIRED_SCHEMAS_EXCLUDED_FROM_SUCCESSOR_ONBOARDING",
+    "RETIRED_SCHEMAS_NOT_REGISTERED_BY_CURRENT_LOADER",
+    "GIT_BYTE_PRESERVATION_ALLOWED",
+    "HISTORICAL_TEST_REFERENCES_OUTSIDE_CURRENT_CONFORMANCE_ONLY"
+  ],
+  "retired_schema_paths": [
+    "schemas/attractor_packet.schema.json",
+    "schemas/plan_graph.schema.json"
+  ],
+  "schema_surface_id": "current_schema_surface_v01",
+  "schema_surface_status": "CURRENT_SCHEMA_SURFACE_ISOLATED"
 }

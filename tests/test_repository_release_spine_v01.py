@@ -1158,10 +1158,22 @@ def _g2d_v0310_bind_exact_e4_candidate_hashes_v01() -> str:
                 "G37_FROZEN_RELEASE_COMMITTED",
             } | {
                 "REVIEWED_" + kind + "_" + state
-                for kind in ("BOOTSTRAP", "DOCUMENTATION", "ENGINEERING")
+                for kind in ("BOOTSTRAP", "DOCUMENTATION", "ENGINEERING", "POLICY_INSTALLATION")
                 for state in ("PREPARED_UNSTAGED", "PREPARED_STAGED",
                               "PREPARED_COMMITTED", "FINALIZED")
             }
+            policy = guard['_repository_transition_policy_v01']()
+            context = policy.resolve_context(REPOSITORY_ROOT)
+            if context is not None and context['schema'] == policy.INSTALL_VERSION:
+                # The public guard above checked the complete externally pinned
+                # installation and mutable inventory before this exact binding.
+                bridge = policy.strict_json(Path(context['installation']['path']).read_bytes())
+                assert hashlib.sha256(Path(context['installation']['path']).read_bytes()).hexdigest() == context['installation']['sha256']
+                for name, row in bridge['new_registries'].items():
+                    assert policy._current_file(REPOSITORY_ROOT, name)[0] == row
+                for name, row in bridge['old_registries'].items():
+                    historical_body = policy.git(REPOSITORY_ROOT, 'show', bridge['base']['commit'] + ':' + name)
+                    assert hashlib.sha256(historical_body).hexdigest() == row['sha256']
             # The same historical runtime/checkpoint assertions above still bind.
             return "EXACT_G37_WITH_HISTORICAL_TESTFLIX_E_PAIR"
         if guard.get('_g36_requested_v01',lambda root:False)(REPOSITORY_ROOT):
@@ -4851,7 +4863,12 @@ def test_testflix_current_admission_preserves_historical_U4_and_schema_inventory
             expected_document["gate3_g36_mechanism_v01"] = (
                 _g37_expected_registration_v01(path)
             )
-            assert json.loads(current_bytes) == expected_document
+            if 'gate4_reference_release_v01' in json.loads(current_bytes):
+                from hedgehog.gate4_reference_release_v01 import historical_projection_v01, validate_registration_v01
+                validate_registration_v01(REPOSITORY_ROOT)
+                assert historical_projection_v01(json.loads(current_bytes),path,root=REPOSITORY_ROOT) == expected_document
+            else:
+                assert json.loads(current_bytes) == expected_document
         elif guard.get('_g36_requested_v01', lambda root: False)(REPOSITORY_ROOT):
             expected_document = json.loads(historical_bytes)
             assert 'gate3_g36_mechanism_v01' not in expected_document
@@ -5025,5 +5042,13 @@ def test_g37_current_registration_pins_actual_release_files_v01():
         ),
     }
     assert registration["base_identities"] == expected
+    current = _read_json(REPOSITORY_ROOT / 'release/completion_manifest.json')
+    if 'gate4_reference_release_v01' in current:
+        from hedgehog.gate4_reference_release_v01 import validate_registration_v01
+        checked = validate_registration_v01(REPOSITORY_ROOT)
+        for path, digest in expected.items():
+            assert hashlib.sha256(_git_show('71e166ccb88b024fd3ca3a25e17da110c6db1a3f',path)).hexdigest() == digest
+            assert checked['historical'][path] == json.loads(_git_show('71e166ccb88b024fd3ca3a25e17da110c6db1a3f',path))
     for path, digest in expected.items():
-        assert hashlib.sha256((REPOSITORY_ROOT / path).read_bytes()).hexdigest() == digest
+        if 'gate4_reference_release_v01' not in current:
+            assert hashlib.sha256((REPOSITORY_ROOT / path).read_bytes()).hexdigest() == digest

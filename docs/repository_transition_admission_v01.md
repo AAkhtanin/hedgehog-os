@@ -141,3 +141,47 @@ dispatch precedes historical/runtime binding assertions, and the CLI retains
 its historical Gate-closure wording. Archived prompts and source snapshots
 remain data. No runtime collection, provider call or effect is part of these
 checks.
+
+## Proposed G44 Exact Policy Installation
+
+This section is NOT_AUTHORIZED_FOR_OWNER_USE_PENDING_INDEPENDENT_REVIEW.
+The separately reviewed `reviewed_repository_policy_installation_v01` operation
+is not an ordinary ENGINEERING exemption. The old verifier continues to refuse
+changed enforcement and registration. An owner must explicitly select the exact
+independently reviewed new verifier for installation, after the old verifier
+validates the admitted predecessor. Candidate tests provide no such approval.
+
+The new context has the old closed fields plus `installation`: absolute `path`,
+independently expected raw `sha256`, and nullable actual installed `tip`
+(`commit`, `tree`). It permits only POLICY_INSTALLATION, DOCUMENTATION and
+ENGINEERING. The manifest keeps its original closed fields and exact ledger;
+the installation context schema is the new version. The detached bridge binds
+`schema`, `repository`, `base`, complete FINALIZED `predecessor_context`, raw
+`predecessor_manifest_utf8`, complete `old_enforcement`/`new_enforcement`,
+`old_policy_id`/`new_policy_id`, approved `manifest_sha256`, exact `ledger`,
+`old_registries`/`new_registries`, and `commit_message`. Independent expected
+bridge and manifest hashes remain outside those bodies and all covered code.
+
+Both four-file raw enforcement maps retain type, Git mode, bytes and SHA256.
+The old map is derived from admitted Git objects, not proposed files. Exact
+prior manifest/context and sole-parent subject bind the actual base inventory.
+The new map is compared with executing and proposed source bytes. Whole mutable
+files, modes, index, namespaces, operation markers, lineage, status and origins
+are still independently checked at every invocation. Work and G3 runtime pins
+remain unchanged; the only registry successors are the exact externally pinned
+three bodies. Metadata, historical capsules, README and architecture stay fixed.
+
+PREPARED allows the complete unstaged/staged proposal and its exact sole-parent
+commit. FINALIZED binds the actual commit/tree, refusing an alternative equal-tree
+child. Descendant ordinary publications carry the same pinned installation and
+its actual verified tip; they retain all old kind restrictions and same-policy
+continuity. No arbitrary policy or registration mutation is admitted. Missing or
+invalid bridge refuses without fallback. No success is inferred from file presence.
+
+The future helper verifies before copying, staging, commit, recovery/finalization
+and normal push/readback. It preserves the predecessor context under a unique
+recovery name before atomic durable replacement. Interrupted postcommit recovery
+uses the same approved identities and actual commit, never reset/amend/force or
+a regenerated approval. All G44 examples/rehearsals are DISPOSABLE_TEST_ONLY.
+Only later exact-byte independent review and a separate owner instruction can
+authorize production installation. Source admission is not Gate4 closure.

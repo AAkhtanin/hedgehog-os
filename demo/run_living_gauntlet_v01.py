@@ -24,15 +24,28 @@ def collect_living_g36_v01(directory):
     return result
 
 
-def validate_living_g36_v01(value):
+def validate_living_g36_v01(value, *, registration_root=None):
     """Independent supplied successor validation; never recollect E5 or G3."""
     try:
         if set(value)!={'profile','legacy','gate3','gate3_bundle','g3_collector_calls','e5_collector_calls'} or value['profile']!='LIVING_G36_SUCCESSOR_V01':return ('g36_living_shape',)
-        errors=validate_living_gauntlet_report_v01(value['legacy'])
+        errors=validate_living_gauntlet_report_v01(value['legacy'],registration_root=registration_root)
         if errors:return errors
         if value['gate3']!=consume_gate3_mechanism_v01(value['gate3_bundle']) or (value['g3_collector_calls'],value['e5_collector_calls'])!=(1,1):return ('g36_living_binding',)
         return ()
     except (TypeError,KeyError,ValueError):return ('g36_living_supplied_invalid',)
+
+
+def validate_living_parent_g44_v01(value, *, root):
+    """Checked successor registration followed by unchanged parent report laws."""
+    from hedgehog.gate4_reference_release_v01 import validate_registration_v01
+    validate_registration_v01(root)
+    return validate_living_g36_v01(value,registration_root=root)
+
+
+def validate_living_g44_v01(**inputs):
+    """Supplied retained-parent/G4 entry; no collection fallback."""
+    from hedgehog.gate4_reference_release_v01 import validate_release_v01
+    return validate_release_v01(**inputs)
 
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, replace
@@ -1144,6 +1157,10 @@ def _validate_completion_manifest_v01(manifest: Any) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(manifest, dict):
         return ("completion_manifest_not_object",)
+    if 'gate4_reference_release_v01' in manifest:
+        from hedgehog.gate4_reference_release_v01 import historical_projection_v01
+        try:manifest=historical_projection_v01(manifest,'release/completion_manifest.json',root=_REPOSITORY_ROOT)
+        except (ValueError,OSError,KeyError):return ('completion_manifest_g44_invalid',)
     if frozenset(manifest) != _MANIFEST_FIELD_NAMES:
         errors.append("completion_manifest_field_surface_mismatch")
     for key, expected in (
@@ -1431,6 +1448,10 @@ def _validate_integration_seam_index_v01(index: Any) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(index, dict):
         return ("integration_seam_index_not_object",)
+    if 'gate4_reference_release_v01' in index:
+        from hedgehog.gate4_reference_release_v01 import historical_projection_v01
+        try:index=historical_projection_v01(index,'release/integration_seam_index.json',root=_REPOSITORY_ROOT)
+        except (ValueError,OSError,KeyError):return ('integration_seam_g44_invalid',)
     if frozenset(index) != _SEAM_INDEX_FIELD_NAMES:
         errors.append("integration_seam_index_field_surface_mismatch")
     for key, expected in (
@@ -5853,6 +5874,11 @@ def _current_registration_v01(root: Path) -> tuple[dict[str, Any] | None, tuple[
     errors: list[str] = []
     try:
         overlay = _load_strict_json_object(root / "release/current_status_overlay_v01.json")
+        completion = _load_strict_json_object(root / 'release/completion_manifest.json')
+        if 'gate4_reference_release_v01' in completion:
+            from hedgehog.gate4_reference_release_v01 import parent_registration_v01
+            try:return parent_registration_v01(root), ()
+            except (ValueError,OSError,KeyError):return None, ('registration_g44_invalid',)
         g37 = _G37_REGISTRATION_KEY_V01 in overlay
         sentinel = _SENTINEL_REGISTRATION_KEY_V01 in overlay
         ews = _EWS_REGISTRATION_KEY_V01 in overlay
@@ -6224,11 +6250,12 @@ def _collect_living_gauntlet_with_validated_continuous_delta_runtime_v01(
 
 def validate_living_gauntlet_report_v01(
     report: Any,
+    *, registration_root: Path | None = None,
 ) -> tuple[str, ...]:
     errors: list[str] = []
     if not isinstance(report, Mapping):
         return ("living_gauntlet_report_not_mapping",)
-    current_registration, registration_errors = _current_registration_v01(_REPOSITORY_ROOT)
+    current_registration, registration_errors = _current_registration_v01(_REPOSITORY_ROOT if registration_root is None else Path(registration_root))
     errors.extend(registration_errors)
     if report.get("current_registration") != current_registration:
         errors.append("report_current_registration_mismatch")

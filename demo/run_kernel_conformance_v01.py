@@ -9,6 +9,12 @@ effect operation. It is not production certification.
 from __future__ import annotations
 
 
+def validate_kernel_conformance_g44_v01(**inputs):
+    """The same supplied G4 extension and pinned retained parent; no collector."""
+    from hedgehog.gate4_reference_release_v01 import validate_release_v01
+    return validate_release_v01(**inputs)
+
+
 def consume_gate3_mechanism_v01(bundle):
     """The supplied G3 path is independent of expensive E5 collection."""
     from hedgehog.kernel.conformance_v01 import build_gate3_mechanism_receipt_v01

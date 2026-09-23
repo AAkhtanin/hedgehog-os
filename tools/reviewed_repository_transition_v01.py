@@ -166,14 +166,17 @@ def resolve_context(root: Path, explicit: Path | None = None) -> dict | None:
     for file in paths:
         _require(file.is_absolute(), "REVIEW_CONTEXT_ABSOLUTE_PATH_REQUIRED")
         document = strict_json(_read_regular(file, "REVIEW_CONTEXT_FILE"))
+        installation = type(document) is dict and document.get("schema") == INSTALL_VERSION
         _keys(document, {
             "schema", "repository", "policy_id", "kind", "accepted_basis",
             "base", "previous", "manifest", "state", "finalized", "purpose",
-        }, "REVIEW_CONTEXT_SHAPE")
-        _require(document["schema"] == VERSION, "REVIEW_CONTEXT_VERSION")
+        } | ({"installation"} if installation else set()), "REVIEW_CONTEXT_SHAPE")
+        _require(document["schema"] in (VERSION, INSTALL_VERSION), "REVIEW_CONTEXT_VERSION")
         _require(document["repository"] == REPOSITORY, "REVIEW_CONTEXT_REPOSITORY")
-        _require(document["kind"] in ("BOOTSTRAP", "DOCUMENTATION", "ENGINEERING"),
+        _require(document["kind"] in ((INSTALL_KIND, "DOCUMENTATION", "ENGINEERING") if installation else ("BOOTSTRAP", "DOCUMENTATION", "ENGINEERING")),
                  "REVIEW_CONTEXT_KIND")
+        if installation:
+            _installation_context_shape(document)
         _require(_hex(document["policy_id"]), "REVIEW_CONTEXT_POLICY")
         _require(document["accepted_basis"] == ACCEPTED, "REVIEW_CONTEXT_ACCEPTED_BASIS")
         _base_shape(document["base"])
@@ -338,9 +341,12 @@ def _accepted_objects(root: Path) -> dict:
     return accepted
 
 
-def _metadata_and_registration(root: Path, base: dict, accepted: dict, kind: str) -> list[str]:
+def _metadata_and_registration(root: Path, base: dict, accepted: dict, kind: str, installation: dict | None = None) -> list[str]:
     errors = []
-    for name, pin in PROTECTED_PINS.items():
+    pins = dict(PROTECTED_PINS)
+    if installation is not None:
+        pins.update({name: row["sha256"] for name, row in installation["new_registries"].items()})
+    for name, pin in pins.items():
         try:
             if _digest(_read_regular(root / name, "PROTECTED_FILE:" + name, repository_file=True)) != pin:
                 errors.append("PROTECTED_IDENTITY:" + name)
@@ -370,7 +376,7 @@ def _metadata_and_registration(root: Path, base: dict, accepted: dict, kind: str
     return errors
 
 
-def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict) -> None:
+def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict, installation: dict | None = None) -> None:
     kind = manifest["kind"]
     capsules = manifest["governed_namespaces"]
     if kind == "BOOTSTRAP":
@@ -401,6 +407,9 @@ def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict) -> None:
             "presentation_publication": "NOT_YET_PUBLISHED_AT_AUTHORING",
         }.items():
             _require(closure.get(key) == expected_value, "CLOSURE_RECORD:" + key)
+    elif kind == INSTALL_KIND:
+        _require(installation is not None and manifest["schema"] == INSTALL_VERSION,
+                 "EXACT_INSTALLATION_REQUIRED")
     else:
         previous = _keys(manifest["previous"], {"manifest_sha256", "commit", "tree", "policy_id"},
                          "PREVIOUS_TRANSITION_REQUIRED")
@@ -439,6 +448,131 @@ def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict) -> None:
                  "PRIOR_CAPSULE_IMMUTABLE:" + capsule)
 
 
+INSTALL_VERSION = "reviewed_repository_policy_installation_v01"
+INSTALL_KIND = "POLICY_INSTALLATION"
+REGISTRY_PATHS = tuple(name for name in PROTECTED_PINS if name.startswith("release/"))
+INSTALLATION_PATHS = frozenset({
+    'demo/run_gate4_reference_v01.py', 'demo/run_living_gauntlet_v01.py', 'demo/run_kernel_conformance_v01.py',
+    'hedgehog/domains/airline/gate4_reference_adapter_v01.py', 'hedgehog/domains/airline/gate4_reference_history_v01.py',
+    'hedgehog/gate4_reference_contracts_v01.py', 'hedgehog/gate4_strategy_reference_v01.py',
+    'hedgehog/gate4_pressure_budget_v01.py', 'hedgehog/gate4_reference_runtime_v01.py',
+    'hedgehog/gate4_reference_evidence_v01.py', 'hedgehog/gate4_reference_release_v01.py',
+    'schemas/gate4_reference_v01.schema.json', 'fixtures/gate4_reference_v01.json',
+    'fixtures/gate4_reference_native_v01.json', 'fixtures/gate4_reference_math_v01.json',
+    'tests/test_gate4_reference_math_v01.py',
+    'tests/test_gate4_reference_supplied_v01.py', 'tests/test_gate4_reference_preflight_v01.py',
+    'tests/test_gate4_reference_native_v01.py', 'tests/test_gate4_reference_history_v01.py',
+    'tests/test_gate4_reference_evidence_v01.py', 'tests/test_gate4_reference_registration_v01.py',
+    'docs/gate4_reference_checkpoint_v01.md', 'docs/gate4_reference_contract_v01.md',
+    'docs/gate4_reference_math_checkpoint_v01.md', 'docs/gate4_reference_native_checkpoint_v01.md',
+    'docs/gate4_reference_evidence_checkpoint_v01.md', 'docs/gate4_reference_release_checkpoint_v01.md',
+    'tests/test_reviewed_repository_transition_v01.py', 'tests/test_active_architecture_authority_v01.py',
+}) | frozenset(POLICY_PATHS) | frozenset(REGISTRY_PATHS)
+
+
+def _object_identities(objects: dict) -> dict:
+    return {name: identity(value[1], value[0]) for name, value in objects.items()}
+
+
+def _installation_context_shape(context: dict) -> None:
+    binding = _keys(context["installation"], {"path", "sha256", "tip"}, "INSTALLATION_CONTEXT_SHAPE")
+    _require(type(binding["path"]) is str and Path(binding["path"]).is_absolute()
+             and _hex(binding["sha256"]), "INSTALLATION_EXTERNAL_BINDING")
+    if binding["tip"] is not None:
+        _base_shape(binding["tip"])
+
+
+def validate_policy_installation_v01(root: Path, context: dict, manifest: dict, ledger: dict) -> dict:
+    """Inactive until explicitly dispatched by the closed installation schema.
+
+    The external expected bridge pin binds both complete policies and payload.
+    This checks the new proposal; it does not claim old-policy authorization.
+    All mutable Git/index/inventory checks remain in validate_transition.
+    """
+    _installation_context_shape(context)
+    binding = context["installation"]
+    raw = _read_regular(Path(binding["path"]), "INSTALLATION_BRIDGE_FILE")
+    _require(_digest(raw) == binding["sha256"], "INSTALLATION_BRIDGE_PIN")
+    bridge = _keys(strict_json(raw), {
+        "schema", "repository", "base", "predecessor_context", "predecessor_manifest_utf8",
+        "old_enforcement", "new_enforcement", "old_policy_id", "new_policy_id",
+        "manifest_sha256", "ledger", "old_registries", "new_registries", "commit_message",
+    }, "INSTALLATION_BRIDGE_SHAPE")
+    _require(bridge["schema"] == INSTALL_VERSION and bridge["repository"] == REPOSITORY,
+             "INSTALLATION_BRIDGE_VERSION")
+    _base_shape(bridge["base"])
+    base_id = bridge["base"]["commit"]
+    _require(git(root, "rev-parse", base_id + "^{tree}").decode().strip() == bridge["base"]["tree"],
+             "INSTALLATION_BASE_TREE")
+    base = tree_objects(root, base_id)
+    for key in ("old_enforcement", "new_enforcement"):
+        _require(type(bridge[key]) is dict and set(bridge[key]) == set(POLICY_PATHS), "INSTALLATION_ENFORCEMENT_CLOSURE")
+        for value in bridge[key].values():
+            _identity_shape(value)
+    old = {name: identity(base[name][1], base[name][0]) for name in POLICY_PATHS}
+    new = {name: _current_file(root, name)[0] for name in POLICY_PATHS}
+    _require(old == bridge["old_enforcement"] and new == bridge["new_enforcement"], "INSTALLATION_RAW_ENFORCEMENT")
+    _require(_digest(_canonical(old)) == bridge["old_policy_id"] and
+             _digest(_canonical(new)) == bridge["new_policy_id"] == context["policy_id"], "INSTALLATION_POLICY_IDS")
+    previous = _keys(bridge["predecessor_context"], {
+        "schema", "repository", "policy_id", "kind", "accepted_basis", "base", "previous",
+        "manifest", "state", "finalized", "purpose",
+    }, "INSTALLATION_PREDECESSOR_CONTEXT")
+    _require(previous["schema"] == VERSION and previous["repository"] == REPOSITORY
+             and previous["accepted_basis"] == ACCEPTED and previous["state"] == "FINALIZED"
+             and previous["finalized"] == bridge["base"] and previous["policy_id"] == bridge["old_policy_id"],
+             "INSTALLATION_FINALIZED_PREDECESSOR")
+    prior_raw = bridge["predecessor_manifest_utf8"].encode()
+    _require(_digest(prior_raw) == previous["manifest"]["sha256"], "INSTALLATION_PREDECESSOR_MANIFEST_PIN")
+    prior = strict_json(prior_raw)
+    _require(set(prior) == {"schema", "repository", "policy_id", "kind", "accepted_basis", "base", "previous", "governed_namespaces", "commit_message", "ledger"}, "INSTALLATION_PRIOR_MANIFEST_SHAPE")
+    for key in ("schema", "repository", "policy_id", "kind", "accepted_basis", "base", "previous"):
+        _require(prior[key] == previous[key], "INSTALLATION_PRIOR_CONTEXT:" + key)
+    old_base = tree_objects(root, prior["base"]["commit"])
+    expected_prior = _object_identities(old_base)
+    for row in prior["ledger"]:
+        _require(row["pre"] == expected_prior.get(row["path"]), "INSTALLATION_PRIOR_PREIMAGE")
+        expected_prior[row["path"]] = row["post"]
+    _require(expected_prior == _object_identities(base), "INSTALLATION_ADMITTED_BASE_INVENTORY")
+    _require(git(root, "show", "-s", "--format=%P%n%B", base_id).decode().strip().splitlines() ==
+             [prior["base"]["commit"], prior["commit_message"]], "INSTALLATION_ADMITTED_BASE_PARENT_MESSAGE")
+    for key in ("old_registries", "new_registries"):
+        _require(type(bridge[key]) is dict and set(bridge[key]) == set(REGISTRY_PATHS), "INSTALLATION_REGISTRY_CLOSURE")
+        for value in bridge[key].values():
+            _identity_shape(value)
+    _require(bridge["old_registries"] == {name: identity(base[name][1], base[name][0]) for name in REGISTRY_PATHS}, "INSTALLATION_OLD_REGISTRIES")
+    _require(bridge["new_registries"] == {name: _current_file(root, name)[0] for name in REGISTRY_PATHS}, "INSTALLATION_NEW_REGISTRIES")
+    for name, pin in PROTECTED_PINS.items():
+        if name not in REGISTRY_PATHS:
+            _require(_current_file(root, name)[0]["sha256"] == pin == _digest(base[name][1]), "INSTALLATION_PROTECTED_RUNTIME:" + name)
+    payload = bridge["ledger"]
+    _require(type(payload) is list and bool(payload), "INSTALLATION_LEDGER_REQUIRED")
+    expected = _object_identities(base)
+    names = set()
+    for row in payload:
+        _keys(row, {"path", "action", "pre", "post"}, "INSTALLATION_LEDGER_ROW")
+        name = row["path"]
+        _require(_relative(name) and name not in names and name in INSTALLATION_PATHS, "INSTALLATION_PATH")
+        _require(row["action"] == ("M" if name in base else "A") and row["pre"] == expected.get(name), "INSTALLATION_PREIMAGE")
+        _identity_shape(row["post"]); expected[name] = row["post"]; names.add(name)
+    _require(set(POLICY_PATHS) - names == {"tools/check_active_architecture_authority_v01.py"}
+             and set(REGISTRY_PATHS) <= names and not names.intersection((*METADATA_PATHS, "AGENTS.md", "README.md", "specs/current_architecture_lock_v01.md")), "INSTALLATION_BOUNDED_CONTROLS")
+    if manifest["kind"] == INSTALL_KIND:
+        _require(manifest["base"] == bridge["base"] and manifest["ledger"] == payload
+                 and context["manifest"]["sha256"] == bridge["manifest_sha256"]
+                 and manifest["commit_message"] == bridge["commit_message"] and not manifest["governed_namespaces"], "INSTALLATION_EXACT_PROPOSAL")
+        _require(manifest["previous"] == dict(manifest_sha256=previous["manifest"]["sha256"],
+                 **bridge["base"], policy_id=bridge["old_policy_id"]), "INSTALLATION_PREVIOUS_BINDING")
+        _require(binding["tip"] is None or binding["tip"] == context["finalized"], "INSTALLATION_TIP_BINDING")
+    else:
+        tip = binding["tip"]; _base_shape(tip)
+        _require(git(root, "show", "-s", "--format=%P%n%T%n%B", tip["commit"]).decode().strip().splitlines() ==
+                 [base_id, tip["tree"], bridge["commit_message"]], "INSTALLED_PARENT_TREE_MESSAGE")
+        _require(_object_identities(tree_objects(root, tip["commit"])) == expected, "INSTALLED_EXACT_TREE")
+        _require(tip["commit"] in git(root, "rev-list", manifest["base"]["commit"]).decode().splitlines(), "INSTALLED_BASE_ANCESTRY")
+    return bridge
+
+
 def validate_transition(root: Path, explicit_context: Path | None = None) -> dict:
     """Check exact current sources; never publish, finalize, or create context."""
     root = root.resolve()
@@ -459,8 +593,9 @@ def validate_transition(root: Path, explicit_context: Path | None = None) -> dic
         ancestry = git(root, "rev-list", base_commit).decode().splitlines()
         _require(ACCEPTED["commit"] in ancestry, "REVIEWED_BASE_ANCESTRY")
         base = tree_objects(root, base_commit)
-        _kind_rules(root, manifest, ledger, base)
-        errors.extend(_metadata_and_registration(root, base, accepted, manifest["kind"]))
+        installation = validate_policy_installation_v01(root, context, manifest, ledger) if context["schema"] == INSTALL_VERSION else None
+        _kind_rules(root, manifest, ledger, base, installation)
+        errors.extend(_metadata_and_registration(root, base, accepted, manifest["kind"], installation))
         for name, row in ledger.items():
             if row["action"] == "A":
                 _require(name not in base, "PREIMAGE_ADD_EXISTS:" + name)

@@ -1,0 +1,36 @@
+[main e538790] Implement Incident Atlas across five domains
+ 34 files changed, 5585 insertions(+)
+ create mode 100644 demo/run_incident_atlas_v01.py
+ create mode 100644 docs/incident_to_proof_atlas_v01.md
+ create mode 100644 fixtures/incident_atlas_airline_v01.json
+ create mode 100644 fixtures/incident_atlas_cases_v01.json
+ create mode 100644 fixtures/incident_atlas_supplier_v01.json
+ create mode 100644 fixtures/incident_atlas_testflix_v01.json
+ create mode 100644 hedgehog/domains/airline/incident_atlas_source_v01.py
+ create mode 100644 hedgehog/domains/airline/incident_atlas_v01.py
+ create mode 100644 hedgehog/domains/airline/incident_atlas_work_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py
+ create mode 100644 hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py
+ create mode 100644 hedgehog/domains/landslide_sentinel/incident_atlas_proof_v01.py
+ create mode 100644 hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py
+ create mode 100644 hedgehog/domains/landslide_sentinel/incident_atlas_v01.py
+ create mode 100644 hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py
+ create mode 100644 hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py
+ create mode 100644 hedgehog/domains/supplier_water_filter/incident_atlas_v01.py
+ create mode 100644 hedgehog/domains/testflix/incident_atlas_proof_v01.py
+ create mode 100644 hedgehog/domains/testflix/incident_atlas_source_v01.py
+ create mode 100644 hedgehog/domains/testflix/incident_atlas_v01.py
+ create mode 100644 hedgehog/domains/testflix/incident_atlas_work_v01.py
+ create mode 100644 hedgehog/incident_atlas_history_v01.py
+ create mode 100644 hedgehog/incident_atlas_v01.py
+ create mode 100644 tests/test_incident_atlas_airline_v01.py
+ create mode 100644 tests/test_incident_atlas_sentinel_v01.py
+ create mode 100644 tests/test_incident_atlas_supplier_v01.py
+ create mode 100644 tests/test_incident_atlas_testflix_v01.py
+ create mode 100644 tests/test_incident_atlas_v01.py
+ create mode 100644 tests/test_incident_atlas_workspace_v01.py

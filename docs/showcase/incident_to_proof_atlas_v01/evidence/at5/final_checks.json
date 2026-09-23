@@ -1,0 +1,18 @@
+{
+  "commit": false,
+  "final_passed_phases": 66,
+  "final_test_nodes": 22,
+  "owner_exact_entry_preserved": true,
+  "paths": 34,
+  "prior_29_postimages_and_git_preserved": true,
+  "push": false,
+  "replay": {
+    "byte_identical": true,
+    "bytes": 935,
+    "sha256": "b2e7d1d859cf382dfd9879763f20e49fb373b61a2b2b8ac7d117bea7925fc6a2"
+  },
+  "retained_four_domains_exact": true,
+  "status": "PASS",
+  "time": "2026-09-23T06:49:29.590165+00:00",
+  "worker_joined": true
+}

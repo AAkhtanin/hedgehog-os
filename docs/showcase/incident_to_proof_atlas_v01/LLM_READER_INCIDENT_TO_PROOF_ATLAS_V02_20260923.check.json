@@ -1,0 +1,12 @@
+{
+  "profile": "ATLAS_READER_STATIC_VERIFICATION_V02",
+  "status": "PASS",
+  "reader_sha256": "48c4b979aacec80182af827a4a26e420fe98a1b4f611d2f0fe8b38154823b8da",
+  "reader_bytes": 75890185,
+  "members": 278,
+  "text_members": 273,
+  "binary_members": 5,
+  "capsule_checked": true,
+  "embedded_project_code_executed": false,
+  "provider_calls": 0
+}

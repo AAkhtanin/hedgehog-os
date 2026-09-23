@@ -1,0 +1,1617 @@
+{
+  "architecture_gaps": [],
+  "limitations": [
+    "Static byte/hash verification only; no project code imported or executed.",
+    "Historical repository path plus SHA identifies executed bytes; a differing final source never substitutes for them.",
+    "Selected full architecture bodies are not a runnable import closure. Public verify requires the already admitted e538790eef3eb11201900a5da63fbb3ff61ad602 checkout and existing authorized R1 context.",
+    "No actual admission contexts, configuration files, credentials, environment dumps or private key material are selected.",
+    "Generic historical absolute paths inside selected exact source/provenance bodies are inert evidence, never navigation.",
+    "Case mappings express domain scope; claim-specific mapping remains the Reader builder responsibility.",
+    "Canonical proof, replay, AT6 command evidence and read guide are selected separately by the Reader builder."
+  ],
+  "profile": "ATLAS_READER_STATIC_SOURCE_SELECTION_V01",
+  "source_bindings": [
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/demo/run_incident_atlas_v01.py",
+      "repository_path": "demo/run_incident_atlas_v01.py",
+      "sha256": "b71c140927941e215f8596789649a4364a7a75ea018b635cb64e3978a92d8c57"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/docs/incident_to_proof_atlas_v01.md",
+      "repository_path": "docs/incident_to_proof_atlas_v01.md",
+      "sha256": "b408ec66729e764ea1360b75c0f0f060c5ee4e8e91b29320b4865750059527b4"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/fixtures/incident_atlas_airline_v01.json",
+      "repository_path": "fixtures/incident_atlas_airline_v01.json",
+      "sha256": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/fixtures/incident_atlas_cases_v01.json",
+      "repository_path": "fixtures/incident_atlas_cases_v01.json",
+      "sha256": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/fixtures/incident_atlas_supplier_v01.json",
+      "repository_path": "fixtures/incident_atlas_supplier_v01.json",
+      "sha256": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/fixtures/incident_atlas_testflix_v01.json",
+      "repository_path": "fixtures/incident_atlas_testflix_v01.json",
+      "sha256": "0f545c52938533386e83212f5fae8be93d6f0fc286f60ad944f9f1e1078e84a4"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "sha256": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/airline/incident_atlas_v01.py",
+      "sha256": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "sha256": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "sha256": "60ce33ceb220b947ef912884f51f9b1f871e586742963271efcf26e8da42ee14"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "sha256": "d61ea8ea23f89c3b19868fc4eab3c41795955af42fe06307fdbc565a49481c1b"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "sha256": "e39c084be25e4a60aa050c3aa6c5451a0fb1ad47501d30244499dbb818d7db17"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "sha256": "46fe3d3d540dd81cfb582394d586c766ac46339c9a50bd3829736617a28b869d"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "sha256": "0448a8eb44ed69e0d8eac4f9a1d3ae484b377422d36fb2030be8f663066e4b57"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "sha256": "7feecd660d7a71911d20bf5e4f5c44269b6507f465888b804285bf9b36813395"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "sha256": "a6f362626106de6bf2f01e6fd20e4fb2a36b949a2f2a62c9915eaa77bb2e702f"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_proof_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_proof_v01.py",
+      "sha256": "5cea9af2fe2edd3bc759fff06d7e2e962967643b336a5cc858dd196fb22921b8"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "sha256": "f9a37c0ae36dbbbc40c610cf9210f66157aaceb8ec4b2e695fadbd77a4e4c8cd"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "sha256": "04bf9f18adfcff9472a560c84c5581814841092a4c5ace957c8856b0e6c1614e"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "sha256": "7ab9972fce0e04de15cf84293548a7b6a789ed5c9046c68a9be21dbe82f10792"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "sha256": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "sha256": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "sha256": "cf84470b41bf3c759520d3d0d28b078e9c02bf2edd3f4c40b6d5e31f7b0ba39f"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "sha256": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "sha256": "6f816d40749933e96d5af75d17180df53a1b5e60212b01bcbe5dc7b3f9d94798"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "sha256": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/incident_atlas_history_v01.py",
+      "repository_path": "hedgehog/incident_atlas_history_v01.py",
+      "sha256": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/hedgehog/incident_atlas_v01.py",
+      "repository_path": "hedgehog/incident_atlas_v01.py",
+      "sha256": "f18e8702fdc21bfd97eba5bbbe8a20e062864f4d2a490346f8f16872ede0387b"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/tests/test_incident_atlas_airline_v01.py",
+      "repository_path": "tests/test_incident_atlas_airline_v01.py",
+      "sha256": "f8307e1c5ef38ec3a9578413e5130200c3619f82f77ba98565c075797ef535f7"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+      "repository_path": "tests/test_incident_atlas_sentinel_v01.py",
+      "sha256": "8cd5e2ab341ee55c52e96823d9807f074563b7f5f952ecb3ac3d92025fa85a16"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/tests/test_incident_atlas_supplier_v01.py",
+      "repository_path": "tests/test_incident_atlas_supplier_v01.py",
+      "sha256": "cd9b3b55fbc9711c0f88d42b325d564461f3471861a167131288231f3ed8a1eb"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/tests/test_incident_atlas_testflix_v01.py",
+      "repository_path": "tests/test_incident_atlas_testflix_v01.py",
+      "sha256": "75535063206fa7d40942e2039776840d1252c370e534773780d834a0229b9e07"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/tests/test_incident_atlas_v01.py",
+      "repository_path": "tests/test_incident_atlas_v01.py",
+      "sha256": "945cdf93d983c847cc7e1a8f164a86e7bff9b1fb6e84e02ba85b826ac996c282"
+    },
+    {
+      "basis": "AT6_LANDED_34",
+      "path": "sources/current/tests/test_incident_atlas_workspace_v01.py",
+      "repository_path": "tests/test_incident_atlas_workspace_v01.py",
+      "sha256": "0090b19a3f9f7b7da45061a65169d7a5e9f40fe1cdbfe78ef8d8be9d0c130206"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/fixtures/incident_atlas_airline_v01.json",
+      "repository_path": "fixtures/incident_atlas_airline_v01.json",
+      "sha256": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/fixtures/incident_atlas_cases_v01.json",
+      "repository_path": "fixtures/incident_atlas_cases_v01.json",
+      "sha256": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/fixtures/incident_atlas_supplier_v01.json",
+      "repository_path": "fixtures/incident_atlas_supplier_v01.json",
+      "sha256": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/fixtures/incident_atlas_testflix_v01.json",
+      "repository_path": "fixtures/incident_atlas_testflix_v01.json",
+      "sha256": "0f545c52938533386e83212f5fae8be93d6f0fc286f60ad944f9f1e1078e84a4"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/fixtures/landslide_sentinel/ls1_inputs_v01.json",
+      "repository_path": "fixtures/landslide_sentinel/ls1_inputs_v01.json",
+      "sha256": "abb013d9f2618775087a2cc570e4b57d99a2d3aea6a7799a82fbfdfd2be2b0ab"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/action_commit_packet_v02.py",
+      "repository_path": "hedgehog/action_commit_packet_v02.py",
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "sha256": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/airline/incident_atlas_v01.py",
+      "sha256": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "sha256": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "sha256": "60ce33ceb220b947ef912884f51f9b1f871e586742963271efcf26e8da42ee14"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "sha256": "d61ea8ea23f89c3b19868fc4eab3c41795955af42fe06307fdbc565a49481c1b"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "sha256": "e39c084be25e4a60aa050c3aa6c5451a0fb1ad47501d30244499dbb818d7db17"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "sha256": "46fe3d3d540dd81cfb582394d586c766ac46339c9a50bd3829736617a28b869d"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "sha256": "0448a8eb44ed69e0d8eac4f9a1d3ae484b377422d36fb2030be8f663066e4b57"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "sha256": "7feecd660d7a71911d20bf5e4f5c44269b6507f465888b804285bf9b36813395"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "sha256": "a6f362626106de6bf2f01e6fd20e4fb2a36b949a2f2a62c9915eaa77bb2e702f"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/contrasts_v01.py",
+      "sha256": "d528ee2471a87b0aaf1eee7044dd013c3254b864d9fc17d8ddde0a38e0fb5d57"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/events_v01.py",
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_proof_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_proof_v01.py",
+      "sha256": "5cea9af2fe2edd3bc759fff06d7e2e962967643b336a5cc858dd196fb22921b8"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "sha256": "f9a37c0ae36dbbbc40c610cf9210f66157aaceb8ec4b2e695fadbd77a4e4c8cd"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "sha256": "04bf9f18adfcff9472a560c84c5581814841092a4c5ace957c8856b0e6c1614e"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "sha256": "7ab9972fce0e04de15cf84293548a7b6a789ed5c9046c68a9be21dbe82f10792"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "repository_path": "hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "sha256": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "sha256": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/contracts_v01.py",
+      "repository_path": "hedgehog/domains/testflix/contracts_v01.py",
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/evidence_v01.py",
+      "repository_path": "hedgehog/domains/testflix/evidence_v01.py",
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "sha256": "cf84470b41bf3c759520d3d0d28b078e9c02bf2edd3f4c40b6d5e31f7b0ba39f"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "sha256": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "sha256": "6f816d40749933e96d5af75d17180df53a1b5e60212b01bcbe5dc7b3f9d94798"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "sha256": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "repository_path": "hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/lifecycle_v01.py",
+      "repository_path": "hedgehog/domains/testflix/lifecycle_v01.py",
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/mock_world_v01.py",
+      "repository_path": "hedgehog/domains/testflix/mock_world_v01.py",
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "repository_path": "hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/incident_atlas_history_v01.py",
+      "repository_path": "hedgehog/incident_atlas_history_v01.py",
+      "sha256": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/incident_atlas_v01.py",
+      "repository_path": "hedgehog/incident_atlas_v01.py",
+      "sha256": "f18e8702fdc21bfd97eba5bbbe8a20e062864f4d2a490346f8f16872ede0387b"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/kernel/work_composition_v01.py",
+      "repository_path": "hedgehog/kernel/work_composition_v01.py",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/outcome_calibration_v01.py",
+      "repository_path": "hedgehog/outcome_calibration_v01.py",
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/outcome_feedback_consumer_v01.py",
+      "repository_path": "hedgehog/outcome_feedback_consumer_v01.py",
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/outcome_feedback_history_v01.py",
+      "repository_path": "hedgehog/outcome_feedback_history_v01.py",
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/outcome_feedback_v01.py",
+      "repository_path": "hedgehog/outcome_feedback_v01.py",
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    {
+      "basis": "AT5_CANONICAL_IMPLEMENTATION_PIN",
+      "path": "sources/current/hedgehog/work_execution_host_v01.py",
+      "repository_path": "hedgehog/work_execution_host_v01.py",
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/91ee00f07cc33d15bf3084aa03e834ee60b3e351722945610fa58a48cdc3aea3/run_incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/demo~1run_incident_atlas_v01.py"
+      ],
+      "repository_path": "demo/run_incident_atlas_v01.py",
+      "sha256": "91ee00f07cc33d15bf3084aa03e834ee60b3e351722945610fa58a48cdc3aea3"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/93e66cd081171fe9375ef17591d87d0ff3380307880914662064cf67ef57761d/incident_to_proof_atlas_v01.md",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/docs~1incident_to_proof_atlas_v01.md"
+      ],
+      "repository_path": "docs/incident_to_proof_atlas_v01.md",
+      "sha256": "93e66cd081171fe9375ef17591d87d0ff3380307880914662064cf67ef57761d"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/fixtures/incident_atlas_airline_v01.json",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/fixtures~1incident_atlas_airline_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/fixtures~1incident_atlas_airline_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/fixtures~1incident_atlas_airline_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/fixtures~1incident_atlas_airline_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/fixtures~1incident_atlas_airline_v01.json"
+      ],
+      "repository_path": "fixtures/incident_atlas_airline_v01.json",
+      "sha256": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/fixtures/incident_atlas_cases_v01.json",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/fixtures~1incident_atlas_cases_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/fixtures~1incident_atlas_cases_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/fixtures~1incident_atlas_cases_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/fixtures~1incident_atlas_cases_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/fixtures~1incident_atlas_cases_v01.json"
+      ],
+      "repository_path": "fixtures/incident_atlas_cases_v01.json",
+      "sha256": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/ba4b40dc58320d8a72851e084260abf5d1784e77f5c25cffc41f94e64b896ce2/incident_atlas_cases_v01.json",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/fixtures~1incident_atlas_cases_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/fixtures~1incident_atlas_cases_v01.json"
+      ],
+      "repository_path": "fixtures/incident_atlas_cases_v01.json",
+      "sha256": "ba4b40dc58320d8a72851e084260abf5d1784e77f5c25cffc41f94e64b896ce2"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/fixtures/incident_atlas_supplier_v01.json",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/fixtures~1incident_atlas_supplier_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/fixtures~1incident_atlas_supplier_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/fixtures~1incident_atlas_supplier_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/fixtures~1incident_atlas_supplier_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/fixtures~1incident_atlas_supplier_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/fixtures~1incident_atlas_supplier_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/fixtures~1incident_atlas_supplier_v01.json"
+      ],
+      "repository_path": "fixtures/incident_atlas_supplier_v01.json",
+      "sha256": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/fixtures/incident_atlas_testflix_v01.json",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/fixtures~1incident_atlas_testflix_v01.json",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/fixtures~1incident_atlas_testflix_v01.json"
+      ],
+      "repository_path": "fixtures/incident_atlas_testflix_v01.json",
+      "sha256": "0f545c52938533386e83212f5fae8be93d6f0fc286f60ad944f9f1e1078e84a4"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/action_commit_packet_v02.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1action_commit_packet_v02.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1action_commit_packet_v02.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1action_commit_packet_v02.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1action_commit_packet_v02.py"
+      ],
+      "repository_path": "hedgehog/action_commit_packet_v02.py",
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1domains~1airline~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1domains~1airline~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1airline~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1airline~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1airline~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1airline~1incident_atlas_source_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "sha256": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/dcc235eca5e49acd31d6e0764a5366c7c041b042cca08530dce2962f9989e84e/incident_atlas_source_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1domains~1airline~1incident_atlas_source_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "sha256": "dcc235eca5e49acd31d6e0764a5366c7c041b042cca08530dce2962f9989e84e"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1domains~1airline~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1domains~1airline~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1domains~1airline~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1airline~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1airline~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1airline~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1airline~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/airline/incident_atlas_v01.py",
+      "sha256": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1domains~1airline~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1domains~1airline~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1domains~1airline~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1airline~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1airline~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1airline~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1airline~1incident_atlas_work_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "sha256": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1capability_registry_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1contracts_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_proof_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_proof_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "sha256": "60ce33ceb220b947ef912884f51f9b1f871e586742963271efcf26e8da42ee14"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/workspace/exact_runtime_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_source_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "sha256": "d61ea8ea23f89c3b19868fc4eab3c41795955af42fe06307fdbc565a49481c1b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/workspace/exact_runtime_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_summary_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_summary_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_summary_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "sha256": "e39c084be25e4a60aa050c3aa6c5451a0fb1ad47501d30244499dbb818d7db17"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/workspace/exact_runtime_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_task_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_task_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_task_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "sha256": "46fe3d3d540dd81cfb582394d586c766ac46339c9a50bd3829736617a28b869d"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/workspace/exact_runtime_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "sha256": "0448a8eb44ed69e0d8eac4f9a1d3ae484b377422d36fb2030be8f663066e4b57"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/workspace/exact_runtime_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_work_proof_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_work_proof_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_work_proof_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "sha256": "7feecd660d7a71911d20bf5e4f5c44269b6507f465888b804285bf9b36813395"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/workspace/exact_runtime_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1ephemeral_workspace~1incident_atlas_work_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "sha256": "a6f362626106de6bf2f01e6fd20e4fb2a36b949a2f2a62c9915eaa77bb2e702f"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1kernel_adapter_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1local_services_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1media_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1memory_adapter_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1semantic_adapter_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1semantic_roles_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1ephemeral_workspace~1session_runtime_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/sentinel/exact_runtime_sources/hedgehog~1domains~1landslide_sentinel~1incident_atlas_source_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "sha256": "f9a37c0ae36dbbbc40c610cf9210f66157aaceb8ec4b2e695fadbd77a4e4c8cd"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/sentinel/exact_runtime_sources/hedgehog~1domains~1landslide_sentinel~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "sha256": "04bf9f18adfcff9472a560c84c5581814841092a4c5ace957c8856b0e6c1614e"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/sentinel/exact_runtime_sources/hedgehog~1domains~1landslide_sentinel~1incident_atlas_work_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "sha256": "7ab9972fce0e04de15cf84293548a7b6a789ed5c9046c68a9be21dbe82f10792"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "sha256": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/92472ac0f5c2cea46bd57cd824ea32ad79daec59e260591980a1aae379089b7e/incident_atlas_backend_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "sha256": "92472ac0f5c2cea46bd57cd824ea32ad79daec59e260591980a1aae379089b7e"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/c2fa1ef59f6ba7d24055792028f217d05f616a35168e2f95ef7205d51414399b/incident_atlas_backend_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/hedgehog~1domains~1supplier_water_filter~1incident_atlas_backend_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "sha256": "c2fa1ef59f6ba7d24055792028f217d05f616a35168e2f95ef7205d51414399b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/658fc417ee03cae51c5f692749efc3454404d9e38ce7a03efdf74f56a231d757/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "sha256": "658fc417ee03cae51c5f692749efc3454404d9e38ce7a03efdf74f56a231d757"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "sha256": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/f0f52b9cca288eafb7c76243cd0b30ced4187e0234fad0fd5db62483b084b577/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/hedgehog~1domains~1supplier_water_filter~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "sha256": "f0f52b9cca288eafb7c76243cd0b30ced4187e0234fad0fd5db62483b084b577"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/contracts_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1contracts_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1contracts_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/contracts_v01.py",
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/evidence_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1evidence_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1evidence_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/evidence_v01.py",
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1incident_atlas_proof_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_proof_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1incident_atlas_proof_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_proof_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "sha256": "cf84470b41bf3c759520d3d0d28b078e9c02bf2edd3f4c40b6d5e31f7b0ba39f"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/0/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/1/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/2/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/3/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/4/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/5/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/6/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/7/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/8/source_pins/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_source_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "sha256": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "sha256": "6f816d40749933e96d5af75d17180df53a1b5e60212b01bcbe5dc7b3f9d94798"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/741d0dc6c546fc945f79d4b8f8df10e33cab460b1ec3b63b916ae9b7f829c35b/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/2/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/3/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/4/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/5/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "sha256": "741d0dc6c546fc945f79d4b8f8df10e33cab460b1ec3b63b916ae9b7f829c35b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/9223d0faf5bb6c4848da03048f19b18d4a1d8e6709ddc29424f94e1287a9d51e/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/6/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/7/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/8/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "sha256": "9223d0faf5bb6c4848da03048f19b18d4a1d8e6709ddc29424f94e1287a9d51e"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/b00ba9f244f52bfcaeeb15602fdd683c70b94cc6340f6f262362d9afbc13523e/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/0/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/1/source_pins/hedgehog~1domains~1testflix~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "sha256": "b00ba9f244f52bfcaeeb15602fdd683c70b94cc6340f6f262362d9afbc13523e"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/0/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/1/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/2/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/3/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/4/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/5/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/6/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/7/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/testflix/phase_bindings/8/source_pins/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_domain_sources/hedgehog~1domains~1testflix~1incident_atlas_work_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "sha256": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1kernel_adapter_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1kernel_adapter_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/lifecycle_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1lifecycle_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1lifecycle_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/lifecycle_v01.py",
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/mock_world_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1mock_world_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1mock_world_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/mock_world_v01.py",
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1domains~1testflix~1semantic_adapter_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1domains~1testflix~1semantic_adapter_v01.py"
+      ],
+      "repository_path": "hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/incident_atlas_history_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1incident_atlas_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1incident_atlas_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1incident_atlas_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1incident_atlas_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1incident_atlas_history_v01.py"
+      ],
+      "repository_path": "hedgehog/incident_atlas_history_v01.py",
+      "sha256": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/2ad5a469b8b58175e24b2c42a4a638da3baea086b132b64169b8971b1cd854fe/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/hedgehog~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/hedgehog~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/incident_atlas_v01.py",
+      "sha256": "2ad5a469b8b58175e24b2c42a4a638da3baea086b132b64169b8971b1cd854fe"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/337080fde79a17be36356fbf94bf6d89f2b722d0e810610a96c5d94c09ccb4d2/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/hedgehog~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/incident_atlas_v01.py",
+      "sha256": "337080fde79a17be36356fbf94bf6d89f2b722d0e810610a96c5d94c09ccb4d2"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/a7d7ac557ca0644efd4a68a3fba67230ca78cfff96cbca58d5520684235fd44f/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/incident_atlas_v01.py",
+      "sha256": "a7d7ac557ca0644efd4a68a3fba67230ca78cfff96cbca58d5520684235fd44f"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/e71444f3217f363534e52f62927374206ffb03984f4ea60e8fd9dd3c433e70db/incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1incident_atlas_v01.py"
+      ],
+      "repository_path": "hedgehog/incident_atlas_v01.py",
+      "sha256": "e71444f3217f363534e52f62927374206ffb03984f4ea60e8fd9dd3c433e70db"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/kernel/work_composition_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1kernel~1work_composition_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1kernel~1work_composition_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1kernel~1work_composition_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1kernel~1work_composition_v01.py"
+      ],
+      "repository_path": "hedgehog/kernel/work_composition_v01.py",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/outcome_calibration_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1outcome_calibration_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1outcome_calibration_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1outcome_calibration_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1outcome_calibration_v01.py"
+      ],
+      "repository_path": "hedgehog/outcome_calibration_v01.py",
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/outcome_feedback_consumer_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1outcome_feedback_consumer_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1outcome_feedback_consumer_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1outcome_feedback_consumer_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1outcome_feedback_consumer_v01.py"
+      ],
+      "repository_path": "hedgehog/outcome_feedback_consumer_v01.py",
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/outcome_feedback_history_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1outcome_feedback_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1outcome_feedback_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1outcome_feedback_history_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1outcome_feedback_history_v01.py"
+      ],
+      "repository_path": "hedgehog/outcome_feedback_history_v01.py",
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/outcome_feedback_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1outcome_feedback_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1outcome_feedback_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1outcome_feedback_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1outcome_feedback_v01.py"
+      ],
+      "repository_path": "hedgehog/outcome_feedback_v01.py",
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/hedgehog/work_execution_host_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/verifier/hedgehog~1work_execution_host_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_implementation/hedgehog~1work_execution_host_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_implementation/hedgehog~1work_execution_host_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_implementation/hedgehog~1work_execution_host_v01.py"
+      ],
+      "repository_path": "hedgehog/work_execution_host_v01.py",
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/tests/test_incident_atlas_airline_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/tests~1test_incident_atlas_airline_v01.py"
+      ],
+      "repository_path": "tests/test_incident_atlas_airline_v01.py",
+      "sha256": "f8307e1c5ef38ec3a9578413e5130200c3619f82f77ba98565c075797ef535f7"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/adea5046715c90d62c0b79f0d1a19d908641fd7df95af18fe44e647b5c90dda8/test_incident_atlas_supplier_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/tests~1test_incident_atlas_supplier_v01.py"
+      ],
+      "repository_path": "tests/test_incident_atlas_supplier_v01.py",
+      "sha256": "adea5046715c90d62c0b79f0d1a19d908641fd7df95af18fe44e647b5c90dda8"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/b5973267675a333a6ad553df5dbcc12de2ce02d415cf8a71930581a68440dc8e/test_incident_atlas_supplier_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/tests~1test_incident_atlas_supplier_v01.py"
+      ],
+      "repository_path": "tests/test_incident_atlas_supplier_v01.py",
+      "sha256": "b5973267675a333a6ad553df5dbcc12de2ce02d415cf8a71930581a68440dc8e"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": false,
+      "path": "sources/current/tests/test_incident_atlas_supplier_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/tests~1test_incident_atlas_supplier_v01.py"
+      ],
+      "repository_path": "tests/test_incident_atlas_supplier_v01.py",
+      "sha256": "cd9b3b55fbc9711c0f88d42b325d564461f3471861a167131288231f3ed8a1eb"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/c7a0073b925653f08e52bcbc644ef682b0cebc7b55ba845ea35d0ff99988f9f5/test_incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0009_supplier_execution/source_pins/tests~1test_incident_atlas_v01.py",
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/supplier/execution_receipts/0010_channels_repair/source_pins/tests~1test_incident_atlas_v01.py"
+      ],
+      "repository_path": "tests/test_incident_atlas_v01.py",
+      "sha256": "c7a0073b925653f08e52bcbc644ef682b0cebc7b55ba845ea35d0ff99988f9f5"
+    },
+    {
+      "basis": "AT5_RETAINED_RUNTIME_SOURCE_PIN",
+      "differs_from_AT6_final": true,
+      "path": "sources/historical/f15bc0ba467aacb33e16bedfdc698fcc20dd391d44f1215a8361ff79e5078ee9/test_incident_atlas_v01.py",
+      "pin_pointers": [
+        "evidence/atlas_package.json#/execution_sources/retained_AT4_execution_sources/retained_AT3_execution_sources/retained_AT2_execution_sources/airline/receipt/source_pins/tests~1test_incident_atlas_v01.py"
+      ],
+      "repository_path": "tests/test_incident_atlas_v01.py",
+      "sha256": "f15bc0ba467aacb33e16bedfdc698fcc20dd391d44f1215a8361ff79e5078ee9"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/gate3_mechanism_v01.py",
+      "repository_path": "hedgehog/gate3_mechanism_v01.py",
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/abi_v01.py",
+      "repository_path": "hedgehog/kernel/abi_v01.py",
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/root_decision_v01.py",
+      "repository_path": "hedgehog/kernel/root_decision_v01.py",
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/effect_firewall_v01.py",
+      "repository_path": "hedgehog/kernel/effect_firewall_v01.py",
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/semantic_work_v01.py",
+      "repository_path": "hedgehog/kernel/semantic_work_v01.py",
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/trust_model_v01.py",
+      "repository_path": "hedgehog/kernel/trust_model_v01.py",
+      "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/execution_mode_router_v01.py",
+      "repository_path": "hedgehog/kernel/execution_mode_router_v01.py",
+      "sha256": "4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/transition_registry_v01.py",
+      "repository_path": "hedgehog/kernel/transition_registry_v01.py",
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/integrity_replay_v01.py",
+      "repository_path": "hedgehog/kernel/integrity_replay_v01.py",
+      "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/drs.py",
+      "repository_path": "hedgehog/drs.py",
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/local_drs_resolver.py",
+      "repository_path": "hedgehog/local_drs_resolver.py",
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/drs_semantic_address_v01.py",
+      "repository_path": "hedgehog/drs_semantic_address_v01.py",
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/drs_memory_resolution_v01.py",
+      "repository_path": "hedgehog/drs_memory_resolution_v01.py",
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/context_packets.py",
+      "repository_path": "hedgehog/context_packets.py",
+      "sha256": "080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/structured_rationale.py",
+      "repository_path": "hedgehog/structured_rationale.py",
+      "sha256": "05686cd42bc4ea0bd9b0bc2586c7df6fd51369d43ee0fb15af4c95326e3d1f03"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/outcome_feedback_report_v01.py",
+      "repository_path": "hedgehog/outcome_feedback_report_v01.py",
+      "sha256": "aa382adb332e5925a0f94b228417768fef03382e420d13441c34b9ffb71df385"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "repository_path": "hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "repository_path": "hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "repository_path": "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "repository_path": "hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_CONTEXT",
+      "path": "sources/current/pyproject.toml",
+      "repository_path": "pyproject.toml",
+      "sha256": "86485a92ac1bdaa3a73743190e70eda2ac37d66cb4d7653f69fb81d70f319ee6"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_ARCHITECTURE_CONTEXT",
+      "path": "sources/current/demo/gate3_scenario_packs_v01.py",
+      "repository_path": "demo/gate3_scenario_packs_v01.py",
+      "sha256": "cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_ARCHITECTURE_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/fractal_runtime_v02.py",
+      "repository_path": "hedgehog/kernel/fractal_runtime_v02.py",
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_ARCHITECTURE_CONTEXT",
+      "path": "sources/current/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "repository_path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_ARCHITECTURE_CONTEXT",
+      "path": "sources/current/hedgehog/capability_memory_binding_v01.py",
+      "repository_path": "hedgehog/capability_memory_binding_v01.py",
+      "sha256": "6e4f2ca3be12a1e9a93d7b59318d9a6ba90ea6f43bbd9bccc81d8bdefe1b1b79"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_GITHUB_FETCH_AT_IMPLEMENTATION_COMMIT",
+      "path": "sources/current/LICENSE",
+      "repository_path": "LICENSE",
+      "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_GITHUB_FETCH_AT_IMPLEMENTATION_COMMIT",
+      "path": "sources/current/hedgehog/avf_v02.py",
+      "repository_path": "hedgehog/avf_v02.py",
+      "sha256": "ba88a22b3ddea715ad7af2731c171511273b6e7bb4c67f5d54024464a1a8b616"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_GITHUB_FETCH_AT_IMPLEMENTATION_COMMIT",
+      "path": "sources/current/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "repository_path": "hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "sha256": "6b9f34433cae8ef0435ea1456820fd4f7e300a2a6c9a2d389c77c3db008be4a6"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_GITHUB_FETCH_AT_IMPLEMENTATION_COMMIT",
+      "path": "sources/current/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "repository_path": "hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "sha256": "3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98"
+    },
+    {
+      "basis": "AT6_BASE_IDENTITY_GITHUB_FETCH_AT_IMPLEMENTATION_COMMIT",
+      "path": "sources/current/COMMERCIAL-LICENSING.md",
+      "repository_path": "COMMERCIAL-LICENSING.md",
+      "sha256": "50628fca63d697535669adfa1526d45fa7465e2f22a45707cc69f6fa56b023ee"
+    }
+  ],
+  "source_pin_basis": {
+    "AT5_archive": {
+      "bytes": 56038561,
+      "filename": "RADIOLARIA_INCIDENT_ATLAS_AT5_RETURN_20260923T065201Z.tar.gz",
+      "manifest_rows": 1232,
+      "regular_members": 1233,
+      "sha256": "95d47f59ac73df126687c114918b1dded036d960c9784f77c1f136a041b4ac48"
+    },
+    "AT6_base_identities": {
+      "input": "atlas/review/at6/records/base_file_identities.json",
+      "sha256": "7d26430308ffc73204c2a747c1bf08ec32a9cf004777f8da2e2daf000db8fd54"
+    },
+    "AT6_commit": "e538790eef3eb11201900a5da63fbb3ff61ad602",
+    "U1_U4_source_xml": {
+      "bytes": 2361889,
+      "exact_AT6_identity_matching": "Required for every recovered file",
+      "input": "upload/RADIOLARIA_U1_U4_REAL_SOURCE_AND_AUDIT_REPOMIX_V01(3).xml",
+      "matching_path_elements": 0,
+      "recovered_files": 0,
+      "recovery_result": "REQUESTED_PATHS_ABSENT_FROM_XML",
+      "requested_missing_paths": 5,
+      "scanned_file_elements": 65,
+      "sha256": "b6a011c471c0bfd43e28302f1acfcdd3859ef7e1cd331d1290fbc4b95b132c74"
+    },
+    "archive_manifests": [
+      {
+        "bytes": 263680,
+        "input": "atlas/review/at5/MANIFEST.json",
+        "sha256": "d2f86dd8df9524ee94958639e99698a419f7fd0b479734c6931ac5c912db7db8"
+      },
+      {
+        "bytes": 151127,
+        "input": "atlas/review/at6/MANIFEST.json",
+        "sha256": "0c6b2aef8b3fc03c36f938802177e3084e05d153b5e5229b97381e9ac53683dc"
+      }
+    ],
+    "canonical_package": {
+      "bytes": 68250583,
+      "input": "atlas/review/at5/evidence/atlas_package.json",
+      "sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24"
+    },
+    "external_expected_pin": {
+      "input": "atlas/review/at5/evidence/expected_pin.json",
+      "purpose": "WRITER_HANDOFF_NOT_INDEPENDENT_ACCEPTANCE",
+      "sha256": "6f44be87aa798dcd45d804804b968e2b0e7de61ccc845a7bed863ef9b74b45f5"
+    }
+  }
+}

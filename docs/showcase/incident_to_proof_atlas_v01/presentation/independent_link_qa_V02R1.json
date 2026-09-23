@@ -1,0 +1,105 @@
+{
+  "revision": "V02R1_LINK_ONLY",
+  "review": "independent_static_link_qa",
+  "overall_result": "PASS",
+  "checks": {
+    "zip_member_names_and_order_identical": true,
+    "exactly_two_expected_zip_parts_changed": true,
+    "pptx_22_slides": true,
+    "all_pptx_text_identical": true,
+    "exactly_three_native_click_links_all_on_slide22": true,
+    "all_three_native_destinations_and_labels_match_targets": true,
+    "exactly_three_hyperlink_relationships_on_slide22": true,
+    "removing_added_hyperlinks_restores_original_xml_bytes": true,
+    "pdf_22_pages": true,
+    "all_22_pdf_pages_text_identical": true,
+    "all_22_pdf_page_sizes_identical": true,
+    "all_22_pdf_pages_pixel_identical_at_144dpi": true,
+    "exactly_three_pdf_uri_annotations_all_on_page22": true,
+    "pdf_destinations_match_targets": true,
+    "pdf_link_rectangles_cover_corresponding_labels": true
+  },
+  "changed_pptx_parts": [
+    "ppt/slides/slide22.xml",
+    "ppt/slides/_rels/slide22.xml.rels"
+  ],
+  "native_links": [
+    {
+      "shape_id": "4",
+      "label": "Technical appendix",
+      "relationship_id": "rIdAtlasAppendix",
+      "url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/incident_to_proof_atlas_v01/technical_appendix_INCIDENT_ATLAS_V02_20260923.pdf",
+      "native_link_matches_target": true
+    },
+    {
+      "shape_id": "5",
+      "label": "Source-bound XML Reader",
+      "relationship_id": "rIdAtlasReader",
+      "url": "https://github.com/AAkhtanin/hedgehog-os/raw/refs/heads/main/docs/showcase/incident_to_proof_atlas_v01/LLM_READER_INCIDENT_TO_PROOF_ATLAS_V02_20260923.xml",
+      "native_link_matches_target": true
+    },
+    {
+      "shape_id": "6",
+      "label": "Pinned repository",
+      "relationship_id": "rIdAtlasRepository",
+      "url": "https://github.com/AAkhtanin/hedgehog-os/tree/e538790eef3eb11201900a5da63fbb3ff61ad602",
+      "native_link_matches_target": true
+    }
+  ],
+  "pdf_links": [
+    {
+      "page": 22,
+      "kind": 2,
+      "uri": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/incident_to_proof_atlas_v01/technical_appendix_INCIDENT_ATLAS_V02_20260923.pdf",
+      "rectangle": [
+        55.494998931884766,
+        412.49700927734375,
+        301.47100830078125,
+        448.468994140625
+      ]
+    },
+    {
+      "page": 22,
+      "kind": 2,
+      "uri": "https://github.com/AAkhtanin/hedgehog-os/raw/refs/heads/main/docs/showcase/incident_to_proof_atlas_v01/LLM_READER_INCIDENT_TO_PROOF_ATLAS_V02_20260923.xml",
+      "rectangle": [
+        338.9880065917969,
+        412.49700927734375,
+        638.2269897460938,
+        448.468994140625
+      ]
+    },
+    {
+      "page": 22,
+      "kind": 2,
+      "uri": "https://github.com/AAkhtanin/hedgehog-os/tree/e538790eef3eb11201900a5da63fbb3ff61ad602",
+      "rectangle": [
+        679.4860229492188,
+        412.49700927734375,
+        905.9600219726562,
+        448.468994140625
+      ]
+    }
+  ],
+  "render_comparison": {
+    "renderer": "PyMuPDF",
+    "dpi": 144,
+    "pages_compared": 22,
+    "identical_pages": 22,
+    "mismatched_pages": []
+  },
+  "remote_link_validation": {
+    "performed_by_this_review": false,
+    "pending": [
+      "Technical appendix",
+      "Source-bound XML Reader"
+    ],
+    "note": "Appendix and XML destinations are publication targets on GitHub main. Their availability remains CHECK_AFTER_PUBLICATION. Pinned repository README fetch was reported confirmed by root; this static review did not independently fetch it."
+  },
+  "sha256": {
+    "output/incident_to_proof_atlas_V02_20260923.pptx": "db8f1f2b3e01f385a84e34ee59fb6d9e7bb46b4c436794dff8d8be428a6293cc",
+    "link_fix_V02R1/output/incident_to_proof_atlas_V02R1_20260923.pptx": "6c93cf8b8d0cd32adaf8ca9e6ed95a1cce9286e6a507f7e6ffeb4f608edcc2f7",
+    "output/incident_to_proof_atlas_V02_20260923.pdf": "dbcdaa0740f8ea9877b444cda7934e0f850de6d9f15eab1b974f13ba4c90ec34",
+    "link_fix_V02R1/output/incident_to_proof_atlas_V02R1_20260923.pdf": "ecc895b552c5e1b8178f9fe6db8d92194c369944b461f88532371f4f137502be"
+  }
+}

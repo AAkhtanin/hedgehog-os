@@ -1,0 +1,43 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-p",
+    "atlas_at6_pytest_plugin",
+    "tests/test_incident_atlas_v01.py::test_atlas_supplied_replay_positive_v01",
+    "tests/test_incident_atlas_v01.py::test_atlas_wrong_external_pin_v01",
+    "tests/test_incident_atlas_v01.py::test_atlas_rehashed_false_relationship_v01"
+  ],
+  "context": "/Users/admin/Projects/RADIOLARIA_INCIDENT_ATLAS_AT6.WNEoen/preflight_context.json",
+  "cwd": "/Users/admin/Projects/RADIOLARIA_INCIDENT_ATLAS_AT6.WNEoen/preflight",
+  "elapsed_seconds": 43.935483457520604,
+  "ended_at": "2026-09-23T07:17:54.434890+00:00",
+  "extra_environment": {
+    "AT1_SAVED_EXPORT": "/Users/admin/Projects/RADIOLARIA_INCIDENT_ATLAS_AT6.WNEoen/input/atlas_at5_return/evidence",
+    "PYTHONPATH": "/Users/admin/Projects/RADIOLARIA_INCIDENT_ATLAS_AT6.WNEoen:/Users/admin/Projects/RADIOLARIA_INCIDENT_ATLAS_AT6.WNEoen/preflight"
+  },
+  "frozen_manifest_sha256": "d7afeb8c169169e4783515e89315085b1fb3591792e82c0a2a347c27b8314748",
+  "helpers": {
+    "atlas_at6_pytest_plugin.py": "25e60c5471434ce15bd162e81c460f93906e1c4c9da81debd4e2d6e4bd4f33ac",
+    "ops.py": "ae6d8cc23dd82e2dbc73587537ad1bdccf84a22d9f6a45c9b1222576cd81f5b4",
+    "prepare.py": "8f822ca7ee861d52e2eeec3a8f795779e9e01a37199feae69710d2bade3220d0"
+  },
+  "inherited_context_removed": null,
+  "pid": 74797,
+  "policy_identity": "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+  "rc": 0,
+  "started_at": "2026-09-23T07:17:10.498943+00:00",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 99,
+    "sha256": "81ba0ffc40d63eef4596aab3ca437eef30df214b78cd2435dbcf77097eae3b1b"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "attempts": [
+    {
+      "cause": "Verifier expected only one five-stage descent audit; completed Work correctly contains initial and completed descents. Both source-bound sequences are now checked.",
+      "command": "0007_supplied",
+      "raw_stderr": "commands/0007_supplied/stderr.raw",
+      "raw_stdout": "commands/0007_supplied/stdout.raw",
+      "receipt": "commands/0007_supplied/receipt.json"
+    },
+    {
+      "cause": "Verifier compared runtime tuple fields to JSON lists; full canonical comparison preserves every field and value.",
+      "command": "0009_supplied",
+      "raw_stderr": "commands/0009_supplied/stderr.raw",
+      "raw_stdout": "commands/0009_supplied/stdout.raw",
+      "receipt": "commands/0009_supplied/receipt.json"
+    },
+    {
+      "cause": "External exporter looked for a nonexistent generic phases.jsonl. Actual collector finalizer owns phase durations.",
+      "command": "0012_export",
+      "raw_stderr": "commands/0012_export/stderr.raw",
+      "raw_stdout": "commands/0012_export/stdout.raw",
+      "receipt": "commands/0012_export/receipt.json"
+    },
+    {
+      "cause": "Test context omitted fixture.site for the positive role-material path. Filled from unchanged fixture; predicates and expectations unchanged.",
+      "command": "0015_focused",
+      "raw_stderr": "commands/0015_focused/stderr.raw",
+      "raw_stdout": "commands/0015_focused/stdout.raw",
+      "receipt": "commands/0015_focused/receipt.json"
+    },
+    {
+      "cause": "Observer detected six Root decisions from semantic_source in the new verifier. Repaired to validate actual saved intake Root decisions and reconstruct finite packets through public builders, with no new decision.",
+      "command": "0018_replay_one",
+      "raw_stderr": "commands/0018_replay_one/stderr.raw",
+      "raw_stdout": "commands/0018_replay_one/stdout.raw",
+      "receipt": "commands/0018_replay_one/receipt.json"
+    }
+  ],
+  "collector_reexecuted": false,
+  "historical_failures_remain_failures": true
+}

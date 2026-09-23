@@ -1,0 +1,168 @@
+{
+  "profile": "AT6_INDEPENDENT_STATIC_LANDING_REVIEW_V01",
+  "reviewed_at_utc": "2026-09-23T08:19:43.440008+00:00",
+  "conclusion": "No landing blocker found; the exact reviewed Atlas implementation is committed and published. Presentation preparation can proceed.",
+  "method": "Read-only inspection of archived source and receipts, own standard-library byte/Git-object calculations, and one fresh GitHub main commit readback. No repository mutation or archived code execution.",
+  "github_readback": {
+    "repository": "AAkhtanin/hedgehog-os",
+    "requested_ref": "main",
+    "sha": "e538790eef3eb11201900a5da63fbb3ff61ad602",
+    "message": "Implement Incident Atlas across five domains",
+    "created_at": "2026-09-23T07:21:23Z",
+    "url": "https://github.com/AAkhtanin/hedgehog-os/commit/e538790eef3eb11201900a5da63fbb3ff61ad602",
+    "files": [
+      "demo/run_incident_atlas_v01.py",
+      "docs/incident_to_proof_atlas_v01.md",
+      "fixtures/incident_atlas_airline_v01.json",
+      "fixtures/incident_atlas_cases_v01.json",
+      "fixtures/incident_atlas_supplier_v01.json",
+      "fixtures/incident_atlas_testflix_v01.json",
+      "hedgehog/domains/airline/incident_atlas_source_v01.py",
+      "hedgehog/domains/airline/incident_atlas_v01.py",
+      "hedgehog/domains/airline/incident_atlas_work_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "hedgehog/domains/landslide_sentinel/incident_atlas_proof_v01.py",
+      "hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py",
+      "hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py",
+      "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "hedgehog/domains/testflix/incident_atlas_proof_v01.py",
+      "hedgehog/domains/testflix/incident_atlas_source_v01.py",
+      "hedgehog/domains/testflix/incident_atlas_v01.py",
+      "hedgehog/domains/testflix/incident_atlas_work_v01.py",
+      "hedgehog/incident_atlas_history_v01.py",
+      "hedgehog/incident_atlas_v01.py",
+      "tests/test_incident_atlas_airline_v01.py",
+      "tests/test_incident_atlas_sentinel_v01.py",
+      "tests/test_incident_atlas_supplier_v01.py",
+      "tests/test_incident_atlas_testflix_v01.py",
+      "tests/test_incident_atlas_v01.py",
+      "tests/test_incident_atlas_workspace_v01.py"
+    ],
+    "parent_tree_exposed": false,
+    "verification_scope": "Fresh GitHub connector fetch of main confirms commit identity and 34 changed paths. Connector response omits parent and tree; those are checked against archived Git readback."
+  },
+  "implementation": {
+    "commit": "e538790eef3eb11201900a5da63fbb3ff61ad602",
+    "parent": "0c5d02100442b43be9187d52ecd487022344d83b",
+    "tree": "c03b80c9d506a12d329ae6608c1c9dbabbd9615f",
+    "base_paths": 1659,
+    "exact_additions": 34,
+    "final_paths": 1693,
+    "postimages_identical_to_reviewed_AT5": true,
+    "git_blob_sha1_and_sha256_verified": true,
+    "remote_local_staged_inventory_equal": true,
+    "git_tree_independently_recomputed": true,
+    "source_edits_during_landing": 0
+  },
+  "recorded_owner_state": {
+    "branch": "main",
+    "worktree_clean": true,
+    "index_empty": true,
+    "origin_main": "e538790eef3eb11201900a5da63fbb3ff61ad602",
+    "admission_context": "FINALIZED",
+    "context_purpose": "INDEPENDENT_REVIEW",
+    "context_mode": "0600",
+    "source": "states/0042_final_owner.json; records/context_finalized.json; records/context_finalized_transition.json"
+  },
+  "guard_and_binder": {
+    "all_inspected_command_rcs": 0,
+    "owner_phases": [
+      "PREPARED_UNSTAGED",
+      "PREPARED_STAGED",
+      "PREPARED_COMMITTED",
+      "FINALIZED"
+    ],
+    "actual_owner_binder": "PASS",
+    "actual_registration_assertion": "PASS",
+    "guard_source_unchanged": true,
+    "binder_source_unchanged": true,
+    "evidence_commands": [
+      "0007_preflight_guard",
+      "0008_preflight_binder",
+      "0020_owner_unstaged_guard",
+      "0027_owner_staged_guard",
+      "0032_owner_committed_guard",
+      "0033_actual_owner_binder",
+      "0034_owner_finalized_guard",
+      "0043_final_readback_guard",
+      "0037_normal_push",
+      "0038_fetch_published",
+      "0039_ls_remote_published",
+      "0040_remote_commit"
+    ],
+    "status_limit": "Historical GATE3_STATUS=NOT_CLOSED and remote_publication=NOT_CHECKED are unchanged source-admission labels; separate reviewed acceptance and Git readback supply later scope/publication facts."
+  },
+  "fresh_checks": {
+    "nodes": 3,
+    "passed_phases": 9,
+    "command_seconds": 43.935483457520604,
+    "tests": [
+      "tests/test_incident_atlas_v01.py::test_atlas_rehashed_false_relationship_v01",
+      "tests/test_incident_atlas_v01.py::test_atlas_supplied_replay_positive_v01",
+      "tests/test_incident_atlas_v01.py::test_atlas_wrong_external_pin_v01"
+    ],
+    "monitored_entrypoints": 22,
+    "observed_calls": 0,
+    "monitoring_scope": "Selected domain/provider/Root/Host/Work/history entrypoints, not OS-wide monitoring.",
+    "recorded_not_rerun_by_this_review": true
+  },
+  "preservation": {
+    "base_git_modes_and_blob_identities_verified": 1659,
+    "special_posix_modes_recorded_preserved": {
+      "0600": 14,
+      "0400": 7
+    },
+    "special_mode_paths": 21,
+    "new_files_posix_mode": "0644",
+    "posix_evidence_limit": "POSIX mode preservation is supported by archived owner identity/preservation records, not fresh access to the Mac filesystem.",
+    "policy_paths_unchanged": [
+      "docs/repository_transition_admission_v01.md",
+      "tests/test_repository_release_spine_v01.py",
+      "tools/check_active_architecture_authority_v01.py",
+      "tools/reviewed_repository_transition_v01.py"
+    ],
+    "previous_context_and_manifest_retained": true
+  },
+  "semantic_evidence": {
+    "basis": "Prior independent AT5 static proof review, exact source transfer, and current supplied-proof checks. No new domain execution in AT6.",
+    "cards": 20,
+    "risk_families": 15,
+    "distinct_consumers": 5,
+    "lawful_continuations": 5,
+    "effective_history_samples": 7,
+    "historical_model_responses": 5,
+    "historical_models": 1,
+    "new_model_calls_AT6": 0,
+    "new_domain_collectors_AT6": 0,
+    "new_effect_runtime_calls_AT6": 0,
+    "examples": [
+      "Supplier: hostile proposal rejected; source-bound history changes selected Work before lawful continuation.",
+      "Airline: current selected-offer binding and private-field protection; actual current Work consumed.",
+      "Testflix: current price, expiry/revocation and receipt/period controls; memory supplies no renewed consent.",
+      "Workspace: live summary consumed, controlled poisoned derivatives rejected, exact current Work followed by fresh approval and one sidecar.",
+      "Sentinel: failed prediction receives one negative sample; current Work changes to observability; local ON precedes waiting worker return; measured recovery precedes separate OFF."
+    ]
+  },
+  "reviewed_package_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+  "recorded_final_replay_sha256": "b2e7d1d859cf382dfd9879763f20e49fb373b61a2b2b8ac7d117bea7925fc6a2",
+  "failures_preserved": [
+    "Two initialization helper assertions failed before owner transfer; they are recorded under failures/initialize_01 and initialize_02.",
+    "AT5 initial replay Root calls remain historical failed evidence; final pure replay does not relabel them PASS."
+  ],
+  "limitations": [
+    "Finite engineering and safe-derived replay acceptance, not universal adversarial robustness or physical certification.",
+    "Historical coverage PENDING admission fields are retained exact; AT6 landing records provide the later state.",
+    "Fresh GitHub connector readback exposes commit and changed paths, not parent/tree. Parent/tree are supported by archived Git readback and independently recomputed Git tree.",
+    "AT6 bounded archive intentionally omits the full AT5 proof package; that package remains available in the reviewed AT5 archive.",
+    "Presentation assets are not part of this implementation commit."
+  ],
+  "blocking_gaps": []
+}

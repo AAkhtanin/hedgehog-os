@@ -1,0 +1,729 @@
+{
+  "evidence_class": "SOURCE_IMPACT_BRIDGE_NOT_REEXECUTION_OF_PRIOR_DOMAINS",
+  "predecessor_package_sha256": "4ac4db7b837e925225f2b9250c1cc65b17ebb19f36e79b6504b240bb8146089d",
+  "retained_AT3_execution_sources": {
+    "common_bridge": "canonical_v01/digest_v01/require_v01 AST-identical; package index, pure verifier dispatch and rendering extended.",
+    "evidence_class": "SOURCE_IMPACT_BRIDGE_NOT_FRESH_EXECUTION_OF_HISTORICAL_DOMAINS",
+    "predecessor_package_sha256": "b025ea9dfc05b0328b52aea4718c9299a52eea53505065f1c50771b34e518963",
+    "retained_AT2_execution_sources": {
+      "airline": {
+        "execution": "FRESH_CONTROLLED",
+        "output_sha256": "910b14d8fc0af3833237b64f3be32c2a75af9c392767983b810518b04ef72c06",
+        "receipt": {
+          "argv": [
+            "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+            "-B",
+            "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT2.oKr9UP/airline_final_driver.py"
+          ],
+          "context": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT2.oKr9UP/admission/final_bound/context.json",
+          "cwd": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT2.oKr9UP/candidate",
+          "elapsed_seconds": 8.10411270800978,
+          "ended_at": "2026-09-22T21:22:41.958034+00:00",
+          "helper_sha256": "a5d39f3c41fde50ef89828271d6c36cf294765345971e05a38481b7aed12e0cb",
+          "inherited_context_overridden": false,
+          "pid": 45007,
+          "rc": 0,
+          "source_pins": {
+            "demo/run_incident_atlas_v01.py": "91ee00f07cc33d15bf3084aa03e834ee60b3e351722945610fa58a48cdc3aea3",
+            "docs/incident_to_proof_atlas_v01.md": "93e66cd081171fe9375ef17591d87d0ff3380307880914662064cf67ef57761d",
+            "fixtures/incident_atlas_airline_v01.json": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4",
+            "fixtures/incident_atlas_cases_v01.json": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233",
+            "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+            "hedgehog/domains/airline/incident_atlas_source_v01.py": "dcc235eca5e49acd31d6e0764a5366c7c041b042cca08530dce2962f9989e84e",
+            "hedgehog/domains/airline/incident_atlas_v01.py": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4",
+            "hedgehog/domains/airline/incident_atlas_work_v01.py": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177",
+            "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd",
+            "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867",
+            "hedgehog/incident_atlas_history_v01.py": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585",
+            "hedgehog/incident_atlas_v01.py": "337080fde79a17be36356fbf94bf6d89f2b722d0e810610a96c5d94c09ccb4d2",
+            "tests/test_incident_atlas_airline_v01.py": "f8307e1c5ef38ec3a9578413e5130200c3619f82f77ba98565c075797ef535f7",
+            "tests/test_incident_atlas_supplier_v01.py": "cd9b3b55fbc9711c0f88d42b325d564461f3471861a167131288231f3ed8a1eb",
+            "tests/test_incident_atlas_v01.py": "f15bc0ba467aacb33e16bedfdc698fcc20dd391d44f1215a8361ff79e5078ee9"
+          },
+          "started_at": "2026-09-22T21:22:33.853680+00:00",
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stdout": {
+            "bytes": 372,
+            "sha256": "41df9db48117945f319425a761339b8022e352ec81056e796bb2c694120a7185"
+          }
+        },
+        "source_impact": {
+          "after": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411",
+          "before": "dcc235eca5e49acd31d6e0764a5366c7c041b042cca08530dce2962f9989e84e",
+          "change": "Trailing empty lines only; exact AST including source positions unchanged.",
+          "fresh_checks": [
+            "Exact AST/source transform",
+            "Final supplied package validation",
+            "Two final independent pure replays",
+            "Guard/binder",
+            "Patch applications"
+          ],
+          "path": "hedgehog/domains/airline/incident_atlas_source_v01.py",
+          "reuse": "Recorded execution and tests bridged by exact source transform, not relabeled as fresh final-byte execution.",
+          "runtime_receipt": "0025_airline_final",
+          "test_receipt": "0027_focused_tests"
+        }
+      },
+      "classification": "EXECUTION_AND_VERIFIER_IDENTITIES_SEPARATE",
+      "meaning": "Hash/source binding is evidence only, never live authority or independent acceptance.",
+      "predecessor_package_sha256": "0f91ffdd0fae534bcaf0cdd5c59292021ca997f8b3ff4023044ef4c8db0bcd44",
+      "supplier": {
+        "execution": "RECORDED_AT1_NOT_RECOLLECTED",
+        "execution_receipts": {
+          "0009_supplier_execution": {
+            "argv": [
+              "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+              "-B",
+              "-c",
+              "from hedgehog.incident_atlas_v01 import collect_v01; result=collect_v01('/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT1.wGI9Hx/runtime'); print('SUPPLIER_COLLECTED', result['donor']['report']['current'])"
+            ],
+            "context": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT1.wGI9Hx/admission/native_smoke/context.json",
+            "cwd": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT1.wGI9Hx/candidate",
+            "elapsed_seconds": 87.68437237478793,
+            "ended_at": "2026-09-22T19:55:09.146391+00:00",
+            "helper_sha256": "630cd9a2b9b4d887381ac6d670244abdafb24d4b590f947119c5e7be69501e96",
+            "inherited_context_overridden": false,
+            "pid": 39430,
+            "rc": 0,
+            "source_pins": {
+              "fixtures/incident_atlas_cases_v01.json": "ba4b40dc58320d8a72851e084260abf5d1784e77f5c25cffc41f94e64b896ce2",
+              "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+              "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "92472ac0f5c2cea46bd57cd824ea32ad79daec59e260591980a1aae379089b7e",
+              "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "f0f52b9cca288eafb7c76243cd0b30ced4187e0234fad0fd5db62483b084b577",
+              "hedgehog/incident_atlas_v01.py": "2ad5a469b8b58175e24b2c42a4a638da3baea086b132b64169b8971b1cd854fe",
+              "tests/test_incident_atlas_supplier_v01.py": "b5973267675a333a6ad553df5dbcc12de2ce02d415cf8a71930581a68440dc8e",
+              "tests/test_incident_atlas_v01.py": "c7a0073b925653f08e52bcbc644ef682b0cebc7b55ba845ea35d0ff99988f9f5"
+            },
+            "started_at": "2026-09-22T19:53:41.461701+00:00",
+            "stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "stdout": {
+              "bytes": 341,
+              "sha256": "767d8e0393dee573702239913b13e06e53d57664ec15c4bd5f64ab4794376448"
+            }
+          },
+          "0010_channels_repair": {
+            "argv": [
+              "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+              "-B",
+              "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT1.wGI9Hx/resume_channels.py"
+            ],
+            "context": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT1.wGI9Hx/admission/channel_repair/context.json",
+            "cwd": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT1.wGI9Hx/candidate",
+            "elapsed_seconds": 16.050247499719262,
+            "ended_at": "2026-09-22T19:57:38.691579+00:00",
+            "helper_sha256": "bc6f71e0be69e3d6abc3bab4afeb3f224d097c2ddf95cd7e4e763469f51aa9c3",
+            "inherited_context_overridden": false,
+            "pid": 39630,
+            "rc": 0,
+            "source_pins": {
+              "fixtures/incident_atlas_cases_v01.json": "ba4b40dc58320d8a72851e084260abf5d1784e77f5c25cffc41f94e64b896ce2",
+              "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+              "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "c2fa1ef59f6ba7d24055792028f217d05f616a35168e2f95ef7205d51414399b",
+              "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "658fc417ee03cae51c5f692749efc3454404d9e38ce7a03efdf74f56a231d757",
+              "hedgehog/incident_atlas_v01.py": "2ad5a469b8b58175e24b2c42a4a638da3baea086b132b64169b8971b1cd854fe",
+              "tests/test_incident_atlas_supplier_v01.py": "adea5046715c90d62c0b79f0d1a19d908641fd7df95af18fe44e647b5c90dda8",
+              "tests/test_incident_atlas_v01.py": "c7a0073b925653f08e52bcbc644ef682b0cebc7b55ba845ea35d0ff99988f9f5"
+            },
+            "started_at": "2026-09-22T19:57:22.641098+00:00",
+            "stderr": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "stdout": {
+              "bytes": 54,
+              "sha256": "5361164e8f3775b7ce7c2ae24e50d91789541219fd69241e5d639fe37bd2090f"
+            }
+          }
+        },
+        "original_impact": {
+          "channels": "collect_channels_v01 AST and full backend bytes identical to executed command 0010.",
+          "classification": "REUSED_COMPLETED_PHASES_WITH_EXPLICIT_IMPACT; NOT_A_NEW_FULL_COLLECTION",
+          "donor": "Unchanged accepted implementation; command 0009 source-bound completion preserved.",
+          "final_changes": "Export/pure consumers plus refusal to silently resume an existing collection directory.",
+          "fresh_final_checks": [
+            "0011_final_engineering",
+            "0012_export",
+            "0013_focused_checks",
+            "0014_offline_replay"
+          ],
+          "history": "collect_history_controls_v01 AST identical to executed command 0009; unchanged imports/canonical helpers."
+        },
+        "original_summary_sha256": "98bff06438b5c18e2c6ddf42cf9a9e124e3d7695e7436a8d23565290e8224038",
+        "storage_recovery": {
+          "epochs": {
+            "3552098d01b1d04aeffca783299237aa5a24ce70b956130c08c287b82bb47c88": {
+              "body": "52c150cfae5d7bb463b82d9f49d8e6b413e4217a9ac6eacda2f6d5407a2490e3",
+              "descriptor": "3a551683e8852e762ba763ae62541abda21535ac26bc6f9a0960d2cbe2ec1308",
+              "payload": "8d96abf3b459c8707968bd1b5d0b144a6e512e41e39e0936ae44bf91bfa4dd7e"
+            },
+            "edf0c2ebbc6283a0804c21a68049f2a404886c4f9e850f41886db19fdc900c68": {
+              "body": "2c2fce93de267e163cf61b560a48068b414d84fad91a29b659d76b11fae436cd",
+              "descriptor": "81de4a19bbb7b6969ee999a54400fd91a6814c384ee6caa67b50fbc4530541f2",
+              "payload": "84f0b911ce8b755cf49aaa8de1000bae6bb57df5fadf3a7c3d593b5ff33b3516"
+            },
+            "fb6bec24411ba4de353accaa23a6dd67e05ee4aefe4188452d348f9821fd1d9d": {
+              "body": "bdf3d497c2c2adc62d2087ef9542c2c6619516fdc195c9c494f5253c8b7fc606",
+              "descriptor": "63dbc8f94aa7abf6e66259cec0c3dcafc92bc08fc88f9a791809caae498c8502",
+              "payload": "7ba84508577608bbbce9d12868185cbda19a13e6c3014ab5df8f4fd32f1f4917"
+            }
+          },
+          "original_path": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT2.oKr9UP/input/atlas_at1_return/evidence/supplier_final.json",
+          "original_sha256": "98bff06438b5c18e2c6ddf42cf9a9e124e3d7695e7436a8d23565290e8224038",
+          "recovered_path": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT2.oKr9UP/supplier_retained.json",
+          "recovered_sha256": "1302fbbe6b015feb95291325b788aa0b2f0475b72be8169d84954235fef9452c",
+          "scope": "Original fields unchanged; exact retained storage added"
+        }
+      },
+      "verifier": {
+        "fixtures/incident_atlas_airline_v01.json": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4",
+        "fixtures/incident_atlas_cases_v01.json": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233",
+        "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+        "hedgehog/action_commit_packet_v02.py": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+        "hedgehog/domains/airline/incident_atlas_source_v01.py": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411",
+        "hedgehog/domains/airline/incident_atlas_v01.py": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4",
+        "hedgehog/domains/airline/incident_atlas_work_v01.py": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177",
+        "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd",
+        "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867",
+        "hedgehog/incident_atlas_history_v01.py": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585",
+        "hedgehog/incident_atlas_v01.py": "337080fde79a17be36356fbf94bf6d89f2b722d0e810610a96c5d94c09ccb4d2",
+        "hedgehog/kernel/work_composition_v01.py": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0",
+        "hedgehog/outcome_calibration_v01.py": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079",
+        "hedgehog/outcome_feedback_consumer_v01.py": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938",
+        "hedgehog/outcome_feedback_history_v01.py": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6",
+        "hedgehog/outcome_feedback_v01.py": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13",
+        "hedgehog/work_execution_host_v01.py": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    "retained_AT2_implementation": {
+      "fixtures/incident_atlas_airline_v01.json": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4",
+      "fixtures/incident_atlas_cases_v01.json": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233",
+      "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+      "hedgehog/action_commit_packet_v02.py": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+      "hedgehog/domains/airline/incident_atlas_source_v01.py": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411",
+      "hedgehog/domains/airline/incident_atlas_v01.py": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4",
+      "hedgehog/domains/airline/incident_atlas_work_v01.py": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177",
+      "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd",
+      "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867",
+      "hedgehog/incident_atlas_history_v01.py": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585",
+      "hedgehog/incident_atlas_v01.py": "337080fde79a17be36356fbf94bf6d89f2b722d0e810610a96c5d94c09ccb4d2",
+      "hedgehog/kernel/work_composition_v01.py": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0",
+      "hedgehog/outcome_calibration_v01.py": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079",
+      "hedgehog/outcome_feedback_consumer_v01.py": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938",
+      "hedgehog/outcome_feedback_history_v01.py": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6",
+      "hedgehog/outcome_feedback_v01.py": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13",
+      "hedgehog/work_execution_host_v01.py": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    "retained_domain_verifiers": [
+      {
+        "path": "hedgehog/domains/airline/incident_atlas_v01.py",
+        "sha256": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4"
+      },
+      {
+        "path": "hedgehog/domains/airline/incident_atlas_work_v01.py",
+        "sha256": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177"
+      },
+      {
+        "path": "hedgehog/domains/airline/incident_atlas_source_v01.py",
+        "sha256": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411"
+      },
+      {
+        "path": "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+        "sha256": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867"
+      },
+      {
+        "path": "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+        "sha256": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd"
+      },
+      {
+        "path": "hedgehog/incident_atlas_history_v01.py",
+        "sha256": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585"
+      }
+    ],
+    "testflix": {
+      "command": "0005_testflix_collection",
+      "failures": [
+        {
+          "attempt": 1,
+          "elapsed": 1.3894410831853747,
+          "error": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/collect_testflix.py\", line 47, in <module>\n    else:getattr(atlas,step+'_v01')(session)\n         ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/domains/testflix/incident_atlas_v01.py\", line 112, in stale_quote_v01\n    require(state.lifecycle_state=='PENDING' and state.idempotency_disposition!='CONSUMED','atlas_testflix_T1_not_pending')\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/incident_atlas_v01.py\", line 21, in require_v01\n    raise ValueError(reason)\nValueError: atlas_testflix_T1_not_pending\n",
+          "kind": "FAILED",
+          "step": "stale_quote",
+          "time": "2026-09-22T22:21:32.439762+00:00"
+        },
+        {
+          "attempt": 1,
+          "elapsed": 0.26432020869106054,
+          "error": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/collect_testflix.py\", line 47, in <module>\n    else:getattr(atlas,step+'_v01')(session)\n         ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/domains/testflix/incident_atlas_v01.py\", line 175, in experience_v01\n    experience,live=native.experience_v01(session['directory']/'experience',material,material)\n                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/domains/testflix/incident_atlas_work_v01.py\", line 265, in experience_v01\n    observed, event = observe_v01(directory/'native', bad_material, catalogue)\n                      ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/domains/testflix/incident_atlas_work_v01.py\", line 226, in observe_v01\n    saved, live = execute_current_v01(material, invocation=invocation, catalogue=catalogue, only_constraint=True)\n                  ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/domains/testflix/incident_atlas_work_v01.py\", line 179, in execute_current_v01\n    additional, check_live = execute_current_v01(material, invocation='', catalogue=catalogue, check_request=check, evaluation_time=now, shared_host=host)\n                             ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/domains/testflix/incident_atlas_work_v01.py\", line 194, in execute_current_v01\n    program, results, artifact, common = consumer.execute_reviewed_pure_work_v01(review=review, projection=projection, source_context=source,\n                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        semantic_proposal=proposal, catalogue=catalogue, host=host, item=item, material=material, budget=work.WorkBudgetV01(1,0,0,1,0), task_id=invocation, trusted_inputs=trusted, additional_receipt=additional_receipt)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/outcome_feedback_consumer_v01.py\", line 350, in execute_reviewed_pure_work_v01\n    require(_literal_material_v01(item)==material and selected['material_sha256']==hashlib.sha256(canonical(material)).hexdigest()\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        and selected['definition_id']==item.definition_id,'g34_work_material_changed')\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT3.O5cgyl/candidate/hedgehog/outcome_feedback_consumer_v01.py\", line 22, in require\n    if not condition: raise ValueError(reason)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: g34_work_material_changed\n",
+          "kind": "FAILED",
+          "step": "experience",
+          "time": "2026-09-22T22:25:17.132385+00:00"
+        }
+      ],
+      "final_public_wrapper": "Adds the ordered collection entrypoint only; executed phase bodies are AST-identical.",
+      "native_work_source_sha256": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1",
+      "new_E": 0,
+      "phase_bindings": [
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 113.50050666555762,
+            "kind": "COMPLETE",
+            "step": "setup",
+            "time": "2026-09-22T22:21:26.079252+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "b00ba9f244f52bfcaeeb15602fdd683c70b94cc6340f6f262362d9afbc13523e",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 4.970267625525594,
+            "kind": "COMPLETE",
+            "step": "project_setup",
+            "time": "2026-09-22T22:21:31.049943+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "b00ba9f244f52bfcaeeb15602fdd683c70b94cc6340f6f262362d9afbc13523e",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 2,
+            "elapsed": 1.4417088329792023,
+            "kind": "COMPLETE",
+            "step": "stale_quote",
+            "time": "2026-09-22T22:25:00.315779+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "741d0dc6c546fc945f79d4b8f8df10e33cab460b1ec3b63b916ae9b7f829c35b",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 0.36793241649866104,
+            "kind": "COMPLETE",
+            "step": "receipt_retry",
+            "time": "2026-09-22T22:25:00.684069+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "741d0dc6c546fc945f79d4b8f8df10e33cab460b1ec3b63b916ae9b7f829c35b",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 14.526175833307207,
+            "kind": "COMPLETE",
+            "step": "prepare_session",
+            "time": "2026-09-22T22:25:15.210728+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "741d0dc6c546fc945f79d4b8f8df10e33cab460b1ec3b63b916ae9b7f829c35b",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 1.6559329582378268,
+            "kind": "COMPLETE",
+            "step": "session_boundaries",
+            "time": "2026-09-22T22:25:16.867544+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "741d0dc6c546fc945f79d4b8f8df10e33cab460b1ec3b63b916ae9b7f829c35b",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 2,
+            "elapsed": 5.412694583646953,
+            "kind": "COMPLETE",
+            "step": "experience",
+            "time": "2026-09-22T22:28:46.688774+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "9223d0faf5bb6c4848da03048f19b18d4a1d8e6709ddc29424f94e1287a9d51e",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "experience_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "consume_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 2.0457819579169154,
+            "kind": "COMPLETE",
+            "step": "memory_controls",
+            "time": "2026-09-22T22:28:48.735487+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "9223d0faf5bb6c4848da03048f19b18d4a1d8e6709ddc29424f94e1287a9d51e",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "experience_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "consume_v01",
+            "continuation_v01"
+          ]
+        },
+        {
+          "phase": {
+            "attempt": 1,
+            "elapsed": 1.6378442076966166,
+            "kind": "COMPLETE",
+            "step": "continuation",
+            "time": "2026-09-22T22:28:50.373743+00:00"
+          },
+          "same_final_function_ast": true,
+          "source_pins": {
+            "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+            "hedgehog/domains/testflix/incident_atlas_v01.py": "9223d0faf5bb6c4848da03048f19b18d4a1d8e6709ddc29424f94e1287a9d51e",
+            "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+          },
+          "unchanged_helpers": [
+            "save_v01",
+            "calls_v01",
+            "clock_v01",
+            "action_record_v01",
+            "inspection_v01",
+            "refuse_dispatch_v01",
+            "device_branch_v01",
+            "setup_v01",
+            "project_setup_v01",
+            "stale_quote_v01",
+            "receipt_retry_v01",
+            "prepare_session_v01",
+            "session_boundaries_v01",
+            "experience_v01",
+            "memory_review_v01",
+            "memory_controls_v01",
+            "consume_v01",
+            "continuation_v01"
+          ]
+        }
+      ],
+      "return_sha256": "3e390dfbe4f546e2efdc6c08413319fbae1d32ee92fb8c6cc6378a595e71f193",
+      "single_quote_D": true,
+      "source_reconstruction": "NO_HOST_RESTORATION"
+    }
+  },
+  "retained_AT3_implementation": {
+    "fixtures/incident_atlas_airline_v01.json": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4",
+    "fixtures/incident_atlas_cases_v01.json": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233",
+    "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+    "fixtures/incident_atlas_testflix_v01.json": "0f545c52938533386e83212f5fae8be93d6f0fc286f60ad944f9f1e1078e84a4",
+    "hedgehog/action_commit_packet_v02.py": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+    "hedgehog/domains/airline/incident_atlas_source_v01.py": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411",
+    "hedgehog/domains/airline/incident_atlas_v01.py": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4",
+    "hedgehog/domains/airline/incident_atlas_work_v01.py": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177",
+    "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd",
+    "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867",
+    "hedgehog/domains/testflix/contracts_v01.py": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b",
+    "hedgehog/domains/testflix/evidence_v01.py": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae",
+    "hedgehog/domains/testflix/incident_atlas_proof_v01.py": "cf84470b41bf3c759520d3d0d28b078e9c02bf2edd3f4c40b6d5e31f7b0ba39f",
+    "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+    "hedgehog/domains/testflix/incident_atlas_v01.py": "6f816d40749933e96d5af75d17180df53a1b5e60212b01bcbe5dc7b3f9d94798",
+    "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1",
+    "hedgehog/domains/testflix/kernel_adapter_v01.py": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae",
+    "hedgehog/domains/testflix/lifecycle_v01.py": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b",
+    "hedgehog/domains/testflix/mock_world_v01.py": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+    "hedgehog/domains/testflix/semantic_adapter_v01.py": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5",
+    "hedgehog/incident_atlas_history_v01.py": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585",
+    "hedgehog/incident_atlas_v01.py": "e71444f3217f363534e52f62927374206ffb03984f4ea60e8fd9dd3c433e70db",
+    "hedgehog/kernel/work_composition_v01.py": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0",
+    "hedgehog/outcome_calibration_v01.py": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079",
+    "hedgehog/outcome_feedback_consumer_v01.py": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938",
+    "hedgehog/outcome_feedback_history_v01.py": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6",
+    "hedgehog/outcome_feedback_v01.py": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13",
+    "hedgehog/work_execution_host_v01.py": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+  },
+  "retained_domain_sources": {
+    "hedgehog/domains/airline/incident_atlas_source_v01.py": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411",
+    "hedgehog/domains/airline/incident_atlas_v01.py": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4",
+    "hedgehog/domains/airline/incident_atlas_work_v01.py": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177",
+    "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd",
+    "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867",
+    "hedgehog/domains/testflix/incident_atlas_proof_v01.py": "cf84470b41bf3c759520d3d0d28b078e9c02bf2edd3f4c40b6d5e31f7b0ba39f",
+    "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+    "hedgehog/domains/testflix/incident_atlas_v01.py": "6f816d40749933e96d5af75d17180df53a1b5e60212b01bcbe5dc7b3f9d94798",
+    "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1"
+  },
+  "shared_bridge": "Canonical/digest/require/cards/historical-origins AST-identical. Only additive dispatch, supplied proof, coverage and rendering changed.",
+  "workspace": {
+    "command": "0009_workspace_runtime",
+    "exact_runtime_sources": {
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py": "d61ea8ea23f89c3b19868fc4eab3c41795955af42fe06307fdbc565a49481c1b",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py": "e39c084be25e4a60aa050c3aa6c5451a0fb1ad47501d30244499dbb818d7db17",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py": "46fe3d3d540dd81cfb582394d586c766ac46339c9a50bd3829736617a28b869d",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py": "0448a8eb44ed69e0d8eac4f9a1d3ae484b377422d36fb2030be8f663066e4b57",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py": "7feecd660d7a71911d20bf5e4f5c44269b6507f465888b804285bf9b36813395",
+      "hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py": "a6f362626106de6bf2f01e6fd20e4fb2a36b949a2f2a62c9915eaa77bb2e702f"
+    },
+    "model_calls": 1,
+    "phases": [
+      {
+        "phase": "SETUP",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:26:44.162440+00:00"
+      },
+      {
+        "elapsed": 0.22582895774394274,
+        "phase": "SETUP",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:26:44.388269+00:00"
+      },
+      {
+        "phase": "PRIOR_AND_INGRESS",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:26:44.388483+00:00"
+      },
+      {
+        "elapsed": 5.615467625670135,
+        "phase": "PRIOR_AND_INGRESS",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:26:50.003970+00:00"
+      },
+      {
+        "phase": "CURRENT_MEMORY_AND_MISSING_WORK",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:26:50.013172+00:00"
+      },
+      {
+        "elapsed": 0.2227553753182292,
+        "phase": "CURRENT_MEMORY_AND_MISSING_WORK",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:26:50.235925+00:00"
+      },
+      {
+        "phase": "CODE_IDENTITY",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:26:50.244060+00:00"
+      },
+      {
+        "elapsed": 0.010592584498226643,
+        "phase": "CODE_IDENTITY",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:26:50.254652+00:00"
+      },
+      {
+        "phase": "LIVE_SUMMARY_AND_CURRENT_REQUIRED_WORK",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:26:50.262322+00:00"
+      },
+      {
+        "elapsed": 4.684981708414853,
+        "phase": "LIVE_SUMMARY_AND_CURRENT_REQUIRED_WORK",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:26:54.947310+00:00"
+      },
+      {
+        "phase": "GENERIC_HISTORY_AND_SELECTED_WORK",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:26:54.957009+00:00"
+      },
+      {
+        "elapsed": 6.84151762444526,
+        "phase": "GENERIC_HISTORY_AND_SELECTED_WORK",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:27:01.798531+00:00"
+      },
+      {
+        "phase": "ACTUAL_CONSUMPTION_AND_SAVE",
+        "pid": 53255,
+        "status": "START",
+        "time": "2026-09-22T23:27:01.823371+00:00"
+      },
+      {
+        "elapsed": 24.71334254182875,
+        "phase": "ACTUAL_CONSUMPTION_AND_SAVE",
+        "pid": 53255,
+        "status": "COMPLETE",
+        "time": "2026-09-22T23:27:26.536762+00:00"
+      }
+    ],
+    "receipt_sha256": "c8423ced8af3d5a01f6c9da7b4fa9fa8df8863842e1d78feaae7c8a12a23cab8",
+    "saved_return_sha256": "240c3b0a775bf77d45b299decdaadbd216f04a2bcd05071e7292c581b48258b2",
+    "source_reconstruction": "NO_HOST_RESTORATION"
+  }
+}

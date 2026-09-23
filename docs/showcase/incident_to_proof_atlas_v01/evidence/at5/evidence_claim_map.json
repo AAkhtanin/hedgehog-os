@@ -1,0 +1,1021 @@
+{
+  "cards": [
+    {
+      "card": "A1",
+      "records": [
+        {
+          "bytes": 654,
+          "record": "evidence/atlas_package.json#/cards/A1",
+          "role": "card",
+          "sha256": "88e54a433e2cce6ad2da62ca74d877f9663a6bf710d97b1f793bba11f94a6fdf"
+        },
+        {
+          "bytes": 36442,
+          "record": "evidence/atlas_package.json#/airline/bad",
+          "role": "attempt_ref",
+          "sha256": "7103603d2db5c4b802982adad92a9eded418848a27012ff8c78d7282b771a71a"
+        },
+        {
+          "bytes": 52658,
+          "record": "evidence/atlas_package.json#/airline/good",
+          "role": "allowed_neighbor",
+          "sha256": "899afe1f42cd6f7276abbc28be319c46b36860edabc46664510d036f5e155a29"
+        },
+        {
+          "bytes": 613250,
+          "record": "evidence/atlas_package.json#/airline/experience/observation",
+          "role": "experience_ref",
+          "sha256": "8463d84a158d2f023e4e427c8213be5a8d6e99dda9e403f41e627ac296d0da9d"
+        },
+        {
+          "bytes": 657389,
+          "record": "evidence/atlas_package.json#/airline/experience/after",
+          "role": "consumer_ref",
+          "sha256": "376a9ebb684c2f437d85953fd1052fac81c3b72ad6ebab06182cd9dd2a977830"
+        },
+        {
+          "bytes": 52658,
+          "record": "evidence/atlas_package.json#/airline/good",
+          "role": "continuation_ref",
+          "sha256": "899afe1f42cd6f7276abbc28be319c46b36860edabc46664510d036f5e155a29"
+        }
+      ]
+    },
+    {
+      "card": "A2",
+      "records": [
+        {
+          "bytes": 694,
+          "record": "evidence/atlas_package.json#/cards/A2",
+          "role": "card",
+          "sha256": "dab1cbc3d82318816b3e3e5987bd26d59b3fa0c66546c33e393d20d7b19e6f7a"
+        },
+        {
+          "bytes": 18993,
+          "record": "evidence/atlas_package.json#/airline/reads/foreign_projection",
+          "role": "attempt_ref",
+          "sha256": "76e2f56d7ca92dd731ec6c1c82762f22c169a298b63c170fde2a47ff4cd3e3b4"
+        },
+        {
+          "bytes": 9,
+          "record": "evidence/atlas_package.json#/airline/reads/local",
+          "role": "allowed_neighbor",
+          "sha256": "1b711c794e69600117c71c8c8ec5589c7476f0646867c2fa0c9babc53b61aeed"
+        },
+        {
+          "bytes": 613250,
+          "record": "evidence/atlas_package.json#/airline/experience/observation",
+          "role": "experience_ref",
+          "sha256": "8463d84a158d2f023e4e427c8213be5a8d6e99dda9e403f41e627ac296d0da9d"
+        },
+        {
+          "bytes": 657389,
+          "record": "evidence/atlas_package.json#/airline/experience/after",
+          "role": "consumer_ref",
+          "sha256": "376a9ebb684c2f437d85953fd1052fac81c3b72ad6ebab06182cd9dd2a977830"
+        },
+        {
+          "bytes": 52658,
+          "record": "evidence/atlas_package.json#/airline/good",
+          "role": "continuation_ref",
+          "sha256": "899afe1f42cd6f7276abbc28be319c46b36860edabc46664510d036f5e155a29"
+        }
+      ]
+    },
+    {
+      "card": "A3",
+      "records": [
+        {
+          "bytes": 662,
+          "record": "evidence/atlas_package.json#/cards/A3",
+          "role": "card",
+          "sha256": "c1ae0c197e92de41f57aeb735a95d5cdc0af8ec132f5e8c36dfea1b818dcd604"
+        },
+        {
+          "bytes": 771,
+          "record": "evidence/atlas_package.json#/airline/transfer",
+          "role": "attempt_ref",
+          "sha256": "831650e210849ad6f3fbfc4be16232ed54400336d1da53ce500843bee7d535a1"
+        },
+        {
+          "bytes": 727,
+          "record": "evidence/atlas_package.json#/airline/matching",
+          "role": "allowed_neighbor",
+          "sha256": "cd654d9aa2cfe531cec628898295506f22bb80eb4c6504a372e3b67168553892"
+        },
+        {
+          "bytes": 613250,
+          "record": "evidence/atlas_package.json#/airline/experience/observation",
+          "role": "experience_ref",
+          "sha256": "8463d84a158d2f023e4e427c8213be5a8d6e99dda9e403f41e627ac296d0da9d"
+        },
+        {
+          "bytes": 657389,
+          "record": "evidence/atlas_package.json#/airline/experience/after",
+          "role": "consumer_ref",
+          "sha256": "376a9ebb684c2f437d85953fd1052fac81c3b72ad6ebab06182cd9dd2a977830"
+        },
+        {
+          "bytes": 52658,
+          "record": "evidence/atlas_package.json#/airline/good",
+          "role": "continuation_ref",
+          "sha256": "899afe1f42cd6f7276abbc28be319c46b36860edabc46664510d036f5e155a29"
+        }
+      ]
+    },
+    {
+      "card": "A4",
+      "records": [
+        {
+          "bytes": 690,
+          "record": "evidence/atlas_package.json#/cards/A4",
+          "role": "card",
+          "sha256": "afa84ee322135bb260fb0107ce42b98f6ead41ce31317c0987e8debb4ce84002"
+        },
+        {
+          "bytes": 110436,
+          "record": "evidence/atlas_package.json#/airline/reads/rows/0",
+          "role": "attempt_ref",
+          "sha256": "171b1ff15215cf1207f8ea7cb937279b76071bd5f42a412b8e1bb036a42e0006"
+        },
+        {
+          "bytes": 400726,
+          "record": "evidence/atlas_package.json#/airline/reads/rows/1",
+          "role": "allowed_neighbor",
+          "sha256": "187a3e992892fd23e0e26adecba2ef916779b4976214bb1d0f460a766c35b189"
+        },
+        {
+          "bytes": 613250,
+          "record": "evidence/atlas_package.json#/airline/experience/observation",
+          "role": "experience_ref",
+          "sha256": "8463d84a158d2f023e4e427c8213be5a8d6e99dda9e403f41e627ac296d0da9d"
+        },
+        {
+          "bytes": 657389,
+          "record": "evidence/atlas_package.json#/airline/experience/after",
+          "role": "consumer_ref",
+          "sha256": "376a9ebb684c2f437d85953fd1052fac81c3b72ad6ebab06182cd9dd2a977830"
+        },
+        {
+          "bytes": 52658,
+          "record": "evidence/atlas_package.json#/airline/good",
+          "role": "continuation_ref",
+          "sha256": "899afe1f42cd6f7276abbc28be319c46b36860edabc46664510d036f5e155a29"
+        }
+      ]
+    },
+    {
+      "card": "N1",
+      "records": [
+        {
+          "bytes": 843,
+          "record": "evidence/atlas_package.json#/cards/N1",
+          "role": "card",
+          "sha256": "fbafc56753c3d066b0a983b2851473f7e366af5ca426b6cabb04f5ded75ec5cb"
+        },
+        {
+          "bytes": 71593,
+          "record": "evidence/atlas_package.json#/sentinel/n1",
+          "role": "attempt_ref",
+          "sha256": "d3ec0860e046727b60ae596ab7c2b5a073ac49de72ebf68e66dcbabc1077c35f"
+        },
+        {
+          "bytes": 33930,
+          "record": "evidence/atlas_package.json#/sentinel/n1/neighbor",
+          "role": "allowed_neighbor",
+          "sha256": "9dd086dfa3f1f4247c70adf68c7735ae1c202dbc4f51cbecdcfde0f3bbeaa00f"
+        },
+        {
+          "bytes": 1821626,
+          "record": "evidence/atlas_package.json#/sentinel/experience",
+          "role": "experience_ref",
+          "sha256": "733aa89cc4a1d0ae34b72ebf6b58332786497778ac9351f0daab475d77799d34"
+        },
+        {
+          "bytes": 242210,
+          "record": "evidence/atlas_package.json#/sentinel/experience/values/after",
+          "role": "consumer_ref",
+          "sha256": "3262fc0844e7cf80c631d5f6a3a9ed7e7912c149cfcf2a1df1aa956281578dd0"
+        },
+        {
+          "bytes": 832018,
+          "record": "evidence/atlas_package.json#/sentinel/continuation",
+          "role": "continuation_ref",
+          "sha256": "ae0beb88e5fbf9345a106a6ae4d39cb4c34e57ba27cdba50698b1f84b7eba030"
+        }
+      ]
+    },
+    {
+      "card": "N2",
+      "records": [
+        {
+          "bytes": 864,
+          "record": "evidence/atlas_package.json#/cards/N2",
+          "role": "card",
+          "sha256": "e0d8d191a83f9349559e5a8027d50fb85b2c79b55fb11e6618b7554e5c310ad1"
+        },
+        {
+          "bytes": 39714,
+          "record": "evidence/atlas_package.json#/sentinel/n2",
+          "role": "attempt_ref",
+          "sha256": "bcec194edbb8fe40a7deb147d2250a3736ce003b389a4f5acc3c2de119206386"
+        },
+        {
+          "bytes": 13452,
+          "record": "evidence/atlas_package.json#/sentinel/continuation/positive",
+          "role": "allowed_neighbor",
+          "sha256": "3abb823eb328644c812a9a9e34605a502fd2bcf44dd6adac82fd7576a904b5ee"
+        },
+        {
+          "bytes": 1821626,
+          "record": "evidence/atlas_package.json#/sentinel/experience",
+          "role": "experience_ref",
+          "sha256": "733aa89cc4a1d0ae34b72ebf6b58332786497778ac9351f0daab475d77799d34"
+        },
+        {
+          "bytes": 242210,
+          "record": "evidence/atlas_package.json#/sentinel/experience/values/after",
+          "role": "consumer_ref",
+          "sha256": "3262fc0844e7cf80c631d5f6a3a9ed7e7912c149cfcf2a1df1aa956281578dd0"
+        },
+        {
+          "bytes": 832018,
+          "record": "evidence/atlas_package.json#/sentinel/continuation",
+          "role": "continuation_ref",
+          "sha256": "ae0beb88e5fbf9345a106a6ae4d39cb4c34e57ba27cdba50698b1f84b7eba030"
+        }
+      ]
+    },
+    {
+      "card": "N3",
+      "records": [
+        {
+          "bytes": 872,
+          "record": "evidence/atlas_package.json#/cards/N3",
+          "role": "card",
+          "sha256": "577945ffd4651ba2447073fab6bc9fdfbf5e22c97e5c106310e62418bcbaf49e"
+        },
+        {
+          "bytes": 93838,
+          "record": "evidence/atlas_package.json#/sentinel/continuation/late",
+          "role": "attempt_ref",
+          "sha256": "ebe49619af019e4ed6fd4bb15a4daacd3f348d1059cea5ba18f97b67f44f6d64"
+        },
+        {
+          "bytes": 288107,
+          "record": "evidence/atlas_package.json#/sentinel/continuation/recovery",
+          "role": "allowed_neighbor",
+          "sha256": "e22d426a4460bd4ea47846c86d123fc44bfd98304af4969767fc4458925f6d9d"
+        },
+        {
+          "bytes": 1821626,
+          "record": "evidence/atlas_package.json#/sentinel/experience",
+          "role": "experience_ref",
+          "sha256": "733aa89cc4a1d0ae34b72ebf6b58332786497778ac9351f0daab475d77799d34"
+        },
+        {
+          "bytes": 242210,
+          "record": "evidence/atlas_package.json#/sentinel/experience/values/after",
+          "role": "consumer_ref",
+          "sha256": "3262fc0844e7cf80c631d5f6a3a9ed7e7912c149cfcf2a1df1aa956281578dd0"
+        },
+        {
+          "bytes": 832018,
+          "record": "evidence/atlas_package.json#/sentinel/continuation",
+          "role": "continuation_ref",
+          "sha256": "ae0beb88e5fbf9345a106a6ae4d39cb4c34e57ba27cdba50698b1f84b7eba030"
+        }
+      ]
+    },
+    {
+      "card": "N4",
+      "records": [
+        {
+          "bytes": 886,
+          "record": "evidence/atlas_package.json#/cards/N4",
+          "role": "card",
+          "sha256": "e5019f9b5659bd338052251f863f207fe66604ad61b3823dba9347b4effcc190"
+        },
+        {
+          "bytes": 6390,
+          "record": "evidence/atlas_package.json#/sentinel/continuation/pending",
+          "role": "attempt_ref",
+          "sha256": "00e17a1d04fc465bd689e4b1b4a871c88bff8ddb5963b5b4cd9281e14356e85c"
+        },
+        {
+          "bytes": 79406,
+          "record": "evidence/atlas_package.json#/sentinel/continuation/waiting",
+          "role": "allowed_neighbor",
+          "sha256": "ad0219c29010bcb06b80db96227dd3b1364fe33db27120df2a7f35a15d955ac2"
+        },
+        {
+          "bytes": 1821626,
+          "record": "evidence/atlas_package.json#/sentinel/experience",
+          "role": "experience_ref",
+          "sha256": "733aa89cc4a1d0ae34b72ebf6b58332786497778ac9351f0daab475d77799d34"
+        },
+        {
+          "bytes": 242210,
+          "record": "evidence/atlas_package.json#/sentinel/experience/values/after",
+          "role": "consumer_ref",
+          "sha256": "3262fc0844e7cf80c631d5f6a3a9ed7e7912c149cfcf2a1df1aa956281578dd0"
+        },
+        {
+          "bytes": 832018,
+          "record": "evidence/atlas_package.json#/sentinel/continuation",
+          "role": "continuation_ref",
+          "sha256": "ae0beb88e5fbf9345a106a6ae4d39cb4c34e57ba27cdba50698b1f84b7eba030"
+        }
+      ]
+    },
+    {
+      "card": "S1",
+      "records": [
+        {
+          "bytes": 1051,
+          "record": "evidence/atlas_package.json#/cards/S1",
+          "role": "card",
+          "sha256": "5e7c8ccd2b98045c6b63d9476a6edece740339ae5e587b34122e4d058229c666"
+        },
+        {
+          "bytes": 114421,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/observations/0",
+          "role": "attempt_ref",
+          "sha256": "d264a9d029a40493ee7c91bf0b50e3d440790a34eb89aabf5c61076e6cd96e24"
+        },
+        {
+          "bytes": 794233,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/observations/3",
+          "role": "allowed_neighbor",
+          "sha256": "9b0c519bd753dd6a3cc7041e91ff9f012b810b7c9b0caab7354a1dcb75f8e814"
+        },
+        {
+          "bytes": 23183,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/history",
+          "role": "experience_ref",
+          "sha256": "7ba84508577608bbbce9d12868185cbda19a13e6c3014ab5df8f4fd32f1f4917"
+        },
+        {
+          "bytes": 874387,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/current/work",
+          "role": "consumer_ref",
+          "sha256": "1efff008c5e4efce022596cf88cb68434e1ac3653b8b742151e4e8d38832b231"
+        },
+        {
+          "bytes": 794233,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/observations/3",
+          "role": "continuation_ref",
+          "sha256": "9b0c519bd753dd6a3cc7041e91ff9f012b810b7c9b0caab7354a1dcb75f8e814"
+        }
+      ]
+    },
+    {
+      "card": "S2",
+      "records": [
+        {
+          "bytes": 1420,
+          "record": "evidence/atlas_package.json#/cards/S2",
+          "role": "card",
+          "sha256": "7cb6daf24fef3b616c6bcbdf49f44b5bc546f48f253f6809629f960ff9048bcb"
+        },
+        {
+          "bytes": 874387,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/current/work",
+          "role": "consumer_ref",
+          "sha256": "1efff008c5e4efce022596cf88cb68434e1ac3653b8b742151e4e8d38832b231"
+        },
+        {
+          "bytes": 794233,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/observations/3",
+          "role": "continuation_ref",
+          "sha256": "9b0c519bd753dd6a3cc7041e91ff9f012b810b7c9b0caab7354a1dcb75f8e814"
+        },
+        {
+          "bytes": 395706,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/0",
+          "role": "native_channel",
+          "sha256": "aff234630d473cfe79a50bf3348a3c1422f321752dd799f29f05b6a706e0000a"
+        },
+        {
+          "bytes": 839299,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/1",
+          "role": "native_channel",
+          "sha256": "9cc5bce63ca718667abfb3e486194c6d0751bd74fdcf04ecb01fc59ae15cd069"
+        },
+        {
+          "bytes": 995991,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/2",
+          "role": "native_channel",
+          "sha256": "3357be377740bf06c8372d86790476181d80640d1967a9ca71d55dcaee92ca0c"
+        },
+        {
+          "bytes": 995984,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/3",
+          "role": "native_channel",
+          "sha256": "d25d0274be7938ef1101756c1c8b63407125ed8d346c43d5af4002863b6abeab"
+        },
+        {
+          "bytes": 996007,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/4",
+          "role": "native_channel",
+          "sha256": "382989a83d07b407498bfc5a61629f640437f789c9bc01a47ad66d99326ff111"
+        },
+        {
+          "bytes": 995546,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/5",
+          "role": "native_channel",
+          "sha256": "3fc6defbcc04df4ffa5ff4ee6871c8aee336f51e12cc1d7e31c47d2d21eb6d4c"
+        },
+        {
+          "bytes": 1283668,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/6",
+          "role": "native_channel",
+          "sha256": "dd9312d3e61019cc30f9bc70ad4635118c0e545b79d04fee583dd0422bc5dcbe"
+        },
+        {
+          "bytes": 396595,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/7",
+          "role": "native_channel",
+          "sha256": "8fe4084be53f7f90941cd576802a36bcae5197ce04a4bbb0313925ca6f05cb8a"
+        },
+        {
+          "bytes": 1283668,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/6",
+          "role": "native_channel",
+          "sha256": "dd9312d3e61019cc30f9bc70ad4635118c0e545b79d04fee583dd0422bc5dcbe"
+        }
+      ]
+    },
+    {
+      "card": "S3",
+      "records": [
+        {
+          "bytes": 1183,
+          "record": "evidence/atlas_package.json#/cards/S3",
+          "role": "card",
+          "sha256": "e913a3a5873fe29de7a2fbda24e873a4820f77ccba74ca614b7f9ab3eb958b0d"
+        },
+        {
+          "bytes": 874387,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/current/work",
+          "role": "consumer_ref",
+          "sha256": "1efff008c5e4efce022596cf88cb68434e1ac3653b8b742151e4e8d38832b231"
+        },
+        {
+          "bytes": 794233,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/observations/3",
+          "role": "continuation_ref",
+          "sha256": "9b0c519bd753dd6a3cc7041e91ff9f012b810b7c9b0caab7354a1dcb75f8e814"
+        },
+        {
+          "bytes": 1923967,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/8",
+          "role": "native_channel",
+          "sha256": "1da572e4eb69fc06c6f6509815d9871b4e68d02d468ada3564c6102940a16e03"
+        },
+        {
+          "bytes": 1924325,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/9",
+          "role": "native_channel",
+          "sha256": "1e3101a3e8847651a42cb420872f64038fae4ffba7e050c3235a586d5f4c5f9b"
+        },
+        {
+          "bytes": 1924321,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/10",
+          "role": "native_channel",
+          "sha256": "cf683cc1c21eeef7913bbe4ce039c423f559abb8ee1fadb312e14b10ca10b856"
+        },
+        {
+          "bytes": 2938006,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/11",
+          "role": "native_channel",
+          "sha256": "c7abf0f6ef1da80e11578fef5187917682205c8ba3ddb56082a38b702b2255b7"
+        },
+        {
+          "bytes": 3664865,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/12",
+          "role": "native_channel",
+          "sha256": "7201323e6b486d75abb3d2ceaff50435753f9bb9e95d6c1e2f6334ea704b373d"
+        },
+        {
+          "bytes": 2938006,
+          "record": "evidence/atlas_package.json#/supplier/channels/rows/11",
+          "role": "native_channel",
+          "sha256": "c7abf0f6ef1da80e11578fef5187917682205c8ba3ddb56082a38b702b2255b7"
+        }
+      ]
+    },
+    {
+      "card": "S4",
+      "records": [
+        {
+          "bytes": 993,
+          "record": "evidence/atlas_package.json#/cards/S4",
+          "role": "card",
+          "sha256": "9c37dd226c72a4c616ce88ee40651d84858dad3d9c3592bcdb7b7b7135183f93"
+        },
+        {
+          "bytes": 740136,
+          "record": "evidence/atlas_package.json#/supplier/history_controls",
+          "role": "attempt_ref",
+          "sha256": "f22fee097ad492153ccced47c54a29c89f4bf7304c29ae1c0890ebe35fe0cfa8"
+        },
+        {
+          "bytes": 20568,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/record_review",
+          "role": "allowed_neighbor",
+          "sha256": "f0740274084623d1140c25ebc3decef117b9f6175af9ede19cb560476e654f64"
+        },
+        {
+          "bytes": 874387,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/current/work",
+          "role": "consumer_ref",
+          "sha256": "1efff008c5e4efce022596cf88cb68434e1ac3653b8b742151e4e8d38832b231"
+        },
+        {
+          "bytes": 794233,
+          "record": "evidence/atlas_package.json#/supplier/donor/sources/observations/3",
+          "role": "continuation_ref",
+          "sha256": "9b0c519bd753dd6a3cc7041e91ff9f012b810b7c9b0caab7354a1dcb75f8e814"
+        }
+      ]
+    },
+    {
+      "card": "T1",
+      "records": [
+        {
+          "bytes": 711,
+          "record": "evidence/atlas_package.json#/cards/T1",
+          "role": "card",
+          "sha256": "3e60935b0e1baa1dec691e46e0c7bf5dfc56f1d0a13eb1f26c8c5435e17bcd35"
+        },
+        {
+          "bytes": 612232,
+          "record": "evidence/atlas_package.json#/testflix/T1",
+          "role": "attempt_ref",
+          "sha256": "74cd1af04aedcaf28f0422919cfcdcecbb663a4f60ca940f30f8a0be94275759"
+        },
+        {
+          "bytes": 517855,
+          "record": "evidence/atlas_package.json#/testflix/actions/payment",
+          "role": "allowed_neighbor",
+          "sha256": "2b5950631d9225372fd125aacf910b37c191a7b0f257c03fef9038e2ef177fcf"
+        },
+        {
+          "bytes": 1454605,
+          "record": "evidence/atlas_package.json#/testflix/experience/observation",
+          "role": "experience_ref",
+          "sha256": "f9a29ad9deb87906e8d49006920c0a90a8abb5459793ab91bb9bac82ace44d9e"
+        },
+        {
+          "bytes": 738076,
+          "record": "evidence/atlas_package.json#/testflix/experience/after",
+          "role": "consumer_ref",
+          "sha256": "b327816308c0a3c64c41748f5b1677c5526e579a7797fc12f3c96649d1dc89ab"
+        },
+        {
+          "bytes": 1158810,
+          "record": "evidence/atlas_package.json#/testflix/consumption",
+          "role": "continuation_ref",
+          "sha256": "3020de959a91e63e3c14e9ee1d927fee5488c5721213aecfd22881b794120b77"
+        }
+      ]
+    },
+    {
+      "card": "T2",
+      "records": [
+        {
+          "bytes": 727,
+          "record": "evidence/atlas_package.json#/cards/T2",
+          "role": "card",
+          "sha256": "9e9ebe1ba3047b591bc354a353f455927fbce6441ed832c8fc674f5c2b51fa73"
+        },
+        {
+          "bytes": 1880288,
+          "record": "evidence/atlas_package.json#/testflix/T2",
+          "role": "attempt_ref",
+          "sha256": "1404f495b857fe2cd002910f1ae2442721f81b0d4d690fdcf19f17d47f99038d"
+        },
+        {
+          "bytes": 1158810,
+          "record": "evidence/atlas_package.json#/testflix/consumption",
+          "role": "allowed_neighbor",
+          "sha256": "3020de959a91e63e3c14e9ee1d927fee5488c5721213aecfd22881b794120b77"
+        },
+        {
+          "bytes": 1454605,
+          "record": "evidence/atlas_package.json#/testflix/experience/observation",
+          "role": "experience_ref",
+          "sha256": "f9a29ad9deb87906e8d49006920c0a90a8abb5459793ab91bb9bac82ace44d9e"
+        },
+        {
+          "bytes": 738076,
+          "record": "evidence/atlas_package.json#/testflix/experience/after",
+          "role": "consumer_ref",
+          "sha256": "b327816308c0a3c64c41748f5b1677c5526e579a7797fc12f3c96649d1dc89ab"
+        },
+        {
+          "bytes": 1158810,
+          "record": "evidence/atlas_package.json#/testflix/consumption",
+          "role": "continuation_ref",
+          "sha256": "3020de959a91e63e3c14e9ee1d927fee5488c5721213aecfd22881b794120b77"
+        }
+      ]
+    },
+    {
+      "card": "T3",
+      "records": [
+        {
+          "bytes": 732,
+          "record": "evidence/atlas_package.json#/cards/T3",
+          "role": "card",
+          "sha256": "7ca64fadd27b266f1c93ac6d32df76e9d30740002d5bad9576af05c5a5c10e96"
+        },
+        {
+          "bytes": 879241,
+          "record": "evidence/atlas_package.json#/testflix/T3",
+          "role": "attempt_ref",
+          "sha256": "558a39a08f57ab2945153a17c0573b050ee0b61483d41c35acaf8d5de188ae92"
+        },
+        {
+          "bytes": 1158810,
+          "record": "evidence/atlas_package.json#/testflix/consumption",
+          "role": "allowed_neighbor",
+          "sha256": "3020de959a91e63e3c14e9ee1d927fee5488c5721213aecfd22881b794120b77"
+        },
+        {
+          "bytes": 1454605,
+          "record": "evidence/atlas_package.json#/testflix/experience/observation",
+          "role": "experience_ref",
+          "sha256": "f9a29ad9deb87906e8d49006920c0a90a8abb5459793ab91bb9bac82ace44d9e"
+        },
+        {
+          "bytes": 738076,
+          "record": "evidence/atlas_package.json#/testflix/experience/after",
+          "role": "consumer_ref",
+          "sha256": "b327816308c0a3c64c41748f5b1677c5526e579a7797fc12f3c96649d1dc89ab"
+        },
+        {
+          "bytes": 1158810,
+          "record": "evidence/atlas_package.json#/testflix/consumption",
+          "role": "continuation_ref",
+          "sha256": "3020de959a91e63e3c14e9ee1d927fee5488c5721213aecfd22881b794120b77"
+        }
+      ]
+    },
+    {
+      "card": "T4",
+      "records": [
+        {
+          "bytes": 717,
+          "record": "evidence/atlas_package.json#/cards/T4",
+          "role": "card",
+          "sha256": "cc4b2f0b155ed90bd0444f3ef280c5776d3984a05eb9a242ad3c8baed42e3349"
+        },
+        {
+          "bytes": 120074,
+          "record": "evidence/atlas_package.json#/testflix/T4",
+          "role": "attempt_ref",
+          "sha256": "d1902d9a310c6dfeec5cbc5e353843619f4ea765b3dbebbbb1c1ac59f13614ce"
+        },
+        {
+          "bytes": 58013,
+          "record": "evidence/atlas_package.json#/testflix/T4/explicit_consent",
+          "role": "allowed_neighbor",
+          "sha256": "86c6181af4135f813bcc7b78395ef368de74f0fcd30a7f73048ee917ed817fa4"
+        },
+        {
+          "bytes": 1454605,
+          "record": "evidence/atlas_package.json#/testflix/experience/observation",
+          "role": "experience_ref",
+          "sha256": "f9a29ad9deb87906e8d49006920c0a90a8abb5459793ab91bb9bac82ace44d9e"
+        },
+        {
+          "bytes": 738076,
+          "record": "evidence/atlas_package.json#/testflix/experience/after",
+          "role": "consumer_ref",
+          "sha256": "b327816308c0a3c64c41748f5b1677c5526e579a7797fc12f3c96649d1dc89ab"
+        },
+        {
+          "bytes": 1158810,
+          "record": "evidence/atlas_package.json#/testflix/consumption",
+          "role": "continuation_ref",
+          "sha256": "3020de959a91e63e3c14e9ee1d927fee5488c5721213aecfd22881b794120b77"
+        }
+      ]
+    },
+    {
+      "card": "W1",
+      "records": [
+        {
+          "bytes": 743,
+          "record": "evidence/atlas_package.json#/cards/W1",
+          "role": "card",
+          "sha256": "2062ac9b50f625126a17968a50948c49580be9583b12d650d3ca7dff9639eafd"
+        },
+        {
+          "bytes": 3894,
+          "record": "evidence/atlas_package.json#/workspace/W1",
+          "role": "attempt_ref",
+          "sha256": "1592527a0c4d14035270c3f9eb33a0d336cf72d0fd7b6f638a048983661d3a24"
+        },
+        {
+          "bytes": 641,
+          "record": "evidence/atlas_package.json#/workspace/sidecar",
+          "role": "allowed_neighbor",
+          "sha256": "d7687dd24723b74f824e12474a665c80333780686f2e6a62617ebe1f0ad7a161"
+        },
+        {
+          "bytes": 1737208,
+          "record": "evidence/atlas_package.json#/workspace/experience/observation",
+          "role": "experience_ref",
+          "sha256": "15a6d4cc5237d6f662b84d6458ced243bbffba324fcd73f77648957e6ccd8010"
+        },
+        {
+          "bytes": 870379,
+          "record": "evidence/atlas_package.json#/workspace/experience/after",
+          "role": "consumer_ref",
+          "sha256": "7a9ab5a0dd814e0b92c8df587af5b5107b423dca70782c12172d14b5bbf36627"
+        },
+        {
+          "bytes": 4720291,
+          "record": "evidence/atlas_package.json#/workspace/consumption",
+          "role": "continuation_ref",
+          "sha256": "d2edd59f7f82aa15323b7bb4d429e3e6852ee05c336df62cf91ca98620bf36ec"
+        }
+      ]
+    },
+    {
+      "card": "W2",
+      "records": [
+        {
+          "bytes": 783,
+          "record": "evidence/atlas_package.json#/cards/W2",
+          "role": "card",
+          "sha256": "14c32d7d18be9e32d1248f89cbba83a1229e81bb51ab93f1c1a1182783706291"
+        },
+        {
+          "bytes": 99406,
+          "record": "evidence/atlas_package.json#/workspace/native_input",
+          "role": "attempt_ref",
+          "sha256": "e59814f93f1494cb86caf3756d9e608b5f387a10affb4e47e085eee2bae7caeb"
+        },
+        {
+          "bytes": 641,
+          "record": "evidence/atlas_package.json#/workspace/sidecar",
+          "role": "allowed_neighbor",
+          "sha256": "d7687dd24723b74f824e12474a665c80333780686f2e6a62617ebe1f0ad7a161"
+        },
+        {
+          "bytes": 1737208,
+          "record": "evidence/atlas_package.json#/workspace/experience/observation",
+          "role": "experience_ref",
+          "sha256": "15a6d4cc5237d6f662b84d6458ced243bbffba324fcd73f77648957e6ccd8010"
+        },
+        {
+          "bytes": 870379,
+          "record": "evidence/atlas_package.json#/workspace/experience/after",
+          "role": "consumer_ref",
+          "sha256": "7a9ab5a0dd814e0b92c8df587af5b5107b423dca70782c12172d14b5bbf36627"
+        },
+        {
+          "bytes": 4720291,
+          "record": "evidence/atlas_package.json#/workspace/consumption",
+          "role": "continuation_ref",
+          "sha256": "d2edd59f7f82aa15323b7bb4d429e3e6852ee05c336df62cf91ca98620bf36ec"
+        }
+      ]
+    },
+    {
+      "card": "W3",
+      "records": [
+        {
+          "bytes": 727,
+          "record": "evidence/atlas_package.json#/cards/W3",
+          "role": "card",
+          "sha256": "b1e97b1678d8e49155bd6c4b12ac51ca32ff192bb31c50f52ea9f3308cc1276c"
+        },
+        {
+          "bytes": 19418,
+          "record": "evidence/atlas_package.json#/workspace/W3",
+          "role": "attempt_ref",
+          "sha256": "e273864d26e11bc4adb43c38b15b7cf452768a54d074f31bc2b33278c3733955"
+        },
+        {
+          "bytes": 641,
+          "record": "evidence/atlas_package.json#/workspace/sidecar",
+          "role": "allowed_neighbor",
+          "sha256": "d7687dd24723b74f824e12474a665c80333780686f2e6a62617ebe1f0ad7a161"
+        },
+        {
+          "bytes": 1737208,
+          "record": "evidence/atlas_package.json#/workspace/experience/observation",
+          "role": "experience_ref",
+          "sha256": "15a6d4cc5237d6f662b84d6458ced243bbffba324fcd73f77648957e6ccd8010"
+        },
+        {
+          "bytes": 870379,
+          "record": "evidence/atlas_package.json#/workspace/experience/after",
+          "role": "consumer_ref",
+          "sha256": "7a9ab5a0dd814e0b92c8df587af5b5107b423dca70782c12172d14b5bbf36627"
+        },
+        {
+          "bytes": 4720291,
+          "record": "evidence/atlas_package.json#/workspace/consumption",
+          "role": "continuation_ref",
+          "sha256": "d2edd59f7f82aa15323b7bb4d429e3e6852ee05c336df62cf91ca98620bf36ec"
+        }
+      ]
+    },
+    {
+      "card": "W4",
+      "records": [
+        {
+          "bytes": 788,
+          "record": "evidence/atlas_package.json#/cards/W4",
+          "role": "card",
+          "sha256": "6c27440b49e5e68df2e5bb9b4664c55a515e3d8ad93b178429603e8b18d1c4de"
+        },
+        {
+          "bytes": 186445,
+          "record": "evidence/atlas_package.json#/workspace/D1_controls",
+          "role": "attempt_ref",
+          "sha256": "db0917eff8359baf62c870d66a466963c62839dd5b07a4844c5537ad411c9305"
+        },
+        {
+          "bytes": 641,
+          "record": "evidence/atlas_package.json#/workspace/sidecar",
+          "role": "allowed_neighbor",
+          "sha256": "d7687dd24723b74f824e12474a665c80333780686f2e6a62617ebe1f0ad7a161"
+        },
+        {
+          "bytes": 1737208,
+          "record": "evidence/atlas_package.json#/workspace/experience/observation",
+          "role": "experience_ref",
+          "sha256": "15a6d4cc5237d6f662b84d6458ced243bbffba324fcd73f77648957e6ccd8010"
+        },
+        {
+          "bytes": 870379,
+          "record": "evidence/atlas_package.json#/workspace/experience/after",
+          "role": "consumer_ref",
+          "sha256": "7a9ab5a0dd814e0b92c8df587af5b5107b423dca70782c12172d14b5bbf36627"
+        },
+        {
+          "bytes": 4720291,
+          "record": "evidence/atlas_package.json#/workspace/consumption",
+          "role": "continuation_ref",
+          "sha256": "d2edd59f7f82aa15323b7bb4d429e3e6852ee05c336df62cf91ca98620bf36ec"
+        }
+      ]
+    }
+  ],
+  "load_bearing": [
+    {
+      "bytes": 5782271,
+      "record": "evidence/atlas_package.json#/sentinel/native",
+      "role": "native_relationship",
+      "sha256": "cf06c8f0b76de1c1bc8f09e781f20dda166e48a6e3fc5be4720fca9aa328ab45"
+    },
+    {
+      "bytes": 71593,
+      "record": "evidence/atlas_package.json#/sentinel/n1",
+      "role": "native_relationship",
+      "sha256": "d3ec0860e046727b60ae596ab7c2b5a073ac49de72ebf68e66dcbabc1077c35f"
+    },
+    {
+      "bytes": 39714,
+      "record": "evidence/atlas_package.json#/sentinel/n2",
+      "role": "native_relationship",
+      "sha256": "bcec194edbb8fe40a7deb147d2250a3736ce003b389a4f5acc3c2de119206386"
+    },
+    {
+      "bytes": 31264,
+      "record": "evidence/atlas_package.json#/sentinel/experience/source",
+      "role": "native_relationship",
+      "sha256": "f0b0c7747d8603aa823583293f59444fa8efbd3dd960fb387315125c3d4de81d"
+    },
+    {
+      "bytes": 276994,
+      "record": "evidence/atlas_package.json#/sentinel/experience/native_work",
+      "role": "native_relationship",
+      "sha256": "0ce1f7f6aa2001b607efd74e07be11308bb7460e94576693645071c1247ca980"
+    },
+    {
+      "bytes": 22242,
+      "record": "evidence/atlas_package.json#/sentinel/experience/native_review",
+      "role": "native_relationship",
+      "sha256": "4d36845e7ef0df7a676956ab390c4cb263eff0930e3b6baa7c3be9b7415be9bd"
+    },
+    {
+      "bytes": 18654,
+      "record": "evidence/atlas_package.json#/sentinel/experience/recording_review",
+      "role": "native_relationship",
+      "sha256": "33f782f0f502568d2ceb66f4dfd078aca4b3a0fc08d71dae336860aa12d654b8"
+    },
+    {
+      "bytes": 7769,
+      "record": "evidence/atlas_package.json#/sentinel/experience/snapshot",
+      "role": "native_relationship",
+      "sha256": "09ff2f1932ea74560ea3e9571b5fce5d2290de8f39b8c76218a20e2798a8e15d"
+    },
+    {
+      "bytes": 344,
+      "record": "evidence/atlas_package.json#/sentinel/experience/head",
+      "role": "native_relationship",
+      "sha256": "8d4455c3c91977f4a363c2fa57d8973324d8ad9442dd9b383b3a825be53530a2"
+    },
+    {
+      "bytes": 54772,
+      "record": "evidence/atlas_package.json#/sentinel/experience/storage",
+      "role": "native_relationship",
+      "sha256": "6c2f634206e6d6506d20141fdb57fbe9b141f677e16ec413150ba75472f8c520"
+    },
+    {
+      "bytes": 1143370,
+      "record": "evidence/atlas_package.json#/sentinel/experience/values",
+      "role": "native_relationship",
+      "sha256": "6e344586b64210de96ce05f0d0dbd44c0989b741fd4fe00b6addb92f70104d1f"
+    },
+    {
+      "bytes": 23054,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/consumption",
+      "role": "native_relationship",
+      "sha256": "da9cba8258e51670d73a72cf55e000d84375fc9d1b82e2a2862fe4e535189348"
+    },
+    {
+      "bytes": 62,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/wrong_consumed_work",
+      "role": "native_relationship",
+      "sha256": "a1dea09af73cdf6bed7476940f18aadb7e27da9d6035a965f2a42c15e5add402"
+    },
+    {
+      "bytes": 6390,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/pending",
+      "role": "native_relationship",
+      "sha256": "00e17a1d04fc465bd689e4b1b4a871c88bff8ddb5963b5b4cd9281e14356e85c"
+    },
+    {
+      "bytes": 79406,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/waiting",
+      "role": "native_relationship",
+      "sha256": "ad0219c29010bcb06b80db96227dd3b1364fe33db27120df2a7f35a15d955ac2"
+    },
+    {
+      "bytes": 93838,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/late",
+      "role": "native_relationship",
+      "sha256": "ebe49619af019e4ed6fd4bb15a4daacd3f348d1059cea5ba18f97b67f44f6d64"
+    },
+    {
+      "bytes": 79794,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/joined",
+      "role": "native_relationship",
+      "sha256": "5ef52fecd8ce26c671cdf5c849bada52251191023dc68415f3a67ac5b249da71"
+    },
+    {
+      "bytes": 269,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/budget_controls",
+      "role": "native_relationship",
+      "sha256": "9988246417d0369a14239f4ab645ffcce67f08d76b8aaaf4fe68a637cc50f1df"
+    },
+    {
+      "bytes": 119196,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/budget_final",
+      "role": "native_relationship",
+      "sha256": "d77640c6a999df573a2e1b2c4ad9d134eba819b027b7346d382b1f9917262ee0"
+    },
+    {
+      "bytes": 288107,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/recovery",
+      "role": "native_relationship",
+      "sha256": "e22d426a4460bd4ea47846c86d123fc44bfd98304af4969767fc4458925f6d9d"
+    },
+    {
+      "bytes": 119196,
+      "record": "evidence/atlas_package.json#/sentinel/continuation/final",
+      "role": "native_relationship",
+      "sha256": "d77640c6a999df573a2e1b2c4ad9d134eba819b027b7346d382b1f9917262ee0"
+    },
+    {
+      "bytes": 19246,
+      "record": "evidence/atlas_package.json#/sentinel/episode_trace",
+      "role": "native_relationship",
+      "sha256": "dcbd5853bff06b5e193f55ae403ab72869608b2ca7ea91894a43767612880274"
+    },
+    {
+      "bytes": 5417,
+      "record": "evidence/atlas_package.json#/workspace/summary_capture",
+      "role": "native_relationship",
+      "sha256": "3a5d6520790e5c284dc3bf3433653b0f25e6b53335b1bd0bbcce9dd4f03af4cb"
+    },
+    {
+      "bytes": 186445,
+      "record": "evidence/atlas_package.json#/workspace/D1_controls",
+      "role": "native_relationship",
+      "sha256": "db0917eff8359baf62c870d66a466963c62839dd5b07a4844c5537ad411c9305"
+    }
+  ],
+  "negative_controls": "frozen_phases.jsonl",
+  "scope": "Safe-derived supplied relationships, not restored live authority.",
+  "source_binding": "execution_sources.json"
+}

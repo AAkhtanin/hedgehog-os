@@ -1,0 +1,35 @@
+{
+  "profile": "ATLAS_V02R1_LINK_ONLY_CHECK",
+  "status": "PASS",
+  "pages": 22,
+  "pdf_uri_annotations": 3,
+  "pptx_hyperlinks": 3,
+  "unchanged_rendered_pages": 22,
+  "all_pages_visually_identical": true,
+  "all_page_text_identical": true,
+  "targets": [
+    {
+      "shape_id": "4",
+      "id": "rIdAtlasAppendix",
+      "label": "Technical appendix",
+      "url": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/incident_to_proof_atlas_v01/technical_appendix_INCIDENT_ATLAS_V02_20260923.pdf",
+      "remote_status": "CHECK_AFTER_PUBLICATION"
+    },
+    {
+      "shape_id": "5",
+      "id": "rIdAtlasReader",
+      "label": "Source-bound XML Reader",
+      "url": "https://github.com/AAkhtanin/hedgehog-os/raw/refs/heads/main/docs/showcase/incident_to_proof_atlas_v01/LLM_READER_INCIDENT_TO_PROOF_ATLAS_V02_20260923.xml",
+      "remote_status": "CHECK_AFTER_PUBLICATION"
+    },
+    {
+      "shape_id": "6",
+      "id": "rIdAtlasRepository",
+      "label": "Pinned repository",
+      "url": "https://github.com/AAkhtanin/hedgehog-os/tree/e538790eef3eb11201900a5da63fbb3ff61ad602",
+      "remote_status": "PINNED_README_FETCH_CONFIRMED"
+    }
+  ],
+  "remote_scope": "Repository pin fetched. Appendix and Reader URLs are publication destinations; HTTP/readback confirmation required after push.",
+  "new_runtime_or_model_calls": 0
+}

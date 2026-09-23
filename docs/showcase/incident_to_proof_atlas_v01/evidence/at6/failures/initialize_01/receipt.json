@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "/Users/admin/Projects/RADIOLARIA_INCIDENT_ATLAS_AT6.WNEoen/prepare.py",
+    "initialize"
+  ],
+  "ended_at": "2026-09-23T07:12:23.689725+00:00",
+  "helper_sha256": "a26cc084deb08eb44688cbc5518c5d68d370672df5aab6e4b23e8556a9193e92",
+  "rc": 1,
+  "seconds": 0.039002000354230404
+}

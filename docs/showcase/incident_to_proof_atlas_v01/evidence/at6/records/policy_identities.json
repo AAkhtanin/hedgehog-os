@@ -1,0 +1,26 @@
+{
+  "docs/repository_transition_admission_v01.md": {
+    "bytes": 8274,
+    "mode": "100644",
+    "sha256": "a975b78197154133b4ea3b524ceb82791358ecf0b6c37a5822d006e3658aac52",
+    "type": "regular"
+  },
+  "tests/test_repository_release_spine_v01.py": {
+    "bytes": 219634,
+    "mode": "100644",
+    "sha256": "902b4f3552525d267ac3ac360cc8d9e6086b366466771cbf9606ef4905a8b558",
+    "type": "regular"
+  },
+  "tools/check_active_architecture_authority_v01.py": {
+    "bytes": 851085,
+    "mode": "100644",
+    "sha256": "01a261aeb3c36bd1e079b02a315133b2b90f5d778544418b4af8491b83c57738",
+    "type": "regular"
+  },
+  "tools/reviewed_repository_transition_v01.py": {
+    "bytes": 27772,
+    "mode": "100644",
+    "sha256": "9ec5d6ad6bd2ac93a6d40cad392a7fe6020459fcba0e45f318852f93d746c261",
+    "type": "regular"
+  }
+}

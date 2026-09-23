@@ -1,0 +1,10 @@
+{
+  "collector_source_exact": true,
+  "new_pin": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+  "new_sentinel": "evidence/sentinel/sentinel.json",
+  "no_Host_restoration": true,
+  "old_package": "historical_at4/evidence/atlas_package.json",
+  "predecessor_pin": "74152c35a1065a09846fb4a8dfc623a74fc010df772ab3b692116e4879c96163",
+  "prior_four_domain_values_exact": true,
+  "writer_pin_is_independent_acceptance": false
+}

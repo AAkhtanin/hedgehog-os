@@ -1,0 +1,197 @@
+[
+  {
+    "page": 1,
+    "key": "cover",
+    "bottom": 336.8
+  },
+  {
+    "page": 2,
+    "key": "guide",
+    "bottom": 166.8
+  },
+  {
+    "page": 3,
+    "key": "architecture",
+    "bottom": 271.4
+  },
+  {
+    "page": 4,
+    "key": "origins",
+    "bottom": 240.3
+  },
+  {
+    "page": 5,
+    "key": "walkthrough",
+    "bottom": 240.8
+  },
+  {
+    "page": 6,
+    "key": "taxonomy",
+    "bottom": 188.9
+  },
+  {
+    "page": 7,
+    "key": "A1",
+    "bottom": 196.2
+  },
+  {
+    "page": 8,
+    "key": "A2",
+    "bottom": 210.8
+  },
+  {
+    "page": 9,
+    "key": "A3",
+    "bottom": 236.8
+  },
+  {
+    "page": 10,
+    "key": "A4",
+    "bottom": 236.8
+  },
+  {
+    "page": 11,
+    "key": "S1",
+    "bottom": 196.2
+  },
+  {
+    "page": 12,
+    "key": "S2",
+    "bottom": 196.2
+  },
+  {
+    "page": 13,
+    "key": "S3",
+    "bottom": 167.0
+  },
+  {
+    "page": 14,
+    "key": "S4",
+    "bottom": 181.6
+  },
+  {
+    "page": 15,
+    "key": "T1",
+    "bottom": 207.6
+  },
+  {
+    "page": 16,
+    "key": "T2",
+    "bottom": 222.2
+  },
+  {
+    "page": 17,
+    "key": "T3",
+    "bottom": 222.2
+  },
+  {
+    "page": 18,
+    "key": "T4",
+    "bottom": 193.0
+  },
+  {
+    "page": 19,
+    "key": "W1",
+    "bottom": 222.2
+  },
+  {
+    "page": 20,
+    "key": "W2",
+    "bottom": 210.8
+  },
+  {
+    "page": 21,
+    "key": "W3",
+    "bottom": 210.8
+  },
+  {
+    "page": 22,
+    "key": "W4",
+    "bottom": 137.8
+  },
+  {
+    "page": 23,
+    "key": "N1",
+    "bottom": 207.6
+  },
+  {
+    "page": 24,
+    "key": "N2",
+    "bottom": 193.0
+  },
+  {
+    "page": 25,
+    "key": "N3",
+    "bottom": 181.6
+  },
+  {
+    "page": 26,
+    "key": "N4",
+    "bottom": 167.0
+  },
+  {
+    "page": 27,
+    "key": "consumers",
+    "bottom": 257.8
+  },
+  {
+    "page": 28,
+    "key": "bindings",
+    "bottom": 172.1
+  },
+  {
+    "page": 29,
+    "key": "math",
+    "bottom": 60.4
+  },
+  {
+    "page": 30,
+    "key": "time",
+    "bottom": 208.3
+  },
+  {
+    "page": 31,
+    "key": "crypto",
+    "bottom": 297.9
+  },
+  {
+    "page": 32,
+    "key": "replay",
+    "bottom": 196.0
+  },
+  {
+    "page": 33,
+    "key": "claims1",
+    "bottom": 183.9
+  },
+  {
+    "page": 34,
+    "key": "claims2",
+    "bottom": 183.9
+  },
+  {
+    "page": 35,
+    "key": "methods",
+    "bottom": 197.8
+  },
+  {
+    "page": 36,
+    "key": "sources1",
+    "bottom": 133.4
+  },
+  {
+    "page": 37,
+    "key": "sources2",
+    "bottom": 133.0
+  },
+  {
+    "page": 38,
+    "key": "sources3",
+    "bottom": 122.0
+  },
+  {
+    "page": 39,
+    "key": "release",
+    "bottom": 282.6
+  }
+]

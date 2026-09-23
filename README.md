@@ -28,6 +28,7 @@ replay without private originals or provider calls. It does not restore authorit
 The linked showcase contains current commands and explicit audit lanes; the
 accepted design and older status passages retain their historical provenance.
 
+[Incident-to-Proof Atlas: presentation and evidence](docs/showcase/incident_to_proof_atlas_v01/README.md)
 
 ## Testflix V11 Preparation
 

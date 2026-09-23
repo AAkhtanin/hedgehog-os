@@ -1,0 +1,16 @@
+{
+  "classification": "RECORDED_COMPLETED_SAME_TASK_UNAFFECTED_PHASE_REUSE",
+  "original_receipt": "commands/0009_supplier_execution/receipt.json",
+  "preserved_phases": [
+    "supplier_donor",
+    "history_controls"
+  ],
+  "evidence_sha256": {
+    "donor_bundle.json": "6695cc1eae7df929eb0e1529eea0dc1b80b8770fcabe84dbffc0f6806b715be4",
+    "history_controls.json": "cb400ca31be9b100ce9201033fbc43ee734e318a9da187e7fc1cfee104c8cfbe"
+  },
+  "affected_phase": "native_channels_receipts",
+  "repair": "Exact workspace binding and independent receipt registry version; new negative neighbor",
+  "core_and_donor_sources": "UNCHANGED_ACCEPTED_BASE",
+  "new_channel_seconds": 15.346623624674976
+}

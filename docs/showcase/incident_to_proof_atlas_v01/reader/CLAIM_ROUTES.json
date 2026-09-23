@@ -1,0 +1,476 @@
+{
+  "claims": [
+    {
+      "assertion": "One architecture, five domains.",
+      "case_ids": [
+        "A1",
+        "S1",
+        "T1",
+        "W4",
+        "N2"
+      ],
+      "claim_id": "C01",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/counts",
+        "/implementation"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Meaning influences actual work.",
+      "case_ids": [
+        "W4"
+      ],
+      "claim_id": "C02",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/workspace/summary_capture",
+        "/workspace/commands",
+        "/workspace/consumption"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Untrusted proposals cannot mint the tested local authority.",
+      "case_ids": [
+        "A2",
+        "S1",
+        "T4"
+      ],
+      "claim_id": "C03",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/airline/reads/foreign_projection",
+        "/supplier/donor/sources/observations",
+        "/testflix/T4"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Confidentiality starts before the prohibited read.",
+      "case_ids": [
+        "A4",
+        "S2"
+      ],
+      "claim_id": "C04",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/airline/reads",
+        "/supplier/channels"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "History does not restore present permissions.",
+      "case_ids": [
+        "W4",
+        "T4"
+      ],
+      "claim_id": "C05",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/workspace/previous_close",
+        "/workspace/D1_controls",
+        "/testflix/T4"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Currentness protects the exact authorized operation.",
+      "case_ids": [
+        "T1",
+        "T2",
+        "A3"
+      ],
+      "claim_id": "C06",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/testflix/T1",
+        "/testflix/T2",
+        "/airline/transfer",
+        "/airline/matching"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Receipt is evidence, not new effect authorization.",
+      "case_ids": [
+        "S3",
+        "T3"
+      ],
+      "claim_id": "C07",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/supplier/channels",
+        "/testflix/T3"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Changing admitted code requires a new valid basis.",
+      "case_ids": [
+        "W3"
+      ],
+      "claim_id": "C08",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/workspace/W3"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Unsupported commands and wrong current inputs fail at actual boundaries.",
+      "case_ids": [
+        "W1",
+        "W2"
+      ],
+      "claim_id": "C09",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/workspace/W1",
+        "/workspace/W2",
+        "/workspace/native_input"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Arrival and repetition do not improve evidence provenance.",
+      "case_ids": [
+        "N1",
+        "N2"
+      ],
+      "claim_id": "C10",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/sentinel/n1",
+        "/sentinel/n2"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Optional delay does not suspend sufficient local work.",
+      "case_ids": [
+        "N4"
+      ],
+      "claim_id": "C11",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/sentinel/continuation/pending",
+        "/sentinel/continuation/waiting",
+        "/sentinel/continuation/joined",
+        "/sentinel/episode_trace"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Recovery is independently justified.",
+      "case_ids": [
+        "N3"
+      ],
+      "claim_id": "C12",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/sentinel/continuation/late",
+        "/sentinel/continuation/recovery"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Experience changes executed work, not only a score.",
+      "case_ids": [
+        "S1",
+        "A1",
+        "T4",
+        "W4",
+        "N2"
+      ],
+      "claim_id": "C13",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/supplier/donor/sources/observations",
+        "/supplier/donor/sources/history",
+        "/supplier/donor/sources/record_review",
+        "/supplier/donor/sources/current/projection",
+        "/supplier/donor/sources/current/work",
+        "/supplier/donor/sources/current/review_after",
+        "/airline/experience/observation",
+        "/airline/experience/recording_review",
+        "/airline/experience/snapshot",
+        "/airline/experience/after",
+        "/airline/consumption",
+        "/testflix/experience/observation",
+        "/testflix/experience/recording_review",
+        "/testflix/experience/snapshot",
+        "/testflix/experience/after",
+        "/testflix/consumption",
+        "/workspace/experience/observation",
+        "/workspace/experience/recording_review",
+        "/workspace/experience/snapshot",
+        "/workspace/experience/after",
+        "/workspace/consumption",
+        "/workspace/exact_approval",
+        "/workspace/sidecar",
+        "/sentinel/experience/observation",
+        "/sentinel/experience/recording_review",
+        "/sentinel/experience/snapshot",
+        "/sentinel/experience/values/after",
+        "/sentinel/continuation/consumption",
+        "/sentinel/continuation/recovery"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Quality, enforcement and business outcome are separate.",
+      "case_ids": [
+        "S1",
+        "S2",
+        "A1",
+        "T4",
+        "W4",
+        "N2"
+      ],
+      "claim_id": "C14",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/supplier/donor/sources/observations",
+        "/airline/experience/observation",
+        "/testflix/experience/observation",
+        "/workspace/experience/observation",
+        "/sentinel/experience/feedback"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Repackaging one event does not multiply its contribution.",
+      "case_ids": [
+        "S4"
+      ],
+      "claim_id": "C15",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/supplier/history_controls",
+        "/counts"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "The verifier checks contextual relations, not just matching hashes.",
+      "case_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "W1",
+        "W2",
+        "W3",
+        "W4"
+      ],
+      "claim_id": "C16",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/execution_sources"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Verification does not re-enact action authority.",
+      "case_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "W1",
+        "W2",
+        "W3",
+        "W4"
+      ],
+      "claim_id": "C17",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/replay_scope",
+        "/native_replay"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    },
+    {
+      "assertion": "Presentation cannot invent stronger results.",
+      "case_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "N1",
+        "N2",
+        "N3",
+        "N4",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "W1",
+        "W2",
+        "W3",
+        "W4"
+      ],
+      "claim_id": "C18",
+      "execution_status": "Use saved receipts; source presence alone is not an execution result.",
+      "package_pointers": [
+        "/cards",
+        "/coverage"
+      ],
+      "recorded_controls": "evidence/at5/evidence_claim_map.json",
+      "source_test_files": [
+        "sources/current/tests/test_incident_atlas_airline_v01.py",
+        "sources/current/tests/test_incident_atlas_sentinel_v01.py",
+        "sources/current/tests/test_incident_atlas_supplier_v01.py",
+        "sources/current/tests/test_incident_atlas_testflix_v01.py",
+        "sources/current/tests/test_incident_atlas_workspace_v01.py",
+        "sources/current/tests/test_incident_atlas_v01.py"
+      ],
+      "symbol_index": "reader/SOURCE_SYMBOLS.json"
+    }
+  ],
+  "profile": "ATLAS_EDITORIAL_CLAIM_ROUTES_V02",
+  "source": "evidence/atlas_package.json",
+  "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24"
+}

@@ -1,0 +1,28 @@
+{
+  "counts": {
+    "airline": 0,
+    "backend": 0,
+    "collect": 0,
+    "current_work": 0,
+    "history_commit": 0,
+    "history_current": 0,
+    "history_prepare": 0,
+    "history_read": 0,
+    "host_dispatch": 0,
+    "host_init": 0,
+    "host_pure": 0,
+    "provider": 0,
+    "root": 0,
+    "sentinel": 0,
+    "sentinel_episode": 0,
+    "summary_capture": 0,
+    "supplier": 0,
+    "testflix": 0,
+    "testflix_provider": 0,
+    "work": 0,
+    "workspace": 0,
+    "workspace_provider": 0
+  },
+  "scope": "Selected domain/provider/Root/Host/Work/history entrypoints, not OS-wide monitoring.",
+  "seconds": 42.81762837525457
+}

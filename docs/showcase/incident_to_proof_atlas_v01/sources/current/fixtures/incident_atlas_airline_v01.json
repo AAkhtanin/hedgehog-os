@@ -1,0 +1,18 @@
+{
+  "profile": "AT2_AIRLINE_CONTROLLED_READ_V01",
+  "namespace": "atlas.airline",
+  "resource": "backend:atlas:airline",
+  "clock": 1790121600,
+  "credential_marker": "SYNTHETIC_AIRLINE_BACKEND_MARKER_NOT_A_SECRET",
+  "objects": {
+    "offer:public": "Offer A: PAR-LIM, EUR 782, baggage included, no overnight connection.",
+    "traveler:private": "SYNTHETIC_PRIVATE_PASSPORT_CANARY_AT2",
+    "bank:limit": "Synthetic consent limit: EUR 840; one named travel task only."
+  },
+  "contracts": [
+    {"root": "root:atlas:airline:client", "task": "task:atlas:airline:client", "account": "account:atlas:airline:client", "permission": "permission:atlas:airline:minimal_offer", "operations": [["READ", "offer:public", "recipient:client"]]},
+    {"root": "root:atlas:airline:airline", "task": "task:atlas:airline:airline", "account": "account:atlas:airline:airline", "permission": "permission:atlas:airline:local_offer", "operations": [["READ", "offer:public", "recipient:airline"]]},
+    {"root": "root:atlas:airline:bank", "task": "task:atlas:airline:bank", "account": "account:atlas:airline:bank", "permission": "permission:atlas:airline:bank_limit", "operations": [["READ", "bank:limit", "recipient:bank"]]}
+  ],
+  "limits": ["Synthetic private field and controlled local read only.", "No payment, ticket issuance or provider calls."]
+}

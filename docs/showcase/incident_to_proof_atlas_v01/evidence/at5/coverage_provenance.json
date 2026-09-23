@@ -1,0 +1,27 @@
+{
+  "final_selection_command": "0023_focused",
+  "fresh_nodes": 22,
+  "fresh_passed_phases": 66,
+  "not_run": [
+    "Old collectors",
+    "Gemini",
+    "Full D/E",
+    "Living",
+    "Conformance",
+    "E5",
+    "Browser",
+    "Scientific physical validation"
+  ],
+  "pending": [
+    "Independent overall Atlas review",
+    "Separately authorized owner admission/landing",
+    "Presentation preparation",
+    "Separately authorized publication"
+  ],
+  "recorded_AT4_nodes": 63,
+  "recorded_AT4_passed_phases": 189,
+  "recorded_is_fresh": false,
+  "sentinel_new_nodes": 17,
+  "shared_nodes": 5,
+  "unchanged_domain_tests": "Prior four domain test bodies and production modules are byte-identical. Recorded results retain their AT4 sources. Current integration and two replays freshly validate their supplied records."
+}

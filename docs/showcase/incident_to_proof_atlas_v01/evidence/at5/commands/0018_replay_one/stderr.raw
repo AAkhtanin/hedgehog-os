@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/offline_replay.py", line 58, in <module>
+    assert report['counts']['unique_experience_consumers']==5 and not any(counts.values()),counts
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'collect': 0, 'donor_collect': 0, 'supplier_collect': 0, 'airline_collect': 0, 'testflix_collect': 0, 'testflix_handle': 0, 'testflix_provider': 0, 'testflix_dispatch': 0, 'semantic_callback': 0, 'root_decide': 6, 'host_init': 0, 'host_dispatch': 0, 'backend_invoke': 0, 'pure_work': 0, 'history_prepare': 0, 'history_commit': 0, 'history_read': 0, 'history_current': 0, 'workspace_collect': 0, 'summary_capture': 0, 'workspace_command': 0, 'workspace_effect': 0, 'workspace_model': 0, 'workspace_history': 0, 'workspace_memory_read': 0, 'workspace_memory_write': 0, 'work_advance': 0, 'host_pure': 0, 'sentinel_collect': 0, 'sentinel_episode': 0, 'sentinel_command': 0, 'sentinel_read': 0, 'sentinel_worker': 0, 'sentinel_native_work': 0, 'sentinel_prediction': 0, 'sentinel_current_work': 0, 'sentinel_current_check': 0}

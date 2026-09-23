@@ -1,0 +1,15 @@
+{
+  "goal": "Short useful local photo continuation intent.",
+  "notes": "Short limitations",
+  "result_ref": null,
+  "reuse_prior_permission": false,
+  "selection": {
+    "asset": "asset:1",
+    "crop": "ORIGINAL",
+    "exposure": 0,
+    "rating": 0,
+    "selected": true
+  },
+  "source_version": "CURRENT",
+  "work_status": "REQUIRED"
+}

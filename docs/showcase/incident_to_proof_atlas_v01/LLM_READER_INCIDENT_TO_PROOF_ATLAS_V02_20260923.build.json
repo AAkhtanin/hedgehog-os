@@ -1,0 +1,124 @@
+{
+  "binary_member_count": 5,
+  "commit_or_push": false,
+  "content_manifest_sha256": "cbaf87f8923cb29a85317df194b0d04acd67c7bfd2ae14661372c73d69b65bd0",
+  "counts_by_kind": {
+    "AT4_MODEL_SUMMARY_CAPTURE": 5,
+    "AT6_BASE_ARCHITECTURE_CONTEXT": 26,
+    "AT6_BASE_DEPENDENCY_OR_LICENSE": 1,
+    "AT6_LANDED_SOURCE": 34,
+    "AT6_UNCHANGED_BASE_SOURCE": 34,
+    "EDITORIAL_NAVIGATION_REPAIR": 2,
+    "EDITORIAL_READING_MAP": 13,
+    "EXACT_CURRENT_PINNED_SOURCE": 5,
+    "EXACT_HISTORICAL_HANDOFF_PIN": 1,
+    "EXACT_INDEPENDENT_REVIEW_RECORD": 3,
+    "EXACT_ORIGINAL_AT5_PROOF": 1,
+    "EXACT_RECORDED_EVIDENCE": 94,
+    "EXACT_SAVED_SIDECAR": 1,
+    "HISTORICAL_EXECUTED_SOURCE": 19,
+    "HISTORICAL_MODEL_CAPTURE": 12,
+    "INERT_DOCUMENTARY_BUILDER": 2,
+    "PRESENTATION_AUTHORING_TEXT": 9,
+    "PRESENTATION_COMPANION_BINARY": 4,
+    "SOURCE_IMPACT_BRIDGE": 11,
+    "SYNTHETIC_INPUT_BINARY": 1
+  },
+  "domain_or_provider_calls": 0,
+  "embedded_project_code_executed": false,
+  "member_count": 278,
+  "payload_bytes": 78787878,
+  "presentation_integration": {
+    "final_freeze_authorized": true,
+    "inputs": [
+      {
+        "path": "presentation/slide_text_and_notes.json",
+        "required": true,
+        "role": "main_text_and_notes",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/cards.json",
+        "required": true,
+        "role": "twenty_cards",
+        "status": "PRESENT"
+      },
+      {
+        "path": "technical_appendix_INCIDENT_ATLAS_V02_20260923.md",
+        "required": true,
+        "role": "technical_appendix",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/appendix_content.json",
+        "required": true,
+        "role": "appendix_content",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/render_appendix.py",
+        "required": false,
+        "role": "appendix_builder",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/external_sources.json",
+        "required": false,
+        "role": "external_primary_sources",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/math_profile.json",
+        "required": true,
+        "role": "consumer_math",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/model_origins.json",
+        "required": true,
+        "role": "model_origins",
+        "status": "PRESENT"
+      },
+      {
+        "path": "presentation/presentation_qa_V02_20260923.json",
+        "required": true,
+        "role": "presentation_qa",
+        "status": "PRESENT"
+      },
+      {
+        "path": "incident_to_proof_atlas_V02_20260923.pdf",
+        "required": true,
+        "role": "main_pdf",
+        "status": "PRESENT"
+      },
+      {
+        "path": "incident_to_proof_atlas_V02_20260923.pptx",
+        "required": true,
+        "role": "main_pptx",
+        "status": "PRESENT"
+      },
+      {
+        "path": "technical_appendix_INCIDENT_ATLAS_V02_20260923.pdf",
+        "required": true,
+        "role": "appendix_pdf",
+        "status": "PRESENT"
+      },
+      {
+        "path": "assets/radiolaria_incident_atlas_hero_v01.png",
+        "required": true,
+        "role": "hero",
+        "status": "PRESENT"
+      }
+    ],
+    "profile": "ATLAS_EDITORIAL_INTEGRATION_V02",
+    "publication_status": "NOT_COMMITTED_OR_PUSHED",
+    "state": "COMPLETE_EDITORIAL_INPUTS"
+  },
+  "profile": "ATLAS_READER_STATIC_BUILD_V02",
+  "reader": "LLM_READER_INCIDENT_TO_PROOF_ATLAS_V02_20260923.xml",
+  "reader_bytes": 75890185,
+  "reader_sha256": "48c4b979aacec80182af827a4a26e420fe98a1b4f611d2f0fe8b38154823b8da",
+  "repository_mutated": false,
+  "status": "PASS_EXACT_BYTES_AND_XML_ROUNDTRIP",
+  "text_member_count": 273
+}

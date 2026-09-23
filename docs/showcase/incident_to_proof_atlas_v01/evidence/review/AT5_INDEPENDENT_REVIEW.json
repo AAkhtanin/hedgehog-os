@@ -1,0 +1,74 @@
+{
+  "review": "AT5_INDEPENDENT_SOURCE_AND_SAVED_EVIDENCE_REVIEW",
+  "decision": "ATLAS_ENGINEERING_ACCEPTED_FOR_DECLARED_FINITE_SCOPE",
+  "owner_admission": "PENDING_EXACT_AT6_LANDING",
+  "presentation_publication": "PENDING",
+  "archive": {
+    "name": "RADIOLARIA_INCIDENT_ATLAS_AT5_RETURN_20260923T065201Z.tar.gz",
+    "sha256": "95d47f59ac73df126687c114918b1dded036d960c9784f77c1f136a041b4ac48",
+    "bytes": 56038561,
+    "regular_members": 1233,
+    "manifest_rows": 1232
+  },
+  "checks": {
+    "crc_safe_paths_manifest_modes_sizes_hashes": "PASS",
+    "postimages": 34,
+    "at4_preimages": 29,
+    "independent_patch_applications": 2,
+    "raw_command_receipts": 39,
+    "recorded_fresh_test_nodes": 22,
+    "recorded_passed_phases": 66,
+    "card_references": 128,
+    "retained_four_domains_exact": true,
+    "runtime_sentinel_source_bodies_exact": 3,
+    "retained_domain_source_hashes": 16,
+    "owner_entry_final_identical": true
+  },
+  "review_execution": {
+    "archived_project_code_executed": false,
+    "test_reruns": 0,
+    "model_calls": 0
+  },
+  "replay": {
+    "supported_scope": "SAFE_DERIVED_SAVED_RELATIONS",
+    "unsupported": "FULL_ORIGINAL_NATIVE_GRAPH",
+    "two_outputs_identical": true,
+    "bytes": 935,
+    "sha256": "b2e7d1d859cf382dfd9879763f20e49fb373b61a2b2b8ac7d117bea7925fc6a2",
+    "observed_prohibited_entrypoints_zero": 37,
+    "initial_failure_six_root_calls_preserved": true
+  },
+  "semantics": [
+    "Event age not renewed by delivery.",
+    "Correlated redelivery adds arrivals, not independent witnesses.",
+    "History changes diagnostic to observability; exact LIMITED result consumed in current Root diagnostic continuation.",
+    "Insufficient measured recovery refuses OFF at Root before Host.",
+    "Same continuing episode Root/Host performs ON while actual controlled worker is waiting, without resetting pending budgets.",
+    "Separate OFF only after new independent measured recovery covering 30 scenario seconds."
+  ],
+  "counts": {
+    "cards": 20,
+    "risk_families": 15,
+    "domain_consumers": 5,
+    "lawful_continuations": 5,
+    "effective_history_samples": 7,
+    "historical_actual_model_calls": 5,
+    "new_at5_model_calls": 0,
+    "sentinel_mock_effects": 3
+  },
+  "limits": [
+    "Finite synthetic sensor domain; not physical certification.",
+    "Controlled pending stub, not fresh live provider latency proof.",
+    "Sentinel consumer is diagnostic; history does not confer signal permissions.",
+    "External incident catalog is not one-to-one proof of twenty real-company incidents.",
+    "Hash identity is not signature or authority."
+  ],
+  "next_owner_manifest": {
+    "sha256": "d7afeb8c169169e4783515e89315085b1fb3591792e82c0a2a347c27b8314748",
+    "bytes": 11384,
+    "kind": "ENGINEERING",
+    "ledger_rows": 34,
+    "commit_message": "Implement Incident Atlas across five domains"
+  },
+  "package_pin": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24"
+}

@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "git",
+    "--no-optional-locks",
+    "-C",
+    "/Users/admin/Projects/hedgehog-os",
+    "commit",
+    "-m",
+    "Implement Incident Atlas across five domains"
+  ],
+  "context": "LOCAL_ONLY",
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "elapsed_seconds": 0.021950541995465755,
+  "ended_at": "2026-09-23T07:21:23.861955+00:00",
+  "extra_environment": {},
+  "frozen_manifest_sha256": "d7afeb8c169169e4783515e89315085b1fb3591792e82c0a2a347c27b8314748",
+  "helpers": {
+    "atlas_at6_pytest_plugin.py": "25e60c5471434ce15bd162e81c460f93906e1c4c9da81debd4e2d6e4bd4f33ac",
+    "landing.py": "5feb077833130ebaab8b17b8f247880e43f48241238c333efe86266ea7e079d5",
+    "ops.py": "ae6d8cc23dd82e2dbc73587537ad1bdccf84a22d9f6a45c9b1222576cd81f5b4",
+    "prepare.py": "8f822ca7ee861d52e2eeec3a8f795779e9e01a37199feae69710d2bade3220d0"
+  },
+  "inherited_context_removed": null,
+  "pid": 75305,
+  "policy_identity": "8981402f2d6d9c4ef3680e554560a92ee877cb07b40194ce15c6344fcde1c4ad",
+  "rc": 0,
+  "started_at": "2026-09-23T07:21:23.839895+00:00",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 2520,
+    "sha256": "8e446efd88e22fa83af70dd40659a8712b22a96ec3c66fc52fc1b78f3d53f485"
+  }
+}

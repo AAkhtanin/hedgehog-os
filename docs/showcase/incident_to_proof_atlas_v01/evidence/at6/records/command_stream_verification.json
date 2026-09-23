@@ -1,0 +1,863 @@
+{
+  "all_final": true,
+  "commands": 107,
+  "raw_stream_pairs": "PASS",
+  "rows": [
+    {
+      "elapsed_seconds": 0.006285416893661022,
+      "ended_at": "2026-09-23T07:15:30.193015+00:00",
+      "label": "0001_owner_entry_branch",
+      "pid": 74212,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.186655+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011462791822850704,
+      "ended_at": "2026-09-23T07:15:30.244046+00:00",
+      "label": "0001_owner_entry_cached",
+      "pid": 74222,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.232498+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011479792185127735,
+      "ended_at": "2026-09-23T07:15:30.160745+00:00",
+      "label": "0001_owner_entry_gitdir",
+      "pid": 74207,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.149176+00:00"
+    },
+    {
+      "elapsed_seconds": 0.02443062514066696,
+      "ended_at": "2026-09-23T07:15:30.186037+00:00",
+      "label": "0001_owner_entry_identity",
+      "pid": 74209,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.161522+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006422250531613827,
+      "ended_at": "2026-09-23T07:15:30.200078+00:00",
+      "label": "0001_owner_entry_origin",
+      "pid": 74213,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.193588+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012494750320911407,
+      "ended_at": "2026-09-23T07:15:30.257299+00:00",
+      "label": "0001_owner_entry_refs",
+      "pid": 74223,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.244712+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006548499688506126,
+      "ended_at": "2026-09-23T07:15:30.207338+00:00",
+      "label": "0001_owner_entry_remote",
+      "pid": 74214,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.200712+00:00"
+    },
+    {
+      "elapsed_seconds": 0.023797125555574894,
+      "ended_at": "2026-09-23T07:15:30.231830+00:00",
+      "label": "0001_owner_entry_status",
+      "pid": 74218,
+      "rc": 0,
+      "started_at": "2026-09-23T07:15:30.207945+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012357416562736034,
+      "ended_at": "2026-09-23T07:16:15.823567+00:00",
+      "label": "0002_base_tree",
+      "pid": 74275,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:15.811135+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012217083014547825,
+      "ended_at": "2026-09-23T07:16:15.838524+00:00",
+      "label": "0003_entry_index",
+      "pid": 74276,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:15.826232+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0061242906376719475,
+      "ended_at": "2026-09-23T07:16:15.846164+00:00",
+      "label": "0003_entry_index_flags",
+      "pid": 74278,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:15.839962+00:00"
+    },
+    {
+      "elapsed_seconds": 0.473772750236094,
+      "ended_at": "2026-09-23T07:16:38.298197+00:00",
+      "label": "0004_clone",
+      "pid": 74416,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:37.824129+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0061922501772642136,
+      "ended_at": "2026-09-23T07:16:38.305327+00:00",
+      "label": "0005_clone_origin",
+      "pid": 74418,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:38.299036+00:00"
+    },
+    {
+      "elapsed_seconds": 0.35935412533581257,
+      "ended_at": "2026-09-23T07:16:38.673763+00:00",
+      "label": "0006_preflight_tracked_delta",
+      "pid": 74419,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:38.314311+00:00"
+    },
+    {
+      "elapsed_seconds": 3.4946660846471786,
+      "ended_at": "2026-09-23T07:16:42.169866+00:00",
+      "label": "0007_preflight_guard",
+      "pid": 74422,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:38.675088+00:00"
+    },
+    {
+      "elapsed_seconds": 28.327205541543663,
+      "ended_at": "2026-09-23T07:17:10.498143+00:00",
+      "label": "0008_preflight_binder",
+      "pid": 74588,
+      "rc": 0,
+      "started_at": "2026-09-23T07:16:42.170613+00:00"
+    },
+    {
+      "elapsed_seconds": 43.935483457520604,
+      "ended_at": "2026-09-23T07:17:54.434890+00:00",
+      "label": "0009_focused",
+      "pid": 74797,
+      "rc": 0,
+      "started_at": "2026-09-23T07:17:10.498943+00:00"
+    },
+    {
+      "elapsed_seconds": 0.005915000103414059,
+      "ended_at": "2026-09-23T07:20:00.220906+00:00",
+      "label": "0010_before_owner_transfer_branch",
+      "pid": 74903,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.214921+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01128737535327673,
+      "ended_at": "2026-09-23T07:20:00.271969+00:00",
+      "label": "0010_before_owner_transfer_cached",
+      "pid": 74915,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.260569+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006447041407227516,
+      "ended_at": "2026-09-23T07:20:00.200991+00:00",
+      "label": "0010_before_owner_transfer_gitdir",
+      "pid": 74900,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.194224+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012399415485560894,
+      "ended_at": "2026-09-23T07:20:00.214311+00:00",
+      "label": "0010_before_owner_transfer_identity",
+      "pid": 74901,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.201828+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0059460001066327095,
+      "ended_at": "2026-09-23T07:20:00.227453+00:00",
+      "label": "0010_before_owner_transfer_origin",
+      "pid": 74904,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.221441+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01221575029194355,
+      "ended_at": "2026-09-23T07:20:00.284918+00:00",
+      "label": "0010_before_owner_transfer_refs",
+      "pid": 74916,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.272623+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006217999383807182,
+      "ended_at": "2026-09-23T07:20:00.234414+00:00",
+      "label": "0010_before_owner_transfer_remote",
+      "pid": 74907,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.228108+00:00"
+    },
+    {
+      "elapsed_seconds": 0.02439445909112692,
+      "ended_at": "2026-09-23T07:20:00.259634+00:00",
+      "label": "0010_before_owner_transfer_status",
+      "pid": 74912,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.235148+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01296466775238514,
+      "ended_at": "2026-09-23T07:20:00.810447+00:00",
+      "label": "0011_before_transfer_index",
+      "pid": 74933,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.797338+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006302792578935623,
+      "ended_at": "2026-09-23T07:20:00.818410+00:00",
+      "label": "0011_before_transfer_index_flags",
+      "pid": 74934,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.812019+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0064872074872255325,
+      "ended_at": "2026-09-23T07:20:00.828679+00:00",
+      "label": "0012_push_url",
+      "pid": 74935,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.822067+00:00"
+    },
+    {
+      "elapsed_seconds": 0.9695442076772451,
+      "ended_at": "2026-09-23T07:20:01.798868+00:00",
+      "label": "0013_fetch_before",
+      "pid": 74936,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.829269+00:00"
+    },
+    {
+      "elapsed_seconds": 0.8682208340615034,
+      "ended_at": "2026-09-23T07:20:02.668666+00:00",
+      "label": "0014_ls_remote_before",
+      "pid": 74948,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:01.800317+00:00"
+    },
+    {
+      "elapsed_seconds": 0.013155334629118443,
+      "ended_at": "2026-09-23T07:20:02.683382+00:00",
+      "label": "0015_fetched_before",
+      "pid": 74957,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:02.670111+00:00"
+    },
+    {
+      "elapsed_seconds": 0.024759416468441486,
+      "ended_at": "2026-09-23T07:20:26.730245+00:00",
+      "label": "0016_immediate_pretransfer_status",
+      "pid": 74976,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:26.705162+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006371458992362022,
+      "ended_at": "2026-09-23T07:20:26.737473+00:00",
+      "label": "0017_immediate_pretransfer_head",
+      "pid": 74977,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:26.731025+00:00"
+    },
+    {
+      "elapsed_seconds": 0.013194750063121319,
+      "ended_at": "2026-09-23T07:20:27.344089+00:00",
+      "label": "0018_after_transfer_index",
+      "pid": 74983,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.330697+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006390208378434181,
+      "ended_at": "2026-09-23T07:20:27.352348+00:00",
+      "label": "0018_after_transfer_index_flags",
+      "pid": 74984,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.345865+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0063139572739601135,
+      "ended_at": "2026-09-23T07:20:27.380728+00:00",
+      "label": "0019_after_transfer_before_context_branch",
+      "pid": 74987,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.374324+00:00"
+    },
+    {
+      "elapsed_seconds": 0.010861832648515701,
+      "ended_at": "2026-09-23T07:20:27.432256+00:00",
+      "label": "0019_after_transfer_before_context_cached",
+      "pid": 74991,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.421315+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006178749725222588,
+      "ended_at": "2026-09-23T07:20:27.360295+00:00",
+      "label": "0019_after_transfer_before_context_gitdir",
+      "pid": 74985,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.354045+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012504874728620052,
+      "ended_at": "2026-09-23T07:20:27.373630+00:00",
+      "label": "0019_after_transfer_before_context_identity",
+      "pid": 74986,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.361049+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006216834299266338,
+      "ended_at": "2026-09-23T07:20:27.387621+00:00",
+      "label": "0019_after_transfer_before_context_origin",
+      "pid": 74988,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.381326+00:00"
+    },
+    {
+      "elapsed_seconds": 0.010914666578173637,
+      "ended_at": "2026-09-23T07:20:27.444113+00:00",
+      "label": "0019_after_transfer_before_context_refs",
+      "pid": 74992,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.433098+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006779957562685013,
+      "ended_at": "2026-09-23T07:20:27.395055+00:00",
+      "label": "0019_after_transfer_before_context_remote",
+      "pid": 74989,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.388203+00:00"
+    },
+    {
+      "elapsed_seconds": 0.02468300051987171,
+      "ended_at": "2026-09-23T07:20:27.420598+00:00",
+      "label": "0019_after_transfer_before_context_status",
+      "pid": 74990,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.395824+00:00"
+    },
+    {
+      "elapsed_seconds": 3.235101624391973,
+      "ended_at": "2026-09-23T07:20:30.682358+00:00",
+      "label": "0020_owner_unstaged_guard",
+      "pid": 74993,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:27.447147+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0468573747202754,
+      "ended_at": "2026-09-23T07:20:50.466066+00:00",
+      "label": "0021_stage_exact",
+      "pid": 75160,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.418910+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006470957770943642,
+      "ended_at": "2026-09-23T07:20:50.473389+00:00",
+      "label": "0022_staged_entire_index",
+      "pid": 75161,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.466830+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006156250834465027,
+      "ended_at": "2026-09-23T07:20:50.481281+00:00",
+      "label": "0022_staged_entire_index_flags",
+      "pid": 75162,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.475044+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006364332512021065,
+      "ended_at": "2026-09-23T07:20:50.513219+00:00",
+      "label": "0023_staged_state_branch",
+      "pid": 75165,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.506781+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01078195869922638,
+      "ended_at": "2026-09-23T07:20:50.563964+00:00",
+      "label": "0023_staged_state_cached",
+      "pid": 75169,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.553119+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0063140420243144035,
+      "ended_at": "2026-09-23T07:20:50.493086+00:00",
+      "label": "0023_staged_state_gitdir",
+      "pid": 75163,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.486696+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0121995834633708,
+      "ended_at": "2026-09-23T07:20:50.506124+00:00",
+      "label": "0023_staged_state_identity",
+      "pid": 75164,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.493843+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006239041686058044,
+      "ended_at": "2026-09-23T07:20:50.520168+00:00",
+      "label": "0023_staged_state_origin",
+      "pid": 75166,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.513859+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012455125339329243,
+      "ended_at": "2026-09-23T07:20:50.577275+00:00",
+      "label": "0023_staged_state_refs",
+      "pid": 75170,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.564728+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0065386248752474785,
+      "ended_at": "2026-09-23T07:20:50.527607+00:00",
+      "label": "0023_staged_state_remote",
+      "pid": 75167,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.520977+00:00"
+    },
+    {
+      "elapsed_seconds": 0.024258834309875965,
+      "ended_at": "2026-09-23T07:20:50.552543+00:00",
+      "label": "0023_staged_state_status",
+      "pid": 75168,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.528213+00:00"
+    },
+    {
+      "elapsed_seconds": 0.010959833860397339,
+      "ended_at": "2026-09-23T07:20:50.589719+00:00",
+      "label": "0024_unstaged_check",
+      "pid": 75171,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.578683+00:00"
+    },
+    {
+      "elapsed_seconds": 0.027410791255533695,
+      "ended_at": "2026-09-23T07:20:50.620311+00:00",
+      "label": "0025_prospective_tree",
+      "pid": 75172,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.592746+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011417459696531296,
+      "ended_at": "2026-09-23T07:20:50.632485+00:00",
+      "label": "0026_staged_whitespace",
+      "pid": 75173,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.621012+00:00"
+    },
+    {
+      "elapsed_seconds": 2.6140098748728633,
+      "ended_at": "2026-09-23T07:20:53.247446+00:00",
+      "label": "0027_owner_staged_guard",
+      "pid": 75174,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.633329+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006751375272870064,
+      "ended_at": "2026-09-23T07:21:23.820521+00:00",
+      "label": "0028_immediate_precommit_index",
+      "pid": 75302,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.813423+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006194666959345341,
+      "ended_at": "2026-09-23T07:21:23.828265+00:00",
+      "label": "0028_immediate_precommit_index_flags",
+      "pid": 75303,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.822006+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006197749637067318,
+      "ended_at": "2026-09-23T07:21:23.839099+00:00",
+      "label": "0029_immediate_precommit_head",
+      "pid": 75304,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.832803+00:00"
+    },
+    {
+      "elapsed_seconds": 0.021950541995465755,
+      "ended_at": "2026-09-23T07:21:23.861955+00:00",
+      "label": "0030_commit",
+      "pid": 75305,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.839895+00:00"
+    },
+    {
+      "elapsed_seconds": 0.00616329163312912,
+      "ended_at": "2026-09-23T07:21:23.893729+00:00",
+      "label": "0031_committed_branch",
+      "pid": 75310,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.887496+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012631166726350784,
+      "ended_at": "2026-09-23T07:21:23.939708+00:00",
+      "label": "0031_committed_cached",
+      "pid": 75314,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.926975+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01218066643923521,
+      "ended_at": "2026-09-23T07:21:23.966336+00:00",
+      "label": "0031_committed_delta",
+      "pid": 75316,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.954086+00:00"
+    },
+    {
+      "elapsed_seconds": 0.010357541963458061,
+      "ended_at": "2026-09-23T07:21:23.873120+00:00",
+      "label": "0031_committed_gitdir",
+      "pid": 75308,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.862682+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012722416780889034,
+      "ended_at": "2026-09-23T07:21:23.886837+00:00",
+      "label": "0031_committed_identity",
+      "pid": 75309,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.874005+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006497291848063469,
+      "ended_at": "2026-09-23T07:21:24.001498+00:00",
+      "label": "0031_committed_index",
+      "pid": 75319,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.994873+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0062844594940543175,
+      "ended_at": "2026-09-23T07:21:24.009451+00:00",
+      "label": "0031_committed_index_flags",
+      "pid": 75320,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:24.003094+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011377166956663132,
+      "ended_at": "2026-09-23T07:21:23.978606+00:00",
+      "label": "0031_committed_message",
+      "pid": 75317,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.967144+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011831291951239109,
+      "ended_at": "2026-09-23T07:21:23.906296+00:00",
+      "label": "0031_committed_origin",
+      "pid": 75311,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.894380+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01252949982881546,
+      "ended_at": "2026-09-23T07:21:23.952983+00:00",
+      "label": "0031_committed_refs",
+      "pid": 75315,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.940365+00:00"
+    },
+    {
+      "elapsed_seconds": 0.0064961668103933334,
+      "ended_at": "2026-09-23T07:21:23.913543+00:00",
+      "label": "0031_committed_remote",
+      "pid": 75312,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.906968+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012058624997735023,
+      "ended_at": "2026-09-23T07:21:23.926249+00:00",
+      "label": "0031_committed_status",
+      "pid": 75313,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.914117+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011655583046376705,
+      "ended_at": "2026-09-23T07:21:23.991251+00:00",
+      "label": "0031_committed_tree",
+      "pid": 75318,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.979458+00:00"
+    },
+    {
+      "elapsed_seconds": 3.4720222502946854,
+      "ended_at": "2026-09-23T07:21:27.769106+00:00",
+      "label": "0032_owner_committed_guard",
+      "pid": 75322,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:24.296978+00:00"
+    },
+    {
+      "elapsed_seconds": 28.431600249372423,
+      "ended_at": "2026-09-23T07:21:56.202163+00:00",
+      "label": "0033_actual_owner_binder",
+      "pid": 75447,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:27.770221+00:00"
+    },
+    {
+      "elapsed_seconds": 3.2633623341098428,
+      "ended_at": "2026-09-23T07:21:59.467936+00:00",
+      "label": "0034_owner_finalized_guard",
+      "pid": 75536,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:56.204463+00:00"
+    },
+    {
+      "elapsed_seconds": 0.006180458702147007,
+      "ended_at": "2026-09-23T07:22:19.062657+00:00",
+      "label": "0035_immediate_prepush_head",
+      "pid": 75672,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:19.056187+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012438458390533924,
+      "ended_at": "2026-09-23T07:22:19.075887+00:00",
+      "label": "0036_immediate_prepush_status",
+      "pid": 75673,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:19.063369+00:00"
+    },
+    {
+      "elapsed_seconds": 1.965289792045951,
+      "ended_at": "2026-09-23T07:22:21.041959+00:00",
+      "label": "0037_normal_push",
+      "pid": 75674,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:19.076601+00:00"
+    },
+    {
+      "elapsed_seconds": 0.9471176667138934,
+      "ended_at": "2026-09-23T07:22:21.991086+00:00",
+      "label": "0038_fetch_published",
+      "pid": 75689,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:21.043863+00:00"
+    },
+    {
+      "elapsed_seconds": 0.8241061251610518,
+      "ended_at": "2026-09-23T07:22:22.816922+00:00",
+      "label": "0039_ls_remote_published",
+      "pid": 75699,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:21.992620+00:00"
+    },
+    {
+      "elapsed_seconds": 0.022533916868269444,
+      "ended_at": "2026-09-23T07:22:22.841809+00:00",
+      "label": "0040_remote_commit",
+      "pid": 75708,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.819178+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01382249966263771,
+      "ended_at": "2026-09-23T07:22:22.857111+00:00",
+      "label": "0041_remote_tree",
+      "pid": 75709,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.843200+00:00"
+    },
+    {
+      "elapsed_seconds": 0.013662166893482208,
+      "ended_at": "2026-09-23T07:22:22.903139+00:00",
+      "label": "0042_final_owner_branch",
+      "pid": 75712,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.889388+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012540957890450954,
+      "ended_at": "2026-09-23T07:22:22.971714+00:00",
+      "label": "0042_final_owner_cached",
+      "pid": 75716,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.959077+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012435583397746086,
+      "ended_at": "2026-09-23T07:22:22.999933+00:00",
+      "label": "0042_final_owner_delta",
+      "pid": 75718,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.987422+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01096595823764801,
+      "ended_at": "2026-09-23T07:22:22.873530+00:00",
+      "label": "0042_final_owner_gitdir",
+      "pid": 75710,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.862376+00:00"
+    },
+    {
+      "elapsed_seconds": 0.013364625163376331,
+      "ended_at": "2026-09-23T07:22:22.888337+00:00",
+      "label": "0042_final_owner_identity",
+      "pid": 75711,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.874868+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011783833615481853,
+      "ended_at": "2026-09-23T07:22:23.045181+00:00",
+      "label": "0042_final_owner_index",
+      "pid": 75724,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:23.033252+00:00"
+    },
+    {
+      "elapsed_seconds": 0.011386625468730927,
+      "ended_at": "2026-09-23T07:22:23.058806+00:00",
+      "label": "0042_final_owner_index_flags",
+      "pid": 75726,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:23.047286+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012880667112767696,
+      "ended_at": "2026-09-23T07:22:23.013841+00:00",
+      "label": "0042_final_owner_message",
+      "pid": 75719,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:23.000873+00:00"
+    },
+    {
+      "elapsed_seconds": 0.013716583140194416,
+      "ended_at": "2026-09-23T07:22:22.918242+00:00",
+      "label": "0042_final_owner_origin",
+      "pid": 75713,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.904418+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01303795911371708,
+      "ended_at": "2026-09-23T07:22:22.986059+00:00",
+      "label": "0042_final_owner_refs",
+      "pid": 75717,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.972910+00:00"
+    },
+    {
+      "elapsed_seconds": 0.013119916431605816,
+      "ended_at": "2026-09-23T07:22:22.932433+00:00",
+      "label": "0042_final_owner_remote",
+      "pid": 75714,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.919224+00:00"
+    },
+    {
+      "elapsed_seconds": 0.02461579069495201,
+      "ended_at": "2026-09-23T07:22:22.958256+00:00",
+      "label": "0042_final_owner_status",
+      "pid": 75715,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:22.933501+00:00"
+    },
+    {
+      "elapsed_seconds": 0.012775625102221966,
+      "ended_at": "2026-09-23T07:22:23.027524+00:00",
+      "label": "0042_final_owner_tree",
+      "pid": 75720,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:23.014676+00:00"
+    },
+    {
+      "elapsed_seconds": 3.281818499788642,
+      "ended_at": "2026-09-23T07:22:26.620915+00:00",
+      "label": "0043_final_readback_guard",
+      "pid": 75729,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:23.338919+00:00"
+    },
+    {
+      "elapsed_seconds": 0.02062216680496931,
+      "ended_at": "2026-09-23T07:26:37.859942+00:00",
+      "label": "0044_landed_diff",
+      "pid": 75996,
+      "rc": 0,
+      "started_at": "2026-09-23T07:26:37.839095+00:00"
+    },
+    {
+      "elapsed_seconds": 0.018724875524640083,
+      "ended_at": "2026-09-23T07:26:37.879728+00:00",
+      "label": "0045_final_diff_check",
+      "pid": 75997,
+      "rc": 0,
+      "started_at": "2026-09-23T07:26:37.860928+00:00"
+    },
+    {
+      "elapsed_seconds": 2.549740457907319,
+      "ended_at": "2026-09-23T07:20:02.701575+00:00",
+      "label": "phase01_pretransfer",
+      "pid": 74899,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:00.151561+00:00"
+    },
+    {
+      "elapsed_seconds": 4.038910750299692,
+      "ended_at": "2026-09-23T07:20:30.699787+00:00",
+      "label": "phase02_transfer",
+      "pid": 74974,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:26.660500+00:00"
+    },
+    {
+      "elapsed_seconds": 3.200029667466879,
+      "ended_at": "2026-09-23T07:20:53.298075+00:00",
+      "label": "phase03_stage",
+      "pid": 75159,
+      "rc": 0,
+      "started_at": "2026-09-23T07:20:50.097739+00:00"
+    },
+    {
+      "elapsed_seconds": 36.01044483296573,
+      "ended_at": "2026-09-23T07:21:59.496965+00:00",
+      "label": "phase04_commit_finalize",
+      "pid": 75301,
+      "rc": 0,
+      "started_at": "2026-09-23T07:21:23.485948+00:00"
+    },
+    {
+      "elapsed_seconds": 7.65755929145962,
+      "ended_at": "2026-09-23T07:22:26.670912+00:00",
+      "label": "phase05_publish",
+      "pid": 75671,
+      "rc": 0,
+      "started_at": "2026-09-23T07:22:19.012972+00:00"
+    }
+  ]
+}

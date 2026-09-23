@@ -1,0 +1,9 @@
+{
+  "profile": "CONCEPTUAL_ARTWORK_PROVENANCE_V01",
+  "artwork": "radiolaria_incident_atlas_hero_v01.png",
+  "method": "Original built-in image generation for this Atlas presentation; no postprocessing.",
+  "meaning": "Conceptual silica-lattice Radiolaria. It is not a measured specimen or an evidence graph.",
+  "sha256": "f4f2338b1eb33a3c752b1ad5035b23111b629cc3620514e29931f893a9be3220",
+  "public_language": "English",
+  "date": "2026-09-23"
+}

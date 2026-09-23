@@ -1,0 +1,2 @@
+AssertionError at prepare.py:11: assert body.count(begin)==body.count(end)==1
+The end marker also occurs in explanatory text. No archive extraction, Git mutation, or owner source transfer had started.

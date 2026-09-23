@@ -1,0 +1,87 @@
+{
+  "causality": "Five actual consumers, not twenty independent learning events.",
+  "consumers": [
+    {
+      "domain": "Supplier",
+      "effective_samples": 3,
+      "evidence_refs": [
+        "/supplier/donor/sources/observations",
+        "/supplier/donor/sources/history",
+        "/supplier/donor/sources/record_review",
+        "/supplier/donor/sources/current/projection",
+        "/supplier/donor/sources/current/work",
+        "/supplier/donor/sources/current/review_after"
+      ],
+      "labels": "Captions summarize saved operation identities; exact IDs remain in original records.",
+      "limitation": "Additional S4 delivery controls follow this consumer; unsupported channel/receipt profiles do not generate independent feedback.",
+      "selected_after_caption": "provenance",
+      "selected_before_caption": "standard"
+    },
+    {
+      "domain": "Airline",
+      "effective_samples": 1,
+      "evidence_refs": [
+        "/airline/experience/observation",
+        "/airline/experience/recording_review",
+        "/airline/experience/snapshot",
+        "/airline/experience/after",
+        "/airline/consumption"
+      ],
+      "labels": "Captions summarize saved operation identities; exact IDs remain in original records.",
+      "limitation": "Selected-offer/hold only; cold-trust additional Work remains.",
+      "selected_after_caption": "provenance",
+      "selected_before_caption": "constraint"
+    },
+    {
+      "domain": "Testflix",
+      "effective_samples": 1,
+      "evidence_refs": [
+        "/testflix/experience/observation",
+        "/testflix/experience/recording_review",
+        "/testflix/experience/snapshot",
+        "/testflix/experience/after",
+        "/testflix/consumption"
+      ],
+      "labels": "Captions summarize saved operation identities; exact IDs remain in original records.",
+      "limitation": "Favorable history is not purchase consent; actual continuation is START within an existing paid period.",
+      "selected_after_caption": "constraint",
+      "selected_before_caption": "provenance"
+    },
+    {
+      "domain": "Workspace",
+      "effective_samples": 1,
+      "evidence_refs": [
+        "/workspace/experience/observation",
+        "/workspace/experience/recording_review",
+        "/workspace/experience/snapshot",
+        "/workspace/experience/after",
+        "/workspace/consumption",
+        "/workspace/exact_approval",
+        "/workspace/sidecar"
+      ],
+      "labels": "Captions summarize saved operation identities; exact IDs remain in original records.",
+      "limitation": "One authored predictive sample is separate from live-summary quality; exact current save approval still required.",
+      "selected_after_caption": "constraint",
+      "selected_before_caption": "provenance"
+    },
+    {
+      "domain": "Sentinel",
+      "effective_samples": 1,
+      "evidence_refs": [
+        "/sentinel/experience/observation",
+        "/sentinel/experience/recording_review",
+        "/sentinel/experience/snapshot",
+        "/sentinel/experience/values/after",
+        "/sentinel/continuation/consumption",
+        "/sentinel/continuation/recovery"
+      ],
+      "labels": "Captions summarize saved operation identities; exact IDs remain in original records.",
+      "limitation": "Consumed LIMITED diagnostic output does not authorize signals; independent new observations and native Root checks do.",
+      "selected_after_caption": "observability",
+      "selected_before_caption": "diagnostic"
+    }
+  ],
+  "sample_count": 7,
+  "source": "evidence/atlas_package.json",
+  "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24"
+}

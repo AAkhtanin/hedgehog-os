@@ -1,0 +1,86 @@
+{
+  "final_freeze_authorized": true,
+  "inputs": [
+    {
+      "path": "presentation/slide_text_and_notes.json",
+      "required": true,
+      "role": "main_text_and_notes",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/cards.json",
+      "required": true,
+      "role": "twenty_cards",
+      "status": "PRESENT"
+    },
+    {
+      "path": "technical_appendix_INCIDENT_ATLAS_V02_20260923.md",
+      "required": true,
+      "role": "technical_appendix",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/appendix_content.json",
+      "required": true,
+      "role": "appendix_content",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/render_appendix.py",
+      "required": false,
+      "role": "appendix_builder",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/external_sources.json",
+      "required": false,
+      "role": "external_primary_sources",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/math_profile.json",
+      "required": true,
+      "role": "consumer_math",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/model_origins.json",
+      "required": true,
+      "role": "model_origins",
+      "status": "PRESENT"
+    },
+    {
+      "path": "presentation/presentation_qa_V02_20260923.json",
+      "required": true,
+      "role": "presentation_qa",
+      "status": "PRESENT"
+    },
+    {
+      "path": "incident_to_proof_atlas_V02_20260923.pdf",
+      "required": true,
+      "role": "main_pdf",
+      "status": "PRESENT"
+    },
+    {
+      "path": "incident_to_proof_atlas_V02_20260923.pptx",
+      "required": true,
+      "role": "main_pptx",
+      "status": "PRESENT"
+    },
+    {
+      "path": "technical_appendix_INCIDENT_ATLAS_V02_20260923.pdf",
+      "required": true,
+      "role": "appendix_pdf",
+      "status": "PRESENT"
+    },
+    {
+      "path": "assets/radiolaria_incident_atlas_hero_v01.png",
+      "required": true,
+      "role": "hero",
+      "status": "PRESENT"
+    }
+  ],
+  "profile": "ATLAS_EDITORIAL_INTEGRATION_V02",
+  "publication_status": "NOT_COMMITTED_OR_PUSHED",
+  "state": "COMPLETE_EDITORIAL_INPUTS"
+}

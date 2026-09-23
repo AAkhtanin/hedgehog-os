@@ -1,0 +1,172 @@
+{
+  "AT4_actual_summary": {
+    "attempt": 1,
+    "input_sha256": "6707ef4c33b653b62bab195ed30c419578f1946542c02e5fb788fe60a02af85c",
+    "model": "gemini-2.5-flash",
+    "purpose": "One live closed-workspace continuation summary; poison is a separate controlled derivative.",
+    "raw_sha256": "4850b0ed54e672ab6c3151a08533c0ebed457def2959e5b2c41718b6c836f7d7",
+    "request_sha256": "01d3cba84078e5d61af04267cbf147b6da073d28e78ce20150125df42d069243",
+    "response_id": "uw6zasK3EKWykdUPiYvZmQ0",
+    "response_model": "gemini-2.5-flash",
+    "seconds": 4.5139260003343225,
+    "status": "RETURNED",
+    "usage": {
+      "candidates_token_count": 115,
+      "prompt_token_count": 655,
+      "total_token_count": 1408
+    }
+  },
+  "AT5_new_provider_calls": 0,
+  "captured_reexecution_calls": 0,
+  "counts": {
+    "captured_reexecutions": 0,
+    "effective_history_samples": 7,
+    "historical_model_calls": 5,
+    "historical_models": 1,
+    "new_provider_calls": 0,
+    "supplemental_channel_attempts": 13,
+    "unique_airline_predictive_observations": 1,
+    "unique_continuations": 5,
+    "unique_experience_consumers": 5,
+    "unique_sentinel_predictive_observations": 1,
+    "unique_supplier_advice_events": 4,
+    "unique_testflix_predictive_observations": 1,
+    "unique_workspace_predictive_observations": 1
+  },
+  "historical_actual_calls": 5,
+  "historical_models": 1,
+  "historical_origins": [
+    {
+      "case": "ADV-1",
+      "contributes_new_atlas_sample": false,
+      "execution": "RECORDED_HISTORICAL",
+      "files": {
+        "receipt.json": {
+          "bytes": 717,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_captures/ADV-1_1/receipt.json",
+          "sha256": "40ccb7b23db4a19d15c7a993a61e83c668d1c94d1b08e034d84d5965ad86646f"
+        },
+        "request.json": {
+          "bytes": 1961,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_captures/ADV-1_1/request.json",
+          "sha256": "2372a8417052e44caa10e613915e14dc5cb40c00f86f652a0eeeb581ec4acb0e"
+        },
+        "response.txt": {
+          "bytes": 163,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_captures/ADV-1_1/response.txt",
+          "sha256": "c25f96d273bf1f50c5b94acb6c6cd6b56f52466b34035dcd907557b6d07ef197"
+        }
+      },
+      "model": "gemini-2.5-flash",
+      "proposal_origin": "EXACT_SAVED_PROVIDER_RESPONSE",
+      "response_id": "-6uxaozSItetvdIP7q7QMA"
+    },
+    {
+      "case": "ADV-2",
+      "contributes_new_atlas_sample": false,
+      "execution": "RECORDED_HISTORICAL",
+      "files": {
+        "receipt.json": {
+          "bytes": 718,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_captures/ADV-2_1/receipt.json",
+          "sha256": "3dc0bc956719ca026e79c7073239e3ee337af5963195fa6f7240715aac7cc898"
+        },
+        "request.json": {
+          "bytes": 1962,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_captures/ADV-2_1/request.json",
+          "sha256": "8f85d0de3af7c8193ed048684e2662b16b809de763e6226c54d3b8cad5fff2c7"
+        },
+        "response.txt": {
+          "bytes": 163,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_captures/ADV-2_1/response.txt",
+          "sha256": "feb385d3209410186f74f4ee17676a21bdbf5d6f10f368bb8a05bf217e01d3f6"
+        }
+      },
+      "model": "gemini-2.5-flash",
+      "proposal_origin": "EXACT_SAVED_PROVIDER_RESPONSE",
+      "response_id": "CayxaqOqDd6JxN8P2s63mAY"
+    },
+    {
+      "case": "ADV-3",
+      "contributes_new_atlas_sample": false,
+      "execution": "RECORDED_HISTORICAL",
+      "files": {
+        "receipt.json": {
+          "bytes": 718,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_resumed_captures/ADV-3_1/receipt.json",
+          "sha256": "3408f83dff90836a388775e2e75aa11fbf300885c1792e4c74b0cf9e5042951e"
+        },
+        "request.json": {
+          "bytes": 1986,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_resumed_captures/ADV-3_1/request.json",
+          "sha256": "7cb5025605f4c3e2b5925633910929030c30cff594db65acae17e87376286896"
+        },
+        "response.txt": {
+          "bytes": 170,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_live_resumed_captures/ADV-3_1/response.txt",
+          "sha256": "1347583716e9eaa978c77394956ddad78a7831c51d8912b0281a9e3e2582b056"
+        }
+      },
+      "model": "gemini-2.5-flash",
+      "proposal_origin": "EXACT_SAVED_PROVIDER_RESPONSE",
+      "response_id": "A62xatHgBcf5xN8Pt-W-mAY"
+    },
+    {
+      "case": "CONTINUE",
+      "contributes_new_atlas_sample": false,
+      "execution": "RECORDED_HISTORICAL",
+      "files": {
+        "receipt.json": {
+          "bytes": 720,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_captured_complete_captures/CONTINUE_1/receipt.json",
+          "sha256": "654861eefcab24aff4b58c50ba02c06d7d1d4ad603a07d3d4192141a9f996b39"
+        },
+        "request.json": {
+          "bytes": 2009,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_captured_complete_captures/CONTINUE_1/request.json",
+          "sha256": "4cb9c7039aba4dfebd683e30a8e6a7d17ff179faaa98b85f990590d3730c7eb8"
+        },
+        "response.txt": {
+          "bytes": 189,
+          "path": "docs/showcase/gate3_closure_v01/evidence/g36/runtime/g36_captured_complete_captures/CONTINUE_1/response.txt",
+          "sha256": "aa3f4c3b97b92c1f13e34bae91a15cff5f02cd2ae95ec1cc08335a4394d6b018"
+        }
+      },
+      "model": "gemini-2.5-flash",
+      "proposal_origin": "EXACT_SAVED_PROVIDER_RESPONSE",
+      "response_id": "y62xaqHDGdLWxN8P-PmdiQM"
+    }
+  ],
+  "historical_raw_files": "historical_at1/historical_origins and historical_at4/evidence/workspace",
+  "new_model_quality_claim": "NONE",
+  "pending_worker": "CONTROLLED_BARRIER_STUB",
+  "sentinel": {
+    "configuration_effect": 0,
+    "drs_descent": 2,
+    "drs_search": 2,
+    "drs_write": 1,
+    "harness_async_transport": 0,
+    "harness_attempt": 0,
+    "harness_completed": 0,
+    "harness_rejected": 0,
+    "harness_transport": 0,
+    "local_work": 10,
+    "mock_effect": 3,
+    "native_dispatch": 3,
+    "outbox_deliver": 0,
+    "outbox_queue": 1,
+    "public_D": 0,
+    "public_E": 0,
+    "receiver_receive": 0,
+    "report_effect": 1,
+    "sensor_attempt": 0,
+    "sensor_completed": 0,
+    "series_effect": 0,
+    "series_read": 0,
+    "signal_effect": 2,
+    "site_completed": 1,
+    "site_rejected": 0,
+    "site_request": 1
+  },
+  "sentinel_claims": "AUTHORED_CONTROLLED"
+}

@@ -1,0 +1,13 @@
+{
+  "channels": "collect_channels_v01 AST and full backend bytes identical to executed command 0010.",
+  "classification": "REUSED_COMPLETED_PHASES_WITH_EXPLICIT_IMPACT; NOT_A_NEW_FULL_COLLECTION",
+  "donor": "Unchanged accepted implementation; command 0009 source-bound completion preserved.",
+  "final_changes": "Export/pure consumers plus refusal to silently resume an existing collection directory.",
+  "fresh_final_checks": [
+    "0011_final_engineering",
+    "0012_export",
+    "0013_focused_checks",
+    "0014_offline_replay"
+  ],
+  "history": "collect_history_controls_v01 AST identical to executed command 0009; unchanged imports/canonical helpers."
+}

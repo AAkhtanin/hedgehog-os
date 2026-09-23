@@ -1,0 +1,30 @@
+{
+  "site": "slope_demo_site_001",
+  "reference_note": "Independent reference and reserve channels are available for bounded diagnostic work.",
+  "maintenance_note": {"text":"Compare independent reserve readings, inspect references, and check rainfall context age.","observed_at":120,"received_at":120,"site":"slope_demo_site_001","source":"synthetic_maintenance_log"},
+  "frames": [
+    {"sensor":"rainfall","value":12000,"unit":"mm_x1000","scenario_tick":0,"healthy":true,"calibration":"calibration:sentinel:v01"},
+    {"sensor":"displacement","value":400,"unit":"um","scenario_tick":0,"healthy":true,"calibration":"calibration:sentinel:v01"},
+    {"sensor":"reserve","value":350,"unit":"um","scenario_tick":0,"healthy":true,"calibration":"calibration:sentinel:v01"}
+  ],
+  "changed_rainfall":{"sensor":"rainfall","value":41000,"unit":"mm_x1000","scenario_tick":90,"healthy":true,"calibration":"calibration:sentinel:v01"},
+  "critical_local":[],
+  "reserve_series_raw":[{"tick":100,"value":1600},{"tick":110,"value":1700},{"tick":120,"value":1750}],
+  "roles":{
+    "LOCAL_SLOPE_ANALYST":{"diagnostic":"INDEPENDENT_RESERVE_SERIES","reason":"Compare the independent local reserve series."},
+    "CLOUD_ENVIRONMENTAL_ANALYST":{"diagnostic":"TEMPORAL_CONTEXT_APPLICABILITY","reason":"Check applicability of the recorded accumulation interval."},
+    "ADVERSARIAL_SENSOR_REVIEWER":{"diagnostic":"REFERENCE_INTEGRITY","reason":"Inspect reference integrity following the maintenance note."}
+  },
+  "local_events":[
+    {"tick":120,"displacement":1800,"reserve":1700},
+    {"tick":135,"displacement":2100,"reserve":1900},
+    {"tick":150,"displacement":6200,"reserve":5800},
+    {"tick":165,"displacement":6300,"reserve":5900},
+    {"tick":180,"displacement":6000,"reserve":5700},
+    {"tick":195,"displacement":400,"reserve":350},
+    {"tick":210,"displacement":400,"reserve":null},
+    {"tick":225,"displacement":450,"reserve":400},
+    {"tick":240,"displacement":400,"reserve":350},
+    {"tick":255,"displacement":350,"reserve":300}
+  ]
+}

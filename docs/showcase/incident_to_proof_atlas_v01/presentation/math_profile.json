@@ -1,0 +1,16 @@
+{
+  "id": "G3_FIXED_POINT_REFERENCE_V01",
+  "source": "hedgehog/outcome_calibration_v01.py",
+  "source_sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079",
+  "scale_Q": 1000000000,
+  "rounding": "signed rational round-half-even; clamp after update",
+  "rating_update": "r_next = clamp(r + RHE(125000000 * (observed - expected) / Q), 0, Q)",
+  "avf_history_prior": "p_next = clamp(p + RHE(62500000 * ((2 * observed - Q) - p) / Q), -Q, Q)",
+  "ranking": "score = clamp(base + RHE(250000000 * prior / Q), 0, Q); units = RHE(score * 1000000 / Q)",
+  "half_life": "H = clamp(RHE(86400 * (Q/2 + r_next) * regret_factor * freshness_factor * safety_factor / Q^4), 3600, 604800)",
+  "factors": "Unknown regret: Q/2; known regret: Q - regret_norm. Freshness factor: Q. Verified unsafe: safety Q/2; otherwise Q.",
+  "decay": "trust(age) = RHE(rating * 2^(-age/H)); exact rational branch for integral half-lives; Decimal precision 80 otherwise; zero at age >= 64H. Time admission is separate.",
+  "review": "pressure = Q - trust; review recommended below 600000000; unusable time yields full advisory pressure, not authority.",
+  "limits": "256 deliveries; 64 effective occurrences; duplicates audited without extra updates; sample state WARM at 3, otherwise SPARSE/COLD. Missing expectation or unsupported profile remains NO_UPDATE.",
+  "authority": "Advisory ranking only. No permission, hard veto, model weight update, or calibrated market probability."
+}

@@ -1,0 +1,65 @@
+{
+  "argument_file_identities": {
+    "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/runtime.py": {
+      "bytes": 534,
+      "sha256": "b53830cea64feda3446146a73a2f0b541249416b20819a1e5c05e69923762cbf"
+    }
+  },
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/runtime.py",
+    "0005_sentinel"
+  ],
+  "context": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/admission/0003_initial/context.json",
+  "cwd": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate",
+  "elapsed_seconds": 25.64017862547189,
+  "ended_at": "2026-09-23T06:12:51.060892+00:00",
+  "helper_sha256": "b06e0b59730272ce595163270688bf8977f633b13869ba4e8cfe0bc0e5f58623",
+  "inherited_context_overridden": false,
+  "pid": 70135,
+  "rc": 0,
+  "source_pins": {
+    "demo/run_incident_atlas_v01.py": "bf6d81191cd88f7f43b6ae24e8c173c9b2b599698f9f90b66dca0eb3fc969049",
+    "docs/incident_to_proof_atlas_v01.md": "698f5094e4a57a50957efe99902d4deacc12fdcca58c195086a46422bc10a60c",
+    "fixtures/incident_atlas_airline_v01.json": "dfc615defd2b42d335dcb479d7383cd3a0338119dc7d568e9546a68aad546eb4",
+    "fixtures/incident_atlas_cases_v01.json": "5b491e4af2e497d0cc7b880339a33a6ba1bd0e0d3532ed9bb1231a6d13b7f233",
+    "fixtures/incident_atlas_supplier_v01.json": "f3cfc8a811f2699a02e299abb9fdb943b9e052a4b86c0c1f5c7be5024df70b1f",
+    "fixtures/incident_atlas_testflix_v01.json": "0f545c52938533386e83212f5fae8be93d6f0fc286f60ad944f9f1e1078e84a4",
+    "hedgehog/domains/airline/incident_atlas_source_v01.py": "11c04dcafe61b1dd0f6840268d119f4eb9377a9d2594a085e93cd60c0ef68411",
+    "hedgehog/domains/airline/incident_atlas_v01.py": "0a3fffe17b89a8d473dbd1143275242c384d830ad2d3785bc13b46296a6e2ce4",
+    "hedgehog/domains/airline/incident_atlas_work_v01.py": "8d6fc16c5670d78ef92ed06c65e22de66a6c1c98c7f7104236b88fad17717177",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_proof_v01.py": "60ce33ceb220b947ef912884f51f9b1f871e586742963271efcf26e8da42ee14",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_source_v01.py": "d61ea8ea23f89c3b19868fc4eab3c41795955af42fe06307fdbc565a49481c1b",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py": "e39c084be25e4a60aa050c3aa6c5451a0fb1ad47501d30244499dbb818d7db17",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_task_v01.py": "46fe3d3d540dd81cfb582394d586c766ac46339c9a50bd3829736617a28b869d",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py": "0448a8eb44ed69e0d8eac4f9a1d3ae484b377422d36fb2030be8f663066e4b57",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_work_proof_v01.py": "7feecd660d7a71911d20bf5e4f5c44269b6507f465888b804285bf9b36813395",
+    "hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py": "a6f362626106de6bf2f01e6fd20e4fb2a36b949a2f2a62c9915eaa77bb2e702f",
+    "hedgehog/domains/landslide_sentinel/incident_atlas_source_v01.py": "f9a37c0ae36dbbbc40c610cf9210f66157aaceb8ec4b2e695fadbd77a4e4c8cd",
+    "hedgehog/domains/landslide_sentinel/incident_atlas_v01.py": "04bf9f18adfcff9472a560c84c5581814841092a4c5ace957c8856b0e6c1614e",
+    "hedgehog/domains/landslide_sentinel/incident_atlas_work_v01.py": "7ab9972fce0e04de15cf84293548a7b6a789ed5c9046c68a9be21dbe82f10792",
+    "hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py": "087e404fb5481a98df2436dfd4a44f811f7b59e9a09a9ae74982be4cc84532dd",
+    "hedgehog/domains/supplier_water_filter/incident_atlas_v01.py": "cef0f14e42f12834c09c74209d638ba5f4a3bf7da41cfde81f3b1a083889e867",
+    "hedgehog/domains/testflix/incident_atlas_proof_v01.py": "cf84470b41bf3c759520d3d0d28b078e9c02bf2edd3f4c40b6d5e31f7b0ba39f",
+    "hedgehog/domains/testflix/incident_atlas_source_v01.py": "63e945d5cc4caddb663893cc49bf29f9700ec129e18b13dbf5745411dea4bef0",
+    "hedgehog/domains/testflix/incident_atlas_v01.py": "6f816d40749933e96d5af75d17180df53a1b5e60212b01bcbe5dc7b3f9d94798",
+    "hedgehog/domains/testflix/incident_atlas_work_v01.py": "2edc3af561eb6c3cdfde0757cb1f18e9675bae4513db9d5c82f0769354e520a1",
+    "hedgehog/incident_atlas_history_v01.py": "7774802ea2015027506279823f04fdb46c09e6b70aa9a848f31a845d76f02585",
+    "hedgehog/incident_atlas_v01.py": "a7d7ac557ca0644efd4a68a3fba67230ca78cfff96cbca58d5520684235fd44f",
+    "tests/test_incident_atlas_airline_v01.py": "f8307e1c5ef38ec3a9578413e5130200c3619f82f77ba98565c075797ef535f7",
+    "tests/test_incident_atlas_supplier_v01.py": "cd9b3b55fbc9711c0f88d42b325d564461f3471861a167131288231f3ed8a1eb",
+    "tests/test_incident_atlas_testflix_v01.py": "75535063206fa7d40942e2039776840d1252c370e534773780d834a0229b9e07",
+    "tests/test_incident_atlas_v01.py": "7c36843878936201ac55b273e21d904c7c7f7a585f7c056d7a7618647f2fe9d4",
+    "tests/test_incident_atlas_workspace_v01.py": "0090b19a3f9f7b7da45061a65169d7a5e9f40fe1cdbfe78ef8d8be9d0c130206"
+  },
+  "started_at": "2026-09-23T06:12:25.420212+00:00",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 24522,
+    "sha256": "56b961d9b8051f4e55214f09d82692d9232479c8d493f169a242a74994076089"
+  }
+}

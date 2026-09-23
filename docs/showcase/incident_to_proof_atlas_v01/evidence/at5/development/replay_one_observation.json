@@ -1,0 +1,194 @@
+{
+  "counts": {
+    "airline_collect": 0,
+    "backend_invoke": 0,
+    "collect": 0,
+    "donor_collect": 0,
+    "history_commit": 0,
+    "history_current": 0,
+    "history_prepare": 0,
+    "history_read": 0,
+    "host_dispatch": 0,
+    "host_init": 0,
+    "host_pure": 0,
+    "pure_work": 0,
+    "root_decide": 6,
+    "semantic_callback": 0,
+    "sentinel_collect": 0,
+    "sentinel_command": 0,
+    "sentinel_current_check": 0,
+    "sentinel_current_work": 0,
+    "sentinel_episode": 0,
+    "sentinel_native_work": 0,
+    "sentinel_prediction": 0,
+    "sentinel_read": 0,
+    "sentinel_worker": 0,
+    "summary_capture": 0,
+    "supplier_collect": 0,
+    "testflix_collect": 0,
+    "testflix_dispatch": 0,
+    "testflix_handle": 0,
+    "testflix_provider": 0,
+    "work_advance": 0,
+    "workspace_collect": 0,
+    "workspace_command": 0,
+    "workspace_effect": 0,
+    "workspace_history": 0,
+    "workspace_memory_read": 0,
+    "workspace_memory_write": 0,
+    "workspace_model": 0
+  },
+  "elapsed_seconds": 35.71843804232776,
+  "origins": {
+    "airline_collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/airline/incident_atlas_v01.py",
+      "line": 69
+    },
+    "backend_invoke": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/supplier_water_filter/incident_atlas_backend_v01.py",
+      "line": 104
+    },
+    "collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/incident_atlas_v01.py",
+      "line": 68
+    },
+    "donor_collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/gate3_mechanism_v01.py",
+      "line": 280
+    },
+    "history_commit": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/outcome_feedback_history_v01.py",
+      "line": 306
+    },
+    "history_current": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/outcome_feedback_history_v01.py",
+      "line": 409
+    },
+    "history_prepare": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/outcome_feedback_history_v01.py",
+      "line": 190
+    },
+    "history_read": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/outcome_feedback_history_v01.py",
+      "line": 250
+    },
+    "host_dispatch": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/work_execution_host_v01.py",
+      "line": 361
+    },
+    "host_init": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/work_execution_host_v01.py",
+      "line": 153
+    },
+    "host_pure": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/work_execution_host_v01.py",
+      "line": 768
+    },
+    "pure_work": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/outcome_feedback_consumer_v01.py",
+      "line": 330
+    },
+    "root_decide": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/kernel/root_decision_v01.py",
+      "line": 268
+    },
+    "semantic_callback": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "line": 474
+    },
+    "sentinel_collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/incident_atlas_v01.py",
+      "line": 131
+    },
+    "sentinel_command": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "line": 444
+    },
+    "sentinel_current_check": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "line": 326
+    },
+    "sentinel_current_work": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "line": 323
+    },
+    "sentinel_episode": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "line": 406
+    },
+    "sentinel_native_work": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "line": 537
+    },
+    "sentinel_prediction": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "line": 257
+    },
+    "sentinel_read": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "line": 502
+    },
+    "sentinel_worker": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "line": 655
+    },
+    "summary_capture": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/incident_atlas_summary_v01.py",
+      "line": 28
+    },
+    "supplier_collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/supplier_water_filter/incident_atlas_v01.py",
+      "line": 269
+    },
+    "testflix_collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/testflix/incident_atlas_v01.py",
+      "line": 259
+    },
+    "testflix_dispatch": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/testflix/lifecycle_v01.py",
+      "line": 214
+    },
+    "testflix_handle": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/testflix/evidence_v01.py",
+      "line": 207
+    },
+    "testflix_provider": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "line": 46
+    },
+    "work_advance": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/kernel/work_composition_v01.py",
+      "line": 1314
+    },
+    "workspace_collect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/incident_atlas_v01.py",
+      "line": 273
+    },
+    "workspace_command": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "line": 184
+    },
+    "workspace_effect": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "line": 241
+    },
+    "workspace_history": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/incident_atlas_work_v01.py",
+      "line": 202
+    },
+    "workspace_memory_read": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "line": 93
+    },
+    "workspace_memory_write": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "line": 59
+    },
+    "workspace_model": {
+      "file": "/private/tmp/RADIOLARIA_INCIDENT_ATLAS_AT5.LFDGAs/candidate/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "line": 367
+    }
+  },
+  "scope": "Selected production entrypoints, not an OS-wide network or effect audit",
+  "status": "INCOMPLETE"
+}

@@ -1,0 +1,1 @@
+AssertionError at prepare.py:24: origin was expected without .git suffix. Actual unchanged origin is https://github.com/AAkhtanin/hedgehog-os.git, the authorized repository. External helper literal corrected; owner Git configuration unchanged. Completed owner metadata checks are reused.

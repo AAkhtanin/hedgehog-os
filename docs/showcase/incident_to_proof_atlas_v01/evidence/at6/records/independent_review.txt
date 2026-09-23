@@ -1,0 +1,51 @@
+Exact independent review and authorization excerpt from the owner-supplied AT6 instruction.
+
+
+Independent Work review accepts AT5 and the cumulative Atlas implementation in
+the declared finite engineering/evidence scope. Archive SHA256/size/CRC, every
+manifest row, 34 postimages, 29 AT4 preimages, both independently applied patches,
+39 command-stream receipts, 22 nodes/66 passed phases, 128 case evidence pointers,
+three actual Sentinel runtime source identities and retained prior domain records
+were checked. Two final 935-byte replay outputs match; all 37 observed prohibited
+entrypoints are zero. Prior four domains remain exact, not freshly recollected.
+
+Native/source review confirms N1 event age, N2 independent lineage/redelivery,
+N3 trusted current recovery checks and separate measured OFF, and N4 genuine
+waiting worker with sufficient local Work/ON on the same continuing Root/Host.
+One completed diagnostic result contradicts its prospective authored prediction.
+The separately recorded history changes selected Work from diagnostic to
+observability, and that exact output enters current Root review. LIMITED output
+does not grant signal authority. The lawful continuation seeks independent new
+observations; the accepted incident path separately handles ON and measured OFF.
+
+The initial replay's six new Root decisions are preserved as a failure; the
+final supplied verifier validates saved decisions and uses pure public builders.
+No counter was removed to make the final replay pass. The code repair affects
+only Atlas additions; accepted core, domain and governance bytes remain frozen.
+
+Reviewed engineering coverage: 20 cards, 15 risk families, D1-D3 within those
+cards, five actual domain consumers and five lawful continuations. Seven effective
+history samples are not twenty learners. Five saved Gemini responses represent
+four historical Gate-3 calls plus one AT4 live summary; AT5 made no model calls.
+Controlled attack variants and the controlled waiting worker are labeled honestly.
+
+REVIEW_DECISION=ATLAS_ENGINEERING_ACCEPTED_FOR_DECLARED_FINITE_SCOPE
+OWNER_ADMISSION_AT_REVIEW=PENDING_THIS_EXACT_LANDING
+PRESENTATION_PUBLICATION=PENDING_SEPARATE_TASK
+
+This review does not certify physical landslide accuracy, arbitrary OS sandboxing,
+universal model safety, weight training, hard real-time response or full original
+native-graph replay. Safe-derived saved relationships are the supported replay
+scope. Hashes identify bytes/relations, not physical truth or new permissions.
+External incident catalog mappings remain documentary context; do not invent
+one-to-one real-company incident claims from the twenty controlled cards.
+
+Perform one ordinary owner landing of the exact 34 files below, one commit,
+normal push to origin/main, and independent remote readback. This includes the
+ordinary authorized R1 context transition/finalization. It does not authorize
+editing R1 policy, verifier, guard, binder, runtime, tests or any reviewed source.
+No implementation repair, extra audit file in the repository, presentation asset,
+README navigation change, new showcase capsule or new Gate is part of this hop.
+Keep the independent review record and landing audit outside the repository;
+they will accompany the later presentation/evidence capsule.
+

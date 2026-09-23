@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hedgehog-os-demo"
+version = "0.1.0"
+requires-python = ">=3.11"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+dependencies = [
+  "jsonschema",
+  "pytest",
+  "pyTelegramBotAPI",
+  "google-genai",
+  "cryptography==48.0.0",
+  "referencing",
+  "httpx",
+  "httpcore",
+  "Pillow",
+  "python-pptx",
+  "pypdf",
+  "reportlab",
+  "wasmtime==48.0.0"
+]
+
+[tool.setuptools.packages.find]
+include = ["hedgehog*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+  "--ignore=tests/test_ephemeral_workspace_evidence_v01.py",
+  "--ignore=tests/test_ephemeral_workspace_adversarial_v01.py",
+  "--ignore=tests/test_landslide_sentinel_ls0_v01.py",
+  "--ignore=tests/test_landslide_sentinel_ls1_v01.py",
+  "--ignore=tests/test_landslide_sentinel_ls2_v01.py",
+]

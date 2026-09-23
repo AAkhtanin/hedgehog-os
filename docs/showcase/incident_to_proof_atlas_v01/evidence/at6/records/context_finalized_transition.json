@@ -1,0 +1,9 @@
+{
+  "after_sha256": "895d66f9c1c4781efdcc96585c4848204b0ad622aa8c9b68ae3575f5f8e423c1",
+  "atomic_replace": true,
+  "before_sha256": "c6d9d500d17a6c01215602281e55fd5a319d624482acd1e623dbaf7c8db33e77",
+  "mode": "0600",
+  "path": "/Users/admin/Projects/hedgehog-os/.git/reviewed_repository_transition_v01/context.json",
+  "recovery": "/Users/admin/Projects/hedgehog-os/.git/reviewed_repository_transition_v01/context.AT6.finalized.20260923T072156203158Z.json",
+  "time": "2026-09-23T07:21:56.203842+00:00"
+}

@@ -1,0 +1,191 @@
+{
+  "profile": "INCIDENT_ATLAS_PRESENTATION_QA_V02_20260923",
+  "slides": 22,
+  "pptx_native_objects": [
+    {
+      "slide": 1,
+      "text_runs": 7,
+      "editable_shapes": 4,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 2,
+      "text_runs": 20,
+      "editable_shapes": 23,
+      "connectors": 4,
+      "tables": 0
+    },
+    {
+      "slide": 3,
+      "text_runs": 18,
+      "editable_shapes": 5,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 4,
+      "text_runs": 17,
+      "editable_shapes": 14,
+      "connectors": 1,
+      "tables": 0
+    },
+    {
+      "slide": 5,
+      "text_runs": 19,
+      "editable_shapes": 6,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 6,
+      "text_runs": 18,
+      "editable_shapes": 17,
+      "connectors": 3,
+      "tables": 0
+    },
+    {
+      "slide": 7,
+      "text_runs": 15,
+      "editable_shapes": 20,
+      "connectors": 4,
+      "tables": 0
+    },
+    {
+      "slide": 8,
+      "text_runs": 12,
+      "editable_shapes": 9,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 9,
+      "text_runs": 30,
+      "editable_shapes": 5,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 10,
+      "text_runs": 29,
+      "editable_shapes": 4,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 11,
+      "text_runs": 23,
+      "editable_shapes": 4,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 12,
+      "text_runs": 14,
+      "editable_shapes": 15,
+      "connectors": 1,
+      "tables": 0
+    },
+    {
+      "slide": 13,
+      "text_runs": 21,
+      "editable_shapes": 5,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 14,
+      "text_runs": 21,
+      "editable_shapes": 17,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 15,
+      "text_runs": 17,
+      "editable_shapes": 17,
+      "connectors": 2,
+      "tables": 0
+    },
+    {
+      "slide": 16,
+      "text_runs": 15,
+      "editable_shapes": 15,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 17,
+      "text_runs": 17,
+      "editable_shapes": 18,
+      "connectors": 2,
+      "tables": 0
+    },
+    {
+      "slide": 18,
+      "text_runs": 19,
+      "editable_shapes": 18,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 19,
+      "text_runs": 24,
+      "editable_shapes": 5,
+      "connectors": 0,
+      "tables": 1
+    },
+    {
+      "slide": 20,
+      "text_runs": 18,
+      "editable_shapes": 9,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 21,
+      "text_runs": 14,
+      "editable_shapes": 9,
+      "connectors": 0,
+      "tables": 0
+    },
+    {
+      "slide": 22,
+      "text_runs": 12,
+      "editable_shapes": 9,
+      "connectors": 0,
+      "tables": 0
+    }
+  ],
+  "native_chart_parts": [
+    "ppt/slides/charts/chart1.xml"
+  ],
+  "embedded_workbooks": [
+    "ppt/embeddings/chart-data-snapshot-001.xlsx"
+  ],
+  "selectable_pdf_text_characters": 11517,
+  "pdf_generated_from_pptx": "LibreOffice headless from exact final canonical PPTX",
+  "visual_review": "All 22 pages render pixel-identically to the accepted V02 PDF. Text, geometry and styles remain unchanged. Three native shape links on slide 22 survive direct PDF re-export.",
+  "application_limits": "No interactive Microsoft PowerPoint or Google Slides edit/save test. Native OOXML table/chart/shape presence and first-party import verified.",
+  "provenance": "Retained source data only; no domain/provider calls.",
+  "finalizer_receipt": "build/validation_r4.json",
+  "files": [
+    {
+      "file": "incident_to_proof_atlas_V02_20260923.pptx",
+      "bytes": 1314822,
+      "sha256": "6c93cf8b8d0cd32adaf8ca9e6ed95a1cce9286e6a507f7e6ffeb4f608edcc2f7"
+    },
+    {
+      "file": "incident_to_proof_atlas_V02_20260923.pdf",
+      "bytes": 412308,
+      "sha256": "ecc895b552c5e1b8178f9fe6db8d92194c369944b461f88532371f4f137502be"
+    }
+  ],
+  "native_tables_count": 7,
+  "native_connectors_count": 17,
+  "navigation_revision": "V02R1_LINK_ONLY",
+  "native_hyperlinks": 3,
+  "pdf_uri_annotations": 3,
+  "navigation_check": "navigation_link_qa_V02R1.json",
+  "finalizer_receipt_scope": "The retained finalizer receipt predates the link-only edit. All native content is unchanged except two hyperlink-bearing OOXML parts, checked independently."
+}

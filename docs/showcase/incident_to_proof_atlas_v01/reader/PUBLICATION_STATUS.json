@@ -1,0 +1,36 @@
+{
+  "as_of": "2026-09-23",
+  "distinction": "Source availability, historical execution, independent review and presentation publication are separate facts.",
+  "implementation": {
+    "commit": "e538790eef3eb11201900a5da63fbb3ff61ad602",
+    "exact_additions": 34,
+    "final_tracked_paths": 1693,
+    "message": "Implement Incident Atlas across five domains",
+    "parent": "0c5d02100442b43be9187d52ecd487022344d83b",
+    "tree": "c03b80c9d506a12d329ae6608c1c9dbabbd9615f"
+  },
+  "presentation": {
+    "editorial_version": "V02",
+    "namespace": "docs/showcase/incident_to_proof_atlas_v01",
+    "owner_publication_authorized_by_this_build": false,
+    "publication_commit": null,
+    "status": "PREPARED_LOCALLY_NOT_COMMITTED_OR_PUSHED"
+  },
+  "profile": "ATLAS_PRESENTATION_STATUS_OVERLAY_V02",
+  "proof": {
+    "bytes": 68250583,
+    "historical_bytes_unchanged": true,
+    "path": "evidence/atlas_package.json",
+    "sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24"
+  },
+  "review": {
+    "at5": "evidence/review/AT5_INDEPENDENT_REVIEW.json",
+    "at6": "evidence/review/AT6_INDEPENDENT_REVIEW.json"
+  },
+  "source_admission": {
+    "manifest": "evidence/at6/records/frozen_manifest.json",
+    "manifest_sha256": "d7afeb8c169169e4783515e89315085b1fb3591792e82c0a2a347c27b8314748",
+    "remote_readback": "evidence/at6/records/remote_readback.json",
+    "state": "FINALIZED"
+  }
+}

@@ -1,0 +1,9 @@
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_supplied_replay_positive_v01", "phase": "setup", "outcome": "passed", "seconds": 0.16909337509423494, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_supplied_replay_positive_v01", "phase": "call", "outcome": "passed", "seconds": 35.79106233455241, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_supplied_replay_positive_v01", "phase": "teardown", "outcome": "passed", "seconds": 8.129235357046127e-05, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_wrong_external_pin_v01", "phase": "setup", "outcome": "passed", "seconds": 6.366614252328873e-05, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_wrong_external_pin_v01", "phase": "call", "outcome": "passed", "seconds": 0.19552462548017502, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_wrong_external_pin_v01", "phase": "teardown", "outcome": "passed", "seconds": 5.0875358283519745e-05, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_rehashed_false_relationship_v01", "phase": "setup", "outcome": "passed", "seconds": 4.795938730239868e-05, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_rehashed_false_relationship_v01", "phase": "call", "outcome": "passed", "seconds": 6.610650916583836, "error": null}
+{"node": "tests/test_incident_atlas_v01.py::test_atlas_rehashed_false_relationship_v01", "phase": "teardown", "outcome": "passed", "seconds": 7.71665945649147e-05, "error": null}

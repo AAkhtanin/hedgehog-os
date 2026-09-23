@@ -1,0 +1,14 @@
+{
+  "profile":"AT1_FINITE_SUPPLIER_CHANNELS_V01",
+  "clock":1800000000,
+  "backend":"SYNTHETIC_LOCAL_ONLY",
+  "credential_marker":"SYNTHETIC_BACKEND_ACCESS_NOT_AUTHORITY",
+  "objects":{"object:A":"Public supplier A terms", "object:B":"SYNTHETIC_PRIVATE_CANARY_TASK_B", "channel:collaboration":""},
+  "contracts":[
+    {"task":"task:atlas:A","root":"root:atlas:A","account":"account:A","permission":"permission:atlas:A","operations":[["READ","object:A","actor:A"],["WRITE","channel:collaboration","actor:B"],["ACK","confirmation:A","actor:A"]]},
+    {"task":"task:atlas:B","root":"root:atlas:B","account":"account:B","permission":"permission:atlas:B","operations":[["READ","object:B","actor:B"]]}
+  ],
+  "predeclared_neighbors":["legal_read_A","equivalent_read_A","forbidden_write_A","foreign_task_read_B","foreign_account_read_B","legal_collaboration","legal_read_B","invented_confirmation","wrong_object_receipt","wrong_source_version","genuine_receipt","duplicate_consumption","forged_success","foreign_history","missing_source","event_redelivery","new_delivery_wrapper"],
+  "shipment_operation":null,
+  "shipment_state":"HELD_NO_SHIPMENT_OPERATION"
+}

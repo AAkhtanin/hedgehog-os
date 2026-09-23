@@ -1,0 +1,51 @@
+{
+  "profile": "INCIDENT_ATLAS_AT2_V01",
+  "claims": {
+    "P01": "Untrusted goal hijack", "P02": "Availability versus permission",
+    "P03": "Private data disclosure", "P04": "Foreign authority",
+    "P05": "Cross-task or actor channels", "P06": "Memory or summary instructions",
+    "P07": "Expiry or revocation", "P08": "Contextual TOCTOU",
+    "P09": "Duplicate effects", "P10": "Invented results",
+    "P11": "Stale or dependent observations", "P12": "Changed admitted implementation",
+    "P13": "Arbitrary execution or write", "P14": "Unavailable work or unbounded waiting",
+    "P15": "Forged or multiplied feedback"
+  },
+  "cards": [
+    {"id":"A1","title":"Outside-request offer","claims":["P01","P02"]},
+    {"id":"A2","title":"Foreign consent","claims":["P04","P05"]},
+    {"id":"A3","title":"Wrong offer binding","claims":["P08","P11"]},
+    {"id":"A4","title":"Private-field disclosure","claims":["P03"]},
+    {"id":"S1","title":"The invoice cannot change the payee","claims":["P01","P02"]},
+    {"id":"S2","title":"Collaboration needs an allowed channel","claims":["P03","P05"]},
+    {"id":"S3","title":"A claimed receipt is not an executed result","claims":["P10","P09"]},
+    {"id":"S4","title":"A forged success is not experience","claims":["P15"]},
+    {"id":"T1","title":"Changed quote","claims":["P08"]},
+    {"id":"T2","title":"Current expiry and revocation","claims":["P07"]},
+    {"id":"T3","title":"Duplicate purchase","claims":["P09"]},
+    {"id":"T4","title":"Memory is not renewed consent","claims":["P06","P15"]},
+    {"id":"W1","title":"Unauthorized hosting","claims":["P03","P05"]},
+    {"id":"W2","title":"Unrestricted execution","claims":["P13"]},
+    {"id":"W3","title":"Implementation identity","claims":["P12"]},
+    {"id":"W4","title":"Old grants and summary","claims":["P06","P07"]},
+    {"id":"N1","title":"Event age versus delivery","claims":["P11"]},
+    {"id":"N2","title":"Shared lineage","claims":["P11"]},
+    {"id":"N3","title":"Late result and current recovery","claims":["P10","P08"]},
+    {"id":"N4","title":"Optional cloud versus sufficient local work","claims":["P14"]}
+  ],
+  "variants": {
+    "D1":{"cards":["W4","S3","S4"],"status":"PENDING","obligation":"Actual summary continuation"},
+    "D2":{"cards":["S1","S3"],"status":"PENDING","obligation":"Synthetic credential is not task authority"},
+    "D3":{"cards":["S2"],"status":"PENDING","obligation":"A resource is not an authorized cross-task channel"}
+  },
+  "risk_sources": [
+    {"id":"risk_source:W7","type":"E","url":"https://invariantlabs.ai/blog/mcp-github-vulnerability","review":"SUPPLIED_RESEARCH_NOT_NEW_WEB_REVIEW"},
+    {"id":"risk_source:W4","type":"I","url":"https://openai.com/index/model-misalignment-reporting-framework/","review":"SUPPLIED_RESEARCH_NOT_NEW_WEB_REVIEW"},
+    {"id":"risk_source:O3","type":"I","url":"https://alignment.openai.com/misalignment-reports/searching-github-for-leaked-api-keys/","review":"SUPPLIED_DELTA_NOT_NEW_WEB_REVIEW"},
+    {"id":"risk_source:O5","type":"I","url":"https://alignment.openai.com/misalignment-reports/unauthorized-artifactory-writes-and-cross-sample-communication/","review":"SUPPLIED_DELTA_NOT_NEW_WEB_REVIEW"},
+    {"id":"risk_source:O1","type":"I","url":"https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/","review":"PENDING_ATLAS_VARIANT"},
+    {"id":"risk_source:O2","type":"I","url":"https://alignment.openai.com/misalignment-reports/encouraging-deception-in-compaction-summaries/","review":"PENDING_ATLAS_VARIANT"},
+    {"id":"risk_source:AT1_P15","type":"R","description":"Source-bound feedback poisoning is a local engineering requirement, not a claim about an external OFE system."}
+  ],
+  "risk_type_legend":{"I":"Investigated incident","E":"Research demonstration","R":"Requirement or risk framing"},
+  "counting":"Unique source events, continuations and consumers; card references are not new samples."
+}

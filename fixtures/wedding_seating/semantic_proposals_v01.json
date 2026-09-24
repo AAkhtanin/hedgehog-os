@@ -1,0 +1,182 @@
+{
+  "classification": "CONTROLLED_FIXTURE",
+  "safe_intents": {
+    "A": "Create a seating plan. Prefer keeping the existing circles together. Keep all mandatory seating restrictions.",
+    "B": "Create a seating plan. Prefer mixing the existing circles across tables. Keep all mandatory seating restrictions.",
+    "VALIDATE": "Check this existing seating plan. Do not search for a replacement."
+  },
+  "proposals": [
+    {
+      "schema_version": "WeddingSemanticProposalV01",
+      "origin": "CONTROLLED_FIXTURE",
+      "request_ref": "request:A",
+      "actor_ref": "actor:ORCHESTRATOR",
+      "role": "ORCHESTRATOR",
+      "model_ref": "model:controlled",
+      "capture_ref": "capture:A:ORCHESTRATOR",
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 1,
+      "source_refs": [
+        "source:w1:hard"
+      ],
+      "task_kind": "GENERATE",
+      "unresolved": [],
+      "reason": "Controlled schema fixture; no live model or authority.",
+      "needs": [
+        "EXACT_SEARCH",
+        "ORIGINAL_VALIDATION",
+        "REQUIREMENT_REVIEW"
+      ],
+      "requested_outputs": [
+        "SEATING_CANDIDATES",
+        "VALIDATION_REPORT"
+      ]
+    },
+    {
+      "schema_version": "WeddingSemanticProposalV01",
+      "origin": "CONTROLLED_FIXTURE",
+      "request_ref": "request:A",
+      "actor_ref": "actor:REQUIREMENT_ARCHITECT",
+      "role": "REQUIREMENT_ARCHITECT",
+      "model_ref": "model:controlled",
+      "capture_ref": "capture:A:REQUIREMENT_ARCHITECT",
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 1,
+      "source_refs": [
+        "source:w1:hard"
+      ],
+      "task_kind": "GENERATE",
+      "unresolved": [],
+      "reason": "Controlled schema fixture; no live model or authority.",
+      "objective_profile": "KEEP_FAMILIAR_V01",
+      "condition_refs": [
+        "condition_01",
+        "condition_02",
+        "condition_03",
+        "condition_04",
+        "condition_05",
+        "condition_06",
+        "condition_07",
+        "condition_08"
+      ],
+      "needed_capabilities": [
+        "COMPILE_QUBO",
+        "SOLVE_EXACT",
+        "VALIDATE_ORIGINAL"
+      ]
+    },
+    {
+      "schema_version": "WeddingSemanticProposalV01",
+      "origin": "CONTROLLED_FIXTURE",
+      "request_ref": "request:B",
+      "actor_ref": "actor:ORCHESTRATOR",
+      "role": "ORCHESTRATOR",
+      "model_ref": "model:controlled",
+      "capture_ref": "capture:B:ORCHESTRATOR",
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 1,
+      "source_refs": [
+        "source:w1:hard"
+      ],
+      "task_kind": "GENERATE",
+      "unresolved": [],
+      "reason": "Controlled schema fixture; no live model or authority.",
+      "needs": [
+        "EXACT_SEARCH",
+        "ORIGINAL_VALIDATION",
+        "REQUIREMENT_REVIEW"
+      ],
+      "requested_outputs": [
+        "SEATING_CANDIDATES",
+        "VALIDATION_REPORT"
+      ]
+    },
+    {
+      "schema_version": "WeddingSemanticProposalV01",
+      "origin": "CONTROLLED_FIXTURE",
+      "request_ref": "request:B",
+      "actor_ref": "actor:REQUIREMENT_ARCHITECT",
+      "role": "REQUIREMENT_ARCHITECT",
+      "model_ref": "model:controlled",
+      "capture_ref": "capture:B:REQUIREMENT_ARCHITECT",
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 1,
+      "source_refs": [
+        "source:w1:hard"
+      ],
+      "task_kind": "GENERATE",
+      "unresolved": [],
+      "reason": "Controlled schema fixture; no live model or authority.",
+      "objective_profile": "MIX_CIRCLES_V01",
+      "condition_refs": [
+        "condition_01",
+        "condition_02",
+        "condition_03",
+        "condition_04",
+        "condition_05",
+        "condition_06",
+        "condition_07",
+        "condition_08"
+      ],
+      "needed_capabilities": [
+        "COMPILE_QUBO",
+        "SOLVE_EXACT",
+        "VALIDATE_ORIGINAL"
+      ]
+    },
+    {
+      "schema_version": "WeddingSemanticProposalV01",
+      "origin": "CONTROLLED_FIXTURE",
+      "request_ref": "request:VALIDATE",
+      "actor_ref": "actor:ORCHESTRATOR",
+      "role": "ORCHESTRATOR",
+      "model_ref": "model:controlled",
+      "capture_ref": "capture:VALIDATE:ORCHESTRATOR",
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 1,
+      "source_refs": [
+        "source:w1:hard"
+      ],
+      "task_kind": "VALIDATE_EXISTING",
+      "unresolved": [],
+      "reason": "Controlled schema fixture; no live model or authority.",
+      "needs": [
+        "ORIGINAL_VALIDATION"
+      ],
+      "requested_outputs": [
+        "VALIDATION_REPORT"
+      ]
+    },
+    {
+      "schema_version": "WeddingSemanticProposalV01",
+      "origin": "CONTROLLED_FIXTURE",
+      "request_ref": "request:VALIDATE",
+      "actor_ref": "actor:REQUIREMENT_ARCHITECT",
+      "role": "REQUIREMENT_ARCHITECT",
+      "model_ref": "model:controlled",
+      "capture_ref": "capture:VALIDATE:REQUIREMENT_ARCHITECT",
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 1,
+      "source_refs": [
+        "source:w1:hard"
+      ],
+      "task_kind": "VALIDATE_EXISTING",
+      "unresolved": [],
+      "reason": "Controlled schema fixture; no live model or authority.",
+      "objective_profile": "KEEP_FAMILIAR_V01",
+      "condition_refs": [
+        "condition_01",
+        "condition_02",
+        "condition_03",
+        "condition_04",
+        "condition_05",
+        "condition_06",
+        "condition_07",
+        "condition_08"
+      ],
+      "needed_capabilities": [
+        "VALIDATE_ORIGINAL"
+      ]
+    }
+  ]
+}

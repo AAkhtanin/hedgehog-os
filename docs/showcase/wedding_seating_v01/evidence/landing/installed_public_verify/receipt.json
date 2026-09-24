@@ -1,0 +1,40 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "/Users/admin/Projects/hedgehog-os/demo/run_wedding_seating_v01.py",
+    "verify",
+    "--input",
+    "/Users/admin/Projects/hedgehog-os-wedding-w5-oaSjm8Xn/portable",
+    "--expected-sha256",
+    "3c924898bedf03cf97df5f59cbc553e3d6f54cc9a60eaaf72c8019ac33bf1552",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-wedding-w5l-6SkOzhfJ/installed_canonical.json"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "end": "2026-09-24T10:51:07.036977+00:00",
+  "env_overrides": {
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/Users/admin/Projects/hedgehog-os"
+  },
+  "helper_pin": "9942c597cbe1792681c53648f1044836df1e29fd227f5282f3e6f9df41c182b5",
+  "manifest_pin": "bd2119d1a0ea7a6da99ea7d316e23f4b55b02cdfebc3e514dcfd78199d70501f",
+  "pid": 74422,
+  "process_start_command": "  PID  PPID STARTED                      COMMAND\n74422 74421 Thu Sep 24 12:51:01 2026     /Users/admin/Projects/hedgehog-os/.venv/bin/python -B /Users/admin/Projects/hedgehog-os/demo/run_wedding_seating_v01.py verify --input /Users/admin/Projects/hedgehog-os-wedding-w5-oaSjm8Xn/portable --expected-sha256 3c924898bedf03cf97df5f59cbc553e3d6f54cc9a60eaaf72c8019ac33bf1552 --output /Users/admin/Projects/hedgehog-os-wedding-w5l-6SkOzhfJ/installed_canonical.json\n",
+  "rc": 0,
+  "reaped": true,
+  "seconds": 5.881531041115522,
+  "start": "2026-09-24T10:51:01.155451+00:00",
+  "stderr": {
+    "bytes": 0,
+    "mode": "0644",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 5784,
+    "mode": "0644",
+    "sha256": "cb7d78d975eff1b763be8e430adcf6b492b829a450a654b642c5f6bcbe1cab67"
+  },
+  "supervisor_pid": 74421
+}

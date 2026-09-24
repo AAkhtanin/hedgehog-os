@@ -1,0 +1,34 @@
+{
+  "abstract_counts": {
+    "cnot": 310,
+    "h": 10,
+    "measure": 10,
+    "rx": 10,
+    "rz": 105
+  },
+  "beta_pi": [
+    22,
+    24
+  ],
+  "binding": {
+    "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+    "objective_profile": "KEEP_FAMILIAR_V01",
+    "owner_root_id": "organizer:w1",
+    "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+    "problem_revision": 1,
+    "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+    "time_context_ref": "time:w1:static"
+  },
+  "encoding_ref": "e75e59afd54a367215dda1d8e4d0dd4fb615888edbd0d8958f9aa4f13e4caacf",
+  "gamma_pi": [
+    9,
+    2
+  ],
+  "logical_qubits": 10,
+  "optimization_ref": "beef6a61405ec037939f9b331bee3d9ce0631af57c22ab6b4c3bdd8d9f438594",
+  "p": 1,
+  "scale": 4096,
+  "schema_version": "WeddingCircuitDescriptorV02",
+  "serializer_id": "BRAKET_OPENQASM_SUBSET_V02",
+  "state_index": "SUM_ZJ_2_POW_J"
+}

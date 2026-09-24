@@ -1,0 +1,81 @@
+{
+  "status": "PASS_CONTENT_GEOMETRY_VISUAL_ANNOTATIONS_AND_ASSEMBLED_LOCAL_TARGETS",
+  "date_utc": "2026-09-24T11:41:48.179188+00:00",
+  "pdf_sha256": "4ac9dc476490aa2dcd2b557a5c4d7374abe8f4c990b6ca39784b4ae21ee07177",
+  "markdown_sha256": "92b043f9883b9f906c0be39c0a8f8da94791f97446d0af9383c130820a8cf046",
+  "pages": 30,
+  "named_pdf_destinations": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "A16",
+    "A17",
+    "A18",
+    "A19",
+    "A20",
+    "A21",
+    "A22",
+    "A23",
+    "A24",
+    "A25",
+    "A26",
+    "A27",
+    "A28",
+    "A29",
+    "A30"
+  ],
+  "active_link_annotations": 142,
+  "local_link_annotations": 53,
+  "source_link_paths_resolved": true,
+  "pending_document_targets": [],
+  "all19_raw_hashes_verified": true,
+  "initial_status_counts": {
+    "VALIDATED": 16,
+    "FAILED": 3
+  },
+  "selected_distinct_captures": 14,
+  "hardware_shared_data_assertions": true,
+  "all30_pages_rendered_and_visually_reviewed": true,
+  "corrected_issues": [
+    "Initial code background overlapped previous final line; explicit padding fixed and rerendered.",
+    "AMBIGUOUS label column widened.",
+    "Independent content review fixes applied: response vs request, cloud principal label, exact W2 diagnostic and DRS counts, canonical RP IDs, explicit arXiv v2 URL."
+  ],
+  "independent_reviewer": "/root/w6_evidence_content",
+  "unsupported_claims_preserved": [
+    "full native-schema replay",
+    "provider cryptographic attestation",
+    "current execution permission",
+    "107-guest execution",
+    "quantum speedup"
+  ],
+  "tools": {
+    "python": "3.12.14",
+    "reportlab": "4.4.9",
+    "pypdf": "6.10.0",
+    "pdftoppm": "pdftoppm version 26.05.0"
+  },
+  "commands": [
+    {
+      "command": "python3 appendix_build/build_appendix.py",
+      "returncode": 0
+    },
+    {
+      "command": "pdftoppm -r 110 -png technical_appendix_v01.pdf appendix_build/page",
+      "returncode": 0
+    }
+  ],
+  "online_link_status": "Stable existing implementation references and future publication references recorded; private repository may require authorized access. No anonymous availability claim."
+}

@@ -1,0 +1,145 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "kind": "accepted_plan",
+    "material": {
+      "dependencies": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01"
+      },
+      "kind": "accepted_plan",
+      "source_ref": "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01",
+        "request_ref": "request:w2:keep"
+      }
+    },
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:ac080f36e4d0624d966a0425a541f4528b51103c10718652e17092730f7b457d",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "17a7fc86ea99d3edb99db691dccb7feacff26aefceaae506b3753243db0d3cfe",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "organizer:w1",
+        "recording_component": "wedding:memory",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "a5d63124a9779a8892afdc490c0c342392df95db1b1df7eeae51d7b5d304f4ab",
+        "source_root_decision_id": "3959b640bb52b3d1b0b03f9d2f497c6d196cdc52448f0254ea80ffc742719de0",
+        "source_root_decision_input_id": "152a7ec251582df9c1411811934624c2ba215c5b1357b0d1fa5096be32319f89"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "2a0eb63a40979191b15324c56584aae494793dc9b20e7cfc29a431de180e1b10",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "wedding.context_only.v01",
+      "predecessor_record_id": null,
+      "recording_component": "wedding:memory",
+      "resonance_reason": "Historical bounded context, never current permission.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "{\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"problem_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"profile\":\"KEEP_FAMILIAR_V01\",\"request_ref\":\"request:w2:keep\"}",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "WEDDING_SEATING",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "wedding.safe_context",
+        "meaning_schema_version": "v0.1",
+        "namespace": "wedding",
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "subject_class": "accepted_plan"
+      },
+      "semantic_tags": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_reference_ids": [
+        "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1700000000,
+        "et_observed_at": 1700000000,
+        "freshness_policy_id": "freshness:wedding:context",
+        "kt_as_of": 1700000000,
+        "pt_created_at": 1700000000,
+        "source_observed_at": 1700000000,
+        "source_reported_at": 1700000000,
+        "system_ingested_at": 1700000000,
+        "system_verified_at": 1700000000,
+        "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 3600,
+        "valid_from": 1700000000,
+        "valid_to": 1700003600
+      }
+    },
+    "root_final_ref": "3959b640bb52b3d1b0b03f9d2f497c6d196cdc52448f0254ea80ffc742719de0",
+    "semantic_keys": [
+      "wedding",
+      "accepted_plan"
+    ],
+    "worldstate_ref": "17a7fc86ea99d3edb99db691dccb7feacff26aefceaae506b3753243db0d3cfe"
+  },
+  "domain": "WEDDING_SEATING",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "request:w2:keep",
+    "trace_refs": [
+      {
+        "trace_id": "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "request:w2:keep",
+    "et_observed_at": "2023-11-14T22:13:20+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2023-11-14T22:13:20+00:00",
+    "pt_created_at": "2023-11-14T22:13:20+00:00",
+    "ttl_seconds": 3600,
+    "valid_from": "2023-11-14T22:13:20+00:00",
+    "valid_to": "2023-11-14T23:13:20+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139"
+    }
+  ],
+  "type": "generic"
+}

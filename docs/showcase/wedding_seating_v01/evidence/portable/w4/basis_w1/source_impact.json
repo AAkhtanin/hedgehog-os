@@ -1,0 +1,10 @@
+{
+  "added_contract_test_methods": [
+    "test_coherent_foreign_profile_and_mapping_are_not_current",
+    "test_numeric_wire_mutations_and_explicit_bounds"
+  ],
+  "clean_reproduction_production_identical_to_final": true,
+  "existing_test_function_asts_identical": true,
+  "production_and_fixtures_identical_to_full_suite": true,
+  "source_classification": "22 fresh full-suite nodes, plus two new focused nodes; all affected contract tests freshly rerun"
+}

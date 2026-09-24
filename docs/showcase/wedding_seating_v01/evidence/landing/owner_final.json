@@ -1,0 +1,66 @@
+{
+  "branch": "main",
+  "context": {
+    "accepted_basis": {
+      "commit": "71e166ccb88b024fd3ca3a25e17da110c6db1a3f",
+      "parent": "d199199a578c078c913a2381f595549175bd9235",
+      "tree": "71e0438a4ef8532a3047a6e87061240d5b958a31"
+    },
+    "base": {
+      "commit": "3470b448059cfc5089975342b80c1649ba1dff61",
+      "tree": "76c58d928b6ee0506afcab650489371686ee14c3"
+    },
+    "finalized": {
+      "commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a",
+      "tree": "97708773152e8fc147ce64d2a965a6b9534340c4"
+    },
+    "installation": {
+      "path": "/Users/admin/Projects/hedgehog-os-gate4-g45-VbYwCeTe/approved/bridge.json",
+      "sha256": "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea",
+      "tip": {
+        "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+        "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"
+      }
+    },
+    "kind": "ENGINEERING",
+    "manifest": {
+      "path": "/Users/admin/Projects/hedgehog-os/.git/reviewed_repository_transition_v01/manifests/bd2119d1a0ea7a6da99ea7d316e23f4b55b02cdfebc3e514dcfd78199d70501f.json",
+      "sha256": "bd2119d1a0ea7a6da99ea7d316e23f4b55b02cdfebc3e514dcfd78199d70501f"
+    },
+    "policy_id": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+    "previous": {
+      "commit": "3470b448059cfc5089975342b80c1649ba1dff61",
+      "manifest_sha256": "2a4b32b4e13ee680993590c32b33e587b05a9b74a0c37b094ae5ec065f573028",
+      "policy_id": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+      "tree": "76c58d928b6ee0506afcab650489371686ee14c3"
+    },
+    "purpose": "INDEPENDENT_REVIEW",
+    "repository": "AAkhtanin/hedgehog-os",
+    "schema": "reviewed_repository_policy_installation_v01",
+    "state": "FINALIZED"
+  },
+  "head": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a",
+  "metadata": {
+    "config": {
+      "bytes": 528,
+      "mode": "0644",
+      "sha256": "c3a37464a39412f3550ad82628d904f1b5e907fd55bc1cd1510e52591ca8ec45"
+    },
+    "index": {
+      "bytes": 383897,
+      "mode": "0644",
+      "sha256": "164328942997f3f870e300c0c85cfd710130813742f38ce74ef3d43b5b8588c0"
+    },
+    "reviewed_repository_transition_v01/context.json": {
+      "bytes": 1646,
+      "mode": "0600",
+      "sha256": "dcaf05d8b96102168e515db82ea30d309f93edfdcde3263b94c52964a350838b"
+    }
+  },
+  "origin": "https://github.com/AAkhtanin/hedgehog-os.git",
+  "origin_main": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a",
+  "parent": "3470b448059cfc5089975342b80c1649ba1dff61",
+  "staging": "",
+  "status": "# branch.oid fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a\n# branch.head main\n# branch.upstream origin/main\n# branch.ab +0 -0",
+  "tree": "97708773152e8fc147ce64d2a965a6b9534340c4"
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "name": "genuine_current_permit",
+    "outcome": "PASS",
+    "seconds": 0.45441262517124414
+  },
+  {
+    "name": "expired_permit",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "current_permit_request_or_expiry",
+    "seconds": 1.0875053703784943e-05
+  },
+  {
+    "name": "revoked_disclosure",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "current_disclosure_permission",
+    "seconds": 5.584210157394409e-06
+  },
+  {
+    "name": "substituted_native_output",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "actual_consumed_output",
+    "seconds": 0.3668756661936641
+  },
+  {
+    "name": "lawful_native_after_refusal",
+    "outcome": "PASS",
+    "seconds": 0.4156360002234578
+  },
+  {
+    "name": "positive",
+    "outcome": "PASS",
+    "seconds": 0.9047492919489741
+  },
+  {
+    "name": "changed_actual_shots",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "current_permit_request_or_expiry",
+    "seconds": 0.45258045848459005
+  },
+  {
+    "name": "private_actual_metadata",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "current_permit_request_or_expiry",
+    "seconds": 0.45277470722794533
+  },
+  {
+    "name": "lost_ack",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "CONTROLLED_LOST_ACK",
+    "seconds": 0.9145697075873613
+  },
+  {
+    "name": "no_blind_resubmit_unknown",
+    "outcome": "EXPECTED_REFUSAL",
+    "reason": "not_a_fresh_send",
+    "seconds": 3.1655654311180115e-06
+  }
+]

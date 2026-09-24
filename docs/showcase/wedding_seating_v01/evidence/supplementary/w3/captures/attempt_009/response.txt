@@ -1,0 +1,1 @@
+{"task_kind":"VALIDATE_EXISTING","unresolved":[],"reason":"Checking an existing seating plan against current requirements without making any changes or searching for alternatives.","objective_profile":null,"needed_capabilities":["VALIDATE_ORIGINAL"],"amendments":[]}

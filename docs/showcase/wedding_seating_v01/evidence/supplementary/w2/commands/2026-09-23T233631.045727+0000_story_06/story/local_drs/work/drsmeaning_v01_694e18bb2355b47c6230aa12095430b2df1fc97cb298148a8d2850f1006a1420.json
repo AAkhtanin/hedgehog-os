@@ -1,0 +1,139 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "kind": "negative_context",
+    "material": {
+      "dependencies": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476",
+        "profile": "KEEP_FAMILIAR_V01"
+      },
+      "kind": "negative_context",
+      "source_ref": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476",
+      "value": {
+        "conditions": [
+          {
+            "condition_id": "condition_01",
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_conflict",
+            "source_ref": "source:w1:hard"
+          }
+        ],
+        "status": "DIRECT_CONTRADICTION"
+      }
+    },
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:bff26718c6422120a485cea1aa8b987bc650f5e8a3ed489dc6db3bf281f92565",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "d794fa14dd2ee9896781b88de41c9933fc668c1bfe7f337985ea07754ba6a3d6",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "organizer:w1",
+        "recording_component": "wedding:memory",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "e7971d078297f9424bc0093848f79d7ab33ed794afbf031bdb5cfcb9de7a072f",
+        "source_root_decision_id": "9a8b6424a1c659caf6892e23eaa3fe90a01b9705033e7d6c74bc42cc115bf955",
+        "source_root_decision_input_id": "622d3bccc6199463251d39ba4c581c672b714e7d642e6afe8df2acd3ff0be9ba"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "76cbc66528849f1d048dba0efa1f4e8c864c267d6050c6e10587aafae1661381",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "wedding.context_only.v01",
+      "predecessor_record_id": null,
+      "recording_component": "wedding:memory",
+      "resonance_reason": "Historical bounded context, never current permission.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "{\"conditions\":[{\"condition_id\":\"condition_01\",\"source_ref\":\"source:w1:hard\"},{\"condition_id\":\"condition_conflict\",\"source_ref\":\"source:w1:hard\"}],\"status\":\"DIRECT_CONTRADICTION\"}",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "WEDDING_SEATING",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "wedding.safe_context",
+        "meaning_schema_version": "v0.1",
+        "namespace": "wedding",
+        "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+        "subject_class": "negative_context"
+      },
+      "semantic_tags": [
+        "wedding",
+        "negative_context"
+      ],
+      "source_reference_ids": [
+        "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1700000000,
+        "et_observed_at": 1700000000,
+        "freshness_policy_id": "freshness:wedding:context",
+        "kt_as_of": 1700000000,
+        "pt_created_at": 1700000000,
+        "source_observed_at": 1700000000,
+        "source_reported_at": 1700000000,
+        "system_ingested_at": 1700000000,
+        "system_verified_at": 1700000000,
+        "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 3600,
+        "valid_from": 1700000000,
+        "valid_to": 1700003600
+      }
+    },
+    "root_final_ref": "9a8b6424a1c659caf6892e23eaa3fe90a01b9705033e7d6c74bc42cc115bf955",
+    "semantic_keys": [
+      "wedding",
+      "negative_context"
+    ],
+    "worldstate_ref": "d794fa14dd2ee9896781b88de41c9933fc668c1bfe7f337985ea07754ba6a3d6"
+  },
+  "domain": "WEDDING_SEATING",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "request:w2:contradiction",
+    "trace_refs": [
+      {
+        "trace_id": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "request:w2:contradiction",
+    "et_observed_at": "2023-11-14T22:13:20+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2023-11-14T22:13:20+00:00",
+    "pt_created_at": "2023-11-14T22:13:20+00:00",
+    "ttl_seconds": 3600,
+    "valid_from": "2023-11-14T22:13:20+00:00",
+    "valid_to": "2023-11-14T23:13:20+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420"
+    }
+  ],
+  "type": "generic"
+}

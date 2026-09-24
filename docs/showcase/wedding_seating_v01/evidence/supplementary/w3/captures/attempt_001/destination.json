@@ -1,0 +1,1 @@
+{"host":"generativelanguage.googleapis.com","method":"POST","path":"/v1beta/models/gemini-2.5-flash:generateContent","query":"","scheme":"https"}

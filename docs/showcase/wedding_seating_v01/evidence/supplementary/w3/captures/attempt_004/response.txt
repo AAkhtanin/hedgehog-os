@@ -1,0 +1,1 @@
+{"task_kind":"GENERATE","unresolved":[],"reason":"The user explicitly requested to create a complete seating plan.","needs":["REQUIREMENT_REVIEW","EXACT_SEARCH","ORIGINAL_VALIDATION"],"requested_outputs":["SEATING_CANDIDATES","VALIDATION_REPORT"]}

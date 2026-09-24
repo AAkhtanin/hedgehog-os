@@ -1,0 +1,168 @@
+{
+  "device": {
+    "capability_sha256": "898f194f5255efba5f85cf49b49c7c0369fae78c0ce15d259d2f92ae337f0b8a",
+    "device_arn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+    "device_type": "QPU",
+    "observed": "2026-09-24T07:18:44.753005+00:00",
+    "openqasm": {
+      "actionType": "braket.ir.openqasm.program",
+      "disabledQubitRewiringSupported": false,
+      "forbiddenArrayOperations": [
+        "concatenation",
+        "negativeIndex",
+        "range",
+        "rangeWithStep",
+        "slicing",
+        "selection"
+      ],
+      "forbiddenPragmas": [
+        "braket_unitary_matrix",
+        "braket_result_type_state_vector",
+        "braket_result_type_density_matrix",
+        "braket_result_type_amplitude",
+        "braket_result_type_adjoint_gradient"
+      ],
+      "maximumClassicalArrays": 1,
+      "maximumQubitArrays": 1,
+      "requiresAllQubitsMeasurement": false,
+      "requiresContiguousQubitIndices": false,
+      "supportPhysicalQubits": true,
+      "supportedModifiers": [],
+      "supportedOperations": [
+        "cz",
+        "xy",
+        "ccnot",
+        "cnot",
+        "cphaseshift",
+        "cphaseshift00",
+        "cphaseshift01",
+        "cphaseshift10",
+        "cswap",
+        "h",
+        "i",
+        "iswap",
+        "phaseshift",
+        "pswap",
+        "rx",
+        "ry",
+        "rz",
+        "s",
+        "si",
+        "swap",
+        "t",
+        "ti",
+        "x",
+        "y",
+        "z",
+        "barrier"
+      ],
+      "supportedPragmas": [
+        "verbatim",
+        "braket_result_type_sample",
+        "braket_result_type_expectation",
+        "braket_result_type_variance",
+        "braket_result_type_probability"
+      ],
+      "supportedResultTypes": [
+        {
+          "maxShots": 50000,
+          "minShots": 10,
+          "name": "Sample",
+          "observables": [
+            "x",
+            "y",
+            "z",
+            "h",
+            "i"
+          ]
+        },
+        {
+          "maxShots": 50000,
+          "minShots": 10,
+          "name": "Expectation",
+          "observables": [
+            "x",
+            "y",
+            "z",
+            "h",
+            "i"
+          ]
+        },
+        {
+          "maxShots": 50000,
+          "minShots": 10,
+          "name": "Variance",
+          "observables": [
+            "x",
+            "y",
+            "z",
+            "h",
+            "i"
+          ]
+        },
+        {
+          "maxShots": 50000,
+          "minShots": 10,
+          "name": "Probability"
+        }
+      ],
+      "supportsPartialVerbatimBox": true,
+      "supportsUnassignedMeasurements": false,
+      "version": [
+        "1.0"
+      ]
+    },
+    "provider": "Rigetti",
+    "qubit_count": 107,
+    "service": {
+      "braketSchemaHeader": {
+        "name": "braket.device_schema.device_service_properties",
+        "version": "1"
+      },
+      "deviceCost": {
+        "price": 0.000425,
+        "unit": "shot"
+      },
+      "deviceDocumentation": {
+        "externalDocumentationUrl": "https://qcs.rigetti.com/qpus/",
+        "imageUrl": "http://d1.awsstatic.com/logos/Rigetti_logo_rgb_teal.0cbe3c0653e755ab97c04ec56f3611f53e2a780c.png",
+        "summary": "Universal gate-model QPU based on superconducting qubits"
+      },
+      "deviceLocation": "California, USA",
+      "executionWindows": [
+        {
+          "executionDay": "Everyday",
+          "windowEndHour": "06:59:59",
+          "windowStartHour": "00:00:00"
+        },
+        {
+          "executionDay": "Everyday",
+          "windowEndHour": "19:00:00",
+          "windowStartHour": "09:00:00"
+        },
+        {
+          "executionDay": "Everyday",
+          "windowEndHour": "23:59:59",
+          "windowStartHour": "21:00:00"
+        }
+      ],
+      "getTaskPollIntervalMillis": 200,
+      "shotsRange": [
+        10,
+        50000
+      ],
+      "updatedAt": "2026-09-24T07:02:03+00:00"
+    },
+    "shots_range": [
+      10,
+      50000
+    ],
+    "status": "ONLINE"
+  },
+  "identity": {
+    "Account": "296280725196",
+    "Arn": "arn:aws:iam::296280725196:user/radiolaria-quantum",
+    "UserId": "AIDAUJ65VC3GHQHGI3FYG"
+  },
+  "observed": "2026-09-24T07:18:44.753706+00:00"
+}

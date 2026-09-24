@@ -1,0 +1,390 @@
+{
+  "actual_D_reviews": [
+    {
+      "command": "2026-09-24T002314.971127+0000_live_story_01",
+      "episode": "A",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 12.864404249936342,
+      "task": "request:w3:a",
+      "time": "2026-09-24T00:23:40.366808+00:00"
+    },
+    {
+      "command": "2026-09-24T002556.231648+0000_live_story_02",
+      "episode": "A",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 13.044233541935682,
+      "task": "request:w3:v02:a",
+      "time": "2026-09-24T00:26:19.141208+00:00"
+    },
+    {
+      "command": "2026-09-24T002556.231648+0000_live_story_02",
+      "episode": "B",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 13.039718749932945,
+      "task": "request:w3:v02:b",
+      "time": "2026-09-24T00:26:45.545486+00:00"
+    },
+    {
+      "command": "2026-09-24T002957.340602+0000_live_continuation_03",
+      "episode": "A",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 12.916595292277634,
+      "task": "request:w3:v02:a",
+      "time": "2026-09-24T00:30:13.027788+00:00"
+    },
+    {
+      "command": "2026-09-24T002957.340602+0000_live_continuation_03",
+      "episode": "VERIFY",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 12.971726458519697,
+      "task": "request:w3:v02:verify:resumed",
+      "time": "2026-09-24T00:30:36.893997+00:00"
+    },
+    {
+      "command": "2026-09-24T003357.526297+0000_revision_continuation_04",
+      "episode": "SR1",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 12.90658341627568,
+      "task": "request:w3:v02:sr1",
+      "time": "2026-09-24T00:34:13.266988+00:00"
+    },
+    {
+      "command": "2026-09-24T003357.526297+0000_revision_continuation_04",
+      "episode": "SR2",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 12.885077750310302,
+      "task": "request:w3:v02:sr2",
+      "time": "2026-09-24T00:34:41.656230+00:00"
+    },
+    {
+      "command": "2026-09-24T003357.526297+0000_revision_continuation_04",
+      "episode": "SR3",
+      "event": "D_REVIEW_RETURN",
+      "seconds": 12.913265791721642,
+      "task": "request:w3:v02:sr3",
+      "time": "2026-09-24T00:35:05.861710+00:00"
+    }
+  ],
+  "all_development_observed_calls": {
+    "ProblemMathV01.solve": 6,
+    "ProblemMathV01.solve_profiles": 6,
+    "compile_encoding_v02": 0,
+    "compile_optimization_v01": 27,
+    "compile_problem": 6,
+    "consume_plan": 8,
+    "review_requirements": 6,
+    "root_review": 18,
+    "run_fractal_runtime_v02": 8,
+    "solve_problem": 6,
+    "validate_original": 8
+  },
+  "all_provider_seconds": 72.77873571030796,
+  "aws_requests": 0,
+  "commands": [
+    {
+      "name": "2026-09-24T001521.124613+0000_saved_before",
+      "pid": 39319,
+      "rc": 0,
+      "seconds": 0.4686267916113138,
+      "supervisor_pid": 39317
+    },
+    {
+      "name": "2026-09-24T002026.739195+0000_cheap_01",
+      "pid": 39523,
+      "rc": 0,
+      "seconds": 1.1191838756203651,
+      "supervisor_pid": 39522
+    },
+    {
+      "name": "2026-09-24T002314.971127+0000_live_story_01",
+      "pid": 39618,
+      "rc": 1,
+      "seconds": 33.382678042165935,
+      "supervisor_pid": 39617
+    },
+    {
+      "name": "2026-09-24T002536.033805+0000_cheap_v02",
+      "pid": 39719,
+      "rc": 0,
+      "seconds": 1.0871137920767069,
+      "supervisor_pid": 39718
+    },
+    {
+      "name": "2026-09-24T002556.231648+0000_live_story_02",
+      "pid": 39734,
+      "rc": 1,
+      "seconds": 59.83683729078621,
+      "supervisor_pid": 39733
+    },
+    {
+      "name": "2026-09-24T002834.319157+0000_verify_repair",
+      "pid": 39847,
+      "rc": 0,
+      "seconds": 1.1480400003492832,
+      "supervisor_pid": 39846
+    },
+    {
+      "name": "2026-09-24T002957.340602+0000_live_continuation_03",
+      "pid": 39902,
+      "rc": 1,
+      "seconds": 56.07682479079813,
+      "supervisor_pid": 39901
+    },
+    {
+      "name": "2026-09-24T003337.733853+0000_group_repair",
+      "pid": 40050,
+      "rc": 0,
+      "seconds": 1.2375139174982905,
+      "supervisor_pid": 40049
+    },
+    {
+      "name": "2026-09-24T003357.526297+0000_revision_continuation_04",
+      "pid": 40111,
+      "rc": 0,
+      "seconds": 70.79387441650033,
+      "supervisor_pid": 40110
+    },
+    {
+      "name": "2026-09-24T003632.625343+0000_final_pure",
+      "pid": 40220,
+      "rc": 0,
+      "seconds": 1.6329615823924541,
+      "supervisor_pid": 40219
+    },
+    {
+      "name": "2026-09-24T003644.825161+0000_static_patches",
+      "pid": 40230,
+      "rc": 0,
+      "seconds": 5.914245207794011,
+      "supervisor_pid": 40229
+    },
+    {
+      "name": "2026-09-24T003712.981126+0000_clean_one",
+      "pid": 40257,
+      "rc": 0,
+      "seconds": 0.7811224590986967,
+      "supervisor_pid": 40256
+    },
+    {
+      "name": "2026-09-24T003734.520537+0000_clean_two",
+      "pid": 40271,
+      "rc": 0,
+      "seconds": 0.7622606251388788,
+      "supervisor_pid": 40270
+    }
+  ],
+  "effects": 0,
+  "failed_test_phases": [],
+  "initial_capture_refusals": [
+    {
+      "ended": "2026-09-24T00:23:48.088462+00:00",
+      "error_type": "WeddingContractError",
+      "model": "gemini-2.5-flash",
+      "reason": "requested_outputs",
+      "request_ref": "request:w3:b",
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "sdk_retry_attempts": 1,
+      "seconds": 5.207112750038505,
+      "started": "2026-09-24T00:23:42.881347+00:00",
+      "status": "FAILED",
+      "wire_sends": 1
+    },
+    {
+      "ended": "2026-09-24T00:26:55.813029+00:00",
+      "error_type": "WeddingContractError",
+      "model": "gemini-2.5-flash",
+      "reason": "objective_scope",
+      "request_ref": "request:w3:v02:verify",
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "sdk_retry_attempts": 1,
+      "seconds": 4.8940936252474785,
+      "started": "2026-09-24T00:26:50.918939+00:00",
+      "status": "FAILED",
+      "wire_sends": 1
+    },
+    {
+      "ended": "2026-09-24T00:30:53.182750+00:00",
+      "error_type": "WeddingContractError",
+      "model": "gemini-2.5-flash",
+      "reason": "collection_bound",
+      "request_ref": "request:w3:v02:sr1",
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "sdk_retry_attempts": 1,
+      "seconds": 3.7113112499937415,
+      "started": "2026-09-24T00:30:49.471438+00:00",
+      "status": "FAILED",
+      "wire_sends": 1
+    }
+  ],
+  "initially_validated_captures": 16,
+  "main_story": {
+    "costs": {
+      "A": {
+        "native_seconds": 17.727221000008285,
+        "observed_calls": {
+          "ProblemMathV01.solve": 1,
+          "ProblemMathV01.solve_profiles": 1,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 3,
+          "compile_problem": 1,
+          "consume_plan": 1,
+          "review_requirements": 1,
+          "root_review": 2,
+          "run_fractal_runtime_v02": 1,
+          "solve_problem": 1,
+          "validate_original": 1
+        },
+        "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+        "total_seconds": 17.738432915881276
+      },
+      "AMBIGUOUS": {
+        "native_seconds": 0.02494258340448141,
+        "observed_calls": {
+          "ProblemMathV01.solve": 0,
+          "ProblemMathV01.solve_profiles": 0,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 0,
+          "compile_problem": 0,
+          "consume_plan": 0,
+          "review_requirements": 0,
+          "root_review": 0,
+          "run_fractal_runtime_v02": 0,
+          "solve_problem": 0,
+          "validate_original": 0
+        },
+        "origin": "LIVE_ROLE_ORIGIN",
+        "total_seconds": 5.693556999787688
+      },
+      "B": {
+        "native_seconds": 17.98540237545967,
+        "observed_calls": {
+          "ProblemMathV01.solve": 1,
+          "ProblemMathV01.solve_profiles": 1,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 3,
+          "compile_problem": 1,
+          "consume_plan": 1,
+          "review_requirements": 1,
+          "root_review": 2,
+          "run_fractal_runtime_v02": 1,
+          "solve_problem": 1,
+          "validate_original": 1
+        },
+        "origin": "LIVE_ROLE_ORIGIN",
+        "total_seconds": 26.506766791455448
+      },
+      "SR1": {
+        "native_seconds": 17.79809633269906,
+        "observed_calls": {
+          "ProblemMathV01.solve": 1,
+          "ProblemMathV01.solve_profiles": 1,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 3,
+          "compile_problem": 1,
+          "consume_plan": 1,
+          "review_requirements": 1,
+          "root_review": 3,
+          "run_fractal_runtime_v02": 1,
+          "solve_problem": 1,
+          "validate_original": 1
+        },
+        "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+        "total_seconds": 17.81003904249519
+      },
+      "SR2": {
+        "native_seconds": 17.722028374671936,
+        "observed_calls": {
+          "ProblemMathV01.solve": 1,
+          "ProblemMathV01.solve_profiles": 1,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 3,
+          "compile_problem": 1,
+          "consume_plan": 1,
+          "review_requirements": 1,
+          "root_review": 3,
+          "run_fractal_runtime_v02": 1,
+          "solve_problem": 1,
+          "validate_original": 1
+        },
+        "origin": "LIVE_ROLE_ORIGIN",
+        "total_seconds": 28.389919416978955
+      },
+      "SR3": {
+        "native_seconds": 17.813385541550815,
+        "observed_calls": {
+          "ProblemMathV01.solve": 0,
+          "ProblemMathV01.solve_profiles": 0,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 0,
+          "compile_problem": 0,
+          "consume_plan": 1,
+          "review_requirements": 0,
+          "root_review": 2,
+          "run_fractal_runtime_v02": 1,
+          "solve_problem": 0,
+          "validate_original": 1
+        },
+        "origin": "LIVE_ROLE_ORIGIN",
+        "total_seconds": 23.90093804243952
+      },
+      "VERIFY": {
+        "native_seconds": 17.852777250111103,
+        "observed_calls": {
+          "ProblemMathV01.solve": 0,
+          "ProblemMathV01.solve_profiles": 0,
+          "compile_encoding_v02": 0,
+          "compile_optimization_v01": 0,
+          "compile_problem": 0,
+          "consume_plan": 1,
+          "review_requirements": 0,
+          "root_review": 2,
+          "run_fractal_runtime_v02": 1,
+          "solve_problem": 0,
+          "validate_original": 1
+        },
+        "origin": "LIVE_ROLE_ORIGIN",
+        "total_seconds": 23.578956999816
+      }
+    },
+    "distinct_consumed_provider_contributions": 14,
+    "episodes": [
+      "A",
+      "B",
+      "VERIFY",
+      "AMBIGUOUS",
+      "SR1",
+      "SR2",
+      "SR3"
+    ],
+    "native_dispatches": 24,
+    "native_tasks": 6,
+    "searches": 4,
+    "total_selected_native_seconds": 106.89891087450087
+  },
+  "provider_attempts": 19,
+  "qpu_tasks": 0,
+  "supervised_process_seconds": 234.2412827918306,
+  "unique_passed_test_calls": [
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_canonical_closed_problem_and_isolation",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_coherent_foreign_profile_and_mapping_are_not_current",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_conditions_and_sources_are_not_model_policy",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_distinct_controlled_semantic_shapes",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_numeric_wire_mutations_and_explicit_bounds",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_semantic_response_bound",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_specs_candidates_and_reports_bind_independent_problem",
+    "tests/test_wedding_seating_contracts_v01.py::ContractsTests::test_wire_limits_and_exact_types",
+    "tests/test_wedding_seating_live_v01.py::test_actual_egress_refusals_zero_send_v01",
+    "tests/test_wedding_seating_live_v01.py::test_group_amendment_and_complete_replacement_v01",
+    "tests/test_wedding_seating_live_v01.py::test_live_bindings_and_field_consumption_v01",
+    "tests/test_wedding_seating_live_v01.py::test_revision_preserves_protected_law_and_replaces_v01",
+    "tests/test_wedding_seating_live_v01.py::test_saved_display_consistency_v01",
+    "tests/test_wedding_seating_live_v01.py::test_unresolved_without_invented_profile_v01",
+    "tests/test_wedding_seating_live_v01.py::test_verify_inherits_only_bound_prior_information_v01",
+    "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+    "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+    "tests/test_wedding_seating_privacy_v01.py::PrivacyTests::test_actual_wire_mutants_and_unknown_private_paths_refuse",
+    "tests/test_wedding_seating_privacy_v01.py::PrivacyTests::test_explicit_disclosure_denial_and_finite_intent_dictionary",
+    "tests/test_wedding_seating_privacy_v01.py::PrivacyTests::test_private_split_and_role_specific_serialized_projections"
+  ],
+  "wire_sends": 19
+}

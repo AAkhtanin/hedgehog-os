@@ -1,0 +1,249 @@
+{
+  "current": {
+    "assignment": [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2,
+      1,
+      1,
+      0,
+      0,
+      2,
+      2
+    ],
+    "binding": {
+      "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+      "objective_profile": "MIX_CIRCLES_V01",
+      "owner_root_id": "organizer:w1",
+      "problem_ref": "dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf",
+      "problem_revision": 3,
+      "source_bundle_hash": "c91d2db7f99452d47e712dbe35ad51301b22602f5e6b4dcdfe11783097eb831f",
+      "time_context_ref": "time:w1:static"
+    },
+    "components": {
+      "hard": 2,
+      "keep": 24,
+      "mix": 0,
+      "objective": 0
+    },
+    "condition_verdicts": [
+      {
+        "condition_id": "builtin:capacity:table_1",
+        "satisfied": true,
+        "source_ref": "original:table_records"
+      },
+      {
+        "condition_id": "builtin:capacity:table_2",
+        "satisfied": true,
+        "source_ref": "original:table_records"
+      },
+      {
+        "condition_id": "builtin:capacity:table_3",
+        "satisfied": true,
+        "source_ref": "original:table_records"
+      },
+      {
+        "condition_id": "added:6401c0b74de7b706653434554e345cfe",
+        "satisfied": false,
+        "source_ref": "request:w3:v02:sr2"
+      },
+      {
+        "condition_id": "added:7ed3818df8898a0c7d422f951aab0cde",
+        "satisfied": false,
+        "source_ref": "request:w3:v02:sr2"
+      },
+      {
+        "condition_id": "condition_01",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_02",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_03",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_04",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_05",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_06",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_07",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_08",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      }
+    ],
+    "coverage": "ORIGINAL_ALL_CONDITIONS",
+    "hard_violations": [
+      "added:6401c0b74de7b706653434554e345cfe",
+      "added:7ed3818df8898a0c7d422f951aab0cde"
+    ],
+    "ranking_key": [
+      true,
+      0,
+      [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        0,
+        0,
+        2,
+        2
+      ]
+    ],
+    "schema_version": "SeatingValidationReportV01",
+    "status": "INVALID",
+    "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+  },
+  "current_root_refusal": "current_owner_context",
+  "historical": {
+    "assignment": [
+      0,
+      0,
+      1,
+      1,
+      2,
+      2,
+      1,
+      1,
+      0,
+      0,
+      2,
+      2
+    ],
+    "binding": {
+      "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+      "objective_profile": "MIX_CIRCLES_V01",
+      "owner_root_id": "organizer:w1",
+      "problem_ref": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+      "problem_revision": 2,
+      "source_bundle_hash": "69a0f528a18c68053983d7afe6cd18ac17a784a6a6a308a2f6de8c5dc781b5e1",
+      "time_context_ref": "time:w1:static"
+    },
+    "components": {
+      "hard": 0,
+      "keep": 24,
+      "mix": 0,
+      "objective": 0
+    },
+    "condition_verdicts": [
+      {
+        "condition_id": "builtin:capacity:table_1",
+        "satisfied": true,
+        "source_ref": "original:table_records"
+      },
+      {
+        "condition_id": "builtin:capacity:table_2",
+        "satisfied": true,
+        "source_ref": "original:table_records"
+      },
+      {
+        "condition_id": "builtin:capacity:table_3",
+        "satisfied": true,
+        "source_ref": "original:table_records"
+      },
+      {
+        "condition_id": "added:3f21ee24070770e6a7dbc90bd1272907",
+        "satisfied": true,
+        "source_ref": "request:w3:v02:sr1"
+      },
+      {
+        "condition_id": "added:cefff2237df9864e94438b6db02b436e",
+        "satisfied": true,
+        "source_ref": "request:w3:v02:sr1"
+      },
+      {
+        "condition_id": "condition_01",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_02",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_03",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_04",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_05",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_06",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_07",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      },
+      {
+        "condition_id": "condition_08",
+        "satisfied": true,
+        "source_ref": "source:w1:hard"
+      }
+    ],
+    "coverage": "ORIGINAL_ALL_CONDITIONS",
+    "hard_violations": [],
+    "ranking_key": [
+      false,
+      0,
+      [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        0,
+        0,
+        2,
+        2
+      ]
+    ],
+    "schema_version": "SeatingValidationReportV01",
+    "status": "VALID",
+    "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+  },
+  "original_sr1_unchanged": true
+}

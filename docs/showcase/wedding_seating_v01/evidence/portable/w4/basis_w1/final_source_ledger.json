@@ -1,0 +1,135 @@
+{
+  "base": "3470b448059cfc5089975342b80c1649ba1dff61",
+  "paths": [
+    {
+      "action": "A",
+      "path": "fixtures/wedding_seating/reference_problem_v01.json",
+      "post": {
+        "bytes": 3220,
+        "mode": "0644",
+        "sha256": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "fixtures/wedding_seating/semantic_proposals_v01.json",
+      "post": {
+        "bytes": 5797,
+        "mode": "0644",
+        "sha256": "a73602a0817c57bd25cc03f709d06daefc6099a8c955c493499ad43df134140c"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/wedding_seating/__init__.py",
+      "post": {
+        "bytes": 78,
+        "mode": "0644",
+        "sha256": "0b34394a5e8767878378cba8c8e34013e0f33e0d3e040f8528402c370bbfab64"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/wedding_seating/circuit_v02.py",
+      "post": {
+        "bytes": 9598,
+        "mode": "0644",
+        "sha256": "2f6cf1f0f219ce12fdf227c7eddfef15d2d3a144b92fd546ca0eb0c93ad3593d"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/wedding_seating/contracts_v01.py",
+      "post": {
+        "bytes": 15863,
+        "mode": "0644",
+        "sha256": "25516a295a22727b8bb188256b575d3a71dacf4a28eed7a83af3ad60a151347b"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/wedding_seating/encoding_v02.py",
+      "post": {
+        "bytes": 6820,
+        "mode": "0644",
+        "sha256": "3c29ddd305739ec92fae337c5be6c803a5a893cdf1f72e1f85c2d2582e440053"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/wedding_seating/math_v01.py",
+      "post": {
+        "bytes": 10017,
+        "mode": "0644",
+        "sha256": "fb07498b922f6d1f95dfbbbdf1709f17732f2c40a4b0ce70c36cd1224ada0e3a"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "hedgehog/domains/wedding_seating/privacy_v01.py",
+      "post": {
+        "bytes": 6127,
+        "mode": "0644",
+        "sha256": "9b7cc26529f5091b623bfe66325fb88a2e550a65b65d08a0891aac853fcd856e"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_wedding_seating_circuit_v01.py",
+      "post": {
+        "bytes": 7484,
+        "mode": "0644",
+        "sha256": "b2f76cbb7b0e10550cb6db0e0f72ee934b536449091da5e1e87f7a92ce784bd0"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_wedding_seating_contracts_v01.py",
+      "post": {
+        "bytes": 13883,
+        "mode": "0644",
+        "sha256": "aac809883614af12ac45777b89c68ff9b90471f74cee0a3fcc08c68e3714df5c"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_wedding_seating_encoding_v01.py",
+      "post": {
+        "bytes": 7036,
+        "mode": "0644",
+        "sha256": "686ac9eb5bc05c78af49bb4f44dd3d75c4baab90c9c6084e5201ad382ef58199"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_wedding_seating_math_v01.py",
+      "post": {
+        "bytes": 10783,
+        "mode": "0644",
+        "sha256": "993c00428ac66714b36c524e8861a1d13aca8fb68a2b39bdb6d71b3398ef5d18"
+      },
+      "pre": null
+    },
+    {
+      "action": "A",
+      "path": "tests/test_wedding_seating_privacy_v01.py",
+      "post": {
+        "bytes": 5543,
+        "mode": "0644",
+        "sha256": "145fb73ca7efa7def06707acc005b17462f8ccc90dbae50828ec9a20f46a0009"
+      },
+      "pre": null
+    }
+  ]
+}

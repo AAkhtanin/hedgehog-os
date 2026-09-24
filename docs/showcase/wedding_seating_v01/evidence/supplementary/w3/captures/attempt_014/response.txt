@@ -1,0 +1,1 @@
+{"task_kind":"GENERATE","unresolved":[],"reason":"User requested to create a new seating plan, mixing existing circles and seating specific guests at a designated table, while keeping all existing mandatory restrictions.","needs":["REQUIREMENT_REVIEW","EXACT_SEARCH","ORIGINAL_VALIDATION"],"requested_outputs":["SEATING_CANDIDATES","VALIDATION_REPORT"]}

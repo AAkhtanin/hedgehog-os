@@ -1,0 +1,213 @@
+{
+  "model_calls": 19,
+  "initial_capture_validated": 16,
+  "initial_capture_failed": 3,
+  "final_consumed_captures": 14,
+  "semantic_episodes": 7,
+  "native_tasks_in_W3": 6,
+  "native_dispatches_in_W3": 24,
+  "W3_searches": 4,
+  "hardware": [
+    {
+      "profile": "KEEP_FAMILIAR_V01",
+      "measurements": 1000,
+      "feasible_shots": 33,
+      "infeasible_shots": 967,
+      "distinct_feasible_plans": 16,
+      "optimal_shots": 5,
+      "feasible_nonoptimal_shots": 28,
+      "selected_raw_index_zero_based": 63,
+      "selected_compact_basis": 517,
+      "selected_raw_bit_string_in_measured_qubits_order": "1010000001",
+      "selected_score": 0,
+      "reference_score": 0,
+      "objective_gap": 0,
+      "seating": {
+        "table_1": [
+          "guest_05",
+          "guest_06",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_2": [
+          "guest_01",
+          "guest_02",
+          "guest_03",
+          "guest_04"
+        ],
+        "table_3": [
+          "guest_09",
+          "guest_10",
+          "guest_11",
+          "guest_12"
+        ]
+      }
+    },
+    {
+      "profile": "MIX_CIRCLES_V01",
+      "measurements": 1000,
+      "feasible_shots": 42,
+      "infeasible_shots": 958,
+      "distinct_feasible_plans": 20,
+      "optimal_shots": 18,
+      "feasible_nonoptimal_shots": 24,
+      "selected_raw_index_zero_based": 31,
+      "selected_compact_basis": 292,
+      "selected_raw_bit_string_in_measured_qubits_order": "0010010010",
+      "selected_score": 0,
+      "reference_score": 0,
+      "objective_gap": 0,
+      "seating": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_2": [
+          "guest_03",
+          "guest_04",
+          "guest_09",
+          "guest_10"
+        ],
+        "table_3": [
+          "guest_05",
+          "guest_06",
+          "guest_11",
+          "guest_12"
+        ]
+      }
+    }
+  ],
+  "math": {
+    "canonical_binary_variables": 36,
+    "balanced_assignments": 34650,
+    "reduced_states": 1024,
+    "reduced_original_valid": 24
+  },
+  "local_seatings": {
+    "A": {
+      "table_1": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04"
+      ],
+      "table_2": [
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08"
+      ],
+      "table_3": [
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ]
+    },
+    "B": {
+      "table_1": [
+        "guest_01",
+        "guest_02",
+        "guest_09",
+        "guest_10"
+      ],
+      "table_2": [
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06"
+      ],
+      "table_3": [
+        "guest_07",
+        "guest_08",
+        "guest_11",
+        "guest_12"
+      ]
+    },
+    "VERIFY": {
+      "table_1": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04"
+      ],
+      "table_2": [
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08"
+      ],
+      "table_3": [
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ]
+    },
+    "SR1": {
+      "table_1": [
+        "guest_01",
+        "guest_02",
+        "guest_09",
+        "guest_10"
+      ],
+      "table_2": [
+        "guest_03",
+        "guest_04",
+        "guest_07",
+        "guest_08"
+      ],
+      "table_3": [
+        "guest_05",
+        "guest_06",
+        "guest_11",
+        "guest_12"
+      ]
+    },
+    "SR2": {
+      "table_1": [
+        "guest_01",
+        "guest_02",
+        "guest_07",
+        "guest_08"
+      ],
+      "table_2": [
+        "guest_03",
+        "guest_04",
+        "guest_09",
+        "guest_10"
+      ],
+      "table_3": [
+        "guest_05",
+        "guest_06",
+        "guest_11",
+        "guest_12"
+      ]
+    },
+    "SR3": {
+      "table_1": [
+        "guest_01",
+        "guest_02",
+        "guest_07",
+        "guest_08"
+      ],
+      "table_2": [
+        "guest_03",
+        "guest_04",
+        "guest_09",
+        "guest_10"
+      ],
+      "table_3": [
+        "guest_05",
+        "guest_06",
+        "guest_11",
+        "guest_12"
+      ]
+    }
+  },
+  "source_paths_added": 34,
+  "protected_baseline_paths": 2508,
+  "protected_nondefault_modes": 26
+}

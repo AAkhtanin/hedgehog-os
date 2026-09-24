@@ -1,0 +1,58 @@
+{
+  "adapter_change": "Use a source-bound live capture reference in the existing bounded BSEP summary. Controlled summary retains its old value.",
+  "clean_proof": "Two separate processes, different cwd, canonical identical; pinned domain consistency only, no JSON authority reconstruction",
+  "current_SR1": "Captured response reconsumption after group-shape repair, not an additional model call",
+  "last_native_source_impact": "Only informational checkpoint added after revision_continuation_04; no production/test source changed.",
+  "main_A_B": {
+    "A_reconsumption": "live_continuation_03: CAPTURED_PROVIDER_RESPONSE_REEXECUTION for genuine current Host; original live A is preserved in story_v02_partial",
+    "B": "Completed live B retained without native recollection; final clean consumer rebuilds its actual semantic material unchanged",
+    "live_source_command": "live_story_02",
+    "version": "WeddingLiveSemanticV02"
+  },
+  "native_runtime_change": "Extract the existing body into one private shared producer after each lane validates its own intake; provenance classification only.",
+  "protected_base_paths": 2508,
+  "retained_W2": "All old failures and not-run test tails remain recorded, not freshly passed. No G4/DRS collector rerun.",
+  "semantic_revisions": [
+    {
+      "change": "Expose the same fixed mandatory output mapping for every task. No expected objective, table or assignment is supplied.",
+      "comparison_policy": "New declared A/B comparison on one common V02 version; no old response rewritten or selected as a winner.",
+      "diagnosis": "The general task catalogue specified mandatory needs and capabilities but omitted mandatory output sets. The closed local consumer correctly refused the actual response.",
+      "new_version": "WeddingLiveSemanticV02",
+      "observed_failure": "B router omitted mandatory VALIDATION_REPORT from requested_outputs",
+      "old_captures_preserved": [
+        "attempt_001",
+        "attempt_002",
+        "attempt_003"
+      ],
+      "old_native_A": "story_v01_partial/A.json",
+      "previous_version": "WeddingLiveSemanticV01"
+    },
+    {
+      "actual_response": "VALIDATE_EXISTING, objective_profile=null, VALIDATE_ORIGINAL only",
+      "authority_restored_from_json": false,
+      "cause": "The domain parser unnecessarily demanded a new objective selection for verify-only, despite an explicitly bound actual prior output.",
+      "observed_refusal": "objective_scope",
+      "prompt_version": "WeddingLiveSemanticV02 unchanged",
+      "repair": "For VALIDATE_EXISTING alone, retain actual prior profile information when the model proposes no new objective. Preserve raw null and its source binding; reject a different profile.",
+      "source_impact": "GENERATION interpretation and native producers unchanged. Preserve completed B. A is reexecuted from its pinned capture only to obtain a genuine live Host-bound prior for the interrupted verification; no new A provider call."
+    },
+    {
+      "actual_response": "One ADD ALLOWED_TABLES proposal for guest_07 and guest_08 at table_2",
+      "cause": "The semantic schema allowed a group but its domain consumer unnecessarily required a single subject.",
+      "observed_refusal": "collection_bound",
+      "prompt_version": "WeddingLiveSemanticV02 unchanged",
+      "repair": "Expand the actual bounded group into existing single-subject original conditions. Preserve raw proposal and source. Require complete replacement of prior same-request added conditions.",
+      "source_impact": "Completed no-amendment A/B/verify/clarification remain unchanged. The preserved SR1 capture is reconsumed under the repaired group parser, honestly labelled captured reexecution. No new SR1 model call."
+    }
+  ],
+  "supplied_change": "Rebuild final displayed output independently; exact W2 C1 positive plus coherent changed display refusal executed.",
+  "unchanged_w2_domain": [
+    "native_contracts_v01.py",
+    "native_capabilities_v01.py",
+    "allocation_v01.py",
+    "memory_v01.py"
+  ],
+  "w1_all_13_unchanged": true,
+  "w2_archive": "5a7fbe8834e48e8bd3caeec9f1f7ae9c91fb81b37f2cdaaed5b5327f3df5b8ff",
+  "w2_collector_repeated": false
+}

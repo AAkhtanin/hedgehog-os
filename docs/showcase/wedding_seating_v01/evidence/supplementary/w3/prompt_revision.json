@@ -1,0 +1,10 @@
+{
+  "previous_version": "WeddingLiveSemanticV01",
+  "new_version": "WeddingLiveSemanticV02",
+  "observed_failure": "B router omitted mandatory VALIDATION_REPORT from requested_outputs",
+  "diagnosis": "The general task catalogue specified mandatory needs and capabilities but omitted mandatory output sets. The closed local consumer correctly refused the actual response.",
+  "change": "Expose the same fixed mandatory output mapping for every task. No expected objective, table or assignment is supplied.",
+  "old_captures_preserved": ["attempt_001", "attempt_002", "attempt_003"],
+  "old_native_A": "story_v01_partial/A.json",
+  "comparison_policy": "New declared A/B comparison on one common V02 version; no old response rewritten or selected as a winner."
+}

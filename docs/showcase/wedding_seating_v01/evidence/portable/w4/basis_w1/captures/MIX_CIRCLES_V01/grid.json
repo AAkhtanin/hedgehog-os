@@ -1,0 +1,4623 @@
+{
+  "encoding_ref": "5bd4912868eb0f84e16a01cc69107bde749f1acb9758a9b58482483bde0e3ba4",
+  "grid": "GAMMA_32_BETA_24_V02",
+  "loss_quantization": "DECIMAL_FROM_FLOAT_RHE_1E12_V01",
+  "rows": [
+    {
+      "beta_index": 1,
+      "gamma_index": 1,
+      "loss": 254.6747573824548,
+      "loss_key": 254674757382455
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 1,
+      "loss": 259.8071978271007,
+      "loss_key": 259807197827101
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 1,
+      "loss": 259.6481835992877,
+      "loss_key": 259648183599288
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 1,
+      "loss": 256.5760839551183,
+      "loss_key": 256576083955118
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 1,
+      "loss": 253.91694025062606,
+      "loss_key": 253916940250626
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 1,
+      "loss": 252.90962277066475,
+      "loss_key": 252909622770665
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 1,
+      "loss": 252.12182538052667,
+      "loss_key": 252121825380527
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 1,
+      "loss": 249.64093540170353,
+      "loss_key": 249640935401704
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 1,
+      "loss": 245.60943369914318,
+      "loss_key": 245609433699143
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 1,
+      "loss": 242.43410794198297,
+      "loss_key": 242434107941983
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 1,
+      "loss": 242.4483513100949,
+      "loss_key": 242448351310095
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 1,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 1,
+      "loss": 248.593798205895,
+      "loss_key": 248593798205895
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 1,
+      "loss": 249.01227938468114,
+      "loss_key": 249012279384681
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 1,
+      "loss": 246.26920149430345,
+      "loss_key": 246269201494303
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 1,
+      "loss": 242.54395388104103,
+      "loss_key": 242543953881041
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 1,
+      "loss": 240.23499907057078,
+      "loss_key": 240234999070571
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 1,
+      "loss": 239.5576795734974,
+      "loss_key": 239557679573497
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 1,
+      "loss": 238.61555327911483,
+      "loss_key": 238615553279115
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 1,
+      "loss": 235.88160434675734,
+      "loss_key": 235881604346757
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 1,
+      "loss": 232.48764897593026,
+      "loss_key": 232487648975930
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 1,
+      "loss": 231.79669008669316,
+      "loss_key": 231796690086693
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 1,
+      "loss": 236.41446252129282,
+      "loss_key": 236414462521293
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 1,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 2,
+      "loss": 264.04178188586434,
+      "loss_key": 264041781885864
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 2,
+      "loss": 274.7945423899923,
+      "loss_key": 274794542389992
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 2,
+      "loss": 275.05007780713805,
+      "loss_key": 275050077807138
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 2,
+      "loss": 269.2873062522387,
+      "loss_key": 269287306252239
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 2,
+      "loss": 264.06028196260775,
+      "loss_key": 264060281962608
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 2,
+      "loss": 261.9402362783676,
+      "loss_key": 261940236278368
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 2,
+      "loss": 260.20092662117406,
+      "loss_key": 260200926621174
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 2,
+      "loss": 255.05593968035828,
+      "loss_key": 255055939680358
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 2,
+      "loss": 246.72935667194136,
+      "loss_key": 246729356671941
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 2,
+      "loss": 240.0029817531486,
+      "loss_key": 240002981753149
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 2,
+      "loss": 239.64851935948957,
+      "loss_key": 239648519359490
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 2,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 2,
+      "loss": 251.89003496382733,
+      "loss_key": 251890034963827
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 2,
+      "loss": 253.14092176597248,
+      "loss_key": 253140921765972
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 2,
+      "loss": 248.13264955978246,
+      "loss_key": 248132649559782
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 2,
+      "loss": 241.02533120177975,
+      "loss_key": 241025331201780
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 2,
+      "loss": 236.565828590279,
+      "loss_key": 236565828590279
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 2,
+      "loss": 235.2652543957317,
+      "loss_key": 235265254395732
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 2,
+      "loss": 233.40086454362125,
+      "loss_key": 233400864543621
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 2,
+      "loss": 227.87229478094758,
+      "loss_key": 227872294780948
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 2,
+      "loss": 220.82858784080446,
+      "loss_key": 220828587840804
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 2,
+      "loss": 218.97193533211163,
+      "loss_key": 218971935332112
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 2,
+      "loss": 227.68283402411902,
+      "loss_key": 227682834024119
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 2,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 3,
+      "loss": 273.44805665012,
+      "loss_key": 273448056650120
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 3,
+      "loss": 290.2644567000015,
+      "loss_key": 290264456700002
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 3,
+      "loss": 291.5308980832982,
+      "loss_key": 291530898083298
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 3,
+      "loss": 283.5090121828331,
+      "loss_key": 283509012182833
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 3,
+      "loss": 275.8242963753841,
+      "loss_key": 275824296375384
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 3,
+      "loss": 272.4545912561472,
+      "loss_key": 272454591256147
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 3,
+      "loss": 269.55450814476853,
+      "loss_key": 269554508144769
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 3,
+      "loss": 261.55552423053183,
+      "loss_key": 261555524230532
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 3,
+      "loss": 248.7178382774275,
+      "loss_key": 248717838277427
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 3,
+      "loss": 238.12972896113425,
+      "loss_key": 238129728961134
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 3,
+      "loss": 237.05501535768013,
+      "loss_key": 237055015357680
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 3,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 3,
+      "loss": 255.29430086919655,
+      "loss_key": 255294300869197
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 3,
+      "loss": 257.78862671016833,
+      "loss_key": 257788626710168
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 3,
+      "loss": 251.02582871573844,
+      "loss_key": 251025828715738
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 3,
+      "loss": 240.9100353334453,
+      "loss_key": 240910035333445
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 3,
+      "loss": 234.44489868380364,
+      "loss_key": 234444898683804
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 3,
+      "loss": 232.52017717632322,
+      "loss_key": 232520177176323
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 3,
+      "loss": 229.70688131527947,
+      "loss_key": 229706881315279
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 3,
+      "loss": 221.33525621219806,
+      "loss_key": 221335256212198
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 3,
+      "loss": 210.45543710307635,
+      "loss_key": 210455437103076
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 3,
+      "loss": 207.02724715523368,
+      "loss_key": 207027247155234
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 3,
+      "loss": 219.3116963422436,
+      "loss_key": 219311696342244
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 3,
+      "loss": 245.43749999999997,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 4,
+      "loss": 282.79854553739744,
+      "loss_key": 282798545537397
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 4,
+      "loss": 306.05954804983315,
+      "loss_key": 306059548049833
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 4,
+      "loss": 308.93493550527717,
+      "loss_key": 308934935505277
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 4,
+      "loss": 299.1236125515017,
+      "loss_key": 299123612551502
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 4,
+      "loss": 289.1126191391744,
+      "loss_key": 289112619139174
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 4,
+      "loss": 284.3364451979468,
+      "loss_key": 284336445197947
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 4,
+      "loss": 280.03248281269845,
+      "loss_key": 280032482812698
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 4,
+      "loss": 268.98961558469836,
+      "loss_key": 268989615584698
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 4,
+      "loss": 251.47628405965912,
+      "loss_key": 251476284059659
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 4,
+      "loss": 236.7866744075625,
+      "loss_key": 236786674407562
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 4,
+      "loss": 234.67979975799915,
+      "loss_key": 234679799757999
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 4,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 4,
+      "loss": 258.77056760227606,
+      "loss_key": 258770567602276
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 4,
+      "loss": 262.9035182675108,
+      "loss_key": 262903518267511
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 4,
+      "loss": 254.91538292669512,
+      "loss_key": 254915382926695
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 4,
+      "loss": 242.1880111696578,
+      "loss_key": 242188011169658
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 4,
+      "loss": 233.85073913214052,
+      "loss_key": 233850739132141
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 4,
+      "loss": 231.25183326387426,
+      "loss_key": 231251833263874
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 4,
+      "loss": 227.41925058843847,
+      "loss_key": 227419250588438
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 4,
+      "loss": 216.16713714255707,
+      "loss_key": 216167137142557
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 4,
+      "loss": 201.33462097776717,
+      "loss_key": 201334620977767
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 4,
+      "loss": 196.0053572616873,
+      "loss_key": 196005357261687
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 4,
+      "loss": 211.3615248573065,
+      "loss_key": 211361524857307
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 4,
+      "loss": 245.43749999999997,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 5,
+      "loss": 291.99554813223006,
+      "loss_key": 291995548132230
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 5,
+      "loss": 322.0029468831385,
+      "loss_key": 322002946883139
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 5,
+      "loss": 327.06478180540716,
+      "loss_key": 327064781805407
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 5,
+      "loss": 315.95783266558885,
+      "loss_key": 315957832665589
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 5,
+      "loss": 303.7750185679615,
+      "loss_key": 303775018567962
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 5,
+      "loss": 297.42937737486704,
+      "loss_key": 297429377374867
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 5,
+      "loss": 291.45945089208806,
+      "loss_key": 291459450892088
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 5,
+      "loss": 277.1912562282742,
+      "loss_key": 277191256228274
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 5,
+      "loss": 254.89210136449276,
+      "loss_key": 254892101364493
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 5,
+      "loss": 235.93529911673335,
+      "loss_key": 235935299116733
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 5,
+      "loss": 232.53007725243788,
+      "loss_key": 232530077252438
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 5,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 5,
+      "loss": 262.27948763117655,
+      "loss_key": 262279487631177
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 5,
+      "loss": 268.4177093204951,
+      "loss_key": 268417709320495
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 5,
+      "loss": 259.73691548174247,
+      "loss_key": 259736915481742
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 5,
+      "loss": 244.81059147720268,
+      "loss_key": 244810591477203
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 5,
+      "loss": 234.72695495433936,
+      "loss_key": 234726954954339
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 5,
+      "loss": 231.3642197395278,
+      "loss_key": 231364219739528
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 5,
+      "loss": 226.4046276355791,
+      "loss_key": 226404627635579
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 5,
+      "loss": 212.24517497644513,
+      "loss_key": 212245174976445
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 5,
+      "loss": 193.41074469731046,
+      "loss_key": 193410744697310
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 5,
+      "loss": 185.93030291274897,
+      "loss_key": 185930302912749
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 5,
+      "loss": 203.88400228025623,
+      "loss_key": 203884002280256
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 5,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 6,
+      "loss": 300.9408064840693,
+      "loss_key": 300940806484069
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 6,
+      "loss": 337.9024032403565,
+      "loss_key": 337902403240356
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 6,
+      "loss": 345.6856053174107,
+      "loss_key": 345685605317411
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 6,
+      "loss": 333.78576436444695,
+      "loss_key": 333785764364447
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 6,
+      "loss": 319.6096848880822,
+      "loss_key": 319609684888082
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 6,
+      "loss": 311.54005738950417,
+      "loss_key": 311540057389504
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 6,
+      "loss": 303.6400179807425,
+      "loss_key": 303640017980743
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 6,
+      "loss": 285.98306245985407,
+      "loss_key": 285983062459854
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 6,
+      "loss": 258.84407064177014,
+      "loss_key": 258844070641770
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 6,
+      "loss": 235.5289488459852,
+      "loss_key": 235528948845985
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 6,
+      "loss": 230.60874424345286,
+      "loss_key": 230608744243453
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 6,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 6,
+      "loss": 265.7793850303766,
+      "loss_key": 265779385030377
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 6,
+      "loss": 274.24920402573355,
+      "loss_key": 274249204025734
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 6,
+      "loss": 265.3968370643645,
+      "loss_key": 265396837064364
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 6,
+      "loss": 248.69207327510458,
+      "loss_key": 248692073275105
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 6,
+      "loss": 236.98484151404938,
+      "loss_key": 236984841514049
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 6,
+      "loss": 232.74135733502123,
+      "loss_key": 232741357335021
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 6,
+      "loss": 226.51911404559849,
+      "loss_key": 226519114045598
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 6,
+      "loss": 209.4365174697634,
+      "loss_key": 209436517469763
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 6,
+      "loss": 186.6136290108212,
+      "loss_key": 186613629010821
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 6,
+      "loss": 176.81044673256824,
+      "loss_key": 176810446732568
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 6,
+      "loss": 196.92209891760012,
+      "loss_key": 196922098917600
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 6,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 7,
+      "loss": 309.53778422548794,
+      "loss_key": 309537784225488
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 7,
+      "loss": 353.5554811338444,
+      "loss_key": 353555481133844
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 7,
+      "loss": 364.5318409419596,
+      "loss_key": 364531840941960
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 7,
+      "loss": 352.33518387947595,
+      "loss_key": 352335183879476
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 7,
+      "loss": 336.3685585481569,
+      "loss_key": 336368558548157
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 7,
+      "loss": 326.44340929824693,
+      "loss_key": 326443409298247
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 7,
+      "loss": 316.3647275766971,
+      "loss_key": 316364727576697
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 7,
+      "loss": 295.1835924284277,
+      "loss_key": 295183592428428
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 7,
+      "loss": 263.2075974096323,
+      "loss_key": 263207597409632
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 7,
+      "loss": 235.51562844645142,
+      "loss_key": 235515628446451
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 7,
+      "loss": 228.9149454477652,
+      "loss_key": 228914945447765
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 7,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 7,
+      "loss": 269.22739478359097,
+      "loss_key": 269227394783591
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 7,
+      "loss": 280.30455405362443,
+      "loss_key": 280304554053624
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 7,
+      "loss": 271.77569036353447,
+      "loss_key": 271775690363534
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 7,
+      "loss": 253.71297168868247,
+      "loss_key": 253712971688682
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 7,
+      "loss": 240.50703254246616,
+      "loss_key": 240507032542466
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 7,
+      "loss": 235.25260867710728,
+      "loss_key": 235252608677107
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 7,
+      "loss": 227.61577019003497,
+      "loss_key": 227615770190035
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 7,
+      "loss": 207.60658954685283,
+      "loss_key": 207606589546853
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 7,
+      "loss": 180.86497003410463,
+      "loss_key": 180864970034105
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 7,
+      "loss": 168.64165593416445,
+      "loss_key": 168641655934164
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 7,
+      "loss": 190.51036302344772,
+      "loss_key": 190510363023448
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 7,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 8,
+      "loss": 317.6940222481801,
+      "loss_key": 317694022248180
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 8,
+      "loss": 368.7556013709334,
+      "loss_key": 368755601370933
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 8,
+      "loss": 383.3159609685405,
+      "loss_key": 383315960968540
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 8,
+      "loss": 371.2968320086408,
+      "loss_key": 371296832008641
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 8,
+      "loss": 353.7654700720208,
+      "loss_key": 353765470072021
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 8,
+      "loss": 341.8894691111323,
+      "loss_key": 341889469111132
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 8,
+      "loss": 329.4163556052216,
+      "loss_key": 329416355605222
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 8,
+      "loss": 304.61331421405873,
+      "loss_key": 304613314214059
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 8,
+      "loss": 267.8595574502817,
+      "loss_key": 267859557450282
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 8,
+      "loss": 235.84070917606425,
+      "loss_key": 235840709176064
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 8,
+      "loss": 227.4446938211614,
+      "loss_key": 227444693821161
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 8,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 8,
+      "loss": 272.5806969450116,
+      "loss_key": 272580696945012
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 8,
+      "loss": 286.4821305962634,
+      "loss_key": 286482130596263
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 8,
+      "loss": 278.73277644278517,
+      "loss_key": 278732776442785
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 8,
+      "loss": 259.7247914912431,
+      "loss_key": 259724791491243
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 8,
+      "loss": 245.15201575959338,
+      "loss_key": 245152015759593
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 8,
+      "loss": 238.7576471572953,
+      "loss_key": 238757647157295
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 8,
+      "loss": 229.5507985922744,
+      "loss_key": 229550798592274
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 8,
+      "loss": 206.6260082508992,
+      "loss_key": 206626008250899
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 8,
+      "loss": 176.08418348975405,
+      "loss_key": 176084183489754
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 8,
+      "loss": 161.41038855315318,
+      "loss_key": 161410388553153
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 8,
+      "loss": 184.67536053485884,
+      "loss_key": 184675360534859
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 8,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 9,
+      "loss": 325.32346469056284,
+      "loss_key": 325323464690563
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 9,
+      "loss": 383.29861063976773,
+      "loss_key": 383298610639768
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 9,
+      "loss": 401.7388209774186,
+      "loss_key": 401738820977419
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 9,
+      "loss": 390.33610814490225,
+      "loss_key": 390336108144902
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 9,
+      "loss": 371.4866328802997,
+      "loss_key": 371486632880300
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 9,
+      "loss": 357.6116001067448,
+      "loss_key": 357611600106745
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 9,
+      "loss": 342.5762993523154,
+      "loss_key": 342576299352315
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 9,
+      "loss": 314.09991889503164,
+      "loss_key": 314099918895032
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 9,
+      "loss": 272.6825039623169,
+      "loss_key": 272682503962317
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 9,
+      "loss": 236.44939914890227,
+      "loss_key": 236449399148902
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 9,
+      "loss": 226.1915090676984,
+      "loss_key": 226191509067698
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 9,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 9,
+      "loss": 275.79778455545306,
+      "loss_key": 275797784555453
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 9,
+      "loss": 292.67582995509713,
+      "loss_key": 292675829955097
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 9,
+      "loss": 286.11181703535294,
+      "loss_key": 286111817035353
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 9,
+      "loss": 266.55605932146676,
+      "loss_key": 266556059321467
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 9,
+      "loss": 250.7593205920394,
+      "loss_key": 250759320592039
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 9,
+      "loss": 243.11090484539005,
+      "loss_key": 243110904845390
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 9,
+      "loss": 232.18816972885088,
+      "loss_key": 232188169728851
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 9,
+      "loss": 206.37573437825384,
+      "loss_key": 206375734378254
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 9,
+      "loss": 172.19311405898264,
+      "loss_key": 172193114058983
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 9,
+      "loss": 155.0964760437525,
+      "loss_key": 155096476043752
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 9,
+      "loss": 179.43620457801842,
+      "loss_key": 179436204578018
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 9,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 10,
+      "loss": 332.3486456733796,
+      "loss_key": 332348645673380
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 10,
+      "loss": 396.98950618354786,
+      "loss_key": 396989506183548
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 10,
+      "loss": 419.5009430115691,
+      "loss_key": 419500943011569
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 10,
+      "loss": 409.1064303702269,
+      "loss_key": 409106430370227
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 10,
+      "loss": 389.20283706267423,
+      "loss_key": 389202837062674
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 10,
+      "loss": 373.33562125364784,
+      "loss_key": 373335621253648
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 10,
+      "loss": 355.6307931982899,
+      "loss_key": 355630793198290
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 10,
+      "loss": 323.48279090122327,
+      "loss_key": 323482790901223
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 10,
+      "loss": 277.5680737451843,
+      "loss_key": 277568073745184
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 10,
+      "loss": 237.28885925792486,
+      "loss_key": 237288859257925
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 10,
+      "loss": 225.14703424492632,
+      "loss_key": 225147034244926
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 10,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 10,
+      "loss": 278.8397009133323,
+      "loss_key": 278839700913332
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 10,
+      "loss": 298.7789998277002,
+      "loss_key": 298778999827700
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 10,
+      "loss": 293.747315927989,
+      "loss_key": 293747315927989
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 10,
+      "loss": 274.01928029450494,
+      "loss_key": 274019280294505
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 10,
+      "loss": 257.1551615029757,
+      "loss_key": 257155161502976
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 10,
+      "loss": 248.16541407370204,
+      "loss_key": 248165414073702
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 10,
+      "loss": 235.40264000341057,
+      "loss_key": 235402640003411
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 10,
+      "loss": 206.7503457776836,
+      "loss_key": 206750345777684
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 10,
+      "loss": 169.11942844609246,
+      "loss_key": 169119428446092
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 10,
+      "loss": 149.67544674711576,
+      "loss_key": 149675446747116
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 10,
+      "loss": 174.80512095745382,
+      "loss_key": 174805120957454
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 10,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 11,
+      "loss": 338.70263150663936,
+      "loss_key": 338702631506639
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 11,
+      "loss": 409.64892599029804,
+      "loss_key": 409648925990298
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 11,
+      "loss": 436.3140197536749,
+      "loss_key": 436314019753675
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 11,
+      "loss": 427.26337977097387,
+      "loss_key": 427263379770974
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 11,
+      "loss": 406.582555489048,
+      "loss_key": 406582555489048
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 11,
+      "loss": 388.7893301772969,
+      "loss_key": 388789330177297
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 11,
+      "loss": 368.37669856192997,
+      "loss_key": 368376698561930
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 11,
+      "loss": 332.6165209669321,
+      "loss_key": 332616520966932
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 11,
+      "loss": 282.41950305566854,
+      "loss_key": 282419503055669
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 11,
+      "loss": 238.3098846808515,
+      "loss_key": 238309884680851
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 11,
+      "loss": 224.30159679610813,
+      "loss_key": 224301596796108
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 11,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 11,
+      "loss": 281.67118300273256,
+      "loss_key": 281671183002733
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 11,
+      "loss": 304.68835889458245,
+      "loss_key": 304688358894582
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 11,
+      "loss": 301.47123778497,
+      "loss_key": 301471237784970
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 11,
+      "loss": 281.9184278291991,
+      "loss_key": 281918427829199
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 11,
+      "loss": 264.1583089411407,
+      "loss_key": 264158308941141
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 11,
+      "loss": 253.7760351128189,
+      "loss_key": 253776035112819
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 11,
+      "loss": 239.08127339272167,
+      "loss_key": 239081273392722
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 11,
+      "loss": 207.6595031004956,
+      "loss_key": 207659503100496
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 11,
+      "loss": 166.79864967237148,
+      "loss_key": 166798649672371
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 11,
+      "loss": 145.12029681175278,
+      "loss_key": 145120296811753
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 11,
+      "loss": 170.788005378196,
+      "loss_key": 170788005378196
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 11,
+      "loss": 245.43749999999991,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 12,
+      "loss": 344.33062481898054,
+      "loss_key": 344330624818981
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 12,
+      "loss": 421.1190262389781,
+      "loss_key": 421119026238978
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 12,
+      "loss": 451.9119062013686,
+      "loss_key": 451911906201369
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 12,
+      "loss": 444.4786912169555,
+      "loss_key": 444478691216955
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 12,
+      "loss": 423.305107136155,
+      "loss_key": 423305107136155
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 12,
+      "loss": 403.7118710346293,
+      "loss_key": 403711871034629
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 12,
+      "loss": 380.6266446961941,
+      "loss_key": 380626644696194
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 12,
+      "loss": 341.3734191646307,
+      "loss_key": 341373419164631
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 12,
+      "loss": 287.15323570840894,
+      "loss_key": 287153235708409
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 12,
+      "loss": 239.46811178997837,
+      "loss_key": 239468111789978
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 12,
+      "loss": 223.64468896231807,
+      "loss_key": 223644688962318
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 12,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 12,
+      "loss": 284.2616535197157,
+      "loss_key": 284261653519716
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 12,
+      "loss": 310.30768520312427,
+      "loss_key": 310307685203124
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 12,
+      "loss": 309.11960786642527,
+      "loss_key": 309119607866425
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 12,
+      "loss": 290.0565492695903,
+      "loss_key": 290056549269590
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 12,
+      "loss": 271.58595783539727,
+      "loss_key": 271585957835397
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 12,
+      "loss": 259.80212324027684,
+      "loss_key": 259802123240277
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 12,
+      "loss": 243.12370722802407,
+      "loss_key": 243123707228024
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 12,
+      "loss": 209.0278354461782,
+      "loss_key": 209027835446178
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 12,
+      "loss": 165.17491607869727,
+      "loss_key": 165174916078697
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 12,
+      "loss": 141.4026775903677,
+      "loss_key": 141402677590368
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 12,
+      "loss": 167.38494014302478,
+      "loss_key": 167384940143025
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 12,
+      "loss": 245.43749999999991,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 13,
+      "loss": 349.1911554113327,
+      "loss_key": 349191155411333
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 13,
+      "loss": 431.26840987999526,
+      "loss_key": 431268409879995
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 13,
+      "loss": 466.06041072325183,
+      "loss_key": 466060410723252
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 13,
+      "loss": 460.45317975069264,
+      "loss_key": 460453179750693
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 13,
+      "loss": 439.07303184767085,
+      "loss_key": 439073031847671
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 13,
+      "loss": 417.8624123960603,
+      "loss_key": 417862412396060
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 13,
+      "loss": 392.213338456092,
+      "loss_key": 392213338456092
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 13,
+      "loss": 349.64505106491384,
+      "loss_key": 349645051064914
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 13,
+      "loss": 291.6996702601528,
+      "loss_key": 291699670260153
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 13,
+      "loss": 240.72474843576288,
+      "loss_key": 240724748435763
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 13,
+      "loss": 223.16535209728337,
+      "loss_key": 223165352097283
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 13,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 13,
+      "loss": 286.58601357252905,
+      "loss_key": 286586013572529
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 13,
+      "loss": 315.5510688001667,
+      "loss_key": 315551068800167
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 13,
+      "loss": 316.53865202582165,
+      "loss_key": 316538652025822
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 13,
+      "loss": 298.2430740175056,
+      "loss_key": 298243074017506
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 13,
+      "loss": 279.25937061852915,
+      "loss_key": 279259370618529
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 13,
+      "loss": 266.109726937814,
+      "loss_key": 266109726937814
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 13,
+      "loss": 247.4414874387702,
+      "loss_key": 247441487438770
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 13,
+      "loss": 210.79358706554592,
+      "loss_key": 210793587065546
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 13,
+      "loss": 164.20065018844338,
+      "loss_key": 164200650188443
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 13,
+      "loss": 138.4935254488588,
+      "loss_key": 138493525448859
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 13,
+      "loss": 164.5906511574389,
+      "loss_key": 164590651157439
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 13,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 14,
+      "loss": 353.2568062066233,
+      "loss_key": 353256806206623
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 14,
+      "loss": 439.9958388598502,
+      "loss_key": 439995838859850
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 14,
+      "loss": 478.5653004508983,
+      "loss_key": 478565300450898
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 14,
+      "loss": 474.92779747071546,
+      "loss_key": 474927797470715
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 14,
+      "loss": 453.6229136690387,
+      "loss_key": 453622913669039
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 14,
+      "loss": 431.0276590433748,
+      "loss_key": 431027659043375
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 14,
+      "loss": 402.9929119466793,
+      "loss_key": 402992911946679
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 14,
+      "loss": 357.3428745062422,
+      "loss_key": 357342874506242
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 14,
+      "loss": 296.0031450440986,
+      "loss_key": 296003145044099
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 14,
+      "loss": 242.04685916366958,
+      "loss_key": 242046859163670
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 14,
+      "loss": 222.85245906726547,
+      "loss_key": 222852459067265
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 14,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 14,
+      "loss": 288.6252009799411,
+      "loss_key": 288625200979941
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 14,
+      "loss": 320.3455591567508,
+      "loss_key": 320345559156751
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 14,
+      "loss": 323.59014116318724,
+      "loss_key": 323590141163187
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 14,
+      "loss": 306.3004444560087,
+      "loss_key": 306300444456009
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 14,
+      "loss": 287.00908747071406,
+      "loss_key": 287009087470714
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 14,
+      "loss": 272.57342291163656,
+      "loss_key": 272573422911637
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 14,
+      "loss": 251.95683415442454,
+      "loss_key": 251956834154425
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 14,
+      "loss": 212.9064292953733,
+      "loss_key": 212906429295373
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 14,
+      "loss": 163.8353923579237,
+      "loss_key": 163835392357924
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 14,
+      "loss": 136.36320659305747,
+      "loss_key": 136363206593057
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 14,
+      "loss": 162.39489894588473,
+      "loss_key": 162394898945885
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 14,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 15,
+      "loss": 356.5144495940475,
+      "loss_key": 356514449594048
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 15,
+      "loss": 447.2325512466243,
+      "loss_key": 447232551246624
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 15,
+      "loss": 489.27808597137886,
+      "loss_key": 489278085971379
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 15,
+      "loss": 487.69218825249214,
+      "loss_key": 487692188252492
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 15,
+      "loss": 466.7340364487418,
+      "loss_key": 466734036448742
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 15,
+      "loss": 443.02781817142056,
+      "loss_key": 443027818171421
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 15,
+      "loss": 412.8472333675395,
+      "loss_key": 412847233367540
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 15,
+      "loss": 364.39809481171505,
+      "loss_key": 364398094811715
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 15,
+      "loss": 300.02129643523836,
+      "loss_key": 300021296435238
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 15,
+      "loss": 243.40726370044388,
+      "loss_key": 243407263700444
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 15,
+      "loss": 222.69489787954362,
+      "loss_key": 222694897879544
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 15,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 15,
+      "loss": 290.3664941044295,
+      "loss_key": 290366494104429
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 15,
+      "loss": 324.633084868889,
+      "loss_key": 324633084868889
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 15,
+      "loss": 330.1556733420024,
+      "loss_key": 330155673342002
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 15,
+      "loss": 314.06974941053977,
+      "loss_key": 314069749410540
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 15,
+      "loss": 294.67952016133313,
+      "loss_key": 294679520161333
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 15,
+      "loss": 279.0778846404618,
+      "loss_key": 279077884640462
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 15,
+      "loss": 256.6011860150594,
+      "loss_key": 256601186015059
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 15,
+      "loss": 215.3248529753888,
+      "loss_key": 215324852975389
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 15,
+      "loss": 164.0440887063454,
+      "loss_key": 164044088706345
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 15,
+      "loss": 134.98128282229604,
+      "loss_key": 134981282822296
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 15,
+      "loss": 160.782808874612,
+      "loss_key": 160782808874612
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 15,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 16,
+      "loss": 358.96499760440406,
+      "loss_key": 358964997604404
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 16,
+      "loss": 452.9431051152131,
+      "loss_key": 452943105115213
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 16,
+      "loss": 498.0993319053707,
+      "loss_key": 498099331905371
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 16,
+      "loss": 498.5903280602357,
+      "loss_key": 498590328060236
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 16,
+      "loss": 478.23444918909706,
+      "loss_key": 478234449189097
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 16,
+      "loss": 453.7207647301223,
+      "loss_key": 453720764730122
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 16,
+      "loss": 421.6851642843765,
+      "loss_key": 421685164284377
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 16,
+      "loss": 370.76088129044973,
+      "loss_key": 370760881290450
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 16,
+      "loss": 303.7239458983505,
+      "loss_key": 303723945898351
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 16,
+      "loss": 244.78412563994024,
+      "loss_key": 244784125639940
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 16,
+      "loss": 222.68166729168763,
+      "loss_key": 222681667291688
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 16,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 16,
+      "loss": 291.80355711223774,
+      "loss_key": 291803557112238
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 16,
+      "loss": 328.3715775872635,
+      "loss_key": 328371577587264
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 16,
+      "loss": 336.13971327861316,
+      "loss_key": 336139713278613
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 16,
+      "loss": 321.41511956834086,
+      "loss_key": 321415119568341
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 16,
+      "loss": 302.13277667648697,
+      "loss_key": 302132776676487
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 16,
+      "loss": 285.5192538803873,
+      "loss_key": 285519253880387
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 16,
+      "loss": 261.3138178956588,
+      "loss_key": 261313817895659
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 16,
+      "loss": 218.0135207177767,
+      "loss_key": 218013520717777
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 16,
+      "loss": 164.79512315622677,
+      "loss_key": 164795123156227
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 16,
+      "loss": 134.31602268387667,
+      "loss_key": 134316022683877
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 16,
+      "loss": 159.73515498109626,
+      "loss_key": 159735154981096
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 16,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 17,
+      "loss": 360.62269647683206,
+      "loss_key": 360622696476832
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 17,
+      "loss": 457.1247742407294,
+      "loss_key": 457124774240729
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 17,
+      "loss": 504.9794350111928,
+      "loss_key": 504979435011193
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 17,
+      "loss": 507.52308374131104,
+      "loss_key": 507523083741311
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 17,
+      "loss": 488.0042388243804,
+      "loss_key": 488004238824380
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 17,
+      "loss": 463.00428985272055,
+      "loss_key": 463004289852721
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 17,
+      "loss": 429.4428018030468,
+      "loss_key": 429442801803047
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 17,
+      "loss": 376.3990978649727,
+      "loss_key": 376399097864973
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 17,
+      "loss": 307.09167572237016,
+      "loss_key": 307091675722370
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 17,
+      "loss": 246.16031821707156,
+      "loss_key": 246160318217072
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 17,
+      "loss": 222.80190093269326,
+      "loss_key": 222801900932693
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 17,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 17,
+      "loss": 292.9362381728417,
+      "loss_key": 292936238172842
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 17,
+      "loss": 331.5352892187899,
+      "loss_key": 331535289218790
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 17,
+      "loss": 341.47130469087324,
+      "loss_key": 341471304690873
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 17,
+      "loss": 328.2267368807744,
+      "loss_key": 328226736880774
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 17,
+      "loss": 309.25160066129547,
+      "loss_key": 309251600661295
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 17,
+      "loss": 291.8063459654139,
+      "loss_key": 291806345965414
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 17,
+      "loss": 266.04074358769884,
+      "loss_key": 266040743587699
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 17,
+      "loss": 220.94088566749497,
+      "loss_key": 220940885667495
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 17,
+      "loss": 166.05835429683322,
+      "loss_key": 166058354296833
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 17,
+      "loss": 134.3337866598277,
+      "loss_key": 134333786659828
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 17,
+      "loss": 159.2286181290482,
+      "loss_key": 159228618129048
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 17,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 18,
+      "loss": 361.51402019336683,
+      "loss_key": 361514020193367
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 18,
+      "loss": 459.8056171274901,
+      "loss_key": 459805617127490
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 18,
+      "loss": 509.9170009476152,
+      "loss_key": 509917000947615
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 18,
+      "loss": 514.44776808236,
+      "loss_key": 514447768082360
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 18,
+      "loss": 495.9760318773598,
+      "loss_key": 495976031877360
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 18,
+      "loss": 470.81645665248493,
+      "loss_key": 470816456652485
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 18,
+      "loss": 436.0827928440058,
+      "loss_key": 436082792844006
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 18,
+      "loss": 381.2966974195001,
+      "loss_key": 381296697419500
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 18,
+      "loss": 310.1142439889373,
+      "loss_key": 310114243988937
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 18,
+      "loss": 247.52265577778235,
+      "loss_key": 247522655777782
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 18,
+      "loss": 223.04484014039446,
+      "loss_key": 223044840140394
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 18,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 18,
+      "loss": 293.77014618111656,
+      "loss_key": 293770146181117
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 18,
+      "loss": 334.1143461579527,
+      "loss_key": 334114346157953
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 18,
+      "loss": 346.1044672960307,
+      "loss_key": 346104467296031
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 18,
+      "loss": 334.4224073950919,
+      "loss_key": 334422407395092
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 18,
+      "loss": 315.9413512266012,
+      "loss_key": 315941351226601
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 18,
+      "loss": 297.8616780101339,
+      "loss_key": 297861678010134
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 18,
+      "loss": 270.7340166799411,
+      "loss_key": 270734016679941
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 18,
+      "loss": 224.07728738650934,
+      "loss_key": 224077287386509
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 18,
+      "loss": 167.8033668160796,
+      "loss_key": 167803366816080
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 18,
+      "loss": 134.99840655761727,
+      "loss_key": 134998406557617
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 18,
+      "loss": 159.23604237547417,
+      "loss_key": 159236042375474
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 18,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 19,
+      "loss": 361.676236700965,
+      "loss_key": 361676236700965
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 19,
+      "loss": 461.0414223127241,
+      "loss_key": 461041422312724
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 19,
+      "loss": 512.9551170303885,
+      "loss_key": 512955117030388
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 19,
+      "loss": 519.3749896426255,
+      "loss_key": 519374989642625
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 19,
+      "loss": 502.1329516249401,
+      "loss_key": 502132951624940
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 19,
+      "loss": 477.134215760001,
+      "loss_key": 477134215760001
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 19,
+      "loss": 441.59284674134466,
+      "loss_key": 441592846741345
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 19,
+      "loss": 385.45191573806244,
+      "loss_key": 385451915738062
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 19,
+      "loss": 312.7889694426606,
+      "loss_key": 312788969442661
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 19,
+      "loss": 248.86107412824674,
+      "loss_key": 248861074128247
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 19,
+      "loss": 223.39977721615088,
+      "loss_key": 223399777216151
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 19,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 19,
+      "loss": 294.31604306565737,
+      "loss_key": 294316043065657
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 19,
+      "loss": 336.11363206176924,
+      "loss_key": 336113632061769
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 19,
+      "loss": 350.01737866981193,
+      "loss_key": 350017378669812
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 19,
+      "loss": 339.9477410608174,
+      "loss_key": 339947741060817
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 19,
+      "loss": 322.13099321942354,
+      "loss_key": 322130993219424
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 19,
+      "loss": 303.62227238741275,
+      "loss_key": 303622272387413
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 19,
+      "loss": 275.35144454712554,
+      "loss_key": 275351444547126
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 19,
+      "loss": 227.39363126837958,
+      "loss_key": 227393631268380
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 19,
+      "loss": 169.99808365623804,
+      "loss_key": 169998083656238
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 19,
+      "loss": 136.27066105973086,
+      "loss_key": 136270661059731
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 19,
+      "loss": 159.7267135050633,
+      "loss_key": 159726713505063
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 19,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 20,
+      "loss": 361.15573353561246,
+      "loss_key": 361155733535612
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 20,
+      "loss": 460.911792666524,
+      "loss_key": 460911792666524
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 20,
+      "loss": 514.1759466760437,
+      "loss_key": 514175946676044
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 20,
+      "loss": 522.3632722894387,
+      "loss_key": 522363272289439
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 20,
+      "loss": 506.50442496289315,
+      "loss_key": 506504424962893
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 20,
+      "loss": 481.97053739750856,
+      "loss_key": 481970537397509
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 20,
+      "loss": 445.9835995120288,
+      "loss_key": 445983599512029
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 20,
+      "loss": 388.8753800527061,
+      "loss_key": 388875380052706
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 20,
+      "loss": 315.11919029087505,
+      "loss_key": 315119190290875
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 20,
+      "loss": 250.16783196404933,
+      "loss_key": 250167831964049
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 20,
+      "loss": 223.8559902356247,
+      "loss_key": 223855990235625
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 20,
+      "loss": 245.43749999999997,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 20,
+      "loss": 294.58909686225275,
+      "loss_key": 294589096862253
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 20,
+      "loss": 337.55112775447986,
+      "loss_key": 337551127754480
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 20,
+      "loss": 353.2105144991964,
+      "loss_key": 353210514499196
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 20,
+      "loss": 344.77506544314224,
+      "loss_key": 344775065443142
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 20,
+      "loss": 327.7731136899762,
+      "loss_key": 327773113689976
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 20,
+      "loss": 309.040163041808,
+      "loss_key": 309040163041808
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 20,
+      "loss": 279.8566457816677,
+      "loss_key": 279856645781668
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 20,
+      "loss": 230.86065990617968,
+      "loss_key": 230860659906180
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 20,
+      "loss": 172.60781834985713,
+      "loss_key": 172607818349857
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 20,
+      "loss": 138.10792486709707,
+      "loss_key": 138107924867097
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 20,
+      "loss": 160.66668098690567,
+      "loss_key": 160666680986906
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 20,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 21,
+      "loss": 360.00619573285337,
+      "loss_key": 360006195732853
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 21,
+      "loss": 459.51566543462917,
+      "loss_key": 459515665434629
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 21,
+      "loss": 513.6941518591585,
+      "loss_key": 513694151859159
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 21,
+      "loss": 523.5120371266622,
+      "loss_key": 523512037126662
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 21,
+      "loss": 509.160349261937,
+      "loss_key": 509160349261937
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 21,
+      "loss": 485.3703893026658,
+      "loss_key": 485370389302666
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 21,
+      "loss": 449.2859973030844,
+      "loss_key": 449285997303084
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 21,
+      "loss": 391.58822273819715,
+      "loss_key": 391588222738197
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 21,
+      "loss": 317.1128714032097,
+      "loss_key": 317112871403210
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 21,
+      "loss": 251.43679088360534,
+      "loss_key": 251436790883605
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 21,
+      "loss": 224.40268821015007,
+      "loss_key": 224402688210150
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 21,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 21,
+      "loss": 294.6080450395326,
+      "loss_key": 294608045039533
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 21,
+      "loss": 338.4558607162826,
+      "loss_key": 338455860716283
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 21,
+      "loss": 355.70397363500933,
+      "loss_key": 355703973635009
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 21,
+      "loss": 348.90126699141194,
+      "loss_key": 348901266991412
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 21,
+      "loss": 332.84302480654173,
+      "loss_key": 332843024806542
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 21,
+      "loss": 314.0825240365052,
+      "loss_key": 314082524036505
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 21,
+      "loss": 284.21932128901267,
+      "loss_key": 284219321289013
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 21,
+      "loss": 234.4487451211519,
+      "loss_key": 234448745121152
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 21,
+      "loss": 175.5947857333489,
+      "loss_key": 175594785733349
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 21,
+      "loss": 140.4640416037351,
+      "loss_key": 140464041603735
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 21,
+      "loss": 162.0191396810082,
+      "loss_key": 162019139681008
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 21,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 22,
+      "loss": 358.2867282201722,
+      "loss_key": 358286728220172
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 22,
+      "loss": 456.96657169895366,
+      "loss_key": 456966571698954
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 22,
+      "loss": 511.6496785204907,
+      "loss_key": 511649678520491
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 22,
+      "loss": 522.9535915486626,
+      "loss_key": 522953591548663
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 22,
+      "loss": 510.2041868622637,
+      "loss_key": 510204186862264
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 22,
+      "loss": 487.40592615814967,
+      "loss_key": 487405926158150
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 22,
+      "loss": 451.5483678919393,
+      "loss_key": 451548367891939
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 22,
+      "loss": 393.62026577575955,
+      "loss_key": 393620265775760
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 22,
+      "loss": 318.7814053718173,
+      "loss_key": 318781405371817
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 22,
+      "loss": 252.66281495101822,
+      "loss_key": 252662814951018
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 22,
+      "loss": 225.02898166096801,
+      "loss_key": 225028981660968
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 22,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 22,
+      "loss": 294.39431798210245,
+      "loss_key": 294394317982102
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 22,
+      "loss": 338.865626165452,
+      "loss_key": 338865626165452
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 22,
+      "loss": 357.53424376637884,
+      "loss_key": 357534243766379
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 22,
+      "loss": 352.34479952029665,
+      "loss_key": 352344799520297
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 22,
+      "loss": 337.3370545138946,
+      "loss_key": 337337054513895
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 22,
+      "loss": 318.7313501107611,
+      "loss_key": 318731350110761
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 22,
+      "loss": 288.41557994749087,
+      "loss_key": 288415579947491
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 22,
+      "loss": 238.128076087324,
+      "loss_key": 238128076087324
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 22,
+      "loss": 178.9180399817924,
+      "loss_key": 178918039981792
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 22,
+      "loss": 143.28944384770793,
+      "loss_key": 143289443847708
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 22,
+      "loss": 163.744881144775,
+      "loss_key": 163744881144775
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 22,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 23,
+      "loss": 356.0600079269631,
+      "loss_key": 356060007926963
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 23,
+      "loss": 453.38792024466704,
+      "loss_key": 453387920244667
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 23,
+      "loss": 508.20041798357346,
+      "loss_key": 508200417983573
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 23,
+      "loss": 520.8447570961465,
+      "loss_key": 520844757096147
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 23,
+      "loss": 509.76555323431967,
+      "loss_key": 509765553234320
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 23,
+      "loss": 488.17125636790945,
+      "loss_key": 488171256367909
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 23,
+      "loss": 452.8333390071317,
+      "loss_key": 452833339007132
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 23,
+      "loss": 395.00831886020245,
+      "loss_key": 395008318860202
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 23,
+      "loss": 320.13862717107577,
+      "loss_key": 320138627171076
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 23,
+      "loss": 253.84131409290148,
+      "loss_key": 253841314092901
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 23,
+      "loss": 225.7238890137263,
+      "loss_key": 225723889013726
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 23,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 23,
+      "loss": 293.97116933606117,
+      "loss_key": 293971169336061
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 23,
+      "loss": 338.8246373353916,
+      "loss_key": 338824637335392
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 23,
+      "loss": 358.75066900817967,
+      "loss_key": 358750669008180
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 23,
+      "loss": 355.1421230292259,
+      "loss_key": 355142123029226
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 23,
+      "loss": 341.2701614247426,
+      "loss_key": 341270161424743
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 23,
+      "loss": 322.9826467864816,
+      "loss_key": 322982646786482
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 23,
+      "loss": 292.42816256297925,
+      "loss_key": 292428162562979
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 23,
+      "loss": 241.86909568659908,
+      "loss_key": 241869095686599
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 23,
+      "loss": 182.53377557901183,
+      "loss_key": 182533775579012
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 23,
+      "loss": 146.53151984482264,
+      "loss_key": 146531519844823
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 23,
+      "loss": 165.80281709658357,
+      "loss_key": 165802817096584
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 23,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 24,
+      "loss": 353.3905387400478,
+      "loss_key": 353390538740048
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 24,
+      "loss": 448.90855053984586,
+      "loss_key": 448908550539846
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 24,
+      "loss": 503.51519197026164,
+      "loss_key": 503515191970262
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 24,
+      "loss": 517.3586974955701,
+      "loss_key": 517358697495570
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 24,
+      "loss": 507.99281071481903,
+      "loss_key": 507992810714819
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 24,
+      "loss": 487.7771200974074,
+      "loss_key": 487777120097407
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 24,
+      "loss": 453.2147429392866,
+      "loss_key": 453214742939287
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 24,
+      "loss": 395.7946152211625,
+      "loss_key": 395794615221162
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 24,
+      "loss": 321.2000415212822,
+      "loss_key": 321200041521282
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 24,
+      "loss": 254.9679401748104,
+      "loss_key": 254967940174810
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 24,
+      "loss": 226.47638413260114,
+      "loss_key": 226476384132601
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 24,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 24,
+      "loss": 293.36285368382994,
+      "loss_key": 293362853683830
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 24,
+      "loss": 338.38124587602283,
+      "loss_key": 338381245876023
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 24,
+      "loss": 359.4118641486493,
+      "loss_key": 359411864148649
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 24,
+      "loss": 357.34383730515367,
+      "loss_key": 357343837305154
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 24,
+      "loss": 344.67303756628985,
+      "loss_key": 344673037566290
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 24,
+      "loss": 326.84512871967917,
+      "loss_key": 326845128719679
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 24,
+      "loss": 296.24643930007835,
+      "loss_key": 296246439300078
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 24,
+      "loss": 245.6430426711471,
+      "loss_key": 245643042671147
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 24,
+      "loss": 186.39591046676458,
+      "loss_key": 186395910466765
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 24,
+      "loss": 150.1352072852677,
+      "loss_key": 150135207285268
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 24,
+      "loss": 168.15057020215647,
+      "loss_key": 168150570202156
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 24,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 25,
+      "loss": 350.3430666948347,
+      "loss_key": 350343066694835
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 25,
+      "loss": 443.65874364187994,
+      "loss_key": 443658743641880
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 25,
+      "loss": 497.76741095536016,
+      "loss_key": 497767410955360
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 25,
+      "loss": 512.6773944926088,
+      "loss_key": 512677394492609
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 25,
+      "loss": 505.04608511227593,
+      "loss_key": 505046085112276
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 25,
+      "loss": 486.3457558305557,
+      "loss_key": 486345755830556
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 25,
+      "loss": 452.7746213899687,
+      "loss_key": 452774621389969
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 25,
+      "loss": 396.0253952564351,
+      "loss_key": 396025395256435
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 25,
+      "loss": 321.9822473134674,
+      "loss_key": 321982247313467
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 25,
+      "loss": 256.0384313871812,
+      "loss_key": 256038431387181
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 25,
+      "loss": 227.27548526279634,
+      "loss_key": 227275485262796
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 25,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 25,
+      "loss": 292.59388355766873,
+      "loss_key": 292593883557669
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 25,
+      "loss": 337.5858471644813,
+      "loss_key": 337585847164481
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 25,
+      "loss": 359.5822857408926,
+      "loss_key": 359582285740893
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 25,
+      "loss": 359.01075633872154,
+      "loss_key": 359010756338722
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 25,
+      "loss": 347.5888798372054,
+      "loss_key": 347588879837205
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 25,
+      "loss": 330.3384733622895,
+      "loss_key": 330338473362290
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 25,
+      "loss": 299.86610821251736,
+      "loss_key": 299866108212517
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 25,
+      "loss": 249.42248597357457,
+      "loss_key": 249422485973575
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 25,
+      "loss": 190.4568695458879,
+      "loss_key": 190456869545888
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 25,
+      "loss": 154.04378067495236,
+      "loss_key": 154043780674952
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 25,
+      "loss": 170.7451204998051,
+      "loss_key": 170745120499805
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 25,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 26,
+      "loss": 346.9811951612236,
+      "loss_key": 346981195161224
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 26,
+      "loss": 437.7668155297503,
+      "loss_key": 437766815529750
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 26,
+      "loss": 491.129639324844,
+      "loss_key": 491129639324844
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 26,
+      "loss": 506.98507950549384,
+      "loss_key": 506985079505494
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 26,
+      "loss": 501.0910030885093,
+      "loss_key": 501091003088509
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 26,
+      "loss": 484.00616086459496,
+      "loss_key": 484006160864595
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 26,
+      "loss": 451.6004160453432,
+      "loss_key": 451600416045343
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 26,
+      "loss": 395.7496389791431,
+      "loss_key": 395749638979143
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 26,
+      "loss": 322.5025344704599,
+      "loss_key": 322502534470460
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 26,
+      "loss": 257.0485901371023,
+      "loss_key": 257048590137102
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 26,
+      "loss": 228.11038105303447,
+      "loss_key": 228110381053034
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 26,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 26,
+      "loss": 291.68838808414245,
+      "loss_key": 291688388084142
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 26,
+      "loss": 336.4890532148687,
+      "loss_key": 336489053214869
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 26,
+      "loss": 359.3291231161254,
+      "loss_key": 359329123116125
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 26,
+      "loss": 360.21013546015706,
+      "loss_key": 360210135460157
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 26,
+      "loss": 350.0700171026151,
+      "loss_key": 350070017102615
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 26,
+      "loss": 333.49122514644023,
+      "loss_key": 333491225146440
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 26,
+      "loss": 303.2885855148086,
+      "loss_key": 303288585514809
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 26,
+      "loss": 253.1817811017489,
+      "loss_key": 253181781101749
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 26,
+      "loss": 194.66849713959226,
+      "loss_key": 194668497139592
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 26,
+      "loss": 158.1997901537862,
+      "loss_key": 158199790153786
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 26,
+      "loss": 173.5434899923872,
+      "loss_key": 173543489992387
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 26,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 27,
+      "loss": 343.36622202269405,
+      "loss_key": 343366222022694
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 27,
+      "loss": 431.35635212560476,
+      "loss_key": 431356352125605
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 27,
+      "loss": 483.76918099562505,
+      "loss_key": 483769180995625
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 27,
+      "loss": 500.4627828911914,
+      "loss_key": 500462782891191
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 27,
+      "loss": 496.29332130544884,
+      "loss_key": 496293321305449
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 27,
+      "loss": 480.8898746096667,
+      "loss_key": 480889874609667
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 27,
+      "loss": 449.78240219009956,
+      "loss_key": 449782402190100
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 27,
+      "loss": 395.01794342303936,
+      "loss_key": 395017943423039
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 27,
+      "loss": 322.7786245572189,
+      "loss_key": 322778624557219
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 27,
+      "loss": 257.9943721641709,
+      "loss_key": 257994372164171
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 27,
+      "loss": 228.9705855208003,
+      "loss_key": 228970585520800
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 27,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 27,
+      "loss": 290.66958557159467,
+      "loss_key": 290669585571595
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 27,
+      "loss": 335.1401816529129,
+      "loss_key": 335140181652913
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 27,
+      "loss": 358.71961899591804,
+      "loss_key": 358719618995918
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 27,
+      "loss": 361.0122183516148,
+      "loss_key": 361012218351615
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 27,
+      "loss": 352.17457425771636,
+      "loss_key": 352174574257716
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 27,
+      "loss": 336.3384857569167,
+      "loss_key": 336338485756917
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 27,
+      "loss": 306.52014031857954,
+      "loss_key": 306520140318580
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 27,
+      "loss": 256.8974269361729,
+      "loss_key": 256897426936173
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 27,
+      "loss": 198.98304388734562,
+      "loss_key": 198983043887346
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 27,
+      "loss": 162.54610529274635,
+      "loss_key": 162546105292746
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 27,
+      "loss": 176.50344358099608,
+      "loss_key": 176503443580996
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 27,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 28,
+      "loss": 339.55620455986997,
+      "loss_key": 339556204559870
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 28,
+      "loss": 424.54408604967176,
+      "loss_key": 424544086049672
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 28,
+      "loss": 475.84468979229234,
+      "loss_key": 475844689792292
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 28,
+      "loss": 493.28402792144186,
+      "loss_key": 493284027921442
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 28,
+      "loss": 490.81450035319335,
+      "loss_key": 490814500353193
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 28,
+      "loss": 477.1273422062962,
+      "loss_key": 477127342206296
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 28,
+      "loss": 447.4113976021613,
+      "loss_key": 447411397602161
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 28,
+      "loss": 393.8815394397308,
+      "loss_key": 393881539439731
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 28,
+      "loss": 322.8285260134063,
+      "loss_key": 322828526013406
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 28,
+      "loss": 258.8720599429364,
+      "loss_key": 258872059942936
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 28,
+      "loss": 229.84611103980444,
+      "loss_key": 229846111039804
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 28,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 28,
+      "loss": 289.5593730379909,
+      "loss_key": 289559373037991
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 28,
+      "loss": 333.5860765500744,
+      "loss_key": 333586076550074
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 28,
+      "loss": 357.81887594289344,
+      "loss_key": 357818875942893
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 28,
+      "loss": 361.487221227948,
+      "loss_key": 361487221227948
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 28,
+      "loss": 353.9633376885384,
+      "loss_key": 353963337688538
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 28,
+      "loss": 338.9195520492209,
+      "loss_key": 338919552049221
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 28,
+      "loss": 309.57087685696166,
+      "loss_key": 309570876856962
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 28,
+      "loss": 260.54834446421046,
+      "loss_key": 260548344464210
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 28,
+      "loss": 203.35419140033198,
+      "loss_key": 203354191400332
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 28,
+      "loss": 167.0270162551312,
+      "loss_key": 167027016255131
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 28,
+      "loss": 179.58418181921803,
+      "loss_key": 179584181819218
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 28,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 29,
+      "loss": 335.6052442190992,
+      "loss_key": 335605244219099
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 29,
+      "loss": 417.4383675434867,
+      "loss_key": 417438367543487
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 29,
+      "loss": 467.50372135194857,
+      "loss_key": 467503721351949
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 29,
+      "loss": 485.61158836514767,
+      "loss_key": 485611588365148
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 29,
+      "loss": 484.8081810621477,
+      "loss_key": 484808181062148
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 29,
+      "loss": 472.8448579673044,
+      "loss_key": 472844857967304
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 29,
+      "loss": 444.5767590784498,
+      "loss_key": 444576759078450
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 29,
+      "loss": 392.3914424720324,
+      "loss_key": 392391442472032
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 29,
+      "loss": 322.67047661199047,
+      "loss_key": 322670476611990
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 29,
+      "loss": 259.6784912643722,
+      "loss_key": 259678491264372
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 29,
+      "loss": 230.72764680445835,
+      "loss_key": 230727646804458
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 29,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 29,
+      "loss": 288.3780277960123,
+      "loss_key": 288378027796012
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 29,
+      "loss": 331.8702489307734,
+      "loss_key": 331870248930773
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 29,
+      "loss": 356.68815696600427,
+      "loss_key": 356688156966004
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 29,
+      "loss": 361.70282180932475,
+      "loss_key": 361702821809325
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 29,
+      "loss": 355.4969596301718,
+      "loss_key": 355496959630172
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 29,
+      "loss": 341.27567022197445,
+      "loss_key": 341275670221974
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 29,
+      "loss": 312.4536971953064,
+      "loss_key": 312453697195306
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 29,
+      "loss": 264.11612875289825,
+      "loss_key": 264116128752898
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 29,
+      "loss": 207.73809207998187,
+      "loss_key": 207738092079982
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 29,
+      "loss": 171.58934547149195,
+      "loss_key": 171589345471492
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 29,
+      "loss": 182.74700000323583,
+      "loss_key": 182747000003236
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 29,
+      "loss": 245.4374999999999,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 30,
+      "loss": 331.56297351874844,
+      "loss_key": 331562973518748
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 30,
+      "loss": 410.1381496683276,
+      "loss_key": 410138149668328
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 30,
+      "loss": 458.88108519214273,
+      "loss_key": 458881085192143
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 30,
+      "loss": 477.5951568724483,
+      "loss_key": 477595156872448
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 30,
+      "loss": 478.41745709519745,
+      "loss_key": 478417457095197
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 30,
+      "loss": 468.16204889257233,
+      "loss_key": 468162048892572
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 30,
+      "loss": 441.36466540404405,
+      "loss_key": 441364665404044
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 30,
+      "loss": 390.5977326683271,
+      "loss_key": 390597732668327
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 30,
+      "loss": 322.32294832276784,
+      "loss_key": 322322948322768
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 30,
+      "loss": 260.411313771457,
+      "loss_key": 260411313771457
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 30,
+      "loss": 231.60672979099365,
+      "loss_key": 231606729790994
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 30,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 30,
+      "loss": 287.14401030527404,
+      "loss_key": 287144010305274
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 30,
+      "loss": 330.0323037529968,
+      "loss_key": 330032303752997
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 30,
+      "loss": 355.38365044644786,
+      "loss_key": 355383650446448
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 30,
+      "loss": 361.7221757950159,
+      "loss_key": 361722175795016
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 30,
+      "loss": 356.83360411091644,
+      "loss_key": 356833604110916
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 30,
+      "loss": 343.4480610810764,
+      "loss_key": 343448061081076
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 30,
+      "loss": 315.18338208154574,
+      "loss_key": 315183382081546
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 30,
+      "loss": 267.5853364105179,
+      "loss_key": 267585336410518
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 30,
+      "loss": 212.0944083934051,
+      "loss_key": 212094408393405
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 30,
+      "loss": 176.183524579879,
+      "loss_key": 176183524579879
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 30,
+      "loss": 185.95588883113544,
+      "loss_key": 185955888831135
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 30,
+      "loss": 245.43749999999994,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 31,
+      "loss": 327.4742213710357,
+      "loss_key": 327474221371036
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 31,
+      "loss": 402.73239226773364,
+      "loss_key": 402732392267734
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 31,
+      "loss": 450.0978298176453,
+      "loss_key": 450097829817645
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 31,
+      "loss": 469.36974020189746,
+      "loss_key": 469369740201897
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 31,
+      "loss": 471.77280944762543,
+      "loss_key": 471772809447625
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 31,
+      "loss": 463.1898400994083,
+      "loss_key": 463189840099408
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 31,
+      "loss": 437.8566785575083,
+      "loss_key": 437856678557508
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 31,
+      "loss": 388.5489601408243,
+      "loss_key": 388548960140824
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 31,
+      "loss": 321.8046921930448,
+      "loss_key": 321804692193045
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 31,
+      "loss": 261.06923772304,
+      "loss_key": 261069237723040
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 31,
+      "loss": 232.47589592697938,
+      "loss_key": 232475895926979
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 31,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 31,
+      "loss": 285.8738538372411,
+      "loss_key": 285873853837241
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 31,
+      "loss": 328.10760733437337,
+      "loss_key": 328107607334373
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 31,
+      "loss": 353.95564374632653,
+      "loss_key": 353955643746327
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 31,
+      "loss": 361.60244677383207,
+      "loss_key": 361602446773832
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 31,
+      "loss": 358.0270973338173,
+      "loss_key": 358027097333817
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 31,
+      "loss": 345.476337772077,
+      "loss_key": 345476337772077
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 31,
+      "loss": 317.77590617781544,
+      "loss_key": 317775906177815
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 31,
+      "loss": 270.9438612206593,
+      "loss_key": 270943861220659
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 31,
+      "loss": 216.3873341544488,
+      "loss_key": 216387334154449
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 31,
+      "loss": 180.76459314058084,
+      "loss_key": 180764593140581
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 31,
+      "loss": 189.17805411093835,
+      "loss_key": 189178054110938
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 31,
+      "loss": 245.43749999999997,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 1,
+      "gamma_index": 32,
+      "loss": 323.3788309296866,
+      "loss_key": 323378830929687
+    },
+    {
+      "beta_index": 2,
+      "gamma_index": 32,
+      "loss": 395.29978943783317,
+      "loss_key": 395299789437833
+    },
+    {
+      "beta_index": 3,
+      "gamma_index": 32,
+      "loss": 441.2606986918208,
+      "loss_key": 441260698691821
+    },
+    {
+      "beta_index": 4,
+      "gamma_index": 32,
+      "loss": 461.0546046519569,
+      "loss_key": 461054604651957
+    },
+    {
+      "beta_index": 5,
+      "gamma_index": 32,
+      "loss": 464.9905738038721,
+      "loss_key": 464990573803872
+    },
+    {
+      "beta_index": 6,
+      "gamma_index": 32,
+      "loss": 458.028845184529,
+      "loss_key": 458028845184529
+    },
+    {
+      "beta_index": 7,
+      "gamma_index": 32,
+      "loss": 434.1285736557328,
+      "loss_key": 434128573655733
+    },
+    {
+      "beta_index": 8,
+      "gamma_index": 32,
+      "loss": 386.291670680316,
+      "loss_key": 386291670680316
+    },
+    {
+      "beta_index": 9,
+      "gamma_index": 32,
+      "loss": 321.13480262926555,
+      "loss_key": 321134802629266
+    },
+    {
+      "beta_index": 10,
+      "gamma_index": 32,
+      "loss": 261.65226200188306,
+      "loss_key": 261652262001883
+    },
+    {
+      "beta_index": 11,
+      "gamma_index": 32,
+      "loss": 233.3288008590865,
+      "loss_key": 233328800859086
+    },
+    {
+      "beta_index": 12,
+      "gamma_index": 32,
+      "loss": 245.4375,
+      "loss_key": 245437500000000
+    },
+    {
+      "beta_index": 13,
+      "gamma_index": 32,
+      "loss": 284.5821250681663,
+      "loss_key": 284582125068166
+    },
+    {
+      "beta_index": 14,
+      "gamma_index": 32,
+      "loss": 326.12714465134275,
+      "loss_key": 326127144651343
+    },
+    {
+      "beta_index": 15,
+      "gamma_index": 32,
+      "loss": 352.4480371308071,
+      "loss_key": 352448037130807
+    },
+    {
+      "beta_index": 16,
+      "gamma_index": 32,
+      "loss": 361.39380884107067,
+      "loss_key": 361393808841071
+    },
+    {
+      "beta_index": 17,
+      "gamma_index": 32,
+      "loss": 359.12560382411345,
+      "loss_key": 359125603824113
+    },
+    {
+      "beta_index": 18,
+      "gamma_index": 32,
+      "loss": 347.3973882432074,
+      "loss_key": 347397388243207
+    },
+    {
+      "beta_index": 19,
+      "gamma_index": 32,
+      "loss": 320.2480599948252,
+      "loss_key": 320248059994825
+    },
+    {
+      "beta_index": 20,
+      "gamma_index": 32,
+      "loss": 274.18342270023453,
+      "loss_key": 274183422700235
+    },
+    {
+      "beta_index": 21,
+      "gamma_index": 32,
+      "loss": 220.58657061847416,
+      "loss_key": 220586570618474
+    },
+    {
+      "beta_index": 22,
+      "gamma_index": 32,
+      "loss": 185.29307735478272,
+      "loss_key": 185293077354783
+    },
+    {
+      "beta_index": 23,
+      "gamma_index": 32,
+      "loss": 192.38433654130586,
+      "loss_key": 192384336541306
+    },
+    {
+      "beta_index": 24,
+      "gamma_index": 32,
+      "loss": 245.43749999999997,
+      "loss_key": 245437500000000
+    }
+  ],
+  "scale": 4096,
+  "seconds": 0.6512390421703458,
+  "selected": {
+    "beta_index": 22,
+    "gamma_index": 16,
+    "loss": 134.31602268387667,
+    "loss_key": 134316022683877
+  }
+}

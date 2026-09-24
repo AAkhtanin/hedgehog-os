@@ -1,0 +1,1 @@
+{"task_kind":"GENERATE","unresolved":[],"reason":"User requested generation of a complete seating plan, prioritizing mixing existing circles while adhering to all mandatory restrictions.","objective_profile":"MIX_CIRCLES_V01","needed_capabilities":["COMPILE_QUBO","SOLVE_EXACT","VALIDATE_ORIGINAL"],"amendments":[]}

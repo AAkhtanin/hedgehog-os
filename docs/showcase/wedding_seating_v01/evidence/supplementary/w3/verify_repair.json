@@ -1,0 +1,9 @@
+{
+  "observed_refusal": "objective_scope",
+  "actual_response": "VALIDATE_EXISTING, objective_profile=null, VALIDATE_ORIGINAL only",
+  "cause": "The domain parser unnecessarily demanded a new objective selection for verify-only, despite an explicitly bound actual prior output.",
+  "repair": "For VALIDATE_EXISTING alone, retain actual prior profile information when the model proposes no new objective. Preserve raw null and its source binding; reject a different profile.",
+  "prompt_version": "WeddingLiveSemanticV02 unchanged",
+  "source_impact": "GENERATION interpretation and native producers unchanged. Preserve completed B. A is reexecuted from its pinned capture only to obtain a genuine live Host-bound prior for the interrupted verification; no new A provider call.",
+  "authority_restored_from_json": false
+}

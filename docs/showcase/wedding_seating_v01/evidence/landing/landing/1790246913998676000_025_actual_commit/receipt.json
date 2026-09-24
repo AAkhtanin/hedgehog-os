@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "git",
+    "rev-parse",
+    "HEAD"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "final": true,
+  "rc": 0,
+  "seconds": 0.005916290916502476,
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 41,
+    "sha256": "b2adff762c04dedcc7285aca4dde568549a2c2bc0b7c6512254577a470393aab"
+  }
+}

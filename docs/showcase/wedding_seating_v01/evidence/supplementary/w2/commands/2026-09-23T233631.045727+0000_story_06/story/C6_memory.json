@@ -1,0 +1,2050 @@
+[
+  {
+    "creates_permission": false,
+    "op": "WRITE",
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:ac080f36e4d0624d966a0425a541f4528b51103c10718652e17092730f7b457d",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "17a7fc86ea99d3edb99db691dccb7feacff26aefceaae506b3753243db0d3cfe",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "organizer:w1",
+        "recording_component": "wedding:memory",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "a5d63124a9779a8892afdc490c0c342392df95db1b1df7eeae51d7b5d304f4ab",
+        "source_root_decision_id": "3959b640bb52b3d1b0b03f9d2f497c6d196cdc52448f0254ea80ffc742719de0",
+        "source_root_decision_input_id": "152a7ec251582df9c1411811934624c2ba215c5b1357b0d1fa5096be32319f89"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "2a0eb63a40979191b15324c56584aae494793dc9b20e7cfc29a431de180e1b10",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "wedding.context_only.v01",
+      "predecessor_record_id": null,
+      "recording_component": "wedding:memory",
+      "resonance_reason": "Historical bounded context, never current permission.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "{\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"problem_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"profile\":\"KEEP_FAMILIAR_V01\",\"request_ref\":\"request:w2:keep\"}",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "WEDDING_SEATING",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "wedding.safe_context",
+        "meaning_schema_version": "v0.1",
+        "namespace": "wedding",
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "subject_class": "accepted_plan"
+      },
+      "semantic_tags": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_reference_ids": [
+        "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1700000000,
+        "et_observed_at": 1700000000,
+        "freshness_policy_id": "freshness:wedding:context",
+        "kt_as_of": 1700000000,
+        "pt_created_at": 1700000000,
+        "source_observed_at": 1700000000,
+        "source_reported_at": 1700000000,
+        "system_ingested_at": 1700000000,
+        "system_verified_at": 1700000000,
+        "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 3600,
+        "valid_from": 1700000000,
+        "valid_to": 1700003600
+      }
+    },
+    "result": {
+      "content": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "kind": "accepted_plan",
+        "material": {
+          "dependencies": {
+            "owner": "organizer:w1",
+            "policy": "wedding.context_only.v01",
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "profile": "KEEP_FAMILIAR_V01"
+          },
+          "kind": "accepted_plan",
+          "source_ref": "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d",
+          "value": {
+            "assignment": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "profile": "KEEP_FAMILIAR_V01",
+            "request_ref": "request:w2:keep"
+          }
+        },
+        "record": {
+          "artifact_pointers": [],
+          "authority_envelope": {
+            "action_permission_present": false,
+            "authority_class": "ROOT_ACCEPTED_WORK",
+            "authority_envelope_id": "drsauth_v01:ac080f36e4d0624d966a0425a541f4528b51103c10718652e17092730f7b457d",
+            "authority_envelope_version": "v0.1",
+            "authority_scope_fingerprint": "17a7fc86ea99d3edb99db691dccb7feacff26aefceaae506b3753243db0d3cfe",
+            "creates_authority": false,
+            "creates_permission": false,
+            "owning_local_root_id": "organizer:w1",
+            "recording_component": "wedding:memory",
+            "root_acceptance_state": "ACCEPTED_WORK",
+            "source_root_decision_hash": "a5d63124a9779a8892afdc490c0c342392df95db1b1df7eeae51d7b5d304f4ab",
+            "source_root_decision_id": "3959b640bb52b3d1b0b03f9d2f497c6d196cdc52448f0254ea80ffc742719de0",
+            "source_root_decision_input_id": "152a7ec251582df9c1411811934624c2ba215c5b1357b0d1fa5096be32319f89"
+          },
+          "conflict_hints": [],
+          "content_fingerprint": "2a0eb63a40979191b15324c56584aae494793dc9b20e7cfc29a431de180e1b10",
+          "creates_authority": false,
+          "creates_permission": false,
+          "lineage_edges": [],
+          "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+          "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "meaning_record_version": "v0.1",
+          "memory_pointers": [],
+          "persistent_lifecycle_state": "ACTIVE",
+          "policy_version": "wedding.context_only.v01",
+          "predecessor_record_id": null,
+          "recording_component": "wedding:memory",
+          "resonance_reason": "Historical bounded context, never current permission.",
+          "reuse_policy_class": "CONTEXT_ONLY",
+          "risk_hints": [],
+          "safe_summary": "{\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"problem_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"profile\":\"KEEP_FAMILIAR_V01\",\"request_ref\":\"request:w2:keep\"}",
+          "schema_versions": [
+            "wedding.context_only.v01"
+          ],
+          "semantic_address": {
+            "address_profile_version": "v0.1",
+            "domain": "WEDDING_SEATING",
+            "intent_class": "context_lookup",
+            "meaning_schema_id": "wedding.safe_context",
+            "meaning_schema_version": "v0.1",
+            "namespace": "wedding",
+            "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+            "subject_class": "accepted_plan"
+          },
+          "semantic_tags": [
+            "wedding",
+            "accepted_plan"
+          ],
+          "source_reference_ids": [
+            "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d"
+          ],
+          "supersession_reason": null,
+          "time_envelope": {
+            "ct_context_anchor": 1700000000,
+            "et_observed_at": 1700000000,
+            "freshness_policy_id": "freshness:wedding:context",
+            "kt_as_of": 1700000000,
+            "pt_created_at": 1700000000,
+            "source_observed_at": 1700000000,
+            "source_reported_at": 1700000000,
+            "system_ingested_at": 1700000000,
+            "system_verified_at": 1700000000,
+            "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+            "time_envelope_version": "v0.1",
+            "ttl_seconds": 3600,
+            "valid_from": 1700000000,
+            "valid_to": 1700003600
+          }
+        },
+        "root_final_ref": "3959b640bb52b3d1b0b03f9d2f497c6d196cdc52448f0254ea80ffc742719de0",
+        "semantic_keys": [
+          "wedding",
+          "accepted_plan"
+        ],
+        "worldstate_ref": "17a7fc86ea99d3edb99db691dccb7feacff26aefceaae506b3753243db0d3cfe"
+      },
+      "domain": "WEDDING_SEATING",
+      "layer": "work",
+      "provenance": {
+        "created_by": "root_orchestrator",
+        "request_id": "request:w2:keep",
+        "trace_refs": [
+          {
+            "trace_id": "work_results:157ce3ecced591dab28e6bbfbee487f8142b07b473b2f36e061405edb250788d"
+          }
+        ]
+      },
+      "record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+      "status": "active",
+      "time_envelope": {
+        "ct_session_anchor": "request:w2:keep",
+        "et_observed_at": "2023-11-14T22:13:20+00:00",
+        "freshness_class": "static",
+        "kt_asof": "2023-11-14T22:13:20+00:00",
+        "pt_created_at": "2023-11-14T22:13:20+00:00",
+        "ttl_seconds": 3600,
+        "valid_from": "2023-11-14T22:13:20+00:00",
+        "valid_to": "2023-11-14T23:13:20+00:00"
+      },
+      "trace_refs": [
+        {
+          "kind": "local_drs_resolver",
+          "trace_id": "trace:drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139"
+        }
+      ],
+      "type": "generic"
+    },
+    "root": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "3959b640bb52b3d1b0b03f9d2f497c6d196cdc52448f0254ea80ffc742719de0",
+      "decision_input_id": "152a7ec251582df9c1411811934624c2ba215c5b1357b0d1fa5096be32319f89",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:a69f92e1b0b9167d0cc58c1ee4e704f6eed82a3e8be2bf2eab68aefb2d8a69b1",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w2:keep",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    }
+  },
+  {
+    "current_query": {
+      "as_of": 1700000001,
+      "domain": "WEDDING_SEATING",
+      "evaluation_time": 1700000001,
+      "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+      "forbidden_changes": [
+        "POLICY_CHANGED"
+      ],
+      "freshness_policy_id": "freshness:wedding:context",
+      "max_age_seconds": 3600,
+      "owning_local_root_id": "organizer:w1",
+      "policy_version": "wedding.context_only.v01",
+      "query_id": "drsquery_v01:1000abdd1d23b21df2fe8774583ae57920a70f66e9fb08b6dfb407912d3acbd1",
+      "query_mode": "CURRENT_DECISION",
+      "requested_reuse_classes": [
+        "CONTEXT_ONLY"
+      ],
+      "required_evidence_classes": [
+        "SOURCE_IDENTITY",
+        "SOURCE_INTEGRITY",
+        "PROVENANCE_CHAIN",
+        "TIME_FITNESS",
+        "POLICY_COMPATIBILITY",
+        "SCHEMA_COMPATIBILITY",
+        "CONFLICT_CLEARANCE",
+        "ROOT_DECISION",
+        "SOURCE_HISTORY"
+      ],
+      "required_time_axes": [
+        "PT",
+        "KT",
+        "ET",
+        "CT",
+        "TTL",
+        "VALIDITY"
+      ],
+      "reuse_intent": "CONTEXT",
+      "risk_class": "LOW",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "scope_fingerprint": "17a7fc86ea99d3edb99db691dccb7feacff26aefceaae506b3753243db0d3cfe",
+      "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+      "temporal_query_version": "v0.1",
+      "time_range_end": 1700000002,
+      "time_range_start": 1700000001
+    },
+    "descent": {
+      "applied_budget_id": "drsbudget_v01:076ff18b40b1a2413f79ed40f27e3f625ce7a7023dd805dd1e9488e9184d640e",
+      "artifacts_opened": 0,
+      "bytes_opened": 0,
+      "conflict_records_opened": 0,
+      "creates_authority": false,
+      "creates_permission": false,
+      "depth_reached": 0,
+      "executed_descent_class": "SUMMARY_ONLY",
+      "limits_respected": true,
+      "lineage_edges_traversed": 0,
+      "memory_descent_request_id": "drsdescentreq_v01:da34b117ac949ac6eb793693641e61a05d19c4161e935b7b7072ea8d36a5a94b",
+      "memory_descent_result_id": "drsdescentres_v01:76e2a7929b972588cdb9f636c717ae6621fca72bf8e83a7b107a30635ed72abc",
+      "memory_descent_result_version": "v0.1",
+      "opened_artifact_pointer_ids": [],
+      "opened_conflict_record_ids": [],
+      "opened_memory_pointer_ids": [],
+      "opened_payload_fingerprints": [],
+      "opened_record_ids": [
+        "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139"
+      ],
+      "pointers_opened": 0,
+      "query_id": "drsquery_v01:1000abdd1d23b21df2fe8774583ae57920a70f66e9fb08b6dfb407912d3acbd1",
+      "real_world_effects_count": 0,
+      "reason_codes": [],
+      "records_opened": 1,
+      "retrieval_plan_id": "drsplan_v01:f09e1c9427e17e349a36ae87b160b214327c61ea1d24f028b444dc515df5227f",
+      "safe_summaries": [
+        "{\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"problem_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"profile\":\"KEEP_FAMILIAR_V01\",\"request_ref\":\"request:w2:keep\"}"
+      ],
+      "traversed_lineage_edge_ids": []
+    },
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": true,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 9997,
+        "deadend_passed": true,
+        "eligible_for_ranking": true,
+        "evaluated_at": 1700000001,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+        "observed_evidence_fingerprint": "c537766b59538c24e7e59c1287851a317cdb483fc515a88309e5b0f0b3b484bc",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": true,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:1a3030b3d1865053c84e0d6dbb030b93e41415a741cd2154b353fe0cfd56b007",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:1000abdd1d23b21df2fe8774583ae57920a70f66e9fb08b6dfb407912d3acbd1",
+        "query_state": "FRESH_CANDIDATE",
+        "reason_codes": [],
+        "required_evidence_passed": true,
+        "required_time_axes_passed": true,
+        "schema_compatible": true,
+        "scope_passed": true,
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "source_history_hash": "06ef6aab1c031e2ced2c4b1dd834db5a9f577ebefd1ae01e38c58d9fa1db3d21",
+        "temporal_hard_gate_passed": true,
+        "ttl_freshness_passed": true,
+        "validity_interval_passed": true
+      }
+    ],
+    "op": "QUERY",
+    "plan": {
+      "creates_authority": false,
+      "creates_permission": false,
+      "executes_read": false,
+      "proposed_artifact_pointer_ids": [],
+      "proposed_budget_id": "drsbudget_v01:076ff18b40b1a2413f79ed40f27e3f625ce7a7023dd805dd1e9488e9184d640e",
+      "proposed_memory_pointer_ids": [],
+      "proposed_record_ids": [
+        "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139"
+      ],
+      "query_id": "drsquery_v01:1000abdd1d23b21df2fe8774583ae57920a70f66e9fb08b6dfb407912d3acbd1",
+      "reason_codes": [],
+      "requested_descent_class": "SUMMARY_ONLY",
+      "required_access_policy_ids": [],
+      "retrieval_plan_id": "drsplan_v01:f09e1c9427e17e349a36ae87b160b214327c61ea1d24f028b444dc515df5227f",
+      "retrieval_plan_version": "v0.1",
+      "root_approval_required": true,
+      "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f"
+    },
+    "query": {
+      "content_filters": {
+        "kind": "accepted_plan"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:efa531872da31db5338d6a0869fa4bc52eb005493b5150739dbf8690ad5a9487",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T22:13:21+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output"
+          ],
+          "record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "review_required": true,
+          "stale": false
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 0,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:efa531872da31db5338d6a0869fa4bc52eb005493b5150739dbf8690ad5a9487",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    },
+    "root": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "96f7f8b457e4f32ce486b9aa83c0d674f50c2e434304ddd92d425fc0bf313c2b",
+      "decision_input_id": "f9b91b9772570eec909d845a496804801b22a29b312d77ad7ff38f68128cfe7c",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "drsplan_v01:f09e1c9427e17e349a36ae87b160b214327c61ea1d24f028b444dc515df5227f",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "drsquery_v01:1000abdd1d23b21df2fe8774583ae57920a70f66e9fb08b6dfb407912d3acbd1",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    }
+  },
+  {
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": true,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 0,
+        "deadend_passed": true,
+        "eligible_for_ranking": false,
+        "evaluated_at": 1700004000,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+        "observed_evidence_fingerprint": "85a55460a4d242e06aa349b81f92512819a85ec534b43f2a684db9c8f8bc5f8e",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": true,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:c7b0626a121970d33221e2a701f963f1d61fdf04e117cd8bcfca72fb16352891",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:70af32d4a509d608bc4b01e403b28ee073577d166418450316827ad7182abded",
+        "query_state": "BLOCKED_BY_TIME",
+        "reason_codes": [
+          "drs_time_validity_interval_invalid",
+          "drs_time_ttl_expired",
+          "drs_required_evidence_missing"
+        ],
+        "required_evidence_passed": false,
+        "required_time_axes_passed": false,
+        "schema_compatible": true,
+        "scope_passed": true,
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "source_history_hash": "06ef6aab1c031e2ced2c4b1dd834db5a9f577ebefd1ae01e38c58d9fa1db3d21",
+        "temporal_hard_gate_passed": false,
+        "ttl_freshness_passed": false,
+        "validity_interval_passed": false
+      }
+    ],
+    "op": "QUERY",
+    "query": {
+      "content_filters": {
+        "kind": "accepted_plan"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:f7ea8f92e177c51607f3dc4f5ba1394796ef1bcda3c04f9b141a86a4e2661f6c",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T23:20:00+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output",
+            "stale_record_forces_root_review"
+          ],
+          "record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "review_required": true,
+          "stale": true
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 1,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:f7ea8f92e177c51607f3dc4f5ba1394796ef1bcda3c04f9b141a86a4e2661f6c",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output",
+        "stale_record_forces_root_review"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    }
+  },
+  {
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": true,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 9997,
+        "deadend_passed": true,
+        "eligible_for_ranking": false,
+        "evaluated_at": 1700000001,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+        "observed_evidence_fingerprint": "c537766b59538c24e7e59c1287851a317cdb483fc515a88309e5b0f0b3b484bc",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": true,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:4e251924243ad4654b6f907aca9194de2f76a6e6ef7201751f17ed56b760aa6c",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:2ad3b689d5e7dcbf36e5dc05673a2bbe7e4970a4ce7eb0b3a39514e7bcf95f66",
+        "query_state": "BLOCKED_BY_SCOPE",
+        "reason_codes": [
+          "drs_address_scope_mismatch"
+        ],
+        "required_evidence_passed": true,
+        "required_time_axes_passed": true,
+        "schema_compatible": true,
+        "scope_passed": false,
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "source_history_hash": "06ef6aab1c031e2ced2c4b1dd834db5a9f577ebefd1ae01e38c58d9fa1db3d21",
+        "temporal_hard_gate_passed": true,
+        "ttl_freshness_passed": true,
+        "validity_interval_passed": true
+      }
+    ],
+    "op": "QUERY",
+    "query": {
+      "content_filters": {
+        "kind": "accepted_plan"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:0f8362e9191aab5209aaa5277bd09b9b3c4eb8140b9acc5e0ad759a48bc8b704",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T22:13:21+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "MIX_CIRCLES_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output"
+          ],
+          "record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "review_required": true,
+          "stale": false
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 0,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:0f8362e9191aab5209aaa5277bd09b9b3c4eb8140b9acc5e0ad759a48bc8b704",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    }
+  },
+  {
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": false,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 9997,
+        "deadend_passed": true,
+        "eligible_for_ranking": false,
+        "evaluated_at": 1700000001,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+        "observed_evidence_fingerprint": "0d55433868099683cac373ecb5a10cb62abbb39240c3530ea58a7f168f1b8a01",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": false,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:8b911370e0de8a4ac6c83e456f09e473cddee3f68f32d076715cec57f3cb5c95",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:526afae74f3657507d0265547148a5e40eca56076be2b32b2953995ef6fffb84",
+        "query_state": "BLOCKED_BY_SCOPE",
+        "reason_codes": [
+          "drs_address_scope_mismatch",
+          "drs_provenance_invalid",
+          "drs_required_evidence_missing"
+        ],
+        "required_evidence_passed": false,
+        "required_time_axes_passed": true,
+        "schema_compatible": true,
+        "scope_passed": false,
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "source_history_hash": "06ef6aab1c031e2ced2c4b1dd834db5a9f577ebefd1ae01e38c58d9fa1db3d21",
+        "temporal_hard_gate_passed": true,
+        "ttl_freshness_passed": true,
+        "validity_interval_passed": true
+      }
+    ],
+    "op": "QUERY",
+    "query": {
+      "content_filters": {
+        "kind": "accepted_plan"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:c92b2884d80ba6cb205d89c9eeaa6a6e4df79910b612ed53d82b25f9428e3eef",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T22:13:21+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:foreign",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "5a9bbc7c0f7779eba567e960b55be23abe18262332cadee21b4921389f5b9ea8",
+        "profile": "KEEP_FAMILIAR_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output"
+          ],
+          "record_id": "drsmeaning_v01:55807903eeed56e5ccf6bf82e0065f00bc5cb3fc1f30ce75df43c46ae0aca139",
+          "review_required": true,
+          "stale": false
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 0,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:c92b2884d80ba6cb205d89c9eeaa6a6e4df79910b612ed53d82b25f9428e3eef",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    }
+  },
+  {
+    "creates_permission": false,
+    "op": "WRITE",
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:bff26718c6422120a485cea1aa8b987bc650f5e8a3ed489dc6db3bf281f92565",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "d794fa14dd2ee9896781b88de41c9933fc668c1bfe7f337985ea07754ba6a3d6",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "organizer:w1",
+        "recording_component": "wedding:memory",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "e7971d078297f9424bc0093848f79d7ab33ed794afbf031bdb5cfcb9de7a072f",
+        "source_root_decision_id": "9a8b6424a1c659caf6892e23eaa3fe90a01b9705033e7d6c74bc42cc115bf955",
+        "source_root_decision_input_id": "622d3bccc6199463251d39ba4c581c672b714e7d642e6afe8df2acd3ff0be9ba"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "76cbc66528849f1d048dba0efa1f4e8c864c267d6050c6e10587aafae1661381",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "wedding.context_only.v01",
+      "predecessor_record_id": null,
+      "recording_component": "wedding:memory",
+      "resonance_reason": "Historical bounded context, never current permission.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "{\"conditions\":[{\"condition_id\":\"condition_01\",\"source_ref\":\"source:w1:hard\"},{\"condition_id\":\"condition_conflict\",\"source_ref\":\"source:w1:hard\"}],\"status\":\"DIRECT_CONTRADICTION\"}",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "WEDDING_SEATING",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "wedding.safe_context",
+        "meaning_schema_version": "v0.1",
+        "namespace": "wedding",
+        "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+        "subject_class": "negative_context"
+      },
+      "semantic_tags": [
+        "wedding",
+        "negative_context"
+      ],
+      "source_reference_ids": [
+        "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1700000000,
+        "et_observed_at": 1700000000,
+        "freshness_policy_id": "freshness:wedding:context",
+        "kt_as_of": 1700000000,
+        "pt_created_at": 1700000000,
+        "source_observed_at": 1700000000,
+        "source_reported_at": 1700000000,
+        "system_ingested_at": 1700000000,
+        "system_verified_at": 1700000000,
+        "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 3600,
+        "valid_from": 1700000000,
+        "valid_to": 1700003600
+      }
+    },
+    "result": {
+      "content": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "kind": "negative_context",
+        "material": {
+          "dependencies": {
+            "owner": "organizer:w1",
+            "policy": "wedding.context_only.v01",
+            "problem_ref": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476",
+            "profile": "KEEP_FAMILIAR_V01"
+          },
+          "kind": "negative_context",
+          "source_ref": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476",
+          "value": {
+            "conditions": [
+              {
+                "condition_id": "condition_01",
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_conflict",
+                "source_ref": "source:w1:hard"
+              }
+            ],
+            "status": "DIRECT_CONTRADICTION"
+          }
+        },
+        "record": {
+          "artifact_pointers": [],
+          "authority_envelope": {
+            "action_permission_present": false,
+            "authority_class": "ROOT_ACCEPTED_WORK",
+            "authority_envelope_id": "drsauth_v01:bff26718c6422120a485cea1aa8b987bc650f5e8a3ed489dc6db3bf281f92565",
+            "authority_envelope_version": "v0.1",
+            "authority_scope_fingerprint": "d794fa14dd2ee9896781b88de41c9933fc668c1bfe7f337985ea07754ba6a3d6",
+            "creates_authority": false,
+            "creates_permission": false,
+            "owning_local_root_id": "organizer:w1",
+            "recording_component": "wedding:memory",
+            "root_acceptance_state": "ACCEPTED_WORK",
+            "source_root_decision_hash": "e7971d078297f9424bc0093848f79d7ab33ed794afbf031bdb5cfcb9de7a072f",
+            "source_root_decision_id": "9a8b6424a1c659caf6892e23eaa3fe90a01b9705033e7d6c74bc42cc115bf955",
+            "source_root_decision_input_id": "622d3bccc6199463251d39ba4c581c672b714e7d642e6afe8df2acd3ff0be9ba"
+          },
+          "conflict_hints": [],
+          "content_fingerprint": "76cbc66528849f1d048dba0efa1f4e8c864c267d6050c6e10587aafae1661381",
+          "creates_authority": false,
+          "creates_permission": false,
+          "lineage_edges": [],
+          "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+          "meaning_record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "meaning_record_version": "v0.1",
+          "memory_pointers": [],
+          "persistent_lifecycle_state": "ACTIVE",
+          "policy_version": "wedding.context_only.v01",
+          "predecessor_record_id": null,
+          "recording_component": "wedding:memory",
+          "resonance_reason": "Historical bounded context, never current permission.",
+          "reuse_policy_class": "CONTEXT_ONLY",
+          "risk_hints": [],
+          "safe_summary": "{\"conditions\":[{\"condition_id\":\"condition_01\",\"source_ref\":\"source:w1:hard\"},{\"condition_id\":\"condition_conflict\",\"source_ref\":\"source:w1:hard\"}],\"status\":\"DIRECT_CONTRADICTION\"}",
+          "schema_versions": [
+            "wedding.context_only.v01"
+          ],
+          "semantic_address": {
+            "address_profile_version": "v0.1",
+            "domain": "WEDDING_SEATING",
+            "intent_class": "context_lookup",
+            "meaning_schema_id": "wedding.safe_context",
+            "meaning_schema_version": "v0.1",
+            "namespace": "wedding",
+            "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+            "subject_class": "negative_context"
+          },
+          "semantic_tags": [
+            "wedding",
+            "negative_context"
+          ],
+          "source_reference_ids": [
+            "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476"
+          ],
+          "supersession_reason": null,
+          "time_envelope": {
+            "ct_context_anchor": 1700000000,
+            "et_observed_at": 1700000000,
+            "freshness_policy_id": "freshness:wedding:context",
+            "kt_as_of": 1700000000,
+            "pt_created_at": 1700000000,
+            "source_observed_at": 1700000000,
+            "source_reported_at": 1700000000,
+            "system_ingested_at": 1700000000,
+            "system_verified_at": 1700000000,
+            "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+            "time_envelope_version": "v0.1",
+            "ttl_seconds": 3600,
+            "valid_from": 1700000000,
+            "valid_to": 1700003600
+          }
+        },
+        "root_final_ref": "9a8b6424a1c659caf6892e23eaa3fe90a01b9705033e7d6c74bc42cc115bf955",
+        "semantic_keys": [
+          "wedding",
+          "negative_context"
+        ],
+        "worldstate_ref": "d794fa14dd2ee9896781b88de41c9933fc668c1bfe7f337985ea07754ba6a3d6"
+      },
+      "domain": "WEDDING_SEATING",
+      "layer": "work",
+      "provenance": {
+        "created_by": "root_orchestrator",
+        "request_id": "request:w2:contradiction",
+        "trace_refs": [
+          {
+            "trace_id": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476"
+          }
+        ]
+      },
+      "record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+      "status": "active",
+      "time_envelope": {
+        "ct_session_anchor": "request:w2:contradiction",
+        "et_observed_at": "2023-11-14T22:13:20+00:00",
+        "freshness_class": "static",
+        "kt_asof": "2023-11-14T22:13:20+00:00",
+        "pt_created_at": "2023-11-14T22:13:20+00:00",
+        "ttl_seconds": 3600,
+        "valid_from": "2023-11-14T22:13:20+00:00",
+        "valid_to": "2023-11-14T23:13:20+00:00"
+      },
+      "trace_refs": [
+        {
+          "kind": "local_drs_resolver",
+          "trace_id": "trace:drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420"
+        }
+      ],
+      "type": "generic"
+    },
+    "root": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "9a8b6424a1c659caf6892e23eaa3fe90a01b9705033e7d6c74bc42cc115bf955",
+      "decision_input_id": "622d3bccc6199463251d39ba4c581c672b714e7d642e6afe8df2acd3ff0be9ba",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "negative:181e6412fcda001784daaaecf84bd6f500439f6d107cb61f668cfda69b5cb840",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w2:contradiction",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    }
+  },
+  {
+    "current_query": {
+      "as_of": 1700000001,
+      "domain": "WEDDING_SEATING",
+      "evaluation_time": 1700000001,
+      "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+      "forbidden_changes": [
+        "POLICY_CHANGED"
+      ],
+      "freshness_policy_id": "freshness:wedding:context",
+      "max_age_seconds": 3600,
+      "owning_local_root_id": "organizer:w1",
+      "policy_version": "wedding.context_only.v01",
+      "query_id": "drsquery_v01:bba51841d371dde6ce38cdd6c532f3644a2e50ed76d0797992c610bbc2708119",
+      "query_mode": "CURRENT_DECISION",
+      "requested_reuse_classes": [
+        "CONTEXT_ONLY"
+      ],
+      "required_evidence_classes": [
+        "SOURCE_IDENTITY",
+        "SOURCE_INTEGRITY",
+        "PROVENANCE_CHAIN",
+        "TIME_FITNESS",
+        "POLICY_COMPATIBILITY",
+        "SCHEMA_COMPATIBILITY",
+        "CONFLICT_CLEARANCE",
+        "ROOT_DECISION",
+        "SOURCE_HISTORY"
+      ],
+      "required_time_axes": [
+        "PT",
+        "KT",
+        "ET",
+        "CT",
+        "TTL",
+        "VALIDITY"
+      ],
+      "reuse_intent": "CONTEXT",
+      "risk_class": "LOW",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "scope_fingerprint": "d794fa14dd2ee9896781b88de41c9933fc668c1bfe7f337985ea07754ba6a3d6",
+      "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+      "temporal_query_version": "v0.1",
+      "time_range_end": 1700000002,
+      "time_range_start": 1700000001
+    },
+    "descent": {
+      "applied_budget_id": "drsbudget_v01:076ff18b40b1a2413f79ed40f27e3f625ce7a7023dd805dd1e9488e9184d640e",
+      "artifacts_opened": 0,
+      "bytes_opened": 0,
+      "conflict_records_opened": 0,
+      "creates_authority": false,
+      "creates_permission": false,
+      "depth_reached": 0,
+      "executed_descent_class": "SUMMARY_ONLY",
+      "limits_respected": true,
+      "lineage_edges_traversed": 0,
+      "memory_descent_request_id": "drsdescentreq_v01:3d1149fc82fb064a54ce43299e685a63c20b2b2644b8618cb53f35b162470c24",
+      "memory_descent_result_id": "drsdescentres_v01:d1ca80e026478ab6382f9881f38c7e6180ef932ee38c0fb4b2f28fbb9a49d6a3",
+      "memory_descent_result_version": "v0.1",
+      "opened_artifact_pointer_ids": [],
+      "opened_conflict_record_ids": [],
+      "opened_memory_pointer_ids": [],
+      "opened_payload_fingerprints": [],
+      "opened_record_ids": [
+        "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420"
+      ],
+      "pointers_opened": 0,
+      "query_id": "drsquery_v01:bba51841d371dde6ce38cdd6c532f3644a2e50ed76d0797992c610bbc2708119",
+      "real_world_effects_count": 0,
+      "reason_codes": [],
+      "records_opened": 1,
+      "retrieval_plan_id": "drsplan_v01:6ca2bc380c3843f49bbade79990f9fea923e08ae930c7ded6d80de7ce149b261",
+      "safe_summaries": [
+        "{\"conditions\":[{\"condition_id\":\"condition_01\",\"source_ref\":\"source:w1:hard\"},{\"condition_id\":\"condition_conflict\",\"source_ref\":\"source:w1:hard\"}],\"status\":\"DIRECT_CONTRADICTION\"}"
+      ],
+      "traversed_lineage_edge_ids": []
+    },
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": true,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 9997,
+        "deadend_passed": true,
+        "eligible_for_ranking": true,
+        "evaluated_at": 1700000001,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+        "observed_evidence_fingerprint": "a4b7933ba168cacfa53cf7a6c89f19afe81415cf36d1d4e84fa4a48b59e7f47f",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": true,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:f2a4ecc54a07f60dd4957599b51569975717ff1e2e74657d00edc9331eefb572",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:bba51841d371dde6ce38cdd6c532f3644a2e50ed76d0797992c610bbc2708119",
+        "query_state": "FRESH_CANDIDATE",
+        "reason_codes": [],
+        "required_evidence_passed": true,
+        "required_time_axes_passed": true,
+        "schema_compatible": true,
+        "scope_passed": true,
+        "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+        "source_history_hash": "13f7a4a8389daf9ca2aac25ed2e8dd262315f4c82a6355c2106cc89b2c95b047",
+        "temporal_hard_gate_passed": true,
+        "ttl_freshness_passed": true,
+        "validity_interval_passed": true
+      }
+    ],
+    "op": "QUERY",
+    "plan": {
+      "creates_authority": false,
+      "creates_permission": false,
+      "executes_read": false,
+      "proposed_artifact_pointer_ids": [],
+      "proposed_budget_id": "drsbudget_v01:076ff18b40b1a2413f79ed40f27e3f625ce7a7023dd805dd1e9488e9184d640e",
+      "proposed_memory_pointer_ids": [],
+      "proposed_record_ids": [
+        "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420"
+      ],
+      "query_id": "drsquery_v01:bba51841d371dde6ce38cdd6c532f3644a2e50ed76d0797992c610bbc2708119",
+      "reason_codes": [],
+      "requested_descent_class": "SUMMARY_ONLY",
+      "required_access_policy_ids": [],
+      "retrieval_plan_id": "drsplan_v01:6ca2bc380c3843f49bbade79990f9fea923e08ae930c7ded6d80de7ce149b261",
+      "retrieval_plan_version": "v0.1",
+      "root_approval_required": true,
+      "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d"
+    },
+    "query": {
+      "content_filters": {
+        "kind": "negative_context"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:5c54e97cca5a4c408446b1c5253b3a0c48bd8a1d4c9f7c5748834f330402ef6b",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "negative_context"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T22:13:21+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "920187d891da4d56bfe0676671b622e385d801c974b0229fe15fca801b0aa476",
+        "profile": "KEEP_FAMILIAR_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output"
+          ],
+          "record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "review_required": true,
+          "stale": false
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 0,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:5c54e97cca5a4c408446b1c5253b3a0c48bd8a1d4c9f7c5748834f330402ef6b",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    },
+    "root": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "8f2893f60eddee3b2dbdf2278cac11f7e5c5bb0b56ca65098e19466c71aab557",
+      "decision_input_id": "85874f91b4cd97bf554cf110c3a5970b32409cbb6dbbe9e67fd5cb027d525d29",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "drsplan_v01:6ca2bc380c3843f49bbade79990f9fea923e08ae930c7ded6d80de7ce149b261",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "drsquery_v01:bba51841d371dde6ce38cdd6c532f3644a2e50ed76d0797992c610bbc2708119",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    }
+  },
+  {
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": true,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 9997,
+        "deadend_passed": true,
+        "eligible_for_ranking": false,
+        "evaluated_at": 1700000001,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+        "observed_evidence_fingerprint": "a4b7933ba168cacfa53cf7a6c89f19afe81415cf36d1d4e84fa4a48b59e7f47f",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": true,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:51f138ed1c59d1e91e54cb14b2dbeba8f3a8804f8bb99be84685d384b09a4342",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:596597159605a489208fd4cdac3505389f63213df8f9d9efb14e049e7f91a84c",
+        "query_state": "BLOCKED_BY_SCOPE",
+        "reason_codes": [
+          "drs_address_scope_mismatch"
+        ],
+        "required_evidence_passed": true,
+        "required_time_axes_passed": true,
+        "schema_compatible": true,
+        "scope_passed": false,
+        "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+        "source_history_hash": "13f7a4a8389daf9ca2aac25ed2e8dd262315f4c82a6355c2106cc89b2c95b047",
+        "temporal_hard_gate_passed": true,
+        "ttl_freshness_passed": true,
+        "validity_interval_passed": true
+      }
+    ],
+    "op": "QUERY",
+    "query": {
+      "content_filters": {
+        "kind": "negative_context"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:22200907d61eb6026bba52255ca1e5c4f157c0468c43bc1866b8de5b50a2a411",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "negative_context"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T22:13:21+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output"
+          ],
+          "record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "review_required": true,
+          "stale": false
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 0,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:22200907d61eb6026bba52255ca1e5c4f157c0468c43bc1866b8de5b50a2a411",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    }
+  },
+  {
+    "evaluations": [
+      {
+        "action_history_binding_id": null,
+        "action_intent_passed": true,
+        "authority_envelope_passed": true,
+        "checked_dependency_fingerprint": "b0ae1bb7426fa62f8478de0465f6fc12b8484b69c74e81e16300b7761529fd06",
+        "conflict_passed": true,
+        "creates_authority": false,
+        "creates_permission": false,
+        "current_freshness_units": 9997,
+        "deadend_passed": true,
+        "eligible_for_ranking": false,
+        "evaluated_at": 1700000001,
+        "evaluation_time_source": "INJECTED_CURRENT_DECISION_TIME",
+        "forbidden_changes_passed": true,
+        "g2a_action_history_passed": true,
+        "lifecycle_passed": true,
+        "meaning_record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+        "observed_evidence_fingerprint": "a4b7933ba168cacfa53cf7a6c89f19afe81415cf36d1d4e84fa4a48b59e7f47f",
+        "permission_boundary_passed": true,
+        "policy_compatible": true,
+        "provenance_passed": true,
+        "quarantine_passed": true,
+        "query_evaluation_id": "drsqeval_v01:bb57a88a3d5bf7808a91e07d9595ce564d12259dbfbefeb05315a3f77db4ac95",
+        "query_evaluation_version": "v0.1",
+        "query_id": "drsquery_v01:3c7c5f26ff4e5c0fc209fe9219e83a31214742f018562f03cc1d7e2d856de4ab",
+        "query_state": "BLOCKED_BY_SCOPE",
+        "reason_codes": [
+          "drs_address_scope_mismatch"
+        ],
+        "required_evidence_passed": true,
+        "required_time_axes_passed": true,
+        "schema_compatible": true,
+        "scope_passed": false,
+        "semantic_address_id": "drsaddr_v01:c30fa9892d4b783432e066339da28819489cfd280e3876e7ab7f8b14858cca7d",
+        "source_history_hash": "13f7a4a8389daf9ca2aac25ed2e8dd262315f4c82a6355c2106cc89b2c95b047",
+        "temporal_hard_gate_passed": true,
+        "ttl_freshness_passed": true,
+        "validity_interval_passed": true
+      }
+    ],
+    "op": "QUERY",
+    "query": {
+      "content_filters": {
+        "kind": "negative_context"
+      },
+      "domain": "WEDDING_SEATING",
+      "max_candidates": 10,
+      "query_id": "memory_query:caeb654d4d0f560f234cd625ea82fbf87b7c76730b31ffbf43ef60638b68750d",
+      "require_root_review": true,
+      "risk_class": "normal",
+      "semantic_terms": [
+        "wedding",
+        "negative_context"
+      ],
+      "source_refs": [],
+      "temporal_query": {
+        "as_of": "2023-11-14T22:13:21+00:00"
+      },
+      "trace_refs": [],
+      "worldstate": {
+        "owner": "organizer:w1",
+        "policy": "wedding.context_only.v01",
+        "problem_ref": "c9750a1cf70a64573964dee5bb6919d1a9336552e31f49e48762cf2e7a6c692a",
+        "profile": "KEEP_FAMILIAR_V01"
+      }
+    },
+    "report": {
+      "authority_boundary": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "freshness_is_final_authority": false,
+        "local_file_backed_drs_is_production_drs": false,
+        "resolver_called_connectors": false,
+        "resolver_called_gemini": false,
+        "resolver_called_network": false,
+        "resolver_mutated_manifest": false,
+        "resolver_mutated_transition_matrix": false,
+        "root_final_authority_preserved": true
+      },
+      "blocked_count": 0,
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "action_permission_granted": false,
+          "blocked": false,
+          "candidate_id": "candidate:drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "changed_worldstate": false,
+          "conflicting_provenance": false,
+          "deadend_pressure": false,
+          "direct_reuse_allowed": false,
+          "domain": "WEDDING_SEATING",
+          "match_reasons": [
+            "domain_exact_match",
+            "explicit_content_key_match",
+            "controlled_token_overlap"
+          ],
+          "match_score": 1.0,
+          "poisoning_pressure": false,
+          "quarantine_pressure": false,
+          "reason_codes": [
+            "candidate_only_root_review_required",
+            "root_review_required_before_reuse_affects_final_output"
+          ],
+          "record_id": "drsmeaning_v01:694e18bb2355b47c6230aa12095430b2df1fc97cb298148a8d2850f1006a1420",
+          "review_required": true,
+          "stale": false
+        }
+      ],
+      "counters": {
+        "action_permission_granted_count": 0,
+        "candidates_returned_count": 1,
+        "changed_worldstate_reuse_blocked_count": 0,
+        "conflicting_provenance_blocked_count": 0,
+        "direct_reuse_allowed_count": 0,
+        "duplicate_poisoning_records_seen_count": 0,
+        "external_drs_used_count": 0,
+        "gemini_used_count": 0,
+        "manifest_mutation_count": 0,
+        "network_used_count": 0,
+        "poisoning_pressure_authority_claimed_count": 0,
+        "production_drs_used_count": 0,
+        "quarantine_reuse_blocked_count": 0,
+        "root_review_required_count": 1,
+        "stale_record_reuse_blocked_count": 0,
+        "transition_matrix_mutation_count": 0
+      },
+      "direct_reuse_allowed_count": 0,
+      "query_id": "memory_query:caeb654d4d0f560f234cd625ea82fbf87b7c76730b31ffbf43ef60638b68750d",
+      "reason_codes": [
+        "candidate_only_root_review_required",
+        "root_review_required_before_reuse_affects_final_output"
+      ],
+      "review_required_count": 1,
+      "root_review_required": true
+    }
+  },
+  {
+    "creates_permission": false,
+    "op": "WRITE",
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "ROOT_ACCEPTED_WORK",
+        "authority_envelope_id": "drsauth_v01:9b962a3d0f8d28cea1a21072b09c6c7719d844558dec529821d26aa33be4e7b5",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "26bfba30a9421a7f0605842aa000d25b3f1264d0847a7ae6fa760e06dad2d5f0",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": "organizer:w1",
+        "recording_component": "wedding:memory",
+        "root_acceptance_state": "ACCEPTED_WORK",
+        "source_root_decision_hash": "368ada3f1ed2630a40b1718a809dd5f9905892775a25babf778507a7e61ffd43",
+        "source_root_decision_id": "cf7b8d809d6ae9e663fa038625d9844e2975c84759e74dd7869f3285583c1a5d",
+        "source_root_decision_input_id": "3196670addf95bad6c800cdfc85dd61e5794825c87d0782477fb1db575dcaacc"
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "f4207010a6eaf500e45417d789ce58618b333e293ab5fc3a212c4773a4b05f01",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:1138b1ac100238fc81cb9cca1fb23c71f3640eca9c153e807b068cc53b5bcbbf",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "wedding.context_only.v01",
+      "predecessor_record_id": null,
+      "recording_component": "wedding:memory",
+      "resonance_reason": "Historical bounded context, never current permission.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "{\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"problem_ref\":\"c9750a1cf70a64573964dee5bb6919d1a9336552e31f49e48762cf2e7a6c692a\",\"profile\":\"KEEP_FAMILIAR_V01\",\"request_ref\":\"request:w2:recovery\"}",
+      "schema_versions": [
+        "wedding.context_only.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "WEDDING_SEATING",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "wedding.safe_context",
+        "meaning_schema_version": "v0.1",
+        "namespace": "wedding",
+        "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+        "subject_class": "accepted_plan"
+      },
+      "semantic_tags": [
+        "wedding",
+        "accepted_plan"
+      ],
+      "source_reference_ids": [
+        "work_results:fb778ae616a59abd6a43fbb836d3f27d3905d7ea5b196b3bd419e43d874f7f2a"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1700000000,
+        "et_observed_at": 1700000000,
+        "freshness_policy_id": "freshness:wedding:context",
+        "kt_as_of": 1700000000,
+        "pt_created_at": 1700000000,
+        "source_observed_at": 1700000000,
+        "source_reported_at": 1700000000,
+        "system_ingested_at": 1700000000,
+        "system_verified_at": 1700000000,
+        "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 3600,
+        "valid_from": 1700000000,
+        "valid_to": 1700003600
+      }
+    },
+    "result": {
+      "content": {
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "kind": "accepted_plan",
+        "material": {
+          "dependencies": {
+            "owner": "organizer:w1",
+            "policy": "wedding.context_only.v01",
+            "problem_ref": "c9750a1cf70a64573964dee5bb6919d1a9336552e31f49e48762cf2e7a6c692a",
+            "profile": "KEEP_FAMILIAR_V01"
+          },
+          "kind": "accepted_plan",
+          "source_ref": "work_results:fb778ae616a59abd6a43fbb836d3f27d3905d7ea5b196b3bd419e43d874f7f2a",
+          "value": {
+            "assignment": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "problem_ref": "c9750a1cf70a64573964dee5bb6919d1a9336552e31f49e48762cf2e7a6c692a",
+            "profile": "KEEP_FAMILIAR_V01",
+            "request_ref": "request:w2:recovery"
+          }
+        },
+        "record": {
+          "artifact_pointers": [],
+          "authority_envelope": {
+            "action_permission_present": false,
+            "authority_class": "ROOT_ACCEPTED_WORK",
+            "authority_envelope_id": "drsauth_v01:9b962a3d0f8d28cea1a21072b09c6c7719d844558dec529821d26aa33be4e7b5",
+            "authority_envelope_version": "v0.1",
+            "authority_scope_fingerprint": "26bfba30a9421a7f0605842aa000d25b3f1264d0847a7ae6fa760e06dad2d5f0",
+            "creates_authority": false,
+            "creates_permission": false,
+            "owning_local_root_id": "organizer:w1",
+            "recording_component": "wedding:memory",
+            "root_acceptance_state": "ACCEPTED_WORK",
+            "source_root_decision_hash": "368ada3f1ed2630a40b1718a809dd5f9905892775a25babf778507a7e61ffd43",
+            "source_root_decision_id": "cf7b8d809d6ae9e663fa038625d9844e2975c84759e74dd7869f3285583c1a5d",
+            "source_root_decision_input_id": "3196670addf95bad6c800cdfc85dd61e5794825c87d0782477fb1db575dcaacc"
+          },
+          "conflict_hints": [],
+          "content_fingerprint": "f4207010a6eaf500e45417d789ce58618b333e293ab5fc3a212c4773a4b05f01",
+          "creates_authority": false,
+          "creates_permission": false,
+          "lineage_edges": [],
+          "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+          "meaning_record_id": "drsmeaning_v01:1138b1ac100238fc81cb9cca1fb23c71f3640eca9c153e807b068cc53b5bcbbf",
+          "meaning_record_version": "v0.1",
+          "memory_pointers": [],
+          "persistent_lifecycle_state": "ACTIVE",
+          "policy_version": "wedding.context_only.v01",
+          "predecessor_record_id": null,
+          "recording_component": "wedding:memory",
+          "resonance_reason": "Historical bounded context, never current permission.",
+          "reuse_policy_class": "CONTEXT_ONLY",
+          "risk_hints": [],
+          "safe_summary": "{\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"problem_ref\":\"c9750a1cf70a64573964dee5bb6919d1a9336552e31f49e48762cf2e7a6c692a\",\"profile\":\"KEEP_FAMILIAR_V01\",\"request_ref\":\"request:w2:recovery\"}",
+          "schema_versions": [
+            "wedding.context_only.v01"
+          ],
+          "semantic_address": {
+            "address_profile_version": "v0.1",
+            "domain": "WEDDING_SEATING",
+            "intent_class": "context_lookup",
+            "meaning_schema_id": "wedding.safe_context",
+            "meaning_schema_version": "v0.1",
+            "namespace": "wedding",
+            "semantic_address_id": "drsaddr_v01:48b8ceb842bd388f683a46072fce8dec10323f87304f8b135ccf5a9c8c9d1d1f",
+            "subject_class": "accepted_plan"
+          },
+          "semantic_tags": [
+            "wedding",
+            "accepted_plan"
+          ],
+          "source_reference_ids": [
+            "work_results:fb778ae616a59abd6a43fbb836d3f27d3905d7ea5b196b3bd419e43d874f7f2a"
+          ],
+          "supersession_reason": null,
+          "time_envelope": {
+            "ct_context_anchor": 1700000000,
+            "et_observed_at": 1700000000,
+            "freshness_policy_id": "freshness:wedding:context",
+            "kt_as_of": 1700000000,
+            "pt_created_at": 1700000000,
+            "source_observed_at": 1700000000,
+            "source_reported_at": 1700000000,
+            "system_ingested_at": 1700000000,
+            "system_verified_at": 1700000000,
+            "time_envelope_id": "drstime_v01:e3dff0fa0fd1ec127384c17f6b945491e851b4a3530d26cb15a84600c6c1d839",
+            "time_envelope_version": "v0.1",
+            "ttl_seconds": 3600,
+            "valid_from": 1700000000,
+            "valid_to": 1700003600
+          }
+        },
+        "root_final_ref": "cf7b8d809d6ae9e663fa038625d9844e2975c84759e74dd7869f3285583c1a5d",
+        "semantic_keys": [
+          "wedding",
+          "accepted_plan"
+        ],
+        "worldstate_ref": "26bfba30a9421a7f0605842aa000d25b3f1264d0847a7ae6fa760e06dad2d5f0"
+      },
+      "domain": "WEDDING_SEATING",
+      "layer": "work",
+      "provenance": {
+        "created_by": "root_orchestrator",
+        "request_id": "request:w2:recovery",
+        "trace_refs": [
+          {
+            "trace_id": "work_results:fb778ae616a59abd6a43fbb836d3f27d3905d7ea5b196b3bd419e43d874f7f2a"
+          }
+        ]
+      },
+      "record_id": "drsmeaning_v01:1138b1ac100238fc81cb9cca1fb23c71f3640eca9c153e807b068cc53b5bcbbf",
+      "status": "active",
+      "time_envelope": {
+        "ct_session_anchor": "request:w2:recovery",
+        "et_observed_at": "2023-11-14T22:13:20+00:00",
+        "freshness_class": "static",
+        "kt_asof": "2023-11-14T22:13:20+00:00",
+        "pt_created_at": "2023-11-14T22:13:20+00:00",
+        "ttl_seconds": 3600,
+        "valid_from": "2023-11-14T22:13:20+00:00",
+        "valid_to": "2023-11-14T23:13:20+00:00"
+      },
+      "trace_refs": [
+        {
+          "kind": "local_drs_resolver",
+          "trace_id": "trace:drsmeaning_v01:1138b1ac100238fc81cb9cca1fb23c71f3640eca9c153e807b068cc53b5bcbbf"
+        }
+      ],
+      "type": "generic"
+    },
+    "root": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "cf7b8d809d6ae9e663fa038625d9844e2975c84759e74dd7869f3285583c1a5d",
+      "decision_input_id": "3196670addf95bad6c800cdfc85dd61e5794825c87d0782477fb1db575dcaacc",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:60c51c91a0472e77d395fead63fb4976f61b9ca163590bef7c9ffd76c43c6dc7",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w2:recovery",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    }
+  }
+]

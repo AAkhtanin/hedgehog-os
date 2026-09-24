@@ -1,0 +1,250 @@
+{
+  "material": {
+    "approved_intent": "Clarify the missing approved objective.",
+    "parent_ref": null,
+    "problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": null,
+      "problem_revision": 1,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "profile": "KEEP_FAMILIAR_V01",
+    "projection_status": "SERIALIZED_PROJECTION_CHECKED",
+    "request_ref": "request:w2:clarify",
+    "semantics": [
+      {
+        "actor_ref": "actor:ORCHESTRATOR",
+        "capture_ref": "request:w2:clarify:capture:ORCHESTRATOR",
+        "model_ref": "model:controlled",
+        "needs": [
+          "LOCAL_CLARIFICATION"
+        ],
+        "origin": "CONTROLLED_FIXTURE",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "problem_revision": 1,
+        "reason": "Controlled schema fixture; no live model or authority.",
+        "request_ref": "request:w2:clarify",
+        "requested_outputs": [
+          "CLARIFICATION"
+        ],
+        "role": "ORCHESTRATOR",
+        "schema_version": "WeddingSemanticProposalV01",
+        "source_refs": [
+          "source:w1:hard"
+        ],
+        "task_kind": "CLARIFY",
+        "unresolved": [
+          "question:objective"
+        ]
+      },
+      {
+        "actor_ref": "actor:REQUIREMENT_ARCHITECT",
+        "capture_ref": "request:w2:clarify:capture:REQUIREMENT_ARCHITECT",
+        "condition_refs": [
+          "condition_01",
+          "condition_02",
+          "condition_03",
+          "condition_04",
+          "condition_05",
+          "condition_06",
+          "condition_07",
+          "condition_08"
+        ],
+        "model_ref": "model:controlled",
+        "needed_capabilities": [],
+        "objective_profile": "KEEP_FAMILIAR_V01",
+        "origin": "CONTROLLED_FIXTURE",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "problem_revision": 1,
+        "reason": "Controlled schema fixture; no live model or authority.",
+        "request_ref": "request:w2:clarify",
+        "role": "REQUIREMENT_ARCHITECT",
+        "schema_version": "WeddingSemanticProposalV01",
+        "source_refs": [
+          "source:w1:hard"
+        ],
+        "task_kind": "CLARIFY",
+        "unresolved": [
+          "question:objective"
+        ]
+      }
+    ],
+    "task_kind": "CLARIFY"
+  },
+  "questions": [
+    "question:objective"
+  ],
+  "search_calls": 0,
+  "status": "NEEDS_CLARIFICATION"
+}

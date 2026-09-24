@@ -1,0 +1,30 @@
+{
+  "account_id": "296280725196",
+  "authorization": {
+    "prompt_name": "RADIOLARIA_POSTG4_WEDDING_W4_BRAKET_RIGETTI_V03_PROMPT_20260924.txt",
+    "prompt_sha256": "50528130e9174134f72b3463d993eb703d26af2e27680869ed834b88ad5a83b5",
+    "scope": "PRESENT_W4_NOT_RETROACTIVE_W0"
+  },
+  "bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+  "device_arn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+  "episode": "wedding-w4-xExg43mO",
+  "feasible_suboptimal_allowed": true,
+  "max_qpu_microusd": 1450000,
+  "max_unique_tasks": 2,
+  "output_prefix": "wedding-v02/w4-xExg43mO/",
+  "prefix": "wedding-v02/",
+  "region": "us-west-1",
+  "revoked": false,
+  "runtime_arn": "arn:aws:iam::296280725196:user/radiolaria-quantum",
+  "runtime_profile": "radiolaria-quantum",
+  "setup_id": "wedding-w0-h2xwk03",
+  "setup_identity": {
+    "bytes": 711,
+    "mode": "0600",
+    "sha256": "ce9d86976fdbb3410f946b7c8078ce5ed6736993c71a86d8db39c3edb33b0da6"
+  },
+  "shot_microusd": 425,
+  "shots": 1000,
+  "structural_disclosure": true,
+  "task_microusd": 300000
+}

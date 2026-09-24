@@ -1,0 +1,1 @@
+{"task_kind":"GENERATE","unresolved":[],"reason":"The user explicitly requested to create a complete seating plan.","objective_profile":"KEEP_FAMILIAR_V01","needed_capabilities":["COMPILE_QUBO","SOLVE_EXACT","VALIDATE_ORIGINAL"],"amendments":[]}

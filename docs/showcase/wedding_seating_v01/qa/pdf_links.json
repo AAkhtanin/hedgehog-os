@@ -1,0 +1,795 @@
+{
+  "wedding_presentation_v01.pdf": {
+    "sha256": "c2afea7d2c3315c18e7a8b536ad5560cc12d3f9e11b704b1c602e260ecb08b5a",
+    "pages": 20,
+    "selectable_text": true,
+    "active_link_annotations": 44,
+    "annotations": [
+      {
+        "page": 1,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A01"
+      },
+      {
+        "page": 1,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 2,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A02"
+      },
+      {
+        "page": 2,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 3,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A25"
+      },
+      {
+        "page": 3,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 4,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A05"
+      },
+      {
+        "page": 4,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 5,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A11"
+      },
+      {
+        "page": 5,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 6,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A12"
+      },
+      {
+        "page": 6,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 7,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A11"
+      },
+      {
+        "page": 7,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 8,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A14"
+      },
+      {
+        "page": 8,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 9,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A17"
+      },
+      {
+        "page": 9,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 10,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A16"
+      },
+      {
+        "page": 10,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 11,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A19"
+      },
+      {
+        "page": 11,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 12,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A20"
+      },
+      {
+        "page": 12,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 13,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A20"
+      },
+      {
+        "page": 13,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 14,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A22"
+      },
+      {
+        "page": 14,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 15,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A18"
+      },
+      {
+        "page": 15,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 16,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A23"
+      },
+      {
+        "page": 16,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 17,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A24"
+      },
+      {
+        "page": 17,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 17,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/README.md#verify-recorded-evidence"
+      },
+      {
+        "page": 18,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A25"
+      },
+      {
+        "page": 18,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 19,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A26"
+      },
+      {
+        "page": 19,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf#nameddest=A30"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/technical_appendix_v01.pdf"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/SOURCES.md"
+      }
+    ],
+    "named_destinations": []
+  },
+  "technical_appendix_v01.pdf": {
+    "sha256": "4ac9dc476490aa2dcd2b557a5c4d7374abe8f4c990b6ca39784b4ae21ee07177",
+    "pages": 30,
+    "selectable_text": true,
+    "active_link_annotations": 142,
+    "annotations": [
+      {
+        "page": 1,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/tree/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+      },
+      {
+        "page": 1,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/wedding_presentation_v01.pdf"
+      },
+      {
+        "page": 1,
+        "target": "wedding_presentation_v01.pdf"
+      },
+      {
+        "page": 1,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 1,
+        "target": "WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 2,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/docs/wedding_seating_v01_checkpoint.md"
+      },
+      {
+        "page": 2,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/content_manifest.json"
+      },
+      {
+        "page": 2,
+        "target": "content_manifest.json"
+      },
+      {
+        "page": 3,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/fixtures/wedding_seating/reference_problem_v01.json"
+      },
+      {
+        "page": 3,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/math_v01.py"
+      },
+      {
+        "page": 4,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/math_v01.py"
+      },
+      {
+        "page": 4,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/A.json"
+      },
+      {
+        "page": 4,
+        "target": "evidence/portable/w3/story/A.json"
+      },
+      {
+        "page": 5,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 5,
+        "target": "WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 6,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_001/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "evidence/supplementary/w3/captures/attempt_001/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_002/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "evidence/supplementary/w3/captures/attempt_002/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_003/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "evidence/supplementary/w3/captures/attempt_003/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_004/response.txt"
+      },
+      {
+        "page": 6,
+        "target": "evidence/supplementary/w3/captures/attempt_004/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_005/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "evidence/supplementary/w3/captures/attempt_005/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_006/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "evidence/supplementary/w3/captures/attempt_006/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_007/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "evidence/supplementary/w3/captures/attempt_007/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_008/response.txt"
+      },
+      {
+        "page": 7,
+        "target": "evidence/supplementary/w3/captures/attempt_008/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_009/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "evidence/supplementary/w3/captures/attempt_009/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_010/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "evidence/supplementary/w3/captures/attempt_010/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_011/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "evidence/supplementary/w3/captures/attempt_011/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_012/response.txt"
+      },
+      {
+        "page": 8,
+        "target": "evidence/supplementary/w3/captures/attempt_012/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_013/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "evidence/supplementary/w3/captures/attempt_013/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_014/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "evidence/supplementary/w3/captures/attempt_014/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_015/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "evidence/supplementary/w3/captures/attempt_015/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_016/response.txt"
+      },
+      {
+        "page": 9,
+        "target": "evidence/supplementary/w3/captures/attempt_016/response.txt"
+      },
+      {
+        "page": 10,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_017/response.txt"
+      },
+      {
+        "page": 10,
+        "target": "evidence/supplementary/w3/captures/attempt_017/response.txt"
+      },
+      {
+        "page": 10,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_018/response.txt"
+      },
+      {
+        "page": 10,
+        "target": "evidence/supplementary/w3/captures/attempt_018/response.txt"
+      },
+      {
+        "page": 10,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_019/response.txt"
+      },
+      {
+        "page": 10,
+        "target": "evidence/supplementary/w3/captures/attempt_019/response.txt"
+      },
+      {
+        "page": 11,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR3.json"
+      },
+      {
+        "page": 11,
+        "target": "evidence/portable/w3/story/SR3.json"
+      },
+      {
+        "page": 12,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR1.json"
+      },
+      {
+        "page": 12,
+        "target": "evidence/portable/w3/story/SR1.json"
+      },
+      {
+        "page": 12,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json"
+      },
+      {
+        "page": 12,
+        "target": "evidence/portable/w3/story/SR2.json"
+      },
+      {
+        "page": 12,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/captures/attempt_017/response.txt"
+      },
+      {
+        "page": 12,
+        "target": "evidence/supplementary/w3/captures/attempt_017/response.txt"
+      },
+      {
+        "page": 13,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/native_adapter_v01.py"
+      },
+      {
+        "page": 13,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/native_capabilities_v01.py"
+      },
+      {
+        "page": 14,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/allocation_v01.py"
+      },
+      {
+        "page": 14,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/memory_v01.py"
+      },
+      {
+        "page": 15,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/math_v01.py"
+      },
+      {
+        "page": 16,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/encoding_v02.py"
+      },
+      {
+        "page": 17,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/circuit_v02.py"
+      },
+      {
+        "page": 17,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/source.qasm"
+      },
+      {
+        "page": 17,
+        "target": "evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/source.qasm"
+      },
+      {
+        "page": 17,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/source.qasm"
+      },
+      {
+        "page": 17,
+        "target": "evidence/portable/w4/numeric/MIX_CIRCLES_V01/source.qasm"
+      },
+      {
+        "page": 18,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/qpu_bridge_v01.py"
+      },
+      {
+        "page": 18,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/privacy_v01.py"
+      },
+      {
+        "page": 18,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/read_only_preflight.json"
+      },
+      {
+        "page": 18,
+        "target": "evidence/portable/w4/provider/read_only_preflight.json"
+      },
+      {
+        "page": 19,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/ledger.json"
+      },
+      {
+        "page": 19,
+        "target": "evidence/portable/w4/provider/ledger.json"
+      },
+      {
+        "page": 19,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json"
+      },
+      {
+        "page": 19,
+        "target": "evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json"
+      },
+      {
+        "page": 19,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_results.json"
+      },
+      {
+        "page": 19,
+        "target": "evidence/portable/w4/provider/MIX_CIRCLES_V01_results.json"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json"
+      },
+      {
+        "page": 20,
+        "target": "evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json"
+      },
+      {
+        "page": 20,
+        "target": "evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/seating.json"
+      },
+      {
+        "page": 20,
+        "target": "evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/seating.json"
+      },
+      {
+        "page": 20,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json"
+      },
+      {
+        "page": 20,
+        "target": "evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json"
+      },
+      {
+        "page": 21,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json"
+      },
+      {
+        "page": 21,
+        "target": "evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json"
+      },
+      {
+        "page": 21,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json"
+      },
+      {
+        "page": 21,
+        "target": "evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json"
+      },
+      {
+        "page": 21,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/seating.json"
+      },
+      {
+        "page": 21,
+        "target": "evidence/portable/w4/outputs/MIX_CIRCLES_V01/seating.json"
+      },
+      {
+        "page": 21,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json"
+      },
+      {
+        "page": 21,
+        "target": "evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json"
+      },
+      {
+        "page": 22,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/qpu_bridge_v01.py"
+      },
+      {
+        "page": 22,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/operator_v01.py"
+      },
+      {
+        "page": 22,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/ledger.json"
+      },
+      {
+        "page": 22,
+        "target": "evidence/portable/w4/provider/ledger.json"
+      },
+      {
+        "page": 23,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 23,
+        "target": "WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 23,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/tests/test_wedding_seating_portable_v01.py"
+      },
+      {
+        "page": 23,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/tests/test_wedding_seating_qpu_v01.py"
+      },
+      {
+        "page": 24,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/hedgehog/domains/wedding_seating/portable_v01.py"
+      },
+      {
+        "page": 24,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/README.md"
+      },
+      {
+        "page": 24,
+        "target": "README.md"
+      },
+      {
+        "page": 25,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/SOURCES.md"
+      },
+      {
+        "page": 25,
+        "target": "SOURCES.md"
+      },
+      {
+        "page": 26,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/SOURCES.md"
+      },
+      {
+        "page": 26,
+        "target": "SOURCES.md"
+      },
+      {
+        "page": 27,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/content_manifest.json"
+      },
+      {
+        "page": 27,
+        "target": "content_manifest.json"
+      },
+      {
+        "page": 28,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/QA_REPORT.md"
+      },
+      {
+        "page": 28,
+        "target": "QA_REPORT.md"
+      },
+      {
+        "page": 28,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a/docs/wedding_seating_v01_checkpoint.md"
+      },
+      {
+        "page": 29,
+        "target": "https://coin-or.github.io/pulp/CaseStudies/a_set_partitioning_problem.html"
+      },
+      {
+        "page": 29,
+        "target": "https://improbable.com/news/2012/Optimal-seating-chart.pdf"
+      },
+      {
+        "page": 29,
+        "target": "https://github.com/google/or-tools/blob/stable/examples/python/wedding_optimal_chart_sat.py"
+      },
+      {
+        "page": 29,
+        "target": "https://developers.google.com/optimization/cp/cp_solver"
+      },
+      {
+        "page": 29,
+        "target": "https://developers.google.com/optimization/cp/cp_solver"
+      },
+      {
+        "page": 29,
+        "target": "https://arxiv.org/abs/2604.10497v2"
+      },
+      {
+        "page": 29,
+        "target": "https://github.com/flatironinstitute/masala_public"
+      },
+      {
+        "page": 29,
+        "target": "https://support.dwavesys.com/hc/en-us/articles/360051869733-From-What-Countries-Can-I-Access-D-Wave-s-Leap-Quantum-Cloud-Service"
+      },
+      {
+        "page": 29,
+        "target": "https://docs.aws.amazon.com/braket/latest/developerguide/braket-openqasm-create-submit-task.html"
+      },
+      {
+        "page": 29,
+        "target": "https://docs.aws.amazon.com/braket/latest/developerguide/braket-monitor-tasks-sdk.html"
+      },
+      {
+        "page": 29,
+        "target": "https://docs.dwavequantum.com/en/latest/ocean/api_ref_dimod/generated/dimod.ConstrainedQuadraticModel.check_feasible.html"
+      },
+      {
+        "page": 29,
+        "target": "https://www.usenix.org/conference/osdi26/call-for-artifacts"
+      },
+      {
+        "page": 29,
+        "target": "https://www.usenix.org/conference/usenixsecurity26/call-for-artifacts"
+      },
+      {
+        "page": 29,
+        "target": "https://www.sei.cmu.edu/blog/assurance-cases-and-confidence/"
+      },
+      {
+        "page": 29,
+        "target": "https://airc.nist.gov/airmf-resources/playbook/measure/"
+      },
+      {
+        "page": 29,
+        "target": "https://www.assertion-evidence.com/"
+      },
+      {
+        "page": 29,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/SOURCES.md"
+      },
+      {
+        "page": 29,
+        "target": "SOURCES.md"
+      },
+      {
+        "page": 30,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 30,
+        "target": "WEDDING_LLM_READER_V01.xml"
+      },
+      {
+        "page": 30,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/content_manifest.json"
+      },
+      {
+        "page": 30,
+        "target": "content_manifest.json"
+      },
+      {
+        "page": 30,
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/main/docs/showcase/wedding_seating_v01/README.md"
+      },
+      {
+        "page": 30,
+        "target": "README.md"
+      }
+    ],
+    "named_destinations": [
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "A09",
+      "A10",
+      "A11",
+      "A12",
+      "A13",
+      "A14",
+      "A15",
+      "A16",
+      "A17",
+      "A18",
+      "A19",
+      "A20",
+      "A21",
+      "A22",
+      "A23",
+      "A24",
+      "A25",
+      "A26",
+      "A27",
+      "A28",
+      "A29",
+      "A30"
+    ]
+  }
+}

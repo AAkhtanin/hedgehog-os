@@ -1,0 +1,2264 @@
+{
+  "A": {
+    "D_seconds": 12.916595292277634,
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": null,
+      "problem_revision": 1,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "actual_work": [
+      "review",
+      "compile",
+      "solve",
+      "validate",
+      "consume"
+    ],
+    "captures": [
+      {
+        "capture_ref": "capture:93fcd108eae64f61f3d4661f9065422fc92c9227c278b59a32e063ba23a4e242",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "2c443b9f735dee47efeab3f1ba2a8610adf795925adc85791d3bf09a40327f37",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:e93632ee1ce198bf17b357dc4d1cc191bfca5fe9290ac52fe91d6598322ef9b7",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "4eb089aaf657f208e3359e03dd8aa63caabb3244c6ed9b90547f374e14fa21ed",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:93fcd108eae64f61f3d4661f9065422fc92c9227c278b59a32e063ba23a4e242",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "REQUIREMENT_REVIEW",
+          "EXACT_SEARCH",
+          "ORIGINAL_VALIDATION"
+        ],
+        "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+        "reason": "The user explicitly requested to create a complete seating plan.",
+        "request_ref": "request:w3:v02:a",
+        "requested_outputs": [
+          "SEATING_CANDIDATES",
+          "VALIDATION_REPORT"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "GENERATE",
+        "unresolved": []
+      },
+      {
+        "amendments": [],
+        "capture_ref": "capture:e93632ee1ce198bf17b357dc4d1cc191bfca5fe9290ac52fe91d6598322ef9b7",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [
+          "COMPILE_QUBO",
+          "SOLVE_EXACT",
+          "VALIDATE_ORIGINAL"
+        ],
+        "objective_profile": "KEEP_FAMILIAR_V01",
+        "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+        "reason": "The user explicitly requested to create a complete seating plan.",
+        "request_ref": "request:w3:v02:a",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "GENERATE",
+        "unresolved": []
+      }
+    ],
+    "controlled_native_time": 1700000000,
+    "displayed_plan": {
+      "assignment": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "profile": "KEEP_FAMILIAR_V01",
+      "request_ref": "request:w3:v02:a"
+    },
+    "native_mode": "full_semantic",
+    "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+    "producer_input": "{\"approved_intent\":\"Create a complete seating plan that keeps familiar circles together as much as possible. Keep every existing mandatory restriction.\",\"origin\":\"CAPTURED_PROVIDER_RESPONSE_REEXECUTION\",\"original_base_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"parent_ref\":null,\"problem\":{\"allowed_objective_profiles\":[\"KEEP_FAMILIAR_V01\",\"MIX_CIRCLES_V01\"],\"disclosure_profile_ref\":\"disclosure:w1:synthetic\",\"episode_id\":\"wedding:w1:synthetic\",\"familiarity_pairs\":[[\"guest_01\",\"guest_03\"],[\"guest_01\",\"guest_04\"],[\"guest_02\",\"guest_03\"],[\"guest_02\",\"guest_04\"],[\"guest_05\",\"guest_07\"],[\"guest_05\",\"guest_08\"],[\"guest_06\",\"guest_07\"],[\"guest_06\",\"guest_08\"],[\"guest_09\",\"guest_11\"],[\"guest_09\",\"guest_12\"],[\"guest_10\",\"guest_11\"],[\"guest_10\",\"guest_12\"]],\"guest_ids\":[\"guest_01\",\"guest_02\",\"guest_03\",\"guest_04\",\"guest_05\",\"guest_06\",\"guest_07\",\"guest_08\",\"guest_09\",\"guest_10\",\"guest_11\",\"guest_12\"],\"hard_conditions\":[{\"condition_id\":\"condition_01\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_02\"]},{\"condition_id\":\"condition_02\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_03\",\"guest_04\"]},{\"condition_id\":\"condition_03\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_05\",\"guest_06\"]},{\"condition_id\":\"condition_04\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_07\",\"guest_08\"]},{\"condition_id\":\"condition_05\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_09\",\"guest_10\"]},{\"condition_id\":\"condition_06\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\",\"guest_12\"]},{\"condition_id\":\"condition_07\",\"hard\":true,\"predicate\":\"APART\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_05\"]},{\"condition_id\":\"condition_08\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\"],\"tables\":[\"table_3\"]}],\"owner_root_id\":\"organizer:w1\",\"parent_problem_ref\":null,\"problem_revision\":1,\"safe_intent_ref\":\"intent:A\",\"schema_version\":\"WeddingProblemV01\",\"source_bundle_hash\":\"f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4\",\"table_records\":[{\"capacity\":4,\"table_id\":\"table_1\"},{\"capacity\":4,\"table_id\":\"table_2\"},{\"capacity\":4,\"table_id\":\"table_3\"}],\"time_context_ref\":\"time:w1:static\"},\"profile\":\"KEEP_FAMILIAR_V01\",\"projection_status\":\"ACTUAL_SERIALIZED_EGRESS_CHECKED\",\"request_ref\":\"request:w3:v02:a\",\"revision_acknowledgement\":null,\"semantics\":[{\"capture_ref\":\"capture:93fcd108eae64f61f3d4661f9065422fc92c9227c278b59a32e063ba23a4e242\",\"model\":\"gemini-2.5-flash\",\"needs\":[\"REQUIREMENT_REVIEW\",\"EXACT_SEARCH\",\"ORIGINAL_VALIDATION\"],\"origin\":\"CAPTURED_PROVIDER_RESPONSE_REEXECUTION\",\"reason\":\"The user explicitly requested to create a complete seating plan.\",\"request_ref\":\"request:w3:v02:a\",\"requested_outputs\":[\"SEATING_CANDIDATES\",\"VALIDATION_REPORT\"],\"role\":\"WEDDING_INTENT_ORCHESTRATOR\",\"source_snapshot\":\"69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b\",\"task_kind\":\"GENERATE\",\"unresolved\":[]},{\"amendments\":[],\"capture_ref\":\"capture:e93632ee1ce198bf17b357dc4d1cc191bfca5fe9290ac52fe91d6598322ef9b7\",\"model\":\"gemini-2.5-flash\",\"needed_capabilities\":[\"COMPILE_QUBO\",\"SOLVE_EXACT\",\"VALIDATE_ORIGINAL\"],\"objective_profile\":\"KEEP_FAMILIAR_V01\",\"origin\":\"CAPTURED_PROVIDER_RESPONSE_REEXECUTION\",\"reason\":\"The user explicitly requested to create a complete seating plan.\",\"request_ref\":\"request:w3:v02:a\",\"role\":\"WEDDING_REQUIREMENT_ARCHITECT\",\"source_snapshot\":\"69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b\",\"task_kind\":\"GENERATE\",\"unresolved\":[]}],\"task_kind\":\"GENERATE\"}",
+    "revision_ack": null,
+    "root_decision": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "6c04b0d25ba9deea9266236a7ab49799e8d9d23b528136bd56ac8cd189ba5dd8",
+      "decision_input_id": "bad84b56181926470c24afe20cb3c4adb44e0ed40acedffbc3b0d05094b7faff",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:ea96f1a4550ff5915fb529d72021ea5e3010ddbb8929f44e1323b9d9bae571ac",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w3:v02:a",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "semantic_proposal_ref": "wedding_semantics:4a833e4c7a394c8ea1b7d39e8b15044cbaa966ee57b08cafe986cd81f0bf2ff1",
+    "work_result_ref": "work_results:067d3dc84afd8aab05dafcffc4662734de141b8eecf02ae78043943c3d1a83ba"
+  },
+  "AMBIGUOUS": {
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": null,
+      "problem_revision": 1,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "captures": [
+      {
+        "capture_ref": "capture:1c4f37cb8c82b6a4772a062b41e57771ee7013ce148933f015a0fa04a1403a52",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "d252b49d7a4fbefebb894fde8ef6e3bc08f657dbb0e4df0d4159765bac844c1d",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:574ca0de360fcf5405f07e8cd90644d1e816e66ab375b56b74ae577ace921c0c",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "7396a9071a0d005a8ad1dbe48695fbcba2f36d1b69a2f6d0a9f1b6ca335e2731",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:1c4f37cb8c82b6a4772a062b41e57771ee7013ce148933f015a0fa04a1403a52",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "LOCAL_CLARIFICATION"
+        ],
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "The user has not specified whether to keep familiar circles together or mix them, requiring clarification of the seating objective.",
+        "request_ref": "request:w3:v02:ambiguous",
+        "requested_outputs": [
+          "CLARIFICATION"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "CLARIFY",
+        "unresolved": [
+          "objective"
+        ]
+      },
+      {
+        "amendments": [],
+        "capture_ref": "capture:574ca0de360fcf5405f07e8cd90644d1e816e66ab375b56b74ae577ace921c0c",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [],
+        "objective_profile": null,
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "The user has not specified whether to keep familiar circles together or mix them, requiring clarification of the seating objective.",
+        "request_ref": "request:w3:v02:ambiguous",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "CLARIFY",
+        "unresolved": [
+          "objective"
+        ]
+      }
+    ],
+    "origin": "LIVE_ROLE_ORIGIN",
+    "revision_ack": null
+  },
+  "B": {
+    "D_seconds": 13.039718749932945,
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": null,
+      "problem_revision": 1,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "actual_work": [
+      "review",
+      "compile",
+      "solve",
+      "validate",
+      "consume"
+    ],
+    "captures": [
+      {
+        "capture_ref": "capture:b47a28601d704cd5a496a9c97ddfc59d003f60e5cff594d2c6ad4ec4f40985dd",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "d0e5667e444a70cce50457e8d91eb4ae1348f135876e55fde3e938e9f57f56af",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:5156642a2d63dd654be8b5d6b97fda5f4a6c525e9929970b903eafe6be692b6a",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "caf165463ef8909f3e2bfe3f39b1e7d5d508ff22fbf0d3ade1631d80310c9fc9",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:b47a28601d704cd5a496a9c97ddfc59d003f60e5cff594d2c6ad4ec4f40985dd",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "REQUIREMENT_REVIEW",
+          "EXACT_SEARCH",
+          "ORIGINAL_VALIDATION"
+        ],
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "User requested generation of a complete seating plan, prioritizing mixing existing circles while adhering to all mandatory restrictions.",
+        "request_ref": "request:w3:v02:b",
+        "requested_outputs": [
+          "SEATING_CANDIDATES",
+          "VALIDATION_REPORT"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "GENERATE",
+        "unresolved": []
+      },
+      {
+        "amendments": [],
+        "capture_ref": "capture:5156642a2d63dd654be8b5d6b97fda5f4a6c525e9929970b903eafe6be692b6a",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [
+          "COMPILE_QUBO",
+          "SOLVE_EXACT",
+          "VALIDATE_ORIGINAL"
+        ],
+        "objective_profile": "MIX_CIRCLES_V01",
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "User requested generation of a complete seating plan, prioritizing mixing existing circles while adhering to all mandatory restrictions.",
+        "request_ref": "request:w3:v02:b",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "GENERATE",
+        "unresolved": []
+      }
+    ],
+    "controlled_native_time": 1700000010,
+    "displayed_plan": {
+      "assignment": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        0,
+        0,
+        2,
+        2
+      ],
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "profile": "MIX_CIRCLES_V01",
+      "request_ref": "request:w3:v02:b"
+    },
+    "native_mode": "full_semantic",
+    "origin": "LIVE_ROLE_ORIGIN",
+    "producer_input": "{\"approved_intent\":\"Create a complete seating plan that mixes the existing circles as much as possible. Keep every existing mandatory restriction.\",\"origin\":\"LIVE_ROLE_ORIGIN\",\"original_base_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"parent_ref\":null,\"problem\":{\"allowed_objective_profiles\":[\"KEEP_FAMILIAR_V01\",\"MIX_CIRCLES_V01\"],\"disclosure_profile_ref\":\"disclosure:w1:synthetic\",\"episode_id\":\"wedding:w1:synthetic\",\"familiarity_pairs\":[[\"guest_01\",\"guest_03\"],[\"guest_01\",\"guest_04\"],[\"guest_02\",\"guest_03\"],[\"guest_02\",\"guest_04\"],[\"guest_05\",\"guest_07\"],[\"guest_05\",\"guest_08\"],[\"guest_06\",\"guest_07\"],[\"guest_06\",\"guest_08\"],[\"guest_09\",\"guest_11\"],[\"guest_09\",\"guest_12\"],[\"guest_10\",\"guest_11\"],[\"guest_10\",\"guest_12\"]],\"guest_ids\":[\"guest_01\",\"guest_02\",\"guest_03\",\"guest_04\",\"guest_05\",\"guest_06\",\"guest_07\",\"guest_08\",\"guest_09\",\"guest_10\",\"guest_11\",\"guest_12\"],\"hard_conditions\":[{\"condition_id\":\"condition_01\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_02\"]},{\"condition_id\":\"condition_02\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_03\",\"guest_04\"]},{\"condition_id\":\"condition_03\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_05\",\"guest_06\"]},{\"condition_id\":\"condition_04\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_07\",\"guest_08\"]},{\"condition_id\":\"condition_05\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_09\",\"guest_10\"]},{\"condition_id\":\"condition_06\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\",\"guest_12\"]},{\"condition_id\":\"condition_07\",\"hard\":true,\"predicate\":\"APART\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_05\"]},{\"condition_id\":\"condition_08\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\"],\"tables\":[\"table_3\"]}],\"owner_root_id\":\"organizer:w1\",\"parent_problem_ref\":null,\"problem_revision\":1,\"safe_intent_ref\":\"intent:A\",\"schema_version\":\"WeddingProblemV01\",\"source_bundle_hash\":\"f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4\",\"table_records\":[{\"capacity\":4,\"table_id\":\"table_1\"},{\"capacity\":4,\"table_id\":\"table_2\"},{\"capacity\":4,\"table_id\":\"table_3\"}],\"time_context_ref\":\"time:w1:static\"},\"profile\":\"MIX_CIRCLES_V01\",\"projection_status\":\"ACTUAL_SERIALIZED_EGRESS_CHECKED\",\"request_ref\":\"request:w3:v02:b\",\"revision_acknowledgement\":null,\"semantics\":[{\"capture_ref\":\"capture:b47a28601d704cd5a496a9c97ddfc59d003f60e5cff594d2c6ad4ec4f40985dd\",\"model\":\"gemini-2.5-flash\",\"needs\":[\"REQUIREMENT_REVIEW\",\"EXACT_SEARCH\",\"ORIGINAL_VALIDATION\"],\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"User requested generation of a complete seating plan, prioritizing mixing existing circles while adhering to all mandatory restrictions.\",\"request_ref\":\"request:w3:v02:b\",\"requested_outputs\":[\"SEATING_CANDIDATES\",\"VALIDATION_REPORT\"],\"role\":\"WEDDING_INTENT_ORCHESTRATOR\",\"source_snapshot\":\"69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b\",\"task_kind\":\"GENERATE\",\"unresolved\":[]},{\"amendments\":[],\"capture_ref\":\"capture:5156642a2d63dd654be8b5d6b97fda5f4a6c525e9929970b903eafe6be692b6a\",\"model\":\"gemini-2.5-flash\",\"needed_capabilities\":[\"COMPILE_QUBO\",\"SOLVE_EXACT\",\"VALIDATE_ORIGINAL\"],\"objective_profile\":\"MIX_CIRCLES_V01\",\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"User requested generation of a complete seating plan, prioritizing mixing existing circles while adhering to all mandatory restrictions.\",\"request_ref\":\"request:w3:v02:b\",\"role\":\"WEDDING_REQUIREMENT_ARCHITECT\",\"source_snapshot\":\"69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b\",\"task_kind\":\"GENERATE\",\"unresolved\":[]}],\"task_kind\":\"GENERATE\"}",
+    "revision_ack": null,
+    "root_decision": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "557ffd945fad4588bbcbeee6e30c6a476e5921bff82f1c1811a743240a40ac31",
+      "decision_input_id": "1e05b02497dcf9adcefc49a322db7f8fb9640f5f7e10a41985114811dc3ee49b",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:772ed448b6b4ba2542ea6fc191506f110a45949d9256a2ad7f0e8a9f686e8e54",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w3:v02:b",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "semantic_proposal_ref": "wedding_semantics:759e28f4a2ea118d1fc558bc59a383cc6e71fc8ae9afe8f047c5b20a5f3f66c9",
+    "work_result_ref": "work_results:42069f26f1a45280391a5ec5cfcbc5f1aa29d2793a5acca17545ae7459386e0c"
+  },
+  "SR1": {
+    "D_seconds": 12.90658341627568,
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "added:3f21ee24070770e6a7dbc90bd1272907",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "request:w3:v02:sr1",
+          "subjects": [
+            "guest_08"
+          ],
+          "tables": [
+            "table_2"
+          ]
+        },
+        {
+          "condition_id": "added:cefff2237df9864e94438b6db02b436e",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "request:w3:v02:sr1",
+          "subjects": [
+            "guest_07"
+          ],
+          "tables": [
+            "table_2"
+          ]
+        },
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "problem_revision": 2,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "69a0f528a18c68053983d7afe6cd18ac17a784a6a6a308a2f6de8c5dc781b5e1",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "actual_work": [
+      "review",
+      "compile",
+      "solve",
+      "validate",
+      "consume"
+    ],
+    "captures": [
+      {
+        "capture_ref": "capture:43a9f124efa2ce62641bf711f9fe9f59ffec7b5064482dc1caf99ac1ebf96ca9",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "f8a9064dd6f8ef4390bfa51402afaff5265d2475337344bab3e5bf62f36da2d1",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:c1bcdc143fe11294b9c2884de77f4632354cd5123c46d41e1cd4c22551bb2d04",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "cd5eda157464a2f0f0922d5b5360e248838e6efce7c5f816ff85725f73197589",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:43a9f124efa2ce62641bf711f9fe9f59ffec7b5064482dc1caf99ac1ebf96ca9",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "REQUIREMENT_REVIEW",
+          "EXACT_SEARCH",
+          "ORIGINAL_VALIDATION"
+        ],
+        "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+        "reason": "User requested to create a new seating plan, mixing existing circles and seating specific guests at a designated table, while keeping all existing mandatory restrictions.",
+        "request_ref": "request:w3:v02:sr1",
+        "requested_outputs": [
+          "SEATING_CANDIDATES",
+          "VALIDATION_REPORT"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "GENERATE",
+        "unresolved": []
+      },
+      {
+        "amendments": [
+          {
+            "operation": "ADD",
+            "predicate": "ALLOWED_TABLES",
+            "replaces": [],
+            "source_ref": "request:w3:v02:sr1",
+            "subjects": [
+              "guest_07",
+              "guest_08"
+            ],
+            "tables": [
+              "table_2"
+            ]
+          }
+        ],
+        "capture_ref": "capture:c1bcdc143fe11294b9c2884de77f4632354cd5123c46d41e1cd4c22551bb2d04",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [
+          "COMPILE_QUBO",
+          "SOLVE_EXACT",
+          "VALIDATE_ORIGINAL"
+        ],
+        "objective_profile": "MIX_CIRCLES_V01",
+        "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+        "reason": "User requested to create a new seating plan, mixing existing circles and seating specific guests at a designated table, while keeping all existing mandatory restrictions.",
+        "request_ref": "request:w3:v02:sr1",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b",
+        "task_kind": "GENERATE",
+        "unresolved": []
+      }
+    ],
+    "controlled_native_time": 1700000040,
+    "displayed_plan": {
+      "assignment": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        0,
+        0,
+        2,
+        2
+      ],
+      "problem_ref": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+      "profile": "MIX_CIRCLES_V01",
+      "request_ref": "request:w3:v02:sr1"
+    },
+    "native_mode": "full_semantic",
+    "origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+    "producer_input": "{\"approved_intent\":\"Create a seating plan that mixes the existing circles. Keep all the existing mandatory restrictions. Seat guest_07 and guest_08 at table_2. Give me the complete seating plan.\",\"origin\":\"CAPTURED_PROVIDER_RESPONSE_REEXECUTION\",\"original_base_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"parent_ref\":null,\"problem\":{\"allowed_objective_profiles\":[\"KEEP_FAMILIAR_V01\",\"MIX_CIRCLES_V01\"],\"disclosure_profile_ref\":\"disclosure:w1:synthetic\",\"episode_id\":\"wedding:w1:synthetic\",\"familiarity_pairs\":[[\"guest_01\",\"guest_03\"],[\"guest_01\",\"guest_04\"],[\"guest_02\",\"guest_03\"],[\"guest_02\",\"guest_04\"],[\"guest_05\",\"guest_07\"],[\"guest_05\",\"guest_08\"],[\"guest_06\",\"guest_07\"],[\"guest_06\",\"guest_08\"],[\"guest_09\",\"guest_11\"],[\"guest_09\",\"guest_12\"],[\"guest_10\",\"guest_11\"],[\"guest_10\",\"guest_12\"]],\"guest_ids\":[\"guest_01\",\"guest_02\",\"guest_03\",\"guest_04\",\"guest_05\",\"guest_06\",\"guest_07\",\"guest_08\",\"guest_09\",\"guest_10\",\"guest_11\",\"guest_12\"],\"hard_conditions\":[{\"condition_id\":\"added:3f21ee24070770e6a7dbc90bd1272907\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"request:w3:v02:sr1\",\"subjects\":[\"guest_08\"],\"tables\":[\"table_2\"]},{\"condition_id\":\"added:cefff2237df9864e94438b6db02b436e\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"request:w3:v02:sr1\",\"subjects\":[\"guest_07\"],\"tables\":[\"table_2\"]},{\"condition_id\":\"condition_01\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_02\"]},{\"condition_id\":\"condition_02\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_03\",\"guest_04\"]},{\"condition_id\":\"condition_03\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_05\",\"guest_06\"]},{\"condition_id\":\"condition_04\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_07\",\"guest_08\"]},{\"condition_id\":\"condition_05\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_09\",\"guest_10\"]},{\"condition_id\":\"condition_06\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\",\"guest_12\"]},{\"condition_id\":\"condition_07\",\"hard\":true,\"predicate\":\"APART\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_05\"]},{\"condition_id\":\"condition_08\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\"],\"tables\":[\"table_3\"]}],\"owner_root_id\":\"organizer:w1\",\"parent_problem_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"problem_revision\":2,\"safe_intent_ref\":\"intent:A\",\"schema_version\":\"WeddingProblemV01\",\"source_bundle_hash\":\"69a0f528a18c68053983d7afe6cd18ac17a784a6a6a308a2f6de8c5dc781b5e1\",\"table_records\":[{\"capacity\":4,\"table_id\":\"table_1\"},{\"capacity\":4,\"table_id\":\"table_2\"},{\"capacity\":4,\"table_id\":\"table_3\"}],\"time_context_ref\":\"time:w1:static\"},\"profile\":\"MIX_CIRCLES_V01\",\"projection_status\":\"ACTUAL_SERIALIZED_EGRESS_CHECKED\",\"request_ref\":\"request:w3:v02:sr1\",\"revision_acknowledgement\":{\"amendments\":[{\"operation\":\"ADD\",\"predicate\":\"ALLOWED_TABLES\",\"replaces\":[],\"source_ref\":\"request:w3:v02:sr1\",\"subjects\":[\"guest_07\",\"guest_08\"],\"tables\":[\"table_2\"]}],\"browser_click_claimed\":false,\"mode\":\"SCRIPTED_CONTROLLED_OWNER_INPUT\",\"prior_problem_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"proposed_problem_ref\":\"96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab\",\"request_ref\":\"request:w3:v02:sr1\",\"scope_guests\":[\"guest_07\",\"guest_08\"]},\"revision_root\":{\"conflict_set_ids\":[],\"decision\":\"ACCEPT\",\"decision_id\":\"46966a967fc163a96aec1f4b0928f80bcd86675f3b785dc7bee61a7c9a64a89c\",\"decision_input_id\":\"96d7adaac627b5acb1f90896a949b2bab84f78ef5507228dcea5c633b85d9f16\",\"effect_requested\":false,\"final_output_created\":false,\"hard_failure_reasons\":[],\"missing_evidence_refs\":[],\"permission_created\":false,\"prior_decision_id\":null,\"reason_code\":\"validated_candidate_accepted\",\"root_commit_created\":true,\"selected_candidate_id\":\"revision:71cb9f6742f39b88edb59cddf37decb8aab83484a0af07f182e78ad53418e80d\",\"target_root_id\":\"organizer:w1\",\"transaction_id\":\"transaction:request:w3:v02:sr1\",\"transition_decision\":{\"abi_major_version\":1,\"actor_role\":\"gt\",\"attempted_effect\":\"CREATE_ROOT_DECISION\",\"decision\":\"RETURN_TO_ROOT\",\"decision_id\":\"85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07\",\"matched\":true,\"missing_guards\":[],\"reason_code\":\"gt_advisory_returns_to_root\",\"registry_id\":\"336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be\",\"required_guards\":[\"artifact_valid\",\"post_vv_passed\",\"advisory_only\"],\"root_commit_present\":false,\"root_commit_required\":true,\"rule_id\":\"gt_advisory_to_root_decision\",\"satisfied_guards\":[\"artifact_valid\",\"post_vv_passed\",\"advisory_only\"],\"source_artifact_type\":\"GTAdvisoryReport\",\"source_lifecycle_state\":\"VALIDATED\",\"target_artifact_type\":\"RootDecision\"}},\"semantics\":[{\"capture_ref\":\"capture:43a9f124efa2ce62641bf711f9fe9f59ffec7b5064482dc1caf99ac1ebf96ca9\",\"model\":\"gemini-2.5-flash\",\"needs\":[\"REQUIREMENT_REVIEW\",\"EXACT_SEARCH\",\"ORIGINAL_VALIDATION\"],\"origin\":\"CAPTURED_PROVIDER_RESPONSE_REEXECUTION\",\"reason\":\"User requested to create a new seating plan, mixing existing circles and seating specific guests at a designated table, while keeping all existing mandatory restrictions.\",\"request_ref\":\"request:w3:v02:sr1\",\"requested_outputs\":[\"SEATING_CANDIDATES\",\"VALIDATION_REPORT\"],\"role\":\"WEDDING_INTENT_ORCHESTRATOR\",\"source_snapshot\":\"69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b\",\"task_kind\":\"GENERATE\",\"unresolved\":[]},{\"amendments\":[{\"operation\":\"ADD\",\"predicate\":\"ALLOWED_TABLES\",\"replaces\":[],\"source_ref\":\"request:w3:v02:sr1\",\"subjects\":[\"guest_07\",\"guest_08\"],\"tables\":[\"table_2\"]}],\"capture_ref\":\"capture:c1bcdc143fe11294b9c2884de77f4632354cd5123c46d41e1cd4c22551bb2d04\",\"model\":\"gemini-2.5-flash\",\"needed_capabilities\":[\"COMPILE_QUBO\",\"SOLVE_EXACT\",\"VALIDATE_ORIGINAL\"],\"objective_profile\":\"MIX_CIRCLES_V01\",\"origin\":\"CAPTURED_PROVIDER_RESPONSE_REEXECUTION\",\"reason\":\"User requested to create a new seating plan, mixing existing circles and seating specific guests at a designated table, while keeping all existing mandatory restrictions.\",\"request_ref\":\"request:w3:v02:sr1\",\"role\":\"WEDDING_REQUIREMENT_ARCHITECT\",\"source_snapshot\":\"69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b\",\"task_kind\":\"GENERATE\",\"unresolved\":[]}],\"task_kind\":\"GENERATE\"}",
+    "revision_ack": {
+      "amendments": [
+        {
+          "operation": "ADD",
+          "predicate": "ALLOWED_TABLES",
+          "replaces": [],
+          "source_ref": "request:w3:v02:sr1",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ],
+          "tables": [
+            "table_2"
+          ]
+        }
+      ],
+      "browser_click_claimed": false,
+      "mode": "SCRIPTED_CONTROLLED_OWNER_INPUT",
+      "prior_problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "proposed_problem_ref": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+      "request_ref": "request:w3:v02:sr1",
+      "scope_guests": [
+        "guest_07",
+        "guest_08"
+      ]
+    },
+    "root_decision": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "3131af0ef3e7eaa9b734f6a15e3f16141e987772b23bab591fa47d4824894032",
+      "decision_input_id": "277e53cc7488409669f8c26569498b4ad3dfcb0d162b08c9dccdcd5812be3f53",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:33319240bfced5929714803d8f667e54b6579e463bb4acf3e84cb19e2a71b777",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w3:v02:sr1",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "semantic_proposal_ref": "wedding_semantics:31d35aeb65ebc95e0e580524835940f724e44ff5a72a40544edfdceb325c92aa",
+    "work_result_ref": "work_results:f809c23df925fbde5fb0f68fa2001ff58de59fe8bc16258ee45310ac94678251"
+  },
+  "SR2": {
+    "D_seconds": 12.885077750310302,
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "added:6401c0b74de7b706653434554e345cfe",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "request:w3:v02:sr2",
+          "subjects": [
+            "guest_07"
+          ],
+          "tables": [
+            "table_1"
+          ]
+        },
+        {
+          "condition_id": "added:7ed3818df8898a0c7d422f951aab0cde",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "request:w3:v02:sr2",
+          "subjects": [
+            "guest_08"
+          ],
+          "tables": [
+            "table_1"
+          ]
+        },
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+      "problem_revision": 3,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "c91d2db7f99452d47e712dbe35ad51301b22602f5e6b4dcdfe11783097eb831f",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "actual_work": [
+      "review",
+      "compile",
+      "solve",
+      "validate",
+      "consume"
+    ],
+    "captures": [
+      {
+        "capture_ref": "capture:f926e675311b9d23428c20937ed67061a20deb0dfc2d73df99393b08948f766e",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "f26b2ad7ada7e9ddd6dc50eca102cf0d423b9e7dd097a2355e02d4fe8bb8f7fb",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:c189488fe1f096e06418329f0efc2ea0e7eec7652dfb3c2521c2f62e58dd64ad",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "f89ec106b34fa8defffe421d67902e0f37539fa6276d9c9cc3748918c836398f",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:f926e675311b9d23428c20937ed67061a20deb0dfc2d73df99393b08948f766e",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "REQUIREMENT_REVIEW",
+          "EXACT_SEARCH",
+          "ORIGINAL_VALIDATION"
+        ],
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "Specific guest placement change requested by the user.",
+        "request_ref": "request:w3:v02:sr2",
+        "requested_outputs": [
+          "SEATING_CANDIDATES",
+          "VALIDATION_REPORT"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+        "task_kind": "REVISE",
+        "unresolved": []
+      },
+      {
+        "amendments": [
+          {
+            "operation": "REPLACE",
+            "predicate": "ALLOWED_TABLES",
+            "replaces": [
+              "added:cefff2237df9864e94438b6db02b436e"
+            ],
+            "source_ref": "request:w3:v02:sr2",
+            "subjects": [
+              "guest_07"
+            ],
+            "tables": [
+              "table_1"
+            ]
+          },
+          {
+            "operation": "REPLACE",
+            "predicate": "ALLOWED_TABLES",
+            "replaces": [
+              "added:3f21ee24070770e6a7dbc90bd1272907"
+            ],
+            "source_ref": "request:w3:v02:sr2",
+            "subjects": [
+              "guest_08"
+            ],
+            "tables": [
+              "table_1"
+            ]
+          }
+        ],
+        "capture_ref": "capture:c189488fe1f096e06418329f0efc2ea0e7eec7652dfb3c2521c2f62e58dd64ad",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [
+          "COMPILE_QUBO",
+          "SOLVE_EXACT",
+          "VALIDATE_ORIGINAL"
+        ],
+        "objective_profile": "MIX_CIRCLES_V01",
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "Specific guest placement change requested by the user.",
+        "request_ref": "request:w3:v02:sr2",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+        "task_kind": "REVISE",
+        "unresolved": []
+      }
+    ],
+    "controlled_native_time": 1700000050,
+    "displayed_plan": {
+      "assignment": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        1,
+        2,
+        2
+      ],
+      "problem_ref": "dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf",
+      "profile": "MIX_CIRCLES_V01",
+      "request_ref": "request:w3:v02:sr2"
+    },
+    "native_mode": "full_semantic",
+    "origin": "LIVE_ROLE_ORIGIN",
+    "producer_input": "{\"approved_intent\":\"Change the previous request: seat guest_07 and guest_08 at table_1 instead of table_2. Keep all the other restrictions and the preference for mixing circles. Recalculate the seating plan.\",\"origin\":\"LIVE_ROLE_ORIGIN\",\"original_base_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"parent_ref\":\"work_results:f809c23df925fbde5fb0f68fa2001ff58de59fe8bc16258ee45310ac94678251\",\"problem\":{\"allowed_objective_profiles\":[\"KEEP_FAMILIAR_V01\",\"MIX_CIRCLES_V01\"],\"disclosure_profile_ref\":\"disclosure:w1:synthetic\",\"episode_id\":\"wedding:w1:synthetic\",\"familiarity_pairs\":[[\"guest_01\",\"guest_03\"],[\"guest_01\",\"guest_04\"],[\"guest_02\",\"guest_03\"],[\"guest_02\",\"guest_04\"],[\"guest_05\",\"guest_07\"],[\"guest_05\",\"guest_08\"],[\"guest_06\",\"guest_07\"],[\"guest_06\",\"guest_08\"],[\"guest_09\",\"guest_11\"],[\"guest_09\",\"guest_12\"],[\"guest_10\",\"guest_11\"],[\"guest_10\",\"guest_12\"]],\"guest_ids\":[\"guest_01\",\"guest_02\",\"guest_03\",\"guest_04\",\"guest_05\",\"guest_06\",\"guest_07\",\"guest_08\",\"guest_09\",\"guest_10\",\"guest_11\",\"guest_12\"],\"hard_conditions\":[{\"condition_id\":\"added:6401c0b74de7b706653434554e345cfe\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_07\"],\"tables\":[\"table_1\"]},{\"condition_id\":\"added:7ed3818df8898a0c7d422f951aab0cde\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_08\"],\"tables\":[\"table_1\"]},{\"condition_id\":\"condition_01\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_02\"]},{\"condition_id\":\"condition_02\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_03\",\"guest_04\"]},{\"condition_id\":\"condition_03\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_05\",\"guest_06\"]},{\"condition_id\":\"condition_04\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_07\",\"guest_08\"]},{\"condition_id\":\"condition_05\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_09\",\"guest_10\"]},{\"condition_id\":\"condition_06\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\",\"guest_12\"]},{\"condition_id\":\"condition_07\",\"hard\":true,\"predicate\":\"APART\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_05\"]},{\"condition_id\":\"condition_08\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\"],\"tables\":[\"table_3\"]}],\"owner_root_id\":\"organizer:w1\",\"parent_problem_ref\":\"96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab\",\"problem_revision\":3,\"safe_intent_ref\":\"intent:A\",\"schema_version\":\"WeddingProblemV01\",\"source_bundle_hash\":\"c91d2db7f99452d47e712dbe35ad51301b22602f5e6b4dcdfe11783097eb831f\",\"table_records\":[{\"capacity\":4,\"table_id\":\"table_1\"},{\"capacity\":4,\"table_id\":\"table_2\"},{\"capacity\":4,\"table_id\":\"table_3\"}],\"time_context_ref\":\"time:w1:static\"},\"profile\":\"MIX_CIRCLES_V01\",\"projection_status\":\"ACTUAL_SERIALIZED_EGRESS_CHECKED\",\"request_ref\":\"request:w3:v02:sr2\",\"revision_acknowledgement\":{\"amendments\":[{\"operation\":\"REPLACE\",\"predicate\":\"ALLOWED_TABLES\",\"replaces\":[\"added:cefff2237df9864e94438b6db02b436e\"],\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_07\"],\"tables\":[\"table_1\"]},{\"operation\":\"REPLACE\",\"predicate\":\"ALLOWED_TABLES\",\"replaces\":[\"added:3f21ee24070770e6a7dbc90bd1272907\"],\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_08\"],\"tables\":[\"table_1\"]}],\"browser_click_claimed\":false,\"mode\":\"SCRIPTED_CONTROLLED_OWNER_INPUT\",\"prior_problem_ref\":\"96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab\",\"proposed_problem_ref\":\"dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf\",\"request_ref\":\"request:w3:v02:sr2\",\"scope_guests\":[\"guest_07\",\"guest_08\"]},\"revision_root\":{\"conflict_set_ids\":[],\"decision\":\"ACCEPT\",\"decision_id\":\"82c4e166cb503b4f8b5717c48ac6412be0d7d653614ee4e59908fc063fdc3627\",\"decision_input_id\":\"b4e54c0060ccaa23c8db8d563f879e1ee33cdddbf969fba7f23e68e7aa79a603\",\"effect_requested\":false,\"final_output_created\":false,\"hard_failure_reasons\":[],\"missing_evidence_refs\":[],\"permission_created\":false,\"prior_decision_id\":null,\"reason_code\":\"validated_candidate_accepted\",\"root_commit_created\":true,\"selected_candidate_id\":\"revision:1bb96781a44431ec20fc201841543a569482879a0466ce813fc2eee83c2d17b7\",\"target_root_id\":\"organizer:w1\",\"transaction_id\":\"transaction:request:w3:v02:sr2\",\"transition_decision\":{\"abi_major_version\":1,\"actor_role\":\"gt\",\"attempted_effect\":\"CREATE_ROOT_DECISION\",\"decision\":\"RETURN_TO_ROOT\",\"decision_id\":\"85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07\",\"matched\":true,\"missing_guards\":[],\"reason_code\":\"gt_advisory_returns_to_root\",\"registry_id\":\"336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be\",\"required_guards\":[\"artifact_valid\",\"post_vv_passed\",\"advisory_only\"],\"root_commit_present\":false,\"root_commit_required\":true,\"rule_id\":\"gt_advisory_to_root_decision\",\"satisfied_guards\":[\"artifact_valid\",\"post_vv_passed\",\"advisory_only\"],\"source_artifact_type\":\"GTAdvisoryReport\",\"source_lifecycle_state\":\"VALIDATED\",\"target_artifact_type\":\"RootDecision\"}},\"semantics\":[{\"capture_ref\":\"capture:f926e675311b9d23428c20937ed67061a20deb0dfc2d73df99393b08948f766e\",\"model\":\"gemini-2.5-flash\",\"needs\":[\"REQUIREMENT_REVIEW\",\"EXACT_SEARCH\",\"ORIGINAL_VALIDATION\"],\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"Specific guest placement change requested by the user.\",\"request_ref\":\"request:w3:v02:sr2\",\"requested_outputs\":[\"SEATING_CANDIDATES\",\"VALIDATION_REPORT\"],\"role\":\"WEDDING_INTENT_ORCHESTRATOR\",\"source_snapshot\":\"96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab\",\"task_kind\":\"REVISE\",\"unresolved\":[]},{\"amendments\":[{\"operation\":\"REPLACE\",\"predicate\":\"ALLOWED_TABLES\",\"replaces\":[\"added:cefff2237df9864e94438b6db02b436e\"],\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_07\"],\"tables\":[\"table_1\"]},{\"operation\":\"REPLACE\",\"predicate\":\"ALLOWED_TABLES\",\"replaces\":[\"added:3f21ee24070770e6a7dbc90bd1272907\"],\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_08\"],\"tables\":[\"table_1\"]}],\"capture_ref\":\"capture:c189488fe1f096e06418329f0efc2ea0e7eec7652dfb3c2521c2f62e58dd64ad\",\"model\":\"gemini-2.5-flash\",\"needed_capabilities\":[\"COMPILE_QUBO\",\"SOLVE_EXACT\",\"VALIDATE_ORIGINAL\"],\"objective_profile\":\"MIX_CIRCLES_V01\",\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"Specific guest placement change requested by the user.\",\"request_ref\":\"request:w3:v02:sr2\",\"role\":\"WEDDING_REQUIREMENT_ARCHITECT\",\"source_snapshot\":\"96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab\",\"task_kind\":\"REVISE\",\"unresolved\":[]}],\"task_kind\":\"REVISE\"}",
+    "revision_ack": {
+      "amendments": [
+        {
+          "operation": "REPLACE",
+          "predicate": "ALLOWED_TABLES",
+          "replaces": [
+            "added:cefff2237df9864e94438b6db02b436e"
+          ],
+          "source_ref": "request:w3:v02:sr2",
+          "subjects": [
+            "guest_07"
+          ],
+          "tables": [
+            "table_1"
+          ]
+        },
+        {
+          "operation": "REPLACE",
+          "predicate": "ALLOWED_TABLES",
+          "replaces": [
+            "added:3f21ee24070770e6a7dbc90bd1272907"
+          ],
+          "source_ref": "request:w3:v02:sr2",
+          "subjects": [
+            "guest_08"
+          ],
+          "tables": [
+            "table_1"
+          ]
+        }
+      ],
+      "browser_click_claimed": false,
+      "mode": "SCRIPTED_CONTROLLED_OWNER_INPUT",
+      "prior_problem_ref": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+      "proposed_problem_ref": "dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf",
+      "request_ref": "request:w3:v02:sr2",
+      "scope_guests": [
+        "guest_07",
+        "guest_08"
+      ]
+    },
+    "root_decision": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "778aad4d7dc5085c1e7e6df99238968a08fff13469792e4af7d404f8b2425d99",
+      "decision_input_id": "0ad1f654f4054591c447f730253f424b642440ead12cc266d2a804fd0d3b1f3e",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:018cfeca4796286d844c71dcd40ec3877b4b819753e7bceacff013b2bbc061ec",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w3:v02:sr2",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "semantic_proposal_ref": "wedding_semantics:65a99ce288dcc9ba5cd4ade48614eb4481b44c551b62254fa10de5b7a1b7b34e",
+    "work_result_ref": "work_results:be9ea3f5242575f0c99d604ba688eba6355d8151addfaba04ce038d61d48b7a7"
+  },
+  "SR3": {
+    "D_seconds": 12.913265791721642,
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "added:6401c0b74de7b706653434554e345cfe",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "request:w3:v02:sr2",
+          "subjects": [
+            "guest_07"
+          ],
+          "tables": [
+            "table_1"
+          ]
+        },
+        {
+          "condition_id": "added:7ed3818df8898a0c7d422f951aab0cde",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "request:w3:v02:sr2",
+          "subjects": [
+            "guest_08"
+          ],
+          "tables": [
+            "table_1"
+          ]
+        },
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": "96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab",
+      "problem_revision": 3,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "c91d2db7f99452d47e712dbe35ad51301b22602f5e6b4dcdfe11783097eb831f",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "actual_work": [
+      "validate",
+      "consume"
+    ],
+    "captures": [
+      {
+        "capture_ref": "capture:f28959ceaa1275d665a5a5cd5b66e035c188b331fe45b2c03cb2b9b78b2dc138",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "ff3fecc77cf5ff4ba27eb149c72c167d794974aff749b25b607469d1efa80e3b",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:c1db652c496058abbf256a5c54c697be0a15a7e528609847bef8377b608a8701",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "2accd3f45d3137eeb0c4a3a2142f8a166f4942d86f5ae2d227d3012b1636efdf",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:f28959ceaa1275d665a5a5cd5b66e035c188b331fe45b2c03cb2b9b78b2dc138",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "ORIGINAL_VALIDATION"
+        ],
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "Check an existing seating plan against current requirements.",
+        "request_ref": "request:w3:v02:sr3",
+        "requested_outputs": [
+          "VALIDATION_REPORT"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf",
+        "task_kind": "VALIDATE_EXISTING",
+        "unresolved": []
+      },
+      {
+        "amendments": [],
+        "capture_ref": "capture:c1db652c496058abbf256a5c54c697be0a15a7e528609847bef8377b608a8701",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [
+          "VALIDATE_ORIGINAL"
+        ],
+        "objective_profile": null,
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "Check an existing seating plan against current requirements.",
+        "request_ref": "request:w3:v02:sr3",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf",
+        "task_kind": "VALIDATE_EXISTING",
+        "unresolved": []
+      }
+    ],
+    "controlled_native_time": 1700000060,
+    "displayed_plan": {
+      "assignment": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        0,
+        0,
+        1,
+        1,
+        2,
+        2
+      ],
+      "problem_ref": "dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf",
+      "profile": "MIX_CIRCLES_V01",
+      "request_ref": "request:w3:v02:sr3"
+    },
+    "native_mode": "full_semantic",
+    "origin": "LIVE_ROLE_ORIGIN",
+    "producer_input": "{\"approved_intent\":\"Check this seating plan against the current requirements. Do not rearrange anyone or search for alternatives. Tell me whether all requirements are met.\",\"assignment\":[0,0,1,1,2,2,0,0,1,1,2,2],\"existing_result_ref\":\"work_results:be9ea3f5242575f0c99d604ba688eba6355d8151addfaba04ce038d61d48b7a7\",\"objective_information_source\":{\"kind\":\"ACTUAL_PRIOR_RESULT\",\"model_selected\":null,\"result_ref\":\"work_results:be9ea3f5242575f0c99d604ba688eba6355d8151addfaba04ce038d61d48b7a7\"},\"origin\":\"LIVE_ROLE_ORIGIN\",\"original_base_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"parent_ref\":\"work_results:be9ea3f5242575f0c99d604ba688eba6355d8151addfaba04ce038d61d48b7a7\",\"problem\":{\"allowed_objective_profiles\":[\"KEEP_FAMILIAR_V01\",\"MIX_CIRCLES_V01\"],\"disclosure_profile_ref\":\"disclosure:w1:synthetic\",\"episode_id\":\"wedding:w1:synthetic\",\"familiarity_pairs\":[[\"guest_01\",\"guest_03\"],[\"guest_01\",\"guest_04\"],[\"guest_02\",\"guest_03\"],[\"guest_02\",\"guest_04\"],[\"guest_05\",\"guest_07\"],[\"guest_05\",\"guest_08\"],[\"guest_06\",\"guest_07\"],[\"guest_06\",\"guest_08\"],[\"guest_09\",\"guest_11\"],[\"guest_09\",\"guest_12\"],[\"guest_10\",\"guest_11\"],[\"guest_10\",\"guest_12\"]],\"guest_ids\":[\"guest_01\",\"guest_02\",\"guest_03\",\"guest_04\",\"guest_05\",\"guest_06\",\"guest_07\",\"guest_08\",\"guest_09\",\"guest_10\",\"guest_11\",\"guest_12\"],\"hard_conditions\":[{\"condition_id\":\"added:6401c0b74de7b706653434554e345cfe\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_07\"],\"tables\":[\"table_1\"]},{\"condition_id\":\"added:7ed3818df8898a0c7d422f951aab0cde\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"request:w3:v02:sr2\",\"subjects\":[\"guest_08\"],\"tables\":[\"table_1\"]},{\"condition_id\":\"condition_01\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_02\"]},{\"condition_id\":\"condition_02\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_03\",\"guest_04\"]},{\"condition_id\":\"condition_03\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_05\",\"guest_06\"]},{\"condition_id\":\"condition_04\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_07\",\"guest_08\"]},{\"condition_id\":\"condition_05\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_09\",\"guest_10\"]},{\"condition_id\":\"condition_06\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\",\"guest_12\"]},{\"condition_id\":\"condition_07\",\"hard\":true,\"predicate\":\"APART\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_05\"]},{\"condition_id\":\"condition_08\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\"],\"tables\":[\"table_3\"]}],\"owner_root_id\":\"organizer:w1\",\"parent_problem_ref\":\"96db62a42c0548b23e881da45064060dd7a0876ae4d8c62bd5c932a21b12f5ab\",\"problem_revision\":3,\"safe_intent_ref\":\"intent:A\",\"schema_version\":\"WeddingProblemV01\",\"source_bundle_hash\":\"c91d2db7f99452d47e712dbe35ad51301b22602f5e6b4dcdfe11783097eb831f\",\"table_records\":[{\"capacity\":4,\"table_id\":\"table_1\"},{\"capacity\":4,\"table_id\":\"table_2\"},{\"capacity\":4,\"table_id\":\"table_3\"}],\"time_context_ref\":\"time:w1:static\"},\"profile\":\"MIX_CIRCLES_V01\",\"projection_status\":\"ACTUAL_SERIALIZED_EGRESS_CHECKED\",\"request_ref\":\"request:w3:v02:sr3\",\"revision_acknowledgement\":null,\"semantics\":[{\"capture_ref\":\"capture:f28959ceaa1275d665a5a5cd5b66e035c188b331fe45b2c03cb2b9b78b2dc138\",\"model\":\"gemini-2.5-flash\",\"needs\":[\"ORIGINAL_VALIDATION\"],\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"Check an existing seating plan against current requirements.\",\"request_ref\":\"request:w3:v02:sr3\",\"requested_outputs\":[\"VALIDATION_REPORT\"],\"role\":\"WEDDING_INTENT_ORCHESTRATOR\",\"source_snapshot\":\"dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf\",\"task_kind\":\"VALIDATE_EXISTING\",\"unresolved\":[]},{\"amendments\":[],\"capture_ref\":\"capture:c1db652c496058abbf256a5c54c697be0a15a7e528609847bef8377b608a8701\",\"model\":\"gemini-2.5-flash\",\"needed_capabilities\":[\"VALIDATE_ORIGINAL\"],\"objective_profile\":null,\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"Check an existing seating plan against current requirements.\",\"request_ref\":\"request:w3:v02:sr3\",\"role\":\"WEDDING_REQUIREMENT_ARCHITECT\",\"source_snapshot\":\"dd8c7848b55b1325bf75589eb710ce5e6d6fe0dee6e5fa36ec3dc99aa09aefdf\",\"task_kind\":\"VALIDATE_EXISTING\",\"unresolved\":[]}],\"task_kind\":\"VALIDATE_EXISTING\"}",
+    "revision_ack": null,
+    "root_decision": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "f69bd6f48f351337906ce092d3de79dc985aef777ac91e76fd2eb23b4214b391",
+      "decision_input_id": "eeaa504998f2453ef2ba1d1191bf8e5e2e1127bc46fe4818edf6944e623fcc0d",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:6dfb4a673852e964ab0c16a133011c0a43f007118312c3e82c86bcd3f08962ce",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w3:v02:sr3",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "semantic_proposal_ref": "wedding_semantics:c247389039e137a29e71b71c15998b99fa0e8471203fbcc4ed638609ff8f4eaa",
+    "work_result_ref": "work_results:b8f8285c25d7aabfc8cce575ec521d96806d29aa508440bfaa4f546177955c21"
+  },
+  "VERIFY": {
+    "D_seconds": 12.971726458519697,
+    "accepted_problem": {
+      "allowed_objective_profiles": [
+        "KEEP_FAMILIAR_V01",
+        "MIX_CIRCLES_V01"
+      ],
+      "disclosure_profile_ref": "disclosure:w1:synthetic",
+      "episode_id": "wedding:w1:synthetic",
+      "familiarity_pairs": [
+        [
+          "guest_01",
+          "guest_03"
+        ],
+        [
+          "guest_01",
+          "guest_04"
+        ],
+        [
+          "guest_02",
+          "guest_03"
+        ],
+        [
+          "guest_02",
+          "guest_04"
+        ],
+        [
+          "guest_05",
+          "guest_07"
+        ],
+        [
+          "guest_05",
+          "guest_08"
+        ],
+        [
+          "guest_06",
+          "guest_07"
+        ],
+        [
+          "guest_06",
+          "guest_08"
+        ],
+        [
+          "guest_09",
+          "guest_11"
+        ],
+        [
+          "guest_09",
+          "guest_12"
+        ],
+        [
+          "guest_10",
+          "guest_11"
+        ],
+        [
+          "guest_10",
+          "guest_12"
+        ]
+      ],
+      "guest_ids": [
+        "guest_01",
+        "guest_02",
+        "guest_03",
+        "guest_04",
+        "guest_05",
+        "guest_06",
+        "guest_07",
+        "guest_08",
+        "guest_09",
+        "guest_10",
+        "guest_11",
+        "guest_12"
+      ],
+      "hard_conditions": [
+        {
+          "condition_id": "condition_01",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_02"
+          ]
+        },
+        {
+          "condition_id": "condition_02",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_03",
+            "guest_04"
+          ]
+        },
+        {
+          "condition_id": "condition_03",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_05",
+            "guest_06"
+          ]
+        },
+        {
+          "condition_id": "condition_04",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_07",
+            "guest_08"
+          ]
+        },
+        {
+          "condition_id": "condition_05",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_09",
+            "guest_10"
+          ]
+        },
+        {
+          "condition_id": "condition_06",
+          "hard": true,
+          "predicate": "TOGETHER",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11",
+            "guest_12"
+          ]
+        },
+        {
+          "condition_id": "condition_07",
+          "hard": true,
+          "predicate": "APART",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_01",
+            "guest_05"
+          ]
+        },
+        {
+          "condition_id": "condition_08",
+          "hard": true,
+          "predicate": "ALLOWED_TABLES",
+          "source_ref": "source:w1:hard",
+          "subjects": [
+            "guest_11"
+          ],
+          "tables": [
+            "table_3"
+          ]
+        }
+      ],
+      "owner_root_id": "organizer:w1",
+      "parent_problem_ref": null,
+      "problem_revision": 1,
+      "safe_intent_ref": "intent:A",
+      "schema_version": "WeddingProblemV01",
+      "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+      "table_records": [
+        {
+          "capacity": 4,
+          "table_id": "table_1"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_2"
+        },
+        {
+          "capacity": 4,
+          "table_id": "table_3"
+        }
+      ],
+      "time_context_ref": "time:w1:static"
+    },
+    "actual_work": [
+      "validate",
+      "consume"
+    ],
+    "captures": [
+      {
+        "capture_ref": "capture:9daeb9d79189182c048ffc3d3d6da16b036518c03c1e2541c577b6b2ef809a34",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "e370239701323ec0f9dec9eb74002166be25e7033e1333565a7f9467103091af",
+        "role": "WEDDING_INTENT_ORCHESTRATOR"
+      },
+      {
+        "capture_ref": "capture:5916e4b5c00873b8d10724f99790afdbc6e50225f5a6c171fdf9033812abd7a2",
+        "model": "gemini-2.5-flash",
+        "response_sha256": "1d9fc72a390077f836dc2c254ec4ecbf046c43be4c832b83772f828102f99235",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT"
+      }
+    ],
+    "consumed_semantics": [
+      {
+        "capture_ref": "capture:9daeb9d79189182c048ffc3d3d6da16b036518c03c1e2541c577b6b2ef809a34",
+        "model": "gemini-2.5-flash",
+        "needs": [
+          "ORIGINAL_VALIDATION"
+        ],
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "The user explicitly requested to check an existing seating plan against current requirements without any rearrangement or search for alternatives.",
+        "request_ref": "request:w3:v02:verify:resumed",
+        "requested_outputs": [
+          "VALIDATION_REPORT"
+        ],
+        "role": "WEDDING_INTENT_ORCHESTRATOR",
+        "source_snapshot": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "task_kind": "VALIDATE_EXISTING",
+        "unresolved": []
+      },
+      {
+        "amendments": [],
+        "capture_ref": "capture:5916e4b5c00873b8d10724f99790afdbc6e50225f5a6c171fdf9033812abd7a2",
+        "model": "gemini-2.5-flash",
+        "needed_capabilities": [
+          "VALIDATE_ORIGINAL"
+        ],
+        "objective_profile": null,
+        "origin": "LIVE_ROLE_ORIGIN",
+        "reason": "The user explicitly requested to check an existing seating plan against current requirements without any rearrangement or search for alternatives.",
+        "request_ref": "request:w3:v02:verify:resumed",
+        "role": "WEDDING_REQUIREMENT_ARCHITECT",
+        "source_snapshot": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "task_kind": "VALIDATE_EXISTING",
+        "unresolved": []
+      }
+    ],
+    "controlled_native_time": 1700000020,
+    "displayed_plan": {
+      "assignment": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2
+      ],
+      "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+      "profile": "KEEP_FAMILIAR_V01",
+      "request_ref": "request:w3:v02:verify:resumed"
+    },
+    "native_mode": "full_semantic",
+    "origin": "LIVE_ROLE_ORIGIN",
+    "producer_input": "{\"approved_intent\":\"Check this seating plan against the current requirements. Do not rearrange anyone or search for alternatives. Tell me whether all requirements are met.\",\"assignment\":[0,0,0,0,1,1,1,1,2,2,2,2],\"existing_result_ref\":\"work_results:067d3dc84afd8aab05dafcffc4662734de141b8eecf02ae78043943c3d1a83ba\",\"objective_information_source\":{\"kind\":\"ACTUAL_PRIOR_RESULT\",\"model_selected\":null,\"result_ref\":\"work_results:067d3dc84afd8aab05dafcffc4662734de141b8eecf02ae78043943c3d1a83ba\"},\"origin\":\"LIVE_ROLE_ORIGIN\",\"original_base_ref\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"parent_ref\":\"work_results:067d3dc84afd8aab05dafcffc4662734de141b8eecf02ae78043943c3d1a83ba\",\"problem\":{\"allowed_objective_profiles\":[\"KEEP_FAMILIAR_V01\",\"MIX_CIRCLES_V01\"],\"disclosure_profile_ref\":\"disclosure:w1:synthetic\",\"episode_id\":\"wedding:w1:synthetic\",\"familiarity_pairs\":[[\"guest_01\",\"guest_03\"],[\"guest_01\",\"guest_04\"],[\"guest_02\",\"guest_03\"],[\"guest_02\",\"guest_04\"],[\"guest_05\",\"guest_07\"],[\"guest_05\",\"guest_08\"],[\"guest_06\",\"guest_07\"],[\"guest_06\",\"guest_08\"],[\"guest_09\",\"guest_11\"],[\"guest_09\",\"guest_12\"],[\"guest_10\",\"guest_11\"],[\"guest_10\",\"guest_12\"]],\"guest_ids\":[\"guest_01\",\"guest_02\",\"guest_03\",\"guest_04\",\"guest_05\",\"guest_06\",\"guest_07\",\"guest_08\",\"guest_09\",\"guest_10\",\"guest_11\",\"guest_12\"],\"hard_conditions\":[{\"condition_id\":\"condition_01\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_02\"]},{\"condition_id\":\"condition_02\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_03\",\"guest_04\"]},{\"condition_id\":\"condition_03\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_05\",\"guest_06\"]},{\"condition_id\":\"condition_04\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_07\",\"guest_08\"]},{\"condition_id\":\"condition_05\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_09\",\"guest_10\"]},{\"condition_id\":\"condition_06\",\"hard\":true,\"predicate\":\"TOGETHER\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\",\"guest_12\"]},{\"condition_id\":\"condition_07\",\"hard\":true,\"predicate\":\"APART\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_01\",\"guest_05\"]},{\"condition_id\":\"condition_08\",\"hard\":true,\"predicate\":\"ALLOWED_TABLES\",\"source_ref\":\"source:w1:hard\",\"subjects\":[\"guest_11\"],\"tables\":[\"table_3\"]}],\"owner_root_id\":\"organizer:w1\",\"parent_problem_ref\":null,\"problem_revision\":1,\"safe_intent_ref\":\"intent:A\",\"schema_version\":\"WeddingProblemV01\",\"source_bundle_hash\":\"f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4\",\"table_records\":[{\"capacity\":4,\"table_id\":\"table_1\"},{\"capacity\":4,\"table_id\":\"table_2\"},{\"capacity\":4,\"table_id\":\"table_3\"}],\"time_context_ref\":\"time:w1:static\"},\"profile\":\"KEEP_FAMILIAR_V01\",\"projection_status\":\"ACTUAL_SERIALIZED_EGRESS_CHECKED\",\"request_ref\":\"request:w3:v02:verify:resumed\",\"revision_acknowledgement\":null,\"semantics\":[{\"capture_ref\":\"capture:9daeb9d79189182c048ffc3d3d6da16b036518c03c1e2541c577b6b2ef809a34\",\"model\":\"gemini-2.5-flash\",\"needs\":[\"ORIGINAL_VALIDATION\"],\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"The user explicitly requested to check an existing seating plan against current requirements without any rearrangement or search for alternatives.\",\"request_ref\":\"request:w3:v02:verify:resumed\",\"requested_outputs\":[\"VALIDATION_REPORT\"],\"role\":\"WEDDING_INTENT_ORCHESTRATOR\",\"source_snapshot\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"task_kind\":\"VALIDATE_EXISTING\",\"unresolved\":[]},{\"amendments\":[],\"capture_ref\":\"capture:5916e4b5c00873b8d10724f99790afdbc6e50225f5a6c171fdf9033812abd7a2\",\"model\":\"gemini-2.5-flash\",\"needed_capabilities\":[\"VALIDATE_ORIGINAL\"],\"objective_profile\":null,\"origin\":\"LIVE_ROLE_ORIGIN\",\"reason\":\"The user explicitly requested to check an existing seating plan against current requirements without any rearrangement or search for alternatives.\",\"request_ref\":\"request:w3:v02:verify:resumed\",\"role\":\"WEDDING_REQUIREMENT_ARCHITECT\",\"source_snapshot\":\"16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17\",\"task_kind\":\"VALIDATE_EXISTING\",\"unresolved\":[]}],\"task_kind\":\"VALIDATE_EXISTING\"}",
+    "revision_ack": null,
+    "root_decision": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "6998b43b370d03e16150313d62b1c5956a0ea50a0789a483c14f3d1ca76d4143",
+      "decision_input_id": "8d7a83b5f159c807a01b4aad25ff92ce37956b3c124e2c58fd880837df1842dc",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "wedding_result:7a75356049c7d6e079997c4acf3afc05562c1a4d40643b64a3a860b2c447c351",
+      "target_root_id": "organizer:w1",
+      "transaction_id": "transaction:request:w3:v02:verify:resumed",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "semantic_proposal_ref": "wedding_semantics:5e1d95c1d879e80545b1f77e367a4bf6ad2077aac984ccf3a73fac952779a74b",
+    "work_result_ref": "work_results:fb64eac13092e73713c52492b1e1223fe6ffd5f11f39a3e87a426731f66f8d2f"
+  }
+}

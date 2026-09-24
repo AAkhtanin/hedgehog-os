@@ -1,0 +1,1 @@
+{"task_kind":"REVISE","unresolved":[],"reason":"Specific guest placement change requested by the user.","needs":["REQUIREMENT_REVIEW","EXACT_SEARCH","ORIGINAL_VALIDATION"],"requested_outputs":["SEATING_CANDIDATES","VALIDATION_REPORT"]}

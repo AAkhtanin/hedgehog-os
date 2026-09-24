@@ -1,0 +1,9 @@
+{
+  "helper_and_verification_reaped": true,
+  "observed_packaging_processes": [
+    "74446 26069 Thu Sep 24 12:51:44 2026     /opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B -c import sys; sys.path.insert(0,\"/Users/admin/Projects/hedgehog-os-wedding-w5l-6SkOzhfJ\"); from manage_w5l import run,PYTHON,WORK; raise SystemExit(run(\"final_confirmation\",[PYTHON,\"-B\",WORK/\"finish_w5l.py\"]))",
+    "74447 74446 Thu Sep 24 12:51:44 2026     /opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python -B /Users/admin/Projects/hedgehog-os-wedding-w5l-6SkOzhfJ/finish_w5l.py"
+  ],
+  "remaining_task_workers": [],
+  "time": "2026-09-24T10:51:44.810917+00:00"
+}

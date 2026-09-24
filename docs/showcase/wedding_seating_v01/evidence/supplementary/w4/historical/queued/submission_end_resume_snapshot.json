@@ -1,0 +1,12 @@
+{
+  "candidate": "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/candidate",
+  "durable_ledger": "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/provider/ledger.json",
+  "live_authority_serialized": false,
+  "new_submission_armed": false,
+  "next_command": "/Users/admin/Projects/hedgehog-os-wedding-w0-h2xwkV3N/provider_venv/bin/python /Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/episode.py resume",
+  "phase": "PENDING",
+  "states": {
+    "KEEP_FAMILIAR_V01": "PENDING",
+    "MIX_CIRCLES_V01": "PENDING"
+  }
+}

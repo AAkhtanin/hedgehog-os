@@ -1,0 +1,132 @@
+{
+  "status": "BLOCKED_PROCESS_FAILURE",
+  "scope": "One attempted guarded local pure verifier process on exact Git-blob-matched accepted W5L source reconstruction; refused due to ModuleNotFoundError. Second process not run. Saved-byte comparisons remain valid; no fresh native or provider execution.",
+  "requested_process_count": 2,
+  "executed_process_count": 1,
+  "runs": [
+    {
+      "id": "reader_a",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-I",
+        "-B",
+        "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w6_build/reader_build/verify/guarded_verify.py",
+        "reader_a"
+      ],
+      "cwd": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w6_build/reader_build/verify/reader_a",
+      "rc": 2,
+      "elapsed_seconds": 0.936043,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "941b1b2e55d47ee91faea0493755db31083f43dafaf3d2419b0eb461a13cdf76",
+      "canonical_sha256": null,
+      "canonical_matches_installed": false,
+      "independent_manifest_pin": "3c924898bedf03cf97df5f59cbc553e3d6f54cc9a60eaaf72c8019ac33bf1552",
+      "status": "FAILED"
+    },
+    {
+      "id": "reader_b",
+      "status": "NOT_RUN_DEPENDENCY_BLOCK",
+      "command": null,
+      "rc": null,
+      "elapsed_seconds": null,
+      "stdout_sha256": null,
+      "canonical_sha256": null
+    }
+  ],
+  "portable_manifest": {
+    "path": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w5_review/extracted/wedding_w5/portable/MANIFEST.json",
+    "bytes": 17207,
+    "sha256": "3c924898bedf03cf97df5f59cbc553e3d6f54cc9a60eaaf72c8019ac33bf1552"
+  },
+  "independent_manifest_pin": "3c924898bedf03cf97df5f59cbc553e3d6f54cc9a60eaaf72c8019ac33bf1552",
+  "manifest_matches_external_pin": true,
+  "expected_installed_canonical_sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0",
+  "saved_canonicals": [
+    {
+      "path": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w5_review/extracted/wedding_w5/verification/clean_final_a/canonical.json",
+      "bytes": 5783,
+      "sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0"
+    },
+    {
+      "path": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w5_review/extracted/wedding_w5/verification/clean_final_b/canonical.json",
+      "bytes": 5783,
+      "sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0"
+    }
+  ],
+  "installed_canonical": {
+    "path": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w5l_review/extracted/wedding_w5l/installed_canonical.json",
+    "bytes": 5783,
+    "sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0"
+  },
+  "saved_canonical_bytes_match": true,
+  "missing_dependencies": [],
+  "dependency_evidence": [
+    "Initial missing common source modules were reconstructed ONLY from exact Git-blob matches to saved accepted W5L remote inventory.",
+    "88 exact-matching source/fixture files were available; static internal import inventory appeared complete.",
+    "First guarded public verify invocation returned RC 2, reason ModuleNotFoundError; CLI intentionally prints exception class only.",
+    "Stopped without installing dependencies or executing a second process.",
+    "Guarded import-only probe identified missing external jsonschema package; not present in the checked preinstalled runtime/system locations. No packages installed."
+  ],
+  "source_inspection": [
+    {
+      "path": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w5_review/extracted/wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/portable_v01.py",
+      "bytes": 23056,
+      "sha256": "572aea9885e26b425d9d4ec42990fcc56cb4619ec444d98a9f9bd878431155fb"
+    },
+    {
+      "path": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w5_review/extracted/wedding_w5/landing/postimages/demo/run_wedding_seating_v01.py",
+      "bytes": 3145,
+      "sha256": "7af918d9a51a62f0d555621a06f06173ec67cf4a123d6bb2f3be4b447c02817e"
+    }
+  ],
+  "source_review_conclusion": "The guarded verify command attempted to load the exact accepted source reconstruction but refused with ModuleNotFoundError. No new canonical result was generated; all forbidden function counters were zero and no network/process audit events occurred.",
+  "dependency_reconstruction_report": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w6_build/reader_build/verify/dependency_reconstruction.json",
+  "forbidden_function_counts_zero": true,
+  "network_process_audit_events": [],
+  "new_canonical_generated": false,
+  "missing_external_dependencies": [
+    "jsonschema"
+  ],
+  "dependency_probe": {
+    "kind": "GUARDED_IMPORT_ONLY_NO_VERIFIER_WORKLOAD",
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "-I",
+      "-B",
+      "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w6_build/reader_build/verify/guarded_verify.py",
+      "dependency_probe"
+    ],
+    "rc": 2,
+    "module": "jsonschema",
+    "message": "No module named 'jsonschema'",
+    "forbidden_function_counts_zero": true,
+    "network_process_audit_events": []
+  },
+  "existing_runtime_search": {
+    "jsonschema_found": false,
+    "roots_checked": [
+      "/usr/lib/python3/dist-packages",
+      "/usr/local/lib",
+      "/opt/codex/runtimes/codex-primary-runtime"
+    ],
+    "installation_attempted": false
+  },
+  "primary_runtime_dependency_check": {
+    "requested_interpreter": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "resolved_interpreter": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "sys_executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "flags": [
+      "-I",
+      "-B"
+    ],
+    "jsonschema_spec": null,
+    "sys_path": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python312.zip",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lib-dynload",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages"
+    ],
+    "status": "DEPENDENCY_MISSING"
+  }
+}

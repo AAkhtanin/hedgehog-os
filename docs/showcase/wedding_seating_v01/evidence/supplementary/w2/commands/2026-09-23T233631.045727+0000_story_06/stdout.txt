@@ -1,0 +1,101 @@
+..C_ROUTE_START {'task': 'request:w2:keep'}
+D_REVIEW_START {'task': 'request:w2:keep'}
+D_REVIEW_RETURN {'task': 'request:w2:keep', 'seconds': 12.803510333411396}
+WORK_START {'task': 'request:w2:keep'}
+WORK_ROOT_COMPLETE {'task': 'request:w2:keep'}
+C_ROUTE_START {'task': 'request:w2:mix'}
+D_REVIEW_START {'task': 'request:w2:mix'}
+D_REVIEW_RETURN {'task': 'request:w2:mix', 'seconds': 12.795705458149314}
+WORK_START {'task': 'request:w2:mix'}
+WORK_ROOT_COMPLETE {'task': 'request:w2:mix'}
+C_ROUTE_START {'task': 'request:w2:validate'}
+D_REVIEW_START {'task': 'request:w2:validate'}
+D_REVIEW_RETURN {'task': 'request:w2:validate', 'seconds': 12.748226249590516}
+WORK_START {'task': 'request:w2:validate'}
+WORK_ROOT_COMPLETE {'task': 'request:w2:validate'}
+G4_START {}
+G4_RETURN {}
+MEMORY_START {}
+C_ROUTE_START {'task': 'request:w2:recovery'}
+D_REVIEW_START {'task': 'request:w2:recovery'}
+D_REVIEW_RETURN {'task': 'request:w2:recovery', 'seconds': 12.907455666922033}
+WORK_START {'task': 'request:w2:recovery'}
+WORK_ROOT_COMPLETE {'task': 'request:w2:recovery'}
+MEMORY_RETURN {}
+...F
+=================================== FAILURES ===================================
+______________________ test_native_supplied_neighbors_v01 ______________________
+
+story = {'clarified': {'material': {'approved_intent': 'Clarify the missing approved objective.', 'parent_ref': None, 'problem...es': 5, 'llm': 0, 'aws': 0, 'qpu': 0, 'effects': 0}, 'classification': 'CONTROLLED_NATIVE_SEMANTIC_CONSUMPTION'}), ...}
+
+    def test_native_supplied_neighbors_v01(story):
+        run=story['first'];ctx=n.w.work_continuation_context_v01(run.host,task_id=run.owner.request_ref,expected_revision=run.host.state_revision)
+        args=dict(run.common,host_map={run.host.owning_root_id:run.host},review_bindings=run.reviews,continuation_context=ctx)
+        controls={}
+        controls['missing_producer']=n.w.validate_work_program_result_v01(run.program,run.outcome.results[1:],**args)
+        assert not controls['missing_producer'][0]
+        bad=list(run.outcome.results);bad[-1]=replace(bad[-1],revision_id='foreign:revision')
+        controls['foreign_result']=n.w.validate_work_program_result_v01(run.program,tuple(bad),**args)
+        assert not controls['foreign_result'][0]
+        bad=list(run.outcome.results)
+        bad[0]=replace(bad[0],result=replace(bad[0].result,output=caps.record(dict(run.material,requirements_checked='foreign',contradiction=[]))))
+        controls['altered_producer']=n.w.validate_work_program_result_v01(run.program,tuple(bad),**args)
+        assert not controls['altered_producer'][0]
+        item=run.program.candidate.items[1]
+        wrong=replace(item,inputs=(n.w.WorkInputBindingV01('material',n.w.WorkOutputBindingV01('review','absent','TEXT')),))
+        altered_candidate=replace(run.program.candidate,items=(run.program.candidate.items[0],wrong,*run.program.candidate.items[2:]))
+        controls['wrong_field']=n.w.validate_work_program_candidate_v01(altered_candidate,**run.common)
+        assert not controls['wrong_field'][0]
+        foreign_program=replace(run.program,topology_artifact=story['second'].program.topology_artifact)
+        controls['foreign_topology']=n.w.validate_work_program_result_v01(foreign_program,run.outcome.results,**args)
+        assert not controls['foreign_topology'][0]
+        altered=deepcopy(run.evidence);altered['results'][-1]['result']['output'][0]['value']=altered['results'][0]['result']['output'][0]['value']
+>       with pytest.raises(ValueError):supplied.validate_saved_run_v01(altered,owner=run.owner)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_wedding_seating_native_v01.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+evidence = {'D_bundle': {'backpressure_states': [], 'budgets': [{'action_commit_packet_created': False, 'allocation_parent_budget...authority_created': False, 'domain_id': 'WEDDING_SEATING', 'downstream_action_packet_required': False, ...}, ...}, ...}
+
+    def validate_saved_run_v01(evidence,*,owner):
+        problem=owner.problem();p=problem.to_plain_v01()
+        c.require(evidence['owner']==dict(problem=p,request_ref=owner.request_ref,task_kind=owner.task_kind,profile=owner.profile,parent_ref=owner.parent_ref),'supplied_owner')
+        material=evidence['material']
+        c.require(material['problem']==p and material['profile']==owner.profile and material['request_ref']==owner.request_ref,'supplied_original')
+        results=evidence['results'];items=evidence['program']['candidate']['items']
+        names=['review','compile','solve','validate','consume'] if owner.task_kind in ('GENERATE','REVISE') else ['validate','consume']
+        c.require([i['work_id'] for i in items]==names and [r['work_id'] for r in results]==names,'supplied_work_set')
+        previous=None
+        for i,(item,result) in enumerate(zip(items,results)):
+            c.require(result['status']=='COMPLETED','supplied_completed')
+            incoming=json.loads(result['invocation']['inputs'][0]['value'])
+            output=json.loads(result['result']['output'][0]['value'])
+            c.require(incoming==(material if i==0 else previous),'supplied_actual_parent_value')
+            c.require(output['problem']==p and output['profile']==owner.profile and output['request_ref']==owner.request_ref,'supplied_output_context')
+            if i:
+                c.require(item['inputs'][0]['source']==dict(predecessor_work_id=names[i-1],output_field='material',expected_type='TEXT'),'supplied_output_binding')
+                c.require(bool(result['consumed_fields']),'supplied_causal_consumption')
+            if item['work_id']=='review':c.require(output['requirements_checked']==problem.content_id and not output['contradiction'],'supplied_requirement')
+            if item['work_id']=='compile':
+                c.require(output['optimization']==math.compile_optimization_v01(problem,owner.profile).to_plain_v01(),'supplied_compilation')
+            if item['work_id'] in ('solve','validate','consume'):
+>               report=math.validate_assignment_v01(problem,output['assignment'],owner.profile).to_plain_v01()
+                                                            ^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'assignment'
+
+hedgehog/domains/wedding_seating/supplied_v01.py:27: KeyError
+=============================== warnings summary ===============================
+tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01
+  /Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/candidate/hedgehog/post_vv.py:84: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(result_proposal_schema, store=store)
+
+tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01
+  /Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/candidate/hedgehog/post_vv.py:101: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+    resolver = jsonschema.RefResolver.from_schema(vv_report_schema, store=store)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_wedding_seating_native_v01.py::test_native_supplied_neighbors_v01
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 5 passed, 2 warnings in 72.87s (0:01:12)

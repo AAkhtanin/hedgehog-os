@@ -1,0 +1,847 @@
+{
+  "new_calls": {
+    "AWS": 0,
+    "LLM": 0,
+    "QPU": 0,
+    "effects": 0,
+    "native_runtime": 0
+  },
+  "rows": [
+    {
+      "acknowledged": "2026-09-24T07:18:23.997042+00:00",
+      "actual_wire_sha256": "8e89486c0e3c8f752d5f7007296a2d5aba963fdd9b25e4832d43933ec9c9c069",
+      "compiled_program": {
+        "bytes": 110564,
+        "sha256": "b780254bdafe652c1780f6dbce14d484e5e9f29bc9839d9ec33f2c92790ff051"
+      },
+      "complete_sample_validation_path": "snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "consumption": {
+        "D_seconds": 13.108864957466722,
+        "artifact": "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83",
+        "now": 1790240587,
+        "output": {
+          "assignment": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ],
+          "basis_index": 517,
+          "local_repair": false,
+          "objective_gap": 0,
+          "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+          "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+          "profile": "KEEP_FAMILIAR_V01",
+          "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+          "request_ref": "request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+          "shot_index": 63,
+          "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b"
+        },
+        "root_result": {
+          "conflict_set_ids": [],
+          "decision": "ACCEPT",
+          "decision_id": "dbfcb1fac1d7960f83c80c0f99175133449747c50c939070785c600f64593b7f",
+          "decision_input_id": "fe8b17205207286831e8fb748e2ddb5aac6e67a65886f4cff2d1308ce2a8705d",
+          "effect_requested": false,
+          "final_output_created": false,
+          "hard_failure_reasons": [],
+          "missing_evidence_refs": [],
+          "permission_created": false,
+          "prior_decision_id": null,
+          "reason_code": "validated_candidate_accepted",
+          "root_commit_created": true,
+          "selected_candidate_id": "wedding_result:3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5",
+          "target_root_id": "organizer:w1",
+          "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+          "transition_decision": {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "RETURN_TO_ROOT",
+            "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+            "matched": true,
+            "missing_guards": [],
+            "reason_code": "gt_advisory_returns_to_root",
+            "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+            "required_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "root_commit_present": false,
+            "root_commit_required": true,
+            "rule_id": "gt_advisory_to_root_decision",
+            "satisfied_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          }
+        }
+      },
+      "device_arn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+      "local_last_read": "2026-09-24T09:02:46.357768+00:00",
+      "measured_qubits": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "measurements": 1000,
+      "network_attempts": 1,
+      "original_prepare": {
+        "D_seconds": 13.093288000673056,
+        "artifact": "work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77",
+        "now": 1790234276,
+        "path": "snapshot/native/KEEP_FAMILIAR_V01/prepare.json"
+      },
+      "profile": "KEEP_FAMILIAR_V01",
+      "provider_created": "2026-09-24T07:18:23.886000+00:00",
+      "provider_ended": "2026-09-24T09:00:12.621000+00:00",
+      "provider_status": "COMPLETED",
+      "raw_bytes": 157753,
+      "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "request_sha256": "ff42c5379321283b255706ba137ecb922ed75dd5b1d57e599c31ad5646f76523",
+      "reserved_microusd": 725000,
+      "resume_prepare": {
+        "D_seconds": 12.8461833326146,
+        "artifact": "work_results:17e93a13ec84ef0add500bd28fc390e81c24a704398e557513e8dc3106e2e2b9",
+        "now": 1790240567,
+        "path": "snapshot/native/KEEP_FAMILIAR_V01/resume_prepare_1790240567.json"
+      },
+      "s3_bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+      "s3_key": "wedding-v02/w4-xExg43mO//2c896911-1bd9-4c72-9d03-873fb782b59b/results.json",
+      "sample_validation": {
+        "distinct_valid_plans": 16,
+        "invalid_samples": 967,
+        "local_reference_objective": 0,
+        "local_repair": false,
+        "measured_qubits": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "objective_gap": 0,
+        "postselection": "CLASSICAL_OBJECTIVE_THEN_ASSIGNMENT_THEN_SHOT",
+        "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+        "requested_shots": 1000,
+        "selected": {
+          "assignment": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ],
+          "basis_index": 517,
+          "shot_index": 63,
+          "status": "VALID",
+          "validation": {
+            "assignment": [
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              2,
+              2,
+              2,
+              2
+            ],
+            "binding": {
+              "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+              "objective_profile": "KEEP_FAMILIAR_V01",
+              "owner_root_id": "organizer:w1",
+              "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+              "problem_revision": 1,
+              "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+              "time_context_ref": "time:w1:static"
+            },
+            "components": {
+              "hard": 0,
+              "keep": 0,
+              "mix": 12,
+              "objective": 0
+            },
+            "condition_verdicts": [
+              {
+                "condition_id": "builtin:capacity:table_1",
+                "satisfied": true,
+                "source_ref": "original:table_records"
+              },
+              {
+                "condition_id": "builtin:capacity:table_2",
+                "satisfied": true,
+                "source_ref": "original:table_records"
+              },
+              {
+                "condition_id": "builtin:capacity:table_3",
+                "satisfied": true,
+                "source_ref": "original:table_records"
+              },
+              {
+                "condition_id": "condition_01",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_02",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_03",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_04",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_05",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_06",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_07",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_08",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              }
+            ],
+            "coverage": "ORIGINAL_ALL_CONDITIONS",
+            "hard_violations": [],
+            "ranking_key": [
+              false,
+              0,
+              [
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                2,
+                2,
+                2,
+                2
+              ]
+            ],
+            "schema_version": "SeatingValidationReportV01",
+            "status": "VALID",
+            "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+          }
+        },
+        "status": "VALIDATED_RAW_SAMPLE",
+        "successful_shots": 1000,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b",
+        "valid_samples": 33
+      },
+      "saves": [
+        {
+          "archive_path": "snapshot/outputs/KEEP_FAMILIAR_V01/seating.json",
+          "bytes": 520,
+          "expires": 1790241212,
+          "mode": "0644",
+          "path": "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/KEEP_FAMILIAR_V01/seating.json",
+          "recorded_status": "SAVED_READBACK_VERIFIED",
+          "root_result": {
+            "conflict_set_ids": [],
+            "decision": "ACCEPT",
+            "decision_id": "0dc285a99ff051c846282169206a265199545c6f5c7380df01c0620776fc4e2d",
+            "decision_input_id": "d7d5724945b09d5a15aa08c750c15ccc75d18b51c5bdf9db5a43e9f97709db8f",
+            "effect_requested": false,
+            "final_output_created": false,
+            "hard_failure_reasons": [],
+            "missing_evidence_refs": [],
+            "permission_created": false,
+            "prior_decision_id": null,
+            "reason_code": "validated_candidate_accepted",
+            "root_commit_created": true,
+            "selected_candidate_id": "wedding_save:e9fba3fdd300e3b0e3b237569e614045016711dfaa6522cc9690a5a5f6ef0697",
+            "target_root_id": "organizer:w1",
+            "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+            "transition_decision": {
+              "abi_major_version": 1,
+              "actor_role": "gt",
+              "attempted_effect": "CREATE_ROOT_DECISION",
+              "decision": "RETURN_TO_ROOT",
+              "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+              "matched": true,
+              "missing_guards": [],
+              "reason_code": "gt_advisory_returns_to_root",
+              "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+              "required_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "root_commit_present": false,
+              "root_commit_required": true,
+              "rule_id": "gt_advisory_to_root_decision",
+              "satisfied_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "source_artifact_type": "GTAdvisoryReport",
+              "source_lifecycle_state": "VALIDATED",
+              "target_artifact_type": "RootDecision"
+            }
+          },
+          "save_time": 1790240612,
+          "sha256": "3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5"
+        },
+        {
+          "archive_path": "snapshot/outputs/KEEP_FAMILIAR_V01/seating.html",
+          "bytes": 2243,
+          "expires": 1790241212,
+          "mode": "0644",
+          "path": "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/KEEP_FAMILIAR_V01/seating.html",
+          "recorded_status": "SAVED_READBACK_VERIFIED",
+          "root_result": {
+            "conflict_set_ids": [],
+            "decision": "ACCEPT",
+            "decision_id": "510c8ea2a2680a885a735406e094af54fd02533f8ea065c1aed7b32425239497",
+            "decision_input_id": "9c95280781465d241b962027eedaec2d5f62f26dde2c58dcaf606277f30c49f7",
+            "effect_requested": false,
+            "final_output_created": false,
+            "hard_failure_reasons": [],
+            "missing_evidence_refs": [],
+            "permission_created": false,
+            "prior_decision_id": null,
+            "reason_code": "validated_candidate_accepted",
+            "root_commit_created": true,
+            "selected_candidate_id": "wedding_save:2ba7cb144be067e63b1b6e28352797541acb8602dc240c28ed93948b54d872c3",
+            "target_root_id": "organizer:w1",
+            "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+            "transition_decision": {
+              "abi_major_version": 1,
+              "actor_role": "gt",
+              "attempted_effect": "CREATE_ROOT_DECISION",
+              "decision": "RETURN_TO_ROOT",
+              "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+              "matched": true,
+              "missing_guards": [],
+              "reason_code": "gt_advisory_returns_to_root",
+              "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+              "required_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "root_commit_present": false,
+              "root_commit_required": true,
+              "rule_id": "gt_advisory_to_root_decision",
+              "satisfied_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "source_artifact_type": "GTAdvisoryReport",
+              "source_lifecycle_state": "VALIDATED",
+              "target_artifact_type": "RootDecision"
+            }
+          },
+          "save_time": 1790240612,
+          "sha256": "0105a85f0757e8b1c3b27bd30589bdc67a8d40d5b04abd1b7194f63fc30deff8"
+        }
+      ],
+      "shots": 1000,
+      "status": "VALIDATED_AND_SAVED",
+      "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b",
+      "unavailable": {
+        "actual_billed_cost": "NOT_PRESENT_NO_BILLING_REQUEST",
+        "provider_execution_seconds": "NOT_PRESENT_IN_SAVED_TASK_RESULT_OR_METADATA"
+      },
+      "w3_semantic_captures": [
+        {
+          "capture_ref": "capture:93fcd108eae64f61f3d4661f9065422fc92c9227c278b59a32e063ba23a4e242",
+          "ended": "2026-09-24T00:26:00.917438+00:00",
+          "model": "gemini-2.5-flash",
+          "model_version": "gemini-2.5-flash",
+          "origin": "LIVE_ROLE_ORIGIN",
+          "raw_response_sha256": "2c443b9f735dee47efeab3f1ba2a8610adf795925adc85791d3bf09a40327f37",
+          "role": "WEDDING_INTENT_ORCHESTRATOR",
+          "started": "2026-09-24T00:25:57.081639+00:00"
+        },
+        {
+          "capture_ref": "capture:e93632ee1ce198bf17b357dc4d1cc191bfca5fe9290ac52fe91d6598322ef9b7",
+          "ended": "2026-09-24T00:26:03.691019+00:00",
+          "model": "gemini-2.5-flash",
+          "model_version": "gemini-2.5-flash",
+          "origin": "LIVE_ROLE_ORIGIN",
+          "raw_response_sha256": "4eb089aaf657f208e3359e03dd8aa63caabb3244c6ed9b90547f374e14fa21ed",
+          "role": "WEDDING_REQUIREMENT_ARCHITECT",
+          "started": "2026-09-24T00:26:00.927447+00:00"
+        }
+      ]
+    },
+    {
+      "acknowledged": "2026-09-24T07:18:47.176118+00:00",
+      "actual_wire_sha256": "af78f27e3085f6cc9e09a284712c98f3078de410052e458c293b7c45d07d1344",
+      "compiled_program": {
+        "bytes": 119018,
+        "sha256": "2126d1e962784f072a30cfb0a35f423df0a92608966c36c714293f336c805e42"
+      },
+      "complete_sample_validation_path": "snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "consumption": {
+        "D_seconds": 13.079172041267157,
+        "artifact": "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a",
+        "now": 1790240635,
+        "output": {
+          "assignment": [
+            0,
+            0,
+            1,
+            1,
+            2,
+            2,
+            0,
+            0,
+            1,
+            1,
+            2,
+            2
+          ],
+          "basis_index": 292,
+          "local_repair": false,
+          "objective_gap": 0,
+          "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+          "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+          "profile": "MIX_CIRCLES_V01",
+          "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+          "request_ref": "request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+          "shot_index": 31,
+          "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d"
+        },
+        "root_result": {
+          "conflict_set_ids": [],
+          "decision": "ACCEPT",
+          "decision_id": "7314078037001398b914cd1cbb7f8f867c09a9f29df80b82868f2cb504226a17",
+          "decision_input_id": "a29f5ede104bf091edc1e2ccbf204739e930d7499c19d7ae20afa2373422c2a8",
+          "effect_requested": false,
+          "final_output_created": false,
+          "hard_failure_reasons": [],
+          "missing_evidence_refs": [],
+          "permission_created": false,
+          "prior_decision_id": null,
+          "reason_code": "validated_candidate_accepted",
+          "root_commit_created": true,
+          "selected_candidate_id": "wedding_result:f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd",
+          "target_root_id": "organizer:w1",
+          "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+          "transition_decision": {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "RETURN_TO_ROOT",
+            "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+            "matched": true,
+            "missing_guards": [],
+            "reason_code": "gt_advisory_returns_to_root",
+            "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+            "required_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "root_commit_present": false,
+            "root_commit_required": true,
+            "rule_id": "gt_advisory_to_root_decision",
+            "satisfied_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          }
+        }
+      },
+      "device_arn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+      "local_last_read": "2026-09-24T09:03:33.153533+00:00",
+      "measured_qubits": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "measurements": 1000,
+      "network_attempts": 1,
+      "original_prepare": {
+        "D_seconds": 13.20854916702956,
+        "artifact": "work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450",
+        "now": 1790234304,
+        "path": "snapshot/native/MIX_CIRCLES_V01/prepare.json"
+      },
+      "profile": "MIX_CIRCLES_V01",
+      "provider_created": "2026-09-24T07:18:47.069000+00:00",
+      "provider_ended": "2026-09-24T09:00:13.377000+00:00",
+      "provider_status": "COMPLETED",
+      "raw_bytes": 166558,
+      "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "request_sha256": "830d97241af1c2b886bc29b1c98cf5e38067344f8a2691c58d02096f6b9accc9",
+      "reserved_microusd": 725000,
+      "resume_prepare": {
+        "D_seconds": 12.76750120986253,
+        "artifact": "work_results:099028b396f6f3aa86093a86a4b423a8766bac940be68882f50261cdf8cc9096",
+        "now": 1790240614,
+        "path": "snapshot/native/MIX_CIRCLES_V01/resume_prepare_1790240614.json"
+      },
+      "s3_bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+      "s3_key": "wedding-v02/w4-xExg43mO//470b472c-590e-42ad-b4f1-6b597be40f6d/results.json",
+      "sample_validation": {
+        "distinct_valid_plans": 20,
+        "invalid_samples": 958,
+        "local_reference_objective": 0,
+        "local_repair": false,
+        "measured_qubits": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "objective_gap": 0,
+        "postselection": "CLASSICAL_OBJECTIVE_THEN_ASSIGNMENT_THEN_SHOT",
+        "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+        "requested_shots": 1000,
+        "selected": {
+          "assignment": [
+            0,
+            0,
+            1,
+            1,
+            2,
+            2,
+            0,
+            0,
+            1,
+            1,
+            2,
+            2
+          ],
+          "basis_index": 292,
+          "shot_index": 31,
+          "status": "VALID",
+          "validation": {
+            "assignment": [
+              0,
+              0,
+              1,
+              1,
+              2,
+              2,
+              0,
+              0,
+              1,
+              1,
+              2,
+              2
+            ],
+            "binding": {
+              "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+              "objective_profile": "MIX_CIRCLES_V01",
+              "owner_root_id": "organizer:w1",
+              "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+              "problem_revision": 1,
+              "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+              "time_context_ref": "time:w1:static"
+            },
+            "components": {
+              "hard": 0,
+              "keep": 24,
+              "mix": 0,
+              "objective": 0
+            },
+            "condition_verdicts": [
+              {
+                "condition_id": "builtin:capacity:table_1",
+                "satisfied": true,
+                "source_ref": "original:table_records"
+              },
+              {
+                "condition_id": "builtin:capacity:table_2",
+                "satisfied": true,
+                "source_ref": "original:table_records"
+              },
+              {
+                "condition_id": "builtin:capacity:table_3",
+                "satisfied": true,
+                "source_ref": "original:table_records"
+              },
+              {
+                "condition_id": "condition_01",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_02",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_03",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_04",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_05",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_06",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_07",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              },
+              {
+                "condition_id": "condition_08",
+                "satisfied": true,
+                "source_ref": "source:w1:hard"
+              }
+            ],
+            "coverage": "ORIGINAL_ALL_CONDITIONS",
+            "hard_violations": [],
+            "ranking_key": [
+              false,
+              0,
+              [
+                0,
+                0,
+                1,
+                1,
+                2,
+                2,
+                0,
+                0,
+                1,
+                1,
+                2,
+                2
+              ]
+            ],
+            "schema_version": "SeatingValidationReportV01",
+            "status": "VALID",
+            "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+          }
+        },
+        "status": "VALIDATED_RAW_SAMPLE",
+        "successful_shots": 1000,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d",
+        "valid_samples": 42
+      },
+      "saves": [
+        {
+          "archive_path": "snapshot/outputs/MIX_CIRCLES_V01/seating.json",
+          "bytes": 516,
+          "expires": 1790241259,
+          "mode": "0644",
+          "path": "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/MIX_CIRCLES_V01/seating.json",
+          "recorded_status": "SAVED_READBACK_VERIFIED",
+          "root_result": {
+            "conflict_set_ids": [],
+            "decision": "ACCEPT",
+            "decision_id": "0965a17e2cae473182ed0376b35a85e349656bfe9211e708aa4eeefd0dc97769",
+            "decision_input_id": "2b3de396953bfe423002d77008660ef07c7e2194535934734c39871ed0ed5b73",
+            "effect_requested": false,
+            "final_output_created": false,
+            "hard_failure_reasons": [],
+            "missing_evidence_refs": [],
+            "permission_created": false,
+            "prior_decision_id": null,
+            "reason_code": "validated_candidate_accepted",
+            "root_commit_created": true,
+            "selected_candidate_id": "wedding_save:be9fd50cdf4b5904c1a076402166adc37c364d6d78f557deb452c56a1a3e680e",
+            "target_root_id": "organizer:w1",
+            "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+            "transition_decision": {
+              "abi_major_version": 1,
+              "actor_role": "gt",
+              "attempted_effect": "CREATE_ROOT_DECISION",
+              "decision": "RETURN_TO_ROOT",
+              "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+              "matched": true,
+              "missing_guards": [],
+              "reason_code": "gt_advisory_returns_to_root",
+              "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+              "required_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "root_commit_present": false,
+              "root_commit_required": true,
+              "rule_id": "gt_advisory_to_root_decision",
+              "satisfied_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "source_artifact_type": "GTAdvisoryReport",
+              "source_lifecycle_state": "VALIDATED",
+              "target_artifact_type": "RootDecision"
+            }
+          },
+          "save_time": 1790240659,
+          "sha256": "f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd"
+        },
+        {
+          "archive_path": "snapshot/outputs/MIX_CIRCLES_V01/seating.html",
+          "bytes": 2241,
+          "expires": 1790241259,
+          "mode": "0644",
+          "path": "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/MIX_CIRCLES_V01/seating.html",
+          "recorded_status": "SAVED_READBACK_VERIFIED",
+          "root_result": {
+            "conflict_set_ids": [],
+            "decision": "ACCEPT",
+            "decision_id": "e0d9c2c2372449871f425b28233e202ce9d8558c64f838283cea4d583bcf235e",
+            "decision_input_id": "909a5dea9699ba75c0ee79c8d7a2c184c9e993d6c558c7446598b8aa05656347",
+            "effect_requested": false,
+            "final_output_created": false,
+            "hard_failure_reasons": [],
+            "missing_evidence_refs": [],
+            "permission_created": false,
+            "prior_decision_id": null,
+            "reason_code": "validated_candidate_accepted",
+            "root_commit_created": true,
+            "selected_candidate_id": "wedding_save:a852f720587d756cc388b69434663ffa69e637aaddb04fcaf04d3667113ba356",
+            "target_root_id": "organizer:w1",
+            "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+            "transition_decision": {
+              "abi_major_version": 1,
+              "actor_role": "gt",
+              "attempted_effect": "CREATE_ROOT_DECISION",
+              "decision": "RETURN_TO_ROOT",
+              "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+              "matched": true,
+              "missing_guards": [],
+              "reason_code": "gt_advisory_returns_to_root",
+              "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+              "required_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "root_commit_present": false,
+              "root_commit_required": true,
+              "rule_id": "gt_advisory_to_root_decision",
+              "satisfied_guards": [
+                "artifact_valid",
+                "post_vv_passed",
+                "advisory_only"
+              ],
+              "source_artifact_type": "GTAdvisoryReport",
+              "source_lifecycle_state": "VALIDATED",
+              "target_artifact_type": "RootDecision"
+            }
+          },
+          "save_time": 1790240659,
+          "sha256": "843c56e3b005f6e15e48c2fed6da94d1196ecccbac5b16c84c091a00e1bb5ef8"
+        }
+      ],
+      "shots": 1000,
+      "status": "VALIDATED_AND_SAVED",
+      "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d",
+      "unavailable": {
+        "actual_billed_cost": "NOT_PRESENT_NO_BILLING_REQUEST",
+        "provider_execution_seconds": "NOT_PRESENT_IN_SAVED_TASK_RESULT_OR_METADATA"
+      },
+      "w3_semantic_captures": [
+        {
+          "capture_ref": "capture:b47a28601d704cd5a496a9c97ddfc59d003f60e5cff594d2c6ad4ec4f40985dd",
+          "ended": "2026-09-24T00:26:26.928810+00:00",
+          "model": "gemini-2.5-flash",
+          "model_version": "gemini-2.5-flash",
+          "origin": "LIVE_ROLE_ORIGIN",
+          "raw_response_sha256": "d0e5667e444a70cce50457e8d91eb4ae1348f135876e55fde3e938e9f57f56af",
+          "role": "WEDDING_INTENT_ORCHESTRATOR",
+          "started": "2026-09-24T00:26:21.678976+00:00"
+        },
+        {
+          "capture_ref": "capture:5156642a2d63dd654be8b5d6b97fda5f4a6c525e9929970b903eafe6be692b6a",
+          "ended": "2026-09-24T00:26:30.181549+00:00",
+          "model": "gemini-2.5-flash",
+          "model_version": "gemini-2.5-flash",
+          "origin": "LIVE_ROLE_ORIGIN",
+          "raw_response_sha256": "caf165463ef8909f3e2bfe3f39b1e7d5d508ff22fbf0d3ade1631d80310c9fc9",
+          "role": "WEDDING_REQUIREMENT_ARCHITECT",
+          "started": "2026-09-24T00:26:26.943639+00:00"
+        }
+      ]
+    }
+  ],
+  "source_bindings": "completion_source_bindings.json",
+  "status": "LOCAL_CHAIN_CONSISTENCY_PASS"
+}

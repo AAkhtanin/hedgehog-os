@@ -1,0 +1,1695 @@
+{
+  "attempts": [
+    {
+      "acknowledged": "2026-09-24T07:18:23.997042+00:00",
+      "actual_wire": "{\"action\": \"{\\\"braketSchemaHeader\\\":{\\\"name\\\":\\\"braket.ir.openqasm.program\\\",\\\"version\\\":\\\"1\\\"},\\\"inputs\\\":{},\\\"source\\\":\\\"OPENQASM 3.0;\\\\nbit[10] b;\\\\nqubit[10] q;\\\\nh q[0];\\\\nh q[1];\\\\nh q[2];\\\\nh q[3];\\\\nh q[4];\\\\nh q[5];\\\\nh q[6];\\\\nh q[7];\\\\nh q[8];\\\\nh q[9];\\\\nrz(0.10052367850613092) q[0];\\\\nrz(-0.5897676760424077) q[1];\\\\ncnot q[0], q[1];\\\\nrz(-0.10052367850613092) q[1];\\\\ncnot q[0], q[1];\\\\nrz(0.08973787609131001) q[2];\\\\ncnot q[0], q[2];\\\\nrz(0.24850488763747386) q[2];\\\\ncnot q[0], q[2];\\\\ncnot q[1], q[2];\\\\nrz(-0.08283496254582462) q[2];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[2];\\\\nrz(0.08283496254582462) q[2];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\nrz(-0.6005534784572285) q[3];\\\\ncnot q[0], q[3];\\\\nrz(-0.08283496254582462) q[3];\\\\ncnot q[0], q[3];\\\\ncnot q[1], q[3];\\\\nrz(0.24850488763747386) q[3];\\\\ncnot q[1], q[3];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[3];\\\\nrz(0.08283496254582462) q[3];\\\\ncnot q[1], q[3];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[3];\\\\nrz(-0.08973787609131001) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[0], q[2];\\\\ncnot q[2], q[3];\\\\nrz(0.08283496254582462) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[0], q[2];\\\\ncnot q[1], q[2];\\\\ncnot q[2], q[3];\\\\nrz(0.08283496254582462) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[2];\\\\ncnot q[2], q[3];\\\\nrz(0.24850488763747386) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\nrz(0.10052367850613092) q[4];\\\\ncnot q[0], q[4];\\\\nrz(0.2912166652001647) q[4];\\\\ncnot q[0], q[4];\\\\ncnot q[1], q[4];\\\\nrz(-0.09707222173338823) q[4];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[4];\\\\nrz(0.09707222173338823) q[4];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[4];\\\\nrz(0.25885925795570197) q[4];\\\\ncnot q[2], q[4];\\\\ncnot q[3], q[4];\\\\nrz(-0.08628641931856731) q[4];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[4];\\\\nrz(0.08628641931856731) q[4];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\nrz(-0.5897676760424077) q[5];\\\\ncnot q[0], q[5];\\\\nrz(-0.09707222173338823) q[5];\\\\ncnot q[0], q[5];\\\\ncnot q[1], q[5];\\\\nrz(0.2912166652001647) q[5];\\\\ncnot q[1], q[5];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[5];\\\\nrz(0.09707222173338823) q[5];\\\\ncnot q[1], q[5];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[5];\\\\nrz(-0.08628641931856731) q[5];\\\\ncnot q[2], q[5];\\\\ncnot q[3], q[5];\\\\nrz(0.25885925795570197) q[5];\\\\ncnot q[3], q[5];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[5];\\\\nrz(0.08628641931856731) q[5];\\\\ncnot q[3], q[5];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[5];\\\\nrz(-0.10052367850613092) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[0], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.09707222173338823) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[0], q[4];\\\\ncnot q[1], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.09707222173338823) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.2912166652001647) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.08628641931856731) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[2], q[4];\\\\ncnot q[3], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.08628641931856731) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.25885925795570197) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\nrz(0.08973787609131001) q[6];\\\\ncnot q[0], q[6];\\\\nrz(0.25885925795570197) q[6];\\\\ncnot q[0], q[6];\\\\ncnot q[1], q[6];\\\\nrz(-0.08628641931856731) q[6];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[6];\\\\nrz(0.08628641931856731) q[6];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[6];\\\\nrz(0.25885925795570197) q[6];\\\\ncnot q[2], q[6];\\\\ncnot q[3], q[6];\\\\nrz(-0.08628641931856731) q[6];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[6];\\\\nrz(0.08628641931856731) q[6];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[6];\\\\nrz(0.24850488763747386) q[6];\\\\ncnot q[4], q[6];\\\\ncnot q[5], q[6];\\\\nrz(-0.08283496254582462) q[6];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[6];\\\\nrz(0.08283496254582462) q[6];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\nrz(-0.6005534784572285) q[7];\\\\ncnot q[0], q[7];\\\\nrz(-0.08628641931856731) q[7];\\\\ncnot q[0], q[7];\\\\ncnot q[1], q[7];\\\\nrz(0.25885925795570197) q[7];\\\\ncnot q[1], q[7];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[7];\\\\nrz(0.08628641931856731) q[7];\\\\ncnot q[1], q[7];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[7];\\\\nrz(-0.08628641931856731) q[7];\\\\ncnot q[2], q[7];\\\\ncnot q[3], q[7];\\\\nrz(0.25885925795570197) q[7];\\\\ncnot q[3], q[7];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[7];\\\\nrz(0.08628641931856731) q[7];\\\\ncnot q[3], q[7];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[7];\\\\nrz(-0.08283496254582462) q[7];\\\\ncnot q[4], q[7];\\\\ncnot q[5], q[7];\\\\nrz(0.24850488763747386) q[7];\\\\ncnot q[5], q[7];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[7];\\\\nrz(0.08283496254582462) q[7];\\\\ncnot q[5], q[7];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[7];\\\\nrz(-0.08973787609131001) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[0], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08628641931856731) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[0], q[6];\\\\ncnot q[1], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08628641931856731) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.25885925795570197) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08628641931856731) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[2], q[6];\\\\ncnot q[3], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08628641931856731) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.25885925795570197) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08283496254582462) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[4], q[6];\\\\ncnot q[5], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08283496254582462) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.24850488763747386) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\nrz(0.07938350577308192) q[8];\\\\ncnot q[0], q[8];\\\\nrz(0.25885925795570197) q[8];\\\\ncnot q[0], q[8];\\\\ncnot q[1], q[8];\\\\nrz(-0.08628641931856731) q[8];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[8];\\\\nrz(0.08628641931856731) q[8];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[8];\\\\nrz(0.25885925795570197) q[8];\\\\ncnot q[2], q[8];\\\\ncnot q[3], q[8];\\\\nrz(-0.08628641931856731) q[8];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[8];\\\\nrz(0.08628641931856731) q[8];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[8];\\\\nrz(0.25885925795570197) q[8];\\\\ncnot q[4], q[8];\\\\ncnot q[5], q[8];\\\\nrz(-0.08628641931856731) q[8];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[8];\\\\nrz(0.08628641931856731) q[8];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[8];\\\\nrz(0.25885925795570197) q[8];\\\\ncnot q[6], q[8];\\\\ncnot q[7], q[8];\\\\nrz(-0.08628641931856731) q[8];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\ncnot q[7], q[8];\\\\nrz(0.08628641931856731) q[8];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\nrz(-0.583296194593515) q[9];\\\\ncnot q[0], q[9];\\\\nrz(-0.08628641931856731) q[9];\\\\ncnot q[0], q[9];\\\\ncnot q[1], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[1], q[9];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[1], q[9];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[9];\\\\nrz(-0.08628641931856731) q[9];\\\\ncnot q[2], q[9];\\\\ncnot q[3], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[3], q[9];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[3], q[9];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[9];\\\\nrz(-0.08628641931856731) q[9];\\\\ncnot q[4], q[9];\\\\ncnot q[5], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[5], q[9];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[5], q[9];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[9];\\\\nrz(-0.08628641931856731) q[9];\\\\ncnot q[6], q[9];\\\\ncnot q[7], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[7], q[9];\\\\ncnot q[6], q[7];\\\\ncnot q[7], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[7], q[9];\\\\ncnot q[6], q[7];\\\\ncnot q[8], q[9];\\\\nrz(-0.07938350577308192) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[0], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[0], q[8];\\\\ncnot q[1], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[2], q[8];\\\\ncnot q[3], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[4], q[8];\\\\ncnot q[5], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[6], q[8];\\\\ncnot q[7], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.08628641931856731) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\ncnot q[7], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.25885925795570197) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\nrx(5.759586531581287) q[0];\\\\nrx(5.759586531581287) q[1];\\\\nrx(5.759586531581287) q[2];\\\\nrx(5.759586531581287) q[3];\\\\nrx(5.759586531581287) q[4];\\\\nrx(5.759586531581287) q[5];\\\\nrx(5.759586531581287) q[6];\\\\nrx(5.759586531581287) q[7];\\\\nrx(5.759586531581287) q[8];\\\\nrx(5.759586531581287) q[9];\\\\nb[0] = measure q[0];\\\\nb[1] = measure q[1];\\\\nb[2] = measure q[2];\\\\nb[3] = measure q[3];\\\\nb[4] = measure q[4];\\\\nb[5] = measure q[5];\\\\nb[6] = measure q[6];\\\\nb[7] = measure q[7];\\\\nb[8] = measure q[8];\\\\nb[9] = measure q[9];\\\"}\", \"clientToken\": \"6473ea42aca748ef901f254b2acf2262\", \"deviceArn\": \"arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q\", \"outputS3Bucket\": \"amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03\", \"outputS3KeyPrefix\": \"wedding-v02/w4-xExg43mO/\", \"shots\": 1000}",
+      "actual_wire_sha256": "8e89486c0e3c8f752d5f7007296a2d5aba963fdd9b25e4832d43933ec9c9c069",
+      "approval": {
+        "classification": "LIVE_QPU_EXPLICIT_PROVIDER_BRIDGE",
+        "expires": 1790234898,
+        "native_prepare_result_ref": "work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77",
+        "request_sha256": "ff42c5379321283b255706ba137ecb922ed75dd5b1d57e599c31ad5646f76523",
+        "root_input": {
+          "conflict_state": {
+            "items": [
+              [
+                "conflict_set_ids",
+                []
+              ],
+              [
+                "material_unresolved_conflict",
+                false
+              ]
+            ]
+          },
+          "decision_input_id": "6f4413e5fb1772d659f52ca167c58a7e7c40b865fb22fedeac4622bfc78ef104",
+          "gt_advisory": {
+            "items": [
+              [
+                "actor_role",
+                "gt"
+              ],
+              [
+                "advisory_id",
+                "gt:wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18"
+              ],
+              [
+                "advisory_only",
+                true
+              ],
+              [
+                "attempted_effect",
+                "CREATE_ROOT_DECISION"
+              ],
+              [
+                "candidate_ids",
+                [
+                  "wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18"
+                ]
+              ],
+              [
+                "creates_final_output",
+                false
+              ],
+              [
+                "requests_effect",
+                false
+              ],
+              [
+                "score_micros_by_candidate",
+                {
+                  "items": [
+                    [
+                      "wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18",
+                      1000000
+                    ]
+                  ]
+                }
+              ],
+              [
+                "selected_candidate_id",
+                "wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18"
+              ],
+              [
+                "source_artifact_type",
+                "GTAdvisoryReport"
+              ],
+              [
+                "source_lifecycle_state",
+                "VALIDATED"
+              ],
+              [
+                "target_artifact_type",
+                "RootDecision"
+              ]
+            ]
+          },
+          "permission_state": {
+            "items": [
+              [
+                "permission_ref",
+                null
+              ],
+              [
+                "permission_required",
+                false
+              ],
+              [
+                "permission_scope_valid",
+                true
+              ],
+              [
+                "user_permission_present",
+                false
+              ]
+            ]
+          },
+          "policy_state": {
+            "items": [
+              [
+                "allow_accept",
+                true
+              ],
+              [
+                "conflict_policy",
+                "DEFER"
+              ],
+              [
+                "hard_policy_passed",
+                true
+              ],
+              [
+                "identity_passed",
+                true
+              ],
+              [
+                "no_candidate_policy",
+                "NO_UPDATE"
+              ],
+              [
+                "policy_id",
+                "wedding:hard_policy"
+              ],
+              [
+                "scope_passed",
+                true
+              ]
+            ]
+          },
+          "post_vv_bundle": {
+            "items": [
+              [
+                "bundle_id",
+                "checks:98250ea142ce1e7db3711c0347870f8863275c639e48069cf6794398603fdddb"
+              ],
+              [
+                "hard_failure_reasons",
+                []
+              ],
+              [
+                "post_vv_passed",
+                true
+              ],
+              [
+                "provided_evidence_refs",
+                [
+                  "work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77"
+                ]
+              ],
+              [
+                "rejected_candidate_ids",
+                []
+              ],
+              [
+                "required_evidence_refs",
+                [
+                  "work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77"
+                ]
+              ],
+              [
+                "validated_candidate_ids",
+                [
+                  "wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18"
+                ]
+              ]
+            ]
+          },
+          "prior_root_state": {
+            "items": [
+              [
+                "prior_decision",
+                null
+              ],
+              [
+                "prior_decision_id",
+                null
+              ],
+              [
+                "prior_selected_candidate_id",
+                null
+              ]
+            ]
+          },
+          "root_review_packet": {
+            "authority_class": "ADVISORY_ONLY",
+            "conflict_set_ids": [],
+            "contribution_ids": [
+              "contribution:wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18"
+            ],
+            "final_output_created": false,
+            "missing_evidence_refs": [],
+            "packet_id": "e904a8085ca73a5a2eb3370cf60fc5f1bee0e3e61b9eb5dbcb8b91e53a09ed88",
+            "permission_created": false,
+            "request_id": "review:wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18",
+            "required_validator_ids": [
+              "current_owner_transport_scope",
+              "exact_disclosed_request",
+              "native_numeric_consumed"
+            ],
+            "review_state": "ROOT_REVIEW_REQUIRED",
+            "root_decision_created": false,
+            "runtime_topology_ref": "work_topology:e39793cb80ee19b40e5324e78b3e51c384136a42d021c0dd8693ce0164602366",
+            "synthesis_proposal": {
+              "authority_class": "ADVISORY_ONLY",
+              "conflict_sets": [],
+              "contribution_modes": [
+                "DETERMINISTIC"
+              ],
+              "missing_evidence_refs": [],
+              "normalized_claims": [
+                {
+                  "authority_class": "NONE",
+                  "claim_id": "wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18",
+                  "confidence_micros": 1000000,
+                  "evidence_refs": [
+                    "binding:work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77"
+                  ],
+                  "object_or_value": {
+                    "items": [
+                      [
+                        "expires",
+                        1790234898
+                      ],
+                      [
+                        "request",
+                        {
+                          "items": [
+                            [
+                              "action",
+                              "{\"braketSchemaHeader\":{\"name\":\"braket.ir.openqasm.program\",\"version\":\"1\"},\"inputs\":{},\"source\":\"OPENQASM 3.0;\\nbit[10] b;\\nqubit[10] q;\\nh q[0];\\nh q[1];\\nh q[2];\\nh q[3];\\nh q[4];\\nh q[5];\\nh q[6];\\nh q[7];\\nh q[8];\\nh q[9];\\nrz(0.10052367850613092) q[0];\\nrz(-0.5897676760424077) q[1];\\ncnot q[0], q[1];\\nrz(-0.10052367850613092) q[1];\\ncnot q[0], q[1];\\nrz(0.08973787609131001) q[2];\\ncnot q[0], q[2];\\nrz(0.24850488763747386) q[2];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\nrz(-0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\nrz(0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(-0.6005534784572285) q[3];\\ncnot q[0], q[3];\\nrz(-0.08283496254582462) q[3];\\ncnot q[0], q[3];\\ncnot q[1], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[1], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[2], q[3];\\nrz(-0.08973787609131001) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(0.10052367850613092) q[4];\\ncnot q[0], q[4];\\nrz(0.2912166652001647) q[4];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\nrz(-0.09707222173338823) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\nrz(0.09707222173338823) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\nrz(0.25885925795570197) q[4];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\nrz(-0.08628641931856731) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\nrz(0.08628641931856731) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(-0.5897676760424077) q[5];\\ncnot q[0], q[5];\\nrz(-0.09707222173338823) q[5];\\ncnot q[0], q[5];\\ncnot q[1], q[5];\\nrz(0.2912166652001647) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[1], q[5];\\nrz(0.09707222173338823) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[2], q[5];\\nrz(-0.08628641931856731) q[5];\\ncnot q[2], q[5];\\ncnot q[3], q[5];\\nrz(0.25885925795570197) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[3], q[5];\\nrz(0.08628641931856731) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[4], q[5];\\nrz(-0.10052367850613092) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[4], q[5];\\nrz(0.09707222173338823) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.09707222173338823) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.2912166652001647) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\ncnot q[4], q[5];\\nrz(0.08628641931856731) q[5];\\ncnot q[4], q[5];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.08628641931856731) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.25885925795570197) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(0.08973787609131001) q[6];\\ncnot q[0], q[6];\\nrz(0.25885925795570197) q[6];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\nrz(-0.08628641931856731) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\nrz(0.08628641931856731) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\nrz(0.25885925795570197) q[6];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\nrz(-0.08628641931856731) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\nrz(0.08628641931856731) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\nrz(0.24850488763747386) q[6];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\nrz(-0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\nrz(0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(-0.6005534784572285) q[7];\\ncnot q[0], q[7];\\nrz(-0.08628641931856731) q[7];\\ncnot q[0], q[7];\\ncnot q[1], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[1], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[2], q[7];\\nrz(-0.08628641931856731) q[7];\\ncnot q[2], q[7];\\ncnot q[3], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[3], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[4], q[7];\\nrz(-0.08283496254582462) q[7];\\ncnot q[4], q[7];\\ncnot q[5], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[5], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[6], q[7];\\nrz(-0.08973787609131001) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(0.07938350577308192) q[8];\\ncnot q[0], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrz(-0.583296194593515) q[9];\\ncnot q[0], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[0], q[9];\\ncnot q[1], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[1], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[2], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[2], q[9];\\ncnot q[3], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[3], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[4], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[4], q[9];\\ncnot q[5], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[5], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[6], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[6], q[9];\\ncnot q[7], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[7], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[8], q[9];\\nrz(-0.07938350577308192) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrx(5.759586531581287) q[0];\\nrx(5.759586531581287) q[1];\\nrx(5.759586531581287) q[2];\\nrx(5.759586531581287) q[3];\\nrx(5.759586531581287) q[4];\\nrx(5.759586531581287) q[5];\\nrx(5.759586531581287) q[6];\\nrx(5.759586531581287) q[7];\\nrx(5.759586531581287) q[8];\\nrx(5.759586531581287) q[9];\\nb[0] = measure q[0];\\nb[1] = measure q[1];\\nb[2] = measure q[2];\\nb[3] = measure q[3];\\nb[4] = measure q[4];\\nb[5] = measure q[5];\\nb[6] = measure q[6];\\nb[7] = measure q[7];\\nb[8] = measure q[8];\\nb[9] = measure q[9];\"}"
+                            ],
+                            [
+                              "clientToken",
+                              "6473ea42aca748ef901f254b2acf2262"
+                            ],
+                            [
+                              "deviceArn",
+                              "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q"
+                            ],
+                            [
+                              "outputS3Bucket",
+                              "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03"
+                            ],
+                            [
+                              "outputS3KeyPrefix",
+                              "wedding-v02/w4-xExg43mO/"
+                            ],
+                            [
+                              "shots",
+                              1000
+                            ]
+                          ]
+                        }
+                      ],
+                      [
+                        "scope",
+                        {
+                          "items": [
+                            [
+                              "account_id",
+                              "296280725196"
+                            ],
+                            [
+                              "authorization",
+                              {
+                                "items": [
+                                  [
+                                    "prompt_name",
+                                    "RADIOLARIA_POSTG4_WEDDING_W4_BRAKET_RIGETTI_V03_PROMPT_20260924.txt"
+                                  ],
+                                  [
+                                    "prompt_sha256",
+                                    "50528130e9174134f72b3463d993eb703d26af2e27680869ed834b88ad5a83b5"
+                                  ],
+                                  [
+                                    "scope",
+                                    "PRESENT_W4_NOT_RETROACTIVE_W0"
+                                  ]
+                                ]
+                              }
+                            ],
+                            [
+                              "bucket",
+                              "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03"
+                            ],
+                            [
+                              "device_arn",
+                              "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q"
+                            ],
+                            [
+                              "episode",
+                              "wedding-w4-xExg43mO"
+                            ],
+                            [
+                              "feasible_suboptimal_allowed",
+                              true
+                            ],
+                            [
+                              "max_qpu_microusd",
+                              1450000
+                            ],
+                            [
+                              "max_unique_tasks",
+                              2
+                            ],
+                            [
+                              "output_prefix",
+                              "wedding-v02/w4-xExg43mO/"
+                            ],
+                            [
+                              "prefix",
+                              "wedding-v02/"
+                            ],
+                            [
+                              "region",
+                              "us-west-1"
+                            ],
+                            [
+                              "revoked",
+                              false
+                            ],
+                            [
+                              "runtime_arn",
+                              "arn:aws:iam::296280725196:user/radiolaria-quantum"
+                            ],
+                            [
+                              "runtime_profile",
+                              "radiolaria-quantum"
+                            ],
+                            [
+                              "setup_id",
+                              "wedding-w0-h2xwk03"
+                            ],
+                            [
+                              "setup_identity",
+                              {
+                                "items": [
+                                  [
+                                    "bytes",
+                                    711
+                                  ],
+                                  [
+                                    "mode",
+                                    "0600"
+                                  ],
+                                  [
+                                    "sha256",
+                                    "ce9d86976fdbb3410f946b7c8078ce5ed6736993c71a86d8db39c3edb33b0da6"
+                                  ]
+                                ]
+                              }
+                            ],
+                            [
+                              "shot_microusd",
+                              425
+                            ],
+                            [
+                              "shots",
+                              1000
+                            ],
+                            [
+                              "structural_disclosure",
+                              true
+                            ],
+                            [
+                              "task_microusd",
+                              300000
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  },
+                  "predicate": "wedding_qpu_exact_submission_evidence",
+                  "provenance_refs": [
+                    "work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77"
+                  ],
+                  "source_mode": "DETERMINISTIC",
+                  "source_role": "deterministic_runtime",
+                  "subject": "request:w4:xExg43mO:KEEP_FAMILIAR_V01",
+                  "time_envelope_ref": "wedding:time:1790234298"
+                }
+              ],
+              "proposal_id": "e114f6e5e3cda8a139a13e7832f80f1dbb606d5111a27c83f1523ce13362484c",
+              "request_id": "review:wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18",
+              "requested_validators": [
+                "current_owner_transport_scope",
+                "exact_disclosed_request",
+                "native_numeric_consumed"
+              ],
+              "root_review_required": true,
+              "source_contribution_ids": [
+                "contribution:wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18"
+              ],
+              "synthesis_summary": "advisory_claims_ready_for_root_review"
+            },
+            "target_root_id": "organizer:w1",
+            "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01"
+          },
+          "target_root_id": "organizer:w1",
+          "temporal_state": {
+            "items": [
+              [
+                "expired",
+                false
+              ],
+              [
+                "not_before_satisfied",
+                true
+              ],
+              [
+                "temporal_valid",
+                true
+              ],
+              [
+                "time_envelope_ref",
+                "wedding:time:1790234298"
+              ]
+            ]
+          },
+          "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01"
+        },
+        "root_kernel": {
+          "effect_access": "NONE",
+          "kernel_id": "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235",
+          "kernel_version": "v0.1",
+          "llm_dependency_allowed": false,
+          "precedence_order": [
+            "HARD_FAILURE",
+            "NEEDS_USER",
+            "NEEDS_MORE_EVIDENCE",
+            "MATERIAL_CONFLICT",
+            "NO_VALID_CANDIDATE",
+            "POLICY_REJECT",
+            "ACCEPT"
+          ],
+          "transition_registry": {
+            "abi_major_version": 1,
+            "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+            "registry_version": "v0.1",
+            "rules": [
+              {
+                "abi_major_version": 1,
+                "actor_role": "orchestrator",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "route_acceptance_requires_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "target_root_bound"
+                ],
+                "root_commit_required": true,
+                "rule_id": "route_proposal_to_root_accepted_route",
+                "source_artifact_type": "OrchestratorRouteProposal",
+                "source_lifecycle_state": "PROPOSED",
+                "target_artifact_type": "RootAcceptedRoute"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "deterministic_runtime",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "root_accepted_route_allows_topology",
+                "required_guards": [
+                  "artifact_valid",
+                  "target_root_bound"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_accepted_route_to_runtime_topology",
+                "source_artifact_type": "RootAcceptedRoute",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "RuntimeExecutionTopology"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "post_vv",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "actor_contribution_requires_validated_evidence",
+                "required_guards": [
+                  "artifact_valid",
+                  "required_evidence_present"
+                ],
+                "root_commit_required": false,
+                "rule_id": "actor_contribution_to_validated_evidence",
+                "source_artifact_type": "ActorContribution",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "ValidatedEvidence"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "post_vv",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "result_proposal_allows_post_vv",
+                "required_guards": [
+                  "artifact_valid",
+                  "hard_predicates_evaluated"
+                ],
+                "root_commit_required": false,
+                "rule_id": "result_proposal_to_post_vv_report",
+                "source_artifact_type": "ResultProposal",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "PostVVReport"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "gt",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "post_vv_allows_gt_advisory",
+                "required_guards": [
+                  "artifact_valid",
+                  "post_vv_passed",
+                  "advisory_only"
+                ],
+                "root_commit_required": false,
+                "rule_id": "post_vv_report_to_gt_advisory",
+                "source_artifact_type": "PostVVReport",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "GTAdvisoryReport"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "gt",
+                "attempted_effect": "CREATE_ROOT_DECISION",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "gt_advisory_returns_to_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "post_vv_passed",
+                  "advisory_only"
+                ],
+                "root_commit_required": true,
+                "rule_id": "gt_advisory_to_root_decision",
+                "source_artifact_type": "GTAdvisoryReport",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "root_decision_allows_root_owned_intent",
+                "required_guards": [
+                  "artifact_valid",
+                  "decision_accept"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_decision_to_root_owned_intent",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "RootOwnedIntent"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "root_decision_allows_execution_request",
+                "required_guards": [
+                  "artifact_valid",
+                  "decision_accept",
+                  "user_permission_present",
+                  "effect_firewall_required"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_decision_to_execution_request",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "ExecutionRequest"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "receipt",
+                "attempted_effect": "RETURN_TO_ROOT",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "receipt_returns_to_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "receipt_evidence_only"
+                ],
+                "root_commit_required": true,
+                "rule_id": "evidence_receipt_to_root_review",
+                "source_artifact_type": "EvidenceReceipt",
+                "source_lifecycle_state": "RECEIPT_RECORDED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "CREATE_FINAL_OUTPUT",
+                "decision": "ALLOW",
+                "reason_code": "root_decision_allows_root_final",
+                "required_guards": [
+                  "artifact_valid",
+                  "decision_accept",
+                  "finalization_policy_passed"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_decision_to_root_final",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "RootFinal"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "RECORD_EVIDENCE",
+                "decision": "ALLOW",
+                "reason_code": "root_final_allows_transaction_outcome",
+                "required_guards": [
+                  "artifact_valid",
+                  "outcome_complete"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_final_to_transaction_outcome",
+                "source_artifact_type": "RootFinal",
+                "source_lifecycle_state": "FINALIZED",
+                "target_artifact_type": "TransactionOutcomeEnvelope"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "RETURN_TO_ROOT",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "cross_root_evidence_returns_to_target_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "source_root_isolated",
+                  "target_root_bound"
+                ],
+                "root_commit_required": true,
+                "rule_id": "cross_root_evidence_to_root_review",
+                "source_artifact_type": "CrossRootEvidenceRef",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "provider_llm",
+                "attempted_effect": "CREATE_ROOT_DECISION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "provider_cannot_create_root_decision",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "provider_contribution_to_root_decision_forbidden",
+                "source_artifact_type": "ActorContribution",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "drs",
+                "attempted_effect": "CREATE_PERMISSION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "evidence_cannot_create_permission",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "drs_evidence_to_permission_forbidden",
+                "source_artifact_type": "SemanticEvidence",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "ExecutionRequest"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "gt",
+                "attempted_effect": "CREATE_FINAL_OUTPUT",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "gt_cannot_create_final_output",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "gt_advisory_to_root_final_forbidden",
+                "source_artifact_type": "GTAdvisoryReport",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootFinal"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "receipt",
+                "attempted_effect": "CREATE_PERMISSION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "receipt_cannot_create_permission",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "receipt_to_permission_forbidden",
+                "source_artifact_type": "EvidenceReceipt",
+                "source_lifecycle_state": "RECEIPT_RECORDED",
+                "target_artifact_type": "ExecutionRequest"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "replay",
+                "attempted_effect": "CREATE_ROOT_DECISION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "causal_evidence_cannot_create_root_decision",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "causal_evidence_to_root_decision_forbidden",
+                "source_artifact_type": "CausalConsumptionRef",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "domain_adapter",
+                "attempted_effect": "REQUEST_EFFECT",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "domain_adapter_cannot_request_effect",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "domain_adapter_effect_request_forbidden",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "ExecutionRequest"
+              }
+            ]
+          }
+        },
+        "root_result": {
+          "conflict_set_ids": [],
+          "decision": "ACCEPT",
+          "decision_id": "94525e18a4dd9645718159153452c88767993efe6a9d1d5795b81e711b6af379",
+          "decision_input_id": "6f4413e5fb1772d659f52ca167c58a7e7c40b865fb22fedeac4622bfc78ef104",
+          "effect_requested": false,
+          "final_output_created": false,
+          "hard_failure_reasons": [],
+          "missing_evidence_refs": [],
+          "permission_created": false,
+          "prior_decision_id": null,
+          "reason_code": "validated_candidate_accepted",
+          "root_commit_created": true,
+          "selected_candidate_id": "wedding_qpu_request:794bd8950e00e4e035f567b80e1fa28ed6c724679381ff3839b679f9a9305f18",
+          "target_root_id": "organizer:w1",
+          "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01",
+          "transition_decision": {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "RETURN_TO_ROOT",
+            "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+            "matched": true,
+            "missing_guards": [],
+            "reason_code": "gt_advisory_returns_to_root",
+            "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+            "required_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "root_commit_present": false,
+            "root_commit_required": true,
+            "rule_id": "gt_advisory_to_root_decision",
+            "satisfied_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          }
+        },
+        "scope": {
+          "account_id": "296280725196",
+          "authorization": {
+            "prompt_name": "RADIOLARIA_POSTG4_WEDDING_W4_BRAKET_RIGETTI_V03_PROMPT_20260924.txt",
+            "prompt_sha256": "50528130e9174134f72b3463d993eb703d26af2e27680869ed834b88ad5a83b5",
+            "scope": "PRESENT_W4_NOT_RETROACTIVE_W0"
+          },
+          "bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+          "device_arn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+          "episode": "wedding-w4-xExg43mO",
+          "feasible_suboptimal_allowed": true,
+          "max_qpu_microusd": 1450000,
+          "max_unique_tasks": 2,
+          "output_prefix": "wedding-v02/w4-xExg43mO/",
+          "prefix": "wedding-v02/",
+          "region": "us-west-1",
+          "revoked": false,
+          "runtime_arn": "arn:aws:iam::296280725196:user/radiolaria-quantum",
+          "runtime_profile": "radiolaria-quantum",
+          "setup_id": "wedding-w0-h2xwk03",
+          "setup_identity": {
+            "bytes": 711,
+            "mode": "0600",
+            "sha256": "ce9d86976fdbb3410f946b7c8078ce5ed6736993c71a86d8db39c3edb33b0da6"
+          },
+          "shot_microusd": 425,
+          "shots": 1000,
+          "structural_disclosure": true,
+          "task_microusd": 300000
+        }
+      },
+      "aws_request_id": "7a990cd6-de31-4b8c-930f-2587d8896037",
+      "client_token": "6473ea42aca748ef901f254b2acf2262",
+      "consumed_result_ref": "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83",
+      "created": "2026-09-24T07:18:19.446824+00:00",
+      "last_read": "2026-09-24T09:02:46.357768+00:00",
+      "metadata": {
+        "actionMetadata": {
+          "actionType": "braket.ir.openqasm.program"
+        },
+        "createdAt": "2026-09-24T07:18:23.886000+00:00",
+        "deviceArn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+        "deviceParameters": "{\"braketSchemaHeader\": {\"name\": \"braket.device_schema.rigetti.rigetti_device_parameters\", \"version\": \"1\"}, \"paradigmParameters\": {\"braketSchemaHeader\": {\"name\": \"braket.device_schema.gate_model_parameters\", \"version\": \"1\"}, \"qubitCount\": 10, \"disableQubitRewiring\": false}}",
+        "endedAt": "2026-09-24T09:00:12.621000+00:00",
+        "outputS3Bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+        "outputS3Directory": "wedding-v02/w4-xExg43mO//2c896911-1bd9-4c72-9d03-873fb782b59b",
+        "quantumTaskArn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b",
+        "shots": 1000,
+        "status": "COMPLETED",
+        "tags": {}
+      },
+      "network_attempts": 1,
+      "profile": "KEEP_FAMILIAR_V01",
+      "raw_path": "KEEP_FAMILIAR_V01_results.json",
+      "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "request": {
+        "action": "{\"braketSchemaHeader\":{\"name\":\"braket.ir.openqasm.program\",\"version\":\"1\"},\"inputs\":{},\"source\":\"OPENQASM 3.0;\\nbit[10] b;\\nqubit[10] q;\\nh q[0];\\nh q[1];\\nh q[2];\\nh q[3];\\nh q[4];\\nh q[5];\\nh q[6];\\nh q[7];\\nh q[8];\\nh q[9];\\nrz(0.10052367850613092) q[0];\\nrz(-0.5897676760424077) q[1];\\ncnot q[0], q[1];\\nrz(-0.10052367850613092) q[1];\\ncnot q[0], q[1];\\nrz(0.08973787609131001) q[2];\\ncnot q[0], q[2];\\nrz(0.24850488763747386) q[2];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\nrz(-0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\nrz(0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(-0.6005534784572285) q[3];\\ncnot q[0], q[3];\\nrz(-0.08283496254582462) q[3];\\ncnot q[0], q[3];\\ncnot q[1], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[1], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[2], q[3];\\nrz(-0.08973787609131001) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(0.10052367850613092) q[4];\\ncnot q[0], q[4];\\nrz(0.2912166652001647) q[4];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\nrz(-0.09707222173338823) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\nrz(0.09707222173338823) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\nrz(0.25885925795570197) q[4];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\nrz(-0.08628641931856731) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\nrz(0.08628641931856731) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(-0.5897676760424077) q[5];\\ncnot q[0], q[5];\\nrz(-0.09707222173338823) q[5];\\ncnot q[0], q[5];\\ncnot q[1], q[5];\\nrz(0.2912166652001647) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[1], q[5];\\nrz(0.09707222173338823) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[2], q[5];\\nrz(-0.08628641931856731) q[5];\\ncnot q[2], q[5];\\ncnot q[3], q[5];\\nrz(0.25885925795570197) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[3], q[5];\\nrz(0.08628641931856731) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[4], q[5];\\nrz(-0.10052367850613092) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[4], q[5];\\nrz(0.09707222173338823) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.09707222173338823) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.2912166652001647) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\ncnot q[4], q[5];\\nrz(0.08628641931856731) q[5];\\ncnot q[4], q[5];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.08628641931856731) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.25885925795570197) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(0.08973787609131001) q[6];\\ncnot q[0], q[6];\\nrz(0.25885925795570197) q[6];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\nrz(-0.08628641931856731) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\nrz(0.08628641931856731) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\nrz(0.25885925795570197) q[6];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\nrz(-0.08628641931856731) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\nrz(0.08628641931856731) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\nrz(0.24850488763747386) q[6];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\nrz(-0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\nrz(0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(-0.6005534784572285) q[7];\\ncnot q[0], q[7];\\nrz(-0.08628641931856731) q[7];\\ncnot q[0], q[7];\\ncnot q[1], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[1], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[2], q[7];\\nrz(-0.08628641931856731) q[7];\\ncnot q[2], q[7];\\ncnot q[3], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[3], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[4], q[7];\\nrz(-0.08283496254582462) q[7];\\ncnot q[4], q[7];\\ncnot q[5], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[5], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[6], q[7];\\nrz(-0.08973787609131001) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.08628641931856731) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.25885925795570197) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(0.07938350577308192) q[8];\\ncnot q[0], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\nrz(0.25885925795570197) q[8];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\nrz(-0.08628641931856731) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\nrz(0.08628641931856731) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrz(-0.583296194593515) q[9];\\ncnot q[0], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[0], q[9];\\ncnot q[1], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[1], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[2], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[2], q[9];\\ncnot q[3], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[3], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[4], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[4], q[9];\\ncnot q[5], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[5], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[6], q[9];\\nrz(-0.08628641931856731) q[9];\\ncnot q[6], q[9];\\ncnot q[7], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[7], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[8], q[9];\\nrz(-0.07938350577308192) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.08628641931856731) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.25885925795570197) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrx(5.759586531581287) q[0];\\nrx(5.759586531581287) q[1];\\nrx(5.759586531581287) q[2];\\nrx(5.759586531581287) q[3];\\nrx(5.759586531581287) q[4];\\nrx(5.759586531581287) q[5];\\nrx(5.759586531581287) q[6];\\nrx(5.759586531581287) q[7];\\nrx(5.759586531581287) q[8];\\nrx(5.759586531581287) q[9];\\nb[0] = measure q[0];\\nb[1] = measure q[1];\\nb[2] = measure q[2];\\nb[3] = measure q[3];\\nb[4] = measure q[4];\\nb[5] = measure q[5];\\nb[6] = measure q[6];\\nb[7] = measure q[7];\\nb[8] = measure q[8];\\nb[9] = measure q[9];\"}",
+        "clientToken": "6473ea42aca748ef901f254b2acf2262",
+        "deviceArn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+        "outputS3Bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+        "outputS3KeyPrefix": "wedding-v02/w4-xExg43mO/",
+        "shots": 1000
+      },
+      "request_sha256": "ff42c5379321283b255706ba137ecb922ed75dd5b1d57e599c31ad5646f76523",
+      "reserved_microusd": 725000,
+      "result_key": "wedding-v02/w4-xExg43mO//2c896911-1bd9-4c72-9d03-873fb782b59b/results.json",
+      "save_paths": [
+        "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/KEEP_FAMILIAR_V01/seating.json",
+        "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/KEEP_FAMILIAR_V01/seating.html"
+      ],
+      "state": "VALIDATED_AND_SAVED",
+      "submitting": "2026-09-24T07:18:19.899335+00:00",
+      "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b"
+    },
+    {
+      "acknowledged": "2026-09-24T07:18:47.176118+00:00",
+      "actual_wire": "{\"action\": \"{\\\"braketSchemaHeader\\\":{\\\"name\\\":\\\"braket.ir.openqasm.program\\\",\\\"version\\\":\\\"1\\\"},\\\"inputs\\\":{},\\\"source\\\":\\\"OPENQASM 3.0;\\\\nbit[10] b;\\\\nqubit[10] q;\\\\nh q[0];\\\\nh q[1];\\\\nh q[2];\\\\nh q[3];\\\\nh q[4];\\\\nh q[5];\\\\nh q[6];\\\\nh q[7];\\\\nh q[8];\\\\nh q[9];\\\\nrz(0.0928058376670813) q[0];\\\\nrz(-0.5453301700933454) q[1];\\\\ncnot q[0], q[1];\\\\nrz(-0.0928058376670813) q[1];\\\\ncnot q[0], q[1];\\\\nrz(0.08283496254582462) q[2];\\\\ncnot q[0], q[2];\\\\nrz(0.24850488763747386) q[2];\\\\ncnot q[0], q[2];\\\\ncnot q[1], q[2];\\\\nrz(-0.08283496254582462) q[2];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[2];\\\\nrz(0.08283496254582462) q[2];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\nrz(-0.5553010452146021) q[3];\\\\ncnot q[0], q[3];\\\\nrz(-0.08283496254582462) q[3];\\\\ncnot q[0], q[3];\\\\ncnot q[1], q[3];\\\\nrz(0.24850488763747386) q[3];\\\\ncnot q[1], q[3];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[3];\\\\nrz(0.08283496254582462) q[3];\\\\ncnot q[1], q[3];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[3];\\\\nrz(-0.08283496254582462) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[0], q[2];\\\\ncnot q[2], q[3];\\\\nrz(0.08283496254582462) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[0], q[2];\\\\ncnot q[1], q[2];\\\\ncnot q[2], q[3];\\\\nrz(0.08283496254582462) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[2];\\\\ncnot q[2], q[3];\\\\nrz(0.24850488763747386) q[3];\\\\ncnot q[2], q[3];\\\\ncnot q[1], q[2];\\\\ncnot q[0], q[1];\\\\nrz(0.0928058376670813) q[4];\\\\ncnot q[0], q[4];\\\\nrz(0.26921362827393003) q[4];\\\\ncnot q[0], q[4];\\\\ncnot q[1], q[4];\\\\nrz(-0.08973787609131001) q[4];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[4];\\\\nrz(0.08973787609131001) q[4];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[4];\\\\nrz(0.23930100291016002) q[4];\\\\ncnot q[2], q[4];\\\\ncnot q[3], q[4];\\\\nrz(-0.07976700097005335) q[4];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[4];\\\\nrz(0.07976700097005335) q[4];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\nrz(-0.5453301700933454) q[5];\\\\ncnot q[0], q[5];\\\\nrz(-0.08973787609131001) q[5];\\\\ncnot q[0], q[5];\\\\ncnot q[1], q[5];\\\\nrz(0.26921362827393003) q[5];\\\\ncnot q[1], q[5];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[5];\\\\nrz(0.08973787609131001) q[5];\\\\ncnot q[1], q[5];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[5];\\\\nrz(-0.07976700097005335) q[5];\\\\ncnot q[2], q[5];\\\\ncnot q[3], q[5];\\\\nrz(0.23930100291016002) q[5];\\\\ncnot q[3], q[5];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[5];\\\\nrz(0.07976700097005335) q[5];\\\\ncnot q[3], q[5];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[5];\\\\nrz(-0.0928058376670813) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[0], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.08973787609131001) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[0], q[4];\\\\ncnot q[1], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.08973787609131001) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.26921362827393003) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[1], q[4];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.07976700097005335) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[2], q[4];\\\\ncnot q[3], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.07976700097005335) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[4];\\\\ncnot q[4], q[5];\\\\nrz(0.23930100291016002) q[5];\\\\ncnot q[4], q[5];\\\\ncnot q[3], q[4];\\\\ncnot q[2], q[3];\\\\nrz(0.08283496254582462) q[6];\\\\ncnot q[0], q[6];\\\\nrz(0.23930100291016002) q[6];\\\\ncnot q[0], q[6];\\\\ncnot q[1], q[6];\\\\nrz(-0.07976700097005335) q[6];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[6];\\\\nrz(0.07976700097005335) q[6];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[6];\\\\nrz(0.23930100291016002) q[6];\\\\ncnot q[2], q[6];\\\\ncnot q[3], q[6];\\\\nrz(-0.07976700097005335) q[6];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[6];\\\\nrz(0.07976700097005335) q[6];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[6];\\\\nrz(0.24850488763747386) q[6];\\\\ncnot q[4], q[6];\\\\ncnot q[5], q[6];\\\\nrz(-0.08283496254582462) q[6];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[6];\\\\nrz(0.08283496254582462) q[6];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\nrz(-0.5553010452146021) q[7];\\\\ncnot q[0], q[7];\\\\nrz(-0.07976700097005335) q[7];\\\\ncnot q[0], q[7];\\\\ncnot q[1], q[7];\\\\nrz(0.23930100291016002) q[7];\\\\ncnot q[1], q[7];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[7];\\\\nrz(0.07976700097005335) q[7];\\\\ncnot q[1], q[7];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[7];\\\\nrz(-0.07976700097005335) q[7];\\\\ncnot q[2], q[7];\\\\ncnot q[3], q[7];\\\\nrz(0.23930100291016002) q[7];\\\\ncnot q[3], q[7];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[7];\\\\nrz(0.07976700097005335) q[7];\\\\ncnot q[3], q[7];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[7];\\\\nrz(-0.08283496254582462) q[7];\\\\ncnot q[4], q[7];\\\\ncnot q[5], q[7];\\\\nrz(0.24850488763747386) q[7];\\\\ncnot q[5], q[7];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[7];\\\\nrz(0.08283496254582462) q[7];\\\\ncnot q[5], q[7];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[7];\\\\nrz(-0.08283496254582462) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[0], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.07976700097005335) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[0], q[6];\\\\ncnot q[1], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.07976700097005335) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.23930100291016002) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[1], q[6];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.07976700097005335) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[2], q[6];\\\\ncnot q[3], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.07976700097005335) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.23930100291016002) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[3], q[6];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08283496254582462) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[4], q[6];\\\\ncnot q[5], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.08283496254582462) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[6];\\\\ncnot q[6], q[7];\\\\nrz(0.24850488763747386) q[7];\\\\ncnot q[6], q[7];\\\\ncnot q[5], q[6];\\\\ncnot q[4], q[5];\\\\nrz(0.09203884727313846) q[8];\\\\ncnot q[0], q[8];\\\\nrz(0.23930100291016002) q[8];\\\\ncnot q[0], q[8];\\\\ncnot q[1], q[8];\\\\nrz(-0.07976700097005335) q[8];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[8];\\\\nrz(0.07976700097005335) q[8];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[8];\\\\nrz(0.23930100291016002) q[8];\\\\ncnot q[2], q[8];\\\\ncnot q[3], q[8];\\\\nrz(-0.07976700097005335) q[8];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[8];\\\\nrz(0.07976700097005335) q[8];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[8];\\\\nrz(0.23930100291016002) q[8];\\\\ncnot q[4], q[8];\\\\ncnot q[5], q[8];\\\\nrz(-0.07976700097005335) q[8];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[8];\\\\nrz(0.07976700097005335) q[8];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[8];\\\\nrz(0.23930100291016002) q[8];\\\\ncnot q[6], q[8];\\\\ncnot q[7], q[8];\\\\nrz(-0.07976700097005335) q[8];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\ncnot q[7], q[8];\\\\nrz(0.07976700097005335) q[8];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\nrz(-0.5706408530934585) q[9];\\\\ncnot q[0], q[9];\\\\nrz(-0.07976700097005335) q[9];\\\\ncnot q[0], q[9];\\\\ncnot q[1], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[1], q[9];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[1], q[9];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[9];\\\\nrz(-0.07976700097005335) q[9];\\\\ncnot q[2], q[9];\\\\ncnot q[3], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[3], q[9];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[3], q[9];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[9];\\\\nrz(-0.07976700097005335) q[9];\\\\ncnot q[4], q[9];\\\\ncnot q[5], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[5], q[9];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[5], q[9];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[9];\\\\nrz(-0.07976700097005335) q[9];\\\\ncnot q[6], q[9];\\\\ncnot q[7], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[7], q[9];\\\\ncnot q[6], q[7];\\\\ncnot q[7], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[7], q[9];\\\\ncnot q[6], q[7];\\\\ncnot q[8], q[9];\\\\nrz(-0.09203884727313846) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[0], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[0], q[8];\\\\ncnot q[1], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[1], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[1], q[8];\\\\ncnot q[0], q[1];\\\\ncnot q[2], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[2], q[8];\\\\ncnot q[3], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[3], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[3], q[8];\\\\ncnot q[2], q[3];\\\\ncnot q[4], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[4], q[8];\\\\ncnot q[5], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[5], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[5], q[8];\\\\ncnot q[4], q[5];\\\\ncnot q[6], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[6], q[8];\\\\ncnot q[7], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.07976700097005335) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\ncnot q[7], q[8];\\\\ncnot q[8], q[9];\\\\nrz(0.23930100291016002) q[9];\\\\ncnot q[8], q[9];\\\\ncnot q[7], q[8];\\\\ncnot q[6], q[7];\\\\nrx(5.759586531581287) q[0];\\\\nrx(5.759586531581287) q[1];\\\\nrx(5.759586531581287) q[2];\\\\nrx(5.759586531581287) q[3];\\\\nrx(5.759586531581287) q[4];\\\\nrx(5.759586531581287) q[5];\\\\nrx(5.759586531581287) q[6];\\\\nrx(5.759586531581287) q[7];\\\\nrx(5.759586531581287) q[8];\\\\nrx(5.759586531581287) q[9];\\\\nb[0] = measure q[0];\\\\nb[1] = measure q[1];\\\\nb[2] = measure q[2];\\\\nb[3] = measure q[3];\\\\nb[4] = measure q[4];\\\\nb[5] = measure q[5];\\\\nb[6] = measure q[6];\\\\nb[7] = measure q[7];\\\\nb[8] = measure q[8];\\\\nb[9] = measure q[9];\\\"}\", \"clientToken\": \"21f07739c2f74d8d81ad2a03688118d2\", \"deviceArn\": \"arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q\", \"outputS3Bucket\": \"amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03\", \"outputS3KeyPrefix\": \"wedding-v02/w4-xExg43mO/\", \"shots\": 1000}",
+      "actual_wire_sha256": "af78f27e3085f6cc9e09a284712c98f3078de410052e458c293b7c45d07d1344",
+      "approval": {
+        "classification": "LIVE_QPU_EXPLICIT_PROVIDER_BRIDGE",
+        "expires": 1790234924,
+        "native_prepare_result_ref": "work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450",
+        "request_sha256": "830d97241af1c2b886bc29b1c98cf5e38067344f8a2691c58d02096f6b9accc9",
+        "root_input": {
+          "conflict_state": {
+            "items": [
+              [
+                "conflict_set_ids",
+                []
+              ],
+              [
+                "material_unresolved_conflict",
+                false
+              ]
+            ]
+          },
+          "decision_input_id": "a89999bb1a393dc84ffa745fdada6cc6e1b7358b37cec89b09d8a7719c1b0a8a",
+          "gt_advisory": {
+            "items": [
+              [
+                "actor_role",
+                "gt"
+              ],
+              [
+                "advisory_id",
+                "gt:wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217"
+              ],
+              [
+                "advisory_only",
+                true
+              ],
+              [
+                "attempted_effect",
+                "CREATE_ROOT_DECISION"
+              ],
+              [
+                "candidate_ids",
+                [
+                  "wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217"
+                ]
+              ],
+              [
+                "creates_final_output",
+                false
+              ],
+              [
+                "requests_effect",
+                false
+              ],
+              [
+                "score_micros_by_candidate",
+                {
+                  "items": [
+                    [
+                      "wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217",
+                      1000000
+                    ]
+                  ]
+                }
+              ],
+              [
+                "selected_candidate_id",
+                "wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217"
+              ],
+              [
+                "source_artifact_type",
+                "GTAdvisoryReport"
+              ],
+              [
+                "source_lifecycle_state",
+                "VALIDATED"
+              ],
+              [
+                "target_artifact_type",
+                "RootDecision"
+              ]
+            ]
+          },
+          "permission_state": {
+            "items": [
+              [
+                "permission_ref",
+                null
+              ],
+              [
+                "permission_required",
+                false
+              ],
+              [
+                "permission_scope_valid",
+                true
+              ],
+              [
+                "user_permission_present",
+                false
+              ]
+            ]
+          },
+          "policy_state": {
+            "items": [
+              [
+                "allow_accept",
+                true
+              ],
+              [
+                "conflict_policy",
+                "DEFER"
+              ],
+              [
+                "hard_policy_passed",
+                true
+              ],
+              [
+                "identity_passed",
+                true
+              ],
+              [
+                "no_candidate_policy",
+                "NO_UPDATE"
+              ],
+              [
+                "policy_id",
+                "wedding:hard_policy"
+              ],
+              [
+                "scope_passed",
+                true
+              ]
+            ]
+          },
+          "post_vv_bundle": {
+            "items": [
+              [
+                "bundle_id",
+                "checks:98250ea142ce1e7db3711c0347870f8863275c639e48069cf6794398603fdddb"
+              ],
+              [
+                "hard_failure_reasons",
+                []
+              ],
+              [
+                "post_vv_passed",
+                true
+              ],
+              [
+                "provided_evidence_refs",
+                [
+                  "work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450"
+                ]
+              ],
+              [
+                "rejected_candidate_ids",
+                []
+              ],
+              [
+                "required_evidence_refs",
+                [
+                  "work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450"
+                ]
+              ],
+              [
+                "validated_candidate_ids",
+                [
+                  "wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217"
+                ]
+              ]
+            ]
+          },
+          "prior_root_state": {
+            "items": [
+              [
+                "prior_decision",
+                null
+              ],
+              [
+                "prior_decision_id",
+                null
+              ],
+              [
+                "prior_selected_candidate_id",
+                null
+              ]
+            ]
+          },
+          "root_review_packet": {
+            "authority_class": "ADVISORY_ONLY",
+            "conflict_set_ids": [],
+            "contribution_ids": [
+              "contribution:wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217"
+            ],
+            "final_output_created": false,
+            "missing_evidence_refs": [],
+            "packet_id": "fb300f2dffeaf00d7554b9caf58ee4dde36fb73e4901dc1fcb2b39151c3fab36",
+            "permission_created": false,
+            "request_id": "review:wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217",
+            "required_validator_ids": [
+              "current_owner_transport_scope",
+              "exact_disclosed_request",
+              "native_numeric_consumed"
+            ],
+            "review_state": "ROOT_REVIEW_REQUIRED",
+            "root_decision_created": false,
+            "runtime_topology_ref": "work_topology:b5234151263104b549214c2079bee2229a385b534ba51ee3250d21836d89f5b1",
+            "synthesis_proposal": {
+              "authority_class": "ADVISORY_ONLY",
+              "conflict_sets": [],
+              "contribution_modes": [
+                "DETERMINISTIC"
+              ],
+              "missing_evidence_refs": [],
+              "normalized_claims": [
+                {
+                  "authority_class": "NONE",
+                  "claim_id": "wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217",
+                  "confidence_micros": 1000000,
+                  "evidence_refs": [
+                    "binding:work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450"
+                  ],
+                  "object_or_value": {
+                    "items": [
+                      [
+                        "expires",
+                        1790234924
+                      ],
+                      [
+                        "request",
+                        {
+                          "items": [
+                            [
+                              "action",
+                              "{\"braketSchemaHeader\":{\"name\":\"braket.ir.openqasm.program\",\"version\":\"1\"},\"inputs\":{},\"source\":\"OPENQASM 3.0;\\nbit[10] b;\\nqubit[10] q;\\nh q[0];\\nh q[1];\\nh q[2];\\nh q[3];\\nh q[4];\\nh q[5];\\nh q[6];\\nh q[7];\\nh q[8];\\nh q[9];\\nrz(0.0928058376670813) q[0];\\nrz(-0.5453301700933454) q[1];\\ncnot q[0], q[1];\\nrz(-0.0928058376670813) q[1];\\ncnot q[0], q[1];\\nrz(0.08283496254582462) q[2];\\ncnot q[0], q[2];\\nrz(0.24850488763747386) q[2];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\nrz(-0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\nrz(0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(-0.5553010452146021) q[3];\\ncnot q[0], q[3];\\nrz(-0.08283496254582462) q[3];\\ncnot q[0], q[3];\\ncnot q[1], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[1], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[2], q[3];\\nrz(-0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(0.0928058376670813) q[4];\\ncnot q[0], q[4];\\nrz(0.26921362827393003) q[4];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\nrz(-0.08973787609131001) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\nrz(0.08973787609131001) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\nrz(0.23930100291016002) q[4];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\nrz(-0.07976700097005335) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\nrz(0.07976700097005335) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(-0.5453301700933454) q[5];\\ncnot q[0], q[5];\\nrz(-0.08973787609131001) q[5];\\ncnot q[0], q[5];\\ncnot q[1], q[5];\\nrz(0.26921362827393003) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[1], q[5];\\nrz(0.08973787609131001) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[2], q[5];\\nrz(-0.07976700097005335) q[5];\\ncnot q[2], q[5];\\ncnot q[3], q[5];\\nrz(0.23930100291016002) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[3], q[5];\\nrz(0.07976700097005335) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[4], q[5];\\nrz(-0.0928058376670813) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[4], q[5];\\nrz(0.08973787609131001) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.08973787609131001) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.26921362827393003) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\ncnot q[4], q[5];\\nrz(0.07976700097005335) q[5];\\ncnot q[4], q[5];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.07976700097005335) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.23930100291016002) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[6];\\ncnot q[0], q[6];\\nrz(0.23930100291016002) q[6];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\nrz(-0.07976700097005335) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\nrz(0.07976700097005335) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\nrz(0.23930100291016002) q[6];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\nrz(-0.07976700097005335) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\nrz(0.07976700097005335) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\nrz(0.24850488763747386) q[6];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\nrz(-0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\nrz(0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(-0.5553010452146021) q[7];\\ncnot q[0], q[7];\\nrz(-0.07976700097005335) q[7];\\ncnot q[0], q[7];\\ncnot q[1], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[1], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[2], q[7];\\nrz(-0.07976700097005335) q[7];\\ncnot q[2], q[7];\\ncnot q[3], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[3], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[4], q[7];\\nrz(-0.08283496254582462) q[7];\\ncnot q[4], q[7];\\ncnot q[5], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[5], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[6], q[7];\\nrz(-0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(0.09203884727313846) q[8];\\ncnot q[0], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrz(-0.5706408530934585) q[9];\\ncnot q[0], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[0], q[9];\\ncnot q[1], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[1], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[2], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[2], q[9];\\ncnot q[3], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[3], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[4], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[4], q[9];\\ncnot q[5], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[5], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[6], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[6], q[9];\\ncnot q[7], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[7], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[8], q[9];\\nrz(-0.09203884727313846) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrx(5.759586531581287) q[0];\\nrx(5.759586531581287) q[1];\\nrx(5.759586531581287) q[2];\\nrx(5.759586531581287) q[3];\\nrx(5.759586531581287) q[4];\\nrx(5.759586531581287) q[5];\\nrx(5.759586531581287) q[6];\\nrx(5.759586531581287) q[7];\\nrx(5.759586531581287) q[8];\\nrx(5.759586531581287) q[9];\\nb[0] = measure q[0];\\nb[1] = measure q[1];\\nb[2] = measure q[2];\\nb[3] = measure q[3];\\nb[4] = measure q[4];\\nb[5] = measure q[5];\\nb[6] = measure q[6];\\nb[7] = measure q[7];\\nb[8] = measure q[8];\\nb[9] = measure q[9];\"}"
+                            ],
+                            [
+                              "clientToken",
+                              "21f07739c2f74d8d81ad2a03688118d2"
+                            ],
+                            [
+                              "deviceArn",
+                              "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q"
+                            ],
+                            [
+                              "outputS3Bucket",
+                              "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03"
+                            ],
+                            [
+                              "outputS3KeyPrefix",
+                              "wedding-v02/w4-xExg43mO/"
+                            ],
+                            [
+                              "shots",
+                              1000
+                            ]
+                          ]
+                        }
+                      ],
+                      [
+                        "scope",
+                        {
+                          "items": [
+                            [
+                              "account_id",
+                              "296280725196"
+                            ],
+                            [
+                              "authorization",
+                              {
+                                "items": [
+                                  [
+                                    "prompt_name",
+                                    "RADIOLARIA_POSTG4_WEDDING_W4_BRAKET_RIGETTI_V03_PROMPT_20260924.txt"
+                                  ],
+                                  [
+                                    "prompt_sha256",
+                                    "50528130e9174134f72b3463d993eb703d26af2e27680869ed834b88ad5a83b5"
+                                  ],
+                                  [
+                                    "scope",
+                                    "PRESENT_W4_NOT_RETROACTIVE_W0"
+                                  ]
+                                ]
+                              }
+                            ],
+                            [
+                              "bucket",
+                              "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03"
+                            ],
+                            [
+                              "device_arn",
+                              "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q"
+                            ],
+                            [
+                              "episode",
+                              "wedding-w4-xExg43mO"
+                            ],
+                            [
+                              "feasible_suboptimal_allowed",
+                              true
+                            ],
+                            [
+                              "max_qpu_microusd",
+                              1450000
+                            ],
+                            [
+                              "max_unique_tasks",
+                              2
+                            ],
+                            [
+                              "output_prefix",
+                              "wedding-v02/w4-xExg43mO/"
+                            ],
+                            [
+                              "prefix",
+                              "wedding-v02/"
+                            ],
+                            [
+                              "region",
+                              "us-west-1"
+                            ],
+                            [
+                              "revoked",
+                              false
+                            ],
+                            [
+                              "runtime_arn",
+                              "arn:aws:iam::296280725196:user/radiolaria-quantum"
+                            ],
+                            [
+                              "runtime_profile",
+                              "radiolaria-quantum"
+                            ],
+                            [
+                              "setup_id",
+                              "wedding-w0-h2xwk03"
+                            ],
+                            [
+                              "setup_identity",
+                              {
+                                "items": [
+                                  [
+                                    "bytes",
+                                    711
+                                  ],
+                                  [
+                                    "mode",
+                                    "0600"
+                                  ],
+                                  [
+                                    "sha256",
+                                    "ce9d86976fdbb3410f946b7c8078ce5ed6736993c71a86d8db39c3edb33b0da6"
+                                  ]
+                                ]
+                              }
+                            ],
+                            [
+                              "shot_microusd",
+                              425
+                            ],
+                            [
+                              "shots",
+                              1000
+                            ],
+                            [
+                              "structural_disclosure",
+                              true
+                            ],
+                            [
+                              "task_microusd",
+                              300000
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  },
+                  "predicate": "wedding_qpu_exact_submission_evidence",
+                  "provenance_refs": [
+                    "work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450"
+                  ],
+                  "source_mode": "DETERMINISTIC",
+                  "source_role": "deterministic_runtime",
+                  "subject": "request:w4:xExg43mO:MIX_CIRCLES_V01",
+                  "time_envelope_ref": "wedding:time:1790234324"
+                }
+              ],
+              "proposal_id": "ed062fb14ac03c25160224f23ecf9fd167f8e2a30952cf688eb9936b971486e8",
+              "request_id": "review:wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217",
+              "requested_validators": [
+                "current_owner_transport_scope",
+                "exact_disclosed_request",
+                "native_numeric_consumed"
+              ],
+              "root_review_required": true,
+              "source_contribution_ids": [
+                "contribution:wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217"
+              ],
+              "synthesis_summary": "advisory_claims_ready_for_root_review"
+            },
+            "target_root_id": "organizer:w1",
+            "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01"
+          },
+          "target_root_id": "organizer:w1",
+          "temporal_state": {
+            "items": [
+              [
+                "expired",
+                false
+              ],
+              [
+                "not_before_satisfied",
+                true
+              ],
+              [
+                "temporal_valid",
+                true
+              ],
+              [
+                "time_envelope_ref",
+                "wedding:time:1790234324"
+              ]
+            ]
+          },
+          "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01"
+        },
+        "root_kernel": {
+          "effect_access": "NONE",
+          "kernel_id": "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235",
+          "kernel_version": "v0.1",
+          "llm_dependency_allowed": false,
+          "precedence_order": [
+            "HARD_FAILURE",
+            "NEEDS_USER",
+            "NEEDS_MORE_EVIDENCE",
+            "MATERIAL_CONFLICT",
+            "NO_VALID_CANDIDATE",
+            "POLICY_REJECT",
+            "ACCEPT"
+          ],
+          "transition_registry": {
+            "abi_major_version": 1,
+            "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+            "registry_version": "v0.1",
+            "rules": [
+              {
+                "abi_major_version": 1,
+                "actor_role": "orchestrator",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "route_acceptance_requires_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "target_root_bound"
+                ],
+                "root_commit_required": true,
+                "rule_id": "route_proposal_to_root_accepted_route",
+                "source_artifact_type": "OrchestratorRouteProposal",
+                "source_lifecycle_state": "PROPOSED",
+                "target_artifact_type": "RootAcceptedRoute"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "deterministic_runtime",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "root_accepted_route_allows_topology",
+                "required_guards": [
+                  "artifact_valid",
+                  "target_root_bound"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_accepted_route_to_runtime_topology",
+                "source_artifact_type": "RootAcceptedRoute",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "RuntimeExecutionTopology"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "post_vv",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "actor_contribution_requires_validated_evidence",
+                "required_guards": [
+                  "artifact_valid",
+                  "required_evidence_present"
+                ],
+                "root_commit_required": false,
+                "rule_id": "actor_contribution_to_validated_evidence",
+                "source_artifact_type": "ActorContribution",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "ValidatedEvidence"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "post_vv",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "result_proposal_allows_post_vv",
+                "required_guards": [
+                  "artifact_valid",
+                  "hard_predicates_evaluated"
+                ],
+                "root_commit_required": false,
+                "rule_id": "result_proposal_to_post_vv_report",
+                "source_artifact_type": "ResultProposal",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "PostVVReport"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "gt",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "post_vv_allows_gt_advisory",
+                "required_guards": [
+                  "artifact_valid",
+                  "post_vv_passed",
+                  "advisory_only"
+                ],
+                "root_commit_required": false,
+                "rule_id": "post_vv_report_to_gt_advisory",
+                "source_artifact_type": "PostVVReport",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "GTAdvisoryReport"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "gt",
+                "attempted_effect": "CREATE_ROOT_DECISION",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "gt_advisory_returns_to_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "post_vv_passed",
+                  "advisory_only"
+                ],
+                "root_commit_required": true,
+                "rule_id": "gt_advisory_to_root_decision",
+                "source_artifact_type": "GTAdvisoryReport",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "root_decision_allows_root_owned_intent",
+                "required_guards": [
+                  "artifact_valid",
+                  "decision_accept"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_decision_to_root_owned_intent",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "RootOwnedIntent"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "CREATE_TARGET_ARTIFACT",
+                "decision": "ALLOW",
+                "reason_code": "root_decision_allows_execution_request",
+                "required_guards": [
+                  "artifact_valid",
+                  "decision_accept",
+                  "user_permission_present",
+                  "effect_firewall_required"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_decision_to_execution_request",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "ExecutionRequest"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "receipt",
+                "attempted_effect": "RETURN_TO_ROOT",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "receipt_returns_to_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "receipt_evidence_only"
+                ],
+                "root_commit_required": true,
+                "rule_id": "evidence_receipt_to_root_review",
+                "source_artifact_type": "EvidenceReceipt",
+                "source_lifecycle_state": "RECEIPT_RECORDED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "CREATE_FINAL_OUTPUT",
+                "decision": "ALLOW",
+                "reason_code": "root_decision_allows_root_final",
+                "required_guards": [
+                  "artifact_valid",
+                  "decision_accept",
+                  "finalization_policy_passed"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_decision_to_root_final",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "RootFinal"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "RECORD_EVIDENCE",
+                "decision": "ALLOW",
+                "reason_code": "root_final_allows_transaction_outcome",
+                "required_guards": [
+                  "artifact_valid",
+                  "outcome_complete"
+                ],
+                "root_commit_required": true,
+                "rule_id": "root_final_to_transaction_outcome",
+                "source_artifact_type": "RootFinal",
+                "source_lifecycle_state": "FINALIZED",
+                "target_artifact_type": "TransactionOutcomeEnvelope"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "root",
+                "attempted_effect": "RETURN_TO_ROOT",
+                "decision": "RETURN_TO_ROOT",
+                "reason_code": "cross_root_evidence_returns_to_target_root",
+                "required_guards": [
+                  "artifact_valid",
+                  "source_root_isolated",
+                  "target_root_bound"
+                ],
+                "root_commit_required": true,
+                "rule_id": "cross_root_evidence_to_root_review",
+                "source_artifact_type": "CrossRootEvidenceRef",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "provider_llm",
+                "attempted_effect": "CREATE_ROOT_DECISION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "provider_cannot_create_root_decision",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "provider_contribution_to_root_decision_forbidden",
+                "source_artifact_type": "ActorContribution",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "drs",
+                "attempted_effect": "CREATE_PERMISSION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "evidence_cannot_create_permission",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "drs_evidence_to_permission_forbidden",
+                "source_artifact_type": "SemanticEvidence",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "ExecutionRequest"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "gt",
+                "attempted_effect": "CREATE_FINAL_OUTPUT",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "gt_cannot_create_final_output",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "gt_advisory_to_root_final_forbidden",
+                "source_artifact_type": "GTAdvisoryReport",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootFinal"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "receipt",
+                "attempted_effect": "CREATE_PERMISSION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "receipt_cannot_create_permission",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "receipt_to_permission_forbidden",
+                "source_artifact_type": "EvidenceReceipt",
+                "source_lifecycle_state": "RECEIPT_RECORDED",
+                "target_artifact_type": "ExecutionRequest"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "replay",
+                "attempted_effect": "CREATE_ROOT_DECISION",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "causal_evidence_cannot_create_root_decision",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "causal_evidence_to_root_decision_forbidden",
+                "source_artifact_type": "CausalConsumptionRef",
+                "source_lifecycle_state": "VALIDATED",
+                "target_artifact_type": "RootDecision"
+              },
+              {
+                "abi_major_version": 1,
+                "actor_role": "domain_adapter",
+                "attempted_effect": "REQUEST_EFFECT",
+                "decision": "BLOCKED_FAIL_CLOSED",
+                "reason_code": "domain_adapter_cannot_request_effect",
+                "required_guards": [],
+                "root_commit_required": false,
+                "rule_id": "domain_adapter_effect_request_forbidden",
+                "source_artifact_type": "RootDecision",
+                "source_lifecycle_state": "ROOT_ACCEPTED",
+                "target_artifact_type": "ExecutionRequest"
+              }
+            ]
+          }
+        },
+        "root_result": {
+          "conflict_set_ids": [],
+          "decision": "ACCEPT",
+          "decision_id": "cdd8c5a7e2a9a59dbcc049d75868ef08badb8053e08d3eea8af2b283acf8d096",
+          "decision_input_id": "a89999bb1a393dc84ffa745fdada6cc6e1b7358b37cec89b09d8a7719c1b0a8a",
+          "effect_requested": false,
+          "final_output_created": false,
+          "hard_failure_reasons": [],
+          "missing_evidence_refs": [],
+          "permission_created": false,
+          "prior_decision_id": null,
+          "reason_code": "validated_candidate_accepted",
+          "root_commit_created": true,
+          "selected_candidate_id": "wedding_qpu_request:c9139f96f492156010f81fb9c81297ea2ef82104bd91758717e69cf908cf4217",
+          "target_root_id": "organizer:w1",
+          "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01",
+          "transition_decision": {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "RETURN_TO_ROOT",
+            "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+            "matched": true,
+            "missing_guards": [],
+            "reason_code": "gt_advisory_returns_to_root",
+            "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+            "required_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "root_commit_present": false,
+            "root_commit_required": true,
+            "rule_id": "gt_advisory_to_root_decision",
+            "satisfied_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          }
+        },
+        "scope": {
+          "account_id": "296280725196",
+          "authorization": {
+            "prompt_name": "RADIOLARIA_POSTG4_WEDDING_W4_BRAKET_RIGETTI_V03_PROMPT_20260924.txt",
+            "prompt_sha256": "50528130e9174134f72b3463d993eb703d26af2e27680869ed834b88ad5a83b5",
+            "scope": "PRESENT_W4_NOT_RETROACTIVE_W0"
+          },
+          "bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+          "device_arn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+          "episode": "wedding-w4-xExg43mO",
+          "feasible_suboptimal_allowed": true,
+          "max_qpu_microusd": 1450000,
+          "max_unique_tasks": 2,
+          "output_prefix": "wedding-v02/w4-xExg43mO/",
+          "prefix": "wedding-v02/",
+          "region": "us-west-1",
+          "revoked": false,
+          "runtime_arn": "arn:aws:iam::296280725196:user/radiolaria-quantum",
+          "runtime_profile": "radiolaria-quantum",
+          "setup_id": "wedding-w0-h2xwk03",
+          "setup_identity": {
+            "bytes": 711,
+            "mode": "0600",
+            "sha256": "ce9d86976fdbb3410f946b7c8078ce5ed6736993c71a86d8db39c3edb33b0da6"
+          },
+          "shot_microusd": 425,
+          "shots": 1000,
+          "structural_disclosure": true,
+          "task_microusd": 300000
+        }
+      },
+      "aws_request_id": "b51b8fb9-1598-4837-8db6-280cd7274eff",
+      "client_token": "21f07739c2f74d8d81ad2a03688118d2",
+      "consumed_result_ref": "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a",
+      "created": "2026-09-24T07:18:45.768560+00:00",
+      "last_read": "2026-09-24T09:03:33.153533+00:00",
+      "metadata": {
+        "actionMetadata": {
+          "actionType": "braket.ir.openqasm.program"
+        },
+        "createdAt": "2026-09-24T07:18:47.069000+00:00",
+        "deviceArn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+        "deviceParameters": "{\"braketSchemaHeader\": {\"name\": \"braket.device_schema.rigetti.rigetti_device_parameters\", \"version\": \"1\"}, \"paradigmParameters\": {\"braketSchemaHeader\": {\"name\": \"braket.device_schema.gate_model_parameters\", \"version\": \"1\"}, \"qubitCount\": 10, \"disableQubitRewiring\": false}}",
+        "endedAt": "2026-09-24T09:00:13.377000+00:00",
+        "outputS3Bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+        "outputS3Directory": "wedding-v02/w4-xExg43mO//470b472c-590e-42ad-b4f1-6b597be40f6d",
+        "quantumTaskArn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d",
+        "shots": 1000,
+        "status": "COMPLETED",
+        "tags": {}
+      },
+      "network_attempts": 1,
+      "profile": "MIX_CIRCLES_V01",
+      "raw_path": "MIX_CIRCLES_V01_results.json",
+      "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "request": {
+        "action": "{\"braketSchemaHeader\":{\"name\":\"braket.ir.openqasm.program\",\"version\":\"1\"},\"inputs\":{},\"source\":\"OPENQASM 3.0;\\nbit[10] b;\\nqubit[10] q;\\nh q[0];\\nh q[1];\\nh q[2];\\nh q[3];\\nh q[4];\\nh q[5];\\nh q[6];\\nh q[7];\\nh q[8];\\nh q[9];\\nrz(0.0928058376670813) q[0];\\nrz(-0.5453301700933454) q[1];\\ncnot q[0], q[1];\\nrz(-0.0928058376670813) q[1];\\ncnot q[0], q[1];\\nrz(0.08283496254582462) q[2];\\ncnot q[0], q[2];\\nrz(0.24850488763747386) q[2];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\nrz(-0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\nrz(0.08283496254582462) q[2];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(-0.5553010452146021) q[3];\\ncnot q[0], q[3];\\nrz(-0.08283496254582462) q[3];\\ncnot q[0], q[3];\\ncnot q[1], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[1], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[1], q[3];\\ncnot q[0], q[1];\\ncnot q[2], q[3];\\nrz(-0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[0], q[2];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\ncnot q[1], q[2];\\ncnot q[2], q[3];\\nrz(0.24850488763747386) q[3];\\ncnot q[2], q[3];\\ncnot q[1], q[2];\\ncnot q[0], q[1];\\nrz(0.0928058376670813) q[4];\\ncnot q[0], q[4];\\nrz(0.26921362827393003) q[4];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\nrz(-0.08973787609131001) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\nrz(0.08973787609131001) q[4];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\nrz(0.23930100291016002) q[4];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\nrz(-0.07976700097005335) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\nrz(0.07976700097005335) q[4];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(-0.5453301700933454) q[5];\\ncnot q[0], q[5];\\nrz(-0.08973787609131001) q[5];\\ncnot q[0], q[5];\\ncnot q[1], q[5];\\nrz(0.26921362827393003) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[1], q[5];\\nrz(0.08973787609131001) q[5];\\ncnot q[1], q[5];\\ncnot q[0], q[1];\\ncnot q[2], q[5];\\nrz(-0.07976700097005335) q[5];\\ncnot q[2], q[5];\\ncnot q[3], q[5];\\nrz(0.23930100291016002) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[3], q[5];\\nrz(0.07976700097005335) q[5];\\ncnot q[3], q[5];\\ncnot q[2], q[3];\\ncnot q[4], q[5];\\nrz(-0.0928058376670813) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[4], q[5];\\nrz(0.08973787609131001) q[5];\\ncnot q[4], q[5];\\ncnot q[0], q[4];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.08973787609131001) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[1], q[4];\\ncnot q[4], q[5];\\nrz(0.26921362827393003) q[5];\\ncnot q[4], q[5];\\ncnot q[1], q[4];\\ncnot q[0], q[1];\\ncnot q[2], q[4];\\ncnot q[4], q[5];\\nrz(0.07976700097005335) q[5];\\ncnot q[4], q[5];\\ncnot q[2], q[4];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.07976700097005335) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\ncnot q[3], q[4];\\ncnot q[4], q[5];\\nrz(0.23930100291016002) q[5];\\ncnot q[4], q[5];\\ncnot q[3], q[4];\\ncnot q[2], q[3];\\nrz(0.08283496254582462) q[6];\\ncnot q[0], q[6];\\nrz(0.23930100291016002) q[6];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\nrz(-0.07976700097005335) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\nrz(0.07976700097005335) q[6];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\nrz(0.23930100291016002) q[6];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\nrz(-0.07976700097005335) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\nrz(0.07976700097005335) q[6];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\nrz(0.24850488763747386) q[6];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\nrz(-0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\nrz(0.08283496254582462) q[6];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(-0.5553010452146021) q[7];\\ncnot q[0], q[7];\\nrz(-0.07976700097005335) q[7];\\ncnot q[0], q[7];\\ncnot q[1], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[1], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[1], q[7];\\ncnot q[0], q[1];\\ncnot q[2], q[7];\\nrz(-0.07976700097005335) q[7];\\ncnot q[2], q[7];\\ncnot q[3], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[3], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[3], q[7];\\ncnot q[2], q[3];\\ncnot q[4], q[7];\\nrz(-0.08283496254582462) q[7];\\ncnot q[4], q[7];\\ncnot q[5], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[5], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[5], q[7];\\ncnot q[4], q[5];\\ncnot q[6], q[7];\\nrz(-0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[0], q[6];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[1], q[6];\\ncnot q[6], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[6], q[7];\\ncnot q[1], q[6];\\ncnot q[0], q[1];\\ncnot q[2], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[2], q[6];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.07976700097005335) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[3], q[6];\\ncnot q[6], q[7];\\nrz(0.23930100291016002) q[7];\\ncnot q[6], q[7];\\ncnot q[3], q[6];\\ncnot q[2], q[3];\\ncnot q[4], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[4], q[6];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.08283496254582462) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\ncnot q[5], q[6];\\ncnot q[6], q[7];\\nrz(0.24850488763747386) q[7];\\ncnot q[6], q[7];\\ncnot q[5], q[6];\\ncnot q[4], q[5];\\nrz(0.09203884727313846) q[8];\\ncnot q[0], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\nrz(0.23930100291016002) q[8];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\nrz(-0.07976700097005335) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\nrz(0.07976700097005335) q[8];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrz(-0.5706408530934585) q[9];\\ncnot q[0], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[0], q[9];\\ncnot q[1], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[1], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[1], q[9];\\ncnot q[0], q[1];\\ncnot q[2], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[2], q[9];\\ncnot q[3], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[3], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[3], q[9];\\ncnot q[2], q[3];\\ncnot q[4], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[4], q[9];\\ncnot q[5], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[5], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[5], q[9];\\ncnot q[4], q[5];\\ncnot q[6], q[9];\\nrz(-0.07976700097005335) q[9];\\ncnot q[6], q[9];\\ncnot q[7], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[7], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[7], q[9];\\ncnot q[6], q[7];\\ncnot q[8], q[9];\\nrz(-0.09203884727313846) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[0], q[8];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[1], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[1], q[8];\\ncnot q[0], q[1];\\ncnot q[2], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[2], q[8];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[3], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[3], q[8];\\ncnot q[2], q[3];\\ncnot q[4], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[4], q[8];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[5], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[5], q[8];\\ncnot q[4], q[5];\\ncnot q[6], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[6], q[8];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.07976700097005335) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\ncnot q[7], q[8];\\ncnot q[8], q[9];\\nrz(0.23930100291016002) q[9];\\ncnot q[8], q[9];\\ncnot q[7], q[8];\\ncnot q[6], q[7];\\nrx(5.759586531581287) q[0];\\nrx(5.759586531581287) q[1];\\nrx(5.759586531581287) q[2];\\nrx(5.759586531581287) q[3];\\nrx(5.759586531581287) q[4];\\nrx(5.759586531581287) q[5];\\nrx(5.759586531581287) q[6];\\nrx(5.759586531581287) q[7];\\nrx(5.759586531581287) q[8];\\nrx(5.759586531581287) q[9];\\nb[0] = measure q[0];\\nb[1] = measure q[1];\\nb[2] = measure q[2];\\nb[3] = measure q[3];\\nb[4] = measure q[4];\\nb[5] = measure q[5];\\nb[6] = measure q[6];\\nb[7] = measure q[7];\\nb[8] = measure q[8];\\nb[9] = measure q[9];\"}",
+        "clientToken": "21f07739c2f74d8d81ad2a03688118d2",
+        "deviceArn": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+        "outputS3Bucket": "amazon-braket-radiolaria-wedding-296280725196-us-west-1-h2xwk03",
+        "outputS3KeyPrefix": "wedding-v02/w4-xExg43mO/",
+        "shots": 1000
+      },
+      "request_sha256": "830d97241af1c2b886bc29b1c98cf5e38067344f8a2691c58d02096f6b9accc9",
+      "reserved_microusd": 725000,
+      "result_key": "wedding-v02/w4-xExg43mO//470b472c-590e-42ad-b4f1-6b597be40f6d/results.json",
+      "save_paths": [
+        "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/MIX_CIRCLES_V01/seating.json",
+        "/Users/admin/Projects/hedgehog-os-wedding-w4-xExg43mO/outputs/MIX_CIRCLES_V01/seating.html"
+      ],
+      "state": "VALIDATED_AND_SAVED",
+      "submitting": "2026-09-24T07:18:46.236189+00:00",
+      "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d"
+    }
+  ],
+  "version": "WeddingQpuLedgerV01"
+}

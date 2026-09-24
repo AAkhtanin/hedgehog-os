@@ -1,0 +1,149 @@
+{
+  "additional_showcase_0600": 3,
+  "all_baseline_bytes_modes_unchanged": true,
+  "baseline_files": 2508,
+  "executables_0755": 2,
+  "historical_special": 21,
+  "index_empty": true,
+  "installation_tip": {
+    "commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+    "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"
+  },
+  "nondefault_posix_files": {
+    "docs/airline_all_real_full_stack_replay_report_v01.json": {
+      "bytes": 14657,
+      "mode": "0600",
+      "sha256": "7ceaa5400ef6b35fb1e39f2bdc739a68cb9bb4373d82e7586feee901ef414b57"
+    },
+    "docs/airline_sealed_trace_replay_slice_d_official_report_v01.json": {
+      "bytes": 14638,
+      "mode": "0600",
+      "sha256": "4626a972e3f127b9df51e16ac429d9392a1b8338b2d730f26d9691a2288694a9"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_crypto_anchor_v01.json": {
+      "bytes": 1494,
+      "mode": "0600",
+      "sha256": "c551963a060f33d0407c4590db97ff4482277de7ac33b0c4fdd9ad1ed2d3d13c"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_replay_report_v01.json": {
+      "bytes": 4148,
+      "mode": "0600",
+      "sha256": "9caa9361746660c08b8e20f75bba5e5f07336e8dfbf0ab744ec98e1d346dac39"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json": {
+      "bytes": 16389,
+      "mode": "0400",
+      "sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json": {
+      "bytes": 16686,
+      "mode": "0400",
+      "sha256": "e3161701e0f691c7ded8befbb3e0e65951d1ece93438192145e1b54c061ef9fb"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_package_index_v01.json": {
+      "bytes": 7907,
+      "mode": "0600",
+      "sha256": "333ee37ee3c5d85fb1158b4ad663f6464138fa2252007630f1bf2a4eae44cb25"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/01-airline-safe-execution-report-v01.json": {
+      "bytes": 16389,
+      "mode": "0600",
+      "sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/02-airline-source-lineage-v01.json": {
+      "bytes": 4529,
+      "mode": "0600",
+      "sha256": "c1562090af6212c66d7a7e23cfe82f31d84fa0e6bc0fc734f9c68d1e287b3555"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/03-airline-a2-typed-context-v01.json": {
+      "bytes": 1126349,
+      "mode": "0600",
+      "sha256": "b8418e89e2d2b67a40ac83d255c976fdfbffefa3afabe6be774456bc0ff8a4aa"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/04-airline-sealed-evidence-adapter-result-v01.json": {
+      "bytes": 97393,
+      "mode": "0600",
+      "sha256": "26c0688c1ba46266604dd91b58991c1211de1642fca36128b6c42bcf1b293a70"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/sealed_package_manifest_v01.json": {
+      "bytes": 5305,
+      "mode": "0600",
+      "sha256": "691d39788df1738d0cd8698b5174ccdee36bf42c173582e089a6dbcf3bb074fe"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json": {
+      "bytes": 25745,
+      "mode": "0400",
+      "sha256": "053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_crypto_anchor_v01.json": {
+      "bytes": 1387,
+      "mode": "0600",
+      "sha256": "54cf0f57b3af138cb30311f11537980e9b2b6983cd428af17b326b96d1e23f8b"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_replay_report_v01.json": {
+      "bytes": 4267,
+      "mode": "0600",
+      "sha256": "666ab84f04a9f75bc510dade055d4d4e777712aeadb013cb79b00358aff9de55"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json": {
+      "bytes": 7899,
+      "mode": "0400",
+      "sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json": {
+      "bytes": 14749,
+      "mode": "0400",
+      "sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_package_index_v01.json": {
+      "bytes": 2472,
+      "mode": "0400",
+      "sha256": "3a9502777cdb1c0d96cf7800d888ba5da0b19033ba0173049bf3a80e197ab200"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_sealed_package_v01/evidence/01-supplier-safe-evidence-index-v01.json": {
+      "bytes": 7899,
+      "mode": "0600",
+      "sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_sealed_package_v01/sealed_package_manifest_v01.json": {
+      "bytes": 3622,
+      "mode": "0600",
+      "sha256": "0f87bfc7234a5c0cf3cdca6530c77dcc9a5b1d84337a8809ee9c0794afd12c92"
+    },
+    "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_water_filter_negative_matrix_v01.json": {
+      "bytes": 26720,
+      "mode": "0400",
+      "sha256": "8d59848127872cc813d5941f4cce587155eadc5c50ea916c07487687d4ce9969"
+    },
+    "docs/showcase/ephemeral_workspace_v01/verify_replay.sh": {
+      "bytes": 648,
+      "mode": "0755",
+      "sha256": "3a33996a383dad621d2cbe4a7ead0224754597e92383b23177b1a939d0ad77a2"
+    },
+    "docs/showcase/gate4_reference_v01/evidence/g44/commands/0019_filesystem_mode_diagnostic/mode_sample.txt": {
+      "bytes": 22,
+      "mode": "0600",
+      "sha256": "23ee8e4a5481b96b2679bcc543e92596f1f579048b4bc8be06270c6433c61eeb"
+    },
+    "docs/showcase/gate4_reference_v01/gate4_reference_v01.pptx": {
+      "bytes": 1116382,
+      "mode": "0600",
+      "sha256": "1164536b567a544683634a210b838e4d9d36c8423cf1bcb5a7dc676c32dc4bb2"
+    },
+    "docs/showcase/gate4_reference_v01/presentation/build/validation_r3.json": {
+      "bytes": 4684,
+      "mode": "0600",
+      "sha256": "c511de3c4a0125a404540bd5d617484e67b67c44d47efc7ce48d13af5459a439"
+    },
+    "docs/showcase/landslide_sentinel_v01/verify_replay.sh": {
+      "bytes": 671,
+      "mode": "0755",
+      "sha256": "187cfa17308e2ec42424600a121e6a8b247732caebc385792a0aa8090b406b84"
+    }
+  },
+  "owner_config_unchanged": true,
+  "portable_manifest_unchanged": true,
+  "reviewed_inputs_unchanged": true,
+  "status": "PASS",
+  "worktree_clean": true
+}

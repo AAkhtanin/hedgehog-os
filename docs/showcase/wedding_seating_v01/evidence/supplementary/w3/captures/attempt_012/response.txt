@@ -1,0 +1,1 @@
+{"task_kind":"CLARIFY","unresolved":["objective"],"reason":"The user has not specified whether to keep familiar circles together or mix them, requiring clarification of the seating objective.","needs":["LOCAL_CLARIFICATION"],"requested_outputs":["CLARIFICATION"]}

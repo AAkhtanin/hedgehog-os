@@ -1,0 +1,791 @@
+{
+  "files": [
+    {
+      "bytes": 8288,
+      "mode": "0644",
+      "path": "FINAL_REPORT.md",
+      "sha256": "bc86e3f72c059a4b041985ad9ee46767167381ed8d945cd800db30b1b45acde5"
+    },
+    {
+      "bytes": 716,
+      "mode": "0644",
+      "path": "RESUME_STATE.json",
+      "sha256": "0aa46cf97b4535e6baa63a3f92865515e7eba0757192c1d83f1b234cde1c2804"
+    },
+    {
+      "bytes": 7716,
+      "mode": "0644",
+      "path": "W2_HANDOFF.md",
+      "sha256": "aea8a508621045413c3e512478236fb7149d220f17c3cbbdc43391fbb17f4f88"
+    },
+    {
+      "bytes": 2462,
+      "mode": "0644",
+      "path": "all_command_receipts_final.json",
+      "sha256": "8bf3fa1a35721c16a3d3ba865e0198504b14586053ef3c2d6b3f8b7a30e06acb"
+    },
+    {
+      "bytes": 105432,
+      "mode": "0644",
+      "path": "candidate.patch",
+      "sha256": "544d1d12776f7726d0bb9b5001956f5111ef03cdd306ba630457fde0ff4b6be5"
+    },
+    {
+      "bytes": 558633,
+      "mode": "0644",
+      "path": "candidate_baseline.json",
+      "sha256": "a25f7a3f27bab33163113afa45b1a10f661c8e7c7ad312e251d13c372fc0f27e"
+    },
+    {
+      "bytes": 978,
+      "mode": "0644",
+      "path": "captures/KEEP_FAMILIAR_V01/descriptor.json",
+      "sha256": "531e2ce6653ba5a71158eb402a120c240990029941755a6af1ed990024576e10"
+    },
+    {
+      "bytes": 98625,
+      "mode": "0644",
+      "path": "captures/KEEP_FAMILIAR_V01/grid.json",
+      "sha256": "1668e5846d919b040f935f620753da93e6bec94373fac381dc11c07749df2c9d"
+    },
+    {
+      "bytes": 62196,
+      "mode": "0644",
+      "path": "captures/KEEP_FAMILIAR_V01/pre_measurement_state.json",
+      "sha256": "8aefe6030ea9033f09f6edbc5e573b67bfb9ad336ad8461bc716008835c40440"
+    },
+    {
+      "bytes": 9593,
+      "mode": "0644",
+      "path": "captures/KEEP_FAMILIAR_V01/program.json",
+      "sha256": "59e82b5418ec09bbc50b7ba5a61ced65c660714d0480b3c250a29be90455237e"
+    },
+    {
+      "bytes": 9048,
+      "mode": "0644",
+      "path": "captures/KEEP_FAMILIAR_V01/source.qasm",
+      "sha256": "f2e72ca32405f435a755c4c195f7251c159290a5d137bf583ff39badb5016394"
+    },
+    {
+      "bytes": 977,
+      "mode": "0644",
+      "path": "captures/MIX_CIRCLES_V01/descriptor.json",
+      "sha256": "a205fee30ea40a163c6166840fa315cc696d374009177b37b3ebdb093fe8499f"
+    },
+    {
+      "bytes": 99009,
+      "mode": "0644",
+      "path": "captures/MIX_CIRCLES_V01/grid.json",
+      "sha256": "39726a1a1f79324ad53c95d638a2ae937b00e5f66ec5bc2db856d48d9a628b0c"
+    },
+    {
+      "bytes": 62238,
+      "mode": "0644",
+      "path": "captures/MIX_CIRCLES_V01/pre_measurement_state.json",
+      "sha256": "45127a47d0e4e214aabcbcdf35b921ca31e0878f1dc0dfb81f7f14c09635afc7"
+    },
+    {
+      "bytes": 9593,
+      "mode": "0644",
+      "path": "captures/MIX_CIRCLES_V01/program.json",
+      "sha256": "d6b02a1cbf9b425312e827ce1ce96c534a3c306b95559666ba430d7959ab167d"
+    },
+    {
+      "bytes": 9048,
+      "mode": "0644",
+      "path": "captures/MIX_CIRCLES_V01/source.qasm",
+      "sha256": "e2723baa44d921e2be9e0d78d430682c4c86ab77d9204994831e1dff55c665f4"
+    },
+    {
+      "bytes": 33013,
+      "mode": "0644",
+      "path": "captures/canonical_math.json",
+      "sha256": "4d7deabf7719e8a3d02a171195171a54e260df6858e3cd5c7413d7d945688ea6"
+    },
+    {
+      "bytes": 89,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220918.216938_0000_owner_entry/heartbeats.jsonl",
+      "sha256": "923f9ff7014195b71fbcd01ece944882f93226c5f17473af8bce60685db06b60"
+    },
+    {
+      "bytes": 1266,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220918.216938_0000_owner_entry/receipt.json",
+      "sha256": "c61f1ea63268a32c02466cd96867434095243126b7901a4b8103efc59cbdc8e2"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220918.216938_0000_owner_entry/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 106,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220918.216938_0000_owner_entry/stdout.txt",
+      "sha256": "c2f3f7e5e26867de4025605b698b3b543573a4f874fcb8a10bce2364ef353971"
+    },
+    {
+      "bytes": 90,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220923.349430_0000_local_clone/heartbeats.jsonl",
+      "sha256": "8ee5edb2e619380f53b62fc39913b7f4739317d66662df6bcd23620c43e8cf05"
+    },
+    {
+      "bytes": 1374,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220923.349430_0000_local_clone/receipt.json",
+      "sha256": "efcd502da94fda6fdda96525819259ab808568b502e3d72da39189fb9d7173cb"
+    },
+    {
+      "bytes": 88,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220923.349430_0000_local_clone/stderr.txt",
+      "sha256": "be17c377ffda82964cba179f0bcd4d6c4777f1fa4564e04ee7bdf2806b082f42"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220923.349430_0000_local_clone/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220929.081670_0000_preserve_modes/heartbeats.jsonl",
+      "sha256": "885b2bfae14bc7e2bb107c89bb738fa835bf55061243d95c8dfbd892087ed3c7"
+    },
+    {
+      "bytes": 1283,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220929.081670_0000_preserve_modes/receipt.json",
+      "sha256": "b8cc9b903fe16c7fd11887af1b131bf113cbaf6bc45015a586392169432ae84a"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220929.081670_0000_preserve_modes/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 106,
+      "mode": "0644",
+      "path": "commands/2026-09-23T220929.081670_0000_preserve_modes/stdout.txt",
+      "sha256": "3e3806ffc6fd968e2b9f246fc2573197bccd767579155b9eae50ace191f2f2d8"
+    },
+    {
+      "bytes": 90,
+      "mode": "0644",
+      "path": "commands/2026-09-23T221748.906423_0000_sdk_surface/heartbeats.jsonl",
+      "sha256": "d2621829781ead454b4cb21aca7aaea3246bd7b19698dcd144ee313aff7fae31"
+    },
+    {
+      "bytes": 3242,
+      "mode": "0644",
+      "path": "commands/2026-09-23T221748.906423_0000_sdk_surface/receipt.json",
+      "sha256": "dd138c4adf20bbc7ab16290aec3f376dd643b17f4f8c38031bd377e1cc1e5c9f"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T221748.906423_0000_sdk_surface/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1240,
+      "mode": "0644",
+      "path": "commands/2026-09-23T221748.906423_0000_sdk_surface/stdout.txt",
+      "sha256": "3e9d061a3b30dfed67fa09bafcfe75b07554f8019bb6499ce30e8344f9045e14"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T222501.080928_0000_small_contract_probe/heartbeats.jsonl",
+      "sha256": "edee8644e14432f41f58836fd276c129ed73bbfabd2d0eccb6e7af5118c65a05"
+    },
+    {
+      "bytes": 5543,
+      "mode": "0644",
+      "path": "commands/2026-09-23T222501.080928_0000_small_contract_probe/receipt.json",
+      "sha256": "7a245b6d7e6d07ac313c00d0a2feed8d6aa21a703c9f08db5db35d001fb4578c"
+    },
+    {
+      "bytes": 420,
+      "mode": "0644",
+      "path": "commands/2026-09-23T222501.080928_0000_small_contract_probe/stderr.txt",
+      "sha256": "8ee709b847cdef035f68d3d54aa0e0ad27d811eec01f096b5a28f9f48103e440"
+    },
+    {
+      "bytes": 326,
+      "mode": "0644",
+      "path": "commands/2026-09-23T222501.080928_0000_small_contract_probe/stdout.txt",
+      "sha256": "f3597ed6e2fb7d77a946da8b41b936e80207f3ff92f4effe78c9f309f91bf7d0"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223107.582987_0000_freeze_static/heartbeats.jsonl",
+      "sha256": "bd2cf7ce7695b233ca8572d6e9411490a4bc6d38454215697e8756e76e044687"
+    },
+    {
+      "bytes": 6213,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223107.582987_0000_freeze_static/receipt.json",
+      "sha256": "4ec2e5479477a1ba815c2639bb9dd93863b34099080f541e973dd40372159e86"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223107.582987_0000_freeze_static/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 80,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223107.582987_0000_freeze_static/stdout.txt",
+      "sha256": "608d41a882b44efcce47a86949505553cdb5714790b7cf4dc163eff04aa8622b"
+    },
+    {
+      "bytes": 177,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223117.484417_0000_full_w1_01/heartbeats.jsonl",
+      "sha256": "b8318b772c1bb0bdb6a20dde83b03550ad5a5601f90fc6ffefa451b4db654a83"
+    },
+    {
+      "bytes": 6413,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223117.484417_0000_full_w1_01/receipt.json",
+      "sha256": "55f90f7b587bf88b29715b6abd4542cf4dcc3ceaa31eaba7b60f241ebc543ae6"
+    },
+    {
+      "bytes": 3461,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223117.484417_0000_full_w1_01/stderr.txt",
+      "sha256": "a291140d1cd698abbeb8d61a241708c4215787aebc4bb7e50c55cf4ef417d958"
+    },
+    {
+      "bytes": 2270,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223117.484417_0000_full_w1_01/stdout.txt",
+      "sha256": "b15b0958d234b2ac31e286fd610021e0550dcc1493d10fd4feb7abce53f54b6e"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223603.930811_0000_prepare_clean_reproduction/heartbeats.jsonl",
+      "sha256": "d8b4cfefceae8b3e887b3c7fd1257c8f0cea089edb7b0bbee2c81c95caefe110"
+    },
+    {
+      "bytes": 6206,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223603.930811_0000_prepare_clean_reproduction/receipt.json",
+      "sha256": "5aca72900b82e166361d648867a0d568fd5b9ae02542f8f1e603ebef37e6e384"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223603.930811_0000_prepare_clean_reproduction/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 178,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223603.930811_0000_prepare_clean_reproduction/stdout.txt",
+      "sha256": "b54e5097cc4c69bc71af52fb94f709a219e49eae64851ef0653a1b08850844b1"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223608.854454_0000_clean_offline_reproduction/heartbeats.jsonl",
+      "sha256": "6735665315f293bbe16d4c4ab3224c1069e95f76b25fab122bd4557384c7acfd"
+    },
+    {
+      "bytes": 6264,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223608.854454_0000_clean_offline_reproduction/receipt.json",
+      "sha256": "c6e30f0a2ff2deab7caa359e175b0eaef1b3e74007b5541ff8befb045558aa80"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223608.854454_0000_clean_offline_reproduction/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 81,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223608.854454_0000_clean_offline_reproduction/stdout.txt",
+      "sha256": "90f3fc896176879a9cb4af8f5ea7834c3f9f5322b98c3e8ab376a1726677118d"
+    },
+    {
+      "bytes": 90,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223753.266106_0000_final_contract_boundaries/heartbeats.jsonl",
+      "sha256": "b364f8f90074b26d134645556dea06e9fc2f05e7b880eeff39fea8bc631e4184"
+    },
+    {
+      "bytes": 6450,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223753.266106_0000_final_contract_boundaries/receipt.json",
+      "sha256": "e2dafe0d731a7fda0f6681fce616ab3aa867c8173d9e562797fcf5beaf8662ab"
+    },
+    {
+      "bytes": 1816,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223753.266106_0000_final_contract_boundaries/stderr.txt",
+      "sha256": "109d23bfc5be4328ff1474e132eb26b571f1aa25fd112f9fd97b328c976fb041"
+    },
+    {
+      "bytes": 1231,
+      "mode": "0644",
+      "path": "commands/2026-09-23T223753.266106_0000_final_contract_boundaries/stdout.txt",
+      "sha256": "87c4902dfc0b6c476011bdf9b861c6992786b3235a602941d2061e803b0c5e27"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224036.604330_0000_final_static_freeze/heartbeats.jsonl",
+      "sha256": "7a43d0ed38efcf9d03f568389072cf6fc78d84e610c7914e9077e660faca0174"
+    },
+    {
+      "bytes": 6228,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224036.604330_0000_final_static_freeze/receipt.json",
+      "sha256": "0fb72174012f6b06c8ff84f198a7aade2b0dc67480e1d436785f8a20e8cb8985"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224036.604330_0000_final_static_freeze/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 80,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224036.604330_0000_final_static_freeze/stdout.txt",
+      "sha256": "608d41a882b44efcce47a86949505553cdb5714790b7cf4dc163eff04aa8622b"
+    },
+    {
+      "bytes": 91,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224041.934814_0000_owner_final/heartbeats.jsonl",
+      "sha256": "eb78091adb652a18154e0efdbfb49baf6f957966ff03ad62ab866d99d72d0411"
+    },
+    {
+      "bytes": 6178,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224041.934814_0000_owner_final/receipt.json",
+      "sha256": "2d4f421fcef69f76028db6f9d0e0583846928e39f2ba80bff04a5bea60be2dec"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224041.934814_0000_owner_final/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 106,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224041.934814_0000_owner_final/stdout.txt",
+      "sha256": "04cc321d90ac5d21129ad75264060c1dbca255b379597d6cd57238d6b3bcefe4"
+    },
+    {
+      "bytes": 90,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224047.424303_0000_evidence_finalize/heartbeats.jsonl",
+      "sha256": "e6f3af53115eb719e19ab0e975c0b5e2f5943bbe68a532b60e1cec04613453d8"
+    },
+    {
+      "bytes": 6178,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224047.424303_0000_evidence_finalize/receipt.json",
+      "sha256": "ea840dd257f437c11bae176a273e2385ea8a984fc7bdf3d00ad70110c002cd4c"
+    },
+    {
+      "bytes": 0,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224047.424303_0000_evidence_finalize/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 103,
+      "mode": "0644",
+      "path": "commands/2026-09-23T224047.424303_0000_evidence_finalize/stdout.txt",
+      "sha256": "7c3770b88970252ef10adf61a49c855290d5208d3f87b7bcd9368c1a46025a90"
+    },
+    {
+      "bytes": 1979,
+      "mode": "0644",
+      "path": "completed_commands_before_finalizer.json",
+      "sha256": "a89e3ad451a1c7a14953a5c807a4ee00d71fac79482762faa185ee77094499c0"
+    },
+    {
+      "bytes": 9935,
+      "mode": "0644",
+      "path": "contracts_test_full_suite_source.py",
+      "sha256": "83b6a4c99967688374fdcf7060d2b9091cba8955dc31dac70fac76d959d243ba"
+    },
+    {
+      "bytes": 6548,
+      "mode": "0644",
+      "path": "coverage.json",
+      "sha256": "a440939b72b3c47d1648416407bbbae9d1c92fda2728ea37ddaec8bf8314538c"
+    },
+    {
+      "bytes": 1018,
+      "mode": "0644",
+      "path": "environment_check.py",
+      "sha256": "28aa0f4dd98ee789717bd6cd461250c6ec185388b6a7894678a7e6345391e7b2"
+    },
+    {
+      "bytes": 1240,
+      "mode": "0644",
+      "path": "environment_verified.json",
+      "sha256": "8d124208b313454f748024acdca802b299360f64c1bc8b2f77815b36a7ab725e"
+    },
+    {
+      "bytes": 872,
+      "mode": "0644",
+      "path": "exploratory_observations.json",
+      "sha256": "b89c7a0642d0579360c9157f593a4d38ffb7b55210dacd17fac3274a9e59abfc"
+    },
+    {
+      "bytes": 301,
+      "mode": "0644",
+      "path": "final_contract_boundaries/import_origins.json",
+      "sha256": "a0fc14205a4a35cdb851275c11257acb1744609c49330ec72c6181d707dc8cc5"
+    },
+    {
+      "bytes": 14126,
+      "mode": "0644",
+      "path": "final_contract_boundaries/phases.jsonl",
+      "sha256": "cda90ebad61870ffa16b1ef1a5499f0c58a0cf98879a9c44221fd5d394cff67e"
+    },
+    {
+      "bytes": 1295,
+      "mode": "0644",
+      "path": "final_contract_boundaries/summary.json",
+      "sha256": "af52ba8b73a5896aeb1c332c036561f518ef65b3c523e95b19a5180328cfb393"
+    },
+    {
+      "bytes": 30395,
+      "mode": "0644",
+      "path": "final_contract_boundaries/test_wedding_seating_contracts_v01_evidence.json",
+      "sha256": "d25132196258dd56dc0b4e50c4916bd53b21cb030496d03488d7b85ed632c6b8"
+    },
+    {
+      "bytes": 23088,
+      "mode": "0644",
+      "path": "final_contract_boundaries/test_wedding_seating_privacy_v01_evidence.json",
+      "sha256": "c1b65b39ec214cbff3efed72b2386007f04b04af9d6253047b7c022f745a22fe"
+    },
+    {
+      "bytes": 3614,
+      "mode": "0644",
+      "path": "final_source_ledger.json",
+      "sha256": "3ac046cc8800d51eea82781dedebb5791468955b4fcdaaf462fc0216941f01b0"
+    },
+    {
+      "bytes": 5585,
+      "mode": "0644",
+      "path": "finalize.py",
+      "sha256": "de14314214be36e6af66f5f67e9649ad8af85aadc84f7c0da17d3623464788d3"
+    },
+    {
+      "bytes": 3452,
+      "mode": "0644",
+      "path": "full_suite_source_freeze.json",
+      "sha256": "25da1be30136f989f6a81c393c88894a7ebd666ad8d59848a1a47a2efbab8059"
+    },
+    {
+      "bytes": 738,
+      "mode": "0644",
+      "path": "full_w1_01/import_origins.json",
+      "sha256": "ae1d74b800a5392d2334fabd04a15c53593a6f4c3d98033487afaf3549c8db79"
+    },
+    {
+      "bytes": 27821,
+      "mode": "0644",
+      "path": "full_w1_01/phases.jsonl",
+      "sha256": "e669a9f229b4d76d813ea09d92d2302edd5fe4abdf586fda8e79d7e83cf95ae4"
+    },
+    {
+      "bytes": 2378,
+      "mode": "0644",
+      "path": "full_w1_01/summary.json",
+      "sha256": "31962994a7c36b8413160b68f030e32f995c0ce7bdf32392f098fba8fe7c855a"
+    },
+    {
+      "bytes": 456840,
+      "mode": "0644",
+      "path": "full_w1_01/test_wedding_seating_circuit_v01_evidence.json",
+      "sha256": "ad6c4d0ce283f4bb36303af9ad2af91d860892e93d5d39c6943d4ee895f781af"
+    },
+    {
+      "bytes": 30207,
+      "mode": "0644",
+      "path": "full_w1_01/test_wedding_seating_contracts_v01_evidence.json",
+      "sha256": "bd2d82ccf7ecc612169f1c5c338703395162f59865c326cae6d8773e4d14f465"
+    },
+    {
+      "bytes": 295899,
+      "mode": "0644",
+      "path": "full_w1_01/test_wedding_seating_encoding_v01_evidence.json",
+      "sha256": "694f74574ab32458dc69d678d4b9faab3f31aed2768e5069bfea036cf2cf9f35"
+    },
+    {
+      "bytes": 80744,
+      "mode": "0644",
+      "path": "full_w1_01/test_wedding_seating_math_v01_evidence.json",
+      "sha256": "d58b51dc99379bfb5d96a081dbfb0d657542cb7716d50c4171753457cd4372a8"
+    },
+    {
+      "bytes": 23088,
+      "mode": "0644",
+      "path": "full_w1_01/test_wedding_seating_privacy_v01_evidence.json",
+      "sha256": "c1b65b39ec214cbff3efed72b2386007f04b04af9d6253047b7c022f745a22fe"
+    },
+    {
+      "bytes": 826,
+      "mode": "0644",
+      "path": "input_identities.json",
+      "sha256": "7ab76202ba6583a3ded063a72e900130ef3ad5df6b78a082dc4d37846d88e401"
+    },
+    {
+      "bytes": 1102455,
+      "mode": "0644",
+      "path": "owner_entry.json",
+      "sha256": "3f32050b95c159409f96830521de495d60765bd8f7f62eb2f73bfeebd2377158"
+    },
+    {
+      "bytes": 1102455,
+      "mode": "0644",
+      "path": "owner_final.json",
+      "sha256": "3f32050b95c159409f96830521de495d60765bd8f7f62eb2f73bfeebd2377158"
+    },
+    {
+      "bytes": 2487,
+      "mode": "0644",
+      "path": "owner_metadata_summary.json",
+      "sha256": "d26fc9902ec406340c25fe8ece724b7ebfca58f6c7cde288bb2d771b8410cddc"
+    },
+    {
+      "bytes": 5988,
+      "mode": "0644",
+      "path": "package_return.py",
+      "sha256": "127194446596dc05db922fe9d2ecb0a0f338226189ce1bcd17be86298484c1e0"
+    },
+    {
+      "bytes": 3220,
+      "mode": "0644",
+      "path": "postimages/fixtures/wedding_seating/reference_problem_v01.json",
+      "sha256": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b"
+    },
+    {
+      "bytes": 5797,
+      "mode": "0644",
+      "path": "postimages/fixtures/wedding_seating/semantic_proposals_v01.json",
+      "sha256": "a73602a0817c57bd25cc03f709d06daefc6099a8c955c493499ad43df134140c"
+    },
+    {
+      "bytes": 78,
+      "mode": "0644",
+      "path": "postimages/hedgehog/domains/wedding_seating/__init__.py",
+      "sha256": "0b34394a5e8767878378cba8c8e34013e0f33e0d3e040f8528402c370bbfab64"
+    },
+    {
+      "bytes": 9598,
+      "mode": "0644",
+      "path": "postimages/hedgehog/domains/wedding_seating/circuit_v02.py",
+      "sha256": "2f6cf1f0f219ce12fdf227c7eddfef15d2d3a144b92fd546ca0eb0c93ad3593d"
+    },
+    {
+      "bytes": 15863,
+      "mode": "0644",
+      "path": "postimages/hedgehog/domains/wedding_seating/contracts_v01.py",
+      "sha256": "25516a295a22727b8bb188256b575d3a71dacf4a28eed7a83af3ad60a151347b"
+    },
+    {
+      "bytes": 6820,
+      "mode": "0644",
+      "path": "postimages/hedgehog/domains/wedding_seating/encoding_v02.py",
+      "sha256": "3c29ddd305739ec92fae337c5be6c803a5a893cdf1f72e1f85c2d2582e440053"
+    },
+    {
+      "bytes": 10017,
+      "mode": "0644",
+      "path": "postimages/hedgehog/domains/wedding_seating/math_v01.py",
+      "sha256": "fb07498b922f6d1f95dfbbbdf1709f17732f2c40a4b0ce70c36cd1224ada0e3a"
+    },
+    {
+      "bytes": 6127,
+      "mode": "0644",
+      "path": "postimages/hedgehog/domains/wedding_seating/privacy_v01.py",
+      "sha256": "9b7cc26529f5091b623bfe66325fb88a2e550a65b65d08a0891aac853fcd856e"
+    },
+    {
+      "bytes": 7484,
+      "mode": "0644",
+      "path": "postimages/tests/test_wedding_seating_circuit_v01.py",
+      "sha256": "b2f76cbb7b0e10550cb6db0e0f72ee934b536449091da5e1e87f7a92ce784bd0"
+    },
+    {
+      "bytes": 13883,
+      "mode": "0644",
+      "path": "postimages/tests/test_wedding_seating_contracts_v01.py",
+      "sha256": "aac809883614af12ac45777b89c68ff9b90471f74cee0a3fcc08c68e3714df5c"
+    },
+    {
+      "bytes": 7036,
+      "mode": "0644",
+      "path": "postimages/tests/test_wedding_seating_encoding_v01.py",
+      "sha256": "686ac9eb5bc05c78af49bb4f44dd3d75c4baab90c9c6084e5201ad382ef58199"
+    },
+    {
+      "bytes": 10783,
+      "mode": "0644",
+      "path": "postimages/tests/test_wedding_seating_math_v01.py",
+      "sha256": "993c00428ac66714b36c524e8861a1d13aca8fb68a2b39bdb6d71b3398ef5d18"
+    },
+    {
+      "bytes": 5543,
+      "mode": "0644",
+      "path": "postimages/tests/test_wedding_seating_privacy_v01.py",
+      "sha256": "145fb73ca7efa7def06707acc005b17462f8ccc90dbae50828ec9a20f46a0009"
+    },
+    {
+      "bytes": 2622,
+      "mode": "0644",
+      "path": "prepare_reproduction.py",
+      "sha256": "4195b0374ca8464f2ac20113bb893a46867c390cdb168cac854e114260311964"
+    },
+    {
+      "bytes": 133,
+      "mode": "0644",
+      "path": "preservation.json",
+      "sha256": "dbfdc63c9752bd72af84bde3dd01b493f228a5ccc95b83dad7b0f8daf32ae989"
+    },
+    {
+      "bytes": 4724,
+      "mode": "0644",
+      "path": "preserve.py",
+      "sha256": "0863b84b1b5003dbebb73b8f83e8e8b826b85e59f316030fcd25a6962f80f4fd"
+    },
+    {
+      "bytes": 206,
+      "mode": "0644",
+      "path": "prior_evidence_preserved.json",
+      "sha256": "459e3b85dc0f8551ff4bcc951fb71dbc5aa0209df169bb06408deb1a446aea8b"
+    },
+    {
+      "bytes": 301,
+      "mode": "0644",
+      "path": "probe/import_origins.json",
+      "sha256": "a0fc14205a4a35cdb851275c11257acb1744609c49330ec72c6181d707dc8cc5"
+    },
+    {
+      "bytes": 2595,
+      "mode": "0644",
+      "path": "probe/phases.jsonl",
+      "sha256": "fc5a1ce08ec37c1780183af333866d3170a0868091a9f4c73d91ce3bcabe00e1"
+    },
+    {
+      "bytes": 354,
+      "mode": "0644",
+      "path": "probe/summary.json",
+      "sha256": "a77c71dece155bf7200570bce24077248d3a415440c26d6f4cd39e0022bc13f0"
+    },
+    {
+      "bytes": 3599,
+      "mode": "0644",
+      "path": "probe/test_wedding_seating_contracts_v01_evidence.json",
+      "sha256": "28d055f540140adf6b01bb7135b5aaec5a0680377e9ae3766f58af16e6bae94e"
+    },
+    {
+      "bytes": 22794,
+      "mode": "0644",
+      "path": "probe/test_wedding_seating_privacy_v01_evidence.json",
+      "sha256": "3cd2f396b651c37e4bf8046a5adf866d6c1a8b8bcd53c3a7ee530e5fff9849da"
+    },
+    {
+      "bytes": 277,
+      "mode": "0644",
+      "path": "process_completion.json",
+      "sha256": "d6c14fb5c0e221f0ced3470f967e4e78fbfd8097e40492a3e1507cbd97ec4b1f"
+    },
+    {
+      "bytes": 738,
+      "mode": "0644",
+      "path": "process_observation.json",
+      "sha256": "6c10b1cc799c84e63e4eb05aa006be261fe265a6c7c1a9a47fcbc7fa2d93752c"
+    },
+    {
+      "bytes": 6164,
+      "mode": "0644",
+      "path": "reproduce.py",
+      "sha256": "9929ba71a9e56b4a989a1f47525be5ab353b4bac7eb4d330406e6218730f1d70"
+    },
+    {
+      "bytes": 33013,
+      "mode": "0644",
+      "path": "reproduced_canonical_math.json",
+      "sha256": "4d7deabf7719e8a3d02a171195171a54e260df6858e3cd5c7413d7d945688ea6"
+    },
+    {
+      "bytes": 3031,
+      "mode": "0644",
+      "path": "reproduction_location.json",
+      "sha256": "12310a3cb6f4588c0f83ed411a94728b0ecba6e4b476157eaa5c1dda524a661d"
+    },
+    {
+      "bytes": 1554,
+      "mode": "0644",
+      "path": "reproduction_result.json",
+      "sha256": "2a833e16b6bc811c2499fc84c65e1c535170b04499d292d7fd1f89949deef26d"
+    },
+    {
+      "bytes": 3350,
+      "mode": "0644",
+      "path": "run.py",
+      "sha256": "ca56e475e831e09a9ad217925e7b347bb5e80c70cf62ae2f139b56bc822b267e"
+    },
+    {
+      "bytes": 3019,
+      "mode": "0644",
+      "path": "run_suite.py",
+      "sha256": "5cc226c4cfc33a2277049240ce95d21de1ae64936d12cd40704b82294d8e28b0"
+    },
+    {
+      "bytes": 38,
+      "mode": "0644",
+      "path": "source_anchor.txt",
+      "sha256": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4"
+    },
+    {
+      "bytes": 3453,
+      "mode": "0644",
+      "path": "source_freeze.json",
+      "sha256": "1011d500fe40455bd9f1f033f87d21e3b7f4fd48f9ab2ab37e98a55a06aa3d23"
+    },
+    {
+      "bytes": 457,
+      "mode": "0644",
+      "path": "source_impact.json",
+      "sha256": "e13f3e4d5557ed17eb3965b322203fe5f75189cb6fcb8378c501e0f44c069212"
+    },
+    {
+      "bytes": 1919,
+      "mode": "0644",
+      "path": "static_check.py",
+      "sha256": "b26557b403d19df814e7f2fbdbf260ff1a4c20acc5d761d8840a35993ecb13e3"
+    },
+    {
+      "bytes": 1710,
+      "mode": "0644",
+      "path": "w0_evidence_bindings.json",
+      "sha256": "55e3ad842b0cadcf28f40d890c1d25eb0dcfc8ce069721b7635a04c779cee131"
+    }
+  ],
+  "schema": "W1_RETURN_MANIFEST_V01"
+}

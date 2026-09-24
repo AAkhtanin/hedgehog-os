@@ -1,0 +1,351 @@
+{
+  "base": "3470b448059cfc5089975342b80c1649ba1dff61",
+  "changed_from_w2": [
+    "hedgehog/domains/wedding_seating/native_adapter_v01.py",
+    "hedgehog/domains/wedding_seating/runtime_v01.py",
+    "hedgehog/domains/wedding_seating/semantic_adapter_v01.py",
+    "hedgehog/domains/wedding_seating/supplied_v01.py",
+    "tests/test_wedding_seating_live_v01.py",
+    "docs/wedding_seating_v01_checkpoint.md"
+  ],
+  "paths": [
+    {
+      "git_blob": "c35955d842aa2325549a89d7180e62f8532e231f",
+      "path": "hedgehog/domains/wedding_seating/__init__.py",
+      "post": {
+        "bytes": 78,
+        "mode": "0644",
+        "sha256": "0b34394a5e8767878378cba8c8e34013e0f33e0d3e040f8528402c370bbfab64"
+      },
+      "pre": {
+        "bytes": 78,
+        "mode": "0644",
+        "sha256": "0b34394a5e8767878378cba8c8e34013e0f33e0d3e040f8528402c370bbfab64"
+      }
+    },
+    {
+      "git_blob": "dcfe11769fe3c8742311c5563650a2c139d5650c",
+      "path": "hedgehog/domains/wedding_seating/allocation_v01.py",
+      "post": {
+        "bytes": 12652,
+        "mode": "0644",
+        "sha256": "9b69815ccadfa5713e2f215be6fc901f6cb962a86e2a6e182c3e42fce40e14d2"
+      },
+      "pre": {
+        "bytes": 12652,
+        "mode": "0644",
+        "sha256": "9b69815ccadfa5713e2f215be6fc901f6cb962a86e2a6e182c3e42fce40e14d2"
+      }
+    },
+    {
+      "git_blob": "550b5b28227df944dca0eb2192d2bc7b0f6f3589",
+      "path": "hedgehog/domains/wedding_seating/circuit_v02.py",
+      "post": {
+        "bytes": 9598,
+        "mode": "0644",
+        "sha256": "2f6cf1f0f219ce12fdf227c7eddfef15d2d3a144b92fd546ca0eb0c93ad3593d"
+      },
+      "pre": {
+        "bytes": 9598,
+        "mode": "0644",
+        "sha256": "2f6cf1f0f219ce12fdf227c7eddfef15d2d3a144b92fd546ca0eb0c93ad3593d"
+      }
+    },
+    {
+      "git_blob": "fb8f40b06ed45a66f7cdca4e62e05c7cafc4687e",
+      "path": "hedgehog/domains/wedding_seating/contracts_v01.py",
+      "post": {
+        "bytes": 15863,
+        "mode": "0644",
+        "sha256": "25516a295a22727b8bb188256b575d3a71dacf4a28eed7a83af3ad60a151347b"
+      },
+      "pre": {
+        "bytes": 15863,
+        "mode": "0644",
+        "sha256": "25516a295a22727b8bb188256b575d3a71dacf4a28eed7a83af3ad60a151347b"
+      }
+    },
+    {
+      "git_blob": "5b138a9298164a188fdc0488db863ae6e7054d9c",
+      "path": "hedgehog/domains/wedding_seating/encoding_v02.py",
+      "post": {
+        "bytes": 6820,
+        "mode": "0644",
+        "sha256": "3c29ddd305739ec92fae337c5be6c803a5a893cdf1f72e1f85c2d2582e440053"
+      },
+      "pre": {
+        "bytes": 6820,
+        "mode": "0644",
+        "sha256": "3c29ddd305739ec92fae337c5be6c803a5a893cdf1f72e1f85c2d2582e440053"
+      }
+    },
+    {
+      "git_blob": "89503dc43a86f36c8f4cb5c80763c2579351a544",
+      "path": "hedgehog/domains/wedding_seating/math_v01.py",
+      "post": {
+        "bytes": 10017,
+        "mode": "0644",
+        "sha256": "fb07498b922f6d1f95dfbbbdf1709f17732f2c40a4b0ce70c36cd1224ada0e3a"
+      },
+      "pre": {
+        "bytes": 10017,
+        "mode": "0644",
+        "sha256": "fb07498b922f6d1f95dfbbbdf1709f17732f2c40a4b0ce70c36cd1224ada0e3a"
+      }
+    },
+    {
+      "git_blob": "a665741ea9865a242a4c3e8c525755e75306d9db",
+      "path": "hedgehog/domains/wedding_seating/memory_v01.py",
+      "post": {
+        "bytes": 9578,
+        "mode": "0644",
+        "sha256": "d94a6cc15dad3519454d0c8776b1515f54f948e8dc7f3bec70ce8db23a6ebb5f"
+      },
+      "pre": {
+        "bytes": 9578,
+        "mode": "0644",
+        "sha256": "d94a6cc15dad3519454d0c8776b1515f54f948e8dc7f3bec70ce8db23a6ebb5f"
+      }
+    },
+    {
+      "git_blob": "885674c0a5adfb237bdbca4f0c92cb7160153ac8",
+      "path": "hedgehog/domains/wedding_seating/native_adapter_v01.py",
+      "post": {
+        "bytes": 15869,
+        "mode": "0644",
+        "sha256": "6ebb4b2ec0b3d15cf87d769718a14f131b5a7b516d3de1929368a69fe7be28e5"
+      },
+      "pre": {
+        "bytes": 15742,
+        "mode": "0644",
+        "sha256": "39e73fcd487609d3aa07628da49c54b34d2c9cae62cd7c228b49721af6bd6ca4"
+      }
+    },
+    {
+      "git_blob": "8b04742852ce58c1cfa60d753b957bc7df355858",
+      "path": "hedgehog/domains/wedding_seating/native_capabilities_v01.py",
+      "post": {
+        "bytes": 7549,
+        "mode": "0644",
+        "sha256": "f65487b8a55134cc038f6bf9a850245537073dadd36b5ed357ad94a225df1c16"
+      },
+      "pre": {
+        "bytes": 7549,
+        "mode": "0644",
+        "sha256": "f65487b8a55134cc038f6bf9a850245537073dadd36b5ed357ad94a225df1c16"
+      }
+    },
+    {
+      "git_blob": "c6b91fabe9fe3a95a6b7bdbd9439553f56fd738a",
+      "path": "hedgehog/domains/wedding_seating/native_contracts_v01.py",
+      "post": {
+        "bytes": 4319,
+        "mode": "0644",
+        "sha256": "7e375d56542d3904e2cc75f9154b95fad36496f6d1e67b18e3a998745b7313be"
+      },
+      "pre": {
+        "bytes": 4319,
+        "mode": "0644",
+        "sha256": "7e375d56542d3904e2cc75f9154b95fad36496f6d1e67b18e3a998745b7313be"
+      }
+    },
+    {
+      "git_blob": "419bf1671ff57d694d3886d890b19f3e071077c3",
+      "path": "hedgehog/domains/wedding_seating/privacy_v01.py",
+      "post": {
+        "bytes": 6127,
+        "mode": "0644",
+        "sha256": "9b7cc26529f5091b623bfe66325fb88a2e550a65b65d08a0891aac853fcd856e"
+      },
+      "pre": {
+        "bytes": 6127,
+        "mode": "0644",
+        "sha256": "9b7cc26529f5091b623bfe66325fb88a2e550a65b65d08a0891aac853fcd856e"
+      }
+    },
+    {
+      "git_blob": "771f14e4947656c2025989f476e9e441f1f67b85",
+      "path": "hedgehog/domains/wedding_seating/runtime_v01.py",
+      "post": {
+        "bytes": 10702,
+        "mode": "0644",
+        "sha256": "7ef1bb98c0b64b0a78dd1a5be955e6d6cb2bee3947bba5e3598c67e0f21fa062"
+      },
+      "pre": {
+        "bytes": 10406,
+        "mode": "0644",
+        "sha256": "327e329db4666e4cde464697c56fff12b64a17806e36df51044017834324db8e"
+      }
+    },
+    {
+      "git_blob": "85919315276a346a6715b4ebdfb0fb5430ca6bdf",
+      "path": "hedgehog/domains/wedding_seating/semantic_adapter_v01.py",
+      "post": {
+        "bytes": 21195,
+        "mode": "0644",
+        "sha256": "799142015719e4cc13e7d72032d51dc2fd0c10a5a35cc47bb6216fcc4048fb31"
+      },
+      "pre": null
+    },
+    {
+      "git_blob": "5aedcfc8b46848b1a78213b57700e2421ff8aed4",
+      "path": "hedgehog/domains/wedding_seating/supplied_v01.py",
+      "post": {
+        "bytes": 3373,
+        "mode": "0644",
+        "sha256": "7be168bbdfac5bcaf4b13271a42907c0602981ed29f1303180a3d58839a3553d"
+      },
+      "pre": {
+        "bytes": 3111,
+        "mode": "0644",
+        "sha256": "b83ad72bc0d57d202f7a5b7d47a4a089733a0f86a2aee6539e09edeff2e8a1a9"
+      }
+    },
+    {
+      "git_blob": "c2135a15eaf5703ae437ce36def1ff36de7f9a67",
+      "path": "tests/test_wedding_seating_circuit_v01.py",
+      "post": {
+        "bytes": 7484,
+        "mode": "0644",
+        "sha256": "b2f76cbb7b0e10550cb6db0e0f72ee934b536449091da5e1e87f7a92ce784bd0"
+      },
+      "pre": {
+        "bytes": 7484,
+        "mode": "0644",
+        "sha256": "b2f76cbb7b0e10550cb6db0e0f72ee934b536449091da5e1e87f7a92ce784bd0"
+      }
+    },
+    {
+      "git_blob": "1259822c927c403d4c61edcd1dce410449437080",
+      "path": "tests/test_wedding_seating_contracts_v01.py",
+      "post": {
+        "bytes": 13883,
+        "mode": "0644",
+        "sha256": "aac809883614af12ac45777b89c68ff9b90471f74cee0a3fcc08c68e3714df5c"
+      },
+      "pre": {
+        "bytes": 13883,
+        "mode": "0644",
+        "sha256": "aac809883614af12ac45777b89c68ff9b90471f74cee0a3fcc08c68e3714df5c"
+      }
+    },
+    {
+      "git_blob": "bb0b5300005a5a995b6a4cfee82299265d6b926a",
+      "path": "tests/test_wedding_seating_encoding_v01.py",
+      "post": {
+        "bytes": 7036,
+        "mode": "0644",
+        "sha256": "686ac9eb5bc05c78af49bb4f44dd3d75c4baab90c9c6084e5201ad382ef58199"
+      },
+      "pre": {
+        "bytes": 7036,
+        "mode": "0644",
+        "sha256": "686ac9eb5bc05c78af49bb4f44dd3d75c4baab90c9c6084e5201ad382ef58199"
+      }
+    },
+    {
+      "git_blob": "65ba46feb47e91de22ef07ee47952c1f35a8593f",
+      "path": "tests/test_wedding_seating_live_v01.py",
+      "post": {
+        "bytes": 9515,
+        "mode": "0644",
+        "sha256": "5a214eb80a84230d70af19d4554d7db566ca447cf789abdbbd04b1b1f5b60a70"
+      },
+      "pre": null
+    },
+    {
+      "git_blob": "6a5fe9f6587f8a0d6e3c1d62c0ec1c4e0e6f3d11",
+      "path": "tests/test_wedding_seating_math_v01.py",
+      "post": {
+        "bytes": 10783,
+        "mode": "0644",
+        "sha256": "993c00428ac66714b36c524e8861a1d13aca8fb68a2b39bdb6d71b3398ef5d18"
+      },
+      "pre": {
+        "bytes": 10783,
+        "mode": "0644",
+        "sha256": "993c00428ac66714b36c524e8861a1d13aca8fb68a2b39bdb6d71b3398ef5d18"
+      }
+    },
+    {
+      "git_blob": "16d615e4f3c989a9386cd82c1227bd3310fe35dc",
+      "path": "tests/test_wedding_seating_native_v01.py",
+      "post": {
+        "bytes": 13934,
+        "mode": "0644",
+        "sha256": "b916e83765d519aa607a8a5ea85e02e901a9b04530b765b92b2b71d56b3fb75b"
+      },
+      "pre": {
+        "bytes": 13934,
+        "mode": "0644",
+        "sha256": "b916e83765d519aa607a8a5ea85e02e901a9b04530b765b92b2b71d56b3fb75b"
+      }
+    },
+    {
+      "git_blob": "9f9eb14a7fcd55add20f57042ef4529e2d6d800e",
+      "path": "tests/test_wedding_seating_privacy_v01.py",
+      "post": {
+        "bytes": 5543,
+        "mode": "0644",
+        "sha256": "145fb73ca7efa7def06707acc005b17462f8ccc90dbae50828ec9a20f46a0009"
+      },
+      "pre": {
+        "bytes": 5543,
+        "mode": "0644",
+        "sha256": "145fb73ca7efa7def06707acc005b17462f8ccc90dbae50828ec9a20f46a0009"
+      }
+    },
+    {
+      "git_blob": "15eed36633d6f457958690f47b3c92905dcecec6",
+      "path": "tests/test_wedding_seating_supplied_v01.py",
+      "post": {
+        "bytes": 10926,
+        "mode": "0644",
+        "sha256": "f489bef046cd0c0c959776dc3b5dcade3030ae9ce0e59e7ccce9775f8365b385"
+      },
+      "pre": {
+        "bytes": 10926,
+        "mode": "0644",
+        "sha256": "f489bef046cd0c0c959776dc3b5dcade3030ae9ce0e59e7ccce9775f8365b385"
+      }
+    },
+    {
+      "git_blob": "8ee554b0a86c6ecbff31892ec88a0bd34b78d0fa",
+      "path": "fixtures/wedding_seating/reference_problem_v01.json",
+      "post": {
+        "bytes": 3220,
+        "mode": "0644",
+        "sha256": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b"
+      },
+      "pre": {
+        "bytes": 3220,
+        "mode": "0644",
+        "sha256": "69fab1879ccc15c708265828f68b31efd80b78e36cf076dffea88fa52b205a9b"
+      }
+    },
+    {
+      "git_blob": "8361ecd19f8ca7448df3530036baeaef9d222e4a",
+      "path": "fixtures/wedding_seating/semantic_proposals_v01.json",
+      "post": {
+        "bytes": 5797,
+        "mode": "0644",
+        "sha256": "a73602a0817c57bd25cc03f709d06daefc6099a8c955c493499ad43df134140c"
+      },
+      "pre": {
+        "bytes": 5797,
+        "mode": "0644",
+        "sha256": "a73602a0817c57bd25cc03f709d06daefc6099a8c955c493499ad43df134140c"
+      }
+    },
+    {
+      "git_blob": "f9f0a0b0a6a4029d55e5e819a4748ae684f06af3",
+      "path": "docs/wedding_seating_v01_checkpoint.md",
+      "post": {
+        "bytes": 2763,
+        "mode": "0644",
+        "sha256": "147df455926402479a3534b95317ba1dd4c0165eaa3645b13d927dce65dca069"
+      },
+      "pre": null
+    }
+  ]
+}

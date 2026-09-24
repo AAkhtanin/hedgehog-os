@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "-B",
+    "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w6_build/package/files/docs/showcase/wedding_seating_v01/verify_reader_v01.py"
+  ],
+  "cwd": "/workspace/scratch/7085cdc7c562/postgate4_wedding/v03/w6_build/package/files/docs/showcase/wedding_seating_v01",
+  "rc": 0,
+  "elapsed_seconds": 10.199009955002111,
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "stdout_sha256": "fd53455cf74b6c5901c339d7708d83282f1dd1948f6a97d8da154a980790bb4c",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scope": "DOCUMENT_BYTES_JSON_XML_RECORDED_FIELD_RELATIONSHIPS_ONLY"
+}

@@ -1,0 +1,12 @@
+{
+  "api_reference": "https://docs.aws.amazon.com/braket/latest/APIReference/API_CreateQuantumTask.html",
+  "checked_date": "2026-09-24",
+  "device": "Rigetti Cepheus",
+  "qpu_estimate_usd": "1.45",
+  "scope": "QPU subtotal only; S3, tax and actual billing not certified",
+  "shots_per_task": 1000,
+  "source": "https://aws.amazon.com/braket/pricing/",
+  "tasks": 2,
+  "usd_per_shot": "0.000425",
+  "usd_per_task": "0.30000"
+}

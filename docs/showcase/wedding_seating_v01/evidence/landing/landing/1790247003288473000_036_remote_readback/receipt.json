@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "git",
+    "ls-remote",
+    "--exit-code",
+    "origin",
+    "refs/heads/main"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os",
+  "final": true,
+  "rc": 0,
+  "seconds": 0.787509249523282,
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 57,
+    "sha256": "6a96af1b1bb29cc9c0cbe30c0c92a0c2dfbdd163ffceaa4792b9ea3655ed8fab"
+  }
+}

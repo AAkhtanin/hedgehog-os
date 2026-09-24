@@ -1,0 +1,12 @@
+{
+  "W4": "NOT_STARTED",
+  "all_owned_processes_final": true,
+  "armed_next_stage": false,
+  "candidate": "/private/tmp/RADIOLARIA_WEDDING_W3.QegSaxuA/candidate",
+  "commit": false,
+  "live_attempts": 19,
+  "phase": "COMPLETE_PACKAGING",
+  "proof_sha256": "3df0de699c4a690f21b2ef1f726ca2c66debce1a251035ab9c6d0cf289ec5cf6",
+  "push": false,
+  "result": "W3_READY_FOR_INDEPENDENT_REVIEW"
+}

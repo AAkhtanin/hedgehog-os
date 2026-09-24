@@ -1,0 +1,65 @@
+{
+  "status": "PASS_DOCUMENTATION_QA_WITH_RECORDED_RUNTIME_SCOPE",
+  "main_pages": 20,
+  "appendix_pages": 30,
+  "claims": 22,
+  "model_call_records": 19,
+  "final_selected_captures": 14,
+  "slide_visual_review": "All20 viewed at full size; final spacing repair on slide02 checked after LibreOffice export. Unchanged19render images compared exactly.",
+  "appendix_visual_review": "All30 rendered and individually visually reviewed; independent content review corrections applied.",
+  "pptx_native_tables": 3,
+  "pptx_native_charts": 1,
+  "chart_workbooks": 1,
+  "pptx_hyperlinks": 44,
+  "pdf_hyperlinks": 44,
+  "appendix_hyperlinks": 142,
+  "all_local_targets_resolve": true,
+  "new_online_targets": "PENDING_REVIEWED_PUBLICATION; stable repository URLs require authorized access",
+  "new_online_unique_targets": 62,
+  "owner_mutations": 0,
+  "commit": false,
+  "push": false,
+  "new_model_aws_qpu_native_calls": 0,
+  "tools": {
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "libreoffice": "LibreOfficeDev 26.8.0.0.alpha0 2c87e51eeaa2b413ff4ae097b2705eea1995d8e5",
+    "renderer": "Poppler pdftoppm; PDF text/annotations via pypdf",
+    "deck_authoring": "@oai/artifact-tool; final package/import/native-chart validators"
+  },
+  "assets": {
+    "wedding_presentation_v01.pptx": {
+      "bytes": 3100132,
+      "sha256": "c24906bc8c57bbf1f95d4832e829fbf7d57391974d29173787ed1e3ea19cc79c"
+    },
+    "wedding_presentation_v01.pdf": {
+      "bytes": 789458,
+      "sha256": "c2afea7d2c3315c18e7a8b536ad5560cc12d3f9e11b704b1c602e260ecb08b5a"
+    },
+    "technical_appendix_v01.pdf": {
+      "bytes": 180624,
+      "sha256": "4ac9dc476490aa2dcd2b557a5c4d7374abe8f4c990b6ca39784b4ae21ee07177"
+    },
+    "technical_appendix_v01.md": {
+      "bytes": 60205,
+      "sha256": "92b043f9883b9f906c0be39c0a8f8da94791f97446d0af9383c130820a8cf046"
+    },
+    "WEDDING_LLM_READER_V01.xml": {
+      "bytes": 8732562,
+      "sha256": "c6623b09fe0d5032ba2a4fd5cc822f851a2a564afb7382a90d890af271f971eb"
+    },
+    "content_manifest.json": {
+      "bytes": 89701,
+      "sha256": "6e3a3637fb9a334753121447955a66000283fb2edc214cbd18bf0dcd0e1ea5ad"
+    }
+  },
+  "fresh_application_verifier": "NOT_PASSED_IN_THIS_AUTHORING_ENVIRONMENT: one process RC2 due to missing jsonschema; second skipped; no dependency installed. Saved W5/W5L proofs remain recorded and exact canonical identities match.",
+  "fresh_independent_document_verifier": "PASS: standard-library bytes, XML, JSON pointers, all19 raw calls and saved measurement/output relationships; no application execution.",
+  "historical_failures": "All19 original receipts and relevant repair history retained; FAILED capture15 later consumed after consumer repair without raw response changes.",
+  "authoring_repairs": [
+    "Corrected workspace/receipt output handling in deck finalizer.",
+    "Embedded a native chart data workbook from exact recorded values.",
+    "Set required runtime import environment for first-party validation.",
+    "Corrected final PDF slide02 heading wrap."
+  ]
+}

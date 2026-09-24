@@ -1,0 +1,726 @@
+{
+  "D_seconds": {
+    "C1": 12.803510333411396,
+    "C2": 12.795705458149314,
+    "C3": 12.748226249590516,
+    "C4_recovery": 12.907455666922033
+  },
+  "G4_seconds": 1.3753671646118164,
+  "aws_requests": 0,
+  "commands": [
+    {
+      "counts": null,
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T231541.702272+0000_native_probe",
+      "phases": [],
+      "rc": 1,
+      "seconds": 0.5522599993273616
+    },
+    {
+      "counts": null,
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T231617.145243+0000_native_probe_02",
+      "phases": [],
+      "rc": 0,
+      "seconds": 0.7093506250530481
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 0,
+        "ProblemMathV01.solve_profiles": 0,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 0,
+        "run_fractal_runtime_v02": 0
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T232444.392616+0000_intake",
+      "phases": [
+        {
+          "duration": 4.5291148126125336e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.013017958961427212,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "failed",
+          "phase": "call"
+        },
+        {
+          "duration": 5.999952554702759e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.7249567210674286e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.04812000039964914,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 5.554128438234329e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 0.9808563338592649
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 0,
+        "ProblemMathV01.solve_profiles": 0,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 0,
+        "run_fractal_runtime_v02": 0
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T232514.708267+0000_story_01",
+      "phases": [
+        {
+          "duration": 4.179123789072037e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.016828082501888275,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.387460649013519e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.7208589017391205e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.048896209336817265,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.845803439617157e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 0.11834262497723103,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "failed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.00010466575622558594,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 1.1350724175572395
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 0,
+        "ProblemMathV01.solve_profiles": 0,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 0,
+        "run_fractal_runtime_v02": 0
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T232615.212652+0000_story_02",
+      "phases": [
+        {
+          "duration": 4.354212433099747e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.01692295726388693,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.77079302072525e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.6999972760677338e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.04801749996840954,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.754215478897095e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.293364582583308,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "failed",
+          "phase": "setup"
+        },
+        {
+          "duration": 8.537527173757553e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 3.357455374673009
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 2,
+        "ProblemMathV01.solve_profiles": 2,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 6,
+        "run_fractal_runtime_v02": 3
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T232715.315731+0000_story_03",
+      "phases": [
+        {
+          "duration": 7.083266973495483e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.016908875666558743,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.579126834869385e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.8166919946670532e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.047897666692733765,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.2166560888290405e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 53.919576125219464,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "failed",
+          "phase": "setup"
+        },
+        {
+          "duration": 8.479226380586624e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 55.05083308368921
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 2,
+        "ProblemMathV01.solve_profiles": 2,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 6,
+        "run_fractal_runtime_v02": 3
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T233126.788009+0000_story_04",
+      "phases": [
+        {
+          "duration": 4.9250200390815735e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.016149834729731083,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.7083402276039124e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.4124979972839355e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.04690825007855892,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.966689109802246e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 52.38466391712427,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "failed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.00020341668277978897,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 53.3714200835675
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 2,
+        "ProblemMathV01.solve_profiles": 2,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 6,
+        "run_fractal_runtime_v02": 3
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T233345.335833+0000_story_05",
+      "phases": [
+        {
+          "duration": 4.504155367612839e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.016679166816174984,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.791654646396637e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.670940011739731e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.04727466590702534,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.679189831018448e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 53.19701937492937,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "failed",
+          "phase": "setup"
+        },
+        {
+          "duration": 7.245782762765884e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 54.06030199956149
+    },
+    {
+      "counts": null,
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T233538.058912+0000_memory_probe",
+      "phases": [],
+      "rc": 0,
+      "seconds": 0.609307374805212
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 3,
+        "ProblemMathV01.solve_profiles": 3,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 10,
+        "run_fractal_runtime_v02": 4
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T233631.045727+0000_story_06",
+      "phases": [
+        {
+          "duration": 4.0833838284015656e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.01655204128473997,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.641657531261444e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.4791806936264038e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.04819616675376892,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.045851528644562e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 71.01206191722304,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.77124366723001,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.3332576751708984e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 7.987488061189651e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_validate_only_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 7.683224976062775e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_validate_only_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 2.5209039449691772e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_validate_only_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 4.741549491882324e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_clarify_conflict_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.7319405842572451,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_clarify_conflict_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.462525248527527e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_clarify_conflict_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 7.791630923748016e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_supplied_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.14234162494540215,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_supplied_neighbors_v01",
+          "outcome": "failed",
+          "phase": "call"
+        },
+        {
+          "duration": 7.920805364847183e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_native_supplied_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 73.53146537486464
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 0,
+        "ProblemMathV01.solve_profiles": 0,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 8,
+        "run_fractal_runtime_v02": 0
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T234146.677097+0000_supplied_and_current",
+      "phases": [
+        {
+          "duration": 0.08775445725768805,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_native_original_and_edges_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.037969292141497135,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_native_original_and_edges_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.916677087545395e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_native_original_and_edges_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 4.1000545024871826e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_changed_producer_refusal_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.052338709123432636,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_changed_producer_refusal_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.3375807106494904e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_changed_producer_refusal_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 3.299955278635025e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_allocation_and_memory_consumption_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.08998462464660406,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_allocation_and_memory_consumption_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 2.995971590280533e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_saved_allocation_and_memory_consumption_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 3.125052899122238e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.5174701251089573,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+          "outcome": "failed",
+          "phase": "call"
+        },
+        {
+          "duration": 7.304176688194275e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 1,
+      "seconds": 1.595200083218515
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 0,
+        "ProblemMathV01.solve_profiles": 0,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 1,
+        "run_fractal_runtime_v02": 0
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T234220.819466+0000_current_control_final",
+      "phases": [
+        {
+          "duration": 0.08474408369511366,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.5431488752365112,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 5.487445741891861e-05,
+          "nodeid": "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 0,
+      "seconds": 1.3584856251254678
+    },
+    {
+      "counts": {
+        "ProblemMathV01.solve": 0,
+        "ProblemMathV01.solve_profiles": 0,
+        "compile_encoding_v02": 0,
+        "compile_optimization_v01": 0,
+        "run_fractal_runtime_v02": 0
+      },
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T234321.079067+0000_final_intake",
+      "phases": [
+        {
+          "duration": 4.091672599315643e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.01662808284163475,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 3.9958395063877106e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        },
+        {
+          "duration": 2.4833716452121735e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "setup"
+        },
+        {
+          "duration": 0.05342237465083599,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "call"
+        },
+        {
+          "duration": 4.224944859743118e-05,
+          "nodeid": "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+          "outcome": "passed",
+          "phase": "teardown"
+        }
+      ],
+      "rc": 0,
+      "seconds": 0.9189134994521737
+    },
+    {
+      "counts": null,
+      "directory": "/Users/admin/Projects/hedgehog-os-wedding-w2-n2njZP54/commands/2026-09-23T234718.939205+0000_clean_supplied",
+      "phases": [],
+      "rc": 0,
+      "seconds": 0.87812037486583
+    }
+  ],
+  "controlled_main_native_dispatches": 23,
+  "controlled_main_native_tasks": 5,
+  "currentness_control_native_dispatches": 2,
+  "currentness_control_native_tasks": 1,
+  "effects": 0,
+  "informational_reuse_observed_calls": {},
+  "latest_observed_call_outcomes": {
+    "tests/test_wedding_seating_native_v01.py::test_native_clarify_conflict_v01": "passed",
+    "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01": "passed",
+    "tests/test_wedding_seating_native_v01.py::test_native_supplied_neighbors_v01": "failed",
+    "tests/test_wedding_seating_native_v01.py::test_native_validate_only_v01": "passed",
+    "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01": "passed",
+    "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01": "passed",
+    "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01": "passed",
+    "tests/test_wedding_seating_supplied_v01.py::test_saved_allocation_and_memory_consumption_v01": "passed",
+    "tests/test_wedding_seating_supplied_v01.py::test_saved_changed_producer_refusal_v01": "passed",
+    "tests/test_wedding_seating_supplied_v01.py::test_saved_native_original_and_edges_v01": "passed"
+  },
+  "live_llm_calls": 0,
+  "qpu_tasks": 0,
+  "story_seconds": 73.53146537486464,
+  "total_supervised_test_process_seconds": 248.10904224961996,
+  "unique_passed_call_nodes": [
+    "tests/test_wedding_seating_native_v01.py::test_native_clarify_conflict_v01",
+    "tests/test_wedding_seating_native_v01.py::test_native_story_profiles_v01",
+    "tests/test_wedding_seating_native_v01.py::test_native_validate_only_v01",
+    "tests/test_wedding_seating_native_v01.py::test_source_only_independent_intake_v01",
+    "tests/test_wedding_seating_native_v01.py::test_source_only_semantic_neighbors_v01",
+    "tests/test_wedding_seating_supplied_v01.py::test_fresh_native_current_source_and_root_v01",
+    "tests/test_wedding_seating_supplied_v01.py::test_saved_allocation_and_memory_consumption_v01",
+    "tests/test_wedding_seating_supplied_v01.py::test_saved_changed_producer_refusal_v01",
+    "tests/test_wedding_seating_supplied_v01.py::test_saved_native_original_and_edges_v01"
+  ],
+  "validate_only_observed_calls": {
+    "run_fractal_runtime_v02": 1
+  }
+}

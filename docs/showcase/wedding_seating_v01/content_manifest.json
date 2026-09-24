@@ -1,0 +1,2302 @@
+{
+  "schema": "WeddingPublicationContentManifestV01",
+  "publication_status": "PREPARED_NOT_COMMITTED_NOT_PUSHED",
+  "engineering_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a",
+  "engineering_tree": "97708773152e8fc147ce64d2a965a6b9534340c4",
+  "portable_manifest_sha256": "3c924898bedf03cf97df5f59cbc553e3d6f54cc9a60eaaf72c8019ac33bf1552",
+  "canonical_result_sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0",
+  "shared_facts": {
+    "model_calls": 19,
+    "initial_capture_validated": 16,
+    "initial_capture_failed": 3,
+    "final_consumed_captures": 14,
+    "semantic_episodes": 7,
+    "native_tasks_in_W3": 6,
+    "native_dispatches_in_W3": 24,
+    "W3_searches": 4,
+    "hardware": [
+      {
+        "profile": "KEEP_FAMILIAR_V01",
+        "measurements": 1000,
+        "feasible_shots": 33,
+        "infeasible_shots": 967,
+        "distinct_feasible_plans": 16,
+        "optimal_shots": 5,
+        "feasible_nonoptimal_shots": 28,
+        "selected_raw_index_zero_based": 63,
+        "selected_compact_basis": 517,
+        "selected_raw_bit_string_in_measured_qubits_order": "1010000001",
+        "selected_score": 0,
+        "reference_score": 0,
+        "objective_gap": 0,
+        "seating": {
+          "table_1": [
+            "guest_05",
+            "guest_06",
+            "guest_07",
+            "guest_08"
+          ],
+          "table_2": [
+            "guest_01",
+            "guest_02",
+            "guest_03",
+            "guest_04"
+          ],
+          "table_3": [
+            "guest_09",
+            "guest_10",
+            "guest_11",
+            "guest_12"
+          ]
+        }
+      },
+      {
+        "profile": "MIX_CIRCLES_V01",
+        "measurements": 1000,
+        "feasible_shots": 42,
+        "infeasible_shots": 958,
+        "distinct_feasible_plans": 20,
+        "optimal_shots": 18,
+        "feasible_nonoptimal_shots": 24,
+        "selected_raw_index_zero_based": 31,
+        "selected_compact_basis": 292,
+        "selected_raw_bit_string_in_measured_qubits_order": "0010010010",
+        "selected_score": 0,
+        "reference_score": 0,
+        "objective_gap": 0,
+        "seating": {
+          "table_1": [
+            "guest_01",
+            "guest_02",
+            "guest_07",
+            "guest_08"
+          ],
+          "table_2": [
+            "guest_03",
+            "guest_04",
+            "guest_09",
+            "guest_10"
+          ],
+          "table_3": [
+            "guest_05",
+            "guest_06",
+            "guest_11",
+            "guest_12"
+          ]
+        }
+      }
+    ],
+    "math": {
+      "canonical_binary_variables": 36,
+      "balanced_assignments": 34650,
+      "reduced_states": 1024,
+      "reduced_original_valid": 24
+    },
+    "local_seatings": {
+      "A": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_03",
+          "guest_04"
+        ],
+        "table_2": [
+          "guest_05",
+          "guest_06",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_3": [
+          "guest_09",
+          "guest_10",
+          "guest_11",
+          "guest_12"
+        ]
+      },
+      "B": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_09",
+          "guest_10"
+        ],
+        "table_2": [
+          "guest_03",
+          "guest_04",
+          "guest_05",
+          "guest_06"
+        ],
+        "table_3": [
+          "guest_07",
+          "guest_08",
+          "guest_11",
+          "guest_12"
+        ]
+      },
+      "VERIFY": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_03",
+          "guest_04"
+        ],
+        "table_2": [
+          "guest_05",
+          "guest_06",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_3": [
+          "guest_09",
+          "guest_10",
+          "guest_11",
+          "guest_12"
+        ]
+      },
+      "SR1": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_09",
+          "guest_10"
+        ],
+        "table_2": [
+          "guest_03",
+          "guest_04",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_3": [
+          "guest_05",
+          "guest_06",
+          "guest_11",
+          "guest_12"
+        ]
+      },
+      "SR2": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_2": [
+          "guest_03",
+          "guest_04",
+          "guest_09",
+          "guest_10"
+        ],
+        "table_3": [
+          "guest_05",
+          "guest_06",
+          "guest_11",
+          "guest_12"
+        ]
+      },
+      "SR3": {
+        "table_1": [
+          "guest_01",
+          "guest_02",
+          "guest_07",
+          "guest_08"
+        ],
+        "table_2": [
+          "guest_03",
+          "guest_04",
+          "guest_09",
+          "guest_10"
+        ],
+        "table_3": [
+          "guest_05",
+          "guest_06",
+          "guest_11",
+          "guest_12"
+        ]
+      }
+    },
+    "source_paths_added": 34,
+    "protected_baseline_paths": 2508,
+    "protected_nondefault_modes": 26
+  },
+  "slides": [
+    {
+      "slide_id": "S01",
+      "title": "One intent. Different computers.\nTraceable results.",
+      "subtitle": "A synthetic 12-guest wedding becomes a complete, inspectable activity.",
+      "appendix_anchor": "A01",
+      "claim_ids": [
+        "C01",
+        "C02",
+        "C09",
+        "C10"
+      ]
+    },
+    {
+      "slide_id": "S02",
+      "title": "The computation changed.\nThe commitment did not.",
+      "subtitle": "A request, its conditions and its current owner remain connected to the result.",
+      "appendix_anchor": "A02",
+      "claim_ids": [
+        "C20",
+        "C22"
+      ]
+    },
+    {
+      "slide_id": "S03",
+      "title": "A familiar optimization problem\nbecomes an operating-system case study.",
+      "subtitle": "The contribution is how a changing activity stays connected around its solver.",
+      "appendix_anchor": "A25",
+      "claim_ids": [
+        "C20"
+      ]
+    },
+    {
+      "slide_id": "S04",
+      "title": "Nineteen real model calls shaped\nseven recorded episodes.",
+      "subtitle": "One model: Gemini 2.5 Flash. Two roles: intent orchestrator and requirement architect.",
+      "appendix_anchor": "A05",
+      "claim_ids": [
+        "C07"
+      ]
+    },
+    {
+      "slide_id": "S05",
+      "title": "A different wish selected a different\nobjective and a different local plan.",
+      "subtitle": "The model chose between two declared profiles; the solver produced the arrangement.",
+      "appendix_anchor": "A11",
+      "claim_ids": [
+        "C02"
+      ]
+    },
+    {
+      "slide_id": "S06",
+      "title": "A changed request created a new\ncondition, with its predecessor intact.",
+      "subtitle": "Guests 07 and 08 move together: table 2 → table 1 → verify without another search.",
+      "appendix_anchor": "A12",
+      "claim_ids": [
+        "C04",
+        "C05"
+      ]
+    },
+    {
+      "slide_id": "S07",
+      "title": "“Check this plan” performed less work\nthan “make a plan”.",
+      "subtitle": "A finite capability catalogue turns semantic differences into different execution paths.",
+      "appendix_anchor": "A11",
+      "claim_ids": [
+        "C03",
+        "C06"
+      ]
+    },
+    {
+      "slide_id": "S08",
+      "title": "Budget and memory affected\nreal work in the local precursor.",
+      "subtitle": "Recorded W2 evidence: useful diagnostics and a scoped LocalDRS return path.",
+      "appendix_anchor": "A14",
+      "claim_ids": [
+        "C17",
+        "C18"
+      ]
+    },
+    {
+      "slide_id": "S09",
+      "title": "The numerical adapter changed\nwhile the original conditions stayed.",
+      "subtitle": "A documented engineering change from an annealing-oriented plan to gate-based hardware.",
+      "appendix_anchor": "A17",
+      "claim_ids": [
+        "C08",
+        "C22"
+      ]
+    },
+    {
+      "slide_id": "S10",
+      "title": "An exact reduction preserved\nevery feasible seating assignment.",
+      "subtitle": "Classical mathematics and preparation remained explicit around the QPU.",
+      "appendix_anchor": "A16",
+      "claim_ids": [
+        "C08",
+        "C11"
+      ]
+    },
+    {
+      "slide_id": "S11",
+      "title": "Two real tasks returned measurements\nfrom the same Rigetti QPU.",
+      "subtitle": "Amazon Braket · Rigetti Cepheus-1-108Q · recorded 24 September 2026.",
+      "appendix_anchor": "A19",
+      "claim_ids": [
+        "C09"
+      ]
+    },
+    {
+      "slide_id": "S12",
+      "title": "Every shot was checked against\nthe original seating conditions.",
+      "subtitle": "Feasible samples were a small subset; their selected plans still matched the finite optimum.",
+      "appendix_anchor": "A20",
+      "claim_ids": [
+        "C12"
+      ]
+    },
+    {
+      "slide_id": "S13",
+      "title": "A saved plan can be traced\nto one specific hardware measurement.",
+      "subtitle": "No failed sample was replaced by a classical solution.",
+      "appendix_anchor": "A20",
+      "claim_ids": [
+        "C10",
+        "C11"
+      ]
+    },
+    {
+      "slide_id": "S14",
+      "title": "Waiting preserved task identity\nwithout extending old authority.",
+      "subtitle": "Submission and later result consumption remained separate, bounded decisions.",
+      "appendix_anchor": "A22",
+      "claim_ids": [
+        "C13"
+      ]
+    },
+    {
+      "slide_id": "S15",
+      "title": "Each participant received a different\nprojection of the same activity.",
+      "subtitle": "Disclosure controls protected selected synthetic fields, with explicit trust assumptions.",
+      "appendix_anchor": "A18",
+      "claim_ids": [
+        "C14",
+        "C15"
+      ]
+    },
+    {
+      "slide_id": "S16",
+      "title": "A measured candidate could fail\neven when its decoding was coherent.",
+      "subtitle": "The original domain rules decided admissibility before acceptance.",
+      "appendix_anchor": "A23",
+      "claim_ids": [
+        "C05",
+        "C12"
+      ]
+    },
+    {
+      "slide_id": "S17",
+      "title": "The recorded result can be checked\nwithout buying another QPU task.",
+      "subtitle": "An external pin binds the accepted portable bytes; installed code checks supported relations.",
+      "appendix_anchor": "A24",
+      "claim_ids": [
+        "C19"
+      ]
+    },
+    {
+      "slide_id": "S18",
+      "title": "The comparison concerns evaluated\nscope, not a solver leaderboard.",
+      "subtitle": "Related work already formulates seating, exchanges optimizers and checks feasibility.",
+      "appendix_anchor": "A25",
+      "claim_ids": [
+        "C20"
+      ]
+    },
+    {
+      "slide_id": "S19",
+      "title": "A 107-guest profile needs new domain\nengineering, not a new owner principle.",
+      "subtitle": "Architectural extension argument. The observed experiment remains 12 guests.",
+      "appendix_anchor": "A26",
+      "claim_ids": [
+        "C21"
+      ]
+    },
+    {
+      "slide_id": "S20",
+      "title": "Inspect the words. Trace the sample.\nVerify the result.",
+      "subtitle": "The computation changed. The commitment did not.",
+      "appendix_anchor": "A30",
+      "claim_ids": [
+        "C16",
+        "C19",
+        "C20"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "C01",
+      "english_headline": "A person asks for a result, not a cloud workflow.",
+      "scope_class": "ARCHITECTURAL_INFERENCE",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_004/request_body.json",
+          "member": "captures/attempt_004/request_body.json",
+          "sha256": "22394dcd633e467b76d87f60589302e3ce3bd105d96635e74a562849623212ca",
+          "bytes": 3292,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/A.json",
+          "member": "story/A.json",
+          "sha256": "a285b22a67d5d76cc96ef8522cb4c2a87dc29472302ea9328a7d3f25570fd2db",
+          "bytes": 1062750,
+          "json_pointer": "/material/semantics",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/demo/run_wedding_seating_v01.py",
+          "member": "landing/postimages/demo/run_wedding_seating_v01.py",
+          "sha256": "7af918d9a51a62f0d555621a06f06173ec67cf4a123d6bb2f3be4b447c02817e",
+          "bytes": 3145,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Intent → finite semantic catalogue → performed work → checked result.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Interpretation of the demonstrated API and trace; one OrganizerRoot.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        1
+      ],
+      "appendix_anchor": "A01",
+      "reader_id": "C01",
+      "external_source_ids": [],
+      "rendered_value": "Intent → finite semantic catalogue → performed work → checked result.",
+      "slides": [
+        "S01"
+      ],
+      "appendix_anchors": [
+        "A01"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C02",
+      "english_headline": "The requested objective changes the accepted seating.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_005/response.txt",
+          "member": "captures/attempt_005/response.txt",
+          "sha256": "4eb089aaf657f208e3359e03dd8aa63caabb3244c6ed9b90547f374e14fa21ed",
+          "bytes": 245,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_007/response.txt",
+          "member": "captures/attempt_007/response.txt",
+          "sha256": "caf165463ef8909f3e2bfe3f39b1e7d5d508ff22fbf0d3ade1631d80310c9fc9",
+          "bytes": 315,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/A.json",
+          "member": "story/A.json",
+          "sha256": "a285b22a67d5d76cc96ef8522cb4c2a87dc29472302ea9328a7d3f25570fd2db",
+          "bytes": 1062750,
+          "json_pointer": "/output",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/B.json",
+          "member": "story/B.json",
+          "sha256": "10d36505fd66fb20e55150f2504ea349fef49a9b564a7b4c9f7dfdf004149cc9",
+          "bytes": 1063796,
+          "json_pointer": "/output",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "KEEP_FAMILIAR_V01 and MIX_CIRCLES_V01 select distinct local W3 plans.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Two predefined objective profiles share the same mandatory conditions. W4 hardware plans are separate outputs.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        5
+      ],
+      "appendix_anchor": "A01",
+      "reader_id": "C02",
+      "external_source_ids": [],
+      "rendered_value": "KEEP_FAMILIAR_V01 and MIX_CIRCLES_V01 select distinct local W3 plans.",
+      "slides": [
+        "S01",
+        "S05"
+      ],
+      "appendix_anchors": [
+        "A01",
+        "A11"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C03",
+      "english_headline": "Checking an existing plan does not trigger a new search.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/A.json",
+          "member": "story/A.json",
+          "sha256": "a285b22a67d5d76cc96ef8522cb4c2a87dc29472302ea9328a7d3f25570fd2db",
+          "bytes": 1062750,
+          "json_pointer": "/program/ordered_work_ids",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/VERIFY.json",
+          "member": "story/VERIFY.json",
+          "sha256": "4cfbfc6405608d6c668086d81df40472845c834ec2a4e32726d219d18e719cf5",
+          "bytes": 905501,
+          "json_pointer": "/program/ordered_work_ids",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR3.json",
+          "member": "story/SR3.json",
+          "sha256": "67921f9c4f7379591f3138a3061a6b294b6c0c0e41bf9b1f9731e940cd74e260",
+          "bytes": 907398,
+          "json_pointer": "/program/ordered_work_ids",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/costs_and_coverage.json",
+          "member": "costs_and_coverage.json",
+          "sha256": "73cadeae1358ea48270c313cf195f06f450b64f5ef777b56230ca35e08cb2ee9",
+          "bytes": 12994,
+          "json_pointer": "/main_story/costs",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "GENERATE: review,compile,solve,validate,consume. VERIFY/SR3: validate,consume; search/QUBO/encoding counts0.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Finite supported work catalogue. Verify inherits profile from actual bound prior, not a newly selected objective.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        7
+      ],
+      "appendix_anchor": "A11",
+      "reader_id": "C03",
+      "external_source_ids": [],
+      "rendered_value": "GENERATE: review,compile,solve,validate,consume. VERIFY/SR3: validate,consume; search/QUBO/encoding counts0.",
+      "slides": [
+        "S07"
+      ],
+      "appendix_anchors": [
+        "A11"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C04",
+      "english_headline": "A changed instruction replaces a condition instead of rewriting history.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_015/response.txt",
+          "member": "captures/attempt_015/response.txt",
+          "sha256": "cd5eda157464a2f0f0922d5b5360e248838e6efce7c5f816ff85725f73197589",
+          "bytes": 501,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_017/response.txt",
+          "member": "captures/attempt_017/response.txt",
+          "sha256": "f89ec106b34fa8defffe421d67902e0f37539fa6276d9c9cc3748918c836398f",
+          "bytes": 602,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR1.json",
+          "member": "story/SR1.json",
+          "sha256": "f944240d2ad0143834e3f3f8d5b091bfb91b8f24f21c003bcbbcb886de32d5b6",
+          "bytes": 1138425,
+          "json_pointer": "/material/revision_acknowledgement",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR2.json",
+          "member": "story/SR2.json",
+          "sha256": "650f76e5927278acdcb584fe2110bbd00d839bb8780bcbd30f750ba808a7f073",
+          "bytes": 1145745,
+          "json_pointer": "/material/revision_acknowledgement",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR2.json",
+          "member": "story/SR2.json",
+          "sha256": "650f76e5927278acdcb584fe2110bbd00d839bb8780bcbd30f750ba808a7f073",
+          "bytes": 1145745,
+          "json_pointer": "/material/problem",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR2.json",
+          "member": "story/SR2.json",
+          "sha256": "650f76e5927278acdcb584fe2110bbd00d839bb8780bcbd30f750ba808a7f073",
+          "bytes": 1145745,
+          "json_pointer": "/output",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "guest_07/08 table_2 ADD becomes table_1 REPLACE; revisions2→3.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Acknowledgement is SCRIPTED_CONTROLLED_OWNER_INPUT, followed by actual Root review.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        6
+      ],
+      "appendix_anchor": "A12",
+      "reader_id": "C04",
+      "external_source_ids": [],
+      "rendered_value": "guest_07/08 table_2 ADD becomes table_1 REPLACE; revisions2→3.",
+      "slides": [
+        "S06"
+      ],
+      "appendix_anchors": [
+        "A12"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C05",
+      "english_headline": "An old valid result is not necessarily valid for the current task.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/old_under_new.json",
+          "member": "story/old_under_new.json",
+          "sha256": "1c84f2c016365c046a6b00fe306fa02051a75a1c08e4ec50a9ecc634dffe8004",
+          "bytes": 5908,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR2.json",
+          "member": "story/SR2.json",
+          "sha256": "650f76e5927278acdcb584fe2110bbd00d839bb8780bcbd30f750ba808a7f073",
+          "bytes": 1145745,
+          "json_pointer": "/root_result",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Historical VALID; current INVALID with2 added-condition violations; current_owner_context refusal.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Domain context refusal, not a freshly created Root REJECT.",
+      "positive_ref": "RP2:historical/SR2",
+      "negative_ref": "RP2:current",
+      "slide_ids": [
+        6,
+        16
+      ],
+      "appendix_anchor": "A12",
+      "reader_id": "C05",
+      "external_source_ids": [],
+      "rendered_value": "Historical VALID; current INVALID with2 added-condition violations; current_owner_context refusal.",
+      "slides": [
+        "S06",
+        "S16"
+      ],
+      "appendix_anchors": [
+        "A12",
+        "A23"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C06",
+      "english_headline": "An unspecified objective remains unresolved.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_012/response.txt",
+          "member": "captures/attempt_012/response.txt",
+          "sha256": "d252b49d7a4fbefebb894fde8ef6e3bc08f657dbb0e4df0d4159765bac844c1d",
+          "bytes": 263,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_013/response.txt",
+          "member": "captures/attempt_013/response.txt",
+          "sha256": "7396a9071a0d005a8ad1dbe48695fbcba2f36d1b69a2f6d0a9f1b6ca335e2731",
+          "bytes": 259,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/AMBIGUOUS.json",
+          "member": "story/AMBIGUOUS.json",
+          "sha256": "297d07f637fcde0e34690e9fab57a592a6b254eda8d7c2ac43e93f0130e61309",
+          "bytes": 6076,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "CLARIFY; objective=null; no capabilities, search or plan.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "The model did not infer an undeclared objective.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        7
+      ],
+      "appendix_anchor": "A11",
+      "reader_id": "C06",
+      "external_source_ids": [],
+      "rendered_value": "CLARIFY; objective=null; no capabilities, search or plan.",
+      "slides": [
+        "S07"
+      ],
+      "appendix_anchors": [
+        "A11"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C07",
+      "english_headline": "Nineteen real model calls produced inspectable semantic contributions.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/costs_and_coverage.json",
+          "member": "costs_and_coverage.json",
+          "sha256": "73cadeae1358ea48270c313cf195f06f450b64f5ef777b56230ca35e08cb2ee9",
+          "bytes": 12994,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/prompt_revision.json",
+          "member": "prompt_revision.json",
+          "sha256": "5fc4ccbcbeae9a5d637f83d2c53ab2196568ff73a3459300ac0e26973f5dd80b",
+          "bytes": 762,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/verify_repair.json",
+          "member": "verify_repair.json",
+          "sha256": "19cd107d9ac0e11e5c4a1d548138d0b34f000a219492eea6e7bfe4c1a4e9409a",
+          "bytes": 821,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/group_repair.json",
+          "member": "group_repair.json",
+          "sha256": "bf3b7b7d4dc7fa6d1c094e1160625c84f44640fa1e800400b7e8217a933226aa",
+          "bytes": 733,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_001/receipt.json",
+          "member": "captures/attempt_001/receipt.json",
+          "sha256": "e9404ae6a9187a10e6a3bd7ba92c00d34b7366487bd9926587f088af8704959d",
+          "bytes": 393,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_002/receipt.json",
+          "member": "captures/attempt_002/receipt.json",
+          "sha256": "3d0fb1f2a8321117deaa8a3622be76920109e1bbe4919d29d77473bfb2150fbf",
+          "bytes": 395,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_003/receipt.json",
+          "member": "captures/attempt_003/receipt.json",
+          "sha256": "bcdfcf5e798f9cc75b98095a503f765c8911ef73c2274858e5d04dfdfffc0c9c",
+          "bytes": 331,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_004/receipt.json",
+          "member": "captures/attempt_004/receipt.json",
+          "sha256": "0b076dba293a556f3dfdd850a1a7c84045e5844f69c19c5b70268831c774a39c",
+          "bytes": 396,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_005/receipt.json",
+          "member": "captures/attempt_005/receipt.json",
+          "sha256": "cb41cc48b6411562a0862d1655fc4cb662139fe35509c1ab6c714d7dfd7425d2",
+          "bytes": 398,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_006/receipt.json",
+          "member": "captures/attempt_006/receipt.json",
+          "sha256": "ce760bc7df597172c92de611ce9b6b81fa42a23bf12b4adaf72a267a055a0707",
+          "bytes": 397,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_007/receipt.json",
+          "member": "captures/attempt_007/receipt.json",
+          "sha256": "775e942e6edded1cae2535ddebf2097e4398572555d770336596d24993c6d6e7",
+          "bytes": 400,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_008/receipt.json",
+          "member": "captures/attempt_008/receipt.json",
+          "sha256": "d6e04689498d4c0d8c101dc702ac882f5e640e04b476803ac500b4340e3b6e53",
+          "bytes": 402,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_009/receipt.json",
+          "member": "captures/attempt_009/receipt.json",
+          "sha256": "cd49086350bd7522b6d6fe0260e655e5e85b057a61d1d4032eb72f2109b8972f",
+          "bytes": 341,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_010/receipt.json",
+          "member": "captures/attempt_010/receipt.json",
+          "sha256": "3a170c79ec24a8d8271da4269682928d4c54568fbb3f78130442c797cffb4e2a",
+          "bytes": 410,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_011/receipt.json",
+          "member": "captures/attempt_011/receipt.json",
+          "sha256": "b9e6b2af2306825f5c8dffd056a158da27a0fd37c7fd73ee348396c3103bd83b",
+          "bytes": 413,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_012/receipt.json",
+          "member": "captures/attempt_012/receipt.json",
+          "sha256": "3ed5bf7fd65ac0111df48b0a35bd6b398ee0aa91fb64e8adaa782f805f7b8434",
+          "bytes": 405,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_013/receipt.json",
+          "member": "captures/attempt_013/receipt.json",
+          "sha256": "6d27a98bc45260552adfbb293349e6693a0a5648fcdf54a77fcd80931b3ff6a6",
+          "bytes": 408,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_014/receipt.json",
+          "member": "captures/attempt_014/receipt.json",
+          "sha256": "d297d984591fdc8d0a28d557ca5637502e30a279e47c9606c0fa8ac23c641a29",
+          "bytes": 397,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_015/receipt.json",
+          "member": "captures/attempt_015/receipt.json",
+          "sha256": "27e0f61783ac1b3462bd9c17e6f2647bfa280cf70c73e25a6dcc882be09d68de",
+          "bytes": 339,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_016/receipt.json",
+          "member": "captures/attempt_016/receipt.json",
+          "sha256": "ceae603992505510acfc7ecf5075d075d6e761547671c1dfa70c08f6ee6548bd",
+          "bytes": 399,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_017/receipt.json",
+          "member": "captures/attempt_017/receipt.json",
+          "sha256": "1cf11bdce94c303bf2c0706127b741c39ba842d14b756e3b82e2b38389de9bad",
+          "bytes": 401,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_018/receipt.json",
+          "member": "captures/attempt_018/receipt.json",
+          "sha256": "569a860a2c5b456d029fa04080cc36b898cc27916b75acc72033bd072c90fd4e",
+          "bytes": 400,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_019/receipt.json",
+          "member": "captures/attempt_019/receipt.json",
+          "sha256": "24adb1f3a8e3d1cc323ae4fa6841b3f43ccbd3ff4d6716054fa0a50d4c9ab1a8",
+          "bytes": 401,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "19 attempts/19 sends; initial16 VALIDATED/3 FAILED; final14 distinct captures.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "14 includes initially failed CALL15 after consumer repair. No accuracy percentage; no19 independent agents.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        4
+      ],
+      "appendix_anchor": "A05",
+      "reader_id": "C07",
+      "external_source_ids": [],
+      "rendered_value": "19 attempts/19 sends; initial16 VALIDATED/3 FAILED; final14 distinct captures.",
+      "slides": [
+        "S04"
+      ],
+      "appendix_anchors": [
+        "A05"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C08",
+      "english_headline": "A different compute model preserved the original constraints.",
+      "scope_class": "DERIVED",
+      "sources": [
+        {
+          "stage": "W1",
+          "archive_member": "w1_return/full_w1_01/test_wedding_seating_math_v01_evidence.json",
+          "member": "full_w1_01/test_wedding_seating_math_v01_evidence.json",
+          "sha256": "d58b51dc99379bfb5d96a081dbfb0d657542cb7716d50c4171753457cd4372a8",
+          "bytes": 80744,
+          "json_pointer": "/reference",
+          "manifest_sha256": "245e869293dc95d0e42ca8868d6430518a36f28562f07f85114225febdacfaae",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W1",
+          "archive_member": "w1_return/full_w1_01/test_wedding_seating_encoding_v01_evidence.json",
+          "member": "full_w1_01/test_wedding_seating_encoding_v01_evidence.json",
+          "sha256": "694f74574ab32458dc69d678d4b9faab3f31aed2768e5069bfea036cf2cf9f35",
+          "bytes": 295899,
+          "json_pointer": "/codec",
+          "manifest_sha256": "245e869293dc95d0e42ca8868d6430518a36f28562f07f85114225febdacfaae",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/numeric/KEEP_FAMILIAR_V01/numeric.json",
+          "member": "snapshot/numeric/KEEP_FAMILIAR_V01/numeric.json",
+          "sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+          "bytes": 50542,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/numeric/MIX_CIRCLES_V01/numeric.json",
+          "member": "snapshot/numeric/MIX_CIRCLES_V01/numeric.json",
+          "sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+          "bytes": 50215,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "36 binary variables → exact pair substitution →10 logical qubits; same24 feasible assignments.",
+      "unit": "as stated",
+      "derived_expression": "Original energy equals substituted energy for all1024 reduced states; recorded W1 equivalence.",
+      "caveat_assumption": "Developer implemented a different adapter/encoding. D-Wave was not executed; reduction is degree4, not a10-variable QUBO.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        9,
+        10
+      ],
+      "appendix_anchor": "A17",
+      "reader_id": "C08",
+      "external_source_ids": [],
+      "rendered_value": "36 binary variables → exact pair substitution →10 logical qubits; same24 feasible assignments.",
+      "slides": [
+        "S09",
+        "S10"
+      ],
+      "appendix_anchors": [
+        "A17",
+        "A16"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C09",
+      "english_headline": "Physical hardware participated in both requested objectives.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/KEEP_FAMILIAR_V01_results.json",
+          "member": "snapshot/provider/KEEP_FAMILIAR_V01_results.json",
+          "sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+          "bytes": 157753,
+          "json_pointer": "/taskMetadata",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/MIX_CIRCLES_V01_results.json",
+          "member": "snapshot/provider/MIX_CIRCLES_V01_results.json",
+          "sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+          "bytes": 166558,
+          "json_pointer": "/taskMetadata",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/KEEP_FAMILIAR_V01_results.json",
+          "member": "snapshot/provider/KEEP_FAMILIAR_V01_results.json",
+          "sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+          "bytes": 157753,
+          "json_pointer": "/additionalMetadata",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/MIX_CIRCLES_V01_results.json",
+          "member": "snapshot/provider/MIX_CIRCLES_V01_results.json",
+          "sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+          "bytes": 166558,
+          "json_pointer": "/additionalMetadata",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/hardware_completion_chain.json",
+          "member": "hardware_completion_chain.json",
+          "sha256": "d7e90af9d4f21a82699b34cc1f8e23192fdddf7d20380652af578adcf7d580c1",
+          "bytes": 32327,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Two1000-shot tasks on one Rigetti Cepheus-1-108Q via Amazon Braket.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Observed account-returned task metadata and compiled programs; not independent physical hardware attestation.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        11
+      ],
+      "appendix_anchor": "A01",
+      "reader_id": "C09",
+      "external_source_ids": [],
+      "rendered_value": "Two1000-shot tasks on one Rigetti Cepheus-1-108Q via Amazon Braket.",
+      "slides": [
+        "S01",
+        "S11"
+      ],
+      "appendix_anchors": [
+        "A01",
+        "A19"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C10",
+      "english_headline": "The selected plan is present in the original measurements.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/KEEP_FAMILIAR_V01_results.json",
+          "member": "snapshot/provider/KEEP_FAMILIAR_V01_results.json",
+          "sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+          "bytes": 157753,
+          "json_pointer": "/measurements/63",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/MIX_CIRCLES_V01_results.json",
+          "member": "snapshot/provider/MIX_CIRCLES_V01_results.json",
+          "sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+          "bytes": 166558,
+          "json_pointer": "/measurements/31",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+          "member": "snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+          "sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+          "bytes": 1633954,
+          "json_pointer": "/selected",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+          "member": "snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+          "sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+          "bytes": 1639686,
+          "json_pointer": "/selected",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+          "member": "snapshot/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+          "sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+          "bytes": 44491,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/outputs/MIX_CIRCLES_V01/save_receipts.json",
+          "member": "snapshot/outputs/MIX_CIRCLES_V01/save_receipts.json",
+          "sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+          "bytes": 44467,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "KEEP raw63/basis517; MIX raw31/basis292 → original validation → native consumption → Root ACCEPT → separate SAVE.",
+      "unit": "as stated",
+      "derived_expression": "basis=sum(bit*2^qubit); bounded pair codec; table assignment and saved bytes match.",
+      "caveat_assumption": "Bits use recorded measuredQubits order. No local repair or classical replacement.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        13
+      ],
+      "appendix_anchor": "A01",
+      "reader_id": "C10",
+      "external_source_ids": [],
+      "rendered_value": "KEEP raw63/basis517; MIX raw31/basis292 → original validation → native consumption → Root ACCEPT → separate SAVE.",
+      "slides": [
+        "S01",
+        "S13"
+      ],
+      "appendix_anchors": [
+        "A01",
+        "A20"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C11",
+      "english_headline": "Both selected hardware plans match the finite reference optimum.",
+      "scope_class": "DERIVED",
+      "sources": [
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+          "member": "snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+          "sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+          "bytes": 1633954,
+          "json_pointer": "/selected/validation/components",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+          "member": "snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+          "sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+          "bytes": 1639686,
+          "json_pointer": "/selected/validation/components",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W1",
+          "archive_member": "w1_return/full_w1_01/test_wedding_seating_math_v01_evidence.json",
+          "member": "full_w1_01/test_wedding_seating_math_v01_evidence.json",
+          "sha256": "d58b51dc99379bfb5d96a081dbfb0d657542cb7716d50c4171753457cd4372a8",
+          "bytes": 80744,
+          "json_pointer": "/reference/solutions",
+          "manifest_sha256": "245e869293dc95d0e42ca8868d6430518a36f28562f07f85114225febdacfaae",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Selected objective0, reference0, gap0 for both profiles.",
+      "unit": "as stated",
+      "derived_expression": "Feasible selected objective0 equals reference0; gap=selected-reference.",
+      "caveat_assumption": "Nonnegative finite objective with a valid zero witness; not an optimality guarantee for future tasks.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        10,
+        13
+      ],
+      "appendix_anchor": "A16",
+      "reader_id": "C11",
+      "external_source_ids": [],
+      "rendered_value": "Selected objective0, reference0, gap0 for both profiles.",
+      "slides": [
+        "S10",
+        "S13"
+      ],
+      "appendix_anchors": [
+        "A16",
+        "A20"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C12",
+      "english_headline": "Measured candidates are checked against the original conditions.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+          "member": "snapshot/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+          "sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+          "bytes": 1633954,
+          "json_pointer": "/lineage",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+          "member": "snapshot/provider/MIX_CIRCLES_V01_sample_validation.json",
+          "sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+          "bytes": 1639686,
+          "json_pointer": "/lineage",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "KEEP1000/33 feasible/16 distinct/5 optimal; MIX1000/42 feasible/20 distinct/18 optimal.",
+      "unit": "as stated",
+      "derived_expression": "Count valid lineage rows; deduplicate assignments separately; count valid rows with objective0.",
+      "caveat_assumption": "Optimal counts are shots, distinct plans another denominator. Rejections are not a physical-noise estimate.",
+      "positive_ref": "selected KEEP raw63",
+      "negative_ref": "KEEP raw2 capacity(table1,table2)+APART01/05",
+      "slide_ids": [
+        12,
+        16
+      ],
+      "appendix_anchor": "A20",
+      "reader_id": "C12",
+      "external_source_ids": [],
+      "rendered_value": "KEEP1000/33 feasible/16 distinct/5 optimal; MIX1000/42 feasible/20 distinct/18 optimal.",
+      "slides": [
+        "S12",
+        "S16"
+      ],
+      "appendix_anchors": [
+        "A20",
+        "A23"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C13",
+      "english_headline": "Waiting preserved task identity, not expired authority.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/historical/queued/submission_end_resume_snapshot.json",
+          "member": "historical/queued/submission_end_resume_snapshot.json",
+          "sha256": "4ee55dc72ba3b792e67dc8c347cc4ae2fb13eaf0f9aca2887800f2152f31756b",
+          "bytes": 536,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/ledger.json",
+          "member": "snapshot/provider/ledger.json",
+          "sha256": "9d638c5dc01c7af4bc5852b37039eedf9061d063cfc79f0d1987fded58326d6d",
+          "bytes": 131189,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/hardware_completion_chain.json",
+          "member": "hardware_completion_chain.json",
+          "sha256": "d7e90af9d4f21a82699b34cc1f8e23192fdddf7d20380652af578adcf7d580c1",
+          "bytes": 32327,
+          "json_pointer": "/rows",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Same two task ARNs; fresh resume preparations; ~102minutes creation-to-end; separate current reviews/SAVEs.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Elapsed includes waiting. Old authority is not restored; no general exactly-once claim.",
+      "positive_ref": "same-task resume completion",
+      "negative_ref": "RP4",
+      "slide_ids": [
+        14
+      ],
+      "appendix_anchor": "A22",
+      "reader_id": "C13",
+      "external_source_ids": [],
+      "rendered_value": "Same two task ARNs; fresh resume preparations; ~102minutes creation-to-end; separate current reviews/SAVEs.",
+      "slides": [
+        "S14"
+      ],
+      "appendix_anchors": [
+        "A22"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C14",
+      "english_headline": "Different participants receive different approved projections.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_004/request_body.json",
+          "member": "captures/attempt_004/request_body.json",
+          "sha256": "22394dcd633e467b76d87f60589302e3ce3bd105d96635e74a562849623212ca",
+          "bytes": 3292,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/captures/attempt_005/request_body.json",
+          "member": "captures/attempt_005/request_body.json",
+          "sha256": "8b9c23cc029d3ddea9d3cc6ade6c5130efb835def894b4f4c9e75882ea325598",
+          "bytes": 6275,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/postimages/tests/test_wedding_seating_live_v01.py",
+          "member": "postimages/tests/test_wedding_seating_live_v01.py",
+          "sha256": "5a214eb80a84230d70af19d4554d7db566ca447cf789abdbbd04b1b1f5b60a70",
+          "bytes": 9515,
+          "json_pointer": "",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true,
+          "line_range": [
+            27,
+            46
+          ]
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/costs_and_coverage.json",
+          "member": "costs_and_coverage.json",
+          "sha256": "73cadeae1358ea48270c313cf195f06f450b64f5ef777b56230ca35e08cb2ee9",
+          "bytes": 12994,
+          "json_pointer": "/unique_passed_test_calls",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/numeric/KEEP_FAMILIAR_V01/program.json",
+          "member": "snapshot/numeric/KEEP_FAMILIAR_V01/program.json",
+          "sha256": "59e82b5418ec09bbc50b7ba5a61ced65c660714d0480b3c250a29be90455237e",
+          "bytes": 9593,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/numeric/MIX_CIRCLES_V01/program.json",
+          "member": "snapshot/numeric/MIX_CIRCLES_V01/program.json",
+          "sha256": "d6b02a1cbf9b425312e827ce1ce96c534a3c306b95559666ba430d7959ab167d",
+          "bytes": 9593,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Declared private synthetic fields absent from inspected model/QPU payloads; approved semantic and numerical projections released.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Numeric relational structure remains information. No universal confidentiality or secret-zero-knowledge claim.",
+      "positive_ref": "RP1 approved",
+      "negative_ref": "RP1 controlled private/foreign",
+      "slide_ids": [
+        15
+      ],
+      "appendix_anchor": "A18",
+      "reader_id": "C14",
+      "external_source_ids": [],
+      "rendered_value": "Declared private synthetic fields absent from inspected model/QPU payloads; approved semantic and numerical projections released.",
+      "slides": [
+        "S15"
+      ],
+      "appendix_anchors": [
+        "A18"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C15",
+      "english_headline": "The recorded cloud principal was an IAM user, not account root.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/snapshot/provider/read_only_preflight.json",
+          "member": "snapshot/provider/read_only_preflight.json",
+          "sha256": "44f084049128af902cb4c6d7ae5593e5aff2bee44a38100152c45bc575a1cd15",
+          "bytes": 530989,
+          "json_pointer": "/identity",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "IAM user radiolaria-quantum.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Principal-only fact; exact least privilege needs policy bodies/version/scope and supporting permission review.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        15
+      ],
+      "appendix_anchor": "A18",
+      "reader_id": "C15",
+      "external_source_ids": [],
+      "rendered_value": "IAM user radiolaria-quantum.",
+      "slides": [
+        "S15"
+      ],
+      "appendix_anchors": [
+        "A18"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C16",
+      "english_headline": "The accepted domain addition did not modify common core paths.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W5L",
+          "archive_member": "wedding_w5l/delta.json",
+          "member": "delta.json",
+          "sha256": "f0d532dba41c0b06e8ef8f0588dacd62e13c03b686e1450669bfa17915520e3f",
+          "bytes": 8633,
+          "json_pointer": "/changes",
+          "manifest_sha256": "bd9df61c2a994641d62b4b14699e6eff3321435b4f047af60aa99f47c52bfcf9",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5L",
+          "archive_member": "wedding_w5l/verification_summary.json",
+          "member": "verification_summary.json",
+          "sha256": "88d4d6a12ac981e36d62e1e907c17a645596a59689179519d6ec06a02aa419e7",
+          "bytes": 16605,
+          "json_pointer": "/commit",
+          "manifest_sha256": "bd9df61c2a994641d62b4b14699e6eff3321435b4f047af60aa99f47c52bfcf9",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "34 added paths at fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a relative to3470b448059cfc5089975342b80c1649ba1dff61.",
+      "unit": "as stated",
+      "derived_expression": "Count accepted delta changes; all are additions in wedding domain/demo/fixtures/tests/checkpoint scopes.",
+      "caveat_assumption": "Bounded accepted delta, not all historical development. W4 historical cumulative count30 is a different snapshot.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        20
+      ],
+      "appendix_anchor": "A30",
+      "reader_id": "C16",
+      "external_source_ids": [],
+      "rendered_value": "34 added paths at fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a relative to3470b448059cfc5089975342b80c1649ba1dff61.",
+      "slides": [
+        "S20"
+      ],
+      "appendix_anchors": [
+        "A30"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C17",
+      "english_headline": "G4 allocated real optional diagnostic work.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W2",
+          "archive_member": "w2_return/commands/2026-09-23T233631.045727+0000_story_06/story/C6_allocation.json",
+          "member": "commands/2026-09-23T233631.045727+0000_story_06/story/C6_allocation.json",
+          "sha256": "ca0d68ab2bd86b09ef876c183b4f245efce9b43c80aad9192ba5ea3f484cc355",
+          "bytes": 316519,
+          "json_pointer": "/allocation",
+          "manifest_sha256": "4df7d98bea23fc7f31d83f7627390d968040e9e302d7a5b066178c6bf20b48d3",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W2",
+          "archive_member": "w2_return/commands/2026-09-23T233631.045727+0000_story_06/story/C6_allocation.json",
+          "member": "commands/2026-09-23T233631.045727+0000_story_06/story/C6_allocation.json",
+          "sha256": "ca0d68ab2bd86b09ef876c183b4f245efce9b43c80aad9192ba5ea3f484cc355",
+          "bytes": 316519,
+          "json_pointer": "/diagnostics",
+          "manifest_sha256": "4df7d98bea23fc7f31d83f7627390d968040e9e302d7a5b066178c6bf20b48d3",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W2",
+          "archive_member": "w2_return/commands/2026-09-23T233631.045727+0000_story_06/story/C6_allocation.json",
+          "member": "commands/2026-09-23T233631.045727+0000_story_06/story/C6_allocation.json",
+          "sha256": "ca0d68ab2bd86b09ef876c183b4f245efce9b43c80aad9192ba5ea3f484cc355",
+          "bytes": 316519,
+          "json_pointer": "/results",
+          "manifest_sha256": "4df7d98bea23fc7f31d83f7627390d968040e9e302d7a5b066178c6bf20b48d3",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Policy6: seed1+final consumer1+four diagnostics; cohesion/table1,table2 and mixing/table1,table2.",
+      "unit": "as stated",
+      "derived_expression": "Original task policy6; four optional dispatched work results consumed by final.",
+      "caveat_assumption": "Recorded W2, partial table coverage; StrongGT NOT_USED_IN_SINGLE_OWNER_PROFILE; no new learned calibration.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        8
+      ],
+      "appendix_anchor": "A14",
+      "reader_id": "C17",
+      "external_source_ids": [],
+      "rendered_value": "Policy6: seed1+final consumer1+four diagnostics; cohesion/table1,table2 and mixing/table1,table2.",
+      "slides": [
+        "S08"
+      ],
+      "appendix_anchors": [
+        "A14"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C18",
+      "english_headline": "Memory can inform a fresh review without restoring authority.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W2",
+          "archive_member": "w2_return/commands/2026-09-23T233631.045727+0000_story_06/story/C6_memory.json",
+          "member": "commands/2026-09-23T233631.045727+0000_story_06/story/C6_memory.json",
+          "sha256": "03d054f6e5e4be3b0e03d93bc6ffa9ba6ff7d0534732ed9430dc9095e5b9a400",
+          "bytes": 84582,
+          "json_pointer": "",
+          "manifest_sha256": "4df7d98bea23fc7f31d83f7627390d968040e9e302d7a5b066178c6bf20b48d3",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W2",
+          "archive_member": "w2_return/commands/2026-09-23T233631.045727+0000_story_06/story/C4_conflict.json",
+          "member": "commands/2026-09-23T233631.045727+0000_story_06/story/C4_conflict.json",
+          "sha256": "b4330ec14038ca9aa103d3ef277ae06f46eea2eb372c8181b854bfa3396d2fe3",
+          "bytes": 6866,
+          "json_pointer": "",
+          "manifest_sha256": "4df7d98bea23fc7f31d83f7627390d968040e9e302d7a5b066178c6bf20b48d3",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W2",
+          "archive_member": "w2_return/commands/2026-09-23T233631.045727+0000_story_06/story/C4_recovery.json",
+          "member": "commands/2026-09-23T233631.045727+0000_story_06/story/C4_recovery.json",
+          "sha256": "343834c94892dd44f85ba9edc20e046bc2d7aeb587c5656a4bd1789405d36b92",
+          "bytes": 1067560,
+          "json_pointer": "",
+          "manifest_sha256": "4df7d98bea23fc7f31d83f7627390d968040e9e302d7a5b066178c6bf20b48d3",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "3writes,7queries,2fresh Root-approved summary descents;5 eligibility refusals.",
+      "unit": "as stated",
+      "derived_expression": "Count op WRITE/QUERY and descent outcomes in recorded C6 memory.",
+      "caveat_assumption": "All seven searches return candidate_count1/blocked_count0; separate eligibility blocks5(time1/scope4). LocalDRS only; persistent record remains ACTIVE.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        8
+      ],
+      "appendix_anchor": "A14",
+      "reader_id": "C18",
+      "external_source_ids": [],
+      "rendered_value": "3writes,7queries,2fresh Root-approved summary descents;5 eligibility refusals.",
+      "slides": [
+        "S08"
+      ],
+      "appendix_anchors": [
+        "A14"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C19",
+      "english_headline": "Recorded evidence can be checked without new model or QPU calls.",
+      "scope_class": "OBSERVED",
+      "sources": [
+        {
+          "stage": "W5L",
+          "archive_member": "wedding_w5l/installed_canonical.json",
+          "member": "installed_canonical.json",
+          "sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0",
+          "bytes": 5783,
+          "json_pointer": "/operations",
+          "manifest_sha256": "bd9df61c2a994641d62b4b14699e6eff3321435b4f047af60aa99f47c52bfcf9",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5L",
+          "archive_member": "wedding_w5l/verification_summary.json",
+          "member": "verification_summary.json",
+          "sha256": "88d4d6a12ac981e36d62e1e907c17a645596a59689179519d6ec06a02aa419e7",
+          "bytes": 16605,
+          "json_pointer": "",
+          "manifest_sha256": "bd9df61c2a994641d62b4b14699e6eff3321435b4f047af60aa99f47c52bfcf9",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/portable_v01.py",
+          "member": "landing/postimages/hedgehog/domains/wedding_seating/portable_v01.py",
+          "sha256": "572aea9885e26b425d9d4ec42990fcc56cb4619ec444d98a9f9bd878431155fb",
+          "bytes": 23056,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Pinned portable read-only checks: Host/Root/D/Work/search/DRS/network/model/QPU operations0.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Saved relationship verification at recorded times, not full native replay; original W5 checker does not cover supplementary all19 history.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        17,
+        20
+      ],
+      "appendix_anchor": "A24",
+      "reader_id": "C19",
+      "external_source_ids": [],
+      "rendered_value": "Pinned portable read-only checks: Host/Root/D/Work/search/DRS/network/model/QPU operations0.",
+      "slides": [
+        "S17",
+        "S20"
+      ],
+      "appendix_anchors": [
+        "A24",
+        "A30"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C20",
+      "english_headline": "The contribution is the inspected organization around the solver.",
+      "scope_class": "ARCHITECTURAL_INFERENCE",
+      "sources": [
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR2.json",
+          "member": "story/SR2.json",
+          "sha256": "650f76e5927278acdcb584fe2110bbd00d839bb8780bcbd30f750ba808a7f073",
+          "bytes": 1145745,
+          "json_pointer": "/material",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W3",
+          "archive_member": "w3_return/story/SR3.json",
+          "member": "story/SR3.json",
+          "sha256": "67921f9c4f7379591f3138a3061a6b294b6c0c0e41bf9b1f9731e940cd74e260",
+          "bytes": 907398,
+          "json_pointer": "/program/ordered_work_ids",
+          "manifest_sha256": "31c6fa081df72122243454775341b98ec54ddf5c4f135dbbf7af5bd6e80bda0a",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/hardware_completion_chain.json",
+          "member": "hardware_completion_chain.json",
+          "sha256": "d7e90af9d4f21a82699b34cc1f8e23192fdddf7d20380652af578adcf7d580c1",
+          "bytes": 32327,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5L",
+          "archive_member": "wedding_w5l/installed_canonical.json",
+          "member": "installed_canonical.json",
+          "sha256": "e4a1a644776da341368af07eeb5a0317f7fca4dcda25e5bb23c7004aacad09b0",
+          "bytes": 5783,
+          "json_pointer": "",
+          "manifest_sha256": "bd9df61c2a994641d62b4b14699e6eff3321435b4f047af60aa99f47c52bfcf9",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Intent, work composition, revision, release, source provenance, current review and offline inspection are evaluated together.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Compare scope of cited publications; no solver-speed or company ranking. Integrate exact external bibliographic records separately.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        2,
+        3,
+        18
+      ],
+      "appendix_anchor": "A02",
+      "reader_id": "C20",
+      "external_source_ids": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ],
+      "rendered_value": "Intent, work composition, revision, release, source provenance, current review and offline inspection are evaluated together.",
+      "slides": [
+        "S02",
+        "S03",
+        "S18",
+        "S20"
+      ],
+      "appendix_anchors": [
+        "A02",
+        "A25",
+        "A30"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C21",
+      "english_headline": "A107-guest extension calls for domain and solver engineering.",
+      "scope_class": "ARCHITECTURAL_INFERENCE",
+      "sources": [
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/contracts_v01.py",
+          "member": "landing/postimages/hedgehog/domains/wedding_seating/contracts_v01.py",
+          "sha256": "25516a295a22727b8bb188256b575d3a71dacf4a28eed7a83af3ad60a151347b",
+          "bytes": 15863,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/math_v01.py",
+          "member": "landing/postimages/hedgehog/domains/wedding_seating/math_v01.py",
+          "sha256": "fb07498b922f6d1f95dfbbbdf1709f17732f2c40a4b0ce70c36cd1224ada0e3a",
+          "bytes": 10017,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/encoding_v02.py",
+          "member": "landing/postimages/hedgehog/domains/wedding_seating/encoding_v02.py",
+          "sha256": "3c29ddd305739ec92fae337c5be6c803a5a893cdf1f72e1f85c2d2582e440053",
+          "bytes": 6820,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/qpu_contracts_v01.py",
+          "member": "landing/postimages/hedgehog/domains/wedding_seating/qpu_contracts_v01.py",
+          "sha256": "912c48a6875ac43223b40d2744d985c3e056f9e54f90275c011363f6025d97dc",
+          "bytes": 6621,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5",
+          "archive_member": "wedding_w5/landing/postimages/hedgehog/domains/wedding_seating/native_adapter_v01.py",
+          "member": "landing/postimages/hedgehog/domains/wedding_seating/native_adapter_v01.py",
+          "sha256": "6c8c643f9ee5aae9193cd2b51b7b9f1199de7b906e48255abacbc50a589f7f3f",
+          "bytes": 15899,
+          "json_pointer": "",
+          "manifest_sha256": "d76671859837f20a373dd6f94280437e6c4c353eb2decc7001668b4b4946f301",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Generalize bounds, table capacities, validator and solver/encoding while retaining task ownership and source/currentness/review boundaries.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Future profile, not an executed107-guest benchmark.107 is not divisible by4; current pair encoding is specialized.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        19
+      ],
+      "appendix_anchor": "A26",
+      "reader_id": "C21",
+      "external_source_ids": [
+        "L2"
+      ],
+      "rendered_value": "Generalize bounds, table capacities, validator and solver/encoding while retaining task ownership and source/currentness/review boundaries.",
+      "slides": [
+        "S19"
+      ],
+      "appendix_anchors": [
+        "A26"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    },
+    {
+      "claim_id": "C22",
+      "english_headline": "The computation changed; the commitment did not.",
+      "scope_class": "ARCHITECTURAL_INFERENCE",
+      "sources": [
+        {
+          "stage": "W1",
+          "archive_member": "w1_return/full_w1_01/test_wedding_seating_encoding_v01_evidence.json",
+          "member": "full_w1_01/test_wedding_seating_encoding_v01_evidence.json",
+          "sha256": "694f74574ab32458dc69d678d4b9faab3f31aed2768e5069bfea036cf2cf9f35",
+          "bytes": 295899,
+          "json_pointer": "/codec",
+          "manifest_sha256": "245e869293dc95d0e42ca8868d6430518a36f28562f07f85114225febdacfaae",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W4",
+          "archive_member": "w4_hardware_completion/hardware_completion_chain.json",
+          "member": "hardware_completion_chain.json",
+          "sha256": "d7e90af9d4f21a82699b34cc1f8e23192fdddf7d20380652af578adcf7d580c1",
+          "bytes": 32327,
+          "json_pointer": "",
+          "manifest_sha256": "014e2996c874f92e74db37373fb82aba934f9dd9f6a2a581410113bcbdeca1d1",
+          "manifest_row_verified": true
+        },
+        {
+          "stage": "W5L",
+          "archive_member": "wedding_w5l/delta.json",
+          "member": "delta.json",
+          "sha256": "f0d532dba41c0b06e8ef8f0588dacd62e13c03b686e1450669bfa17915520e3f",
+          "bytes": 8633,
+          "json_pointer": "",
+          "manifest_sha256": "bd9df61c2a994641d62b4b14699e6eff3321435b4f047af60aa99f47c52bfcf9",
+          "manifest_row_verified": true
+        }
+      ],
+      "observed_value": "Different numerical encoding and hardware transport preserved the original task conditions and acceptance relationships.",
+      "unit": "as stated",
+      "derived_expression": "",
+      "caveat_assumption": "Measured two-task history plus architectural conclusion. Developer migration, no runtime dual-device failover or universal immunity.",
+      "positive_ref": null,
+      "negative_ref": null,
+      "slide_ids": [
+        2,
+        9
+      ],
+      "appendix_anchor": "A02",
+      "reader_id": "C22",
+      "external_source_ids": [],
+      "rendered_value": "Different numerical encoding and hardware transport preserved the original task conditions and acceptance relationships.",
+      "slides": [
+        "S02",
+        "S09"
+      ],
+      "appendix_anchors": [
+        "A02",
+        "A17"
+      ],
+      "source_commit": "fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a"
+    }
+  ],
+  "all_19_call_ledger": [
+    {
+      "call_id": "CALL_01",
+      "attempt": 1,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:a",
+      "prompt_version": "WeddingLiveSemanticV01",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [],
+      "historical_only": true,
+      "raw_response_sha256": "9c255333703e40531b8a009f4db9676df59b8ae5bcbfd9bde9af3454fba5ea10"
+    },
+    {
+      "call_id": "CALL_02",
+      "attempt": 2,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:a",
+      "prompt_version": "WeddingLiveSemanticV01",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [],
+      "historical_only": true,
+      "raw_response_sha256": "ace20f49354bfca3ad5048bfe1676004b4ca97b715e1755206252768ea7cefe2"
+    },
+    {
+      "call_id": "CALL_03",
+      "attempt": 3,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:b",
+      "prompt_version": "WeddingLiveSemanticV01",
+      "initial_status": "FAILED",
+      "initial_refusal": "requested_outputs",
+      "selected_episodes": [],
+      "historical_only": true,
+      "raw_response_sha256": "06ab06d5f9186a9f9019146a58e6b8c1be74398491d3eeb9510a23aec8e5b158"
+    },
+    {
+      "call_id": "CALL_04",
+      "attempt": 4,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:a",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "A"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "2c443b9f735dee47efeab3f1ba2a8610adf795925adc85791d3bf09a40327f37"
+    },
+    {
+      "call_id": "CALL_05",
+      "attempt": 5,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:a",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "A"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "4eb089aaf657f208e3359e03dd8aa63caabb3244c6ed9b90547f374e14fa21ed"
+    },
+    {
+      "call_id": "CALL_06",
+      "attempt": 6,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:b",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "B"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "d0e5667e444a70cce50457e8d91eb4ae1348f135876e55fde3e938e9f57f56af"
+    },
+    {
+      "call_id": "CALL_07",
+      "attempt": 7,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:b",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "B"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "caf165463ef8909f3e2bfe3f39b1e7d5d508ff22fbf0d3ade1631d80310c9fc9"
+    },
+    {
+      "call_id": "CALL_08",
+      "attempt": 8,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:verify",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [],
+      "historical_only": true,
+      "raw_response_sha256": "d614582e373aa0345f75d1ba65e674204a4cd797f30155d9724a6547eb0ab09d"
+    },
+    {
+      "call_id": "CALL_09",
+      "attempt": 9,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:verify",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "FAILED",
+      "initial_refusal": "objective_scope",
+      "selected_episodes": [],
+      "historical_only": true,
+      "raw_response_sha256": "4f1e42d5bf72aa7baba6a72e9e1a2868fde00bb9f1f1666e7c87df734042f17e"
+    },
+    {
+      "call_id": "CALL_10",
+      "attempt": 10,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:verify:resumed",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "VERIFY"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "e370239701323ec0f9dec9eb74002166be25e7033e1333565a7f9467103091af"
+    },
+    {
+      "call_id": "CALL_11",
+      "attempt": 11,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:verify:resumed",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "VERIFY"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "1d9fc72a390077f836dc2c254ec4ecbf046c43be4c832b83772f828102f99235"
+    },
+    {
+      "call_id": "CALL_12",
+      "attempt": 12,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:ambiguous",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "AMBIGUOUS"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "d252b49d7a4fbefebb894fde8ef6e3bc08f657dbb0e4df0d4159765bac844c1d"
+    },
+    {
+      "call_id": "CALL_13",
+      "attempt": 13,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:ambiguous",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "AMBIGUOUS"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "7396a9071a0d005a8ad1dbe48695fbcba2f36d1b69a2f6d0a9f1b6ca335e2731"
+    },
+    {
+      "call_id": "CALL_14",
+      "attempt": 14,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:sr1",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "SR1"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "f8a9064dd6f8ef4390bfa51402afaff5265d2475337344bab3e5bf62f36da2d1"
+    },
+    {
+      "call_id": "CALL_15",
+      "attempt": 15,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:sr1",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "FAILED",
+      "initial_refusal": "collection_bound",
+      "selected_episodes": [
+        "SR1"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "cd5eda157464a2f0f0922d5b5360e248838e6efce7c5f816ff85725f73197589"
+    },
+    {
+      "call_id": "CALL_16",
+      "attempt": 16,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:sr2",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "SR2"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "f26b2ad7ada7e9ddd6dc50eca102cf0d423b9e7dd097a2355e02d4fe8bb8f7fb"
+    },
+    {
+      "call_id": "CALL_17",
+      "attempt": 17,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:sr2",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "SR2"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "f89ec106b34fa8defffe421d67902e0f37539fa6276d9c9cc3748918c836398f"
+    },
+    {
+      "call_id": "CALL_18",
+      "attempt": 18,
+      "role": "WEDDING_INTENT_ORCHESTRATOR",
+      "request_ref": "request:w3:v02:sr3",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "SR3"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "ff3fecc77cf5ff4ba27eb149c72c167d794974aff749b25b607469d1efa80e3b"
+    },
+    {
+      "call_id": "CALL_19",
+      "attempt": 19,
+      "role": "WEDDING_REQUIREMENT_ARCHITECT",
+      "request_ref": "request:w3:v02:sr3",
+      "prompt_version": "WeddingLiveSemanticV02",
+      "initial_status": "VALIDATED",
+      "initial_refusal": null,
+      "selected_episodes": [
+        "SR3"
+      ],
+      "historical_only": false,
+      "raw_response_sha256": "2accd3f45d3137eeb0c4a3a2142f8a166f4942d86f5ae2d227d3012b1636efdf"
+    }
+  ],
+  "scope_classes": [
+    "OBSERVED",
+    "DERIVED",
+    "ARCHITECTURAL_INFERENCE",
+    "EXTERNAL_RESEARCH",
+    "FUTURE_EXTENSION"
+  ],
+  "scope_note": "Recorded means observed in the identified prior run, not a new provider execution. Account-returned evidence is not independent physical attestation. Historical prompts and code are inert source data."
+}

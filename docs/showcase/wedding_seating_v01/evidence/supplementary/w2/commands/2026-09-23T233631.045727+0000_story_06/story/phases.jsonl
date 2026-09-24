@@ -1,0 +1,24 @@
+{"phase": "C_ROUTE_START", "wall": 1790206591.8637462, "task": "request:w2:keep"}
+{"phase": "D_REVIEW_START", "wall": 1790206593.960224, "task": "request:w2:keep"}
+{"phase": "D_REVIEW_RETURN", "wall": 1790206606.763996, "task": "request:w2:keep", "seconds": 12.803510333411396}
+{"phase": "WORK_START", "wall": 1790206606.764631, "task": "request:w2:keep"}
+{"phase": "WORK_ROOT_COMPLETE", "wall": 1790206608.8903081, "task": "request:w2:keep"}
+{"phase": "C_ROUTE_START", "wall": 1790206608.991349, "task": "request:w2:mix"}
+{"phase": "D_REVIEW_START", "wall": 1790206611.07718, "task": "request:w2:mix"}
+{"phase": "D_REVIEW_RETURN", "wall": 1790206623.8731148, "task": "request:w2:mix", "seconds": 12.795705458149314}
+{"phase": "WORK_START", "wall": 1790206623.8737202, "task": "request:w2:mix"}
+{"phase": "WORK_ROOT_COMPLETE", "wall": 1790206626.044864, "task": "request:w2:mix"}
+{"phase": "C_ROUTE_START", "wall": 1790206626.517337, "task": "request:w2:validate"}
+{"phase": "D_REVIEW_START", "wall": 1790206628.621324, "task": "request:w2:validate"}
+{"phase": "D_REVIEW_RETURN", "wall": 1790206641.369813, "task": "request:w2:validate", "seconds": 12.748226249590516}
+{"phase": "WORK_START", "wall": 1790206641.370365, "task": "request:w2:validate"}
+{"phase": "WORK_ROOT_COMPLETE", "wall": 1790206643.2124171, "task": "request:w2:validate"}
+{"phase": "G4_START", "wall": 1790206643.2347798}
+{"phase": "G4_RETURN", "wall": 1790206644.610147}
+{"phase": "MEMORY_START", "wall": 1790206644.610214}
+{"phase": "C_ROUTE_START", "wall": 1790206645.214495, "task": "request:w2:recovery"}
+{"phase": "D_REVIEW_START", "wall": 1790206647.3336508, "task": "request:w2:recovery"}
+{"phase": "D_REVIEW_RETURN", "wall": 1790206660.241366, "task": "request:w2:recovery", "seconds": 12.907455666922033}
+{"phase": "WORK_START", "wall": 1790206660.2419279, "task": "request:w2:recovery"}
+{"phase": "WORK_ROOT_COMPLETE", "wall": 1790206662.3789692, "task": "request:w2:recovery"}
+{"phase": "MEMORY_RETURN", "wall": 1790206662.75454}

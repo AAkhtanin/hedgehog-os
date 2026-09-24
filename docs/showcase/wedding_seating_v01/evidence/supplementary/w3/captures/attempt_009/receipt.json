@@ -1,0 +1,1 @@
+{"ended":"2026-09-24T00:26:55.813029+00:00","error_type":"WeddingContractError","model":"gemini-2.5-flash","reason":"objective_scope","request_ref":"request:w3:v02:verify","role":"WEDDING_REQUIREMENT_ARCHITECT","sdk_retry_attempts":1,"seconds":4.8940936252474785,"started":"2026-09-24T00:26:50.918939+00:00","status":"FAILED","wire_sends":1}

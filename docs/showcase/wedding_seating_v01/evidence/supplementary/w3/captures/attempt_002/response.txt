@@ -1,0 +1,1 @@
+{"task_kind":"GENERATE","unresolved":[],"reason":"To create a complete seating plan that keeps familiar circles together as much as possible while respecting all existing mandatory restrictions.","objective_profile":"KEEP_FAMILIAR_V01","needed_capabilities":["COMPILE_QUBO","SOLVE_EXACT","VALIDATE_ORIGINAL"],"amendments":[]}

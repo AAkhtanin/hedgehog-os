@@ -1,0 +1,8 @@
+{
+  "observed_refusal": "collection_bound",
+  "actual_response": "One ADD ALLOWED_TABLES proposal for guest_07 and guest_08 at table_2",
+  "cause": "The semantic schema allowed a group but its domain consumer unnecessarily required a single subject.",
+  "repair": "Expand the actual bounded group into existing single-subject original conditions. Preserve raw proposal and source. Require complete replacement of prior same-request added conditions.",
+  "prompt_version": "WeddingLiveSemanticV02 unchanged",
+  "source_impact": "Completed no-amendment A/B/verify/clarification remain unchanged. The preserved SR1 capture is reconsumed under the repaired group parser, honestly labelled captured reexecution. No new SR1 model call."
+}

@@ -1,0 +1,1 @@
+{"task_kind":"GENERATE","unresolved":[],"reason":"To create a complete seating plan that keeps familiar circles together as much as possible while respecting all existing mandatory restrictions.","needs":["REQUIREMENT_REVIEW","EXACT_SEARCH","ORIGINAL_VALIDATION"],"requested_outputs":["SEATING_CANDIDATES","VALIDATION_REPORT"]}

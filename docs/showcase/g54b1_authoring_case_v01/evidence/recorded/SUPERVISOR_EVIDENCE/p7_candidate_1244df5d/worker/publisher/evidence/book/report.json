@@ -1,0 +1,75 @@
+{
+  "counts": {
+    "dispatch": 1,
+    "mutations": 1,
+    "search": 0
+  },
+  "currency": "EUR",
+  "native_refs": {
+    "offer": {
+      "file": "offer_body.json",
+      "id": "source:football:fdfbfa8f9a23d97365f4041e379d06028ae2238b099236d2b5b875adcffa2e00"
+    },
+    "receipt": {
+      "file": "receipt.json",
+      "id": "effect_receipt_v01:16d2611a5c85f250f59ad56e38cca6ce24922af4f56efe3b0791169ce30c2966"
+    },
+    "source_review": {
+      "file": "source_review.json",
+      "id": "bf714d289962d28526e7f903deaf0616498a5cb70447d81d9a2b6a0c55aabc8b"
+    },
+    "venue_work": {
+      "file": "venue_work.json",
+      "id": "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f"
+    }
+  },
+  "operation": "CONFIRM_MOCK_BOOKING",
+  "receipt_ref": "effect_receipt_v01:16d2611a5c85f250f59ad56e38cca6ce24922af4f56efe3b0791169ce30c2966",
+  "request_ref": "request:exam:one",
+  "request_revision": 2,
+  "slots": [
+    {
+      "end_utc": 1799341200,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:7",
+      "start_utc": 1799335800,
+      "venue_ref": "venue:synthetic"
+    },
+    {
+      "end_utc": 1799409600,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:8",
+      "start_utc": 1799404200,
+      "venue_ref": "venue:synthetic"
+    },
+    {
+      "end_utc": 1799494200,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:9",
+      "start_utc": 1799488800,
+      "venue_ref": "venue:synthetic"
+    }
+  ],
+  "source": {
+    "observed_at": 1790326469,
+    "offer_revision": 4,
+    "pt": 1790326469,
+    "publisher": "VenueRoot",
+    "recipient": "ActivePlanetRoot",
+    "request_revision": 2,
+    "schedule_revision": 4,
+    "status": "ACTIVE",
+    "status_checked": 1790326470,
+    "status_until": 1790326530,
+    "ttl": 300,
+    "valid_from": 1790326469,
+    "valid_to": 1790326769
+  },
+  "status": "MOCK_BOOKED",
+  "team_ref": "team:one",
+  "total_minor": 6300,
+  "version": "g53.result.v01"
+}

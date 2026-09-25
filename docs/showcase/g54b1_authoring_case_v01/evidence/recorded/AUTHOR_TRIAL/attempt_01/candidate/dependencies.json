@@ -1,0 +1,540 @@
+{
+  "version": "football.dependencies.v01.correction01",
+  "direct_approved_modules": [
+    {
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.external_drs.gate5_body_profile_v01",
+      "path": "source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.external_drs.gate5_lifecycle_v01",
+      "path": "source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.kernel.work_composition_v01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.kernel.abi_v01",
+      "path": "source/hedgehog/kernel/abi_v01.py",
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.kernel.integrity_replay_v01",
+      "path": "source/hedgehog/kernel/integrity_replay_v01.py",
+      "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.kernel.root_decision_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.action_commit_packet_v02",
+      "path": "source/hedgehog/action_commit_packet_v02.py",
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.work_execution_host_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.drs",
+      "path": "source/hedgehog/drs.py",
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.local_drs_resolver",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.drs_semantic_address_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "demo.run_action_packet_portability_v01",
+      "path": "source/demo/run_action_packet_portability_v01.py",
+      "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb",
+      "version": "frozen-kit-source"
+    },
+    {
+      "module": "demo.work_composition_mock_capabilities_v01",
+      "path": "source/demo/work_composition_mock_capabilities_v01.py",
+      "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731",
+      "version": "frozen-kit-source"
+    }
+  ],
+  "approved_transitive_inventory": [
+    {
+      "path": "source/hedgehog/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "source/hedgehog/avf_v02.py",
+      "sha256": "ba88a22b3ddea715ad7af2731c171511273b6e7bb4c67f5d54024464a1a8b616"
+    },
+    {
+      "path": "source/hedgehog/capability_admission_v01.py",
+      "sha256": "2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda"
+    },
+    {
+      "path": "source/hedgehog/context_packets.py",
+      "sha256": "080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32"
+    },
+    {
+      "path": "source/hedgehog/domains/__init__.py",
+      "sha256": "f33ec43826cba0521f58774c1500cb6f84d72bb36d88db8d41c7f1992cdb80a8"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/__init__.py",
+      "sha256": "cc46b98e70deb6ea9b8eb5ea184cda638ce7365a1870e5074d2dfc837dab9cf8"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "sha256": "6b9f34433cae8ef0435ea1456820fd4f7e300a2a6c9a2d389c77c3db008be4a6"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "sha256": "3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "sha256": "0e9864fb499f378edeeb8300b785a8de69af2fbcb51ad4039d9306e182adb0eb"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "sha256": "5bf787130b370da4c58918ef4a65de29aa7c017a59d9fc491ad5c4ee66a50e3b"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "sha256": "af7dc4da6ce1185688447d96747516a521084ec7c749c8490ea92f3ee65264c4"
+    },
+    {
+      "path": "source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "sha256": "3e9cdcd6d3c411b4dfab598d4b62b5648dcf071d4bf15e8297e3d4144aa831bf"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "sha256": "f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "sha256": "792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "sha256": "8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+    },
+    {
+      "path": "source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    {
+      "path": "source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa"
+    },
+    {
+      "path": "source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "sha256": "dbca71e4fe22c58cd4b24f46f069c5e2e9fe60c30503dc7489a1f162bb818fa0"
+    },
+    {
+      "path": "source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    {
+      "path": "source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    {
+      "path": "source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "sha256": "0ec36f709977b85f457739e1266ba3889a5735eee2dc89f033a34e45512abdfe"
+    },
+    {
+      "path": "source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/__init__.py",
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/contracts_v01.py",
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/evidence_v01.py",
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "sha256": "6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/mock_world_v01.py",
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    {
+      "path": "source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "sha256": "7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736"
+    },
+    {
+      "path": "source/hedgehog/drs_g2b_compatibility_v01.py",
+      "sha256": "dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5"
+    },
+    {
+      "path": "source/hedgehog/evidence/__init__.py",
+      "sha256": "2fa905efbd7f2a968d8a648ef14ef676a4f64bac94a159651c7a4d7b71a81b8b"
+    },
+    {
+      "path": "source/hedgehog/evidence/external_anchor_v01.py",
+      "sha256": "299c6d2daabfe53c0c93c76a46709d09c4cc26b89907af17a30dab8ce8537994"
+    },
+    {
+      "path": "source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "sha256": "3845a246e641aea8da3d9314e2d140bcb701a5488cb9de8153a62f0d84529b37"
+    },
+    {
+      "path": "source/hedgehog/evidence/sealed_package_v01.py",
+      "sha256": "4fecf1b24696316348256acd1bd5a9e7a237dc37bd5b11abc41a71257796af53"
+    },
+    {
+      "path": "source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "sha256": "f40e48f3d32f4b67250534f5d47d5bb4e076890497506ec4315d9ce06261c5a3"
+    },
+    {
+      "path": "source/hedgehog/external_drs/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "sha256": "22419806c70631543f66c2d5894b6858e2f4462907277c8fddb025f32e329b88"
+    },
+    {
+      "path": "source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+    },
+    {
+      "path": "source/hedgehog/gate3_mechanism_v01.py",
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    {
+      "path": "source/hedgehog/gt_validator.py",
+      "sha256": "e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd"
+    },
+    {
+      "path": "source/hedgehog/kernel/__init__.py",
+      "sha256": "b26dad7e3a5d47b2d717f002a0982bd0bb0fcde95110627846d81d747a0e4be1"
+    },
+    {
+      "path": "source/hedgehog/kernel/conformance_v01.py",
+      "sha256": "6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f"
+    },
+    {
+      "path": "source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    {
+      "path": "source/hedgehog/kernel/execution_mode_router_v01.py",
+      "sha256": "4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4"
+    },
+    {
+      "path": "source/hedgehog/kernel/fractal_runtime_v02.py",
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+    },
+    {
+      "path": "source/hedgehog/kernel/multiroot_v01.py",
+      "sha256": "e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff"
+    },
+    {
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+    },
+    {
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+    },
+    {
+      "path": "source/hedgehog/kernel/transition_registry_v01.py",
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca"
+    },
+    {
+      "path": "source/hedgehog/kernel/trust_model_v01.py",
+      "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+    },
+    {
+      "path": "source/hedgehog/local_drs_v02.py",
+      "sha256": "831c3c7e0a1bfcb2ad9cc56d61c2c33ccbc8982add7ac46434c55676c03a34af"
+    },
+    {
+      "path": "source/hedgehog/outcome_calibration_v01.py",
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    {
+      "path": "source/hedgehog/outcome_feedback_consumer_v01.py",
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    {
+      "path": "source/hedgehog/outcome_feedback_history_v01.py",
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    {
+      "path": "source/hedgehog/outcome_feedback_v01.py",
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    {
+      "path": "source/hedgehog/post_vv.py",
+      "sha256": "e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3"
+    },
+    {
+      "path": "source/hedgehog/reuse_certificate_v01.py",
+      "sha256": "55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c"
+    },
+    {
+      "path": "source/hedgehog/reuse_gate.py",
+      "sha256": "964bd4ae925c934710f1055514a256b2a5d7521e91841628180c418742df9584"
+    },
+    {
+      "path": "source/hedgehog/semantic_reasoning_adapter.py",
+      "sha256": "3900b23d3f15ee42b21b7f28895e1badf6639d56a98ce3fcbe5a9f9c072009f6"
+    },
+    {
+      "path": "source/hedgehog/structured_rationale.py",
+      "sha256": "05686cd42bc4ea0bd9b0bc2586c7df6fd51369d43ee0fb15af4c95326e3d1f03"
+    },
+    {
+      "path": "source/hedgehog/time_model.py",
+      "sha256": "1b461cf013f2e60a82509669b0ac692d0121b8d5f3c9d3a46a3d5fd33fc48cba"
+    },
+    {
+      "path": "source/hedgehog/wasm_pure_worker_v01.py",
+      "sha256": "e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae"
+    },
+    {
+      "path": "source/tests/test_gate5_calibration_exchange_v01.py",
+      "sha256": "8cf3b08eff2dd3ad750104e73a836183db1a9c714930ea3c9c01b9086662eae8"
+    }
+  ],
+  "transitive_inventory_semantics": "Pinned available dependency closure; presence is not a claim every module executes. Candidate does not import provider, media, tests or Wasm lanes directly.",
+  "candidate_modules": [
+    "candidate_domain",
+    "candidate_domain.domain",
+    "candidate_domain.profile",
+    "candidate_domain.policy",
+    "candidate_domain.native",
+    "candidate_domain.effect",
+    "candidate_domain.memory",
+    "candidate_domain.source",
+    "candidate_domain.transport",
+    "candidate_domain.run"
+  ],
+  "candidate_source_hashes": "Exact whole-file hashes belong to coordinator-generated candidate.json, avoiding manifest/self-hash cycles.",
+  "stdlib": [
+    "json",
+    "pathlib",
+    "datetime",
+    "itertools",
+    "zoneinfo",
+    "re",
+    "secrets"
+  ],
+  "test_stdlib": [
+    "copy",
+    "unittest",
+    "itertools",
+    "tempfile",
+    "pathlib",
+    "json"
+  ],
+  "test_local_modules": [
+    "tests/test_domain.py (test_domain under unittest discovery)",
+    "tests/test_native.py (test_native under unittest discovery)",
+    "tests/test_memory.py (test_memory under unittest discovery)"
+  ],
+  "installed_packages": [
+    {
+      "name": "cryptography",
+      "version": "48.0.0",
+      "use": "existing Ed25519 commitment primitives via frozen kit"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "use": "native Work schema validation"
+    }
+  ],
+  "python": {
+    "execution_contract": "Python 3.14, Linux arm64",
+    "dependency_record": "DEPENDENCIES.json measured Python 3.14.5 Darwin arm64; not evidence of execution on the required Linux runner",
+    "dependency_record_sha256": "bf2527bce5d2d86b4e9918edf1f7f5911efd9b8b022bcb94771efff6a6ed6c48"
+  },
+  "runtime_resources": [
+    {
+      "path": "source/schemas/work_composition_v01.schema.json",
+      "sha256": "ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0"
+    },
+    {
+      "resource": "System IANA Europe/Tirane timezone data used by stdlib zoneinfo",
+      "version": "OS-provided version not established in supplied inventory",
+      "on_missing": "TIMEZONE_RESOURCE_UNAVAILABLE / CLARIFY before Work; no package installation or fallback offset",
+      "first_access": "domain boundary before native Work; immutable ZoneInfo cache thereafter"
+    }
+  ],
+  "filesystem_operations": [
+    "Read immutable candidate source by public native capability observer; its internal compile compares code but does not execute candidate source.",
+    "Read public Work schema via frozen native module.",
+    "Create/read/write only own assigned state_root and output_root; JSON evidence and LocalDRS indexes; caller-supplied logical IDs never open paths.",
+    "Atomic registry replacement only from admitted MOCK callback through native Host/Firewall.",
+    "Public state_write uses own .pending temporary, fsync and os.replace.",
+    "Own tests use TemporaryDirectory only when separately authorized."
+  ],
+  "network_access": false,
+  "provider_access": false,
+  "subprocess_access": false,
+  "threads": false,
+  "new_processes": false,
+  "private_key_export": false,
+  "transport": "Only supplied PipeChannel objects; candidate never accesses file descriptors or constructs channels.",
+  "installation_requested": false
+}

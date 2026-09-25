@@ -1,0 +1,28 @@
+"""Bind a completed supervising source review to one frozen correction."""
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+WORK = Path(__file__).resolve().parent
+attempt = WORK / 'AUTHOR_TRIAL' / ('attempt_%02d' % int(sys.argv[1]))
+assert (attempt / 'FROZEN.json').is_file()
+notes = json.loads((attempt / 'source_review_findings.json').read_text())
+assert notes['complete_source_review'] is True
+assert notes['allowed_for_confined_execution'] is True
+data = json.loads((attempt / 'static_data_review.json').read_text())
+assert data['shape']['status'] == 'CANDIDATE_DATA_SHAPE_ONLY_NOT_EXECUTION_OR_ADMISSION'
+candidate = attempt / 'candidate'
+assert not any(p.is_symlink() for p in candidate.rglob('*'))
+actual = {str(p.relative_to(candidate)): hashlib.sha256(p.read_bytes()).hexdigest()
+          for p in candidate.rglob('*') if p.is_file()}
+assert actual == {k: v['sha256'] for k, v in data['files'].items()}
+assert actual == notes['files']
+record = dict(status='APPROVED_FOR_DECLARED_CONFINED_EXECUTION', files=actual,
+    review=notes, scope='Unchanged G54 Docker runner only; not native acceptance or admission.',
+    generated_code_host_imported=False,
+    image='sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97')
+with (attempt / 'confined_execution_review.json').open('x') as stream:
+    json.dump(record, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(dict(status=record['status'], manifest_sha256=actual['candidate.json'])))

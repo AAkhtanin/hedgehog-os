@@ -1,0 +1,135 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "kind": "pointer",
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "CONNECTOR_OBSERVATION",
+        "authority_envelope_id": "drsauth_v01:f53763b25201c467fcaf56602bc3c10571af623c536197d70c8a7ec8c820766e",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "1a8658b22f87c2a74d9cd6d1c268155206cd2d6fc08ebfb51d8a06ffea81df82",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": null,
+        "recording_component": "football:connector",
+        "root_acceptance_state": "UNREVIEWED",
+        "source_root_decision_hash": null,
+        "source_root_decision_id": null,
+        "source_root_decision_input_id": null
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "1a8658b22f87c2a74d9cd6d1c268155206cd2d6fc08ebfb51d8a06ffea81df82",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:216d539edd6a4fdbcdd23bae73ca2f2b61b34b4fa57f39ad2fe54cbbf7c3577b",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "football.pointer.v01",
+      "predecessor_record_id": null,
+      "recording_component": "football:connector",
+      "resonance_reason": "Foreign venue metadata; local context only.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "Synthetic full-size natural-grass venue offer metadata.",
+      "schema_versions": [
+        "football.pointer.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "FOOTBALL_ADDRESS",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "football.pointer_metadata",
+        "meaning_schema_version": "v01",
+        "namespace": "football",
+        "semantic_address_id": "drsaddr_v01:d21f2b5e06121d55229a517ade0bcd314b3239f6dadbfbbae99996965642513e",
+        "subject_class": "external_pointer"
+      },
+      "semantic_tags": [
+        "football",
+        "pointer"
+      ],
+      "source_reference_ids": [
+        "61bc527c165c0064356b7507141cd273f4e53a55861448e614a9aff2feed4161"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1790324452,
+        "et_observed_at": 1790324452,
+        "freshness_policy_id": "freshness:football:source",
+        "kt_as_of": 1790324452,
+        "pt_created_at": 1790324452,
+        "source_observed_at": 1790324452,
+        "source_reported_at": 1790324452,
+        "system_ingested_at": 1790324452,
+        "system_verified_at": 1790324452,
+        "time_envelope_id": "drstime_v01:86196289defc8a08b43e5f221cbbdc15d1c0b8d70ed09babbf05cbe8a295bb4d",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 300,
+        "valid_from": 1790324452,
+        "valid_to": 1790324752
+      }
+    },
+    "semantic_keys": [
+      "football",
+      "pointer"
+    ]
+  },
+  "domain": "FOOTBALL_ADDRESS",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:drsmeaning_v01:216d539edd6a4fdbcdd23bae73ca2f2b61b34b4fa57f39ad2fe54cbbf7c3577b",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:drsmeaning_v01:216d539edd6a4fdbcdd23bae73ca2f2b61b34b4fa57f39ad2fe54cbbf7c3577b"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:216d539edd6a4fdbcdd23bae73ca2f2b61b34b4fa57f39ad2fe54cbbf7c3577b",
+  "source_refs": [
+    {
+      "identity_field": "source_record_ref",
+      "publisher": "VenueRoot",
+      "source": "external_drs",
+      "source_id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+    },
+    {
+      "identity_field": "source_review_ref",
+      "publisher": "VenueRoot",
+      "source": "external_drs",
+      "source_id": "2405b092dba82048eded0a5f741891f2d071543ce7e8583bca3afd05146c3cf4"
+    },
+    {
+      "identity_field": "pointer_id",
+      "publisher": "VenueRoot",
+      "source": "external_drs",
+      "source_id": "g5pointer:e28315d877f3730d1bb85ba472e0f6416893b81248cf1eb26ac8d5de4b1ec03c"
+    }
+  ],
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "football:session",
+    "et_observed_at": "2026-09-25T08:20:52+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2026-09-25T08:20:52+00:00",
+    "pt_created_at": "2026-09-25T08:20:52+00:00",
+    "ttl_seconds": 300,
+    "valid_from": "2026-09-25T08:20:52+00:00",
+    "valid_to": "2026-09-25T08:25:52+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:216d539edd6a4fdbcdd23bae73ca2f2b61b34b4fa57f39ad2fe54cbbf7c3577b"
+    }
+  ],
+  "type": "generic"
+}

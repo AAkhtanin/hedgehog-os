@@ -1,0 +1,156 @@
+[
+  {
+    "description": "Read exact pinned public text; lines are 1-based; never arbitrary paths.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "max_lines": {
+          "maximum": 240,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path": {
+          "maxLength": 240,
+          "type": "string"
+        },
+        "start_line": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
+    "name": "read_approved_source",
+    "type": "function"
+  },
+  {
+    "description": "Bounded literal search in pinned public files, optionally one exact path. Returns at most 60 matching lines.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 240,
+          "type": "string"
+        },
+        "query": {
+          "maxLength": 160,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "object"
+    },
+    "name": "search_approved_source",
+    "type": "function"
+  },
+  {
+    "description": "Read an inert candidate file with its exact whole-file hash.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 240,
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
+    "name": "read_candidate_file",
+    "type": "function"
+  },
+  {
+    "description": "Atomically replace one complete UTF-8 candidate text file. No code execution. candidate.json belongs to coordinator.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "maxLength": 262144,
+          "type": "string"
+        },
+        "path": {
+          "maxLength": 240,
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ],
+      "type": "object"
+    },
+    "name": "write_candidate_file",
+    "type": "function"
+  },
+  {
+    "description": "Exact expected SHA256 and unique literal replacement only. No fuzzy matching or execution.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "new": {
+          "maxLength": 262144,
+          "type": "string"
+        },
+        "old": {
+          "maxLength": 262144,
+          "minLength": 1,
+          "type": "string"
+        },
+        "path": {
+          "maxLength": 240,
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "expected_sha256",
+        "old",
+        "new"
+      ],
+      "type": "object"
+    },
+    "name": "patch_candidate_file",
+    "type": "function"
+  },
+  {
+    "description": "Parse candidate Python and JSON as data only. No imports, tests or hidden checks.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "name": "inspect_candidate_text",
+    "type": "function"
+  },
+  {
+    "description": "Freeze this complete candidate for independent review; coordinator computes candidate.json. Do not write after submission.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "pattern": "^[a-z][a-z0-9_.-]{0,63}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id"
+      ],
+      "type": "object"
+    },
+    "name": "submit_candidate",
+    "type": "function"
+  }
+]

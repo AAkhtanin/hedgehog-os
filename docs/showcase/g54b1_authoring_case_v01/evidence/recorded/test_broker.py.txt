@@ -1,0 +1,64 @@
+"""Focused synthetic controls only; not football execution."""
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from broker import Broker, TOOLS
+from no_env_client import ALLOWED
+
+
+class Controls(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory(prefix='g54b1_local_',dir='/private/tmp');self.root=Path(self.tmp.name)
+        self.public=self.root/'public';self.public.mkdir();(self.public/'test.txt').write_text('allowed\n')
+        self.inventory={'files':[dict(path='test.txt',bytes=8,sha256=hashlib.sha256(b'allowed\n').hexdigest())]}
+        self.b=Broker(self.public,self.inventory,self.root/'trial');self.b.bind('thread1','turn1');self.i=0
+    def tearDown(self):self.tmp.cleanup()
+    def call(self,name,args,**extras):
+        self.i+=1;p=dict(tool=name,arguments=args,threadId='thread1',turnId='turn1',callId=str(self.i));p.update(extras)
+        return self.b.dispatch(p)
+    def test_allowed_read_write_and_patch(self):
+        self.assertEqual(self.call('read_approved_source',{'path':'test.txt'})['lines'],['allowed'])
+        out=self.call('write_candidate_file',{'path':'README.md','content':'alpha'})
+        self.assertEqual(self.call('patch_candidate_file',{'path':'README.md','expected_sha256':out['sha256'],'old':'alpha','new':'beta'})['status'],'INERT_FILE_RECORDED')
+        self.assertEqual((self.b.candidate/'README.md').read_text(),'beta')
+    def test_private_traversal_unknown_and_extra(self):
+        for name,args in [('read_approved_source',{'path':'../private.txt'}),('command/exec',{}),
+                          ('read_approved_source',{'path':'test.txt','command':'ignored'})]:
+            self.assertEqual(self.call(name,args)['status'],'TOOL_REFUSED')
+    def test_stale_ambiguous(self):
+        out=self.call('write_candidate_file',{'path':'README.md','content':'a a'})
+        for h in ('0'*64,out['sha256']):
+            self.assertEqual(self.call('patch_candidate_file',{'path':'README.md','expected_sha256':h,'old':'a','new':'b'})['status'],'TOOL_REFUSED')
+        self.assertEqual((self.b.candidate/'README.md').read_text(),'a a')
+    def test_identity_duplicate_rebind_and_foreign(self):
+        p=dict(tool='write_candidate_file',arguments={'path':'README.md','content':'one'},threadId='thread1',turnId='turn1',callId='fixed')
+        first=self.b.dispatch(p);self.assertEqual(first,self.b.dispatch(p))
+        changed=dict(p,arguments={'path':'README.md','content':'two'})
+        self.assertEqual(self.b.dispatch(changed)['reason'],'call_identity_rebound')
+        for key in ('threadId','turnId'):
+            self.assertEqual(self.b.dispatch(dict(p,**{key:'foreign'}))['reason'],'thread_turn_binding')
+        self.assertEqual((self.b.candidate/'README.md').read_text(),'one')
+    def test_freeze_and_coordinator_manifest(self):
+        self.assertEqual(self.call('write_candidate_file',{'path':'candidate.json','content':'{}'})['status'],'TOOL_REFUSED')
+        self.call('write_candidate_file',{'path':'README.md','content':'x'})
+        self.assertEqual(self.call('submit_candidate',{'candidate_id':'synthetic'})['status'],'SUBMITTED_FOR_INDEPENDENT_REVIEW')
+        self.assertEqual(self.call('write_candidate_file',{'path':'README.md','content':'changed'})['reason'],'candidate_frozen')
+    def test_links_and_source_mutation(self):
+        (self.public/'test.txt').write_text('changed')
+        self.assertEqual(self.call('read_approved_source',{'path':'test.txt'})['status'],'TOOL_REFUSED')
+        (self.b.candidate/'README.md').symlink_to(self.public/'test.txt')
+        self.assertEqual(self.call('write_candidate_file',{'path':'README.md','content':'changed'})['reason'],'candidate_link')
+    def test_no_privileged_dispatch_surface(self):
+        self.assertFalse(set(ALLOWED)&{'command/exec','thread/shellCommand','fs/readFile','process/spawn'})
+        self.assertEqual({x['name'] for x in TOOLS},{'read_approved_source','search_approved_source','read_candidate_file','write_candidate_file','patch_candidate_file','inspect_candidate_text','submit_candidate'})
+    def test_interrupted_preparation_is_not_retried(self):
+        p=dict(tool='write_candidate_file',arguments={'path':'README.md','content':'x'},threadId='thread1',turnId='turn1',callId='interrupted')
+        ident=hashlib.sha256(json.dumps(['thread1','turn1','interrupted']).encode()).hexdigest()
+        (self.b.journal/(ident+'.json')).write_text(json.dumps(dict(call=p,status='PREPARED')))
+        self.assertEqual(self.b.dispatch(p)['reason'],'interrupted_call_unknown_do_not_repeat')
+        self.assertFalse((self.b.candidate/'README.md').exists())
+
+
+if __name__=='__main__': unittest.main(verbosity=2)

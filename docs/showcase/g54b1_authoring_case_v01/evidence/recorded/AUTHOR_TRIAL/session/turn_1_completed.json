@@ -1,0 +1,23 @@
+{
+  "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4",
+  "turn": {
+    "completedAt": 1790323126,
+    "durationMs": 2097021,
+    "error": null,
+    "id": "01a0d772-effe-7de2-9110-f48481b18b1c",
+    "items": [
+      {
+        "delivery": null,
+        "id": "msg_0862a23817afd429016ab629b4945c87d292ee21e44384d3f1",
+        "memoryCitation": null,
+        "phase": "final_answer",
+        "questions": null,
+        "text": "Submitted `football_reference_v01` for independent review with implementation, schemas, tests, passport, and dependency/source-impact records.\n\nSyntax and JSON checks passed. Nothing was executed, installed, or admitted. Runtime validation remains with the reviewer.",
+        "type": "agentMessage"
+      }
+    ],
+    "itemsView": "summary",
+    "startedAt": 1790321029,
+    "status": "completed"
+  }
+}

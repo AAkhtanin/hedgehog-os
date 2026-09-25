@@ -1,0 +1,159 @@
+"""Persisted metadata lookup and source-bounded native summary descent."""
+from datetime import datetime, timezone
+from hedgehog.drs import LocalDRS
+from hedgehog import local_drs_resolver as resolver, drs_semantic_address_v01 as address, drs_memory_resolution_v01 as memory
+from hedgehog.kernel import integrity_replay_v01 as integrity, root_decision_v01 as roots
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e
+from .profile import PROFILE, SUMMARY
+from . import domain as d
+
+def persist_source(descriptor, folder):
+    pointer = descriptor['value']
+    resolver.write_semantic_record(LocalDRS(folder/'source_address_drs'),
+        resolver.SemanticDRSRecordInput(record_id=pointer['pointer_id'],domain='FOOTBALL_ADDRESS',
+            content=dict(kind='signed_pointer',descriptor=descriptor),
+            semantic_keys=('football','pointer')))
+    reopened = LocalDRS(folder/'source_address_drs')
+    report = resolver.resolve_semantic_candidates(reopened,
+        resolver.SemanticResolveQuery(query_id='query:football:source',
+            domain='FOOTBALL_ADDRESS',semantic_terms=('football','pointer'),
+            max_candidates=4,require_root_review=True),layers=('work',))
+    d.need(any(x.record_id == pointer['pointer_id'] for x in report.candidates),
+           'PERSISTED_SOURCE_POINTER_MISSING')
+    n.save(folder/'source_pointer_lookup.json',n.plain(report))
+
+def descend(descriptor, folder, policy, counters):
+    pointer = c.check_pointer(descriptor,policy,e.clock(),profile=PROFILE)
+    store = LocalDRS(folder/'address_index')
+    resolver.write_semantic_record(store,resolver.SemanticDRSRecordInput(
+        record_id=pointer['pointer_id'],domain='FOOTBALL_ADDRESS',
+        content=dict(kind='signed_pointer',descriptor=descriptor),
+        semantic_keys=('football','pointer')))
+    store = LocalDRS(folder/'address_index')
+    resolved = resolver.resolve_semantic_candidates(store,resolver.SemanticResolveQuery(
+        query_id='query:football:descriptor',domain='FOOTBALL_ADDRESS',
+        semantic_terms=('football','pointer'),require_root_review=True,max_candidates=4),
+        layers=('work',))
+    d.need(len(resolved.candidates) == 1,'POINTER_RESOLUTION')
+    stored = store.read_record('work',resolved.candidates[0].record_id)['content']['descriptor']
+    d.need(stored == descriptor,'PERSISTED_DESCRIPTOR_BINDING')
+    pointer = c.check_pointer(stored,policy,e.clock(),profile=PROFILE)
+    now = e.clock()
+    end = c.temporal(pointer['time_envelope'],now,policy)
+    root = policy['local_root']
+    addr = address.build_semantic_address_v01(namespace='football',domain='FOOTBALL_ADDRESS',
+        subject_class='external_pointer',intent_class='context_lookup',
+        meaning_schema_id='football.pointer_metadata',meaning_schema_version='v01')
+    # Preserve every original source axis. The context cannot extend source life.
+    env = n.rebuilt(address.build_drs_time_envelope_v01,pointer['time_envelope'])
+    fingerprint = c.sha(pointer)
+    checks = dict(metadata_only=pointer['safe_summary'] == SUMMARY,
+                  pinned_publisher=pointer['publisher_root_id'] == policy['peer_root'],
+                  recipient=root in pointer['recipient_scope'],current=now < end)
+    review = n.root_review(root,'transaction:football:pointer',
+        'candidate:football:pointer:'+fingerprint,addr.semantic_address_id,checks,
+        dict(pointer=pointer,policy_sha256=c.sha(policy)),now,window=(now,end))
+    counters['root_reviews'] += 1
+    n.save(folder/'pointer_context_review.json',n.root_plain(review))
+    d.need(review[2].decision == 'ACCEPT','POINTER_CONTEXT_REFUSED')
+    record_ids = []
+    meaning_store = LocalDRS(folder/'meaning_drs')
+    for accepted in (False,True):
+        auth = address.build_drs_authority_envelope_v01(
+            authority_class='ROOT_ACCEPTED_CONTEXT' if accepted else 'CONNECTOR_OBSERVATION',
+            owning_local_root_id=root if accepted else None,
+            source_root_decision_input_id=review[1].decision_input_id if accepted else None,
+            source_root_decision_id=review[2].decision_id if accepted else None,
+            source_root_decision_hash=c.sha(roots.root_decision_result_to_plain_dict_v01(
+                review[2])) if accepted else None,
+            authority_scope_fingerprint=fingerprint,
+            root_acceptance_state='ACCEPTED_CONTEXT' if accepted else 'UNREVIEWED',
+            recording_component='football:connector')
+        record = address.build_meaning_record_v01(semantic_address=addr,
+            predecessor_record_id=None,supersession_reason=None,safe_summary=SUMMARY,
+            semantic_tags=('football','pointer'),
+            resonance_reason='Foreign venue metadata; local context only.',
+            memory_pointers=(),artifact_pointers=(),
+            source_reference_ids=(pointer['source_record_ref'],pointer['pointer_id']),
+            lineage_edges=(),time_envelope=env,authority_envelope=auth,
+            persistent_lifecycle_state='ACTIVE',risk_hints=(),conflict_hints=(),
+            reuse_policy_class='CONTEXT_ONLY',policy_version='football.pointer.v01',
+            schema_versions=('football.pointer.v01',),content_fingerprint=fingerprint,
+            recording_component='football:connector')
+        def stamp(value):
+            return datetime.fromtimestamp(value,timezone.utc).isoformat()
+        source = pointer['time_envelope']
+        resolver.write_semantic_record(meaning_store,resolver.SemanticDRSRecordInput(
+            record_id=record.meaning_record_id,domain='FOOTBALL_ADDRESS',
+            content=dict(kind='pointer',record=address.meaning_record_to_plain_data_v01(record)),
+            semantic_keys=('football','pointer'),time_envelope=dict(
+                pt_created_at=stamp(source['pt_created_at']),kt_asof=stamp(source['kt_as_of']),
+                et_observed_at=stamp(source['et_observed_at']),ct_session_anchor='football:session',
+                ttl_seconds=source['ttl_seconds'],freshness_class='static',
+                valid_from=stamp(source['valid_from']),valid_to=stamp(end))))
+        record_ids.append(record.meaning_record_id)
+    meaning_store = LocalDRS(folder/'meaning_drs')
+    lookup = resolver.resolve_semantic_candidates(meaning_store,resolver.SemanticResolveQuery(
+        query_id='query:football:meaning',domain='FOOTBALL_ADDRESS',
+        semantic_terms=('football','pointer'),content_filters=dict(kind='pointer'),
+        require_root_review=True,max_candidates=4),layers=('work',))
+    d.need({x.record_id for x in lookup.candidates} == set(record_ids),'MEANING_LOOKUP')
+    evaluations = []
+    for record_id in record_ids:
+        raw = meaning_store.read_record('work',record_id)['content']['record']
+        record = n.rebuilt(address.build_meaning_record_v01,dict(raw,
+            semantic_address=n.rebuilt(address.build_semantic_address_v01,raw['semantic_address']),
+            time_envelope=n.rebuilt(address.build_drs_time_envelope_v01,raw['time_envelope']),
+            authority_envelope=n.rebuilt(address.build_drs_authority_envelope_v01,raw['authority_envelope'])))
+        d.need(address.meaning_record_to_plain_data_v01(record) == raw,'MEANING_IDENTITY')
+        query = memory.build_drs_temporal_query_v01(query_mode='CURRENT_DECISION',
+            semantic_address_id=addr.semantic_address_id,scope_fingerprint=fingerprint,
+            as_of=now,evaluation_time=now,evaluation_time_source='INJECTED_CURRENT_DECISION_TIME',
+            time_range_start=now,time_range_end=now+1,required_time_axes=('PT','KT','ET','CT','TTL','VALIDITY'),
+            freshness_policy_id=env.freshness_policy_id,max_age_seconds=policy['max_source_age'],
+            domain='FOOTBALL_ADDRESS',risk_class='LOW',reuse_intent='CONTEXT',
+            requested_reuse_classes=('CONTEXT_ONLY',),
+            required_evidence_classes=('SOURCE_IDENTITY','SOURCE_INTEGRITY','PROVENANCE_CHAIN',
+                'TIME_FITNESS','POLICY_COMPATIBILITY','SCHEMA_COMPATIBILITY','CONFLICT_CLEARANCE',
+                'ROOT_DECISION','SOURCE_HISTORY'),forbidden_changes=('POLICY_CHANGED',),
+            policy_version='football.pointer.v01',schema_versions=('football.pointer.v01',),
+            owning_local_root_id=root)
+        evaluation = memory.evaluate_drs_candidate_v01(semantic_address=addr,query=query,
+                                                      meaning_record=record)
+        evaluations.append(memory.query_evaluation_state_to_plain_data_v01(evaluation))
+    d.need(not evaluations[0]['eligible_for_ranking'] and evaluation.eligible_for_ranking,
+           'MEANING_ELIGIBILITY')
+    budget = memory.build_memory_descent_budget_v01(max_depth=0,max_records_opened=1,
+        max_pointers_opened=0,max_artifacts_opened=0,max_bytes_opened=0,
+        max_lineage_edges=0,max_conflict_records=0)
+    plan = memory.build_retrieval_plan_v01(query_id=query.query_id,
+        semantic_address_id=addr.semantic_address_id,proposed_record_ids=(record.meaning_record_id,),
+        proposed_memory_pointer_ids=(),proposed_artifact_pointer_ids=(),
+        requested_descent_class='SUMMARY_ONLY',proposed_budget_id=budget.memory_descent_budget_id,
+        required_access_policy_ids=(),reason_codes=())
+    review = n.root_review(root,query.query_id,plan.retrieval_plan_id,addr.semantic_address_id,
+        dict(eligible=evaluation.eligible_for_ranking,metadata_only=record.safe_summary == SUMMARY),
+        memory.retrieval_plan_to_plain_data_v01(plan),now,
+        predicate='approve_controlled_memory_descent_plan_v01',window=(now,end))
+    counters['root_reviews'] += 1
+    d.need(review[2].decision == 'ACCEPT','DESCENT_REVIEW_REFUSED')
+    rh = integrity.domain_separated_sha256_hex_v01(
+        domain='hedgehog:drs:memory_descent_root_result_binding:v01',
+        payload=c.canonical(roots.root_decision_result_to_plain_dict_v01(review[2])))
+    request = memory.build_memory_descent_request_v01(retrieval_plan_id=plan.retrieval_plan_id,
+        query_id=query.query_id,owning_local_root_id=root,root_kernel_id=review[0].kernel_id,
+        root_decision_input_id=review[1].decision_input_id,root_decision_id=review[2].decision_id,
+        root_decision_hash=rh,requested_descent_class='SUMMARY_ONLY',approved_descent_class='SUMMARY_ONLY',
+        proposed_budget_id=budget.memory_descent_budget_id,approved_budget=budget,
+        approved_record_ids=(record.meaning_record_id,),approved_memory_pointer_ids=(),
+        approved_artifact_pointer_ids=())
+    result = memory.execute_local_memory_descent_v01(retrieval_plan=plan,proposed_budget=budget,
+        descent_request=request,root_kernel=review[0],root_decision_input=review[1],
+        root_decision_result=review[2],source_records=(record,))
+    d.need(result.limits_respected and not result.reason_codes and
+           result.safe_summaries == (SUMMARY,),'DESCENT_FAILED')
+    n.save(folder/'pointer_descent.json',dict(resolver=n.plain(resolved),lookup=n.plain(lookup),
+        evaluations=evaluations,root=n.root_plain(review),
+        descent=memory.memory_descent_result_to_plain_data_v01(result),
+        descriptor_sha256=c.sha(stored)))
+    return stored

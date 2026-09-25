@@ -1,0 +1,192 @@
+{
+  "chronology_scope": "G54R and G54B are predecessors, while G54B1 is the featured no-environment Astra trial; four attempts inside G54B1 are submissions, not independent trials.",
+  "entries": [
+    {
+      "artifact_hash": "5d997e0c3f7a4d2cba450543e54143777e78680133df1a0cbf913e4685a721bb",
+      "artifact_hash_type": "sha256 of retained predecessor result record; original G54R archive identity in separate predecessor record",
+      "backend_model_effort": {
+        "backend": "Gemini transport",
+        "effort": "UNKNOWN_FROM_INCLUDED_RESULT",
+        "model": "gemini-2.5-flash"
+      },
+      "code_edit_owner": "Historical model author according to retained result; not independently rechecked in this capsule.",
+      "corrections": 3,
+      "ended_utc": null,
+      "execution_status": "Both final peers exit1 before native Work/Root; no timeout; not semantic acceptance.",
+      "first_blocker": "TypeError: ActionCommitPacketRegistryV02.__init__() got an unexpected keyword argument 'invalidation_contexts'",
+      "human_supervisor_assistance": "Separate supervisor feedback and controls reported; exact predecessor package not incorporated into this selected G54B1 archive.",
+      "inclusion_in_main_story": false,
+      "inference_requests": {
+        "count": null,
+        "reason": "Usage and generation posts do not establish provider inference request count."
+      },
+      "input_kit_task_examiner_source_hashes": {
+        "status": "UNKNOWN_FROM_INCLUDED_RESULT; predecessor result record retained"
+      },
+      "predecessor_trial_id": null,
+      "purpose": "Earlier Gemini football-domain cold-author attempt; preserved as incomplete.",
+      "record": "evidence/recorded/SUPERVISOR_EVIDENCE/G54R_FINAL_RESULT.json",
+      "result": "TRANSPORT_RECOVERED_COLD_AUTHOR_TRIAL_INCOMPLETE",
+      "started_utc": null,
+      "submissions": 4,
+      "tool_calls": {
+        "count": null,
+        "reason": "Not reconstructed from predecessor package; final result reports tool outcomes but not a same-definition operation count."
+      },
+      "trial_id": "G54R",
+      "type": "early_cold_author_trial"
+    },
+    {
+      "artifact_hash": "61d68df876231b0fa94c2ed3f118537ac409597d8b8af0ac84ed3b3c0c7ee3cb",
+      "artifact_hash_type": "sha256 of earlier G54B return archive reported and copy-verified in retained predecessor identity; archive itself not embedded",
+      "artifact_identity_record": "evidence/recorded/SUPERVISOR_EVIDENCE/predecessor_archive_identity.json",
+      "backend_model_effort": {
+        "backend": "Codex app-server configured",
+        "effort": "ultra",
+        "model": "gpt-6-astra"
+      },
+      "code_edit_owner": "NONE; AUTHOR_TRIAL_NOT_STARTED",
+      "corrections": 0,
+      "ended_utc": null,
+      "execution_status": "NO_AUTHOR_TASK_DELIVERED; FOOTBALL_NATIVE_NOT_RUN",
+      "first_blocker": "command/exec accepted permissionProfile=g54b-public but read a sibling private synthetic file and created a file in its read-only public root.",
+      "human_supervisor_assistance": "Boundary investigation, no candidate correction.",
+      "inclusion_in_main_story": false,
+      "inference_requests": {
+        "count": null,
+        "reason": "No model turn delivered; request counter not exposed by predecessor result. Reported new author/model calls were zero."
+      },
+      "input_kit_task_examiner_source_hashes": {
+        "status": "UNKNOWN_FROM_INCLUDED_RESULT; task not delivered"
+      },
+      "predecessor_trial_id": "G54R",
+      "purpose": "Probe Astra author-access path; model football task never delivered.",
+      "record": "evidence/recorded/SUPERVISOR_EVIDENCE/G54B_FINAL_RESULT.json",
+      "result": "AUTHOR_BOUNDARY_UNVERIFIED",
+      "result_record_sha256": "b61286b894d379759ca948f7e50c36f3fbd13b2a62a5cfab212acc9f22399807",
+      "started_utc": null,
+      "submissions": 0,
+      "tool_calls": {
+        "count": 0,
+        "scope": "new author calls only; no task sent"
+      },
+      "trial_id": "G54B",
+      "type": "access_boundary_probe_no_author_task"
+    },
+    {
+      "artifact_hash": "9c383d342b63c3ca54cddc51c37eae0baac53cccf2bf49fd9a1bb8ce67f2d422",
+      "artifact_hash_type": "sha256 of entire delivered G54B1 return archive",
+      "attempts": [
+        {
+          "attempt_id": "G54B1/attempt_00",
+          "author_source_tests": "Present as source files; no separate test-run receipt, not claimed executed.",
+          "candidate_file_count": 20,
+          "candidate_manifest_sha256": "68e3c14dab5824086cfce831f8bb59255b471a7d07af03bdb2b6341e85809e32",
+          "execution_status": "Requester rc1 before Work; representation/privacy rule rejected the synthetic DRS payload.",
+          "frozen_record": "evidence/recorded/AUTHOR_TRIAL/attempt_00/FROZEN.json",
+          "kind": "initial_candidate",
+          "observed_first_blocker": "drs_secret_payload_forbidden",
+          "review_decision": "CORRECT",
+          "review_record": "evidence/recorded/AUTHOR_TRIAL/attempt_00/REVIEW_DECISION.json",
+          "sequence": 0,
+          "submission_call_id": "exec-e5aa076e-4c77-4f6d-b8b8-6a68ed970f06"
+        },
+        {
+          "attempt_id": "G54B1/attempt_01",
+          "author_source_tests": "Present as source files; no separate test-run receipt, not claimed executed.",
+          "candidate_file_count": 22,
+          "candidate_manifest_sha256": "712a382be898900eb2e17834abb1bb08c384b9c7d5922d3b1715c016527e4e7a",
+          "execution_status": "Peers rc0, but 173-character persistence key exceeds the 128-character boundary; requester refused before Work.",
+          "frozen_record": "evidence/recorded/AUTHOR_TRIAL/attempt_01/FROZEN.json",
+          "kind": "correction_of_same_trial",
+          "observed_first_blocker": "json_key",
+          "review_decision": "CORRECT",
+          "review_record": "evidence/recorded/AUTHOR_TRIAL/attempt_01/REVIEW_DECISION.json",
+          "sequence": 1,
+          "submission_call_id": "exec-db2e8500-02a4-47e9-be2a-4243d81f2f0e"
+        },
+        {
+          "attempt_id": "G54B1/attempt_02",
+          "author_source_tests": "Present as source files; no separate test-run receipt, not claimed executed.",
+          "candidate_file_count": 23,
+          "candidate_manifest_sha256": "74a83d8f6d75e03009da809dd7d736737a68bf4e784e07a6673ea5afece7caa2",
+          "execution_status": "Mock registry had already been changed; publisher rc1 while serializing mappingproxy into native_dispatch.json; supervisor observed and reported.",
+          "frozen_record": "evidence/recorded/AUTHOR_TRIAL/attempt_02/FROZEN.json",
+          "kind": "correction_of_same_trial",
+          "observed_first_blocker": "post_effect_evidence_serialization_failure",
+          "review_decision": "CORRECT",
+          "review_record": "evidence/recorded/AUTHOR_TRIAL/attempt_02/REVIEW_DECISION.json",
+          "sequence": 2,
+          "submission_call_id": "exec-3557410b-d7b0-49b4-b121-514a03c75851"
+        },
+        {
+          "attempt_id": "G54B1/attempt_03",
+          "author_source_tests": "Present as source files; no separate test-run receipt, not claimed executed.",
+          "candidate_file_count": 26,
+          "candidate_manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa",
+          "execution_status": "Both peers rc0 and subject computation/effect recorded; frozen independent native acceptance failed before full matrix/live/supplied checks.",
+          "frozen_record": "evidence/recorded/AUTHOR_TRIAL/attempt_03/FROZEN.json",
+          "kind": "correction_of_same_trial",
+          "observed_first_blocker": "venue_offer_consumption",
+          "review_decision": "STOP",
+          "review_record": "evidence/recorded/AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json",
+          "sequence": 3,
+          "submission_call_id": "exec-ba31e0cf-eeae-43d5-9840-79421e0469b5"
+        }
+      ],
+      "backend_model_effort": {
+        "backend": "Codex app-server",
+        "effort": "ultra",
+        "environments": [],
+        "model": "gpt-6-astra",
+        "service_tier": "default"
+      },
+      "candidate_final_manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa",
+      "code_edit_owner": "gpt-6-astra candidate author via restricted broker; supervisor_target_code_edits=0, frozen kernel/guard/examiner changes=0",
+      "corrections": 3,
+      "ended_utc": "2026-09-25T08:55:54.115804+00:00",
+      "execution_status": {
+        "both_peers": "RC0_BOTH_WORKERS_REAPED_CONTAINER_REMOVED",
+        "final_supplied": "NOT_RUN_NATIVE_ACCEPTANCE_PREREQUISITE_FAILED; partial diagnostics are not substitutes",
+        "full_matrix": "NOT_COMPLETED_AFTER_NATIVE_ACCEPTANCE_FAILURE",
+        "live_runtime": "NOT_RUN_NATIVE_ACCEPTANCE_PREREQUISITE_FAILED",
+        "native_acceptance": "FAIL_AT_ACTUAL_PREDICATE; partial exam prefix, not full P01-P10/A-H acceptance"
+      },
+      "first_blocker": "EXAMINER_PRIVATE/examiner.py:164 check_native: venue_offer_consumption",
+      "human_supervisor_assistance": "Supervisor supplied original kit/task and bounded feedback after each submission; independent reviewer later analyzed contract. One predicate-change approval note was rejected and not applied.",
+      "inclusion_in_main_story": true,
+      "inference_requests": {
+        "count": null,
+        "reason": "NOT_EXPOSED_BY_APP_SERVER; not equated with turns or tool calls"
+      },
+      "input_kit_task_examiner_source_hashes": {
+        "author_visible_manifest_sha256": "06586271a18f1158d7b9c76963a66334bdb39a968af83d2c1e5923eab5001d9d",
+        "broker_source_sha256": "b1ba862c8d86cd228a028e8035875fbbc91d3363f8afc6a4309de364d6daf466",
+        "examiner_py_sha256": "874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372",
+        "how_to_build_sha256": "6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3",
+        "initial_input_record_sha256": "0e8a67be86544f84b0e8fa5bbbd178d8895bcdc7c488d4986bf2e0910b95772e",
+        "initial_prompt_text_sha256": "972ca734b2e19aedec39e79ffc5cb70f37ebf9425d9416bcd33026d74e084ecd",
+        "runner_source_sha256": "9563bb42447024939a42f7026da4832e6737bb65b6bad008294f5f11dca1d327",
+        "source_snapshot_inventory_sha256": "adc2b04f6a2d73a7dd640381ab3f2605cf588fb5b69a12df3fbf9f8d46322b11",
+        "task_visible_manifest_sha256": "70e66c7d57ef3bad1fa9adeab8f9a6c925affd24f39a310afd60895ed2b7176e",
+        "what_to_build_sha256": "dbcdfeeaca9405687dd30bba33a72a510729d606c7d99ee52a5f390d426963a1"
+      },
+      "later_contract_reviewer_status": "REVIEW_FINDING_ONLY; no retroactive native acceptance",
+      "predecessor_trial_id": "G54B",
+      "purpose": "Fresh external model author built a candidate football extension from generic architecture instruction and separate subject task.",
+      "record": "evidence/recorded/FINAL_RESULT.json",
+      "result": "G54B1_COLD_AUTHORING_INCOMPLETE_NATIVE_OFFER_BINDING",
+      "started_utc": "2026-09-25T07:23:49.030925+00:00",
+      "submissions": 4,
+      "tool_calls": {
+        "count": 429,
+        "kind": "restricted broker operations, not inference requests",
+        "separate_diagnostic_count": 4
+      },
+      "trial_id": "G54B1",
+      "type": "fresh_no_environment_cold_author_trial"
+    }
+  ],
+  "schema": "radiolaria.g54b1.publication.trial_ledger.v01",
+  "source_archive_sha256": "9c383d342b63c3ca54cddc51c37eae0baac53cccf2bf49fd9a1bb8ce67f2d422"
+}

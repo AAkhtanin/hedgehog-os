@@ -1,0 +1,29 @@
+{
+  "branch": "main",
+  "head": "76a6952c9d0f31c976d2501c5641457a20de153a",
+  "metadata": [
+    {
+      "bytes": 439264,
+      "mode": "0644",
+      "path": "/Users/admin/Projects/hedgehog-os/.git/index",
+      "sha256": "c09620e0b59d62f3c8872e8b78928baf9f67c2065b7d0a0c8f4189a6f06c464c"
+    },
+    {
+      "bytes": 528,
+      "mode": "0644",
+      "path": "/Users/admin/Projects/hedgehog-os/.git/config",
+      "sha256": "c3a37464a39412f3550ad82628d904f1b5e907fd55bc1cd1510e52591ca8ec45"
+    },
+    {
+      "bytes": 1648,
+      "mode": "0600",
+      "path": "/Users/admin/Projects/hedgehog-os/.git/reviewed_repository_transition_v01/context.json",
+      "sha256": "b62d2133bfd43a1e66af6801173fc39fe438e30688c406a2a1eb8ed4ce5819ce"
+    }
+  ],
+  "staged": "",
+  "status": "",
+  "tracked": "289df3b1f0e9f2a3ef5c57d52523b77ad21f0f77f1ef7243b5dafcb90ff586c8",
+  "tree": "b98f1d5d33c259939c1b4b2bcf72ce1c0e5ebf9c",
+  "unchanged": true
+}

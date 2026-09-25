@@ -1,0 +1,239 @@
+"""One source-owned disposable MOCK registry, mutated only by Firewall callback."""
+import json
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e
+from hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts
+from hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi
+from demo import run_action_packet_portability_v01 as donor
+from . import domain as d, policy as p
+
+# Runtime bindings are installed only for a locally prepared native packet.
+PACKETS = {}
+
+def snapshot(path):
+    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})
+
+def merged_inventory(inventory, registry):
+    result = c.decode(c.canonical(inventory))
+    for field in result['fields']:
+        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']
+                    if s['field_id'] == field['field_id']]
+        field['occupied_utc'] = field['occupied_utc'] + existing
+        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')
+    return result
+
+def scope_key(request):
+    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],
+                  request['revision']])
+
+def payload(request, offer):
+    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],
+                schedule_revision=offer['schedule_revision'],currency=offer['currency'],
+                total_minor=offer['total_minor'])
+
+def validate_payload(value):
+    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))
+    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])
+    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and
+           len(value['slots']) == 3, 'MOCK_PAYLOAD')
+    d.need(value['currency'] == value['request']['currency'] and
+           type(value['total_minor']) is int and
+           0 <= value['total_minor'] <= value['request']['budget_minor'],
+           'MOCK_BUDGET')
+
+def validate_inputs(definition, inputs):
+    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)
+    if not errors:
+        try:
+            values = {v.parameter_name:v.value for v in inputs}
+            validate_payload(c.decode(values['payload_json'].encode()))
+        except ValueError as exc:
+            errors = (str(exc),)
+    return firewall.build_capability_validation_evidence_v01(definition=definition,
+        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)
+
+def validate_output(definition, invocation, output):
+    errors = firewall.validate_capability_values_v01(definition.output_fields,output)
+    values = {v.parameter_name:v.value for v in invocation.inputs}
+    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],
+                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))
+    if not errors and {v.parameter_name:v.value for v in output} != expected:
+        errors = ('mock_booking_output_binding',)
+    return firewall.build_capability_validation_evidence_v01(definition=definition,
+        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)
+
+def execute_booking(invocation):
+    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')
+    context = PACKETS[invocation.packet_id]
+    values = {v.parameter_name:v.value for v in invocation.inputs}
+    data = c.decode(values['payload_json'].encode())
+    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',
+              'mock_payload_or_owner_changed')
+    request, offer, policy = data['request'], context['offer'], context['policy']
+    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),
+              'mock_current_consent')
+    now = e.clock()
+    c.require(context['valid_from'] <= now < context['source_end'] and
+              policy['status'] == 'ACTIVE','mock_offer_not_current')
+    current = c.decode(context['inventory_path'].read_bytes())
+    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')
+    old = snapshot(context['state_path'])
+    key = context['key']
+    # The application reconciles terminal keys before dispatch. A second callback
+    # is a refusal even if the payload is unchanged.
+    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')
+    effective = merged_inventory(current,old)
+    d.check_offer(offer,request,effective)
+    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')
+    new = dict(reservations=old['reservations'] + data['slots'],
+               idempotency=dict(old['idempotency']))
+    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,
+        slots=data['slots'],request_sha256=c.sha(request))
+    # Sole business-state write: all three reservations and logical key together.
+    e.state_write(context['state_path'],new)
+    context['mutations'].append(dict(invocation_id=invocation.invocation_id,
+        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),
+        snapshot_sha256=c.sha(new)))
+    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],
+                  payload_sha256=c.sha(data))
+    return tuple(action.build_action_effect_parameter_record_v01(
+        parameter_name=name,value_type=kind,value=result[name])
+        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),
+                          ('payload_sha256','TEXT')))
+
+def admit(device):
+    functions = (validate_inputs,validate_output,execute_booking)
+    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)
+    semantics = firewall.build_capability_business_semantics_v01(
+        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',
+        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',
+        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',
+        input_bindings=(
+            firewall.build_capability_business_input_binding_v01(input_name='device_ref',
+                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),
+            firewall.build_capability_business_input_binding_v01(input_name='payload_json',
+                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))
+    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,
+        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,
+        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,
+            required=True,consequential=True) for k,t in
+            (('device_ref','REFERENCE'),('payload_json','TEXT'))),
+        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,
+            required=True,consequential=False) for k,t in
+            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),
+        resource_refs=(device,),input_validator_ref=code[0].public_symbol,
+        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,
+        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))
+    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,
+        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,
+        host_instance_ref='host:football:venue')
+
+def reconcile(request, state_root, expected_payload=None):
+    path = state_root/'bookings'/(scope_key(request)+'.json')
+    pending = state_root/'pending'/(scope_key(request)+'.json')
+    if not path.exists():
+        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')
+        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')
+    saved = json.loads(path.read_text())
+    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')
+    if expected_payload is not None:
+        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')
+    state = snapshot(state_root/'registry.json')
+    row = state['idempotency'].get(saved['logical_key'])
+    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and
+           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and
+           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),
+           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')
+    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],
+           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')
+    return saved, state
+
+def confirm(request, offer, source_body, operator, state_root, folder, counters):
+    data = payload(request,offer)
+    path = state_root/'bookings'/(scope_key(request)+'.json')
+    pending = state_root/'pending'/(scope_key(request)+'.json')
+    if path.exists() or pending.exists():
+        saved, readback = reconcile(request,state_root,data)
+        n.save(folder/'receipt.json',saved['receipt'])
+        n.save(folder/'readback.json',readback)
+        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],
+            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))
+        counters['receipt_reuse'] += 1
+        return saved['booking']
+    now = e.clock()
+    try:
+        end = c.temporal(source_body['time_envelope'],now,
+            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))
+    except ValueError as exc:
+        raise d.Refusal(str(exc)) from exc
+    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')
+    inventory_path = state_root/'current_inventory.json'
+    inventory = c.decode(inventory_path.read_bytes())
+    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))
+    d.check_offer(offer,request,effective)
+    review = n.root_review('VenueRoot','transaction:football:booking',
+        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],
+        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],
+             complete=len(offer['slots']) == 3,source_current=now < end,
+             schedule=inventory['revision'] == offer['schedule_revision']),
+        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),
+             source_work_ref=source_body['source_work_ref'],
+             source_review_ref=source_body['source_review_ref'],inputs=data,
+             policy_sha256=c.sha(operator)),now,
+        window=(source_body['time_envelope']['valid_from'],end))
+    counters['root_reviews'] += 1
+    n.save(folder/'booking_review.json',n.root_plain(review))
+    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')
+    device = 'device:football:' + c.sha(request['venue_ref'])
+    admitted = admit(device)
+    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,
+        value_type=t,value=v) for k,t,v in
+        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))
+    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,
+        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),
+        business_object_ref='booking:football:'+scope_key(request))
+    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)
+    counters['root_reviews'] += 1
+    packet = prepared.root_bound.packet_identity.packet_id
+    key = canonical.idempotency_identity.idempotency_key
+    host = donor.host_for_prepared_action_v01(prepared)
+    mutations = []
+    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,
+        state_path=state_root/'registry.json',inventory_path=inventory_path,
+        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],
+        source_end=end,mutations=mutations)
+    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))
+    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),
+        root=n.plain(prepared.root_bound.root_decision_projection),
+        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))
+    counters['dispatch'] += 1
+    try:
+        registry, revision = hosts.dispatch_current_action_v01(host,
+            expected_revision=host.revision,packet_id=packet,
+            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,
+            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')
+    finally:
+        # Persist even a failed/uncertain native attempt before rendering a report.
+        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),
+            events=n.plain(host.events),mutations=mutations))
+        counters['mutations'] += len(mutations)
+        PACKETS.pop(packet,None)
+    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]
+    receipt = attempt.receipt
+    d.need(receipt is not None and len(mutations) == 1,
+           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')
+    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)
+    n.save(folder/'receipt.json',receipt_plain)
+    readback = snapshot(state_root/'registry.json')
+    n.save(folder/'readback.json',readback)
+    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and
+           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and
+           all(readback['reservations'].count(s) == 1 for s in data['slots']),
+           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')
+    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],
+        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,
+        slots=data['slots'],request_sha256=c.sha(request))
+    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),
+        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)
+    # Saved receipt is history data, never deserialized into a Host or permission.
+    n.save(path,saved)
+    return booking

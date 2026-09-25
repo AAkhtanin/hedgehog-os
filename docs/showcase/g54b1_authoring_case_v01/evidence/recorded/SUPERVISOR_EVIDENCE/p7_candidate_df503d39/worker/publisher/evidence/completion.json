@@ -1,0 +1,51 @@
+{
+  "bootstrap": {
+    "received": 1,
+    "received_bytes": 358,
+    "sent": 1,
+    "sent_bytes": 351
+  },
+  "classification": "CANDIDATE_COMPLETION_ONLY",
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "provider_calls": 0,
+    "pure_verification": 0,
+    "receipt_reuse": 0,
+    "requester_work": 0,
+    "root_reviews": 6,
+    "runtime_semantic_calls": 0,
+    "search": 2,
+    "source_work": 2,
+    "transport_requests": 9
+  },
+  "events": [
+    {
+      "event_id": "exact",
+      "status": "NEEDS_CONFIRMATION"
+    },
+    {
+      "event_id": "shift",
+      "status": "OFFER_READY"
+    },
+    {
+      "event_id": "book",
+      "status": "REFUSED"
+    },
+    {
+      "event_id": "repeat",
+      "status": "REFUSED"
+    },
+    {
+      "event_id": "verify",
+      "status": "CURRENT_STATUS_UNKNOWN"
+    }
+  ],
+  "role": "publisher",
+  "wire": {
+    "received": 9,
+    "received_bytes": 16847,
+    "sent": 9,
+    "sent_bytes": 15934
+  }
+}

@@ -1,0 +1,781 @@
+{
+  "command": "candidate",
+  "limit_error": null,
+  "observations": {
+    "publisher": [
+      {
+        "event": "FILTERED_BEFORE_IMPORT",
+        "pid": 7,
+        "restrictions": {
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "2",
+          "Uid": "65532\t65532\t65532\t65532"
+        },
+        "role": "publisher"
+      },
+      {
+        "event": "ENTRY_START",
+        "input_sha256": "223713b0d40a2691968c45bed98e93ee4a940ed59736b67c4aeb8e2e26c9b4a9",
+        "module": "/candidate/candidate_domain/run.py",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "ed6a356f6fdb0c76b902c4f0c7b85ba458b1436dc01664530c705fb282e95426",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "1cd063916deca23bf4ed2235f39bca6195ece8032a3cd5b410d2fae5e929aef9",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "9c5053ad1511780a18b602768109109554c972b36a1832f9c357a1797d4921b8",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.disclosure",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.disclosure",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "6dd2403a5f4b2304ae0d3da44fe98d6498607175da48d39cfafba22bdc8c4e70",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "3cad556896d84efe88cac612f7c342cfd94c25dd0d1fa6e8d81290d953adaf6e",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "89f2489629773836673e325f4ce98b3f13effe21cb738bbc54d4dc72c8cb1b64",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.disclosure",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.disclosure",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "3ae7e57dab3f981ae422d6bc0b04f8af82dd8f8abe52e1aa0bcb72c5c173ee52",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "41a16946485e21dbff71af2134249fda67916d816c2f23b3b0eee0929d5e798b",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.work_execution_host_v01.dispatch_current_action_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.effect_firewall_v01.execute_bound_effect_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.effect_firewall_v01.execute_bound_effect_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.work_execution_host_v01.dispatch_current_action_v01",
+        "role": "publisher"
+      }
+    ],
+    "requester": [
+      {
+        "event": "FILTERED_BEFORE_IMPORT",
+        "pid": 8,
+        "restrictions": {
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "2",
+          "Uid": "65532\t65532\t65532\t65532"
+        },
+        "role": "requester"
+      },
+      {
+        "event": "ENTRY_START",
+        "input_sha256": "86185070ae1a3cb3aaabfced90d253e31a484bcec9d53c861c170fa85d3b7fb0",
+        "module": "/candidate/candidate_domain/run.py",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "d62799b33abb1205f0c8c6883034e9e00fc5a10680efd7ef0dab4208e6a7ac37",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "b0070ee40fe405ef7d92f91d4c8daaa13e43b627c02a3a2264064727e905f3e6",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "8afb5f5f8a2e553e481e816f9ae71db9d11798e09d73440d5d93c7fc9ec854c4",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "c31a61b2a40c2a81702e46c27e184ccd41881387e6862386af67a0117d2ca114",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "6c28376395623d9fa3811924ba83827cfcabd976c744bf1484cdb1d70de79b72",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "aae536fed43cf0aeab7f795a48ce67157650839e5bc39c430e01f756874693ee",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "82fbae76f4431f83735c4f7719d0ad3defe9f8550cb943d65caea4ae53ff8664",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "f63528428ec76648a82d4c1b0ac5bebd584d51c500bd12fccea868e99f5ad60a",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "2b2b4add780f422334cb12315f0fa6eb1eccc12a31d24e443d16447d6dcd890a",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "ef4d2836392a71d096f679e2d94ab6af02e9cc4d48e3dfdfd0ce992b9a218986",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "8d46cb1e499b2305c64a6f3deb6cd773fcea7dd02f6700a2a1f10e8d70347c2f",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "7713d91e0944949cca9792cc96e7375c3dcc191b6dcadc07c5a86b6042fc7963",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "3f2f45de7ec9c399bff53079786d48efe35089061cf2456330ba23190c91f9c7",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "950376e2c235cb989b450e8a8e5b08a148b5aeaa0818053c13b624a55b77a3b3",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "bb2887bf33d6b192d18c02c7132a0c68e10fb8043b4fc0af5e310a4ec3dfabeb",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      }
+    ]
+  },
+  "seconds": 2.6014779179999996,
+  "version": "g54.runner.v01",
+  "waits": [
+    {
+      "exit_code": 1,
+      "pid": 7,
+      "reaped": true,
+      "role": "publisher"
+    },
+    {
+      "exit_code": 1,
+      "pid": 8,
+      "reaped": true,
+      "role": "requester"
+    }
+  ]
+}

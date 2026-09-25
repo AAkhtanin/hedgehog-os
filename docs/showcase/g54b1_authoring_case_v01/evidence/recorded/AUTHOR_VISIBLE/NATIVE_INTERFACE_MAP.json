@@ -1,0 +1,3416 @@
+{
+  "constants": [
+    {
+      "line": 10,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "LIMIT = (1 << 62) - 1"
+    },
+    {
+      "line": 11,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "WIRE_MAX, BODY_MAX, POINTER_MAX, DEPTH_MAX = (262144, 65536, 16384, 12)"
+    },
+    {
+      "line": 12,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "BODY_SCHEMA = 'BoundedCalibrationSummaryV01'"
+    },
+    {
+      "line": 13,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "ROOT_A, ROOT_B = ('root:gate5:calibration', 'root:gate5:site')"
+    },
+    {
+      "line": 14,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "UNIT, QUANTITY = ('synthetic_unit_v01', 'reference_quantity_v01')"
+    },
+    {
+      "line": 139,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "IDS = {'pointer': ('pointer_id', 'g5pointer'), 'manifest': ('manifest_id', 'g5manifest'), 'request': ('request_id', 'g5request'), 'import': ('import_id', 'g5import'), 'disposition': ('disposition_id', 'g5disposition'), 'adaptation': ('local_view_id', 'g5adaptation')}"
+    },
+    {
+      "line": 142,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "source": "FIELDS = {'body': ('version', 'source_record_ref', 'source_revision', 'unit_id', 'quantity_id', 'reference', 'observations', 'n', 'total', 'correction', 'source_work_ref', 'source_review_ref', 'time_envelope', 'ttl_base', 'source_lineage_refs'), 'manifest': ('version', 'manifest_id', 'publisher', 'source_revision', 'source_refs', 'declared_schema', 'files'), 'pointer': ('version', 'pointer_id', 'publisher_root_id', 'publisher_key_id', 'semantic_address', 'source_record_ref', 'source_revision', 'source_review_ref', 'body_sha256', 'body_bytes', 'media_type', 'artifact_manifest_ref', 'safe_summary', 'published_scope', 'allowed_use_classes', 'forbidden_use_classes', 'recipient_scope', 'time_envelope', 'source_lineage_refs', 'access_policy_ref', 'revocation_stream_id', 'transport_object_id', 'creates_authority', 'creates_permission'), 'request': ('version', 'request_id', 'op', 'requester', 'publisher', 'task_ref', 'request_revision', 'pointer_ref', 'trust_profile_hash', 'use_class', 'object_id', 'allowed_size', 'nonce', 'deadline', 'issued_at', 'subject_request_ref', 'owner_transport_scope'), 'entry': ('version', 'pointer_id', 'publisher_root_id', 'stream_id', 'revision', 'state', 'effective_at', 'reason_ref', 'entry_hash'), 'status': ('version', 'entry', 'requested_pointer_hash', 'requester', 'subject_request_ref', 'request_revision', 'nonce', 'checked_at', 'valid_until'), 'release': ('version', 'state', 'request_ref', 'request_revision', 'pointer_ref', 'manifest_ref', 'body_hash', 'recipient', 'use_class', 'nonce', 'deadline', 'release_review_ref'), 'import': ('version', 'import_id', 'local_request_ref', 'pointer_ref', 'foreign_publisher', 'foreign_source_ref', 'foreign_revision', 'received_manifest_hash', 'body_hash', 'receive_event_ref', 'validation_results', 'status_entry_hash', 'dependency_fingerprint', 'policy_hash', 'creates_permission'), 'disposition': ('version', 'disposition_id', 'candidate_ref', 'parent_ref', 'state', 'local_review_ref'), 'adaptation': ('version', 'local_view_id', 'import_ref', 'foreign_source_ref', 'source_field', 'value', 'input_names', 'work_request_ref', 'local_acceptance_ref')}"
+    },
+    {
+      "line": 10,
+      "module": "hedgehog.external_drs.gate5_body_profile_v01",
+      "source": "COMMON_BODY_FIELDS = ('version', 'source_record_ref', 'source_revision', 'source_work_ref', 'source_review_ref', 'time_envelope', 'ttl_base', 'source_lineage_refs')"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "function",
+      "line": 493,
+      "module": "demo.run_action_packet_portability_v01",
+      "name": "authorize_and_prepare_action_v01",
+      "path": "source/demo/run_action_packet_portability_v01.py",
+      "signature": "authorize_and_prepare_action_v01(canonical, admitted=None, inputs=None)",
+      "source": {
+        "bytes": 59686,
+        "mode": "0644",
+        "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 270,
+      "module": "demo.run_action_packet_portability_v01",
+      "name": "build_native_work_action_v01",
+      "path": "source/demo/run_action_packet_portability_v01.py",
+      "signature": "build_native_work_action_v01(*, admitted, inputs, root_id, transaction_id, business_object_ref)",
+      "source": {
+        "bytes": 59686,
+        "mode": "0644",
+        "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 770,
+      "module": "demo.run_action_packet_portability_v01",
+      "name": "host_for_prepared_action_v01",
+      "path": "source/demo/run_action_packet_portability_v01.py",
+      "signature": "host_for_prepared_action_v01(prepared, trusted_source=None)",
+      "source": {
+        "bytes": 59686,
+        "mode": "0644",
+        "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 320,
+      "module": "demo.run_action_packet_portability_v01",
+      "name": "prepare_work_program_v01",
+      "path": "source/demo/run_action_packet_portability_v01.py",
+      "signature": "prepare_work_program_v01(*, task_id, root_id, admitted, items, device_refs)",
+      "source": {
+        "bytes": 59686,
+        "mode": "0644",
+        "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 315,
+      "module": "demo.run_action_packet_portability_v01",
+      "name": "work_literal_v01",
+      "path": "source/demo/run_action_packet_portability_v01.py",
+      "signature": "work_literal_v01(name, value_type, value)",
+      "source": {
+        "bytes": 59686,
+        "mode": "0644",
+        "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 146,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 148,
+          "signature": "__init__(self, observations, bridge, evaluation_time, evaluation_time_source, evaluation_context_id)"
+        },
+        {
+          "decorators": [],
+          "line": 152,
+          "signature": "read_current_v01(self)"
+        },
+        {
+          "decorators": [],
+          "line": 155,
+          "signature": "advance_v01(self, *, evaluation_time, observations=None)"
+        }
+      ],
+      "module": "demo.work_composition_mock_capabilities_v01",
+      "name": "TrustedMockWorkSourceV01",
+      "path": "source/demo/work_composition_mock_capabilities_v01.py",
+      "source": {
+        "bytes": 29523,
+        "mode": "0644",
+        "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 279,
+      "module": "demo.work_composition_mock_capabilities_v01",
+      "name": "admit_pure_operation_v01",
+      "path": "source/demo/work_composition_mock_capabilities_v01.py",
+      "signature": "admit_pure_operation_v01(*, operation_id, input_fields, output_fields, executor, output_validator, host_instance_ref)",
+      "source": {
+        "bytes": 29523,
+        "mode": "0644",
+        "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+      }
+    },
+    {
+      "fields": [
+        "parameter_name: str",
+        "value_type: str",
+        "value: str | int | bool"
+      ],
+      "kind": "class",
+      "line": 1719,
+      "methods": [],
+      "module": "hedgehog.action_commit_packet_v02",
+      "name": "ActionEffectParameterRecordV01",
+      "path": "source/hedgehog/action_commit_packet_v02.py",
+      "source": {
+        "bytes": 792178,
+        "mode": "0644",
+        "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 3397,
+      "module": "hedgehog.action_commit_packet_v02",
+      "name": "build_action_effect_parameter_record_v01",
+      "path": "source/hedgehog/action_commit_packet_v02.py",
+      "signature": "build_action_effect_parameter_record_v01(*, parameter_name: object, value_type: object, value: object) -> ActionEffectParameterRecordV01",
+      "source": {
+        "bytes": 792178,
+        "mode": "0644",
+        "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1097,
+      "module": "hedgehog.action_commit_packet_v02",
+      "name": "validate_action_commit_packet_registry_v02",
+      "path": "source/hedgehog/action_commit_packet_v02.py",
+      "signature": "validate_action_commit_packet_registry_v02(registry: object) -> tuple[bool, tuple[str, ...]]",
+      "source": {
+        "bytes": 792178,
+        "mode": "0644",
+        "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 65,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 66,
+          "signature": "__init__(self, root_path: Path | str='data/drs')"
+        },
+        {
+          "decorators": [],
+          "line": 69,
+          "signature": "layer_path(self, layer: str) -> Path"
+        },
+        {
+          "decorators": [],
+          "line": 76,
+          "signature": "write_record(self, record: dict) -> Path"
+        },
+        {
+          "decorators": [],
+          "line": 99,
+          "signature": "read_record(self, layer: str, record_id: str) -> dict"
+        },
+        {
+          "decorators": [],
+          "line": 104,
+          "signature": "read_layer(self, layer: str) -> list[dict]"
+        },
+        {
+          "decorators": [],
+          "line": 112,
+          "signature": "query_records(self, temporal_query: dict, layers: list[str]) -> list[dict]"
+        }
+      ],
+      "module": "hedgehog.drs",
+      "name": "LocalDRS",
+      "path": "source/hedgehog/drs.py",
+      "source": {
+        "bytes": 3888,
+        "mode": "0644",
+        "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4"
+      }
+    },
+    {
+      "fields": [
+        "temporal_query_version: str",
+        "query_id: str",
+        "query_mode: str",
+        "semantic_address_id: str",
+        "scope_fingerprint: str",
+        "as_of: int",
+        "evaluation_time: int",
+        "evaluation_time_source: str",
+        "time_range_start: int",
+        "time_range_end: int",
+        "required_time_axes: tuple[str, ...]",
+        "freshness_policy_id: str",
+        "max_age_seconds: int",
+        "domain: str",
+        "risk_class: str",
+        "reuse_intent: str",
+        "requested_reuse_classes: tuple[str, ...]",
+        "required_evidence_classes: tuple[str, ...]",
+        "forbidden_changes: tuple[str, ...]",
+        "policy_version: str",
+        "schema_versions: tuple[str, ...]",
+        "owning_local_root_id: str"
+      ],
+      "kind": "class",
+      "line": 487,
+      "methods": [],
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "DRSTemporalQueryV01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "fields": [
+        "memory_descent_budget_version: str",
+        "memory_descent_budget_id: str",
+        "max_depth: int",
+        "max_records_opened: int",
+        "max_pointers_opened: int",
+        "max_artifacts_opened: int",
+        "max_bytes_opened: int",
+        "max_lineage_edges: int",
+        "max_conflict_records: int"
+      ],
+      "kind": "class",
+      "line": 600,
+      "methods": [],
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "MemoryDescentBudgetV01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "fields": [
+        "memory_descent_request_version: str",
+        "memory_descent_request_id: str",
+        "retrieval_plan_id: str",
+        "query_id: str",
+        "owning_local_root_id: str",
+        "root_kernel_id: str",
+        "root_decision_input_id: str",
+        "root_decision_id: str",
+        "root_decision_hash: str",
+        "requested_descent_class: str",
+        "approved_descent_class: str",
+        "proposed_budget_id: str",
+        "approved_budget: MemoryDescentBudgetV01",
+        "approved_record_ids: tuple[str, ...]",
+        "approved_memory_pointer_ids: tuple[str, ...]",
+        "approved_artifact_pointer_ids: tuple[str, ...]",
+        "root_approved: bool",
+        "reason_codes: tuple[str, ...]",
+        "creates_permission: bool",
+        "creates_authority: bool"
+      ],
+      "kind": "class",
+      "line": 613,
+      "methods": [],
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "MemoryDescentRequestV01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "fields": [
+        "memory_descent_result_version: str",
+        "memory_descent_result_id: str",
+        "memory_descent_request_id: str",
+        "retrieval_plan_id: str",
+        "query_id: str",
+        "executed_descent_class: str",
+        "applied_budget_id: str",
+        "opened_record_ids: tuple[str, ...]",
+        "opened_memory_pointer_ids: tuple[str, ...]",
+        "opened_artifact_pointer_ids: tuple[str, ...]",
+        "traversed_lineage_edge_ids: tuple[str, ...]",
+        "opened_conflict_record_ids: tuple[str, ...]",
+        "depth_reached: int",
+        "records_opened: int",
+        "pointers_opened: int",
+        "artifacts_opened: int",
+        "bytes_opened: int",
+        "lineage_edges_traversed: int",
+        "conflict_records_opened: int",
+        "safe_summaries: tuple[str, ...]",
+        "opened_payload_fingerprints: tuple[str, ...]",
+        "limits_respected: bool",
+        "reason_codes: tuple[str, ...]",
+        "creates_authority: bool",
+        "creates_permission: bool",
+        "real_world_effects_count: int"
+      ],
+      "kind": "class",
+      "line": 637,
+      "methods": [],
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "MemoryDescentResultV01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "fields": [
+        "query_evaluation_version: str",
+        "query_evaluation_id: str",
+        "query_id: str",
+        "semantic_address_id: str",
+        "meaning_record_id: str",
+        "query_state: str",
+        "evaluated_at: int",
+        "evaluation_time_source: str",
+        "temporal_hard_gate_passed: bool",
+        "validity_interval_passed: bool",
+        "ttl_freshness_passed: bool",
+        "required_time_axes_passed: bool",
+        "scope_passed: bool",
+        "lifecycle_passed: bool",
+        "policy_compatible: bool",
+        "schema_compatible: bool",
+        "provenance_passed: bool",
+        "authority_envelope_passed: bool",
+        "required_evidence_passed: bool",
+        "forbidden_changes_passed: bool",
+        "conflict_passed: bool",
+        "quarantine_passed: bool",
+        "deadend_passed: bool",
+        "action_intent_passed: bool",
+        "g2a_action_history_passed: bool",
+        "permission_boundary_passed: bool",
+        "current_freshness_units: int",
+        "observed_evidence_fingerprint: str",
+        "checked_dependency_fingerprint: str",
+        "source_history_hash: str",
+        "action_history_binding_id: str | None",
+        "eligible_for_ranking: bool",
+        "reason_codes: tuple[str, ...]",
+        "creates_authority: bool",
+        "creates_permission: bool"
+      ],
+      "kind": "class",
+      "line": 513,
+      "methods": [],
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "QueryEvaluationStateV01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "fields": [
+        "retrieval_plan_version: str",
+        "retrieval_plan_id: str",
+        "query_id: str",
+        "semantic_address_id: str",
+        "proposed_record_ids: tuple[str, ...]",
+        "proposed_memory_pointer_ids: tuple[str, ...]",
+        "proposed_artifact_pointer_ids: tuple[str, ...]",
+        "requested_descent_class: str",
+        "proposed_budget_id: str",
+        "required_access_policy_ids: tuple[str, ...]",
+        "reason_codes: tuple[str, ...]",
+        "root_approval_required: bool",
+        "creates_authority: bool",
+        "creates_permission: bool",
+        "executes_read: bool"
+      ],
+      "kind": "class",
+      "line": 581,
+      "methods": [],
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "RetrievalPlanV01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 916,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "build_drs_temporal_query_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "build_drs_temporal_query_v01(*, query_mode: str, semantic_address_id: str, scope_fingerprint: str, as_of: int, evaluation_time: int, evaluation_time_source: str, time_range_start: int, time_range_end: int, required_time_axes: tuple[str, ...], freshness_policy_id: str, max_age_seconds: int, domain: str, risk_class: str, reuse_intent: str, requested_reuse_classes: tuple[str, ...], required_evidence_classes: tuple[str, ...], forbidden_changes: tuple[str, ...], policy_version: str, schema_versions: tuple[str, ...], owning_local_root_id: str) -> DRSTemporalQueryV01",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2164,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "build_memory_descent_budget_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "build_memory_descent_budget_v01(*, max_depth: int, max_records_opened: int, max_pointers_opened: int, max_artifacts_opened: int, max_bytes_opened: int, max_lineage_edges: int, max_conflict_records: int) -> MemoryDescentBudgetV01",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2275,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "build_memory_descent_request_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "build_memory_descent_request_v01(*, retrieval_plan_id: str, query_id: str, owning_local_root_id: str, root_kernel_id: str, root_decision_input_id: str, root_decision_id: str, root_decision_hash: str, requested_descent_class: str, approved_descent_class: str, proposed_budget_id: str, approved_budget: MemoryDescentBudgetV01, approved_record_ids: tuple[str, ...], approved_memory_pointer_ids: tuple[str, ...], approved_artifact_pointer_ids: tuple[str, ...]) -> MemoryDescentRequestV01",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2078,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "build_retrieval_plan_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "build_retrieval_plan_v01(*, query_id: str, semantic_address_id: str, proposed_record_ids: tuple[str, ...], proposed_memory_pointer_ids: tuple[str, ...], proposed_artifact_pointer_ids: tuple[str, ...], requested_descent_class: str, proposed_budget_id: str, required_access_policy_ids: tuple[str, ...], reason_codes: tuple[str, ...]) -> RetrievalPlanV01",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1283,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "evaluate_drs_candidate_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "evaluate_drs_candidate_v01(*, semantic_address: SemanticAddressV01, query: DRSTemporalQueryV01, meaning_record: MeaningRecordV01, action_history_binding: G2AActionHistoryBindingV01 | None=None) -> QueryEvaluationStateV01",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2958,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "execute_local_memory_descent_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "execute_local_memory_descent_v01(*, retrieval_plan: RetrievalPlanV01, proposed_budget: MemoryDescentBudgetV01, descent_request: MemoryDescentRequestV01, root_kernel: RootDecisionKernelV01, root_decision_input: RootDecisionInputV01, root_decision_result: RootDecisionResultV01, source_records: tuple[MeaningRecordV01, ...], artifact_payloads: tuple[tuple[str, bytes], ...]=()) -> MemoryDescentResultV01",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2518,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "memory_descent_result_to_plain_data_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "memory_descent_result_to_plain_data_v01(value: object) -> dict[str, object]",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1146,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "query_evaluation_state_to_plain_data_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "query_evaluation_state_to_plain_data_v01(value: object) -> dict[str, object]",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2124,
+      "module": "hedgehog.drs_memory_resolution_v01",
+      "name": "retrieval_plan_to_plain_data_v01",
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "signature": "retrieval_plan_to_plain_data_v01(value: object) -> dict[str, object]",
+      "source": {
+        "bytes": 157202,
+        "mode": "0644",
+        "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+      }
+    },
+    {
+      "fields": [
+        "pointer_version: str",
+        "pointer_id: str",
+        "storage_class: str",
+        "object_reference: str",
+        "content_sha256: str",
+        "media_type: str",
+        "byte_length: int | None",
+        "access_policy_id: str",
+        "sensitivity_class: str",
+        "allowed_use_classes: tuple[str, ...]",
+        "forbidden_use_classes: tuple[str, ...]",
+        "summary_read_permitted: bool",
+        "payload_read_permitted: bool",
+        "creates_authority: bool",
+        "creates_permission: bool"
+      ],
+      "kind": "class",
+      "line": 343,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "ArtifactPointerV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "authority_envelope_version: str",
+        "authority_envelope_id: str",
+        "authority_class: str",
+        "owning_local_root_id: str | None",
+        "source_root_decision_input_id: str | None",
+        "source_root_decision_id: str | None",
+        "source_root_decision_hash: str | None",
+        "authority_scope_fingerprint: str",
+        "root_acceptance_state: str",
+        "recording_component: str",
+        "creates_authority: bool",
+        "creates_permission: bool",
+        "action_permission_present: bool"
+      ],
+      "kind": "class",
+      "line": 378,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "DRSAuthorityEnvelopeV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "time_envelope_version: str",
+        "time_envelope_id: str",
+        "pt_created_at: int",
+        "kt_as_of: int",
+        "et_observed_at: int",
+        "ct_context_anchor: int",
+        "ttl_seconds: int",
+        "valid_from: int",
+        "valid_to: int",
+        "source_observed_at: int",
+        "source_reported_at: int",
+        "system_ingested_at: int",
+        "system_verified_at: int",
+        "freshness_policy_id: str"
+      ],
+      "kind": "class",
+      "line": 395,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "DRSTimeEnvelopeV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "lineage_edge_version: str",
+        "lineage_edge_id: str",
+        "source_meaning_record_id: str",
+        "target_meaning_record_id: str",
+        "relation_class: str",
+        "claim_dimension: str",
+        "source_history_hash: str",
+        "evidence_ref_ids: tuple[str, ...]",
+        "created_at: int",
+        "recording_component: str",
+        "creates_authority: bool",
+        "transfers_authority: bool"
+      ],
+      "kind": "class",
+      "line": 362,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "LineageEdgeV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "meaning_record_version: str",
+        "meaning_record_id: str",
+        "semantic_address: SemanticAddressV01",
+        "predecessor_record_id: str | None",
+        "supersession_reason: str | None",
+        "safe_summary: str",
+        "semantic_tags: tuple[str, ...]",
+        "resonance_reason: str",
+        "memory_pointers: tuple[MemoryPointerV01, ...]",
+        "artifact_pointers: tuple[ArtifactPointerV01, ...]",
+        "source_reference_ids: tuple[str, ...]",
+        "lineage_edges: tuple[LineageEdgeV01, ...]",
+        "time_envelope: DRSTimeEnvelopeV01",
+        "authority_envelope: DRSAuthorityEnvelopeV01",
+        "persistent_lifecycle_state: str",
+        "risk_hints: tuple[str, ...]",
+        "conflict_hints: tuple[str, ...]",
+        "reuse_policy_class: str",
+        "policy_version: str",
+        "schema_versions: tuple[str, ...]",
+        "content_fingerprint: str",
+        "recording_component: str",
+        "local_reference_kernel_scope: str",
+        "creates_authority: bool",
+        "creates_permission: bool"
+      ],
+      "kind": "class",
+      "line": 413,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "MeaningRecordV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "pointer_version: str",
+        "pointer_id: str",
+        "storage_class: str",
+        "object_reference: str",
+        "content_sha256: str",
+        "record_class: str",
+        "byte_length: int | None",
+        "access_policy_id: str",
+        "sensitivity_class: str",
+        "allowed_use_classes: tuple[str, ...]",
+        "forbidden_use_classes: tuple[str, ...]",
+        "summary_read_permitted: bool",
+        "payload_read_permitted: bool",
+        "creates_authority: bool",
+        "creates_permission: bool"
+      ],
+      "kind": "class",
+      "line": 324,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "MemoryPointerV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "address_profile_version: str",
+        "namespace: str",
+        "domain: str",
+        "subject_class: str",
+        "intent_class: str",
+        "meaning_schema_id: str",
+        "meaning_schema_version: str",
+        "semantic_address_id: str"
+      ],
+      "kind": "class",
+      "line": 312,
+      "methods": [],
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "SemanticAddressV01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1333,
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "build_drs_authority_envelope_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "signature": "build_drs_authority_envelope_v01(*, authority_class: str, owning_local_root_id: str | None, source_root_decision_input_id: str | None, source_root_decision_id: str | None, source_root_decision_hash: str | None, authority_scope_fingerprint: str, root_acceptance_state: str, recording_component: str) -> DRSAuthorityEnvelopeV01",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1444,
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "build_drs_time_envelope_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "signature": "build_drs_time_envelope_v01(*, pt_created_at: int, kt_as_of: int, et_observed_at: int, ct_context_anchor: int, ttl_seconds: int, valid_from: int, valid_to: int, source_observed_at: int, source_reported_at: int, system_ingested_at: int, system_verified_at: int, freshness_policy_id: str) -> DRSTimeEnvelopeV01",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1635,
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "build_meaning_record_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "signature": "build_meaning_record_v01(*, semantic_address: SemanticAddressV01, predecessor_record_id: str | None, supersession_reason: str | None, safe_summary: str, semantic_tags: tuple[str, ...], resonance_reason: str, memory_pointers: tuple[MemoryPointerV01, ...], artifact_pointers: tuple[ArtifactPointerV01, ...], source_reference_ids: tuple[str, ...], lineage_edges: tuple[LineageEdgeV01, ...], time_envelope: DRSTimeEnvelopeV01, authority_envelope: DRSAuthorityEnvelopeV01, persistent_lifecycle_state: str, risk_hints: tuple[str, ...], conflict_hints: tuple[str, ...], reuse_policy_class: str, policy_version: str, schema_versions: tuple[str, ...], content_fingerprint: str, recording_component: str) -> MeaningRecordV01",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 871,
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "build_semantic_address_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "signature": "build_semantic_address_v01(*, namespace: str, domain: str, subject_class: str, intent_class: str, meaning_schema_id: str, meaning_schema_version: str) -> SemanticAddressV01",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1503,
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "drs_time_envelope_to_plain_data_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "signature": "drs_time_envelope_to_plain_data_v01(value: object) -> dict[str, object]",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1713,
+      "module": "hedgehog.drs_semantic_address_v01",
+      "name": "meaning_record_to_plain_data_v01",
+      "path": "source/hedgehog/drs_semantic_address_v01.py",
+      "signature": "meaning_record_to_plain_data_v01(value: object) -> dict[str, object]",
+      "source": {
+        "bytes": 57213,
+        "mode": "0644",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+      }
+    },
+    {
+      "fields": [
+        "schema_id: str",
+        "body_fields: tuple[str, ...]",
+        "scope_fields: tuple[str, ...]",
+        "policy_accept_field: str",
+        "validate_body: object",
+        "validate_pointer: object",
+        "validate_binding: object"
+      ],
+      "kind": "class",
+      "line": 14,
+      "methods": [],
+      "module": "hedgehog.external_drs.gate5_body_profile_v01",
+      "name": "ReviewedBodyProfileV01",
+      "path": "source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "source": {
+        "bytes": 1720,
+        "mode": "0644",
+        "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 33,
+      "module": "hedgehog.external_drs.gate5_body_profile_v01",
+      "name": "check_local_profile_v01",
+      "path": "source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "signature": "check_local_profile_v01(profile)",
+      "source": {
+        "bytes": 1720,
+        "mode": "0644",
+        "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f"
+      }
+    },
+    {
+      "fields": [
+        "kind: str",
+        "wire: bytes"
+      ],
+      "kind": "class",
+      "line": 260,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 268,
+          "signature": "plain(self)"
+        }
+      ],
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "BoundedContractV01",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 27,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "add",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "add(a, b)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 309,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "authenticate_status",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "authenticate_status(envelope, pointer, request, policy, now, history)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 55,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "calibration",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "calibration(reference, observations)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 66,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "canonical",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "canonical(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 356,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "check_bundle",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "check_bundle(bundle, pointer_envelope, request, status, policy, now, history, conflicts, *, profile=None)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 343,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "check_pointer",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "check_pointer(envelope, policy, now, *, profile=None)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 334,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "check_route",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "check_route(pointer, policy, *, visited=(), depth=0, endpoint=None)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 328,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "check_status",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "check_status(envelope, pointer, request, policy, now, history)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 272,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "contract",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "contract(kind, value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 60,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "corrected",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "corrected(readings, offset)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 90,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "decode",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "decode(data, limit=WIRE_MAX)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 121,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "hash_value",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "hash_value(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 130,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "identifier",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "identifier(prefix, value, field)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 22,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "integer",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "integer(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 276,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "keyset",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "keyset(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 117,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "label",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "label(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 31,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "mul",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "mul(a, b)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 41,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "ratio",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "ratio(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 35,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "rational",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "rational(num, den)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 113,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "ref",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "ref(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 17,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "require",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "require(condition, reason)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 125,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "sequence",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "sequence(values, maximum=16)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 70,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "sha",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "sha(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 109,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "shape",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "shape(value, names)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 282,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "sign",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "sign(cap, keys, purpose, value, manifest_hash)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 301,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "temporal",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "temporal(value, now, policy)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 155,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "time_shape",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "time_shape(value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 47,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "total",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "total(values)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 167,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "validate",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "validate(kind, value, *, profile=None)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 290,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "verify",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "verify(envelope, pinned_keys, purpose, manifest_hash)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 74,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "walk",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "walk(value, depth=0)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 134,
+      "module": "hedgehog.external_drs.gate5_contracts_v01",
+      "name": "with_id",
+      "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "signature": "with_id(kind, value)",
+      "source": {
+        "bytes": 24167,
+        "mode": "0644",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 39,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 40,
+          "signature": "__init__(self, path, task)"
+        },
+        {
+          "decorators": [],
+          "line": 44,
+          "signature": "read(self)"
+        },
+        {
+          "decorators": [],
+          "line": 47,
+          "signature": "reserve(self, request)"
+        },
+        {
+          "decorators": [],
+          "line": 53,
+          "signature": "received_body(self, size)"
+        }
+      ],
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "Budget",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 107,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 108,
+          "signature": "__init__(self, read_fd, write_fd, folder)"
+        },
+        {
+          "decorators": [],
+          "line": 112,
+          "signature": "exact(self, size, allow_eof=False)"
+        },
+        {
+          "decorators": [],
+          "line": 121,
+          "signature": "receive(self, allow_eof=False)"
+        },
+        {
+          "decorators": [],
+          "line": 131,
+          "signature": "send(self, kind, value)"
+        },
+        {
+          "decorators": [],
+          "line": 138,
+          "signature": "counters(self)"
+        }
+      ],
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "PipeChannel",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 59,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 65,
+          "signature": "__init__(self, path, contexts)"
+        },
+        {
+          "decorators": [],
+          "line": 71,
+          "signature": "read(self)"
+        },
+        {
+          "decorators": [],
+          "line": 73,
+          "signature": "reserve(self, req)"
+        },
+        {
+          "decorators": [],
+          "line": 88,
+          "signature": "response(self, req, released)"
+        },
+        {
+          "decorators": [],
+          "line": 93,
+          "signature": "matches_source(self, req, revision)"
+        },
+        {
+          "decorators": [],
+          "line": 97,
+          "signature": "disclosure(self, req, size)"
+        }
+      ],
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "PublisherBudget",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 147,
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "build_source",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "signature": "build_source(inputs, cap, keys, policy, folder)",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 15,
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "clock",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "signature": "clock()",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 18,
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "immutable",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "signature": "immutable(path, value)",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 189,
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "request",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "signature": "request(policy, op, pointer=None, use='LOCAL_CONTEXT', subject=None, nonce=None)",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 141,
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "source_time",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "signature": "source_time(now)",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 26,
+      "module": "hedgehog.external_drs.gate5_exchange_v01",
+      "name": "state_write",
+      "path": "source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "signature": "state_write(path, value)",
+      "source": {
+        "bytes": 26991,
+        "mode": "0644",
+        "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 26,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 27,
+          "signature": "__init__(self, folder)"
+        },
+        {
+          "decorators": [],
+          "line": 31,
+          "signature": "observe(self, envelope, pointer, request, policy, now)"
+        },
+        {
+          "decorators": [],
+          "line": 41,
+          "signature": "conflicts(self)"
+        },
+        {
+          "decorators": [],
+          "line": 44,
+          "signature": "validate_bundle(self, bundle, descriptor, request, status, policy, now)"
+        },
+        {
+          "decorators": [],
+          "line": 50,
+          "signature": "import_body(self, checked, pointer)"
+        },
+        {
+          "decorators": [],
+          "line": 60,
+          "signature": "quarantine(self, reason, value)"
+        }
+      ],
+      "module": "hedgehog.external_drs.gate5_lifecycle_v01",
+      "name": "ImportStore",
+      "path": "source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "source": {
+        "bytes": 29240,
+        "mode": "0644",
+        "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 243,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "native_work",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "native_work(mode, root, task, values)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 270,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "persist_and_resolve_pointer",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "persist_and_resolve_pointer(envelope, folder, policy)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 28,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "plain",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "plain(value)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 110,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "pointer_descent_v01",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "pointer_descent_v01(pointer, folder, source_end)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 100,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "root_plain",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "root_plain(review)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 45,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "root_review",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "root_review(root, transaction, candidate, subject, checks, claim_value, now, predicate='g51_bounded_context_review', window=None)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 40,
+      "module": "hedgehog.external_drs.gate5_native_v01",
+      "name": "save",
+      "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+      "signature": "save(path, value)",
+      "source": {
+        "bytes": 20725,
+        "mode": "0644",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 24,
+      "module": "hedgehog.external_drs.gate5_supplied_v01",
+      "name": "native_result",
+      "path": "source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "signature": "native_result(proof, expected_root, expected_inputs)",
+      "source": {
+        "bytes": 10358,
+        "mode": "0644",
+        "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 15,
+      "module": "hedgehog.external_drs.gate5_supplied_v01",
+      "name": "record",
+      "path": "source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "signature": "record(cls, value, **overrides)",
+      "source": {
+        "bytes": 10358,
+        "mode": "0644",
+        "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 53,
+      "module": "hedgehog.external_drs.gate5_supplied_v01",
+      "name": "root_links",
+      "path": "source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "signature": "root_links(value, root, selected, accepted=True)",
+      "source": {
+        "bytes": 10358,
+        "mode": "0644",
+        "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 20,
+      "module": "hedgehog.external_drs.gate5_supplied_v01",
+      "name": "tuple_fields",
+      "path": "source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "signature": "tuple_fields(value, names)",
+      "source": {
+        "bytes": 10358,
+        "mode": "0644",
+        "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+      }
+    },
+    {
+      "fields": [
+        "abi_version: str",
+        "artifact_id: str",
+        "artifact_type: str",
+        "schema_version: str",
+        "transaction_id: str",
+        "owner_root_id: str",
+        "source_component: str",
+        "authority_class: str",
+        "lifecycle_state: str",
+        "payload: object",
+        "trace_refs: tuple[str, ...]",
+        "parent_refs: tuple[str, ...]",
+        "time_envelope: object"
+      ],
+      "kind": "class",
+      "line": 203,
+      "methods": [],
+      "module": "hedgehog.kernel.abi_v01",
+      "name": "KernelArtifactV01",
+      "path": "source/hedgehog/kernel/abi_v01.py",
+      "source": {
+        "bytes": 43017,
+        "mode": "0644",
+        "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 326,
+      "module": "hedgehog.kernel.abi_v01",
+      "name": "build_kernel_artifact_v01",
+      "path": "source/hedgehog/kernel/abi_v01.py",
+      "signature": "build_kernel_artifact_v01(*, abi_version: str, artifact_id: str, artifact_type: str, schema_version: str, transaction_id: str, owner_root_id: str, source_component: str, authority_class: str, lifecycle_state: str, payload: object, trace_refs: tuple[str, ...], parent_refs: tuple[str, ...], time_envelope: object) -> KernelArtifactV01",
+      "source": {
+        "bytes": 43017,
+        "mode": "0644",
+        "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 436,
+      "module": "hedgehog.kernel.abi_v01",
+      "name": "kernel_artifact_to_plain_dict_v01",
+      "path": "source/hedgehog/kernel/abi_v01.py",
+      "signature": "kernel_artifact_to_plain_dict_v01(artifact: KernelArtifactV01) -> dict[str, object]",
+      "source": {
+        "bytes": 43017,
+        "mode": "0644",
+        "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 377,
+      "module": "hedgehog.kernel.abi_v01",
+      "name": "validate_kernel_artifact_v01",
+      "path": "source/hedgehog/kernel/abi_v01.py",
+      "signature": "validate_kernel_artifact_v01(artifact: object) -> tuple[str, ...]",
+      "source": {
+        "bytes": 43017,
+        "mode": "0644",
+        "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+      }
+    },
+    {
+      "fields": [
+        "invocation_id: str",
+        "admission_id: str",
+        "definition_id: str",
+        "task_id: str",
+        "work_instance_id: str",
+        "owning_root_id: str",
+        "candidate_id: str | None",
+        "packet_id: str | None",
+        "execution_attempt_id: str",
+        "inputs: tuple[object, ...]",
+        "resource_refs: tuple[str, ...]",
+        "input_validation: CapabilityValidationEvidenceV01"
+      ],
+      "kind": "class",
+      "line": 2188,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "BoundCapabilityInvocationV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "admission_id: str",
+        "definition: CapabilityDefinitionV01",
+        "code_sources: tuple[CapabilityCodeSnapshotV01, ...]",
+        "input_contract_ref: str",
+        "output_contract_ref: str",
+        "implementation_ref: str",
+        "catalogue_revision: int",
+        "host_instance_ref: str"
+      ],
+      "kind": "class",
+      "line": 2141,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityAdmissionSnapshotV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "input_name: str",
+        "source_kind: str",
+        "source_name: str",
+        "value_type: str"
+      ],
+      "kind": "class",
+      "line": 2098,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityBusinessInputBindingV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "operation_key: str",
+        "selected_action_class: str",
+        "logical_effect_class: str",
+        "logical_effect_namespace: str",
+        "business_object_class: str",
+        "business_object_namespace: str",
+        "input_bindings: tuple[CapabilityBusinessInputBindingV01, ...]"
+      ],
+      "kind": "class",
+      "line": 2106,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityBusinessSemanticsV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "public_symbol: str",
+        "source_utf8: str",
+        "source_sha256: str"
+      ],
+      "kind": "class",
+      "line": 2134,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityCodeSnapshotV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "definition_id: str",
+        "operation_id: str",
+        "version: str",
+        "effect_kind: str",
+        "business_semantics: CapabilityBusinessSemanticsV01 | None",
+        "input_fields: tuple[CapabilityFieldV01, ...]",
+        "output_fields: tuple[CapabilityFieldV01, ...]",
+        "resource_refs: tuple[str, ...]",
+        "input_validator_ref: str",
+        "output_validator_ref: str",
+        "executor_ref: str",
+        "code_sha256s: tuple[tuple[str, str], ...]",
+        "contract_sha256: str"
+      ],
+      "kind": "class",
+      "line": 2117,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityDefinitionV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "name: str",
+        "value_type: str",
+        "required: bool",
+        "consequential: bool",
+        "minimum: int | str | None",
+        "maximum: int | str | None",
+        "allowed_values: tuple[str | int | bool, ...]"
+      ],
+      "kind": "class",
+      "line": 2087,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityFieldV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "fields": [
+        "definition_id: str",
+        "validator_code_sha256: str",
+        "subject_sha256: str",
+        "invocation_id: str | None",
+        "valid: bool",
+        "reason_codes: tuple[str, ...]"
+      ],
+      "kind": "class",
+      "line": 2178,
+      "methods": [],
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "CapabilityValidationEvidenceV01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2554,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "build_bound_capability_invocation_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "build_bound_capability_invocation_v01(*, admitted_capability: object, task_id: str, work_instance_id: str, owning_root_id: str, candidate_id: str | None, packet_id: str | None, execution_attempt_id: str, inputs: tuple, resource_refs: tuple, canonical_projection: object=None) -> BoundCapabilityInvocationV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2343,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "build_capability_business_input_binding_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "build_capability_business_input_binding_v01(*, input_name: str, source_kind: str, source_name: str, value_type: str) -> CapabilityBusinessInputBindingV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2356,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "build_capability_business_semantics_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "build_capability_business_semantics_v01(*, operation_key: str, selected_action_class: str, logical_effect_class: str, logical_effect_namespace: str, business_object_class: str, business_object_namespace: str, input_bindings: tuple) -> CapabilityBusinessSemanticsV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2403,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "build_capability_definition_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "build_capability_definition_v01(*, operation_id: str, version: str, effect_kind: str, business_semantics: object, input_fields: tuple, output_fields: tuple, resource_refs: tuple, input_validator_ref: str, output_validator_ref: str, executor_ref: str, code_sha256s: tuple) -> CapabilityDefinitionV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2307,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "build_capability_field_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "build_capability_field_v01(*, name: str, value_type: str, required: bool, consequential: bool, minimum: object=None, maximum: object=None, allowed_values: tuple=()) -> CapabilityFieldV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2511,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "build_capability_validation_evidence_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "build_capability_validation_evidence_v01(*, definition: CapabilityDefinitionV01, values: tuple, invocation_id: str | None, valid: bool, reason_codes: tuple[str, ...]) -> CapabilityValidationEvidenceV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2474,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "snapshot_admitted_capability_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "snapshot_admitted_capability_v01(admitted_capability: object) -> CapabilityAdmissionSnapshotV01",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2529,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "validate_bound_capability_invocation_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "validate_bound_capability_invocation_v01(value: object, admission_snapshot: object, canonical_projection: object=None) -> tuple[str, ...]",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2424,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "validate_capability_admission_snapshot_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "validate_capability_admission_snapshot_v01(value: object) -> tuple[str, ...]",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2574,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "validate_capability_execution_result_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "validate_capability_execution_result_v01(value: object, invocation: object, admission_snapshot: object) -> tuple[str, ...]",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 2321,
+      "module": "hedgehog.kernel.effect_firewall_v01",
+      "name": "validate_capability_values_v01",
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "signature": "validate_capability_values_v01(fields: object, values: object) -> tuple[str, ...]",
+      "source": {
+        "bytes": 128809,
+        "mode": "0644",
+        "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 249,
+      "module": "hedgehog.kernel.integrity_replay_v01",
+      "name": "domain_separated_sha256_hex_v01",
+      "path": "source/hedgehog/kernel/integrity_replay_v01.py",
+      "signature": "domain_separated_sha256_hex_v01(*, domain: str, payload: bytes) -> str",
+      "source": {
+        "bytes": 48487,
+        "mode": "0644",
+        "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be"
+      }
+    },
+    {
+      "fields": [
+        "decision_input_id: str",
+        "transaction_id: str",
+        "target_root_id: str",
+        "root_review_packet: _RootReviewPacketV01",
+        "post_vv_bundle: object",
+        "gt_advisory: object",
+        "policy_state: object",
+        "permission_state: object",
+        "temporal_state: object",
+        "conflict_state: object",
+        "prior_root_state: object"
+      ],
+      "kind": "class",
+      "line": 119,
+      "methods": [],
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "RootDecisionInputV01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "fields": [
+        "kernel_id: str",
+        "kernel_version: str",
+        "transition_registry: _TransitionRegistryV01",
+        "precedence_order: tuple[str, ...]",
+        "llm_dependency_allowed: bool",
+        "effect_access: str"
+      ],
+      "kind": "class",
+      "line": 154,
+      "methods": [],
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "RootDecisionKernelV01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "fields": [
+        "decision_id: str",
+        "decision_input_id: str",
+        "transaction_id: str",
+        "target_root_id: str",
+        "decision: str",
+        "reason_code: str",
+        "selected_candidate_id: str | None",
+        "transition_decision: _TransitionDecisionV01",
+        "hard_failure_reasons: tuple[str, ...]",
+        "missing_evidence_refs: tuple[str, ...]",
+        "conflict_set_ids: tuple[str, ...]",
+        "prior_decision_id: str | None",
+        "root_commit_created: bool",
+        "permission_created: bool",
+        "final_output_created: bool",
+        "effect_requested: bool"
+      ],
+      "kind": "class",
+      "line": 134,
+      "methods": [],
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "RootDecisionResultV01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 191,
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "build_root_decision_input_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "signature": "build_root_decision_input_v01(*, transaction_id: str, target_root_id: str, root_review_packet: _RootReviewPacketV01, post_vv_bundle: object, gt_advisory: object, policy_state: object, permission_state: object, temporal_state: object, conflict_state: object, prior_root_state: object) -> RootDecisionInputV01",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 163,
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "build_root_decision_kernel_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "signature": "build_root_decision_kernel_v01() -> RootDecisionKernelV01",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 268,
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "decide_root_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "signature": "decide_root_v01(*, kernel: object, decision_input: object) -> RootDecisionResultV01",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 369,
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "root_decision_result_to_plain_dict_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "signature": "root_decision_result_to_plain_dict_v01(result: RootDecisionResultV01) -> dict[str, object]",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 255,
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "validate_root_decision_input_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "signature": "validate_root_decision_input_v01(*, kernel: object, decision_input: object) -> tuple[str, ...]",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 290,
+      "module": "hedgehog.kernel.root_decision_v01",
+      "name": "validate_root_decision_result_v01",
+      "path": "source/hedgehog/kernel/root_decision_v01.py",
+      "signature": "validate_root_decision_result_v01(*, kernel: object, decision_input: object, result: object) -> tuple[str, ...]",
+      "source": {
+        "bytes": 43352,
+        "mode": "0644",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+      }
+    },
+    {
+      "fields": [
+        "commitment_version: str",
+        "commitment_id: str",
+        "transaction_id: str",
+        "owner_root_id: str",
+        "commitment_scope: str",
+        "artifact_hash: str",
+        "manifest_hash: str",
+        "key_id: str"
+      ],
+      "kind": "class",
+      "line": 166,
+      "methods": [],
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "RootOwnedCommitmentV01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "fields": [
+        "signature_version: str",
+        "algorithm: str",
+        "commitment_id: str",
+        "transaction_id: str",
+        "owner_root_id: str",
+        "key_id: str",
+        "commitment_hash: str",
+        "signature_hex: str"
+      ],
+      "kind": "class",
+      "line": 178,
+      "methods": [],
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "RootSignatureV01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "fields": [
+        "verification_status: str",
+        "verification_errors: tuple[str, ...]",
+        "trusted_key_set_verified: bool",
+        "commitment_verified: bool",
+        "signature_contract_verified: bool",
+        "trusted_root_present: bool",
+        "key_id_verified: bool",
+        "public_key_verified: bool",
+        "commitment_hash_verified: bool",
+        "signature_verified: bool",
+        "root_isolation_verified: bool",
+        "owner_root_id: str",
+        "key_id: str",
+        "commitment_hash: str"
+      ],
+      "kind": "class",
+      "line": 190,
+      "methods": [],
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "RootSignatureVerificationResultV01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 75,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 91,
+          "signature": "__init__(self, factory_token: object, *, root_id: str, key_id: str, public_key_hex: str, private_key: _Ed25519PrivateKey) -> None"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 109,
+          "signature": "root_id(self) -> str"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 113,
+          "signature": "key_id(self) -> str"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 117,
+          "signature": "algorithm(self) -> str"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 121,
+          "signature": "public_key_hex(self) -> str"
+        }
+      ],
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "RootSignerCapabilityV01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "fields": [
+        "key_set_version: str",
+        "key_set_id: str",
+        "algorithm: str",
+        "root_ids: tuple[str, ...]",
+        "key_ids: tuple[str, ...]",
+        "public_key_hexes: tuple[str, ...]"
+      ],
+      "kind": "class",
+      "line": 156,
+      "methods": [],
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "TrustedRootKeySetV01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 279,
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "build_root_owned_commitment_v01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "signature": "build_root_owned_commitment_v01(*, commitment_id: str, transaction_id: str, owner_root_id: str, commitment_scope: str, artifact_hash: str, manifest_hash: str, key_id: str) -> RootOwnedCommitmentV01",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 387,
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "root_owned_commitment_to_plain_dict_v01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "signature": "root_owned_commitment_to_plain_dict_v01(commitment: RootOwnedCommitmentV01) -> dict[str, object]",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 400,
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "root_signature_to_plain_dict_v01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "signature": "root_signature_to_plain_dict_v01(signature: RootSignatureV01) -> dict[str, object]",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 305,
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "sign_root_owned_commitment_v01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "signature": "sign_root_owned_commitment_v01(*, capability: RootSignerCapabilityV01, trusted_key_set: TrustedRootKeySetV01, commitment: RootOwnedCommitmentV01) -> RootSignatureV01",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 367,
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "trusted_root_key_set_to_plain_dict_v01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "signature": "trusted_root_key_set_to_plain_dict_v01(key_set: TrustedRootKeySetV01) -> dict[str, object]",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 351,
+      "module": "hedgehog.kernel.root_signer_isolation_v01",
+      "name": "verify_root_signature_v01",
+      "path": "source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "signature": "verify_root_signature_v01(*, trusted_key_set: object, commitment: object, signature: object) -> RootSignatureVerificationResultV01",
+      "source": {
+        "bytes": 31043,
+        "mode": "0644",
+        "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+      }
+    },
+    {
+      "fields": [
+        "contribution_id: str",
+        "request_id: str",
+        "actor_id: str",
+        "actor_role: str",
+        "contribution_mode: str",
+        "bsep_projection_ref: str",
+        "scope: str",
+        "bounded_context_refs: tuple[str, ...]",
+        "claims: tuple[NormalizedClaimV01, ...]",
+        "evidence_bindings: tuple[EvidenceBindingV01, ...]",
+        "constraint_bindings: tuple[ConstraintBindingV01, ...]",
+        "uncertainty_bindings: tuple[UncertaintyBindingV01, ...]",
+        "requested_validators: tuple[str, ...]",
+        "forbidden_claims_observed: tuple[str, ...]"
+      ],
+      "kind": "class",
+      "line": 194,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "ActorContributionV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "conflict_set_id: str",
+        "subject: str",
+        "predicate: str",
+        "claim_ids: tuple[str, ...]",
+        "conflicting_values: tuple[object, ...]",
+        "source_modes: tuple[str, ...]",
+        "resolution_state: str"
+      ],
+      "kind": "class",
+      "line": 212,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "ConflictSetV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "constraint_id: str",
+        "subject: str",
+        "predicate: str",
+        "object_or_value: object",
+        "source_ref: str",
+        "constraint_class: str",
+        "evaluation_state: str"
+      ],
+      "kind": "class",
+      "line": 158,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "ConstraintBindingV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "evidence_id: str",
+        "evidence_ref: str",
+        "evidence_class: str",
+        "source_component_id: str",
+        "provenance_ref: str",
+        "evidence_state: str"
+      ],
+      "kind": "class",
+      "line": 148,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "EvidenceBindingV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "claim_id: str",
+        "subject: str",
+        "predicate: str",
+        "object_or_value: object",
+        "time_envelope_ref: str",
+        "provenance_refs: tuple[str, ...]",
+        "evidence_refs: tuple[str, ...]",
+        "confidence_micros: int",
+        "source_role: str",
+        "source_mode: str",
+        "authority_class: str"
+      ],
+      "kind": "class",
+      "line": 179,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "NormalizedClaimV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "packet_id: str",
+        "request_id: str",
+        "transaction_id: str",
+        "target_root_id: str",
+        "runtime_topology_ref: str",
+        "synthesis_proposal: SynthesisProposalV01",
+        "contribution_ids: tuple[str, ...]",
+        "conflict_set_ids: tuple[str, ...]",
+        "missing_evidence_refs: tuple[str, ...]",
+        "required_validator_ids: tuple[str, ...]",
+        "review_state: str",
+        "authority_class: str",
+        "root_decision_created: bool",
+        "permission_created: bool",
+        "final_output_created: bool"
+      ],
+      "kind": "class",
+      "line": 238,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "RootReviewPacketV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "request_id: str",
+        "transaction_id: str",
+        "target_root_id: str",
+        "runtime_topology_ref: str",
+        "bounded_context_refs: tuple[str, ...]",
+        "permitted_actor_ids: tuple[str, ...]",
+        "permitted_contribution_modes: tuple[str, ...]",
+        "requested_subjects: tuple[str, ...]",
+        "required_evidence_classes: tuple[str, ...]",
+        "forbidden_claims: tuple[str, ...]"
+      ],
+      "kind": "class",
+      "line": 134,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "SemanticWorkRequestV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "proposal_id: str",
+        "request_id: str",
+        "source_contribution_ids: tuple[str, ...]",
+        "normalized_claims: tuple[NormalizedClaimV01, ...]",
+        "conflict_sets: tuple[ConflictSetV01, ...]",
+        "missing_evidence_refs: tuple[str, ...]",
+        "contribution_modes: tuple[str, ...]",
+        "requested_validators: tuple[str, ...]",
+        "synthesis_summary: str",
+        "authority_class: str",
+        "root_review_required: bool"
+      ],
+      "kind": "class",
+      "line": 223,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "SynthesisProposalV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "uncertainty_id: str",
+        "claim_id: str",
+        "uncertainty_kind: str",
+        "statement: str",
+        "confidence_micros: int",
+        "source_ref: str"
+      ],
+      "kind": "class",
+      "line": 169,
+      "methods": [],
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "UncertaintyBindingV01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 396,
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "build_actor_contribution_v01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "signature": "build_actor_contribution_v01(*, contribution_id: str, request_id: str, actor_id: str, actor_role: str, contribution_mode: str, bsep_projection_ref: str, scope: str, bounded_context_refs: tuple[str, ...], claims: tuple[NormalizedClaimV01, ...], evidence_bindings: tuple[EvidenceBindingV01, ...], constraint_bindings: tuple[ConstraintBindingV01, ...], uncertainty_bindings: tuple[UncertaintyBindingV01, ...], requested_validators: tuple[str, ...], forbidden_claims_observed: tuple[str, ...]) -> ActorContributionV01",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 287,
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "build_evidence_binding_v01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "signature": "build_evidence_binding_v01(*, evidence_id: str, evidence_ref: str, evidence_class: str, source_component_id: str, provenance_ref: str, evidence_state: str) -> EvidenceBindingV01",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 362,
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "build_normalized_claim_v01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "signature": "build_normalized_claim_v01(*, claim_id: str, subject: str, predicate: str, object_or_value: object, time_envelope_ref: str, provenance_refs: tuple[str, ...], evidence_refs: tuple[str, ...], confidence_micros: int, source_role: str, source_mode: str) -> NormalizedClaimV01",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 438,
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "build_root_review_packet_from_contributions_v01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "signature": "build_root_review_packet_from_contributions_v01(*, request: SemanticWorkRequestV01, contributions: tuple[ActorContributionV01, ...], trust_profiles: tuple[_ComponentTrustProfileV01, ...]) -> RootReviewPacketV01",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 256,
+      "module": "hedgehog.kernel.semantic_work_v01",
+      "name": "build_semantic_work_request_v01",
+      "path": "source/hedgehog/kernel/semantic_work_v01.py",
+      "signature": "build_semantic_work_request_v01(*, request_id: str, transaction_id: str, target_root_id: str, runtime_topology_ref: str, bounded_context_refs: tuple[str, ...], permitted_actor_ids: tuple[str, ...], permitted_contribution_modes: tuple[str, ...], requested_subjects: tuple[str, ...], required_evidence_classes: tuple[str, ...], forbidden_claims: tuple[str, ...]) -> SemanticWorkRequestV01",
+      "source": {
+        "bytes": 58880,
+        "mode": "0644",
+        "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+      }
+    },
+    {
+      "fields": [
+        "component_id: str",
+        "component_class: str",
+        "authority_class: str",
+        "trusted_inputs: tuple[str, ...]",
+        "untrusted_inputs: tuple[str, ...]",
+        "produced_artifact_classes: tuple[str, ...]",
+        "may_create_root_decision: bool",
+        "may_create_permission: bool",
+        "may_request_effect: bool",
+        "may_hold_effect_handle: bool",
+        "compromise_assumptions: tuple[str, ...]",
+        "fail_closed_expectation: str"
+      ],
+      "kind": "class",
+      "line": 29,
+      "methods": [],
+      "module": "hedgehog.kernel.trust_model_v01",
+      "name": "ComponentTrustProfileV01",
+      "path": "source/hedgehog/kernel/trust_model_v01.py",
+      "source": {
+        "bytes": 15364,
+        "mode": "0644",
+        "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 303,
+      "module": "hedgehog.kernel.trust_model_v01",
+      "name": "build_default_component_trust_profiles_v01",
+      "path": "source/hedgehog/kernel/trust_model_v01.py",
+      "signature": "build_default_component_trust_profiles_v01() -> tuple[ComponentTrustProfileV01, ...]",
+      "source": {
+        "bytes": 15364,
+        "mode": "0644",
+        "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+      }
+    },
+    {
+      "fields": [
+        "max_items: int",
+        "max_children: int",
+        "max_model_calls: int",
+        "max_compute_units: int",
+        "max_revisions: int"
+      ],
+      "kind": "class",
+      "line": 66,
+      "methods": [],
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "WorkBudgetV01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "fields": [
+        "task_id: str",
+        "revision_id: str",
+        "predecessor_work_id: str",
+        "invocation_id: str",
+        "result_id: str",
+        "admission_id: str",
+        "result_artifact_ref: str",
+        "output_field: str",
+        "expected_type: str",
+        "value: action.ActionEffectParameterRecordV01"
+      ],
+      "kind": "class",
+      "line": 33,
+      "methods": [],
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "WorkHistoricalOutputV01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "fields": [
+        "input_field: str",
+        "source: WorkLiteralV01 | WorkOutputBindingV01 | WorkHistoricalOutputV01"
+      ],
+      "kind": "class",
+      "line": 60,
+      "methods": [],
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "WorkInputBindingV01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "fields": [
+        "work_id: str",
+        "definition_id: str",
+        "owning_root_id: str",
+        "inputs: tuple[WorkInputBindingV01, ...]",
+        "resource_refs: tuple[str, ...]",
+        "depends_on: tuple[str, ...]",
+        "guard: WorkOutputBindingV01 | None",
+        "review_obligation_id: str | None"
+      ],
+      "kind": "class",
+      "line": 75,
+      "methods": [],
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "WorkItemV01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "fields": [
+        "value: action.ActionEffectParameterRecordV01"
+      ],
+      "kind": "class",
+      "line": 21,
+      "methods": [],
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "WorkLiteralV01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "fields": [
+        "predecessor_work_id: str",
+        "output_field: str",
+        "expected_type: str"
+      ],
+      "kind": "class",
+      "line": 26,
+      "methods": [],
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "WorkOutputBindingV01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 1314,
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "advance_work_program_v01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "signature": "advance_work_program_v01(program, *, catalogue, source_context, semantic_proposal, host_map, results=(), review_bindings=(), action_authorizers=None, continuation_context=None)",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 442,
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "validate_work_program_result_v01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "signature": "validate_work_program_result_v01(program, results, *, catalogue, host_map, source_context, semantic_proposal, review_bindings=(), continuation_context=None)",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 606,
+      "module": "hedgehog.kernel.work_composition_v01",
+      "name": "work_program_result_to_artifact_v01",
+      "path": "source/hedgehog/kernel/work_composition_v01.py",
+      "signature": "work_program_result_to_artifact_v01(program, results, *, catalogue, host_map, source_context, semantic_proposal, review_bindings=(), continuation_context=None)",
+      "source": {
+        "bytes": 89168,
+        "mode": "0644",
+        "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+      }
+    },
+    {
+      "fields": [
+        "candidate_id: str",
+        "record_id: str",
+        "domain: str",
+        "match_score: float",
+        "match_reasons: tuple[str, ...]",
+        "review_required: bool",
+        "blocked: bool",
+        "direct_reuse_allowed: bool",
+        "action_permission_granted: bool",
+        "stale: bool",
+        "quarantine_pressure: bool",
+        "deadend_pressure: bool",
+        "conflicting_provenance: bool",
+        "changed_worldstate: bool",
+        "poisoning_pressure: bool",
+        "reason_codes: tuple[str, ...]"
+      ],
+      "kind": "class",
+      "line": 159,
+      "methods": [],
+      "module": "hedgehog.local_drs_resolver",
+      "name": "ResolvedDRSCandidate",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "source": {
+        "bytes": 53552,
+        "mode": "0644",
+        "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+      }
+    },
+    {
+      "fields": [
+        "query_id: str",
+        "candidates: tuple[ResolvedDRSCandidate, ...]",
+        "candidate_count: int",
+        "root_review_required: bool",
+        "direct_reuse_allowed_count: int",
+        "blocked_count: int",
+        "review_required_count: int",
+        "authority_boundary: dict[str, Any]",
+        "counters: dict[str, int]",
+        "reason_codes: tuple[str, ...]"
+      ],
+      "kind": "class",
+      "line": 179,
+      "methods": [],
+      "module": "hedgehog.local_drs_resolver",
+      "name": "ResolvedDRSReport",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "source": {
+        "bytes": 53552,
+        "mode": "0644",
+        "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+      }
+    },
+    {
+      "fields": [
+        "record_id: str",
+        "domain: str",
+        "content: dict[str, Any]",
+        "semantic_keys: tuple[str, ...] = ()",
+        "layer: str = 'work'",
+        "record_type: str = 'generic'",
+        "time_envelope: dict[str, Any] | None = None",
+        "provenance: dict[str, Any] | None = None",
+        "trace_refs: tuple[dict[str, Any], ...] = ()",
+        "source_refs: tuple[dict[str, Any], ...] = ()",
+        "status: str = 'active'",
+        "gt: dict[str, Any] | None = None",
+        "validation: dict[str, Any] | None = None",
+        "root_final_ref: str | None = None",
+        "worldstate_ref: str | None = None",
+        "poisoning_markers: tuple[str, ...] = ()"
+      ],
+      "kind": "class",
+      "line": 124,
+      "methods": [],
+      "module": "hedgehog.local_drs_resolver",
+      "name": "SemanticDRSRecordInput",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "source": {
+        "bytes": 53552,
+        "mode": "0644",
+        "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+      }
+    },
+    {
+      "fields": [
+        "query_id: str",
+        "domain: str",
+        "semantic_terms: tuple[str, ...] = ()",
+        "content_filters: dict[str, Any] = field(default_factory=dict)",
+        "temporal_query: dict[str, Any] | None = None",
+        "worldstate: dict[str, Any] | None = None",
+        "source_refs: tuple[dict[str, Any], ...] = ()",
+        "trace_refs: tuple[dict[str, Any], ...] = ()",
+        "max_candidates: int = 10",
+        "require_root_review: bool = True",
+        "risk_class: str = 'normal'"
+      ],
+      "kind": "class",
+      "line": 144,
+      "methods": [],
+      "module": "hedgehog.local_drs_resolver",
+      "name": "SemanticResolveQuery",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "source": {
+        "bytes": 53552,
+        "mode": "0644",
+        "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 521,
+      "module": "hedgehog.local_drs_resolver",
+      "name": "resolve_semantic_candidates",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "signature": "resolve_semantic_candidates(drs: LocalDRS, query: SemanticResolveQuery, *, layers: tuple[str, ...]=('work', 'thoughts', 'quarantine', 'deadends')) -> ResolvedDRSReport",
+      "source": {
+        "bytes": 53552,
+        "mode": "0644",
+        "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 258,
+      "module": "hedgehog.local_drs_resolver",
+      "name": "write_semantic_record",
+      "path": "source/hedgehog/local_drs_resolver.py",
+      "signature": "write_semantic_record(drs: LocalDRS, record_input: SemanticDRSRecordInput) -> dict[str, Any]",
+      "source": {
+        "bytes": 53552,
+        "mode": "0644",
+        "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+      }
+    },
+    {
+      "fields": [
+        "owning_root_id: str",
+        "packet_id: str",
+        "transaction_id: str",
+        "registry: object",
+        "root_bound_packet: object",
+        "observations: tuple",
+        "logical_time_bridge: object",
+        "evaluation_time: int",
+        "evaluation_time_source: str",
+        "evaluation_context_id: str",
+        "source_revision: int",
+        "host_revision: int",
+        "capture_ordinal: int",
+        "_origin: object = field(repr=False, compare=False)"
+      ],
+      "kind": "class",
+      "line": 33,
+      "methods": [],
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "ActionSourceCaptureV01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "fields": [],
+      "kind": "class",
+      "line": 146,
+      "methods": [
+        {
+          "decorators": [],
+          "line": 153,
+          "signature": "__init__(self, *, owning_root_id, registry, catalogue, packet_bindings, current_dependency_observations, logical_time_bridge, trusted_source, task_policies=(), pure_need_permissions=())"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 251,
+          "signature": "revision(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 255,
+          "signature": "state_revision(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 259,
+          "signature": "registry(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 263,
+          "signature": "events(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 267,
+          "signature": "current_sources(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 271,
+          "signature": "owning_root_id(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 275,
+          "signature": "admitted_catalogue(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 279,
+          "signature": "catalogue_membership_history(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 283,
+          "signature": "pure_need_resolutions(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 287,
+          "signature": "pure_guest_evidence(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 291,
+          "signature": "pure_admission_attempts(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 295,
+          "signature": "pure_generation_proposals(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 299,
+          "signature": "completed_work(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 304,
+          "signature": "work_attempts(self)"
+        },
+        {
+          "decorators": [
+            "property"
+          ],
+          "line": 309,
+          "signature": "unresolved_starts(self)"
+        },
+        {
+          "decorators": [],
+          "line": 361,
+          "signature": "dispatch(self, *, packet_id, task_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id, work_instance_id=None)"
+        },
+        {
+          "decorators": [],
+          "line": 452,
+          "signature": "observe_receipt(self, *, packet_id, attempt_evidence_id, expected_revision, evaluation_time, evaluation_time_source)"
+        },
+        {
+          "decorators": [],
+          "line": 466,
+          "signature": "replay(self, *, packet_id)"
+        },
+        {
+          "decorators": [],
+          "line": 470,
+          "signature": "apply_revocation(self, *, packet_id, expected_revision, revocation_candidate, revocation_root_projection, accepted_revocation_binding, invalidation_evidence, transition_event)"
+        }
+      ],
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "RootWorkExecutionHostV01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "fields": [
+        "observations: tuple",
+        "logical_time_bridge: object",
+        "evaluation_time: int",
+        "evaluation_time_source: str",
+        "evaluation_context_id: str",
+        "source_revision: int"
+      ],
+      "kind": "class",
+      "line": 23,
+      "methods": [],
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "TrustedWorkSourceSnapshotV01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 125,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "admit_local_capability_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "admit_local_capability_v01(*, definition, input_validator, output_validator, executor, catalogue_revision, host_instance_ref)",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 488,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "build_root_work_execution_host_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "build_root_work_execution_host_v01(*, owning_root_id, registry, catalogue, packet_bindings, current_dependency_observations, logical_time_bridge, trusted_source, task_policies=(), pure_need_permissions=())",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 712,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "capture_current_action_source_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "capture_current_action_source_v01(host, *, packet_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id)",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 496,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "dispatch_current_action_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "dispatch_current_action_v01(host, *, packet_id, task_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id, work_instance_id=None)",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 519,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "inspect_current_action_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "inspect_current_action_v01(host, *, packet_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id)",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 101,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "observe_local_capability_code_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "observe_local_capability_code_v01(public_callable)",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    },
+    {
+      "kind": "function",
+      "line": 739,
+      "module": "hedgehog.work_execution_host_v01",
+      "name": "validate_retained_action_source_capture_v01",
+      "path": "source/hedgehog/work_execution_host_v01.py",
+      "signature": "validate_retained_action_source_capture_v01(host, capture, *, require_current=False)",
+      "source": {
+        "bytes": 52262,
+        "mode": "0644",
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+      }
+    }
+  ],
+  "extraction": "AST_NO_IMPORT_EXECUTION",
+  "limits": "Public names in donors and selected immediate interfaces, not universal API acceptance.",
+  "version": "g53.interfaces.v01"
+}

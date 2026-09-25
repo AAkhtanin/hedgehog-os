@@ -1,0 +1,891 @@
+{
+  "cases": [
+    {
+      "allowed_statuses": [
+        "OFFER_READY"
+      ],
+      "case_id": "competitive_price",
+      "classification": "SYNTHETIC_CHECKER_DATA_NOT_NATIVE_EVIDENCE",
+      "evaluation_time": 1798880401,
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "ARTIFICIAL"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:better",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 1000,
+            "surface": "NATURAL_GRASS"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "optimality_argument": "Both natural fields have identical intervals/occupancy. Shift1800 is unavoidable. Three1000 sessions strictly beat three2100 sessions.",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      },
+      "witness": {
+        "counts": {
+          "dispatch": 0,
+          "mutations": 0,
+          "search": 1
+        },
+        "currency": "EUR",
+        "native_refs": {},
+        "operation": "FIND_OFFER",
+        "receipt_ref": null,
+        "request_ref": "request:exam:one",
+        "request_revision": 2,
+        "slots": [
+          {
+            "end_utc": 1799341200,
+            "field_id": "field:better",
+            "price_minor": 1000,
+            "session_id": "session:7",
+            "start_utc": 1799335800,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799409600,
+            "field_id": "field:better",
+            "price_minor": 1000,
+            "session_id": "session:8",
+            "start_utc": 1799404200,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799494200,
+            "field_id": "field:better",
+            "price_minor": 1000,
+            "session_id": "session:9",
+            "start_utc": 1799488800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "source": {
+          "observed_at": 1798880400,
+          "offer_revision": 1,
+          "pt": 1798880400,
+          "publisher": "VenueRoot",
+          "recipient": "ActivePlanetRoot",
+          "request_revision": 2,
+          "schedule_revision": 4,
+          "status": "ACTIVE",
+          "status_checked": 1798880400,
+          "status_until": 1798880460,
+          "ttl": 300,
+          "valid_from": 1798880400,
+          "valid_to": 1798880700
+        },
+        "status": "OFFER_READY",
+        "team_ref": "team:one",
+        "total_minor": 3000,
+        "version": "g53.result.v01"
+      }
+    },
+    {
+      "allowed_statuses": [
+        "OFFER_READY"
+      ],
+      "case_id": "shift_before_price",
+      "classification": "SYNTHETIC_CHECKER_DATA_NOT_NATIVE_EVIDENCE",
+      "evaluation_time": 1798880401,
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "ARTIFICIAL"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:exact",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 2600,
+            "surface": "NATURAL_GRASS"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "optimality_argument": "Only exact field can avoid January8 shift. Other dates use cheaper elm. Shift0 then minimum6800 beats shifted6300.",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      },
+      "witness": {
+        "counts": {
+          "dispatch": 0,
+          "mutations": 0,
+          "search": 1
+        },
+        "currency": "EUR",
+        "native_refs": {},
+        "operation": "FIND_OFFER",
+        "receipt_ref": null,
+        "request_ref": "request:exam:one",
+        "request_revision": 2,
+        "slots": [
+          {
+            "end_utc": 1799341200,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:7",
+            "start_utc": 1799335800,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799407800,
+            "field_id": "field:exact",
+            "price_minor": 2600,
+            "session_id": "session:8",
+            "start_utc": 1799402400,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799494200,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:9",
+            "start_utc": 1799488800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "source": {
+          "observed_at": 1798880400,
+          "offer_revision": 1,
+          "pt": 1798880400,
+          "publisher": "VenueRoot",
+          "recipient": "ActivePlanetRoot",
+          "request_revision": 2,
+          "schedule_revision": 4,
+          "status": "ACTIVE",
+          "status_checked": 1798880400,
+          "status_until": 1798880460,
+          "ttl": 300,
+          "valid_from": 1798880400,
+          "valid_to": 1798880700
+        },
+        "status": "OFFER_READY",
+        "team_ref": "team:one",
+        "total_minor": 6800,
+        "version": "g53.result.v01"
+      }
+    },
+    {
+      "allowed_statuses": [
+        "OFFER_READY"
+      ],
+      "case_id": "stable_tie",
+      "classification": "SYNTHETIC_CHECKER_DATA_NOT_NATIVE_EVIDENCE",
+      "evaluation_time": 1798880401,
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "ARTIFICIAL"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:aardvark",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "optimality_argument": "All times/costs equal. field:aardvark sorts before field:elm in every session row.",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      },
+      "witness": {
+        "counts": {
+          "dispatch": 0,
+          "mutations": 0,
+          "search": 1
+        },
+        "currency": "EUR",
+        "native_refs": {},
+        "operation": "FIND_OFFER",
+        "receipt_ref": null,
+        "request_ref": "request:exam:one",
+        "request_revision": 2,
+        "slots": [
+          {
+            "end_utc": 1799341200,
+            "field_id": "field:aardvark",
+            "price_minor": 2100,
+            "session_id": "session:7",
+            "start_utc": 1799335800,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799409600,
+            "field_id": "field:aardvark",
+            "price_minor": 2100,
+            "session_id": "session:8",
+            "start_utc": 1799404200,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799494200,
+            "field_id": "field:aardvark",
+            "price_minor": 2100,
+            "session_id": "session:9",
+            "start_utc": 1799488800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "source": {
+          "observed_at": 1798880400,
+          "offer_revision": 1,
+          "pt": 1798880400,
+          "publisher": "VenueRoot",
+          "recipient": "ActivePlanetRoot",
+          "request_revision": 2,
+          "schedule_revision": 4,
+          "status": "ACTIVE",
+          "status_checked": 1798880400,
+          "status_until": 1798880460,
+          "ttl": 300,
+          "valid_from": 1798880400,
+          "valid_to": 1798880700
+        },
+        "status": "OFFER_READY",
+        "team_ref": "team:one",
+        "total_minor": 6300,
+        "version": "g53.result.v01"
+      }
+    },
+    {
+      "allowed_statuses": [
+        "OFFER_READY"
+      ],
+      "case_id": "permuted_records",
+      "classification": "SYNTHETIC_CHECKER_DATA_NOT_NATIVE_EVIDENCE",
+      "evaluation_time": 1798880401,
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:aardvark",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "ARTIFICIAL"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "optimality_argument": "All times/costs equal. field:aardvark sorts before field:elm in every session row.",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      },
+      "witness": {
+        "counts": {
+          "dispatch": 0,
+          "mutations": 0,
+          "search": 1
+        },
+        "currency": "EUR",
+        "native_refs": {},
+        "operation": "FIND_OFFER",
+        "receipt_ref": null,
+        "request_ref": "request:exam:one",
+        "request_revision": 2,
+        "slots": [
+          {
+            "end_utc": 1799494200,
+            "field_id": "field:aardvark",
+            "price_minor": 2100,
+            "session_id": "session:9",
+            "start_utc": 1799488800,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799409600,
+            "field_id": "field:aardvark",
+            "price_minor": 2100,
+            "session_id": "session:8",
+            "start_utc": 1799404200,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799341200,
+            "field_id": "field:aardvark",
+            "price_minor": 2100,
+            "session_id": "session:7",
+            "start_utc": 1799335800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "source": {
+          "observed_at": 1798880400,
+          "offer_revision": 1,
+          "pt": 1798880400,
+          "publisher": "VenueRoot",
+          "recipient": "ActivePlanetRoot",
+          "request_revision": 2,
+          "schedule_revision": 4,
+          "status": "ACTIVE",
+          "status_checked": 1798880400,
+          "status_until": 1798880460,
+          "ttl": 300,
+          "valid_from": 1798880400,
+          "valid_to": 1798880700
+        },
+        "status": "OFFER_READY",
+        "team_ref": "team:one",
+        "total_minor": 6300,
+        "version": "g53.result.v01"
+      }
+    },
+    {
+      "allowed_statuses": [
+        "OFFER_READY"
+      ],
+      "case_id": "renamed_tie",
+      "classification": "SYNTHETIC_CHECKER_DATA_NOT_NATIVE_EVIDENCE",
+      "evaluation_time": 1798880401,
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "ARTIFICIAL"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:zebra",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "NATURAL_GRASS"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "optimality_argument": "Renaming aardvark to zebra changes only tie order; elm is now lexicographically smallest.",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      },
+      "witness": {
+        "counts": {
+          "dispatch": 0,
+          "mutations": 0,
+          "search": 1
+        },
+        "currency": "EUR",
+        "native_refs": {},
+        "operation": "FIND_OFFER",
+        "receipt_ref": null,
+        "request_ref": "request:exam:one",
+        "request_revision": 2,
+        "slots": [
+          {
+            "end_utc": 1799341200,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:7",
+            "start_utc": 1799335800,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799409600,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:8",
+            "start_utc": 1799404200,
+            "venue_ref": "venue:synthetic"
+          },
+          {
+            "end_utc": 1799494200,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:9",
+            "start_utc": 1799488800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "source": {
+          "observed_at": 1798880400,
+          "offer_revision": 1,
+          "pt": 1798880400,
+          "publisher": "VenueRoot",
+          "recipient": "ActivePlanetRoot",
+          "request_revision": 2,
+          "schedule_revision": 4,
+          "status": "ACTIVE",
+          "status_checked": 1798880400,
+          "status_until": 1798880460,
+          "ttl": 300,
+          "valid_from": 1798880400,
+          "valid_to": 1798880700
+        },
+        "status": "OFFER_READY",
+        "team_ref": "team:one",
+        "total_minor": 6300,
+        "version": "g53.result.v01"
+      }
+    }
+  ],
+  "classification": "PRIVATE_PRE_AUTHOR_SYNTHETIC_DATA",
+  "version": "g53r.exam.ranking.v02"
+}

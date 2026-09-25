@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "run_author.py"
+  ],
+  "cwd": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A",
+  "started": "2026-09-25T07:23:48.907086+00:00",
+  "supervisor_pid": 28928,
+  "source_pins": {
+    "no_env_client.py": "505130455f541f674637c6d802c378937e1e11028544abada17091acefad8aaa",
+    "test_broker.py": "958ca6446f4bccab289d90b0c38dbe4fe2150b0d39e6639b89732360f4f1c1fd",
+    "run_author.py": "9563bb42447024939a42f7026da4832e6737bb65b6bad008294f5f11dca1d327",
+    "broker.py": "b1ba862c8d86cd228a028e8035875fbbc91d3363f8afc6a4309de364d6daf466",
+    "run_diagnostic.py": "ac815f64ce5bef519d3001be5e2fdd21780aea6e592b8273e4ea64a9dc8af8dc",
+    "prepare.py": "58312a2cfcaa3348533b54f794cda52372af9f4bdc5c51af4b6088a8fe1e8eb0",
+    "journal_run.py": "605e990042453855be5ba84eb607256f950ff11f3e733a8095b5b8815aec0e20"
+  },
+  "pid": 28935
+}

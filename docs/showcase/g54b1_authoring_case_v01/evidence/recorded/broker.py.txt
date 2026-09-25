@@ -1,0 +1,165 @@
+"""Pinned inert text broker. No candidate imports, processes or arbitrary RPCs."""
+import ast
+import hashlib
+import json
+import os
+from pathlib import Path, PurePosixPath
+import re
+import stat
+from jsonschema import Draft7Validator
+
+
+def digest(body): return hashlib.sha256(body).hexdigest()
+
+
+def schema(properties, required):
+    return {'type':'object','properties':properties,'required':required,'additionalProperties':False}
+
+
+TEXT={'type':'string'}
+PATH={'type':'string','maxLength':240}
+HASH={'type':'string','pattern':'^[0-9a-f]{64}$'}
+SPEC = {
+ 'read_approved_source': ('Read exact pinned public text; lines are 1-based; never arbitrary paths.', schema({'path':PATH,'start_line':{'type':'integer','minimum':1},'max_lines':{'type':'integer','minimum':1,'maximum':240}},['path'])),
+ 'search_approved_source': ('Bounded literal search in pinned public files, optionally one exact path. Returns at most 60 matching lines.',schema({'query':{'type':'string','minLength':1,'maxLength':160},'path':PATH},['query'])),
+ 'read_candidate_file': ('Read an inert candidate file with its exact whole-file hash.',schema({'path':PATH},['path'])),
+ 'write_candidate_file': ('Atomically replace one complete UTF-8 candidate text file. No code execution. candidate.json belongs to coordinator.',schema({'path':PATH,'content':{'type':'string','maxLength':262144}},['path','content'])),
+ 'patch_candidate_file': ('Exact expected SHA256 and unique literal replacement only. No fuzzy matching or execution.',schema({'path':PATH,'expected_sha256':HASH,'old':{'type':'string','minLength':1,'maxLength':262144},'new':{'type':'string','maxLength':262144}},['path','expected_sha256','old','new'])),
+ 'inspect_candidate_text': ('Parse candidate Python and JSON as data only. No imports, tests or hidden checks.',schema({},[])),
+ 'submit_candidate': ('Freeze this complete candidate for independent review; coordinator computes candidate.json. Do not write after submission.',schema({'candidate_id':{'type':'string','pattern':'^[a-z][a-z0-9_.-]{0,63}$'}},['candidate_id']))
+}
+TOOLS=[dict(type='function',name=name,description=desc,inputSchema=shape) for name,(desc,shape) in SPEC.items()]
+
+
+def safe_path(value, manifest=False):
+    p=PurePosixPath(value)
+    if value != str(p) or p.is_absolute() or '..' in p.parts or '\\' in value or not re.fullmatch(r'[A-Za-z0-9_./-]+',value):
+        raise ValueError('candidate_path')
+    if len(p.parts)>6: raise ValueError('candidate_depth')
+    allowed=('PASSPORT.json','README.md','dependencies.json','source_impact.json')
+    if value not in allowed and not (manifest and value=='candidate.json') and not value.startswith(('candidate_domain/','schemas/','tests/')):
+        raise ValueError('candidate_path_scope')
+    return p
+
+
+def pinned_read(root, relative, maximum):
+    p=PurePosixPath(relative)
+    if p.is_absolute() or '..' in p.parts or str(p)!=relative or '\\' in relative: raise ValueError('source_path')
+    fd=os.open(root,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+    try:
+        for part in p.parts[:-1]:
+            nxt=os.open(part,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd);os.close(fd);fd=nxt
+        leaf=os.open(p.parts[-1],os.O_RDONLY|os.O_NOFOLLOW,dir_fd=fd)
+        with os.fdopen(leaf,'rb') as f:
+            meta=os.fstat(f.fileno())
+            if not stat.S_ISREG(meta.st_mode) or meta.st_nlink!=1: raise ValueError('regular_single_link_required')
+            body=f.read(maximum+1)
+            if len(body)>maximum: raise ValueError('file_bound')
+            return body
+    except OSError as exc: raise ValueError('path_binding') from exc
+    finally: os.close(fd)
+
+
+class Broker:
+    def __init__(self, public, inventory, trial, attempt=0):
+        self.public=Path(public); self.rows={r['path']:r for r in inventory['files']}
+        if len(self.rows)!=len(inventory['files']): raise ValueError('inventory_duplicate')
+        self.trial=Path(trial); self.attempt=attempt
+        self.candidate=self.trial/f'attempt_{attempt:02d}/candidate'
+        self.candidate.mkdir(parents=True,exist_ok=True)
+        self.journal=self.trial/'tool_journal';self.journal.mkdir(exist_ok=True)
+        self.thread=None;self.turn=None; self.frozen=(self.candidate.parent/'FROZEN.json').exists()
+
+    def bind(self, thread, turn):
+        if self.thread not in (None,thread): raise ValueError('broker_thread_rebind')
+        self.thread=thread;self.turn=turn
+
+    def source(self,path):
+        if path not in self.rows: raise ValueError('source_not_allowlisted')
+        row=self.rows[path]
+        if row['bytes']>4*1024*1024: raise ValueError('source_size_bound')
+        body=pinned_read(self.public,path,row['bytes'])
+        if len(body)!=row['bytes'] or digest(body)!=row['sha256']: raise ValueError('source_pin_changed')
+        return body.decode()
+
+    def write(self,path,content,identity):
+        if self.frozen: raise ValueError('candidate_frozen')
+        relative=safe_path(path);body=content.encode()
+        if len(body)>262144: raise ValueError('candidate_file_bound')
+        all_paths=list(self.candidate.rglob('*'))
+        if any(p.is_symlink() for p in all_paths): raise ValueError('candidate_link')
+        rows={str(p.relative_to(self.candidate)):p.stat().st_size for p in all_paths if p.is_file()}
+        rows[str(relative)]=len(body)
+        if len(rows)>31 or sum(rows.values())>1048576: raise ValueError('candidate_total_bound')
+        dst=self.candidate/relative;dst.parent.mkdir(parents=True,exist_ok=True)
+        tmp=self.journal/(identity+'.staged')
+        with tmp.open('xb') as f: f.write(body);f.flush();os.fsync(f.fileno())
+        os.replace(tmp,dst)
+        return dict(status='INERT_FILE_RECORDED',path=path,bytes=len(body),sha256=digest(body))
+
+    def dispatch(self,params):
+        required={'arguments','callId','threadId','tool','turnId'}
+        if not required<=set(params) or set(params)-required-{'namespace'}: return dict(status='TOOL_REFUSED',reason='call_shape')
+        if params['threadId']!=self.thread or params['turnId']!=self.turn or not self.turn:
+            return dict(status='TOOL_REFUSED',reason='thread_turn_binding')
+        if params.get('namespace') not in (None,''): return dict(status='TOOL_REFUSED',reason='namespace')
+        ident=digest(json.dumps([self.thread,self.turn,params['callId']]).encode())
+        target=self.journal/(ident+'.json')
+        if target.exists():
+            old=json.loads(target.read_text())
+            if old['call']!=params: return dict(status='TOOL_REFUSED',reason='call_identity_rebound')
+            if old['status']=='COMMITTED': return old['response']
+            return dict(status='TOOL_REFUSED',reason='interrupted_call_unknown_do_not_repeat')
+        target.write_text(json.dumps(dict(call=params,status='PREPARED'))+'\n')
+        name=params['tool'];args=params['arguments']
+        try:
+            if name not in SPEC: raise ValueError('unadvertised_tool')
+            if not Draft7Validator(SPEC[name][1]).is_valid(args): raise ValueError('argument_schema')
+            if name=='read_approved_source':
+                text=self.source(args['path']);start=args.get('start_line',1);count=args.get('max_lines',240)
+                lines=text.splitlines();chosen=lines[start-1:start-1+count]
+                if len('\n'.join(chosen).encode())>65536: raise ValueError('read_byte_bound')
+                result=dict(path=args['path'],sha256=self.rows[args['path']]['sha256'],start_line=start,total_lines=len(lines),lines=chosen)
+            elif name=='search_approved_source':
+                paths=[args['path']] if 'path' in args else sorted(self.rows)
+                matches=[]
+                for path in paths:
+                    for line,text in enumerate(self.source(path).splitlines(),1):
+                        if args['query'] in text:
+                            matches.append(dict(path=path,line=line,text=text[:2000],sha256=self.rows[path]['sha256']))
+                            if len(matches)>=60: break
+                    if len(matches)>=60: break
+                result=dict(matches=matches,truncated=len(matches)>=60)
+            elif name=='read_candidate_file':
+                path=str(safe_path(args['path'],True));body=pinned_read(self.candidate,path,262144)
+                result=dict(path=path,content=body.decode(),sha256=digest(body),bytes=len(body))
+            elif name=='write_candidate_file': result=self.write(args['path'],args['content'],ident)
+            elif name=='patch_candidate_file':
+                path=str(safe_path(args['path']));body=pinned_read(self.candidate,path,262144)
+                if digest(body)!=args['expected_sha256']: raise ValueError('stale_sha256')
+                text=body.decode()
+                if text.count(args['old'])!=1: raise ValueError('ambiguous_or_missing_literal')
+                result=self.write(path,text.replace(args['old'],args['new'],1),ident)
+            elif name=='inspect_candidate_text':
+                errors=[]
+                for p in sorted(self.candidate.rglob('*')):
+                    if p.is_file() and p.suffix in ('.py','.json'):
+                        text=pinned_read(self.candidate,str(p.relative_to(self.candidate)),262144).decode()
+                        try: ast.parse(text) if p.suffix=='.py' else json.loads(text)
+                        except (SyntaxError,ValueError) as exc: errors.append(dict(path=str(p.relative_to(self.candidate)),error=str(exc)))
+                result=dict(status='PUBLIC_SYNTAX_ONLY',errors=errors)
+            else:
+                if self.frozen: raise ValueError('candidate_frozen')
+                rows=[]
+                for p in sorted(self.candidate.rglob('*')):
+                    if p.is_file():
+                        path=str(p.relative_to(self.candidate));safe_path(path)
+                        body=pinned_read(self.candidate,path,262144);rows.append(dict(path=path,bytes=len(body),sha256=digest(body)))
+                manifest=dict(version='g53.candidate.v01',candidate_id=args['candidate_id'],entrypoint='candidate_domain.run',installable_now=False,files=rows)
+                (self.candidate/'candidate.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+                (self.candidate.parent/'FROZEN.json').write_text(json.dumps(dict(manifest_sha256=digest((self.candidate/'candidate.json').read_bytes()),call=params))+'\n')
+                self.frozen=True;result=dict(status='SUBMITTED_FOR_INDEPENDENT_REVIEW',attempt=self.attempt)
+        except (ValueError,TypeError,KeyError,OSError) as exc:
+            result=dict(status='TOOL_REFUSED',reason=str(exc) if isinstance(exc,ValueError) else type(exc).__name__)
+        target.write_text(json.dumps(dict(call=params,status='COMMITTED',response=result),sort_keys=True)+'\n')
+        return result

@@ -1,0 +1,133 @@
+{
+  "candidate_id": "football_reference_v01",
+  "entrypoint": "candidate_domain.run",
+  "files": [
+    {
+      "bytes": 9405,
+      "path": "PASSPORT.json",
+      "sha256": "abcaf6602f44907654c71632712e3db198f2c5e748cfe9949b48f297b8eff636"
+    },
+    {
+      "bytes": 18856,
+      "path": "README.md",
+      "sha256": "d62c138001c92996ec5a340fc8f3f6a01a4ffb790c861c8c2d3c5048bda70913"
+    },
+    {
+      "bytes": 6429,
+      "path": "candidate_domain/CORRECTION_01.md",
+      "sha256": "c57156e93ad69b64b91151b9fa38c63db6dadac823fd360fed40e218a46b7778"
+    },
+    {
+      "bytes": 5318,
+      "path": "candidate_domain/CORRECTION_02.md",
+      "sha256": "3a51613253c3b8f4dc19b4e992e2f0ca1900e2e4584d2a77d266e8b0ac6e4912"
+    },
+    {
+      "bytes": 9081,
+      "path": "candidate_domain/CORRECTION_03.md",
+      "sha256": "bb4ff8b1d3067f7568d1a80199738b45a9d8c855ce77508e9ec598fb68d5162a"
+    },
+    {
+      "bytes": 79,
+      "path": "candidate_domain/__init__.py",
+      "sha256": "f4f7ad9fdaf3b7bf2c58c68b993d961679087ae3475e37012475a99198cf7349"
+    },
+    {
+      "bytes": 17574,
+      "path": "candidate_domain/domain.py",
+      "sha256": "ed13c8791098db1bc2611737e57a913faabdbaf013087f8c1e466959b8477b1e"
+    },
+    {
+      "bytes": 17186,
+      "path": "candidate_domain/effect.py",
+      "sha256": "08c5655f0a127ad99caaad90409c52d64f8a21f2d936bc6c77511a0456302be6"
+    },
+    {
+      "bytes": 975,
+      "path": "candidate_domain/evidence.py",
+      "sha256": "096e44e69a5a8c339b33ba3de5f298dd4b96d0d724fbbd75f857302ff42714a5"
+    },
+    {
+      "bytes": 14912,
+      "path": "candidate_domain/memory.py",
+      "sha256": "a28357326ad8f49d55ce97f170d5f6748c4396bec7c57e22d2fc44c4fa67b6e0"
+    },
+    {
+      "bytes": 5650,
+      "path": "candidate_domain/native.py",
+      "sha256": "42dafc0d5030ba1ebdd5b357bac4b9cb2f277713201cd973efa19848fde02e4c"
+    },
+    {
+      "bytes": 7674,
+      "path": "candidate_domain/policy.py",
+      "sha256": "ef7e0879794ca0bc776f3aa1b63f8ebfac8b42516a5e37bcc828e1aa60fd528c"
+    },
+    {
+      "bytes": 2946,
+      "path": "candidate_domain/profile.py",
+      "sha256": "351946fe5c19ff3ce41f8615aa8e10e4c0d4ad372272fc319d7540f743c0f199"
+    },
+    {
+      "bytes": 17478,
+      "path": "candidate_domain/run.py",
+      "sha256": "bb5ebf24fa7ff8536c44c4e3761e0f3d2c7ac7273be555635db6a9b3eb8e0a1c"
+    },
+    {
+      "bytes": 8765,
+      "path": "candidate_domain/source.py",
+      "sha256": "ee9dd3f73c2c7b3bc729c07c8fd8de4368007b30a9d82cf0ac18d986f60dba34"
+    },
+    {
+      "bytes": 18796,
+      "path": "candidate_domain/transport.py",
+      "sha256": "09c1f32e8a368196b20c729fd78f19946dc845457c73d948d8653fc98a109c42"
+    },
+    {
+      "bytes": 24501,
+      "path": "dependencies.json",
+      "sha256": "ffcd4bf41fe3f7739f810d4ba05811f967d31fdf66b69e0e660db2cdbadd2af6"
+    },
+    {
+      "bytes": 10869,
+      "path": "schemas/body.schema.json",
+      "sha256": "b8f3c41d49daabe1237e444c1cccd3218fa651b924798e49ee5d92f96cdbccdd"
+    },
+    {
+      "bytes": 16836,
+      "path": "schemas/input.schema.json",
+      "sha256": "b92e07f001d1f7c75a3cde58fe98ba52097b392d66bba75baf4c7ff8c2d67fa2"
+    },
+    {
+      "bytes": 6092,
+      "path": "schemas/report.schema.json",
+      "sha256": "21b41ba26dc91ff295a0eafaf49d4b6076ce1e3ab1ec86ecdd5959527b26b350"
+    },
+    {
+      "bytes": 22588,
+      "path": "source_impact.json",
+      "sha256": "375ea1f432baaf65e3f273cbf340f11742493d6ec893069135e0cb0c04728cda"
+    },
+    {
+      "bytes": 6891,
+      "path": "tests/test_domain.py",
+      "sha256": "b3fd31af6fc070e48963281f0e497039899bcdb16addbd99f121d9ab5b953728"
+    },
+    {
+      "bytes": 1018,
+      "path": "tests/test_evidence.py",
+      "sha256": "11b4568769cbd83fed2ea3960d99a682ceb662e0d585fe22cca4af7b8ac46ebc"
+    },
+    {
+      "bytes": 6568,
+      "path": "tests/test_memory.py",
+      "sha256": "8931c3108331732c4bdfc633574bd5a4bbe3e2455ea61113e727f25d87271bb3"
+    },
+    {
+      "bytes": 19944,
+      "path": "tests/test_native.py",
+      "sha256": "d2536129642ecec4da3ed4080987cc47e3ac578fb0eff2527b74cc1386323b9d"
+    }
+  ],
+  "installable_now": false,
+  "version": "g53.candidate.v01"
+}

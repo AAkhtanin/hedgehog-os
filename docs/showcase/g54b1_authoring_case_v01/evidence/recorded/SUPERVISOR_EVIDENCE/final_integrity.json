@@ -1,0 +1,40 @@
+{
+  "configuration": [
+    {
+      "no_environment_thread_and_all_turn_readbacks": true,
+      "path": "DIAGNOSTIC/actual_turn",
+      "residual_execution_tool_notification": "NONE_OBSERVED_NOT_OPAQUE_PLATFORM_AUDIT"
+    },
+    {
+      "no_environment_thread_and_all_turn_readbacks": true,
+      "path": "AUTHOR_TRIAL/session",
+      "residual_execution_tool_notification": "NONE_OBSERVED_NOT_OPAQUE_PLATFORM_AUDIT"
+    }
+  ],
+  "copied_predecessor_files_unchanged": 147,
+  "docker_client_has_credentials": false,
+  "public_files_unchanged": 126,
+  "submissions": [
+    {
+      "attempt": "attempt_00",
+      "files": 20,
+      "manifest_sha256": "68e3c14dab5824086cfce831f8bb59255b471a7d07af03bdb2b6341e85809e32"
+    },
+    {
+      "attempt": "attempt_01",
+      "files": 22,
+      "manifest_sha256": "712a382be898900eb2e17834abb1bb08c384b9c7d5922d3b1715c016527e4e7a"
+    },
+    {
+      "attempt": "attempt_02",
+      "files": 23,
+      "manifest_sha256": "74a83d8f6d75e03009da809dd7d736737a68bf4e784e07a6673ea5afece7caa2"
+    },
+    {
+      "attempt": "attempt_03",
+      "files": 26,
+      "manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa"
+    }
+  ],
+  "target_or_native_execution": false
+}

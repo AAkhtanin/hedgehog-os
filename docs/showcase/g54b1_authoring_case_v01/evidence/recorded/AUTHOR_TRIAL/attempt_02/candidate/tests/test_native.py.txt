@@ -1,0 +1,199 @@
+"""Native component tests, not peer execution or admission certificates."""
+import copy
+import json
+import tempfile
+import unittest
+from pathlib import Path
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e
+from candidate_domain import domain as d, native, source, effect, policy as p, run
+from candidate_domain.profile import PROFILE
+from test_domain import request_fixture, inventory_fixture
+
+def operator(role):
+    return dict(local_root=p.ROOTS[role],peer_root=p.ROOTS['requester' if role=='publisher' else 'publisher'],
+        venue_ref='venue.delta',accept_offers=True,publish_enabled=True,release_enabled=True,
+        audience=[p.ROOTS['requester' if role=='publisher' else 'publisher']],
+        release_uses=['LOCAL_CONTEXT'],max_source_age=300,ttl_seconds=300,status='ACTIVE',
+        approvals=[],booking_enabled=True)
+
+class NativeTests(unittest.TestCase):
+    def test_native_positive_altered_and_missing(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        first = native.perform('source','VenueRoot','task:own:native:one',
+            dict(request_json=c.canonical(request).decode(),inventory_json=c.canonical(inventory).decode()))
+        self.assertEqual(first['attempts'],1)
+        self.assertEqual(set(first['native_evidence']),{'admission','invocation','result'})
+        inventory['fields'][1]['price_minor'] += 1
+        second = native.perform('source','VenueRoot','task:own:native:two',
+            dict(request_json=c.canonical(request).decode(),inventory_json=c.canonical(inventory).decode()))
+        self.assertNotEqual(first['outputs'],second['outputs'])
+        with self.assertRaises(d.Refusal):
+            native.perform('source','VenueRoot','task:own:missing',
+                           dict(request_json=c.canonical(request).decode()))
+        with tempfile.TemporaryDirectory() as temporary:
+            result,refs = run.report_failure(dict(request,budget_minor=True),
+                d.Refusal('BUDGET_REQUIRED','CLARIFY'),'publisher',Path(temporary),run.new_counts())
+            root = json.loads((Path(temporary)/'refusal_review.json').read_text())
+            self.assertNotEqual(root['result']['decision'],'ACCEPT')
+            self.assertEqual(result['status'],'CLARIFY')
+
+    def test_mock_native_commit_reuse_verify_and_changed_payload(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        policy = operator('publisher')
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); state = root/'state'; state.mkdir()
+            produced = root/'produced'; produced.mkdir()
+            cap = c.crypto.generate_root_signer_capability_v01(root_id='VenueRoot')
+            keys = c.crypto.build_trusted_root_key_set_v01(capabilities=(cap,))
+            current = source.build('own_source',request,inventory,policy,cap,keys,
+                                   state,produced,run.new_counts())
+            confirm = dict(request,operation='CONFIRM_MOCK_BOOKING',owner_approval_ref='consent.book')
+            policy['approvals'] = [dict(approval_ref='consent.book',scope='BOOK',
+                                        request_sha256=c.sha(confirm))]
+            committed = root/'committed'; committed.mkdir(); counts = run.new_counts()
+            booking = effect.confirm(confirm,current['body']['offer'],current['body'],policy,
+                                     state,committed,counts)
+            self.assertEqual(counts['dispatch'],1); self.assertEqual(counts['mutations'],1)
+            registry_bytes = (state/'registry.json').read_bytes()
+            self.assertEqual(len(c.decode(registry_bytes)['reservations']),3)
+            duplicate = root/'duplicate'; duplicate.mkdir(); second_counts = run.new_counts()
+            replay = effect.confirm(confirm,current['body']['offer'],current['body'],policy,
+                                    state,duplicate,second_counts)
+            self.assertEqual(replay['receipt_ref'],booking['receipt_ref'])
+            self.assertEqual(second_counts['dispatch'],0)
+            saved, readback = effect.reconcile(dict(confirm,operation='VERIFY_EXISTING'),state)
+            self.assertEqual(saved['receipt']['artifact_id'],booking['receipt_ref'])
+            self.assertEqual((state/'registry.json').read_bytes(),registry_bytes)
+            bad = dict(confirm,budget_minor=confirm['budget_minor']+1)
+            with self.assertRaises(d.Refusal):
+                effect.confirm(bad,current['body']['offer'],current['body'],policy,
+                               state,duplicate,run.new_counts())
+
+    def test_signed_profile_scope_expiry_status_and_consumption(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        owner = operator('publisher'); local = operator('requester')
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary); state = root/'state'; state.mkdir()
+            folder = root/'source'; folder.mkdir()
+            cap = c.crypto.generate_root_signer_capability_v01(root_id='VenueRoot')
+            keys = c.crypto.build_trusted_root_key_set_v01(capabilities=(cap,))
+            public = c.crypto.trusted_root_key_set_to_plain_dict_v01(keys)
+            current = source.build('own_component',request,inventory,owner,cap,keys,
+                                   state,folder,run.new_counts())
+            body = current['body']; pointer = current['descriptor']['value']
+            policy = p.local_policy(local,request,'own_component',public)
+            from candidate_domain.transport import make_request, read_import_state
+            from hedgehog.external_drs.gate5_lifecycle_v01 import ImportStore
+            fetch = make_request(policy,request,'FETCH',pointer)
+            now = e.clock(); mh = current['manifest']['manifest_id'].split(':')[1]
+            status_value = dict(version='g51.status.v01',entry=current['entry'],
+                requested_pointer_hash=c.sha(pointer),requester='ActivePlanetRoot',
+                subject_request_ref=fetch['request_id'],request_revision=request['revision'],
+                nonce=fetch['nonce'],checked_at=now,valid_until=now+60)
+            status = c.sign(cap,keys,'STATUS',status_value,mh)
+            review = n.root_review('VenueRoot','transaction:own:release',fetch['request_id'],
+                pointer['pointer_id'],dict(audience=fetch['requester'] in owner['audience'],
+                body_size=pointer['body_bytes'] <= fetch['allowed_size']),dict(request=fetch,
+                pointer_ref=pointer['pointer_id'],body_sha256=c.sha(body)),now)
+            release = c.sign(cap,keys,'RELEASE',dict(version='g51.release.v01',state='RELEASED',
+                request_ref=fetch['request_id'],request_revision=fetch['request_revision'],
+                pointer_ref=pointer['pointer_id'],manifest_ref=current['manifest']['manifest_id'],
+                body_hash=c.sha(body),recipient=fetch['requester'],use_class=fetch['use_class'],
+                nonce=fetch['nonce'],deadline=fetch['deadline'],release_review_ref=review[2].decision_id),mh)
+            bundle = dict(body=body,manifest=current['manifest'],release=release)
+            # Status is a bounded wire object. ImportStore's composite-key maps
+            # are local persistence, consumed through the same reader as retrieve.
+            self.assertEqual(c.decode(c.canonical(status)),status)
+            store = ImportStore(root/'imports')
+            store.observe(status,pointer,fetch,policy,now)
+            key = c.canonical([pointer['publisher_root_id'],pointer['pointer_id'],
+                               pointer['revocation_stream_id']]).decode()
+            self.assertGreater(len(key),128)
+            store = ImportStore(root/'imports')
+            state = read_import_state(store.path)
+            self.assertEqual(state['highwater'],{key:current['entry']})
+            with self.assertRaisesRegex(ValueError,'^json_key$'):
+                c.decode(store.path.read_bytes())
+            c.check_status(status,pointer,fetch,policy,now,state['highwater'])
+
+            # New signed freshness does not alter the immutable entry identity.
+            refreshed = c.sign(cap,keys,'STATUS',
+                dict(status_value,checked_at=now+1,valid_until=now+61),mh)
+            store.observe(refreshed,pointer,fetch,policy,now+1)
+            self.assertEqual(read_import_state(store.path)['highwater'],state['highwater'])
+            altered_entry = dict(current['entry'],reason_ref='reason:own:changed')
+            altered_entry['entry_hash'] = c.sha({k:v for k,v in altered_entry.items()
+                                               if k != 'entry_hash'})
+            altered_status = c.sign(cap,keys,'STATUS',dict(status_value,entry=altered_entry),mh)
+            with self.assertRaisesRegex(ValueError,'^status_equivocation$'):
+                store.observe(altered_status,pointer,fetch,policy,now+1)
+            # A scoped refusal preserves history and permits a lawful observation.
+            store = ImportStore(root/'imports')
+            store.observe(refreshed,pointer,fetch,policy,now+1)
+            state = read_import_state(store.path)
+            self.assertEqual(state['highwater'],{key:current['entry']})
+            self.assertEqual(state['quarantine'][-1]['reason'],'status_equivocation')
+            with self.assertRaisesRegex(ValueError,'^status_not_current$'):
+                c.check_status(status,pointer,fetch,policy,now+60,state['highwater'])
+            wrong_request = dict(fetch,nonce=c.sha('own:other:nonce'))
+            with self.assertRaisesRegex(ValueError,'^status_request_binding$'):
+                c.check_status(status,pointer,wrong_request,policy,now,state['highwater'])
+
+            # Exercise the full explicit-profile bundle check after local reload,
+            # then retain source conflicts and duplicate accounting across restart.
+            checked = c.check_bundle(bundle,current['descriptor'],fetch,status,policy,now,
+                                     state['highwater'],store.conflicts(),profile=PROFILE)
+            self.assertEqual(store.import_body(checked,pointer),'NEW_SOURCE')
+            store = ImportStore(root/'imports')
+            state = read_import_state(store.path)
+            checked_again = c.check_bundle(bundle,current['descriptor'],fetch,status,policy,now,
+                state['highwater'],store.conflicts(),profile=PROFILE)
+            self.assertEqual(store.import_body(checked_again,pointer),'DUPLICATE')
+            self.assertEqual(store.conflicts(),{checked['conflict_key']:c.sha(body)})
+            self.assertEqual(read_import_state(store.path)['credit'],0)
+            self.assertEqual(len(read_import_state(store.path)['duplicates']),1)
+            conflicts = dict(store.conflicts())
+            conflicts[checked['conflict_key']] = c.sha('own:conflicting:body')
+            with self.assertRaisesRegex(ValueError,'^source_equivocation$'):
+                c.check_bundle(bundle,current['descriptor'],fetch,status,policy,now,
+                    state['highwater'],conflicts,profile=PROFILE)
+            wrapper = dict(body=body,source_projection=source.projection(body,current['entry'],now,now+60))
+            result = native.perform('requester','ActivePlanetRoot','task:own:consumer',dict(
+                request_json=c.canonical(request).decode(),offer_json=c.canonical(wrapper).decode()))
+            self.assertEqual(result['attempts'],1)
+            consumed = c.decode(result['outputs']['result_json'].encode())
+            self.assertEqual(consumed['slots'],body['offer']['slots'])
+            for changed in (dict(body,extra=True),dict(body,offer=dict(body['offer'],total_minor=0))):
+                with self.assertRaises(ValueError):
+                    c.validate('body',changed,profile=PROFILE)
+            with self.assertRaises(ValueError):
+                c.temporal(body['time_envelope'],checked['source_end'],policy)
+            tampered = copy.deepcopy(current['descriptor'])
+            tampered['value']['recipient_scope'] = ['ForeignRoot']
+            with self.assertRaises(ValueError):
+                c.check_pointer(tampered,policy,now,profile=PROFILE)
+            entry = dict(current['entry'],revision=2,state='REVOKED')
+            entry['entry_hash'] = c.sha({k:v for k,v in entry.items() if k != 'entry_hash'})
+            terminal = c.sign(cap,keys,'STATUS',dict(status_value,entry=entry),mh)
+            # Authentic terminal entries persist before refusal of current use.
+            store.observe(terminal,pointer,fetch,policy,now)
+            store = ImportStore(root/'imports')
+            terminal_history = read_import_state(store.path)['highwater']
+            self.assertEqual(terminal_history[key],entry)
+            with self.assertRaisesRegex(ValueError,'^status_not_active$'):
+                c.check_status(terminal,pointer,fetch,policy,now,terminal_history)
+            with self.assertRaisesRegex(ValueError,'^status_rollback$'):
+                store.observe(status,pointer,fetch,policy,now)
+            revived_entry = dict(current['entry'],revision=3)
+            revived_entry['entry_hash'] = c.sha({k:v for k,v in revived_entry.items()
+                                               if k != 'entry_hash'})
+            revived = c.sign(cap,keys,'STATUS',dict(status_value,entry=revived_entry),mh)
+            with self.assertRaisesRegex(ValueError,'^status_terminal_revival$'):
+                store.observe(revived,pointer,fetch,policy,now)
+            store = ImportStore(root/'imports')
+            self.assertEqual(read_import_state(store.path)['highwater'],terminal_history)
+            self.assertEqual(store.conflicts(),{checked['conflict_key']:c.sha(body)})
+            self.assertEqual(consumed['counts'],dict(search=0,dispatch=0,mutations=0))
+
+if __name__ == '__main__':
+    unittest.main()

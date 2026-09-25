@@ -1,0 +1,61 @@
+"""Receipt/readback and refusal checks, no unguarded invocation of effect callback."""
+import json
+import sys
+import time
+from pathlib import Path
+from dataclasses import replace
+import mock_effect as adapter
+from native_seams import action, firewall, hosts, donor, save, plain, abi
+
+folder=Path(sys.argv[1]);folder.mkdir(parents=True,exist_ok=True)
+started=time.monotonic()
+adapter.STATE_PATH=folder/'disposable_batch.json'
+admitted=adapter.admit_v01()
+inputs=tuple(action.build_action_effect_parameter_record_v01(parameter_name=n,value_type=t,value=v)
+    for n,t,v in (('device_ref','REFERENCE','device:g50:disposable'),('enabled','BOOLEAN',True)))
+canonical=donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,root_id='root:g50:effect',
+    transaction_id='transaction:g50:effect',business_object_ref='records:g50:two')
+prepared=donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)
+packet=prepared.root_bound.packet_identity.packet_id
+adapter.PACKET_KEYS[packet]=canonical.idempotency_identity.idempotency_key
+host=donor.host_for_prepared_action_v01(prepared)
+controls={}
+
+def refused(name, fn):
+    before=len(adapter.EXECUTIONS)
+    try:fn()
+    except ValueError as exc:controls[name]=str(exc)
+    else:raise AssertionError('control_accepted:'+name)
+    assert len(adapter.EXECUTIONS)==before
+
+call=dict(packet_id=packet,task_id='task:g50:effect',evaluation_time=1014,
+    evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')
+refused('stale_host_revision',lambda:hosts.dispatch_current_action_v01(host,expected_revision=host.revision+1,**call))
+refused('not_current_time',lambda:hosts.dispatch_current_action_v01(host,expected_revision=host.revision,**dict(call,evaluation_time=1015)))
+binding=dict(admitted_capability=admitted,task_id='task:g50:effect',work_instance_id='work:g50:effect',
+    owning_root_id='root:g50:effect',candidate_id=canonical.authorization_candidate.root_packet_authorization_candidate_id,
+    packet_id=packet,execution_attempt_id=prepared.registry.action_packet_lifecycle_entries[0].transition_events[-1].execution_attempt_id,
+    inputs=inputs,resource_refs=admitted.definition.resource_refs,canonical_projection=canonical)
+refused('foreign_owner',lambda:firewall.build_bound_capability_invocation_v01(**dict(binding,owning_root_id='root:g50:foreign')))
+changed=tuple(replace(v,value=False) if v.parameter_name=='enabled' else v for v in inputs)
+refused('same_packet_and_key_changed_payload',lambda:firewall.build_bound_capability_invocation_v01(**dict(binding,inputs=changed)))
+registry,revision=hosts.dispatch_current_action_v01(host,expected_revision=host.revision,**call)
+assert len(adapter.EXECUTIONS)==1
+receipt=registry.action_packet_fulfillment_attempt_contexts[-1].receipt
+save(folder/'dispatch_evidence.json',dict(attempt=plain(registry.action_packet_fulfillment_attempt_contexts[-1]),
+    host_events=plain(host.events),controls=controls,executions=adapter.EXECUTIONS))
+assert receipt is not None
+receipt_plain=abi.kernel_artifact_to_plain_dict_v01(receipt)
+state=json.loads(adapter.STATE_PATH.read_text())
+assert set(state['records'])=={'record:alpha','record:beta'} and len(state['idempotency'])==1
+assert all(v==dict(enabled=True,owner='root:g50:effect') for v in state['records'].values())
+old_bytes=adapter.STATE_PATH.read_bytes()
+refused('exact_duplicate_terminal_packet',lambda:hosts.dispatch_current_action_v01(host,expected_revision=host.revision,**call))
+assert adapter.STATE_PATH.read_bytes()==old_bytes and host.registry.action_packet_fulfillment_attempt_contexts[-1].receipt==receipt
+assert action.validate_action_commit_packet_registry_v02(host.registry)[0]
+save(folder/'result.json',dict(status='PASS_BOUNDED_NATIVE_MUTATION_AND_NO_DUPLICATE_EFFECT',controls=controls,
+    executions=adapter.EXECUTIONS,root=plain(prepared.root_bound.root_decision_projection),receipt=receipt_plain,readback=state,
+    native_duplicate_behavior='REFUSES_ALREADY_CONSUMED_PACKET; existing receipt retained; no automatic second receipt return',
+    batch_boundary='Atomic single-file two-record MOCK snapshot with persisted key/payload. No cross-file or crash-injection proof; no restored native authority.',
+    seconds=time.monotonic()-started))
+print('NATIVE_MOCK_EFFECT_RECEIPT_READBACK_PASS',flush=True)

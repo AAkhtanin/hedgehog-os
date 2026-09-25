@@ -1,0 +1,53 @@
+"""Invoke the unchanged examiner up to the available source-bound proof boundary."""
+import hashlib
+import json
+from pathlib import Path
+import sys
+import traceback
+
+WORK = Path(__file__).resolve().parent
+sys.path.insert(0, str(WORK / 'EXAMINER_PRIVATE'))
+sys.path.insert(0, str(WORK / 'AUTHOR_VISIBLE/source'))
+import examiner
+
+attempt = WORK / 'AUTHOR_TRIAL' / ('attempt_%02d' % int(sys.argv[1]))
+runtime = WORK / sys.argv[2]
+receipt = json.loads((runtime / 'receipt.json').read_text())
+parent = json.loads((runtime / 'trusted_parent_receipt.json').read_text())
+input_path = attempt / 'native_story/inputs/requester/input.json'
+input_bytes = input_path.read_bytes()
+assert hashlib.sha256(input_bytes).hexdigest() == receipt['inputs']['inputs/requester/input.json']
+assert any(r.get('event') == 'ENTRY_START' and r['input_sha256'] == hashlib.sha256(input_bytes).hexdigest()
+    for r in parent['observations']['requester'])
+request = next(e['request'] for e in json.loads(input_bytes)['events'] if e['event_id'] == 'shift')
+def read(role, name):
+    return json.loads((runtime / 'worker' / role / 'evidence/shift' / name).read_text())
+assert request == read('requester', 'request.json') == read('publisher', 'request.json')
+source_pin = hashlib.sha256((attempt / 'candidate/candidate.json').read_bytes()).hexdigest()
+assert source_pin == receipt['inputs']['candidate/candidate.json']
+case = dict(request=request, inventory=read('publisher', 'inventory_input.json'),
+    reviewed_candidate_source_sha256=source_pin)
+proofs = dict(offer_body=read('requester', 'offer_body.json'),
+    venue_work=read('publisher', 'venue_work.json'),
+    requester_work=read('requester', 'requester_work.json'),
+    requester_review=read('requester', 'requester_review.json'))
+assert proofs['offer_body'] == read('publisher', 'offer_body.json')
+observed = dict(classification='TRUSTED_RUNNER_OBSERVATION',
+    request_sha256=examiner.sha(request), candidate_source_sha256=source_pin)
+record = dict(classification='PARTIAL_FROZEN_EXAM_NOT_FULL_ACCEPTANCE',
+    observation_binding='Trusted parent input-file hash -> declared event -> actual saved request; exact reviewed candidate manifest',
+    scope='Only available source/input/binding prefix. No per-event counter or full-boundary claim invented.',
+    examiner_sha256=hashlib.sha256(Path(examiner.__file__).read_bytes()).hexdigest(),
+    source_pin=source_pin, new_native_provider_effect_calls=0)
+try:
+    examiner.check_native(case, read('requester', 'report.json'), proofs, observed)
+    raise AssertionError('Unexpected complete acceptance without per-event observations')
+except ValueError as error:
+    record.update(status='FAIL_AT_ACTUAL_PREDICATE', error=str(error), traceback=traceback.format_exc())
+except KeyError as error:
+    record.update(status='AVAILABLE_PREFIX_PASSED_REMAINING_OBSERVATION_REQUIRED', error=str(error))
+with (attempt / 'frozen_native_prefix.json').open('x') as stream:
+    json.dump(record, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(record))
+raise SystemExit(1 if record['status'] == 'FAIL_AT_ACTUAL_PREDICATE' else 2)

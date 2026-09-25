@@ -1,0 +1,15 @@
+{
+  "version": "g53.author_tools.design.v01",
+  "status": "PROPOSED_NOT_STARTED",
+  "tools": [
+    {
+      "name": "read_approved_source",
+      "arguments": {"path": "exact SOURCE_INVENTORY path", "start_line": "positive integer", "max_lines": "integer 1..240"},
+      "result": {"path": "canonical approved relative path", "sha256": "review-pinned full file hash", "start_line": "integer", "lines": "exact source text with line numbers"},
+      "boundary": "Trusted outside-model adapter; immutable inventory lookup only; reject unlisted paths, traversal, aliases, links, byte changes and over-limit requests. No arbitrary filesystem or URL access. Log every request/response."
+    }
+  ],
+  "forbidden_tools": ["shell", "python", "browser", "network", "owner_files", "examiner", "secret_store", "candidate_execution"],
+  "output": "Candidate files as data conforming to CANDIDATE_OUTPUT.md, independently packaged and checked outside the model.",
+  "execution_authority": false
+}

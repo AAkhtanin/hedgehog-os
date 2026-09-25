@@ -1,0 +1,194 @@
+{
+  "command": "candidate",
+  "limit_error": null,
+  "observations": {
+    "publisher": [
+      {
+        "event": "FILTERED_BEFORE_IMPORT",
+        "pid": 7,
+        "restrictions": {
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "2",
+          "Uid": "65532\t65532\t65532\t65532"
+        },
+        "role": "publisher"
+      },
+      {
+        "event": "ENTRY_START",
+        "input_sha256": "223713b0d40a2691968c45bed98e93ee4a940ed59736b67c4aeb8e2e26c9b4a9",
+        "module": "/candidate/candidate_domain/run.py",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.PublisherBudget.reserve",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.work_execution_host_v01.execute_admitted_pure_work_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.advance_work_program_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.work_composition_v01.validate_work_program_result_v01",
+        "role": "publisher"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "479a5019da4e3489fe0832bb82afdcd6b847c950a7eaaba20c4242600df4dc1f",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "70e77ee34a2ea134e603d2ca6d65000948e13cb7352095c166d63651e6f3372c",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "publisher",
+        "root_id": "VenueRoot"
+      }
+    ],
+    "requester": [
+      {
+        "event": "FILTERED_BEFORE_IMPORT",
+        "pid": 8,
+        "restrictions": {
+          "CapEff": "0000000000000000",
+          "NoNewPrivs": "1",
+          "Seccomp": "2",
+          "Seccomp_filters": "2",
+          "Uid": "65532\t65532\t65532\t65532"
+        },
+        "role": "requester"
+      },
+      {
+        "event": "ENTRY_START",
+        "input_sha256": "86185070ae1a3cb3aaabfced90d253e31a484bcec9d53c861c170fa85d3b7fb0",
+        "module": "/candidate/candidate_domain/run.py",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "de8c72a5ad9668edc0eb2f7d68e9bb294d816f97ad39ff3b623ba80edc34c10d",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.external_drs.gate5_exchange_v01.Budget.reserve",
+        "role": "requester"
+      },
+      {
+        "event": "NATIVE_START",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester"
+      },
+      {
+        "decision": "ACCEPT",
+        "decision_id": "b4ee864050e7b261527bd28e58a0b0418deb17ecf2b6a339a4c1a133fe225923",
+        "event": "NATIVE_RETURN",
+        "function": "hedgehog.kernel.root_decision_v01.decide_root_v01",
+        "role": "requester",
+        "root_id": "ActivePlanetRoot"
+      }
+    ]
+  },
+  "seconds": 1.379591126,
+  "version": "g54.runner.v01",
+  "waits": [
+    {
+      "exit_code": 1,
+      "pid": 7,
+      "reaped": true,
+      "role": "publisher"
+    },
+    {
+      "exit_code": 1,
+      "pid": 8,
+      "reaped": true,
+      "role": "requester"
+    }
+  ]
+}

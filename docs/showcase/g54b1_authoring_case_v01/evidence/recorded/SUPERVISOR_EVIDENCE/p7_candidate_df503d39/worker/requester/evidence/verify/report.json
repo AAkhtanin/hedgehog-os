@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "search": 0
+  },
+  "currency": "EUR",
+  "native_refs": {
+    "refusal": {
+      "file": "refusal.json",
+      "id": "refusal:8d490246314315c420ac471610326fe5dc9473270407bf047f5d1ce69d2c7e4a"
+    }
+  },
+  "operation": "VERIFY_EXISTING",
+  "receipt_ref": null,
+  "request_ref": "request:exam:one",
+  "request_revision": 2,
+  "slots": [],
+  "source": null,
+  "status": "CURRENT_STATUS_UNKNOWN",
+  "team_ref": "team:one",
+  "total_minor": 0,
+  "version": "g53.result.v01"
+}

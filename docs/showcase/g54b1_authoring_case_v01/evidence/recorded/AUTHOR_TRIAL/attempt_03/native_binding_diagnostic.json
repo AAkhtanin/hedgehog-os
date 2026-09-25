@@ -1,0 +1,75 @@
+{
+  "candidate_manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa",
+  "checks": {
+    "declared_canonical_body_input": {
+      "error": "supplied_consumed_input",
+      "status": "FAIL",
+      "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_work_binding.py\", line 33, in check\n    result['checks'][name] = dict(status='PASS', value=fn())\n                                                       ~~^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_work_binding.py\", line 42, in <lambda>\n    check('declared_canonical_body_input', lambda: native_result(requester, 'ActivePlanetRoot',\n                                                   ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        dict(request_json=c.canonical(request).decode(), offer_json=c.canonical(body).decode())))\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_supplied_v01.py\", line 42, in native_result\n    c.require(invocation.owning_root_id==expected_root and {v.parameter_name:v.value for v in invocation.inputs}==expected_inputs,'supplied_consumed_input')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 19, in require\n    raise ValueError(reason)\nValueError: supplied_consumed_input\n"
+    },
+    "declared_shared_offer_input": {
+      "error": "supplied_consumed_input",
+      "status": "FAIL",
+      "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_work_binding.py\", line 33, in check\n    result['checks'][name] = dict(status='PASS', value=fn())\n                                                       ~~^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_work_binding.py\", line 40, in <lambda>\n    check('declared_shared_offer_input', lambda: native_result(requester, 'ActivePlanetRoot',\n                                                 ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        dict(request_json=c.canonical(request).decode(), offer_json=venue['outputs']['offer_json'])))\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_supplied_v01.py\", line 42, in native_result\n    c.require(invocation.owning_root_id==expected_root and {v.parameter_name:v.value for v in invocation.inputs}==expected_inputs,'supplied_consumed_input')\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 19, in require\n    raise ValueError(reason)\nValueError: supplied_consumed_input\n"
+    },
+    "final_root_three_hash_claim": {
+      "status": "PASS",
+      "value": {
+        "offer_sha256": "b92ee183c725b2052e29cd1840d195fb3c5bc6b0d78984a1d1339f5285e61ab3",
+        "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+        "result_sha256": "b439e3555525c180b9eafc69a3f24e02460603aa9ce7e099820e841d805ba73f"
+      }
+    },
+    "requester_actual_native": {
+      "status": "PASS",
+      "value": {
+        "result_json": "{\"counts\":{\"dispatch\":0,\"mutations\":0,\"search\":0},\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"receipt_ref\":null,\"request_ref\":\"request:exam:one\",\"request_revision\":2,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"source\":{\"observed_at\":1790326469,\"offer_revision\":4,\"pt\":1790326469,\"publisher\":\"VenueRoot\",\"recipient\":\"ActivePlanetRoot\",\"request_revision\":2,\"schedule_revision\":4,\"status\":\"ACTIVE\",\"status_checked\":1790326469,\"status_until\":1790326529,\"ttl\":300,\"valid_from\":1790326469,\"valid_to\":1790326769},\"status\":\"OFFER_READY\",\"team_ref\":\"team:one\",\"total_minor\":6300,\"version\":\"g53.result.v01\"}"
+      }
+    },
+    "venue_actual_native": {
+      "status": "PASS",
+      "value": {
+        "offer_json": "{\"alternatives\":[{\"choices\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"}],\"session_id\":\"session:7\"},{\"choices\":[{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"}],\"session_id\":\"session:8\"},{\"choices\":[{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"session_id\":\"session:9\"}],\"currency\":\"EUR\",\"fields\":[{\"field_id\":\"field:elm\",\"full_size\":true,\"price_minor\":2100,\"surface\":\"NATURAL_GRASS\"}],\"offer_revision\":4,\"request\":{\"budget_minor\":7000,\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"owner_approval_ref\":\"consent:jan8-only\",\"request_id\":\"request:exam:one\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:00:00\",\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T12:30:00\",\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T12:30:00\",\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\"}],\"team_ref\":\"team:one\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:synthetic\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"status\":\"OFFER_READY\",\"total_minor\":6300}"
+      }
+    }
+  },
+  "classification": "PARTIAL_INDEPENDENT_NATIVE_BINDING_DIAGNOSTIC",
+  "comparison": {
+    "body_keys": [
+      "booking",
+      "offer",
+      "publisher",
+      "recipient",
+      "request_sha256",
+      "source_lineage_refs",
+      "source_record_ref",
+      "source_review_ref",
+      "source_revision",
+      "source_work_ref",
+      "time_envelope",
+      "ttl_base",
+      "version"
+    ],
+    "body_sha256": "b92ee183c725b2052e29cd1840d195fb3c5bc6b0d78984a1d1339f5285e61ab3",
+    "consumed_result_equals_report": true,
+    "requester_input_json_keys": [
+      "body",
+      "source_projection"
+    ],
+    "requester_offer_input_sha256": "feb77a169eeb0470a78aa8bb6c5c5d69e0afe13a6813e41042f2bf1ac2fa55a1",
+    "venue_output_json_keys": [
+      "alternatives",
+      "currency",
+      "fields",
+      "offer_revision",
+      "request",
+      "schedule_revision",
+      "slots",
+      "status",
+      "total_minor"
+    ],
+    "venue_output_sha256": "1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033"
+  },
+  "new_native_provider_effect_calls": 0,
+  "runtime": "SUPERVISOR_EVIDENCE/p7_candidate_1244df5d",
+  "scope": "Authenticates supplied PURE structures and diagnoses actual input/output bindings. Not a complete native exam or admission."
+}

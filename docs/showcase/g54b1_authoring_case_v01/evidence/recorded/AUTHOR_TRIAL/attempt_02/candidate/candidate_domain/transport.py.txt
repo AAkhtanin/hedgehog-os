@@ -1,0 +1,303 @@
+"""Finite domain adapter using existing PipeChannel and contract primitives."""
+import secrets
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e
+from hedgehog.external_drs.gate5_lifecycle_v01 import ImportStore, read as read_import_state
+from . import domain as d, policy as p, memory, native, source, effect
+from .profile import PROFILE
+
+def make_request(policy, request, op, pointer=None, subject=None, nonce=None):
+    now = e.clock()
+    value = c.with_id('request',dict(version='g51.request.v01',op=op,
+        requester=policy['local_root'],publisher=policy['peer_root'],
+        task_ref=p.task_ref(request),request_revision=request['revision'],
+        pointer_ref=None if pointer is None else pointer['pointer_id'],
+        trust_profile_hash=c.sha(policy),use_class='LOCAL_CONTEXT',
+        object_id=policy['object_id'],allowed_size=c.BODY_MAX,nonce=nonce or secrets.token_hex(32),
+        issued_at=now,deadline=now+60,subject_request_ref=subject,
+        owner_transport_scope=policy['transport_scope']))
+    c.validate('request',value)
+    return value
+
+def exchange(channel, budget, request, policy, cap, keys, folder, counters):
+    now = e.clock()
+    review = n.root_review(policy['local_root'],'transaction:football:retrieval',
+        request['request_id'],request['object_id'],
+        dict(endpoint=policy['endpoint'] == 'endpoint:gate5:A',
+             scope=request['use_class'] in policy['uses'],
+             pinned_object=request['object_id'] == policy['object_id'],
+             policy_hash=request['trust_profile_hash'] == c.sha(policy)),
+        request,now,window=(request['issued_at'],request['deadline']))
+    counters['root_reviews'] += 1
+    n.save(folder/('retrieval_'+request['op'].lower()+'.json'),n.root_plain(review))
+    d.need(review[2].decision == 'ACCEPT','RETRIEVAL_REVIEW_REFUSED')
+    try:
+        budget.reserve(request)
+    except ValueError as exc:
+        raise d.Refusal(str(exc)) from exc
+    counters['transport_requests'] += 1
+    channel.send('REQUEST',c.sign(cap,keys,'REQUEST',request,c.sha(policy)))
+    response = channel.receive()
+    e.immutable(folder/('exchange_'+request['op'].lower()+'.json'),
+                dict(request=request,response=response))
+    return response
+
+def unavailable(message, request, policy, manifest_hash):
+    value = c.verify(message['value'],policy['peer_keys'],'STATUS_UNAVAILABLE',manifest_hash)
+    d.closed(value,('request_ref','nonce','reason','status','event_id'))
+    d.need(value['request_ref'] == request['request_id'] and value['nonce'] == request['nonce'],
+           'UNAVAILABLE_BINDING')
+    d.need(value['status'] in ('CLARIFY','REFUSED','NEEDS_CONFIRMATION',
+                              'CURRENT_STATUS_UNKNOWN'),'UNAVAILABLE_STATUS')
+    raise d.Refusal(value['reason'],value['status'])
+
+def close(channel, budget, request, policy, cap, keys, folder, counters, event_id):
+    req = make_request(policy,request,'CLOSE')
+    # CLOSE carries no evidence retrieval or action; historical verification
+    # therefore makes no new Root decision.
+    counters['transport_requests'] += 1
+    channel.send('REQUEST',c.sign(cap,keys,'REQUEST',req,c.sha(policy)))
+    response = channel.receive()
+    e.immutable(folder/'exchange_close.json',dict(request=req,response=response))
+    d.need(response['kind'] == 'CLOSED','SIGNED_CLOSE_REQUIRED')
+    value = c.verify(response['value'],policy['peer_keys'],'CLOSE',c.sha(policy))
+    d.need(value == dict(request_ref=req['request_id'],session=event_id),'CLOSE_BINDING')
+
+def receive_request(channel, peer_keys, expected, operator, seen, counters):
+    message = channel.receive(allow_eof=True)
+    d.need(message is not None,'EARLY_CLEAN_EOF')
+    c.require(message['kind'] == 'REQUEST','expected_request')
+    envelope = message['value']
+    req = envelope['value']
+    # The requester signs its own policy fingerprint; this is not the venue's
+    # policy. The venue independently checks its own context, audience and use.
+    c.verify(envelope,peer_keys,'REQUEST',req['trust_profile_hash'])
+    c.validate('request',req)
+    c.require(req['requester'] == operator['peer_root'] and
+        req['publisher'] == operator['local_root'] and
+        req['request_revision'] == expected['revision'] and
+        req['task_ref'] == p.task_ref(expected) and req['object_id'] == p.object_ref(expected) and
+        req['owner_transport_scope'] == 'owner:football:inherited-pipes',
+        'publisher_request_binding')
+    c.require(req['request_id'] not in seen and req['issued_at'] <= e.clock() < req['deadline'],
+              'request_replay_or_expiry')
+    seen.add(req['request_id'])
+    counters['transport_requests'] += 1
+    c.require(len(seen) <= 32,'publisher_finite_session_limit')
+    return req
+
+def send_unavailable(channel, cap, keys, req, reason, status, event_id, manifest_hash):
+    value = dict(request_ref=req['request_id'],nonce=req['nonce'],reason=reason,
+                 status=status,event_id=event_id)
+    channel.send('UNAVAILABLE',c.sign(cap,keys,'STATUS_UNAVAILABLE',value,manifest_hash))
+
+def serve_event(channel, cap, keys, peer_keys, request, event_id, operator,
+                publisher_budget, state_root, folder, counters, seen, prepare, early_error):
+    current = None
+    error = early_error
+    observed_ops = []
+    for _ in range(4):
+        req = receive_request(channel,peer_keys,request,operator,seen,counters)
+        observed_ops.append(req['op'])
+        if req['op'] == 'CLOSE':
+            channel.send('CLOSED',c.sign(cap,keys,'CLOSE',
+                dict(request_ref=req['request_id'],session=event_id),req['trust_profile_hash']))
+            return current,error,observed_ops
+        reserved = publisher_budget.reserve(req)
+        if req['op'] == 'DESCRIBE':
+            c.require(observed_ops == ['DESCRIBE'],'publisher_event_order')
+            if error is None:
+                try:
+                    d.need(reserved,'PUBLISHER_ATTEMPT_BUDGET')
+                    row = publisher_budget.read()['tasks'][req['task_ref']]
+                    if request['operation'] == 'CONFIRM_MOCK_BOOKING':
+                        d.need(row['payload'] < 2 and row['bodies'] < 2 and
+                               row['body_bytes']+c.BODY_MAX <= 131072,
+                               'PUBLISHER_DISCLOSURE_BUDGET')
+                    current = prepare()
+                except d.Refusal as exc:
+                    error = exc
+            if error is not None:
+                publisher_budget.response(req,False)
+                send_unavailable(channel,cap,keys,req,str(error),error.status,event_id,
+                                 req['trust_profile_hash'])
+            else:
+                publisher_budget.response(req,True)
+                channel.send('POINTER',current['descriptor'])
+            continue
+        c.require(current is not None,'publisher_source_missing')
+        body, manifest, descriptor, entry = (current[k] for k in ('body','manifest','descriptor','entry'))
+        pointer = descriptor['value']
+        manifest_hash = manifest['manifest_id'].split(':')[1]
+        c.require(req['pointer_ref'] == pointer['pointer_id'],'publisher_pointer_binding')
+        if req['op'] == 'STATUS':
+            c.require(observed_ops == ['DESCRIBE','STATUS'] and reserved,'publisher_status_order_or_budget')
+            if operator['status'] == 'UNAVAILABLE':
+                error = d.Refusal('CURRENT_STATUS_UNKNOWN','CURRENT_STATUS_UNKNOWN')
+                send_unavailable(channel,cap,keys,req,'CURRENT_STATUS_UNKNOWN',
+                                 'CURRENT_STATUS_UNKNOWN',event_id,manifest_hash)
+            else:
+                now = e.clock()
+                value = dict(version='g51.status.v01',entry=entry,
+                    requested_pointer_hash=c.sha(pointer),requester=req['requester'],
+                    subject_request_ref=req['subject_request_ref'],request_revision=req['request_revision'],
+                    nonce=req['nonce'],checked_at=now,valid_until=now+60)
+                c.validate('status',value)
+                signed_status = c.sign(cap,keys,'STATUS',value,manifest_hash)
+                current['status'] = signed_status
+                e.immutable(folder/'signed_status.json',signed_status)
+                channel.send('STATUS',signed_status)
+            continue
+        c.require(req['op'] == 'FETCH' and observed_ops == ['DESCRIBE','STATUS','FETCH'],
+                  'publisher_fetch_order')
+        now = e.clock()
+        env = body['time_envelope']
+        end = min(env['valid_to'],env['pt_created_at']+env['ttl_seconds'],
+                  env['source_observed_at']+operator['max_source_age'])
+        context = publisher_budget.contexts[req['task_ref']]
+        checks = dict(authenticated_requester=req['requester'] == peer_keys['root_ids'][0],
+            reserved=reserved,audience=req['requester'] in operator['audience'],
+            allowed_use=req['use_class'] in operator['release_uses'],
+            release_enabled=operator['release_enabled'],
+            source_revision=body['source_revision'] in context['source_revisions'],
+            active=entry['state'] == 'ACTIVE' and operator['status'] != 'UNAVAILABLE',
+            size=pointer['body_bytes'] <= req['allowed_size'],current=env['valid_from'] <= now < end)
+        review = n.root_review('VenueRoot','transaction:football:release',req['request_id'],
+            pointer['pointer_id'],checks,dict(request=req,pointer_ref=pointer['pointer_id'],
+            body_hash=c.sha(body),source_review_ref=body['source_review_ref']),now,
+            window=(env['valid_from'],min(end,req['deadline'])))
+        counters['root_reviews'] += 1
+        n.save(folder/'release_review.json',n.root_plain(review))
+        allowed = review[2].decision == 'ACCEPT'
+        if not allowed:
+            error = d.Refusal('SOURCE_RELEASE_REFUSED')
+        if allowed:
+            publisher_budget.disclosure(req,len(c.canonical(body)))
+        release = dict(version='g51.release.v01',state='RELEASED' if allowed else 'REFUSED',
+            request_ref=req['request_id'],request_revision=req['request_revision'],
+            pointer_ref=pointer['pointer_id'],manifest_ref=manifest['manifest_id'],
+            body_hash=c.sha(body),recipient=req['requester'],use_class=req['use_class'],
+            nonce=req['nonce'],deadline=req['deadline'],release_review_ref=review[2].decision_id)
+        c.validate('release',release)
+        response = dict(release=c.sign(cap,keys,'RELEASE',release,manifest_hash),
+                        manifest=manifest if allowed else None,body=body if allowed else None)
+        publisher_budget.response(req,allowed)
+        e.immutable(folder/'release.json',response)
+        channel.send('BUNDLE',response)
+        if allowed and request['operation'] == 'FIND_OFFER' and body['offer']['status'] == 'OFFER_READY':
+            n.save(state_root/'offers'/(effect.scope_key(request)+'.json'),current)
+    raise ValueError('publisher_event_missing_close')
+
+def retrieve(channel, cap, keys, policy, request, state_root, folder, counters):
+    budget = e.Budget(state_root/'budgets'/(c.sha(p.task_ref(request))+'.json'),p.task_ref(request))
+    allowance = budget.read()
+    d.need(allowance['payload'] < 2 and allowance['metadata'] <= 6 and
+           allowance['opened'] < 2 and allowance['body_bytes']+c.BODY_MAX <= 131072,
+           'ATTEMPT_OR_ACCEPTED_BODY_BUDGET')
+    describe = make_request(policy,request,'DESCRIBE')
+    response = exchange(channel,budget,describe,policy,cap,keys,folder,counters)
+    if response['kind'] == 'UNAVAILABLE':
+        unavailable(response,describe,policy,c.sha(policy))
+    d.need(response['kind'] == 'POINTER','POINTER_RESPONSE')
+    descriptor = response['value']
+    try:
+        c.check_pointer(descriptor,policy,e.clock(),profile=PROFILE)
+        c.check_route(descriptor['value'],policy)
+    except ValueError as exc:
+        raise d.Refusal(str(exc)) from exc
+    descriptor = memory.descend(descriptor,folder,policy,counters)
+    pointer = descriptor['value']
+    e.immutable(folder/'descriptor.json',descriptor)
+    fetch = make_request(policy,request,'FETCH',pointer)
+    status_req = make_request(policy,request,'STATUS',pointer,fetch['request_id'],fetch['nonce'])
+    response = exchange(channel,budget,status_req,policy,cap,keys,folder,counters)
+    if response['kind'] == 'UNAVAILABLE':
+        unavailable(response,status_req,policy,pointer['artifact_manifest_ref'].split(':')[1])
+    d.need(response['kind'] == 'STATUS','STATUS_RESPONSE')
+    status = response['value']
+    store = ImportStore(state_root/'imports')
+    try:
+        # Persist authenticated terminal state before current-use refusal.
+        entry = store.observe(status,pointer,fetch,policy,e.clock())
+        # ImportStore's local composite-key maps are not wire envelopes.
+        highwater = read_import_state(store.path)['highwater']
+        c.check_status(status,pointer,fetch,policy,e.clock(),highwater)
+    except ValueError as exc:
+        raise d.Refusal(str(exc)) from exc
+    response = exchange(channel,budget,fetch,policy,cap,keys,folder,counters)
+    d.need(response['kind'] == 'BUNDLE','BUNDLE_RESPONSE')
+    bundle = response['value']
+    e.immutable(folder/'bundle.json',bundle)
+    e.immutable(folder/'status.json',status)
+    e.immutable(folder/'fetch_request.json',fetch)
+    try:
+        # ImportStore's calibration convenience method is deliberately not called.
+        state = read_import_state(store.path)
+        checked = c.check_bundle(bundle,descriptor,fetch,status,policy,e.clock(),
+            state['highwater'],store.conflicts(),profile=PROFILE)
+        budget.received_body(len(c.canonical(checked['body'])))
+    except ValueError as exc:
+        store.quarantine(str(exc),dict(bundle=bundle,descriptor=descriptor,
+                                       request=fetch,status=status))
+        raise d.Refusal(str(exc)) from exc
+    classification = store.import_body(checked,pointer)
+    body = checked['body']
+    e.immutable(folder/'body.json',body)
+    e.immutable(folder/'offer_body.json',body)
+    facts = {k:True for k in ('shape','signature','integrity','arithmetic','provenance',
+        'temporal','scope','status','conflict','local_policy')}
+    # These facts are populated only after the complete public check_bundle returns.
+    candidate = c.with_id('import',dict(version='g51.import.v01',
+        local_request_ref=fetch['request_id'],pointer_ref=pointer['pointer_id'],
+        foreign_publisher=pointer['publisher_root_id'],foreign_source_ref=body['source_record_ref'],
+        foreign_revision=body['source_revision'],received_manifest_hash=c.sha(bundle['manifest']),
+        body_hash=c.sha(body),receive_event_ref='receive:'+fetch['request_id'],
+        validation_results=facts,status_entry_hash=entry['entry_hash'],
+        dependency_fingerprint=c.sha([policy,body['source_work_ref'],body['source_review_ref']]),
+        policy_hash=c.sha(policy),creates_permission=False))
+    c.validate('import',candidate)
+    e.immutable(folder/'import_candidate.json',candidate)
+    review = n.root_review(policy['local_root'],'transaction:football:import',candidate['import_id'],
+        body['source_record_ref'],dict(independent_bundle_validation=checked['body'] == body,
+            local_accept=policy['accept_offers'],current=entry['state'] == 'ACTIVE'),
+        dict(import_candidate=candidate,classification=classification,
+             source_work_ref=body['source_work_ref'],source_review_ref=body['source_review_ref']),
+        e.clock(),window=(body['time_envelope']['valid_from'],
+                         min(checked['source_end'],fetch['deadline'],status['value']['valid_until'])))
+    counters['root_reviews'] += 1
+    n.save(folder/'import_review.json',n.root_plain(review))
+    d.need(review[2].decision == 'ACCEPT','IMPORT_REVIEW_REFUSED')
+    disposition = c.with_id('disposition',dict(version='g51.disposition.v01',
+        candidate_ref=candidate['import_id'],parent_ref=None,state='ACCEPTED_CONTEXT',
+        local_review_ref=review[2].decision_id))
+    c.validate('disposition',disposition)
+    e.immutable(folder/'import_disposition.json',disposition)
+    wrapper = dict(body=body,source_projection=source.projection(body,entry,
+        status['value']['checked_at'],status['value']['valid_until']))
+    work = native.perform('requester',policy['local_root'],
+        'task:football:requester:'+c.sha([request,body]),dict(
+            request_json=c.canonical(request).decode(),offer_json=c.canonical(wrapper).decode()))
+    counters['requester_work'] += work['attempts']
+    n.save(folder/'requester_work.json',work)
+    result = c.decode(work['outputs']['result_json'].encode())
+    d.check_result(request,wrapper,result)
+    claim = dict(request_sha256=c.sha(request),offer_sha256=c.sha(body),result_sha256=c.sha(result),
+        request=request,consumed_offer=wrapper,result=result,
+        work_ref=work['artifact']['artifact_id'],source_work_ref=body['source_work_ref'],
+        source_review_ref=body['source_review_ref'],import_ref=candidate['import_id'])
+    final = n.root_review(policy['local_root'],'transaction:football:result',
+        work['artifact']['artifact_id'],body['source_record_ref'],
+        dict(native=work['attempts'] == 1,output_bound=work['outputs']['result_json'] ==
+             c.canonical(result).decode(),import_accepted=review[2].decision == 'ACCEPT',
+             shift_consent=not any(s['allow_shift_minutes'] for s in request['sessions']) or
+                           p.approved(policy['operator_policy'],request,'SHIFT'),
+             booking_consent=request['operation'] != 'CONFIRM_MOCK_BOOKING' or
+                             p.approved(policy['operator_policy'],request,'BOOK')),
+        claim,e.clock(),window=(body['time_envelope']['valid_from'],
+            min(checked['source_end'],fetch['deadline'],status['value']['valid_until'])))
+    counters['root_reviews'] += 1
+    n.save(folder/'requester_review.json',n.root_plain(final))
+    d.need(final[2].decision == 'ACCEPT','FINAL_REVIEW_REFUSED')
+    return result,dict(requester_work=dict(file='requester_work.json',id=work['artifact']['artifact_id']),
+        requester_review=dict(file='requester_review.json',id=final[2].decision_id),
+        offer=dict(file='offer_body.json',id=body['source_record_ref']),
+        import_ref=dict(file='import_candidate.json',id=candidate['import_id'])),body

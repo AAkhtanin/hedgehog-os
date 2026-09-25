@@ -1,0 +1,41 @@
+{
+  "files": [
+    {
+      "bytes": 4983,
+      "mode": "0644",
+      "path": "ACCEPTANCE.md",
+      "sha256": "45877166e0e3a3ca774edc0c2ceae9ff65128b20ab417ae4a9fee71d047c300f"
+    },
+    {
+      "bytes": 4113,
+      "mode": "0644",
+      "path": "boundary_witnesses.json",
+      "sha256": "a87cbac1aea78d3b8e476a6d02d2788adae4773682749aa453d51593ea654664"
+    },
+    {
+      "bytes": 4590,
+      "mode": "0644",
+      "path": "build_cases.py",
+      "sha256": "4d72c792494e37f4f9c3d6b107a53ecff6c9059ab9e4350de02d0a9f70462401"
+    },
+    {
+      "bytes": 17608,
+      "mode": "0644",
+      "path": "cases.json",
+      "sha256": "07cf3a95b82b4a5daa541cdadf53b2337af92c25fc9619935b952f525e6bfe60"
+    },
+    {
+      "bytes": 14178,
+      "mode": "0644",
+      "path": "examiner.py",
+      "sha256": "874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372"
+    },
+    {
+      "bytes": 24321,
+      "mode": "0644",
+      "path": "ranking_cases_v02.json",
+      "sha256": "b1f9a7d7330585b1dc413dd8bd692f8f48b84c17b09b6688e68e6412bb52458d"
+    }
+  ],
+  "version": "g53r.component.v01"
+}

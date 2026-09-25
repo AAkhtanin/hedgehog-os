@@ -1,0 +1,58 @@
+"""Explicit locally selected body profile. Construction grants no admission."""
+from hedgehog.external_drs import gate5_contracts_v01 as c
+from hedgehog.external_drs.gate5_body_profile_v01 import ReviewedBodyProfileV01, COMMON_BODY_FIELDS
+from . import domain as d
+
+SCHEMA = 'FootballVenueOfferV01'
+DOMAIN = 'FOOTBALL'
+SUMMARY = 'Synthetic full-size natural-grass venue offer metadata.'
+
+def validate_body(body):
+    d.check_offer(body['offer'])
+    d.need(body['offer']['request']['operation'] == 'FIND_OFFER','PRODUCER_OPERATION')
+    d.ident(body['publisher']); d.ident(body['recipient'])
+    c.hash_value(body['request_sha256'])
+    d.need(body['request_sha256'] == c.sha(body['offer']['request']),
+           'BODY_REQUEST_HASH')
+    d.need(body['source_revision'] == body['offer']['offer_revision'],
+           'BODY_REVISION')
+    d.need(body['source_work_ref'] in body['source_lineage_refs'], 'WORK_LINEAGE')
+    booking = body['booking']
+    if booking is not None:
+        d.closed(booking, ('state','receipt_ref','payload_sha256','snapshot_sha256',
+                          'packet_ref','slots','request_sha256'))
+        d.need(booking['state'] == 'COMMITTED' and
+               booking['slots'] == body['offer']['slots'] and len(booking['slots']) == 3,
+               'BOOKING_PROJECTION')
+        for key in ('receipt_ref','packet_ref'):
+            c.ref(booking[key])
+        for key in ('payload_sha256','snapshot_sha256','request_sha256'):
+            c.hash_value(booking[key])
+
+def validate_pointer(pointer):
+    d.need(pointer['safe_summary'] == SUMMARY, 'UNSAFE_POINTER_SUMMARY')
+    d.need(pointer['allowed_use_classes'] == ['LOCAL_CONTEXT'] and
+           pointer['forbidden_use_classes'] == ['ACTION'], 'POINTER_USE')
+    d.need(pointer['semantic_address']['subject_class'] == 'venue_offer' and
+           pointer['semantic_address']['intent_class'] == 'context_lookup',
+           'POINTER_MEANING')
+
+def validate_binding(body, policy, pointer):
+    request = policy['request']
+    d.check_offer(body['offer'], request)
+    d.need(body['publisher'] == policy['peer_root'] and
+           body['recipient'] == policy['local_root'], 'BODY_OWNER_RECIPIENT')
+    d.need(pointer['recipient_scope'] == [policy['local_root']], 'POINTER_RECIPIENT')
+    d.need(pointer['published_scope'] == dict(domain=DOMAIN,venue_ref=request['venue_ref'],
+           team_ref=request['team_ref']), 'FOOTBALL_SCOPE')
+    if request['operation'] == 'CONFIRM_MOCK_BOOKING':
+        d.need(body['booking'] is not None and
+               body['booking']['request_sha256'] == c.sha(request),
+               'BOOKING_REQUEST_HASH')
+    else:
+        d.need(body['booking'] is None, 'UNEXPECTED_BOOKING_EVIDENCE')
+
+PROFILE = ReviewedBodyProfileV01(SCHEMA,
+    COMMON_BODY_FIELDS + ('publisher','recipient','request_sha256','offer','booking'),
+    ('domain','venue_ref','team_ref'),'accept_offers',
+    validate_body,validate_pointer,validate_binding)

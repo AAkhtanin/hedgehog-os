@@ -1,0 +1,45 @@
+{
+  "needle_id": "football_reference_v01",
+  "owner": "Codex cold domain author; independent deployment/review owners are not assigned by this candidate",
+  "version": "football.reference.v01 / G54 precreated-peer contract V02",
+  "purpose": "Finite synthetic three-session football offer selection, explicitly consented local MOCK booking, saved receipt verification, and clarification. Excludes real venue contact, money, physical access, travel, meals, variable durations and marketplaces.",
+  "domain": "January 2027, Europe/Tirane, one venue, at most four fields, three 90-minute sessions, full-size natural grass; no personal identities.",
+  "input_schema": "schemas/input.schema.json urn:football:peer-input:v01; exact normalized request/inventory fields, original local strings retained, integer minor units, closed operator policy and optional bound semantic capture. Control identity is required even for CLARIFY.",
+  "output_schema": "schemas/body.schema.json urn:football:FootballVenueOfferV01; schemas/report.schema.json urn:football:report:v01 (g53.result.v01). Generic native Work evidence is saved without revived authority.",
+  "actor_roles": [
+    "VenueRoot: own inventory, independently reviewed publication/release and native registry effect",
+    "ActivePlanetRoot: own request/consent policy, persisted pointer lookup, import, native consumer Work and result review",
+    "Untrusted semantic proposal: mode/parameters only, matched to typed event and local capture; never consent",
+    "Trusted parent: precreates peers/channels, source review and independent execution observation"
+  ],
+  "execution_modes": [
+    "PURE through public module-level executor and validator capabilities",
+    "MOCK_CONSEQUENTIAL only for a disposable one-file source registry",
+    "Pure saved-history verification with no Work, new Root decision or dispatch",
+    "CANDIDATE_READY for quarantine review; installable_now=false"
+  ],
+  "capabilities": [
+    "candidate_domain.native.execute_source / validate_source via mocks.admit_pure_operation_v01 and real WorkItem/program/Host",
+    "candidate_domain.native.execute_requester / validate_requester via the same public lower Work seam",
+    "candidate_domain.effect.validate_inputs / validate_output / execute_booking observed and admitted through hosts.admit_local_capability_v01",
+    "donor.build_native_work_action_v01, authorize_and_prepare_action_v01, host_for_prepared_action_v01; hosts.dispatch_current_action_v01",
+    "LocalDRS persisted resolver and native summary descent; explicit ReviewedBodyProfileV01 callbacks; existing PipeChannel, Budget, PublisherBudget, ImportStore authenticated state"
+  ],
+  "forbidden_effects": [
+    "REAL consequential effects, payment, website/venue/email/cloud/device contact",
+    "Network/provider/subprocess/thread/process creation, descriptor introspection, private-key export",
+    "Protected source mutation, monkeypatching, dynamic candidate loaders, kernel copies, new effect enums",
+    "Direct registry write outside admitted Firewall callback; native terminal-packet redispatch"
+  ],
+  "permission_policy": "Explicit independent operator policy; SHIFT and BOOK approvals bind reference, scope and exact normalized request SHA. Source current local review gates native action preparation. Foreign signatures and Root decisions remain evidence. Current native packet/Host/Firewall exclusively authorize the callback. History never supplies a new grant.",
+  "risk_class": "LOW synthetic disposable MOCK; no production security, crash durability or cross-owner atomicity assertion.",
+  "drs_scope": "Source own source_address_drs stores metadata only. Consumer own address_index/meaning_drs starts CONNECTOR_OBSERVATION then retains a separately reviewed local context; own imports highwater/sources/quarantine and own accepted/history namespaces. No role opens another role's filesystem.",
+  "sealed_slot_refs": "NOT_APPLICABLE: no sealed evidence slot is supplied or invented. All actual imported public sources/resources are pinned in dependencies.json and all candidate bytes by coordinator candidate.json.",
+  "adapter_requirements": "Fresh local signers, pinned peer roots via separately assigned public bootstrap, immutable candidate module files for observe_local_capability_code_v01, exact public native modules and Work schema, supplied existing channels, matching finite ordered event identities; own trusted single-writer disposable directories only.",
+  "time_currentness_dependencies": "Logical native donor 1010..1014 is distinct from recorded integer UTC source/review time. Half-open End=min(valid_to,pt+ttl,source_observed+local_max_age); no future observations. Signed status valid for at most60 seconds, request/nonce/pointer bound; authenticated terminal highwater persists. Request/policy/inventory/code dependencies require appropriate new review. Europe/Tirane system timezone resource is required.",
+  "failure_policy": "Closed-field/type/bool/calendar/currency/budget/consent failures refuse before effects; missing essentials CLARIFY. No complete exact selection yields NO_COMPLETE_OFFER or NEEDS_CONFIRMATION with no slots. Source expiry, rollback/equivocation, terminal status, wrong owner/revision, altered bytes and removed producer fields refuse. UNAVAILABLE yields CURRENT_STATUS_UNKNOWN, not blacklist. Unknown native/I/O exceptions are saved and re-raised. Unknown receipt/state stops retry. Bound two payload attempts/eight observations/two bodies/128KiB per operator task,32 session requests,eight events; signed CLOSE control adds no semantic budget observation.",
+  "compensation": "NOT_APPLICABLE for this all-or-none one-file disposable mock. No real action, cross-owner rollback or power-loss promise. Receipt/readback mismatch requires manual supported reconciliation under a new review; never automatic redispatch.",
+  "audit_provenance": "Preserve original requests/inventory in owner-only evidence, actual admission/invocation/result/host attempts/artifacts, distinct source/publication/retrieval/import/result/booking reviews, full signed descriptor/status/release/manifest/body/time envelopes, native canonical packet and registry receipt, exact source/review lineage and readback. Final requester claim selects actual consumer artifact and binds request/body/result hashes. Parent telemetry remains independently required.",
+  "tests": "tests/test_domain.py and tests/test_native.py cover positive/altered/refusal/continuation, ranking/interval/consent integrity, genuine native Work, real Root refusal, signed component/profile/temporal/status checks and native MOCK receipt/reuse/readback. Written and syntax-checked only, never executed by author. No examiner code or target-answer fixtures.",
+  "compatibility": "Frozen G53 V01 lower seams with G54 V02 precreated peers, Python3.14 Linux arm64, cryptography48.0.0/jsonschema4.26.0. Original dependency measurement is Darwin, not Linux runtime proof. Calibration remains unchanged. No concrete missing public API identified by static reading; execution, resource envelopes, source/import review and admission are unverified."
+}

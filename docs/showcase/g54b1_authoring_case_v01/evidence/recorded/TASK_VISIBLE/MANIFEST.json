@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "bytes": 7832,
+      "mode": "0644",
+      "path": "WHAT_TO_BUILD.md",
+      "sha256": "dbcdfeeaca9405687dd30bba33a72a510729d606c7d99ee52a5f390d426963a1"
+    }
+  ],
+  "version": "g53r.component.v01"
+}

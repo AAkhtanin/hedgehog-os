@@ -1,0 +1,179 @@
+{
+  "booking": {
+    "packet_ref": "acp_v02:b262addefd635bae4693b8167f3b0dfc667359f5a1dbfa27f195cfc23c84cdad",
+    "payload_sha256": "560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544",
+    "receipt_ref": "effect_receipt_v01:16d2611a5c85f250f59ad56e38cca6ce24922af4f56efe3b0791169ce30c2966",
+    "request_sha256": "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8",
+    "slots": [
+      {
+        "end_utc": 1799341200,
+        "field_id": "field:elm",
+        "price_minor": 2100,
+        "session_id": "session:7",
+        "start_utc": 1799335800,
+        "venue_ref": "venue:synthetic"
+      },
+      {
+        "end_utc": 1799409600,
+        "field_id": "field:elm",
+        "price_minor": 2100,
+        "session_id": "session:8",
+        "start_utc": 1799404200,
+        "venue_ref": "venue:synthetic"
+      },
+      {
+        "end_utc": 1799494200,
+        "field_id": "field:elm",
+        "price_minor": 2100,
+        "session_id": "session:9",
+        "start_utc": 1799488800,
+        "venue_ref": "venue:synthetic"
+      }
+    ],
+    "snapshot_sha256": "1e0d2d310d7032ae3a8471e771f54cf6dabc1616682237527a763c94361d7300",
+    "state": "COMMITTED"
+  },
+  "offer": {
+    "alternatives": [
+      {
+        "choices": [
+          {
+            "end_utc": 1799341200,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:7",
+            "start_utc": 1799335800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "session_id": "session:7"
+      },
+      {
+        "choices": [
+          {
+            "end_utc": 1799409600,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:8",
+            "start_utc": 1799404200,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "session_id": "session:8"
+      },
+      {
+        "choices": [
+          {
+            "end_utc": 1799494200,
+            "field_id": "field:elm",
+            "price_minor": 2100,
+            "session_id": "session:9",
+            "start_utc": 1799488800,
+            "venue_ref": "venue:synthetic"
+          }
+        ],
+        "session_id": "session:9"
+      }
+    ],
+    "currency": "EUR",
+    "fields": [
+      {
+        "field_id": "field:elm",
+        "full_size": true,
+        "price_minor": 2100,
+        "surface": "NATURAL_GRASS"
+      }
+    ],
+    "offer_revision": 4,
+    "request": {
+      "budget_minor": 7000,
+      "currency": "EUR",
+      "operation": "FIND_OFFER",
+      "owner_approval_ref": "consent:jan8-only",
+      "request_id": "request:exam:one",
+      "revision": 2,
+      "sessions": [
+        {
+          "allow_shift_minutes": 0,
+          "end": "2027-01-07T18:00:00",
+          "session_id": "session:7",
+          "start": "2027-01-07T16:30:00"
+        },
+        {
+          "allow_shift_minutes": 30,
+          "end": "2027-01-08T12:30:00",
+          "session_id": "session:8",
+          "start": "2027-01-08T11:00:00"
+        },
+        {
+          "allow_shift_minutes": 0,
+          "end": "2027-01-09T12:30:00",
+          "session_id": "session:9",
+          "start": "2027-01-09T11:00:00"
+        }
+      ],
+      "team_ref": "team:one",
+      "timezone": "Europe/Tirane",
+      "venue_ref": "venue:synthetic"
+    },
+    "schedule_revision": 4,
+    "slots": [
+      {
+        "end_utc": 1799341200,
+        "field_id": "field:elm",
+        "price_minor": 2100,
+        "session_id": "session:7",
+        "start_utc": 1799335800,
+        "venue_ref": "venue:synthetic"
+      },
+      {
+        "end_utc": 1799409600,
+        "field_id": "field:elm",
+        "price_minor": 2100,
+        "session_id": "session:8",
+        "start_utc": 1799404200,
+        "venue_ref": "venue:synthetic"
+      },
+      {
+        "end_utc": 1799494200,
+        "field_id": "field:elm",
+        "price_minor": 2100,
+        "session_id": "session:9",
+        "start_utc": 1799488800,
+        "venue_ref": "venue:synthetic"
+      }
+    ],
+    "status": "OFFER_READY",
+    "total_minor": 6300
+  },
+  "publisher": "VenueRoot",
+  "recipient": "ActivePlanetRoot",
+  "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+  "source_lineage_refs": [
+    "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f",
+    "source:football:6f4c5c8536dbec2f5a0495a0c059467df0dd754de616bf2bea5af6c063942b97",
+    "cea16f779c17d64c29ed4ccecb800b5bfca7d6954d0bfd66b7fdec440e9d0e39"
+  ],
+  "source_record_ref": "source:football:fdfbfa8f9a23d97365f4041e379d06028ae2238b099236d2b5b875adcffa2e00",
+  "source_review_ref": "bf714d289962d28526e7f903deaf0616498a5cb70447d81d9a2b6a0c55aabc8b",
+  "source_revision": 4,
+  "source_work_ref": "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f",
+  "time_envelope": {
+    "ct_context_anchor": 1790326469,
+    "et_observed_at": 1790326469,
+    "freshness_policy_id": "freshness:football:source",
+    "kt_as_of": 1790326469,
+    "pt_created_at": 1790326469,
+    "source_observed_at": 1790326469,
+    "source_reported_at": 1790326469,
+    "system_ingested_at": 1790326469,
+    "system_verified_at": 1790326469,
+    "time_envelope_id": "drstime_v01:225d8e39ca41b7781be1f92161b36c84a8e8c50c3e0ebc6856c645442b739e7f",
+    "time_envelope_version": "v0.1",
+    "ttl_seconds": 300,
+    "valid_from": 1790326469,
+    "valid_to": 1790326769
+  },
+  "ttl_base": "pt_created_at",
+  "version": "g51.body.v01"
+}

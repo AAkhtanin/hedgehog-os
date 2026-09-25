@@ -1,0 +1,9 @@
+{
+  "decision": "CORRECT",
+  "evidence_refs": [
+    "SUPERVISOR_EVIDENCE/commands/native_story_00/receipt.json",
+    "SUPERVISOR_EVIDENCE/p7_candidate_ebd28667/worker/requester/stderr.txt",
+    "SUPERVISOR_EVIDENCE/p7_candidate_ebd28667/worker/publisher/evidence/exact/descriptor.json"
+  ],
+  "feedback": "Actual confined native story, exact-only phase: requester exited 1 before requester Work. The primary traceback is candidate_domain/run.py:221 run_peer_v01 -> transport.py:207 retrieve -> memory.py:72 descend -> approved/source/hedgehog/drs_semantic_address_v01.py:1696 build_meaning_record_v01, raising ValueError('drs_secret_payload_forbidden'). VenueRoot native PURE Work and the source/publication Root reviews had completed. The public descriptor source_record_ref was source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd and pointer_id was g5pointer:38be13337e4a793b415b05ad4b33d11c58d71483f6f4a220bd257e94ae79901d. These are actual non-secret generated metadata values; no validator result is being substituted. The publisher's later Refusal('EARLY_CLEAN_EOF') followed requester termination and is secondary. Root cause beyond the observed public DRS refusal is not yet asserted. Correct the candidate's use of the unchanged public contract. No subsequent shift, booking, repeat or verify phase was reached. Native acceptance, live and supplied checks are not passed."
+}

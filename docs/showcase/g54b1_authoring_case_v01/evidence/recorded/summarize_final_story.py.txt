@@ -1,0 +1,85 @@
+"""Summarize saved final-run evidence; no candidate imports or authority recovery."""
+import collections
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+WORK = Path(__file__).resolve().parent
+sys.path.insert(0, str(WORK / 'AUTHOR_VISIBLE/source'))
+from hedgehog.kernel import abi_v01 as abi
+
+runtime = WORK / 'SUPERVISOR_EVIDENCE/p7_candidate_1244df5d'
+pins = {}
+def read(name):
+    path = runtime / name
+    raw = path.read_bytes()
+    pins[name] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+    return json.loads(raw)
+
+receipt = read('receipt.json')
+parent = read('trusted_parent_receipt.json')
+assert receipt['rc'] == 0 and receipt['cli_reaped'] and receipt['container_removed']
+assert receipt['limit_failure'] is None and parent['limit_error'] is None
+assert all(row['exit_code'] == 0 and row['reaped'] for row in parent['waits'])
+result = dict(classification='SCOPED_SAVED_STORY_OBSERVATIONS_NOT_FULL_EXAM_ACCEPTANCE',
+    runtime=str(runtime.relative_to(WORK)),
+    candidate_manifest_sha256=receipt['inputs']['candidate/candidate.json'],
+    container_seconds=receipt['seconds'], worker_parent_seconds=parent['seconds'],
+    reports={}, local_counters={}, parent_native_counts={}, checks={},
+    new_native_work=0, new_root_decisions=0, new_host_dispatch=0, new_provider_calls=0,
+    authority_restored=False)
+for role, rows in parent['observations'].items():
+    result['parent_native_counts'][role] = {
+        phase: dict(collections.Counter(row['function'] for row in rows if row['event'] == phase))
+        for phase in ('NATIVE_START', 'NATIVE_RETURN')}
+    for phase in ('exact', 'shift', 'book', 'repeat', 'verify'):
+        report = read('worker/' + role + '/evidence/' + phase + '/report.json')
+        counters = read('worker/' + role + '/evidence/' + phase + '/counts.json')
+        result['reports'][role + '/' + phase] = {
+            key: report.get(key) for key in ('status', 'operation', 'total_minor', 'currency', 'receipt_ref', 'counts')}
+        result['local_counters'][role + '/' + phase] = counters
+
+saved_receipt = read('worker/publisher/evidence/book/receipt.json')
+readback = read('worker/publisher/evidence/book/readback.json')
+final_registry = read('worker/publisher/state/registry.json')
+dispatch = read('worker/publisher/evidence/book/native_dispatch.json')
+artifact = abi.build_kernel_artifact_v01(**dict(saved_receipt,
+    trace_refs=tuple(saved_receipt['trace_refs']), parent_refs=tuple(saved_receipt['parent_refs'])))
+assert not abi.validate_kernel_artifact_v01(artifact)
+assert abi.kernel_artifact_to_plain_dict_v01(artifact) == saved_receipt
+assert saved_receipt['authority_class'] == 'EVIDENCE_ONLY'
+assert saved_receipt['owner_root_id'] == 'VenueRoot'
+assert saved_receipt['payload']['real_world_effects_count'] == 0
+assert len(readback['reservations']) == 3 and len(readback['idempotency']) == 1
+assert final_registry == readback
+assert dispatch['registry']['action_packet_fulfillment_attempt_contexts'][-1]['receipt'] == saved_receipt
+assert len(dispatch['mutations']) == 1
+for phase in ('repeat', 'verify'):
+    assert read('worker/publisher/evidence/' + phase + '/receipt.json') == saved_receipt
+    assert read('worker/publisher/evidence/' + phase + '/readback.json') == readback
+    for role in ('publisher', 'requester'):
+        report = result['reports'][role + '/' + phase]
+        assert report['receipt_ref'] == saved_receipt['artifact_id']
+        local = result['local_counters'][role + '/' + phase]['local_observations']
+        assert all(local[key] == 0 for key in
+            ('dispatch', 'mutations', 'search', 'source_work', 'requester_work', 'root_reviews'))
+for role in ('publisher', 'requester'):
+    returns = result['parent_native_counts'][role]['NATIVE_RETURN']
+    assert returns.get('hedgehog.work_execution_host_v01.dispatch_current_action_v01', 0) == int(role == 'publisher')
+    assert returns.get('hedgehog.kernel.effect_firewall_v01.execute_bound_effect_v01', 0) == int(role == 'publisher')
+result['checks'] = dict(
+    receipt_abi_structure='PASS_HISTORICAL_STRUCTURE_ONLY',
+    saved_dispatch_receipt_binding='PASS',
+    three_reservations_one_idempotency_entry='PASS',
+    repeated_receipt_and_readback='PASS_DATA_EQUALITY',
+    total_dispatch_and_effect_parent_observation='ONE_EACH_PUBLISHER_ZERO_REQUESTER',
+    repeat_verify_per_event_counts='CANDIDATE_REPORTED_ZERO; unchanged parent independently observes one total dispatch/effect',
+    native_acceptance='FAIL_VENUE_OFFER_CONSUMPTION_RECORDED_SEPARATELY',
+    no_new_current_permission='HISTORICAL_DATA_ONLY')
+result['evidence_pins'] = pins
+with (WORK / 'AUTHOR_TRIAL/attempt_03/saved_story_summary.json').open('x') as stream:
+    json.dump(result, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(dict(checks=result['checks'], reports=result['reports'],
+    container_seconds=result['container_seconds'])))

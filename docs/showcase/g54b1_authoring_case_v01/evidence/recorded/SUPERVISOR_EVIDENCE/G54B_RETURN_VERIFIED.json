@@ -1,0 +1,21 @@
+{
+  "all_hashes_sizes_modes": true,
+  "archive_root": "g54b_codex_astra_ultra_v02_return",
+  "bytes": 755950,
+  "copy_verified_at": "2026-09-25T06:57:00.525415+00:00",
+  "downloads": {
+    "bytes": 755950,
+    "mode": "0o644",
+    "path": "/Users/admin/Downloads/RADIOLARIA_GATE5_REFERENCE_G54B_CODEX_ASTRA_ULTRA_V02_RETURN_20260925T065543Z.tar.gz",
+    "sha256": "61d68df876231b0fa94c2ed3f118537ac409597d8b8af0ac84ed3b3c0c7ee3cb"
+  },
+  "downloads_copy": "VERIFIED_REOPENED_COMPLETE",
+  "exact_coverage": true,
+  "full_gzip_crc": true,
+  "manifest_rows": 596,
+  "mode": "0o644",
+  "path": "/private/tmp/RADIOLARIA_GATE5_G54B.AG6Wj9/RADIOLARIA_GATE5_REFERENCE_G54B_CODEX_ASTRA_ULTRA_V02_RETURN_20260925T065543Z.tar.gz",
+  "regular_members": 597,
+  "safe_paths": true,
+  "sha256": "61d68df876231b0fa94c2ed3f118537ac409597d8b8af0ac84ed3b3c0c7ee3cb"
+}

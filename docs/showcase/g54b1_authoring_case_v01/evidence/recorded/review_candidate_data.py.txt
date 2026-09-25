@@ -1,0 +1,49 @@
+"""Data-only independent inventory. Never imports generated candidate code."""
+import ast
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+WORK = Path(__file__).resolve().parent
+sys.path.insert(0, str(WORK / 'AUTHOR_VISIBLE'))
+from candidate_contract import check_package
+
+
+def inspect(folder):
+    candidate = Path(folder).resolve()
+    report = dict(candidate=str(candidate),
+        classification='STATIC_DATA_REVIEW_NOT_EXECUTION_APPROVAL', files={}, python={})
+    try:
+        report['shape'] = check_package(candidate)
+    except (ValueError, KeyError, TypeError) as error:
+        report['shape_error'] = str(error)
+    for path in sorted(candidate.rglob('*')):
+        if not path.is_file() or path.is_symlink():
+            continue
+        name = str(path.relative_to(candidate))
+        raw = path.read_bytes()
+        report['files'][name] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+        if path.suffix != '.py':
+            continue
+        try:
+            tree = ast.parse(raw, filename=name)
+            report['python'][name] = dict(
+                imports=[dict(line=n.lineno, text=ast.unparse(n)) for n in ast.walk(tree)
+                    if isinstance(n, (ast.Import, ast.ImportFrom))],
+                calls=[dict(line=n.lineno, function=ast.unparse(n.func)) for n in ast.walk(tree)
+                    if isinstance(n, ast.Call)],
+                top_level=[dict(line=n.lineno, kind=type(n).__name__) for n in tree.body],
+                ast_sha256=hashlib.sha256(ast.dump(tree).encode()).hexdigest())
+        except SyntaxError as error:
+            report['python'][name] = dict(syntax_error=str(error))
+    target = candidate.parent / 'static_data_review.json'
+    with target.open('x') as stream:
+        json.dump(report, stream, sort_keys=True, indent=2)
+        stream.write('\n')
+    print(json.dumps(dict(report=str(target), shape=report.get('shape'),
+        shape_error=report.get('shape_error'), files=len(report['files']))))
+
+
+if __name__ == '__main__':
+    inspect(sys.argv[1])

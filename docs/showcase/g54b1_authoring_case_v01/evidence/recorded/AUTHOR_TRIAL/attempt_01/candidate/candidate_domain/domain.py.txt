@@ -1,0 +1,332 @@
+"""Closed, deterministic domain logic. No I/O or native decisions."""
+from datetime import datetime, timezone
+from itertools import product
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+import re
+from hedgehog.external_drs import gate5_contracts_v01 as c
+
+OPS = ('FIND_OFFER', 'CONFIRM_MOCK_BOOKING', 'VERIFY_EXISTING', 'CLARIFY')
+REQUEST_FIELDS = ('request_id','revision','operation','team_ref','venue_ref','timezone',
+                  'currency','budget_minor','owner_approval_ref','sessions')
+SLOT_FIELDS = ('session_id','venue_ref','field_id','start_utc','end_utc','price_minor')
+OFFER_FIELDS = ('request','schedule_revision','offer_revision','status','fields',
+                'alternatives','slots','total_minor','currency')
+REPORT_FIELDS = ('version','request_ref','request_revision','team_ref','operation',
+                 'status','slots','total_minor','currency','source','receipt_ref','counts')
+SOURCE_FIELDS = ('publisher','recipient','request_revision','schedule_revision',
+                 'offer_revision','observed_at','valid_from','valid_to','ttl','pt',
+                 'status','status_checked','status_until')
+
+class Refusal(ValueError):
+    def __init__(self, reason, status='REFUSED'):
+        super().__init__(reason)
+        self.status = status
+
+def need(ok, reason, status='REFUSED'):
+    if not ok:
+        raise Refusal(reason, status)
+
+def ident(value):
+    need(type(value) is str and re.fullmatch(r'[A-Za-z0-9_.:-]{1,80}', value) is not None,
+         'DOMAIN_IDENTIFIER')
+
+def safe_event(value):
+    need(type(value) is str and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,47}', value)
+         is not None, 'EVENT_ID')
+    return value
+
+def closed(value, fields):
+    need(type(value) is dict and set(value) == set(fields), 'DOMAIN_CLOSED_FIELDS')
+
+def uint(value, reason, maximum=c.LIMIT):
+    need(type(value) is int and 0 <= value <= maximum, reason)
+    return value
+
+def overlap(a, b):
+    return a[0] < b[1] and b[0] < a[1]
+
+def parse_request(request):
+    need(type(request) is dict, 'REQUEST_OBJECT', 'CLARIFY')
+    missing = set(REQUEST_FIELDS) - set(request)
+    need(not missing, 'MISSING_REQUIRED_INPUT:' + ','.join(sorted(missing)), 'CLARIFY')
+    closed(request, REQUEST_FIELDS)
+    for key in ('request_id','team_ref','venue_ref'):
+        ident(request[key])
+    need(type(request['revision']) is int and 0 < request['revision'] <= c.LIMIT,
+         'REQUEST_REVISION')
+    need(request['operation'] in OPS, 'UNSUPPORTED_OPERATION', 'CLARIFY')
+    need(request['timezone'] == 'Europe/Tirane', 'UNSUPPORTED_TIMEZONE', 'CLARIFY')
+    need(type(request['currency']) is str and re.fullmatch(r'[A-Z]{3}', request['currency'])
+         is not None, 'CURRENCY_REQUIRED', 'CLARIFY')
+    need(type(request['budget_minor']) is int and 0 <= request['budget_minor'] <= c.LIMIT,
+         'BUDGET_REQUIRED', 'CLARIFY')
+    if request['owner_approval_ref'] is not None:
+        ident(request['owner_approval_ref'])
+    need(type(request['sessions']) is list and len(request['sessions']) == 3,
+         'THREE_SESSIONS_REQUIRED', 'CLARIFY')
+    try:
+        zone = ZoneInfo(request['timezone'])
+    except ZoneInfoNotFoundError as exc:
+        raise Refusal('TIMEZONE_RESOURCE_UNAVAILABLE', 'CLARIFY') from exc
+    rows = []
+    for session in request['sessions']:
+        closed(session, ('session_id','start','end','allow_shift_minutes'))
+        ident(session['session_id'])
+        need(type(session['allow_shift_minutes']) is int and
+             session['allow_shift_minutes'] in (0,30), 'UNSUPPORTED_SHIFT', 'CLARIFY')
+        times = []
+        local = []
+        for name in ('start','end'):
+            text = session[name]
+            need(type(text) is str and re.fullmatch(
+                r'2027-01-[0-9]{2}T[0-9]{2}:[0-9]{2}(:00)?', text) is not None,
+                'LOCAL_CALENDAR_FORMAT', 'CLARIFY')
+            try:
+                value = datetime.fromisoformat(text)
+            except ValueError as exc:
+                raise Refusal('INVALID_CALENDAR', 'CLARIFY') from exc
+            instant = value.replace(tzinfo=zone)
+            need(instant.utcoffset() == value.replace(tzinfo=zone, fold=1).utcoffset(),
+                 'AMBIGUOUS_LOCAL_TIME', 'CLARIFY')
+            need(instant.astimezone(timezone.utc).astimezone(zone).replace(tzinfo=None)
+                 == value, 'NONEXISTENT_LOCAL_TIME', 'CLARIFY')
+            times.append(int(instant.timestamp()))
+            local.append(value)
+        need(times[1] - times[0] == 5400, 'UNSUPPORTED_DURATION', 'CLARIFY')
+        need(not session['allow_shift_minutes'] or
+             (local[0].date().isoformat() == '2027-01-08' and
+              (request['owner_approval_ref'] is not None or
+               request['operation'] == 'VERIFY_EXISTING')),
+             'SHIFT_CONSENT_REQUIRED', 'NEEDS_CONFIRMATION')
+        rows.append(dict(session_id=session['session_id'], start=times[0], end=times[1],
+                         shift=session['allow_shift_minutes'] * 60,
+                         shift_day=local[0].date().isoformat() == '2027-01-08'))
+    need(sum(bool(s['shift']) for s in rows) <= 1, 'ONLY_ONE_SHIFT_SESSION')
+    need(len({s['session_id'] for s in rows}) == 3, 'DUPLICATE_SESSION_ID')
+    return sorted(rows, key=lambda s:s['session_id'])
+
+def constraints(request):
+    """Operation and consent evidence vary without changing the selected schedule."""
+    result = {k:request[k] for k in REQUEST_FIELDS
+              if k not in ('operation','owner_approval_ref')}
+    result['sessions'] = sorted(request['sessions'],key=lambda s:s['session_id'])
+    return result
+
+def inventory_rows(inventory, request):
+    closed(inventory, ('revision','venue_ref','currency','fields'))
+    need(type(inventory['revision']) is int and 0 < inventory['revision'] <= c.LIMIT,
+         'SCHEDULE_REVISION')
+    need(inventory['venue_ref'] == request['venue_ref'], 'VENUE_SCOPE')
+    need(inventory['currency'] == request['currency'], 'CURRENCY_MISMATCH')
+    need(type(inventory['fields']) is list and 1 <= len(inventory['fields']) <= 4,
+         'FIELD_BOUND')
+    fields = []
+    for field in inventory['fields']:
+        closed(field, ('field_id','surface','full_size','price_minor','available_utc',
+                       'occupied_utc'))
+        ident(field['field_id'])
+        need(field['surface'] in ('NATURAL_GRASS','ARTIFICIAL','OTHER'), 'SURFACE_ENUM')
+        need(type(field['full_size']) is bool, 'FULL_SIZE_BOOLEAN')
+        uint(field['price_minor'], 'PRICE_INTEGER')
+        for key in ('available_utc','occupied_utc'):
+            intervals = field[key]
+            need(type(intervals) is list and len(intervals) <= 32, 'INTERVAL_BOUND')
+            for interval in intervals:
+                need(type(interval) is list and len(interval) == 2, 'INTERVAL_SHAPE')
+                uint(interval[0], 'UTC_INTEGER'); uint(interval[1], 'UTC_INTEGER')
+                need(interval[0] < interval[1], 'INTERVAL_ORDER')
+        fields.append(field)
+    need(len({f['field_id'] for f in fields}) == len(fields), 'DUPLICATE_FIELD_ID')
+    return sorted(fields, key=lambda f:f['field_id'])
+
+def available(field, start, end):
+    return (field['surface'] == 'NATURAL_GRASS' and field['full_size'] is True and
+            any(a <= start and end <= b for a,b in field['available_utc']) and
+            not any(overlap((start,end), p) for p in field['occupied_utc']))
+
+def candidates(request, sessions, fields, hypothetical=False):
+    groups = []
+    for session in sessions:
+        shifts = [0]
+        if session['shift'] or (hypothetical and session['shift_day']):
+            shifts.append(1800)
+        group = []
+        for shift in shifts:
+            start, end = session['start'] + shift, session['end'] + shift
+            for field in fields:
+                if available(field, start, end):
+                    group.append(dict(session_id=session['session_id'],
+                        venue_ref=request['venue_ref'],field_id=field['field_id'],
+                        start_utc=start,end_utc=end,price_minor=field['price_minor']))
+        groups.append(group)
+    return groups
+
+def choice_key(slots, sessions):
+    starts = {s['session_id']:s['start'] for s in sessions}
+    ordered = sorted(slots, key=lambda s:s['session_id'])
+    return (sum(s['start_utc']-starts[s['session_id']] for s in ordered),
+            sum(s['price_minor'] for s in ordered),
+            tuple(tuple(s[k] for k in ('session_id','field_id','start_utc','end_utc',
+                                       'venue_ref')) for s in ordered))
+
+def complete_choices(request, sessions, fields, hypothetical=False):
+    for choice in product(*candidates(request, sessions, fields, hypothetical)):
+        if sum(row['price_minor'] for row in choice) > request['budget_minor']:
+            continue
+        if any(a['field_id'] == b['field_id'] and
+               overlap((a['start_utc'],a['end_utc']),(b['start_utc'],b['end_utc']))
+               for i,a in enumerate(choice) for b in choice[i+1:]):
+            continue
+        yield sorted(choice, key=lambda s:s['session_id'])
+
+def produce_offer(request, inventory):
+    sessions = parse_request(request)
+    fields = inventory_rows(inventory, request)
+    choices = list(complete_choices(request, sessions, fields))
+    slots = min(choices, key=lambda x:choice_key(x,sessions)) if choices else []
+    status = 'OFFER_READY' if slots else 'NO_COMPLETE_OFFER'
+    if not slots and any(complete_choices(request,sessions,fields,True)):
+        status = 'NEEDS_CONFIRMATION'
+    selected = {s['field_id'] for s in slots}
+    return dict(request=request, schedule_revision=inventory['revision'],
+                offer_revision=inventory['revision'],status=status,
+                fields=[{k:f[k] for k in ('field_id','surface','full_size','price_minor')}
+                        for f in fields if f['field_id'] in selected],
+                alternatives=[dict(session_id=s['session_id'], choices=[s]) for s in slots],
+                slots=slots,total_minor=sum(s['price_minor'] for s in slots),
+                currency=request['currency'])
+
+def check_offer(offer, request=None, inventory=None):
+    """Validate typed facts and equations independently of the producer status flag."""
+    closed(offer, OFFER_FIELDS)
+    original = offer['request']
+    sessions = parse_request(original)
+    if request is not None:
+        parse_request(request)
+        need(constraints(original) == constraints(request), 'OFFER_REQUEST_BINDING')
+    for key in ('schedule_revision','offer_revision'):
+        need(type(offer[key]) is int and 0 < offer[key] <= c.LIMIT, 'OFFER_REVISION')
+    need(offer['offer_revision'] == offer['schedule_revision'], 'REVISION_PROJECTION')
+    need(offer['currency'] == original['currency'], 'OFFER_CURRENCY')
+    need(offer['status'] in ('OFFER_READY','NO_COMPLETE_OFFER','NEEDS_CONFIRMATION'),
+         'OFFER_STATUS')
+    need(type(offer['fields']) is list and len(offer['fields']) <= 4, 'OFFER_FIELDS')
+    by_field = {}
+    for field in offer['fields']:
+        closed(field, ('field_id','surface','full_size','price_minor'))
+        ident(field['field_id']); uint(field['price_minor'], 'PRICE_INTEGER')
+        need(field['field_id'] not in by_field, 'DUPLICATE_FIELD_ID')
+        need(field['surface'] == 'NATURAL_GRASS' and field['full_size'] is True,
+             'HARD_FIELD_CONDITION')
+        by_field[field['field_id']] = field
+    slots = offer['slots']
+    need(type(slots) is list and len(slots) in (0,3), 'COMPLETE_OFFER_REQUIRED')
+    need((len(slots) == 3) == (offer['status'] == 'OFFER_READY'), 'OFFER_STATUS_FACTS')
+    need(type(offer['alternatives']) is list and
+         len(offer['alternatives']) == len(slots), 'ALTERNATIVES_BOUND')
+    expected = {s['session_id']:s for s in sessions}
+    def slot_check(slot):
+        closed(slot, SLOT_FIELDS)
+        need(slot['session_id'] in expected, 'SESSION_SCOPE')
+        session = expected[slot['session_id']]
+        need(slot['field_id'] in by_field and slot['venue_ref'] == original['venue_ref'],
+             'FIELD_SCOPE')
+        for key in ('start_utc','end_utc','price_minor'):
+            uint(slot[key], 'SLOT_INTEGER')
+        delta = slot['start_utc'] - session['start']
+        need(delta == 0 or (delta == 1800 and session['shift'] == 1800),
+             'FORBIDDEN_SHIFT')
+        need(slot['end_utc'] == session['end'] + delta, 'SLOT_DURATION')
+        need(slot['price_minor'] == by_field[slot['field_id']]['price_minor'],
+             'SLOT_PRICE')
+    for slot in slots:
+        slot_check(slot)
+    need(slots == sorted(slots,key=lambda s:s['session_id']) and
+         len({s['session_id'] for s in slots}) == len(slots), 'SLOT_ORDER_UNIQUENESS')
+    for a in offer['alternatives']:
+        closed(a, ('session_id','choices'))
+        need(type(a['choices']) is list and 1 <= len(a['choices']) <= 2,
+             'ALTERNATIVES_BOUND')
+        for slot in a['choices']:
+            slot_check(slot)
+            need(slot['session_id'] == a['session_id'], 'ALTERNATIVE_SESSION')
+    need([a['session_id'] for a in offer['alternatives']] ==
+         [s['session_id'] for s in slots], 'ALTERNATIVE_ORDER')
+    need(all(s in a['choices'] for s,a in zip(slots,offer['alternatives'])),
+         'SELECTED_ALTERNATIVE_MISSING')
+    need(not any(a['field_id'] == b['field_id'] and
+         overlap((a['start_utc'],a['end_utc']),(b['start_utc'],b['end_utc']))
+         for i,a in enumerate(slots) for b in slots[i+1:]), 'SELECTED_OVERLAP')
+    uint(offer['total_minor'], 'TOTAL_INTEGER')
+    need(offer['total_minor'] == sum(s['price_minor'] for s in slots) <=
+         original['budget_minor'], 'TOTAL_OR_BUDGET')
+    need(set(by_field) == {s['field_id'] for s in slots}, 'MINIMUM_FIELD_PROJECTION')
+    if inventory is not None:
+        fields = inventory_rows(inventory,original)
+        need(inventory['revision'] == offer['schedule_revision'], 'SCHEDULE_CHANGED')
+        choices = list(complete_choices(original,sessions,fields))
+        if slots:
+            actual = {f['field_id']:f for f in fields}
+            need(all(s['field_id'] in actual and
+                 available(actual[s['field_id']],s['start_utc'],s['end_utc']) and
+                 actual[s['field_id']]['price_minor'] == s['price_minor'] for s in slots),
+                 'CURRENT_OCCUPANCY_OR_PRICE')
+            need(all(available(actual[s['field_id']],s['start_utc'],s['end_utc'])
+                     for a in offer['alternatives'] for s in a['choices']),
+                 'ALTERNATIVE_NOT_AVAILABLE')
+            need(choices and choice_key(slots,sessions) ==
+                 min(choice_key(x,sessions) for x in choices), 'SELECTION_NOT_OPTIMAL')
+        else:
+            need(not choices, 'FALSE_NO_COMPLETE_OFFER')
+            possible = any(complete_choices(original,sessions,fields,True))
+            need((offer['status'] == 'NEEDS_CONFIRMATION') == possible,
+                 'FALSE_SHIFT_PROPOSAL')
+    return offer
+
+def report(request, status, slots=None, total=0, source=None, receipt=None,
+           search=0, dispatch=0, mutations=0):
+    """Refusal outputs never contain a partial booking."""
+    return dict(version='g53.result.v01',request_ref=request.get('request_id'),
+        request_revision=request.get('revision'),team_ref=request.get('team_ref'),
+        operation=request.get('operation'),status=status,slots=slots or [],
+        total_minor=total,currency=request.get('currency'),source=source,
+        receipt_ref=receipt,counts=dict(search=search,dispatch=dispatch,mutations=mutations))
+
+def consume_offer(request, body):
+    # The wrapper carries authenticated status facts, not a replacement source clock.
+    closed(body, ('body','source_projection'))
+    source_projection = body['source_projection']
+    closed(source_projection, SOURCE_FIELDS)
+    body = body['body']
+    offer = check_offer(body['offer'],request)
+    env = body['time_envelope']
+    fixed = dict(publisher=body['publisher'],recipient=body['recipient'],
+        request_revision=offer['request']['revision'],schedule_revision=offer['schedule_revision'],
+        offer_revision=offer['offer_revision'],observed_at=env['source_observed_at'],
+        valid_from=env['valid_from'],valid_to=env['valid_to'],ttl=env['ttl_seconds'],
+        pt=env['pt_created_at'])
+    need(all(source_projection[k] == v for k,v in fixed.items()),'SOURCE_PROJECTION_BINDING')
+    uint(source_projection['status_checked'],'STATUS_TIME')
+    uint(source_projection['status_until'],'STATUS_TIME')
+    need(source_projection['status'] == 'ACTIVE' and
+         env['source_observed_at'] <= source_projection['status_checked'] <
+         source_projection['status_until'] <= source_projection['status_checked']+60,
+         'STATUS_PROJECTION_BINDING')
+    status = offer['status']
+    receipt = None
+    if request['operation'] == 'CONFIRM_MOCK_BOOKING':
+        need(body['booking'] is not None, 'BOOKING_EVIDENCE_MISSING')
+        booking = body['booking']
+        need(booking['state'] == 'COMMITTED' and booking['slots'] == offer['slots'],
+             'BOOKING_READBACK_BINDING')
+        status, receipt = 'MOCK_BOOKED', booking['receipt_ref']
+    else:
+        need(request['operation'] == 'FIND_OFFER' and body['booking'] is None,
+             'CONSUMER_OPERATION')
+    return report(request,status,offer['slots'],offer['total_minor'],
+                  source_projection,receipt)
+
+def check_result(request, body, value):
+    closed(value, REPORT_FIELDS)
+    expected = consume_offer(request,body)
+    need(value == expected, 'CONSUMER_RESULT_BINDING')

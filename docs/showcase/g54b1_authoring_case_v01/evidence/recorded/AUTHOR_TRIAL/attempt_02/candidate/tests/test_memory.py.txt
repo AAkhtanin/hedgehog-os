@@ -1,0 +1,105 @@
+"""DRS reference regression components; never executed by the author."""
+import copy
+import json
+import tempfile
+import unittest
+from pathlib import Path
+from hedgehog.drs import LocalDRS
+from hedgehog import drs_semantic_address_v01 as address
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n
+from candidate_domain import memory, policy as p, source, run
+from candidate_domain.profile import SUMMARY
+from test_domain import request_fixture, inventory_fixture
+from test_native import operator
+
+def rebuild_record(raw, **changes):
+    """Invoke the unchanged public builder; no validator result is substituted."""
+    data = dict(raw,
+        semantic_address=n.rebuilt(address.build_semantic_address_v01,raw['semantic_address']),
+        time_envelope=n.rebuilt(address.build_drs_time_envelope_v01,raw['time_envelope']),
+        authority_envelope=n.rebuilt(address.build_drs_authority_envelope_v01,raw['authority_envelope']))
+    data.update(changes)
+    return n.rebuilt(address.build_meaning_record_v01,data)
+
+class MemoryReferenceTests(unittest.TestCase):
+    def test_descriptor_identity_foreign_provenance_and_unchanged_guard(self):
+        request = request_fixture()
+        inventory = inventory_fixture(request)
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            state = base/'source_state'; state.mkdir()
+            source_folder = base/'source_evidence'; source_folder.mkdir()
+            cap = c.crypto.generate_root_signer_capability_v01(root_id='VenueRoot')
+            keys = c.crypto.build_trusted_root_key_set_v01(capabilities=(cap,))
+            public = c.crypto.trusted_root_key_set_to_plain_dict_v01(keys)
+            current = source.build('memory_component',request,inventory,operator('publisher'),
+                                   cap,keys,state,source_folder,run.new_counts())
+            descriptor = current['descriptor']
+            before = c.canonical(descriptor)
+            policy = p.local_policy(operator('requester'),request,'memory_component',public)
+            folder = base/'consumer_evidence'; folder.mkdir()
+            returned = memory.descend(descriptor,folder,policy,run.new_counts())
+            self.assertEqual(c.canonical(returned),before)
+            reference = c.sha(descriptor)
+            retained = LocalDRS(folder/'address_index').read_record('work',reference)
+            self.assertEqual(retained['record_id'],c.sha(retained['content']['descriptor']))
+            self.assertEqual(retained['content']['descriptor'],descriptor)
+            expected_refs = list(memory.foreign_source_refs(descriptor['value']))
+            self.assertEqual(retained['source_refs'],expected_refs)
+            for row in expected_refs:
+                self.assertEqual(row['source'],'external_drs')
+                self.assertEqual(row['publisher'],descriptor['value']['publisher_root_id'])
+                self.assertEqual(row['source_id'],descriptor['value'][row['identity_field']])
+            # Every foreign ID is unchanged, including its original namespace.
+            report = json.loads((folder/'pointer_descent.json').read_text())
+            self.assertEqual(report['descriptor_binding']['local_descriptor_record_ref'],reference)
+            self.assertFalse(report['evaluations'][0]['eligible_for_ranking'])
+            self.assertTrue(report['evaluations'][1]['eligible_for_ranking'])
+            self.assertEqual(report['root']['result']['decision'],'ACCEPT')
+            self.assertTrue(report['resolver']['candidates'][0]['review_required'])
+            self.assertTrue(report['resolver']['candidates'][0]['blocked'])
+            self.assertFalse(report['resolver']['candidates'][0]['direct_reuse_allowed'])
+            records = LocalDRS(folder/'meaning_drs').read_layer('work')
+            self.assertEqual(len(records),2)
+            for wrapper in records:
+                raw = wrapper['content']['record']
+                self.assertEqual(wrapper['source_refs'],expected_refs)
+                self.assertEqual(raw['source_reference_ids'],[reference])
+                self.assertEqual(raw['safe_summary'],SUMMARY)
+                self.assertEqual(raw['content_fingerprint'],c.sha(descriptor['value']))
+                self.assertEqual(raw['time_envelope'],descriptor['value']['time_envelope'])
+                self.assertTrue(address.validate_meaning_record_v01(rebuild_record(raw))[0])
+            raw = next(w['content']['record'] for w in records
+                       if w['content']['record']['authority_envelope']['authority_class']
+                       == 'CONNECTOR_OBSERVATION')
+            # Synthetic public metadata examples, not examiner identities or secrets.
+            # Generic prefixed IDs still encounter the existing 13..19-digit scan.
+            examples = (
+                'source:football:' + '12345678901234' + 'a'*50,
+                'g5pointer:' + '1234567890123456789' + 'b'*45,
+            )
+            for value in examples:
+                with self.subTest(value=value), self.assertRaisesRegex(
+                        ValueError,'^drs_secret_payload_forbidden$'):
+                    rebuild_record(raw,source_reference_ids=(value,))
+            with self.assertRaisesRegex(ValueError,'^drs_secret_payload_forbidden$'):
+                rebuild_record(raw,safe_summary='password=synthetic_fixture')
+            # The supported digest reference is an actual persisted object identity,
+            # not a replacement identifier asserted for the remote record.
+            self.assertEqual(rebuild_record(raw).source_reference_ids,(reference,))
+            self.assertEqual(LocalDRS(source_folder/'source_address_drs').read_record(
+                'work',reference)['content']['descriptor'],descriptor)
+            # An altered signed descriptor still refuses before local Root review.
+            altered = copy.deepcopy(descriptor)
+            altered['value'] = c.with_id('pointer',dict(altered['value'],
+                source_revision=altered['value']['source_revision']+1))
+            refused = base/'refused'; refused.mkdir(); counters = run.new_counts()
+            with self.assertRaises(ValueError):
+                memory.descend(altered,refused,policy,counters)
+            self.assertEqual(counters['root_reviews'],0)
+            continuation = base/'continuation'; continuation.mkdir()
+            self.assertEqual(memory.descend(descriptor,continuation,policy,run.new_counts()),
+                             descriptor)
+
+if __name__ == '__main__':
+    unittest.main()

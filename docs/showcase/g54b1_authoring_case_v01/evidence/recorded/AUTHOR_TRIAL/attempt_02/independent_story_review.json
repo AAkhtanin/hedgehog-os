@@ -1,0 +1,277 @@
+{
+  "candidate_sha256": "74a83d8f6d75e03009da809dd7d736737a68bf4e784e07a6673ea5afece7caa2",
+  "cases": {
+    "exact": {
+      "status": "PASS_SCALAR_ONLY_NATIVE_PENDING"
+    },
+    "shift": {
+      "status": "PASS_SCALAR_ONLY_NATIVE_PENDING",
+      "total_minor": 6300
+    }
+  },
+  "classification": "INDEPENDENT_DATA_AND_PUBLIC_PARSER_CHECK_NOT_NEW_RUNTIME",
+  "evaluation_time": 1790325324,
+  "evaluation_time_origin": "Trusted runner final time for this fresh execution, not the old synthetic oracle date",
+  "module_origins": {
+    "contracts": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py",
+    "examiner": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py"
+  },
+  "new_native_provider_effect_calls": 0,
+  "refusals": {},
+  "reports": {
+    "worker/publisher/evidence/exact/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 1
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "offer": {
+          "file": "offer_body.json",
+          "id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+        },
+        "source_review": {
+          "file": "source_review.json",
+          "id": "ed6a356f6fdb0c76b902c4f0c7b85ba458b1436dc01664530c705fb282e95426"
+        },
+        "venue_work": {
+          "file": "venue_work.json",
+          "id": "work_results:54f4876222f17d761624d9b002a9fd8e80368dbd0ed36681bcba70ef35535006"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 1,
+      "slots": [],
+      "source": {
+        "observed_at": 1790325322,
+        "offer_revision": 4,
+        "pt": 1790325322,
+        "publisher": "VenueRoot",
+        "recipient": "ActivePlanetRoot",
+        "request_revision": 1,
+        "schedule_revision": 4,
+        "status": "ACTIVE",
+        "status_checked": 1790325323,
+        "status_until": 1790325383,
+        "ttl": 300,
+        "valid_from": 1790325322,
+        "valid_to": 1790325622
+      },
+      "status": "NEEDS_CONFIRMATION",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/publisher/evidence/shift/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 1
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "offer": {
+          "file": "offer_body.json",
+          "id": "source:football:6f4c5c8536dbec2f5a0495a0c059467df0dd754de616bf2bea5af6c063942b97"
+        },
+        "source_review": {
+          "file": "source_review.json",
+          "id": "6dd2403a5f4b2304ae0d3da44fe98d6498607175da48d39cfafba22bdc8c4e70"
+        },
+        "venue_work": {
+          "file": "venue_work.json",
+          "id": "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [
+        {
+          "end_utc": 1799341200,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:7",
+          "start_utc": 1799335800,
+          "venue_ref": "venue:synthetic"
+        },
+        {
+          "end_utc": 1799409600,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:8",
+          "start_utc": 1799404200,
+          "venue_ref": "venue:synthetic"
+        },
+        {
+          "end_utc": 1799494200,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:9",
+          "start_utc": 1799488800,
+          "venue_ref": "venue:synthetic"
+        }
+      ],
+      "source": {
+        "observed_at": 1790325323,
+        "offer_revision": 4,
+        "pt": 1790325323,
+        "publisher": "VenueRoot",
+        "recipient": "ActivePlanetRoot",
+        "request_revision": 2,
+        "schedule_revision": 4,
+        "status": "ACTIVE",
+        "status_checked": 1790325323,
+        "status_until": 1790325383,
+        "ttl": 300,
+        "valid_from": 1790325323,
+        "valid_to": 1790325623
+      },
+      "status": "OFFER_READY",
+      "team_ref": "team:one",
+      "total_minor": 6300,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/exact/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "import_ref": {
+          "file": "import_candidate.json",
+          "id": "g5import:27187460a2cff80c58f5a0664e7cf8aba2f399a1e7c702c0084830bc24dcbf94"
+        },
+        "offer": {
+          "file": "offer_body.json",
+          "id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+        },
+        "requester_review": {
+          "file": "requester_review.json",
+          "id": "82fbae76f4431f83735c4f7719d0ad3defe9f8550cb943d65caea4ae53ff8664"
+        },
+        "requester_work": {
+          "file": "requester_work.json",
+          "id": "work_results:57d83c26e0313dc479f66117c0596948f9c383cbae009d60ff90a674c68149d0"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 1,
+      "slots": [],
+      "source": {
+        "observed_at": 1790325322,
+        "offer_revision": 4,
+        "pt": 1790325322,
+        "publisher": "VenueRoot",
+        "recipient": "ActivePlanetRoot",
+        "request_revision": 1,
+        "schedule_revision": 4,
+        "status": "ACTIVE",
+        "status_checked": 1790325323,
+        "status_until": 1790325383,
+        "ttl": 300,
+        "valid_from": 1790325322,
+        "valid_to": 1790325622
+      },
+      "status": "NEEDS_CONFIRMATION",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/shift/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "import_ref": {
+          "file": "import_candidate.json",
+          "id": "g5import:c59ffc3bfd62401ec565d0d10996ac5965ffac513bcc911266c66adc19bd1383"
+        },
+        "offer": {
+          "file": "offer_body.json",
+          "id": "source:football:6f4c5c8536dbec2f5a0495a0c059467df0dd754de616bf2bea5af6c063942b97"
+        },
+        "requester_review": {
+          "file": "requester_review.json",
+          "id": "950376e2c235cb989b450e8a8e5b08a148b5aeaa0818053c13b624a55b77a3b3"
+        },
+        "requester_work": {
+          "file": "requester_work.json",
+          "id": "work_results:08924515d93e54c968ff98cc244094af6018f2844e3fe2d7aebb1eaa62adc4fc"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [
+        {
+          "end_utc": 1799341200,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:7",
+          "start_utc": 1799335800,
+          "venue_ref": "venue:synthetic"
+        },
+        {
+          "end_utc": 1799409600,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:8",
+          "start_utc": 1799404200,
+          "venue_ref": "venue:synthetic"
+        },
+        {
+          "end_utc": 1799494200,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:9",
+          "start_utc": 1799488800,
+          "venue_ref": "venue:synthetic"
+        }
+      ],
+      "source": {
+        "observed_at": 1790325323,
+        "offer_revision": 4,
+        "pt": 1790325323,
+        "publisher": "VenueRoot",
+        "recipient": "ActivePlanetRoot",
+        "request_revision": 2,
+        "schedule_revision": 4,
+        "status": "ACTIVE",
+        "status_checked": 1790325323,
+        "status_until": 1790325383,
+        "ttl": 300,
+        "valid_from": 1790325323,
+        "valid_to": 1790325623
+      },
+      "status": "OFFER_READY",
+      "team_ref": "team:one",
+      "total_minor": 6300,
+      "version": "g53.result.v01"
+    }
+  },
+  "runner": "SUPERVISOR_EVIDENCE/p7_candidate_0d000638",
+  "saved_state": {
+    "highwater_key_lengths": [
+      173,
+      173
+    ],
+    "path": "SUPERVISOR_EVIDENCE/p7_candidate_0d000638/worker/requester/state/imports/import_state.json",
+    "reason": "json_key",
+    "sha256": "c8cab303c63debaf210d7fc2b68368b5538f83d7c97af18dfbdaa2ac26293073",
+    "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_native_story_data.py\", line 46, in <module>\n    contracts.decode(data)\n    ~~~~~~~~~~~~~~~~^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 104, in decode\n    walk(value)\n    ~~~~^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 80, in walk\n    walk(item, depth + 1)\n    ~~~~^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 79, in walk\n    require(type(key) is str and len(key) <= 128 and key.isascii(), 'json_key')\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 19, in require\n    raise ValueError(reason)\nValueError: json_key\n",
+    "wire_decode": "REFUSED"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "classification": "PARTIAL_FROZEN_EXAM_NOT_FULL_ACCEPTANCE",
+  "error": "venue_offer_consumption",
+  "examiner_sha256": "874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372",
+  "new_native_provider_effect_calls": 0,
+  "observation_binding": "Trusted parent input-file hash -> declared event -> actual saved request; exact reviewed candidate manifest",
+  "scope": "Only available source/input/binding prefix. No per-event counter or full-boundary claim invented.",
+  "source_pin": "74a83d8f6d75e03009da809dd7d736737a68bf4e784e07a6673ea5afece7caa2",
+  "status": "FAIL_AT_ACTUAL_PREDICATE",
+  "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/check_frozen_native_prefix.py\", line 43, in <module>\n    examiner.check_native(case, read('requester', 'report.json'), proofs, observed)\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py\", line 164, in check_native\n    need(v=={'offer_json':canonical(offer).decode()},'venue_offer_consumption')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py\", line 12, in need\n    if not ok:raise ValueError(reason)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: venue_offer_consumption\n"
+}

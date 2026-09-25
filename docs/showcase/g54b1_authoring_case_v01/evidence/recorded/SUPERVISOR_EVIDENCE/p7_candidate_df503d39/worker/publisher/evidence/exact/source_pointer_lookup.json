@@ -1,0 +1,96 @@
+{
+  "descriptor_record_ref": "61bc527c165c0064356b7507141cd273f4e53a55861448e614a9aff2feed4161",
+  "resolver": {
+    "authority_boundary": {
+      "drs_hit_is_authority": false,
+      "drs_record_is_truth": false,
+      "drs_reuse_candidate_is_action_permission": false,
+      "freshness_is_final_authority": false,
+      "local_file_backed_drs_is_production_drs": false,
+      "resolver_called_connectors": false,
+      "resolver_called_gemini": false,
+      "resolver_called_network": false,
+      "resolver_mutated_manifest": false,
+      "resolver_mutated_transition_matrix": false,
+      "root_final_authority_preserved": true
+    },
+    "blocked_count": 1,
+    "candidate_count": 1,
+    "candidates": [
+      {
+        "action_permission_granted": false,
+        "blocked": true,
+        "candidate_id": "candidate:61bc527c165c0064356b7507141cd273f4e53a55861448e614a9aff2feed4161",
+        "changed_worldstate": false,
+        "conflicting_provenance": false,
+        "deadend_pressure": false,
+        "direct_reuse_allowed": false,
+        "domain": "FOOTBALL_ADDRESS",
+        "match_reasons": [
+          "domain_exact_match",
+          "controlled_token_overlap"
+        ],
+        "match_score": 1.0,
+        "poisoning_pressure": true,
+        "quarantine_pressure": false,
+        "reason_codes": [
+          "candidate_only_root_review_required",
+          "root_review_required_before_reuse_affects_final_output",
+          "duplicate_poisoning_pressure_does_not_create_authority",
+          "repeated_external_pointer_not_trust"
+        ],
+        "record_id": "61bc527c165c0064356b7507141cd273f4e53a55861448e614a9aff2feed4161",
+        "review_required": true,
+        "stale": false
+      }
+    ],
+    "counters": {
+      "action_permission_granted_count": 0,
+      "candidates_returned_count": 1,
+      "changed_worldstate_reuse_blocked_count": 0,
+      "conflicting_provenance_blocked_count": 0,
+      "direct_reuse_allowed_count": 0,
+      "duplicate_poisoning_records_seen_count": 1,
+      "external_drs_used_count": 0,
+      "gemini_used_count": 0,
+      "manifest_mutation_count": 0,
+      "network_used_count": 0,
+      "poisoning_pressure_authority_claimed_count": 0,
+      "production_drs_used_count": 0,
+      "quarantine_reuse_blocked_count": 0,
+      "root_review_required_count": 1,
+      "stale_record_reuse_blocked_count": 0,
+      "transition_matrix_mutation_count": 0
+    },
+    "direct_reuse_allowed_count": 0,
+    "query_id": "query:football:source",
+    "reason_codes": [
+      "candidate_only_root_review_required",
+      "root_review_required_before_reuse_affects_final_output",
+      "duplicate_poisoning_pressure_does_not_create_authority",
+      "repeated_external_pointer_not_trust"
+    ],
+    "review_required_count": 1,
+    "root_review_required": true
+  },
+  "source_refs": [
+    {
+      "identity_field": "source_record_ref",
+      "publisher": "VenueRoot",
+      "source": "external_drs",
+      "source_id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+    },
+    {
+      "identity_field": "source_review_ref",
+      "publisher": "VenueRoot",
+      "source": "external_drs",
+      "source_id": "2405b092dba82048eded0a5f741891f2d071543ce7e8583bca3afd05146c3cf4"
+    },
+    {
+      "identity_field": "pointer_id",
+      "publisher": "VenueRoot",
+      "source": "external_drs",
+      "source_id": "g5pointer:e28315d877f3730d1bb85ba472e0f6416893b81248cf1eb26ac8d5de4b1ec03c"
+    }
+  ]
+}

@@ -1,0 +1,1174 @@
+{
+  "admission": {
+    "admission_id": "capability_admission:337acf48015e72776c41be87625ebb256915278226c5e7e9c3c97298ef3113f0",
+    "catalogue_revision": 0,
+    "code_sources": [
+      {
+        "public_symbol": "candidate_domain.effect.execute_booking",
+        "source_sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a",
+        "source_utf8": "\"\"\"One source-owned disposable MOCK registry, mutated only by Firewall callback.\"\"\"\nimport json\nfrom hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e\nfrom hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts\nfrom hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi\nfrom demo import run_action_packet_portability_v01 as donor\nfrom . import domain as d, policy as p\n\n# Runtime bindings are installed only for a locally prepared native packet.\nPACKETS = {}\n\ndef snapshot(path):\n    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})\n\ndef merged_inventory(inventory, registry):\n    result = c.decode(c.canonical(inventory))\n    for field in result['fields']:\n        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']\n                    if s['field_id'] == field['field_id']]\n        field['occupied_utc'] = field['occupied_utc'] + existing\n        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')\n    return result\n\ndef scope_key(request):\n    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],\n                  request['revision']])\n\ndef payload(request, offer):\n    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],\n                schedule_revision=offer['schedule_revision'],currency=offer['currency'],\n                total_minor=offer['total_minor'])\n\ndef validate_payload(value):\n    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))\n    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])\n    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and\n           len(value['slots']) == 3, 'MOCK_PAYLOAD')\n    d.need(value['currency'] == value['request']['currency'] and\n           type(value['total_minor']) is int and\n           0 <= value['total_minor'] <= value['request']['budget_minor'],\n           'MOCK_BUDGET')\n\ndef validate_inputs(definition, inputs):\n    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)\n    if not errors:\n        try:\n            values = {v.parameter_name:v.value for v in inputs}\n            validate_payload(c.decode(values['payload_json'].encode()))\n        except ValueError as exc:\n            errors = (str(exc),)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)\n\ndef validate_output(definition, invocation, output):\n    errors = firewall.validate_capability_values_v01(definition.output_fields,output)\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))\n    if not errors and {v.parameter_name:v.value for v in output} != expected:\n        errors = ('mock_booking_output_binding',)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)\n\ndef execute_booking(invocation):\n    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')\n    context = PACKETS[invocation.packet_id]\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    data = c.decode(values['payload_json'].encode())\n    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',\n              'mock_payload_or_owner_changed')\n    request, offer, policy = data['request'], context['offer'], context['policy']\n    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),\n              'mock_current_consent')\n    now = e.clock()\n    c.require(context['valid_from'] <= now < context['source_end'] and\n              policy['status'] == 'ACTIVE','mock_offer_not_current')\n    current = c.decode(context['inventory_path'].read_bytes())\n    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')\n    old = snapshot(context['state_path'])\n    key = context['key']\n    # The application reconciles terminal keys before dispatch. A second callback\n    # is a refusal even if the payload is unchanged.\n    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')\n    effective = merged_inventory(current,old)\n    d.check_offer(offer,request,effective)\n    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')\n    new = dict(reservations=old['reservations'] + data['slots'],\n               idempotency=dict(old['idempotency']))\n    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,\n        slots=data['slots'],request_sha256=c.sha(request))\n    # Sole business-state write: all three reservations and logical key together.\n    e.state_write(context['state_path'],new)\n    context['mutations'].append(dict(invocation_id=invocation.invocation_id,\n        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),\n        snapshot_sha256=c.sha(new)))\n    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                  payload_sha256=c.sha(data))\n    return tuple(action.build_action_effect_parameter_record_v01(\n        parameter_name=name,value_type=kind,value=result[name])\n        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),\n                          ('payload_sha256','TEXT')))\n\ndef admit(device):\n    functions = (validate_inputs,validate_output,execute_booking)\n    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)\n    semantics = firewall.build_capability_business_semantics_v01(\n        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',\n        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',\n        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',\n        input_bindings=(\n            firewall.build_capability_business_input_binding_v01(input_name='device_ref',\n                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),\n            firewall.build_capability_business_input_binding_v01(input_name='payload_json',\n                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))\n    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,\n        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,\n        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=True) for k,t in\n            (('device_ref','REFERENCE'),('payload_json','TEXT'))),\n        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=False) for k,t in\n            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),\n        resource_refs=(device,),input_validator_ref=code[0].public_symbol,\n        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,\n        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))\n    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,\n        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,\n        host_instance_ref='host:football:venue')\n\ndef reconcile(request, state_root, expected_payload=None):\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if not path.exists():\n        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')\n    saved = json.loads(path.read_text())\n    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')\n    if expected_payload is not None:\n        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')\n    state = snapshot(state_root/'registry.json')\n    row = state['idempotency'].get(saved['logical_key'])\n    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and\n           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and\n           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],\n           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')\n    return saved, state\n\ndef confirm(request, offer, source_body, operator, state_root, folder, counters):\n    data = payload(request,offer)\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if path.exists() or pending.exists():\n        saved, readback = reconcile(request,state_root,data)\n        n.save(folder/'receipt.json',saved['receipt'])\n        n.save(folder/'readback.json',readback)\n        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],\n            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))\n        counters['receipt_reuse'] += 1\n        return saved['booking']\n    now = e.clock()\n    try:\n        end = c.temporal(source_body['time_envelope'],now,\n            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))\n    except ValueError as exc:\n        raise d.Refusal(str(exc)) from exc\n    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')\n    inventory_path = state_root/'current_inventory.json'\n    inventory = c.decode(inventory_path.read_bytes())\n    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))\n    d.check_offer(offer,request,effective)\n    review = n.root_review('VenueRoot','transaction:football:booking',\n        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],\n        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],\n             complete=len(offer['slots']) == 3,source_current=now < end,\n             schedule=inventory['revision'] == offer['schedule_revision']),\n        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),\n             source_work_ref=source_body['source_work_ref'],\n             source_review_ref=source_body['source_review_ref'],inputs=data,\n             policy_sha256=c.sha(operator)),now,\n        window=(source_body['time_envelope']['valid_from'],end))\n    counters['root_reviews'] += 1\n    n.save(folder/'booking_review.json',n.root_plain(review))\n    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')\n    device = 'device:football:' + c.sha(request['venue_ref'])\n    admitted = admit(device)\n    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,\n        value_type=t,value=v) for k,t,v in\n        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))\n    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,\n        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),\n        business_object_ref='booking:football:'+scope_key(request))\n    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)\n    counters['root_reviews'] += 1\n    packet = prepared.root_bound.packet_identity.packet_id\n    key = canonical.idempotency_identity.idempotency_key\n    host = donor.host_for_prepared_action_v01(prepared)\n    mutations = []\n    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,\n        state_path=state_root/'registry.json',inventory_path=inventory_path,\n        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],\n        source_end=end,mutations=mutations)\n    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))\n    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),\n        root=n.plain(prepared.root_bound.root_decision_projection),\n        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))\n    counters['dispatch'] += 1\n    try:\n        registry, revision = hosts.dispatch_current_action_v01(host,\n            expected_revision=host.revision,packet_id=packet,\n            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,\n            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')\n    finally:\n        # Persist even a failed/uncertain native attempt before rendering a report.\n        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),\n            events=n.plain(host.events),mutations=mutations))\n        counters['mutations'] += len(mutations)\n        PACKETS.pop(packet,None)\n    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]\n    receipt = attempt.receipt\n    d.need(receipt is not None and len(mutations) == 1,\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)\n    n.save(folder/'receipt.json',receipt_plain)\n    readback = snapshot(state_root/'registry.json')\n    n.save(folder/'readback.json',readback)\n    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and\n           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and\n           all(readback['reservations'].count(s) == 1 for s in data['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],\n        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,\n        slots=data['slots'],request_sha256=c.sha(request))\n    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),\n        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)\n    # Saved receipt is history data, never deserialized into a Host or permission.\n    n.save(path,saved)\n    return booking\n"
+      },
+      {
+        "public_symbol": "candidate_domain.effect.validate_inputs",
+        "source_sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a",
+        "source_utf8": "\"\"\"One source-owned disposable MOCK registry, mutated only by Firewall callback.\"\"\"\nimport json\nfrom hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e\nfrom hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts\nfrom hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi\nfrom demo import run_action_packet_portability_v01 as donor\nfrom . import domain as d, policy as p\n\n# Runtime bindings are installed only for a locally prepared native packet.\nPACKETS = {}\n\ndef snapshot(path):\n    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})\n\ndef merged_inventory(inventory, registry):\n    result = c.decode(c.canonical(inventory))\n    for field in result['fields']:\n        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']\n                    if s['field_id'] == field['field_id']]\n        field['occupied_utc'] = field['occupied_utc'] + existing\n        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')\n    return result\n\ndef scope_key(request):\n    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],\n                  request['revision']])\n\ndef payload(request, offer):\n    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],\n                schedule_revision=offer['schedule_revision'],currency=offer['currency'],\n                total_minor=offer['total_minor'])\n\ndef validate_payload(value):\n    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))\n    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])\n    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and\n           len(value['slots']) == 3, 'MOCK_PAYLOAD')\n    d.need(value['currency'] == value['request']['currency'] and\n           type(value['total_minor']) is int and\n           0 <= value['total_minor'] <= value['request']['budget_minor'],\n           'MOCK_BUDGET')\n\ndef validate_inputs(definition, inputs):\n    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)\n    if not errors:\n        try:\n            values = {v.parameter_name:v.value for v in inputs}\n            validate_payload(c.decode(values['payload_json'].encode()))\n        except ValueError as exc:\n            errors = (str(exc),)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)\n\ndef validate_output(definition, invocation, output):\n    errors = firewall.validate_capability_values_v01(definition.output_fields,output)\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))\n    if not errors and {v.parameter_name:v.value for v in output} != expected:\n        errors = ('mock_booking_output_binding',)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)\n\ndef execute_booking(invocation):\n    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')\n    context = PACKETS[invocation.packet_id]\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    data = c.decode(values['payload_json'].encode())\n    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',\n              'mock_payload_or_owner_changed')\n    request, offer, policy = data['request'], context['offer'], context['policy']\n    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),\n              'mock_current_consent')\n    now = e.clock()\n    c.require(context['valid_from'] <= now < context['source_end'] and\n              policy['status'] == 'ACTIVE','mock_offer_not_current')\n    current = c.decode(context['inventory_path'].read_bytes())\n    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')\n    old = snapshot(context['state_path'])\n    key = context['key']\n    # The application reconciles terminal keys before dispatch. A second callback\n    # is a refusal even if the payload is unchanged.\n    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')\n    effective = merged_inventory(current,old)\n    d.check_offer(offer,request,effective)\n    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')\n    new = dict(reservations=old['reservations'] + data['slots'],\n               idempotency=dict(old['idempotency']))\n    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,\n        slots=data['slots'],request_sha256=c.sha(request))\n    # Sole business-state write: all three reservations and logical key together.\n    e.state_write(context['state_path'],new)\n    context['mutations'].append(dict(invocation_id=invocation.invocation_id,\n        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),\n        snapshot_sha256=c.sha(new)))\n    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                  payload_sha256=c.sha(data))\n    return tuple(action.build_action_effect_parameter_record_v01(\n        parameter_name=name,value_type=kind,value=result[name])\n        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),\n                          ('payload_sha256','TEXT')))\n\ndef admit(device):\n    functions = (validate_inputs,validate_output,execute_booking)\n    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)\n    semantics = firewall.build_capability_business_semantics_v01(\n        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',\n        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',\n        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',\n        input_bindings=(\n            firewall.build_capability_business_input_binding_v01(input_name='device_ref',\n                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),\n            firewall.build_capability_business_input_binding_v01(input_name='payload_json',\n                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))\n    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,\n        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,\n        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=True) for k,t in\n            (('device_ref','REFERENCE'),('payload_json','TEXT'))),\n        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=False) for k,t in\n            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),\n        resource_refs=(device,),input_validator_ref=code[0].public_symbol,\n        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,\n        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))\n    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,\n        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,\n        host_instance_ref='host:football:venue')\n\ndef reconcile(request, state_root, expected_payload=None):\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if not path.exists():\n        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')\n    saved = json.loads(path.read_text())\n    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')\n    if expected_payload is not None:\n        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')\n    state = snapshot(state_root/'registry.json')\n    row = state['idempotency'].get(saved['logical_key'])\n    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and\n           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and\n           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],\n           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')\n    return saved, state\n\ndef confirm(request, offer, source_body, operator, state_root, folder, counters):\n    data = payload(request,offer)\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if path.exists() or pending.exists():\n        saved, readback = reconcile(request,state_root,data)\n        n.save(folder/'receipt.json',saved['receipt'])\n        n.save(folder/'readback.json',readback)\n        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],\n            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))\n        counters['receipt_reuse'] += 1\n        return saved['booking']\n    now = e.clock()\n    try:\n        end = c.temporal(source_body['time_envelope'],now,\n            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))\n    except ValueError as exc:\n        raise d.Refusal(str(exc)) from exc\n    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')\n    inventory_path = state_root/'current_inventory.json'\n    inventory = c.decode(inventory_path.read_bytes())\n    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))\n    d.check_offer(offer,request,effective)\n    review = n.root_review('VenueRoot','transaction:football:booking',\n        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],\n        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],\n             complete=len(offer['slots']) == 3,source_current=now < end,\n             schedule=inventory['revision'] == offer['schedule_revision']),\n        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),\n             source_work_ref=source_body['source_work_ref'],\n             source_review_ref=source_body['source_review_ref'],inputs=data,\n             policy_sha256=c.sha(operator)),now,\n        window=(source_body['time_envelope']['valid_from'],end))\n    counters['root_reviews'] += 1\n    n.save(folder/'booking_review.json',n.root_plain(review))\n    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')\n    device = 'device:football:' + c.sha(request['venue_ref'])\n    admitted = admit(device)\n    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,\n        value_type=t,value=v) for k,t,v in\n        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))\n    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,\n        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),\n        business_object_ref='booking:football:'+scope_key(request))\n    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)\n    counters['root_reviews'] += 1\n    packet = prepared.root_bound.packet_identity.packet_id\n    key = canonical.idempotency_identity.idempotency_key\n    host = donor.host_for_prepared_action_v01(prepared)\n    mutations = []\n    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,\n        state_path=state_root/'registry.json',inventory_path=inventory_path,\n        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],\n        source_end=end,mutations=mutations)\n    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))\n    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),\n        root=n.plain(prepared.root_bound.root_decision_projection),\n        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))\n    counters['dispatch'] += 1\n    try:\n        registry, revision = hosts.dispatch_current_action_v01(host,\n            expected_revision=host.revision,packet_id=packet,\n            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,\n            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')\n    finally:\n        # Persist even a failed/uncertain native attempt before rendering a report.\n        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),\n            events=n.plain(host.events),mutations=mutations))\n        counters['mutations'] += len(mutations)\n        PACKETS.pop(packet,None)\n    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]\n    receipt = attempt.receipt\n    d.need(receipt is not None and len(mutations) == 1,\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)\n    n.save(folder/'receipt.json',receipt_plain)\n    readback = snapshot(state_root/'registry.json')\n    n.save(folder/'readback.json',readback)\n    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and\n           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and\n           all(readback['reservations'].count(s) == 1 for s in data['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],\n        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,\n        slots=data['slots'],request_sha256=c.sha(request))\n    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),\n        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)\n    # Saved receipt is history data, never deserialized into a Host or permission.\n    n.save(path,saved)\n    return booking\n"
+      },
+      {
+        "public_symbol": "candidate_domain.effect.validate_output",
+        "source_sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a",
+        "source_utf8": "\"\"\"One source-owned disposable MOCK registry, mutated only by Firewall callback.\"\"\"\nimport json\nfrom hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e\nfrom hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts\nfrom hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi\nfrom demo import run_action_packet_portability_v01 as donor\nfrom . import domain as d, policy as p\n\n# Runtime bindings are installed only for a locally prepared native packet.\nPACKETS = {}\n\ndef snapshot(path):\n    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})\n\ndef merged_inventory(inventory, registry):\n    result = c.decode(c.canonical(inventory))\n    for field in result['fields']:\n        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']\n                    if s['field_id'] == field['field_id']]\n        field['occupied_utc'] = field['occupied_utc'] + existing\n        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')\n    return result\n\ndef scope_key(request):\n    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],\n                  request['revision']])\n\ndef payload(request, offer):\n    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],\n                schedule_revision=offer['schedule_revision'],currency=offer['currency'],\n                total_minor=offer['total_minor'])\n\ndef validate_payload(value):\n    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))\n    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])\n    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and\n           len(value['slots']) == 3, 'MOCK_PAYLOAD')\n    d.need(value['currency'] == value['request']['currency'] and\n           type(value['total_minor']) is int and\n           0 <= value['total_minor'] <= value['request']['budget_minor'],\n           'MOCK_BUDGET')\n\ndef validate_inputs(definition, inputs):\n    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)\n    if not errors:\n        try:\n            values = {v.parameter_name:v.value for v in inputs}\n            validate_payload(c.decode(values['payload_json'].encode()))\n        except ValueError as exc:\n            errors = (str(exc),)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)\n\ndef validate_output(definition, invocation, output):\n    errors = firewall.validate_capability_values_v01(definition.output_fields,output)\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))\n    if not errors and {v.parameter_name:v.value for v in output} != expected:\n        errors = ('mock_booking_output_binding',)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)\n\ndef execute_booking(invocation):\n    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')\n    context = PACKETS[invocation.packet_id]\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    data = c.decode(values['payload_json'].encode())\n    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',\n              'mock_payload_or_owner_changed')\n    request, offer, policy = data['request'], context['offer'], context['policy']\n    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),\n              'mock_current_consent')\n    now = e.clock()\n    c.require(context['valid_from'] <= now < context['source_end'] and\n              policy['status'] == 'ACTIVE','mock_offer_not_current')\n    current = c.decode(context['inventory_path'].read_bytes())\n    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')\n    old = snapshot(context['state_path'])\n    key = context['key']\n    # The application reconciles terminal keys before dispatch. A second callback\n    # is a refusal even if the payload is unchanged.\n    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')\n    effective = merged_inventory(current,old)\n    d.check_offer(offer,request,effective)\n    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')\n    new = dict(reservations=old['reservations'] + data['slots'],\n               idempotency=dict(old['idempotency']))\n    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,\n        slots=data['slots'],request_sha256=c.sha(request))\n    # Sole business-state write: all three reservations and logical key together.\n    e.state_write(context['state_path'],new)\n    context['mutations'].append(dict(invocation_id=invocation.invocation_id,\n        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),\n        snapshot_sha256=c.sha(new)))\n    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                  payload_sha256=c.sha(data))\n    return tuple(action.build_action_effect_parameter_record_v01(\n        parameter_name=name,value_type=kind,value=result[name])\n        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),\n                          ('payload_sha256','TEXT')))\n\ndef admit(device):\n    functions = (validate_inputs,validate_output,execute_booking)\n    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)\n    semantics = firewall.build_capability_business_semantics_v01(\n        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',\n        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',\n        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',\n        input_bindings=(\n            firewall.build_capability_business_input_binding_v01(input_name='device_ref',\n                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),\n            firewall.build_capability_business_input_binding_v01(input_name='payload_json',\n                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))\n    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,\n        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,\n        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=True) for k,t in\n            (('device_ref','REFERENCE'),('payload_json','TEXT'))),\n        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=False) for k,t in\n            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),\n        resource_refs=(device,),input_validator_ref=code[0].public_symbol,\n        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,\n        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))\n    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,\n        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,\n        host_instance_ref='host:football:venue')\n\ndef reconcile(request, state_root, expected_payload=None):\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if not path.exists():\n        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')\n    saved = json.loads(path.read_text())\n    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')\n    if expected_payload is not None:\n        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')\n    state = snapshot(state_root/'registry.json')\n    row = state['idempotency'].get(saved['logical_key'])\n    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and\n           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and\n           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],\n           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')\n    return saved, state\n\ndef confirm(request, offer, source_body, operator, state_root, folder, counters):\n    data = payload(request,offer)\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if path.exists() or pending.exists():\n        saved, readback = reconcile(request,state_root,data)\n        n.save(folder/'receipt.json',saved['receipt'])\n        n.save(folder/'readback.json',readback)\n        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],\n            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))\n        counters['receipt_reuse'] += 1\n        return saved['booking']\n    now = e.clock()\n    try:\n        end = c.temporal(source_body['time_envelope'],now,\n            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))\n    except ValueError as exc:\n        raise d.Refusal(str(exc)) from exc\n    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')\n    inventory_path = state_root/'current_inventory.json'\n    inventory = c.decode(inventory_path.read_bytes())\n    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))\n    d.check_offer(offer,request,effective)\n    review = n.root_review('VenueRoot','transaction:football:booking',\n        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],\n        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],\n             complete=len(offer['slots']) == 3,source_current=now < end,\n             schedule=inventory['revision'] == offer['schedule_revision']),\n        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),\n             source_work_ref=source_body['source_work_ref'],\n             source_review_ref=source_body['source_review_ref'],inputs=data,\n             policy_sha256=c.sha(operator)),now,\n        window=(source_body['time_envelope']['valid_from'],end))\n    counters['root_reviews'] += 1\n    n.save(folder/'booking_review.json',n.root_plain(review))\n    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')\n    device = 'device:football:' + c.sha(request['venue_ref'])\n    admitted = admit(device)\n    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,\n        value_type=t,value=v) for k,t,v in\n        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))\n    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,\n        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),\n        business_object_ref='booking:football:'+scope_key(request))\n    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)\n    counters['root_reviews'] += 1\n    packet = prepared.root_bound.packet_identity.packet_id\n    key = canonical.idempotency_identity.idempotency_key\n    host = donor.host_for_prepared_action_v01(prepared)\n    mutations = []\n    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,\n        state_path=state_root/'registry.json',inventory_path=inventory_path,\n        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],\n        source_end=end,mutations=mutations)\n    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))\n    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),\n        root=n.plain(prepared.root_bound.root_decision_projection),\n        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))\n    counters['dispatch'] += 1\n    try:\n        registry, revision = hosts.dispatch_current_action_v01(host,\n            expected_revision=host.revision,packet_id=packet,\n            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,\n            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')\n    finally:\n        # Persist even a failed/uncertain native attempt before rendering a report.\n        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),\n            events=n.plain(host.events),mutations=mutations))\n        counters['mutations'] += len(mutations)\n        PACKETS.pop(packet,None)\n    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]\n    receipt = attempt.receipt\n    d.need(receipt is not None and len(mutations) == 1,\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)\n    n.save(folder/'receipt.json',receipt_plain)\n    readback = snapshot(state_root/'registry.json')\n    n.save(folder/'readback.json',readback)\n    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and\n           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and\n           all(readback['reservations'].count(s) == 1 for s in data['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],\n        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,\n        slots=data['slots'],request_sha256=c.sha(request))\n    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),\n        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)\n    # Saved receipt is history data, never deserialized into a Host or permission.\n    n.save(path,saved)\n    return booking\n"
+      }
+    ],
+    "definition": {
+      "business_semantics": {
+        "business_object_class": "RECORD_SET",
+        "business_object_namespace": "football.registry.v01",
+        "input_bindings": [
+          {
+            "input_name": "device_ref",
+            "source_kind": "TARGET_RECORD",
+            "source_name": "device_ref",
+            "value_type": "REFERENCE"
+          },
+          {
+            "input_name": "payload_json",
+            "source_kind": "RECORD",
+            "source_name": "payload_json",
+            "value_type": "TEXT"
+          }
+        ],
+        "logical_effect_class": "BATCH",
+        "logical_effect_namespace": "football.booking.v01",
+        "operation_key": "football.booking.v01",
+        "selected_action_class": "mock_action:football_booking"
+      },
+      "code_sha256s": [
+        [
+          "candidate_domain.effect.execute_booking",
+          "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+        ],
+        [
+          "candidate_domain.effect.validate_inputs",
+          "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+        ],
+        [
+          "candidate_domain.effect.validate_output",
+          "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+        ]
+      ],
+      "contract_sha256": "24795a7ae2e29ee080317a37dcee9c5458f6912583f7997d9292076c5b567a7c",
+      "definition_id": "capability_definition:8923bc921b6e3fa7e2d92be644dea3e91a179c260e120d3e9ca31e08824a0189",
+      "effect_kind": "MOCK_CONSEQUENTIAL",
+      "executor_ref": "candidate_domain.effect.execute_booking",
+      "input_fields": [
+        {
+          "allowed_values": [],
+          "consequential": true,
+          "maximum": null,
+          "minimum": null,
+          "name": "device_ref",
+          "required": true,
+          "value_type": "REFERENCE"
+        },
+        {
+          "allowed_values": [],
+          "consequential": true,
+          "maximum": null,
+          "minimum": null,
+          "name": "payload_json",
+          "required": true,
+          "value_type": "TEXT"
+        }
+      ],
+      "input_validator_ref": "candidate_domain.effect.validate_inputs",
+      "operation_id": "football.booking.v01",
+      "output_fields": [
+        {
+          "allowed_values": [],
+          "consequential": false,
+          "maximum": null,
+          "minimum": null,
+          "name": "booking_state",
+          "required": true,
+          "value_type": "TEXT"
+        },
+        {
+          "allowed_values": [],
+          "consequential": false,
+          "maximum": null,
+          "minimum": null,
+          "name": "device_ref",
+          "required": true,
+          "value_type": "REFERENCE"
+        },
+        {
+          "allowed_values": [],
+          "consequential": false,
+          "maximum": null,
+          "minimum": null,
+          "name": "payload_sha256",
+          "required": true,
+          "value_type": "TEXT"
+        }
+      ],
+      "output_validator_ref": "candidate_domain.effect.validate_output",
+      "resource_refs": [
+        "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+      ],
+      "version": "v01"
+    },
+    "host_instance_ref": "host:football:venue",
+    "implementation_ref": "capability_implementation:558f34cbfbb1737dd2e25763c58fd4a111ccdbfebf8f4c74abd5e04031dad0ed",
+    "input_contract_ref": "capability_input_contract:809588c077af22a0c004ea42b7cd3a0b46a19a3df2d87294feba4b2e0c1bc429",
+    "output_contract_ref": "capability_output_contract:62b1b32f69f84e73731f3cf44620cb16d5d8977009837990e4a63e34f3fb3e72"
+  },
+  "canonical": {
+    "adapter_binding": {
+      "adapter_id": "mock_adapter:work",
+      "adapter_kind": "DETERMINISTIC_MOCK",
+      "adapter_version": "v01",
+      "corridor_class": "u1.mock",
+      "mock_only": true
+    },
+    "authority_policy": {
+      "allowed_business_object_namespaces": [
+        "football.registry.v01"
+      ],
+      "allowed_corridor_classes": [
+        "u1.mock"
+      ],
+      "allowed_logical_effect_classes": [
+        "BATCH"
+      ],
+      "authority_rule_refs": [
+        "authority:u1:root_only"
+      ],
+      "kill_switch_condition_refs": [
+        "kill_switch:u1:root_revocation"
+      ],
+      "logical_effect_namespace": "football.booking.v01",
+      "owning_local_root_id": "VenueRoot",
+      "policy_version": "u1.controlled_mock.v01",
+      "retry_policy": "NON_CONSUMING_RETRY",
+      "supersession_policy": "ROOT_DECISION_ONLY"
+    },
+    "authority_policy_fingerprint": "6ed9cd252f7a9630f2b43d4e8f8b258485092da4d59a0ea94f8f8d933a6c19ba",
+    "authorization_candidate": {
+      "adapter_binding": {
+        "adapter_id": "mock_adapter:work",
+        "adapter_kind": "DETERMINISTIC_MOCK",
+        "adapter_version": "v01",
+        "corridor_class": "u1.mock",
+        "mock_only": true
+      },
+      "authority_policy_fingerprint": "6ed9cd252f7a9630f2b43d4e8f8b258485092da4d59a0ea94f8f8d933a6c19ba",
+      "corridor_class": "u1.mock",
+      "dependency_set_candidate_fingerprint": "f22bbaf11d95d002da95ca4815de8c21ab5f1372dbb03f2b6e5a6e7188428279",
+      "effect_class": "BATCH",
+      "normalized_effect_parameters_fingerprint": "41d22554905ad310d8534e5954cbefcc5b2baa6bf2827337aedd1789144a64e9",
+      "normalized_permission_scope": {
+        "allowed_action_classes": [
+          "mock_action:football_booking"
+        ],
+        "allowed_adapter_ids": [
+          "mock_adapter:work"
+        ],
+        "forbidden_action_classes": [],
+        "forbidden_adapter_ids": [],
+        "prohibited_effect_classes": [],
+        "required_approval_refs": [
+          "permission:VenueRoot:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+        ]
+      },
+      "normalized_subject_scope": {
+        "excluded_subject_refs": [],
+        "included_subject_refs": [
+          "subject:u1:owner"
+        ]
+      },
+      "normalized_target_scope": {
+        "excluded_target_refs": [],
+        "included_target_refs": [
+          "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+        ]
+      },
+      "owning_local_root_id": "VenueRoot",
+      "policy_version": "u1.controlled_mock.v01",
+      "predecessor_packet_id": null,
+      "root_owned_intent_id": "root_logical_intent_v01:5309ab36fa285f489c20b0c69e44536b09b4b89d0f84a2859cf57dce1838b10c",
+      "root_packet_authorization_candidate_id": "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf",
+      "supersession_reason_class": null,
+      "temporal_authority_fingerprint": "f970f82f1bcd89abc70409da96b31cb6d363c0efa850d4c4a54359a1122c5939",
+      "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+    },
+    "business_effect_parameters": {
+      "effect_class": "BATCH",
+      "parameter_records": [
+        {
+          "parameter_name": "device_ref",
+          "value": "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "payload_json",
+          "value": "{\"currency\":\"EUR\",\"offer_sha256\":\"1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033\",\"request\":{\"budget_minor\":7000,\"currency\":\"EUR\",\"operation\":\"CONFIRM_MOCK_BOOKING\",\"owner_approval_ref\":\"consent:controlled:booking\",\"request_id\":\"request:exam:one\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:00:00\",\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T12:30:00\",\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T12:30:00\",\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\"}],\"team_ref\":\"team:one\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:synthetic\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"total_minor\":6300}",
+          "value_type": "TEXT"
+        }
+      ]
+    },
+    "business_object_identity": {
+      "business_object_class": "RECORD_SET",
+      "business_object_namespace": "football.registry.v01",
+      "business_object_ref": "booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+      "owning_effect_root_id": "VenueRoot"
+    },
+    "canonical_permission_ref": "permission:VenueRoot:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+    "consequential_effect_parameters": {
+      "amount_decimal": null,
+      "currency_code": null,
+      "parameter_records": [
+        {
+          "parameter_name": "device_ref",
+          "value": "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "payload_json",
+          "value": "{\"currency\":\"EUR\",\"offer_sha256\":\"1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033\",\"request\":{\"budget_minor\":7000,\"currency\":\"EUR\",\"operation\":\"CONFIRM_MOCK_BOOKING\",\"owner_approval_ref\":\"consent:controlled:booking\",\"request_id\":\"request:exam:one\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:00:00\",\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T12:30:00\",\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T12:30:00\",\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\"}],\"team_ref\":\"team:one\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:synthetic\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"total_minor\":6300}",
+          "value_type": "TEXT"
+        }
+      ],
+      "quantity_decimal": null
+    },
+    "dependency_candidate": {
+      "dependency_records": [
+        {
+          "content_sha256": "4e082d13dd83d356562b5629c9ea74131bddb5e94031b5d2efcf59871abbaad3",
+          "dependency_class": "CONTROLLED_MOCK_AVAILABILITY",
+          "dependency_id": "dependency:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+          "evidence_ref": "evidence:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+          "expected_accepting_local_root_id": "VenueRoot",
+          "freshness_policy_id": "freshness:u1:session",
+          "requirement_class": "MANDATORY",
+          "source_provenance_refs": [
+            "source:u1:controlled_mock"
+          ],
+          "time_envelope_id": "dependency_time_envelope_v01:88ef864d8199d6371e134d7757f8f7603bf1786eae049b37c8443f6bca7d7c32"
+        }
+      ]
+    },
+    "dependency_set_candidate_fingerprint": "f22bbaf11d95d002da95ca4815de8c21ab5f1372dbb03f2b6e5a6e7188428279",
+    "evaluation_context_id": "context:u1:canonical",
+    "evaluation_time": 1010,
+    "evaluation_time_source": "u1.controlled_utc",
+    "execution_binding": {
+      "capability_definition_ref": "capability_definition:8923bc921b6e3fa7e2d92be644dea3e91a179c260e120d3e9ca31e08824a0189",
+      "capability_implementation_ref": "capability_implementation:558f34cbfbb1737dd2e25763c58fd4a111ccdbfebf8f4c74abd5e04031dad0ed",
+      "capability_input_contract_ref": "capability_input_contract:809588c077af22a0c004ea42b7cd3a0b46a19a3df2d87294feba4b2e0c1bc429",
+      "capability_output_contract_ref": "capability_output_contract:62b1b32f69f84e73731f3cf44620cb16d5d8977009837990e4a63e34f3fb3e72"
+    },
+    "execution_source": {
+      "admission_id": "capability_admission:337acf48015e72776c41be87625ebb256915278226c5e7e9c3c97298ef3113f0",
+      "catalogue_revision": 0,
+      "code_sources": [
+        {
+          "public_symbol": "candidate_domain.effect.execute_booking",
+          "source_sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a",
+          "source_utf8": "\"\"\"One source-owned disposable MOCK registry, mutated only by Firewall callback.\"\"\"\nimport json\nfrom hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e\nfrom hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts\nfrom hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi\nfrom demo import run_action_packet_portability_v01 as donor\nfrom . import domain as d, policy as p\n\n# Runtime bindings are installed only for a locally prepared native packet.\nPACKETS = {}\n\ndef snapshot(path):\n    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})\n\ndef merged_inventory(inventory, registry):\n    result = c.decode(c.canonical(inventory))\n    for field in result['fields']:\n        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']\n                    if s['field_id'] == field['field_id']]\n        field['occupied_utc'] = field['occupied_utc'] + existing\n        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')\n    return result\n\ndef scope_key(request):\n    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],\n                  request['revision']])\n\ndef payload(request, offer):\n    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],\n                schedule_revision=offer['schedule_revision'],currency=offer['currency'],\n                total_minor=offer['total_minor'])\n\ndef validate_payload(value):\n    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))\n    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])\n    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and\n           len(value['slots']) == 3, 'MOCK_PAYLOAD')\n    d.need(value['currency'] == value['request']['currency'] and\n           type(value['total_minor']) is int and\n           0 <= value['total_minor'] <= value['request']['budget_minor'],\n           'MOCK_BUDGET')\n\ndef validate_inputs(definition, inputs):\n    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)\n    if not errors:\n        try:\n            values = {v.parameter_name:v.value for v in inputs}\n            validate_payload(c.decode(values['payload_json'].encode()))\n        except ValueError as exc:\n            errors = (str(exc),)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)\n\ndef validate_output(definition, invocation, output):\n    errors = firewall.validate_capability_values_v01(definition.output_fields,output)\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))\n    if not errors and {v.parameter_name:v.value for v in output} != expected:\n        errors = ('mock_booking_output_binding',)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)\n\ndef execute_booking(invocation):\n    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')\n    context = PACKETS[invocation.packet_id]\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    data = c.decode(values['payload_json'].encode())\n    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',\n              'mock_payload_or_owner_changed')\n    request, offer, policy = data['request'], context['offer'], context['policy']\n    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),\n              'mock_current_consent')\n    now = e.clock()\n    c.require(context['valid_from'] <= now < context['source_end'] and\n              policy['status'] == 'ACTIVE','mock_offer_not_current')\n    current = c.decode(context['inventory_path'].read_bytes())\n    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')\n    old = snapshot(context['state_path'])\n    key = context['key']\n    # The application reconciles terminal keys before dispatch. A second callback\n    # is a refusal even if the payload is unchanged.\n    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')\n    effective = merged_inventory(current,old)\n    d.check_offer(offer,request,effective)\n    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')\n    new = dict(reservations=old['reservations'] + data['slots'],\n               idempotency=dict(old['idempotency']))\n    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,\n        slots=data['slots'],request_sha256=c.sha(request))\n    # Sole business-state write: all three reservations and logical key together.\n    e.state_write(context['state_path'],new)\n    context['mutations'].append(dict(invocation_id=invocation.invocation_id,\n        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),\n        snapshot_sha256=c.sha(new)))\n    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                  payload_sha256=c.sha(data))\n    return tuple(action.build_action_effect_parameter_record_v01(\n        parameter_name=name,value_type=kind,value=result[name])\n        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),\n                          ('payload_sha256','TEXT')))\n\ndef admit(device):\n    functions = (validate_inputs,validate_output,execute_booking)\n    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)\n    semantics = firewall.build_capability_business_semantics_v01(\n        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',\n        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',\n        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',\n        input_bindings=(\n            firewall.build_capability_business_input_binding_v01(input_name='device_ref',\n                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),\n            firewall.build_capability_business_input_binding_v01(input_name='payload_json',\n                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))\n    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,\n        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,\n        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=True) for k,t in\n            (('device_ref','REFERENCE'),('payload_json','TEXT'))),\n        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=False) for k,t in\n            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),\n        resource_refs=(device,),input_validator_ref=code[0].public_symbol,\n        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,\n        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))\n    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,\n        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,\n        host_instance_ref='host:football:venue')\n\ndef reconcile(request, state_root, expected_payload=None):\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if not path.exists():\n        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')\n    saved = json.loads(path.read_text())\n    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')\n    if expected_payload is not None:\n        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')\n    state = snapshot(state_root/'registry.json')\n    row = state['idempotency'].get(saved['logical_key'])\n    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and\n           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and\n           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],\n           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')\n    return saved, state\n\ndef confirm(request, offer, source_body, operator, state_root, folder, counters):\n    data = payload(request,offer)\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if path.exists() or pending.exists():\n        saved, readback = reconcile(request,state_root,data)\n        n.save(folder/'receipt.json',saved['receipt'])\n        n.save(folder/'readback.json',readback)\n        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],\n            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))\n        counters['receipt_reuse'] += 1\n        return saved['booking']\n    now = e.clock()\n    try:\n        end = c.temporal(source_body['time_envelope'],now,\n            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))\n    except ValueError as exc:\n        raise d.Refusal(str(exc)) from exc\n    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')\n    inventory_path = state_root/'current_inventory.json'\n    inventory = c.decode(inventory_path.read_bytes())\n    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))\n    d.check_offer(offer,request,effective)\n    review = n.root_review('VenueRoot','transaction:football:booking',\n        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],\n        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],\n             complete=len(offer['slots']) == 3,source_current=now < end,\n             schedule=inventory['revision'] == offer['schedule_revision']),\n        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),\n             source_work_ref=source_body['source_work_ref'],\n             source_review_ref=source_body['source_review_ref'],inputs=data,\n             policy_sha256=c.sha(operator)),now,\n        window=(source_body['time_envelope']['valid_from'],end))\n    counters['root_reviews'] += 1\n    n.save(folder/'booking_review.json',n.root_plain(review))\n    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')\n    device = 'device:football:' + c.sha(request['venue_ref'])\n    admitted = admit(device)\n    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,\n        value_type=t,value=v) for k,t,v in\n        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))\n    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,\n        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),\n        business_object_ref='booking:football:'+scope_key(request))\n    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)\n    counters['root_reviews'] += 1\n    packet = prepared.root_bound.packet_identity.packet_id\n    key = canonical.idempotency_identity.idempotency_key\n    host = donor.host_for_prepared_action_v01(prepared)\n    mutations = []\n    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,\n        state_path=state_root/'registry.json',inventory_path=inventory_path,\n        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],\n        source_end=end,mutations=mutations)\n    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))\n    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),\n        root=n.plain(prepared.root_bound.root_decision_projection),\n        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))\n    counters['dispatch'] += 1\n    try:\n        registry, revision = hosts.dispatch_current_action_v01(host,\n            expected_revision=host.revision,packet_id=packet,\n            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,\n            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')\n    finally:\n        # Persist even a failed/uncertain native attempt before rendering a report.\n        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),\n            events=n.plain(host.events),mutations=mutations))\n        counters['mutations'] += len(mutations)\n        PACKETS.pop(packet,None)\n    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]\n    receipt = attempt.receipt\n    d.need(receipt is not None and len(mutations) == 1,\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)\n    n.save(folder/'receipt.json',receipt_plain)\n    readback = snapshot(state_root/'registry.json')\n    n.save(folder/'readback.json',readback)\n    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and\n           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and\n           all(readback['reservations'].count(s) == 1 for s in data['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],\n        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,\n        slots=data['slots'],request_sha256=c.sha(request))\n    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),\n        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)\n    # Saved receipt is history data, never deserialized into a Host or permission.\n    n.save(path,saved)\n    return booking\n"
+        },
+        {
+          "public_symbol": "candidate_domain.effect.validate_inputs",
+          "source_sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a",
+          "source_utf8": "\"\"\"One source-owned disposable MOCK registry, mutated only by Firewall callback.\"\"\"\nimport json\nfrom hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e\nfrom hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts\nfrom hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi\nfrom demo import run_action_packet_portability_v01 as donor\nfrom . import domain as d, policy as p\n\n# Runtime bindings are installed only for a locally prepared native packet.\nPACKETS = {}\n\ndef snapshot(path):\n    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})\n\ndef merged_inventory(inventory, registry):\n    result = c.decode(c.canonical(inventory))\n    for field in result['fields']:\n        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']\n                    if s['field_id'] == field['field_id']]\n        field['occupied_utc'] = field['occupied_utc'] + existing\n        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')\n    return result\n\ndef scope_key(request):\n    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],\n                  request['revision']])\n\ndef payload(request, offer):\n    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],\n                schedule_revision=offer['schedule_revision'],currency=offer['currency'],\n                total_minor=offer['total_minor'])\n\ndef validate_payload(value):\n    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))\n    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])\n    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and\n           len(value['slots']) == 3, 'MOCK_PAYLOAD')\n    d.need(value['currency'] == value['request']['currency'] and\n           type(value['total_minor']) is int and\n           0 <= value['total_minor'] <= value['request']['budget_minor'],\n           'MOCK_BUDGET')\n\ndef validate_inputs(definition, inputs):\n    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)\n    if not errors:\n        try:\n            values = {v.parameter_name:v.value for v in inputs}\n            validate_payload(c.decode(values['payload_json'].encode()))\n        except ValueError as exc:\n            errors = (str(exc),)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)\n\ndef validate_output(definition, invocation, output):\n    errors = firewall.validate_capability_values_v01(definition.output_fields,output)\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))\n    if not errors and {v.parameter_name:v.value for v in output} != expected:\n        errors = ('mock_booking_output_binding',)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)\n\ndef execute_booking(invocation):\n    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')\n    context = PACKETS[invocation.packet_id]\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    data = c.decode(values['payload_json'].encode())\n    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',\n              'mock_payload_or_owner_changed')\n    request, offer, policy = data['request'], context['offer'], context['policy']\n    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),\n              'mock_current_consent')\n    now = e.clock()\n    c.require(context['valid_from'] <= now < context['source_end'] and\n              policy['status'] == 'ACTIVE','mock_offer_not_current')\n    current = c.decode(context['inventory_path'].read_bytes())\n    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')\n    old = snapshot(context['state_path'])\n    key = context['key']\n    # The application reconciles terminal keys before dispatch. A second callback\n    # is a refusal even if the payload is unchanged.\n    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')\n    effective = merged_inventory(current,old)\n    d.check_offer(offer,request,effective)\n    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')\n    new = dict(reservations=old['reservations'] + data['slots'],\n               idempotency=dict(old['idempotency']))\n    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,\n        slots=data['slots'],request_sha256=c.sha(request))\n    # Sole business-state write: all three reservations and logical key together.\n    e.state_write(context['state_path'],new)\n    context['mutations'].append(dict(invocation_id=invocation.invocation_id,\n        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),\n        snapshot_sha256=c.sha(new)))\n    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                  payload_sha256=c.sha(data))\n    return tuple(action.build_action_effect_parameter_record_v01(\n        parameter_name=name,value_type=kind,value=result[name])\n        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),\n                          ('payload_sha256','TEXT')))\n\ndef admit(device):\n    functions = (validate_inputs,validate_output,execute_booking)\n    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)\n    semantics = firewall.build_capability_business_semantics_v01(\n        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',\n        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',\n        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',\n        input_bindings=(\n            firewall.build_capability_business_input_binding_v01(input_name='device_ref',\n                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),\n            firewall.build_capability_business_input_binding_v01(input_name='payload_json',\n                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))\n    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,\n        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,\n        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=True) for k,t in\n            (('device_ref','REFERENCE'),('payload_json','TEXT'))),\n        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=False) for k,t in\n            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),\n        resource_refs=(device,),input_validator_ref=code[0].public_symbol,\n        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,\n        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))\n    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,\n        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,\n        host_instance_ref='host:football:venue')\n\ndef reconcile(request, state_root, expected_payload=None):\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if not path.exists():\n        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')\n    saved = json.loads(path.read_text())\n    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')\n    if expected_payload is not None:\n        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')\n    state = snapshot(state_root/'registry.json')\n    row = state['idempotency'].get(saved['logical_key'])\n    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and\n           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and\n           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],\n           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')\n    return saved, state\n\ndef confirm(request, offer, source_body, operator, state_root, folder, counters):\n    data = payload(request,offer)\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if path.exists() or pending.exists():\n        saved, readback = reconcile(request,state_root,data)\n        n.save(folder/'receipt.json',saved['receipt'])\n        n.save(folder/'readback.json',readback)\n        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],\n            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))\n        counters['receipt_reuse'] += 1\n        return saved['booking']\n    now = e.clock()\n    try:\n        end = c.temporal(source_body['time_envelope'],now,\n            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))\n    except ValueError as exc:\n        raise d.Refusal(str(exc)) from exc\n    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')\n    inventory_path = state_root/'current_inventory.json'\n    inventory = c.decode(inventory_path.read_bytes())\n    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))\n    d.check_offer(offer,request,effective)\n    review = n.root_review('VenueRoot','transaction:football:booking',\n        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],\n        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],\n             complete=len(offer['slots']) == 3,source_current=now < end,\n             schedule=inventory['revision'] == offer['schedule_revision']),\n        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),\n             source_work_ref=source_body['source_work_ref'],\n             source_review_ref=source_body['source_review_ref'],inputs=data,\n             policy_sha256=c.sha(operator)),now,\n        window=(source_body['time_envelope']['valid_from'],end))\n    counters['root_reviews'] += 1\n    n.save(folder/'booking_review.json',n.root_plain(review))\n    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')\n    device = 'device:football:' + c.sha(request['venue_ref'])\n    admitted = admit(device)\n    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,\n        value_type=t,value=v) for k,t,v in\n        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))\n    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,\n        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),\n        business_object_ref='booking:football:'+scope_key(request))\n    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)\n    counters['root_reviews'] += 1\n    packet = prepared.root_bound.packet_identity.packet_id\n    key = canonical.idempotency_identity.idempotency_key\n    host = donor.host_for_prepared_action_v01(prepared)\n    mutations = []\n    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,\n        state_path=state_root/'registry.json',inventory_path=inventory_path,\n        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],\n        source_end=end,mutations=mutations)\n    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))\n    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),\n        root=n.plain(prepared.root_bound.root_decision_projection),\n        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))\n    counters['dispatch'] += 1\n    try:\n        registry, revision = hosts.dispatch_current_action_v01(host,\n            expected_revision=host.revision,packet_id=packet,\n            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,\n            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')\n    finally:\n        # Persist even a failed/uncertain native attempt before rendering a report.\n        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),\n            events=n.plain(host.events),mutations=mutations))\n        counters['mutations'] += len(mutations)\n        PACKETS.pop(packet,None)\n    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]\n    receipt = attempt.receipt\n    d.need(receipt is not None and len(mutations) == 1,\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)\n    n.save(folder/'receipt.json',receipt_plain)\n    readback = snapshot(state_root/'registry.json')\n    n.save(folder/'readback.json',readback)\n    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and\n           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and\n           all(readback['reservations'].count(s) == 1 for s in data['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],\n        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,\n        slots=data['slots'],request_sha256=c.sha(request))\n    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),\n        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)\n    # Saved receipt is history data, never deserialized into a Host or permission.\n    n.save(path,saved)\n    return booking\n"
+        },
+        {
+          "public_symbol": "candidate_domain.effect.validate_output",
+          "source_sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a",
+          "source_utf8": "\"\"\"One source-owned disposable MOCK registry, mutated only by Firewall callback.\"\"\"\nimport json\nfrom hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e\nfrom hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts\nfrom hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi\nfrom demo import run_action_packet_portability_v01 as donor\nfrom . import domain as d, policy as p\n\n# Runtime bindings are installed only for a locally prepared native packet.\nPACKETS = {}\n\ndef snapshot(path):\n    return c.decode(path.read_bytes()) if path.exists() else dict(reservations=[],idempotency={})\n\ndef merged_inventory(inventory, registry):\n    result = c.decode(c.canonical(inventory))\n    for field in result['fields']:\n        existing = [list((s['start_utc'],s['end_utc'])) for s in registry['reservations']\n                    if s['field_id'] == field['field_id']]\n        field['occupied_utc'] = field['occupied_utc'] + existing\n        d.need(len(field['occupied_utc']) <= 32,'OCCUPANCY_BOUND')\n    return result\n\ndef scope_key(request):\n    return c.sha([request['team_ref'],request['venue_ref'],request['request_id'],\n                  request['revision']])\n\ndef payload(request, offer):\n    return dict(request=request,offer_sha256=c.sha(offer),slots=offer['slots'],\n                schedule_revision=offer['schedule_revision'],currency=offer['currency'],\n                total_minor=offer['total_minor'])\n\ndef validate_payload(value):\n    d.closed(value,('request','offer_sha256','slots','schedule_revision','currency','total_minor'))\n    d.parse_request(value['request']); c.hash_value(value['offer_sha256'])\n    d.need(value['request']['operation'] == 'CONFIRM_MOCK_BOOKING' and\n           len(value['slots']) == 3, 'MOCK_PAYLOAD')\n    d.need(value['currency'] == value['request']['currency'] and\n           type(value['total_minor']) is int and\n           0 <= value['total_minor'] <= value['request']['budget_minor'],\n           'MOCK_BUDGET')\n\ndef validate_inputs(definition, inputs):\n    errors = firewall.validate_capability_values_v01(definition.input_fields,inputs)\n    if not errors:\n        try:\n            values = {v.parameter_name:v.value for v in inputs}\n            validate_payload(c.decode(values['payload_json'].encode()))\n        except ValueError as exc:\n            errors = (str(exc),)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=inputs,invocation_id=None,valid=not errors,reason_codes=errors)\n\ndef validate_output(definition, invocation, output):\n    errors = firewall.validate_capability_values_v01(definition.output_fields,output)\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    expected = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                    payload_sha256=c.sha(c.decode(values['payload_json'].encode())))\n    if not errors and {v.parameter_name:v.value for v in output} != expected:\n        errors = ('mock_booking_output_binding',)\n    return firewall.build_capability_validation_evidence_v01(definition=definition,\n        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)\n\ndef execute_booking(invocation):\n    c.require(invocation.packet_id in PACKETS,'mock_packet_binding_missing')\n    context = PACKETS[invocation.packet_id]\n    values = {v.parameter_name:v.value for v in invocation.inputs}\n    data = c.decode(values['payload_json'].encode())\n    c.require(data == context['payload'] and invocation.owning_root_id == 'VenueRoot',\n              'mock_payload_or_owner_changed')\n    request, offer, policy = data['request'], context['offer'], context['policy']\n    c.require(policy['booking_enabled'] and p.approved(policy,request,'BOOK'),\n              'mock_current_consent')\n    now = e.clock()\n    c.require(context['valid_from'] <= now < context['source_end'] and\n              policy['status'] == 'ACTIVE','mock_offer_not_current')\n    current = c.decode(context['inventory_path'].read_bytes())\n    c.require(c.sha(current) == context['inventory_sha256'],'mock_inventory_changed')\n    old = snapshot(context['state_path'])\n    key = context['key']\n    # The application reconciles terminal keys before dispatch. A second callback\n    # is a refusal even if the payload is unchanged.\n    c.require(key not in old['idempotency'],'mock_terminal_key_no_dispatch')\n    effective = merged_inventory(current,old)\n    d.check_offer(offer,request,effective)\n    c.require(effective['revision'] == data['schedule_revision'],'mock_schedule_changed')\n    new = dict(reservations=old['reservations'] + data['slots'],\n               idempotency=dict(old['idempotency']))\n    new['idempotency'][key] = dict(payload_sha256=c.sha(data),packet_ref=invocation.packet_id,\n        slots=data['slots'],request_sha256=c.sha(request))\n    # Sole business-state write: all three reservations and logical key together.\n    e.state_write(context['state_path'],new)\n    context['mutations'].append(dict(invocation_id=invocation.invocation_id,\n        packet_ref=invocation.packet_id,key=key,payload_sha256=c.sha(data),\n        snapshot_sha256=c.sha(new)))\n    result = dict(booking_state='COMMITTED',device_ref=values['device_ref'],\n                  payload_sha256=c.sha(data))\n    return tuple(action.build_action_effect_parameter_record_v01(\n        parameter_name=name,value_type=kind,value=result[name])\n        for name,kind in (('booking_state','TEXT'),('device_ref','REFERENCE'),\n                          ('payload_sha256','TEXT')))\n\ndef admit(device):\n    functions = (validate_inputs,validate_output,execute_booking)\n    code = tuple(hosts.observe_local_capability_code_v01(f) for f in functions)\n    semantics = firewall.build_capability_business_semantics_v01(\n        operation_key='football.booking.v01',selected_action_class='mock_action:football_booking',\n        logical_effect_class='BATCH',logical_effect_namespace='football.booking.v01',\n        business_object_class='RECORD_SET',business_object_namespace='football.registry.v01',\n        input_bindings=(\n            firewall.build_capability_business_input_binding_v01(input_name='device_ref',\n                source_kind='TARGET_RECORD',source_name='device_ref',value_type='REFERENCE'),\n            firewall.build_capability_business_input_binding_v01(input_name='payload_json',\n                source_kind='RECORD',source_name='payload_json',value_type='TEXT')))\n    definition = firewall.build_capability_definition_v01(operation_id=semantics.operation_key,\n        version='v01',effect_kind='MOCK_CONSEQUENTIAL',business_semantics=semantics,\n        input_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=True) for k,t in\n            (('device_ref','REFERENCE'),('payload_json','TEXT'))),\n        output_fields=tuple(firewall.build_capability_field_v01(name=k,value_type=t,\n            required=True,consequential=False) for k,t in\n            (('booking_state','TEXT'),('device_ref','REFERENCE'),('payload_sha256','TEXT'))),\n        resource_refs=(device,),input_validator_ref=code[0].public_symbol,\n        output_validator_ref=code[1].public_symbol,executor_ref=code[2].public_symbol,\n        code_sha256s=tuple((x.public_symbol,x.source_sha256) for x in code))\n    return hosts.admit_local_capability_v01(definition=definition,input_validator=validate_inputs,\n        output_validator=validate_output,executor=execute_booking,catalogue_revision=0,\n        host_instance_ref='host:football:venue')\n\ndef reconcile(request, state_root, expected_payload=None):\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if not path.exists():\n        d.need(not pending.exists(),'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n        raise d.Refusal('NO_SAVED_RECEIPT','CURRENT_STATUS_UNKNOWN')\n    saved = json.loads(path.read_text())\n    d.need(d.constraints(saved['request']) == d.constraints(request),'SAVED_REQUEST_CHANGED')\n    if expected_payload is not None:\n        d.need(saved['payload_sha256'] == c.sha(expected_payload),'SAME_KEY_CHANGED_PAYLOAD')\n    state = snapshot(state_root/'registry.json')\n    row = state['idempotency'].get(saved['logical_key'])\n    d.need(row is not None and row['payload_sha256'] == saved['payload_sha256'] and\n           row['packet_ref'] == saved['packet_ref'] and row['slots'] == saved['slots'] and\n           all(state['reservations'].count(slot) == 1 for slot in saved['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    d.need(saved['receipt']['artifact_id'] == saved['booking']['receipt_ref'],\n           'RECEIPT_IDENTITY_MISMATCH','CURRENT_STATUS_UNKNOWN')\n    return saved, state\n\ndef confirm(request, offer, source_body, operator, state_root, folder, counters):\n    data = payload(request,offer)\n    path = state_root/'bookings'/(scope_key(request)+'.json')\n    pending = state_root/'pending'/(scope_key(request)+'.json')\n    if path.exists() or pending.exists():\n        saved, readback = reconcile(request,state_root,data)\n        n.save(folder/'receipt.json',saved['receipt'])\n        n.save(folder/'readback.json',readback)\n        e.immutable(folder/'reconciliation.json',dict(logical_key=saved['logical_key'],\n            payload_sha256=saved['payload_sha256'],classification='HISTORY',dispatch=False))\n        counters['receipt_reuse'] += 1\n        return saved['booking']\n    now = e.clock()\n    try:\n        end = c.temporal(source_body['time_envelope'],now,\n            dict(max_source_age=operator['max_source_age'],max_validity_horizon=300))\n    except ValueError as exc:\n        raise d.Refusal(str(exc)) from exc\n    d.need(operator['status'] == 'ACTIVE','SOURCE_NOT_ACTIVE')\n    inventory_path = state_root/'current_inventory.json'\n    inventory = c.decode(inventory_path.read_bytes())\n    effective = merged_inventory(inventory,snapshot(state_root/'registry.json'))\n    d.check_offer(offer,request,effective)\n    review = n.root_review('VenueRoot','transaction:football:booking',\n        'candidate:football:booking:'+c.sha(data),source_body['source_work_ref'],\n        dict(consent=p.approved(operator,request,'BOOK') and operator['booking_enabled'],\n             complete=len(offer['slots']) == 3,source_current=now < end,\n             schedule=inventory['revision'] == offer['schedule_revision']),\n        dict(request_sha256=c.sha(request),offer_sha256=c.sha(offer),\n             source_work_ref=source_body['source_work_ref'],\n             source_review_ref=source_body['source_review_ref'],inputs=data,\n             policy_sha256=c.sha(operator)),now,\n        window=(source_body['time_envelope']['valid_from'],end))\n    counters['root_reviews'] += 1\n    n.save(folder/'booking_review.json',n.root_plain(review))\n    d.need(review[2].decision == 'ACCEPT','BOOKING_REVIEW_REFUSED')\n    device = 'device:football:' + c.sha(request['venue_ref'])\n    admitted = admit(device)\n    inputs = tuple(action.build_action_effect_parameter_record_v01(parameter_name=k,\n        value_type=t,value=v) for k,t,v in\n        (('device_ref','REFERENCE',device),('payload_json','TEXT',c.canonical(data).decode())))\n    canonical = donor.build_native_work_action_v01(admitted=admitted,inputs=inputs,\n        root_id='VenueRoot',transaction_id='transaction:football:'+scope_key(request),\n        business_object_ref='booking:football:'+scope_key(request))\n    prepared = donor.authorize_and_prepare_action_v01(canonical,admitted,inputs)\n    counters['root_reviews'] += 1\n    packet = prepared.root_bound.packet_identity.packet_id\n    key = canonical.idempotency_identity.idempotency_key\n    host = donor.host_for_prepared_action_v01(prepared)\n    mutations = []\n    PACKETS[packet] = dict(key=key,payload=data,offer=offer,policy=operator,\n        state_path=state_root/'registry.json',inventory_path=inventory_path,\n        inventory_sha256=c.sha(inventory),valid_from=source_body['time_envelope']['valid_from'],\n        source_end=end,mutations=mutations)\n    e.immutable(pending,dict(logical_key=key,payload_sha256=c.sha(data),packet_ref=packet))\n    n.save(folder/'prepared_action.json',dict(canonical=n.plain(canonical),\n        root=n.plain(prepared.root_bound.root_decision_projection),\n        admission=n.plain(firewall.snapshot_admitted_capability_v01(admitted))))\n    counters['dispatch'] += 1\n    try:\n        registry, revision = hosts.dispatch_current_action_v01(host,\n            expected_revision=host.revision,packet_id=packet,\n            task_id='task:football:booking:'+scope_key(request),evaluation_time=1014,\n            evaluation_time_source='u1.controlled_utc',evaluation_context_id='context:u1:dispatch')\n    finally:\n        # Persist even a failed/uncertain native attempt before rendering a report.\n        n.save(folder/'native_dispatch.json',dict(registry=n.plain(host.registry),\n            events=n.plain(host.events),mutations=mutations))\n        counters['mutations'] += len(mutations)\n        PACKETS.pop(packet,None)\n    attempt = registry.action_packet_fulfillment_attempt_contexts[-1]\n    receipt = attempt.receipt\n    d.need(receipt is not None and len(mutations) == 1,\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    receipt_plain = abi.kernel_artifact_to_plain_dict_v01(receipt)\n    n.save(folder/'receipt.json',receipt_plain)\n    readback = snapshot(state_root/'registry.json')\n    n.save(folder/'readback.json',readback)\n    d.need(action.validate_action_commit_packet_registry_v02(registry)[0] and\n           readback['idempotency'][key]['payload_sha256'] == c.sha(data) and\n           all(readback['reservations'].count(s) == 1 for s in data['slots']),\n           'UNKNOWN_REQUIRES_READBACK','CURRENT_STATUS_UNKNOWN')\n    booking = dict(state='COMMITTED',receipt_ref=receipt_plain['artifact_id'],\n        payload_sha256=c.sha(data),snapshot_sha256=c.sha(readback),packet_ref=packet,\n        slots=data['slots'],request_sha256=c.sha(request))\n    saved = dict(request=request,logical_key=key,payload_sha256=c.sha(data),\n        packet_ref=packet,slots=data['slots'],receipt=receipt_plain,booking=booking)\n    # Saved receipt is history data, never deserialized into a Host or permission.\n    n.save(path,saved)\n    return booking\n"
+        }
+      ],
+      "definition": {
+        "business_semantics": {
+          "business_object_class": "RECORD_SET",
+          "business_object_namespace": "football.registry.v01",
+          "input_bindings": [
+            {
+              "input_name": "device_ref",
+              "source_kind": "TARGET_RECORD",
+              "source_name": "device_ref",
+              "value_type": "REFERENCE"
+            },
+            {
+              "input_name": "payload_json",
+              "source_kind": "RECORD",
+              "source_name": "payload_json",
+              "value_type": "TEXT"
+            }
+          ],
+          "logical_effect_class": "BATCH",
+          "logical_effect_namespace": "football.booking.v01",
+          "operation_key": "football.booking.v01",
+          "selected_action_class": "mock_action:football_booking"
+        },
+        "code_sha256s": [
+          [
+            "candidate_domain.effect.execute_booking",
+            "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+          ],
+          [
+            "candidate_domain.effect.validate_inputs",
+            "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+          ],
+          [
+            "candidate_domain.effect.validate_output",
+            "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+          ]
+        ],
+        "contract_sha256": "24795a7ae2e29ee080317a37dcee9c5458f6912583f7997d9292076c5b567a7c",
+        "definition_id": "capability_definition:8923bc921b6e3fa7e2d92be644dea3e91a179c260e120d3e9ca31e08824a0189",
+        "effect_kind": "MOCK_CONSEQUENTIAL",
+        "executor_ref": "candidate_domain.effect.execute_booking",
+        "input_fields": [
+          {
+            "allowed_values": [],
+            "consequential": true,
+            "maximum": null,
+            "minimum": null,
+            "name": "device_ref",
+            "required": true,
+            "value_type": "REFERENCE"
+          },
+          {
+            "allowed_values": [],
+            "consequential": true,
+            "maximum": null,
+            "minimum": null,
+            "name": "payload_json",
+            "required": true,
+            "value_type": "TEXT"
+          }
+        ],
+        "input_validator_ref": "candidate_domain.effect.validate_inputs",
+        "operation_id": "football.booking.v01",
+        "output_fields": [
+          {
+            "allowed_values": [],
+            "consequential": false,
+            "maximum": null,
+            "minimum": null,
+            "name": "booking_state",
+            "required": true,
+            "value_type": "TEXT"
+          },
+          {
+            "allowed_values": [],
+            "consequential": false,
+            "maximum": null,
+            "minimum": null,
+            "name": "device_ref",
+            "required": true,
+            "value_type": "REFERENCE"
+          },
+          {
+            "allowed_values": [],
+            "consequential": false,
+            "maximum": null,
+            "minimum": null,
+            "name": "payload_sha256",
+            "required": true,
+            "value_type": "TEXT"
+          }
+        ],
+        "output_validator_ref": "candidate_domain.effect.validate_output",
+        "resource_refs": [
+          "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+        ],
+        "version": "v01"
+      },
+      "host_instance_ref": "host:football:venue",
+      "implementation_ref": "capability_implementation:558f34cbfbb1737dd2e25763c58fd4a111ccdbfebf8f4c74abd5e04031dad0ed",
+      "input_contract_ref": "capability_input_contract:809588c077af22a0c004ea42b7cd3a0b46a19a3df2d87294feba4b2e0c1bc429",
+      "output_contract_ref": "capability_output_contract:62b1b32f69f84e73731f3cf44620cb16d5d8977009837990e4a63e34f3fb3e72"
+    },
+    "idempotency_identity": {
+      "idempotency_key": "idem:action_v01:f8b659dcac06bd56e9510dd7446b4e5ae2b81c73275992f8e968e3a6010e13b7",
+      "logical_effect_class": "BATCH",
+      "logical_effect_namespace": "football.booking.v01",
+      "normalized_business_object_identity": {
+        "business_object_class": "RECORD_SET",
+        "business_object_namespace": "football.registry.v01",
+        "business_object_ref": "booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+        "owning_effect_root_id": "VenueRoot"
+      },
+      "normalized_consequential_effect_parameters": {
+        "amount_decimal": null,
+        "currency_code": null,
+        "parameter_records": [
+          {
+            "parameter_name": "device_ref",
+            "value": "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+            "value_type": "REFERENCE"
+          },
+          {
+            "parameter_name": "payload_json",
+            "value": "{\"currency\":\"EUR\",\"offer_sha256\":\"1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033\",\"request\":{\"budget_minor\":7000,\"currency\":\"EUR\",\"operation\":\"CONFIRM_MOCK_BOOKING\",\"owner_approval_ref\":\"consent:controlled:booking\",\"request_id\":\"request:exam:one\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:00:00\",\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T12:30:00\",\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T12:30:00\",\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\"}],\"team_ref\":\"team:one\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:synthetic\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"total_minor\":6300}",
+            "value_type": "TEXT"
+          }
+        ],
+        "quantity_decimal": null
+      },
+      "normalized_subject_scope": {
+        "excluded_subject_refs": [],
+        "included_subject_refs": [
+          "subject:u1:owner"
+        ]
+      },
+      "normalized_target_scope": {
+        "excluded_target_refs": [],
+        "included_target_refs": [
+          "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+        ]
+      },
+      "owning_effect_root_id": "VenueRoot",
+      "root_owned_intent_id": "root_logical_intent_v01:5309ab36fa285f489c20b0c69e44536b09b4b89d0f84a2859cf57dce1838b10c",
+      "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+    },
+    "logical_intent": {
+      "logical_effect_class": "BATCH",
+      "logical_effect_namespace": "football.booking.v01",
+      "normalized_business_object_identity": {
+        "business_object_class": "RECORD_SET",
+        "business_object_namespace": "football.registry.v01",
+        "business_object_ref": "booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+        "owning_effect_root_id": "VenueRoot"
+      },
+      "normalized_consequential_effect_parameters": {
+        "amount_decimal": null,
+        "currency_code": null,
+        "parameter_records": [
+          {
+            "parameter_name": "device_ref",
+            "value": "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+            "value_type": "REFERENCE"
+          },
+          {
+            "parameter_name": "payload_json",
+            "value": "{\"currency\":\"EUR\",\"offer_sha256\":\"1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033\",\"request\":{\"budget_minor\":7000,\"currency\":\"EUR\",\"operation\":\"CONFIRM_MOCK_BOOKING\",\"owner_approval_ref\":\"consent:controlled:booking\",\"request_id\":\"request:exam:one\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:00:00\",\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T12:30:00\",\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T12:30:00\",\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\"}],\"team_ref\":\"team:one\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:synthetic\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"total_minor\":6300}",
+            "value_type": "TEXT"
+          }
+        ],
+        "quantity_decimal": null
+      },
+      "normalized_subject_scope": {
+        "excluded_subject_refs": [],
+        "included_subject_refs": [
+          "subject:u1:owner"
+        ]
+      },
+      "normalized_target_scope": {
+        "excluded_target_refs": [],
+        "included_target_refs": [
+          "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+        ]
+      },
+      "owning_effect_root_id": "VenueRoot",
+      "root_owned_intent_id": "root_logical_intent_v01:5309ab36fa285f489c20b0c69e44536b09b4b89d0f84a2859cf57dce1838b10c",
+      "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+    },
+    "normalized_effect_parameters": {
+      "effect_class": "BATCH",
+      "parameter_records": [
+        {
+          "parameter_name": "capability_definition_ref",
+          "value": "capability_definition:8923bc921b6e3fa7e2d92be644dea3e91a179c260e120d3e9ca31e08824a0189",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "capability_implementation_ref",
+          "value": "capability_implementation:558f34cbfbb1737dd2e25763c58fd4a111ccdbfebf8f4c74abd5e04031dad0ed",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "capability_input_contract_ref",
+          "value": "capability_input_contract:809588c077af22a0c004ea42b7cd3a0b46a19a3df2d87294feba4b2e0c1bc429",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "capability_output_contract_ref",
+          "value": "capability_output_contract:62b1b32f69f84e73731f3cf44620cb16d5d8977009837990e4a63e34f3fb3e72",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "device_ref",
+          "value": "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c",
+          "value_type": "REFERENCE"
+        },
+        {
+          "parameter_name": "payload_json",
+          "value": "{\"currency\":\"EUR\",\"offer_sha256\":\"1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033\",\"request\":{\"budget_minor\":7000,\"currency\":\"EUR\",\"operation\":\"CONFIRM_MOCK_BOOKING\",\"owner_approval_ref\":\"consent:controlled:booking\",\"request_id\":\"request:exam:one\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:00:00\",\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T12:30:00\",\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T12:30:00\",\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\"}],\"team_ref\":\"team:one\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:synthetic\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799341200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:7\",\"start_utc\":1799335800,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799409600,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:8\",\"start_utc\":1799404200,\"venue_ref\":\"venue:synthetic\"},{\"end_utc\":1799494200,\"field_id\":\"field:elm\",\"price_minor\":2100,\"session_id\":\"session:9\",\"start_utc\":1799488800,\"venue_ref\":\"venue:synthetic\"}],\"total_minor\":6300}",
+          "value_type": "TEXT"
+        }
+      ]
+    },
+    "normalized_effect_parameters_fingerprint": "41d22554905ad310d8534e5954cbefcc5b2baa6bf2827337aedd1789144a64e9",
+    "normalized_permission_scope": {
+      "allowed_action_classes": [
+        "mock_action:football_booking"
+      ],
+      "allowed_adapter_ids": [
+        "mock_adapter:work"
+      ],
+      "forbidden_action_classes": [],
+      "forbidden_adapter_ids": [],
+      "prohibited_effect_classes": [],
+      "required_approval_refs": [
+        "permission:VenueRoot:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+      ]
+    },
+    "normalized_subject_scope": {
+      "excluded_subject_refs": [],
+      "included_subject_refs": [
+        "subject:u1:owner"
+      ]
+    },
+    "normalized_target_scope": {
+      "excluded_target_refs": [],
+      "included_target_refs": [
+        "device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+      ]
+    },
+    "owning_local_root_id": "VenueRoot",
+    "selected_canonical_action": "mock_action:football_booking",
+    "temporal_authority": {
+      "expires_at_utc": 4600,
+      "issued_at_utc": 1000,
+      "temporal_policy_version": "u1.logical_utc.v01",
+      "ttl_seconds": 3600
+    },
+    "temporal_authority_fingerprint": "f970f82f1bcd89abc70409da96b31cb6d363c0efa850d4c4a54359a1122c5939",
+    "temporal_evaluation": {
+      "executable": true,
+      "outcome": "TEMPORALLY_VALID"
+    },
+    "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+  },
+  "root": {
+    "candidate_kind": "PACKET_AUTHORIZATION",
+    "projected_candidate_id": "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf",
+    "root_decision_input": {
+      "conflict_state": {
+        "items": [
+          [
+            "conflict_set_ids",
+            []
+          ],
+          [
+            "material_unresolved_conflict",
+            false
+          ]
+        ]
+      },
+      "decision_input_id": "9af5aae01ca01910a37b5580872dc6cd120b79fd68f3be2f33f9e32373f75f1d",
+      "gt_advisory": {
+        "items": [
+          [
+            "actor_role",
+            "gt"
+          ],
+          [
+            "advisory_id",
+            "gt:u1_native_synthetic"
+          ],
+          [
+            "advisory_only",
+            true
+          ],
+          [
+            "attempted_effect",
+            "CREATE_ROOT_DECISION"
+          ],
+          [
+            "candidate_ids",
+            [
+              "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf"
+            ]
+          ],
+          [
+            "creates_final_output",
+            false
+          ],
+          [
+            "requests_effect",
+            false
+          ],
+          [
+            "score_micros_by_candidate",
+            {
+              "items": [
+                [
+                  "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf",
+                  1000000
+                ]
+              ]
+            }
+          ],
+          [
+            "selected_candidate_id",
+            "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf"
+          ],
+          [
+            "source_artifact_type",
+            "GTAdvisoryReport"
+          ],
+          [
+            "source_lifecycle_state",
+            "VALIDATED"
+          ],
+          [
+            "target_artifact_type",
+            "RootDecision"
+          ]
+        ]
+      },
+      "permission_state": {
+        "items": [
+          [
+            "permission_ref",
+            "permission:VenueRoot:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+          ],
+          [
+            "permission_required",
+            true
+          ],
+          [
+            "permission_scope_valid",
+            true
+          ],
+          [
+            "user_permission_present",
+            true
+          ]
+        ]
+      },
+      "policy_state": {
+        "items": [
+          [
+            "allow_accept",
+            true
+          ],
+          [
+            "conflict_policy",
+            "DEFER"
+          ],
+          [
+            "hard_policy_passed",
+            true
+          ],
+          [
+            "identity_passed",
+            true
+          ],
+          [
+            "no_candidate_policy",
+            "NO_UPDATE"
+          ],
+          [
+            "policy_id",
+            "6ed9cd252f7a9630f2b43d4e8f8b258485092da4d59a0ea94f8f8d933a6c19ba"
+          ],
+          [
+            "scope_passed",
+            true
+          ]
+        ]
+      },
+      "post_vv_bundle": {
+        "items": [
+          [
+            "bundle_id",
+            "post_vv:u1_native_synthetic"
+          ],
+          [
+            "hard_failure_reasons",
+            []
+          ],
+          [
+            "post_vv_passed",
+            true
+          ],
+          [
+            "provided_evidence_refs",
+            [
+              "evidence:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+            ]
+          ],
+          [
+            "rejected_candidate_ids",
+            []
+          ],
+          [
+            "required_evidence_refs",
+            [
+              "evidence:device:football:f000e440d9a649c9e9f32f0ac653f2786b0ab64e82d95cc168d165d6750cd75c"
+            ]
+          ],
+          [
+            "validated_candidate_ids",
+            [
+              "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf"
+            ]
+          ]
+        ]
+      },
+      "prior_root_state": {
+        "items": [
+          [
+            "prior_decision",
+            null
+          ],
+          [
+            "prior_decision_id",
+            null
+          ],
+          [
+            "prior_selected_candidate_id",
+            null
+          ]
+        ]
+      },
+      "root_review_packet": {
+        "authority_class": "ADVISORY_ONLY",
+        "conflict_set_ids": [],
+        "contribution_ids": [
+          "contribution:u1_native:booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+        ],
+        "final_output_created": false,
+        "missing_evidence_refs": [],
+        "packet_id": "dff37cdb530c57fd456f3214d1a22c5bdf1643383256ff0482c93340e4e7b913",
+        "permission_created": false,
+        "request_id": "semantic_request:u1_native:booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+        "required_validator_ids": [
+          "validator:u1_native_synthetic_authorization"
+        ],
+        "review_state": "ROOT_REVIEW_REQUIRED",
+        "root_decision_created": false,
+        "runtime_topology_ref": "runtime_topology:u1_native_bounded_synthetic",
+        "synthesis_proposal": {
+          "authority_class": "ADVISORY_ONLY",
+          "conflict_sets": [],
+          "contribution_modes": [
+            "DETERMINISTIC"
+          ],
+          "missing_evidence_refs": [],
+          "normalized_claims": [
+            {
+              "authority_class": "NONE",
+              "claim_id": "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf",
+              "confidence_micros": 1000000,
+              "evidence_refs": [
+                "evidence_binding:u1_native:booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+              ],
+              "object_or_value": {
+                "items": [
+                  [
+                    "candidate_id",
+                    "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf"
+                  ],
+                  [
+                    "candidate_kind",
+                    "PACKET_AUTHORIZATION"
+                  ]
+                ]
+              },
+              "predicate": "root_packet_authorization_candidate",
+              "provenance_refs": [
+                "provenance:u1_native_synthetic_authorization"
+              ],
+              "source_mode": "DETERMINISTIC",
+              "source_role": "deterministic_runtime",
+              "subject": "action_commit_packet:booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+              "time_envelope_ref": "f970f82f1bcd89abc70409da96b31cb6d363c0efa850d4c4a54359a1122c5939"
+            }
+          ],
+          "proposal_id": "b8409fd4593568ccf0e9eda6babdf213e6a6c0a3ceb6cba9feba326755850211",
+          "request_id": "semantic_request:u1_native:booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+          "requested_validators": [
+            "validator:u1_native_synthetic_authorization"
+          ],
+          "root_review_required": true,
+          "source_contribution_ids": [
+            "contribution:u1_native:booking:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+          ],
+          "synthesis_summary": "advisory_claims_ready_for_root_review"
+        },
+        "target_root_id": "VenueRoot",
+        "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+      },
+      "target_root_id": "VenueRoot",
+      "temporal_state": {
+        "items": [
+          [
+            "expired",
+            false
+          ],
+          [
+            "not_before_satisfied",
+            true
+          ],
+          [
+            "temporal_valid",
+            true
+          ],
+          [
+            "time_envelope_ref",
+            "f970f82f1bcd89abc70409da96b31cb6d363c0efa850d4c4a54359a1122c5939"
+          ]
+        ]
+      },
+      "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1"
+    },
+    "root_decision_kernel": {
+      "effect_access": "NONE",
+      "kernel_id": "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235",
+      "kernel_version": "v0.1",
+      "llm_dependency_allowed": false,
+      "precedence_order": [
+        "HARD_FAILURE",
+        "NEEDS_USER",
+        "NEEDS_MORE_EVIDENCE",
+        "MATERIAL_CONFLICT",
+        "NO_VALID_CANDIDATE",
+        "POLICY_REJECT",
+        "ACCEPT"
+      ],
+      "transition_registry": {
+        "abi_major_version": 1,
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "registry_version": "v0.1",
+        "rules": [
+          {
+            "abi_major_version": 1,
+            "actor_role": "orchestrator",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "RETURN_TO_ROOT",
+            "reason_code": "route_acceptance_requires_root",
+            "required_guards": [
+              "artifact_valid",
+              "target_root_bound"
+            ],
+            "root_commit_required": true,
+            "rule_id": "route_proposal_to_root_accepted_route",
+            "source_artifact_type": "OrchestratorRouteProposal",
+            "source_lifecycle_state": "PROPOSED",
+            "target_artifact_type": "RootAcceptedRoute"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "deterministic_runtime",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "ALLOW",
+            "reason_code": "root_accepted_route_allows_topology",
+            "required_guards": [
+              "artifact_valid",
+              "target_root_bound"
+            ],
+            "root_commit_required": true,
+            "rule_id": "root_accepted_route_to_runtime_topology",
+            "source_artifact_type": "RootAcceptedRoute",
+            "source_lifecycle_state": "ROOT_ACCEPTED",
+            "target_artifact_type": "RuntimeExecutionTopology"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "post_vv",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "ALLOW",
+            "reason_code": "actor_contribution_requires_validated_evidence",
+            "required_guards": [
+              "artifact_valid",
+              "required_evidence_present"
+            ],
+            "root_commit_required": false,
+            "rule_id": "actor_contribution_to_validated_evidence",
+            "source_artifact_type": "ActorContribution",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "ValidatedEvidence"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "post_vv",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "ALLOW",
+            "reason_code": "result_proposal_allows_post_vv",
+            "required_guards": [
+              "artifact_valid",
+              "hard_predicates_evaluated"
+            ],
+            "root_commit_required": false,
+            "rule_id": "result_proposal_to_post_vv_report",
+            "source_artifact_type": "ResultProposal",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "PostVVReport"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "ALLOW",
+            "reason_code": "post_vv_allows_gt_advisory",
+            "required_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "root_commit_required": false,
+            "rule_id": "post_vv_report_to_gt_advisory",
+            "source_artifact_type": "PostVVReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "GTAdvisoryReport"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "RETURN_TO_ROOT",
+            "reason_code": "gt_advisory_returns_to_root",
+            "required_guards": [
+              "artifact_valid",
+              "post_vv_passed",
+              "advisory_only"
+            ],
+            "root_commit_required": true,
+            "rule_id": "gt_advisory_to_root_decision",
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "root",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "ALLOW",
+            "reason_code": "root_decision_allows_root_owned_intent",
+            "required_guards": [
+              "artifact_valid",
+              "decision_accept"
+            ],
+            "root_commit_required": true,
+            "rule_id": "root_decision_to_root_owned_intent",
+            "source_artifact_type": "RootDecision",
+            "source_lifecycle_state": "ROOT_ACCEPTED",
+            "target_artifact_type": "RootOwnedIntent"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "root",
+            "attempted_effect": "CREATE_TARGET_ARTIFACT",
+            "decision": "ALLOW",
+            "reason_code": "root_decision_allows_execution_request",
+            "required_guards": [
+              "artifact_valid",
+              "decision_accept",
+              "user_permission_present",
+              "effect_firewall_required"
+            ],
+            "root_commit_required": true,
+            "rule_id": "root_decision_to_execution_request",
+            "source_artifact_type": "RootDecision",
+            "source_lifecycle_state": "ROOT_ACCEPTED",
+            "target_artifact_type": "ExecutionRequest"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "receipt",
+            "attempted_effect": "RETURN_TO_ROOT",
+            "decision": "RETURN_TO_ROOT",
+            "reason_code": "receipt_returns_to_root",
+            "required_guards": [
+              "artifact_valid",
+              "receipt_evidence_only"
+            ],
+            "root_commit_required": true,
+            "rule_id": "evidence_receipt_to_root_review",
+            "source_artifact_type": "EvidenceReceipt",
+            "source_lifecycle_state": "RECEIPT_RECORDED",
+            "target_artifact_type": "RootDecision"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "root",
+            "attempted_effect": "CREATE_FINAL_OUTPUT",
+            "decision": "ALLOW",
+            "reason_code": "root_decision_allows_root_final",
+            "required_guards": [
+              "artifact_valid",
+              "decision_accept",
+              "finalization_policy_passed"
+            ],
+            "root_commit_required": true,
+            "rule_id": "root_decision_to_root_final",
+            "source_artifact_type": "RootDecision",
+            "source_lifecycle_state": "ROOT_ACCEPTED",
+            "target_artifact_type": "RootFinal"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "root",
+            "attempted_effect": "RECORD_EVIDENCE",
+            "decision": "ALLOW",
+            "reason_code": "root_final_allows_transaction_outcome",
+            "required_guards": [
+              "artifact_valid",
+              "outcome_complete"
+            ],
+            "root_commit_required": true,
+            "rule_id": "root_final_to_transaction_outcome",
+            "source_artifact_type": "RootFinal",
+            "source_lifecycle_state": "FINALIZED",
+            "target_artifact_type": "TransactionOutcomeEnvelope"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "root",
+            "attempted_effect": "RETURN_TO_ROOT",
+            "decision": "RETURN_TO_ROOT",
+            "reason_code": "cross_root_evidence_returns_to_target_root",
+            "required_guards": [
+              "artifact_valid",
+              "source_root_isolated",
+              "target_root_bound"
+            ],
+            "root_commit_required": true,
+            "rule_id": "cross_root_evidence_to_root_review",
+            "source_artifact_type": "CrossRootEvidenceRef",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "provider_llm",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "BLOCKED_FAIL_CLOSED",
+            "reason_code": "provider_cannot_create_root_decision",
+            "required_guards": [],
+            "root_commit_required": false,
+            "rule_id": "provider_contribution_to_root_decision_forbidden",
+            "source_artifact_type": "ActorContribution",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "drs",
+            "attempted_effect": "CREATE_PERMISSION",
+            "decision": "BLOCKED_FAIL_CLOSED",
+            "reason_code": "evidence_cannot_create_permission",
+            "required_guards": [],
+            "root_commit_required": false,
+            "rule_id": "drs_evidence_to_permission_forbidden",
+            "source_artifact_type": "SemanticEvidence",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "ExecutionRequest"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "gt",
+            "attempted_effect": "CREATE_FINAL_OUTPUT",
+            "decision": "BLOCKED_FAIL_CLOSED",
+            "reason_code": "gt_cannot_create_final_output",
+            "required_guards": [],
+            "root_commit_required": false,
+            "rule_id": "gt_advisory_to_root_final_forbidden",
+            "source_artifact_type": "GTAdvisoryReport",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootFinal"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "receipt",
+            "attempted_effect": "CREATE_PERMISSION",
+            "decision": "BLOCKED_FAIL_CLOSED",
+            "reason_code": "receipt_cannot_create_permission",
+            "required_guards": [],
+            "root_commit_required": false,
+            "rule_id": "receipt_to_permission_forbidden",
+            "source_artifact_type": "EvidenceReceipt",
+            "source_lifecycle_state": "RECEIPT_RECORDED",
+            "target_artifact_type": "ExecutionRequest"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "replay",
+            "attempted_effect": "CREATE_ROOT_DECISION",
+            "decision": "BLOCKED_FAIL_CLOSED",
+            "reason_code": "causal_evidence_cannot_create_root_decision",
+            "required_guards": [],
+            "root_commit_required": false,
+            "rule_id": "causal_evidence_to_root_decision_forbidden",
+            "source_artifact_type": "CausalConsumptionRef",
+            "source_lifecycle_state": "VALIDATED",
+            "target_artifact_type": "RootDecision"
+          },
+          {
+            "abi_major_version": 1,
+            "actor_role": "domain_adapter",
+            "attempted_effect": "REQUEST_EFFECT",
+            "decision": "BLOCKED_FAIL_CLOSED",
+            "reason_code": "domain_adapter_cannot_request_effect",
+            "required_guards": [],
+            "root_commit_required": false,
+            "rule_id": "domain_adapter_effect_request_forbidden",
+            "source_artifact_type": "RootDecision",
+            "source_lifecycle_state": "ROOT_ACCEPTED",
+            "target_artifact_type": "ExecutionRequest"
+          }
+        ]
+      }
+    },
+    "root_decision_result": {
+      "conflict_set_ids": [],
+      "decision": "ACCEPT",
+      "decision_id": "41a16946485e21dbff71af2134249fda67916d816c2f23b3b0eee0929d5e798b",
+      "decision_input_id": "9af5aae01ca01910a37b5580872dc6cd120b79fd68f3be2f33f9e32373f75f1d",
+      "effect_requested": false,
+      "final_output_created": false,
+      "hard_failure_reasons": [],
+      "missing_evidence_refs": [],
+      "permission_created": false,
+      "prior_decision_id": null,
+      "reason_code": "validated_candidate_accepted",
+      "root_commit_created": true,
+      "selected_candidate_id": "root_packet_authorization_v01:c37e891a8aad5a745619979a75d801f7b7ee84d7042d17b75f8cd941865f2cdf",
+      "target_root_id": "VenueRoot",
+      "transaction_id": "transaction:football:4571ec31c021e62c79c596b70df26e38bcc0f03089b23dc0c872283bc20712e1",
+      "transition_decision": {
+        "abi_major_version": 1,
+        "actor_role": "gt",
+        "attempted_effect": "CREATE_ROOT_DECISION",
+        "decision": "RETURN_TO_ROOT",
+        "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+        "matched": true,
+        "missing_guards": [],
+        "reason_code": "gt_advisory_returns_to_root",
+        "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+        "required_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "root_commit_present": false,
+        "root_commit_required": true,
+        "rule_id": "gt_advisory_to_root_decision",
+        "satisfied_guards": [
+          "artifact_valid",
+          "post_vv_passed",
+          "advisory_only"
+        ],
+        "source_artifact_type": "GTAdvisoryReport",
+        "source_lifecycle_state": "VALIDATED",
+        "target_artifact_type": "RootDecision"
+      }
+    },
+    "source_root_decision_hash": "a83b8ef14acd38c96634fcc5bb3012f247908be2f1a66b5be155e04a0e09ac61"
+  }
+}

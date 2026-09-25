@@ -1,0 +1,57 @@
+"""Independent saved-output checks; never imports generated candidate code."""
+import hashlib
+import json
+from pathlib import Path
+import sys
+import traceback
+
+WORK = Path(__file__).resolve().parent
+sys.path.insert(0, str(WORK / 'EXAMINER_PRIVATE'))
+sys.path.insert(0, str(WORK / 'AUTHOR_VISIBLE/source'))
+import examiner
+from hedgehog.external_drs import gate5_contracts_v01 as contracts
+
+attempt = WORK / 'AUTHOR_TRIAL' / ('attempt_%02d' % int(sys.argv[1]))
+runtime = WORK / sys.argv[2]
+runtime_receipt = json.loads((runtime / 'receipt.json').read_text())
+assert runtime_receipt['cli_reaped'] and runtime_receipt['container_removed']
+assert runtime_receipt['limit_failure'] is None
+raw_cases = {v['case_id']: v for v in json.loads((WORK / 'EXAMINER_PRIVATE/cases.json').read_text())}
+inputs = json.loads((attempt / 'native_story/inputs/requester/input.json').read_text())
+requests = {v['event_id']: v['request'] for v in inputs['events']}
+result = dict(classification='INDEPENDENT_DATA_AND_PUBLIC_PARSER_CHECK_NOT_NEW_RUNTIME',
+    candidate_sha256=hashlib.sha256((attempt / 'candidate/candidate.json').read_bytes()).hexdigest(),
+    runner=str(runtime.relative_to(WORK)), cases={}, reports={}, refusals={},
+    evaluation_time=int(runtime_receipt['end']),
+    evaluation_time_origin='Trusted runner final time for this fresh execution, not the old synthetic oracle date')
+for path in sorted((runtime / 'worker').glob('*/evidence/*/report.json')):
+    result['reports'][str(path.relative_to(runtime))] = json.loads(path.read_text())
+for path in sorted((runtime / 'worker').glob('*/evidence/*/refusal.json')):
+    result['refusals'][str(path.relative_to(runtime))] = json.loads(path.read_text())
+for label, original in [('exact', 'exact_only'), ('shift', 'allowed_shift')]:
+    case = dict(raw_cases[original], request=requests[label],
+        evaluation_time=result['evaluation_time'])
+    report = json.loads((runtime / 'worker/requester/evidence' / label / 'report.json').read_text())
+    try:
+        result['cases'][label] = examiner.check_report(case, report)
+    except ValueError as error:
+        result['cases'][label] = dict(status='FAIL', error=str(error), traceback=traceback.format_exc())
+state = runtime / 'worker/requester/state/imports/import_state.json'
+if state.exists():
+    data = state.read_bytes()
+    result['saved_state'] = dict(path=str(state.relative_to(WORK)),
+        sha256=hashlib.sha256(data).hexdigest(),
+        highwater_key_lengths=[len(k) for k in json.loads(data)['highwater']])
+    try:
+        contracts.decode(data)
+        result['saved_state']['wire_decode'] = 'ACCEPTED'
+    except ValueError as error:
+        result['saved_state'].update(wire_decode='REFUSED', reason=str(error),
+            traceback=traceback.format_exc())
+result['module_origins'] = dict(examiner=examiner.__file__, contracts=contracts.__file__)
+result['new_native_provider_effect_calls'] = 0
+with (attempt / 'independent_story_review.json').open('x') as stream:
+    json.dump(result, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(dict(cases=result['cases'], saved_state=result.get('saved_state'))))
+raise SystemExit(int(any(v.get('status') == 'FAIL' for v in result['cases'].values())))

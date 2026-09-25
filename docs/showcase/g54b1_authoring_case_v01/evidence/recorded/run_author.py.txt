@@ -1,0 +1,91 @@
+"""Fresh no-environment author and bounded supervisor feedback handoff."""
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import time
+import traceback
+from broker import Broker, TOOLS
+from no_env_client import Client, WORK, save, now
+
+trial=WORK/'AUTHOR_TRIAL';trial.mkdir(exist_ok=False)
+public=WORK/'AUTHOR_VISIBLE'
+inventory=json.loads((WORK/'SUPERVISOR_EVIDENCE/public_inventory.json').read_text())
+for row in inventory['files']:
+    body=(public/row['path']).read_bytes()
+    assert len(body)==row['bytes'] and hashlib.sha256(body).hexdigest()==row['sha256']
+assert json.loads((WORK/'DIAGNOSTIC/RESULT.json').read_text())['result']=='SCOPED_NO_ENV_BROKER_DIAGNOSTIC_PASS'
+inputs=['AUTHOR_SYSTEM.txt','HOW_TO_BUILD.md','EXECUTION_CONTRACT.md','CANDIDATE_OUTPUT.md','WHAT_TO_BUILD.md']
+prompt='\n\n'.join('## '+name+'\n'+(public/name).read_text() for name in inputs)
+prompt+='\n\n## Available public source paths\n'+'\n'.join(row['path'] for row in inventory['files'])
+prompt+='''
+
+## Current Inert Tool Interface
+The registered broker tools are the effective interface for this trial. The old
+AUTHOR_TOOLS.json describes the initial reader design, not a restriction to that
+one tool. All listed public files, including documentation and the mechanically
+generated SYMBOL_INDEX.json, are available through read_approved_source and
+search_approved_source. Search is bounded literal matching, not semantic advice.
+Use actual declarations and examples rather than inventing API signatures.
+Use small complete files or exact-hash patches. inspect_candidate_text performs
+syntax-only checks. submit_candidate freezes the whole pack for independent
+review; the coordinator writes candidate.json from actual bytes. Do not manually
+write that manifest. All other required files remain your responsibility.
+There is no execution environment or direct filesystem access. Never run your
+candidate or ask for privileges. Produce the complete bounded domain pack now.
+Only you write the domain implementation. Report concrete public-contract blockers
+if any; do not claim runtime success or admission from source alone.
+'''
+save(trial/'initial_input.json',dict(text=prompt,sha256=hashlib.sha256(prompt.encode()).hexdigest()))
+save(trial/'freeze.json',dict(public_inventory=inventory,tools=TOOLS,input_sha256=hashlib.sha256(prompt.encode()).hexdigest(),
+     source_pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (WORK/'broker.py',WORK/'no_env_client.py',Path(__file__))},
+     configured_model='gpt-6-astra',effort='ultra',environments=[],fresh_thread=True,
+     prior_author_source_or_feedback_included=False,opaque_platform_instructions='DECLARED_TRUSTED_RUNTIME_NOT_DISCLOSED_OR_HASHED'))
+broker=Broker(public,inventory,trial)
+client=Client(trial/'session',public,broker)
+rc=0;attempt=0;neutral=0
+
+
+def state(phase,**extra):
+    save(WORK/'RESUME_STATE.json',dict(phase=phase,updated=now(),supervisor='journal_run.py',pid=client.p.pid,
+        thread=client.thread,turn=client.turn,attempt=attempt,submissions=attempt+int(broker.frozen),corrections=attempt,
+        task_delivered=client.receipt['turns_sent']>0,client_receipt=str(client.folder/'started.json'),**extra))
+
+
+try:
+    client.start();state('AUTHOR_RUNNING')
+    client.run_turn(prompt)
+    while True:
+        if not broker.frozen:
+            neutral+=1
+            if neutral>2: raise RuntimeError('AUTHOR_DID_NOT_SUBMIT_AFTER_TWO_NEUTRAL_CONTINUATIONS')
+            client.run_turn('Continue the same bounded implementation using the actual public sources and broker. Complete the required candidate and submit_candidate when ready; do not execute it or claim acceptance.')
+            continue
+        state('AWAITING_INDEPENDENT_REVIEW',candidate=str(broker.candidate))
+        print('SUBMITTED',attempt,str(broker.candidate),flush=True)
+        review_path=trial/f'attempt_{attempt:02d}/REVIEW_DECISION.json'
+        while not review_path.exists():
+            client.pump(1)
+            if client.p.poll() is not None: raise RuntimeError('Author session exited while waiting for review')
+        review=json.loads(review_path.read_text())
+        if set(review)!={'decision','feedback','evidence_refs'}: raise ValueError('review_shape')
+        save(trial/f'attempt_{attempt:02d}/REVIEW_RECEIVED.json',review)
+        if review['decision']=='ACCEPT':
+            state('AUTHOR_ACCEPTED_FOR_DECLARED_NEXT_STEPS');break
+        if review['decision']=='STOP' or attempt==3:
+            state('COLD_AUTHORING_INCOMPLETE');break
+        if review['decision']!='CORRECT': raise ValueError('review_decision')
+        attempt+=1;neutral=0
+        old=broker
+        broker=Broker(public,inventory,trial,attempt)
+        for p in old.candidate.rglob('*'):
+            if p.is_file() and p.name!='candidate.json':
+                dst=broker.candidate/p.relative_to(old.candidate);dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,dst)
+        broker.bind(client.thread,None);client.broker=broker
+        feedback='Independent review feedback for the submitted candidate:\n'+review['feedback']+'\nCorrect the candidate using public sources. Do not execute it. Submit the corrected complete pack for review.'
+        save(trial/f'attempt_{attempt:02d}/feedback_input.json',dict(text=feedback,sha256=hashlib.sha256(feedback.encode()).hexdigest()))
+        state('AUTHOR_CORRECTION_RUNNING');client.run_turn(feedback)
+except Exception as exc:
+    rc=1;(trial/'failure.txt').write_text(traceback.format_exc());state('ERROR_PRESERVED_DO_NOT_RESEND',error=str(exc));print(traceback.format_exc(),flush=True)
+finally:client.close(rc)
+raise SystemExit(rc)

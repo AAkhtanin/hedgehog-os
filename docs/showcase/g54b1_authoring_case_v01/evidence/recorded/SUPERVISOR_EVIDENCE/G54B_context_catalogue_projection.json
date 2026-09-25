@@ -1,0 +1,55 @@
+{
+  "cache_top_level_keys": [
+    "client_version",
+    "etag",
+    "fetched_at",
+    "models"
+  ],
+  "excluded": "All model base instructions and other model records. No opaque instructions copied or hashed separately.",
+  "scope": "Local Codex catalogue metadata only. No model turn was sent; effective turn limit is unverified.",
+  "selected_model_metadata": [
+    {
+      "context_window": 272000,
+      "default_reasoning_level": "medium",
+      "display_name": "GPT-6-Astra",
+      "effective_context_window_percent": 95,
+      "slug": "gpt-6-astra",
+      "supported_reasoning_levels": [
+        {
+          "description": "Fast responses with lighter reasoning",
+          "effort": "low"
+        },
+        {
+          "description": "Balances speed and reasoning depth for everyday tasks",
+          "effort": "medium"
+        },
+        {
+          "description": "Greater reasoning depth for complex problems",
+          "effort": "high"
+        },
+        {
+          "description": "Extra high reasoning depth for complex problems",
+          "effort": "xhigh"
+        },
+        {
+          "description": "Maximum reasoning depth for the hardest problems",
+          "effort": "max"
+        },
+        {
+          "description": "Maximum reasoning with automatic task delegation",
+          "effort": "ultra"
+        }
+      ],
+      "truncation_policy": {
+        "limit": 10000,
+        "mode": "tokens"
+      }
+    }
+  ],
+  "source": {
+    "bytes": 228362,
+    "path": "/Users/admin/.codex/models_cache.json",
+    "scope": "Exact bytes used for this projection",
+    "sha256": "762b2fd3d3f8a0a42873a73ac1d014f7f98394bf4907c765270f9b793be9daad"
+  }
+}

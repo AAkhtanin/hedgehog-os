@@ -1,0 +1,71 @@
+{
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "search": 1
+  },
+  "currency": "EUR",
+  "native_refs": {
+    "offer": {
+      "file": "offer_body.json",
+      "id": "source:football:6f4c5c8536dbec2f5a0495a0c059467df0dd754de616bf2bea5af6c063942b97"
+    },
+    "source_review": {
+      "file": "source_review.json",
+      "id": "00f1545bf1dc8aa1bb9d0d34161e2437273887017f51b95e3a4b3feac35b5af9"
+    },
+    "venue_work": {
+      "file": "venue_work.json",
+      "id": "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f"
+    }
+  },
+  "operation": "FIND_OFFER",
+  "receipt_ref": null,
+  "request_ref": "request:exam:one",
+  "request_revision": 2,
+  "slots": [
+    {
+      "end_utc": 1799341200,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:7",
+      "start_utc": 1799335800,
+      "venue_ref": "venue:synthetic"
+    },
+    {
+      "end_utc": 1799409600,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:8",
+      "start_utc": 1799404200,
+      "venue_ref": "venue:synthetic"
+    },
+    {
+      "end_utc": 1799494200,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:9",
+      "start_utc": 1799488800,
+      "venue_ref": "venue:synthetic"
+    }
+  ],
+  "source": {
+    "observed_at": 1790324453,
+    "offer_revision": 4,
+    "pt": 1790324453,
+    "publisher": "VenueRoot",
+    "recipient": "ActivePlanetRoot",
+    "request_revision": 2,
+    "schedule_revision": 4,
+    "status": "ACTIVE",
+    "status_checked": 1790324453,
+    "status_until": 1790324513,
+    "ttl": 300,
+    "valid_from": 1790324453,
+    "valid_to": 1790324753
+  },
+  "status": "OFFER_READY",
+  "team_ref": "team:one",
+  "total_minor": 6300,
+  "version": "g53.result.v01"
+}

@@ -1,0 +1,109 @@
+{
+  "config": {
+    "agents": {
+      "default_subagent_model": null,
+      "default_subagent_reasoning_effort": null,
+      "enabled": false,
+      "interrupt_message": null,
+      "job_max_runtime_seconds": null,
+      "max_concurrent_threads_per_session": null,
+      "max_depth": null
+    },
+    "default_permissions": "g54b1-public",
+    "developer_instructions": null,
+    "features": {
+      "apps": false,
+      "auth_elicitation": true,
+      "background_paginated_rollout_migration": false,
+      "browser_use": false,
+      "computer_use": false,
+      "image_generation": false,
+      "js_repl": false,
+      "mcp_2026_07_28": false,
+      "memories": false,
+      "mentions_v2": true,
+      "multi_agent": false,
+      "network_proxy": null,
+      "plugins": false,
+      "remote_control": false,
+      "remote_plugin": false,
+      "shell_snapshot": false,
+      "shell_tool": false,
+      "skill_mcp_dependency_install": false,
+      "skill_search": false,
+      "skip_host_skill_discovery": true,
+      "tool_suggest": false,
+      "unified_exec": false,
+      "view_image": false,
+      "windows_sandbox_service": false
+    },
+    "instructions": null,
+    "memories": {
+      "consolidation_model": null,
+      "dedicated_tools": null,
+      "disable_on_external_context": null,
+      "extract_model": null,
+      "generate_memories": false,
+      "max_raw_memories_for_consolidation": null,
+      "max_rollout_age_days": null,
+      "max_rollouts_per_startup": null,
+      "max_unused_days": null,
+      "min_rate_limit_remaining_percent": null,
+      "min_rollout_idle_hours": null,
+      "use_memories": false
+    },
+    "model": "gpt-6-astra",
+    "model_instructions_file": null,
+    "model_reasoning_effort": "ultra",
+    "permissions": {
+      "g54b1-public": {
+        "description": null,
+        "extends": null,
+        "filesystem": {
+          "/opt/homebrew/Caskroom/codex/0.154.0/bin/codex": "read",
+          "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE": "read",
+          ":minimal": "read",
+          ":root": "deny",
+          "glob_scan_max_depth": null
+        },
+        "network": {
+          "allow_local_binding": null,
+          "allow_upstream_proxy": null,
+          "dangerously_allow_all_unix_sockets": null,
+          "dangerously_allow_non_loopback_proxy": null,
+          "domains": null,
+          "enable_socks5": null,
+          "enable_socks5_udp": null,
+          "enabled": false,
+          "mitm": null,
+          "mode": null,
+          "proxy_url": null,
+          "socks_url": null,
+          "unix_sockets": null
+        },
+        "workspace_roots": null
+      }
+    },
+    "service_tier": "default",
+    "web_search": "disabled"
+  },
+  "hooks_configured": false,
+  "layer_names": [
+    {
+      "type": "sessionFlags"
+    },
+    {
+      "file": "/Users/admin/.codex/config.toml",
+      "profile": null,
+      "type": "user"
+    },
+    {
+      "file": "/etc/codex/config.toml",
+      "type": "system"
+    }
+  ],
+  "mcp_enabled": {
+    "computer-use": false,
+    "node_repl": false
+  }
+}

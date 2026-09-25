@@ -1,0 +1,71 @@
+{
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "search": 0
+  },
+  "currency": "EUR",
+  "native_refs": {
+    "history": {
+      "file": "history.json",
+      "id": "idem:action_v01:f8b659dcac06bd56e9510dd7446b4e5ae2b81c73275992f8e968e3a6010e13b7"
+    },
+    "readback": {
+      "file": "readback.json",
+      "id": "snapshot:1e0d2d310d7032ae3a8471e771f54cf6dabc1616682237527a763c94361d7300"
+    },
+    "receipt": {
+      "file": "receipt.json",
+      "id": "effect_receipt_v01:16d2611a5c85f250f59ad56e38cca6ce24922af4f56efe3b0791169ce30c2966"
+    }
+  },
+  "operation": "CONFIRM_MOCK_BOOKING",
+  "receipt_ref": "effect_receipt_v01:16d2611a5c85f250f59ad56e38cca6ce24922af4f56efe3b0791169ce30c2966",
+  "request_ref": "request:exam:one",
+  "request_revision": 2,
+  "slots": [
+    {
+      "end_utc": 1799341200,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:7",
+      "start_utc": 1799335800,
+      "venue_ref": "venue:synthetic"
+    },
+    {
+      "end_utc": 1799409600,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:8",
+      "start_utc": 1799404200,
+      "venue_ref": "venue:synthetic"
+    },
+    {
+      "end_utc": 1799494200,
+      "field_id": "field:elm",
+      "price_minor": 2100,
+      "session_id": "session:9",
+      "start_utc": 1799488800,
+      "venue_ref": "venue:synthetic"
+    }
+  ],
+  "source": {
+    "observed_at": 1790326469,
+    "offer_revision": 4,
+    "pt": 1790326469,
+    "publisher": "VenueRoot",
+    "recipient": "ActivePlanetRoot",
+    "request_revision": 2,
+    "schedule_revision": 4,
+    "status": "ACTIVE",
+    "status_checked": 1790326470,
+    "status_until": 1790326530,
+    "ttl": 300,
+    "valid_from": 1790326469,
+    "valid_to": 1790326769
+  },
+  "status": "MOCK_BOOKED",
+  "team_ref": "team:one",
+  "total_minor": 6300,
+  "version": "g53.result.v01"
+}

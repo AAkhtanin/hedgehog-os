@@ -1,0 +1,15 @@
+{
+  "effort": "ultra",
+  "environments": [],
+  "input": [
+    {
+      "text": "Independent review feedback for the submitted candidate:\nActual confined native story, exact-only phase: requester exited 1 before requester Work. The primary traceback is candidate_domain/run.py:221 run_peer_v01 -> transport.py:207 retrieve -> memory.py:72 descend -> approved/source/hedgehog/drs_semantic_address_v01.py:1696 build_meaning_record_v01, raising ValueError('drs_secret_payload_forbidden'). VenueRoot native PURE Work and the source/publication Root reviews had completed. The public descriptor source_record_ref was source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd and pointer_id was g5pointer:38be13337e4a793b415b05ad4b33d11c58d71483f6f4a220bd257e94ae79901d. These are actual non-secret generated metadata values; no validator result is being substituted. The publisher's later Refusal('EARLY_CLEAN_EOF') followed requester termination and is secondary. Root cause beyond the observed public DRS refusal is not yet asserted. Correct the candidate's use of the unchanged public contract. No subsequent shift, booking, repeat or verify phase was reached. Native acceptance, live and supplied checks are not passed.\nCorrect the candidate using public sources. Do not execute it. Submit the corrected complete pack for review.",
+      "type": "text"
+    }
+  ],
+  "model": "gpt-6-astra",
+  "runtimeWorkspaceRoots": [],
+  "serviceTier": "default",
+  "summary": "none",
+  "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4"
+}

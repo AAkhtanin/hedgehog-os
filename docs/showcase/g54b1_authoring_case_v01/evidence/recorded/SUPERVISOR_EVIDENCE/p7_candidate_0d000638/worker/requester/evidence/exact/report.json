@@ -1,0 +1,50 @@
+{
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "search": 0
+  },
+  "currency": "EUR",
+  "native_refs": {
+    "import_ref": {
+      "file": "import_candidate.json",
+      "id": "g5import:27187460a2cff80c58f5a0664e7cf8aba2f399a1e7c702c0084830bc24dcbf94"
+    },
+    "offer": {
+      "file": "offer_body.json",
+      "id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+    },
+    "requester_review": {
+      "file": "requester_review.json",
+      "id": "82fbae76f4431f83735c4f7719d0ad3defe9f8550cb943d65caea4ae53ff8664"
+    },
+    "requester_work": {
+      "file": "requester_work.json",
+      "id": "work_results:57d83c26e0313dc479f66117c0596948f9c383cbae009d60ff90a674c68149d0"
+    }
+  },
+  "operation": "FIND_OFFER",
+  "receipt_ref": null,
+  "request_ref": "request:exam:one",
+  "request_revision": 1,
+  "slots": [],
+  "source": {
+    "observed_at": 1790325322,
+    "offer_revision": 4,
+    "pt": 1790325322,
+    "publisher": "VenueRoot",
+    "recipient": "ActivePlanetRoot",
+    "request_revision": 1,
+    "schedule_revision": 4,
+    "status": "ACTIVE",
+    "status_checked": 1790325323,
+    "status_until": 1790325383,
+    "ttl": 300,
+    "valid_from": 1790325322,
+    "valid_to": 1790325622
+  },
+  "status": "NEEDS_CONFIRMATION",
+  "team_ref": "team:one",
+  "total_minor": 0,
+  "version": "g53.result.v01"
+}

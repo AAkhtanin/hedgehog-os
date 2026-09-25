@@ -1,0 +1,173 @@
+"""Frozen independent elementary checks. No offer finder or target implementation.
+
+Synthetic record sanity is not native acceptance. Native structures require real
+Work records and an independently captured runner observation after P7 is resolved.
+"""
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from itertools import product
+import hashlib,json
+
+def need(ok,reason):
+    if not ok:raise ValueError(reason)
+def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()
+def sha(value):return hashlib.sha256(canonical(value)).hexdigest()
+def utc(local,zone):
+    value=datetime.fromisoformat(local)
+    need(value.tzinfo is None,'local_time_explicit_zone')
+    return int(value.replace(tzinfo=ZoneInfo(zone)).timestamp())
+def overlap(a,b):return a[0]<b[1] and b[0]<a[1]
+
+def selection_rank(request,slots):
+    """Private oracle rank; never part of the author-readable source surface."""
+    sessions={s['session_id']:s for s in request['sessions']}
+    shift=sum(s['start_utc']-utc(sessions[s['session_id']]['start'],request['timezone']) for s in slots)
+    stable=tuple((s['session_id'],s['field_id'],s['start_utc'],s['end_utc'],s['venue_ref']) for s in sorted(slots,key=lambda s:s['session_id']))
+    return shift,sum(s['price_minor'] for s in slots),stable
+
+def optimal_rank(case):
+    """Independent finite enumeration (at most 8**3 tuples), not a domain solver.
+
+    This private examiner checks a supplied result. It cannot execute Work, emit
+    an offer, book a field, contact a peer or supply any output to the author.
+    """
+    req=case['request'];inv=case['inventory'];sessions=req['sessions'];fields=inv['fields']
+    need(len(sessions)==3 and 0<=len(fields)<=4,'oracle_finite_bounds')
+    ids=[s['session_id'] for s in sessions];fids=[f['field_id'] for f in fields]
+    need(len(set(ids))==3 and len(set(fids))==len(fields) and all(type(x) is str and x.isascii() for x in ids+fids),'oracle_stable_ids')
+    need(type(req['budget_minor']) is int and req['budget_minor']>=0,'oracle_budget')
+    if req['venue_ref']!=inv['venue_ref'] or req['currency']!=inv['currency']:return None
+    options=[]
+    for session in sessions:
+        start=utc(session['start'],req['timezone']);end=utc(session['end'],req['timezone'])
+        need(end-start==5400 and session['allow_shift_minutes'] in (0,30),'oracle_time_profile')
+        shifts=(0,1800) if session['allow_shift_minutes']==30 and req['owner_approval_ref'] and session['start'].startswith('2027-01-08T') else (0,)
+        choices=[]
+        for field in fields:
+            if field['surface']!='NATURAL_GRASS' or field['full_size'] is not True:continue
+            need(type(field['price_minor']) is int and field['price_minor']>=0,'oracle_integer_price')
+            for shift in shifts:
+                interval=(start+shift,end+shift)
+                if not any(a<=interval[0]<interval[1]<=b for a,b in field['available_utc']):continue
+                if any(overlap(interval,occupied) for occupied in field['occupied_utc']):continue
+                choices.append(dict(session_id=session['session_id'],venue_ref=req['venue_ref'],field_id=field['field_id'],
+                    start_utc=interval[0],end_utc=interval[1],price_minor=field['price_minor']))
+        options.append(choices)
+    best=None
+    for choice in product(*options):
+        if sum(s['price_minor'] for s in choice)>req['budget_minor']:continue
+        if any(a['field_id']==b['field_id'] and overlap((a['start_utc'],a['end_utc']),(b['start_utc'],b['end_utc'])) for i,a in enumerate(choice) for b in choice[i+1:]):continue
+        rank=selection_rank(req,choice)
+        if best is None or rank<best:best=rank
+    return best
+
+def check_report(case,report):
+    req=case['request'];inventory=case['inventory']
+    required={'version','request_ref','request_revision','team_ref','operation','status','slots','total_minor','currency','source',
+        'receipt_ref','counts','native_refs'}
+    need(type(report) is dict and set(report)==required,'report_shape')
+    need(report['version']=='g53.result.v01','report_version')
+    need((report['request_ref'],report['request_revision'],report['team_ref'],report['operation'])==
+        (req['request_id'],req['revision'],req['team_ref'],req['operation']),'request_binding')
+    need(report['status'] in ('OFFER_READY','NEEDS_CONFIRMATION','NO_COMPLETE_OFFER','MOCK_BOOKED','VERIFIED','CLARIFY','REFUSED','CURRENT_STATUS_UNKNOWN'),'result_status')
+    counts=report['counts'];need(set(counts)=={'search','dispatch','mutations'} and all(type(v) is int and 0<=v<=8 for v in counts.values()),'counter_shape')
+    if req['operation']=='VERIFY_EXISTING':
+        need(counts==dict(search=0,dispatch=0,mutations=0),'verify_no_new_work')
+        need(report['status'] in case['allowed_statuses'],'verify_status')
+        if report['status']=='VERIFIED':
+            need(report['receipt_ref']==case['prior_receipt_ref'] and report['slots']==case['prior_slots'],'verify_exact_readback')
+            need(report['currency']==case['inventory']['currency'] and type(report['total_minor']) is int and
+                report['total_minor']==sum(s['price_minor'] for s in case['prior_slots']),'verify_saved_total')
+        else:
+            need(not report['slots'] and report['receipt_ref'] is None,'verify_unknown_no_success')
+        # Saved receipt/current state readback is not a new use of an expired offer.
+        return dict(status='PASS_SCALAR_ONLY_NATIVE_PENDING')
+    if report['status'] not in ('OFFER_READY','MOCK_BOOKED','VERIFIED'):
+        need(counts['dispatch']==counts['mutations']==0 and not report['slots'],'refusal_no_effect')
+        need(report['status'] in case['allowed_statuses'],'unexpected_refusal')
+        if report['status']=='NO_COMPLETE_OFFER':need(optimal_rank(case) is None,'feasible_offer_was_omitted')
+        return dict(status='PASS_SCALAR_ONLY_NATIVE_PENDING')
+    need(report['status'] in case['allowed_statuses'],'unexpected_success')
+    source=report['source'];need(set(source)=={'publisher','recipient','request_revision','schedule_revision','offer_revision','observed_at','valid_from','valid_to','ttl','pt','status','status_checked','status_until'},'source_shape')
+    need((source['publisher'],source['recipient'],source['request_revision'])==('VenueRoot','ActivePlanetRoot',req['revision']),'source_identity')
+    now=case['evaluation_time']
+    need(all(type(source[k]) is int for k in ('request_revision','schedule_revision','offer_revision','observed_at','valid_from','valid_to','ttl','pt','status_checked','status_until')),'time_integer')
+    need(source['ttl']>0 and source['observed_at']<=now and source['valid_from']<=now<min(source['valid_to'],source['pt']+source['ttl'],source['observed_at']+300),'source_expired')
+    need(source['status']=='ACTIVE' and source['status_checked']<=now<min(source['status_until'],source['status_checked']+60),'status_current')
+    need(source['schedule_revision']==inventory['revision'],'schedule_changed')
+    slots=report['slots'];need(type(slots) is list and len(slots)==len(req['sessions'])==3,'all_three_slots')
+    need({s['session_id'] for s in slots}=={s['session_id'] for s in req['sessions']},'session_ids')
+    fields={f['field_id']:f for f in inventory['fields']};prices=[];chosen=[]
+    for slot in slots:
+        need(set(slot)=={'session_id','venue_ref','field_id','start_utc','end_utc','price_minor'},'slot_shape')
+        need(slot['field_id'] in fields,'field_source');field=fields[slot['field_id']]
+        need(slot['venue_ref']==req['venue_ref']==inventory['venue_ref'] and field['surface']=='NATURAL_GRASS' and field['full_size'] is True,'field_hard_constraints')
+        session=next(x for x in req['sessions'] if x['session_id']==slot['session_id'])
+        start=utc(session['start'],req['timezone']);end=utc(session['end'],req['timezone'])
+        need(all(type(slot[k]) is int for k in ('start_utc','end_utc','price_minor')),'slot_integer')
+        need(slot['end_utc']-slot['start_utc']==end-start==5400,'ninety_minutes')
+        shift=slot['start_utc']-start
+        permitted=[0]
+        if session['allow_shift_minutes']==30 and req['owner_approval_ref'] and session['start'].startswith('2027-01-08T'):permitted.append(1800)
+        need(shift in permitted,'owner_time_permission')
+        interval=(slot['start_utc'],slot['end_utc'])
+        need(any(a<=interval[0]<interval[1]<=b for a,b in field['available_utc']),'outside_availability')
+        need(not any(overlap(interval,b) for b in field['occupied_utc']),'occupied_overlap')
+        need(not any(fid==slot['field_id'] and overlap(interval,other) for fid,other in chosen),'request_overlap')
+        chosen.append((slot['field_id'],interval));need(slot['price_minor']==field['price_minor']>=0,'price_source');prices.append(slot['price_minor'])
+    need(report['currency']==req['currency']==inventory['currency'] and type(report['total_minor']) is int and report['total_minor']==sum(prices)<=req['budget_minor'],'budget_currency')
+    need(selection_rank(req,slots)==optimal_rank(case),'nonoptimal_complete_offer')
+    if req['operation']=='FIND_OFFER':need(counts['dispatch']==counts['mutations']==0 and report['receipt_ref'] is None,'find_no_booking')
+    if report['status']=='MOCK_BOOKED':need(counts['dispatch']<=1 and counts['mutations'] in (0,1) and type(report['receipt_ref']) is str,'mock_receipt_required')
+    return dict(status='PASS_SCALAR_ONLY_NATIVE_PENDING',total_minor=sum(prices))
+
+def check_boundary_record(record):
+    """Independent elementary consistency of trusted-runner observations as data.
+
+    It does not execute a booking, authenticate an observation file, or grant a
+    candidate permission. Future native acceptance requires the separate observer.
+    """
+    need(type(record) is dict and set(record)=={'event','body_reads','searches','dispatches','mutations','old_receipt',
+        'returned_receipt','old_payload','new_payload','reviewed_revision','current_revision','current_permission',
+        'capability_known','readback_count','before_count','after_count','status'},'boundary_shape')
+    for k in ('body_reads','searches','dispatches','mutations','readback_count','before_count','after_count'):
+        need(type(record[k]) is int and 0<=record[k]<=8,'boundary_counter')
+    event=record['event']
+    if event in ('BODY_DENIED','FOREIGN_PERMISSION_ONLY','UNKNOWN_CAPABILITY','OFFER_CHANGED','PAYLOAD_CHANGED'):
+        need(record['dispatches']==record['mutations']==0 and record['before_count']==record['after_count'] and record['returned_receipt'] is None,'boundary_refusal_effect')
+        need(record['status']=='REFUSED','boundary_refusal_status')
+        if event=='BODY_DENIED':need(record['body_reads']==0,'denied_body_read')
+        if event=='FOREIGN_PERMISSION_ONLY':need(record['current_permission'] is False,'foreign_permission_not_local')
+        if event=='UNKNOWN_CAPABILITY':need(record['capability_known'] is False,'unknown_capability_fixture')
+        if event=='OFFER_CHANGED':need(record['reviewed_revision']!=record['current_revision'],'changed_revision_fixture')
+        if event=='PAYLOAD_CHANGED':need(record['old_payload']!=record['new_payload'],'changed_payload_fixture')
+    elif event in ('REPEAT_CONFIRM','VERIFY_EXISTING'):
+        need(record['dispatches']==record['mutations']==record['searches']==0 and record['before_count']==record['after_count'],'repeat_no_new_execution')
+        need(record['old_payload']==record['new_payload'] and record['old_receipt'] is not None and record['returned_receipt']==record['old_receipt'],'repeat_exact_receipt')
+        need(record['readback_count']==3 and record['status']=='VERIFIED','repeat_readback')
+    elif event=='FRESH_MOCK_COMMIT':
+        need(record['current_permission'] is True and record['capability_known'] is True and record['reviewed_revision']==record['current_revision'],'current_mock_boundary')
+        need(record['dispatches']==record['mutations']==1 and record['after_count']==record['before_count']+3 and record['readback_count']==3,'all_or_none_batch')
+        need(record['returned_receipt'] is not None and record['status']=='MOCK_BOOKED','mock_evidence')
+    else:raise ValueError('unknown_boundary_event')
+    return 'PASS_OBSERVATION_DATA_ONLY'
+
+def check_native(case,report,proofs,observed):
+    """Additional structural checks, never accept candidate-reported call counters."""
+    from hedgehog.external_drs.gate5_supplied_v01 import native_result
+    from hedgehog.external_drs.gate5_lifecycle_supplied_v01 import root_record
+    need(observed['classification']=='TRUSTED_RUNNER_OBSERVATION' and observed['request_sha256']==sha(case['request']),'independent_observation')
+    need(observed['candidate_source_sha256']==case['reviewed_candidate_source_sha256'],'reviewed_source')
+    if case['request']['operation']=='FIND_OFFER' and report['status']=='OFFER_READY':
+        offer=proofs['offer_body'];venue=proofs['venue_work'];requester=proofs['requester_work']
+        v=native_result(venue,'VenueRoot',dict(request_json=canonical(case['request']).decode(),inventory_json=canonical(case['inventory']).decode()))
+        need(v=={'offer_json':canonical(offer).decode()},'venue_offer_consumption')
+        r=native_result(requester,'ActivePlanetRoot',dict(request_json=canonical(case['request']).decode(),offer_json=canonical(offer).decode()))
+        need(r=={'result_json':canonical({k:report[k] for k in report if k!='native_refs'}).decode()},'requester_result_consumption')
+        root_record(proofs['requester_review'],'ActivePlanetRoot',requester['artifact']['artifact_id'],
+            dict(request_sha256=sha(case['request']),offer_sha256=sha(offer),result_sha256=sha({k:report[k] for k in report if k!='native_refs'})))
+        need(observed['venue_work']==observed['requester_work']==1,'observed_native_calls')
+    else:
+        need(observed['full_boundary_review']=='REVIEWED_WITH_RECEIPT_SOURCE_AND_READBACK','boundary_review_required')
+    need(observed['counts']==report['counts'],'observed_counters')
+    return dict(status='STRUCTURES_CHECKED_NOT_SELF_AWARDED_ADMISSION',live_boundary_review='REQUIRED')

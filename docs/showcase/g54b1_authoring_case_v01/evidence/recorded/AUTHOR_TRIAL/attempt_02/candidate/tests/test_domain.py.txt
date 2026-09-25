@@ -1,0 +1,125 @@
+"""Own deterministic tests. Execution belongs exclusively to the reviewed runner."""
+import copy
+import unittest
+from itertools import permutations
+from candidate_domain import domain as d
+
+def request_fixture():
+    return dict(request_id='practice.delta',revision=1,operation='FIND_OFFER',
+        team_ref='team.delta',venue_ref='venue.delta',timezone='Europe/Tirane',
+        currency='EUR',budget_minor=120,owner_approval_ref=None,
+        sessions=[dict(session_id='session.'+str(day),start='2027-01-%02dT09:00'%day,
+                       end='2027-01-%02dT10:30'%day,allow_shift_minutes=0)
+                  for day in (11,12,13)])
+
+def inventory_fixture(request):
+    times = d.parse_request(request)
+    windows = [[s['start']-3600,s['end']+3600] for s in times]
+    return dict(revision=4,venue_ref=request['venue_ref'],currency=request['currency'],
+        fields=[dict(field_id=name,surface=surface,full_size=size,price_minor=price,
+                     available_utc=copy.deepcopy(windows),occupied_utc=[])
+                for name,surface,size,price in (
+                    ('field.gamma','NATURAL_GRASS',True,19),
+                    ('field.alpha','NATURAL_GRASS',True,13),
+                    ('field.fake','ARTIFICIAL',True,1),
+                    ('field.small','NATURAL_GRASS',False,1))])
+
+class DomainTests(unittest.TestCase):
+    def test_positive_permutation_and_renaming(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        baseline = d.produce_offer(request,inventory)
+        d.check_offer(baseline,request,inventory)
+        self.assertEqual(baseline['status'],'OFFER_READY')
+        self.assertEqual(baseline['total_minor'],
+                         sum(s['price_minor'] for s in baseline['slots']))
+        for fields in permutations(inventory['fields']):
+            changed = dict(inventory,fields=list(fields))
+            self.assertEqual(d.produce_offer(request,changed)['slots'],baseline['slots'])
+        renamed = copy.deepcopy(inventory)
+        for index,field in enumerate(renamed['fields']):
+            field['field_id'] = 'renamed.'+str(index)
+        self.assertEqual(d.produce_offer(request,renamed)['total_minor'],baseline['total_minor'])
+
+    def test_changed_prices_and_stable_tie(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        first = d.produce_offer(request,inventory)
+        inventory['fields'][0]['price_minor'] = 7
+        second = d.produce_offer(request,inventory)
+        self.assertLess(second['total_minor'],first['total_minor'])
+        self.assertNotEqual(second['slots'][0]['field_id'],first['slots'][0]['field_id'])
+        inventory['fields'][0]['price_minor'] = inventory['fields'][1]['price_minor']
+        tied = d.produce_offer(request,inventory)
+        self.assertTrue(all(s['field_id'] == min(f['field_id'] for f in inventory['fields'][:2])
+                            for s in tied['slots']))
+
+    def test_refusal_and_lawful_continuation(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        request['budget_minor'] = 0
+        denied = d.produce_offer(request,inventory)
+        self.assertEqual(denied['status'],'NO_COMPLETE_OFFER')
+        self.assertEqual(denied['slots'],[])
+        request['budget_minor'] = 120
+        self.assertEqual(d.produce_offer(request,inventory)['status'],'OFFER_READY')
+        for value in (None,True,-1,2.5):
+            malformed = dict(request,budget_minor=value)
+            with self.assertRaises(d.Refusal):
+                d.parse_request(malformed)
+        missing = dict(request); del missing['timezone']
+        with self.assertRaisesRegex(d.Refusal,'MISSING_REQUIRED_INPUT'):
+            d.parse_request(missing)
+
+    def test_tampering_and_removed_output(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        offer = d.produce_offer(request,inventory)
+        for kind in ('total','slot','field','unknown','missing','request','currency'):
+            bad = copy.deepcopy(offer)
+            if kind == 'total': bad['total_minor'] += 1
+            if kind == 'slot': bad['slots'][0]['start_utc'] += 60
+            if kind == 'field': bad['fields'][0]['surface'] = 'ARTIFICIAL'
+            if kind == 'unknown': bad['caption'] = 'success'
+            if kind == 'missing': del bad['slots'][0]['price_minor']
+            if kind == 'request': bad['request']['revision'] += 1
+            if kind == 'currency': bad['currency'] = 'USD'
+            with self.subTest(kind=kind), self.assertRaises(d.Refusal):
+                d.check_offer(bad,request,inventory)
+
+    def test_half_open_and_long_overlap(self):
+        self.assertFalse(d.overlap((10,20),(20,30)))
+        self.assertTrue(d.overlap((10,20),(19,30)))
+        request = request_fixture()
+        request['sessions'][0] = dict(session_id='session.shift',
+            start='2027-01-08T09:00',end='2027-01-08T10:30',allow_shift_minutes=0)
+        inventory = inventory_fixture(request)
+        session = next(s for s in d.parse_request(request) if s['shift_day'])
+        for field in inventory['fields']:
+            field['occupied_utc'] = [[session['start'],session['start']+1800]]
+        self.assertEqual(d.produce_offer(request,inventory)['status'],'NEEDS_CONFIRMATION')
+        request['sessions'][0]['allow_shift_minutes'] = 30
+        with self.assertRaises(d.Refusal):
+            d.produce_offer(request,inventory)
+        request['revision'] = 2; request['owner_approval_ref'] = 'consent.shift'
+        shifted = d.produce_offer(request,inventory)
+        self.assertEqual(shifted['status'],'OFFER_READY')
+        self.assertEqual(next(s for s in shifted['slots'] if s['session_id']=='session.shift')
+                         ['start_utc'],session['start']+1800)
+        for field in inventory['fields']:
+            field['occupied_utc'] = [[session['start'],session['end']]]
+        self.assertEqual(d.produce_offer(request,inventory)['status'],'NO_COMPLETE_OFFER')
+
+    def test_unique_ids_wrong_currency_and_current_occupancy(self):
+        request = request_fixture(); inventory = inventory_fixture(request)
+        bad = copy.deepcopy(inventory)
+        bad['fields'][1]['field_id'] = bad['fields'][0]['field_id']
+        with self.assertRaisesRegex(d.Refusal,'DUPLICATE_FIELD_ID'):
+            d.produce_offer(request,bad)
+        with self.assertRaisesRegex(d.Refusal,'CURRENCY_MISMATCH'):
+            d.produce_offer(request,dict(inventory,currency='USD'))
+        offer = d.produce_offer(request,inventory)
+        for field in inventory['fields']:
+            field['occupied_utc'] = copy.deepcopy(field['available_utc'])
+        with self.assertRaises(d.Refusal):
+            d.check_offer(offer,request,inventory)
+        self.assertEqual(d.produce_offer(request,inventory)['slots'],[])
+
+if __name__ == '__main__':
+    unittest.main()

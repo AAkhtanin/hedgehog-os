@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:football:report:v01",
+  "description": "The requester native result_json is this report without native_refs; history has no new Work claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "request_ref",
+    "request_revision",
+    "team_ref",
+    "operation",
+    "status",
+    "slots",
+    "total_minor",
+    "currency",
+    "source",
+    "receipt_ref",
+    "counts",
+    "native_refs"
+  ],
+  "properties": {
+    "version": {
+      "const": "g53.result.v01"
+    },
+    "request_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "request_revision": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "team_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "operation": {
+      "anyOf": [
+        {
+          "enum": [
+            "FIND_OFFER",
+            "CONFIRM_MOCK_BOOKING",
+            "VERIFY_EXISTING",
+            "CLARIFY"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "OFFER_READY",
+        "NEEDS_CONFIRMATION",
+        "NO_COMPLETE_OFFER",
+        "MOCK_BOOKED",
+        "VERIFIED",
+        "CLARIFY",
+        "REFUSED",
+        "CURRENT_STATUS_UNKNOWN"
+      ]
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "session_id",
+          "venue_ref",
+          "field_id",
+          "start_utc",
+          "end_utc",
+          "price_minor"
+        ],
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+          },
+          "venue_ref": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+          },
+          "field_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+          },
+          "start_utc": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_utc": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "price_minor": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 3
+    },
+    "total_minor": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "publisher",
+            "recipient",
+            "request_revision",
+            "schedule_revision",
+            "offer_revision",
+            "observed_at",
+            "valid_from",
+            "valid_to",
+            "ttl",
+            "pt",
+            "status",
+            "status_checked",
+            "status_until"
+          ],
+          "properties": {
+            "publisher": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+            },
+            "recipient": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.:-]{1,80}$"
+            },
+            "request_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "schedule_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "offer_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "observed_at": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "valid_from": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "valid_to": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ttl": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "pt": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "status": {
+              "enum": [
+                "ACTIVE",
+                "REVOKED",
+                "SUPERSEDED"
+              ]
+            },
+            "status_checked": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "status_until": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "receipt_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,256}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "search",
+        "dispatch",
+        "mutations"
+      ],
+      "properties": {
+        "search": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dispatch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mutations": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "native_refs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file",
+          "id"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+[.]json$"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,256}$"
+          }
+        }
+      }
+    }
+  }
+}

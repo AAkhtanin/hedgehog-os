@@ -1,0 +1,69 @@
+"""Trusted test inputs only; no target calculation and no candidate imports."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import sys
+
+WORK = Path(__file__).resolve().parent
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode()
+
+
+def sha(value):
+    return hashlib.sha256(canonical(value)).hexdigest()
+
+
+def save(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open('x') as stream:
+        json.dump(value, stream, sort_keys=True, indent=2)
+        stream.write('\n')
+
+
+def prepare(attempt):
+    destination = WORK / 'AUTHOR_TRIAL' / ('attempt_%02d' % attempt) / 'native_story'
+    destination.mkdir(exist_ok=False)
+    cases_path = WORK / 'EXAMINER_PRIVATE/cases.json'
+    cases = {case['case_id']: case for case in json.loads(cases_path.read_text())}
+    exact = copy.deepcopy(cases['exact_only']['request'])
+    exact['revision'] = 1
+    shifted = copy.deepcopy(cases['allowed_shift']['request'])
+    booking = dict(shifted, operation='CONFIRM_MOCK_BOOKING',
+        owner_approval_ref='consent:controlled:booking')
+    verify = dict(booking, operation='VERIFY_EXISTING')
+    sequence = [('exact', exact), ('shift', shifted), ('book', booking),
+        ('repeat', booking), ('verify', verify)]
+    approvals = [dict(approval_ref=r['owner_approval_ref'], scope=scope,
+        request_sha256=sha(r)) for r, scope in
+        ((shifted, 'SHIFT'), (booking, 'SHIFT'), (booking, 'BOOK'), (verify, 'SHIFT'))]
+    inventory = cases['allowed_shift']['inventory']
+    for role, local, peer in [('publisher', 'VenueRoot', 'ActivePlanetRoot'),
+                              ('requester', 'ActivePlanetRoot', 'VenueRoot')]:
+        policy = dict(local_root=local, peer_root=peer, venue_ref=shifted['venue_ref'],
+            accept_offers=True, publish_enabled=True, release_enabled=True,
+            audience=[peer], release_uses=['LOCAL_CONTEXT'], max_source_age=300,
+            ttl_seconds=300, status='ACTIVE', approvals=approvals, booking_enabled=True)
+        events = [dict(event_id=name, request=request,
+            **({'inventory': inventory} if role == 'publisher' else {}))
+            for name, request in sequence]
+        save(destination / 'inputs' / role / 'input.json', dict(
+            version='g54.peer_input.v01', role=role, events=events, policy=policy))
+    save(destination / 'intent.json', dict(
+        classification='INDEPENDENT_RUNTIME_INPUTS_NOT_EXPECTED_OUTPUTS',
+        consent_origin='SCRIPTED_CONTROLLED_OWNER_INPUT',
+        source_case_sha256=hashlib.sha256(cases_path.read_bytes()).hexdigest(),
+        adaptation='Exact request revision 1 precedes frozen allowed-shift revision 2. '
+            'The same request then receives separate explicit MOCK booking consent. '
+            'Recorded synthetic oracle evaluation_time is not injected into runtime; '
+            'fresh runtime observation time must be used for current-source checks.',
+        events=[dict(event_id=name, request_sha256=sha(request)) for name, request in sequence],
+        requester_has_inventory=False, expected_offer_supplied=False,
+        candidate_execution_authorized_by_this_file=False))
+    print(destination)
+
+
+if __name__ == '__main__':
+    prepare(int(sys.argv[1]))

@@ -1,0 +1,37 @@
+{
+  "classification": "SAVED_NATIVE_RECEIPT_CURRENT_LOCAL_READBACK",
+  "dispatch": false,
+  "logical_key": "idem:action_v01:f8b659dcac06bd56e9510dd7446b4e5ae2b81c73275992f8e968e3a6010e13b7",
+  "original_request": {
+    "budget_minor": 7000,
+    "currency": "EUR",
+    "operation": "CONFIRM_MOCK_BOOKING",
+    "owner_approval_ref": "consent:controlled:booking",
+    "request_id": "request:exam:one",
+    "revision": 2,
+    "sessions": [
+      {
+        "allow_shift_minutes": 0,
+        "end": "2027-01-07T18:00:00",
+        "session_id": "session:7",
+        "start": "2027-01-07T16:30:00"
+      },
+      {
+        "allow_shift_minutes": 30,
+        "end": "2027-01-08T12:30:00",
+        "session_id": "session:8",
+        "start": "2027-01-08T11:00:00"
+      },
+      {
+        "allow_shift_minutes": 0,
+        "end": "2027-01-09T12:30:00",
+        "session_id": "session:9",
+        "start": "2027-01-09T11:00:00"
+      }
+    ],
+    "team_ref": "team:one",
+    "timezone": "Europe/Tirane",
+    "venue_ref": "venue:synthetic"
+  },
+  "payload_sha256": "560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+}

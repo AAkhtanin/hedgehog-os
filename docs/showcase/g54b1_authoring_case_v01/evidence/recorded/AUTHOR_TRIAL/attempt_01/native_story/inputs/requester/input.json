@@ -1,0 +1,216 @@
+{
+  "events": [
+    {
+      "event_id": "exact",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:exam:one",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "shift",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "book",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "repeat",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "verify",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "VERIFY_EXISTING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    }
+  ],
+  "policy": {
+    "accept_offers": true,
+    "approvals": [
+      {
+        "approval_ref": "consent:jan8-only",
+        "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+        "scope": "SHIFT"
+      },
+      {
+        "approval_ref": "consent:controlled:booking",
+        "request_sha256": "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8",
+        "scope": "SHIFT"
+      },
+      {
+        "approval_ref": "consent:controlled:booking",
+        "request_sha256": "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8",
+        "scope": "BOOK"
+      },
+      {
+        "approval_ref": "consent:controlled:booking",
+        "request_sha256": "31d9f6d62b0601213a58dbb789645a77d645373bf913cc334f3beb15b07a6120",
+        "scope": "SHIFT"
+      }
+    ],
+    "audience": [
+      "VenueRoot"
+    ],
+    "booking_enabled": true,
+    "local_root": "ActivePlanetRoot",
+    "max_source_age": 300,
+    "peer_root": "VenueRoot",
+    "publish_enabled": true,
+    "release_enabled": true,
+    "release_uses": [
+      "LOCAL_CONTEXT"
+    ],
+    "status": "ACTIVE",
+    "ttl_seconds": 300,
+    "venue_ref": "venue:synthetic"
+  },
+  "role": "requester",
+  "version": "g54.peer_input.v01"
+}

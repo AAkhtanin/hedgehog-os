@@ -1,0 +1,113 @@
+{
+  "document": "G54B1_PUBLICATION_SOURCE_CHECK_V01",
+  "date": "2026-09-25",
+  "verification_scope": "Fresh archive identity, all top-level manifest entries, final candidate file/line counts, selected original records read as inert data. No candidate/runtime execution; no new peer replay or signature verification in this check.",
+  "archive": {
+    "file": "RADIOLARIA_GATE5_G54B1_NO_ENV_AUTHOR_AND_FOOTBALL_V01_RETURN_20260925T090317Z.tar(1).gz",
+    "sha256": "9c383d342b63c3ca54cddc51c37eae0baac53cccf2bf49fd9a1bb8ce67f2d422",
+    "bytes": 7928207,
+    "regular_members": 2078,
+    "manifest_rows": 2077,
+    "all_sizes_hashes_modes_match": true
+  },
+  "candidate_final": {
+    "prefix": "AUTHOR_TRIAL/attempt_03/candidate/",
+    "files": 26,
+    "python_files": 15,
+    "python_physical_lines_splitlines": 2419,
+    "candidate_manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa"
+  },
+  "selected_source_identities": {
+    "FINAL_RESULT.json": {
+      "bytes": 3271,
+      "sha256": "af41bbef5307e8aab6cf24d097f0de5d3c6e8c2322e8d86ceefd4adce1737b5d"
+    },
+    "SUPERVISOR_EVIDENCE/G54R_FINAL_RESULT.json": {
+      "bytes": 4113,
+      "sha256": "5d997e0c3f7a4d2cba450543e54143777e78680133df1a0cbf913e4685a721bb"
+    },
+    "SUPERVISOR_EVIDENCE/G54B_FINAL_RESULT.json": {
+      "bytes": 1951,
+      "sha256": "b61286b894d379759ca948f7e50c36f3fbd13b2a62a5cfab212acc9f22399807"
+    },
+    "AUTHOR_TRIAL/attempt_03/candidate/candidate_domain/CORRECTION_03.md": {
+      "bytes": 9081,
+      "sha256": "bb4ff8b1d3067f7568d1a80199738b45a9d8c855ce77508e9ec598fb68d5162a"
+    },
+    "AUTHOR_VISIBLE/HOW_TO_BUILD.md": {
+      "bytes": 21095,
+      "sha256": "6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3"
+    },
+    "AUTHOR_VISIBLE/CANDIDATE_OUTPUT.md": {
+      "bytes": 7110,
+      "sha256": "e28debd12e922d8eefdc66372b87638446a5c8eedc11cebfd5144ff84167b0bd"
+    },
+    "EXAMINER_PRIVATE/examiner.py": {
+      "bytes": 14178,
+      "sha256": "874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372"
+    },
+    "SUPERVISOR_EVIDENCE/predecessor_preservation.json": {
+      "bytes": 158,
+      "sha256": "9f21b74c328b0dc33c8a35c1da77c021d0b04d6d24c4b43a7ab80a4235baaaf2"
+    }
+  },
+  "reported_final_result": {
+    "result": "G54B1_COLD_AUTHORING_INCOMPLETE_NATIVE_OFFER_BINDING",
+    "diagnostic": "SCOPED_NO_ENV_BROKER_DIAGNOSTIC_PASS",
+    "model": "gpt-6-astra",
+    "effort": "ultra",
+    "service_tier": "default",
+    "environments": [],
+    "model_fallback": false,
+    "model_context_window_reported": 258400,
+    "author_turns_completed": 4,
+    "author_submissions": 4,
+    "author_corrections": 3,
+    "diagnostic_turns_completed": 1,
+    "author_dynamic_tool_calls": 429,
+    "diagnostic_dynamic_tool_calls": 4,
+    "provider_inference_request_count": "NOT_EXPOSED_BY_APP_SERVER; not equated with turns or tool calls",
+    "candidate_manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa",
+    "first_unresolved_predicate": "EXAMINER_PRIVATE/examiner.py:164 check_native: venue_offer_consumption",
+    "independent_native_exam": "FAIL_AT_ACTUAL_PREDICATE; partial exam prefix, not full P01-P10/A-H acceptance",
+    "supplied_input_diagnostics": "FAIL supplied_consumed_input for source output or canonical signed body; PASS with actual recorded inputs only",
+    "root_claim_diagnostic": "PASS_EXACT_THREE_HASH_CLAIM",
+    "final_peer_execution": "RC0_BOTH_WORKERS_REAPED_CONTAINER_REMOVED",
+    "final_peer_container_seconds": 3.2126252092421055,
+    "final_peer_command_seconds": 4.696357416920364,
+    "exact_shift_scalar_controls": "PASS_SCALAR_ONLY_NATIVE_PENDING; shift total 6300 minor EUR",
+    "booking_saved_observations": "ONE_MOCK_DISPATCH_AND_EFFECT; THREE_RESERVATIONS; ONE_IDEMPOTENCY_ENTRY; ACTUAL_ABI_RECEIPT_AND_MATCHING_READBACK",
+    "repeat_verify_observations": "SAME_RECEIPT_READBACK; parent observes one total dispatch/effect; candidate per-event counters report zero new work/reviews/search/effects",
+    "full_adversarial_matrix": "NOT_COMPLETED_AFTER_NATIVE_ACCEPTANCE_FAILURE",
+    "authored_unit_tests": "SOURCE_REVIEWED_NOT_EXECUTED; unchanged peer runner has no unittest facility",
+    "live_gemini_series": "NOT_RUN_NATIVE_ACCEPTANCE_PREREQUISITE_FAILED",
+    "final_two_supplied_proofs": "NOT_RUN_NATIVE_ACCEPTANCE_PREREQUISITE_FAILED; partial diagnostics are not substitutes",
+    "gemini_runtime_calls": 0,
+    "real_world_booking_payment_aws_qpu_calls": 0,
+    "generated_candidate_host_imports": 0,
+    "supervisor_target_code_edits": 0,
+    "native_kernel_guard_examiner_changes": 0,
+    "old_standalone_rpc_discrepancy": "PRESERVED_UNEXPLAINED_NOT_RETESTED_NOT_CLAIMED_REPAIRED",
+    "approval_denial": "ONE_REVIEW_NOTE_PREDICATE_CHANGE_REJECTED_NOT_APPLIED_NOT_RETRIED; exact full-file equality retained",
+    "historical_G54R": "INCOMPLETE_PRESERVED",
+    "historical_G54B": "NOT_STARTED_PRESERVED_AS_PREDECESSOR",
+    "owner_head": "76a6952c9d0f31c976d2501c5641457a20de153a",
+    "owner_branch": "main",
+    "owner_unchanged": true,
+    "owner_staging_empty": true,
+    "predecessor_input_bodies_unchanged": 147,
+    "all_own_processes_final": true,
+    "process_readback": "Saved own PIDs absent; ps rc1 with header only is expected absence, not a failed runtime test",
+    "commit": false,
+    "push": false,
+    "G55": "NOT_STARTED",
+    "G56": "NOT_STARTED",
+    "admission_and_gate_closure": "NOT_CLAIMED",
+    "next_required_action": "Independent review of the exact shared-offer producer/body/consumer contract and the failed predicates; no fourth correction or automatic new author trial"
+  },
+  "reported_predecessors": {
+    "G54R": "TRANSPORT_RECOVERED_COLD_AUTHOR_TRIAL_INCOMPLETE",
+    "G54B": "AUTHOR_BOUNDARY_UNVERIFIED"
+  },
+  "interpretation": "G54B1 is the featured documented no-environment Astra authoring trial, not the first model experiment in the entire project. Earlier G54R and G54B remain in the chronology. Four submissions are within one trial."
+}

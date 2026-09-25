@@ -1,0 +1,64 @@
+# G54 Precreated Peer Contract V01
+
+This clarification is frozen before any author request. It replaces only process
+startup, not domain/Root/transport rules. No target solution is supplied.
+
+Implement `run_peer_v01` with EXACT keyword arguments documented in
+CANDIDATE_OUTPUT.md. Import must have no Work, Root, transport or effect side effects.
+`role` is `publisher` (source owner) or `requester` (local consumer). Each peer has
+its own process and fresh native Root/key instances, its own Path `state_root`
+and `output_root`. It must not inspect another role's filesystem or private state.
+The operator supplies that role's JSON as `input_data`; it contains:
+
+```json
+{"version":"g54.peer_input.v01","role":"publisher","events":[],"policy":{}}
+```
+
+`events` is a finite ordered list (at most8). Every event has `event_id` and
+`request` using the exact normalized public fields in CANDIDATE_OUTPUT.md. Publisher
+events additionally have `inventory`, the current source-owned normalized inventory.
+Requester events never receive inventory, an expected offer, or a solution. A
+`semantic_proposal` and its `semantic_capture` may be attached to an event; define
+their closed domain shape and validate/actually consume them, without letting the
+proposal invent consent. `policy` is explicit operator-owned local policy. Document
+your closed keys for audience/release/refusal controls and booking approval.
+The independent runner can supply changed current inventory on a later event.
+Original request history and prior state must remain preserved. Process events
+in order; return after this finite list, with no infinite service loop.
+
+`channel` is the actual existing
+`hedgehog.external_drs.gate5_exchange_v01.PipeChannel` instance. Use its documented
+`send(kind,value)`, `receive(allow_eof=False)` and `counters()` methods; messages have
+the existing closed framing/kinds, max256KiB, canonical JSON and peer timeout.
+Use existing Budget/PublisherBudget and contract/profile signature validators;
+do not reimplement the external DRS protocol or hide I/O inside PURE executors.
+`bootstrap` is a separate preassigned inherited PipeChannel for initial PUBLIC
+keyset exchange only, bound to these two reviewed peer processes by trusted setup.
+Generate each private signer inside its owning process, send only public projection
+over bootstrap, verify expected peer Root identity from operator policy, pin that
+keyset for subsequent data-channel validation. Never install keys from a body or
+data-channel pointer. Bootstrap is test setup, not Internet PKI or an authority grant.
+
+Write one event directory `output_root / event_id` with report.json and necessary
+native/signature/review/receipt/source evidence. Event IDs must be safe local names.
+Preserve requested objects for the private examiner: offer_body.json,
+venue_work.json, requester_work.json and requester_review.json where applicable.
+The file format for native Work is the exact generic producer/consumer format
+shown in HOW_TO_BUILD and CANDIDATE_OUTPUT. A role may write only its own state/output
+directories. Returned dict/None is completion data, never a success certificate.
+The trusted parent separately records OS wait status and native function events;
+candidate-written counters cannot replace this observation. Unknown failures must
+remain observable, not silently turned into expected domain refusals.
+
+Runtime: pinned Python3.14 Linux arm64; jsonschema4.26.0/cryptography48.0.0; no package
+installation. PYTHONPATH contains exact kit/source, generic examples and candidate.
+No network, subprocesses/threads, new imports from unapproved paths, dynamic code,
+monkeypatching, protected-source writes or direct effect outside native Firewall.
+Read-only code; own disposable outputs;512MiB aggregate memory, one CPU,16PIDs,
+30/35 CPU seconds per worker,90second wall,16MiB/file and64MiB output filesystem.
+Reviewed source checks must work on the immutable candidate module files.
+
+This is finite reviewed Python, not a hostile-code or OS-administrator isolation
+claim. The candidate must not introspect/disable the trusted observer or use other
+process file descriptors. The reviewer checks source and native artifacts; a JSON
+claim named TRUSTED is not accepted as independent telemetry.

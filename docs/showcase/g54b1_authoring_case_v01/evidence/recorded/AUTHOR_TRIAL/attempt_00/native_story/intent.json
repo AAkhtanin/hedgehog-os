@@ -1,0 +1,31 @@
+{
+  "adaptation": "Exact request revision 1 precedes frozen allowed-shift revision 2. The same request then receives separate explicit MOCK booking consent. Recorded synthetic oracle evaluation_time is not injected into runtime; fresh runtime observation time must be used for current-source checks.",
+  "candidate_execution_authorized_by_this_file": false,
+  "classification": "INDEPENDENT_RUNTIME_INPUTS_NOT_EXPECTED_OUTPUTS",
+  "consent_origin": "SCRIPTED_CONTROLLED_OWNER_INPUT",
+  "events": [
+    {
+      "event_id": "exact",
+      "request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f"
+    },
+    {
+      "event_id": "shift",
+      "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294"
+    },
+    {
+      "event_id": "book",
+      "request_sha256": "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+    },
+    {
+      "event_id": "repeat",
+      "request_sha256": "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+    },
+    {
+      "event_id": "verify",
+      "request_sha256": "31d9f6d62b0601213a58dbb789645a77d645373bf913cc334f3beb15b07a6120"
+    }
+  ],
+  "expected_offer_supplied": false,
+  "requester_has_inventory": false,
+  "source_case_sha256": "07cf3a95b82b4a5daa541cdadf53b2337af92c25fc9619935b952f525e6bfe60"
+}

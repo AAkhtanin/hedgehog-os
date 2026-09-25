@@ -1,0 +1,1 @@
+"""Inert football reference candidate; no execution or admission at import."""

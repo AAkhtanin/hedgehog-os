@@ -1,0 +1,131 @@
+"""Venue offer construction, independent reviews, and safe publication."""
+import json
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e
+from . import domain as d, policy as p, native, effect, memory
+from .profile import PROFILE, SCHEMA, DOMAIN, SUMMARY
+
+def source_time(now, ttl):
+    return c.drs.drs_time_envelope_to_plain_data_v01(c.drs.build_drs_time_envelope_v01(
+        pt_created_at=now,kt_as_of=now,et_observed_at=now,ct_context_anchor=now,
+        ttl_seconds=ttl,valid_from=now,valid_to=now+ttl,source_observed_at=now,
+        source_reported_at=now,system_ingested_at=now,system_verified_at=now,
+        freshness_policy_id='freshness:football:source'))
+
+def projection(body, entry, checked, until):
+    env, offer = body['time_envelope'],body['offer']
+    return dict(publisher=body['publisher'],recipient=body['recipient'],
+        request_revision=offer['request']['revision'],schedule_revision=offer['schedule_revision'],
+        offer_revision=offer['offer_revision'],observed_at=env['source_observed_at'],
+        valid_from=env['valid_from'],valid_to=env['valid_to'],ttl=env['ttl_seconds'],
+        pt=env['pt_created_at'],status=entry['state'],status_checked=checked,status_until=until)
+
+def build(event_id, request, inventory, policy, cap, keys, state_root, folder, counters):
+    original_inventory = c.decode(c.canonical(inventory))
+    d.inventory_rows(original_inventory,request)
+    e.immutable(folder/'inventory_input.json',original_inventory)
+    e.state_write(state_root/'current_inventory.json',original_inventory)
+    booking = None
+    if request['operation'] == 'CONFIRM_MOCK_BOOKING':
+        d.need(policy['publish_enabled'] and policy['release_enabled'] and
+               policy['peer_root'] in policy['audience'] and
+               'LOCAL_CONTEXT' in policy['release_uses'],'BOOKING_DISCLOSURE_POLICY')
+    if request['operation'] == 'FIND_OFFER':
+        effective = effect.merged_inventory(original_inventory,effect.snapshot(state_root/'registry.json'))
+        work = native.perform('source','VenueRoot','task:football:source:'+c.sha([event_id,request]),
+            dict(request_json=c.canonical(request).decode(),inventory_json=c.canonical(effective).decode()))
+        counters['source_work'] += work['attempts']
+        counters['search'] += work['attempts']
+        n.save(folder/'venue_work.json',work)
+        offer = c.decode(work['outputs']['offer_json'].encode())
+        d.check_offer(offer,request,effective)
+        env = source_time(e.clock(),policy['ttl_seconds'])
+        lineage = [work['artifact']['artifact_id']]
+        previous = None
+    elif request['operation'] == 'CONFIRM_MOCK_BOOKING':
+        saved_path = state_root/'offers'/(effect.scope_key(request)+'.json')
+        d.need(saved_path.exists(),'CURRENT_SELECTED_OFFER_MISSING','NEEDS_CONFIRMATION')
+        saved = json.loads(saved_path.read_text())
+        previous, work = saved['body'],saved['work']
+        offer, env = previous['offer'],previous['time_envelope']
+        d.check_offer(offer,request)
+        d.need(offer['status'] == 'OFFER_READY','NO_COMPLETE_SELECTED_OFFER')
+        # Preserve producer bytes and original identities as history, never new Work.
+        n.save(folder/'venue_work.json',work)
+        n.save(folder/'prior_source.json',saved)
+        booking = effect.confirm(request,offer,previous,policy,state_root,folder,counters)
+        lineage = list(previous['source_lineage_refs'])
+        for original_ref in (previous['source_record_ref'],previous['source_review_ref']):
+            if original_ref not in lineage:
+                lineage.append(original_ref)
+    else:
+        raise d.Refusal('OPERATION_HAS_NO_SOURCE_SEARCH','CLARIFY')
+    now = e.clock()
+    end = min(env['valid_to'],env['pt_created_at']+env['ttl_seconds'],
+              env['source_observed_at']+policy['max_source_age'])
+    c.require(c.sha(c.decode(work['outputs']['offer_json'].encode())) == c.sha(offer),
+              'source_work_output_binding')
+    claim = dict(request_sha256=c.sha(request),inventory_sha256=c.sha(original_inventory),
+        consumed_offer=offer,source_work_ref=work['artifact']['artifact_id'],booking=booking,
+        previous_source_ref=None if previous is None else previous['source_record_ref'],
+        previous_review_ref=None if previous is None else previous['source_review_ref'])
+    review = n.root_review('VenueRoot','transaction:football:source',
+        'candidate:football:source:'+c.sha(claim),p.record_ref(event_id,request),
+        dict(native_work=work['attempts'] == 1,
+             work_output=c.sha(c.decode(work['outputs']['offer_json'].encode())) == c.sha(offer),
+             current=env['valid_from'] <= now < end,
+             scope=offer['request']['venue_ref'] == policy['venue_ref'],
+             shift_consent=not any(s['allow_shift_minutes'] for s in request['sessions']) or
+                           p.approved(policy,request,'SHIFT')),
+        claim,now,window=(env['valid_from'],end))
+    counters['root_reviews'] += 1
+    n.save(folder/'source_review.json',n.root_plain(review))
+    d.need(review[2].decision == 'ACCEPT','SOURCE_REVIEW_REFUSED')
+    body = dict(version='g51.body.v01',source_record_ref=p.record_ref(event_id,request),
+        source_revision=offer['offer_revision'],source_work_ref=work['artifact']['artifact_id'],
+        source_review_ref=review[2].decision_id,time_envelope=env,ttl_base='pt_created_at',
+        source_lineage_refs=lineage,publisher='VenueRoot',recipient=policy['peer_root'],
+        request_sha256=c.sha(offer['request']),offer=offer,booking=booking)
+    c.validate('body',body,profile=PROFILE)
+    manifest = c.with_id('manifest',dict(version='g51.manifest.v01',publisher='VenueRoot',
+        source_revision=body['source_revision'],
+        source_refs=[body['source_record_ref'],body['source_work_ref'],body['source_review_ref']],
+        declared_schema=SCHEMA,files=[dict(path='body.json',bytes=len(c.canonical(body)),
+                                          sha256=c.sha(body))]))
+    c.validate('manifest',manifest,profile=PROFILE)
+    pointer = c.with_id('pointer',dict(version='g51.pointer.v01',publisher_root_id='VenueRoot',
+        publisher_key_id=cap.key_id,semantic_address=dict(namespace='football',domain=DOMAIN,
+            subject_class='venue_offer',intent_class='context_lookup',schema_id=SCHEMA,schema_version='v01'),
+        source_record_ref=body['source_record_ref'],source_revision=body['source_revision'],
+        source_review_ref=body['source_review_ref'],body_sha256=c.sha(body),
+        body_bytes=len(c.canonical(body)),media_type='application/json',
+        artifact_manifest_ref=manifest['manifest_id'],safe_summary=SUMMARY,
+        published_scope=dict(domain=DOMAIN,venue_ref=request['venue_ref'],team_ref=request['team_ref']),
+        allowed_use_classes=['LOCAL_CONTEXT'],forbidden_use_classes=['ACTION'],
+        recipient_scope=[policy['peer_root']],time_envelope=env,source_lineage_refs=lineage,
+        access_policy_ref='policy:football:release',
+        revocation_stream_id='stream:football:'+c.sha(body['source_record_ref']),
+        transport_object_id=p.object_ref(request),creates_authority=False,creates_permission=False))
+    c.validate('pointer',pointer,profile=PROFILE)
+    publish = n.root_review('VenueRoot','transaction:football:publish',
+        pointer['pointer_id'],body['source_record_ref'],
+        dict(publish_enabled=policy['publish_enabled'],
+             bounded=len(c.canonical(pointer)) <= c.POINTER_MAX,
+             audience=policy['peer_root'] in policy['audience']),
+        dict(pointer=pointer,source_review_ref=body['source_review_ref']),e.clock(),
+        window=(env['valid_from'],end))
+    counters['root_reviews'] += 1
+    n.save(folder/'publication_review.json',n.root_plain(publish))
+    d.need(publish[2].decision == 'ACCEPT','PUBLICATION_REFUSED')
+    descriptor = c.sign(cap,keys,'POINTER',pointer,manifest['manifest_id'].split(':')[1])
+    state = policy['status'] if policy['status'] != 'UNAVAILABLE' else 'ACTIVE'
+    entry = dict(version='g51.entry.v01',pointer_id=pointer['pointer_id'],
+        publisher_root_id='VenueRoot',stream_id=pointer['revocation_stream_id'],revision=1,
+        state=state,effective_at=now,reason_ref='reason:football:operator-status')
+    entry['entry_hash'] = c.sha(entry)
+    c.validate('entry',entry)
+    for name, value in (('body',body),('offer_body',body),('manifest',manifest),('descriptor',descriptor),
+                        ('status_entry',entry)):
+        e.immutable(folder/(name+'.json'),value)
+    memory.persist_source(descriptor,folder)
+    result = dict(body=body,manifest=manifest,descriptor=descriptor,entry=entry,work=work)
+    return result

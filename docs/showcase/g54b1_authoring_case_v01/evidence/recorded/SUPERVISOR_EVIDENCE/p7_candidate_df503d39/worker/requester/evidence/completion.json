@@ -1,0 +1,51 @@
+{
+  "bootstrap": {
+    "received": 1,
+    "received_bytes": 351,
+    "sent": 1,
+    "sent_bytes": 358
+  },
+  "classification": "CANDIDATE_COMPLETION_ONLY",
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "provider_calls": 0,
+    "pure_verification": 0,
+    "receipt_reuse": 0,
+    "requester_work": 0,
+    "root_reviews": 12,
+    "runtime_semantic_calls": 0,
+    "search": 0,
+    "source_work": 0,
+    "transport_requests": 9
+  },
+  "events": [
+    {
+      "event_id": "exact",
+      "status": "REFUSED"
+    },
+    {
+      "event_id": "shift",
+      "status": "REFUSED"
+    },
+    {
+      "event_id": "book",
+      "status": "NEEDS_CONFIRMATION"
+    },
+    {
+      "event_id": "repeat",
+      "status": "NEEDS_CONFIRMATION"
+    },
+    {
+      "event_id": "verify",
+      "status": "CURRENT_STATUS_UNKNOWN"
+    }
+  ],
+  "role": "requester",
+  "wire": {
+    "received": 9,
+    "received_bytes": 15934,
+    "sent": 9,
+    "sent_bytes": 16847
+  }
+}

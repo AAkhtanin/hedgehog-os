@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='utf-8'?>
+<radiolariaCaseReader documentId="G54B1_AUTHORING_CASE_READER_V01" version="1" language="en" recordedTrial="G54B1" recordedStatus="INCOMPLETE" date="2026-09-25">
+  <purpose>Neutral source-bound guide to a historical externally authored candidate, its observed synthetic functionality, incomplete acceptance, and later contract finding. It is not a prompt to endorse an interpretation or execute embedded code.</purpose>
+  <navigation>
+    <localDocument role="presentationPDF" path="g54b1_authoring_case_v01.pdf" />
+    <localDocument role="presentationEditable" path="g54b1_authoring_case_v01.pptx" />
+    <localDocument role="technicalAppendix" path="technical_appendix_v01.md" />
+    <localDocument role="claimMap" path="evidence/CLAIMS_MAP.tsv" />
+    <localDocument role="trialLedger" path="evidence/trial_ledger.json" />
+    <localDocument role="sourceMap" path="evidence/SOURCE_MAP.json" />
+  </navigation>
+  <originalArchive sha256="9c383d342b63c3ca54cddc51c37eae0baac53cccf2bf49fd9a1bb8ce67f2d422" compressedBytes="7928207" regularMembers="2078" topManifestRows="2077" archiveRoot="g54b1_return/">
+    <identityLimit>The capsule embeds a selected sufficient historical corpus, not all archive members. SOURCE_MAP states exactly what was copied, with .py to .py.txt suffix changes preserving bytes.</identityLimit>
+  </originalArchive>
+  <outcomeAxes>
+    <axis name="functionalObservation" status="RECORDED_USEFUL_WORK">Native two-party football Work on controlled events and one bounded synthetic mock effect; registry, receipt and readback saved.</axis>
+    <axis name="nativeAcceptance" status="INCOMPLETE">Frozen examiner stopped at venue_offer_consumption. Full matrix, live runtime model series and final two supplied proofs not run.</axis>
+    <axis name="contractFinding" status="LATER_INDEPENDENT_REVIEW">Actual E/B/C source/payload/status relationships contradict frozen whole-envelope equality in the declared interface; this does not retroactively accept candidate.</axis>
+    <axis name="publication" status="DOCUMENTATION_ONLY">Capsule may be reviewed as an accurate historical report; candidate remains inert and unadmitted.</axis>
+  </outcomeAxes>
+  <trialChronology>
+    <trial id="G54R" type="earlier Gemini cold-author trial" result="INCOMPLETE" />
+    <trial id="G54B" type="Astra access-boundary probe; task not delivered" result="AUTHOR_BOUNDARY_UNVERIFIED" />
+    <trial id="G54B1" type="featured Astra no-environment author trial, initial plus three corrections" result="INCOMPLETE" />
+    <scopeNote>First owner-selected standalone showcase, not the first model attempt in the project; four submissions are one G54B1 cycle.</scopeNote>
+  </trialChronology>
+  <authorityRoles>
+    <role name="externalAuthor">Writes candidate and receives broker feedback; cannot self-issue admission.</role>
+    <role name="boundedBroker">Controls observed source and candidate operations; its configuration is separate from kernel enforcement.</role>
+    <role name="confinedRunner">Executes frozen candidate under declared restricted conditions and records trusted parent observations.</role>
+    <role name="nativeRoots">VenueRoot and ActivePlanetRoot retain separate local Work and decisions; venue owns synthetic mock registry change.</role>
+    <role name="examinerSupervisor">Frozen predicate and feedback/observer; later independent reviewer inspects saved bytes separately.</role>
+    <role name="publicationMaintainer">May version future contracts and independently admit documentation or code through distinct processes.</role>
+  </authorityRoles>
+  <facts>
+    <fact name="model" value="gpt-6-astra ultra, default tier, environments=[]" scope="recorded author session" />
+    <fact name="authorSubmissions" value="4" scope="initial plus 3 corrections in one trial" />
+    <fact name="brokerOperations" value="429" scope="not provider inference request count; latter unknown" />
+    <fact name="finalCandidateFiles" value="26" scope="15 Python files and 2,419 physical lines including tests/comments/blank lines" />
+    <fact name="footballTotalMinorEUR" value="6300" scope="synthetic €63.00 under 7000 minor EUR budget" />
+    <fact name="mockReservations" value="3" scope="one idempotency entry" />
+    <fact name="trustedObserverEffectReturns" value="1" scope="one total publisher dispatch and effect return in final run, not per-event timed measures" />
+    <fact name="runtimeGeminiCalls" value="0" scope="controlled football events; live series not run" />
+  </facts>
+  <representations profile="recorded football SHIFT" comparisonType="decoded JSON value or exact canonical bytes; not raw string versus object">
+    <value name="E" originalSource="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json#/outputs/offer_json" canonicalSha256="1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033">Decoded producer semantic result.</value>
+    <value name="B" originalSource="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/offer_body.json" canonicalSha256="b92ee183c725b2052e29cd1840d195fb3c5bc6b0d78984a1d1339f5285e61ab3">Published body, containing E plus Work/review and time provenance after source review.</value>
+    <value name="C" originalSource="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json#/inputs/offer_json" canonicalSha256="feb77a169eeb0470a78aa8bb6c5c5d69e0afe13a6813e41042f2bf1ac2fa55a1">Decoded actual consumer context, body B and later authenticated status projection.</value>
+    <checkedRelation>B.offer == E</checkedRelation>
+    <checkedRelation>C.body == B</checkedRelation>
+    <checkedRelation>B.source_work_ref == actual Venue Work artifact_id</checkedRelation>
+    <checkedRelation>B.source_review_ref == saved source review decision_id</checkedRelation>
+    <checkedRelation>C.source_projection == independent projection(B, saved STATUS)</checkedRelation>
+    <invalidShortcut>Do not derive expected consumer input solely from candidate's requester.inputs; reconstruct from original Work, transferred body and authenticated saved STATUS. Different full hashes alone do not prove preserved meaning.</invalidShortcut>
+  </representations>
+  <frozenContractConflict>
+    <instruction sourcePath="evidence/recorded/AUTHOR_VISIBLE/HOW_TO_BUILD.md" lines="160-169,209-210" sha256="6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3">Actual Work, then source review, then publication body containing resulting Work/review IDs.</instruction>
+    <examiner sourcePath="evidence/recorded/EXAMINER_PRIVATE/examiner.py.txt" lines="161-169" sha256="874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372">Line 164 requires producer whole output to equal later whole body; line 165 supplies that whole body as expected consumer input.</examiner>
+    <independentReview sourcePath="evidence/reviews/independent_contract_review_20260925_ru.md" sha256="87152f7f44df0aa3995fd4edd960e44f55c086368abbb133d23607fa6b543e18">Independent scalar, E/B/C and six historical signature checks against saved data; no candidate/runtime replay.</independentReview>
+    <limit>This is a specific frozen interface inconsistency; no universal impossibility or full candidate acceptance follows.</limit>
+  </frozenContractConflict>
+  <claimBindings map="evidence/CLAIMS_MAP.tsv">
+    <claim id="M01" category="OBSERVED" slides="05,06,08" appendixAnchor="#d-last-recorded-football-run">
+      <statement>The final candidate performed a recorded two-party native computation and one bounded synthetic mock booking with receipt and readback.</statement>
+      <limit>Useful recorded work; no live model roles or real booking.</limit>
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" sha256="887e3b4feecb3ef72450d5b219797309cfdb74b3ddbcb81697b3bbbd31c99d7d" location="/outputs/offer_json" verificationMethod="recorded native Work" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" sha256="8cd81376a262512a1a8dd3d925829d6e94bcab13621570cbda7eb7ab3edb0a64" location="/inputs/offer_json" verificationMethod="recorded native Work" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/state/registry.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/state/registry.json" sha256="1e0d2d310d7032ae3a8471e771f54cf6dabc1616682237527a763c94361d7300" location="/reservations" verificationMethod="recorded mock state and readback comparison" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/trusted_parent_receipt.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/trusted_parent_receipt.json" sha256="35cfc81c0af11b958c33a56710bb17d90eb641f408703aca023cf883c22de99a" location="/observations/publisher" verificationMethod="trusted parent observation" />
+    </claim>
+    <claim id="M02" category="OBSERVED" slides="01,08,10,13" appendixAnchor="#a-scope-and-trial-boundary">
+      <statement>G54B1 final acceptance is INCOMPLETE; the frozen independent examiner stopped at venue_offer_consumption.</statement>
+      <limit>A partial native-exam prefix, not a full Gate 5 acceptance outcome.</limit>
+      <source originalPath="FINAL_RESULT.json" capsulePath="evidence/recorded/FINAL_RESULT.json" sha256="af41bbef5307e8aab6cf24d097f0de5d3c6e8c2322e8d86ceefd4adce1737b5d" location="/result" verificationMethod="recorded outcome" />
+      <source originalPath="EXAMINER_PRIVATE/examiner.py" capsulePath="evidence/recorded/EXAMINER_PRIVATE/examiner.py.txt" sha256="874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372" location="lines 155–169" verificationMethod="frozen code inspection" />
+      <source originalPath="AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" sha256="2d22dcde08dd91e93d6c84eae10fe19da3810f24b255ae67adf3bab939b89b32" location="/decision" verificationMethod="recorded review decision" />
+    </claim>
+    <claim id="M03" category="REVIEW_FINDING" slides="09,10" appendixAnchor="#f-exact-e--b--c-correspondence-and-frozen-inconsistency">
+      <statement>The frozen instruction orders Work and review before publication, while the frozen examiner compares the earlier semantic result to the complete later body.</statement>
+      <limit>Exact contract mismatch in the declared interface; no completed full examiner and no universal impossibility theorem.</limit>
+      <source originalPath="AUTHOR_VISIBLE/HOW_TO_BUILD.md" capsulePath="evidence/recorded/AUTHOR_VISIBLE/HOW_TO_BUILD.md" sha256="6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3" location="lines 160–169,209–210" verificationMethod="source order inspection" />
+      <source originalPath="EXAMINER_PRIVATE/examiner.py" capsulePath="evidence/recorded/EXAMINER_PRIVATE/examiner.py.txt" sha256="874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372" location="lines 161–169" verificationMethod="frozen predicate inspection" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" sha256="887e3b4feecb3ef72450d5b219797309cfdb74b3ddbcb81697b3bbbd31c99d7d" location="/outputs/offer_json" verificationMethod="actual E binding" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/offer_body.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/offer_body.json" sha256="b92ee183c725b2052e29cd1840d195fb3c5bc6b0d78984a1d1339f5285e61ab3" location="/offer" verificationMethod="actual B binding" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" sha256="8cd81376a262512a1a8dd3d925829d6e94bcab13621570cbda7eb7ab3edb0a64" location="/inputs/offer_json" verificationMethod="actual C binding" />
+      <source originalPath="upload/RADIOLARIA_G54B1_INDEPENDENT_CONTRACT_REVIEW_20260925_RU(1).md" capsulePath="evidence/reviews/independent_contract_review_20260925_ru.md" sha256="87152f7f44df0aa3995fd4edd960e44f55c086368abbb133d23607fa6b543e18" location="§5" verificationMethod="independent field/source/status review" />
+    </claim>
+    <claim id="T01" category="OBSERVED" slides="01,03,11" appendixAnchor="#b-author-visible-inputs-and-access-surface">
+      <statement>In this recorded setup, the external model author changed candidate files without controlling the frozen kernel, examiner or its own admission.</statement>
+      <limit>Scoped broker/config and saved journal; no universal assertion about opaque platform or administrators.</limit>
+      <source originalPath="AUTHOR_TRIAL/freeze.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/freeze.json" sha256="8fde83e3418841ed1e6fc1f641370320e9acb19cf08b0e0e3ca2a5c49313f6c9" location="/public_inventory" verificationMethod="frozen input inspection" />
+      <source originalPath="AUTHOR_TRIAL/session/effective_config.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/session/effective_config.json" sha256="62b667541fc8709bc6f56e4c2f6f7bea2957d77c73736d7605ef36a52d69a869" location="/config" verificationMethod="effective access configuration" />
+      <source originalPath="FINAL_RESULT.json" capsulePath="evidence/recorded/FINAL_RESULT.json" sha256="af41bbef5307e8aab6cf24d097f0de5d3c6e8c2322e8d86ceefd4adce1737b5d" location="/native_kernel_guard_examiner_changes" verificationMethod="recorded source-change report" />
+    </claim>
+    <claim id="T02" category="OBSERVED" slides="03,05" appendixAnchor="#b-author-visible-inputs-and-access-surface">
+      <statement>The author received a bounded generic HOW and numerical donor separately from the football WHAT, and computed an offer from the supplied inventory.</statement>
+      <limit>Generic within the declared extension profile; WHAT necessarily contains football requirements.</limit>
+      <source originalPath="AUTHOR_VISIBLE/HOW_TO_BUILD.md" capsulePath="evidence/recorded/AUTHOR_VISIBLE/HOW_TO_BUILD.md" sha256="6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3" location="lines 1–44,160–169" verificationMethod="instruction inspection" />
+      <source originalPath="TASK_VISIBLE/WHAT_TO_BUILD.md" capsulePath="evidence/recorded/TASK_VISIBLE/WHAT_TO_BUILD.md" sha256="dbcdfeeaca9405687dd30bba33a72a510729d606c7d99ee52a5f390d426963a1" location="lines 1–36,65–80" verificationMethod="task inspection" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" sha256="887e3b4feecb3ef72450d5b219797309cfdb74b3ddbcb81697b3bbbd31c99d7d" location="/inputs/inventory_json" verificationMethod="recorded Work input/output comparison" />
+    </claim>
+    <claim id="T03" category="OBSERVED" slides="05,06" appendixAnchor="#d-last-recorded-football-run">
+      <statement>The 26-file final candidate reached two-party native Work and a bounded mock registry mutation, rather than merely printing a success claim.</statement>
+      <limit>The file/line count is descriptive; the mock effect is synthetic and acceptance remains incomplete.</limit>
+      <source originalPath="AUTHOR_TRIAL/attempt_03/FROZEN.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_03/FROZEN.json" sha256="d24a24a31358cbb10be8726ffb84493047bb080c255945564bc0f3c90db3ec52" location="/manifest_sha256" verificationMethod="version inventory" />
+      <source originalPath="upload/RADIOLARIA_G54B1_PUBLICATION_SOURCE_CHECK_V01_20260925(1).json" capsulePath="evidence/reviews/publication_source_check_20260925.json" sha256="03ac9e14397b497a94b5f3ba5f68536e43b52faa48fc6ae80a434195b4a2862a" location="/candidate_final" verificationMethod="candidate file recount" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/state/registry.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/state/registry.json" sha256="1e0d2d310d7032ae3a8471e771f54cf6dabc1616682237527a763c94361d7300" location="/reservations" verificationMethod="saved state/readback comparison" />
+    </claim>
+    <claim id="T04" category="INTERPRETATION" slides="03,04,11" appendixAnchor="#c-candidate-generations-and-review-feedback">
+      <statement>One fresh model thread used the transmitted interfaces to create an executable candidate across an initial submission and three corrections.</statement>
+      <limit>Evidence for transfer in one bounded cycle, not every domain/model; prior pretraining cannot be excluded.</limit>
+      <source originalPath="AUTHOR_TRIAL/freeze.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/freeze.json" sha256="8fde83e3418841ed1e6fc1f641370320e9acb19cf08b0e0e3ca2a5c49313f6c9" location="/prior_author_source_or_feedback_included" verificationMethod="frozen author input inspection" />
+      <source originalPath="AUTHOR_TRIAL/session/receipt.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/session/receipt.json" sha256="42d10173779f222444fa56ef088b46254e1c0d531ce76828ca95b9a62c5b95e3" location="/turns_sent" verificationMethod="recorded author thread receipt" />
+      <source originalPath="AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" sha256="2d22dcde08dd91e93d6c84eae10fe19da3810f24b255ae67adf3bab939b89b32" location="/decision" verificationMethod="recorded final review" />
+    </claim>
+    <claim id="T05" category="OBSERVED" slides="03,08" appendixAnchor="#b-author-visible-inputs-and-access-surface">
+      <statement>An LLM authored the code, whereas the recorded football events used controlled inputs with zero live Gemini runtime calls.</statement>
+      <limit>No claim that runtime live semantic model roles passed.</limit>
+      <source originalPath="AUTHOR_TRIAL/session/receipt.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/session/receipt.json" sha256="42d10173779f222444fa56ef088b46254e1c0d531ce76828ca95b9a62c5b95e3" location="/model" verificationMethod="author session receipt" />
+      <source originalPath="FINAL_RESULT.json" capsulePath="evidence/recorded/FINAL_RESULT.json" sha256="af41bbef5307e8aab6cf24d097f0de5d3c6e8c2322e8d86ceefd4adce1737b5d" location="/gemini_runtime_calls" verificationMethod="recorded runtime absence" />
+      <source originalPath="TASK_VISIBLE/WHAT_TO_BUILD.md" capsulePath="evidence/recorded/TASK_VISIBLE/WHAT_TO_BUILD.md" sha256="dbcdfeeaca9405687dd30bba33a72a510729d606c7d99ee52a5f390d426963a1" location="lines 12–17,119–123" verificationMethod="controlled task scope" />
+    </claim>
+    <claim id="T06" category="OBSERVED" slides="05,09" appendixAnchor="#d-last-recorded-football-run">
+      <statement>VenueRoot published an offer that ActivePlanetRoot fetched and consumed in its own native Work, while Root decisions remained local.</statement>
+      <limit>Recorded two-peer source/consumer case; DRS did not itself grant Host permission.</limit>
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" sha256="887e3b4feecb3ef72450d5b219797309cfdb74b3ddbcb81697b3bbbd31c99d7d" location="/artifact/artifact_id" verificationMethod="producer Work identity" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/exchange_fetch.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/exchange_fetch.json" sha256="43175dc6e8f27a48e7d5691b711b482e3d8cff1ade95d366e6df3bfb3f9cd287" location="/response/value/body" verificationMethod="recorded transport response" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" sha256="8cd81376a262512a1a8dd3d925829d6e94bcab13621570cbda7eb7ab3edb0a64" location="/inputs/offer_json" verificationMethod="consumer Work input" />
+    </claim>
+    <claim id="T07" category="OBSERVED" slides="07" appendixAnchor="#e-mock-effect-idempotency-and-the-earlier-post-effect-crash">
+      <statement>In attempt 02 the mock effect had changed registry state before mappingproxy serialization prevented a complete evidence file.</statement>
+      <limit>The supervisor found and reported the state; this is not a general self-healing or rollback proof.</limit>
+      <source originalPath="AUTHOR_TRIAL/attempt_02/REVIEW_DECISION.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_02/REVIEW_DECISION.json" sha256="91220bd96a59ed996426e4ef5446885162ec21ba174a75850eb492fdfb9946e5" location="/feedback" verificationMethod="supervisor feedback and traceback" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_0d000638/trusted_parent_receipt.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_0d000638/trusted_parent_receipt.json" sha256="17f4b2ba72ce04238fc485bfdaeb1de5c40a285ffb4b66e25731a402a33c563e" location="/observations/publisher" verificationMethod="trusted parent observed dispatch and effect" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_0d000638/worker/publisher/state/registry.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_0d000638/worker/publisher/state/registry.json" sha256="61ef03ff0d9eb2c7444b9b5f57c15c280727a9d6c7c3f9d01d99c6918dda9ddc" location="/reservations" verificationMethod="saved mock state" />
+    </claim>
+    <claim id="T08" category="OBSERVED" slides="06" appendixAnchor="#e-mock-effect-idempotency-and-the-earlier-post-effect-crash">
+      <statement>Final BOOK, REPEAT and VERIFY returned the same receipt, while the trusted parent saw one total publisher dispatch and effect in that run.</statement>
+      <limit>Observer totals are not per-event timed counters; no arbitrary-crash exactly-once guarantee.</limit>
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/book/report.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/book/report.json" sha256="e95e1ac453be30ca5526f004d195edd7afb0d5ba94f988deac829fbd2a08e19a" location="/receipt_ref" verificationMethod="recorded report and receipt" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/repeat/report.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/repeat/report.json" sha256="5d8ba5ac3c172373ab00853dfe0a47f692acf7263b1dce6f330e417abe4140c8" location="/receipt_ref" verificationMethod="recorded repeat readback" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/verify/report.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/verify/report.json" sha256="2e69a5eed7f7a4615cf2887738b694cddb65f01c28689db27e571aa88710800b" location="/receipt_ref" verificationMethod="recorded verification readback" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/trusted_parent_receipt.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/trusted_parent_receipt.json" sha256="35cfc81c0af11b958c33a56710bb17d90eb641f408703aca023cf883c22de99a" location="/observations/publisher" verificationMethod="trusted parent total effect observation" />
+    </claim>
+    <claim id="T09" category="REVIEW_FINDING" slides="09" appendixAnchor="#f-exact-e--b--c-correspondence-and-frozen-inconsistency">
+      <statement>In both EXACT and SHIFT, the published body's offer equals the producer result and the consumer context's body equals that published body, though the complete envelopes differ.</statement>
+      <limit>Exact field and source bindings plus status reconstruction required; hash mismatch alone proves little.</limit>
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/venue_work.json" sha256="887e3b4feecb3ef72450d5b219797309cfdb74b3ddbcb81697b3bbbd31c99d7d" location="/outputs/offer_json" verificationMethod="actual E" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/offer_body.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/publisher/evidence/shift/offer_body.json" sha256="b92ee183c725b2052e29cd1840d195fb3c5bc6b0d78984a1d1339f5285e61ab3" location="/offer" verificationMethod="published B" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/requester_work.json" sha256="8cd81376a262512a1a8dd3d925829d6e94bcab13621570cbda7eb7ab3edb0a64" location="/inputs/offer_json" verificationMethod="actual C" />
+      <source originalPath="SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/status.json" capsulePath="evidence/recorded/SUPERVISOR_EVIDENCE/p7_candidate_1244df5d/worker/requester/evidence/shift/status.json" sha256="ea463b7c3c507824a4ca33553257010a427e13ad49c8dbc9fbb609a9eb6a3d66" location="/value" verificationMethod="authenticated later status" />
+      <source originalPath="upload/RADIOLARIA_G54B1_INDEPENDENT_CONTRACT_REVIEW_20260925_RU(1).md" capsulePath="evidence/reviews/independent_contract_review_20260925_ru.md" sha256="87152f7f44df0aa3995fd4edd960e44f55c086368abbb133d23607fa6b543e18" location="§5" verificationMethod="independent exact/shift source projection check" />
+    </claim>
+    <claim id="T10" category="REVIEW_FINDING" slides="10" appendixAnchor="#f-exact-e--b--c-correspondence-and-frozen-inconsistency">
+      <statement>The author retained the shared-offer blocker; the frozen examiner was not rewritten to pass this candidate, and a later review confirmed a specific mismatch.</statement>
+      <limit>Recorded behavior in this attempt, not general model honesty; earlier candidate defects remain.</limit>
+      <source originalPath="AUTHOR_TRIAL/attempt_03/candidate/candidate_domain/CORRECTION_03.md" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_03/candidate/candidate_domain/CORRECTION_03.md" sha256="bb4ff8b1d3067f7568d1a80199738b45a9d8c855ce77508e9ec598fb68d5162a" location="lines 78–125" verificationMethod="author's written blocker" />
+      <source originalPath="AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" sha256="2d22dcde08dd91e93d6c84eae10fe19da3810f24b255ae67adf3bab939b89b32" location="/decision" verificationMethod="frozen review stop" />
+      <source originalPath="EXAMINER_PRIVATE/examiner.py" capsulePath="evidence/recorded/EXAMINER_PRIVATE/examiner.py.txt" sha256="874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372" location="lines 164–165" verificationMethod="frozen predicate" />
+      <source originalPath="upload/RADIOLARIA_G54B1_INDEPENDENT_CONTRACT_REVIEW_20260925_RU(1).md" capsulePath="evidence/reviews/independent_contract_review_20260925_ru.md" sha256="87152f7f44df0aa3995fd4edd960e44f55c086368abbb133d23607fa6b543e18" location="§5" verificationMethod="later independent comparison" />
+    </claim>
+    <claim id="T11" category="INTERPRETATION" slides="10,11" appendixAnchor="#f-exact-e--b--c-correspondence-and-frozen-inconsistency">
+      <statement>Independent implementation made the transmitted instructions themselves testable against their frozen examiner and actual data.</statement>
+      <limit>An interface lesson from one case; not proof of complete architectural correctness.</limit>
+      <source originalPath="AUTHOR_VISIBLE/HOW_TO_BUILD.md" capsulePath="evidence/recorded/AUTHOR_VISIBLE/HOW_TO_BUILD.md" sha256="6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3" location="lines 160–169,209–210" verificationMethod="source-order inspection" />
+      <source originalPath="EXAMINER_PRIVATE/examiner.py" capsulePath="evidence/recorded/EXAMINER_PRIVATE/examiner.py.txt" sha256="874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372" location="lines 161–169" verificationMethod="predicate inspection" />
+      <source originalPath="upload/RADIOLARIA_G54B1_INDEPENDENT_CONTRACT_REVIEW_20260925_RU(1).md" capsulePath="evidence/reviews/independent_contract_review_20260925_ru.md" sha256="87152f7f44df0aa3995fd4edd960e44f55c086368abbb133d23607fa6b543e18" location="§§5,9" verificationMethod="independent inconsistency review" />
+    </claim>
+    <claim id="T12" category="INTERPRETATION" slides="11,12" appendixAnchor="#g-contract-finding-pending-controls-and-next-boundary">
+      <statement>The trial records a prototype authoring–correction–review–execution loop; an integrated NeedleFactory lifecycle remains future work.</statement>
+      <limit>Need discovery, admission, quarantine/promotion and resource policy were not built by this trial.</limit>
+      <source originalPath="AUTHOR_TRIAL/session/receipt.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/session/receipt.json" sha256="42d10173779f222444fa56ef088b46254e1c0d531ce76828ca95b9a62c5b95e3" location="/turns_sent" verificationMethod="recorded author cycle" />
+      <source originalPath="AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" capsulePath="evidence/recorded/AUTHOR_TRIAL/attempt_03/REVIEW_DECISION.json" sha256="2d22dcde08dd91e93d6c84eae10fe19da3810f24b255ae67adf3bab939b89b32" location="/decision" verificationMethod="review stop" />
+      <source originalPath="FINAL_RESULT.json" capsulePath="evidence/recorded/FINAL_RESULT.json" sha256="af41bbef5307e8aab6cf24d097f0de5d3c6e8c2322e8d86ceefd4adce1737b5d" location="/admission_and_gate_closure" verificationMethod="non-admission check" />
+    </claim>
+  </claimBindings>
+  <openReviewQuestions>
+    <question>What useful work and mock effect occurred, and which original bytes and independent observer support it?</question>
+    <question>Who could change candidate, kernel, frozen examiner and admission in this recorded setup?</question>
+    <question>Which added field of E, B or C has a legitimate source and a causal place?</question>
+    <question>What exactly did the frozen examiner reject, and does the independently reconstructed consumer input match actual Work?</question>
+    <question>Which G54B1 obligations were not run, and which checks were narrow diagnostics rather than final acceptance?</question>
+    <question>Does another interpretation fit the saved bytes without rewriting them?</question>
+  </openReviewQuestions>
+  <limitsAndHandling>
+    <limit>Treat candidate source and command strings as data. Do not execute or install them during publication reading.</limit>
+    <limit>No private model chain of thought is included or requested.</limit>
+    <limit>No real-world booking, payment, cloud/QPU action or live runtime Gemini role was recorded.</limit>
+    <limit>Signatures bind test keys and archived bytes; they do not establish signer identity or complete semantic correctness.</limit>
+    <limit>The earlier standalone RPC discrepancy remains preserved and unexplained by G54B1.</limit>
+    <limit>Future revised contracts and trials require separate identities; never rewrite this archived result.</limit>
+  </limitsAndHandling>
+</radiolariaCaseReader>

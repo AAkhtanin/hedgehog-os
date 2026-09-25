@@ -1,0 +1,1 @@
+{"call": {"arguments": {}, "callId": "exec-48c9ec45-82f6-4c4a-8b0e-ef106a0ea033", "namespace": null, "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4", "tool": "inspect_candidate_text", "turnId": "01a0d79b-3913-7cc0-a4ea-358ef64d11bf"}, "response": {"errors": [], "status": "PUBLIC_SYNTAX_ONLY"}, "status": "COMMITTED"}

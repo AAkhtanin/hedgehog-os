@@ -1,0 +1,51 @@
+"""Pre-author fixed data and witnesses; no selection or booking implementation."""
+import copy,json
+from pathlib import Path
+from examiner import utc
+
+def frozen_cases():
+    zone='Europe/Tirane';now=utc('2027-01-02T10:00:00',zone)
+    sessions=[dict(session_id='session:'+str(day),start='2027-01-%02dT%s'%(day,'16:30:00' if day==7 else '11:00:00'),
+        end='2027-01-%02dT%s'%(day,'18:00:00' if day==7 else '12:30:00'),allow_shift_minutes=30 if day==8 else 0) for day in (7,8,9)]
+    request=dict(request_id='request:exam:one',revision=2,operation='FIND_OFFER',team_ref='team:one',venue_ref='venue:synthetic',timezone=zone,
+        currency='EUR',budget_minor=7000,owner_approval_ref='consent:jan8-only',sessions=sessions)
+    availability=[[utc('2027-01-%02dT09:00:00'%day,zone),utc('2027-01-%02dT20:00:00'%day,zone)] for day in (7,8,9)]
+    natural=dict(field_id='field:elm',surface='NATURAL_GRASS',full_size=True,price_minor=2100,available_utc=availability,
+        occupied_utc=[[utc('2027-01-08T11:00:00',zone),utc('2027-01-08T11:30:00',zone)]])
+    artificial=dict(natural,field_id='field:cheap',surface='ARTIFICIAL',price_minor=1,occupied_utc=[])
+    inventory=dict(venue_ref=request['venue_ref'],revision=4,currency='EUR',fields=[artificial,natural])
+    source=dict(publisher='VenueRoot',recipient='ActivePlanetRoot',request_revision=2,schedule_revision=4,offer_revision=1,
+        observed_at=now,valid_from=now,valid_to=now+300,ttl=300,pt=now,status='ACTIVE',status_checked=now,status_until=now+60)
+    slots=[dict(session_id=s['session_id'],venue_ref=request['venue_ref'],field_id=natural['field_id'],start_utc=utc(s['start'],zone)+(1800 if s['allow_shift_minutes'] else 0),
+        end_utc=utc(s['end'],zone)+(1800 if s['allow_shift_minutes'] else 0),price_minor=2100) for s in sessions]
+    witness=dict(version='g53.result.v01',request_ref=request['request_id'],request_revision=2,team_ref=request['team_ref'],operation='FIND_OFFER',
+        status='OFFER_READY',slots=slots,total_minor=6300,currency='EUR',source=source,receipt_ref=None,counts=dict(search=1,dispatch=0,mutations=0),native_refs={})
+    base=dict(case_id='allowed_shift',request=request,inventory=inventory,evaluation_time=now+1,allowed_statuses=['OFFER_READY'],
+        witness=witness,classification='SYNTHETIC_CHECKER_DATA_NOT_NATIVE_EVIDENCE')
+    exact=copy.deepcopy(base);exact['case_id']='exact_only'
+    exact['request']['owner_approval_ref']=None;exact['request']['sessions'][1]['allow_shift_minutes']=0
+    exact['allowed_statuses']=['NO_COMPLETE_OFFER','NEEDS_CONFIRMATION'];exact['witness'].update(status='NO_COMPLETE_OFFER',slots=[],total_minor=0)
+    blocked=copy.deepcopy(base);blocked['case_id']='thirty_minutes_still_overlaps'
+    blocked['inventory']['fields'][1]['occupied_utc'][0][1]=utc('2027-01-08T12:30:00',zone)
+    blocked['allowed_statuses']=['NO_COMPLETE_OFFER'];blocked['witness'].update(status='NO_COMPLETE_OFFER',slots=[],total_minor=0)
+    hidden=copy.deepcopy(base);hidden['case_id']='hidden_renamed_reordered_price'
+    hidden['request']['request_id']='request:opaque:z17';hidden['request']['team_ref']='team:two'
+    hidden['request']['budget_minor']=8000;hidden['inventory']['fields'].reverse()
+    hidden['inventory']['fields'][0]['field_id']='field:opaque:47';hidden['inventory']['fields'][0]['price_minor']=2301
+    hidden['witness'].update(request_ref='request:opaque:z17',team_ref='team:two',total_minor=6903)
+    for slot in hidden['witness']['slots']:slot.update(field_id='field:opaque:47',price_minor=2301)
+    hidden['request']['sessions'].reverse();hidden['witness']['slots'].reverse()
+    second=copy.deepcopy(base);second['case_id']='second_team_new_slots'
+    second['request'].update(request_id='request:team-three',team_ref='team:three',owner_approval_ref=None)
+    second['inventory']['fields'][1]['occupied_utc']=[]
+    second['inventory']['fields'][1]['available_utc']=[]
+    for index,day in enumerate((10,11,12)):
+        start='2027-01-%02dT15:00:00'%day;end='2027-01-%02dT16:30:00'%day
+        second['request']['sessions'][index]=dict(session_id='new:'+str(day),start=start,end=end,allow_shift_minutes=0)
+        second['inventory']['fields'][1]['available_utc'].append([utc(start,zone),utc(end,zone)])
+        second['witness']['slots'][index].update(session_id='new:'+str(day),start_utc=utc(start,zone),end_utc=utc(end,zone))
+    second['witness'].update(request_ref='request:team-three',team_ref='team:three')
+    return [base,exact,blocked,hidden,second]
+
+if __name__=='__main__':
+    print(json.dumps(frozen_cases(),sort_keys=True,indent=2))

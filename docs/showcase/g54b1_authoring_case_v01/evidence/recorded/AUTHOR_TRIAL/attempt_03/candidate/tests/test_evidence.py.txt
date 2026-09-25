@@ -1,0 +1,24 @@
+"""Unexecuted one-way audit projection checks; no native authority construction."""
+import unittest
+from dataclasses import dataclass
+from types import MappingProxyType
+from candidate_domain import evidence
+
+@dataclass(frozen=True)
+class Observation:
+    values: object
+
+class EvidenceProjectionTests(unittest.TestCase):
+    def test_nested_immutable_mapping_and_unsupported_value(self):
+        original = MappingProxyType({'outer': MappingProxyType({'count': 1}),
+                                     'events': ('observed',)})
+        projected = evidence.plain(Observation(original))
+        self.assertEqual(projected,{'values': {'outer': {'count': 1},'events': ['observed']}})
+        self.assertEqual(original['outer']['count'],1)
+        with self.assertRaisesRegex(TypeError,'audit_unsupported'):
+            evidence.plain(object())
+        with self.assertRaisesRegex(TypeError,'audit_mapping_key'):
+            evidence.plain(MappingProxyType({1:'invalid'}))
+
+if __name__ == '__main__':
+    unittest.main()

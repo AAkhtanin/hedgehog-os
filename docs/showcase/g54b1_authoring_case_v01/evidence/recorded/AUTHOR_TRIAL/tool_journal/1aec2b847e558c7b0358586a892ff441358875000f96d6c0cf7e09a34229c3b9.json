@@ -1,0 +1,1 @@
+{"call": {"arguments": {"candidate_id": "football_reference_v01"}, "callId": "exec-e5aa076e-4c77-4f6d-b8b8-6a68ed970f06", "namespace": null, "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4", "tool": "submit_candidate", "turnId": "01a0d772-effe-7de2-9110-f48481b18b1c"}, "response": {"attempt": 0, "status": "SUBMITTED_FOR_INDEPENDENT_REVIEW"}, "status": "COMMITTED"}

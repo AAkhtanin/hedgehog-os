@@ -1,0 +1,13 @@
+{
+  "attempt": 3,
+  "client_receipt": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_TRIAL/session/started.json",
+  "corrections": 3,
+  "phase": "COLD_AUTHORING_INCOMPLETE",
+  "pid": 28937,
+  "submissions": 4,
+  "supervisor": "journal_run.py",
+  "task_delivered": true,
+  "thread": "01a0d772-efdf-72b2-8663-0cda590c35f4",
+  "turn": "01a0d7b7-4ba6-7940-982d-3b9670e34103",
+  "updated": "2026-09-25T08:55:54.096182+00:00"
+}

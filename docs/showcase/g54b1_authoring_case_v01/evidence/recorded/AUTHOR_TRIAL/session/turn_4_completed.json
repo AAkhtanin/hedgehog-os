@@ -1,0 +1,23 @@
+{
+  "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4",
+  "turn": {
+    "completedAt": 1790326153,
+    "durationMs": 644401,
+    "error": null,
+    "id": "01a0d7b7-4ba6-7940-982d-3b9670e34103",
+    "items": [
+      {
+        "delivery": null,
+        "id": "msg_0862a23817afd429016ab63586922087d294432572d0af6ff0",
+        "memoryCitation": null,
+        "phase": "final_answer",
+        "questions": null,
+        "text": "Submitted correction 03 for independent review.\n\nUpdated receipt serialization, mutation accounting, cleanup, uncertain-outcome preservation and the exact three-hash Root claim.\n\nThe shared `offer_json` binding remains blocked: exact equality conflicts with the required Work \u2192 review \u2192 signed-body identity order. Exact predicates are documented in `candidate_domain/CORRECTION_03.md`.\n\nSyntax inspection found no errors. Nothing was executed; complete booking and supplied-proof acceptance remain unclaimed.",
+        "type": "agentMessage"
+      }
+    ],
+    "itemsView": "summary",
+    "startedAt": 1790325509,
+    "status": "completed"
+  }
+}

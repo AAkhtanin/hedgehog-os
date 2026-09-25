@@ -1,0 +1,34 @@
+"""Record the completed human source review; no candidate execution."""
+import hashlib
+import json
+from pathlib import Path
+
+WORK = Path(__file__).resolve().parent
+attempt = WORK / 'AUTHOR_TRIAL/attempt_00'
+report = json.loads((attempt / 'static_data_review.json').read_text())
+assert report['shape']['status'] == 'CANDIDATE_DATA_SHAPE_ONLY_NOT_EXECUTION_OR_ADMISSION'
+candidate = attempt / 'candidate'
+actual = {str(p.relative_to(candidate)): hashlib.sha256(p.read_bytes()).hexdigest()
+          for p in candidate.rglob('*') if p.is_file()}
+assert actual == {k: v['sha256'] for k, v in report['files'].items()}
+assert not any(p.is_symlink() for p in candidate.rglob('*'))
+review = dict(status='APPROVED_FOR_DECLARED_CONFINED_EXECUTION', files=actual,
+    scope='Only the unchanged G54 two-peer Docker runner and pinned image; no owner admission.',
+    reviewer='Independent supervising agent, not the cold author',
+    examined=['All ten candidate module bodies and all exact-hash author patches through freeze',
+        'Both inert test files, public schemas, passport, dependency and source-impact records',
+        'Entrypoint keyword contract, imports, module-level effects, own path construction',
+        'PURE compute/validation, source and requester Root reviews, signature and DRS APIs',
+        'MOCK mutation only within native admitted callback; PACKETS lifecycle and finally cleanup'],
+    findings=['No candidate subprocess, thread, network, raw descriptor access, dynamic loader, '
+        'observer manipulation, protected-source writes or private-context read path found.',
+        'Runtime compatibility, domain correctness, native evidence binding and all acceptance '
+        'obligations remain unverified. This source review does not grant Root permission.'],
+    review_method='Full source reading plus data-only AST/import/call inventory and exact frozen hashes',
+    image='sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97',
+    limits='Unchanged non-root, no-network, read-only mounts, seccomp before import, finite CPU/memory/wall.',
+    tests_host_imported=False, generated_code_host_imported=False)
+with (attempt / 'confined_execution_review.json').open('x') as stream:
+    json.dump(review, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(dict(status=review['status'], files=len(actual), manifest_sha256=actual['candidate.json'])))

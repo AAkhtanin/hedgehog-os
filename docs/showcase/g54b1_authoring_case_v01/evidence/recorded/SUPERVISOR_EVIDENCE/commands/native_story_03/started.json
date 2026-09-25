@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "DEPLOYMENT/evaluate.py",
+    "candidate",
+    "AUTHOR_TRIAL/attempt_03/native_story/inputs",
+    "AUTHOR_TRIAL/attempt_03/candidate",
+    "AUTHOR_TRIAL/attempt_03/confined_execution_review.json"
+  ],
+  "cwd": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A",
+  "started": "2026-09-25T08:54:25.997590+00:00",
+  "supervisor_pid": 34749,
+  "source_pins": {
+    "collect_final_state.py": "a0e34042339d9d474abc427b5cbd86360fb119001cad15d88b10e4831f16076d",
+    "review_work_binding.py": "6efa77375d8f2be30f9a8d944a28302bc291bd52cb40929a5020bfce4cc559c1",
+    "no_env_client.py": "505130455f541f674637c6d802c378937e1e11028544abada17091acefad8aaa",
+    "prepare_story.py": "a9f77040ddf618e14b1e8ab30fa1d93b58c4b96d7755044cd92deec3f5336000",
+    "test_broker.py": "958ca6446f4bccab289d90b0c38dbe4fe2150b0d39e6639b89732360f4f1c1fd",
+    "check_frozen_native_prefix.py": "21d376af1deadee932995eef704c8550f4055238fae981ac38fa701212c58a73",
+    "package_return.py": "c86869f047f5a361fca323e77592190339f4ffa2d517cadad0e7cac92b5596eb",
+    "review_native_story_data.py": "e0a2d1d303fe790bb48a261e71252ea822cc0a8dcd82bc08e72562896525c328",
+    "run_author.py": "9563bb42447024939a42f7026da4832e6737bb65b6bad008294f5f11dca1d327",
+    "review_candidate_data.py": "ba36f7d09c71165c891584f8c2713a862e54e3e8e024ef72c816300d141e826a",
+    "broker.py": "b1ba862c8d86cd228a028e8035875fbbc91d3363f8afc6a4309de364d6daf466",
+    "run_diagnostic.py": "ac815f64ce5bef519d3001be5e2fdd21780aea6e592b8273e4ea64a9dc8af8dc",
+    "record_review_00.py": "c5678aa78b9795f5d118e67087e72d7c0e466d47888640952c6ee30997aedc46",
+    "prepare.py": "58312a2cfcaa3348533b54f794cda52372af9f4bdc5c51af4b6088a8fe1e8eb0",
+    "record_followup_review.py": "79a7dfecd78a2d066e83ecc39bbaa5565e18e6d872cbdc7a7201478b644ad316",
+    "journal_run.py": "605e990042453855be5ba84eb607256f950ff11f3e733a8095b5b8815aec0e20"
+  },
+  "pid": 34756
+}

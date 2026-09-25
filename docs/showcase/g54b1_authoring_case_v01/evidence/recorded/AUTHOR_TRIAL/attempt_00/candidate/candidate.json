@@ -1,0 +1,103 @@
+{
+  "candidate_id": "football_reference_v01",
+  "entrypoint": "candidate_domain.run",
+  "files": [
+    {
+      "bytes": 7139,
+      "path": "PASSPORT.json",
+      "sha256": "91b03da9ef71533fa49b7af78d0215dcbe6dc07c383934030c36d5794298d128"
+    },
+    {
+      "bytes": 14454,
+      "path": "README.md",
+      "sha256": "160a2a22f56de4c00ef3aae65dc7f79b73006778244e73e64d637dd8d031ea9c"
+    },
+    {
+      "bytes": 79,
+      "path": "candidate_domain/__init__.py",
+      "sha256": "f4f7ad9fdaf3b7bf2c58c68b993d961679087ae3475e37012475a99198cf7349"
+    },
+    {
+      "bytes": 17574,
+      "path": "candidate_domain/domain.py",
+      "sha256": "ed13c8791098db1bc2611737e57a913faabdbaf013087f8c1e466959b8477b1e"
+    },
+    {
+      "bytes": 14346,
+      "path": "candidate_domain/effect.py",
+      "sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+    },
+    {
+      "bytes": 11171,
+      "path": "candidate_domain/memory.py",
+      "sha256": "88967ee8202505a425b3ff9b251e73b320070c684a128bdecb45e99fb7221dea"
+    },
+    {
+      "bytes": 5650,
+      "path": "candidate_domain/native.py",
+      "sha256": "42dafc0d5030ba1ebdd5b357bac4b9cb2f277713201cd973efa19848fde02e4c"
+    },
+    {
+      "bytes": 7674,
+      "path": "candidate_domain/policy.py",
+      "sha256": "ef7e0879794ca0bc776f3aa1b63f8ebfac8b42516a5e37bcc828e1aa60fd528c"
+    },
+    {
+      "bytes": 2946,
+      "path": "candidate_domain/profile.py",
+      "sha256": "351946fe5c19ff3ce41f8615aa8e10e4c0d4ad372272fc319d7540f743c0f199"
+    },
+    {
+      "bytes": 17305,
+      "path": "candidate_domain/run.py",
+      "sha256": "f3ee62a8175d6776f373b064440c1407016221f3ac349c17db810b0ce38cd82c"
+    },
+    {
+      "bytes": 8765,
+      "path": "candidate_domain/source.py",
+      "sha256": "ee9dd3f73c2c7b3bc729c07c8fd8de4368007b30a9d82cf0ac18d986f60dba34"
+    },
+    {
+      "bytes": 18379,
+      "path": "candidate_domain/transport.py",
+      "sha256": "b04655799ad2479622c00e35a92e2ea91a843ad1ec3dbc2064a6f31ec0b563db"
+    },
+    {
+      "bytes": 22104,
+      "path": "dependencies.json",
+      "sha256": "9cc33fe71bfff21664fedb874c8731799122bfcec12df3e0031aefa92d8bdf08"
+    },
+    {
+      "bytes": 10869,
+      "path": "schemas/body.schema.json",
+      "sha256": "b8f3c41d49daabe1237e444c1cccd3218fa651b924798e49ee5d92f96cdbccdd"
+    },
+    {
+      "bytes": 16836,
+      "path": "schemas/input.schema.json",
+      "sha256": "b92e07f001d1f7c75a3cde58fe98ba52097b392d66bba75baf4c7ff8c2d67fa2"
+    },
+    {
+      "bytes": 6092,
+      "path": "schemas/report.schema.json",
+      "sha256": "21b41ba26dc91ff295a0eafaf49d4b6076ce1e3ab1ec86ecdd5959527b26b350"
+    },
+    {
+      "bytes": 10279,
+      "path": "source_impact.json",
+      "sha256": "43055c98677dec1daeffd900cf11a6922f5cd08fafc5ee3c3b1b4c2da9413408"
+    },
+    {
+      "bytes": 6891,
+      "path": "tests/test_domain.py",
+      "sha256": "b3fd31af6fc070e48963281f0e497039899bcdb16addbd99f121d9ab5b953728"
+    },
+    {
+      "bytes": 9082,
+      "path": "tests/test_native.py",
+      "sha256": "00530e720b3021455e6153067cbb77b1bfc70bce3f051f561a0c8f1a3c09d850"
+    }
+  ],
+  "installable_now": false,
+  "version": "g53.candidate.v01"
+}

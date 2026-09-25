@@ -1,0 +1,28 @@
+{
+  "bootstrap": {
+    "received": 0,
+    "received_bytes": 0,
+    "sent": 0,
+    "sent_bytes": 0
+  },
+  "independent_observer_required": true,
+  "local_observations": {
+    "dispatch": 0,
+    "mutations": 0,
+    "provider_calls": 0,
+    "pure_verification": 0,
+    "receipt_reuse": 0,
+    "requester_work": 0,
+    "root_reviews": 1,
+    "runtime_semantic_calls": 0,
+    "search": 0,
+    "source_work": 0,
+    "transport_requests": 1
+  },
+  "wire": {
+    "received": 1,
+    "received_bytes": 1839,
+    "sent": 1,
+    "sent_bytes": 1176
+  }
+}

@@ -1,0 +1,95 @@
+"""Domain PURE capabilities through the public native Work seam."""
+from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n
+from hedgehog.kernel import work_composition_v01 as work, effect_firewall_v01 as firewall, abi_v01 as abi
+from hedgehog import action_commit_packet_v02 as action
+from demo import run_action_packet_portability_v01 as donor, work_composition_mock_capabilities_v01 as mocks
+from . import domain as d
+from .profile import PROFILE
+
+def values(invocation):
+    return {v.parameter_name:v.value for v in invocation.inputs}
+
+def execute_source(invocation):
+    data = values(invocation)
+    result = d.produce_offer(c.decode(data['request_json'].encode()),
+                             c.decode(data['inventory_json'].encode()))
+    return (action.build_action_effect_parameter_record_v01(parameter_name='offer_json',
+            value_type='TEXT',value=c.canonical(result).decode()),)
+
+def execute_requester(invocation):
+    data = values(invocation)
+    wrapper = c.decode(data['offer_json'].encode())
+    c.validate('body',wrapper['body'],profile=PROFILE)
+    result = d.consume_offer(c.decode(data['request_json'].encode()),wrapper)
+    return (action.build_action_effect_parameter_record_v01(parameter_name='result_json',
+            value_type='TEXT',value=c.canonical(result).decode()),)
+
+def validate_source(definition, invocation, output):
+    errors = firewall.validate_capability_values_v01(definition.output_fields,output)
+    if not errors:
+        try:
+            data = values(invocation)
+            d.check_offer(c.decode(output[0].value.encode()),
+                c.decode(data['request_json'].encode()),
+                c.decode(data['inventory_json'].encode()))
+        except ValueError as exc:
+            errors = (str(exc),)
+    return firewall.build_capability_validation_evidence_v01(definition=definition,
+        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)
+
+def validate_requester(definition, invocation, output):
+    errors = firewall.validate_capability_values_v01(definition.output_fields,output)
+    if not errors:
+        try:
+            data = values(invocation)
+            wrapper = c.decode(data['offer_json'].encode())
+            c.validate('body',wrapper['body'],profile=PROFILE)
+            d.check_result(c.decode(data['request_json'].encode()),wrapper,
+                           c.decode(output[0].value.encode()))
+        except ValueError as exc:
+            errors = (str(exc),)
+    return firewall.build_capability_validation_evidence_v01(definition=definition,
+        values=output,invocation_id=invocation.invocation_id,valid=not errors,reason_codes=errors)
+
+def perform(mode, root, task, inputs):
+    d.need(mode in ('source','requester'),'NATIVE_DOMAIN_MODE')
+    input_names = ('request_json','inventory_json') if mode == 'source' else ('request_json','offer_json')
+    output_name = 'offer_json' if mode == 'source' else 'result_json'
+    d.need(set(inputs) == set(input_names) and all(type(v) is str for v in inputs.values()),
+           'NATIVE_REQUIRED_INPUTS')
+    # Domain boundary precedes materialization; malformed/missing inputs make no Work.
+    request = c.decode(inputs['request_json'].encode())
+    d.parse_request(request)
+    if mode == 'source':
+        d.inventory_rows(c.decode(inputs['inventory_json'].encode()),request)
+    else:
+        wrapper = c.decode(inputs['offer_json'].encode())
+        c.validate('body',wrapper['body'],profile=PROFILE)
+        d.check_offer(wrapper['body']['offer'],request)
+    executor = execute_source if mode == 'source' else execute_requester
+    validator = validate_source if mode == 'source' else validate_requester
+    admission = mocks.admit_pure_operation_v01(operation_id='football.'+mode,
+        input_fields=tuple((k,'TEXT') for k in input_names),output_fields=((output_name,'TEXT'),),
+        executor=executor,output_validator=validator,host_instance_ref='host:football:'+root)
+    item = work.WorkItemV01(mode,admission.definition.definition_id,root,
+        tuple(donor.work_literal_v01(k,'TEXT',inputs[k]) for k in input_names),(),(),None,None)
+    program, common, host = donor.prepare_work_program_v01(task_id=task,root_id=root,
+        admitted=(admission,),items=(item,),device_refs=())
+    results = work.advance_work_program_v01(program,**common,host_map={root:host})
+    valid, reasons = work.validate_work_program_result_v01(program,results,**common,
+                                                          host_map={root:host})
+    c.require(valid and not reasons and len(results) == 1 and
+              results[0].status == 'COMPLETED','native_work_failed')
+    artifact = work.work_program_result_to_artifact_v01(program,results,**common,
+                                                       host_map={root:host})
+    snapshot = firewall.snapshot_admitted_capability_v01(admission)
+    c.require(not firewall.validate_capability_execution_result_v01(
+        results[0].result,results[0].invocation,snapshot),'pure_result_validation')
+    outputs = {v.parameter_name:v.value for v in results[0].result.output}
+    c.require(set(outputs) == {output_name},'producer_output_removed')
+    return dict(native_evidence=dict(admission=n.plain(snapshot),
+        invocation=n.plain(results[0].invocation),result=n.plain(results[0].result)),
+        inputs=inputs,outputs=outputs,attempts=len(host.work_attempts),results=n.plain(results),
+        artifact=abi.kernel_artifact_to_plain_dict_v01(artifact),
+        work_attempts=n.plain(host.work_attempts),
+        clock_profile='CONTROLLED_LOGICAL_1014_SEPARATE_FROM_SOURCE_UTC')

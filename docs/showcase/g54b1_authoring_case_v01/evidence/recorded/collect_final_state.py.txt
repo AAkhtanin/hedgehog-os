@@ -1,0 +1,73 @@
+"""Read-only owner/process-evidence accounting after the author has stopped."""
+import collections
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+
+WORK = Path(__file__).resolve().parent
+OWNER = Path('/Users/admin/Projects/hedgehog-os')
+EVIDENCE = WORK / 'SUPERVISOR_EVIDENCE'
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+def write(path, value):
+    with path.open('x') as stream:
+        json.dump(value, stream, sort_keys=True, indent=2)
+        stream.write('\n')
+
+session = WORK / 'AUTHOR_TRIAL/session'
+receipt = json.loads((session / 'receipt.json').read_text())
+assert receipt['server_reaped'] is True
+entry = json.loads((EVIDENCE / 'owner_entry.json').read_text())
+owner = {}
+for label, args in [('head', ['rev-parse', 'HEAD']), ('tree', ['rev-parse', 'HEAD^{tree}']),
+    ('branch', ['branch', '--show-current']), ('status', ['status', '--porcelain=v1', '--untracked-files=all']),
+    ('staged', ['diff', '--cached', '--name-status']), ('tracked', ['ls-files', '--stage'])]:
+    proc = subprocess.run(['git', '-C', str(OWNER), *args], capture_output=True,
+        env=dict(os.environ, GIT_OPTIONAL_LOCKS='0'), check=True)
+    (EVIDENCE / ('owner_final_' + label + '.txt')).write_bytes(proc.stdout)
+    owner[label] = sha(proc.stdout) if label == 'tracked' else proc.stdout.decode().strip()
+    assert owner[label] == (entry[label]['sha256'] if label == 'tracked' else entry[label]), label
+owner['metadata'] = []
+for row in entry['metadata_hashes']:
+    path = Path(row['path'])
+    data = path.read_bytes()
+    actual = dict(path=str(path), bytes=len(data), sha256=sha(data),
+        mode=format(path.stat().st_mode & 0o777, '04o'))
+    assert actual == row
+    owner['metadata'].append(actual)
+owner['unchanged'] = True
+write(EVIDENCE / 'owner_final.json', owner)
+
+pre = json.loads((EVIDENCE / 'prior_frozen_inputs.json').read_text())
+for row in pre:
+    path = Path(row['path'])
+    data = path.read_bytes()
+    assert sha(data) == row['sha256'] and len(data) == row['bytes']
+    assert format(path.stat().st_mode & 0o777, '04o') == row['mode']
+write(EVIDENCE / 'predecessor_preservation.json', dict(unchanged=True, checked=len(pre),
+    scope='Exact previously recorded G54R public/task/exam/runner input bodies; no historical execution repeated'))
+
+metrics = {}
+for label, folder in [('diagnostic', WORK / 'DIAGNOSTIC/actual_turn'), ('author', session)]:
+    events = [json.loads(line) for line in (folder / 'events.jsonl').read_text().splitlines()]
+    calls = [r for r in events if r['message'].get('method') == 'item/tool/call']
+    usage = [r for r in events if r['message'].get('method') == 'thread/tokenUsage/updated']
+    sent = [r for r in events if r['direction'] == 'send' and r['message'].get('method') == 'turn/start']
+    completed = [r for r in events if r['message'].get('method') == 'turn/completed']
+    for row in sent:
+        p = row['message']['params']
+        assert p['model'] == 'gpt-6-astra' and p['effort'] == 'ultra'
+        assert p['environments'] == [] and p['runtimeWorkspaceRoots'] == []
+    metrics[label] = dict(turns_sent=len(sent), turn_completions=len(completed),
+        tools=dict(collections.Counter(r['message']['params']['tool'] for r in calls)),
+        last_reported_usage=usage[-1]['message']['params']['tokenUsage'] if usage else None,
+        receipt=json.loads((folder / 'receipt.json').read_text()),
+        provider_inference_request_count='NOT_EXPOSED; turns and tool calls are not relabeled as inference requests',
+        hidden_reasoning_bodies='NOT_REQUESTED_OR_RECORDED')
+    metrics[label]['turns'] = [dict(sent=r['time'], turn_completed=completed[i]['time'] if i < len(completed) else None)
+        for i, r in enumerate(sent)]
+write(EVIDENCE / 'final_session_metrics.json', metrics)
+print(json.dumps(dict(owner_unchanged=True, predecessor_bodies=len(pre),
+    author_turns=metrics['author']['turns_sent'], diagnostic_turns=metrics['diagnostic']['turns_sent'])))

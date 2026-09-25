@@ -1,0 +1,46 @@
+{
+  "counts": {
+    "dispatch": 0,
+    "mutations": 0,
+    "search": 1
+  },
+  "currency": "EUR",
+  "native_refs": {
+    "offer": {
+      "file": "offer_body.json",
+      "id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+    },
+    "source_review": {
+      "file": "source_review.json",
+      "id": "479a5019da4e3489fe0832bb82afdcd6b847c950a7eaaba20c4242600df4dc1f"
+    },
+    "venue_work": {
+      "file": "venue_work.json",
+      "id": "work_results:54f4876222f17d761624d9b002a9fd8e80368dbd0ed36681bcba70ef35535006"
+    }
+  },
+  "operation": "FIND_OFFER",
+  "receipt_ref": null,
+  "request_ref": "request:exam:one",
+  "request_revision": 1,
+  "slots": [],
+  "source": {
+    "observed_at": 1790323326,
+    "offer_revision": 4,
+    "pt": 1790323326,
+    "publisher": "VenueRoot",
+    "recipient": "ActivePlanetRoot",
+    "request_revision": 1,
+    "schedule_revision": 4,
+    "status": "ACTIVE",
+    "status_checked": 1790323326,
+    "status_until": 1790323386,
+    "ttl": 300,
+    "valid_from": 1790323326,
+    "valid_to": 1790323626
+  },
+  "status": "NEEDS_CONFIRMATION",
+  "team_ref": "team:one",
+  "total_minor": 0,
+  "version": "g53.result.v01"
+}

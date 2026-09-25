@@ -1,0 +1,1 @@
+{"manifest_sha256": "13986b2ff3f3dc7b1b77a9f884ff4521ee6f4cb0b10d44203403f42d8913d1aa", "call": {"threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4", "turnId": "01a0d7b7-4ba6-7940-982d-3b9670e34103", "callId": "exec-ba31e0cf-eeae-43d5-9840-79421e0469b5", "namespace": null, "tool": "submit_candidate", "arguments": {"candidate_id": "football_reference_v01"}}}

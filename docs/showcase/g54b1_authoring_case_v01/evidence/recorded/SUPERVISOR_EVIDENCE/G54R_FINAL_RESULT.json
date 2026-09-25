@@ -1,0 +1,107 @@
+{
+  "BILLING": "No invoice claim; missing usage and unknown remote completions are not zero cost.",
+  "COMMIT": false,
+  "FINAL_CANDIDATE_SHAPE_AND_AST": "PASS_DATA_ONLY",
+  "FIRST_ACTUAL_UNRESOLVED_BLOCKER": "TypeError: ActionCommitPacketRegistryV02.__init__() got an unexpected keyword argument 'invalidation_contexts'",
+  "FIRST_BLOCKER_LOCATION": "AUTHOR_TRIAL/attempt_03/candidate/candidate_domain/run.py:1418",
+  "FOOTBALL_NATIVE_RESULT": "Both final peers exit1 before native Work/Root; no timeout; not semantic acceptance.",
+  "FOOTBALL_SUPPLIED_PROOF": "NOT_RUN_NO_VALID_NATIVE_PRODUCER_RESULT",
+  "FRESH_NATIVE_PEER_PROBES": [
+    {
+      "limit_error": null,
+      "native_starts": {},
+      "path": "SUPERVISOR_EVIDENCE/p7_candidate_6fab07ec/trusted_parent_receipt.json",
+      "pin": {
+        "bytes": 1491,
+        "mode": "0644",
+        "sha256": "b21a4a03dcc4fa107065e7c4e805c57278402d9873ecf0e13e2a96d9572e75a1"
+      },
+      "seconds": 1.0501686670000001,
+      "waits": [
+        {
+          "exit_code": 1,
+          "pid": 7,
+          "reaped": true,
+          "role": "publisher"
+        },
+        {
+          "exit_code": 1,
+          "pid": 8,
+          "reaped": true,
+          "role": "requester"
+        }
+      ]
+    },
+    {
+      "limit_error": null,
+      "native_starts": {},
+      "path": "SUPERVISOR_EVIDENCE/p7_candidate_e55b48e2/trusted_parent_receipt.json",
+      "pin": {
+        "bytes": 1491,
+        "mode": "0644",
+        "sha256": "30a847d73503b437a6e813d3035c52ba6829a39840075f7c9426895329a51528"
+      },
+      "seconds": 1.0638147080000002,
+      "waits": [
+        {
+          "exit_code": 1,
+          "pid": 7,
+          "reaped": true,
+          "role": "publisher"
+        },
+        {
+          "exit_code": 1,
+          "pid": 8,
+          "reaped": true,
+          "role": "requester"
+        }
+      ]
+    }
+  ],
+  "GATE5_ACCEPTANCE": "NOT_CLAIMED",
+  "LIVE_RUNTIME_SEMANTIC_CONTRASTS": "NOT_RUN_NO_ACCEPTED_CONSUMER",
+  "NEXT_ACTION": "Review the failed cold-author trial and decide a new bounded authoring direction; do not automatically retry or implement football as supervisor.",
+  "OWNER_TRACKED_BYTES_MODES": 2859,
+  "OWNER_UNCHANGED": true,
+  "OWN_CANDIDATE_CONTAINERS_REMOVED": true,
+  "P01_P10_A_H": "NOT_REACHED; final prerequisite failed, not ten executed failures",
+  "PREDECESSOR_G54_UNCHANGED": true,
+  "PRIOR_G50_G53R_NOT_MODIFIED": true,
+  "PROCESS_FINALIZER_NOTE": "Package creation separately requires all command receipts terminal/reaped after this report writer exits.",
+  "PROTOCOL_CONTROLS": "13 fresh local protocol tests passed, fabricated transport inputs only, not football evidence.",
+  "PROVIDER_GENERATION_POSTS": {
+    "author": 101,
+    "diagnostic": 3,
+    "historical_author": 2
+  },
+  "PUSH": false,
+  "REAL_EFFECTS": 0,
+  "RECORDED_REUSED": "Unchanged predecessor generic/P7 and generic supplied consumers only; not fresh football acceptance.",
+  "REPORTED_USAGE": {
+    "cached_content_token_count": 22477911,
+    "candidates_token_count": 368646,
+    "prompt_token_count": 24664492,
+    "thoughts_token_count": 48638,
+    "total_token_count": 25081776
+  },
+  "RESULT": "TRANSPORT_RECOVERED_COLD_AUTHOR_TRIAL_INCOMPLETE",
+  "RUNTIME_MODEL_CALLS": 0,
+  "SUPERVISOR_FOOTBALL_EDITS": false,
+  "TASK_RUNTIME_PROCESSES_FINAL": true,
+  "TOOL_OUTCOMES": {
+    "INERT_FILE_RECORDED": 22,
+    "SOURCE_READ_RETURNED": 57,
+    "SUBMITTED_FOR_INDEPENDENT_REVIEW": 4,
+    "TOOL_REFUSED": 9
+  },
+  "TRANSPORT": "Real configured gemini-2.5-flash text/tool responses, durable streaming history, eight explicit recoveries; no model/account change or implicit retry.",
+  "TRIAL": "Initial submission plus three ordinary corrections; all four retained. No demonstrated kit defect; no extra trial.",
+  "USAGE_NOT_REPORTED_REQUESTS": [
+    "PREDECESSOR/AUTHOR_TRIAL/request_001/receipt.json",
+    "PREDECESSOR/AUTHOR_TRIAL/request_002/receipt.json",
+    "AUTHOR_TRIAL/request_003/receipt.json",
+    "AUTHOR_TRIAL/request_004/receipt.json",
+    "AUTHOR_TRIAL/request_035/receipt.json",
+    "AUTHOR_TRIAL/request_094/receipt.json"
+  ]
+}

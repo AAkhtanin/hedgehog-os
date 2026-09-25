@@ -1,0 +1,37 @@
+{
+  "imports": {
+    "PIL": {
+      "pillow": "12.3.0"
+    },
+    "cryptography": {
+      "cryptography": "48.0.0"
+    },
+    "google": {
+      "google-ai-generativelanguage": "0.6.15",
+      "google-api-core": "2.25.2",
+      "google-auth": "2.53.0",
+      "google-genai": "2.6.0",
+      "googleapis-common-protos": "1.75.0",
+      "protobuf": "5.29.6"
+    },
+    "jsonschema": {
+      "jsonschema": "4.26.0"
+    },
+    "wasmtime": {}
+  },
+  "machine": "arm64",
+  "network_needed": false,
+  "platform": "Darwin",
+  "provider_needed": false,
+  "python": "3.14.5",
+  "runtime_resources": [
+    "source/schemas/work_composition_v01.schema.json"
+  ],
+  "semantics": "Installed metadata, not a lockfile or package-install authorization; unused conditional imports are not claimed exercised. Empty distribution map means metadata not established, not a supported installed dependency. Wasm/provider/media lanes are not used by the generic example.",
+  "tested_commands": [
+    "example/run_numeric.py",
+    "example/check_effect.py",
+    "example/reconcile_receipt.py"
+  ],
+  "version": "g53.dependencies.v01"
+}

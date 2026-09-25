@@ -1,0 +1,84 @@
+"""Prepare isolated G54B1 inputs without changing any predecessor or owner."""
+import ast
+import hashlib
+import json
+from pathlib import Path
+import shutil
+import subprocess
+import os
+
+WORK = Path(__file__).resolve().parent
+OLD = Path('/private/tmp/RADIOLARIA_GATE5_G54B.AG6Wj9')
+PRE = Path('/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs')
+OWNER = Path('/Users/admin/Projects/hedgehog-os')
+
+
+def pin(p):
+    p = Path(p)
+    b = p.read_bytes()
+    return dict(path=str(p), sha256=hashlib.sha256(b).hexdigest(), bytes=len(b), mode=format(p.stat().st_mode & 0o777, '04o'))
+
+
+def save(p, value):
+    p = Path(p); p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
+
+
+def main():
+    archive_record = WORK / 'SUPERVISOR_EVIDENCE/predecessor_archive_identity.json'
+    archive = (json.loads(archive_record.read_text()) if archive_record.exists() else
+               pin('/Users/admin/Downloads/RADIOLARIA_GATE5_REFERENCE_G54B_CODEX_ASTRA_ULTRA_V02_RETURN_20260925T065543Z.tar.gz'))
+    assert archive['sha256'] == '61d68df876231b0fa94c2ed3f118537ac409597d8b8af0ac84ed3b3c0c7ee3cb' and archive['bytes'] == 755950
+    evidence = WORK / 'SUPERVISOR_EVIDENCE'; evidence.mkdir(exist_ok=True)
+    save(evidence / 'predecessor_archive_identity.json', archive)
+    records = {}
+    for label, args in [('head', ['rev-parse','HEAD']), ('tree',['rev-parse','HEAD^{tree}']),
+        ('branch',['branch','--show-current']), ('status',['status','--porcelain=v1','--untracked-files=all']),
+        ('staged',['diff','--cached','--name-status']), ('tracked',['ls-files','--stage'])]:
+        target = evidence / ('owner_entry_' + label + '.txt')
+        if not target.exists():
+            proc = subprocess.run(['git','-C',str(OWNER),*args], env=dict(os.environ,GIT_OPTIONAL_LOCKS='0'), capture_output=True, check=True)
+            target.write_bytes(proc.stdout)
+        records[label] = pin(target) if label == 'tracked' else target.read_text().strip()
+    assert records['head'] == '76a6952c9d0f31c976d2501c5641457a20de153a'
+    assert records['tree'] == 'b98f1d5d33c259939c1b4b2bcf72ce1c0e5ebf9c'
+    assert records['branch'] == 'main' and not records['status'] and not records['staged']
+    records['metadata_hashes'] = [pin(OWNER / p) for p in ('.git/index','.git/config','.git/reviewed_repository_transition_v01/context.json')]
+    save(evidence / 'owner_entry.json',records)
+    pins = json.loads((OLD / 'reusable_source_pins.json').read_text())
+    for row in pins['sources']:
+        if 'sha256' in row:
+            actual=pin(row['path'])
+            assert actual['sha256']==row['sha256'] and actual['bytes']==row['bytes'] and int(actual['mode'],8)==int(row['mode'],8)
+    shutil.copy2(OLD / 'reusable_source_pins.json', evidence)
+    shutil.copytree(OLD / 'protocol', WORK / 'protocol')
+    for name in ('AUTHOR_VISIBLE','TASK_VISIBLE','DEPLOYMENT','EXAMINER_PRIVATE'):
+        shutil.copytree(PRE / name, WORK / name, ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+    for name in ('FINAL_RESULT.json','RETURN_VERIFIED.json','boundary_controls.json','context_catalogue_projection.json'):
+        shutil.copy2(OLD / name,evidence / ('G54B_' + name))
+    shutil.copy2(PRE / 'FINAL_RESULT.json', evidence / 'G54R_FINAL_RESULT.json')
+    shutil.copy2('/Users/admin/Downloads/RADIOLARIA_GATE5_G54B1_NO_ENV_AUTHOR_AND_FOOTBALL_V01_20260925_EN.txt',evidence / 'SUPERVISOR_PROMPT.txt')
+    shutil.copy2(WORK / 'TASK_VISIBLE/WHAT_TO_BUILD.md',WORK / 'AUTHOR_VISIBLE/WHAT_TO_BUILD.md')
+    symbols=[]
+    for p in sorted((WORK / 'AUTHOR_VISIBLE').rglob('*.py')):
+        tree=ast.parse(p.read_text())
+        for n in ast.walk(tree):
+            if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef,ast.ClassDef)):
+                symbols.append(dict(path=str(p.relative_to(WORK/'AUTHOR_VISIBLE')),line=n.lineno,kind=type(n).__name__,name=n.name))
+    save(WORK / 'AUTHOR_VISIBLE/SYMBOL_INDEX.json',symbols)
+    public=[]
+    for p in sorted((WORK / 'AUTHOR_VISIBLE').rglob('*')):
+        assert not p.is_symlink()
+        if p.is_file():
+            row=pin(p);row['path']=str(p.relative_to(WORK/'AUTHOR_VISIBLE'));public.append(row)
+    save(evidence / 'public_inventory.json',{'files':public})
+    save(evidence / 'prior_frozen_inputs.json',[pin(p) for root in ('AUTHOR_VISIBLE','TASK_VISIBLE','DEPLOYMENT','EXAMINER_PRIVATE') for p in sorted((PRE/root).rglob('*')) if p.is_file() and '__pycache__' not in p.parts])
+    diagnostic=WORK/'DIAGNOSTIC';(diagnostic/'public').mkdir(parents=True);(diagnostic/'private').mkdir()
+    (diagnostic/'public/token.txt').write_text('G54B1_PUBLIC_TOKEN_8a21f1\n')
+    (diagnostic/'private/token.txt').write_text('G54B1_PRIVATE_'+os.urandom(12).hex()+'\n')
+    row=pin(diagnostic/'public/token.txt');row['path']='token.txt'
+    save(diagnostic/'inventory.json',{'files':[row]})
+    print('PREPARED',WORK)
+
+
+if __name__=='__main__': main()

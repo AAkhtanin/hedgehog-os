@@ -1,0 +1,854 @@
+{
+  "inputs": {
+    "conflict_state": {
+      "items": [
+        [
+          "conflict_set_ids",
+          []
+        ],
+        [
+          "material_unresolved_conflict",
+          false
+        ]
+      ]
+    },
+    "decision_input_id": "4569a3d2417825dfb52c144c9a5da05320f418dcfc9131dfbba242bcdf18dc4c",
+    "gt_advisory": {
+      "items": [
+        [
+          "actor_role",
+          "gt"
+        ],
+        [
+          "advisory_id",
+          "gt:candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+        ],
+        [
+          "advisory_only",
+          true
+        ],
+        [
+          "attempted_effect",
+          "CREATE_ROOT_DECISION"
+        ],
+        [
+          "candidate_ids",
+          [
+            "candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+          ]
+        ],
+        [
+          "creates_final_output",
+          false
+        ],
+        [
+          "requests_effect",
+          false
+        ],
+        [
+          "score_micros_by_candidate",
+          {
+            "items": [
+              [
+                "candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544",
+                1000000
+              ]
+            ]
+          }
+        ],
+        [
+          "selected_candidate_id",
+          "candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+        ],
+        [
+          "source_artifact_type",
+          "GTAdvisoryReport"
+        ],
+        [
+          "source_lifecycle_state",
+          "VALIDATED"
+        ],
+        [
+          "target_artifact_type",
+          "RootDecision"
+        ]
+      ]
+    },
+    "permission_state": {
+      "items": [
+        [
+          "permission_ref",
+          null
+        ],
+        [
+          "permission_required",
+          false
+        ],
+        [
+          "permission_scope_valid",
+          true
+        ],
+        [
+          "user_permission_present",
+          false
+        ]
+      ]
+    },
+    "policy_state": {
+      "items": [
+        [
+          "allow_accept",
+          true
+        ],
+        [
+          "conflict_policy",
+          "DEFER"
+        ],
+        [
+          "hard_policy_passed",
+          true
+        ],
+        [
+          "identity_passed",
+          true
+        ],
+        [
+          "no_candidate_policy",
+          "NO_UPDATE"
+        ],
+        [
+          "policy_id",
+          "g51:operator_pinned"
+        ],
+        [
+          "scope_passed",
+          true
+        ]
+      ]
+    },
+    "post_vv_bundle": {
+      "items": [
+        [
+          "bundle_id",
+          "g51:checks:1a9865037ecbd1c79cef2a07a60db576159d810c630d0ac9b300b9b341dc8406"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "evidence:g51:09511274251150317953ef353c72b43d4c7cf1e9ce15bed7b0722f69e669fa54"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "evidence:g51:09511274251150317953ef353c72b43d4c7cf1e9ce15bed7b0722f69e669fa54"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+          ]
+        ]
+      ]
+    },
+    "prior_root_state": {
+      "items": [
+        [
+          "prior_decision",
+          null
+        ],
+        [
+          "prior_decision_id",
+          null
+        ],
+        [
+          "prior_selected_candidate_id",
+          null
+        ]
+      ]
+    },
+    "root_review_packet": {
+      "authority_class": "ADVISORY_ONLY",
+      "conflict_set_ids": [],
+      "contribution_ids": [
+        "contribution:candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+      ],
+      "final_output_created": false,
+      "missing_evidence_refs": [],
+      "packet_id": "51b293bfb8a970514e96085711fb640ae3082d877592bb77535e9776a30be58f",
+      "permission_created": false,
+      "request_id": "review:candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544",
+      "required_validator_ids": [
+        "complete",
+        "consent",
+        "schedule",
+        "source_current"
+      ],
+      "review_state": "ROOT_REVIEW_REQUIRED",
+      "root_decision_created": false,
+      "runtime_topology_ref": "g51:topology",
+      "synthesis_proposal": {
+        "authority_class": "ADVISORY_ONLY",
+        "conflict_sets": [],
+        "contribution_modes": [
+          "DETERMINISTIC"
+        ],
+        "missing_evidence_refs": [],
+        "normalized_claims": [
+          {
+            "authority_class": "NONE",
+            "claim_id": "candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544",
+            "confidence_micros": 1000000,
+            "evidence_refs": [
+              "binding:evidence:g51:09511274251150317953ef353c72b43d4c7cf1e9ce15bed7b0722f69e669fa54"
+            ],
+            "object_or_value": {
+              "items": [
+                [
+                  "inputs",
+                  {
+                    "items": [
+                      [
+                        "currency",
+                        "EUR"
+                      ],
+                      [
+                        "offer_sha256",
+                        "1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033"
+                      ],
+                      [
+                        "request",
+                        {
+                          "items": [
+                            [
+                              "budget_minor",
+                              7000
+                            ],
+                            [
+                              "currency",
+                              "EUR"
+                            ],
+                            [
+                              "operation",
+                              "CONFIRM_MOCK_BOOKING"
+                            ],
+                            [
+                              "owner_approval_ref",
+                              "consent:controlled:booking"
+                            ],
+                            [
+                              "request_id",
+                              "request:exam:one"
+                            ],
+                            [
+                              "revision",
+                              2
+                            ],
+                            [
+                              "sessions",
+                              [
+                                {
+                                  "items": [
+                                    [
+                                      "allow_shift_minutes",
+                                      0
+                                    ],
+                                    [
+                                      "end",
+                                      "2027-01-07T18:00:00"
+                                    ],
+                                    [
+                                      "session_id",
+                                      "session:7"
+                                    ],
+                                    [
+                                      "start",
+                                      "2027-01-07T16:30:00"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "items": [
+                                    [
+                                      "allow_shift_minutes",
+                                      30
+                                    ],
+                                    [
+                                      "end",
+                                      "2027-01-08T12:30:00"
+                                    ],
+                                    [
+                                      "session_id",
+                                      "session:8"
+                                    ],
+                                    [
+                                      "start",
+                                      "2027-01-08T11:00:00"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "items": [
+                                    [
+                                      "allow_shift_minutes",
+                                      0
+                                    ],
+                                    [
+                                      "end",
+                                      "2027-01-09T12:30:00"
+                                    ],
+                                    [
+                                      "session_id",
+                                      "session:9"
+                                    ],
+                                    [
+                                      "start",
+                                      "2027-01-09T11:00:00"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            ],
+                            [
+                              "team_ref",
+                              "team:one"
+                            ],
+                            [
+                              "timezone",
+                              "Europe/Tirane"
+                            ],
+                            [
+                              "venue_ref",
+                              "venue:synthetic"
+                            ]
+                          ]
+                        }
+                      ],
+                      [
+                        "schedule_revision",
+                        4
+                      ],
+                      [
+                        "slots",
+                        [
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799341200
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:7"
+                              ],
+                              [
+                                "start_utc",
+                                1799335800
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799409600
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:8"
+                              ],
+                              [
+                                "start_utc",
+                                1799404200
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799494200
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:9"
+                              ],
+                              [
+                                "start_utc",
+                                1799488800
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        "total_minor",
+                        6300
+                      ]
+                    ]
+                  }
+                ],
+                [
+                  "offer_sha256",
+                  "1b99b5bca12497294cad821abbef4521448de12d992e09edd2d50408c0cac033"
+                ],
+                [
+                  "policy_sha256",
+                  "2d9b7deb8e67d3011bab9c6d13be0b802ee6a4ed7ae4a4e484523a92d203692f"
+                ],
+                [
+                  "request_sha256",
+                  "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+                ],
+                [
+                  "source_review_ref",
+                  "6dd2403a5f4b2304ae0d3da44fe98d6498607175da48d39cfafba22bdc8c4e70"
+                ],
+                [
+                  "source_work_ref",
+                  "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f"
+                ]
+              ]
+            },
+            "predicate": "g51_bounded_context_review",
+            "provenance_refs": [
+              "evidence:g51:09511274251150317953ef353c72b43d4c7cf1e9ce15bed7b0722f69e669fa54"
+            ],
+            "source_mode": "DETERMINISTIC",
+            "source_role": "deterministic_runtime",
+            "subject": "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f",
+            "time_envelope_ref": "g51:time:1790325323"
+          }
+        ],
+        "proposal_id": "2746180276ba2385347bec7b4ff0d3205f41b2c678b458f430907cf5a67e3b9f",
+        "request_id": "review:candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544",
+        "requested_validators": [
+          "complete",
+          "consent",
+          "schedule",
+          "source_current"
+        ],
+        "root_review_required": true,
+        "source_contribution_ids": [
+          "contribution:candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544"
+        ],
+        "synthesis_summary": "advisory_claims_ready_for_root_review"
+      },
+      "target_root_id": "VenueRoot",
+      "transaction_id": "transaction:football:booking"
+    },
+    "target_root_id": "VenueRoot",
+    "temporal_state": {
+      "items": [
+        [
+          "expired",
+          false
+        ],
+        [
+          "not_before_satisfied",
+          true
+        ],
+        [
+          "temporal_valid",
+          true
+        ],
+        [
+          "time_envelope_ref",
+          "g51:time:1790325323"
+        ]
+      ]
+    },
+    "transaction_id": "transaction:football:booking"
+  },
+  "kernel": {
+    "effect_access": "NONE",
+    "kernel_id": "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235",
+    "kernel_version": "v0.1",
+    "llm_dependency_allowed": false,
+    "precedence_order": [
+      "HARD_FAILURE",
+      "NEEDS_USER",
+      "NEEDS_MORE_EVIDENCE",
+      "MATERIAL_CONFLICT",
+      "NO_VALID_CANDIDATE",
+      "POLICY_REJECT",
+      "ACCEPT"
+    ],
+    "transition_registry": {
+      "abi_major_version": 1,
+      "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+      "registry_version": "v0.1",
+      "rules": [
+        {
+          "abi_major_version": 1,
+          "actor_role": "orchestrator",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "route_acceptance_requires_root",
+          "required_guards": [
+            "artifact_valid",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "route_proposal_to_root_accepted_route",
+          "source_artifact_type": "OrchestratorRouteProposal",
+          "source_lifecycle_state": "PROPOSED",
+          "target_artifact_type": "RootAcceptedRoute"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "deterministic_runtime",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_accepted_route_allows_topology",
+          "required_guards": [
+            "artifact_valid",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_accepted_route_to_runtime_topology",
+          "source_artifact_type": "RootAcceptedRoute",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RuntimeExecutionTopology"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "post_vv",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "actor_contribution_requires_validated_evidence",
+          "required_guards": [
+            "artifact_valid",
+            "required_evidence_present"
+          ],
+          "root_commit_required": false,
+          "rule_id": "actor_contribution_to_validated_evidence",
+          "source_artifact_type": "ActorContribution",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "ValidatedEvidence"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "post_vv",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "result_proposal_allows_post_vv",
+          "required_guards": [
+            "artifact_valid",
+            "hard_predicates_evaluated"
+          ],
+          "root_commit_required": false,
+          "rule_id": "result_proposal_to_post_vv_report",
+          "source_artifact_type": "ResultProposal",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "PostVVReport"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "post_vv_allows_gt_advisory",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_required": false,
+          "rule_id": "post_vv_report_to_gt_advisory",
+          "source_artifact_type": "PostVVReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "GTAdvisoryReport"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "gt_advisory_returns_to_root",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_root_owned_intent",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_root_owned_intent",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RootOwnedIntent"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_execution_request",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept",
+            "user_permission_present",
+            "effect_firewall_required"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_execution_request",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "receipt",
+          "attempted_effect": "RETURN_TO_ROOT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "receipt_returns_to_root",
+          "required_guards": [
+            "artifact_valid",
+            "receipt_evidence_only"
+          ],
+          "root_commit_required": true,
+          "rule_id": "evidence_receipt_to_root_review",
+          "source_artifact_type": "EvidenceReceipt",
+          "source_lifecycle_state": "RECEIPT_RECORDED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_FINAL_OUTPUT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_root_final",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept",
+            "finalization_policy_passed"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_root_final",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RootFinal"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "RECORD_EVIDENCE",
+          "decision": "ALLOW",
+          "reason_code": "root_final_allows_transaction_outcome",
+          "required_guards": [
+            "artifact_valid",
+            "outcome_complete"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_final_to_transaction_outcome",
+          "source_artifact_type": "RootFinal",
+          "source_lifecycle_state": "FINALIZED",
+          "target_artifact_type": "TransactionOutcomeEnvelope"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "RETURN_TO_ROOT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "cross_root_evidence_returns_to_target_root",
+          "required_guards": [
+            "artifact_valid",
+            "source_root_isolated",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "cross_root_evidence_to_root_review",
+          "source_artifact_type": "CrossRootEvidenceRef",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "provider_llm",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "provider_cannot_create_root_decision",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "provider_contribution_to_root_decision_forbidden",
+          "source_artifact_type": "ActorContribution",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "drs",
+          "attempted_effect": "CREATE_PERMISSION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "evidence_cannot_create_permission",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "drs_evidence_to_permission_forbidden",
+          "source_artifact_type": "SemanticEvidence",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_FINAL_OUTPUT",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "gt_cannot_create_final_output",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "gt_advisory_to_root_final_forbidden",
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootFinal"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "receipt",
+          "attempted_effect": "CREATE_PERMISSION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "receipt_cannot_create_permission",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "receipt_to_permission_forbidden",
+          "source_artifact_type": "EvidenceReceipt",
+          "source_lifecycle_state": "RECEIPT_RECORDED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "replay",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "causal_evidence_cannot_create_root_decision",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "causal_evidence_to_root_decision_forbidden",
+          "source_artifact_type": "CausalConsumptionRef",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "domain_adapter",
+          "attempted_effect": "REQUEST_EFFECT",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "domain_adapter_cannot_request_effect",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "domain_adapter_effect_request_forbidden",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "ExecutionRequest"
+        }
+      ]
+    }
+  },
+  "result": {
+    "conflict_set_ids": [],
+    "decision": "ACCEPT",
+    "decision_id": "3ae7e57dab3f981ae422d6bc0b04f8af82dd8f8abe52e1aa0bcb72c5c173ee52",
+    "decision_input_id": "4569a3d2417825dfb52c144c9a5da05320f418dcfc9131dfbba242bcdf18dc4c",
+    "effect_requested": false,
+    "final_output_created": false,
+    "hard_failure_reasons": [],
+    "missing_evidence_refs": [],
+    "permission_created": false,
+    "prior_decision_id": null,
+    "reason_code": "validated_candidate_accepted",
+    "root_commit_created": true,
+    "selected_candidate_id": "candidate:football:booking:560fd02eeb451b06d3bc198a48ef875d56bc3f4f99008226e71e5e439096e544",
+    "target_root_id": "VenueRoot",
+    "transaction_id": "transaction:football:booking",
+    "transition_decision": {
+      "abi_major_version": 1,
+      "actor_role": "gt",
+      "attempted_effect": "CREATE_ROOT_DECISION",
+      "decision": "RETURN_TO_ROOT",
+      "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+      "matched": true,
+      "missing_guards": [],
+      "reason_code": "gt_advisory_returns_to_root",
+      "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+      "required_guards": [
+        "artifact_valid",
+        "post_vv_passed",
+        "advisory_only"
+      ],
+      "root_commit_present": false,
+      "root_commit_required": true,
+      "rule_id": "gt_advisory_to_root_decision",
+      "satisfied_guards": [
+        "artifact_valid",
+        "post_vv_passed",
+        "advisory_only"
+      ],
+      "source_artifact_type": "GTAdvisoryReport",
+      "source_lifecycle_state": "VALIDATED",
+      "target_artifact_type": "RootDecision"
+    }
+  }
+}

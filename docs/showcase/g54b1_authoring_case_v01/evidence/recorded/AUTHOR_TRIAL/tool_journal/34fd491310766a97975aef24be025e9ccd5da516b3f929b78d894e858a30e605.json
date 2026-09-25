@@ -1,0 +1,1 @@
+{"call": {"arguments": {"path": "source/hedgehog/kernel/abi_v01.py", "query": "MappingProxyType"}, "callId": "exec-c001a3fe-39ec-46bc-8926-4112470cd67a", "namespace": null, "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4", "tool": "search_approved_source", "turnId": "01a0d7b7-4ba6-7940-982d-3b9670e34103"}, "response": {"matches": [], "truncated": false}, "status": "COMMITTED"}

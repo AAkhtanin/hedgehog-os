@@ -1,0 +1,23 @@
+{
+  "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4",
+  "turn": {
+    "completedAt": 1790324240,
+    "durationMs": 571136,
+    "error": null,
+    "id": "01a0d79b-3913-7cc0-a4ea-358ef64d11bf",
+    "items": [
+      {
+        "delivery": null,
+        "id": "msg_0862a23817afd429016ab62e0b280087d2a4530ac4c4693511",
+        "memoryCitation": null,
+        "phase": "final_answer",
+        "questions": null,
+        "text": "Submitted correction 01 of `football_reference_v01`.\n\nThe DRS adapter now references the persisted signed descriptor by its content hash, preserving original foreign IDs and the unchanged public guard. Added regression tests and documented the source predicate.\n\nSyntax/JSON checks passed. No execution occurred; runtime validation and admission remain unverified.",
+        "type": "agentMessage"
+      }
+    ],
+    "itemsView": "summary",
+    "startedAt": 1790323669,
+    "status": "completed"
+  }
+}

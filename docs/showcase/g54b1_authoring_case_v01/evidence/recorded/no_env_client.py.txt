@@ -1,0 +1,220 @@
+"""Official stdio app-server with no attached environments and inert dynamic tools."""
+import datetime as dt
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import selectors
+import subprocess
+import time
+from jsonschema import Draft7Validator
+from broker import TOOLS
+
+WORK=Path(__file__).resolve().parent
+CLI='/opt/homebrew/Caskroom/codex/0.154.0/bin/codex'
+ALLOWED=frozenset(('initialize','config/read','thread/start','turn/start','thread/read','turn/interrupt'))
+
+
+def now(): return dt.datetime.now(dt.timezone.utc).isoformat()
+
+
+def save(p,v):
+    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True)
+    p.write_text(json.dumps(v,indent=2,sort_keys=True)+'\n')
+
+
+def scrub(s):
+    s=re.sub(r'\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b','[REDACTED_JWT]',s)
+    s=re.sub(r'(?i)Bearer\s+\S+','Bearer [REDACTED]',s)
+    return re.sub(r'\bsk-(?:proj-)?[A-Za-z0-9_-]{25,}','[REDACTED_KEY]',s)
+
+
+def public_events(value):
+    if isinstance(value,list): return [public_events(v) for v in value]
+    if isinstance(value,dict):
+        if 'reasoning' in str(value.get('type','')).lower():
+            return {'type':value['type'],'id':value.get('id'),'body_not_recorded':True}
+        return {k:public_events(v) for k,v in value.items()}
+    return value
+
+
+def overrides(public):
+    values=['model="gpt-6-astra"','model_reasoning_effort="ultra"','service_tier="default"',
+      'default_permissions="g54b1-public"',
+      'permissions.g54b1-public.filesystem={":root"="deny",":minimal"="read",'+json.dumps(str(public))+'="read",'+json.dumps(CLI)+'="read"}',
+      'permissions.g54b1-public.network.enabled=false','web_search="disabled"',
+      'memories.use_memories=false','memories.generate_memories=false','agents.enabled=false',
+      'tools.view_image=false','mcp_servers.node_repl.enabled=false','mcp_servers.computer-use.enabled=false',
+      'notify=[]','model_reasoning_summary="none"','show_raw_agent_reasoning=false']
+    for name in ('memories','apps','plugins','remote_plugin','tool_suggest','shell_tool','unified_exec',
+       'shell_snapshot','view_image','image_generation','browser_use','computer_use','multi_agent',
+       'skill_search','skill_mcp_dependency_install'):
+        values.append('features.'+name+'=false')
+    values.append('features.skip_host_skill_discovery=true')
+    return values
+
+
+class Client:
+    def __init__(self,folder,public,broker):
+        self.folder=Path(folder);self.folder.mkdir(parents=True,exist_ok=False)
+        self.public=Path(public);self.broker=broker;self.thread=None;self.turn=None
+        self.sequence=0;self.pending={};self.events=[];self.started=time.monotonic();self.completed=None
+        self.tool_results=[];self.hb=0;self.last_event=self.started;self.closed=False
+        args=[CLI,'app-server','--stdio','--strict-config']
+        for value in overrides(public): args+=['-c',value]
+        self.receipt=dict(started=now(),argv=args,cwd=str(public),client_pid=os.getpid(),model='gpt-6-astra',
+                          effort='ultra',service_tier='default',environments=[],turns_sent=0,tools=0,
+                          source_pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (WORK/'broker.py',Path(__file__))})
+        save(self.folder/'started.json',self.receipt)
+        self.log=(self.folder/'events.jsonl').open('w')
+        self.p=subprocess.Popen(args,cwd=public,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,bufsize=0)
+        self.receipt.update(pid=self.p.pid,process_identity=subprocess.check_output(['/bin/ps','-p',str(self.p.pid),'-o','pid=,ppid=,lstart=,command='],text=True).strip())
+        save(self.folder/'started.json',self.receipt)
+        self.sel=selectors.DefaultSelector();self.sel.register(self.p.stdout,selectors.EVENT_READ,'stdout');self.sel.register(self.p.stderr,selectors.EVENT_READ,'stderr')
+        self.buffer=b'';self.stderr=bytearray()
+
+    def record(self,direction,message):
+        # Raw reasoning content is never requested or persisted.
+        method=message.get('method','')
+        if 'reasoning' in method.lower() or message.get('params',{}).get('item',{}).get('type')=='reasoning':
+            message={'method':method,'reasoning_body_not_recorded':True}
+        self.log.write(scrub(json.dumps(dict(time=now(),direction=direction,message=public_events(message)),sort_keys=True))+'\n');self.log.flush()
+
+    def write(self,message):
+        self.record('send',message);self.p.stdin.write((json.dumps(message)+'\n').encode())
+
+    def request(self,method,params):
+        if method not in ALLOWED: raise ValueError('privileged_rpc_not_allowed')
+        if method in ('thread/read','turn/start','turn/interrupt') and params.get('threadId')!=self.thread: raise ValueError('foreign_thread')
+        names={'initialize':'v1/InitializeParams.json','config/read':'v2/ConfigReadParams.json','thread/start':'v2/ThreadStartParams.json',
+               'turn/start':'v2/TurnStartParams.json','thread/read':'v2/ThreadReadParams.json','turn/interrupt':'v2/TurnInterruptParams.json'}
+        Draft7Validator(json.loads((WORK/'protocol'/names[method]).read_text())).validate(params)
+        if method in ('thread/start','turn/start'):
+            assert params['environments']==[] and params['runtimeWorkspaceRoots']==[]
+        self.sequence+=1;ident=self.sequence
+        self.pending[ident]=method;self.write(dict(id=ident,method=method,params=params))
+        return ident
+
+    def pump(self,timeout=0.5):
+        for key,_ in self.sel.select(timeout):
+            data=os.read(key.fileobj.fileno(),65536)
+            if not data: self.sel.unregister(key.fileobj);continue
+            if key.data=='stderr':
+                self.stderr.extend(data)
+                (self.folder/'stderr_sanitized.txt').write_text(scrub(self.stderr.decode(errors='replace')))
+            else:
+                self.buffer+=data
+                if len(self.buffer)>4*1024**2: raise ValueError('server_line_bound')
+                while b'\n' in self.buffer:
+                    line,self.buffer=self.buffer.split(b'\n',1)
+                    if line.strip(): self.handle(json.loads(line))
+        if time.monotonic()-self.hb>=20:
+            with (self.folder/'heartbeats.jsonl').open('a') as f:
+                f.write(json.dumps(dict(time=now(),pid=self.p.pid,thread=self.thread,turn=self.turn,tools=len(self.tool_results),elapsed=time.monotonic()-self.started,last_event_age=time.monotonic()-self.last_event))+'\n')
+            self.hb=time.monotonic()
+
+    def handle(self,message):
+        self.last_event=time.monotonic()
+        ident=message.get('id');method=message.get('method')
+        if method is None and ident in self.pending:
+            request_method=self.pending.pop(ident)
+            if request_method=='config/read' and 'result' in message:
+                raw=message['result'];cfg=raw['config']
+                keys=('model','model_reasoning_effort','service_tier','features','agents','memories','permissions','default_permissions','web_search','instructions','developer_instructions','model_instructions_file')
+                message={'id':ident,'result':{'config':{k:cfg.get(k) for k in keys},
+                    'mcp_enabled':{k:v.get('enabled') for k,v in (cfg.get('mcp_servers') or {}).items()},
+                    'hooks_configured':bool(cfg.get('hooks')),'layer_names':[x['name'] for x in raw.get('layers') or []]}}
+            self.record('receive',message);self.events.append(message);return
+        self.record('receive',message)
+        params=message.get('params') or {}
+        if method=='item/tool/call':
+            if self.turn is None: raise ValueError('tool_before_bound_turn')
+            Draft7Validator(json.loads((WORK/'protocol/DynamicToolCallParams.json').read_text())).validate(params)
+            result=self.broker.dispatch(params)
+            response={'contentItems':[{'type':'inputText','text':json.dumps(result,sort_keys=True)}], 'success':result.get('status')!='TOOL_REFUSED'}
+            Draft7Validator(json.loads((WORK/'protocol/DynamicToolCallResponse.json').read_text())).validate(response)
+            self.write({'id':ident,'result':response})
+            self.tool_results.append(dict(request=params,response=result));self.receipt['tools']=len(self.tool_results)
+            save(self.folder/'tool_results.json',self.tool_results)
+        elif ident is not None:
+            self.write({'id':ident,'error':{'code':-32601,'message':'Unsupported server request in bounded author client'}})
+            raise ValueError('unexpected_server_request:'+str(method))
+        elif method=='turn/started':
+            if params['threadId']!=self.thread: raise ValueError('foreign_turn_event')
+            self.turn=params['turn']['id'];self.broker.bind(self.thread,self.turn)
+        elif method=='turn/completed':
+            if params['threadId']!=self.thread or params['turn']['id']!=self.turn: raise ValueError('completed_turn_binding')
+            self.completed=params['turn'];save(self.folder/('turn_'+str(self.receipt['turns_sent'])+'_completed.json'),public_events(params))
+        elif method in ('model/rerouted','modelRerouted') or 'rerout' in (method or '').lower(): raise ValueError('model_reroute:'+json.dumps(params))
+        elif method=='thread/started':
+            if params.get('thread',{}).get('environments')!=[]: raise ValueError('environment_attached')
+        elif method in ('item/started','item/completed'):
+            item=params.get('item',{})
+            if item.get('type') in ('commandExecution','fileChange','mcpToolCall','webSearch','collabAgentToolCall'):
+                save(self.folder/'residual_tool_observed.json',message)
+        self.events.append(message)
+
+    def wait_response(self,ident,timeout=90):
+        until=time.monotonic()+timeout
+        while time.monotonic()<until:
+            for i,m in enumerate(self.events):
+                if m.get('id')==ident and 'method' not in m:
+                    self.events.pop(i)
+                    if 'error' in m: raise RuntimeError(m['error'])
+                    return m['result']
+            self.pump()
+            if self.p.poll() is not None: raise RuntimeError('app-server exited before response')
+        raise TimeoutError('response_unknown_do_not_resend')
+
+    def start(self):
+        self.wait_response(self.request('initialize',{'clientInfo':{'name':'radiolaria_g54b1','version':'0.1.0'},'capabilities':{'experimentalApi':True}}))
+        self.write({'method':'initialized','params':{}})
+        config=self.wait_response(self.request('config/read',{'cwd':str(self.public),'includeLayers':True}));save(self.folder/'effective_config.json',config)
+        assert config['config']['model']=='gpt-6-astra' and config['config']['model_reasoning_effort']=='ultra'
+        assert all(not v for v in config['mcp_enabled'].values()) and not config['hooks_configured']
+        response=self.wait_response(self.request('thread/start',dict(model='gpt-6-astra',modelProvider='openai',allowProviderModelFallback=False,
+             serviceTier='default',ephemeral=True,environments=[],runtimeWorkspaceRoots=[],cwd=str(self.public),dynamicTools=TOOLS,permissions='g54b1-public')))
+        save(self.folder/'thread.json',response)
+        assert response['model']=='gpt-6-astra' and response['reasoningEffort']=='ultra' and response['serviceTier']=='default'
+        assert response['thread']['environments']==[] and response['runtimeWorkspaceRoots']==[] and response['instructionSources']==[]
+        assert response['thread']['parentThreadId'] is None and response['thread']['forkedFromId'] is None
+        self.thread=response['thread']['id'];self.receipt['thread']=self.thread
+        save(self.folder/'started.json',self.receipt)
+
+    def run_turn(self,text):
+        self.completed=None;self.turn=None;self.receipt['turns_sent']+=1
+        params=dict(threadId=self.thread,model='gpt-6-astra',effort='ultra',environments=[],runtimeWorkspaceRoots=[],
+                    input=[dict(type='text',text=text)],serviceTier='default',summary='none')
+        save(self.folder/('turn_'+str(self.receipt['turns_sent'])+'_input.json'),params)
+        response=self.wait_response(self.request('turn/start',params))
+        if self.turn is None: self.turn=response['turn']['id'];self.broker.bind(self.thread,self.turn)
+        assert self.turn==response['turn']['id']
+        while self.completed is None:
+            self.pump(0.5)
+            if self.p.poll() is not None: raise RuntimeError('UNKNOWN_DELIVERY: app-server exited mid-turn; do not resend')
+            if time.monotonic()-self.last_event>1200: raise TimeoutError('20 minutes without any runtime event; completion unknown')
+        readback=self.wait_response(self.request('thread/read',dict(threadId=self.thread,includeTurns=False)))
+        save(self.folder/('turn_'+str(self.receipt['turns_sent'])+'_readback.json'),readback)
+        assert readback['thread']['environments']==[]
+        if self.completed['status']!='completed': raise RuntimeError(self.completed)
+        return self.completed
+
+    def close(self,rc=0):
+        if self.closed:return
+        self.closed=True
+        if self.turn and self.completed is None and self.p.poll() is None:
+            try: self.wait_response(self.request('turn/interrupt',dict(threadId=self.thread,turnId=self.turn)),15)
+            except Exception as exc:self.receipt['interrupt_error']=str(exc)
+        self.p.stdin.close();until=time.monotonic()+15
+        while self.p.poll() is None and time.monotonic()<until:self.pump(0.1)
+        self.receipt['shutdown']='stdin_eof'
+        if self.p.poll() is None:
+            self.p.terminate();self.receipt['shutdown']='task_owned_terminate_after_eof'
+            try:self.p.wait(timeout=5)
+            except subprocess.TimeoutExpired:self.p.kill();self.p.wait();self.receipt['shutdown']='task_owned_kill_after_terminate'
+        self.p.wait();self.log.close();self.sel.close()
+        (self.folder/'stderr_sanitized.txt').write_text(scrub(self.stderr.decode(errors='replace')))
+        self.receipt.update(rc=rc,server_rc=self.p.returncode,server_reaped=True,finished=now(),elapsed_seconds=time.monotonic()-self.started,
+                            log_sha256=hashlib.sha256((self.folder/'events.jsonl').read_bytes()).hexdigest())
+        save(self.folder/'receipt.json',self.receipt)

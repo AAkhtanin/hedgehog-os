@@ -1,0 +1,58 @@
+"""Final byte/configuration accounting; no generated imports or new model calls."""
+import hashlib
+import json
+from pathlib import Path
+
+WORK = Path(__file__).resolve().parent
+PRE = Path('/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs')
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+def read(path):
+    return json.loads(path.read_text())
+
+inventory = read(WORK / 'SUPERVISOR_EVIDENCE/public_inventory.json')['files']
+for row in inventory:
+    path = WORK / 'AUTHOR_VISIBLE' / row['path']
+    assert not path.is_symlink() and digest(path) == row['sha256']
+    assert path.stat().st_size == row['bytes']
+predecessor = read(WORK / 'SUPERVISOR_EVIDENCE/prior_frozen_inputs.json')
+for row in predecessor:
+    original = Path(row['path'])
+    copied = WORK / original.relative_to(PRE)
+    assert digest(copied) == row['sha256']
+    assert copied.stat().st_size == row['bytes']
+    assert format(copied.stat().st_mode & 0o777, '04o') == row['mode']
+submissions = []
+for attempt in sorted((WORK / 'AUTHOR_TRIAL').glob('attempt_*')):
+    candidate = attempt / 'candidate'
+    actual = {str(path.relative_to(candidate)): digest(path)
+        for path in candidate.rglob('*') if path.is_file()}
+    assert actual == read(attempt / 'confined_execution_review.json')['files']
+    assert actual['candidate.json'] == read(attempt / 'FROZEN.json')['manifest_sha256']
+    submissions.append(dict(attempt=attempt.name, files=len(actual),
+        manifest_sha256=actual['candidate.json']))
+configuration = []
+for folder in (WORK / 'DIAGNOSTIC/actual_turn', WORK / 'AUTHOR_TRIAL/session'):
+    thread = read(folder / 'thread.json')
+    assert thread['model'] == 'gpt-6-astra' and thread['reasoningEffort'] == 'ultra'
+    assert thread['thread']['environments'] == [] and thread['runtimeWorkspaceRoots'] == []
+    assert thread['instructionSources'] == []
+    assert thread['thread']['parentThreadId'] is None and thread['thread']['forkedFromId'] is None
+    for path in folder.glob('turn_*_input.json'):
+        value = read(path)
+        assert value['model'] == 'gpt-6-astra' and value['effort'] == 'ultra'
+        assert value['environments'] == [] and value['runtimeWorkspaceRoots'] == []
+    for path in folder.glob('turn_*_readback.json'):
+        assert read(path)['thread']['environments'] == []
+    assert not (folder / 'residual_tool_observed.json').exists()
+    configuration.append(dict(path=str(folder.relative_to(WORK)),
+        no_environment_thread_and_all_turn_readbacks=True,
+        residual_execution_tool_notification='NONE_OBSERVED_NOT_OPAQUE_PLATFORM_AUDIT'))
+assert read(WORK / 'docker-client/config.json') == {}
+record = dict(public_files_unchanged=len(inventory), copied_predecessor_files_unchanged=len(predecessor),
+    submissions=submissions, configuration=configuration,
+    docker_client_has_credentials=False, target_or_native_execution=False)
+with (WORK / 'SUPERVISOR_EVIDENCE/final_integrity.json').open('x') as stream:
+    json.dump(record, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(record))

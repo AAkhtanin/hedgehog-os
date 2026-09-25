@@ -1,0 +1,17 @@
+{
+  "private_read": {
+    "exitCode": 0,
+    "stderr": "",
+    "stdout": "G54B_PRIVATE_SYNTHETIC_CANARY\n"
+  },
+  "public_read": {
+    "exitCode": 0,
+    "stderr": "",
+    "stdout": "G54B_PUBLIC_CANARY\n"
+  },
+  "public_write": {
+    "exitCode": 0,
+    "stderr": "",
+    "stdout": ""
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "candidate_sha256": "712a382be898900eb2e17834abb1bb08c384b9c7d5922d3b1715c016527e4e7a",
+  "cases": {
+    "exact": {
+      "error": "unexpected_refusal",
+      "status": "FAIL",
+      "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_native_story_data.py\", line 30, in <module>\n    result['cases'][label] = examiner.check_report(case, report)\n                             ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py\", line 87, in check_report\n    need(report['status'] in case['allowed_statuses'],'unexpected_refusal')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py\", line 12, in need\n    if not ok:raise ValueError(reason)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: unexpected_refusal\n"
+    },
+    "shift": {
+      "error": "unexpected_refusal",
+      "status": "FAIL",
+      "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_native_story_data.py\", line 30, in <module>\n    result['cases'][label] = examiner.check_report(case, report)\n                             ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py\", line 87, in check_report\n    need(report['status'] in case['allowed_statuses'],'unexpected_refusal')\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py\", line 12, in need\n    if not ok:raise ValueError(reason)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: unexpected_refusal\n"
+    }
+  },
+  "classification": "INDEPENDENT_DATA_AND_PUBLIC_PARSER_CHECK_NOT_NEW_RUNTIME",
+  "module_origins": {
+    "contracts": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py",
+    "examiner": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/EXAMINER_PRIVATE/examiner.py"
+  },
+  "new_native_provider_effect_calls": 0,
+  "refusals": {
+    "worker/publisher/evidence/book/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "PEER_CLOSED_WITHOUT_RETRIEVAL",
+      "status": "REFUSED"
+    },
+    "worker/publisher/evidence/repeat/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "PEER_CLOSED_WITHOUT_RETRIEVAL",
+      "status": "REFUSED"
+    },
+    "worker/publisher/evidence/verify/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "NO_SAVED_RECEIPT",
+      "status": "CURRENT_STATUS_UNKNOWN"
+    },
+    "worker/requester/evidence/book/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "CURRENT_SELECTED_OFFER_MISSING",
+      "status": "NEEDS_CONFIRMATION"
+    },
+    "worker/requester/evidence/exact/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "json_key",
+      "status": "REFUSED"
+    },
+    "worker/requester/evidence/repeat/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "CURRENT_SELECTED_OFFER_MISSING",
+      "status": "NEEDS_CONFIRMATION"
+    },
+    "worker/requester/evidence/shift/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "json_key",
+      "status": "REFUSED"
+    },
+    "worker/requester/evidence/verify/refusal.json": {
+      "classification": "OBSERVED_LOCAL_REFUSAL",
+      "phase": "EVENT_REFUSAL",
+      "reason": "NO_SAVED_RECEIPT",
+      "status": "CURRENT_STATUS_UNKNOWN"
+    }
+  },
+  "reports": {
+    "worker/publisher/evidence/book/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:1d4f51cdf04162a49c32cb452b5ad856f41cea929445f8f214fa7d147946459e"
+        },
+        "refusal_review": {
+          "file": "refusal_review.json",
+          "id": "b7d01b55226523eceab23adf1736443b8c7305e416b2679c117e289ec9433848"
+        }
+      },
+      "operation": "CONFIRM_MOCK_BOOKING",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "REFUSED",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/publisher/evidence/exact/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 1
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "offer": {
+          "file": "offer_body.json",
+          "id": "source:football:07576902616520d36071ad99009971fc7e1f96d29744525dfbf8cfbc3322dbcd"
+        },
+        "source_review": {
+          "file": "source_review.json",
+          "id": "2405b092dba82048eded0a5f741891f2d071543ce7e8583bca3afd05146c3cf4"
+        },
+        "venue_work": {
+          "file": "venue_work.json",
+          "id": "work_results:54f4876222f17d761624d9b002a9fd8e80368dbd0ed36681bcba70ef35535006"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 1,
+      "slots": [],
+      "source": {
+        "observed_at": 1790324452,
+        "offer_revision": 4,
+        "pt": 1790324452,
+        "publisher": "VenueRoot",
+        "recipient": "ActivePlanetRoot",
+        "request_revision": 1,
+        "schedule_revision": 4,
+        "status": "ACTIVE",
+        "status_checked": 1790324453,
+        "status_until": 1790324513,
+        "ttl": 300,
+        "valid_from": 1790324452,
+        "valid_to": 1790324752
+      },
+      "status": "NEEDS_CONFIRMATION",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/publisher/evidence/repeat/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:1d4f51cdf04162a49c32cb452b5ad856f41cea929445f8f214fa7d147946459e"
+        },
+        "refusal_review": {
+          "file": "refusal_review.json",
+          "id": "b7d01b55226523eceab23adf1736443b8c7305e416b2679c117e289ec9433848"
+        }
+      },
+      "operation": "CONFIRM_MOCK_BOOKING",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "REFUSED",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/publisher/evidence/shift/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 1
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "offer": {
+          "file": "offer_body.json",
+          "id": "source:football:6f4c5c8536dbec2f5a0495a0c059467df0dd754de616bf2bea5af6c063942b97"
+        },
+        "source_review": {
+          "file": "source_review.json",
+          "id": "00f1545bf1dc8aa1bb9d0d34161e2437273887017f51b95e3a4b3feac35b5af9"
+        },
+        "venue_work": {
+          "file": "venue_work.json",
+          "id": "work_results:2f720706a5e13c19d57c1755a1280eaac30d0ec12ade947dcf1982096aefe40f"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [
+        {
+          "end_utc": 1799341200,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:7",
+          "start_utc": 1799335800,
+          "venue_ref": "venue:synthetic"
+        },
+        {
+          "end_utc": 1799409600,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:8",
+          "start_utc": 1799404200,
+          "venue_ref": "venue:synthetic"
+        },
+        {
+          "end_utc": 1799494200,
+          "field_id": "field:elm",
+          "price_minor": 2100,
+          "session_id": "session:9",
+          "start_utc": 1799488800,
+          "venue_ref": "venue:synthetic"
+        }
+      ],
+      "source": {
+        "observed_at": 1790324453,
+        "offer_revision": 4,
+        "pt": 1790324453,
+        "publisher": "VenueRoot",
+        "recipient": "ActivePlanetRoot",
+        "request_revision": 2,
+        "schedule_revision": 4,
+        "status": "ACTIVE",
+        "status_checked": 1790324453,
+        "status_until": 1790324513,
+        "ttl": 300,
+        "valid_from": 1790324453,
+        "valid_to": 1790324753
+      },
+      "status": "OFFER_READY",
+      "team_ref": "team:one",
+      "total_minor": 6300,
+      "version": "g53.result.v01"
+    },
+    "worker/publisher/evidence/verify/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:8d490246314315c420ac471610326fe5dc9473270407bf047f5d1ce69d2c7e4a"
+        }
+      },
+      "operation": "VERIFY_EXISTING",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "CURRENT_STATUS_UNKNOWN",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/book/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:c2fef4a6b87dbe646d0b10e99d2b1260bb12042ab642014cff423d028423f7bc"
+        },
+        "refusal_review": {
+          "file": "refusal_review.json",
+          "id": "5cdd4ac9f8d7a550bc8019005c9107ed1976c1ae49dfa118cc570ba7adbceb1c"
+        }
+      },
+      "operation": "CONFIRM_MOCK_BOOKING",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "NEEDS_CONFIRMATION",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/exact/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:3e8f4fc0d4e2254156c3a64fe0894d4baf61f93b83779b5c8f64ecd9f83d6ac3"
+        },
+        "refusal_review": {
+          "file": "refusal_review.json",
+          "id": "d2f6640ea5baeb16eb54f377da6e79770bd340229b28f0f7e0969a0e34e4da90"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 1,
+      "slots": [],
+      "source": null,
+      "status": "REFUSED",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/repeat/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:c2fef4a6b87dbe646d0b10e99d2b1260bb12042ab642014cff423d028423f7bc"
+        },
+        "refusal_review": {
+          "file": "refusal_review.json",
+          "id": "5cdd4ac9f8d7a550bc8019005c9107ed1976c1ae49dfa118cc570ba7adbceb1c"
+        }
+      },
+      "operation": "CONFIRM_MOCK_BOOKING",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "NEEDS_CONFIRMATION",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/shift/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:3e8f4fc0d4e2254156c3a64fe0894d4baf61f93b83779b5c8f64ecd9f83d6ac3"
+        },
+        "refusal_review": {
+          "file": "refusal_review.json",
+          "id": "1177ebdb02ba1b841ca70293b4d2609013825c98d618b12ede73fae88d56efad"
+        }
+      },
+      "operation": "FIND_OFFER",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "REFUSED",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    },
+    "worker/requester/evidence/verify/report.json": {
+      "counts": {
+        "dispatch": 0,
+        "mutations": 0,
+        "search": 0
+      },
+      "currency": "EUR",
+      "native_refs": {
+        "refusal": {
+          "file": "refusal.json",
+          "id": "refusal:8d490246314315c420ac471610326fe5dc9473270407bf047f5d1ce69d2c7e4a"
+        }
+      },
+      "operation": "VERIFY_EXISTING",
+      "receipt_ref": null,
+      "request_ref": "request:exam:one",
+      "request_revision": 2,
+      "slots": [],
+      "source": null,
+      "status": "CURRENT_STATUS_UNKNOWN",
+      "team_ref": "team:one",
+      "total_minor": 0,
+      "version": "g53.result.v01"
+    }
+  },
+  "runner": "SUPERVISOR_EVIDENCE/p7_candidate_df503d39",
+  "saved_state": {
+    "highwater_key_lengths": [
+      173,
+      173
+    ],
+    "path": "SUPERVISOR_EVIDENCE/p7_candidate_df503d39/worker/requester/state/imports/import_state.json",
+    "reason": "json_key",
+    "sha256": "525e92ca40c356f7dfb96040f3b8395f9ccd49391aa39cf98791dd2c495527f1",
+    "traceback": "Traceback (most recent call last):\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/review_native_story_data.py\", line 40, in <module>\n    contracts.decode(data)\n    ~~~~~~~~~~~~~~~~^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 104, in decode\n    walk(value)\n    ~~~~^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 80, in walk\n    walk(item, depth + 1)\n    ~~~~^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 79, in walk\n    require(type(key) is str and len(key) <= 128 and key.isascii(), 'json_key')\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py\", line 19, in require\n    raise ValueError(reason)\nValueError: json_key\n",
+    "wire_decode": "REFUSED"
+  }
+}

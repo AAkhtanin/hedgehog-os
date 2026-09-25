@@ -1,0 +1,94 @@
+{
+  "execution": "NONE_IN_G54B",
+  "scope": "Resume references only; none were exposed to a model.",
+  "sources": [
+    {
+      "bytes": 4719,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/author_protocol_v02.py",
+      "sha256": "15a9912b2f8f05a84b11c7acb69f8f5c98fc45c80babae16e32e19ba9b8bea40"
+    },
+    {
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/AUTHOR_VISIBLE/source_reader.py",
+      "status": "NOT_PRESENT_AT_THIS_PATH; consult exact public inventory"
+    },
+    {
+      "bytes": 4079,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/AUTHOR_VISIBLE/candidate_contract.py",
+      "sha256": "9179284f641cb809ff92903cb8eadf3666dafab3497322b4303a3487f3c78dcd"
+    },
+    {
+      "bytes": 34830,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/AUTHOR_VISIBLE/SOURCE_INVENTORY.json",
+      "sha256": "adc2b04f6a2d73a7dd640381ab3f2605cf588fb5b69a12df3fbf9f8d46322b11"
+    },
+    {
+      "bytes": 21095,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/AUTHOR_VISIBLE/HOW_TO_BUILD.md",
+      "sha256": "6636167b75d8fec5786e80cb5ce3027c02748d58d5d63765655b1e451d60dea3"
+    },
+    {
+      "bytes": 4252,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/AUTHOR_VISIBLE/EXECUTION_CONTRACT.md",
+      "sha256": "77359dd95b91c3c8c6aa6645d7757276aa7adbaf23104703847136be0b23fd2c"
+    },
+    {
+      "bytes": 7110,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/AUTHOR_VISIBLE/CANDIDATE_OUTPUT.md",
+      "sha256": "e28debd12e922d8eefdc66372b87638446a5c8eedc11cebfd5144ff84167b0bd"
+    },
+    {
+      "bytes": 7832,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/TASK_VISIBLE/WHAT_TO_BUILD.md",
+      "sha256": "dbcdfeeaca9405687dd30bba33a72a510729d606c7d99ee52a5f390d426963a1"
+    },
+    {
+      "bytes": 14178,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/EXAMINER_PRIVATE/examiner.py",
+      "sha256": "874b4b7a82c15bc2212404ccef182519ef16681bb9a85b0addf6f6f336ce2372"
+    },
+    {
+      "bytes": 17608,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/EXAMINER_PRIVATE/cases.json",
+      "sha256": "07cf3a95b82b4a5daa541cdadf53b2337af92c25fc9619935b952f525e6bfe60"
+    },
+    {
+      "bytes": 8459,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/DEPLOYMENT/evaluate.py",
+      "sha256": "c6181d11049afd041e1dd01e3e078df73e4dcc4814811dc5a7b970074f091ef7"
+    },
+    {
+      "bytes": 6856,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/DEPLOYMENT/domain_runner.py",
+      "sha256": "42bc538dce6624a51d1af58caaee21c9302b3e64673844aa485eb2b366aac7f8"
+    },
+    {
+      "bytes": 529,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/DEPLOYMENT/image.lock.json",
+      "sha256": "6f164d4021c7835543d876d1ed3b79274f1ec2b537c0bd7768ab9d16b16aced1"
+    },
+    {
+      "bytes": 16208,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/PREDECESSOR/SUPERVISOR_EVIDENCE/inputs/RADIOLARIA_GATE5_G54_COLD_AUTHOR_FOOTBALL_V01_20260924_EN.txt",
+      "sha256": "06c9ab5aa5b5ba1c7de00eaaeffeb6e4f2968b3e83575df902c2b2635c2f29a3"
+    },
+    {
+      "bytes": 153528,
+      "mode": "0o644",
+      "path": "/private/tmp/RADIOLARIA_GATE5_G54R.BqWYCs/PREDECESSOR/SUPERVISOR_EVIDENCE/inputs/RADIOLARIA_GATE5_REFERENCE_IMPLEMENTATION_MASTER_V02_DRS_FOOTBALL_RU.txt",
+      "sha256": "008cbad1773e116568833ff3e97decce8d73a4dca6e7826fcf40268f11271fef"
+    }
+  ]
+}

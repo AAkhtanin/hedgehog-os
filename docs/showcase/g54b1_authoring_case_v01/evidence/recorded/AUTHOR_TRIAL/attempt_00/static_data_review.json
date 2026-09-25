@@ -1,0 +1,6858 @@
+{
+  "candidate": "/private/tmp/RADIOLARIA_GATE5_G54B1.db4I1A/AUTHOR_TRIAL/attempt_00/candidate",
+  "classification": "STATIC_DATA_REVIEW_NOT_EXECUTION_APPROVAL",
+  "files": {
+    "PASSPORT.json": {
+      "bytes": 7139,
+      "sha256": "91b03da9ef71533fa49b7af78d0215dcbe6dc07c383934030c36d5794298d128"
+    },
+    "README.md": {
+      "bytes": 14454,
+      "sha256": "160a2a22f56de4c00ef3aae65dc7f79b73006778244e73e64d637dd8d031ea9c"
+    },
+    "candidate.json": {
+      "bytes": 3174,
+      "sha256": "68e3c14dab5824086cfce831f8bb59255b471a7d07af03bdb2b6341e85809e32"
+    },
+    "candidate_domain/__init__.py": {
+      "bytes": 79,
+      "sha256": "f4f7ad9fdaf3b7bf2c58c68b993d961679087ae3475e37012475a99198cf7349"
+    },
+    "candidate_domain/domain.py": {
+      "bytes": 17574,
+      "sha256": "ed13c8791098db1bc2611737e57a913faabdbaf013087f8c1e466959b8477b1e"
+    },
+    "candidate_domain/effect.py": {
+      "bytes": 14346,
+      "sha256": "af69fd4325d0640d2f2ef0b4d3df748e82edc65a28feb529ce4356eb2d4a0f4a"
+    },
+    "candidate_domain/memory.py": {
+      "bytes": 11171,
+      "sha256": "88967ee8202505a425b3ff9b251e73b320070c684a128bdecb45e99fb7221dea"
+    },
+    "candidate_domain/native.py": {
+      "bytes": 5650,
+      "sha256": "42dafc0d5030ba1ebdd5b357bac4b9cb2f277713201cd973efa19848fde02e4c"
+    },
+    "candidate_domain/policy.py": {
+      "bytes": 7674,
+      "sha256": "ef7e0879794ca0bc776f3aa1b63f8ebfac8b42516a5e37bcc828e1aa60fd528c"
+    },
+    "candidate_domain/profile.py": {
+      "bytes": 2946,
+      "sha256": "351946fe5c19ff3ce41f8615aa8e10e4c0d4ad372272fc319d7540f743c0f199"
+    },
+    "candidate_domain/run.py": {
+      "bytes": 17305,
+      "sha256": "f3ee62a8175d6776f373b064440c1407016221f3ac349c17db810b0ce38cd82c"
+    },
+    "candidate_domain/source.py": {
+      "bytes": 8765,
+      "sha256": "ee9dd3f73c2c7b3bc729c07c8fd8de4368007b30a9d82cf0ac18d986f60dba34"
+    },
+    "candidate_domain/transport.py": {
+      "bytes": 18379,
+      "sha256": "b04655799ad2479622c00e35a92e2ea91a843ad1ec3dbc2064a6f31ec0b563db"
+    },
+    "dependencies.json": {
+      "bytes": 22104,
+      "sha256": "9cc33fe71bfff21664fedb874c8731799122bfcec12df3e0031aefa92d8bdf08"
+    },
+    "schemas/body.schema.json": {
+      "bytes": 10869,
+      "sha256": "b8f3c41d49daabe1237e444c1cccd3218fa651b924798e49ee5d92f96cdbccdd"
+    },
+    "schemas/input.schema.json": {
+      "bytes": 16836,
+      "sha256": "b92e07f001d1f7c75a3cde58fe98ba52097b392d66bba75baf4c7ff8c2d67fa2"
+    },
+    "schemas/report.schema.json": {
+      "bytes": 6092,
+      "sha256": "21b41ba26dc91ff295a0eafaf49d4b6076ce1e3ab1ec86ecdd5959527b26b350"
+    },
+    "source_impact.json": {
+      "bytes": 10279,
+      "sha256": "43055c98677dec1daeffd900cf11a6922f5cd08fafc5ee3c3b1b4c2da9413408"
+    },
+    "tests/test_domain.py": {
+      "bytes": 6891,
+      "sha256": "b3fd31af6fc070e48963281f0e497039899bcdb16addbd99f121d9ab5b953728"
+    },
+    "tests/test_native.py": {
+      "bytes": 9082,
+      "sha256": "00530e720b3021455e6153067cbb77b1bfc70bce3f051f561a0c8f1a3c09d850"
+    }
+  },
+  "python": {
+    "candidate_domain/__init__.py": {
+      "ast_sha256": "e1e0dba8797428505f0119effb4aed62d9047cc9635932ecd4b7d62fa29c5770",
+      "calls": [],
+      "imports": [],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        }
+      ]
+    },
+    "candidate_domain/domain.py": {
+      "ast_sha256": "714c289a6b819284cc22b313cfb5c7d8d93ec7a6fa9e0fd0f0797d59c42d240b",
+      "calls": [
+        {
+          "function": "need",
+          "line": 30
+        },
+        {
+          "function": "need",
+          "line": 34
+        },
+        {
+          "function": "need",
+          "line": 39
+        },
+        {
+          "function": "need",
+          "line": 42
+        },
+        {
+          "function": "need",
+          "line": 49
+        },
+        {
+          "function": "need",
+          "line": 51
+        },
+        {
+          "function": "closed",
+          "line": 52
+        },
+        {
+          "function": "need",
+          "line": 55
+        },
+        {
+          "function": "need",
+          "line": 57
+        },
+        {
+          "function": "need",
+          "line": 58
+        },
+        {
+          "function": "need",
+          "line": 59
+        },
+        {
+          "function": "need",
+          "line": 61
+        },
+        {
+          "function": "need",
+          "line": 65
+        },
+        {
+          "function": "need",
+          "line": 104
+        },
+        {
+          "function": "need",
+          "line": 105
+        },
+        {
+          "function": "sorted",
+          "line": 106
+        },
+        {
+          "function": "sorted",
+          "line": 112
+        },
+        {
+          "function": "closed",
+          "line": 116
+        },
+        {
+          "function": "need",
+          "line": 117
+        },
+        {
+          "function": "need",
+          "line": 119
+        },
+        {
+          "function": "need",
+          "line": 120
+        },
+        {
+          "function": "need",
+          "line": 121
+        },
+        {
+          "function": "need",
+          "line": 139
+        },
+        {
+          "function": "sorted",
+          "line": 140
+        },
+        {
+          "function": "sorted",
+          "line": 166
+        },
+        {
+          "function": "product",
+          "line": 173
+        },
+        {
+          "function": "parse_request",
+          "line": 183
+        },
+        {
+          "function": "inventory_rows",
+          "line": 184
+        },
+        {
+          "function": "list",
+          "line": 185
+        },
+        {
+          "function": "dict",
+          "line": 191
+        },
+        {
+          "function": "closed",
+          "line": 201
+        },
+        {
+          "function": "parse_request",
+          "line": 203
+        },
+        {
+          "function": "need",
+          "line": 209
+        },
+        {
+          "function": "need",
+          "line": 210
+        },
+        {
+          "function": "need",
+          "line": 211
+        },
+        {
+          "function": "need",
+          "line": 213
+        },
+        {
+          "function": "need",
+          "line": 223
+        },
+        {
+          "function": "need",
+          "line": 224
+        },
+        {
+          "function": "need",
+          "line": 225
+        },
+        {
+          "function": "need",
+          "line": 244
+        },
+        {
+          "function": "need",
+          "line": 253
+        },
+        {
+          "function": "need",
+          "line": 255
+        },
+        {
+          "function": "need",
+          "line": 257
+        },
+        {
+          "function": "uint",
+          "line": 260
+        },
+        {
+          "function": "need",
+          "line": 261
+        },
+        {
+          "function": "need",
+          "line": 263
+        },
+        {
+          "function": "dict",
+          "line": 289
+        },
+        {
+          "function": "closed",
+          "line": 297
+        },
+        {
+          "function": "closed",
+          "line": 299
+        },
+        {
+          "function": "check_offer",
+          "line": 301
+        },
+        {
+          "function": "dict",
+          "line": 303
+        },
+        {
+          "function": "need",
+          "line": 308
+        },
+        {
+          "function": "uint",
+          "line": 309
+        },
+        {
+          "function": "uint",
+          "line": 310
+        },
+        {
+          "function": "need",
+          "line": 311
+        },
+        {
+          "function": "report",
+          "line": 326
+        },
+        {
+          "function": "closed",
+          "line": 330
+        },
+        {
+          "function": "consume_offer",
+          "line": 331
+        },
+        {
+          "function": "need",
+          "line": 332
+        },
+        {
+          "function": "super().__init__",
+          "line": 22
+        },
+        {
+          "function": "Refusal",
+          "line": 27
+        },
+        {
+          "function": "set",
+          "line": 50
+        },
+        {
+          "function": "set",
+          "line": 50
+        },
+        {
+          "function": "ident",
+          "line": 54
+        },
+        {
+          "function": "ident",
+          "line": 64
+        },
+        {
+          "function": "ZoneInfo",
+          "line": 68
+        },
+        {
+          "function": "closed",
+          "line": 73
+        },
+        {
+          "function": "ident",
+          "line": 74
+        },
+        {
+          "function": "need",
+          "line": 75
+        },
+        {
+          "function": "need",
+          "line": 95
+        },
+        {
+          "function": "need",
+          "line": 96
+        },
+        {
+          "function": "rows.append",
+          "line": 101
+        },
+        {
+          "function": "closed",
+          "line": 125
+        },
+        {
+          "function": "ident",
+          "line": 127
+        },
+        {
+          "function": "need",
+          "line": 128
+        },
+        {
+          "function": "need",
+          "line": 129
+        },
+        {
+          "function": "uint",
+          "line": 130
+        },
+        {
+          "function": "fields.append",
+          "line": 138
+        },
+        {
+          "function": "any",
+          "line": 144
+        },
+        {
+          "function": "groups.append",
+          "line": 161
+        },
+        {
+          "function": "sum",
+          "line": 167
+        },
+        {
+          "function": "sum",
+          "line": 168
+        },
+        {
+          "function": "tuple",
+          "line": 169
+        },
+        {
+          "function": "any",
+          "line": 176
+        },
+        {
+          "function": "complete_choices",
+          "line": 185
+        },
+        {
+          "function": "min",
+          "line": 186
+        },
+        {
+          "function": "any",
+          "line": 188
+        },
+        {
+          "function": "parse_request",
+          "line": 205
+        },
+        {
+          "function": "need",
+          "line": 206
+        },
+        {
+          "function": "need",
+          "line": 208
+        },
+        {
+          "function": "closed",
+          "line": 216
+        },
+        {
+          "function": "ident",
+          "line": 217
+        },
+        {
+          "function": "uint",
+          "line": 217
+        },
+        {
+          "function": "need",
+          "line": 218
+        },
+        {
+          "function": "need",
+          "line": 219
+        },
+        {
+          "function": "closed",
+          "line": 229
+        },
+        {
+          "function": "need",
+          "line": 230
+        },
+        {
+          "function": "need",
+          "line": 232
+        },
+        {
+          "function": "need",
+          "line": 237
+        },
+        {
+          "function": "need",
+          "line": 239
+        },
+        {
+          "function": "need",
+          "line": 240
+        },
+        {
+          "function": "slot_check",
+          "line": 243
+        },
+        {
+          "function": "closed",
+          "line": 247
+        },
+        {
+          "function": "need",
+          "line": 248
+        },
+        {
+          "function": "all",
+          "line": 255
+        },
+        {
+          "function": "inventory_rows",
+          "line": 265
+        },
+        {
+          "function": "need",
+          "line": 266
+        },
+        {
+          "function": "list",
+          "line": 267
+        },
+        {
+          "function": "all",
+          "line": 308
+        },
+        {
+          "function": "need",
+          "line": 318
+        },
+        {
+          "function": "need",
+          "line": 320
+        },
+        {
+          "function": "need",
+          "line": 324
+        },
+        {
+          "function": "type",
+          "line": 49
+        },
+        {
+          "function": "','.join",
+          "line": 51
+        },
+        {
+          "function": "Refusal",
+          "line": 70
+        },
+        {
+          "function": "need",
+          "line": 81
+        },
+        {
+          "function": "value.replace",
+          "line": 88
+        },
+        {
+          "function": "need",
+          "line": 89
+        },
+        {
+          "function": "need",
+          "line": 91
+        },
+        {
+          "function": "times.append",
+          "line": 93
+        },
+        {
+          "function": "local.append",
+          "line": 94
+        },
+        {
+          "function": "dict",
+          "line": 101
+        },
+        {
+          "function": "sum",
+          "line": 104
+        },
+        {
+          "function": "len",
+          "line": 105
+        },
+        {
+          "function": "need",
+          "line": 133
+        },
+        {
+          "function": "len",
+          "line": 139
+        },
+        {
+          "function": "len",
+          "line": 139
+        },
+        {
+          "function": "any",
+          "line": 145
+        },
+        {
+          "function": "shifts.append",
+          "line": 152
+        },
+        {
+          "function": "candidates",
+          "line": 173
+        },
+        {
+          "function": "sum",
+          "line": 174
+        },
+        {
+          "function": "sorted",
+          "line": 180
+        },
+        {
+          "function": "complete_choices",
+          "line": 188
+        },
+        {
+          "function": "sum",
+          "line": 196
+        },
+        {
+          "function": "uint",
+          "line": 235
+        },
+        {
+          "function": "slot_check",
+          "line": 251
+        },
+        {
+          "function": "need",
+          "line": 252
+        },
+        {
+          "function": "any",
+          "line": 257
+        },
+        {
+          "function": "sum",
+          "line": 261
+        },
+        {
+          "function": "set",
+          "line": 263
+        },
+        {
+          "function": "complete_choices",
+          "line": 267
+        },
+        {
+          "function": "need",
+          "line": 270
+        },
+        {
+          "function": "need",
+          "line": 274
+        },
+        {
+          "function": "need",
+          "line": 277
+        },
+        {
+          "function": "need",
+          "line": 280
+        },
+        {
+          "function": "any",
+          "line": 281
+        },
+        {
+          "function": "need",
+          "line": 282
+        },
+        {
+          "function": "request.get",
+          "line": 289
+        },
+        {
+          "function": "request.get",
+          "line": 290
+        },
+        {
+          "function": "request.get",
+          "line": 290
+        },
+        {
+          "function": "request.get",
+          "line": 291
+        },
+        {
+          "function": "request.get",
+          "line": 292
+        },
+        {
+          "function": "dict",
+          "line": 293
+        },
+        {
+          "function": "super",
+          "line": 22
+        },
+        {
+          "function": "type",
+          "line": 30
+        },
+        {
+          "function": "re.fullmatch",
+          "line": 30
+        },
+        {
+          "function": "type",
+          "line": 34
+        },
+        {
+          "function": "re.fullmatch",
+          "line": 34
+        },
+        {
+          "function": "type",
+          "line": 39
+        },
+        {
+          "function": "set",
+          "line": 39
+        },
+        {
+          "function": "set",
+          "line": 39
+        },
+        {
+          "function": "type",
+          "line": 42
+        },
+        {
+          "function": "sorted",
+          "line": 51
+        },
+        {
+          "function": "type",
+          "line": 55
+        },
+        {
+          "function": "type",
+          "line": 59
+        },
+        {
+          "function": "re.fullmatch",
+          "line": 59
+        },
+        {
+          "function": "type",
+          "line": 61
+        },
+        {
+          "function": "type",
+          "line": 65
+        },
+        {
+          "function": "len",
+          "line": 65
+        },
+        {
+          "function": "datetime.fromisoformat",
+          "line": 85
+        },
+        {
+          "function": "int",
+          "line": 93
+        },
+        {
+          "function": "type",
+          "line": 117
+        },
+        {
+          "function": "type",
+          "line": 121
+        },
+        {
+          "function": "len",
+          "line": 121
+        },
+        {
+          "function": "type",
+          "line": 129
+        },
+        {
+          "function": "need",
+          "line": 135
+        },
+        {
+          "function": "uint",
+          "line": 136
+        },
+        {
+          "function": "uint",
+          "line": 136
+        },
+        {
+          "function": "need",
+          "line": 137
+        },
+        {
+          "function": "available",
+          "line": 157
+        },
+        {
+          "function": "tuple",
+          "line": 169
+        },
+        {
+          "function": "dict",
+          "line": 195
+        },
+        {
+          "function": "constraints",
+          "line": 206
+        },
+        {
+          "function": "constraints",
+          "line": 206
+        },
+        {
+          "function": "type",
+          "line": 213
+        },
+        {
+          "function": "len",
+          "line": 213
+        },
+        {
+          "function": "type",
+          "line": 223
+        },
+        {
+          "function": "len",
+          "line": 223
+        },
+        {
+          "function": "len",
+          "line": 224
+        },
+        {
+          "function": "type",
+          "line": 225
+        },
+        {
+          "function": "len",
+          "line": 226
+        },
+        {
+          "function": "len",
+          "line": 226
+        },
+        {
+          "function": "sorted",
+          "line": 244
+        },
+        {
+          "function": "len",
+          "line": 245
+        },
+        {
+          "function": "len",
+          "line": 245
+        },
+        {
+          "function": "all",
+          "line": 270
+        },
+        {
+          "function": "all",
+          "line": 274
+        },
+        {
+          "function": "complete_choices",
+          "line": 281
+        },
+        {
+          "function": "type",
+          "line": 75
+        },
+        {
+          "function": "Refusal",
+          "line": 87
+        },
+        {
+          "function": "instant.utcoffset",
+          "line": 89
+        },
+        {
+          "function": "value.replace(tzinfo=zone, fold=1).utcoffset",
+          "line": 89
+        },
+        {
+          "function": "instant.astimezone(timezone.utc).astimezone(zone).replace",
+          "line": 91
+        },
+        {
+          "function": "instant.timestamp",
+          "line": 93
+        },
+        {
+          "function": "bool",
+          "line": 104
+        },
+        {
+          "function": "overlap",
+          "line": 145
+        },
+        {
+          "function": "group.append",
+          "line": 158
+        },
+        {
+          "function": "overlap",
+          "line": 177
+        },
+        {
+          "function": "enumerate",
+          "line": 178
+        },
+        {
+          "function": "choice_key",
+          "line": 186
+        },
+        {
+          "function": "type",
+          "line": 208
+        },
+        {
+          "function": "type",
+          "line": 248
+        },
+        {
+          "function": "len",
+          "line": 248
+        },
+        {
+          "function": "zip",
+          "line": 255
+        },
+        {
+          "function": "fixed.items",
+          "line": 308
+        },
+        {
+          "function": "type",
+          "line": 81
+        },
+        {
+          "function": "re.fullmatch",
+          "line": 81
+        },
+        {
+          "function": "local[0].date().isoformat",
+          "line": 97
+        },
+        {
+          "function": "local[0].date().isoformat",
+          "line": 103
+        },
+        {
+          "function": "type",
+          "line": 133
+        },
+        {
+          "function": "len",
+          "line": 133
+        },
+        {
+          "function": "dict",
+          "line": 158
+        },
+        {
+          "function": "overlap",
+          "line": 258
+        },
+        {
+          "function": "enumerate",
+          "line": 259
+        },
+        {
+          "function": "available",
+          "line": 274
+        },
+        {
+          "function": "choice_key",
+          "line": 277
+        },
+        {
+          "function": "min",
+          "line": 278
+        },
+        {
+          "function": "value.replace",
+          "line": 89
+        },
+        {
+          "function": "instant.astimezone(timezone.utc).astimezone",
+          "line": 91
+        },
+        {
+          "function": "type",
+          "line": 135
+        },
+        {
+          "function": "len",
+          "line": 135
+        },
+        {
+          "function": "available",
+          "line": 271
+        },
+        {
+          "function": "local[0].date",
+          "line": 97
+        },
+        {
+          "function": "local[0].date",
+          "line": 103
+        },
+        {
+          "function": "choice_key",
+          "line": 278
+        },
+        {
+          "function": "instant.astimezone",
+          "line": 91
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "from datetime import datetime, timezone"
+        },
+        {
+          "line": 3,
+          "text": "from itertools import product"
+        },
+        {
+          "line": 4,
+          "text": "from zoneinfo import ZoneInfo, ZoneInfoNotFoundError"
+        },
+        {
+          "line": 5,
+          "text": "import re"
+        },
+        {
+          "line": 6,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "Import",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "Assign",
+          "line": 8
+        },
+        {
+          "kind": "Assign",
+          "line": 9
+        },
+        {
+          "kind": "Assign",
+          "line": 11
+        },
+        {
+          "kind": "Assign",
+          "line": 12
+        },
+        {
+          "kind": "Assign",
+          "line": 14
+        },
+        {
+          "kind": "Assign",
+          "line": 16
+        },
+        {
+          "kind": "ClassDef",
+          "line": 20
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 25
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 29
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 33
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 38
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 41
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 45
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 48
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 108
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 115
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 142
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 147
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 164
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 172
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 182
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 199
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 286
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 295
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 329
+        }
+      ]
+    },
+    "candidate_domain/effect.py": {
+      "ast_sha256": "cd027f0aee703bef09eea5b307c465c9deea5a7dc2e2ed5cd736018b2abd89a2",
+      "calls": [
+        {
+          "function": "c.decode",
+          "line": 16
+        },
+        {
+          "function": "c.sha",
+          "line": 25
+        },
+        {
+          "function": "dict",
+          "line": 29
+        },
+        {
+          "function": "d.closed",
+          "line": 34
+        },
+        {
+          "function": "d.parse_request",
+          "line": 35
+        },
+        {
+          "function": "c.hash_value",
+          "line": 35
+        },
+        {
+          "function": "d.need",
+          "line": 36
+        },
+        {
+          "function": "d.need",
+          "line": 38
+        },
+        {
+          "function": "firewall.validate_capability_values_v01",
+          "line": 44
+        },
+        {
+          "function": "firewall.build_capability_validation_evidence_v01",
+          "line": 51
+        },
+        {
+          "function": "firewall.validate_capability_values_v01",
+          "line": 55
+        },
+        {
+          "function": "dict",
+          "line": 57
+        },
+        {
+          "function": "firewall.build_capability_validation_evidence_v01",
+          "line": 61
+        },
+        {
+          "function": "c.require",
+          "line": 65
+        },
+        {
+          "function": "c.decode",
+          "line": 68
+        },
+        {
+          "function": "c.require",
+          "line": 69
+        },
+        {
+          "function": "c.require",
+          "line": 72
+        },
+        {
+          "function": "e.clock",
+          "line": 74
+        },
+        {
+          "function": "c.require",
+          "line": 75
+        },
+        {
+          "function": "c.decode",
+          "line": 77
+        },
+        {
+          "function": "c.require",
+          "line": 78
+        },
+        {
+          "function": "snapshot",
+          "line": 79
+        },
+        {
+          "function": "c.require",
+          "line": 83
+        },
+        {
+          "function": "merged_inventory",
+          "line": 84
+        },
+        {
+          "function": "d.check_offer",
+          "line": 85
+        },
+        {
+          "function": "c.require",
+          "line": 86
+        },
+        {
+          "function": "dict",
+          "line": 87
+        },
+        {
+          "function": "dict",
+          "line": 89
+        },
+        {
+          "function": "e.state_write",
+          "line": 92
+        },
+        {
+          "function": "context['mutations'].append",
+          "line": 93
+        },
+        {
+          "function": "dict",
+          "line": 96
+        },
+        {
+          "function": "tuple",
+          "line": 98
+        },
+        {
+          "function": "tuple",
+          "line": 105
+        },
+        {
+          "function": "firewall.build_capability_business_semantics_v01",
+          "line": 106
+        },
+        {
+          "function": "firewall.build_capability_definition_v01",
+          "line": 115
+        },
+        {
+          "function": "hosts.admit_local_capability_v01",
+          "line": 126
+        },
+        {
+          "function": "json.loads",
+          "line": 136
+        },
+        {
+          "function": "d.need",
+          "line": 137
+        },
+        {
+          "function": "snapshot",
+          "line": 140
+        },
+        {
+          "function": "state['idempotency'].get",
+          "line": 141
+        },
+        {
+          "function": "d.need",
+          "line": 142
+        },
+        {
+          "function": "d.need",
+          "line": 146
+        },
+        {
+          "function": "payload",
+          "line": 151
+        },
+        {
+          "function": "e.clock",
+          "line": 162
+        },
+        {
+          "function": "d.need",
+          "line": 168
+        },
+        {
+          "function": "c.decode",
+          "line": 170
+        },
+        {
+          "function": "merged_inventory",
+          "line": 171
+        },
+        {
+          "function": "d.check_offer",
+          "line": 172
+        },
+        {
+          "function": "n.root_review",
+          "line": 173
+        },
+        {
+          "function": "n.save",
+          "line": 184
+        },
+        {
+          "function": "d.need",
+          "line": 185
+        },
+        {
+          "function": "admit",
+          "line": 187
+        },
+        {
+          "function": "tuple",
+          "line": 188
+        },
+        {
+          "function": "donor.build_native_work_action_v01",
+          "line": 191
+        },
+        {
+          "function": "donor.authorize_and_prepare_action_v01",
+          "line": 194
+        },
+        {
+          "function": "donor.host_for_prepared_action_v01",
+          "line": 198
+        },
+        {
+          "function": "dict",
+          "line": 200
+        },
+        {
+          "function": "e.immutable",
+          "line": 204
+        },
+        {
+          "function": "n.save",
+          "line": 205
+        },
+        {
+          "function": "d.need",
+          "line": 222
+        },
+        {
+          "function": "abi.kernel_artifact_to_plain_dict_v01",
+          "line": 224
+        },
+        {
+          "function": "n.save",
+          "line": 225
+        },
+        {
+          "function": "snapshot",
+          "line": 226
+        },
+        {
+          "function": "n.save",
+          "line": 227
+        },
+        {
+          "function": "d.need",
+          "line": 228
+        },
+        {
+          "function": "dict",
+          "line": 232
+        },
+        {
+          "function": "dict",
+          "line": 235
+        },
+        {
+          "function": "n.save",
+          "line": 238
+        },
+        {
+          "function": "path.exists",
+          "line": 13
+        },
+        {
+          "function": "c.decode",
+          "line": 13
+        },
+        {
+          "function": "dict",
+          "line": 13
+        },
+        {
+          "function": "c.canonical",
+          "line": 16
+        },
+        {
+          "function": "d.need",
+          "line": 21
+        },
+        {
+          "function": "values['payload_json'].encode",
+          "line": 68
+        },
+        {
+          "function": "context['inventory_path'].read_bytes",
+          "line": 77
+        },
+        {
+          "function": "dict",
+          "line": 93
+        },
+        {
+          "function": "path.exists",
+          "line": 133
+        },
+        {
+          "function": "d.need",
+          "line": 134
+        },
+        {
+          "function": "d.Refusal",
+          "line": 135
+        },
+        {
+          "function": "path.read_text",
+          "line": 136
+        },
+        {
+          "function": "d.need",
+          "line": 139
+        },
+        {
+          "function": "path.exists",
+          "line": 154
+        },
+        {
+          "function": "pending.exists",
+          "line": 154
+        },
+        {
+          "function": "reconcile",
+          "line": 155
+        },
+        {
+          "function": "n.save",
+          "line": 156
+        },
+        {
+          "function": "n.save",
+          "line": 157
+        },
+        {
+          "function": "e.immutable",
+          "line": 158
+        },
+        {
+          "function": "c.temporal",
+          "line": 164
+        },
+        {
+          "function": "inventory_path.read_bytes",
+          "line": 170
+        },
+        {
+          "function": "snapshot",
+          "line": 171
+        },
+        {
+          "function": "dict",
+          "line": 175
+        },
+        {
+          "function": "dict",
+          "line": 178
+        },
+        {
+          "function": "n.root_plain",
+          "line": 184
+        },
+        {
+          "function": "c.sha",
+          "line": 186
+        },
+        {
+          "function": "dict",
+          "line": 204
+        },
+        {
+          "function": "dict",
+          "line": 205
+        },
+        {
+          "function": "hosts.dispatch_current_action_v01",
+          "line": 210
+        },
+        {
+          "function": "n.save",
+          "line": 216
+        },
+        {
+          "function": "len",
+          "line": 218
+        },
+        {
+          "function": "PACKETS.pop",
+          "line": 219
+        },
+        {
+          "function": "path.read_bytes",
+          "line": 13
+        },
+        {
+          "function": "list",
+          "line": 18
+        },
+        {
+          "function": "c.sha",
+          "line": 29
+        },
+        {
+          "function": "validate_payload",
+          "line": 48
+        },
+        {
+          "function": "c.sha",
+          "line": 58
+        },
+        {
+          "function": "p.approved",
+          "line": 72
+        },
+        {
+          "function": "c.sha",
+          "line": 78
+        },
+        {
+          "function": "dict",
+          "line": 88
+        },
+        {
+          "function": "c.sha",
+          "line": 89
+        },
+        {
+          "function": "c.sha",
+          "line": 90
+        },
+        {
+          "function": "c.sha",
+          "line": 97
+        },
+        {
+          "function": "action.build_action_effect_parameter_record_v01",
+          "line": 98
+        },
+        {
+          "function": "hosts.observe_local_capability_code_v01",
+          "line": 105
+        },
+        {
+          "function": "tuple",
+          "line": 117
+        },
+        {
+          "function": "tuple",
+          "line": 120
+        },
+        {
+          "function": "tuple",
+          "line": 125
+        },
+        {
+          "function": "scope_key",
+          "line": 131
+        },
+        {
+          "function": "scope_key",
+          "line": 132
+        },
+        {
+          "function": "d.constraints",
+          "line": 137
+        },
+        {
+          "function": "d.constraints",
+          "line": 137
+        },
+        {
+          "function": "all",
+          "line": 144
+        },
+        {
+          "function": "scope_key",
+          "line": 152
+        },
+        {
+          "function": "scope_key",
+          "line": 153
+        },
+        {
+          "function": "dict",
+          "line": 158
+        },
+        {
+          "function": "dict",
+          "line": 165
+        },
+        {
+          "function": "d.Refusal",
+          "line": 167
+        },
+        {
+          "function": "c.sha",
+          "line": 174
+        },
+        {
+          "function": "action.build_action_effect_parameter_record_v01",
+          "line": 188
+        },
+        {
+          "function": "c.sha",
+          "line": 202
+        },
+        {
+          "function": "dict",
+          "line": 216
+        },
+        {
+          "function": "all",
+          "line": 230
+        },
+        {
+          "function": "c.sha",
+          "line": 233
+        },
+        {
+          "function": "c.sha",
+          "line": 233
+        },
+        {
+          "function": "c.sha",
+          "line": 234
+        },
+        {
+          "function": "c.sha",
+          "line": 235
+        },
+        {
+          "function": "len",
+          "line": 21
+        },
+        {
+          "function": "len",
+          "line": 37
+        },
+        {
+          "function": "type",
+          "line": 39
+        },
+        {
+          "function": "c.decode",
+          "line": 48
+        },
+        {
+          "function": "c.decode",
+          "line": 58
+        },
+        {
+          "function": "c.sha",
+          "line": 94
+        },
+        {
+          "function": "c.sha",
+          "line": 95
+        },
+        {
+          "function": "firewall.build_capability_business_input_binding_v01",
+          "line": 111
+        },
+        {
+          "function": "firewall.build_capability_business_input_binding_v01",
+          "line": 113
+        },
+        {
+          "function": "pending.exists",
+          "line": 134
+        },
+        {
+          "function": "c.sha",
+          "line": 139
+        },
+        {
+          "function": "str",
+          "line": 167
+        },
+        {
+          "function": "c.sha",
+          "line": 178
+        },
+        {
+          "function": "c.sha",
+          "line": 178
+        },
+        {
+          "function": "c.sha",
+          "line": 181
+        },
+        {
+          "function": "scope_key",
+          "line": 192
+        },
+        {
+          "function": "scope_key",
+          "line": 193
+        },
+        {
+          "function": "c.sha",
+          "line": 204
+        },
+        {
+          "function": "n.plain",
+          "line": 205
+        },
+        {
+          "function": "n.plain",
+          "line": 206
+        },
+        {
+          "function": "n.plain",
+          "line": 207
+        },
+        {
+          "function": "len",
+          "line": 222
+        },
+        {
+          "function": "action.validate_action_commit_packet_registry_v02",
+          "line": 228
+        },
+        {
+          "function": "c.sha",
+          "line": 229
+        },
+        {
+          "function": "values['payload_json'].encode",
+          "line": 48
+        },
+        {
+          "function": "str",
+          "line": 50
+        },
+        {
+          "function": "values['payload_json'].encode",
+          "line": 58
+        },
+        {
+          "function": "firewall.build_capability_field_v01",
+          "line": 117
+        },
+        {
+          "function": "firewall.build_capability_field_v01",
+          "line": 120
+        },
+        {
+          "function": "p.approved",
+          "line": 175
+        },
+        {
+          "function": "len",
+          "line": 176
+        },
+        {
+          "function": "firewall.snapshot_admitted_capability_v01",
+          "line": 207
+        },
+        {
+          "function": "scope_key",
+          "line": 212
+        },
+        {
+          "function": "n.plain",
+          "line": 216
+        },
+        {
+          "function": "n.plain",
+          "line": 217
+        },
+        {
+          "function": "state['reservations'].count",
+          "line": 144
+        },
+        {
+          "function": "c.canonical(data).decode",
+          "line": 190
+        },
+        {
+          "function": "readback['reservations'].count",
+          "line": 230
+        },
+        {
+          "function": "c.canonical",
+          "line": 190
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "import json"
+        },
+        {
+          "line": 3,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 4,
+          "text": "from hedgehog import action_commit_packet_v02 as action, work_execution_host_v01 as hosts"
+        },
+        {
+          "line": 5,
+          "text": "from hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi"
+        },
+        {
+          "line": 6,
+          "text": "from demo import run_action_packet_portability_v01 as donor"
+        },
+        {
+          "line": 7,
+          "text": "from . import domain as d, policy as p"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "Import",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 7
+        },
+        {
+          "kind": "Assign",
+          "line": 10
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 12
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 15
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 24
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 28
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 33
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 43
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 54
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 64
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 103
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 130
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 150
+        }
+      ]
+    },
+    "candidate_domain/memory.py": {
+      "ast_sha256": "852094736a4c6233f9ba03b798be496ce8f897fb2bd66ba97e0621ac7cceb921",
+      "calls": [
+        {
+          "function": "resolver.write_semantic_record",
+          "line": 12
+        },
+        {
+          "function": "LocalDRS",
+          "line": 16
+        },
+        {
+          "function": "resolver.resolve_semantic_candidates",
+          "line": 17
+        },
+        {
+          "function": "d.need",
+          "line": 21
+        },
+        {
+          "function": "n.save",
+          "line": 23
+        },
+        {
+          "function": "c.check_pointer",
+          "line": 26
+        },
+        {
+          "function": "LocalDRS",
+          "line": 27
+        },
+        {
+          "function": "resolver.write_semantic_record",
+          "line": 28
+        },
+        {
+          "function": "LocalDRS",
+          "line": 32
+        },
+        {
+          "function": "resolver.resolve_semantic_candidates",
+          "line": 33
+        },
+        {
+          "function": "d.need",
+          "line": 37
+        },
+        {
+          "function": "d.need",
+          "line": 39
+        },
+        {
+          "function": "c.check_pointer",
+          "line": 40
+        },
+        {
+          "function": "e.clock",
+          "line": 41
+        },
+        {
+          "function": "c.temporal",
+          "line": 42
+        },
+        {
+          "function": "address.build_semantic_address_v01",
+          "line": 44
+        },
+        {
+          "function": "n.rebuilt",
+          "line": 48
+        },
+        {
+          "function": "c.sha",
+          "line": 49
+        },
+        {
+          "function": "dict",
+          "line": 50
+        },
+        {
+          "function": "n.root_review",
+          "line": 53
+        },
+        {
+          "function": "n.save",
+          "line": 57
+        },
+        {
+          "function": "d.need",
+          "line": 58
+        },
+        {
+          "function": "LocalDRS",
+          "line": 60
+        },
+        {
+          "function": "LocalDRS",
+          "line": 95
+        },
+        {
+          "function": "resolver.resolve_semantic_candidates",
+          "line": 96
+        },
+        {
+          "function": "d.need",
+          "line": 100
+        },
+        {
+          "function": "d.need",
+          "line": 124
+        },
+        {
+          "function": "memory.build_memory_descent_budget_v01",
+          "line": 126
+        },
+        {
+          "function": "memory.build_retrieval_plan_v01",
+          "line": 129
+        },
+        {
+          "function": "n.root_review",
+          "line": 134
+        },
+        {
+          "function": "d.need",
+          "line": 139
+        },
+        {
+          "function": "integrity.domain_separated_sha256_hex_v01",
+          "line": 140
+        },
+        {
+          "function": "memory.build_memory_descent_request_v01",
+          "line": 143
+        },
+        {
+          "function": "memory.execute_local_memory_descent_v01",
+          "line": 150
+        },
+        {
+          "function": "d.need",
+          "line": 153
+        },
+        {
+          "function": "n.save",
+          "line": 155
+        },
+        {
+          "function": "LocalDRS",
+          "line": 12
+        },
+        {
+          "function": "resolver.SemanticDRSRecordInput",
+          "line": 13
+        },
+        {
+          "function": "resolver.SemanticResolveQuery",
+          "line": 18
+        },
+        {
+          "function": "any",
+          "line": 21
+        },
+        {
+          "function": "n.plain",
+          "line": 23
+        },
+        {
+          "function": "e.clock",
+          "line": 26
+        },
+        {
+          "function": "resolver.SemanticDRSRecordInput",
+          "line": 28
+        },
+        {
+          "function": "resolver.SemanticResolveQuery",
+          "line": 33
+        },
+        {
+          "function": "e.clock",
+          "line": 40
+        },
+        {
+          "function": "dict",
+          "line": 55
+        },
+        {
+          "function": "n.root_plain",
+          "line": 57
+        },
+        {
+          "function": "address.build_drs_authority_envelope_v01",
+          "line": 62
+        },
+        {
+          "function": "address.build_meaning_record_v01",
+          "line": 72
+        },
+        {
+          "function": "resolver.write_semantic_record",
+          "line": 86
+        },
+        {
+          "function": "record_ids.append",
+          "line": 94
+        },
+        {
+          "function": "resolver.SemanticResolveQuery",
+          "line": 96
+        },
+        {
+          "function": "n.rebuilt",
+          "line": 104
+        },
+        {
+          "function": "d.need",
+          "line": 108
+        },
+        {
+          "function": "memory.build_drs_temporal_query_v01",
+          "line": 109
+        },
+        {
+          "function": "memory.evaluate_drs_candidate_v01",
+          "line": 121
+        },
+        {
+          "function": "evaluations.append",
+          "line": 123
+        },
+        {
+          "function": "dict",
+          "line": 135
+        },
+        {
+          "function": "memory.retrieval_plan_to_plain_data_v01",
+          "line": 136
+        },
+        {
+          "function": "dict",
+          "line": 155
+        },
+        {
+          "function": "len",
+          "line": 37
+        },
+        {
+          "function": "store.read_record",
+          "line": 38
+        },
+        {
+          "function": "datetime.fromtimestamp(value, timezone.utc).isoformat",
+          "line": 84
+        },
+        {
+          "function": "resolver.SemanticDRSRecordInput",
+          "line": 86
+        },
+        {
+          "function": "set",
+          "line": 100
+        },
+        {
+          "function": "dict",
+          "line": 104
+        },
+        {
+          "function": "memory.query_evaluation_state_to_plain_data_v01",
+          "line": 123
+        },
+        {
+          "function": "c.canonical",
+          "line": 142
+        },
+        {
+          "function": "dict",
+          "line": 14
+        },
+        {
+          "function": "dict",
+          "line": 30
+        },
+        {
+          "function": "c.sha",
+          "line": 55
+        },
+        {
+          "function": "dict",
+          "line": 98
+        },
+        {
+          "function": "meaning_store.read_record",
+          "line": 103
+        },
+        {
+          "function": "address.meaning_record_to_plain_data_v01",
+          "line": 108
+        },
+        {
+          "function": "roots.root_decision_result_to_plain_dict_v01",
+          "line": 142
+        },
+        {
+          "function": "n.plain",
+          "line": 155
+        },
+        {
+          "function": "n.plain",
+          "line": 155
+        },
+        {
+          "function": "n.root_plain",
+          "line": 156
+        },
+        {
+          "function": "memory.memory_descent_result_to_plain_data_v01",
+          "line": 157
+        },
+        {
+          "function": "c.sha",
+          "line": 158
+        },
+        {
+          "function": "c.sha",
+          "line": 67
+        },
+        {
+          "function": "datetime.fromtimestamp",
+          "line": 84
+        },
+        {
+          "function": "dict",
+          "line": 88
+        },
+        {
+          "function": "dict",
+          "line": 89
+        },
+        {
+          "function": "n.rebuilt",
+          "line": 105
+        },
+        {
+          "function": "n.rebuilt",
+          "line": 106
+        },
+        {
+          "function": "n.rebuilt",
+          "line": 107
+        },
+        {
+          "function": "roots.root_decision_result_to_plain_dict_v01",
+          "line": 67
+        },
+        {
+          "function": "address.meaning_record_to_plain_data_v01",
+          "line": 88
+        },
+        {
+          "function": "stamp",
+          "line": 90
+        },
+        {
+          "function": "stamp",
+          "line": 90
+        },
+        {
+          "function": "stamp",
+          "line": 91
+        },
+        {
+          "function": "stamp",
+          "line": 93
+        },
+        {
+          "function": "stamp",
+          "line": 93
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "from datetime import datetime, timezone"
+        },
+        {
+          "line": 3,
+          "text": "from hedgehog.drs import LocalDRS"
+        },
+        {
+          "line": 4,
+          "text": "from hedgehog import local_drs_resolver as resolver, drs_semantic_address_v01 as address, drs_memory_resolution_v01 as memory"
+        },
+        {
+          "line": 5,
+          "text": "from hedgehog.kernel import integrity_replay_v01 as integrity, root_decision_v01 as roots"
+        },
+        {
+          "line": 6,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 7,
+          "text": "from .profile import PROFILE, SUMMARY"
+        },
+        {
+          "line": 8,
+          "text": "from . import domain as d"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 7
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 8
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 10
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 25
+        }
+      ]
+    },
+    "candidate_domain/native.py": {
+      "ast_sha256": "84d37477ad73a362f23051b430dcfb8812d6fe535cb35bc684ee0d8a6522ff1a",
+      "calls": [
+        {
+          "function": "values",
+          "line": 13
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 14
+        },
+        {
+          "function": "values",
+          "line": 20
+        },
+        {
+          "function": "c.decode",
+          "line": 21
+        },
+        {
+          "function": "c.validate",
+          "line": 22
+        },
+        {
+          "function": "d.consume_offer",
+          "line": 23
+        },
+        {
+          "function": "firewall.validate_capability_values_v01",
+          "line": 28
+        },
+        {
+          "function": "firewall.build_capability_validation_evidence_v01",
+          "line": 37
+        },
+        {
+          "function": "firewall.validate_capability_values_v01",
+          "line": 41
+        },
+        {
+          "function": "firewall.build_capability_validation_evidence_v01",
+          "line": 51
+        },
+        {
+          "function": "d.need",
+          "line": 55
+        },
+        {
+          "function": "d.need",
+          "line": 58
+        },
+        {
+          "function": "c.decode",
+          "line": 61
+        },
+        {
+          "function": "d.parse_request",
+          "line": 62
+        },
+        {
+          "function": "mocks.admit_pure_operation_v01",
+          "line": 71
+        },
+        {
+          "function": "work.WorkItemV01",
+          "line": 74
+        },
+        {
+          "function": "donor.prepare_work_program_v01",
+          "line": 76
+        },
+        {
+          "function": "work.advance_work_program_v01",
+          "line": 78
+        },
+        {
+          "function": "work.validate_work_program_result_v01",
+          "line": 79
+        },
+        {
+          "function": "c.require",
+          "line": 81
+        },
+        {
+          "function": "work.work_program_result_to_artifact_v01",
+          "line": 83
+        },
+        {
+          "function": "firewall.snapshot_admitted_capability_v01",
+          "line": 85
+        },
+        {
+          "function": "c.require",
+          "line": 86
+        },
+        {
+          "function": "c.require",
+          "line": 89
+        },
+        {
+          "function": "dict",
+          "line": 90
+        },
+        {
+          "function": "c.decode",
+          "line": 14
+        },
+        {
+          "function": "c.decode",
+          "line": 15
+        },
+        {
+          "function": "action.build_action_effect_parameter_record_v01",
+          "line": 16
+        },
+        {
+          "function": "data['offer_json'].encode",
+          "line": 21
+        },
+        {
+          "function": "c.decode",
+          "line": 23
+        },
+        {
+          "function": "action.build_action_effect_parameter_record_v01",
+          "line": 24
+        },
+        {
+          "function": "inputs['request_json'].encode",
+          "line": 61
+        },
+        {
+          "function": "d.inventory_rows",
+          "line": 64
+        },
+        {
+          "function": "c.decode",
+          "line": 66
+        },
+        {
+          "function": "c.validate",
+          "line": 67
+        },
+        {
+          "function": "d.check_offer",
+          "line": 68
+        },
+        {
+          "function": "tuple",
+          "line": 75
+        },
+        {
+          "function": "data['request_json'].encode",
+          "line": 14
+        },
+        {
+          "function": "data['inventory_json'].encode",
+          "line": 15
+        },
+        {
+          "function": "data['request_json'].encode",
+          "line": 23
+        },
+        {
+          "function": "values",
+          "line": 31
+        },
+        {
+          "function": "d.check_offer",
+          "line": 32
+        },
+        {
+          "function": "values",
+          "line": 44
+        },
+        {
+          "function": "c.decode",
+          "line": 45
+        },
+        {
+          "function": "c.validate",
+          "line": 46
+        },
+        {
+          "function": "d.check_result",
+          "line": 47
+        },
+        {
+          "function": "all",
+          "line": 58
+        },
+        {
+          "function": "c.decode",
+          "line": 64
+        },
+        {
+          "function": "inputs['offer_json'].encode",
+          "line": 66
+        },
+        {
+          "function": "tuple",
+          "line": 72
+        },
+        {
+          "function": "firewall.validate_capability_execution_result_v01",
+          "line": 86
+        },
+        {
+          "function": "set",
+          "line": 89
+        },
+        {
+          "function": "dict",
+          "line": 90
+        },
+        {
+          "function": "len",
+          "line": 92
+        },
+        {
+          "function": "n.plain",
+          "line": 92
+        },
+        {
+          "function": "abi.kernel_artifact_to_plain_dict_v01",
+          "line": 93
+        },
+        {
+          "function": "n.plain",
+          "line": 94
+        },
+        {
+          "function": "c.canonical(result).decode",
+          "line": 17
+        },
+        {
+          "function": "c.canonical(result).decode",
+          "line": 25
+        },
+        {
+          "function": "c.decode",
+          "line": 32
+        },
+        {
+          "function": "c.decode",
+          "line": 33
+        },
+        {
+          "function": "c.decode",
+          "line": 34
+        },
+        {
+          "function": "data['offer_json'].encode",
+          "line": 45
+        },
+        {
+          "function": "c.decode",
+          "line": 47
+        },
+        {
+          "function": "c.decode",
+          "line": 48
+        },
+        {
+          "function": "set",
+          "line": 58
+        },
+        {
+          "function": "set",
+          "line": 58
+        },
+        {
+          "function": "inputs['inventory_json'].encode",
+          "line": 64
+        },
+        {
+          "function": "donor.work_literal_v01",
+          "line": 75
+        },
+        {
+          "function": "len",
+          "line": 81
+        },
+        {
+          "function": "output[0].value.encode",
+          "line": 32
+        },
+        {
+          "function": "data['request_json'].encode",
+          "line": 33
+        },
+        {
+          "function": "data['inventory_json'].encode",
+          "line": 34
+        },
+        {
+          "function": "str",
+          "line": 36
+        },
+        {
+          "function": "data['request_json'].encode",
+          "line": 47
+        },
+        {
+          "function": "output[0].value.encode",
+          "line": 48
+        },
+        {
+          "function": "str",
+          "line": 50
+        },
+        {
+          "function": "n.plain",
+          "line": 90
+        },
+        {
+          "function": "n.plain",
+          "line": 91
+        },
+        {
+          "function": "n.plain",
+          "line": 91
+        },
+        {
+          "function": "c.canonical",
+          "line": 17
+        },
+        {
+          "function": "c.canonical",
+          "line": 25
+        },
+        {
+          "function": "type",
+          "line": 58
+        },
+        {
+          "function": "inputs.values",
+          "line": 58
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n"
+        },
+        {
+          "line": 3,
+          "text": "from hedgehog.kernel import work_composition_v01 as work, effect_firewall_v01 as firewall, abi_v01 as abi"
+        },
+        {
+          "line": 4,
+          "text": "from hedgehog import action_commit_packet_v02 as action"
+        },
+        {
+          "line": 5,
+          "text": "from demo import run_action_packet_portability_v01 as donor, work_composition_mock_capabilities_v01 as mocks"
+        },
+        {
+          "line": 6,
+          "text": "from . import domain as d"
+        },
+        {
+          "line": 7,
+          "text": "from .profile import PROFILE"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 7
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 9
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 12
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 19
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 27
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 40
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 54
+        }
+      ]
+    },
+    "candidate_domain/policy.py": {
+      "ast_sha256": "52c354dadb32bf63b70832b03e3cf944cf25db32b0207af52b0fd145dc36fdfb",
+      "calls": [
+        {
+          "function": "d.closed",
+          "line": 11
+        },
+        {
+          "function": "d.need",
+          "line": 12
+        },
+        {
+          "function": "d.ident",
+          "line": 15
+        },
+        {
+          "function": "d.need",
+          "line": 20
+        },
+        {
+          "function": "d.need",
+          "line": 24
+        },
+        {
+          "function": "d.need",
+          "line": 26
+        },
+        {
+          "function": "d.need",
+          "line": 32
+        },
+        {
+          "function": "d.need",
+          "line": 44
+        },
+        {
+          "function": "d.safe_event",
+          "line": 45
+        },
+        {
+          "function": "e.immutable",
+          "line": 73
+        },
+        {
+          "function": "d.parse_request",
+          "line": 77
+        },
+        {
+          "function": "d.need",
+          "line": 78
+        },
+        {
+          "function": "e.immutable",
+          "line": 84
+        },
+        {
+          "function": "any",
+          "line": 92
+        },
+        {
+          "function": "dict",
+          "line": 126
+        },
+        {
+          "function": "d.need",
+          "line": 17
+        },
+        {
+          "function": "c.sequence",
+          "line": 19
+        },
+        {
+          "function": "d.need",
+          "line": 23
+        },
+        {
+          "function": "d.closed",
+          "line": 29
+        },
+        {
+          "function": "d.ident",
+          "line": 30
+        },
+        {
+          "function": "c.hash_value",
+          "line": 30
+        },
+        {
+          "function": "d.need",
+          "line": 31
+        },
+        {
+          "function": "d.closed",
+          "line": 49
+        },
+        {
+          "function": "d.need",
+          "line": 50
+        },
+        {
+          "function": "d.need",
+          "line": 51
+        },
+        {
+          "function": "dict",
+          "line": 52
+        },
+        {
+          "function": "d.closed",
+          "line": 53
+        },
+        {
+          "function": "d.need",
+          "line": 56
+        },
+        {
+          "function": "d.ident",
+          "line": 59
+        },
+        {
+          "function": "d.uint",
+          "line": 59
+        },
+        {
+          "function": "d.need",
+          "line": 60
+        },
+        {
+          "function": "d.need",
+          "line": 63
+        },
+        {
+          "function": "e.immutable",
+          "line": 68
+        },
+        {
+          "function": "e.immutable",
+          "line": 69
+        },
+        {
+          "function": "path.exists",
+          "line": 82
+        },
+        {
+          "function": "c.decode",
+          "line": 82
+        },
+        {
+          "function": "max",
+          "line": 87
+        },
+        {
+          "function": "d.need",
+          "line": 88
+        },
+        {
+          "function": "d.need",
+          "line": 90
+        },
+        {
+          "function": "d.need",
+          "line": 93
+        },
+        {
+          "function": "d.need",
+          "line": 97
+        },
+        {
+          "function": "max",
+          "line": 98
+        },
+        {
+          "function": "dict",
+          "line": 100
+        },
+        {
+          "function": "dict",
+          "line": 102
+        },
+        {
+          "function": "d.need",
+          "line": 103
+        },
+        {
+          "function": "d.need",
+          "line": 105
+        },
+        {
+          "function": "any",
+          "line": 107
+        },
+        {
+          "function": "history.append",
+          "line": 108
+        },
+        {
+          "function": "e.state_write",
+          "line": 109
+        },
+        {
+          "function": "c.sha",
+          "line": 116
+        },
+        {
+          "function": "c.sha",
+          "line": 119
+        },
+        {
+          "function": "c.sha",
+          "line": 122
+        },
+        {
+          "function": "len",
+          "line": 32
+        },
+        {
+          "function": "len",
+          "line": 33
+        },
+        {
+          "function": "dict",
+          "line": 37
+        },
+        {
+          "function": "set",
+          "line": 42
+        },
+        {
+          "function": "d.ident",
+          "line": 62
+        },
+        {
+          "function": "dict",
+          "line": 69
+        },
+        {
+          "function": "c.sha",
+          "line": 81
+        },
+        {
+          "function": "path.read_bytes",
+          "line": 82
+        },
+        {
+          "function": "approved",
+          "line": 93
+        },
+        {
+          "function": "bool",
+          "line": 97
+        },
+        {
+          "function": "d.constraints",
+          "line": 99
+        },
+        {
+          "function": "d.constraints",
+          "line": 99
+        },
+        {
+          "function": "dict",
+          "line": 101
+        },
+        {
+          "function": "dict",
+          "line": 108
+        },
+        {
+          "function": "record_ref",
+          "line": 127
+        },
+        {
+          "function": "object_ref",
+          "line": 128
+        },
+        {
+          "function": "c.sha",
+          "line": 134
+        },
+        {
+          "function": "type",
+          "line": 17
+        },
+        {
+          "function": "set",
+          "line": 20
+        },
+        {
+          "function": "set",
+          "line": 21
+        },
+        {
+          "function": "type",
+          "line": 26
+        },
+        {
+          "function": "len",
+          "line": 26
+        },
+        {
+          "function": "type",
+          "line": 44
+        },
+        {
+          "function": "set",
+          "line": 44
+        },
+        {
+          "function": "type",
+          "line": 50
+        },
+        {
+          "function": "e.clock",
+          "line": 60
+        },
+        {
+          "function": "all",
+          "line": 90
+        },
+        {
+          "function": "sorted",
+          "line": 100
+        },
+        {
+          "function": "sorted",
+          "line": 102
+        },
+        {
+          "function": "approved",
+          "line": 105
+        },
+        {
+          "function": "type",
+          "line": 23
+        },
+        {
+          "function": "c.sha",
+          "line": 39
+        },
+        {
+          "function": "c.sha",
+          "line": 65
+        },
+        {
+          "function": "c.sha",
+          "line": 66
+        },
+        {
+          "function": "all",
+          "line": 96
+        },
+        {
+          "function": "d.constraints",
+          "line": 90
+        },
+        {
+          "function": "d.constraints",
+          "line": 90
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 3,
+          "text": "from . import domain as d"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "Assign",
+          "line": 5
+        },
+        {
+          "kind": "Assign",
+          "line": 8
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 10
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 36
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 41
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 76
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 112
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 118
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 121
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 125
+        }
+      ]
+    },
+    "candidate_domain/profile.py": {
+      "ast_sha256": "b5faa7d406285f2634f00b59f91edb0497cde15d0daa0c53a8d5e9638bd8bd93",
+      "calls": [
+        {
+          "function": "ReviewedBodyProfileV01",
+          "line": 55
+        },
+        {
+          "function": "d.check_offer",
+          "line": 11
+        },
+        {
+          "function": "d.need",
+          "line": 12
+        },
+        {
+          "function": "d.ident",
+          "line": 13
+        },
+        {
+          "function": "d.ident",
+          "line": 13
+        },
+        {
+          "function": "c.hash_value",
+          "line": 14
+        },
+        {
+          "function": "d.need",
+          "line": 15
+        },
+        {
+          "function": "d.need",
+          "line": 17
+        },
+        {
+          "function": "d.need",
+          "line": 19
+        },
+        {
+          "function": "d.need",
+          "line": 33
+        },
+        {
+          "function": "d.need",
+          "line": 34
+        },
+        {
+          "function": "d.need",
+          "line": 36
+        },
+        {
+          "function": "d.check_offer",
+          "line": 42
+        },
+        {
+          "function": "d.need",
+          "line": 43
+        },
+        {
+          "function": "d.need",
+          "line": 45
+        },
+        {
+          "function": "d.need",
+          "line": 46
+        },
+        {
+          "function": "d.closed",
+          "line": 22
+        },
+        {
+          "function": "d.need",
+          "line": 24
+        },
+        {
+          "function": "d.need",
+          "line": 49
+        },
+        {
+          "function": "d.need",
+          "line": 53
+        },
+        {
+          "function": "c.sha",
+          "line": 15
+        },
+        {
+          "function": "c.ref",
+          "line": 28
+        },
+        {
+          "function": "c.hash_value",
+          "line": 30
+        },
+        {
+          "function": "dict",
+          "line": 46
+        },
+        {
+          "function": "len",
+          "line": 25
+        },
+        {
+          "function": "c.sha",
+          "line": 50
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c"
+        },
+        {
+          "line": 3,
+          "text": "from hedgehog.external_drs.gate5_body_profile_v01 import ReviewedBodyProfileV01, COMMON_BODY_FIELDS"
+        },
+        {
+          "line": 4,
+          "text": "from . import domain as d"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "Assign",
+          "line": 6
+        },
+        {
+          "kind": "Assign",
+          "line": 7
+        },
+        {
+          "kind": "Assign",
+          "line": 8
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 10
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 32
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 40
+        },
+        {
+          "kind": "Assign",
+          "line": 55
+        }
+      ]
+    },
+    "candidate_domain/run.py": {
+      "ast_sha256": "702355f2e817d8a14db5f7baabc3743fad7c68ff0c732b552d0a644e02684fb6",
+      "calls": [
+        {
+          "function": "dict",
+          "line": 9
+        },
+        {
+          "function": "dict",
+          "line": 21
+        },
+        {
+          "function": "e.immutable",
+          "line": 23
+        },
+        {
+          "function": "dict",
+          "line": 32
+        },
+        {
+          "function": "(folder / 'receipt.json').exists",
+          "line": 33
+        },
+        {
+          "function": "d.need",
+          "line": 41
+        },
+        {
+          "function": "json.loads",
+          "line": 42
+        },
+        {
+          "function": "d.need",
+          "line": 43
+        },
+        {
+          "function": "d.need",
+          "line": 44
+        },
+        {
+          "function": "n.save",
+          "line": 64
+        },
+        {
+          "function": "d.need",
+          "line": 65
+        },
+        {
+          "function": "n.save",
+          "line": 69
+        },
+        {
+          "function": "n.save",
+          "line": 70
+        },
+        {
+          "function": "n.save",
+          "line": 71
+        },
+        {
+          "function": "e.immutable",
+          "line": 72
+        },
+        {
+          "function": "d.report",
+          "line": 75
+        },
+        {
+          "function": "dict",
+          "line": 78
+        },
+        {
+          "function": "effect.reconcile",
+          "line": 85
+        },
+        {
+          "function": "n.save",
+          "line": 91
+        },
+        {
+          "function": "n.save",
+          "line": 92
+        },
+        {
+          "function": "n.save",
+          "line": 93
+        },
+        {
+          "function": "d.need",
+          "line": 97
+        },
+        {
+          "function": "json.loads",
+          "line": 98
+        },
+        {
+          "function": "original.get('status', {}).get",
+          "line": 100
+        },
+        {
+          "function": "n.save",
+          "line": 102
+        },
+        {
+          "function": "n.save",
+          "line": 103
+        },
+        {
+          "function": "d.report",
+          "line": 104
+        },
+        {
+          "function": "contexts.values",
+          "line": 124
+        },
+        {
+          "function": "d.need",
+          "line": 131
+        },
+        {
+          "function": "d.closed",
+          "line": 132
+        },
+        {
+          "function": "d.need",
+          "line": 133
+        },
+        {
+          "function": "p.validate_policy",
+          "line": 136
+        },
+        {
+          "function": "d.need",
+          "line": 138
+        },
+        {
+          "function": "d.need",
+          "line": 148
+        },
+        {
+          "function": "state_root.mkdir",
+          "line": 149
+        },
+        {
+          "function": "output_root.mkdir",
+          "line": 150
+        },
+        {
+          "function": "c.crypto.generate_root_signer_capability_v01",
+          "line": 152
+        },
+        {
+          "function": "c.crypto.build_trusted_root_key_set_v01",
+          "line": 153
+        },
+        {
+          "function": "c.crypto.trusted_root_key_set_to_plain_dict_v01",
+          "line": 154
+        },
+        {
+          "function": "bootstrap.send",
+          "line": 155
+        },
+        {
+          "function": "bootstrap.receive",
+          "line": 156
+        },
+        {
+          "function": "d.need",
+          "line": 157
+        },
+        {
+          "function": "c.keyset",
+          "line": 159
+        },
+        {
+          "function": "d.need",
+          "line": 160
+        },
+        {
+          "function": "e.immutable",
+          "line": 162
+        },
+        {
+          "function": "e.immutable",
+          "line": 164
+        },
+        {
+          "function": "new_counts",
+          "line": 165
+        },
+        {
+          "function": "set",
+          "line": 171
+        },
+        {
+          "function": "n.save",
+          "line": 287
+        },
+        {
+          "function": "dict",
+          "line": 290
+        },
+        {
+          "function": "n.root_review",
+          "line": 25
+        },
+        {
+          "function": "n.save",
+          "line": 30
+        },
+        {
+          "function": "dict",
+          "line": 31
+        },
+        {
+          "function": "json.loads",
+          "line": 34
+        },
+        {
+          "function": "dict",
+          "line": 35
+        },
+        {
+          "function": "d.report",
+          "line": 36
+        },
+        {
+          "function": "path.exists",
+          "line": 41
+        },
+        {
+          "function": "path.read_text",
+          "line": 42
+        },
+        {
+          "function": "d.need",
+          "line": 46
+        },
+        {
+          "function": "proof['bundle']['manifest']['manifest_id'].split",
+          "line": 52
+        },
+        {
+          "function": "c.verify",
+          "line": 56
+        },
+        {
+          "function": "c.verify",
+          "line": 57
+        },
+        {
+          "function": "c.verify",
+          "line": 58
+        },
+        {
+          "function": "d.need",
+          "line": 59
+        },
+        {
+          "function": "dict",
+          "line": 72
+        },
+        {
+          "function": "d.need",
+          "line": 87
+        },
+        {
+          "function": "dict",
+          "line": 93
+        },
+        {
+          "function": "source_path.exists",
+          "line": 97
+        },
+        {
+          "function": "source_path.read_text",
+          "line": 98
+        },
+        {
+          "function": "dict",
+          "line": 100
+        },
+        {
+          "function": "source.projection",
+          "line": 106
+        },
+        {
+          "function": "dict",
+          "line": 109
+        },
+        {
+          "function": "p.task_ref",
+          "line": 117
+        },
+        {
+          "function": "contexts.setdefault",
+          "line": 118
+        },
+        {
+          "function": "event['inventory'].get",
+          "line": 121
+        },
+        {
+          "function": "context['source_revisions'].sort",
+          "line": 125
+        },
+        {
+          "function": "d.safe_event",
+          "line": 140
+        },
+        {
+          "function": "d.need",
+          "line": 146
+        },
+        {
+          "function": "dict",
+          "line": 162
+        },
+        {
+          "function": "publisher_contexts",
+          "line": 168
+        },
+        {
+          "function": "e.PublisherBudget",
+          "line": 169
+        },
+        {
+          "function": "e.immutable",
+          "line": 170
+        },
+        {
+          "function": "folder.mkdir",
+          "line": 176
+        },
+        {
+          "function": "new_counts",
+          "line": 177
+        },
+        {
+          "function": "channel.counters",
+          "line": 178
+        },
+        {
+          "function": "bootstrap.counters",
+          "line": 179
+        },
+        {
+          "function": "dict",
+          "line": 287
+        },
+        {
+          "function": "str",
+          "line": 21
+        },
+        {
+          "function": "dict",
+          "line": 27
+        },
+        {
+          "function": "dict",
+          "line": 28
+        },
+        {
+          "function": "e.clock",
+          "line": 28
+        },
+        {
+          "function": "n.root_plain",
+          "line": 30
+        },
+        {
+          "function": "(folder / 'receipt.json').read_text",
+          "line": 34
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 40
+        },
+        {
+          "function": "d.constraints",
+          "line": 44
+        },
+        {
+          "function": "d.constraints",
+          "line": 44
+        },
+        {
+          "function": "d.Refusal",
+          "line": 63
+        },
+        {
+          "function": "dict",
+          "line": 78
+        },
+        {
+          "function": "dict",
+          "line": 79
+        },
+        {
+          "function": "dict",
+          "line": 80
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 96
+        },
+        {
+          "function": "original.get",
+          "line": 100
+        },
+        {
+          "function": "dict",
+          "line": 118
+        },
+        {
+          "function": "context['source_revisions'].append",
+          "line": 123
+        },
+        {
+          "function": "d.ident",
+          "line": 145
+        },
+        {
+          "function": "len",
+          "line": 148
+        },
+        {
+          "function": "len",
+          "line": 148
+        },
+        {
+          "function": "p.event_request",
+          "line": 184
+        },
+        {
+          "function": "n.save",
+          "line": 272
+        },
+        {
+          "function": "completed.append",
+          "line": 273
+        },
+        {
+          "function": "n.save",
+          "line": 281
+        },
+        {
+          "function": "len",
+          "line": 290
+        },
+        {
+          "function": "c.sha",
+          "line": 26
+        },
+        {
+          "function": "c.sha",
+          "line": 27
+        },
+        {
+          "function": "c.sha",
+          "line": 32
+        },
+        {
+          "function": "str",
+          "line": 63
+        },
+        {
+          "function": "dict",
+          "line": 109
+        },
+        {
+          "function": "dict",
+          "line": 110
+        },
+        {
+          "function": "dict",
+          "line": 111
+        },
+        {
+          "function": "type",
+          "line": 122
+        },
+        {
+          "function": "type",
+          "line": 138
+        },
+        {
+          "function": "len",
+          "line": 138
+        },
+        {
+          "function": "len",
+          "line": 161
+        },
+        {
+          "function": "prior_path.exists",
+          "line": 187
+        },
+        {
+          "function": "d.parse_request",
+          "line": 191
+        },
+        {
+          "function": "p.check_history",
+          "line": 193
+        },
+        {
+          "function": "d.Refusal",
+          "line": 195
+        },
+        {
+          "function": "p.local_policy",
+          "line": 200
+        },
+        {
+          "function": "e.Budget",
+          "line": 201
+        },
+        {
+          "function": "transport.serve_event",
+          "line": 239
+        },
+        {
+          "function": "dict",
+          "line": 272
+        },
+        {
+          "function": "dict",
+          "line": 273
+        },
+        {
+          "function": "n.save",
+          "line": 277
+        },
+        {
+          "function": "dict",
+          "line": 281
+        },
+        {
+          "function": "channel.counters",
+          "line": 288
+        },
+        {
+          "function": "bootstrap.counters",
+          "line": 288
+        },
+        {
+          "function": "str",
+          "line": 28
+        },
+        {
+          "function": "c.sha",
+          "line": 59
+        },
+        {
+          "function": "c.sha",
+          "line": 61
+        },
+        {
+          "function": "p.object_ref",
+          "line": 119
+        },
+        {
+          "function": "type",
+          "line": 146
+        },
+        {
+          "function": "json.loads",
+          "line": 188
+        },
+        {
+          "function": "p.task_ref",
+          "line": 202
+        },
+        {
+          "function": "transport.close",
+          "line": 234
+        },
+        {
+          "function": "source.build",
+          "line": 237
+        },
+        {
+          "function": "report_failure",
+          "line": 243
+        },
+        {
+          "function": "dict",
+          "line": 277
+        },
+        {
+          "function": "str",
+          "line": 26
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 186
+        },
+        {
+          "function": "prior_path.read_text",
+          "line": 188
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 203
+        },
+        {
+          "function": "accepted_path.exists",
+          "line": 208
+        },
+        {
+          "function": "history_requester",
+          "line": 212
+        },
+        {
+          "function": "d.need",
+          "line": 214
+        },
+        {
+          "function": "transport.retrieve",
+          "line": 221
+        },
+        {
+          "function": "n.save",
+          "line": 223
+        },
+        {
+          "function": "report_failure",
+          "line": 232
+        },
+        {
+          "function": "current.get('status', {}).get",
+          "line": 251
+        },
+        {
+          "function": "d.report",
+          "line": 254
+        },
+        {
+          "function": "dict",
+          "line": 258
+        },
+        {
+          "function": "difference",
+          "line": 282
+        },
+        {
+          "function": "difference",
+          "line": 283
+        },
+        {
+          "function": "c.sha",
+          "line": 110
+        },
+        {
+          "function": "c.sha",
+          "line": 201
+        },
+        {
+          "function": "d.need",
+          "line": 216
+        },
+        {
+          "function": "json.loads",
+          "line": 217
+        },
+        {
+          "function": "d.need",
+          "line": 218
+        },
+        {
+          "function": "dict",
+          "line": 223
+        },
+        {
+          "function": "n.save",
+          "line": 250
+        },
+        {
+          "function": "dict",
+          "line": 251
+        },
+        {
+          "function": "source.projection",
+          "line": 255
+        },
+        {
+          "function": "dict",
+          "line": 262
+        },
+        {
+          "function": "report_failure",
+          "line": 270
+        },
+        {
+          "function": "str",
+          "line": 278
+        },
+        {
+          "function": "channel.counters",
+          "line": 282
+        },
+        {
+          "function": "bootstrap.counters",
+          "line": 283
+        },
+        {
+          "function": "p.task_ref",
+          "line": 201
+        },
+        {
+          "function": "accepted_path.exists",
+          "line": 216
+        },
+        {
+          "function": "accepted_path.read_text",
+          "line": 217
+        },
+        {
+          "function": "current.get",
+          "line": 251
+        },
+        {
+          "function": "dict",
+          "line": 258
+        },
+        {
+          "function": "dict",
+          "line": 259
+        },
+        {
+          "function": "dict",
+          "line": 260
+        },
+        {
+          "function": "(state_root / 'bookings' / (effect.scope_key(request) + '.json')).exists",
+          "line": 264
+        },
+        {
+          "function": "history_publisher",
+          "line": 266
+        },
+        {
+          "function": "d.Refusal",
+          "line": 270
+        },
+        {
+          "function": "type",
+          "line": 277
+        },
+        {
+          "function": "json.loads",
+          "line": 209
+        },
+        {
+          "function": "json.loads",
+          "line": 224
+        },
+        {
+          "function": "json.loads",
+          "line": 225
+        },
+        {
+          "function": "dict",
+          "line": 226
+        },
+        {
+          "function": "report_failure",
+          "line": 268
+        },
+        {
+          "function": "accepted_path.read_text",
+          "line": 209
+        },
+        {
+          "function": "d.constraints",
+          "line": 219
+        },
+        {
+          "function": "d.constraints",
+          "line": 219
+        },
+        {
+          "function": "(folder / 'requester_work.json').read_text",
+          "line": 224
+        },
+        {
+          "function": "(folder / 'requester_review.json').read_text",
+          "line": 225
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 250
+        },
+        {
+          "function": "json.loads",
+          "line": 227
+        },
+        {
+          "function": "json.loads",
+          "line": 228
+        },
+        {
+          "function": "json.loads",
+          "line": 229
+        },
+        {
+          "function": "json.loads",
+          "line": 230
+        },
+        {
+          "function": "(folder / 'descriptor.json').read_text",
+          "line": 227
+        },
+        {
+          "function": "(folder / 'status.json').read_text",
+          "line": 228
+        },
+        {
+          "function": "(folder / 'bundle.json').read_text",
+          "line": 229
+        },
+        {
+          "function": "(folder / 'fetch_request.json').read_text",
+          "line": 230
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 264
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "import json"
+        },
+        {
+          "line": 3,
+          "text": "import pathlib"
+        },
+        {
+          "line": 4,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 5,
+          "text": "from hedgehog.external_drs.gate5_exchange_v01 import PipeChannel"
+        },
+        {
+          "line": 6,
+          "text": "from . import domain as d, policy as p, effect, source, transport"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "Import",
+          "line": 2
+        },
+        {
+          "kind": "Import",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 8
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 13
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 16
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 39
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 84
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 113
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 128
+        }
+      ]
+    },
+    "candidate_domain/source.py": {
+      "ast_sha256": "5964ad77f082c45248a47eedc99c03246a3de98f4a455df0f671d310f4120472",
+      "calls": [
+        {
+          "function": "c.drs.drs_time_envelope_to_plain_data_v01",
+          "line": 8
+        },
+        {
+          "function": "dict",
+          "line": 16
+        },
+        {
+          "function": "c.decode",
+          "line": 23
+        },
+        {
+          "function": "d.inventory_rows",
+          "line": 24
+        },
+        {
+          "function": "e.immutable",
+          "line": 25
+        },
+        {
+          "function": "e.state_write",
+          "line": 26
+        },
+        {
+          "function": "e.clock",
+          "line": 62
+        },
+        {
+          "function": "min",
+          "line": 63
+        },
+        {
+          "function": "c.require",
+          "line": 65
+        },
+        {
+          "function": "dict",
+          "line": 67
+        },
+        {
+          "function": "n.root_review",
+          "line": 71
+        },
+        {
+          "function": "n.save",
+          "line": 81
+        },
+        {
+          "function": "d.need",
+          "line": 82
+        },
+        {
+          "function": "dict",
+          "line": 83
+        },
+        {
+          "function": "c.validate",
+          "line": 88
+        },
+        {
+          "function": "c.with_id",
+          "line": 89
+        },
+        {
+          "function": "c.validate",
+          "line": 94
+        },
+        {
+          "function": "c.with_id",
+          "line": 95
+        },
+        {
+          "function": "c.validate",
+          "line": 108
+        },
+        {
+          "function": "n.root_review",
+          "line": 109
+        },
+        {
+          "function": "n.save",
+          "line": 117
+        },
+        {
+          "function": "d.need",
+          "line": 118
+        },
+        {
+          "function": "c.sign",
+          "line": 119
+        },
+        {
+          "function": "dict",
+          "line": 121
+        },
+        {
+          "function": "c.sha",
+          "line": 124
+        },
+        {
+          "function": "c.validate",
+          "line": 125
+        },
+        {
+          "function": "memory.persist_source",
+          "line": 129
+        },
+        {
+          "function": "dict",
+          "line": 130
+        },
+        {
+          "function": "c.drs.build_drs_time_envelope_v01",
+          "line": 8
+        },
+        {
+          "function": "c.canonical",
+          "line": 23
+        },
+        {
+          "function": "d.need",
+          "line": 29
+        },
+        {
+          "function": "effect.merged_inventory",
+          "line": 33
+        },
+        {
+          "function": "native.perform",
+          "line": 34
+        },
+        {
+          "function": "n.save",
+          "line": 38
+        },
+        {
+          "function": "c.decode",
+          "line": 39
+        },
+        {
+          "function": "d.check_offer",
+          "line": 40
+        },
+        {
+          "function": "source_time",
+          "line": 41
+        },
+        {
+          "function": "p.record_ref",
+          "line": 72
+        },
+        {
+          "function": "dict",
+          "line": 73
+        },
+        {
+          "function": "n.root_plain",
+          "line": 81
+        },
+        {
+          "function": "dict",
+          "line": 89
+        },
+        {
+          "function": "dict",
+          "line": 95
+        },
+        {
+          "function": "dict",
+          "line": 111
+        },
+        {
+          "function": "dict",
+          "line": 114
+        },
+        {
+          "function": "e.clock",
+          "line": 114
+        },
+        {
+          "function": "n.root_plain",
+          "line": 117
+        },
+        {
+          "function": "e.immutable",
+          "line": 128
+        },
+        {
+          "function": "effect.snapshot",
+          "line": 33
+        },
+        {
+          "function": "dict",
+          "line": 35
+        },
+        {
+          "function": "work['outputs']['offer_json'].encode",
+          "line": 39
+        },
+        {
+          "function": "e.clock",
+          "line": 41
+        },
+        {
+          "function": "d.need",
+          "line": 46
+        },
+        {
+          "function": "json.loads",
+          "line": 47
+        },
+        {
+          "function": "d.check_offer",
+          "line": 50
+        },
+        {
+          "function": "d.need",
+          "line": 51
+        },
+        {
+          "function": "n.save",
+          "line": 53
+        },
+        {
+          "function": "n.save",
+          "line": 54
+        },
+        {
+          "function": "effect.confirm",
+          "line": 55
+        },
+        {
+          "function": "list",
+          "line": 56
+        },
+        {
+          "function": "d.Refusal",
+          "line": 61
+        },
+        {
+          "function": "c.sha",
+          "line": 65
+        },
+        {
+          "function": "c.sha",
+          "line": 65
+        },
+        {
+          "function": "c.sha",
+          "line": 67
+        },
+        {
+          "function": "c.sha",
+          "line": 67
+        },
+        {
+          "function": "c.sha",
+          "line": 72
+        },
+        {
+          "function": "p.record_ref",
+          "line": 83
+        },
+        {
+          "function": "c.sha",
+          "line": 87
+        },
+        {
+          "function": "manifest['manifest_id'].split",
+          "line": 119
+        },
+        {
+          "function": "c.sha",
+          "line": 34
+        },
+        {
+          "function": "saved_path.exists",
+          "line": 46
+        },
+        {
+          "function": "saved_path.read_text",
+          "line": 47
+        },
+        {
+          "function": "c.decode",
+          "line": 65
+        },
+        {
+          "function": "dict",
+          "line": 96
+        },
+        {
+          "function": "c.sha",
+          "line": 99
+        },
+        {
+          "function": "len",
+          "line": 100
+        },
+        {
+          "function": "dict",
+          "line": 102
+        },
+        {
+          "function": "p.object_ref",
+          "line": 107
+        },
+        {
+          "function": "c.canonical(request).decode",
+          "line": 35
+        },
+        {
+          "function": "c.canonical(effective).decode",
+          "line": 35
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 45
+        },
+        {
+          "function": "lineage.append",
+          "line": 59
+        },
+        {
+          "function": "work['outputs']['offer_json'].encode",
+          "line": 65
+        },
+        {
+          "function": "c.sha",
+          "line": 74
+        },
+        {
+          "function": "c.sha",
+          "line": 74
+        },
+        {
+          "function": "p.approved",
+          "line": 78
+        },
+        {
+          "function": "dict",
+          "line": 92
+        },
+        {
+          "function": "c.canonical",
+          "line": 100
+        },
+        {
+          "function": "c.sha",
+          "line": 106
+        },
+        {
+          "function": "len",
+          "line": 112
+        },
+        {
+          "function": "c.decode",
+          "line": 74
+        },
+        {
+          "function": "any",
+          "line": 77
+        },
+        {
+          "function": "c.canonical",
+          "line": 112
+        },
+        {
+          "function": "c.canonical",
+          "line": 35
+        },
+        {
+          "function": "c.canonical",
+          "line": 35
+        },
+        {
+          "function": "work['outputs']['offer_json'].encode",
+          "line": 74
+        },
+        {
+          "function": "len",
+          "line": 92
+        },
+        {
+          "function": "c.sha",
+          "line": 93
+        },
+        {
+          "function": "c.canonical",
+          "line": 92
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "import json"
+        },
+        {
+          "line": 3,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 4,
+          "text": "from . import domain as d, policy as p, native, effect, memory"
+        },
+        {
+          "line": 5,
+          "text": "from .profile import PROFILE, SCHEMA, DOMAIN, SUMMARY"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "Import",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 7
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 14
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 22
+        }
+      ]
+    },
+    "candidate_domain/transport.py": {
+      "ast_sha256": "a81921b5a9c15de503908006af108db85318cb98d52dfb01f411709686e8718c",
+      "calls": [
+        {
+          "function": "e.clock",
+          "line": 9
+        },
+        {
+          "function": "c.with_id",
+          "line": 10
+        },
+        {
+          "function": "c.validate",
+          "line": 18
+        },
+        {
+          "function": "e.clock",
+          "line": 22
+        },
+        {
+          "function": "n.root_review",
+          "line": 23
+        },
+        {
+          "function": "n.save",
+          "line": 31
+        },
+        {
+          "function": "d.need",
+          "line": 32
+        },
+        {
+          "function": "channel.send",
+          "line": 38
+        },
+        {
+          "function": "channel.receive",
+          "line": 39
+        },
+        {
+          "function": "e.immutable",
+          "line": 40
+        },
+        {
+          "function": "c.verify",
+          "line": 45
+        },
+        {
+          "function": "d.closed",
+          "line": 46
+        },
+        {
+          "function": "d.need",
+          "line": 47
+        },
+        {
+          "function": "d.need",
+          "line": 49
+        },
+        {
+          "function": "d.Refusal",
+          "line": 51
+        },
+        {
+          "function": "make_request",
+          "line": 54
+        },
+        {
+          "function": "channel.send",
+          "line": 58
+        },
+        {
+          "function": "channel.receive",
+          "line": 59
+        },
+        {
+          "function": "e.immutable",
+          "line": 60
+        },
+        {
+          "function": "d.need",
+          "line": 61
+        },
+        {
+          "function": "c.verify",
+          "line": 62
+        },
+        {
+          "function": "d.need",
+          "line": 63
+        },
+        {
+          "function": "channel.receive",
+          "line": 66
+        },
+        {
+          "function": "d.need",
+          "line": 67
+        },
+        {
+          "function": "c.require",
+          "line": 68
+        },
+        {
+          "function": "c.verify",
+          "line": 73
+        },
+        {
+          "function": "c.validate",
+          "line": 74
+        },
+        {
+          "function": "c.require",
+          "line": 75
+        },
+        {
+          "function": "c.require",
+          "line": 81
+        },
+        {
+          "function": "seen.add",
+          "line": 83
+        },
+        {
+          "function": "c.require",
+          "line": 85
+        },
+        {
+          "function": "dict",
+          "line": 89
+        },
+        {
+          "function": "channel.send",
+          "line": 91
+        },
+        {
+          "function": "range",
+          "line": 98
+        },
+        {
+          "function": "ValueError",
+          "line": 188
+        },
+        {
+          "function": "e.Budget",
+          "line": 191
+        },
+        {
+          "function": "budget.read",
+          "line": 192
+        },
+        {
+          "function": "d.need",
+          "line": 193
+        },
+        {
+          "function": "make_request",
+          "line": 196
+        },
+        {
+          "function": "exchange",
+          "line": 197
+        },
+        {
+          "function": "d.need",
+          "line": 200
+        },
+        {
+          "function": "memory.descend",
+          "line": 207
+        },
+        {
+          "function": "e.immutable",
+          "line": 209
+        },
+        {
+          "function": "make_request",
+          "line": 210
+        },
+        {
+          "function": "make_request",
+          "line": 211
+        },
+        {
+          "function": "exchange",
+          "line": 212
+        },
+        {
+          "function": "d.need",
+          "line": 215
+        },
+        {
+          "function": "ImportStore",
+          "line": 217
+        },
+        {
+          "function": "exchange",
+          "line": 225
+        },
+        {
+          "function": "d.need",
+          "line": 226
+        },
+        {
+          "function": "e.immutable",
+          "line": 228
+        },
+        {
+          "function": "e.immutable",
+          "line": 229
+        },
+        {
+          "function": "e.immutable",
+          "line": 230
+        },
+        {
+          "function": "store.import_body",
+          "line": 241
+        },
+        {
+          "function": "e.immutable",
+          "line": 243
+        },
+        {
+          "function": "e.immutable",
+          "line": 244
+        },
+        {
+          "function": "c.with_id",
+          "line": 248
+        },
+        {
+          "function": "c.validate",
+          "line": 256
+        },
+        {
+          "function": "e.immutable",
+          "line": 257
+        },
+        {
+          "function": "n.root_review",
+          "line": 258
+        },
+        {
+          "function": "n.save",
+          "line": 266
+        },
+        {
+          "function": "d.need",
+          "line": 267
+        },
+        {
+          "function": "c.with_id",
+          "line": 268
+        },
+        {
+          "function": "c.validate",
+          "line": 271
+        },
+        {
+          "function": "e.immutable",
+          "line": 272
+        },
+        {
+          "function": "dict",
+          "line": 273
+        },
+        {
+          "function": "native.perform",
+          "line": 275
+        },
+        {
+          "function": "n.save",
+          "line": 279
+        },
+        {
+          "function": "c.decode",
+          "line": 280
+        },
+        {
+          "function": "d.check_result",
+          "line": 281
+        },
+        {
+          "function": "dict",
+          "line": 282
+        },
+        {
+          "function": "n.root_review",
+          "line": 286
+        },
+        {
+          "function": "n.save",
+          "line": 297
+        },
+        {
+          "function": "d.need",
+          "line": 298
+        },
+        {
+          "function": "dict",
+          "line": 10
+        },
+        {
+          "function": "dict",
+          "line": 25
+        },
+        {
+          "function": "n.root_plain",
+          "line": 31
+        },
+        {
+          "function": "budget.reserve",
+          "line": 34
+        },
+        {
+          "function": "c.sign",
+          "line": 38
+        },
+        {
+          "function": "dict",
+          "line": 41
+        },
+        {
+          "function": "c.sign",
+          "line": 58
+        },
+        {
+          "function": "dict",
+          "line": 60
+        },
+        {
+          "function": "c.sha",
+          "line": 62
+        },
+        {
+          "function": "c.sign",
+          "line": 91
+        },
+        {
+          "function": "receive_request",
+          "line": 99
+        },
+        {
+          "function": "observed_ops.append",
+          "line": 100
+        },
+        {
+          "function": "publisher_budget.reserve",
+          "line": 105
+        },
+        {
+          "function": "c.require",
+          "line": 127
+        },
+        {
+          "function": "c.require",
+          "line": 131
+        },
+        {
+          "function": "c.require",
+          "line": 150
+        },
+        {
+          "function": "e.clock",
+          "line": 152
+        },
+        {
+          "function": "min",
+          "line": 154
+        },
+        {
+          "function": "dict",
+          "line": 157
+        },
+        {
+          "function": "n.root_review",
+          "line": 164
+        },
+        {
+          "function": "n.save",
+          "line": 169
+        },
+        {
+          "function": "dict",
+          "line": 175
+        },
+        {
+          "function": "c.validate",
+          "line": 180
+        },
+        {
+          "function": "dict",
+          "line": 181
+        },
+        {
+          "function": "publisher_budget.response",
+          "line": 183
+        },
+        {
+          "function": "e.immutable",
+          "line": 184
+        },
+        {
+          "function": "channel.send",
+          "line": 185
+        },
+        {
+          "function": "p.task_ref",
+          "line": 191
+        },
+        {
+          "function": "unavailable",
+          "line": 199
+        },
+        {
+          "function": "c.check_pointer",
+          "line": 203
+        },
+        {
+          "function": "c.check_route",
+          "line": 204
+        },
+        {
+          "function": "unavailable",
+          "line": 214
+        },
+        {
+          "function": "store.observe",
+          "line": 220
+        },
+        {
+          "function": "c.check_status",
+          "line": 222
+        },
+        {
+          "function": "c.decode",
+          "line": 233
+        },
+        {
+          "function": "c.check_bundle",
+          "line": 234
+        },
+        {
+          "function": "budget.received_body",
+          "line": 236
+        },
+        {
+          "function": "dict",
+          "line": 248
+        },
+        {
+          "function": "dict",
+          "line": 259
+        },
+        {
+          "function": "dict",
+          "line": 261
+        },
+        {
+          "function": "e.clock",
+          "line": 263
+        },
+        {
+          "function": "n.root_plain",
+          "line": 266
+        },
+        {
+          "function": "dict",
+          "line": 268
+        },
+        {
+          "function": "dict",
+          "line": 276
+        },
+        {
+          "function": "work['outputs']['result_json'].encode",
+          "line": 280
+        },
+        {
+          "function": "dict",
+          "line": 288
+        },
+        {
+          "function": "e.clock",
+          "line": 294
+        },
+        {
+          "function": "n.root_plain",
+          "line": 297
+        },
+        {
+          "function": "dict",
+          "line": 299
+        },
+        {
+          "function": "d.Refusal",
+          "line": 36
+        },
+        {
+          "function": "c.sha",
+          "line": 38
+        },
+        {
+          "function": "c.sha",
+          "line": 58
+        },
+        {
+          "function": "dict",
+          "line": 63
+        },
+        {
+          "function": "len",
+          "line": 85
+        },
+        {
+          "function": "channel.send",
+          "line": 102
+        },
+        {
+          "function": "c.require",
+          "line": 107
+        },
+        {
+          "function": "manifest['manifest_id'].split",
+          "line": 130
+        },
+        {
+          "function": "c.require",
+          "line": 133
+        },
+        {
+          "function": "dict",
+          "line": 165
+        },
+        {
+          "function": "n.root_plain",
+          "line": 169
+        },
+        {
+          "function": "d.Refusal",
+          "line": 172
+        },
+        {
+          "function": "publisher_budget.disclosure",
+          "line": 174
+        },
+        {
+          "function": "n.save",
+          "line": 187
+        },
+        {
+          "function": "c.sha",
+          "line": 199
+        },
+        {
+          "function": "e.clock",
+          "line": 203
+        },
+        {
+          "function": "d.Refusal",
+          "line": 206
+        },
+        {
+          "function": "e.clock",
+          "line": 220
+        },
+        {
+          "function": "c.decode",
+          "line": 221
+        },
+        {
+          "function": "e.clock",
+          "line": 222
+        },
+        {
+          "function": "d.Refusal",
+          "line": 224
+        },
+        {
+          "function": "store.path.read_bytes",
+          "line": 233
+        },
+        {
+          "function": "e.clock",
+          "line": 234
+        },
+        {
+          "function": "store.conflicts",
+          "line": 235
+        },
+        {
+          "function": "len",
+          "line": 236
+        },
+        {
+          "function": "store.quarantine",
+          "line": 238
+        },
+        {
+          "function": "d.Refusal",
+          "line": 240
+        },
+        {
+          "function": "source.projection",
+          "line": 273
+        },
+        {
+          "function": "c.sha",
+          "line": 276
+        },
+        {
+          "function": "c.sha",
+          "line": 282
+        },
+        {
+          "function": "c.sha",
+          "line": 282
+        },
+        {
+          "function": "c.sha",
+          "line": 282
+        },
+        {
+          "function": "p.task_ref",
+          "line": 12
+        },
+        {
+          "function": "c.sha",
+          "line": 14
+        },
+        {
+          "function": "str",
+          "line": 36
+        },
+        {
+          "function": "p.task_ref",
+          "line": 78
+        },
+        {
+          "function": "p.object_ref",
+          "line": 78
+        },
+        {
+          "function": "e.clock",
+          "line": 81
+        },
+        {
+          "function": "c.sign",
+          "line": 102
+        },
+        {
+          "function": "publisher_budget.response",
+          "line": 120
+        },
+        {
+          "function": "send_unavailable",
+          "line": 121
+        },
+        {
+          "function": "publisher_budget.response",
+          "line": 124
+        },
+        {
+          "function": "channel.send",
+          "line": 125
+        },
+        {
+          "function": "d.Refusal",
+          "line": 135
+        },
+        {
+          "function": "send_unavailable",
+          "line": 136
+        },
+        {
+          "function": "e.clock",
+          "line": 139
+        },
+        {
+          "function": "dict",
+          "line": 140
+        },
+        {
+          "function": "c.validate",
+          "line": 144
+        },
+        {
+          "function": "c.sign",
+          "line": 145
+        },
+        {
+          "function": "e.immutable",
+          "line": 147
+        },
+        {
+          "function": "channel.send",
+          "line": 148
+        },
+        {
+          "function": "len",
+          "line": 174
+        },
+        {
+          "function": "c.sha",
+          "line": 178
+        },
+        {
+          "function": "c.sign",
+          "line": 181
+        },
+        {
+          "function": "c.sha",
+          "line": 191
+        },
+        {
+          "function": "str",
+          "line": 206
+        },
+        {
+          "function": "pointer['artifact_manifest_ref'].split",
+          "line": 214
+        },
+        {
+          "function": "store.path.read_bytes",
+          "line": 221
+        },
+        {
+          "function": "str",
+          "line": 224
+        },
+        {
+          "function": "c.canonical",
+          "line": 236
+        },
+        {
+          "function": "str",
+          "line": 238
+        },
+        {
+          "function": "dict",
+          "line": 238
+        },
+        {
+          "function": "str",
+          "line": 240
+        },
+        {
+          "function": "c.sha",
+          "line": 251
+        },
+        {
+          "function": "c.sha",
+          "line": 252
+        },
+        {
+          "function": "c.sha",
+          "line": 254
+        },
+        {
+          "function": "c.sha",
+          "line": 255
+        },
+        {
+          "function": "min",
+          "line": 264
+        },
+        {
+          "function": "c.canonical(request).decode",
+          "line": 277
+        },
+        {
+          "function": "c.canonical(wrapper).decode",
+          "line": 277
+        },
+        {
+          "function": "min",
+          "line": 295
+        },
+        {
+          "function": "dict",
+          "line": 299
+        },
+        {
+          "function": "dict",
+          "line": 300
+        },
+        {
+          "function": "dict",
+          "line": 301
+        },
+        {
+          "function": "dict",
+          "line": 302
+        },
+        {
+          "function": "secrets.token_hex",
+          "line": 15
+        },
+        {
+          "function": "c.sha",
+          "line": 28
+        },
+        {
+          "function": "request['op'].lower",
+          "line": 31
+        },
+        {
+          "function": "request['op'].lower",
+          "line": 40
+        },
+        {
+          "function": "dict",
+          "line": 103
+        },
+        {
+          "function": "d.need",
+          "line": 110
+        },
+        {
+          "function": "prepare",
+          "line": 116
+        },
+        {
+          "function": "str",
+          "line": 121
+        },
+        {
+          "function": "c.sha",
+          "line": 166
+        },
+        {
+          "function": "min",
+          "line": 167
+        },
+        {
+          "function": "c.canonical",
+          "line": 174
+        },
+        {
+          "function": "p.task_ref",
+          "line": 191
+        },
+        {
+          "function": "c.canonical(result).decode",
+          "line": 289
+        },
+        {
+          "function": "p.approved",
+          "line": 291
+        },
+        {
+          "function": "p.approved",
+          "line": 293
+        },
+        {
+          "function": "d.need",
+          "line": 113
+        },
+        {
+          "function": "c.sha",
+          "line": 141
+        },
+        {
+          "function": "effect.scope_key",
+          "line": 187
+        },
+        {
+          "function": "c.canonical",
+          "line": 277
+        },
+        {
+          "function": "c.canonical",
+          "line": 277
+        },
+        {
+          "function": "any",
+          "line": 290
+        },
+        {
+          "function": "publisher_budget.read",
+          "line": 111
+        },
+        {
+          "function": "c.canonical",
+          "line": 289
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "import secrets"
+        },
+        {
+          "line": 3,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 4,
+          "text": "from hedgehog.external_drs.gate5_lifecycle_v01 import ImportStore"
+        },
+        {
+          "line": 5,
+          "text": "from . import domain as d, policy as p, memory, native, source, effect"
+        },
+        {
+          "line": 6,
+          "text": "from .profile import PROFILE"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "Import",
+          "line": 2
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 8
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 21
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 44
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 53
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 65
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 88
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 93
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 190
+        }
+      ]
+    },
+    "tests/test_domain.py": {
+      "ast_sha256": "e778e857566b9573a8623d77276dadc9f50b483f261463019a9f4c87f45dbeb4",
+      "calls": [
+        {
+          "function": "dict",
+          "line": 8
+        },
+        {
+          "function": "d.parse_request",
+          "line": 16
+        },
+        {
+          "function": "dict",
+          "line": 18
+        },
+        {
+          "function": "unittest.main",
+          "line": 125
+        },
+        {
+          "function": "request_fixture",
+          "line": 29
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 29
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 30
+        },
+        {
+          "function": "d.check_offer",
+          "line": 31
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 32
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 33
+        },
+        {
+          "function": "permutations",
+          "line": 35
+        },
+        {
+          "function": "copy.deepcopy",
+          "line": 38
+        },
+        {
+          "function": "enumerate",
+          "line": 39
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 41
+        },
+        {
+          "function": "request_fixture",
+          "line": 44
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 44
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 45
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 47
+        },
+        {
+          "function": "self.assertLess",
+          "line": 48
+        },
+        {
+          "function": "self.assertNotEqual",
+          "line": 49
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 51
+        },
+        {
+          "function": "self.assertTrue",
+          "line": 52
+        },
+        {
+          "function": "request_fixture",
+          "line": 56
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 56
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 58
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 59
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 60
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 62
+        },
+        {
+          "function": "dict",
+          "line": 67
+        },
+        {
+          "function": "request_fixture",
+          "line": 72
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 72
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 73
+        },
+        {
+          "function": "self.assertFalse",
+          "line": 87
+        },
+        {
+          "function": "self.assertTrue",
+          "line": 88
+        },
+        {
+          "function": "request_fixture",
+          "line": 89
+        },
+        {
+          "function": "dict",
+          "line": 90
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 92
+        },
+        {
+          "function": "next",
+          "line": 93
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 96
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 101
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 102
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 103
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 107
+        },
+        {
+          "function": "request_fixture",
+          "line": 110
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 110
+        },
+        {
+          "function": "copy.deepcopy",
+          "line": 111
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 117
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 122
+        },
+        {
+          "function": "sum",
+          "line": 34
+        },
+        {
+          "function": "dict",
+          "line": 36
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 37
+        },
+        {
+          "function": "all",
+          "line": 52
+        },
+        {
+          "function": "dict",
+          "line": 64
+        },
+        {
+          "function": "self.assertRaisesRegex",
+          "line": 68
+        },
+        {
+          "function": "d.parse_request",
+          "line": 69
+        },
+        {
+          "function": "copy.deepcopy",
+          "line": 75
+        },
+        {
+          "function": "d.overlap",
+          "line": 87
+        },
+        {
+          "function": "d.overlap",
+          "line": 88
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 98
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 99
+        },
+        {
+          "function": "self.assertRaisesRegex",
+          "line": 113
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 114
+        },
+        {
+          "function": "self.assertRaisesRegex",
+          "line": 115
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 116
+        },
+        {
+          "function": "copy.deepcopy",
+          "line": 119
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 120
+        },
+        {
+          "function": "d.check_offer",
+          "line": 121
+        },
+        {
+          "function": "dict",
+          "line": 11
+        },
+        {
+          "function": "dict",
+          "line": 19
+        },
+        {
+          "function": "str",
+          "line": 40
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 41
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 62
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 65
+        },
+        {
+          "function": "d.parse_request",
+          "line": 66
+        },
+        {
+          "function": "self.subTest",
+          "line": 83
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 83
+        },
+        {
+          "function": "d.check_offer",
+          "line": 84
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 96
+        },
+        {
+          "function": "next",
+          "line": 103
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 107
+        },
+        {
+          "function": "dict",
+          "line": 116
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 122
+        },
+        {
+          "function": "list",
+          "line": 36
+        },
+        {
+          "function": "d.produce_offer",
+          "line": 37
+        },
+        {
+          "function": "d.parse_request",
+          "line": 93
+        },
+        {
+          "function": "copy.deepcopy",
+          "line": 20
+        },
+        {
+          "function": "min",
+          "line": 52
+        },
+        {
+          "function": "str",
+          "line": 11
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "import copy"
+        },
+        {
+          "line": 3,
+          "text": "import unittest"
+        },
+        {
+          "line": 4,
+          "text": "from itertools import permutations"
+        },
+        {
+          "line": 5,
+          "text": "from candidate_domain import domain as d"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "Import",
+          "line": 2
+        },
+        {
+          "kind": "Import",
+          "line": 3
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 4
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 5
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 7
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 15
+        },
+        {
+          "kind": "ClassDef",
+          "line": 27
+        },
+        {
+          "kind": "If",
+          "line": 124
+        }
+      ]
+    },
+    "tests/test_native.py": {
+      "ast_sha256": "8a3bed1cae3ff518c044dac849a2e19b5c481017eabd6315ea72a49169962597",
+      "calls": [
+        {
+          "function": "dict",
+          "line": 13
+        },
+        {
+          "function": "unittest.main",
+          "line": 130
+        },
+        {
+          "function": "request_fixture",
+          "line": 21
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 21
+        },
+        {
+          "function": "native.perform",
+          "line": 22
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 24
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 25
+        },
+        {
+          "function": "native.perform",
+          "line": 27
+        },
+        {
+          "function": "self.assertNotEqual",
+          "line": 29
+        },
+        {
+          "function": "request_fixture",
+          "line": 41
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 41
+        },
+        {
+          "function": "operator",
+          "line": 42
+        },
+        {
+          "function": "request_fixture",
+          "line": 73
+        },
+        {
+          "function": "inventory_fixture",
+          "line": 73
+        },
+        {
+          "function": "operator",
+          "line": 74
+        },
+        {
+          "function": "operator",
+          "line": 74
+        },
+        {
+          "function": "dict",
+          "line": 23
+        },
+        {
+          "function": "set",
+          "line": 25
+        },
+        {
+          "function": "dict",
+          "line": 28
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 30
+        },
+        {
+          "function": "native.perform",
+          "line": 31
+        },
+        {
+          "function": "tempfile.TemporaryDirectory",
+          "line": 33
+        },
+        {
+          "function": "run.report_failure",
+          "line": 34
+        },
+        {
+          "function": "json.loads",
+          "line": 36
+        },
+        {
+          "function": "self.assertNotEqual",
+          "line": 37
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 38
+        },
+        {
+          "function": "tempfile.TemporaryDirectory",
+          "line": 43
+        },
+        {
+          "function": "Path",
+          "line": 44
+        },
+        {
+          "function": "state.mkdir",
+          "line": 44
+        },
+        {
+          "function": "produced.mkdir",
+          "line": 45
+        },
+        {
+          "function": "c.crypto.generate_root_signer_capability_v01",
+          "line": 46
+        },
+        {
+          "function": "c.crypto.build_trusted_root_key_set_v01",
+          "line": 47
+        },
+        {
+          "function": "source.build",
+          "line": 48
+        },
+        {
+          "function": "dict",
+          "line": 50
+        },
+        {
+          "function": "committed.mkdir",
+          "line": 53
+        },
+        {
+          "function": "run.new_counts",
+          "line": 53
+        },
+        {
+          "function": "effect.confirm",
+          "line": 54
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 56
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 56
+        },
+        {
+          "function": "(state / 'registry.json').read_bytes",
+          "line": 57
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 58
+        },
+        {
+          "function": "duplicate.mkdir",
+          "line": 59
+        },
+        {
+          "function": "run.new_counts",
+          "line": 59
+        },
+        {
+          "function": "effect.confirm",
+          "line": 60
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 62
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 63
+        },
+        {
+          "function": "effect.reconcile",
+          "line": 64
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 65
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 66
+        },
+        {
+          "function": "dict",
+          "line": 67
+        },
+        {
+          "function": "tempfile.TemporaryDirectory",
+          "line": 75
+        },
+        {
+          "function": "Path",
+          "line": 76
+        },
+        {
+          "function": "state.mkdir",
+          "line": 76
+        },
+        {
+          "function": "folder.mkdir",
+          "line": 77
+        },
+        {
+          "function": "c.crypto.generate_root_signer_capability_v01",
+          "line": 78
+        },
+        {
+          "function": "c.crypto.build_trusted_root_key_set_v01",
+          "line": 79
+        },
+        {
+          "function": "c.crypto.trusted_root_key_set_to_plain_dict_v01",
+          "line": 80
+        },
+        {
+          "function": "source.build",
+          "line": 81
+        },
+        {
+          "function": "p.local_policy",
+          "line": 84
+        },
+        {
+          "function": "make_request",
+          "line": 86
+        },
+        {
+          "function": "e.clock",
+          "line": 87
+        },
+        {
+          "function": "dict",
+          "line": 88
+        },
+        {
+          "function": "c.sign",
+          "line": 92
+        },
+        {
+          "function": "n.root_review",
+          "line": 93
+        },
+        {
+          "function": "c.sign",
+          "line": 97
+        },
+        {
+          "function": "dict",
+          "line": 102
+        },
+        {
+          "function": "c.check_bundle",
+          "line": 103
+        },
+        {
+          "function": "dict",
+          "line": 104
+        },
+        {
+          "function": "native.perform",
+          "line": 105
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 107
+        },
+        {
+          "function": "c.decode",
+          "line": 108
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 109
+        },
+        {
+          "function": "copy.deepcopy",
+          "line": 115
+        },
+        {
+          "function": "dict",
+          "line": 119
+        },
+        {
+          "function": "c.sha",
+          "line": 120
+        },
+        {
+          "function": "c.sign",
+          "line": 121
+        },
+        {
+          "function": "c.authenticate_status",
+          "line": 122
+        },
+        {
+          "function": "self.assertEqual",
+          "line": 127
+        },
+        {
+          "function": "dict",
+          "line": 32
+        },
+        {
+          "function": "dict",
+          "line": 34
+        },
+        {
+          "function": "d.Refusal",
+          "line": 35
+        },
+        {
+          "function": "Path",
+          "line": 35
+        },
+        {
+          "function": "run.new_counts",
+          "line": 35
+        },
+        {
+          "function": "(Path(temporary) / 'refusal_review.json').read_text",
+          "line": 36
+        },
+        {
+          "function": "run.new_counts",
+          "line": 49
+        },
+        {
+          "function": "dict",
+          "line": 51
+        },
+        {
+          "function": "len",
+          "line": 58
+        },
+        {
+          "function": "dict",
+          "line": 64
+        },
+        {
+          "function": "(state / 'registry.json').read_bytes",
+          "line": 66
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 68
+        },
+        {
+          "function": "effect.confirm",
+          "line": 69
+        },
+        {
+          "function": "run.new_counts",
+          "line": 82
+        },
+        {
+          "function": "current['manifest']['manifest_id'].split",
+          "line": 87
+        },
+        {
+          "function": "dict",
+          "line": 94
+        },
+        {
+          "function": "dict",
+          "line": 95
+        },
+        {
+          "function": "dict",
+          "line": 97
+        },
+        {
+          "function": "dict",
+          "line": 105
+        },
+        {
+          "function": "result['outputs']['result_json'].encode",
+          "line": 108
+        },
+        {
+          "function": "dict",
+          "line": 110
+        },
+        {
+          "function": "dict",
+          "line": 110
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 113
+        },
+        {
+          "function": "c.temporal",
+          "line": 114
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 117
+        },
+        {
+          "function": "c.check_pointer",
+          "line": 118
+        },
+        {
+          "function": "dict",
+          "line": 121
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 123
+        },
+        {
+          "function": "c.check_status",
+          "line": 124
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 125
+        },
+        {
+          "function": "c.check_status",
+          "line": 126
+        },
+        {
+          "function": "dict",
+          "line": 127
+        },
+        {
+          "function": "c.canonical(request).decode",
+          "line": 23
+        },
+        {
+          "function": "c.canonical(inventory).decode",
+          "line": 23
+        },
+        {
+          "function": "c.canonical(request).decode",
+          "line": 28
+        },
+        {
+          "function": "c.canonical(inventory).decode",
+          "line": 28
+        },
+        {
+          "function": "run.new_counts",
+          "line": 70
+        },
+        {
+          "function": "c.sha",
+          "line": 89
+        },
+        {
+          "function": "source.projection",
+          "line": 104
+        },
+        {
+          "function": "self.assertRaises",
+          "line": 111
+        },
+        {
+          "function": "c.validate",
+          "line": 112
+        },
+        {
+          "function": "c.canonical(request).decode",
+          "line": 32
+        },
+        {
+          "function": "c.sha",
+          "line": 52
+        },
+        {
+          "function": "c.decode",
+          "line": 58
+        },
+        {
+          "function": "c.sha",
+          "line": 96
+        },
+        {
+          "function": "c.sha",
+          "line": 100
+        },
+        {
+          "function": "c.canonical(request).decode",
+          "line": 106
+        },
+        {
+          "function": "c.canonical(wrapper).decode",
+          "line": 106
+        },
+        {
+          "function": "dict",
+          "line": 110
+        },
+        {
+          "function": "entry.items",
+          "line": 120
+        },
+        {
+          "function": "c.canonical",
+          "line": 23
+        },
+        {
+          "function": "c.canonical",
+          "line": 23
+        },
+        {
+          "function": "c.canonical",
+          "line": 28
+        },
+        {
+          "function": "c.canonical",
+          "line": 28
+        },
+        {
+          "function": "Path",
+          "line": 36
+        },
+        {
+          "function": "c.canonical",
+          "line": 32
+        },
+        {
+          "function": "c.canonical",
+          "line": 106
+        },
+        {
+          "function": "c.canonical",
+          "line": 106
+        }
+      ],
+      "imports": [
+        {
+          "line": 2,
+          "text": "import copy"
+        },
+        {
+          "line": 3,
+          "text": "import json"
+        },
+        {
+          "line": 4,
+          "text": "import tempfile"
+        },
+        {
+          "line": 5,
+          "text": "import unittest"
+        },
+        {
+          "line": 6,
+          "text": "from pathlib import Path"
+        },
+        {
+          "line": 7,
+          "text": "from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_native_v01 as n, gate5_exchange_v01 as e"
+        },
+        {
+          "line": 8,
+          "text": "from candidate_domain import domain as d, native, source, effect, policy as p, run"
+        },
+        {
+          "line": 9,
+          "text": "from candidate_domain.profile import PROFILE"
+        },
+        {
+          "line": 10,
+          "text": "from test_domain import request_fixture, inventory_fixture"
+        },
+        {
+          "line": 85,
+          "text": "from candidate_domain.transport import make_request"
+        }
+      ],
+      "top_level": [
+        {
+          "kind": "Expr",
+          "line": 1
+        },
+        {
+          "kind": "Import",
+          "line": 2
+        },
+        {
+          "kind": "Import",
+          "line": 3
+        },
+        {
+          "kind": "Import",
+          "line": 4
+        },
+        {
+          "kind": "Import",
+          "line": 5
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 6
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 7
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 8
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 9
+        },
+        {
+          "kind": "ImportFrom",
+          "line": 10
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 12
+        },
+        {
+          "kind": "ClassDef",
+          "line": 19
+        },
+        {
+          "kind": "If",
+          "line": 129
+        }
+      ]
+    }
+  },
+  "shape": {
+    "files": 20,
+    "status": "CANDIDATE_DATA_SHAPE_ONLY_NOT_EXECUTION_OR_ADMISSION"
+  }
+}

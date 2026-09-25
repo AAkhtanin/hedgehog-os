@@ -1,0 +1,59 @@
+"""Read actual native proofs using unchanged public supplied consumers only."""
+import hashlib
+import json
+from pathlib import Path
+import sys
+import traceback
+
+WORK = Path(__file__).resolve().parent
+sys.path.insert(0, str(WORK / 'AUTHOR_VISIBLE/source'))
+from hedgehog.external_drs.gate5_supplied_v01 import native_result
+from hedgehog.external_drs.gate5_lifecycle_supplied_v01 import root_record
+from hedgehog.external_drs import gate5_contracts_v01 as c
+
+attempt = WORK / 'AUTHOR_TRIAL' / ('attempt_%02d' % int(sys.argv[1]))
+runtime = WORK / sys.argv[2]
+def read(role, name):
+    return json.loads((runtime / 'worker' / role / 'evidence/shift' / name).read_text())
+
+request = read('requester', 'request.json')
+inventory = read('publisher', 'inventory_input.json')
+venue = read('publisher', 'venue_work.json')
+requester = read('requester', 'requester_work.json')
+body = read('requester', 'offer_body.json')
+report = read('requester', 'report.json')
+semantic_report = {k: v for k, v in report.items() if k != 'native_refs'}
+result = dict(classification='PARTIAL_INDEPENDENT_NATIVE_BINDING_DIAGNOSTIC',
+    candidate_manifest_sha256=hashlib.sha256((attempt / 'candidate/candidate.json').read_bytes()).hexdigest(),
+    runtime=str(runtime.relative_to(WORK)), checks={},
+    new_native_provider_effect_calls=0,
+    scope='Authenticates supplied PURE structures and diagnoses actual input/output bindings. Not a complete native exam or admission.')
+def check(name, fn):
+    try:
+        result['checks'][name] = dict(status='PASS', value=fn())
+    except (ValueError, KeyError, TypeError, AssertionError) as error:
+        result['checks'][name] = dict(status='FAIL', error=str(error), traceback=traceback.format_exc())
+
+source_inputs = dict(request_json=c.canonical(request).decode(), inventory_json=c.canonical(inventory).decode())
+check('venue_actual_native', lambda: native_result(venue, 'VenueRoot', source_inputs))
+check('requester_actual_native', lambda: native_result(requester, 'ActivePlanetRoot', requester['inputs']))
+check('declared_shared_offer_input', lambda: native_result(requester, 'ActivePlanetRoot',
+    dict(request_json=c.canonical(request).decode(), offer_json=venue['outputs']['offer_json'])))
+check('declared_canonical_body_input', lambda: native_result(requester, 'ActivePlanetRoot',
+    dict(request_json=c.canonical(request).decode(), offer_json=c.canonical(body).decode())))
+check('final_root_three_hash_claim', lambda: root_record(read('requester', 'requester_review.json'),
+    'ActivePlanetRoot', requester['artifact']['artifact_id'],
+    dict(request_sha256=c.sha(request), offer_sha256=c.sha(body), result_sha256=c.sha(semantic_report))))
+result['comparison'] = dict(
+    venue_output_json_keys=sorted(json.loads(venue['outputs']['offer_json'])),
+    requester_input_json_keys=sorted(json.loads(requester['inputs']['offer_json'])),
+    body_keys=sorted(body),
+    venue_output_sha256=hashlib.sha256(venue['outputs']['offer_json'].encode()).hexdigest(),
+    requester_offer_input_sha256=hashlib.sha256(requester['inputs']['offer_json'].encode()).hexdigest(),
+    body_sha256=c.sha(body),
+    consumed_result_equals_report=requester['outputs']['result_json'] == c.canonical(semantic_report).decode())
+with (attempt / 'native_binding_diagnostic.json').open('x') as stream:
+    json.dump(result, stream, sort_keys=True, indent=2)
+    stream.write('\n')
+print(json.dumps(dict(checks={k:dict(status=v['status'],error=v.get('error')) for k,v in result['checks'].items()},comparison=result['comparison'])))
+raise SystemExit(int(any(v['status'] == 'FAIL' for v in result['checks'].values())))

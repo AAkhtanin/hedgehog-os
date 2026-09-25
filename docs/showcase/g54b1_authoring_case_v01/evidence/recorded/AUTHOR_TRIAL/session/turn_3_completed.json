@@ -1,0 +1,23 @@
+{
+  "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4",
+  "turn": {
+    "completedAt": 1790325125,
+    "durationMs": 490285,
+    "error": null,
+    "id": "01a0d7a9-f5d3-7fa3-b6ec-952174e331fb",
+    "items": [
+      {
+        "delivery": null,
+        "id": "msg_0862a23817afd429016ab6318354a487d28bf6895741639781",
+        "memoryCitation": null,
+        "phase": "final_answer",
+        "questions": null,
+        "text": "Submitted correction 02 as `football_reference_v01`.\n\nBoth ImportStore reads now use its public persistence reader. Wire bounds, signatures, currentness and history checks remain unchanged. Corrected the README and extended regression tests.\n\nSyntax inspection found no errors. No code or tests were executed; native acceptance and booking remain unverified.",
+        "type": "agentMessage"
+      }
+    ],
+    "itemsView": "summary",
+    "startedAt": 1790324635,
+    "status": "completed"
+  }
+}

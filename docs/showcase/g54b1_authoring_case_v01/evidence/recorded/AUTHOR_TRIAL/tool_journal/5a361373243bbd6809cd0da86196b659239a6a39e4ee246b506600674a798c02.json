@@ -1,0 +1,1 @@
+{"call": {"arguments": {"max_lines": 300, "path": "example/check_effect.py"}, "callId": "exec-1f1e8ea6-c700-4f2d-a56b-448ca964f71c", "namespace": null, "threadId": "01a0d772-efdf-72b2-8663-0cda590c35f4", "tool": "read_approved_source", "turnId": "01a0d772-effe-7de2-9110-f48481b18b1c"}, "response": {"reason": "argument_schema", "status": "TOOL_REFUSED"}, "status": "COMMITTED"}

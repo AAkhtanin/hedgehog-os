@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "football.body.v01",
+  "description": "Static closed shape; candidate_domain relational validators additionally enforce identities, uniqueness, consent, calendar intervals and arithmetic.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "source_record_ref",
+    "source_revision",
+    "source_work_ref",
+    "source_review_ref",
+    "time_envelope",
+    "ttl_base",
+    "source_lineage_refs",
+    "publisher",
+    "recipient",
+    "request_sha256",
+    "offer",
+    "booking"
+  ],
+  "properties": {
+    "version": {
+      "const": "g51.body.v01"
+    },
+    "source_record_ref": {
+      "type": "string"
+    },
+    "source_revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4611686018427388000
+    },
+    "source_work_ref": {
+      "type": "string"
+    },
+    "source_review_ref": {
+      "type": "string"
+    },
+    "time_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time_envelope_version",
+        "time_envelope_id",
+        "freshness_policy_id",
+        "pt_created_at",
+        "kt_as_of",
+        "et_observed_at",
+        "ct_context_anchor",
+        "ttl_seconds",
+        "valid_from",
+        "valid_to",
+        "source_observed_at",
+        "source_reported_at",
+        "system_ingested_at",
+        "system_verified_at"
+      ],
+      "properties": {
+        "time_envelope_version": {
+          "type": "string"
+        },
+        "time_envelope_id": {
+          "type": "string"
+        },
+        "freshness_policy_id": {
+          "type": "string"
+        },
+        "pt_created_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "kt_as_of": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "et_observed_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "ct_context_anchor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "valid_from": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "valid_to": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "source_observed_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "source_reported_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "system_ingested_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "system_verified_at": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        }
+      }
+    },
+    "ttl_base": {
+      "const": "pt_created_at"
+    },
+    "source_lineage_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "maxItems": 16
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "recipient": {
+      "type": "string"
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request",
+        "fields",
+        "alternatives",
+        "slots",
+        "total_minor",
+        "currency",
+        "status",
+        "schedule_revision",
+        "offer_revision"
+      ],
+      "properties": {
+        "request": {
+          "$ref": "request.schema.json"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "field_id",
+              "surface",
+              "full_size",
+              "price_minor"
+            ],
+            "properties": {
+              "field_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+              },
+              "surface": {
+                "const": "natural_grass"
+              },
+              "full_size": {
+                "const": true
+              },
+              "price_minor": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4611686018427388000
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 4
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "session_id",
+              "choices"
+            ],
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+              },
+              "choices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "session_id",
+                    "venue_ref",
+                    "field_id",
+                    "start_utc",
+                    "end_utc",
+                    "price_minor"
+                  ],
+                  "properties": {
+                    "session_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+                    },
+                    "venue_ref": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+                    },
+                    "field_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+                    },
+                    "start_utc": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 4611686018427388000
+                    },
+                    "end_utc": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 4611686018427388000
+                    },
+                    "price_minor": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 4611686018427388000
+                    }
+                  }
+                },
+                "minItems": 0,
+                "maxItems": 2
+              }
+            }
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "session_id",
+              "venue_ref",
+              "field_id",
+              "start_utc",
+              "end_utc",
+              "price_minor"
+            ],
+            "properties": {
+              "session_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+              },
+              "venue_ref": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+              },
+              "field_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+              },
+              "start_utc": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4611686018427388000
+              },
+              "end_utc": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4611686018427388000
+              },
+              "price_minor": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4611686018427388000
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 3
+        },
+        "total_minor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "status": {
+          "enum": [
+            "OFFER_READY",
+            "NO_COMPLETE_OFFER",
+            "NEEDS_CONFIRMATION"
+          ]
+        },
+        "schedule_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4611686018427388000
+        },
+        "offer_revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4611686018427388000
+        }
+      }
+    },
+    "booking": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "receipt_ref",
+            "payload_sha256",
+            "snapshot_sha256",
+            "packet_ref",
+            "slots",
+            "request_sha256"
+          ],
+          "properties": {
+            "state": {
+              "const": "COMMITTED"
+            },
+            "receipt_ref": {
+              "type": "string"
+            },
+            "payload_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "snapshot_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "packet_ref": {
+              "type": "string"
+            },
+            "slots": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "session_id",
+                  "venue_ref",
+                  "field_id",
+                  "start_utc",
+                  "end_utc",
+                  "price_minor"
+                ],
+                "properties": {
+                  "session_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+                  },
+                  "venue_ref": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+                  },
+                  "field_id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+                  },
+                  "start_utc": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4611686018427388000
+                  },
+                  "end_utc": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4611686018427388000
+                  },
+                  "price_minor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4611686018427388000
+                  }
+                }
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "request_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

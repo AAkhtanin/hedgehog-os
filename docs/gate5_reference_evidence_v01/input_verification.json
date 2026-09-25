@@ -1,0 +1,51 @@
+{
+  "g50": {
+    "bytes": 414094,
+    "manifest_rows": 150,
+    "regular_members": 151,
+    "sha256": "a3d1e9444825bc68ec13ba235d1156125251a6e01901b3ae73adfc8324651dd7",
+    "verified": true
+  },
+  "g51": {
+    "bytes": 766545,
+    "manifest_rows": 458,
+    "regular_members": 459,
+    "sha256": "806ab39111f9c2d915967664309e740b8e044030825908996ecf9e21cd05f679",
+    "verified": true
+  },
+  "g52": {
+    "bytes": 2079388,
+    "manifest_rows": 1043,
+    "regular_members": 1044,
+    "sha256": "4f967a4189f62c0eede9931ec13cb38933ab855eacf864297f305f34a257f510",
+    "verified": true
+  },
+  "g53": {
+    "bytes": 1585811,
+    "manifest_rows": 284,
+    "regular_members": 285,
+    "sha256": "dde9ea8dcb1658d9feff97421d2d7b51f2b8ba6ca2b20455569291b03745d5b1",
+    "verified": true
+  },
+  "g54c": {
+    "bytes": 1798192,
+    "manifest_rows": 395,
+    "regular_members": 396,
+    "sha256": "998c261b4b5aa0451a52b02d30d19274ef472dbecf9620788fbcdef551e6de53",
+    "verified": true
+  },
+  "g54d": {
+    "bytes": 47606002,
+    "manifest_rows": 8635,
+    "regular_members": 8636,
+    "sha256": "2da2c2838f9987a8ca50745a95ca563092fb4e77ee8b8e60748222b1287dc806",
+    "verified": true
+  },
+  "g54d1": {
+    "bytes": 29222925,
+    "manifest_rows": 5515,
+    "regular_members": 5516,
+    "sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+    "verified": true
+  }
+}

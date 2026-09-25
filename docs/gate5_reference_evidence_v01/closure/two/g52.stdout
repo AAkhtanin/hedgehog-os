@@ -1,0 +1,1 @@
+{"status": "PASS_NARROW_G52_SUPPLIED", "seconds": 0.36973629239946604, "report": "/private/tmp/RADIOLARIA_GATE5_G55.2N6uSH/proof_two/g52_result.json", "report_writes": 1, "observed": {"root_decisions": 0, "native_work": 0, "work_advance": 0, "root_private_decision": 0, "host_dispatch": 0, "peer_send": 0, "peer_receive": 0}}

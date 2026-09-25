@@ -1,0 +1,3053 @@
+{
+  "dependency_comparisons": [
+    {
+      "archive": "g53",
+      "bytes": 59686,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/run_action_packet_portability_v01.py",
+      "member": "AUTHOR_VISIBLE/source/demo/run_action_packet_portability_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+    },
+    {
+      "archive": "g53",
+      "bytes": 29523,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/work_composition_mock_capabilities_v01.py",
+      "member": "AUTHOR_VISIBLE/source/demo/work_composition_mock_capabilities_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+    },
+    {
+      "archive": "g53",
+      "bytes": 0,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "g53",
+      "bytes": 792178,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/action_commit_packet_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/action_commit_packet_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+    },
+    {
+      "archive": "g53",
+      "bytes": 32601,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/avf_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/avf_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "ba88a22b3ddea715ad7af2731c171511273b6e7bb4c67f5d54024464a1a8b616"
+    },
+    {
+      "archive": "g53",
+      "bytes": 18116,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/capability_admission_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/capability_admission_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda"
+    },
+    {
+      "archive": "g53",
+      "bytes": 57747,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/context_packets.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/context_packets.py",
+      "owner_core_unchanged": true,
+      "sha256": "080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32"
+    },
+    {
+      "archive": "g53",
+      "bytes": 67,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "f33ec43826cba0521f58774c1500cb6f84d72bb36d88db8d41c7f1992cdb80a8"
+    },
+    {
+      "archive": "g53",
+      "bytes": 47,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "cc46b98e70deb6ea9b8eb5ea184cda638ce7365a1870e5074d2dfc837dab9cf8"
+    },
+    {
+      "archive": "g53",
+      "bytes": 14151,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    {
+      "archive": "g53",
+      "bytes": 110859,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6b9f34433cae8ef0435ea1456820fd4f7e300a2a6c9a2d389c77c3db008be4a6"
+    },
+    {
+      "archive": "g53",
+      "bytes": 123173,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98"
+    },
+    {
+      "archive": "g53",
+      "bytes": 63810,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "0e9864fb499f378edeeb8300b785a8de69af2fbcb51ad4039d9306e182adb0eb"
+    },
+    {
+      "archive": "g53",
+      "bytes": 73472,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "5bf787130b370da4c58918ef4a65de29aa7c017a59d9fc491ad5c4ee66a50e3b"
+    },
+    {
+      "archive": "g53",
+      "bytes": 94409,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "af7dc4da6ce1185688447d96747516a521084ec7c749c8490ea92f3ee65264c4"
+    },
+    {
+      "archive": "g53",
+      "bytes": 98131,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3e9cdcd6d3c411b4dfab598d4b62b5648dcf071d4bf15e8297e3d4144aa831bf"
+    },
+    {
+      "archive": "g53",
+      "bytes": 82,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f"
+    },
+    {
+      "archive": "g53",
+      "bytes": 5616,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+    },
+    {
+      "archive": "g53",
+      "bytes": 3046,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+    },
+    {
+      "archive": "g53",
+      "bytes": 4843,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7"
+    },
+    {
+      "archive": "g53",
+      "bytes": 25003,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+    },
+    {
+      "archive": "g53",
+      "bytes": 13086,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3"
+    },
+    {
+      "archive": "g53",
+      "bytes": 37303,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210"
+    },
+    {
+      "archive": "g53",
+      "bytes": 7487,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+    },
+    {
+      "archive": "g53",
+      "bytes": 12701,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+    },
+    {
+      "archive": "g53",
+      "bytes": 4453,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    {
+      "archive": "g53",
+      "bytes": 29180,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+    },
+    {
+      "archive": "g53",
+      "bytes": 5691,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+    },
+    {
+      "archive": "g53",
+      "bytes": 42605,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+    },
+    {
+      "archive": "g53",
+      "bytes": 76,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5"
+    },
+    {
+      "archive": "g53",
+      "bytes": 7410,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28"
+    },
+    {
+      "archive": "g53",
+      "bytes": 21977,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226"
+    },
+    {
+      "archive": "g53",
+      "bytes": 6942,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/events_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be"
+    },
+    {
+      "archive": "g53",
+      "bytes": 20335,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27"
+    },
+    {
+      "archive": "g53",
+      "bytes": 4726,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947"
+    },
+    {
+      "archive": "g53",
+      "bytes": 70774,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521"
+    },
+    {
+      "archive": "g53",
+      "bytes": 57487,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    {
+      "archive": "g53",
+      "bytes": 2128,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e"
+    },
+    {
+      "archive": "g53",
+      "bytes": 38463,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    {
+      "archive": "g53",
+      "bytes": 17433,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa"
+    },
+    {
+      "archive": "g53",
+      "bytes": 590,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "dbca71e4fe22c58cd4b24f46f069c5e2e9fe60c30503dc7489a1f162bb818fa0"
+    },
+    {
+      "archive": "g53",
+      "bytes": 65393,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    {
+      "archive": "g53",
+      "bytes": 22566,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    {
+      "archive": "g53",
+      "bytes": 62327,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "0ec36f709977b85f457739e1266ba3889a5735eee2dc89f033a34e45512abdfe"
+    },
+    {
+      "archive": "g53",
+      "bytes": 4909,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    {
+      "archive": "g53",
+      "bytes": 79,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf"
+    },
+    {
+      "archive": "g53",
+      "bytes": 13757,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/contracts_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    {
+      "archive": "g53",
+      "bytes": 118238,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    {
+      "archive": "g53",
+      "bytes": 61200,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    {
+      "archive": "g53",
+      "bytes": 27204,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/lifecycle_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    {
+      "archive": "g53",
+      "bytes": 10083,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec"
+    },
+    {
+      "archive": "g53",
+      "bytes": 9890,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/mock_world_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/mock_world_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    {
+      "archive": "g53",
+      "bytes": 10502,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    {
+      "archive": "g53",
+      "bytes": 5287,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    {
+      "archive": "g53",
+      "bytes": 11152,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/semantic_roles_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736"
+    },
+    {
+      "archive": "g53",
+      "bytes": 3888,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs.py",
+      "owner_core_unchanged": true,
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4"
+    },
+    {
+      "archive": "g53",
+      "bytes": 48098,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_g2b_compatibility_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_g2b_compatibility_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5"
+    },
+    {
+      "archive": "g53",
+      "bytes": 157202,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_memory_resolution_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_memory_resolution_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+    },
+    {
+      "archive": "g53",
+      "bytes": 57213,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_semantic_address_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_semantic_address_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+    },
+    {
+      "archive": "g53",
+      "bytes": 3830,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "2fa905efbd7f2a968d8a648ef14ef676a4f64bac94a159651c7a4d7b71a81b8b"
+    },
+    {
+      "archive": "g53",
+      "bytes": 35826,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/external_anchor_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/external_anchor_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "299c6d2daabfe53c0c93c76a46709d09c4cc26b89907af17a30dab8ce8537994"
+    },
+    {
+      "archive": "g53",
+      "bytes": 54293,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3845a246e641aea8da3d9314e2d140bcb701a5488cb9de8153a62f0d84529b37"
+    },
+    {
+      "archive": "g53",
+      "bytes": 30908,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/sealed_package_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_package_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "4fecf1b24696316348256acd1bd5a9e7a237dc37bd5b11abc41a71257796af53"
+    },
+    {
+      "archive": "g53",
+      "bytes": 38035,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "f40e48f3d32f4b67250534f5d47d5bb4e076890497506ec4315d9ce06261c5a3"
+    },
+    {
+      "archive": "g53",
+      "bytes": 0,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "g53",
+      "bytes": 1720,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_body_profile_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f"
+    },
+    {
+      "archive": "g53",
+      "bytes": 24167,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+    },
+    {
+      "archive": "g53",
+      "bytes": 26991,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_exchange_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+    },
+    {
+      "archive": "g53",
+      "bytes": 18817,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "22419806c70631543f66c2d5894b6858e2f4462907277c8fddb025f32e329b88"
+    },
+    {
+      "archive": "g53",
+      "bytes": 29240,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f"
+    },
+    {
+      "archive": "g53",
+      "bytes": 20725,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_native_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_native_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+    },
+    {
+      "archive": "g53",
+      "bytes": 10358,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_supplied_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+    },
+    {
+      "archive": "g53",
+      "bytes": 26640,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/gate3_mechanism_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/gate3_mechanism_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    {
+      "archive": "g53",
+      "bytes": 21496,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/gt_validator.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/gt_validator.py",
+      "owner_core_unchanged": true,
+      "sha256": "e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd"
+    },
+    {
+      "archive": "g53",
+      "bytes": 24063,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "b26dad7e3a5d47b2d717f002a0982bd0bb0fcde95110627846d81d747a0e4be1"
+    },
+    {
+      "archive": "g53",
+      "bytes": 43017,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/abi_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/abi_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+    },
+    {
+      "archive": "g53",
+      "bytes": 76437,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/conformance_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/conformance_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f"
+    },
+    {
+      "archive": "g53",
+      "bytes": 554433,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    {
+      "archive": "g53",
+      "bytes": 128809,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/effect_firewall_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/effect_firewall_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+    },
+    {
+      "archive": "g53",
+      "bytes": 293681,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/execution_mode_router_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/execution_mode_router_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4"
+    },
+    {
+      "archive": "g53",
+      "bytes": 947221,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/fractal_runtime_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/fractal_runtime_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+    },
+    {
+      "archive": "g53",
+      "bytes": 48487,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/integrity_replay_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/integrity_replay_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be"
+    },
+    {
+      "archive": "g53",
+      "bytes": 52804,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/multiroot_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/multiroot_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff"
+    },
+    {
+      "archive": "g53",
+      "bytes": 43352,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/root_decision_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/root_decision_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+    },
+    {
+      "archive": "g53",
+      "bytes": 31043,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/root_signer_isolation_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+    },
+    {
+      "archive": "g53",
+      "bytes": 58880,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/semantic_work_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/semantic_work_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+    },
+    {
+      "archive": "g53",
+      "bytes": 142980,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/transition_registry_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/transition_registry_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca"
+    },
+    {
+      "archive": "g53",
+      "bytes": 15364,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/trust_model_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/trust_model_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+    },
+    {
+      "archive": "g53",
+      "bytes": 89168,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/work_composition_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/work_composition_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    {
+      "archive": "g53",
+      "bytes": 53552,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/local_drs_resolver.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/local_drs_resolver.py",
+      "owner_core_unchanged": true,
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+    },
+    {
+      "archive": "g53",
+      "bytes": 30549,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/local_drs_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/local_drs_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "831c3c7e0a1bfcb2ad9cc56d61c2c33ccbc8982add7ac46434c55676c03a34af"
+    },
+    {
+      "archive": "g53",
+      "bytes": 57704,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_calibration_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_calibration_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    {
+      "archive": "g53",
+      "bytes": 29609,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_feedback_consumer_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_consumer_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    {
+      "archive": "g53",
+      "bytes": 57644,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_feedback_history_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_history_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    {
+      "archive": "g53",
+      "bytes": 65821,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_feedback_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    {
+      "archive": "g53",
+      "bytes": 18910,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/post_vv.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/post_vv.py",
+      "owner_core_unchanged": true,
+      "sha256": "e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3"
+    },
+    {
+      "archive": "g53",
+      "bytes": 50900,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/reuse_certificate_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/reuse_certificate_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c"
+    },
+    {
+      "archive": "g53",
+      "bytes": 4052,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/reuse_gate.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/reuse_gate.py",
+      "owner_core_unchanged": true,
+      "sha256": "964bd4ae925c934710f1055514a256b2a5d7521e91841628180c418742df9584"
+    },
+    {
+      "archive": "g53",
+      "bytes": 14728,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/semantic_reasoning_adapter.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/semantic_reasoning_adapter.py",
+      "owner_core_unchanged": true,
+      "sha256": "3900b23d3f15ee42b21b7f28895e1badf6639d56a98ce3fcbe5a9f9c072009f6"
+    },
+    {
+      "archive": "g53",
+      "bytes": 17449,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/structured_rationale.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/structured_rationale.py",
+      "owner_core_unchanged": true,
+      "sha256": "05686cd42bc4ea0bd9b0bc2586c7df6fd51369d43ee0fb15af4c95326e3d1f03"
+    },
+    {
+      "archive": "g53",
+      "bytes": 974,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/time_model.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/time_model.py",
+      "owner_core_unchanged": true,
+      "sha256": "1b461cf013f2e60a82509669b0ac692d0121b8d5f3c9d3a46a3d5fd33fc48cba"
+    },
+    {
+      "archive": "g53",
+      "bytes": 11394,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/wasm_pure_worker_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/wasm_pure_worker_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae"
+    },
+    {
+      "archive": "g53",
+      "bytes": 52262,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/work_execution_host_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/work_execution_host_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    {
+      "archive": "g53",
+      "bytes": 14114,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "schemas/work_composition_v01.schema.json",
+      "member": "AUTHOR_VISIBLE/source/schemas/work_composition_v01.schema.json",
+      "owner_core_unchanged": true,
+      "sha256": "ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0"
+    },
+    {
+      "archive": "g53",
+      "bytes": 12874,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "tests/test_gate5_calibration_exchange_v01.py",
+      "member": "AUTHOR_VISIBLE/source/tests/test_gate5_calibration_exchange_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "8cf3b08eff2dd3ad750104e73a836183db1a9c714930ea3c9c01b9086662eae8"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 59686,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/run_action_packet_portability_v01.py",
+      "member": "AUTHOR_VISIBLE/source/demo/run_action_packet_portability_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 29523,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/work_composition_mock_capabilities_v01.py",
+      "member": "AUTHOR_VISIBLE/source/demo/work_composition_mock_capabilities_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 0,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 792178,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/action_commit_packet_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/action_commit_packet_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 32601,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/avf_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/avf_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "ba88a22b3ddea715ad7af2731c171511273b6e7bb4c67f5d54024464a1a8b616"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 18116,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/capability_admission_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/capability_admission_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 57747,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/context_packets.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/context_packets.py",
+      "owner_core_unchanged": true,
+      "sha256": "080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 67,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "f33ec43826cba0521f58774c1500cb6f84d72bb36d88db8d41c7f1992cdb80a8"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 47,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "cc46b98e70deb6ea9b8eb5ea184cda638ce7365a1870e5074d2dfc837dab9cf8"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 14151,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 110859,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6b9f34433cae8ef0435ea1456820fd4f7e300a2a6c9a2d389c77c3db008be4a6"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 123173,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 63810,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "0e9864fb499f378edeeb8300b785a8de69af2fbcb51ad4039d9306e182adb0eb"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 73472,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "5bf787130b370da4c58918ef4a65de29aa7c017a59d9fc491ad5c4ee66a50e3b"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 94409,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "af7dc4da6ce1185688447d96747516a521084ec7c749c8490ea92f3ee65264c4"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 98131,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3e9cdcd6d3c411b4dfab598d4b62b5648dcf071d4bf15e8297e3d4144aa831bf"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 82,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 5616,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 3046,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 4843,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 25003,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 13086,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 37303,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 7487,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 12701,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 4453,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 29180,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 5691,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 42605,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 76,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 7410,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 21977,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 6942,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/events_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 20335,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 4726,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 70774,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 57487,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 2128,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 38463,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 17433,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 590,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "dbca71e4fe22c58cd4b24f46f069c5e2e9fe60c30503dc7489a1f162bb818fa0"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 65393,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 22566,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 62327,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "0ec36f709977b85f457739e1266ba3889a5735eee2dc89f033a34e45512abdfe"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 4909,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 79,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 13757,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/contracts_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 118238,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 61200,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 27204,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/lifecycle_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 10083,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 9890,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/mock_world_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/mock_world_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 10502,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 5287,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 11152,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/domains/testflix/semantic_roles_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 3888,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs.py",
+      "owner_core_unchanged": true,
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 48098,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_g2b_compatibility_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_g2b_compatibility_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 157202,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_memory_resolution_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_memory_resolution_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 57213,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_semantic_address_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_semantic_address_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 3830,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "2fa905efbd7f2a968d8a648ef14ef676a4f64bac94a159651c7a4d7b71a81b8b"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 35826,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/external_anchor_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/external_anchor_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "299c6d2daabfe53c0c93c76a46709d09c4cc26b89907af17a30dab8ce8537994"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 54293,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3845a246e641aea8da3d9314e2d140bcb701a5488cb9de8153a62f0d84529b37"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 30908,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/sealed_package_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_package_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "4fecf1b24696316348256acd1bd5a9e7a237dc37bd5b11abc41a71257796af53"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 38035,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "f40e48f3d32f4b67250534f5d47d5bb4e076890497506ec4315d9ce06261c5a3"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 0,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 1720,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_body_profile_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 24167,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_contracts_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 26991,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_exchange_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 18817,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "22419806c70631543f66c2d5894b6858e2f4462907277c8fddb025f32e329b88"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 29240,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 20725,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_native_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_native_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 10358,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_supplied_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 26640,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/gate3_mechanism_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/gate3_mechanism_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 21496,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/gt_validator.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/gt_validator.py",
+      "owner_core_unchanged": true,
+      "sha256": "e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 24063,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/__init__.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/__init__.py",
+      "owner_core_unchanged": true,
+      "sha256": "b26dad7e3a5d47b2d717f002a0982bd0bb0fcde95110627846d81d747a0e4be1"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 43017,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/abi_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/abi_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 76437,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/conformance_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/conformance_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 554433,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 128809,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/effect_firewall_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/effect_firewall_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 293681,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/execution_mode_router_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/execution_mode_router_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 947221,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/fractal_runtime_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/fractal_runtime_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 48487,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/integrity_replay_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/integrity_replay_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 52804,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/multiroot_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/multiroot_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 43352,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/root_decision_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/root_decision_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 31043,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/root_signer_isolation_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 58880,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/semantic_work_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/semantic_work_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 142980,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/transition_registry_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/transition_registry_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 15364,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/trust_model_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/trust_model_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 89168,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/work_composition_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/work_composition_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 53552,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/local_drs_resolver.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/local_drs_resolver.py",
+      "owner_core_unchanged": true,
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 30549,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/local_drs_v02.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/local_drs_v02.py",
+      "owner_core_unchanged": true,
+      "sha256": "831c3c7e0a1bfcb2ad9cc56d61c2c33ccbc8982add7ac46434c55676c03a34af"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 57704,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_calibration_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_calibration_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 29609,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_feedback_consumer_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_consumer_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 57644,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_feedback_history_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_history_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 65821,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/outcome_feedback_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 18910,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/post_vv.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/post_vv.py",
+      "owner_core_unchanged": true,
+      "sha256": "e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 50900,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/reuse_certificate_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/reuse_certificate_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 4052,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/reuse_gate.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/reuse_gate.py",
+      "owner_core_unchanged": true,
+      "sha256": "964bd4ae925c934710f1055514a256b2a5d7521e91841628180c418742df9584"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 14728,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/semantic_reasoning_adapter.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/semantic_reasoning_adapter.py",
+      "owner_core_unchanged": true,
+      "sha256": "3900b23d3f15ee42b21b7f28895e1badf6639d56a98ce3fcbe5a9f9c072009f6"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 17449,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/structured_rationale.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/structured_rationale.py",
+      "owner_core_unchanged": true,
+      "sha256": "05686cd42bc4ea0bd9b0bc2586c7df6fd51369d43ee0fb15af4c95326e3d1f03"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 974,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/time_model.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/time_model.py",
+      "owner_core_unchanged": true,
+      "sha256": "1b461cf013f2e60a82509669b0ac692d0121b8d5f3c9d3a46a3d5fd33fc48cba"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 11394,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/wasm_pure_worker_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/wasm_pure_worker_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 52262,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/work_execution_host_v01.py",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/work_execution_host_v01.py",
+      "owner_core_unchanged": true,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 14114,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "schemas/work_composition_v01.schema.json",
+      "member": "AUTHOR_VISIBLE/source/schemas/work_composition_v01.schema.json",
+      "owner_core_unchanged": true,
+      "sha256": "ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0"
+    },
+    {
+      "archive": "g54d1",
+      "bytes": 12874,
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "tests/test_gate5_calibration_exchange_v01.py",
+      "member": "AUTHOR_VISIBLE/source/tests/test_gate5_calibration_exchange_v01.py",
+      "owner_core_unchanged": false,
+      "sha256": "8cf3b08eff2dd3ad750104e73a836183db1a9c714930ea3c9c01b9086662eae8"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/run_action_packet_portability_v01.py",
+      "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/run_gate5_lifecycle_v01.py",
+      "sha256": "85d98abc1fa4b64a9d836c501f7bf00af9378e21df5505f12af146ddc9ae4b8c",
+      "source": "postimages/demo/run_gate5_lifecycle_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "demo/work_composition_mock_capabilities_v01.py",
+      "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs.py",
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_memory_resolution_v01.py",
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/drs_semantic_address_v01.py",
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "HISTORICAL_G52",
+      "destination": "hedgehog/external_drs/gate5_contracts_v01.py",
+      "sha256": "b551c81d2004463f8053e834dd0aa1642285f1e95acb56996043b24b0729aa0b",
+      "source": "postimages/hedgehog/external_drs/gate5_contracts_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_exchange_v01.py",
+      "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07",
+      "source": "postimages/hedgehog/external_drs/gate5_exchange_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "sha256": "22419806c70631543f66c2d5894b6858e2f4462907277c8fddb025f32e329b88",
+      "source": "postimages/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f",
+      "source": "postimages/hedgehog/external_drs/gate5_lifecycle_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_native_v01.py",
+      "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec",
+      "source": "postimages/hedgehog/external_drs/gate5_native_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/external_drs/gate5_supplied_v01.py",
+      "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69",
+      "source": "postimages/hedgehog/external_drs/gate5_supplied_v01.py"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/abi_v01.py",
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/effect_firewall_v01.py",
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/root_decision_v01.py",
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/root_signer_isolation_v01.py",
+      "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/semantic_work_v01.py",
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/transition_registry_v01.py",
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/kernel/work_composition_v01.py",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/local_drs_resolver.py",
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4",
+      "source": "UNCHANGED_OWNER"
+    },
+    {
+      "archive": "g52",
+      "comparison": "BYTE_IDENTICAL",
+      "destination": "hedgehog/work_execution_host_v01.py",
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b",
+      "source": "UNCHANGED_OWNER"
+    }
+  ],
+  "fresh_integration_required": false,
+  "paths": {
+    "demo/run_gate5_calibration_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "SUPERVISOR_EVIDENCE/retained_postimages/demo/run_gate5_calibration_v01.py",
+      "sha256": "391d9fce88aa663811d6a7b12df6c05a76b82eed154c136909472b7263270d1d"
+    },
+    "demo/run_gate5_lifecycle_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "SUPERVISOR_EVIDENCE/retained_postimages/demo/run_gate5_lifecycle_v01.py",
+      "sha256": "85d98abc1fa4b64a9d836c501f7bf00af9378e21df5505f12af146ddc9ae4b8c"
+    },
+    "docs/gate5_authoring_kit_v01/AUTHOR_SYSTEM.txt": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/AUTHOR_SYSTEM.txt",
+      "sha256": "c485e9b00274020e86560f742aaea6c3f2167b8e29bd889623a4e138f2864738"
+    },
+    "docs/gate5_authoring_kit_v01/AUTHOR_TOOLS.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/AUTHOR_TOOLS.json",
+      "sha256": "dfdca2e497f7b8f1f0456470fdf34f3a98e210ce8abb3e2c05577940118ceb76"
+    },
+    "docs/gate5_authoring_kit_v01/CANDIDATE_OUTPUT.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/CANDIDATE_OUTPUT.md",
+      "sha256": "89176fc7cc395cfb02407a6e2e6be87b3579740b403e2a06acadbe3c475cdd73"
+    },
+    "docs/gate5_authoring_kit_v01/DEPENDENCIES.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/DEPENDENCIES.json",
+      "sha256": "bf2527bce5d2d86b4e9918edf1f7f5911efd9b8b022bcb94771efff6a6ed6c48"
+    },
+    "docs/gate5_authoring_kit_v01/EXECUTION_CONTRACT.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/EXECUTION_CONTRACT.md",
+      "sha256": "77359dd95b91c3c8c6aa6645d7757276aa7adbaf23104703847136be0b23fd2c"
+    },
+    "docs/gate5_authoring_kit_v01/FOOTBALL_PROFILE.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/FOOTBALL_PROFILE.md",
+      "sha256": "01f5afd9cab361bef65a456ff612c84d33d9bb39e56ab5719f200fcf0de5ec53"
+    },
+    "docs/gate5_authoring_kit_v01/HOW_TO_BUILD.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/HOW_TO_BUILD.md",
+      "sha256": "092617adb77cd5f8b99bb9ac50fcfa97c3e8f3975ab48248678770c69477cb21"
+    },
+    "docs/gate5_authoring_kit_v01/LICENSE": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/LICENSE",
+      "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+    },
+    "docs/gate5_authoring_kit_v01/MANIFEST.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/MANIFEST.json",
+      "sha256": "a1e00deff39f07b0ff0e7af59fab1d8076051e4d346d7cf30ee0a119b7b4f8ac"
+    },
+    "docs/gate5_authoring_kit_v01/NATIVE_INTERFACE_MAP.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/NATIVE_INTERFACE_MAP.json",
+      "sha256": "f83e56c871bda6f50fb2b056ea0fad734c1e7b22fa46a4cf48248b2f9837484d"
+    },
+    "docs/gate5_authoring_kit_v01/NATIVE_INTERFACE_MAP.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/NATIVE_INTERFACE_MAP.md",
+      "sha256": "9141ec43d5f50a62c6bfa4b4ebded7a89d9c14c89e76d1842d4df96de7c64575"
+    },
+    "docs/gate5_authoring_kit_v01/PUBLIC_CLARIFICATION_G54D1_V01.txt": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/PUBLIC_CLARIFICATION_G54D1_V01.txt",
+      "sha256": "24f25ae2c9b1a9003172296def66c429b260ac0bdbf70641b782d330e767e080"
+    },
+    "docs/gate5_authoring_kit_v01/SHARED_EVIDENCE_CONTRACT.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/SHARED_EVIDENCE_CONTRACT.md",
+      "sha256": "f8bd6f6b3be330a5ee816b76ddb5581d2cf39d43a28f3712ae85c722656c2886"
+    },
+    "docs/gate5_authoring_kit_v01/SOURCE_INVENTORY.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/SOURCE_INVENTORY.json",
+      "sha256": "adc2b04f6a2d73a7dd640381ab3f2605cf588fb5b69a12df3fbf9f8d46322b11"
+    },
+    "docs/gate5_authoring_kit_v01/START_HERE.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/START_HERE.md",
+      "sha256": "c974139935b6e7596dd32ebb060761365ba3f2d284119d9e6d6c0fe8f9f425ba"
+    },
+    "docs/gate5_authoring_kit_v01/SYMBOL_INDEX.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/SYMBOL_INDEX.json",
+      "sha256": "b83e5d61d03a117c456197794da4ed3afc6e87966e78ee4cc498e43464860c1f"
+    },
+    "docs/gate5_authoring_kit_v01/WHAT_TO_BUILD.md": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/WHAT_TO_BUILD.md",
+      "sha256": "6e1a591c4369a9f37e5ffa727099c4c2ad0594895fd32e63b28f24f3538fd39f"
+    },
+    "docs/gate5_authoring_kit_v01/candidate_contract.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/candidate_contract.py",
+      "sha256": "9179284f641cb809ff92903cb8eadf3666dafab3497322b4303a3487f3c78dcd"
+    },
+    "docs/gate5_authoring_kit_v01/example/check_effect.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/check_effect.py",
+      "sha256": "7c5cc78d3e98726850a7b5942d5040b87c7f2b9d76817c74695fe7f0db696b1a"
+    },
+    "docs/gate5_authoring_kit_v01/example/mock_effect.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/mock_effect.py",
+      "sha256": "77ca3e483d52d3344fc7fd09dd7880fe29440c40cb79a8ee798acec242a1fce7"
+    },
+    "docs/gate5_authoring_kit_v01/example/native_seams.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/native_seams.py",
+      "sha256": "b84dc8608d7f5f5a529e852e3bd376e49ef12ca9c77a25f06b3e767db8bbd36c"
+    },
+    "docs/gate5_authoring_kit_v01/example/numeric_context.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/numeric_context.py",
+      "sha256": "58355f7e8e8dbe626ed35d073b74e99adfdef964248606917d0e592369a38c6f"
+    },
+    "docs/gate5_authoring_kit_v01/example/numeric_profile.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/numeric_profile.py",
+      "sha256": "95bdf2cb001dcb2533c3e99ab0e69944a34e73aaf0ede93c251045cfa822211e"
+    },
+    "docs/gate5_authoring_kit_v01/example/numeric_work.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/numeric_work.py",
+      "sha256": "6a2d3156ec759b5a501fcea2f570e06d6d51bff95efe02f9828350c730f23af4"
+    },
+    "docs/gate5_authoring_kit_v01/example/reconcile_receipt.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/reconcile_receipt.py",
+      "sha256": "5947f72264495274b991ee8eb244372e47892c8ee522560cc8c10de327d24b95"
+    },
+    "docs/gate5_authoring_kit_v01/example/run_numeric.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/example/run_numeric.py",
+      "sha256": "4182de7f1f9be30bf2778f471d2096a461595257a4987c3d7d9e08e87879f1d6"
+    },
+    "docs/gate5_authoring_kit_v01/source/demo/run_action_packet_portability_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/demo/run_action_packet_portability_v01.py",
+      "sha256": "82be33d8420e4e106203898e709399230f6d7f64d4b8243e94269bec828f88cb"
+    },
+    "docs/gate5_authoring_kit_v01/source/demo/work_composition_mock_capabilities_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/demo/work_composition_mock_capabilities_v01.py",
+      "sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/action_commit_packet_v02.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/action_commit_packet_v02.py",
+      "sha256": "e24b8c4bd3284c4b9db8944e2a9c268d26816956880ffb0700700bbf3fdc59ac"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/avf_v02.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/avf_v02.py",
+      "sha256": "ba88a22b3ddea715ad7af2731c171511273b6e7bb4c67f5d54024464a1a8b616"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/capability_admission_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/capability_admission_v01.py",
+      "sha256": "2261347c11f7535522653f0a2e301bed69cbbc5e0ef737bc4a37d2b9954b0cda"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/context_packets.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/context_packets.py",
+      "sha256": "080c69dfe24206549fbf27ae65141105c6e4b4c802b05296f1d90026823e9f32"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/__init__.py",
+      "sha256": "f33ec43826cba0521f58774c1500cb6f84d72bb36d88db8d41c7f1992cdb80a8"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/__init__.py",
+      "sha256": "cc46b98e70deb6ea9b8eb5ea184cda638ce7365a1870e5074d2dfc837dab9cf8"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "sha256": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "sha256": "6b9f34433cae8ef0435ea1456820fd4f7e300a2a6c9a2d389c77c3db008be4a6"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "sha256": "3693ae3d5b15d16bfa23f7d3ebf40bb64a0aa9f245847a1d0d09eae431458e98"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "sha256": "0e9864fb499f378edeeb8300b785a8de69af2fbcb51ad4039d9306e182adb0eb"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "sha256": "5bf787130b370da4c58918ef4a65de29aa7c017a59d9fc491ad5c4ee66a50e3b"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "sha256": "af7dc4da6ce1185688447d96747516a521084ec7c749c8490ea92f3ee65264c4"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "sha256": "3e9cdcd6d3c411b4dfab598d4b62b5648dcf071d4bf15e8297e3d4144aa831bf"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "sha256": "f1eba5acd64fe400ab325106031e2d90f963ddb2df0e33f43eb4cc0d95b00e1f"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "sha256": "c76070da03489e0e9ec8c3784f61520ef2866ebd7a5eaf6d9470e369500e11a3"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/contracts_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "sha256": "9e2a69ed5c02ae9c8febfe2d3064a967598e21c61d80eecd84fd08efad093c9b"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/evidence_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "sha256": "792736b91f2a3fa264613fa6bc1bea60e4370fd8ba7f56c427fc0323f39ca1c7"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "sha256": "15f1243f5dd0d1d798267c48359622983b99387f5b15df2b081620b7516ae1ee"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/local_services_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "sha256": "1abe5cd160a9ae7475334f2b396057366ab4a7c477a7ea62288c702018f1c1a3"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "sha256": "8728b7a47740736bb3d7145acb874fa1e545614e4adf3d1dd94e4230ea4d0210"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/media_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "sha256": "87e2388ceab077e330c144cf3d730341e5a44fdc51131d7aa0969ad490b6d7fa"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "sha256": "ce4944c25a03ac4ca0d2d2c3eb1b3c68ac0d5f2dd012a31a7705642b4a3ba569"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "sha256": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "sha256": "ef42d7529134d9c7f9908dac0ddb08a62d1d9d2a838b1baf38c58316b468dfce"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "sha256": "1d1e8162df04f300143659022d067941413918bd6afe9702b7a08f701a9eb56d"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "sha256": "d3841d5f6faa4dd9e8c9db6373658366d1cc89ae54b0826351de64095276c5cc"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "sha256": "3cbfd0a8d204091544a848ae417615837dec904f3d48135126a4eef53457f9b5"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "sha256": "2542479dddc7485cb1e2220fac51dd59849d571054c1c912b3be3dbd58b0dd28"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/contracts_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "sha256": "bd6bb60cee50a5ef3bdc9d2a79216a3f4c0685fe09cd5dc2837623cb166aa226"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/events_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "sha256": "e1502016a2ddf63b0464dd72ee52a5caefa666327f50036c3c84d045ed9e18be"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/evidence_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "sha256": "0f015f1d876afde74aa9323c49c682f54b8c3042b2e38886235e860e7a170b27"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "sha256": "9ea35362d3f3c7341dc05d4db0a4a5c3bc089bb63512e85d5018c8ea5e290947"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "sha256": "9f9c63e8edb6ae441e30275ae5b9131c711b71648b650d22606aae818ac22521"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "sha256": "5c1f36976661ae83b49086aad35652761bd550aab51cd8a4e1287af5d6e04003"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/outbox_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "sha256": "c6ed19e959908400e76942aa8e5e20c02c0b4fb662655576025188ae49860f2e"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "sha256": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "sha256": "6fac1601e171b56548bdc49c5c9a197a9c2305d1e3bddf1c12404d00830ae8aa"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/supplier_water_filter/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "sha256": "dbca71e4fe22c58cd4b24f46f069c5e2e9fe60c30503dc7489a1f162bb818fa0"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "sha256": "4ce5ccbbbe8c0235533885326c9dc1cf092201ddff228fe8e0bcc80d5eca87bc"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "sha256": "0ec36f709977b85f457739e1266ba3889a5735eee2dc89f033a34e45512abdfe"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "sha256": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/__init__.py",
+      "sha256": "65d25f90889210a6de7ee1d89290e5f3fed0672cd40139287c08b807030c4acf"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/contracts_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/contracts_v01.py",
+      "sha256": "cafe20c56049985bf4031104343f9f068d1e3fe989fbf8c132f47adb2826ef0b"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/evidence_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/evidence_v01.py",
+      "sha256": "3106f3e3459a4585385f170579f4a166f3aad4e330502711394a8be947d589ae"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/kernel_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "sha256": "1444d89f426658949cc0b0c2fae234943cef4454777981a89cff444327412eae"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/lifecycle_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "sha256": "9acf70b4a811c9ec34f7b4e7a580bee6fe25001f39bb2c3042e87378bb72cb2b"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/live_semantic_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "sha256": "6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/mock_world_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/mock_world_v01.py",
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "sha256": "ed0bf73b38cd3bd9ff51eeb38c342451e1c8b9c1c20ba31a5085a1245a18fbc2"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/semantic_adapter_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "sha256": "a20b22edbf26e536c3403d9dabe05fd22ea82cbe0210bb87eaada25f47b5c7e5"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/domains/testflix/semantic_roles_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "sha256": "7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/drs.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs.py",
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/drs_g2b_compatibility_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_g2b_compatibility_v01.py",
+      "sha256": "dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/drs_memory_resolution_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_memory_resolution_v01.py",
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/drs_semantic_address_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/drs_semantic_address_v01.py",
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/evidence/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/__init__.py",
+      "sha256": "2fa905efbd7f2a968d8a648ef14ef676a4f64bac94a159651c7a4d7b71a81b8b"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/evidence/external_anchor_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/external_anchor_v01.py",
+      "sha256": "299c6d2daabfe53c0c93c76a46709d09c4cc26b89907af17a30dab8ce8537994"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/evidence/sealed_evidence_profile_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "sha256": "3845a246e641aea8da3d9314e2d140bcb701a5488cb9de8153a62f0d84529b37"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/evidence/sealed_package_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_package_v01.py",
+      "sha256": "4fecf1b24696316348256acd1bd5a9e7a237dc37bd5b11abc41a71257796af53"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/evidence/sealed_replay_evidence_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "sha256": "f40e48f3d32f4b67250534f5d47d5bb4e076890497506ec4315d9ce06261c5a3"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_body_profile_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_contracts_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_exchange_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "sha256": "22419806c70631543f66c2d5894b6858e2f4462907277c8fddb025f32e329b88"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_lifecycle_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_native_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_native_v01.py",
+      "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/external_drs/gate5_supplied_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/gate3_mechanism_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/gate3_mechanism_v01.py",
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/gt_validator.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/gt_validator.py",
+      "sha256": "e8fa9af23cbff04a059523aa25e47eec790c00776c902e545f1779e20ee5f0dd"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/__init__.py",
+      "sha256": "b26dad7e3a5d47b2d717f002a0982bd0bb0fcde95110627846d81d747a0e4be1"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/abi_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/abi_v01.py",
+      "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/conformance_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/conformance_v01.py",
+      "sha256": "6cb61b29d37d4591d2da8dc10d7182d7a6c61010080415d58848a215718f6e2f"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/continuous_delta_runtime_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/effect_firewall_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/effect_firewall_v01.py",
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/execution_mode_router_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/execution_mode_router_v01.py",
+      "sha256": "4b19de7348a15cd65f1bed02bd93d848ccc490b6c7b8fe21338c3784809f79c4"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/fractal_runtime_v02.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/fractal_runtime_v02.py",
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/integrity_replay_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/integrity_replay_v01.py",
+      "sha256": "d496354e7dbca5ff9c96943fe0d4bf777e85a88b404b67c7dfcfda116ee8d0be"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/multiroot_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/multiroot_v01.py",
+      "sha256": "e29137031417927e98c86b808e8e3897987a32ff953bbd6adcd6b4a7367e03ff"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/root_decision_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/root_decision_v01.py",
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/root_signer_isolation_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "sha256": "3f4efab32cd972803e61b0877c56d46eead9907611e1a1534b8cf924ba8c22f8"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/semantic_work_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/semantic_work_v01.py",
+      "sha256": "34e6064cf62fda3b0b60ebc4f60cfdc963f3a609dfb9bd5d446c5b5bdd4c45b1"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/transition_registry_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/transition_registry_v01.py",
+      "sha256": "16d2d3c31004bccc3064c74290bad4a7303669b63c428cebf6be8763574ae0ca"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/trust_model_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/trust_model_v01.py",
+      "sha256": "6a1651bd624c78a09bfb433e3af8610d0033833d373b881e732da39381b65b2d"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/kernel/work_composition_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/kernel/work_composition_v01.py",
+      "sha256": "1f068c0d1156a312f36a7e55b7cbaf0e3e84503168b3305e10420bd8e3d3cbf0"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/local_drs_resolver.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/local_drs_resolver.py",
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/local_drs_v02.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/local_drs_v02.py",
+      "sha256": "831c3c7e0a1bfcb2ad9cc56d61c2c33ccbc8982add7ac46434c55676c03a34af"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/outcome_calibration_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_calibration_v01.py",
+      "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/outcome_feedback_consumer_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_consumer_v01.py",
+      "sha256": "19eab88fc949ccd10db1143c408224d48a82161527292b7b1283456fd0bd4938"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/outcome_feedback_history_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_history_v01.py",
+      "sha256": "aee1d5ed5649fcd877443dbca1a05f2bed38d1c2619cc84f31a1d8d99fb772b6"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/outcome_feedback_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/outcome_feedback_v01.py",
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/post_vv.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/post_vv.py",
+      "sha256": "e2e856a3976a7250b738231aa62c39f1312278e6e6108e903ad363f87d7fcbe3"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/reuse_certificate_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/reuse_certificate_v01.py",
+      "sha256": "55a061a0e225ae479d06380a9f47ac4e3d22f5771ad0fc24c0f4a0bdc73c852c"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/reuse_gate.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/reuse_gate.py",
+      "sha256": "964bd4ae925c934710f1055514a256b2a5d7521e91841628180c418742df9584"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/semantic_reasoning_adapter.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/semantic_reasoning_adapter.py",
+      "sha256": "3900b23d3f15ee42b21b7f28895e1badf6639d56a98ce3fcbe5a9f9c072009f6"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/structured_rationale.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/structured_rationale.py",
+      "sha256": "05686cd42bc4ea0bd9b0bc2586c7df6fd51369d43ee0fb15af4c95326e3d1f03"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/time_model.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/time_model.py",
+      "sha256": "1b461cf013f2e60a82509669b0ac692d0121b8d5f3c9d3a46a3d5fd33fc48cba"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/wasm_pure_worker_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/wasm_pure_worker_v01.py",
+      "sha256": "e9d727f3f971d5429fdffe25b0917548f2e903b63f1922a3bc60f9cb33e6d3ae"
+    },
+    "docs/gate5_authoring_kit_v01/source/hedgehog/work_execution_host_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/work_execution_host_v01.py",
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    },
+    "docs/gate5_authoring_kit_v01/source/schemas/work_composition_v01.schema.json": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/schemas/work_composition_v01.schema.json",
+      "sha256": "ac385c7202e39c88890d66fd148c85bfafe35e9c8f79ec9748866be39e6ba6a0"
+    },
+    "docs/gate5_authoring_kit_v01/source/tests/test_gate5_calibration_exchange_v01.py": {
+      "archive": "g54d1",
+      "class": "EXACT_REVISED_KIT_AND_SEPARATE_CLARIFICATION",
+      "member": "AUTHOR_VISIBLE/source/tests/test_gate5_calibration_exchange_v01.py",
+      "sha256": "8cf3b08eff2dd3ad750104e73a836183db1a9c714930ea3c9c01b9086662eae8"
+    },
+    "docs/gate5_calibration_exchange_checkpoint_v01.md": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "SUPERVISOR_EVIDENCE/retained_postimages/docs/gate5_calibration_exchange_checkpoint_v01.md",
+      "sha256": "376514709c9c60599ef9dba0b4496cbc645e401411906edc8aa89734db1778b7"
+    },
+    "docs/gate5_lifecycle_restart_checkpoint_v01.md": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "SUPERVISOR_EVIDENCE/retained_postimages/docs/gate5_lifecycle_restart_checkpoint_v01.md",
+      "sha256": "a1bec6f63ee7c8857c69e080536918d26af6459f28124876294fdc761488f843"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/PASSPORT.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/PASSPORT.json",
+      "sha256": "2be4142da3ecc1749f158c014ee8a2e5223bd2769371b9b5ac34aa72dad8ad30"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/README.md": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/README.md",
+      "sha256": "bc996b63faf6f8a83c70633d85e318a869f154dc5ff96e3b6b9cf5da3d501e0c"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_BROKER",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate.json",
+      "sha256": "701f79ca02d0d125a17222281b8ae13fd9fb9ea3e448b3ad49503b3392b3317a"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/__init__.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/__init__.py",
+      "sha256": "e68644b065f0506d9c4a1b022ea7099cdeb209d5b712c566744946748569404d"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/domain.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/domain.py",
+      "sha256": "a98b895d5c6d59ee72d64f6beef97567e320eef4bfc986d8513ae7888abf3662"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/effect.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/effect.py",
+      "sha256": "f06c394747f8746dae844e787c760f07c782e9eb1dad918a6864aa2fa7803be7"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/memory.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/memory.py",
+      "sha256": "a6a3c1eebe8a068d945a4b249ce3d1dacba8c52ceca580fecbcbb3e7df209686"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/native.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/native.py",
+      "sha256": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/policy.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/policy.py",
+      "sha256": "f9edbd5b8d2975496663d62e798d298c32c19c831fcfb55e7ae8ba776f585821"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/profile.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/profile.py",
+      "sha256": "4e3e36c6ba87c7156afdf739c0f86a2965379fe88ac3668b7f76b6f56978d8bc"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/publication.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/publication.py",
+      "sha256": "5df538e6d0c4ddc50cf2f836e23b41da268f147d2ddda1ec518a7468f3b0be61"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/run.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/run.py",
+      "sha256": "0d56d79c2c0cdf4a9d410a4bf39331b5ad9e9fa8f7a9fbc2b1eabfc974f98f12"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/candidate_domain/storage.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/candidate_domain/storage.py",
+      "sha256": "85b2ab1b045f48eb816838a988999c4174c5a3f9bb26fb05da59e1a56b194e1b"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/dependencies.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/dependencies.json",
+      "sha256": "80e535079ac218a1571ef6a983784360d072f58e098da02d9f71a2909c25e637"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/schemas/body.schema.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/schemas/body.schema.json",
+      "sha256": "d5f2a2b439c426a42370b108025197f57ea26ddafde3bddc366581b22c40c042"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/schemas/inventory.schema.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/schemas/inventory.schema.json",
+      "sha256": "f2ffbc17326a4780ea03a886df8bf0d7557f7bc167f6e4b47ad89187e5358825"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/schemas/request.schema.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/schemas/request.schema.json",
+      "sha256": "21c483c8fcbacd56bbe3a1ed7dfcfc9460837ecc96995705cc91f0808c28e48d"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/schemas/result.schema.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/schemas/result.schema.json",
+      "sha256": "81c776010fbcc70acf4862329e010dde98129e7783de9702d2742f7851a6ffb0"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/source_impact.json": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/source_impact.json",
+      "sha256": "8f3291c3eb0a0bc1cb5372503a45f5918b0b45bcd0e777683b0d68ced05db8e5"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/tests/test_business_semantics.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/tests/test_business_semantics.py",
+      "sha256": "93a401a22459a9e691015e5afe1920cb16f193fcc26031cc3ef38d946f35df3e"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/tests/test_descent.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/tests/test_descent.py",
+      "sha256": "2bb0c98531155ffda1faac86adab07d879e6f5ddf5c568231870a999f41a92a4"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/tests/test_domain.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/tests/test_domain.py",
+      "sha256": "5597cf830dd9cfefb230d9a8ef0faa900b98dd923dc51d52d67928664460dd0a"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/tests/test_final_correction.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/tests/test_final_correction.py",
+      "sha256": "69a060b5416824f8367f1b64ab9dfc70c7a0f3ec0539624108a02ade13ca9699"
+    },
+    "hedgehog/domains/football_pitch_booking/pack_v01/tests/test_status_refusal.py": {
+      "archive": "g54d1",
+      "class": "EXACT_D1_AUTHOR",
+      "member": "AUTHOR_TRIAL/attempt_04/candidate/tests/test_status_refusal.py",
+      "sha256": "478f0bf37e04a9aeb9e38311d65c86faa49f51b07699b41e007003aa4e020f37"
+    },
+    "hedgehog/external_drs/gate5_body_profile_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "sha256": "7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f"
+    },
+    "hedgehog/external_drs/gate5_contracts_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f"
+    },
+    "hedgehog/external_drs/gate5_exchange_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "sha256": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07"
+    },
+    "hedgehog/external_drs/gate5_lifecycle_supplied_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "sha256": "22419806c70631543f66c2d5894b6858e2f4462907277c8fddb025f32e329b88"
+    },
+    "hedgehog/external_drs/gate5_lifecycle_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f"
+    },
+    "hedgehog/external_drs/gate5_native_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_native_v01.py",
+      "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+    },
+    "hedgehog/external_drs/gate5_supplied_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "sha256": "5cbb0e4851d65496e2097147b57a4bf285d36bdca9752f75db01694efe755f69"
+    },
+    "tests/test_gate5_calibration_exchange_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "AUTHOR_VISIBLE/source/tests/test_gate5_calibration_exchange_v01.py",
+      "sha256": "8cf3b08eff2dd3ad750104e73a836183db1a9c714930ea3c9c01b9086662eae8"
+    },
+    "tests/test_gate5_lifecycle_v01.py": {
+      "archive": "g53",
+      "class": "EXACT_G53_SHARED",
+      "member": "SUPERVISOR_EVIDENCE/retained_postimages/tests/test_gate5_lifecycle_v01.py",
+      "sha256": "f94651065c4b9f4dabc66d64ca318ca0e755ba0ce27cda11bb07c38818102b7f"
+    }
+  },
+  "reason": "All G53/D1 core, shared and resource dependencies are byte-identical to owner or the 13 exact additions. G52 contracts remain historical; 43 recorded G53 default controls, numeric-profile proofs and D1 final native use bridge the two-file profile seam. No new native collection is needed."
+}

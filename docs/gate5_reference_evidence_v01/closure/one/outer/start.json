@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "candidate/demo/verify_gate5_reference_v01.py",
+    "--output",
+    "/private/tmp/RADIOLARIA_GATE5_G55.2N6uSH/proof_one"
+  ],
+  "cwd": "/private/tmp/RADIOLARIA_GATE5_G55.2N6uSH",
+  "start": "2026-09-25T19:09:24.306122+00:00",
+  "supervisor_pid": 66189,
+  "environment": {
+    "PYTHONPATH": null,
+    "PYTHONDONTWRITEBYTECODE": null,
+    "HEDGEHOG_REPOSITORY_REVIEW_CONTEXT_V01": null
+  }
+}

@@ -1,0 +1,57 @@
+"""Candidate package checker: reads data only, never imports candidate code."""
+import hashlib,json,re,stat
+from pathlib import Path,PurePosixPath
+
+REQUIRED=('PASSPORT.json','README.md','dependencies.json','source_impact.json','candidate_domain/__init__.py',
+    'candidate_domain/run.py','candidate_domain/profile.py','schemas/body.schema.json','tests/test_domain.py')
+ALLOWED=('candidate_domain/','schemas/','tests/')
+def require(ok,reason):
+    if not ok:raise ValueError(reason)
+def load_json(path):
+    def pairs(items):
+        out={}
+        for key,value in items:
+            require(key not in out,'duplicate_json_key');out[key]=value
+        return out
+    def forbidden(value):raise ValueError('noninteger_json_number')
+    return json.loads(path.read_text(),object_pairs_hook=pairs,parse_float=forbidden,parse_constant=forbidden)
+def check_package(root):
+    root=Path(root)
+    require(root.is_dir() and not root.is_symlink(),'candidate_root')
+    all_paths=list(root.rglob('*'));require(not any(p.is_symlink() for p in all_paths),'candidate_links')
+    require(len(all_paths)<=96 and all(len(p.relative_to(root).parts)<=6 for p in all_paths),'candidate_tree_bound')
+    require(all(stat.S_ISREG(p.stat().st_mode) or stat.S_ISDIR(p.stat().st_mode) for p in all_paths),'candidate_regular_only')
+    files={str(p.relative_to(root)):p for p in all_paths if p.is_file()}
+    require('candidate.json' in files and len(files)<=32,'candidate_inventory')
+    require(all(p.stat().st_nlink==1 and p.stat().st_size<=262144 for p in files.values()),'candidate_file_bound')
+    require(sum(p.stat().st_size for p in files.values())<=1048576,'candidate_total_bound')
+    value=load_json(files['candidate.json'])
+    require(type(value) is dict and set(value)=={'version','candidate_id','installable_now','entrypoint','files'},'candidate_manifest_shape')
+    require(value['version']=='g53.candidate.v01' and value['installable_now'] is False,'candidate_not_admitted')
+    require(type(value['candidate_id']) is str and re.fullmatch(r'[a-z][a-z0-9_.-]{0,63}',value['candidate_id']),'candidate_id')
+    require(value['entrypoint']=='candidate_domain.run','candidate_entrypoint')
+    rows=value['files'];require(type(rows) is list and len(rows)<=31,'candidate_rows')
+    named=[]
+    for row in rows:
+        require(type(row) is dict and set(row)=={'path','bytes','sha256'},'candidate_row')
+        name=row['path'];require(type(name) is str,'candidate_path')
+        path=PurePosixPath(name)
+        require(name==str(path) and not path.is_absolute() and '..' not in path.parts and '\\' not in name and
+            bool(re.fullmatch(r'[A-Za-z0-9_./-]+',name)),'candidate_path')
+        require(name in REQUIRED or name.startswith(ALLOWED),'candidate_extra_path')
+        require(name in files and name not in named,'candidate_duplicate_or_missing')
+        p=files[name];require(p.stat().st_nlink==1 and p.stat().st_size<=262144,'candidate_file_bound')
+        raw=p.read_bytes();require(type(row['bytes']) is int and len(raw)==row['bytes'] and hashlib.sha256(raw).hexdigest()==row['sha256'],'candidate_pin')
+        named.append(name)
+    require(set(files)==set(named)|{'candidate.json'} and set(REQUIRED)<=set(named),'candidate_exact_coverage')
+    require(sum(p.stat().st_size for p in files.values())<=1048576,'candidate_total_bound')
+    passport=load_json(files['PASSPORT.json'])
+    required={'needle_id','owner','version','purpose','domain','input_schema','output_schema','actor_roles','execution_modes',
+        'capabilities','forbidden_effects','permission_policy','risk_class','drs_scope','sealed_slot_refs','adapter_requirements',
+        'time_currentness_dependencies','failure_policy','compensation','audit_provenance','tests','compatibility'}
+    require(set(passport)==required and all(v not in (None,'',[],{}) for v in passport.values()),'passport_fields')
+    return dict(status='CANDIDATE_DATA_SHAPE_ONLY_NOT_EXECUTION_OR_ADMISSION',files=len(files))
+
+if __name__=='__main__':
+    import sys
+    print(json.dumps(check_package(sys.argv[1]),sort_keys=True))

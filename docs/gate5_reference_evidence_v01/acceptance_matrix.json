@@ -1,0 +1,2008 @@
+{
+  "F": [
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F01",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Pointer-only index before current retrieval; zero body requests.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F02",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Valid A pointer with B local refusal; zero body fetch.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F03",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Authenticated B requester but A audience/use refusal before release.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F04",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Tampered payload fails identity/signature.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F05",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Coherently signed foreign domain/unit/recipient refused by scope.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F06",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Signed offset inconsistent with source observations refused by independent arithmetic.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F07",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Old genuine source/result for new request revision refused.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F08",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Exact valid_to/TTL/source-age expiry refuses with valid neighbor.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F09",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Changed local policy after fetch prevents current reuse.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F10",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Known revoked prevents current use; old history remains.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F11",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Same status/source revision with different immutable entry quarantined.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F12",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Unavailable current status remains UNKNOWN, not ACTIVE.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F13",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Wrong publisher or key substitution refused against trusted keys.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F14",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Permission/RootFinal/capability/command/import fields cannot grant authority.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F15",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Duplicate source not independent source or second reward.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F16",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Oversize/path/redirect/foreign endpoint refused before disallowed I/O.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F17",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Self-pointer/cycle/depth>1 refused without recursive descent.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F18",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Restart uses persisted pointer lookup and new current Root.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_PURE_COHERENT_COMPONENT_OR_BOUNDED_STATE_CONTROL",
+      "id": "F19",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Deleted/substituted imported field cannot yield a canned 96.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "RECORDED_NATIVE_LIFECYCLE_AND_PURE_CHECK",
+      "id": "F20",
+      "limits": "Historical generic proof with source-impact bridge, not a new football-native injection. F19 includes recorded actual changed input 97; F20 is a recorded canary scan, not renewed access to private content.",
+      "obligation": "Private-note canary absent from public material and projections.",
+      "status": "COVERED_IN_DECLARED_FINITE_SCOPE"
+    }
+  ],
+  "P": [
+    {
+      "cases": "main,variation_feedback",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_RECORDED",
+      "id": "P01",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Hard surface/size cannot be bought",
+      "predicate": "source_selection",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "low_budget,missing_BOOK",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_RECORDED",
+      "id": "P02",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Own budget/consent, no borrowed permission",
+      "predicate": "source_selection,check_refusal",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "release_denied",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_RECORDED",
+      "id": "P03",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Pointer not a body/release",
+      "predicate": "wire_material,check_refusal",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "revoked_source,revision_conflict",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_PLUS_UNCHANGED_GENERIC_CURRENTNESS",
+      "id": "P04",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Current source and schedule, no revived permission",
+      "predicate": "current contract,check_refusal,action_proof",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "foreign_audience",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_PLUS_COHERENT_SIGNED_COMPONENT",
+      "id": "P05",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Owner/recipient/request",
+      "predicate": "authenticated contract,root joins",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "missing_BOOK,component_boundary",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_PLUS_RECORDED_GENERIC_NATIVE",
+      "id": "P06",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Pointer/receipt not permission",
+      "predicate": "action_proof,check_refusal",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "main,missing_history,same_key_changed",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_RECORDED",
+      "id": "P07",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Repeat/VERIFY exact history, zero new work/effect",
+      "predicate": "HISTORY,check_refusal",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "coherent_missing_producer",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "NEW_DOMAIN_COMPONENT_RECORDED",
+      "id": "P08",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Absent producer/slot/price no substituted result",
+      "predicate": "source_selection,producer_consumer,native_result",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "long_overlap",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_RECORDED",
+      "id": "P09",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Longer overlap distinct from lawful shift",
+      "predicate": "source_selection",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "cases": "main,continuation_after_refusal",
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACTUAL_NATIVE_RECORDED",
+      "id": "P10",
+      "limits": "P04/P05 combine native controls with pure signed boundary controls; P06 uses recorded generic native controls; P08 is pure altered-evidence, not a new native execution.",
+      "obligation": "Lawful new request/offer/consent continues after refusal",
+      "predicate": "source_selection,action_proof",
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    }
+  ],
+  "author_exam": [
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "RECORDED_D1_NATIVE",
+      "id": "A",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Typed shape plus real native positive",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "RECORDED_D1_NATIVE",
+      "id": "B",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Different intent / lawful changed conditions on same facts",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "RECORDED_D1_NATIVE",
+      "id": "C",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Verify-only actual prior return without new selection or booking",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "RECORDED_D1_NATIVE",
+      "id": "D",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Hard condition cannot be bought with soft score",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "PURE_BOUNDARY_AND_RECORDED_GENERIC_NATIVE",
+      "id": "E",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Expired/foreign source/current result refused",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "PURE_BOUNDARY_AND_RECORDED_GENERIC_NATIVE",
+      "id": "F",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Unknown capability / attempted effect / source mutation blocked",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "RECORDED_D1_NATIVE",
+      "id": "G",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Input rename/permutation plus hidden variable inputs",
+      "status": "ACCEPTED_SCOPED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 10243,
+          "member": "GENERIC_CONTROLS/result.json",
+          "sha256": "c6ed29ba82a02807d5162a35c16474b0cfd7a6fc75d3091807e63839136a93c2"
+        },
+        {
+          "archive": "g54d",
+          "bytes": 1966,
+          "member": "evidence/new_domain_controls03/RESULT.json",
+          "sha256": "f6f57d9f80ab5e2cebc91c8b349f2fb0380d390ba6873b4f4989d02f57b0bf3b"
+        }
+      ],
+      "evidence_class": "PURE_BOUNDARY_AND_RECORDED_GENERIC_NATIVE",
+      "id": "H",
+      "limits": "Author test-file presence is not executed test evidence; no full crash/race/hostile-Python attestation.",
+      "obligation": "Removed producer result cannot yield old consumer answer",
+      "status": "ACCEPTED_SCOPED"
+    }
+  ],
+  "gate5_closed": false,
+  "klm": [
+    {
+      "id": "K1",
+      "original_obligation": "Domain/Needle Authoring Passport",
+      "rationale": "Complete finite machine kit, examples and schemas; not an unlimited catalogue.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "IMPLEMENTED_REFERENCE"
+    },
+    {
+      "id": "K2",
+      "original_obligation": "NeedleCandidate and candidate-only",
+      "rationale": "External authored pack with installable_now=false and separate review/admission; integrated generation deferred.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "PARTIAL_REFERENCE"
+    },
+    {
+      "id": "K3",
+      "original_obligation": "Integrated NL -> requirements -> code -> sandbox factory",
+      "rationale": "External measured author process is not the built-in Capability Synthesis Factory.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "DEFERRED_POST_GATE6_PUBLICATION"
+    },
+    {
+      "id": "K4",
+      "original_obligation": "Candidate states / quarantine / local admission",
+      "rationale": "Applied to this reviewed pack and P7 route; no runtime self-installer or automated factory pipeline.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "PARTIAL_REFERENCE"
+    },
+    {
+      "id": "K5",
+      "original_obligation": "New small domain without core changes",
+      "rationale": "Accepted football source without core modifications, native Work and independent refusals.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "IMPLEMENTED_REFERENCE"
+    },
+    {
+      "id": "K6",
+      "original_obligation": "Independent cold-author small-domain exam",
+      "rationale": "Explicitly amended initial+4 protocol, not original-budget success.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "IMPLEMENTED_REFERENCE"
+    },
+    {
+      "id": "L1",
+      "original_obligation": "Reflection on own traces; lessons/patch/test-gap proposals",
+      "rationale": "Only role description and naming, no reflective execution.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "DEFERRED_POST_GATE6_PUBLICATION"
+    },
+    {
+      "id": "L2",
+      "original_obligation": "Structural transfer between domains",
+      "rationale": "Proposal-only future role, no authority or trust transfer.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "DEFERRED_POST_GATE6_PUBLICATION"
+    },
+    {
+      "id": "L3",
+      "original_obligation": "Useful/rejected reflection and transfer candidates",
+      "rationale": "No fake successful Cognitive Radiolaria examples.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "DEFERRED_POST_GATE6_PUBLICATION"
+    },
+    {
+      "id": "M1",
+      "original_obligation": "External meaning pointers and envelopes",
+      "rationale": "Closed finite profiles, actual test-key signatures and bounded records.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "IMPLEMENTED_REFERENCE"
+    },
+    {
+      "id": "M2",
+      "original_obligation": "Pointer -> authorized retrieval -> validation -> local application",
+      "rationale": "Separate processes and Roots, actual imported field consumption; no global network.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "IMPLEMENTED_REFERENCE"
+    },
+    {
+      "id": "M3",
+      "original_obligation": "Foreign signature is not local authority",
+      "rationale": "Existing authority law with source-bound positive and refusal contrasts.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "REUSED"
+    },
+    {
+      "id": "M4",
+      "original_obligation": "Independent Roots, revocation/time, no SuperRoot",
+      "rationale": "Finite two-node demonstration; global PKI/discovery/operations deferred.",
+      "source": "Master V02 section 2.2; K5/K6 joint original row",
+      "status": "IMPLEMENTED_REFERENCE"
+    }
+  ],
+  "master_sha256": "008cbad1773e116568833ff3e97decce8d73a4dca6e7826fcf40268f11271fef",
+  "owner_base": "5cef2c52fd805daedec958109caf9d1806899eb4",
+  "preparation_status": "G55_PREPARED_FOR_EXACT_INDEPENDENT_REVIEW",
+  "rows": [
+    {
+      "evidence": [
+        {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      ],
+      "evidence_class": "SOURCE_PRESERVATION",
+      "id": "G5-R01",
+      "limits": "G55 preparation; later landing records actual child.",
+      "obligation": "Actual Wedding-publication baseline/context preserved; current scope frozen.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Wedding base 76a6952c and current owner 5cef2c52 are distinct. No owner change.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "SOURCE_PRESERVATION"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      ],
+      "evidence_class": "SCOPE_RECONCILED",
+      "id": "G5-R02",
+      "limits": "K/L future implementations remain deferred.",
+      "obligation": "Roadmap K/L/M reduction and new cognitive names documented with residuals.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Exact original K1-K6/L1-L3/M1-M4 mapping below; not full old RC5.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "SCOPE_RECONCILED"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R03",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Two actual peer processes, independent local Root/DRS/key contexts.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R04",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Pointer-only persisted local index before body retrieval; actual query path.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R05",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "B local retrieval review and A separate release conditions both effective.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R06",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Real signed source/manifest/body verification with independent trust input.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R07",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Time/TTL/local scope/status/provenance/conflict checks before current use.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R08",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Exact imported field changes actual native local Work result; source retained.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R09",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Revoked/expired/wrong-scope/foreign-authority/oversized data refuse correctly.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R10",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "No shared permissions, Root reconstruction or code execution from foreign data.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g52",
+          "bytes": 4767,
+          "member": "evidence/controls_04/result.json",
+          "sha256": "4623d5deff72971203b40be1b69cf6027655147d7dbeae5c97683d819e6cbd3e"
+        },
+        {
+          "archive": "g53",
+          "bytes": 5318,
+          "member": "SUPERVISOR_EVIDENCE/calibration_controls/result.json",
+          "sha256": "b7f746149704e4ec3afd36428c46fa3982e7a60b21014ed216970e2f289c58c6"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_FINITE_REFERENCE",
+      "id": "G5-R11",
+      "limits": "Historical native collection, not a fresh collection on G53 contracts.",
+      "obligation": "Scoped dead-end/history/reuse and one permitted continuation demonstrated.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "G51/G52 two-process calibration; final historical lifecycle is checked with exact old contracts.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_FINITE_REFERENCE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54c",
+          "bytes": 3705,
+          "member": "evidence/numeric/summary.json",
+          "sha256": "ed8a8c237322aa3b0ef2ae6dafd9945b74e09274ede87569a3abd2262e522f26"
+        },
+        {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_GENERIC",
+      "id": "G5-R12",
+      "limits": "Signed components and actual native producer/consumer, not a generic peer exchange.",
+      "obligation": "Frozen complete Authoring Kit with working generic different-domain example.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Revised public HOW, separate WHAT and D1 clarification; numeric samples 7/11 yield E=23/35 and C result=31/47.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_GENERIC"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 4098,
+          "member": "AUTHOR_TRIAL/attempt_04/authorship_reconstruction.json",
+          "sha256": "e6e1ecc437dc2215aa7213e856e4fe99d48ced557b221996c104611f1d50dbf0"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 477,
+          "member": "PROTOCOL_AMENDMENT.json",
+          "sha256": "543a30dfbf59c3eac0b4c8ddfce554ff6ef7b4f6e4408266b757eca36b45e4cd"
+        }
+      ],
+      "evidence_class": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT",
+      "id": "G5-R13",
+      "limits": "Restored continuation not identical opaque model state; standalone RPC failure unchanged.",
+      "obligation": "Fresh model input manifest and bounded developer corrections fully recorded.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Original fresh trial initial+3 INCOMPLETE; restored correction4, total5, 79 broker operations. Not one-shot or original-budget success.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 4098,
+          "member": "AUTHOR_TRIAL/attempt_04/authorship_reconstruction.json",
+          "sha256": "e6e1ecc437dc2215aa7213e856e4fe99d48ced557b221996c104611f1d50dbf0"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        }
+      ],
+      "evidence_class": "FUNCTIONALLY_ACCEPTED_ENGINEERING_PENDING",
+      "id": "G5-R14",
+      "limits": "Repository admission remains PENDING_EXACT_WORK_REVIEW_AND_LANDING.",
+      "obligation": "One cold-authored football domain independently reviewed and locally admitted; its external offer uses the same approved pointer protocol, not a parallel DRS.",
+      "responsible_closing_stage": "Work review / owner landing",
+      "scope": "Exact 23 author files plus broker candidate.json, same policy; local reviewed P7 execution accepted.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "FUNCTIONALLY_ACCEPTED_ENGINEERING_PENDING"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 1616,
+          "member": "evidence/refusal_binding_d1.json",
+          "sha256": "0cbb08146e2a0eaf4d38847ae1ab646ed1688bd17b7a1fca51251d090d806c50"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_NATIVE",
+      "id": "G5-R15",
+      "limits": "Finite reviewed-reference source TCB, not arbitrary hostile Python.",
+      "obligation": "Native changed-intent/consumed-offer result and mock booking state readback; verify-only/repeat do not create another reservation; no code changes between user requests. Real venue booking/payment are not claimed.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "16 cases, 56 events, 7 isolated mock effects; actual E/B/C, Root, receipt and independent readback.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_NATIVE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 8748,
+          "member": "LIVE/consumption_verified.json",
+          "sha256": "d781b19311a99ebe7c92eb749e3f1b9856d8b122d47bf7b2ba7716742cc6e1af"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        }
+      ],
+      "evidence_class": "ACCEPTED_RECORDED_LIVE",
+      "id": "G5-R16",
+      "limits": "CONFIRM/REPEAT controlled typed input; precollected VERIFY did not see later receipt.",
+      "obligation": "Runtime live semantic subset has actual consumed fields and preserved errors.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Three real Gemini2.5flash proposals consumed; 5 separate events and one mock action.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_RECORDED_LIVE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 3751,
+          "member": "evidence/boundary_routes_d1.json",
+          "sha256": "c69a297812c171b600b0aa51a6f615a6f3acaeb5f714f7541d83f002554d9b6f"
+        }
+      ],
+      "evidence_class": "ACCEPTED_SCOPED_REVIEW",
+      "id": "G5-R17",
+      "limits": "Pure altered-evidence/unknown-capability/uncertainty controls are not native race or crash injections.",
+      "obligation": "Independent adversarial/hidden controls; generator cannot modify judge/core.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Unchanged examiner and runner, native input/observed output joins and independent oracle.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ACCEPTED_SCOPED_REVIEW"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g52",
+          "bytes": 4153,
+          "member": "evidence/proofs/supplied_03.json",
+          "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2"
+        },
+        {
+          "archive": "g54d1",
+          "bytes": 32702,
+          "member": "SUPPLIED/one.json",
+          "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0"
+        }
+      ],
+      "evidence_class": "FRESH_PURE_CLOSURE_REQUIRED_BEFORE_FREEZE",
+      "id": "G5-R18",
+      "limits": "No restored authority; hashing and source/status evidence reads are not zero all I/O.",
+      "obligation": "Two pure checks of identical pinned evidence agree; no restored authority/I/O.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Two independent G55 processes recheck one frozen closure with original supplied verifiers.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "FRESH_PURE_CLOSURE_REQUIRED_BEFORE_FREEZE"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      ],
+      "evidence_class": "PENDING_EXACT_WORK_REVIEW_AND_LANDING",
+      "id": "G5-R19",
+      "limits": "Closing stage: external Work review, then already-authorized owner helper.",
+      "obligation": "Source impact/release bindings/independent acceptance/owner landing recorded.",
+      "responsible_closing_stage": "Work review / owner landing",
+      "scope": "Exact sources and unchanged R1 preparation/rehearsal; external byte review and actual owner child not yet executed.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "PENDING_EXACT_WORK_REVIEW_AND_LANDING"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g54c",
+          "bytes": 3705,
+          "member": "evidence/numeric/summary.json",
+          "sha256": "ed8a8c237322aa3b0ef2ae6dafd9945b74e09274ede87569a3abd2262e522f26"
+        }
+      ],
+      "evidence_class": "ENGINEERING_KIT_AVAILABLE_PRESENTATION_PENDING_G56",
+      "id": "G5-R20",
+      "limits": "Closing stage G56, historical B1 capsule is not final publication.",
+      "obligation": "Human presentation, technical appendix, full Reader AND usable authoring kit.",
+      "responsible_closing_stage": "G56",
+      "scope": "Usable kit and proof CLI; no final presentation, appendix or full Reader produced here.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "ENGINEERING_KIT_AVAILABLE_PRESENTATION_PENDING_G56"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      ],
+      "evidence_class": "PENDING_ENGINEERING_LANDING_AND_G56",
+      "id": "G5-R21",
+      "limits": "No future commit or GitHub result invented.",
+      "obligation": "Ordinary publication/readback and links verified; previous assets unchanged.",
+      "responsible_closing_stage": "G56",
+      "scope": "Engineering push/readback awaits review; showcase/navigation awaits G56.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "PENDING_ENGINEERING_LANDING_AND_G56"
+    },
+    {
+      "evidence": [
+        {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      ],
+      "evidence_class": "DISCLOSED_DEFERRED_NOT_IMPLEMENTED",
+      "id": "G5-R22",
+      "limits": "Disclosure is complete; deferred implementation is not PASS.",
+      "obligation": "Full Factory/Cognitive Radiolaria/global federation explicitly remain deferred.",
+      "responsible_closing_stage": "G55 finite review",
+      "scope": "Factory, Cognitive Radiolaria and global federation remain post-Gate6 programs.",
+      "source_identities": {
+        "D1_freeze": {
+          "archive": "g54d1",
+          "bytes": 961006,
+          "member": "FINAL_EVIDENCE_FREEZE.json",
+          "sha256": "692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49"
+        },
+        "installed_and_core_map": "source_bindings.json",
+        "shared_ledger": {
+          "archive": "g53",
+          "bytes": 6348,
+          "member": "SUPERVISOR_EVIDENCE/final_source_ledger.json",
+          "sha256": "c599acdaf3bb082541201156396e95e75dfbe988528d5868a3c512152f66c651"
+        }
+      },
+      "status": "DISCLOSED_DEFERRED_NOT_IMPLEMENTED"
+    }
+  ],
+  "version": "gate5.reference.acceptance.v01"
+}

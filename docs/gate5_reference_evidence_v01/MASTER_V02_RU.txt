@@ -1,0 +1,1743 @@
+RADIOLARIA OS / HEDGEHOG OS
+GATE 5 REFERENCE — BOUNDED EXTERNAL DRS AND INDEPENDENT AUTHORING
+ПОЛНОЕ ТЕХНИЧЕСКОЕ ЗАДАНИЕ ДЛЯ WORK / ПОЭТАПНЫХ ПРОМПТОВ CODEX
+
+DOCUMENT_ID=RADIOLARIA_GATE5_REFERENCE_IMPLEMENTATION_MASTER_V02
+VERSION=V02
+DATE=2026-09-24
+SCOPE_ID=G5_REFERENCE_EXTERNAL_MEANING_AND_AUTHORING_V02
+STATUS=PROPOSED_SCOPE_REVISION_NOT_IMPLEMENTATION_OR_ACCEPTANCE
+OBSERVED_BASE=76a6952c9d0f31c976d2501c5641457a20de153a
+OBSERVED_PARENT=fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a
+OBSERVED_TREE=b98f1d5d33c259939c1b4b2bcf72ce1c0e5ebf9c
+OPERATOR_LANGUAGE=RU
+PUBLIC_LANGUAGE=EN
+FULL_LEGACY_GATE5=NOT_CLAIMED_BY_THIS_REFERENCE_SCOPE
+DEFERRED_PROGRAM_START=AFTER_GATE6_PUBLICATION_BY_SEPARATE_OWNER_DECISION
+
+ДЛЯ АНДРЕЯ И WORK
+
+V02 ПОЛНОСТЬЮ ЗАМЕНЯЕТ V01 при выборе владельцем этого варианта для запуска.
+Основание изменения: вопрос владельца о pointer-only External DRS и предложение
+заменить холодный экзамен с переговорной сценарием футбольных полей Active Planet.
+Это рекомендуемое уточнение ещё не запущенного Gate5, не описание состоявшегося опыта.
+Исходный V01 сохранён отдельно; его SHA256=836b176e5a758ba9ec3e685d84eef3e76d15e3676e8b7a453def13578e0745b2.
+
+СОХРАНЕНО: весь конечный протокол External DRS, независимые Root, криптография,
+currentness, cold-authoring изоляция, порядок G5-0…G5-6, R1 и все отсрочки.
+УТОЧНЕНО: адресный слой не содержит полные payload/слепки; transport не привязан
+навсегда к калибровке; второй зарегистрированный тип данных нужен футбольному домену.
+ЗАМЕНЕНО: Meeting Room Readiness -> Football Pitch Booking Reference.
+НЕ ДОБАВЛЕНО: третья большая демка, реальное бронирование, банк, сайт, WhatsApp,
+облачный DRS, фабрика кода или новая математика ядра.
+
+Футбольный итог: подбор/согласование трёх слотов и реальное изменение ЛОКАЛЬНОГО
+УЧЕБНОГО реестра бронирования через текущий допущенный mock-effect путь.
+Это не одна напечатанная надпись BOOKED и не настоящая бронь в Tirana Olympic Park.
+По сравнению с V01 это шире отчёта о готовности переговорной: для этой добавки
+отдельно указан резерв времени, а совместимый стык mock-эффекта проверяется в G5-0.
+
+
+Свадебная публикация уже наблюдается в GitHub на указанном commit. Это следующий
+Gate 5, а не ещё одна переделка свадьбы и не новый квантовый опыт. Входная точка —
+первый G5-0. Существующего исполненного кандидата Gate 5 этот документ не предполагает.
+
+Результат Gate 5 состоит из ДВУХ законченных доказательств:
+
+1. Чужой опыт можно найти по ограниченному указателю, разрешённо открыть, проверить
+   и действительно использовать в своей работе, НЕ перенимая чужие полномочия.
+2. Свежий внешний модельный разработчик без нашей переписки способен по машинному
+   руководству написать маленький новый домен, который проходит независимую приёмку
+   и выполняет реальную работу через существующее ядро без его переписывания.
+
+Это мост от «автор построил несколько демонстраций» к «другие могут использовать,
+соединять и развивать технологию». Не строим сейчас глобальную сеть, рынок плагинов,
+фабрику произвольного кода или систему автоматического самоизменения.
+
+Полноценная NeedleFactory и Cognitive Radiolaria остаются в программе развития.
+Они не отменены, не объявляются выполненными и не возвращаются обязательными задачами
+в Gate 6 под видом финальной проверки. Их разработка — после публикации Gate 6,
+по отдельному решению владельца, без придуманной даты.
+
+В этом ТЗ различаются:
+- SOURCE FACT: прочитанный факт репозитория или исходного roadmap;
+- OWNER SCOPE: согласованное сейчас сокращение;
+- NEW DESIGN: предлагаемый конечный контракт Gate 5;
+- EXECUTION EVIDENCE: результаты, которые Work/Codex ещё должны получить.
+Не подменять четвёртое первыми тремя.
+
+Для владельца не требуются новые аккаунты, AWS-права, ключи облачного сервиса,
+платные машины, QPU или сложные переходы по интерфейсам. Work готовит всё в рамках
+действующей среды. Вход/платформенное разрешение и конечное внесение — только там,
+где они действительно требуются и не могут быть выполнены без владельца.
+
+ОГЛАВЛЕНИЕ
+01. Базис, приоритет источников и исходное состояние
+02. Почему и как изменён исходный Gate 5: матрица K / L / M
+03. Новые понятные названия когнитивных радиолярий
+04. Неподвижные законы и границы сокращения
+05. Что уже есть: конкретные стыки и ограничения
+06. External DRS: конечный объём и семантика обмена
+07. Закрытые внешние форматы и их привязки
+08. Время, область, происхождение, конфликт и отзыв
+09. Подписи и независимые владельцы без новой PKI
+10. Два процесса, транспорт и настоящая локальная Work
+11. Положительная история с точной численной опорой
+12. Отказы, повторное использование и dead ends
+13. Машинный Domain / Needle Authoring Kit
+14. Football Pitch Booking Reference: новый домен холодного автора
+15. Протокол свежей LLM и независимого приёмщика
+16. Изоляция разработки, источники доверия и бюджеты
+17. Проверки без многочасовых повторных коллекций
+18. Последовательность G5-0…G5-6 и рабочие оценки
+19. Файлы, R1, точное внесение и восстановление
+20. Документирование сокращения и готовый текст README
+21. Матрица закрытия и стык с Gate 6
+22. Презентация, приложение, XML Reader и Authoring Kit
+23. Возврат, экономия времени и первый промпт Work
+24. Источники и проверка этого проектирования
+
+===============================================================================
+01. БАЗИС, ПРИОРИТЕТ И ИСХОДНОЕ СОСТОЯНИЕ
+===============================================================================
+
+1.1. SOURCE FACT. Через подключённый GitHub прочитан main:
+repo: AAkhtanin/hedgehog-os
+commit: 76a6952c9d0f31c976d2501c5641457a20de153a
+parent: fbb136f4fe1050a5f01be71ea00753c5e7b6fd1a
+tree: b98f1d5d33c259939c1b4b2bcf72ce1c0e5ebf9c
+message: Publish Wedding presentation and source-bound evidence reader.
+Прочитан docs/showcase/wedding_seating_v01/README.md на этом commit.
+
+Owner сообщает: обычный push/readback завершён; 317 assets не менялись; guard и
+release bindings прошли; owner чист; review context FINALIZED. Work использует
+уже полученные реальные receipts своего процесса, не запускает ещё один ритуальный
+цикл приёмки свадьбы. Локальный publication TAR владельца при подготовке данного
+ТЗ не предоставлялся: его размеры/хэш не выдаются здесь за независимо пересчитанные.
+
+1.2. Перед первым изменением Work подтверждает фактический текущий admitted tip,
+его lineage, branch/index/status, отсутствие другого writer и действительный R1
+context. Если tip уже продвинулся, сообщить точную допустимую разницу, а не откатить
+его на OBSERVED_BASE. Никаких reset/force/amend, очистки TMP и закрытия чужих процессов.
+
+1.3. Источники организации работ:
+- hedgehog_deeptech_completion_master_roadmap_v2_1.md: ЧТО технически было задумано;
+- HEDGEHOG_DEEPTECH_COMPLETION_ROADMAP_V3_1_GATE_BASED_GUARDIAN: КАК и КОГДА исполнять;
+- HEDGEHOG_OWNER_ROADMAP_PAIR_AUTHORITY_RULING_V01: приоритеты пары и запрет старых путей;
+- RADIOLARIA_GATE5_GATE6_SCOPE_AND_WHITEPAPER_NOTES_20260923_RU.md: согласованное
+  направление сокращения, не самостоятельно исполняемый runtime-контракт;
+- настоящий документ: точная текущая OWNER SCOPE / NEW DESIGN реализация этого выбора.
+
+Версий v2.5/v3.5 вместо указанных не создавать. Старая историческая терминология
+не имеет права отменить current architecture lock и принятые runtime-инварианты.
+
+1.4. Приоритет при конфликте:
+действующий architecture lock и принятые Root/Host/Firewall/ABI законы -> актуальные
+source/admission contracts и независимо закреплённый review context -> текущий
+владельческий scope этого ТЗ -> v3.1 как порядок -> v2.1 как технический ориентир.
+Если scope требует реально изменить защищённый закон, это отдельный узкий вопрос,
+не разрешение молча переписать закон. Датированные PENDING в старых AGENTS/lock
+не аннулируют более поздние принятые исполнения; их объясняет новый checkpoint.
+
+1.5. START STATE Gate 5:
+IMPLEMENTATION=NOT_STARTED_BY_THIS_MASTER;
+EXTERNAL_DRS_REFERENCE=TO_IMPLEMENT;
+AUTHORING_KIT=TO_BUILD_AND_FREEZE;
+COLD_AUTHORING_EXAM=NOT_RUN;
+COGNITIVE_MODULES=DEFERRED;
+NEEDLE_FACTORY=DEFERRED;
+GATE5_ACCEPTANCE=NOT_AWARDED.
+Сохранённые математические/G3/G4/Wedding доказательства — reusable foundations,
+не новые прогоны G5. Возврат прежнего Work и его память не заменяют source inspection.
+
+===============================================================================
+02. ИСХОДНЫЙ ROADMAP И ОСОЗНАННОЕ СОКРАЩЕНИЕ
+===============================================================================
+
+2.1. SOURCE FACT. В v3.1 Gate 5 называется Extensibility, Federation & Reflection.
+Он объединяет фазы K/L/M master v2.1, но допускает начать с External DRS после
+стабилизации G4. Поэтому порядок M -> authoring не нарушает исходную зависимость.
+Меняется ПОЛНОТА первоначального этапа, а не законы ядра.
+
+2.2. Матрица, обязательная в новом контракте и итоговом checkpoint:
+
+Исходное обязательство | Gate 5 Reference сейчас | После публикации Gate 6
+K1 Domain/Needle Authoring Passport | Полный конечный машинный kit + пример + схемы |
+  Продолжение расширения каталога по потребности
+K2 NeedleCandidate и candidate-only | Передаваемый пакет внешнего разработчика,
+  installable_now=false, отдельный review/admission | Встроенная генерация кандидатов
+K3 Встроенная NL->requirements->code->sandbox фабрика | НЕ строим; внешний Codex/LLM
+  проходит явно измеряемый authoring-процесс | Полноценная NeedleFactory
+K4 Состояния кандидата / quarantine / local admission | Применяем к одному внешнему
+  кандидату как процесс разработки и допуска; не создаём runtime self-installer |
+  Автоматизация конвейера фабрики и расширенные профили
+K5/K6 Новый маленький домен без правки ядра | ОБЯЗАТЕЛЬНЫЙ холодный экзамен,
+  настоящая native Work и независимые отрицательные проверки | Другие домены
+L1 Рефлексия своих следов, lessons/patch/test-gap proposals | Только новый roadmap-
+  паспорт роли и понятное имя; исполнения не заявляем | Reflective Improvement Radiolaria
+L2 Перенос структур между доменами | Только описание proposal-only роли и имя |
+  Cross-Domain Transfer Radiolaria
+L3 Полезные/отклонённые reflection/transfer candidates | DEFERRED, не fake PASS |
+  Отдельная будущая проверка Cognitive Radiolaria
+M1 Внешние смысловые указатели и их envelopes | Один закрытый reference-профиль,
+  реальные подписи тестовых ключей, точные байты и bounded records | Больше профилей
+M2 Pointer -> разрешённое получение -> проверка -> локальное применение | ОБЯЗАТЕЛЬНО
+  в двух отдельных процессах/DRS/Root; это главный внешний результат | Распределённая сеть
+M3 Foreign signature != local authority | ОБЯЗАТЕЛЬНО, положительный и отрицательный
+  контрасты, отдельное местное рассмотрение | Сохраняется всегда
+M4 Два независимых Root, отзыв/срок, отсутствие SuperRoot | ОБЯЗАТЕЛЬНО в конечном
+  двухузловом опыте | Масштаб/операционный PKI/discovery не включаем сейчас
+
+2.3. Почему этого достаточно для текущего выхода.
+G1–G4 и разные предметные демонстрации уже дали фундамент. Следующие два риска для
+передачи технологии — внешние основания и зависимость разработки от автора.
+Ровно их и закрываем. Полноценная фабрика и рефлексивная экосистема добавляют отдельные
+программы исследования и операционного управления, не требуемые для этих двух proof.
+Их включение сейчас увеличивает неопределённость сроков, но не является условием
+того, что ограниченный внешний обмен и опубликованное расширение работают.
+
+2.4. Чего сокращение НЕ означает.
+Не убираем подписи/проверки/Root/currentness ради скорости. Не заменяем federation
+копированием словаря между функциями. Не заменяем cold authoring пересказом старой
+свадьбы. Не называем внешнего кодирующего помощника уже встроенной NeedleFactory.
+Не присваиваем полное старое RC5/Extensible-and-Federated-and-Reflection closure.
+
+Рекомендуемый публичный label:
+  Gate 5 Reference — External Meaning and Independent Authoring.
+Полное исходное Gate 5 покрыто ЧАСТИЧНО и имеет явную residual matrix. Reference
+при этом может быть полностью принят в своей заранее объявленной области.
+
+===============================================================================
+03. НОВАЯ ТЕРМИНОЛОГИЯ: COGNITIVE RADIOLARIA
+===============================================================================
+
+3.1. OWNER SCOPE. Семейство для будущих когнитивных расширений:
+  Cognitive Radiolaria — когнитивные радиолярии.
+Это функциональное название класса расширений, не новая привилегированная иерархия.
+
+Историческое имя | Публичное функциональное имя | Короткое значение
+Marennya / marenna / Марыня | Reflective Improvement Radiolaria |
+  Анализ опыта собственных выполнений и предложения улучшений
+UP / up | Cross-Domain Transfer Radiolaria |
+  Выявление применимых структур опыта и предложения переноса между доменами
+
+Сокращения RIR/CDTR для пользователя не обязательны; ясные полные названия лучше.
+Не вводить «над-Root», «суперсознание» или буквальное геометрическое направление
+вверх как полномочие. Оба расширения возвращают предложения местному рассмотрению.
+
+3.2. Reflective Improvement Radiolaria, FUTURE CONTRACT SUMMARY.
+Входы: bounded sealed trace summaries, scoped dead ends, конфликты/карантин,
+проверяемые ошибки оценки/валидации, пригодный опыт G3/G4.
+Выходы: ReflectionCandidate, TestGapCandidate, RiskNote, ReuseCorrectionCandidate,
+ProtocolPatchCandidate/ValidatorPatchCandidate, при необходимости NeedleCandidate.
+Она обнаруживает повторяющиеся проблемы и предлагает изменение. Она НЕ меняет
+память, закон, validator, файл, рейтинг или исполняемый код собственным решением.
+Путь: основания -> candidate -> независимая проверка -> quarantine -> отдельное
+Root/owner/developer рассмотрение -> допустимое точное изменение.
+
+3.3. Cross-Domain Transfer Radiolaria, FUTURE CONTRACT SUMMARY.
+Входы: проверенные структуры нескольких доменов, успешные протоколы, outcome families,
+явные предпосылки и ограниченные аналогии.
+Выходы: TransferCandidate, OpportunityReport, ProtocolTemplateCandidate,
+CrossDomainNeedleCandidate.
+Она предлагает, ГДЕ и при каких предпосылках применить структуру опыта; совпадение
+формы не доказывает совпадения смысла и не переносит доверие/полномочия.
+Проверка нового домена и его местный владелец остаются необходимыми.
+
+3.4. NeedleFactory сохраняем как планируемую Capability Synthesis Factory.
+Полноценная будущая программа: обнаружение need -> требования -> candidate contract /
+code/config -> проверки -> bounded sandbox -> quarantine -> отдельное принятие.
+Генерация не означает установку, а установка не создаёт разрешение на каждое действие.
+Сейчас — внешний Authoring Kit и проверенная передача процесса другому разработчику.
+Это достаточный заменитель для текущей публикации, а не выполненная фабрика.
+
+3.5. SOURCE FACT. В main есть marenna.py и up.py: они создают quarantined mock
+placeholder records с pending validations. Это не реализованная программа L1/L2.
+Не удалять и не переименовывать эти файлы, storage layer 'up', поля и старые evidence
+в данном Gate. Один mapping в новой документации сохраняет возможность найти историю.
+Новые публичные тексты используют имена выше; исторические ссылки остаются точными.
+Не создавать пустые новые Python-модули только ради английских названий.
+
+===============================================================================
+04. НЕПОДВИЖНЫЕ ЗАКОНЫ
+===============================================================================
+
+4.1. Каждый Root принимает свои решения; общего SuperRoot не появляется.
+Тестовый launcher запускает процессы и подаёт объявленные synthetic inputs, но
+не является третьим владельцем их решений и не выбирает за них допустимый результат.
+
+4.2. Pointer, чужая подпись, успешный replay, прежний ACCEPT, высокий рейтинг,
+скачанный code bundle и репутация автора — НЕ местное разрешение на действие.
+Никакие Root/Host/effect handles и актуальные capability origins по сети не передаются.
+Чужая запись может стать местным evidence/candidate, а не local grant.
+
+4.3. Reasoning / authority / action разделены. Semantic Architect предлагает;
+существующий Runtime материализует исполнимую topology; право исполнения проверяется
+своим действующим механизмом. PlanGraph/AttractorPacket, aliases и legacy resurrection
+запрещены независимо от формулировок старых roadmap.
+
+4.4. И внешняя информация, и внешний код первоначально недоверенны, но это разные
+объекты. Доверенное чтение данных не равно допуску executable code. Code import через
+External DRS здесь не реализуется; ссылки на команды не исполняются.
+
+4.5. Существующие LocalDRS/TimeEnvelope/настоящие Work и Root используются реально.
+Доменные обёртки с именами Root/DRS/Firewall, не вызывающие принятые механизмы,
+не засчитываются. Исполнитель не назначает сам себе expected source/policy pin.
+
+4.6. Новые специальные обязанности G5 реализуются в bounded слоях external_drs,
+authoring/reference domains и операционных адаптерах. Общие ABI/currentness/
+authority/enforcement не переписываются ради удобства. Если найден настоящий
+недостающий публичный стык, Work возвращает узкую source-bound коллизию. Не лечить
+её fake metadata, private-field доступом или новым скрытым владельцем эффекта.
+
+4.7. Пределы теста не выдавать за пределы всего проекта, но не выдавать proposed
+универсальность за измеренный масштаб. Reference = два процесса, ограниченная
+семантика внешнего материала и один внешний авторский эксперимент.
+
+===============================================================================
+05. ЧТО ЕСТЬ В РЕПОЗИТОРИИ И КАК ЭТО ПЕРЕИСПОЛЬЗОВАТЬ
+===============================================================================
+
+5.1. SOURCE FACT, проверенные поверхности на OBSERVED_BASE:
+
+hedgehog/drs.py:
+  LocalDRS, immutable-content-on-same-record-id, слои work/thoughts/up/quarantine/
+  deadends, базовое сохранение/чтение. Это storage, не самостоятельное разрешение.
+hedgehog/local_drs_resolver.py:
+  реальные write_semantic_record / resolve_semantic_candidates используются Wedding.
+hedgehog/drs_semantic_address_v01.py:
+  SemanticAddress, MeaningRecord, Time/Authority envelopes; memory/artifact storage
+  classes в прочитанном текущем контракте LOCAL_*. Нет права выдавать remote URI
+  за LOCAL_DOCUMENT или незаметно расширять старый enum.
+hedgehog/drs_memory_resolution_v01.py:
+  temporal query, eligibility, retrieval plan, budget, local descent; реальный пример
+  использования в WeddingMemoryV01.
+hedgehog/domains/wedding_seating/memory_v01.py:
+  build_semantic_address_v01, build_drs_time_envelope_v01,
+  build_drs_authority_envelope_v01, build_meaning_record_v01;
+  current query -> evaluate_drs_candidate_v01 -> Root review ->
+  build_memory_descent_request_v01 -> execute_local_memory_descent_v01.
+  Это донор ПАТТЕРНА. Не импортировать свадьбу как скрытый общий DRS implementation.
+hedgehog/kernel/root_signer_isolation_v01.py:
+  настоящая Ed25519 криптография для ephemeral test-only signer capabilities,
+  bound commitments и independent trusted keysets; не PKI/production attestation.
+hedgehog/capability_admission_v01.py:
+  конечный affine-u8-v01 / pure-i32 профиль, независимый oracle и quarantine/admission.
+  Контролируемая генерация WAT — не NeedleFactory для любых программ.
+hedgehog/wasm_pure_worker_v01.py и capability_memory_binding_v01.py:
+  существуют как границы конечного pure-кода/его локального повторного использования.
+  Полную совместимость конкретного нового authoring-профиля Work проверяет в G5-0.
+hedgehog/kernel/work_composition_v01.py и work_execution_host_v01.py:
+  реальные typed inputs/results, materialization, current membership, consumption.
+G3/G4 accepted modules:
+  повторное построение feedback loop, GT/AVF математики не является задачей G5.
+
+5.2. SOURCE FACT: hedgehog/external_drs/ существует, но проверенные __init__.py,
+index.py, record.py, resolver.py имеют размер НОЛЬ. Наличие namespace не является
+готовой federation. Это наблюдение этих файлов, не доказательство отсутствия любого
+внешнего helper во всём repo. G5-0 делает конечную карту public reusable seams.
+
+5.3. Непосредственный подход к remote pointer.
+Новый ExternalMeaningPointer хранится как bounded connector metadata/content в
+LocalDRS с местной semantic address. В адресной записи — указатель и разрешённые
+метаданные, НЕ копия всего чужого хранилища, исполнимого фрактала или payload.
+Не расширять MemoryPointerV01.storage_class. Открытие внешнего тела идёт через
+отдельный explicit provider bridge; полученный verified data object становится
+входом локальной Work. Его явно разрешённое локальное сохранение — отдельный
+кандидат/артефакт с происхождением, а не разрастание публичного адресного индекса.
+
+DNS-подобие относится к разделению разрешения адреса и доступа к материалу.
+Это не DNS wire protocol, не общий распределённый реестр истины и не разрешение
+переписать существующий LocalDRS: local records законно имеют safe summaries и
+указатели на полные локальные материалы. Полный trace/слепок выполненной работы
+остаётся у своего владельца; reference открывает только нужный разрешённый bundle.
+Прочитать исторический фрактал не означает восстановить его старые grants/Host.
+Полное удалённое воспроизведение произвольных native graphs в Gate5 не добавляется.
+
+Сохранённый указатель/кандидат — CONNECTOR_OBSERVATION/EVIDENCE_CANDIDATE согласно
+реальному допустимому carrier. ROOT_ACCEPTED_CONTEXT появляется только после
+действительного местного рассмотрения, с местным decision id и сохранёнными foreign
+source refs. Нельзя переписать foreign owning_root_id на свой и назвать это импортом.
+
+5.4. В G5-0 зафиксировать таблицу из максимум нескольких страниц:
+обязанность -> exact public symbol -> current source hash -> новый adapter ->
+положительный probe -> поддержанный предел. Не составлять новый полный паспорт
+всего проекта и не возрождать архивные задачи E5/U4.
+
+===============================================================================
+06. EXTERNAL DRS: КОНЕЧНЫЙ ОБЪЁМ
+===============================================================================
+
+6.1. NEW DESIGN: два процесса A и B, отдельные Root instances, конфигурации,
+LocalDRS roots, publisher state и ключи. Один и тот же установленный reviewed code
+может быть общим: это не означает общий Root или общую базу данных.
+
+A — publisher проверенного bounded результата.
+B — requester / importer, использующий его как основание своей задачи.
+Транспорт — один ограниченный канал между этими процессами. Рекомендуется loopback
+HTTP на явно назначенном 127.0.0.1:port. Это реальная передача сериализованных байтов,
+но не production интернет/TLS и не доказательство защиты от администратора ноутбука.
+
+6.2. Первый evidence body — BoundedCalibrationSummaryV01 из раздела11.
+На нём замыкается отдельный протокольный proof: чужой проверяемый опыт действительно
+использован, без запуска чужого кода. Это не новый Sentinel/прибор.
+
+ВТОРОЙ body-profile после допуска нового доменного кода — FootballVenueOfferV01
+из раздела14. Те же pointer, подпись, transport, query/currentness, quarantine и
+local acceptance работают с другим разрешённым смыслом. В протоколе используется
+body_schema_id/version и конечная локальная allowlist проверяющих, закреплённая
+reviewed source/policy. Контент не поставляет себе validator/import/module/endpoint.
+
+G5-0 проектирует этот стык до первого collector; G5-1/G5-2 исполняют калибровочный
+профиль. G5-3 документирует публичный способ добавить approved domain body-profile.
+Сам футбольный schema/validator/consumer пишет холодный автор в G5-4.
+Служебный transport code не ветвится по имени CalibrationRoot или названию теста.
+Unknown schema отказывает. Это два конечных профиля, не универсальный registry
+скачиваемых executable plugins и не снятие проверки содержимого.
+
+6.3. В локальном индексе B первоначально только pointer:
+кто публикует, что за смысловой тип, для какой scope/revision, когда применим,
+идентичность и размер тела, доступный policy-controlled путь получения.
+Не передавать actual offset, observations и весь source DRS в safe_summary pointer.
+Семантический поиск по kind/domain/declared terms достаточен для reference. Не
+объявлять этот finite lookup универсальным semantic/vector search.
+
+6.4. Конечные пределы НА ОДНУ историю, фиксируются до прогона:
+peers=2; automatic federation hops=1; registered pointers<=4;
+records per requested bundle<=8; lineage refs<=16; pointer bytes<=16KiB;
+canonical body<=64KiB; protocol message<=256KiB; JSON depth<=12;
+max outbound payload retrieval attempts per local task=2;
+max metadata/status observations per local task=8;
+max opened payloads per local task=2; cumulative received body bytes<=128KiB.
+Эти бюджеты не обнуляются новой coroutine, попыткой или повторным входом в helper.
+Калибровочная и футбольная истории используют отдельно созданные контексты тех же
+двух peer-ролей. Не нужны четыре одновременно работающих деловых участника.
+Три футбольных занятия помещаются в один конечный offer bundle; не делать по
+запросу/полному pipeline на каждого участника команды.
+Mock booking — отдельно разрешённая доменная операция со своим конечным бюджетом,
+а не скрытая дополнительная операция pointer resolver.
+
+6.5. В Gate 5 НЕ входят:
+global discovery, consensus, multi-hop federation, federation-wide reputation,
+marketplace, billing, public endpoints, TLS/PKI enrollment, key rotation service,
+внешняя загрузка executable packages, межъязыковые ABI, global memory migration.
+Первое расширение не должно случайно включить все эти продукты.
+
+6.6. Функциональная цепочка:
+A actual Work -> A current review of exact releasable data -> signed descriptor ->
+B LocalDRS pointer registration -> B current query -> B current retrieval review ->
+A current release/access review -> bounded fetch -> quarantine -> independent
+origin/content/time/scope/conflict checks -> B current local acceptance ->
+actual B Work consumes selected field -> B current result review -> local record.
+
+Сохранённое внешнее одобрение не заменяет ни одного из местных шагов. Publication
+указателя заранее может быть разрешена явно заданной synthetic owner policy;
+каждое отдельное человеческое нажатие не требуется, но source её решения виден.
+
+===============================================================================
+07. ФОРМАТЫ ВНЕШНЕГО ОБМЕНА
+===============================================================================
+
+Это новые ЛОГИЧЕСКИЕ carrier names. Не требуется новый файл/ABI-тип под каждый пункт.
+Work замораживает закрытые schemas и canonicalization в одном bounded контракте.
+Дубликаты JSON keys, unknown fields, NaN/Inf, bool-as-int, unbounded strings запрещены.
+Normative числа — integers либо сокращённые rational num/den, den>0. Float не authority.
+
+7.1. ExternalMeaningPointerV01:
+version; pointer_id; publisher_root_id; publisher_key_id;
+semantic_address (namespace/domain/subject_class/intent_class/schema_id/version);
+source_record_ref; source_revision; source_review_ref;
+body_sha256; body_bytes; media_type; artifact_manifest_ref;
+safe_summary; published_scope; allowed_use_classes; forbidden_use_classes;
+recipient_scope; time_envelope; source_lineage_refs;
+access_policy_ref; revocation_stream_id; transport_object_id;
+creates_authority=false; creates_permission=false.
+Signature envelope отдельно от canonical pointer body. pointer_id выводится из
+полного unsigned body без собственного id; signature связывает этот hash.
+source_review_ref указывает на предшествующее рассмотрение исходной Work A. Текущее
+разрешение publish/release хранится отдельно и не включается в самоссылочный hash.
+Нет произвольного URL, path, credentials или executable expression.
+Новые canonical object IDs: фиксированный безопасный префикс + lowercase SHA256;
+они не проходят lossy замену символов, способную слить разные IDs в один filename.
+Peer/domain labels bounded до128 ASCII символов, references до256; safe_summary
+до1024 символов и только явно разрешённые metadata. Все пределы проверяются
+до дорогого вычисления/чтения. Нормализация множества и порядок списка различаются.
+
+7.2. Trust/transport profile — самостоятельный локальный trusted input:
+peer_root_id -> exact pinned public keyset identity -> endpoint alias;
+allowed domains/schemas/use classes; permitted recipient; byte/depth budgets;
+max source age; maximum validity horizon; status freshness requirement;
+local authority scope fingerprint; own policy version.
+Он не загружается из указателя, рекламирующего самого себя. Endpoint mapping задаёт
+оператор, pointer содержит только bounded object id.
+
+7.3. RetrievalPlan / разрешение получения:
+использовать native Root-reviewed plan и существующий reference pattern.
+В новый provider request связать local_root_id, task/request/revision, pointer hash,
+проверенный trust profile hash, requested use, exact object id, allowed size,
+status challenge, deadline и отдельно owner-approved transport scope.
+Сериализованный JSON с allow=true не является runtime grant. Нужен живой действующий
+review origin либо иной действительно поддержанный механизм, а не восстановление
+Root из архивного словаря.
+
+7.4. Export bundle, без циклических хэшей:
+Сначала canonical body.json с source facts, derived result и исходными Work/review
+refs. Затем closed content_manifest(version,publisher,source_revision,source_refs,
+declared_schema,files[path,bytes,sha256]); manifest описывает body, но НЕ pointer,
+собственную подпись или самого себя. После этого pointer связывает body_sha256,
+body_bytes и content_manifest identity. Ответ транспорта содержит pointer_ref и
+эти уже неизменные bytes. Никакого цикла pointer_hash -> manifest -> pointer_hash.
+Public signature/commitment привязывает pointer и content manifest отдельно.
+Несекретные source facts достаточны для самостоятельного finite verifier.
+Вложенный source code только inert reference, НЕ импортировать/исполнять.
+Никаких архивов архива, абсолютных путей, symlink/hardlink или самостоятельного
+выбора кода проверки отправителем.
+
+7.5. ImportCandidateV01:
+import_id, local_request_ref, pointer_ref, original foreign identities,
+received_manifest_hash, body_hash, actual receive event,
+validation component IDs/results, observed status revision,
+local scope/policy/dependency fingerprint, creates_permission=false.
+Сам candidate immutable. Отдельная disposition-запись с candidate_ref и parent_ref
+фиксирует CANDIDATE|QUARANTINED|REFUSED|ACCEPTED_CONTEXT и local_review_ref|null.
+Review ссылается на candidate identity; candidate не перехэшируется, чтобы включить
+ссылающийся на него review. Переход статуса журналирует новый факт, не меняет старый.
+
+7.6. LocalAdaptationCandidateV01, ограниченный вариант:
+конкретный projection/imported field -> типизированный input местной Work;
+foreign_source_ref остаётся прежним; local_view_id и local acceptance — свои.
+Это данные, не предложение патча и не скачанный модуль. Не превращать импорт
+калибровки в новую локальную policy или в permission на аппаратное действие.
+
+7.7. Revocation/status:
+immutable status entry: pointer_id, publisher_root_id, stream_id, revision,
+state ACTIVE|REVOKED|SUPERSEDED, effective_at, reason_ref, entry_hash.
+fresh response: entry + requested_pointer_hash + requester + unpredictable nonce +
+checked_at + valid_until + signature.
+entry_hash вычисляется по canonical entry без самого поля entry_hash.
+Новый nonce/время меняют response, но не immutable entry_hash того же status revision.
+Сравнение equivocation выполняется по entry, не по обновлённому freshness envelope.
+
+7.8. SignatureValid не заполняет остальные результаты validation=true.
+Для imported bundle отдельно проверяются форма, source identity, exact bytes,
+семантика арифметики, units, time, local scope, lineage и отзыв. Внешнее поле
+validated=true не используется вместо собственного проверяющего.
+
+===============================================================================
+08. ВРЕМЯ, ПРИГОДНОСТЬ, ОТЗЫВ И ПОВТОРЫ
+===============================================================================
+
+8.1. SOURCE BASIS M3 расширяется в конечную проверяемую формулу:
+EligibleForLocalUse =
+  ShapeOK ∧ IndependentlyPinnedSourceOK ∧ SignatureOK ∧ BodyIntegrityOK
+  ∧ ProvenanceOK ∧ TemporalOK ∧ ScopeOK ∧ StatusOK ∧ ConflictClear
+  ∧ LocalPolicyOK ∧ CurrentLocalRootAcceptance.
+Ни один conjunct не создаёт другие. EligibleForLocalUse — ещё не разрешение
+последующего внешнего/физического действия.
+
+8.2. ScopeOK:
+requested use принадлежит allowed_use_classes и НЕ forbidden_use_classes;
+requested domain/schema/recipient соответствует pointer И собственной local policy;
+local task dependency fingerprint совпадает с тем, для чего открыт материал.
+Foreign «разрешаю всем всё» не расширяет local policy.
+
+8.3. TimeEnvelope сохраняет PT / KT / ET / CT / TTL и source/ingestion/verification
+времена. Доставка сейчас не превращает старое наблюдение в новое. Полные native
+поля строить существующими public builders, не выдуманным свободным date-словарём.
+
+Для reference unsigned source body хранит explicit ttl_base=pt_created_at.
+End = min(valid_to, pt_created_at + ttl_seconds,
+          source_observed_at + local_max_source_age).
+TemporalOK(t) = valid_from <= t < End AND source_observed_at <= t.
+Часы — целые UTC seconds в объявленном профиле. Переполнение/отрицательная TTL/
+неупорядоченные bounds — отказ. Смена ingestion_time не сдвигает End.
+Local accepted record не может жить дольше End своего зависимого источника.
+
+8.4. Проверять свежесть перед получением и перед фактическим использованием.
+В текущем reference status_max_age_seconds=60; status valid_until также ограничен.
+StatusFreshOK = checked_at <= t < min(valid_until,checked_at+60), nonce и subject
+совпадают с собственной свежей проверкой, подпись и endpoint прошли admission.
+StatusOK = StatusFreshOK AND entry.state == ACTIVE AND entry.effective_at <= t
+AND no_known_terminal_state AND monotonic_status_revision. SUPERSEDED/REVOKED
+не пригодны для нового current use; запись истории при этом остаётся доступной.
+Если фактический native цикл не помещается — свежая проверка тем же разрешённым
+путём, а не переписывание checked_at. Параметр60 можно обоснованно уточнить в G5-0
+до freeze по измеренной длительности; не растягивать задним числом ради PASS.
+
+8.5. У B постоянно хранится highest_seen_revision и hash status entry на каждый
+peer/stream. Ни меньшая revision, ни та же revision с другим entry_hash не принимаются
+как текущие. Known REVOKED для pointer_id не снимается повтором старого ACTIVE.
+Новая публикация после исправления — новая body identity/pointer, не воскрешение
+отозванных байтов под старым id.
+
+8.6. Недоступна обязательная проверка статуса -> CURRENT_STATUS_UNKNOWN.
+Можно показать сохранённую историю как историю. Использовать её как текущее
+основание при строгой reference policy — нельзя. Не утверждать, что отсутствие
+доставленного отзыва доказывает отсутствие отзыва у другой стороны.
+
+Между двумя процессами нет магической мгновенной осведомлённости. Гарантируется
+проверка объявленных текущих свидетельств с ограниченной давностью, не глобальная
+атомарность отзыва. Для контрольного опыта порядок revoke -> next use задаётся
+явно и должен дать отказ. Отзыв не стирает уже состоявшийся результат и не возвращает
+ранее раскрытые байты.
+
+8.7. Конфликт:
+одна source identity с разными bytes; одинаковая revision с разным entry;
+несовместимые units/calibration/subject; неподтверждённый разрыв lineage.
+При конфликте quarantine / запрос другого основания. Не выбирать удобную версию
+по высокой similarity и не отдавать это решение чужому confidence.
+
+8.8. Повтор:
+Duplicate key = publisher + source_record_ref + source_revision + body_sha256.
+Повтор того же pointer — идемпотентное наблюдение, не новый independent source.
+Открытие payload может быть кешировано после действительных проверок, но каждое
+новое current use имеет собственные условия, и свежесть не кешируется бессрочно.
+Не начислять G3 reward повторной доставкой. В этом Gate новый обучающий GT update
+из внешних наблюдений не обязателен и не создаётся фиктивно.
+
+8.9. Continuation / restart.
+Один контрольный повтор B в новом процессе читает свой настоящий сохранённый DRS
+и повторно проходит query/currentness. Не подставлять исходный pointer из глобального
+Python dict. После перезапуска Root/Host создаются новым допустимым способом;
+старые JSON decisions не оживляют grants. A может оставаться живым с ephemeral key.
+Pure replay сохранённого никогда не делает новый fetch/Root/write.
+
+===============================================================================
+09. КРИПТОГРАФИЯ: РЕАЛЬНАЯ ПОДПИСЬ, ОГРАНИЧЕННОЕ УТВЕРЖДЕНИЕ
+===============================================================================
+
+9.1. Не создавать новый криптографический алгоритм.
+Предпочтительный reference использует уже присутствующую Ed25519 библиотеку и
+публичные контрактные функции root_signer_isolation_v01:
+  generate_root_signer_capability_v01;
+  build_trusted_root_key_set_v01;
+  build_root_owned_commitment_v01;
+  sign_root_owned_commitment_v01;
+  verify_root_signature_v01;
+  *_to_plain_dict_v01.
+Модуль прямо объявлен test-only / in-memory. Его применение здесь — криптографический
+reference опыта, НЕ превращение его в production identity / HSM / PKI.
+
+9.2. Ключи каждого peer генерируются внутри его процесса. Нельзя передавать
+RootSignerCapability/секрет A в B, общий multiprocessing pickle или общий root object.
+A может построить singleton keyset и передать его PUBLIC projection по заранее
+выделенному операторскому bootstrap-каналу. B принимает public bytes только по
+отдельно закреплённому trust profile. Payload retrieval не является каналом установки
+доверенного ключа для самого этого payload.
+
+Если public keyset реконструируется из plain данных, использовать публичный тип
+и действительную проверку coherent identity. Не вызывать private helpers, не
+выдумывать capability, не создавать второй signer с тем же именем ради foreign key.
+G5-0 проверяет этот конкретный стык. Допустим тонкий внешний reference crypto adapter
+на уже установленной cryptography, если публичный keyset IO нельзя честно применить;
+он не меняет ядро и отдельно тестируется. Никакой собственной Ed25519 арифметики.
+
+9.3. Commitment связывает artifact hash и manifest hash с publisher/root, key,
+transaction и domain-separated scope. Разные scope для POINTER / STATUS / RELEASE.
+Проверка должна отказать при перестановке подписанного объекта между ролями,
+даже когда сырой body hash тот же. Не подписывать только произвольную строку id.
+
+9.4. Авторитетность источника и истинность содержания различны.
+Настоящая подпись подтверждает владение тестовым ключом и целостность связанного
+сообщения. Она не доказывает реальные физические измерения, честность publisher,
+правильность местной политики или решение другого Root. В нашем synthetic bundle
+арифметическая связь источника и результата проверяется независимо.
+
+9.5. Приватные ключи, model credentials, auth cache, пользовательские секреты не
+попадают в DRS, отчёты, журнал команд, PDF/XML или архив. Не хранить даже хэши
+приватных ключей как «доказательство». Public key/signature допустимы в evidence.
+Все подписи сохраняются как original bytes; signed record не переформатируется
+с сохранением прежнего hash.
+
+9.6. Два fresh исполнения с новыми ключами/nonce не обязаны быть побайтно одинаковыми.
+Одинаковым должен быть semantic reference result при тех же inputs. ДВА чистых
+offline-проверяющих одного и того же pinned пакета должны дать одинаковый canonical
+report, потому что новых ключей/решений/запросов они не создают.
+
+===============================================================================
+10. ТРАНСПОРТ И ПОДКЛЮЧЕНИЕ К НАСТОЯЩЕЙ WORK
+===============================================================================
+
+10.1. Один loopback server A, один requester B; port передаётся trusted setup.
+Внешний DRS разрешает лишь фиксированные операции: publish/read descriptor,
+get bounded status, request exact object. Методы/paths закрыты. Никаких directory listings, static file
+server, произвольных redirects/proxy URLs или shell. HTTP endpoint никогда не берётся
+из текста LLM. Слушать только loopback, не 0.0.0.0 и не публичный интерфейс.
+
+Python http.server допустим лишь как небольшой reference handler; это не объявление
+production web-security. Не использовать SimpleHTTPRequestHandler для раздачи DRS.
+Доступность loopback и sandbox networking проверяется до реализации большого модуля.
+При запрете платформой — не обходить его; можно выбрать эквивалентный разрешённый
+межпроцессный byte-channel и явно изменить transport label, не притворяясь сетью.
+
+10.2. Внешний I/O находится в explicit trusted provider bridge, как в принятом
+wedding-подходе. PURE native executor считает и проверяет, но не прячет HTTP.
+MOCK_CONSEQUENTIAL receipt не является разрешением отправить настоящий payload.
+Bridge связан с текущим native review и отдельной source-bound owner policy.
+TCB bridge и администратор процесса обозначаются в отчёте.
+
+10.3. Перед I/O:
+проверить current recipient/task/plan/source refs -> policy/endpoint -> свежий
+status challenge -> остаток budget -> допустимые wire bytes -> reserve attempt ->
+perform request -> immutable receipt. Refusal BEFORE_IO должен иметь ноль
+соответствующих wire requests по реальному observer, не по нарисованному счётчику.
+
+10.4. Timeout/network failure не является bad advice, UNSAT или отказом предметной
+возможности навсегда. Он даёт SOURCE_UNAVAILABLE / CURRENT_STATUS_UNKNOWN.
+Повтор ограничен и идёт к тому же exact object/nonce-семантике. Ни error handler,
+ни процесс resume не могут расширить scope, снять лимит или скачать всё хранилище.
+
+10.5. Файлы B не открываются по foreign absolute/relative path. object_id разрешается
+в A по собственной allowlist. B получает bytes в новую local quarantine directory,
+проверяет тип, длину, canonical form и все bindings. Заранее ограничивать чтение,
+не читать гигабайт и лишь потом объявлять превышение64KiB.
+
+10.6. Native materialization:
+типизированное предложение -> existing WorkProgramCandidate -> runtime topology ->
+Host invocation -> consumed output -> actual local Root review. Записывать source
+field потреблённого correction, ссылку на original inputs и конечный local result.
+Не копировать kernel code в external_drs. Не использовать свадебный runtime с
+заменёнными строками WEDDING на G5 и подавленными source checks.
+
+10.7. Доказательство отсутствия общей власти.
+A разрешает publish/release только своего материала; B отдельно разрешает retrieval
+и принятие для своей задачи. Политика B может отказать настоящему signed A-result.
+Source A может отказать запросу B, который нарушает publication audience.
+Тестовый coordinator имеет фиксированные setup обязанности, не RootFinal за A/B.
+Никаких shared permissions, local identities или effect handles через transport.
+
+10.8. Не хватит одного Get/JSON round trip.
+В финале должны быть: настоящий persisted pointer, реальный native источник A,
+местная query/descent B, разрешённое получение, текущий местный review и конкретная
+native B Work, результат которой зависел от полученного материала.
+
+10.9. Футбольный request/commit не добавляется в DRS lookup под видом чтения.
+Обмен заявкой и изменение учебного реестра — отдельные закрытые доменные действия
+через текущие разрешённые adapter/Work/Root/effect seams. DRS даёт путь к материалу,
+а не право забронировать. Актуальная занятость и окончательный commit принадлежат
+VenueRoot; RequesterRoot контролирует своё поручение, условия и предел цены.
+Никаких новых общих native effect kinds либо обхода Firewall ради малой демки.
+
+===============================================================================
+11. КОМПАКТНАЯ ПОЛОЖИТЕЛЬНАЯ ИСТОРИЯ EXTERNAL DRS
+===============================================================================
+
+11.1. Этот reference fixture — НОВЫЙ DESIGN, не реальные показания приборов.
+A (CalibrationRoot) проверяет ограниченную серию калибровки.
+B (SiteRoot) использует её для оценки собственных показаний, ничего физически
+не включает и не выключает. Никакой сирены, медицинского решения или новой науки.
+
+A revision1:
+unit_id = synthetic_unit_v01;
+quantity_id = reference_quantity_v01;
+reference_value = 100;
+observations = [110,110,110].
+Результат настоящей pure Work:
+  n=3; sum=330; reference=100;
+  offset = reference - sum/n = -10.
+Поля source/revision/units/time остаются привязаны к входу.
+A local Root рассматривает результат и exact export projection отдельно от сырого
+private note/canary, который не требуется для проверки арифметики.
+
+11.2. B task1:
+local_readings=[103,106,109]; local_mean=318/3=106;
+неизменная local policy: reference_limit=100;
+требуется пригодная калибровка именно unit/quantity/revision-policy данного источника.
+Без неё: INSUFFICIENT_EVIDENCE, не offset=0 по умолчанию.
+После реального разрешённого import:
+  corrected_mean = local_mean + imported_offset = 96;
+  result = WITHIN_REFERENCE_LIMIT.
+Это рекомендация/результат вычисления, не физический action.
+
+11.3. Независимая верификация exported content.
+Bundle содержит разрешённые reference/observations и вычисленный offset.
+Checker B заново вычисляет n,sum,offset из исходных чисел, сверяет exact rationals,
+unit, quantity, source signature/manifest и current local context.
+Нельзя доверять A.report.correct=true или подставить из fixture готовое96.
+
+11.4. Изменение источника при тех же local readings и policy B.
+A revision2 на НОВЫХ объявленных исходных данных:
+reference100; observations[104,104,104] -> offset=-4.
+После нового допуска соответствующего pointer B получает corrected_mean102,
+result=REVIEW_REQUIRED. Собственный threshold100 не приходит из A и не меняется.
+Старый результат96 остаётся в истории со своим источником, не переписывается102.
+Обязательный core proof достаточно получить на revision1; revision2 — небольшой
+causal contrast в том же стенде, не новая большая демонстрация.
+
+11.5. Точная арифметика общего reference:
+o=(n*r-s)/n, y=(sum(local)*den(o)+len(local)*num(o))/(len(local)*den(o)).
+Сокращать дроби gcd, сравнивать cross-products целых. Не писать0.333333 как
+доказательство1/3. n и все наблюдения bounded; общий signed63-bit input ceiling,
+computed intermediates ограничены заранее; overflow = REFUSED, не float fallback.
+Пример с reference100 и[100,101,101] даёт offset=-2/3 для unit test.
+
+11.6. Главное наблюдаемое отличие:
+B не получил весь DRS A и не повторил его полный runtime. Он открыл один разрешённый
+смысловой результат с достаточными основаниями и использовал выбранное поле в своей
+другой работе. Это конечный пример внешней памяти, а не общий файл двух объектов.
+
+11.7. Дополнительный reuse-контраст:
+«Покажи предыдущий расчёт» -> LocalDRS historical read -> zero external body fetch
+и zero new calibration compute, явно historical result.
+«Пересчитай сейчас с действующей калибровкой» -> текущая проверка status/dependencies,
+местный review и настоящее потребление. Эта пара не требует LLM для протокольного
+proof; если existing approved semantic provider используется, его вклад отдельно
+фиксируется. Наличие LLM не является условием математической пригодности подписи.
+
+===============================================================================
+12. ОБЯЗАТЕЛЬНЫЕ ОТРИЦАТЕЛЬНЫЕ КОНТРОЛИ
+===============================================================================
+
+Номера — inventory проверок, НЕ селекторы runtime. У каждой мутации есть соседний
+подлинный positive и точная граница отказа. Не падение на испорченном JSON вместо
+проверки смысла. Возможна компактная параметризация без нового full-run на каждый test.
+
+F01 Pointer-only: до current retrieval нет payload body/offset в B и body-request=0.
+F02 Валидный A pointer + отказ local policy B -> zero body fetch.
+F03 Подлинный requester B, но A запрещает audience/use -> refusal A before release.
+F04 Payload tamper -> body/signature identity refusal.
+F05 Корректно подписанный, внутренне согласованный, но чужой domain/unit/recipient
+    bundle -> локальный scope refusal, не SignatureError.
+F06 Корректно подписанный offset, не соответствующий source observations -> original
+    arithmetic/provenance refusal. Подпись не исправляет арифметику.
+F07 Старый настоящий source/reference/result для новой request revision -> отказ
+    текущей связи при сохранённой historical validity.
+F08 Expiry exactly at valid_to/TTL/source-age boundary -> отказ; before boundary
+    принимает. Новое ingestion_time не продлевает.
+F09 Поздняя local policy revision между fetch и use -> quarantine/new review,
+    никакого молчаливого применения старого результата.
+F10 Доставленный known REVOKED -> последующее current use запрещено. Replay старого
+    signed ACTIVE меньшей revision не возвращает пригодность.
+F11 Та же status revision с другим immutable entry -> conflict/quarantine.
+F12 Недоступный текущий status -> UNKNOWN, не автоматически ACTIVE.
+F13 Signature from peer A claims peer B -> отказ identity. Key replacement в самом
+    pointer не меняет local trust store.
+F14 Body содержит permission/RootFinal/capability handle/command/import path -> не
+    превращается в исполняемый local object. Закрытая схема или authority-laundering
+    проверка отказывает без эффекта.
+F15 Duplicate pointer/body -> не второй independent source и не второй reward.
+F16 Oversized body / path traversal / redirect / чужой endpoint -> bounded before I/O
+    или controlled bounded receive refusal с сохранением счётчиков.
+F17 Cycle/self-pointer/depth>1 -> отказ bounded descent. Не обходить цепь рекурсивно.
+F18 B process restart -> новый current Root, persisted pointer найден через LocalDRS;
+    исходная history не выдаётся за новый grant.
+F19 Deleted/substituted imported field -> actual B consumer не может выдать96 из
+    caption/fixture. Это обязательная причинная проверка использования.
+F20 Publisher private-note canary отсутствует в actual descriptor/body/допустимых
+    metadata и модельных prompts, если модель применялась.
+
+12.1. Внешние dead ends хранятся как scoped evidence.
+Подмена/отзыв фиксирует проблему конкретной source identity/revision; timeout не
+порождает вечного запрета peer. Невозможность при конкретных условиях не переносится
+на изменённые условия. B не обязан доверять чужому утверждению «сюда не ходи» без
+проверки scope и основания. Никакого глобального blacklist только по similarity.
+
+12.2. После одного содержательного отказа обязательно показать lawful continuation:
+годный источник/новое разрешённое состояние проходит, полезный local result получен.
+Система должна не только останавливать, но и продолжать разрешённую работу.
+
+===============================================================================
+13. DOMAIN / NEEDLE AUTHORING KIT
+===============================================================================
+
+13.1. Это публичный машинный вход для внешнего разработчика. Его задача — передать
+способ построения нового domain, не всю многомесячную переписку владельца.
+Kit не заменяет ядро и не прячет текущий target solution в example.
+
+Минимальный состав одного versioned комплекта:
+- START_HERE: смысл архитектуры, current scope, точная версия ядра;
+- AUTHORING_PASSPORT: поля ниже и правила нового domain;
+- NATIVE_INTERFACE_MAP: проверенные public symbols, signatures, маленькие call examples;
+- минимальный donor/example ДРУГОГО домена и рабочий generic adapter skeleton;
+- input/output schemas, validator expectations, named errors;
+- команды создания candidate, safe checks и передачи review;
+- матрица «изменение domain/config» vs «нужна отдельная kernel/authority разработка»;
+- модельные инструкции: work proposer, не владелец; admitted surface, запреты;
+- список источник/версия/хэш, license notice из реального LICENSE;
+- narrow conformance contract с независимыми тестами вне generator write-surface.
+
+13.2. K1 поля, которые обязательно раскрываются:
+needle_id, owner/version, purpose/domain, input/output schemas;
+actor roles, supported task/execution modes;
+required/allowed capabilities and forbidden effects;
+permission policy, risk class, DRS read/write scope;
+sealed-slot references, adapter requirements;
+TimeEnvelope/TTL/currentness/dependencies;
+failure policy, rollback/compensation OR NOT_APPLICABLE with reason;
+audit/provenance requirements, required tests/compatibility profile.
+Не давать поля с undefined placeholders, которые только автор знает как заполнить.
+
+13.3. Кандидат внешнего автора включает:
+manifest, contract/schema bundle, code/config, own tests, threat assumptions,
+compatibility matrix, actual dependency inventory, source impact, installable_now=false.
+Состояния процесса: DRAFT -> CANDIDATE_READY -> QUARANTINED_FOR_REVIEW ->
+APPROVED_FOR_DECLARED_SANDBOX -> LOCAL_REFERENCE_ADMITTED / REJECTED.
+REVOKED применяется только к реально допущенному кандидату с новой отдельной записью.
+Это process evidence внешней разработки, не новый встроенный runtime installer.
+
+13.4. Новая способность не обязана быть Python-class ради class.
+Допустима компактная data/config + schema + pure function реализация там, где она
+выполняет задачу. Но generic skeleton не должен уже содержать её предметное решение.
+Имена файлов Work определяет по принятым conventions; нет нормы15 новых файлов.
+
+13.5. Kit обязательно объясняет внешний DRS как address -> authorized retrieval ->
+checked candidate -> local Work, а не как shared payload dictionary. Даёт точные
+публичные примеры body-schema admission, signed pointer/status и typed consumption,
+не включает целевое футбольное решение. Показывает общий уже существующий путь
+mock consequential action и idempotency/currentness на ДРУГОМ примере. Work обязан
+проверить его работоспособность; отсутствие документации о нужном public symbol
+не превращается в испытание на угадывание.
+
+Машинная упаковка:
+AUTHORING_KIT.xml или эквивалентный однозначный entry содержит полностью нужные
+текстовые правила и source index. Основной текст желательно в пределах примерно
+15–25k токенов, не жёсткий quota. Источники можно читать отдельно по pinned paths;
+все дополнительные доступы генератора регистрируются. Не обрезать важные ABI детали
+ради красивого размера. Не давать миллион токенов исторического архива вместо kit.
+
+13.6. Kit freeze предшествует cold task delivery.
+Work, знающий решение target, не должен добавлять после первой неудачи готовый
+target adapter в «универсальный пример» и продолжать называть экзамен независимым.
+Public kit и приватный examiner pack имеют разные manifests/directories/permissions.
+Полный этот master с эталонами генератору НЕ передаётся.
+
+13.7. Один рабочий экземпляр generic skeleton проверяется Work ДО экзамена.
+Проверить импорт/allowed public call/current admission в действующей среде; иначе
+cold author будет чинить неизвестные нашей документации механические ошибки.
+Этот smoke не является выполнением нового domain и не использует его hidden cases.
+
+===============================================================================
+14. ЗАДАЧА ХОЛОДНОГО АВТОРА: FOOTBALL PITCH BOOKING REFERENCE
+===============================================================================
+
+14.1. Смысл и объём.
+Заменяем прежний экзамен с переговорной, НЕ добавляем к нему ещё одну демку.
+Источник сюжета — рассказ владельца об Active Planet и поездке к спортивному
+объекту в Тиране. Ранее найдено концептуальное обсуждение, не подтверждённый
+отдельный утверждённый implementation master этого домена.
+
+Вводные владельца: полноразмерное футбольное поле с натуральным газоном;
+7 января16:30–18:00, 8 и9 января11:00–12:30; три занятия по90минут.
+Факт существования свободных полей, тарифов или обещания объекта НЕ утверждается.
+Год в исходной переписке не указан. В synthetic fixture явно принимаем2027,
+timezone Europe/Tirane; это параметр моделирования, не восстановленный факт переписки.
+
+Имя нового домена: Football Pitch Booking Reference.
+Две стороны: ActivePlanetRoot (RequesterRoot) и VenueRoot (спорткомплекс).
+Историческое имя Tirana Olympic Park / Feti Borova можно указать в объяснении
+источника идеи; runtime fixture явно SYNTHETIC, без реального делового endorsement.
+Команда представлена synthetic team_ref. Имена/телефоны/документы участников не нужны.
+
+14.2. Что именно строит холодный автор.
+Он пишет один domain pack: закрытые inputs/outputs и offer body-schema,
+проверки требований к полю/интервалам/стоимости, семантические proposal роли,
+provider/requester adapters к уже принятому External DRS и native Work,
+конечный mock booking adapter, собственные тесты и понятный результат.
+
+Он НЕ пишет External DRS заново, не переписывает ядро, не делает произвольный
+планировщик, не получает чужие Root handles, не строит NeedleFactory.
+Kit содержит работающие общие механизмы, но не готовую футбольную логику.
+
+14.3. Предметные границы.
+Один спорткомплекс, максимум4поля, максимум3запрошенных занятия в одном поручении.
+Не более2предложенных альтернатив для каждого занятия. Никакой открытой оптимизации
+по сотням площадок, маршрутам, отелям, питанию, страховкам и другим частям сбора.
+Тариф задаётся целыми minor units и одной валютой в fixture; никакой оплаты/FX.
+Бюджет — обязательное условие RequesterRoot, не финансовая интеграция.
+
+Поле: field_id, venue_ref, surface_kind, full_size, доступные интервалы,
+schedule_revision и источники времени. Условия «натуральный» и «полноразмерный»
+являются hard requirements. Дешёвое искусственное/маленькое поле их не компенсирует.
+Для простоты один frozen профиль использует90минут и фиксированную цену за занятие.
+Иные длительности не угадываются. Выводит явно supported/unsupported/clarify.
+
+14.4. Что находится в External DRS.
+Адресное объявление указывает на ограниченный смысловой объект владельца:
+venue identity, schema/version, предметный тип, хэш/размер, область, сроки и
+политика открытия. В индексе нет полного расписания, всех клиентов, полного
+фрактального trace или приватного DRS площадки. Поиск/resolve должен быть настоящим,
+а не заранее переданный в B словарь с найденным полем.
+
+FootballVenueOfferV01 — разрешённая проекция на КОНКРЕТНОЕ поручение: request_ref,
+requester scope, поля и максимум3интервала/их разрешённые альтернативы, surface/size,
+unit price/total/currency, schedule_revision, offer_revision, source refs,
+выдержки применимых правил и expires. Это один typed payload, а не общий дамп.
+
+Venue строит предложение из своей локальной синтетической inventory реальной
+Work и публикует связанный pointer. Requester находит pointer своей query,
+открывает только этот bundle и потребляет фактически полученные поля в Work.
+Заявка, её получение и публикация ответа различаются; trusted coordinator может
+поставлять user event, но не готовый «правильный offer» вместо venue computation.
+
+Указатель на предложение не является вечным свидетельством свободного слота.
+Перед подтверждением Venue заново сверяет своё текущее расписание. External DRS
+не заменяет владельца ресурса, право мутации и актуальный реестр занятости.
+
+14.5. Конечные операции и реальная семантика.
+Поддержать FIND_OFFER, CONFIRM_MOCK_BOOKING, VERIFY_EXISTING и CLARIFY.
+Выбор задачи, допустимый сдвиг времени и предпочтение среди годных предложений
+приходят из пользовательского ввода/типизированного proposal, не из test_id.
+
+Начальная просьба: нужны три названных занятия, строго исходное время, только
+натуральный полноразмерный газон. Если нужного предложения нет, получить честное
+NO_COMPLETE_OFFER / NEEDS_CONFIRMATION, не заменить время молча.
+
+Изменённая просьба: «Для занятия8января разрешаю сдвиг на30минут позже;
+остальные занятия и условия не меняй». Новая revision расширяет только этот
+допустимый интервал, а не переписывает исходный пожелательный/исторический текст.
+Модель предлагает условие; его принятие связано с текущим разрешением владельца.
+Точный год/даты/часовая зона и бюджет в явной fixture, не догадка модели.
+
+Затем: «Подтверди выбранное предложение в заданном бюджете» — mock booking.
+Затем: «Теперь только проверь нашу бронь» — чтение/проверка актуального результата,
+без нового подбора, резервирования и повторной записи.
+
+14.6. Математические условия.
+Интервалы полуоткрытые[start,end), start<end.
+overlap([a,b),[c,d)) = a<d AND c<b; соседние интервалы не пересекаются.
+Time parsing/UTC conversion один раз по явно объявленной zone; timestamps и
+применимость offer имеют разные значения. TTL предложения не является временем
+проведения тренировки. В native поля использовать принятые builders.
+
+Ready(bundle,request,t) = identity/source/time/scope checks AND
+для всех занятий есть подходящий field/time AND нет пересечения с занятостью
+в указанной версии AND цена/валюта удовлетворяют поручению.
+
+Удобный finite selection: сперва отсутствие недопустимых сдвигов, затем минимум
+суммарного разрешённого сдвига, затем минимальная цена, затем stable IDs.
+Никаких GT/AVF расширений для элементарной сортировки. Бюджет и hard constraints
+не становятся soft weights. Арифметика цен целочисленная, не binary floating point.
+
+14.7. Учебный commit, не новый промышленный booking engine.
+Реальное подтверждение означает изменение ЛОКАЛЬНОГО SYNTHETIC booking state,
+связанное с действительным допущенным mock consequential execution и VenueRoot.
+Не печатать BOOKED вместо вызова/receipt/state readback. Не считать реальным бронь
+спортивного объекта, не отправлять письма/WhatsApp и не обращаться к его сайту.
+
+Один current venue owner фиксирует все3слота одним конечным локальным batch,
+после повторной проверки schedule_revision, expiry, требований и exact offer.
+Пока commit не прошёл, итог «забронировано» запрещён. Partial success не показывается
+как полный успех. Не требуется распределённая атомарность между разными владельцами:
+места принадлежат одному VenueRoot, RequesterRoot не пишет его реестр.
+
+Idempotency key задаётся существующим законным logical-effect binding, не строкой
+от модели. Повтор того же exact подтверждения возвращает прежний receipt,
+не создавая вторую бронь. Новый payload под тем же ключом отказывает.
+Если занятость изменилась между offer и commit, отказ/новое предложение;
+не перетирать чужую запись. В reference достаточно одного контролируемого
+межшагового конфликта, не нового конкурентного stress suite.
+
+Сохранение после перезапуска использует уже допущенный локальный storage/recovery
+путь; отдельный универсальный transaction manager не строим. Не делать заявление
+о гарантированной обработке любых аварий ОС/питания, не испытанных этим доменом.
+
+14.8. Реальный стык необходимо проверить рано.
+В G5-0 Work подтверждает public native mock-effect/admission seam на существующем
+ДРУГОМ доноре. Регистрация domain operation в разрешённом контракте — нормальная
+часть будущего авторского pack; изменение общего effect kind/ABI/policy — не scope.
+Если текущие public seams не позволяют честный mock commit, вернуть узкую коллизию
+до холодного экзамена. Не заменять commit сказкой, не объявлять источник POST
+внутри PURE, не запускать многонедельный ремонт ядра без отдельного решения.
+Этот G5-0 probe не пишет football domain за будущего автора.
+
+14.9. Приватный examiner pack, не передавать генератору.
+Один scenario с natural/full_size полем и отвлекающим искусственным либо меньшим
+полем. У исходного natural поля занят8января11:00–12:30, свободно12:30далее не
+означает что11:30годится: проверять реальное пересечение, не ярлык времени.
+Для основного shift-положительного сценария занятость задать11:00–11:30,
+поэтому11:30–13:00 пригодно, а11:00–12:30 нет. Остальные2занятия свободны.
+Оба набора специально разделить: второй — основной, первый — negative против
+ошибки «прибавил30минут, значит свободно». Правила, не сценарные имена, решают исход.
+
+У exact-only просьбы не может появиться silent11:30. У разрешившей+30минут
+просьбы появляется полное допустимое предложение, после принятия —3mock entries.
+VERIFY прочитывает actual receipt/state, новый booking counter=0.
+Контроль смены occupancy после quote до commit даёт отказ без новых reservations.
+Повтор exact commit не удваивает существующие3entries.
+
+Изменить цены/ID/расположение записей/свободные интервалы в скрытом наборе.
+Второе синтетическое обращение другой команды к другим допустимым слотам проходит
+теми же файлами. Это показывает переиспользование домена, а не один scripted заказ.
+Точный готовый answer/seat-like oracle во ввод модели не передавать.
+
+14.10. Минимум domain negative tests сверх сохранённых F01–F20:
+P01 Неверная поверхность/размер не проходит при меньшей цене.
+P02 Цена сверх своего бюджета не становится разрешением от чужого Root.
+P03 Pointer найден, payload не разрешён -> не выдаётся готовое предложение из fixture.
+P04 Expired/revoked offer либо stale schedule не даёт новой booking.
+P05 Owner/recipient/request revision не совпадает -> отказ правильной границы.
+P06 Pointer либо receipt пытаются стать permission -> zero mock commit.
+P07 VERIFY и повтор доставки не вызывают нового эффекта.
+P08 Отсутствующее imported slot/price поле не заменяется expected answer.
+P09 Два частично пересекающихся интервала действительно конфликтуют.
+P10 После законного нового offer/consent работа успешно продолжается.
+Не повторять двадцать полных federation collections в футболе: переиспользовать
+неизменные generic proofs и получить конечные реальные интеграционные контрасты.
+
+14.11. Runtime model proof и authoring — разные испытания.
+Свежая модель-автор создаёт код по kit/task. Runtime LLM отдельно получает safe
+intents и фактически предлагает mode/параметры/новую revision. Сохраняются original
+requests/responses и путь до Work/results. Записанные controlled owner inputs
+называются SCRIPTED_CONTROLLED_OWNER_INPUT, не записью реального нажатия клиента.
+
+Обязательный малый live contrast: exact-only, разрешённый shift, verify-existing.
+Confirm может быть явным typed controlled owner event без дополнительного LLM.
+Ориентир прежний: до12actual attempts для этой малой runtime-серии, не12обязательных
+вызовов и не разрешение безлимитного повторения. Действительное provider approval
+проверяется отдельно. Сетевые ошибки не скрываются под accepted replies.
+
+14.12. Authoring Kit должен быть ДОСТАТОЧНЫМ, не всезнающим.
+Автору нужны public contracts federation/Work/Root/mock action и один чужой домен
+как пример. Он не должен угадывать внутренние подписи функций. Но kit не содержит
+готовый FootballVenueOffer validator, расписание с ответами или футбольный workflow.
+Полный этот master/hidden cases автору не давать. После3коррекций protocol15 действует
+без послабления. Успех доказывает передачу одного домена, не любых приложений.
+
+14.13. Границы, не допускающие месяца разработки.
+Никаких настоящих денег, чужой авторизации, мессенджеров, браузерного робота,
+отелей/транспорта/питания, больших рынков площадок, ставок и переменной торговой
+стратегии, распределённой компенсации, произвольных кодовых плагинов, новой фабрики.
+Не делать отдельную сложную web UI: достаточно существующего HTML/text renderer.
+Футбол — один контрольный домен нового автора внутри G5, не новый post-Gate проект.
+
+===============================================================================
+15. ПРОТОКОЛ COLD AUTHORING
+===============================================================================
+
+15.1. Fresh означает отсутствие нашей предыдущей переписки и проектной памяти во
+вводе сессии, не отсутствие предобучения модели. Не утверждать, что модель никогда
+не встречала похожий код/идею. Фиксировать backend/model/version/settings фактически.
+
+15.2. Два логических пользовательских входа:
+HOW_TO_BUILD = frozen Authoring Kit + declared pinned source access;
+WHAT_TO_BUILD = новый task brief.
+Дополнительные system/tool instructions среды включаются в manifest контекста.
+Не приписывать успех только двум файлам, скрыв подсказки Work, старую чат-память
+или полный target solution в окружающем workspace.
+
+15.3. Генератор запускается в НОВОЙ сессии/изолированном API-запросе с разрешённым
+developer tool. Старый Work НЕ выдаётся за cold model. Он готовит экзамен и наблюдает.
+Не требуется отдельный новый аккаунт или подписка; используется доступный разрешённый
+инструмент. Если fresh session технически возможна только при одном owner запуске,
+Work готовит одну конкретную команду/файл и точную кнопку, не новый интерфейсный квест.
+
+15.4. Generator workspace:
+read-only approved kernel snapshot + kit + declared donor example;
+writable только candidate domain/code/config/own tests/return;
+нет .git истории проекта, старых prompts/dumps, examiner expectations, owner AWS,
+личного home, model-secret files или полномочий commit/push/install.
+Native тестовый runner может находиться отдельно от generator workspace и иметь
+свой действительный admitted Git/context для вызова защищённых public механизмов.
+Генератор передаёт candidate; доверенный reviewer/runner не передаёт ему owner context,
+не ослабляет binder и не даёт самому готовить DISPOSABLE_TEST_ONLY как разрешение.
+Нет необходимости давать .git/секреты только потому, что native import их проверяет.
+Сам backend инструмента может использовать credentials вне доступной модели
+поверхности; это явно входит в доверенную инфраструктуру запуска.
+
+15.5. Пока candidate не прошёл independent review, он только данные/текст.
+Генератор не изменяет ядро, kit, trusted conformance checker, hidden tests и review
+context. Собственные tests автора полезны, но не заменяют независимые.
+Work проверяет точный source diff и потенциальные I/O/произвольные imports до
+первого исполнения в предусмотренном sandbox. Platform sandbox не отключать.
+
+15.6. Финитный correction loop:
+- initial attempt;
+- не более3 исправлений по конкретным выводам независимых тестов;
+- никаких неучтённых авторских архитектурных подсказок.
+Автоматическое сообщение «missing field X по публичной схеме» — test feedback.
+Сообщение автора «вызови вот этот скрытый helper, потому что я знаю устройство» —
+assistance, которое меняет label опыта. Фиксируются все версии и diff.
+
+После3 corrections — осмысленный разбор причины, не100повторов до случайного PASS.
+Если kit неполон, исправить его как новую версию и провести новый честно обозначенный
+cold trial; раннюю неудачу сохранить. Не больше одного такого дополнительного trial
+без отдельного scope-решения. Не создаём бесконечный benchmark моделей.
+
+15.7. Итоговые labels:
+COLD_AUTHORING_ACCEPTED_WITH_RECORDED_TEST_FEEDBACK;
+COLD_AUTHORING_ASSISTED — если содержание решения подсказано автором/куратором;
+COLD_AUTHORING_INCOMPLETE — нет полноценного результата;
+KIT_REVISED_BEFORE_NEW_TRIAL — история улучшения kit явно видна.
+Полный текущий proof авторонезависимости требует первый label, а не маскировку второго.
+Если требуется помощь, это не отменяет внешний DRS, но оставляет конкретный residual
+exam. Остановить только зависимый claim, не объявлять весь проект неработающим.
+
+15.8. После code freeze исполнитель проходит независимые проверки:
+A. typed shape + real native positive;
+B. другое намерение/разрешённое изменение условий на тех же исходных facts;
+C. verify-only actual prior return без новой selection/booking;
+D. known hard condition нельзя купить хорошим soft score;
+E. expired/foreign source/current-result refused;
+F. unknown capability/attempted effect/source mutation blocked;
+G. input ID rename/permutation и один hidden вариативный набор;
+H. removed producer result => consumer не выдаёт прежний ответ.
+Генератор не знает готовые B/C ответы, но имеет полную спецификацию допустимой задачи.
+
+15.9. Важное разделение source admission и native capability admission.
+Новый пакет не сам устанавливает себя в R1. Work готовит обычный reviewed proposal,
+owner допускает exact source по текущему процессу. Runtime использует допущенные
+определения под своим текущим разрешением. Эти два уровня не схлопываются в один
+«у генератора20tests pass — значит можно запускать всё».
+
+15.10. Доказательство передачи технологии включает не только final code:
+полный доступный ввод генератора, version/source hashes, tool/read inventory,
+модельные request/response receipts, расход/попытки/corrections/human hints,
+независимый acceptance set, native performed work и preserved failure history.
+Не запрашивать скрытую цепочку мыслей модели. Достаточно наблюдаемых входов, выходов
+и действий. Никакой fabricated reasoning trace.
+
+===============================================================================
+16. ИЗОЛЯЦИЯ И БЮДЖЕТЫ
+===============================================================================
+
+16.1. Существующий pure-i32-closed-v01/affine-u8 admission нельзя объявить sandbox
+для произвольного нового Python domain. Он узкий и не должен расширяться ради этого
+экзамена. Программа холодного автора проходит внешний development review и запуск
+в реально доступной ограниченной среде; целевой native adapter — ordinary reviewed
+reference code. Это НЕ automatic hostile-plugin installation.
+
+16.2. venv изолирует Python зависимости, не доступ к filesystem/network аккаунта.
+Отдельная папка/процесс также сами по себе не являются полноценным sandbox.
+Work описывает реальный механизм: какие каталоги доступны, где исполняется код,
+как ограничены сеть/process creation/secrets. Если текущего ограничения недостаточно,
+сначала выбирает уже поддержанный безопасный способ исполнения; не устанавливает
+новую VM/cloud инфраструктуру без owner. Никакого sandbox=off ради того, чтобы пройти.
+
+16.3. Не исполнять source snapshots из evidence/XML и downloadable foreign content.
+SignatureValid пакета не отменяет review его кода. Внешний DRS proof передаёт только
+закрытые численные/смысловые данные, а не исполняемые инструкции.
+
+16.4. Developer task budget и runtime budget различны:
+генерация/corrections учитываются по сессиям и tool calls;
+runtime Work — по действительному native dispatch/resource law;
+transport — по attempts/bytes/objects/status;
+provider model — по actual sends/accepted replies/captured reuse.
+Отсутствие provider calls в native PURE счётчике не скрывает внешнюю модель автора.
+Не расходовать QPU/свадебные allowance: они здесь вообще не нужны.
+
+16.5. Предложенные operational bounds:
+reference local numerical task<=1s для чистой функции на обычной машине;
+peer request timeout<=10s, bounded attempts из6.4;
+metadata loop не бесконечный polling; один finite observation pass;
+code-test process с определённым CPU/wall/bytes пределом, выбирать по реальному
+native baseline, не обрывать штатный setup через2мин, если он обоснованно дольше.
+Время нового запуска сначала измеряется одним probe, затем применяется разумный cap.
+
+16.6. Нельзя делать100live вызовов ради доказательства, которое получается одним
+actual capture и несколькими контролируемыми мутациями. Но нельзя экономить на
+нужном genuine semantic role. Work группирует связанные действия и сообщает один
+понятный результат, а не держит LLM активной для чтения heartbeat каждые10секунд.
+
+===============================================================================
+17. ТЕСТЫ И ПЕРЕНОСИМОЕ ДОКАЗАТЕЛЬСТВО
+===============================================================================
+
+17.1. T0 — pure, offline.
+Schemas, canonicalization, signature verification, rational arithmetic, time/scope,
+status monotonicity, manifest/path bounds, original-condition checks, kit completeness.
+Ни Root collection, ни D/E setup, ни provider config imports ради проверки поля.
+Сохранять точные error codes и соседний positive.
+
+17.2. T1 — конечное native исполнение.
+Один общий источник A, B current import/consumption и один chained continuation.
+Shared immutable captures для зависимых pure checks. Не создавать20 полных D/E
+эпизодов для20 полей. Scope/ownership меняются только через настоящие supported
+builders/decisions. Не monkeypatch validators в PASS.
+
+17.3. T2 — actual two-process transport / cold-author development / small live roles.
+Эти режимы вызываются явно, не pytest default и не при import.
+Перед external run показывается план budgets/source identities. Отсутствие разрешения
+сети/модели — отдельный blocked mode. Не чинить окружение удалением ограничений.
+
+17.4. T3 — supplied verification/replay.
+Пакет и independently expected manifest hash. Проверяющий читает original bytes,
+подписи/public keys, exact fields, time/status последовательность, recorded Root
+relations, native producer-consumer links и local result derivation.
+Новых Root/Host/effect handles, network/model calls, DRS writes и кода из snapshot нет.
+Два отдельных процесса/working directories -> byte-identical canonical proof.
+Telemetry/fresh timestamps вне deterministic comparison, явно отделены.
+
+17.5. Не нужно полный recursive history replay для открытия каждого pointer.
+Пакет содержит достаточное bounded основание текущего imported meaning. Исторические
+refs не дают implicit право бесконечно ходить по DRS. Старые sealed G3/G4/Wedding
+records не копируются целиком и не recollect. Generic verifier применяется только
+в реально поддержанном saved scope; если отдельный foreign формат не native-schema,
+использовать явно названный safe-derived verifier, не переписывать схемы под него.
+
+17.6. Evidence graph, минимум:
+source facts -> actual A Work -> A reviewed export -> pointer/signature ->
+B persisted pointer/query -> local retrieval review -> actual bounded fetch ->
+import checks -> current B acceptance -> actual consumed field -> B result/history.
+Отдельно kit freeze -> task -> cold responses/diff -> review -> candidate admission ->
+new native domain runs. Единый release index связывает две цепочки, не смешивает их.
+
+17.7. Каждое заявленное свойство имеет adversarial counterpart.
+Hash mismatch не доказывает противодействие согласованной подмене. Нужна минимум одна
+mutation с пересчитанными хэшами и настоящей тестовой подписью, отвергнутая на
+original arithmetic/scope/currentness, и минимум один signed foreign grant rejected.
+Не уничтожать настоящий положительный путь ради красивых20DENY.
+
+17.8. Release/source checks по текущему R1 сохраняются.
+Если обязательная общая группа действительно требует свежей collection, получить
+её один раз на замороженном source, затем использовать её actual source-bound outputs
+в предусмотренных потребителях. Старую admission/functional цифру не перепечатывать
+в новый PASS. Не запускать все старые демонстрации для поправки текста README.
+
+17.9. Производительность тестов — обязательство процесса.
+В начале каждого tier: небольшой probe, --durations/analogue, call counters.
+Чистая функция не должна тайком импортировать full Conformance или запускать server.
+Если focused suite начинает жить минутами вместо секунд — сначала исправить
+fixture/import/collection ownership, затем размножать cases. Запрет оптимизации
+путём удаления source/currentness проверки остаётся.
+
+===============================================================================
+18. ПОРЯДОК G5-0…G5-6
+===============================================================================
+
+G5-0 — SCOPE / REAL SEAMS / COST PROBE.
+Прочитать master, реальную пару roadmap, current lock/R1 и donor surfaces.
+Зафиксировать agreed reduced scope + naming mapping + admitted baseline.
+Проверить local-pointer representation, public Root signer IO, native consume seam,
+безопасный transport/developer environment и одну дешёвую текущую source-check.
+Подтвердить конечный body-schema dispatch для второго профиля и существующий generic
+mock-effect путь на не-футбольном доноре; не писать target domain вместо cold model.
+Результат: короткий checkpoint+interface matrix+первый working probe, не20страниц
+рассуждений без вызова интерфейса. Никаких нового AWS/паролей/квантов.
+
+G5-1 — EXTERNAL POINTER VERTICAL SLICE.
+Closed pointer/bundle/status formats; реальные separate process identities;
+A actual numerical Work -> export; B pointer-only -> разрешённое открытие ->
+independent validation -> current native consumption ->96.
+Сначала один такой работающий проход, затем все дополнительные отрицательные случаи.
+
+G5-2 — FEDERATION LIFECYCLE / REUSE / PURE PROOF.
+Expiry/revocation/equivocation/foreign authority/provenance/bounds; revision2->102;
+B persisted lookup после restart; historical read и lawful continuation.
+Получить один самостоятельно проверяемый finite federation package.
+
+G5-3 — AUTHORING KIT / EXAM FREEZE.
+Собрать компактный kit с реально исполняемым generic example, публичными signatures,
+source map и no-self-install boundary. Заморозить kit и отдельно hidden examiner.
+Предметный task brief не скрыт в kit. Work ещё НЕ пишет target code за cold model.
+
+G5-4 — COLD AUTHORING / ADMISSION / FOOTBALL DOMAIN.
+Новая сессия пишет один football domain вместо переговорной; полный observable
+input/output; bounded corrections; independent review; sandbox/native positive;
+настоящий External DRS query/import/consumption по offer; изменённое намерение;
+один допущенный mock booking и verify без нового эффекта; небольшой live semantic
+contrast. Core/transport заново не строить. Сохраняются ошибки и подсказки/их отсутствие.
+
+G5-5 — SCOPE CLOSURE / ENGINEERING LANDING.
+Матрица всего сокращённого scope, residual matrix старого Gate5, два pure proof,
+exact source/format checks, independent review, owner-controlled commit/push/readback.
+Отдельные доказательства external/cold/native/live различены. Будущие программы
+не отмечаются «успех», а гарантированно остаются DEFERRED_POST_GATE6_PUBLICATION.
+
+G5-6 — HUMAN / MACHINE PUBLICATION.
+Публикация принятого результата и kit в той же манере, что G4/Wedding: PPTX+PDF,
+техническое приложение, full reader, источники/доказательства/команды.
+Это DOCUMENTATION transition по актуальному R1, не ещё один Gate6 и не новые прогоны.
+
+18.1. Объединять совместимые этапы разрешено. Номера — рубежи ответственности, а не
+квота архивов или суток. Параллелить независимые pure preparation можно только без
+второго writer одного дерева и без преждевременного раскрытия examiner генератору.
+
+18.2. Оценка усилий — ориентир, не обещание, квота дней или расписание.
+Исходная оценка V01: external DRS16–28, kit6–10, cold authoring/execution6–12,
+сведение/landing4–6: engineering32–56 активных часов, G5-0 уже внутри.
+
+V02: вместо одного readiness-отчёта футбольный pack ещё использует внешний offer,
+две стороны и конечный mock commit. Резерв на эту добавку —8–16активных часов
+поверх V01, а не отдельные12–20часов старой большой концепции целиком.
+Итого engineering ориентировочно40–72часа. Оформление прежнее4–8поверх:
+полный ориентир44–80активных часов при готовых public seams и разрешённой среде.
+Это планировочная оценка неопределённости нового domain/cold developer, не измерение.
+Не делать одновременно переговорную и футбол. Если потребовался новый generic
+transaction/authority engine, это ВЫХОД ИЗ ПРЕДПОЛОЖЕНИЙ, не повод растянуть Gate
+на месяц. Коллизию определить в G5-0 и вернуть владельцу отдельно.
+После первого сквозного exchange и первой авторской итерации уточнить прогноз.
+Нельзя намеренно тратить резерв после уже достигнутых критериев.
+
+Gate3/Gate4 прошли быстрее ранних прогнозов; темп измеряем после G5-1 и G5-4,
+а не заставляем работу длиться заданное число дней. Задержки платформы/квоты и
+неподтверждённая инфраструктура отдельно. Не обещать «точно последний хоп».
+
+18.3. Stop/consult только по существенной коллизии:
+нет совместимого публичного стыка без изменения authority law;
+действующая sandbox/сеть не позволяет требуемый опыт;
+источник/независимый admission не доступен;
+после разрешённых correction циклов cold proof не достигнут;
+выявлен дефект, уничтожающий заявляемое доказательство.
+В остальных случаях Work исправляет локальные проблемы в согласованном scope,
+не просит Андрея выбрать названия полей/контейнеры/шрифты.
+
+===============================================================================
+19. ФАЙЛЫ, R1 И ТОЧНОЕ ВНЕСЕНИЕ
+===============================================================================
+
+19.1. Предлагаемые namespaces, проверить actual _kind_rules в G5-0:
+hedgehog/external_drs/ — новые versioned finite modules;
+hedgehog/domains/gate5_reference/ — минимальный producer/consumer пример;
+hedgehog/domains/football_pitch_booking/ — после независимого cold creation;
+schemas/gate5_*_v01.schema.json — только действительно нужные closed contracts;
+tests/test_gate5_*_v01.py;
+demo/run_gate5_reference_v01.py;
+docs/gate5_reference_contract_v01.md;
+docs/gate5_reference_checkpoint_v01.md;
+docs/gate5_authoring_kit_v01/ или другой разрешённый source namespace;
+docs/showcase/gate5_reference_v01/ — последующая inert публикация.
+
+Это ориентиры, не разрешение обходить R1. Пустые исторические external_drs файлы
+можно оставить пустыми и добавить понятные *_v01 реализации. Заполнять их допустимо
+лишь как точную отдельно описанную ordinary source change, не «они же пустые —
+значит не считаются». Не строить generic platform внутри sample domain.
+
+19.2. Защищены:
+старые core ABI/Root/Firewall/currentness, source admission policy/guard/binder,
+их registry identities, все прежние sealed capsules и исходные Gate1–4/Wedding
+execution records. Никаких массовых форматирований/переименований/обновлений deps.
+Новая функциональность не даёт полномочий редактировать enforcement.
+
+19.3. README root по действующему R1 DOCUMENTATION — ровно разрешённая plain English
+relative link line. Всё объяснение сокращения и future names располагается в новых
+contract/checkpoint/showcase README. Нельзя под видом такой публикации менять Human
+Passport, machine_manifest или общие governance controls.
+
+Если актуальному общему machine manifest для Gate6 действительно требуется новая
+информация, подготовить её exact proposed projection и путь отдельного разрешённого
+обновления. Не откладывать truthful scope в тайну, но и не снимать source protection
+для внесения одной красивой строчки.
+
+19.4. Новый Gate5 standalone collector/reader и tests могут быть отдельным published
+reference proof; не нужно автоматически регистрировать его в старой sealed Living
+матрице, если это потребует изменения защищённого registration. Окончательный Gate6
+будет потреблять ясно описанный G5 result. Если current rules прямо требуют registry
+succession для конкретного claim, сделать отдельный narrowly reviewed шаг, а не
+объявить старый registry изменённым без допуска.
+
+19.5. Engineering landing:
+actual accepted base -> reviewed exact delta -> frozen external manifest/policy ->
+owner-reviewed script -> guarded apply/stage/commit -> требуемые source bindings ->
+finalized exact context -> обычный push -> independent remote readback.
+Source admission, functional acceptance и remote publication — три разных факта.
+Не создавать future commit SHA внутри собственного manifest, не восстанавливать
+разрешение по старому successful log. При interrupted landing проверяется именно
+состоявшийся commit, без amend/force/reset.
+
+19.6. Gates/cognitive naming overlay не даёт разрешения менять лицензию или права.
+Использовать настоящий LICENSE и notices при упаковке кода. Не делать юридические
+обещания, будто AGPL автоматически требует покупки всеми пользователями.
+
+===============================================================================
+20. КАК ОБЪЯСНИТЬ СОКРАЩЕНИЕ В ДОКУМЕНТАХ
+===============================================================================
+
+20.1. Начало нового contract/checkpoint: краткая русская/английская карта:
+«Исходный Gate5: K+L+M. Сейчас принято M bounded + K1/внешнее создание candidate +
+один cold native domain. Встроенная фабрика и L implementations остаются после
+публикации Gate6. Причина — ограничить release scope, сохранив внешний обмен,
+расширяемость и все действующие законы. Не отказ от будущей программы».
+
+20.2. Готовый английский scope block для НОВОГО showcase README:
+
+Gate 5 Reference implements bounded external meaning exchange and independent
+extension authoring. Two separately owned reference processes exchange a
+source-bound pointer, retrieve only approved material, and admit it as evidence
+for local work without importing foreign execution authority. A frozen authoring
+kit is evaluated through one fresh-session model developer and an independently
+reviewed small native football-pitch domain. Its requester resolves a bounded
+external offer, applies the human constraints and requests a separately governed
+reference booking. The booking changes a local synthetic venue registry, not a
+real sports facility. The external directory retains pointers and bounded metadata;
+original evidence and execution traces remain with their respective owners.
+
+This is the agreed release-scope reduction of the original Gate 5 K/L/M program.
+The integrated NeedleFactory (Capability Synthesis Factory), Reflective Improvement
+Radiolaria and Cross-Domain Transfer Radiolaria remain planned for separate work
+after Gate 6 publication. They are deferred, not implemented by this release.
+Historical Marennya/UP names remain only as provenance and navigation aliases.
+Gate 6 will assess the declared reference release, not silently reinstate those
+deferred implementations as prerequisites.
+
+Этот текст в DESIGN-стадии маркируется planned. Прошедшее implements/evaluated
+использовать после соответствующего evidence/acceptance. Не описывать будущий
+cold success как уже полученный при подготовке README.
+
+20.3. Старые документы не переписываются так, будто они всегда требовали меньшего.
+В новой roadmap reconciliation matrix каждое K/L/M обязательство имеет решение:
+REUSED / IMPLEMENTED_REFERENCE / PARTIAL_REFERENCE / DEFERRED_POST_GATE6_PUBLICATION.
+Последний статус не PASS и не дефект текущего меньшего scope.
+
+20.4. New naming mapping хранится ровно в одном canonical разделе. Из остальных
+документов ссылка; не создавать по«паспорту переименования»на каждый старый alias.
+Когнитивные новые имена не ломают поиск marenna.py/up.py и исторического DRS layer up.
+
+===============================================================================
+21. DEFINITION OF DONE И ПЕРЕХОД К GATE 6
+===============================================================================
+
+Идентификаторы — приёмочная карта, не runtime semantics и не квота pytest nodes.
+
+G5-R01 Actual Wedding-publication baseline/context preserved; current scope frozen.
+G5-R02 Roadmap K/L/M reduction and new cognitive names documented with residuals.
+G5-R03 Two actual peer processes, independent local Root/DRS/key contexts.
+G5-R04 Pointer-only persisted local index before body retrieval; actual query path.
+G5-R05 B local retrieval review and A separate release conditions both effective.
+G5-R06 Real signed source/manifest/body verification with independent trust input.
+G5-R07 Time/TTL/local scope/status/provenance/conflict checks before current use.
+G5-R08 Exact imported field changes actual native local Work result; source retained.
+G5-R09 Revoked/expired/wrong-scope/foreign-authority/oversized data refuse correctly.
+G5-R10 No shared permissions, Root reconstruction or code execution from foreign data.
+G5-R11 Scoped dead-end/history/reuse and one permitted continuation demonstrated.
+G5-R12 Frozen complete Authoring Kit with working generic different-domain example.
+G5-R13 Fresh model input manifest and bounded developer corrections fully recorded.
+G5-R14 One cold-authored football domain independently reviewed and locally admitted;
+       its external offer uses the same approved pointer protocol, not a parallel DRS.
+G5-R15 Native changed-intent/consumed-offer result and mock booking state readback;
+       verify-only/repeat do not create another reservation; no code changes between
+       user requests. Real venue booking/payment are not claimed.
+G5-R16 Runtime live semantic subset has actual consumed fields and preserved errors.
+G5-R17 Independent adversarial/hidden controls; generator cannot modify judge/core.
+G5-R18 Two pure checks of identical pinned evidence agree; no restored authority/I/O.
+G5-R19 Source impact/release bindings/independent acceptance/owner landing recorded.
+G5-R20 Human presentation, technical appendix, full Reader AND usable authoring kit.
+G5-R21 Ordinary publication/readback and links verified; previous assets unchanged.
+G5-R22 Full Factory/Cognitive Radiolaria/global federation explicitly remain deferred.
+
+21.1. Закрывать как G5_REFERENCE_CLOSED только после обязательных R01–R22 в их
+объявленных scope. До публикации допустим отдельный ENGINEERING_ACCEPTED, затем
+REFERENCE_PUBLICATION_CONFIRMED. Историческая полная программа остаётся неполной,
+это не скрывается новым коротким label.
+
+21.2. Статусы частей отдельно:
+EXTERNAL_DRS_REFERENCE_IMPLEMENTED/ACCEPTED;
+AUTHORING_KIT_FROZEN;
+COLD_AUTHORING_CLASSIFICATION and ACCEPTANCE;
+RUNTIME_LIVE_SEMANTICS;
+REPLAY_SCOPE;
+ENGINEERING_ADMISSION;
+DOCUMENTATION_PUBLICATION;
+DEFERRED_PROGRAM_MATRIX.
+Чужая подпись/fresh prompt/100tests сами не закрывают всё множество.
+
+21.3. Что получает Gate6, не новое исполнение сейчас:
+G5 contracts, public kit, frozen successful candidate, conformance obligations,
+external trace, authoring trace, recorded live role data, bounded negative cases,
+текущий source/compatibility matrix и команды reproducible verification.
+Для Gate6 planned mapping:
+DomainPack -> new domain/kit;
+RootAdapter -> no foreign authority/current acceptance;
+CorridorAdapter -> explicit external lane and no fake PURE I/O;
+SemanticProvider -> declared role contribution and separate authoring model;
+ReplayCompatibility -> finite offline source relationships;
+CryptoCompatibility -> exact public signatures/pins and no authority inference.
+Полная итоговая Gate6 conformance/hostile-module/model-swap программа всё ещё
+самостоятельная; G5 не объявляет её выполненной.
+
+21.4. Что НЕ возвращается как блокер Gate6:
+встроенная NeedleFactory, Cognitive Radiolaria, новый global discovery/marketplace,
+полная отложенная StrongGT/AVF математика G4, большой cold-authoring benchmark.
+Gate6 проверяет истинность и переносимость ПРИНЯТОГО scope и ясно предъявляет
+остаток будущего развития, а не меняет договорённость при финальном оформлении.
+
+===============================================================================
+22. ПРЕЗЕНТАЦИЯ, ПРИЛОЖЕНИЕ И МАШИННЫЙ ПОКАЗ
+===============================================================================
+
+22.1. Семантический центр:
+  Other knowledge. Another developer. The same rules of authority.
+  Чужой опыт и новый разработчик — без передачи чужой власти и переписывания ядра.
+
+Основная презентация10–14 слайдов, не обязательная квота:
+1. Что человек получает: пригодный внешний опыт и воспроизводимое расширение.
+2. Одна общая геометрия, два проверяемых новых перехода.
+3. Было в roadmap / сделано сейчас / явно отложено.
+4. Две отдельные среды, local roots и DRS; никакого SuperRoot.
+5. Pointer сначала, точное разрешённое тело позже: actual bytes/counters.
+6. Signed does not mean locally authorized: настоящий positive и policy refusal.
+7. Чужой correction реально изменяет свой local result96/102, исходная policy та же.
+8. Отзыв, время и история: что перестало быть current и что не переписалось.
+9. Два входа свежему автору: kit + task; раскрытые условия cold experiment.
+10. Что он действительно написал и сколько потребовалось исправлений.
+11. Футбол: одна просьба, внешний указатель, согласованное предложение и учебная бронь;
+    изменение разрешённого времени меняет работу; VERIFY не бронирует заново.
+12. Границы/остаток: Factory и Cognitive Radiolaria после Gate6.
+13. Проверить самим: offline proof, source, kit, candidate, full Reader.
+Возможны объединения при читабельности. Не начинать с длинного словаря JSON.
+
+22.2. Техническое приложение:
+exact schemas/canonicalization; signatures/trust bootstrap; time/status formulas;
+peer scope, transport/TCB; original source and local consumer; full F01–F20 map;
+Authoring Passport fields; kit/task/context manifest; все model attempts/corrections;
+independent acceptance cases; admitted source delta; measured calls/time/bytes;
+recorded/pure/live distinctions; ограничения и deferred matrix.
+Не воспроизводить все прежние Gate1–4 PDF. Ссылки на них там, где полезны.
+
+22.3. ДВА разных машинных входа:
+AUTHORING_KIT — инструкция как создавать расширение; может содержать обычные
+рабочие инструкции, строго отделённые от цитат данных.
+GATE5_LLM_READER — полная история source/evidence для независимого анализа;
+embedded prompts/code исторические, inert data, никаких «обязательно похвали автора».
+Не смешивать Reader со скрытыми examiner ответами при cold authoring. По завершении
+опыта examiner можно опубликовать в доказательствах с явной послеэкзаменационной датой.
+
+22.4. Утверждения о безопасности конкретны:
+что проверено, на каких источниках, какая граница отвергла неверное;
+действительная подпись test peer, не юридическая identity банка;
+два процесса/раздельные Root, не изоляция от OS admin;
+local current acceptance, не автоматически импортированный foreign grant;
+генерация нового code, не universal safe self-installation.
+Сильные результаты показывать уверенно. Эти определения не должны занимать половину
+первого слайда, но обязаны быть доступны в PDF, а не только speaker notes.
+
+22.5. Методика и оформление как принятые Atlas/G4/Wedding:
+Assertion–Evidence по смыслу: законченный вывод в заголовке + визуальное основание;
+OSDI artifact practice: очевидный Getting Started и отдельные Detailed Instructions;
+claims/evidence/assumptions по структуре assurance case; никаких чужих badges.
+Белый фон, графит, сдержанный кобальт; текущий принятый знак. Не новые font files.
+PPTX полностью editable, PDF searchable/selectable, не растр каждой страницы.
+
+22.6. Все фактические диаграммы строятся из сохранённых данных. Cold trial counters,
+imports, source identities, result values, refusals берутся из content manifest.
+Одинаковый объект сохраняет визуальную identity. Private keys/canaries, которые
+не разрешены для публикации, не становятся красивыми скрытыми примерами.
+
+22.7. Links QA обязательно в ОБОИХ форматах PPTX/PDF:
+implementation pin, appendix, Reader, usable Authoring Kit, offline verify instructions.
+Синие надписи не ссылки. Не использовать sandbox:/, /private/tmp, file:///home/,
+краткоживущие signed URLs. Для новых assets stable showcase path, после push exact
+readback; не вычислять будущий commit внутри файла, ссылающегося на себя.
+Приватный repo не называется открытым публичным архивом до фактического изменения
+доступа владельцем. Публикация assets не разрешает менять visibility репозитория.
+
+22.8. Render -> inspect ВСЕХ страниц -> targeted fix -> rerender.
+Три pilot pages: pointer-to-use, отказ foreign authority, fresh-author-created work.
+No overlap/cropped text/маленькие unreadable таблицы. Полные raw JSON в Reader,
+в main3–7 meaningful lines. Ссылки/формулы/пагинация/цифры проверяются автоматически
+и глазами. Не запускать новое native исполнение ради красивой картинки.
+
+===============================================================================
+23. ВОЗВРАТ И ПЕРВАЯ КОМАНДА WORK
+===============================================================================
+
+23.1. Один полный результат на содержательный этап:
+RADIOLARIA_GATE5_REFERENCE_<SLICE>_RETURN_<UTC>.tar.gz в Downloads.
+FINAL_REPORT (English) + короткий русский итог владельцу;
+RESUME_STATE, exact baseline/policy/source identities;
+изменённые postimages и список файлов; безопасные input/output/trace;
+test phase rc/durations/counters; failed attempts; independent proof outputs;
+known residuals; no commit/push unless actual owner operation occurred.
+
+Один полный MANIFEST: safe unique relative paths, sizes, SHA256, modes;
+сам MANIFEST в собственный hash-list не включается. TAR без symlink/hardlink/traversal,
+CRC/reopen проверены, archive SHA дан отдельно. Private material не включается.
+Не вложить повторно сотни MB старой свадьбы; только реально нужные immutable donor
+bytes с exact source refs. Full Reader и portable package могут иметь разные coverage,
+что фиксируется, а не скрывается фразой «всё есть».
+
+23.2. Short status после G5-1 и G5-4:
+что действительно работает -> чем подтвердили -> exact blocker/остаток -> actual
+cost/counters -> следующий конечный шаг. No fake deadlines, no silent future scope.
+Проверки локально оптимизировать, не удлинять workflow ради привычного количества хопов.
+
+23.3. Готовое управляющее сообщение первому Work-проходу:
+
+«Начинаем G5-0 по RADIOLARIA_GATE5_REFERENCE_IMPLEMENTATION_MASTER_V02.
+Исходный Gate5 сокращён владельцем до bounded External DRS + машинного Authoring
+Kit + одного независимого cold-authoring/native футбольного опыта ВМЕСТО переговорной.
+External DRS — pointer-only address plane; полные материалы у владельца, открытие
+и local use разрешаются отдельно. Сначала калибровочный protocol proof, затем
+замороженный kit, затем новый football domain автора на том же transport. Подбор,
+контракт и один local synthetic mock booking, без реального бронирования/оплаты.
+NeedleFactory и Cognitive Radiolaria остаются после Gate6. Wedding не переделываем.
+Подтверди actual admitted baseline и public seams, зафиксируй scope/naming/roadmap
+matrix. Подготовь первый ограниченный промпт Codex: конкретный pointer/native/crypto
+probe и план source surface. Не начинай с полного глобального протокола, новых
+облачных аккаунтов или 20 файлов без рабочего вертикального стыка. Не выполняй
+owner commit/push и не присваивай Gate5 приёмку. Не передавай этот master будущему
+cold generator: у него будут только frozen kit, новый task и declared source access».
+
+23.4. Накопление знаний для нового Work.
+Всё необходимое для продолжения лежит в source-bound checkpoint и RESUME_STATE,
+а не только в памяти «старого помощника». Emergency dump может помочь найти путь,
+но не является текущим runtime permission и не заменяет manifests/accepted sources.
+Не требуется перенос в новый чат, пока текущий Work корректно работает; протокол
+продолжения должен выдерживать его замену без объяснений от Андрея.
+
+===============================================================================
+24. ИСТОЧНИКИ И ГРАНИЦА ПОДГОТОВКИ ЭТОГО ТЗ
+===============================================================================
+
+24.1. Library / original planning sources, прочитанные для master:
+[S01] hedgehog_deeptech_completion_master_roadmap_v2_1.md,
+      фазы K/L/M, исходные file lines2087–2343.
+[S02] HEDGEHOG_DEEPTECH_COMPLETION_ROADMAP_V3_1_GATE_BASED_GUARDIAN,
+      Gate5 и начало Gate6, file lines1033–1209.
+[S03] HEDGEHOG_OWNER_ROADMAP_PAIR_AUTHORITY_RULING_V01,
+      приоритет v2.1/v3.1, запрет несуществующих версий и revival PlanGraph.
+[S04] RADIOLARIA_GATE5_GATE6_SCOPE_AND_WHITEPAPER_NOTES_20260923_RU.md,
+      sections1–5: reduced scope, External DRS, Authoring Kit, cold exam,32–56h.
+Первоначальный owner request уточнил отдельную G5 презентацию и naming.
+Последующий запрос (основание V02) уточнил pointer-only архитектуру внешнего DRS
+и предложил футбольную историю для второй части. Старое обсуждение восстановлено
+по беседе18September2026; отдельный ранее утверждённый football master не найден.
+V02 является новой конечной спецификацией этой замены, не цитатой такого master.
+
+24.2. Source reads pinned на76a6952c9d0f31c976d2501c5641457a20de153a:
+[R01] GitHub branches/main: commit/parent/tree publication identity.
+[R02] docs/showcase/wedding_seating_v01/README.md.
+[R03] specs/current_architecture_lock_v01.md, прочитан текущий верхний scope и U4 limits.
+[R04] docs/repository_transition_admission_v01.md, R1/G44 successor restrictions.
+[R05] tree hedgehog/external_drs/: четыре empty files, реальной реализации там нет.
+[R06] hedgehog/local_drs_v02.py, first205 lines: legacy reuse/freshness envelopes.
+[R07] hedgehog/drs_semantic_address_v01.py, first270 lines: canonical local contracts,
+      LOCAL_* storage classes and authority/time field sets.
+[R08] hedgehog/domains/wedding_seating/memory_v01.py: полный working donor pattern.
+[R09] hedgehog/drs.py: полный LocalDRS storage API.
+[R10] hedgehog/capability_admission_v01.py, first235 lines: finite affine profile.
+[R11] hedgehog/kernel/root_signer_isolation_v01.py, lines1–545:
+      test-only signer/public commitments/verification and keyset interfaces.
+[R12] hedgehog/marenna.py, полный mock placeholder producer.
+[R13] hedgehog/up.py, полный quarantined transfer placeholder producer.
+Связанные Host/runtime/advanced resolution функции указаны как reuse surfaces:
+Work проверяет их exact signatures и актуальные dependency/source bindings в G5-0.
+ТЗ не утверждает новый полный аудит каждого байта всего репозитория.
+
+Source URL pattern:
+https://github.com/AAkhtanin/hedgehog-os/blob/76a6952c9d0f31c976d2501c5641457a20de153a/<path>
+
+24.3. Внешние первоисточники, проверены24 September2026:
+[E01] https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
+      sign/verify интерфейсы; не требование обновить установленную dependency на dev.
+[E02] https://docs.python.org/3/library/venv.html
+      venv — изоляция пакетов/интерпретатора, не OS sandbox.
+[E03] https://docs.python.org/3/library/http.server.html
+      bounded local HTTP prototype не production web-security.
+[E04] https://www.usenix.org/conference/osdi26/call-for-artifacts
+      concrete artifact expectations; Getting Started и Detailed Instructions;
+      OSDI26 оценивает Available badge, собственного badge этот проект не получал.
+
+24.4. Историческая проверка DESIGN V01, не Gate5 test run:
+при подготовке V01 сообщены18scalar checks:96/102, rational-2/3, два старых
+room-preference результата, half-open интервалы и TTL/status-age. Room-пример
+больше не является task V02. Эти старые проверки не предъявляются как новый
+футбольный PASS и не разрешают подставлять эталон в collector.
+
+При подготовке V02 перечитан полный master V01 и нужный common-action contract
+наOBSERVED_BASE; документальный checkpoint старого контракта сохраняет исторический
+status, поэтому наличие public mock execution Work подтверждает в G5-0 по принятым
+байтам/тестам. Новые Root, транспорт, code-gen, футбол и live providers здесь
+не запускались. Проверена текстовая согласованность replacement, остающихся
+ограничений и оценки времени. Repo не менялся.
+
+24.5. Заключительный смысл.
+Это не «ещё один большой модуль». Gate5 должен показать передачу способности
+работать: между владельцами через проверяемые указатели и между разработчиками
+через ясный машинный контракт. Реализация и доказательства остаются конечными,
+а точки будущего развития — видимыми. Мы сокращаем объём релизной программы,
+не её честность, не конституцию и не качество настоящего положительного результата.
+
+V02 RELATED PRIMARY SOURCE:
+https://github.com/AAkhtanin/hedgehog-os/blob/76a6952c9d0f31c976d2501c5641457a20de153a/docs/common_action_and_dynamic_composition_contract_v01.md
+Sections1–4 were read for the existing native/nonpayment boundary and idempotency
+contract. This is a source reference, not a new execution or permission receipt.

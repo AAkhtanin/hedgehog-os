@@ -1,0 +1,118 @@
+"""Narrow pure verification of independently pinned G5-1 captured evidence.
+
+Public signatures and native PURE invocation/result identities are revalidated.
+Recorded Root relationships are checked, not restored as current authority.
+"""
+import dataclasses
+import hashlib
+import json
+from pathlib import Path
+from hedgehog import action_commit_packet_v02 as action
+from hedgehog.kernel import effect_firewall_v01 as firewall, abi_v01 as abi
+from . import gate5_contracts_v01 as c
+
+
+def record(cls, value, **overrides):
+    c.shape(value, (f.name for f in dataclasses.fields(cls)))
+    return cls(**dict(value,**overrides))
+
+
+def tuple_fields(value, names):
+    return {k:tuple(tuple(i) if type(i) is list else i for i in value[k]) for k in names}
+
+
+def native_result(proof, expected_root, expected_inputs):
+    evidence=proof['native_evidence'];c.shape(evidence,('admission','invocation','result'))
+    p=evidence['admission'];d=p['definition']
+    c.require(d['effect_kind']=='PURE' and d['business_semantics'] is None,'supplied_not_pure')
+    fields=lambda name:tuple(record(firewall.CapabilityFieldV01,f,allowed_values=tuple(f['allowed_values'])) for f in d[name])
+    definition=record(firewall.CapabilityDefinitionV01,d,input_fields=fields('input_fields'),output_fields=fields('output_fields'),
+        **tuple_fields(d,('resource_refs','code_sha256s')))
+    snapshot=record(firewall.CapabilityAdmissionSnapshotV01,p,definition=definition,
+        code_sources=tuple(record(firewall.CapabilityCodeSnapshotV01,s) for s in p['code_sources']))
+    values=lambda seq:tuple(record(action.ActionEffectParameterRecordV01,v) for v in seq)
+    validation=lambda v:record(firewall.CapabilityValidationEvidenceV01,v,reason_codes=tuple(v['reason_codes']))
+    raw=evidence['invocation']
+    invocation=record(firewall.BoundCapabilityInvocationV01,raw,inputs=values(raw['inputs']),resource_refs=tuple(raw['resource_refs']),input_validation=validation(raw['input_validation']))
+    raw_result=evidence['result']
+    result=record(firewall.CapabilityExecutionResultV01,raw_result,output=values(raw_result['output']),output_validation=validation(raw_result['output_validation']))
+    c.require(not firewall.validate_capability_admission_snapshot_v01(snapshot),'supplied_admission')
+    c.require(not firewall.validate_bound_capability_invocation_v01(invocation,snapshot),'supplied_invocation')
+    c.require(not firewall.validate_capability_execution_result_v01(result,invocation,snapshot),'supplied_result')
+    c.require(invocation.owning_root_id==expected_root and {v.parameter_name:v.value for v in invocation.inputs}==expected_inputs,'supplied_consumed_input')
+    output={v.parameter_name:v.value for v in result.output}
+    c.require(output==proof['outputs'] and proof['inputs']==expected_inputs and proof['attempts']==1,'supplied_result_projection')
+    artifact=abi.build_kernel_artifact_v01(**dict(proof['artifact'],
+        trace_refs=tuple(proof['artifact']['trace_refs']),
+        parent_refs=tuple(proof['artifact']['parent_refs'])))
+    c.require(not abi.validate_kernel_artifact_v01(artifact),'supplied_abi')
+    c.require(proof['results'][0]['result']==raw_result and proof['results'][0]['invocation']==raw,'supplied_work_evidence_binding')
+    return output
+
+
+def root_links(value, root, selected, accepted=True):
+    result=value['result']
+    c.require(result['target_root_id']==root and result['decision_input_id']==value['inputs']['decision_input_id'],'recorded_root_identity')
+    c.require((result['decision']=='ACCEPT')==accepted,'recorded_root_decision')
+    if accepted:c.require(result['selected_candidate_id']==selected and result['root_commit_created'] is True,'recorded_root_selection')
+    c.require(all(result[k] is False for k in ('permission_created','effect_requested','final_output_created')),'recorded_root_not_permission')
+    return result['decision_id']
+
+
+def verify_capture(folder, expected, source_root):
+    folder,source_root=Path(folder),Path(source_root)
+    for name,pin in expected['capture_files'].items():
+        path=folder/name;c.require(path.is_file() and not path.is_symlink(),'capture_path')
+        data=path.read_bytes();c.require(len(data)==pin['bytes'] and hashlib.sha256(data).hexdigest()==pin['sha256'],'external_capture_pin:'+name)
+    for name,sha in expected['source_pins'].items():
+        c.require(hashlib.sha256((source_root/name).read_bytes()).hexdigest()==sha,'external_source_pin:'+name)
+    read=lambda name:json.loads((folder/name).read_text())
+    trust=read('operator_trust.json');c.require(c.sha(trust)==expected['operator_trust_sha256'],'external_trust_pin')
+    policy=trust['B'];descriptor=read('B/descriptor.json');pointer=descriptor['value']
+    request=read('B/request_LOCAL_CONTEXT.json');status=read('B/status_LOCAL_CONTEXT.json');bundle=read('B/response_LOCAL_CONTEXT.json')
+    summary=read('summary.json');used=summary['B']['accepted']['use_time']
+    checked=c.check_bundle(bundle,descriptor,request,status,policy,used,{},{});body=checked['body']
+    for index in range(1,6):
+        for sender,receiver in [('A','B'),('B','A')]:
+            sent=(folder/sender/('wire_sent_%02d.json'%index)).read_bytes();received=(folder/receiver/('wire_received_%02d.json'%index)).read_bytes()
+            c.require(sent==received,'reciprocal_wire')
+            message=c.decode(sent)
+            if sender=='B':
+                req=c.verify(message['value'],trust['public']['B'],'REQUEST',c.sha(policy));c.validate('request',req)
+    a_work=read('A/source_work.json');a_result=native_result(a_work,c.ROOT_A,dict(readings=c.canonical(body['observations']).decode(),reference=body['reference']))
+    c.require(a_result==dict(n=body['n'],total=body['total'],correction_num=body['correction']['num'],correction_den=body['correction']['den']),'source_work_body')
+    c.require(body['source_work_ref']==a_work['artifact']['artifact_id'],'source_work_ref')
+    c.require(root_links(read('A/source_review.json'),c.ROOT_A,body['source_work_ref'])==body['source_review_ref'],'source_review_ref')
+    root_links(read('A/publish_review.json'),c.ROOT_A,pointer['pointer_id'])
+    c.require(root_links(read('A/release_review_2.json'),c.ROOT_A,request['request_id'])==bundle['release']['value']['release_review_ref'],'release_review_ref')
+    local=read('B/scenario.json');uncal=read('B/uncalibrated.json')
+    mean=native_result(uncal['work'],c.ROOT_B,dict(readings=c.canonical(local['readings']).decode()))
+    c.require(uncal['status']=='INSUFFICIENT_EVIDENCE' and uncal['root']['result']['decision']!='ACCEPT','missing_not_accepted')
+    candidate=read('B/import_candidate.json');c.validate('import',candidate)
+    c.require(candidate['body_hash']==c.sha(body) and candidate['received_manifest_hash']==c.sha(bundle['manifest']) and candidate['pointer_ref']==pointer['pointer_id'],'import_source_binding')
+    c.require(candidate['foreign_source_ref']==body['source_record_ref'] and candidate['foreign_publisher']==pointer['publisher_root_id'],'foreign_identity_preserved')
+    c.require(candidate['dependency_fingerprint']==c.sha(dict(readings=local['readings'],limit=local['limit'],policy=c.sha(policy),source=c.sha(body))),'dependency_binding')
+    local_review=root_links(read('B/import_review.json'),c.ROOT_B,candidate['import_id'])
+    old=read('B/disposition_candidate.json');accepted=read('B/disposition_accepted.json')
+    c.validate('disposition',old);c.validate('disposition',accepted)
+    c.require(old['state']=='CANDIDATE' and accepted['state']=='ACCEPTED_CONTEXT' and accepted['parent_ref']==old['disposition_id'] and accepted['local_review_ref']==local_review,'immutable_disposition')
+    adaptation=read('B/adaptation.json');c.validate('adaptation',adaptation)
+    c.require(adaptation['import_ref']==candidate['import_id'] and adaptation['foreign_source_ref']==body['source_record_ref'] and adaptation['value']==body['correction'] and adaptation['local_acceptance_ref']==local_review,'adaptation_binding')
+    work=read('B/corrected_work.json');outputs=native_result(work,c.ROOT_B,dict(readings=c.canonical(local['readings']).decode(),offset_num=adaptation['value']['num'],offset_den=adaptation['value']['den']))
+    expected_math=c.corrected(local['readings'],body['correction'])
+    c.require(outputs==dict(corrected_num=expected_math['corrected']['num'],corrected_den=expected_math['corrected']['den'],mean_num=expected_math['mean']['num'],mean_den=expected_math['mean']['den']),'independent_math')
+    assessment='WITHIN_REFERENCE_LIMIT' if outputs['corrected_num']<=c.mul(local['limit'],outputs['corrected_den']) else 'REVIEW_REQUIRED'
+    root_links(read('B/final_review.json'),c.ROOT_B,work['artifact']['artifact_id'])
+    c.require(summary['B']['accepted']['assessment']==assessment,'final_assessment')
+    denial=read('B/local_refusal.json');c.require(denial['before']==denial['after'] and denial['body_attempts']==0 and denial['root']['result']['decision']!='ACCEPT','local_refusal_counters')
+    rejected=read('B/response_AUDIT.json');negative_request=read('B/request_AUDIT.json')
+    release=c.verify(rejected['release'],policy['peer_keys'],'RELEASE',pointer['artifact_manifest_ref'].split(':')[1]);c.validate('release',release)
+    c.require(release['state']=='REFUSED' and release['request_ref']==negative_request['request_id'] and rejected['body'] is None and rejected['manifest'] is None,'A_refusal_no_body')
+    c.require(summary['A']['counts']['released']==summary['B']['budget']['opened']==1 and summary['B']['budget']['payload']==2,'budget_counts')
+    c.require(read('canary_scan.json')['matches']==0,'recorded_canary_scan')
+    return dict(status='PASS_NARROW_SUPPLIED_G51',assessment=assessment,uncorrected=mean,corrected=expected_math['corrected'],
+        source_correction=body['correction'],pointer_ref=pointer['pointer_id'],import_ref=candidate['import_id'],
+        adaptation_ref=adaptation['local_view_id'],work_result_ref=work['artifact']['artifact_id'],
+        wire=summary['B']['wire'],budget=summary['B']['budget'],checked_time=used,verification_mode='HISTORICAL_CAPTURE_NOT_CURRENT_AUTHORITY',
+        scope='PUBLIC_CRYPTO_AND_PURE_INVOCATION_RESULT_VALIDATION_PLUS_PINNED_RECORDED_ROOT_CAUSAL_LINKS; NOT_FULL_NATIVE_CANONICAL_REPLAY',
+        new_root_decisions=0,host_dispatches=0,source_work=0,peer_fetches=0,model_calls=0,effects=0,drs_writes=0)

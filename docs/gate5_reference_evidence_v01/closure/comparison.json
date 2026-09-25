@@ -1,0 +1,17 @@
+{
+  "R18": "PASS_TWO_INDEPENDENT_PURE_CLOSURE_PROCESSES",
+  "all_processes_reaped": true,
+  "canonical_bytes": 37389,
+  "canonical_sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff",
+  "elapsed_seconds": {
+    "one": 6.015555143356323,
+    "two": 6.029391765594482
+  },
+  "native_provider_author_effect_execution": 0,
+  "outer_processes": 2,
+  "owner_mutation": false,
+  "proof_input_freeze_sha256": "af4bf61cdee29e37fbb237f392cedfc37b44346a3be9ce4bb452d9f8624143b9",
+  "pure_verifier_subprocesses_per_pass": 2,
+  "source_matrix_note": "The frozen matrix states the R18 requirement before execution; this completed output resolves that requirement without rewriting the admitted proof inputs.",
+  "status": "BYTE_IDENTICAL"
+}

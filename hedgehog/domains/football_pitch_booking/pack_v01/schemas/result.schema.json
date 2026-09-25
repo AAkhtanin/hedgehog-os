@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "football.result.v01",
+  "description": "Static closed shape; candidate_domain relational validators additionally enforce identities, uniqueness, consent, calendar intervals and arithmetic.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "request_ref",
+    "request_revision",
+    "team_ref",
+    "operation",
+    "status",
+    "slots",
+    "total_minor",
+    "currency",
+    "source",
+    "receipt_ref",
+    "counts",
+    "native_refs"
+  ],
+  "properties": {
+    "version": {
+      "const": "g53.result.v01"
+    },
+    "request_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "request_revision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "team_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "operation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "OFFER_READY",
+        "NEEDS_CONFIRMATION",
+        "NO_COMPLETE_OFFER",
+        "MOCK_BOOKED",
+        "VERIFIED",
+        "CLARIFY",
+        "REFUSED",
+        "CURRENT_STATUS_UNKNOWN"
+      ]
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "session_id",
+          "venue_ref",
+          "field_id",
+          "start_utc",
+          "end_utc",
+          "price_minor"
+        ],
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+          },
+          "venue_ref": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+          },
+          "field_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+          },
+          "start_utc": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4611686018427388000
+          },
+          "end_utc": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4611686018427388000
+          },
+          "price_minor": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4611686018427388000
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 3
+    },
+    "total_minor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4611686018427388000
+    },
+    "currency": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "publisher",
+            "recipient",
+            "request_revision",
+            "schedule_revision",
+            "offer_revision",
+            "observed_at",
+            "valid_from",
+            "valid_to",
+            "ttl",
+            "pt",
+            "status",
+            "status_checked",
+            "status_until"
+          ],
+          "properties": {
+            "publisher": {
+              "type": "string"
+            },
+            "recipient": {
+              "type": "string"
+            },
+            "request_revision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "schedule_revision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "offer_revision": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "observed_at": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "valid_from": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "valid_to": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "ttl": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "pt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "status": {
+              "enum": [
+                "ACTIVE",
+                "REVOKED",
+                "SUPERSEDED"
+              ]
+            },
+            "status_checked": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            "status_until": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "receipt_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "search",
+        "dispatch",
+        "mutations",
+        "observed"
+      ],
+      "properties": {
+        "search": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "dispatch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        },
+        "mutations": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4611686018427388000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4611686018427388000
+        }
+      }
+    },
+    "native_refs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

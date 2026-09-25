@@ -1,0 +1,53 @@
+{
+  "needle_id": "football_g54d_v01",
+  "owner": "Continuing author of the restored G54D candidate; independent local owner review controls source admission",
+  "version": "football.candidate.v01.correction4",
+  "purpose": "Finite synthetic football offers, controlled MOCK confirmation, exact receipt history and readback. No travel, payments, marketplace or real facility actions.",
+  "domain": "One synthetic venue, January 2027 Europe/Tirane, three 90-minute sessions, up to four fields and two disclosed alternatives/session.",
+  "input_schema": {
+    "request": "schemas/request.schema.json (football.request.v01)",
+    "inventory": "schemas/inventory.schema.json (football.inventory.v01)",
+    "peer": "g54.peer_input.v01; closed policy/event/semantic shapes documented in README; integers exclude bool; original local strings retained."
+  },
+  "output_schema": {
+    "body": "schemas/body.schema.json (FootballVenueOfferV01)",
+    "report": "schemas/result.schema.json (g53.result.v01)",
+    "native": "Generic native_evidence={admission,invocation,result}, inputs,outputs,attempts,results,artifact; canonical E then B then C."
+  },
+  "actor_roles": [
+    "Publisher owns VenueRoot inventory, key, registry, source/publication/release/action reviews.",
+    "Requester owns ActivePlanetRoot request, key, retrieval/import/result reviews, authenticated non-active STATUS refusal and local acceptance.",
+    "Untrusted semantic proposals only propose validated event fields; operator approves separately."
+  ],
+  "execution_modes": [
+    "PURE venue and requester capabilities",
+    "MOCK_CONSEQUENTIAL football.book.v01 only",
+    "READ_ONLY saved receipt reconciliation"
+  ],
+  "capabilities": [
+    "candidate_domain.native.execute_venue / validate_venue",
+    "candidate_domain.native.execute_requester / validate_requester",
+    "candidate_domain.effect.validate_inputs / execute_booking / validate_output",
+    "Public Work, Root, Host/Firewall, LocalDRS, ReviewedBodyProfileV01, PipeChannel and signed contracts as pinned in dependencies.json"
+  ],
+  "forbidden_effects": [
+    "Network/provider calls",
+    "Subprocesses/threads/process creation",
+    "Real venue/device/payment/cloud effects",
+    "Protected source/guard changes",
+    "Authority/key deserialization",
+    "Private-key export",
+    "Direct registry write outside admitted MOCK callback"
+  ],
+  "permission_policy": "Separate source review, native capability admission and current local consent. Operator book_approvals bind exact CONFIRM and original FIND request hashes; Root binds actual selected B and payload before native packet/Host dispatch. Foreign signatures/ACCEPTs grant no local effects.",
+  "risk_class": "LOW synthetic PURE and disposable MOCK; no hostile-storage, arbitrary-code isolation or real transaction claim.",
+  "drs_scope": "Per-owner source_drs and per-event requester drs; imported evidence in own imports with highwater/quarantine, accepted immutable records and historical archives. Foreign publisher/source identities retained.",
+  "sealed_slot_refs": "NOT_APPLICABLE: no sealed slot dependency is provided or invented. Exact public source hashes are declared in dependencies.json.",
+  "adapter_requirements": "Immutable source-observable module-level callbacks; reviewed finite Python; precreated peers and independently bound bootstrap PipeChannels; installed public source/resource/dependencies; OS Europe/Tirane TZ entry.",
+  "time_currentness_dependencies": "Native donor logical 1010..1014, explicitly separate from UTC source and review time. End=min(valid_to,pt+ttl,observed+max_age). STATUS half-open freshness up to60s; request deadline up to60s. Consent, policy, inventory revision/occupancy, status, source identity and payload changes invalidate current action use.",
+  "failure_policy": "CLARIFY on missing/unsupported essential inputs; REFUSED on policy/scope/conflict; unavailable status and unresolved effects CURRENT_STATUS_UNKNOWN. Persist terminal highwater before use refusal. At most8 ordered events/32 protocol requests, each task2 payload/8metadata/2accepted bodies/128KiB. No blind retry after executor start; exact confirmed history reuses actual saved receipt/readback. A verified REVOKED/SUPERSEDED current-use refusal retains authentic terminal state and a fresh local BLOCKED_FAIL_CLOSED Root decision linked to the original request, failed active predicate and signed evidence. Confirmation uncertainty remains CURRENT_STATUS_UNKNOWN; unknown errors propagate.",
+  "compensation": "NOT_APPLICABLE to single disposable all-or-none registry snapshot. No automatic rollback; uncertain native or filesystem outcome stops for saved receipt and independent readback. No cross-owner or power-loss guarantee.",
+  "audit_provenance": "Original event/source inputs, generic Work admission/invocation/output/artifact, original and current source reviews, pointer publication and request-bound release reviews, signatures, raw wire, local import/disposition, exact C, consumer result review, actual action packet/Host attempt/receipt and registry readback; README maps paths. status_refusal_evidence.json binds original request/policy, signed descriptor/STATUS, prepared FETCH, STATUS request, highwater and recorded check times; refusal.json links the actual refusal_review.json decision and evidence hash.",
+  "tests": "tests/test_domain.py covers pure selection and reviewer-only native Work/MOCK. tests/test_descent.py covers actual metadata descent and exact Root bindings. tests/test_business_semantics.py covers native declaration/admission, operation equality, typed mappings, rejection and continuation. tests/test_final_correction.py covers terminal publisher reports, active/unavailable continuation, uncertainty/history, changed synthetic inputs, origin reference format, exact native descent source/Root/time bindings and unchanged secret rejection. No author execution; syntax/data inspection only. README attributes attempt_02 progress and failures to the independent reviewer. Final correction requires independent review and prescribed execution. tests/test_status_refusal.py adds unexecuted requester-event component regressions with real native publication/descent/Root and public signatures, plus restart/terminal-revival, independent ACTIVE continuation, invalid-signature/unknown-error, stale-status and confirmation-uncertainty checks. Its in-memory message driver is not P7/OS transport telemetry.",
+  "compatibility": "G54D V01 mapped public seams; calibration profile untouched; no undocumented API or source edits. Finite single-writer local state. Returns inert files, installable_now=false; no runtime-success or admission claim. Restored parent G54D correction_index=4, submission_number=5, one owner-authorized additional pack. Original initial-plus-three result remains INCOMPLETE. No old-state migration or new runtime dependency."
+}

@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+    "-B",
+    "candidate/demo/verify_gate5_reference_v01.py",
+    "--output",
+    "/private/tmp/RADIOLARIA_GATE5_G55.2N6uSH/proof_one"
+  ],
+  "child_pid": 66196,
+  "cwd": "/private/tmp/RADIOLARIA_GATE5_G55.2N6uSH",
+  "elapsed": 6.015555143356323,
+  "end": "2026-09-25T19:09:30.321622+00:00",
+  "environment": {
+    "HEDGEHOG_REPOSITORY_REVIEW_CONTEXT_V01": null,
+    "PYTHONDONTWRITEBYTECODE": null,
+    "PYTHONPATH": null
+  },
+  "rc": 0,
+  "reaped": true,
+  "start": "2026-09-25T19:09:24.306122+00:00",
+  "streams": {
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 163,
+      "sha256": "0803cb4118ecf3bc4dd98aa07a8807791aa83c94ab3a1e423934b6af66da60e1"
+    }
+  },
+  "supervisor_pid": 66189
+}

@@ -1,0 +1,439 @@
+RADIOLARIA — G55 / SCOPE CLOSURE AND EXACT ENGINEERING LANDING PREPARATION
+Version: V01, 2026-09-25
+Operator: Andrey. Repository: AAkhtanin/hedgehog-os.
+Expected owner: /Users/admin/Projects/hedgehog-os.
+
+0. OWNER INTENT, AUTHORIZATION AND THE EXACT REVIEW BOUNDARY
+
+The owner has now explicitly authorized the common Gate5 acceptance matrix,
+admission of the accepted result into the repository, ordinary commit/push and
+remote readback, followed later by presentation preparation with the curator.
+That authorization persists. Do not ask again merely because an old document
+describes owner landing as pending.
+
+G54D1 has completed independent Work review and is accepted under its explicit
+protocol amendment. Do not reopen authoring or restart a cold model experiment.
+
+This invocation must COMPLETE ALL reviewable G55 preparation: exact source and
+evidence packaging, complete matrices, source-impact analysis, focused checks,
+two pure closure passes, frozen ENGINEERING delta/manifest, and a concrete tested
+owner landing helper. Return one self-contained review package.
+
+There is one necessary boundary before owner mutation: the exact G55 postimages,
+manifest and landing helper do not exist at prompt issue time and therefore have
+not yet received the external exact-byte Work review required by current R1.
+Do not manufacture that review from this prompt, your own output, or a delegated
+agent's label. A second reviewer can improve preparation but cannot silently
+replace the agreed external Work admission step.
+
+Accordingly, this invocation ends READY_FOR_EXACT_INDEPENDENT_REVIEW, with owner
+untouched. After Work checks the returned exact bytes, the already authorized
+G55 landing can proceed through the prepared helper without renewed owner consent.
+These are two execution stages of one G55, not another implementation cycle.
+Do not mark a successful preparation INCOMPLETE because owner landing correctly
+awaits that exact-byte review. No G56 presentation/showcase publication now.
+
+1. ESTABLISHED FACTS — DO NOT REPEAT THE EXPERIMENT
+
+Independent Work accepted the G54D1 return after archive/manifest/source and
+causal-evidence review. Archive SHA-256:
+0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0
+Size 29,222,925 bytes; 5,516 files; 5,515 manifest rows.
+
+Confirmed: 24-file final pack, consisting of 23 authored files and the broker
+candidate.json; one restored Astra/ultra/default continuation, correction_index4,
+one new submission, total5 submissions. Initial+3 G54D remains INCOMPLETE.
+All final bytes reconstruct from the22 seed files and79 broker operations.
+The production delta is run.py only, plus a test and documentation. No supervisor
+implementation edits. The old examiner, runner and native predicates remain.
+
+Native16/16,56events,7 isolated mock actions; genuine new Root refusals for both
+REVOKED events. Independent Work additionally checked362 wire signatures,
+25 FIND E→B→C joins,7 confirmation consumers and7 receipt/readback chains.
+Live3 actual Gemini2.5flash calls consumed by the program, without retries;
+separate live5events/1mock action. Total for D1 is8mock actions/61events across
+these two explicitly separate parts. CONFIRM/REPEAT are controlled typed inputs.
+VERIFY proposal was precollected and did not see the later native receipt.
+Two supplied outputs are byte-identical,32,702bytes, SHA-256:
+0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0
+Final evidence freeze SHA-256:
+692d4994937634dd0ba4f3b187678f143e9d3d0c44227aee254eb04a5679fb49
+No additional native/provider/effect execution in those supplied consumers.
+
+The optional companion Work report is
+RADIOLARIA_G54D1_INDEPENDENT_ACCEPTANCE_REVIEW_20260925_RU.md
+SHA-256:7f2b4a8eb78301807758e35760e5cf370182da794ff0327d39616de25135e857
+If available, include it unchanged as review evidence. Its absence is not a new
+blocker: this prompt carries the Work acceptance and exact accepted archive pin.
+This is functional acceptance of D1, not external review of a future G55 ledger.
+
+2. READ CURRENT RULES AND VERIFY INPUTS ONCE
+
+Read the actual applicable AGENTS instructions, current architecture lock,
+docs/repository_transition_admission_v01.md, the relevant current R1 verifier,
+public architecture guard and actual release binder. Read the Master V02 scope,
+G55/G56, source-admission and R01–R22 sections and curator decision §3.9.
+Preserve the established Work/Codex responsibilities and all runtime authority laws.
+
+Master filename (a duplicate suffix may exist in Downloads):
+RADIOLARIA_GATE5_REFERENCE_IMPLEMENTATION_MASTER_V02_DRS_FOOTBALL_RU.txt
+Expected content SHA-256:
+008cbad1773e116568833ff3e97decce8d73a4dca6e7826fcf40268f11271fef
+Curator decision is also inside D1 as CURATOR_DECISION_RU.txt, SHA-256:
+39058d9f3841b9e6b4b69cc3a0718867de049f0a40385780b19e78f30836ec48
+
+Use verified complete originals in ~/Downloads or their exact retained working
+trees. Do not unpack whole history repeatedly. Resolve filenames by exact hash
+when several downloaded copies exist. The useful predecessor pins are:
+
+G50 RADIOLARIA_GATE5_REFERENCE_G50_NATIVE_SEAMS_RETURN_20260924T161240Z.tar.gz
+  a3d1e9444825bc68ec13ba235d1156125251a6e01901b3ae73adfc8324651dd7
+G51 RADIOLARIA_GATE5_REFERENCE_G51_CALIBRATION_EXCHANGE_RETURN_20260924T180314Z.tar.gz
+  806ab39111f9c2d915967664309e740b8e044030825908996ecf9e21cd05f679
+G52 RADIOLARIA_GATE5_REFERENCE_G52_LIFECYCLE_RESTART_RETURN_20260924T193456Z.tar.gz
+  4f967a4189f62c0eede9931ec13cb38933ab855eacf864297f305f34a257f510
+G53 RADIOLARIA_GATE5_REFERENCE_G53_AUTHORING_KIT_EXAM_RETURN_20260924T203615Z.tar.gz
+  dde9ea8dcb1658d9feff97421d2d7b51f2b8ba6ca2b20455569291b03745d5b1
+G54D RADIOLARIA_GATE5_G54D_REVISED_KIT_COLD_AUTHOR_AND_FOOTBALL_V01_RETURN_20260925T170238Z.tar.gz
+  2da2c2838f9987a8ca50745a95ca563092fb4e77ee8b8e60748222b1287dc806
+G54D1 RADIOLARIA_GATE5_G54D1_AUTHORIZED_FOURTH_CORRECTION_AND_COMPLETION_V01_RETURN_20260925T181739Z.tar.gz
+  0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0
+
+Input recovery note: Work's uploaded G52 copy was truncated at1,437,184bytes
+(c4d6afabadd57545a1fceaa47a7657eae912ce0573c67b670285a8a6047ba9f5).
+That copy is NOT accepted as a complete archive. The canonical Mac original is
+2,079,388bytes/1,044files/1,043manifest rows, with the4f967... hash above.
+The historical work path was /private/tmp/RADIOLARIA_GATE5_G52.xpJutB.
+Use your full original or recover exact member bytes from complete retained copies
+under the original manifest. Record recovery provenance; never substitute a new
+execution for missing historical evidence. All13 final shared source postimages
+are independently recoverable from the complete G53 archive even without G52 tar.
+Ask for missing material only after bounded examination of these retained sources
+shows an actual required evidence gap; do not fail because one duplicate is short.
+
+As of this prompt Work checked GitHub main:
+5cef2c52fd805daedec958109caf9d1806899eb4
+Read actual owner HEAD/tree/branch/index/status and remote identity. Do not confuse
+this base with historical Wedding baseline, R1 accepted_basis or installation.tip.
+Confirm actual base, previous FINALIZED context and enforcement pins match the
+admitted chain. Inspect context at git rev-parse --absolute-git-dir plus
+reviewed_repository_transition_v01/context.json. A linked clone has its own gitdir.
+Conflicting explicit/env/local contexts refuse; never pick an arbitrary winner.
+Preserve all unrelated work/index/files and old POSIX modes. Use a separate regular
+preparation tree/disposable clone; do not register a writer worktree on owner.
+
+3. ONE FINITE SOURCE PROPOSAL
+
+Determine exact R1 ENGINEERING path compatibility before choosing destinations.
+Current ordinary ENGINEERING allows no root README edit, no docs/showcase path,
+no governed publication namespace and no enforcement/governance modification.
+Keep README navigation for G56's separately reviewed DOCUMENTATION transition.
+
+3A. Shared External DRS source
+
+Start from G53 SUPERVISOR_EVIDENCE/final_source_ledger.json and SOURCE_IMPACT.md.
+Its cumulative owner proposal is exactly13 additions, not G50 probes plus every
+intermediate implementation. Preserve these13 current postimages byte-for-byte:
+
+demo/run_gate5_calibration_v01.py
+demo/run_gate5_lifecycle_v01.py
+docs/gate5_calibration_exchange_checkpoint_v01.md
+docs/gate5_lifecycle_restart_checkpoint_v01.md
+hedgehog/external_drs/gate5_body_profile_v01.py
+hedgehog/external_drs/gate5_contracts_v01.py
+hedgehog/external_drs/gate5_exchange_v01.py
+hedgehog/external_drs/gate5_lifecycle_supplied_v01.py
+hedgehog/external_drs/gate5_lifecycle_v01.py
+hedgehog/external_drs/gate5_native_v01.py
+hedgehog/external_drs/gate5_supplied_v01.py
+tests/test_gate5_calibration_exchange_v01.py
+tests/test_gate5_lifecycle_v01.py
+
+Read exact original ledger source locations;8 of these files are also in D1's
+AUTHOR_VISIBLE/source and match G53 exactly. The current contracts hash is
+db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f;
+body profile hash is
+7e434e75d1913a7fab71ebc882fb21640fd33e7324ff035bc376a4b7cd65d89f.
+Do not restore older G52 contracts over this successor. New profile callbacks are
+locally reviewed code, never validators selected by a foreign wire module name.
+Retain the two historical checkpoints intact; explain their supersession in the
+new canonical checkpoint instead of rewriting their original not-started labels.
+
+3B. Accepted football pack and integration
+
+Install the exact24-file D1 attempt_04/candidate pack as a clearly named bounded
+domain pack, preserving all bytes, filenames, module identities and relative
+schema/test layout. A suitable placement is
+hedgehog/domains/football_pitch_booking/pack_v01/ with candidate_domain/ inside.
+Confirm actual existing layout and R1 allowability; do not overwrite an existing
+unrelated path. Add only genuinely needed new package/launcher glue.
+Do not rewrite from candidate_domain imports, policy source hashes, PASSPORT,
+candidate.json, schema IDs or old test text merely to make names look uniform.
+Record23 author files vs1 broker manifest and separate new supervisor glue.
+
+The accepted existing confined runner can receive that exact pack at its existing
+candidate mount/import root. Avoid global import shims, sys.modules aliases or
+host import of the candidate. New wrapper code must be thin and auditable.
+Provide a usable, offline, explicit proof-verification command for an engineer.
+Use existing supplied consumers with a bounded source/evidence-location adapter;
+do not build another execution framework, replay engine or generic service.
+No CLI default may launch authoring, a provider, native peers or a mock action.
+Any documentation of optional native reproduction must use the existing reviewed
+P7 route and separate fresh runtime permission; archived records confer none.
+
+3C. Usable kit and portable evidence
+
+Retain the exact revised public kit, TASK_VISIBLE football brief, generic numeric
+example and separate D1 clarification. Keep HOW and WHAT distinct. Label football
+report fields as a domain profile. Keep examiner and hidden fixtures outside
+author-visible input; publishing review evidence does not turn it into author input.
+Do not rewrite an old kit freeze or pretend the clarification existed originally.
+Add a small release README/index if needed to make the engineering package usable.
+
+Create a bounded, relocatable evidence closure under an ENGINEERING-compatible
+namespace, e.g. docs/gate5_reference_evidence_v01/; leave docs/showcase for G56.
+Preserve raw bytes, signatures, source pins, author's original input/output and
+correction lineage, D1 native/live/supplied closure, G52 finite federation closure,
+relevant G53/G54C generic-kit/probe proofs and the external Work acceptance.
+Use exact archive/member maps or compact source-bound bundles where useful.
+No private /tmp dependency may be required by the published verification command.
+No symlink/hardlink/special-file/path-traversal extraction, unbounded decompression
+or executable import just because a file occurred inside an evidence archive.
+
+Avoid two copies of the same large raw evidence, all old intermediate native
+trees, installed dependencies, Docker caches, owner .git or whole owner snapshots.
+Keep historical source snapshots ONLY where necessary for exact recorded-proof
+checking, mark them inert and pin them; they are not a second installed repository.
+The already published G54B1 capsule is linked as history, not copied/replaced.
+If derived excerpts are used, retain an exhaustive omission/member provenance map
+and enough exact bytes to reproduce every claimed check and author's lineage.
+Do not drop a dependency just to reach an arbitrary size target.
+Keep raw historical paths/timestamps as evidence; make new commands location-aware.
+Scan the intended payload for credentials/private keys/hidden reasoning. Preserve
+public signatures and raw ordinary author/provider replies. Do not publish secrets
+or raw reasoning. Retain actual LICENSE/notices; make no new licensing claims.
+
+4. CANONICAL COMMON ACCEPTANCE AND RESIDUAL MATRICES
+
+Create new docs/gate5_reference_contract_v01.md and
+docs/gate5_reference_checkpoint_v01.md, with a short intelligible outcome first.
+Use one canonical machine-readable matrix plus its human view; do not create a
+new passport per hop or edit protected Human Passport/machine_manifest controls.
+
+Cover G5-R01 through R22. Each row includes exact obligation, declared finite scope,
+status, source identities, evidence paths/hashes, evidence class, limits/residual,
+and responsible closing stage. IDs are review inventory, never runtime selectors.
+
+R01: historical Wedding baseline + actual current admitted base and preservation.
+R02: actual original K/L/M requirements and one naming/reduction map, not a new
+     aspirational paraphrase. Use REUSED / IMPLEMENTED_REFERENCE /
+     PARTIAL_REFERENCE / DEFERRED_POST_GATE6_PUBLICATION with rationale.
+R03–R11: source-bound G51/G52 exchange,96→102 change, persisted pointer-only lookup,
+     independent local Roots, signed provenance, currentness, lifecycle/refusals,
+     history and permitted continuation. Reuse unchanged generic evidence honestly.
+R12: frozen kit and executable generic different-domain probe, including E→B→C.
+R13: original fresh author input plus initial+3 INCOMPLETE, explicit amendment,
+     restored correction4 and total5submissions. Never one-shot/original-budget PASS.
+R14: exact authored pack, independent review and planned/current admission state.
+R15: D1 actual native offer consumption, action receipt/readback and zero extra
+     Work/effect on repeat/VERIFY; same candidate across changed-data scenarios.
+R16: actual3-call Gemini subset; typed consent; precollected VERIFY limitation.
+R17: unchanged independent examiner, hidden/control provenance, actual vs pure.
+R18: preserved dual supplied results plus two fresh pure closure checks below.
+R19: exact source impact/release bindings/review; owner admission/commit/readback
+     remain PENDING_EXACT_WORK_REVIEW_AND_LANDING in this preparation.
+R20: usable engineering kit available; final presentation/appendix/full Reader
+     PENDING_G56. The historical B1 showcase does not satisfy final publication.
+R21: engineering publication/readback pending landing, final showcase/link
+     publication PENDING_G56. Never fill a future commit or remote success.
+R22: explicit remaining Factory/Cognitive Radiolaria/global program deferrals.
+     Disclosure may be satisfied; deferred implementations are never marked PASS.
+
+Keep preparation-time status separate from the exact-state rule for later
+ENGINEERING_ACCEPTED. Describe how the external review and actual admitted Git
+child establish that state without editing frozen postimages after commit or
+inventing the child hash in advance. Actual landing/readback receipts are produced
+by the later helper and carried into G56 publication; no premature success caption.
+
+Add bounded submaps for Master F01–F20, football P01–P10 and author exam A–H.
+Use exact existing generic/native/pure/source-review evidence as applicable.
+Do not reinterpret these maps as quotas for fresh football-native injections.
+Pure altered-evidence expiry/provenance/unknown-capability checks remain pure;
+the existence of an author test file is not a performed test. Distinguish source
+metadata/status I/O from body fetch; zero effect never means zero all I/O.
+
+Explicit residuals: reviewed-reference TCB, no arbitrary hostile-Python attestation,
+no full prestart races/crash/power-failure program, no real venue/payment effect,
+no universal football planner or full future Gate6 conformance/model-swap.
+The old standalone command/RPC isolation failure is retained, not declared fixed;
+it is not a blocker for the different accepted no-env broker/P7 path.
+Retain all historical B1/C/D statuses and failed helper attempts accurately.
+
+5. SOURCE IMPACT AND BOUNDED VALIDATION
+
+Produce an exact source-impact map from owner base to proposed destination bytes,
+with G52/G53/D1 provenance, effective dependency/import/resource mapping and every
+new integration file identified. Compare all accepted core/shared dependencies
+used in proofs with current source, not only top-level candidate.json.
+
+Important G52 distinction: its old source-pinned evidence used contracts hash
+b551c81d2004463f8053e834dd0aa1642285f1e95acb56996043b24b0729aa0b.
+Its supplied verify(folder, expected, source_root) checks expected source hashes.
+Do not point that proof at new contracts and replace the expected pin to get PASS.
+Verify historical evidence against its exact historical source mapping. Separately
+show G53's two-file profile seam change, existing43 affected default controls,
+generic profile/numeric proofs and D1's actual use of the final shared source.
+Historical lifecycle is historical, not a fresh full collection on G53 bytes.
+
+Default: NO new author calls, provider calls, football matrix, booking effects,
+generic peer collectors or broad Living/E5/Conformance/Wedding/application suite.
+Run required source/format checks and focused packaging/path/dependency checks.
+Inspect test/entrypoint import-time work before selecting a test; do not accidentally
+run a broad collector by importing an unrelated test module.
+
+If a concrete final source-impact gap cannot be resolved by the existing exact
+proofs and compatibility checks, one bounded existing current-source calibration
+lifecycle run or one focused confined integration may be performed in disposable
+state. Record the exact gap first and affected dependency; reuse current installed
+tools and original finite runner. This is G55 integration, not a new author trial.
+Do not rerun all previous native/model work or create new tests merely for a count.
+If no such gap exists, record why preserved proofs suffice and do not execute it.
+
+Freeze one complete source/evidence closure. Run TWO independent offline closure
+passes in separate processes/output directories using reviewed existing G52 and
+D1 supplied verifiers plus the smallest required cross-index checks. Both passes
+must actually validate the relevant content/source relationships, not read PASS
+captions. Bind the installed shared source and exact football pack to their native
+and live evidence, while preserving historical G52 source compatibility labels.
+
+Canonical semantic results must match byte-for-byte. Keep timestamps/PIDs outside
+the canonical result, in actual command receipts. Observe and report no author,
+provider, Root decisions, Work execution, Host dispatch, peer execution or effects.
+Evidence reads, hashing, signature checks and writing proof outputs are allowed.
+If isolation of historical import closures requires pure verifier subprocesses,
+declare/count those honestly; do not call them native execution or claim zero
+process launches by the orchestration wrapper. Reuse calibrated monitoring where
+available. Do not import the candidate or reconstruct live authority from records.
+
+Avoid self-referential manifests: evidence inputs freeze before verification;
+outputs reference that freeze; the later external R1 ledger covers final files.
+No writes to admitted inputs after the two checks unless you invalidate/repeat only
+the affected check. Final source changes must receive their own exact validation.
+
+6. CURRENT R1 PREPARATION AND DISPOSABLE REHEARSAL
+
+Use the ACTUAL unchanged admitted enforcement chain to validate this ordinary
+ENGINEERING proposal. No new personal guard, no POLICY_INSTALLATION, early-return,
+skipped assertion, altered registration, AST-only exemption or manufactured PASS.
+No README/root governance/core/old sealed capsule modifications. Add-only is the
+expected ordinary shape; name and justify any genuinely unavoidable modification
+before it occurs in the proposal. Never edit a protected path to fit the delta.
+
+Read actual context and raw policy map. Carry the installation schema/bridge/tip,
+historical accepted_basis, actual base, previous finalized manifest correctly.
+Historical installation.tip need not equal the current documentation/engineering
+tip. Do not recreate the older bootstrap context without installation.
+
+Freeze an external detached R1 manifest with the exact complete path ledger:
+regular-file type, Git mode, size, SHA-256, true preimage and postimage. Record the
+actual base commit/tree and previous external context/manifest/policy bindings.
+No fabricated future commit SHA; commit message fixed in the reviewed manifest.
+Suggested message: Admit Gate 5 reference DRS and authored football domain
+The manifest is a review candidate, not its own acceptance certificate.
+
+Prepare a small owner landing helper OUTSIDE the repository proposal and freeze
+its raw bytes for Work review. Reuse proven existing R1 helpers where possible;
+do not redesign the release machinery. It must support the actual ordered path:
+
+  verify external approved pins and base/context/index/state;
+  exact preimages + preservation snapshot;
+  atomically install the externally reviewed PREPARED context, preserving the
+    predecessor and exact approved manifest/policy/installation bindings;
+  apply only named frozen postimages;
+  required guard and real release-binder checks on complete unstaged/staged states;
+  explicit path staging, ordinary sole-parent commit;
+  validate actual committed identities and required checks;
+  atomic durable finalized context using actual commit/tree, preserving old context;
+  ordinary push, fetch/readback and independent remote commit/tree/blob verification;
+  final clean/preservation receipt and exact recovery instructions.
+
+Enforce external expected manifest/policy/helper pins as operator inputs at later
+execution; do not authorize owner use by hashing whatever candidate was just made.
+An explicit new context plus a different old local FINALIZED context conflicts;
+do not use resolver precedence to evade that check. The later helper must perform
+the proper reviewed PREPARED-to-FINALIZED transition and preserve recovery copies.
+Return clear ready commands, but DO NOT execute the owner apply/stage/commit/push
+or install an owner review context in this invocation. Existing user authorization
+does not substitute the missing external exact-byte review.
+
+Rehearse the complete local apply/stage/commit/finalize/recovery path as needed in
+a disposable clone with actual admitted verifier and proper DISPOSABLE_TEST_ONLY
+context. No push from rehearsal to owner remote; simulated publication remains
+clearly rehearsal. Never copy that disposable context or commit identity into owner.
+One successful complete rehearsal suffices; repeat only affected failed phases.
+Exercise a representative exact-pin mismatch refusal if not already inherent in
+the trusted helper's recorded coverage. Do not create an exhaustive new R1 suite.
+
+The later owner helper must detect interruption after commit, inspect the actual
+existing child and continue missing finalization/publication phases. Never duplicate
+the commit, amend, reset, force-push, stash/delete unrelated work or bypass hooks.
+Ordinary rejected approval cannot be cured by changing enforcement or disguising
+the operation. Preserve and report its exact reason if it blocks a required step.
+
+Use the actual public guard and required real binder interfaces. Historical guard
+Gate3 status strings are not current Gate5 verdicts and must not be cosmetically
+changed. A verifier's remote_publication=NOT_CHECKED is separate from eventual
+actual GitHub readback. Compare exact required file/blob/mode identities; do not
+infer remote equality solely from a successful git push exit code.
+
+7. DELIVERABLES AND STOP CONDITION
+
+Complete, not placeholders:
+- New canonical contract/checkpoint, R01–R22 matrix and F/P/A–H submaps;
+- K/L/M reconciliation and one naming map with explicit future deferrals;
+- Exact13 shared postimages, exact24-file football pack, usable kit, minimal glue;
+- Portable proof/lineage closure with input archives/member/source provenance;
+- New source-impact and exact repository destination/dependency map;
+- Two actual pure closure outputs/receipts and their canonical comparison;
+- Focused source/format/import-location checks and any specifically justified
+  fresh integration evidence, with actual commands/rc/timing and failed attempts;
+- Complete proposal patch/postimages/ledger, detached R1 manifest and raw pins;
+- Proposed context marked NOT_AUTHORIZED_FOR_OWNER_USE_PENDING_EXACT_WORK_REVIEW;
+- Frozen owner landing helper and full disposable rehearsal results;
+- Preservation of owner/source/enforcement/prior assets, processes cleanup;
+- Independent-review entrypoint and immediate next landing command template.
+
+Provide independent reviewer findings if a separate agent was used during
+preparation, with exact reviewed files; do not promote this to external Work
+authorization. Return all bytes Work needs for exact review, not only a summary.
+Preserve original archives outside new output; do not generate a huge recursive
+archive of prior returns/virtualenvs/caches. Do not alter Downloads inputs.
+
+Create verified TAR.GZ named:
+RADIOLARIA_GATE5_G55_SCOPE_CLOSURE_AND_ENGINEERING_LANDING_PREP_V01_RETURN_<UTC>.tar.gz
+Include complete hash/size/mode manifest (excluding itself), exact finite payload,
+reports/receipts and reconstruction instructions. Copy to ~/Downloads and verify
+the finished copy's SHA-256, archive safety, every manifest row and full coverage.
+Exclude credentials/private keys/raw hidden reasoning; retain needed public proof.
+
+Successful status:
+G55_PREPARED_FOR_EXACT_INDEPENDENT_REVIEW
+owner_mutation=false; commit=false; push=false;
+functional_D1=ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT;
+engineering_admission=PENDING_EXACT_WORK_REVIEW_AND_LANDING;
+documentation_publication=PENDING_G56; gate5_closed=false.
+
+If an actual substantive gap remains, give the precise unmet predicate and all
+completed evidence; do not broaden into a new architecture project or silently
+relax the condition. Missing yet-unperformed owner review is the intended handoff,
+not such a gap. Do not end at a plan when preparation can continue.
+
+After later successful owner landing the intended status is ENGINEERING_ACCEPTED
+with actual engineering publication/readback, while R20/final-R21 await G56.
+Only completed R01–R22 in their agreed finite scopes permit G5_REFERENCE_CLOSED.
+
+Final Russian operator reply should be short: preparation result, exact path count,
+performed checks, preserved author/core bytes, manifest/helper pins, owner unchanged,
+archive path/size/SHA-256 and that external Work review is the next technical stage
+of the already authorized landing. No request for permission to do what is already
+authorized, no presentation work, no new author/model experiment.

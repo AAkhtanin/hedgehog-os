@@ -1,0 +1,340 @@
+{
+  "version": "football.source_impact.v01",
+  "new_files": [
+    "PASSPORT.json",
+    "README.md",
+    "dependencies.json",
+    "source_impact.json",
+    "candidate_domain/__init__.py",
+    "candidate_domain/domain.py",
+    "candidate_domain/effect.py",
+    "candidate_domain/memory.py",
+    "candidate_domain/native.py",
+    "candidate_domain/policy.py",
+    "candidate_domain/profile.py",
+    "candidate_domain/publication.py",
+    "candidate_domain/run.py",
+    "candidate_domain/storage.py",
+    "schemas/body.schema.json",
+    "schemas/inventory.schema.json",
+    "schemas/request.schema.json",
+    "schemas/result.schema.json",
+    "tests/test_domain.py",
+    "tests/test_descent.py",
+    "tests/test_business_semantics.py",
+    "tests/test_final_correction.py",
+    "tests/test_status_refusal.py"
+  ],
+  "coordinator_manifest": "candidate.json is generated from actual bytes by submit_candidate; author never writes it.",
+  "protected_source_changes": [],
+  "requested_source_changes": [],
+  "public_apis_used": {
+    "demo.run_action_packet_portability_v01": [
+      "work_literal_v01",
+      "prepare_work_program_v01",
+      "build_native_work_action_v01",
+      "authorize_and_prepare_action_v01",
+      "host_for_prepared_action_v01"
+    ],
+    "demo.work_composition_mock_capabilities_v01": [
+      "admit_pure_operation_v01"
+    ],
+    "hedgehog.kernel.work_composition_v01": [
+      "WorkItemV01",
+      "advance_work_program_v01",
+      "validate_work_program_result_v01",
+      "work_program_result_to_artifact_v01"
+    ],
+    "hedgehog.kernel.effect_firewall_v01": [
+      "validate_capability_values_v01",
+      "build_capability_validation_evidence_v01",
+      "snapshot_admitted_capability_v01",
+      "validate_capability_execution_result_v01",
+      "build_capability_business_semantics_v01",
+      "build_capability_business_input_binding_v01",
+      "build_capability_definition_v01",
+      "build_capability_field_v01",
+      "validate_capability_admission_snapshot_v01"
+    ],
+    "hedgehog.work_execution_host_v01": [
+      "observe_local_capability_code_v01",
+      "admit_local_capability_v01",
+      "dispatch_current_action_v01"
+    ],
+    "hedgehog.action_commit_packet_v02": [
+      "build_action_effect_parameter_record_v01"
+    ],
+    "hedgehog.kernel.abi_v01": [
+      "kernel_artifact_to_plain_dict_v01"
+    ],
+    "hedgehog.external_drs.gate5_native_v01": [
+      "plain",
+      "save",
+      "rebuilt",
+      "root_review",
+      "root_plain"
+    ],
+    "hedgehog.external_drs.gate5_body_profile_v01": [
+      "ReviewedBodyProfileV01",
+      "COMMON_BODY_FIELDS"
+    ],
+    "hedgehog.external_drs.gate5_contracts_v01": [
+      "canonical",
+      "decode",
+      "sha",
+      "integer",
+      "shape",
+      "walk",
+      "require",
+      "ref",
+      "label",
+      "hash_value",
+      "sequence",
+      "with_id",
+      "validate(profile=)",
+      "sign",
+      "verify",
+      "keyset",
+      "temporal",
+      "check_pointer(profile=)",
+      "authenticate_status",
+      "check_status",
+      "check_bundle(profile=)",
+      "BODY_MAX",
+      "POINTER_MAX",
+      "LIMIT"
+    ],
+    "hedgehog.external_drs.gate5_exchange_v01": [
+      "PipeChannel.send",
+      "PipeChannel.receive",
+      "PipeChannel.counters",
+      "clock",
+      "immutable",
+      "state_write",
+      "Budget",
+      "PublisherBudget"
+    ],
+    "hedgehog.external_drs.gate5_lifecycle_v01": [
+      "ImportStore.observe",
+      "ImportStore.conflicts",
+      "ImportStore.import_body",
+      "ImportStore.quarantine"
+    ],
+    "hedgehog.kernel.root_signer_isolation_v01": [
+      "generate_root_signer_capability_v01",
+      "build_trusted_root_key_set_v01",
+      "trusted_root_key_set_to_plain_dict_v01 (accessed through public contracts.crypto)"
+    ],
+    "hedgehog.drs": [
+      "LocalDRS"
+    ],
+    "hedgehog.local_drs_resolver": [
+      "SemanticDRSRecordInput",
+      "SemanticResolveQuery",
+      "write_semantic_record",
+      "resolve_semantic_candidates"
+    ],
+    "hedgehog.drs_semantic_address_v01": [
+      "build_semantic_address_v01",
+      "build_drs_time_envelope_v01",
+      "drs_time_envelope_to_plain_data_v01",
+      "build_drs_authority_envelope_v01",
+      "build_meaning_record_v01",
+      "meaning_record_to_plain_data_v01"
+    ],
+    "hedgehog.drs_memory_resolution_v01": [
+      "build_drs_temporal_query_v01",
+      "evaluate_drs_candidate_v01",
+      "query_evaluation_state_to_plain_data_v01",
+      "build_memory_descent_budget_v01",
+      "build_retrieval_plan_v01",
+      "retrieval_plan_to_plain_data_v01",
+      "build_memory_descent_request_v01",
+      "execute_local_memory_descent_v01"
+    ],
+    "hedgehog.kernel.root_decision_v01": [
+      "root_decision_result_to_plain_dict_v01"
+    ],
+    "hedgehog.kernel.integrity_replay_v01": [
+      "domain_separated_sha256_hex_v01"
+    ]
+  },
+  "attribution": "Native patterns adapted from supplied run_numeric.py/numeric_work.py, gate5_native_v01.pointer_descent_v01, gate5_exchange/lifecycle_v01 and G50 mock_effect/check_effect. No kernel or transport implementation copied or altered. Shipped reference license is AGPL-3.0.",
+  "review_focus": [
+    "Profile callbacks and all imported domain helpers form new reviewed TCB.",
+    "Confirmation uses a distinct booking publication record with original E/Work/time and predecessor source/review IDs preserved; review this interpretation against FOOTBALL_PROFILE.",
+    "OS timezone data is required but its installed version is not stated in supplied dependency record.",
+    "Candidate counters are observations, never a replacement for trusted observer calls and independent inputs.",
+    "No claimed execution, installation, source admission or Gate closure."
+  ],
+  "correction_1": {
+    "reported_failure": "Submission 0 P7 first FIND: drs_root_decision_binding_invalid during requester native metadata descent. Source Work/publication occurred; no booking dispatch/executor/mutation. Later peer stall is not a successful refusal.",
+    "source_predicate": {
+      "path": "source/hedgehog/drs_memory_resolution_v01.py",
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+      "definition_lines": [
+        223,
+        225
+      ],
+      "consumer_lines": [
+        3113,
+        3123
+      ],
+      "required": "approve_controlled_memory_descent_plan_v01"
+    },
+    "changed_files": [
+      "candidate_domain/native.py",
+      "candidate_domain/memory.py",
+      "tests/test_descent.py",
+      "README.md",
+      "PASSPORT.json",
+      "source_impact.json"
+    ],
+    "scope": "Forward the public Root-review predicate and specify the exact native descent predicate. Preserve actual local review, public descent consumer, ownership, plan/hash/budget/currentness checks.",
+    "validation": "Corrected code and added regression are unexecuted by author; inert syntax inspection only. Full pack returns for independent review."
+  },
+  "correction_2": {
+    "reported_progress": "Correction 1 reviewer P7: native DRS descent, exact FIND and approved-shift FIND completed source/publication/release/consumer/final Root stages.",
+    "reported_failure": "First CONFIRM stopped before dispatch in build_capability_business_semantics_v01 with capability_business_operation; executor starts and registry mutations zero. Requester IPC stall was consequent failure, not successful refusal.",
+    "source_predicate": {
+      "path": "source/hedgehog/kernel/effect_firewall_v01.py",
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "line": 2360,
+      "prefix_line": 62,
+      "required": "operation_key == logical_effect_namespace and selected_action_class.startswith('mock_action:')"
+    },
+    "changed_files": [
+      "candidate_domain/effect.py",
+      "tests/test_business_semantics.py",
+      "README.md",
+      "PASSPORT.json",
+      "source_impact.json"
+    ],
+    "scope": "Use one local football.book.v01 value for native operation_key and logical_effect_namespace; retain the native constructor, typed business mapping and all Root/Host/Firewall checks.",
+    "representation_note": "Reviewer-only exact bijection natural/artificial facts to documented natural_grass/artificial spelling. Not a model correction or a change to input business facts.",
+    "validation": "No author execution. New tests remain reviewer-only; syntax/data inspection is not native admission or runtime acceptance."
+  },
+  "correction_3": {
+    "reported_progress": "Reviewer attempt_02 passed main FIND/approved-shift/first native booking/repeat/VERIFY and low budget, missing BOOK, missing history, foreign audience, changed schedule, changed same-key payload, permutation and second-team cases; not author execution or final acceptance.",
+    "reported_failures": [
+      "Ordinary REVOKED publisher policy left publisher current reports at producer NO_COMPLETE_OFFER or OFFER_READY while source.status was REVOKED. Requester refused with no Work/effect.",
+      "A permitted changed-ID/price/order request caused requester build_meaning_record_v01 to raise drs_secret_payload_forbidden on the candidate-generated source reference; subsequent publisher IPC stall was a consequence."
+    ],
+    "source_predicates": [
+      {
+        "path": "source/hedgehog/drs_semantic_address_v01.py",
+        "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20",
+        "consumer_line": 1586,
+        "reference_lines": [
+          479,
+          485
+        ],
+        "secret_lines": [
+          508,
+          520
+        ],
+        "card_pattern_lines": [
+          130,
+          134
+        ],
+        "required": "source_reference_ids pass the public reference and secret validators. Bare [0-9a-f]{64} has explicit SHA256 handling; arbitrary prefixed text remains subject to secret-pattern checks."
+      },
+      {
+        "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+        "reference_line": 113,
+        "profile_body_lines": [
+          178,
+          184
+        ],
+        "required": "Common source_record_ref passes bounded contracts.ref; no textual source prefix is required."
+      },
+      {
+        "path": "CANDIDATE_OUTPUT.md",
+        "section": "TASK-SPECIFIC PROFILE: Football",
+        "required": "Pre-action refusal has empty slots and no claimed completed booking; actual attempts and post-start uncertainty remain observable."
+      },
+      {
+        "path": "FOOTBALL_PROFILE.md",
+        "section": "Observable Evidence Without Private Helper Names",
+        "required": "Ordinary operator policy exposes active/revoked status; failures after executor start preserve actual observations and CURRENT_STATUS_UNKNOWN, not fabricated zero effects."
+      }
+    ],
+    "changed_files": [
+      "candidate_domain/policy.py",
+      "candidate_domain/run.py",
+      "tests/test_final_correction.py",
+      "README.md",
+      "PASSPORT.json",
+      "source_impact.json"
+    ],
+    "scope": [
+      "Mint source_record_ref as bare SHA256 of canonical domain-separated original-request/booking data before source review and publication; both peers derive the same identity. No received or historical ID rewrite and no validator suppression.",
+      "Current publisher reports apply signed source state or explicit source operator state: terminal states refuse, unavailable or after-start uncertainty stays unknown, unavailable current slots empty. Preserve E/B/time/status evidence and true counts/receipts.",
+      "Keep separate saved receipt history, release review/null denied body, all native booking and exact descent bindings unchanged."
+    ],
+    "compatibility": "Fresh reviewer-owned peer state; no migration or relabeling of saved identities from older candidate versions. Reopens same-version persisted state without changing references.",
+    "validation": "Reviewer-only focused tests authored. Only inert syntax/data inspection by author; no imports, tests, native calls or execution. Coordinator computes exact manifest at final submission."
+  },
+  "correction_4": {
+    "parent": "G54D",
+    "correction_index": 4,
+    "submission_number": 5,
+    "authorization": "One additional owner-authorized correction/submission of the restored implementation. The original initial-plus-three trial remains INCOMPLETE.",
+    "reported_failure": "After verified non-active STATUS the requester emitted honest REFUSED through the known ValueError path without a corresponding local Root refusal. Prior metadata/retrieval acceptance was not that decision. Reviewer observed no booking execution or registry mutation.",
+    "source_predicates": [
+      {
+        "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+        "lines": [
+          309,
+          331
+        ],
+        "required": "authenticate_status verifies pinned signatures, FETCH/nonce/pointer binding, half-open time and highwater; check_status then requires entry.state == ACTIVE."
+      },
+      {
+        "path": "source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+        "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f",
+        "lines": [
+          31,
+          39
+        ],
+        "required": "ImportStore.observe authenticates and saves terminal highwater before current-use rejection."
+      },
+      {
+        "path": "source/hedgehog/external_drs/gate5_native_v01.py",
+        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec",
+        "lines": [
+          45,
+          103
+        ],
+        "required": "root_review builds live local input, decides through the Root kernel and validates its result; root_plain preserves it as evidence."
+      },
+      {
+        "path": "source/hedgehog/kernel/root_decision_v01.py",
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
+        "lines": [
+          678,
+          716
+        ],
+        "required": "False policy/Post-V&V checks create hard failures and native BLOCKED_FAIL_CLOSED, retained without renaming the native outcome."
+      }
+    ],
+    "changed_files": [
+      "candidate_domain/run.py",
+      "tests/test_status_refusal.py",
+      "README.md",
+      "PASSPORT.json",
+      "source_impact.json"
+    ],
+    "scope": [
+      "Snapshot exact pointer/STATUS verification times, signed originals, prepared FETCH/STATUS request and persisted highwater before check_status; existing current-use check remains in place.",
+      "Only status_not_active in the known ValueError path calls refuse_inactive_status. Revalidate the preserved evidence at its recorded observation times, then make a distinct current local Root review of the original request/reason/source/status with source_active computed from the authenticated entry.",
+      "Require the actual native BLOCKED_FAIL_CLOSED result before completing the refusal; link decision ID and evidence hash in refusal.json and report.native_refs. Failed review/unknown errors remain visible.",
+      "A confirmation at this boundary remains CURRENT_STATUS_UNKNOWN because the requester cannot infer the source effect outcome. No new effect, retry, receipt or cross-role state access.",
+      "Preserve existing producer/consumer, source reports, metadata descent, denied null-body release, consent, booking, history and native checks. No protected-source, ABI, wire/body/report schema or dependency changes."
+    ],
+    "tests": "Reviewer-only component code: genuine source publication and requester_event metadata/native Root calls, signed REVOKED/SUPERSEDED observations, actual refusal linkage, stop before FETCH/consumer/effect; reopened highwater, rejected terminal revival and distinct ACTIVE continuation; invalid signature and unknown errors stay visible; stale status remains unknown; confirmation does not claim source zero effects. In-memory message fixture supplies no body and is not a peer/transport substitute.",
+    "validation": "Author may inspect Python/JSON text only. No imports, execution, native calls or tests by author. Coordinator computes candidate.json from exact bytes at the single additional submission."
+  }
+}

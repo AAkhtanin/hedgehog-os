@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "football.inventory.v01",
+  "description": "Static closed shape; candidate_domain relational validators additionally enforce identities, uniqueness, consent, calendar intervals and arithmetic.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "revision",
+    "venue_ref",
+    "currency",
+    "fields"
+  ],
+  "properties": {
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4611686018427388000
+    },
+    "venue_ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field_id",
+          "surface",
+          "full_size",
+          "price_minor",
+          "available_utc",
+          "occupied_utc"
+        ],
+        "properties": {
+          "field_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+          },
+          "surface": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,128}$"
+          },
+          "full_size": {
+            "type": "boolean"
+          },
+          "price_minor": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4611686018427388000
+          },
+          "available_utc": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4611686018427388000
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 0,
+            "maxItems": 16
+          },
+          "occupied_utc": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4611686018427388000
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 0,
+            "maxItems": 16
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 4
+    }
+  }
+}
